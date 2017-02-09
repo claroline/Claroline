@@ -1,5 +1,9 @@
 {
     "apply": "Toepassen",
     "select": "Kiezen",
-    "close": "Sluiten"
+    "close": "Sluiten",
+    "archives": "Archieven",
+    "posts": "Berichten",
+    "comment_deletion_confirm_message": "Bent u er zeker van dat u deze commentaar wenst te verwijderen ?",
+    "search": "Zoeken"
 }
