@@ -17,5 +17,6 @@
     "category": "Categorie",
     "start_date": "Startdatum",
     "end_date": "Einddatum",
-    "back": "Terug"
+    "back": "Terug",
+    "add_choice": ""
 }
