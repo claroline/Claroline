@@ -1,4 +1,7 @@
 {
     "actions": "Acties",
-    "date": "Datum"
+    "date": "Datum",
+    "archives": "Archieven",
+    "roles": "Rollen",
+    "session": "Sessie"
 }
