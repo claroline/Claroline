@@ -162,7 +162,7 @@
     "log_workspace-role-unsubscribe_group_shortname": "Verwijderen",
     "log_workspace-role-unsubscribe_group_title": "Een rol verwijderen voor een groep (werkruimte)",
     "log_workspace-role-unsubscribe_user_filter": "Een rol verwijderen voor een gebruiker",
-    "log_workspace-role-unsubscribe_user_sentence": "heeft de rol %role% verwijderd voor de gebruiker %receiver_user% in %workspace%",
+    "log_workspace-role-unsubscribe_user_sentence": "heeft de rol %role% verwijderd voor de gebruiker %receiver_user% in %workspace%.  ",
     "log_workspace-role-unsubscribe_user_shortname": "Verwijderen",
     "log_workspace-role-unsubscribe_user_title": "Een rol verwijderen voor een gebruiker (werkruimte)",
     "log_workspace-role-update_filter": "Een rol bewerken",
@@ -184,5 +184,9 @@
     "user": "Gebruiker",
     "user_list": "Lijst van de gebruikers",
     "user_tracking": "Toezicht per gebruiker",
-    "workspace": "Werkruimte"
+    "workspace": "Werkruimte",
+    "log_resource-publish_filter": "Een leermiddel publiceren",
+    "log_resource-publish_sentence": "heeft %resource% gepubliceerd",
+    "log_resource-publish_shortname": "Publicatie",
+    "log_resource-publish_title": "Een leermiddel publiceren"
 }
