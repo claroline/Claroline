@@ -166,7 +166,7 @@
     "log_workspace-role-unsubscribe_group_shortname": "Suppression",
     "log_workspace-role-unsubscribe_group_title": "pour un groupe (espace d'activités)",
     "log_workspace-role-unsubscribe_user_filter": "Suppression d'un rôle pour un utilisateur",
-    "log_workspace-role-unsubscribe_user_sentence": "a supprimé le rôle %role% pour %receiver_user% dans %workspace%",
+    "log_workspace-role-unsubscribe_user_sentence": "a supprimé le rôle %role% pour %receiver_user% dans %workspace%.  ",
     "log_workspace-role-unsubscribe_user_shortname": "Suppression",
     "log_workspace-role-unsubscribe_user_title": "Suppression d'un rôle pour un utilisateur (espace d'activités)",
     "log_workspace-role-update_filter": "Mise à jour d'un rôle",
