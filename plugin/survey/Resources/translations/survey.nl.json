@@ -4,5 +4,8 @@
     "answer": "Antwoorden",
     "no_model": "Geen model",
     "status": "Statuut",
-    "comment": "Commentaar"
+    "comment": "Commentaar",
+    "name": "Naam",
+    "close": "Sluiten",
+    "end_date": "Einddatum"
 }
