@@ -3,5 +3,6 @@
     "actions": "Acties",
     "answer": "Antwoorden",
     "no_model": "Geen model",
-    "status": "Statuut"
+    "status": "Statuut",
+    "comment": "Commentaar"
 }
