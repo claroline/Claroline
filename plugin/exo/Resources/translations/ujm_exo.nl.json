@@ -6,5 +6,8 @@
     "none": "Geen",
     "open": "Openen",
     "reset": "Resetten",
-    "yes": "Ja"
+    "yes": "Ja",
+    "comment": "Commentaar",
+    "select": "Kiezen",
+    "share": "Delen"
 }
