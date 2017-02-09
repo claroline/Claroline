@@ -87,7 +87,7 @@
     "refresh_url_rename_warning_message": "<span class=\"fa fa-exclamation-triangle\"></span> <strong>Attention!</strong> Si vous cochez cette case, l'adresse d'accès à votre portfolio sera mise à jour en fonction du nouveau nom renseigné.<br>L'ancienne adresse de votre portfolio ne sera plus accessible.",
     "rename": "Renommer",
     "rename_portfolio": "Renommer un portfolio",
-    "revoke_access": "Supprimer l'accès",
+    "revoke_access": "Révoquer l'accès",
     "see": "Voir",
     "see_all_exchange": "Voir tous les échanges",
     "select_group": "Sélectionner un groupe",
