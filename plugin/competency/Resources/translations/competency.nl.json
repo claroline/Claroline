@@ -43,7 +43,7 @@
     "info.no_scale": "Er zijn nog geen schalen gemaakt. U kunt een nieuw schaal maken door middel van onderstaande knoppen.",
     "info.no_user_compententie_history": "Er is nog geen activiteit gekoppeld met deze competentie.",
     "info.no_user_objectives": "Er is nog geen leerdoel aan een gebruiker toegewezen. U kunt leerdoelen aan gebruikers toewijzen in de \"Leerdoelen\" tab.",
-    "info.scale_levels": "De niveaus moeten door nieuwe-regel-tekens gescheiden worden. Voorbeeld:\\n\\nEasy\\nMedium\\nHard",
+    "info.scale_levels": "De niveaus moeten door nieuwe-regel-tekens gescheiden worden. Voorbeeld:\\n\\nEasy\\nMedium\\nHard.",
     "learners": "Lerenden",
     "level.achieved": "Gerealiseerd niveau",
     "level.expected": "Verwacht niveau",
