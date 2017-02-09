@@ -1,1 +1,5 @@
-{}
+{
+    "ok": "Valideren",
+    "resource_creation_error": "Er is een fout opgetreden tijdens het maken van de leermiddel.",
+    "resource_name_placeholder": "De naamvan de leermiddel is verplicht."
+}
