@@ -16,5 +16,6 @@
     "user": "Gebruiker",
     "category": "Categorie",
     "start_date": "Startdatum",
-    "end_date": "Einddatum"
+    "end_date": "Einddatum",
+    "back": "Terug"
 }
