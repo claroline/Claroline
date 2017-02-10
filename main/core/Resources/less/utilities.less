@@ -1,9 +1,9 @@
 // Position
-.center-text {
+.center-text { // todo : Duplicate with bootstrap `text-center`
     text-align: center;
 }
 
-.align-right {
+.align-right { // todo : Duplicate with bootstrap `text-right`
     text-align: right;
 }
 
@@ -11,6 +11,13 @@
     position: absolute;
     right: 3px;
     top: 3px
+}
+
+.user-select-disabled {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 .relative {
@@ -43,6 +50,10 @@
 .unclickable {
     pointer-events: none;
     cursor: default;
+}
+
+.drag-handle {
+    cursor: move;
 }
 
 // Margins
@@ -112,8 +123,4 @@
 .white-space {
     vertical-align: top;
     white-space: nowrap;
-}
-
-.form-last {
-    margin-bottom: 0 !important;
 }

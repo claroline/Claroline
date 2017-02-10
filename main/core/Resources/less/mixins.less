@@ -1,1 +1,13 @@
 @import "../../../../../../../web/packages/bootstrap/less/mixins";
+
+// Typography
+
+// rewrite bootstrap method to add `!important` in order to have the correct color on any element
+// (even those who originally have a defined color)
+.text-emphasis-variant(@color) {
+    color: @color !important;
+    a&:hover,
+    a&:focus {
+        color: darken(@color, 10%) !important;
+    }
+}

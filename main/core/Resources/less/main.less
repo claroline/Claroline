@@ -14,6 +14,7 @@
 @import "mixins";
 @import "scaffolding";
 @import "utilities";
+@import "type";
 @import "libraries/index";
 @import "layout/index";
 @import "tools/index";
@@ -50,9 +51,9 @@
     }
 }
 
-/*************/
-/*  Desktop parameters menu */
-/*************/
+/*****************************/
+/*  Desktop parameters menu  */
+/*****************************/
 ul.desktop-parameters-menu {
     li.list-group-item {
         padding: 0;
@@ -85,11 +86,12 @@ ul.desktop-parameters-menu {
 /* WIDGETS */
 /***********/
 
-.panel-group > .panel .panel-heading .btn {
+// todo : this should have broken something (but it breaks quiz editor if uncommented)
+/*.panel-group > .panel .panel-heading .btn {
     position: absolute;
     right: 3px;
     top: 3px
-}
+}*/
 
 .notification-date {
     text-decoration: underline;
