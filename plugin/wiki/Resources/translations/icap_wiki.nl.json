@@ -16,7 +16,7 @@
     "create_section": "Een sectie maken",
     "date_format": "m/d/Y 'at' H:i",
     "delete": "Verwijderen",
-    "delete_confirmation": "Do you really want to delete \"%sectionTitle%\" section?",
+    "delete_confirmation": "",
     "delete_section": "Een sectie verwijderen",
     "deleted": "Verwijderd",
     "deleted_sections": "Verwijderde secties",
@@ -72,5 +72,6 @@
     "save": "Opslaan",
     "set_active_contribution": "Publiceer deze herziening",
     "waiting_for_moderation": "Wacht op goedkeuring",
-    "wiki_contents": "Inhoud"
+    "wiki_contents": "Inhoud",
+    "history": "Geschiedenis"
 }

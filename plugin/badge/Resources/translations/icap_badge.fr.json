@@ -180,7 +180,7 @@
     "rule_details": "Détails de la règle",
     "see_shared_badge": "Voir le badge partagé",
     "see_shared_collection": "Voir la collection partagée",
-    "select": "Sélectionner",
+    "select": "Choisir",
     "select_badge": "Sélectionner un badge",
     "select_badges": "Sélectionner un ou plusieurs badges",
     "share": "Partager",
@@ -202,5 +202,5 @@
     "workspace_badges": "Badges de l'espace de travail",
     "workspace_badges_statistics": "Statistiques des badges de l'espace de travail",
     "workspace_manage_badges": "Gestion des badges de l'espace de travail",
-    "year": "année"
+    "year": "an"
 }

@@ -42,7 +42,7 @@
     "log_section_author": "Auteur",
     "log_section_text": "Tekst",
     "log_section_title": "Titel",
-    "moderate": "Gematigd",
+    "moderate": "Matigen",
     "moved_down_section": "De sectie %section% is naar beneden verplaatst.",
     "moved_from_section_to_section": "De sectie \"%section%\" is verplaatst van %oldParent% naar %newParent%.",
     "moved_from_section_to_wiki": "De sectie %section% is verplaatst van\"%oldParent% naar de root van de wiki.",
@@ -50,9 +50,13 @@
     "moved_up_section": "De sectie %section% is naar boven verplaatst.",
     "no": "Nee",
     "normal": "Normaal",
-    "read_only": "Consultatie",
+    "read_only": "Alleen lezen",
     "text": "Tekst",
     "title": "Titel",
     "visible": "Zichtbaar",
-    "yes": "Ja"
+    "yes": "Ja",
+    "icap_wiki_options_save_success_filter": "Wiki instellingen",
+    "icap_wiki_options_save_success_shortname": "Wiki instellingen",
+    "icap_wiki_options_save_success_title": "Wiki instellingen",
+    "titlë́": "Titel"
 }

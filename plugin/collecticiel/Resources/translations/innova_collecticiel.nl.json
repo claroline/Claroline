@@ -1,5 +1,7 @@
 {
     "tools": "Hulpmiddelen",
     "yes": "Ja",
-    "user": "Gebruiker"
+    "user": "Gebruiker",
+    "no": "Nee",
+    "loading": "Even geduld..."
 }

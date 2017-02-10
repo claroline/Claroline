@@ -1,1 +1,4 @@
-{}
+{
+    "default_parameters": "Standaardinstellingen",
+    "errors.line": "regel"
+}

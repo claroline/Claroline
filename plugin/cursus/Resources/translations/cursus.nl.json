@@ -5,5 +5,20 @@
     "unregister": "Afschrijven",
     "yes": "Ja",
     "invalid_file": "Ongeldig bestand",
-    "no_description": "Geen beschrijving."
+    "no_description": "Geen beschrijving.",
+    "collaborator": "Medewerker",
+    "course": "Opleiding",
+    "form_not_blank_error": "Deze waarde mag niet leeg zijn.",
+    "form_not_unique_error": "Deze waarde wordt al gebruikt.",
+    "form_number_superior_error": "",
+    "no": "Nee",
+    "public_registration": "Openbare inschrijving",
+    "self_register": "Zich inschrijven",
+    "learners": "Lerenden",
+    "default": "Standaard",
+    "no_resource": "Geen leermiddelen",
+    "general_parameters": "Algemene instellingen",
+    "list_view": "Lijstweergave",
+    "locations": "Plaatsen",
+    "registration_validation": "Validatie van de inschrijving"
 }

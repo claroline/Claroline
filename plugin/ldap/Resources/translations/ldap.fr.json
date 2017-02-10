@@ -25,6 +25,6 @@
     "password": "Mot de passe",
     "port": "Port",
     "protocol_version": "Version",
-    "username": "Utilisateur",
+    "username": "Identifiant",
     "users_settings": "Réglages d'utilisateurs"
 }

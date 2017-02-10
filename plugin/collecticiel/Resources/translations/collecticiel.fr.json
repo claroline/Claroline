@@ -304,7 +304,7 @@
     "manualPlanning": "Manuellement",
     "nb correction remains": "one: Il vous reste une copie à corriger pour terminer cette évaluation.|some: Il vous reste %count% copies à corriger pour terminer cette évaluation.",
     "nbDocumentsInThisEvaluation": "one: Vous avez rendu un document pour cette évaluation :|some: Vous avez rendu %count% documents pour cette évaluation :",
-    "no": "non",
+    "no": "Non",
     "no document added yet": "Aucun document ajouté pour l'instant.",
     "no reported copies": "Aucune copie signalée",
     "noCopyExpectedCorrection": "one: Aucune copie n'est evaluée.|some: Aucune copie n'a reçu les %count% corrections attendues.",
@@ -338,5 +338,5 @@
     "user": "Utilisateur",
     "waiting for correction": "En attente de correction",
     "was reported": "A été signalé",
-    "yes": "oui"
+    "yes": "Oui"
 }

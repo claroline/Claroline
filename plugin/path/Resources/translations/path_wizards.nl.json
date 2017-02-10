@@ -2,5 +2,9 @@
     "cancel": "Annuleren",
     "properties": "Eigenschappen",
     "yes": "Ja",
-    "edit": "Bewerken"
+    "edit": "Bewerken",
+    "save": "Opslaan",
+    "publish": "Gepubliceerd",
+    "published": "Gepubliceerd",
+    "with_tutor": "Begeleid"
 }

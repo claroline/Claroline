@@ -7,5 +7,19 @@
     "comment": "Commentaar",
     "name": "Naam",
     "close": "Sluiten",
-    "end_date": "Einddatum"
+    "end_date": "Einddatum",
+    "add_choice": "",
+    "comments": "Commentaren",
+    "publication_date": "",
+    "description": "Beschrijving",
+    "closed": "Gesloten",
+    "horizontal": "Horizontaal",
+    "title": "Titel",
+    "vertical": "Verticaal",
+    "model": "Model",
+    "parameters": "Instellingen",
+    "publish": "Gepubliceerd",
+    "published": "Gepubliceerd",
+    "results": "Resultaten",
+    "unpublished": "Niet gepubliceerd"
 }

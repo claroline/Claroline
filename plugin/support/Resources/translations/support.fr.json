@@ -56,7 +56,7 @@
     "required_credits": "Crédits requis",
     "select_support_contacts": "Choisissez des contacts pour le support",
     "start_intervention": "Démarrer une intervention",
-    "status": "Statut",
+    "status": "État",
     "status_ac": "Attente client",
     "status_an": "Analyse",
     "status_cc": "Contact client",
@@ -85,7 +85,7 @@
     "ticket_deletion_confirm_message": "Êtes-vous sûr de vouloir supprimer ce ticket ?",
     "ticket_edition": "Modification du ticket",
     "time": "Temps",
-    "total_time": "Temps total",
+    "total_time": "Durée totale",
     "type": "Type",
     "view_ticket": "Voir le ticket",
     "with_credits": "Avec les crédits"

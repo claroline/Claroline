@@ -18,7 +18,7 @@
     "insert": "Insérer",
     "media": "Média",
     "more": "Plus",
-    "open": "Ouvrir",
+    "open": "Ouverte",
     "open-tracking": "Voir le suivi de l'objet",
     "rename": "Renommer",
     "resource_copy_warning": "Une erreur est survenue lors de la copie de la ressource <%resourceName%>.",
@@ -28,5 +28,6 @@
     "update_file": "Mettre le fichier à jour",
     "video": "Vidéo",
     "workspace": "Espace d'activités",
-    "write": "Écrire"
+    "write": "Écrire",
+    "resource_type": "Type de ressource"
 }
