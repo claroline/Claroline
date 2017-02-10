@@ -66,7 +66,7 @@ class CollecticielManager
      *
      * @return array
      */
-    public function export(Workspace $workspace, array &$files, Dropzone $dropzone)
+    public function export($workspace, array &$files, Dropzone $dropzone)
     {
         $data = [];
 

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -110,7 +109,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
         return !file_exists($rootpath.$ds.$v);
     }
 
-    public function export(Workspace $workspace, array &$_files, $object)
+    public function export($workspace, array &$_files, $object)
     {
         $content = $this->om->getRepository('Claroline\CoreBundle\Entity\Resource\Revision')
             ->getLastRevision($object)->getContent();

@@ -11,13 +11,12 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Config\Definition\Processor;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
 
 /**
  * @DI\Service("claroline.importer.groups_importer")
@@ -51,7 +50,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
     {
         $configuration = $this->getConfiguration();
         $names = $this->om->getRepository('Claroline\CoreBundle\Entity\Group')->findNames();
-        $availableUsernames = array();
+        $availableUsernames = [];
 
         foreach ($this->om->getRepository('Claroline\CoreBundle\Entity\User')->findUsernames() as $username) {
             $availableUsernames[] = $username['username'];
@@ -69,7 +68,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
             $availableUsernames[] = $configuration['members']['owner']['username'];
         }
 
-        $availableRoleName = array();
+        $availableRoleName = [];
 
         if (isset($configuration['roles'])) {
             foreach ($configuration['roles'] as $role) {
@@ -88,7 +87,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                         function ($v) use ($names) {
                                             return call_user_func_array(
                                                 __CLASS__.'::nameAlreadyExistsInDatabase',
-                                                array($v, $names)
+                                                [$v, $names]
                                             );
                                         }
                                     )
@@ -99,7 +98,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                         function ($v) use ($names) {
                                             return call_user_func_array(
                                                 __CLASS__.'::nameAlreadyExistsInConfig',
-                                                array($v, $names)
+                                                [$v, $names]
                                             );
                                         }
                                     )
@@ -115,7 +114,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                                     function ($v) use ($availableUsernames) {
                                                         return call_user_func_array(
                                                             __CLASS__.'::usernameExists',
-                                                            array($v, $availableUsernames)
+                                                            [$v, $availableUsernames]
                                                         );
                                                     }
                                                 )
@@ -134,7 +133,7 @@ class GroupsImporter extends Importer implements ConfigurationInterface
                                                 function ($v) use ($availableRoleName) {
                                                     return call_user_func_array(
                                                         __CLASS__.'::roleNameExists',
-                                                        array($v, $availableRoleName)
+                                                        [$v, $availableRoleName]
                                                     );
                                                 }
                                             )
@@ -195,9 +194,9 @@ class GroupsImporter extends Importer implements ConfigurationInterface
         return false;
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export($workspace, array &$files, $object)
     {
-        return array();
+        return [];
     }
 
     public function import(array $data)

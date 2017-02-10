@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Wid
 
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -93,7 +92,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
             ->end();
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export($workspace, array &$files, $object)
     {
         $txtConfig = $this->container->get('claroline.manager.simple_text_manager')->getTextConfig($object);
         $tmpPath = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid().'.txt';

@@ -14,7 +14,6 @@ use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -139,7 +138,7 @@ class ActivityImporter extends Importer implements ConfigurationInterface, RichT
         }
     }
 
-    public function export(Workspace $workspace, array &$_files, $object)
+    public function export($workspace, array &$_files, $object)
     {
         // we need to add things that aren't here first...
         $_data = &$this->getExtendedData();

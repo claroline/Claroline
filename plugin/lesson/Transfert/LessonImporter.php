@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 3/10/15
  */
 
@@ -13,13 +13,13 @@ namespace Icap\LessonBundle\Transfert;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Icap\LessonBundle\Manager\LessonManager;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Icap\LessonBundle\Manager\LessonManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -66,7 +66,6 @@ class LessonImporter extends Importer implements ConfigurationInterface, RichTex
 
     public function addLessonDescription($rootNode)
     {
-        $rootPath = $this->getRootPath();
         $rootNode
             ->children()
                 ->arrayNode('chapters')
@@ -102,7 +101,7 @@ class LessonImporter extends Importer implements ConfigurationInterface, RichTex
      *
      * @return array $data
      */
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export($workspace, array &$files, $object)
     {
         return $this->lessonManager->exportLesson($workspace, $files, $object);
     }
