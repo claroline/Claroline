@@ -1,0 +1,39 @@
+.item-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 0;
+    padding: 0;
+    margin-bottom: @component-margin-bottom; // normalize margin as item title can be a h
+}
+
+.item-metadata {
+    .item-content,
+    .item-description {
+        margin-bottom: @component-margin-bottom;
+    }
+
+    .item-description {
+        font-style: italic;
+    }
+}
+
+.item-hints {
+    margin-top: @component-margin-bottom;
+}
+
+.item-content-separator {
+    width: @item-content-separator-width;
+}
+
+.score-box {
+    border-radius: @score-border-radius;
+    border: @score-border;
+    color: @score-color;
+    background: @score-bg;
+    display: inline;
+    font-size: @score-font-size;
+    line-height: 1;
+    padding: @score-padding;
+    text-align: center;
+    white-space: nowrap;
+}

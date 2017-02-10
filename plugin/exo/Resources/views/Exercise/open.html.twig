@@ -6,14 +6,14 @@
 
     {# Exercise styles #}
     {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/exercise.css'
-        '@UJMExoBundle/Resources/less/main.less'
+        '@UJMExoBundle/Resources/styles/main.less'
     %}
-    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
+    <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
 
 {# Content of the Page #}
-{% block section_panel %}
+{% block content %}
     <div
       class="page-container quiz-container"
       data-quiz="{{ exercise | json_encode | raw | escape }}"

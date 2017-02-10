@@ -36,7 +36,7 @@ utils.split = (text, solutions, highlight = true) => {
       if (!el.caseSensitive) regexFlag += 'i'
       const regex = new RegExp('(\\b' + el.word + '\\b)', regexFlag)
       const classname = el.score > 0 ? 'word-success': 'word-danger'
-      const iconname = el.score > 0 ? 'fa fa-check': 'fa fa-times'
+      const iconname = el.score > 0 ? 'fa fa-fw fa-check': 'fa fa-fw fa-times'
       const replacer = `<strong><span class='${classname}'>$1&nbsp<i class='${iconname}'></i></span></strong>`
       el.text = el.text.replace(regex, replacer)
     })

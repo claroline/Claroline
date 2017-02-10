@@ -87,7 +87,7 @@ class MatchLinkPopover extends Component {
                 id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-delete`}
                 title={'delete'}
                 enabled={this.props.solution._deletable}
-                className="btn-sm fa fa-trash"
+                className="btn-sm fa fa-fw fa-trash"
                 onClick={() => this.props.solution._deletable &&
                   this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)
                 }
@@ -95,7 +95,7 @@ class MatchLinkPopover extends Component {
               <TooltipButton
                 id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-close`}
                 title={'close'}
-                className="btn-sm fa fa-close"
+                className="btn-sm fa fa-fw fa-close"
                 onClick={() => this.props.handlePopoverClose()}
               />
             </div>
@@ -114,7 +114,7 @@ class MatchLinkPopover extends Component {
              />
              <TooltipButton
                id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
-               className="fa fa-comments-o"
+               className="fa fa-fw fa-comments-o"
                title={tex('feedback_association_created')}
                onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
              />
@@ -161,7 +161,8 @@ class MatchItem extends Component{
               id={`match-source-${this.props.item.id}-delete`}
               title={t('delete')}
               enabled={this.props.item._deletable}
-              className={classes('btn-sm', 'fa', 'fa-trash-o')}
+              label={<span className="fa fa-fw fa-trash-o"/>}
+              className="btn-link-default"
               onClick={() => this.props.item._deletable && this.props.onUnmount(
                 true, this.props.item.id, this.props.type + '_' + this.props.item.id
               )}
@@ -182,7 +183,8 @@ class MatchItem extends Component{
               id={`match-target-${this.props.type + '_' + this.props.item.id}-delete`}
               title={t('delete')}
               enabled={this.props.item._deletable}
-              className={classes('btn-sm', 'fa', 'fa-trash-o')}
+              label={<span className="fa fa-fw fa-trash-o"/>}
+              className="btn-link-default"
               onClick={() => this.props.item._deletable && this.props.onUnmount(
                 false, this.props.item.id, this.props.type + '_' + this.props.item.id
               )}
@@ -410,15 +412,6 @@ class Match extends Component {
   render() {
     return (
       <div id={`match-question-editor-id-${this.props.item.id}`} className="match-question-editor" ref={(el) => { this.container = el }}>
-        {get(this.props.item, '_errors.items') &&
-          <ErrorBlock text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
-        }
-        {get(this.props.item, '_errors.solutions') &&
-          <ErrorBlock text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
-        }
-        {get(this.props.item, '_errors.warning') &&
-          <ErrorBlock text={this.props.item._errors.warning} warnOnly={!this.props.validating}/>
-        }
         <div className="form-group">
           <label htmlFor="match-penalty">{tex('editor_penalty_label')}</label>
           <input
@@ -444,11 +437,23 @@ class Match extends Component {
             {tex('match_shuffle_labels_and_proposals')}
           </label>
         </div>
-        <hr/>
+
+        <hr className="item-content-separator" />
+
+        {get(this.props.item, '_errors.items') &&
+          <ErrorBlock text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
+        }
+        {get(this.props.item, '_errors.solutions') &&
+          <ErrorBlock text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
+        }
+        {get(this.props.item, '_errors.warning') &&
+          <ErrorBlock text={this.props.item._errors.warning} warnOnly={!this.props.validating}/>
+        }
+
         <span className="help-block">
           <span className="fa fa-info-circle"></span>{tex('match_editor_click_link_help')}
         </span>
-        <hr/>
+
         <div className="match-items" onClick={(event) => this.handlePopoverFocusOut(event)}>
           <div className="item-col">
             <ul>
@@ -464,13 +469,13 @@ class Match extends Component {
               </li>
             )}
             </ul>
-            <div className="footer text-center">
+            <div className="footer">
               <button
                 type="button"
                 className="btn btn-default"
                 onClick={() => this.props.onChange(actions.addItem(true))}
               >
-                <span className="fa fa-plus"/>
+                <span className="fa fa-fw fa-plus"/>
                 {tex('match_add_item')}
               </button>
             </div>
@@ -500,13 +505,13 @@ class Match extends Component {
                 </li>
               )}
             </ul>
-            <div className="footer text-center">
+            <div className="footer">
               <button
                 type="button"
                 className="btn btn-default"
                 onClick={() => this.props.onChange(actions.addItem(false))}
               >
-                <span className="fa fa-plus"/>
+                <span className="fa fa-fw fa-plus"/>
                 {tex('match_add_item')}
               </button>
             </div>

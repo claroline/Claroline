@@ -34,7 +34,7 @@ const Association = props =>
       <div className="right-controls">
         <TooltipButton
           id={`ass-${props.association.itemId}-${props.association.setId}-delete`}
-          className="fa fa-trash-o"
+          className="fa fa-fw fa-trash-o"
           title={t('delete')}
           onClick={() => props.handleItemRemove(props.association.setId, props.association.itemId)}
         />
@@ -110,7 +110,7 @@ let Item = props => {
                 className={classes(
                   'tooltiped-button',
                   'btn',
-                  'fa',
+                  'fa fa-fw',
                   'fa-bars',
                   'drag-handle'
                 )}

@@ -2,16 +2,12 @@
 .questions-list {
   max-width: @quiz-container-width;
   margin: 0 auto;
-  padding: @panel-body-padding;
-  .table {
-    margin-bottom: 0;
-  }
 }
 
 /* ANSWERS LIST ROOT CONTAINER */
 .answers-list {
+  max-width: @quiz-container-width;
   margin: 0 auto;
-  padding: @panel-body-padding;
 
   .answer-row {
     display: flex;
@@ -30,16 +26,6 @@
         width: 110px;
         margin-right: 8px;
         margin-left: 8px;
-      }
-
-      .tooltiped-button {
-        &.btn {
-          border: 0 none;
-          background: none;
-          padding: 5px;
-          outline: none;
-          box-shadow: none;
-        }
       }
     }
   }

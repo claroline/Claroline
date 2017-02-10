@@ -37,7 +37,7 @@ const Pair = props =>
       <div className="right-controls">
         <TooltipButton
           id={`pair-${props.item.id}-delete`}
-          className="fa fa-trash-o"
+          className="fa fa-fw fa-trash-o"
           title={t('delete')}
           onClick={() => props.handleItemRemove(props.item.id)}
         />
@@ -103,7 +103,7 @@ let Item = props => {
                 className={classes(
                   'tooltiped-button',
                   'btn',
-                  'fa',
+                  'fa fa-fw',
                   'fa-bars',
                   'drag-handle'
                 )}

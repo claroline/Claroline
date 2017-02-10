@@ -6,17 +6,15 @@
 
     {# Exercise styles #}
     {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/bank.css'
-        '@UJMExoBundle/Resources/less/main.less'
-        '@UJMExoBundle/Resources/less/bank/main.less'
+        '@UJMExoBundle/Resources/styles/main.less'
+        '@UJMExoBundle/Resources/styles/bank/main.less'
     %}
-    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
+    <link rel="stylesheet" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
 
 {# Title of the Page #}
-{% block title %}
-    {{ 'bank_of_questions' | trans({}, 'ujm_exo') }}
-{% endblock %}
+{% block title %}{{ 'bank_of_questions' | trans({}, 'ujm_exo') }}{% endblock %}
 
 {# Override breadcrumbs #}
 {% block breadcrumb %}
@@ -33,7 +31,7 @@
 {% endblock %}
 
 {# Content of the Page #}
-{% block section_panel %}
+{% block content %}
     <div
         id="questions-bank"
         data-initial="{{ initialSearch | json_encode | raw | escape }}"

@@ -309,7 +309,7 @@ function makePanel(Section, title, key, props, errorProps) {
   const Header =
     <div onClick={() => props.handlePanelClick(key)}>
       <span className="panel-title">
-        <span className={classes('panel-icon', 'fa', caretIcon)}/>
+        <span className={classes('fa fa-fw', caretIcon)}/>
         &nbsp;{title}
       </span>
       {hasPanelError(props, errorProps) &&

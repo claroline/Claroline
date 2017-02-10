@@ -11,7 +11,7 @@ const Actions = props =>
     <span
       role="button"
       title={tex('delete_step')}
-      className="fa fa-trash-o"
+      className="fa fa-fw fa-trash-o"
       onClick={e => {
         e.stopPropagation()
         props.showModal(MODAL_DELETE_CONFIRM, {
@@ -25,7 +25,7 @@ const Actions = props =>
       <span
         role="button"
         title={t('move')}
-        className="fa fa-bars drag-handle"
+        className="fa fa-fw fa-bars drag-handle"
         draggable="true"
       />
     )}

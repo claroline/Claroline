@@ -24,7 +24,7 @@ export const AnswerTable = props =>
             borderRadius: area.shape === SHAPE_RECT ? 0 : '12px'
           }}/>
         {props.highlightScore &&
-          <span className={classes('fa', 'area-status-icon', {
+          <span className={classes('fa fa-fw', 'area-status-icon', {
             'fa-check text-success': area.score > 0,
             'fa-times text-danger': area.score <= 0
           })}/>

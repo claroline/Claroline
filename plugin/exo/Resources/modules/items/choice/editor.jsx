@@ -21,9 +21,9 @@ class ChoiceItem extends Component {
     return (
       <div
         className={classes(
-        'choice-item',
-         {'positive-score' : !this.props.fixedScore && this.props.score > 0},
-         {'negative-score' : !this.props.fixedScore && this.props.score <= 0}
+          'choice-item',
+          {'positive-score' : !this.props.fixedScore && this.props.score > 0},
+          {'negative-score' : !this.props.fixedScore && this.props.score <= 0}
         )}
       >
         <div className="choice-tick">
@@ -73,15 +73,17 @@ class ChoiceItem extends Component {
           }
           <TooltipButton
             id={`choice-${this.props.id}-feedback-toggle`}
-            className="fa fa-comments-o"
+            className="btn-link-default"
             title={tex('choice_feedback_info')}
+            label={<span className="fa fa-fw fa-comments-o"></span>}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
           <TooltipButton
             id={`choice-${this.props.id}-delete`}
-            className="fa fa-trash-o"
+            className="btn-link-default"
             enabled={this.props.deletable}
             title={t('delete')}
+            label={<span className="fa fa-fw fa-trash-o"></span>}
             onClick={() => this.props.deletable && this.props.onChange(
               actions.removeChoice(this.props.id)
             )}
@@ -105,11 +107,11 @@ ChoiceItem.propTypes = {
 }
 
 const ChoiceItems = props =>
-  <div>
+  <div className="choice-items">
     {get(props.item, '_errors.choices') &&
       <ErrorBlock text={props.item._errors.choices} warnOnly={!props.validating}/>
     }
-    <ul className="choice-items">
+    <ul>
       {props.item.choices.map(choice =>
         <li key={choice.id}>
           <ChoiceItem
@@ -125,17 +127,18 @@ const ChoiceItems = props =>
           />
         </li>
       )}
-      <div className="footer">
-        <button
-          type="button"
-          className="btn btn-default"
-          onClick={() => props.onChange(actions.addChoice())}
-        >
-          <span className="fa fa-plus"/>
-          {tex('add_choice')}
-        </button>
-      </div>
     </ul>
+
+    <div className="footer">
+      <button
+        type="button"
+        className="btn btn-default"
+        onClick={() => props.onChange(actions.addChoice())}
+      >
+        <span className="fa fa-fw fa-plus"/>
+        {tex('add_choice')}
+      </button>
+    </div>
   </div>
 
 ChoiceItems.propTypes = {
@@ -224,7 +227,7 @@ export const Choice = props =>
       )}
     >
     </Radios>
-    <hr/>
+    <hr className="item-content-separator" />
     <ChoiceItems {...props}/>
   </fieldset>
 

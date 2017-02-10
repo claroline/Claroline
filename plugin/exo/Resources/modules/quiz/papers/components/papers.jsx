@@ -16,7 +16,7 @@ export const PaperRow = props =>
     <td>{props.score || '-'}</td>
     <td>
       <a href={`#papers/${props.id}`}>
-        <span className="fa fa-eye"></span>
+        <span className="fa fa-fw fa-eye"></span>
       </a>
     </td>
   </tr>

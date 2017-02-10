@@ -57,7 +57,7 @@ export class GraphicPlayer extends Component {
               className="btn btn-default"
               onClick={this.onUndo}
             >
-              <span className="fa fa-undo"/>&nbsp;{tex('undo')}
+              <span className="fa fa-fw fa-undo"/>&nbsp;{tex('undo')}
             </button>
           }
         </div>

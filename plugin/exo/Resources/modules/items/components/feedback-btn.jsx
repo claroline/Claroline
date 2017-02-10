@@ -14,7 +14,7 @@ export const Feedback = props => {
 
   return(
     <OverlayTrigger trigger="click" placement="top" overlay={popoverClick}>
-      <i className="feedback-btn fa fa-comments-o"></i>
+      <span className="feedback-btn fa fa-fw fa-comments-o"></span>
     </OverlayTrigger>
   )
 }

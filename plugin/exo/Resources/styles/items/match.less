@@ -16,6 +16,10 @@
     display: flex;
     justify-content: space-around;
 
+    .footer {
+      text-align: center;
+    }
+    
     .item-col {
       flex-grow: 0;
       width: 260px;
@@ -49,22 +53,8 @@
       .item {
         display: flex;
         background-color: #eee;
-        padding: 5px 10px 0 10px;
-        margin: 5px;
-
-        .text-fields {
-          margin: 5px;
-        }
-
-        .left-controls {
-          display: flex;
-          align-items: flex-start;
-        }
-
-        .right-controls {
-          display: flex;
-          align-items: flex-start;
-        }
+        padding: @panel-body-padding;
+        margin-bottom: @form-group-margin-bottom;
       }
     }
 

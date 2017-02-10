@@ -15,7 +15,7 @@ export class HoverFeedback extends Component {
       <span style={{position: 'relative'}}>
         <span
           ref={el => this.el = el}
-          className="fa fa-comments-o"
+          className="fa fa-fw fa-comments-o"
           onMouseOver={() => this.setState({show: true})}
           onMouseLeave={() => this.setState({show: false})}
         />

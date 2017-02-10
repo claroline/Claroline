@@ -6,7 +6,7 @@ import {tex, transChoice} from './../../../utils/translate'
 
 const UsedHint = props =>
   <div className="well well-sm used-hint">
-    <span className="fa fa-lightbulb-o"></span>
+    <span className="fa fa-fw fa-lightbulb-o"></span>
     <span className="hint-text" dangerouslySetInnerHTML={{__html: props.value}}></span>
 
     {props.penalty > 0 &&
@@ -29,7 +29,7 @@ const Hint = props =>
     className="btn btn-default btn-block hint-btn"
     onClick={props.showHint}
   >
-    <span className="fa fa-eye"/>
+    <span className="fa fa-fw fa-eye"/>
     &nbsp;{tex('hint')}&nbsp;{props.number}
 
     {props.penalty > 0 &&
@@ -97,6 +97,8 @@ const ItemPlayer = props =>
     }
 
     <ItemMetadata item={props.item} />
+
+    <hr className="item-content-separator" />
 
     {props.children}
 

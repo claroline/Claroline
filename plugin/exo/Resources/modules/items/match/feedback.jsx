@@ -52,7 +52,7 @@ export const MatchLinkPopover = props =>
     placement="bottom"
     >
       <div className={classes(
-        'fa',
+        'fa fa-fw',
         {'fa-check text-success' : props.solution.score > 0},
         {'fa-times text-danger' : props.solution.score <= 0 }
       )}>
@@ -169,7 +169,7 @@ export class MatchFeedback extends Component
     return (
       <div>
         <span className="help-block">
-          <span className="fa fa-info-circle">&nbsp;</span>{tex('match_player_click_link_help')}
+          <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
         </span>      
         <div ref={(el) => { this.container = el }} id={`match-question-paper-${this.props.item.id}-first`} className="match-question-feedback">
         <div className="item-col">

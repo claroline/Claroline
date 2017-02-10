@@ -17,7 +17,7 @@ import {
 const SelectedRow = props =>
   <tr className="selected-rows active">
     <td className="text-center">
-      <span className="fa fa-check-square"></span>
+      <span className="fa fa-fw fa-check-square"></span>
     </td>
     <td
       colSpan={5}

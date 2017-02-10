@@ -202,17 +202,17 @@ export class MatchPaper extends Component
         <div>
             <Nav bsStyle="tabs">
               <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
-                  <span className="fa fa-user"></span> {tex('your_answer')}
+                  <span className="fa fa-fw fa-user"></span> {tex('your_answer')}
               </NavItem>
               <NavItem eventKey="second" onSelect={() => this.handleSelect('second')}>
-                <span className="fa fa-check"></span> {tex('expected_answer')}
+                <span className="fa fa-fw fa-check"></span> {tex('expected_answer')}
               </NavItem>
             </Nav>
             <div ref={(el) => { this.container = el }} id={`jsplumb-container-${this.props.item.id}`} className="jsplumb-container" style={{position:'relative'}}>
               <Tab.Content animation>
                 <Tab.Pane eventKey="first">
                   <span className="help-block">
-                    <span className="fa fa-info-circle">&nbsp;</span>{tex('match_player_click_link_help')}
+                    <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
                   </span>
                   <div id={`match-question-paper-${this.props.item.id}-first`} className="match-question-paper">
                     <div className="jsplumb-row">
@@ -255,7 +255,7 @@ export class MatchPaper extends Component
                 </Tab.Pane>
                 <Tab.Pane eventKey="second">
                   <span className="help-block" style={{visibility:'hidden'}} >
-                    <span className="fa fa-info-circle">&nbsp;</span>{tex('match_player_click_link_help')}
+                    <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
                   </span>
                   <div id={`match-question-paper-${this.props.item.id}-second`} className="match-question-paper">
                     <div className="jsplumb-row">
@@ -298,8 +298,8 @@ export class MatchPaper extends Component
                         >
                           <div className="sets">
                             <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionData(solution.firstId, this.props.item.firstSet)}} />
-                            <span className="fa fa-chevron-left"></span>
-                            <span className="fa fa-chevron-right"></span>
+                            <span className="fa fa-fw fa-chevron-left"></span>
+                            <span className="fa fa-fw fa-chevron-right"></span>
                             <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionData(solution.secondId, this.props.item.secondSet)}} />
                           </div>
                           <Feedback

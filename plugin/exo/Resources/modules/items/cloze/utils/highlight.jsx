@@ -7,8 +7,8 @@ function getWarningIcon(solution, answer) {
   solution = utils.getSolutionForAnswer(solution, answer)
 
   return solution && solution.score > 0 ?
-     '<span class="fa fa-check answer-warning-span" aria-hidden="true"></span>' :
-     '<span class="fa fa-times answer-warning-span" aria-hidden="true"></span>'
+     '<span class="fa fa-fw fa-check answer-warning-span" aria-hidden="true"></span>' :
+     '<span class="fa fa-fw fa-times answer-warning-span" aria-hidden="true"></span>'
 }
 
 function getSolutionScore(score) {
@@ -23,7 +23,7 @@ function getFeedback(feedback) {
   return `
     <i
       role="button"
-      class="feedback-btn fa fa-comments-o"
+      class="feedback-btn fa fa-fw fa-comments-o"
       data-content="${feedback}"
       data-toggle="popover"
       data-trigger="click"

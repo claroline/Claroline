@@ -23,11 +23,11 @@ export class PaperTabs extends Component
         <div>
           <Nav bsStyle="tabs">
             <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
-              <span className="fa fa-user"></span> {tex('your_answer')}
+              <span className="fa fa-fw fa-user"></span> {tex('your_answer')}
             </NavItem>
             {!this.props.hideExpected &&
               <NavItem eventKey="second" onSelect={() => this.handleSelect('second')}>
-                <span className="fa fa-check"></span> {tex('expected_answer')}
+                <span className="fa fa-fw fa-check"></span> {tex('expected_answer')}
               </NavItem>
             }
           </Nav>

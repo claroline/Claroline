@@ -33,7 +33,7 @@ export const ModeSelector = props =>
       active={props.currentMode === MODE_RECT}
       onClick={props.onChange}
     >
-      <span className="fa fa-square-o"/>
+      <span className="fa fa-fw fa-square-o"/>
     </ModeButton>
     <ModeButton
       id="circle-mode-btn"
@@ -42,7 +42,7 @@ export const ModeSelector = props =>
       active={props.currentMode === MODE_CIRCLE}
       onClick={props.onChange}
     >
-      <span className="fa fa-circle-o"/>
+      <span className="fa fa-fw fa-circle-o"/>
     </ModeButton>
   </div>
 

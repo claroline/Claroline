@@ -57,13 +57,13 @@ class Association extends Component {
             />
             <TooltipButton
               id={`ass-${this.props.association.itemId}-${this.props.association.setId}-feedback-toggle`}
-              className="fa fa-comments-o"
+              className="fa fa-fw fa-comments-o"
               title={tex('feedback_association_created')}
               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
             />
             <TooltipButton
               id={`ass-${this.props.association.itemId}-${this.props.association.setId}-delete`}
-              className="fa fa-trash-o"
+              className="fa fa-fw fa-trash-o"
               title={t('delete')}
               onClick={() => this.props.onChange(
                 actions.removeAssociation(this.props.association.setId, this.props.association.itemId))
@@ -115,7 +115,7 @@ class Set extends Component {
             <div className="right-controls">
               <TooltipButton
                 id={`set-${this.props.set.id}-delete`}
-                className="fa fa-trash-o"
+                className="fa fa-fw fa-trash-o"
                 title={t('delete')}
                 enabled={this.props.set._deletable}
                 onClick={() => this.props.onChange(
@@ -189,7 +189,7 @@ class SetList extends Component {
             className="btn btn-default"
             onClick={() => this.props.onChange(actions.addSet())}
           >
-            <span className="fa fa-plus"/>
+            <span className="fa fa-fw fa-plus"/>
             {tex('set_add_set')}
           </button>
         </div>
@@ -222,7 +222,7 @@ let Item = props => {
       <div className="right-controls">
         <TooltipButton
           id={`set-item-${props.item.id}-delete`}
-          className="fa fa-trash-o"
+          className="fa fa-fw fa-trash-o"
           title={t('delete')}
           enabled={props.item._deletable}
           onClick={() => props.onChange(
@@ -242,7 +242,7 @@ let Item = props => {
                 className={classes(
                   'tooltiped-button',
                   'btn',
-                  'fa',
+                  'fa fa-fw',
                   'fa-bars',
                   'drag-handle'
                 )}
@@ -285,7 +285,7 @@ class ItemList extends Component {
             className="btn btn-default"
             onClick={() => this.props.onChange(actions.addItem(false))}
           >
-            <span className="fa fa-plus"/>
+            <span className="fa fa-fw fa-plus"/>
             {tex('set_add_item')}
           </button>
         </div>
@@ -346,13 +346,13 @@ class Odd extends Component {
           />
           <TooltipButton
             id={`odd-${this.props.odd.id}-feedback-toggle`}
-            className="fa fa-comments-o"
+            className="fa fa-fw fa-comments-o"
             title={tex('feedback')}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
           <TooltipButton
             id={`odd-${this.props.odd.id}-delete`}
-            className="fa fa-trash-o"
+            className="fa fa-fw fa-trash-o"
             title={t('delete')}
             onClick={() => this.props.onChange(actions.removeItem(this.props.odd.id, true))}
           />
@@ -390,7 +390,7 @@ class OddList extends Component {
             className="btn btn-default"
             onClick={() => this.props.onChange(actions.addItem(true))}
           >
-            <span className="fa fa-plus"/>
+            <span className="fa fa-fw fa-plus"/>
             {tex('set_add_odd')}
           </button>
         </div>

@@ -33,6 +33,6 @@ TooltipButton.propTypes = {
   position: T.string.isRequired,
   enabled: T.bool.isRequired,
   onClick: T.func,
-  label: T.string,
+  label: T.node,
   className: T.string
 }

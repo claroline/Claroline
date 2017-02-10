@@ -132,7 +132,7 @@ const Layout = props =>
 
     {props.empty && props.editable &&
       <a href="#/editor" role="button" className="btn btn-block btn-primary btn-lg">
-        <span className="fa fa-pencil"></span>
+        <span className="fa fa-fw fa-pencil"></span>
         {tex('edit')}
       </a>
     }
