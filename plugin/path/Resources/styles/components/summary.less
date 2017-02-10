@@ -19,6 +19,7 @@
 
     + .content-container {
         margin-left: @path-summary-collapsed-width;
+        padding-left: @grid-gutter-width; // fake bootstrap grid
     }
 
     .summary-controls {
@@ -94,9 +95,11 @@
 .summary-title-icon {
     width: @path-summary-collapsed-width - (@path-summary-padding * 2);
     text-align: center;
+    color: @path-summary-icon-color;
 }
 .summary-title-text {
     padding-left: floor(@grid-gutter-width / 2);
+    color: @path-summary-title-color;
 }
 
 .summary-empty {

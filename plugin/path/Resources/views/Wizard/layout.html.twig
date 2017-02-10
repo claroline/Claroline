@@ -1,24 +1,14 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block stylesheets %}
+    {{ parent() }}
+
     {# Path Editor styles #}
     {% stylesheets debug=false filter='less, cssmin' output='vendor/innovapath/wizards.css'
-        'packages/angular-ui-tree/dist/angular-ui-tree.min.css'
         '@InnovaPathBundle/Resources/styles/main.less'
     %}
-    <link rel="stylesheet" media="all" href="{{ asset_url }}" />
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
-
-    {#
-        Claroline CSS.
-        loading it after permits to override the styles through theme.
-        there is no better way to override a plugin styles for now
-    #}
-    {{ parent() }}
-{% endblock %}
-
-{% block section_panel %}
-    {% block path_wizard %}{% endblock %}
 {% endblock %}
 
 {% block javascripts %}

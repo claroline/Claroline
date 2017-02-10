@@ -1,5 +1,16 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    {# Path Editor styles #}
+    {% stylesheets debug=false filter='less, cssmin' output='vendor/innovapath/wizards.css'
+        '@InnovaPathBundle/Resources/styles/wizards.less'
+    %}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
 {% block content %}
     <div class="alert alert-success navbar navbar-default lockmsg">
         <div class="container-fluid">
@@ -68,16 +79,4 @@
     <script type='text/javascript' src="{{ url('bazinga_jstranslation_js', {'domain':'path_wizards'}) }}"></script>
 
     <script type='text/javascript' src="{{ asset('bundles/innovapath/js/manageLock.js') }}"></script>
-{% endblock %}
-
-{% block stylesheets %}
-    {# Claroline CSS #}
-    {{ parent() }}
-
-    {# Path Editor styles #}
-    {% stylesheets debug=false filter='less, cssmin' output='vendor/innovapath/wizards.css'
-        '@InnovaPathBundle/Resources/styles/wizards.less'
-    %}
-    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
 {% endblock %}
