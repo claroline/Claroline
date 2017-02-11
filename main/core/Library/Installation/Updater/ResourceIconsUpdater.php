@@ -34,6 +34,7 @@ class ResourceIconsUpdater extends Updater
     private function updateIcons()
     {
         $this->log('Refreshing mime types icons...');
+        $this->container->get('claroline.manager.icon_manager')->setLogger($this->logger);
         $coreIconWebDirRelativePath = 'bundles/clarolinecore/images/resources/icons/';
 
         $resourceImages = $this->container->get('claroline.manager.icon_manager')->getDefaultIconMap();
@@ -41,7 +42,7 @@ class ResourceIconsUpdater extends Updater
 
         foreach ($resourceImages as $resourceImage) {
             $mimeType = $resourceImage[1];
-            $rimg = $this->repo->findOneBy(array('mimeType' => $mimeType, 'isShortcut' => false));
+            $rimg = $this->repo->findOneBy(['mimeType' => $mimeType, 'isShortcut' => false]);
 
             if ($rimg === null) {
                 $this->log('Adding mime type for '.$mimeType.'.');
