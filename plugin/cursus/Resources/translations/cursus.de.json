@@ -8,5 +8,6 @@
     "public_registration": "",
     "public_unregistration": "",
     "register": "",
-    "registration_validation": ""
+    "registration_validation": "",
+    "unregister": ""
 }
