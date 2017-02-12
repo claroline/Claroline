@@ -3,5 +3,7 @@
     "completed": "",
     "desktop": "",
     "failed": "",
-    "incomplete": ""
+    "incomplete": "",
+    "not_attempted": "",
+    "passed": ""
 }
