@@ -166,5 +166,6 @@
     "week": "semana",
     "workspace_badges": "insignias del espacio de trabajo",
     "workspace_manage_badges": "Gestión de las insignias del espacio de trabajo",
-    "year": "año"
+    "year": "año",
+    "select": "Séleccionar"
 }
