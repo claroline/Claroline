@@ -1,3 +1,5 @@
 {
-    "type": "Tipo"
+    "type": "Tipo",
+    "end_date": "Fecha de  finalización",
+    "start_date": "Fecha de inicio"
 }
