@@ -1,4 +1,6 @@
 {
     "type": "Tipo",
-    "end_date": "Fecha de  finalización"
+    "end_date": "Fecha de  finalización",
+    "actions": "Acciones",
+    "name": "Nombre"
 }
