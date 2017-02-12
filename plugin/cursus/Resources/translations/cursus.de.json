@@ -4,5 +4,9 @@
     "general_parameters": "",
     "invalid_file": "",
     "list_view": "",
-    "manager": ""
+    "manager": "",
+    "public_registration": "",
+    "public_unregistration": "",
+    "register": "",
+    "registration_validation": ""
 }
