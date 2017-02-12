@@ -1030,9 +1030,9 @@
     "select_all": "Tout sélectionner",
     "select_category": "Sélectionner une catégorie",
     "select_contacts_title": "Sélectionnez les destinataires",
-    "select_groups_for_registration_to_workspace": "Choississez les groupes à inscrire",
-    "select_roles_to_assign": "Selectionnez les rôles à attribuer",
-    "select_users_for_registration_to_workspace": "Choississez les utilisateurs à inscrire",
+    "select_groups_for_registration_to_workspace": "Choisissez les groupes à inscrire",
+    "select_roles_to_assign": "Sélectionnez les rôles à attribuer",
+    "select_users_for_registration_to_workspace": "Choisissez les utilisateurs à inscrire",
     "select_users_to_add_to_your_contacts": "Sélectionnez des utilisateurs à ajouter à vos contacts",
     "select_workspace_to_link": "Choisissez un espace d'activités à lier",
     "select_workspaces_for_registration": "Choisissez les espaces d'activités pour l'inscription",
@@ -1343,5 +1343,7 @@
     "your_platform_id": "Votre identifiant sur la plateforme",
     "your_profile_is_n_complete": "Votre profil est complété à %n%%",
     "your_username": "Votre nom d'utilisateur est",
-    "your_workspace_activity_overview": "Aperçu des activités récentes de vos espaces de travail"
+    "your_workspace_activity_overview": "Aperçu des activités récentes de vos espaces de travail",
+    "ssl_enabled": "SSL est-il activé ?",
+    "visible_facet_form_explanation": "Le champ \"Visible\" vous permet de rendre l'élément visible ou non pour l'utilisateur."
 }

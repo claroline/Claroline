@@ -1,4 +1,14 @@
 {
     "no_description": "",
-    "collaborator": ""
+    "collaborator": "",
+    "general_parameters": "",
+    "invalid_file": "",
+    "list_view": "",
+    "manager": "",
+    "public_registration": "",
+    "public_unregistration": "",
+    "register": "",
+    "registration_validation": "",
+    "unregister": "",
+    "yes": "Ja"
 }
