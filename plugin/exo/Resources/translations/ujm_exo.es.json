@@ -2,5 +2,6 @@
     "type": "Tipo",
     "end_date": "Fecha de  finalización",
     "start_date": "Fecha de inicio",
-    "actions": "Acciones"
+    "actions": "Acciones",
+    "select": "Séleccionar"
 }
