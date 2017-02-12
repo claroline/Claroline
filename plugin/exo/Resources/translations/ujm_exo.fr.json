@@ -201,7 +201,7 @@
     "hide_interact_fields": "Cacher les indices et le commentaire final",
     "hide_metadata_fields": "Cacher le titre et les autres champs",
     "hint": "Indice",
-    "hint_penalty": "",
+    "hint_penalty": "[0,1] -%count% point|]1,Inf[ -%count% points",
     "hint_show": "Voir l'indice",
     "hints": "Indices",
     "histo_discrimination": "Coéfficient de discrimination",
@@ -233,7 +233,7 @@
     "invite_question": "L'invite de la question doit être rempli.",
     "is_interupt": "Interrompu",
     "item_empty_data_error": "Un élément doit avoir des données.",
-    "item_points": "",
+    "item_points": "[0,1] %count% point|]1,Inf[ %count% points",
     "keep_same_step": "Conserver les mêmes étapes pour un même utilisateur",
     "key_word": "Mot clé",
     "keys_words": "Mots clés",
@@ -509,7 +509,7 @@
     "statistics": "Afficher les statistiques",
     "step": "Étape",
     "step_item_add": "Glisser/déposer ou cliquer sur le bouton \"+\" pour ajouter des questions.",
-    "step_items_count": "",
+    "step_items_count": "[0, 1] %count% question|]1,Inf[ %count% questions",
     "step_need_manual_correction": "Cette étape nécessite une correction manuelle",
     "step_picking": "Tirage des étapes",
     "step_score": "Score de l'étape",
@@ -550,5 +550,6 @@
     "wrong_point": "La valeur saisie est incorrecte",
     "yes": "Oui",
     "your_answer": "Votre réponse",
-    "your_answers": "Vos réponses"
+    "your_answers": "Vos réponses",
+    "paper_legend": "Papiers qui nécessitent une correction manuelle."
 }
