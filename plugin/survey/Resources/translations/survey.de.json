@@ -6,5 +6,10 @@
     "end_date": "",
     "answer": "",
     "comment": "",
-    "description": ""
+    "description": "",
+    "model": "",
+    "no_model": "",
+    "parameters": "",
+    "publish": "",
+    "published": ""
 }
