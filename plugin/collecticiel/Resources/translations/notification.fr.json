@@ -1,7 +1,7 @@
 {
-    "resource-innova_collecticiel-correction_report": " a signalé une correction dans l'évaluation %dropzone%",
+    "resource-innova_collecticiel-correction_report": "a signalé une correction dans l'évaluation %dropzone% ",
     "resource-innova_collecticiel-drop_end": "a déposé une copie dans l'évaluation %dropzone%",
-    "resource-innova_collecticiel-drop_grade_available": " Votre copie a été corrigée et votre note est disponible dans l'évaluation %dropzone%",
+    "resource-innova_collecticiel-drop_grade_available": "Votre copie a été corrigée et votre note est disponible dans l'évaluation %dropzone%.",
     "resource-innova_collecticiel-drop_report": " a signalé une une copie  dans l'évaluation %dropzone%",
     "resource-innova_collecticiel-dropzone_add_comment": "%name% a déposé un nouveau commentaire dans `%type%`",
     "resource-innova_collecticiel-dropzone_add_document": "%name% a déposé un nouveau document dans `%type%`",
