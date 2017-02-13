@@ -1,4 +1,6 @@
 {
     "actions": "Acciones",
-    "roles": ""
+    "roles": "",
+    "session": "Sesión",
+    "date": "Fecha"
 }
