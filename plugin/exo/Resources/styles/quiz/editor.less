@@ -90,7 +90,7 @@
 
   .edit-zone {
     flex: 1 100%;
-    padding-left: @grid-gutter-width; // fake bootstrap grid
+    padding-left: floor(@grid-gutter-width / 2); // fake bootstrap grid
     .panel-body {
       & > * {
         max-width: @quiz-container-width;
