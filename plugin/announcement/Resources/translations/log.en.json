@@ -2,7 +2,7 @@
     "log_resource-claroline_announcement_aggregate-create_filter": "Create announcement",
     "log_resource-claroline_announcement_aggregate-create_sentence": "has created an announcement in %resource%",
     "log_resource-claroline_announcement_aggregate-create_shortname": "Create",
-    "log_resource-claroline_announcement_aggregate-create_title": "Create announcementCreate announcement",
+    "log_resource-claroline_announcement_aggregate-create_title": "Create announcement",
     "log_resource-claroline_announcement_aggregate-delete_filter": "Delete announcement",
     "log_resource-claroline_announcement_aggregate-delete_sentence": "has deleted an announcement in %resource%",
     "log_resource-claroline_announcement_aggregate-delete_shortname": "Delete",

@@ -1,6 +1,6 @@
 {
     "add_event": "agregar un evento",
-    "cancel": "Anular",
+    "cancel": "Cancelar",
     "close": "Cerrar",
     "confirm": "Confirmar la modificación?",
     "date_agenda_display_format": "MM-DD-YYYY",
@@ -96,5 +96,6 @@
     "update_event": "Actualizar un evento",
     "week": "semana",
     "workspace": "Espacio de trabajo",
-    "type": "Tipo"
+    "type": "Tipo",
+    "at": "en"
 }

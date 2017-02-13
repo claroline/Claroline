@@ -3,5 +3,14 @@
     "end_date": "Fecha de  finalización",
     "start_date": "Fecha de inicio",
     "actions": "Acciones",
-    "select": "Séleccionar"
+    "select": "Séleccionar",
+    "share": "Compartir",
+    "add_choice": "",
+    "show": "",
+    "add": "Agregar",
+    "all": "Todos",
+    "back": "Atrás",
+    "category": "Categoría",
+    "comment": "",
+    "create": "Crear"
 }

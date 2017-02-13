@@ -1,3 +1,7 @@
 {
-    "type": "Tipo"
+    "type": "Tipo",
+    "menu": "",
+    "apply": "Aplicar",
+    "cancel": "Cancelar",
+    "content": "Contenido"
 }

@@ -1,3 +1,5 @@
 {
-    "type": "Tipo"
+    "type": "Tipo",
+    "host": "",
+    "port": ""
 }
