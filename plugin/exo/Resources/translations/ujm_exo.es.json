@@ -5,5 +5,12 @@
     "actions": "Acciones",
     "select": "Séleccionar",
     "share": "Compartir",
-    "add_choice": ""
+    "add_choice": "",
+    "show": "",
+    "add": "Agregar",
+    "all": "Todos",
+    "back": "Atrás",
+    "category": "Categoría",
+    "comment": "",
+    "create": "Crear"
 }
