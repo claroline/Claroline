@@ -5,6 +5,7 @@
 {% block stylesheets %}
     {% include 'ClarolineCoreBundle:Layout:stylesheets.html.twig' %}
 
+    {# todo : this should be removed and fully managed in LESS #}
     {% if hideTopBar is defined and hideTopBar and not (has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated()) %}
         <style type="text/css">
             html, #left-bar {
@@ -62,9 +63,7 @@
         </div>
     </div>
 
-    {#
-        FIXME : As is we get the sidebar 2 times in the DOM. Responsivity should be fully managed in LESS
-     #}
+    {# FIXME : As is we get the sidebar 2 times in the DOM. Responsivity should be fully managed in LESS #}
     <div class="menu-xs visible-xs">
         {{ block("leftbar") }}
     </div>

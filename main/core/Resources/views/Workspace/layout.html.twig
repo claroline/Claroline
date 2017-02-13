@@ -90,8 +90,10 @@
 {% endblock %}
 
 {% block content %}
+    {# @deprecated block : will be removed ASAP #}
     {% block section_panel %}
         <div class="panel panel-default">
+            {# @deprecated block : will be removed ASAP #}
             {% block section_content %}{% endblock %}
         </div>
     {% endblock %}
@@ -127,7 +129,7 @@
             postHeight();
             /* Hack for constantly polling iframe inner height and react when angular router loads another page */
             var getIframeWindowHeight = function() {
-                return $("iframe#embeddedActivity").contents().find('body').first().height();
+                return $("iframe#embeddedActivity").contents().find('body').height();
             }
             var oldHeight= getIframeWindowHeight();
             intervalFunction = setInterval(function() {
