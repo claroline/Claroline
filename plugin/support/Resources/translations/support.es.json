@@ -1,3 +1,7 @@
 {
-    "type": "Tipo"
+    "type": "Tipo",
+    "created_on": "Creado en",
+    "add_comment": "",
+    "comments": "",
+    "no_comment": ""
 }
