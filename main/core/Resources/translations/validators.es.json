@@ -8,7 +8,7 @@
     "google_meta_tag_error": "Se debe definir una meta etiqueta, ejemplo: <meta name=\"google-site-verification\" content=\"XXX\" />.",
     "invalid_date_range": "La fecha de finalización no puede preceder a la fecha de inicio.",
     "invalid_size_message": "",
-    "name_required": "El Nombre es obligatorio.",
+    "name_required": "El nombre es obligatorio.",
     "need_at_least_one_translation": "Al menos una traducción debe estar definida.",
     "password_mismatch": "Las contraseñas no coinciden.",
     "port_error": "El puerto debe ser un número.",
