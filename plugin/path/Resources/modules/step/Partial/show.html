@@ -84,7 +84,7 @@
                     <!-- Description of the Step -->
                     <div class="step-description" data-ng-if="stepShowCtrl.step.description" data-ng-bind-html="stepShowCtrl.step.description"></div>
 
-                    <hr data-ng-if="stepShowCtrl.step.description"  />
+                    <hr data-ng-if="stepShowCtrl.step.description && stepShowCtrl.step.primaryResource && 0 !== stepShowCtrl.step.primaryResource.length" />
 
                     <!-- Primary resources of the Step -->
                     <resources-primary-show

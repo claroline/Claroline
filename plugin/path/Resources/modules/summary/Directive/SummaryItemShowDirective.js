@@ -27,8 +27,8 @@ export default class SummaryItemShowDirective {
           PathService.goTo(this.step)
         }
 
-        this.getProgresstionText = function () {
-          let text = ''
+        this.getProgressionText = function () {
+          let text = 'user_progression_step_unseen'
 
           switch (this.userProgression.status) {
             case 'seen':
@@ -45,11 +45,6 @@ export default class SummaryItemShowDirective {
 
             case 'done':
               text = 'user_progression_step_done'
-              break
-
-            case 'unseen':
-            default:
-              text = 'user_progression_step_unseen'
               break
           }
 
