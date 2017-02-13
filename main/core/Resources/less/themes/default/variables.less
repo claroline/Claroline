@@ -5,16 +5,19 @@
 // Import bootstrap vars
 @import "variables.bootstrap.less";
 
+
 // -
 // Base & utilities
 // ---
 @box-shadow-base:         0 0 2px rgba(0, 0, 0, 0.10);
 @component-margin-bottom: @line-height-computed;
 
+
 // -
 // Application
 // ---
 @app-max-width:           1200px; // max width for the app content
+
 
 // -
 // Header
@@ -45,6 +48,7 @@
 @top-bar-toggle-hover-bg:     @top-bar-link-hover-bg;
 @top-bar-toggle-icon-bar-bg:  @top-bar-link-color;
 
+
 // -
 // Loader
 // ---
@@ -56,6 +60,7 @@
 @loader-border-radius: @border-radius-base;
 @loader-box-shadow:    @box-shadow-base;
 
+
 // -
 // Breadcrumb
 // ---
@@ -64,9 +69,11 @@
 @breadcrumb-text-transform: inherit;
 @breadcrumb-margin-bottom:  10px;
 
+
 // -
 // Sidebars
 // ---
+
 
 // -
 // Page
@@ -78,6 +85,7 @@
 @page-header-link-hover-color: @gray-dark;
 @page-header-divider-color:    #CCCCCC;
 
+
 // -
 // Summaries
 //
@@ -86,12 +94,12 @@
 // but each UI component intended to be used as a summary MUST use this vars
 // and adapt to the use case in order to keep common look & feel between all summary implementations
 // ---
-@summary-padding:    15px;
-@summary-font:       @font-size-base;
-@summary-bg:         #262626;
-@summary-color:      white;
-@summary-box-shadow-v: 2px 0 4px 0 rgba(0, 0, 0, 0.4); // box shadow for vertical summaries
-@summary-box-shadow-h: 0 2px 4px 0 rgba(0, 0, 0, 0.4); // box shadow for horizontal summaries
+@summary-padding:           15px;
+@summary-font:              @font-size-base;
+@summary-bg:                #262626;
+@summary-color:             white;
+@summary-box-shadow-v:      2px 0 4px 0 rgba(0, 0, 0, 0.4); // box shadow for vertical summaries
+@summary-box-shadow-h:      0 2px 4px 0 rgba(0, 0, 0, 0.4); // box shadow for horizontal summaries
 
 // Links
 @summary-link-bg:           transparent;
@@ -101,6 +109,7 @@
 @summary-link-active-bg:    transparent;
 @summary-link-active-color: white;
 
+
 // -
 // Footer
 // ---
@@ -108,10 +117,10 @@
 @footer-bg:        #F3F3F3;
 @footer-color:     @gray-light;
 
+
 // -
 // Forms
 // ---
-
 @help-block-color:          lighten(@text-color, 25%); // lighten the text some for contrast
 
 // Labels
@@ -120,11 +129,24 @@
 @input-warning-label-color: @text-color; // default bootstrap behavior : @state-warning-text
 @input-error-label-color:   @text-color; // default bootstrap behavior : @state-error-text
 
+
 // -
 // Panels
 // ---
 @panel-box-shadow:    @box-shadow-base;
 @panel-margin-bottom: @component-margin-bottom;
+
+
+// -
+// Navs
+// ---
+@nav-spacing:            5px; // margin between 2 tabs
+
+@nav-tabs-link-color:    @gray;
+@nav-tabs-border-radius: @border-radius-base @border-radius-base 0 0;
+
+@nav-pills-link-color:   @brand-primary;
+@nav-pills-link-bg:      transparent;
 
 // -
 // Widgets (by default give the same look as panels)
@@ -147,6 +169,7 @@
 // This permits to fake the old behavior (only header and borders were colored)
 // by setting it to `@panel-bg` or `@widget-bg`
 @widget-content-bg:      transparent;
+
 
 // -
 // Carousel
