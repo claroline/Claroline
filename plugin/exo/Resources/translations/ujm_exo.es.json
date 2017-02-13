@@ -1,5 +1,7 @@
 {
     "type": "Tipo",
     "end_date": "Fecha de  finalización",
-    "start_date": "Fecha de inicio"
+    "start_date": "Fecha de inicio",
+    "actions": "Acciones",
+    "select": "Séleccionar"
 }

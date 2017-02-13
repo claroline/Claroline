@@ -2,7 +2,7 @@
     "actions": "Acciones",
     "app_want_access_to_your_account": "La aplicación '%clientName%' desearía conectarse a su cuenta.",
     "application_revoked_error_message": "Se produjo un error al revocar el acceso de la aplicación '%application%'.",
-    "application_revoked_success_message": "El acceso para la aplicación '%application%' a sido revocada con éxito",
+    "application_revoked_success_message": "El acceso para la aplicación '%application%' a sido revocada con éxito.",
     "authorization_code_grant_type": "Código de autorización",
     "client_credentials_grant_type": "Credenciales de cliente",
     "grant_types": "Otorgar tipos",

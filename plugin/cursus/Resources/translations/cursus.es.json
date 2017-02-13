@@ -1,1 +1,8 @@
-{}
+{
+    "no_description": "Sin descripción",
+    "public_registration": "Inscripción pública",
+    "public_unregistration": "Cancelación pública de la inscipción",
+    "register": "Registrar",
+    "self_register": "Inscribirse",
+    "unregister": "Desinscribir"
+}
