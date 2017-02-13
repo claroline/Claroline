@@ -5,5 +5,8 @@
     "name": "Nombre",
     "add_choice": "",
     "comments": "",
-    "publication_date": ""
+    "publication_date": "",
+    "answer": "Respuesta",
+    "close": "Cerrar",
+    "comment": ""
 }
