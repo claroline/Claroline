@@ -28,5 +28,6 @@
     "update_file": "Actualizar el documento",
     "video": "video",
     "workspace": "Espacio de trabajo",
-    "write": "Escribir"
+    "write": "Escribir",
+    "resource_type": "Tipo de recurso"
 }
