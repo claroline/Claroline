@@ -1,12 +1,17 @@
-.angular-ui-tree-placeholder {
-    background: #f0f9ff;
-    border: 1px dashed #cccccc;
-}
-
-.angular-ui-tree-drag {
-    list-style-type: none;
-}
-
+// Customize drag handle (this is needed because the CoreBundle adds default rules)
 .angular-ui-tree-handle {
-    font-weight: normal;
+    background: none;
+    border: none;
+    padding: 0;
+    color: @path-summary-link-color;
+
+    &:hover {
+        color: @path-summary-link-hover-color;
+        background: none;
+    }
+
+    &:focus {
+        color: @path-summary-link-active-color;
+        background: none;
+    }
 }

@@ -31,8 +31,8 @@
     </em>
 
     <!-- Block to display when a structure is set -->
-    <div class="path-summary-tree" data-ui-tree="summaryEditCtrl.treeOptions" data-ng-if="summaryEditCtrl.structure.length !== 0">
-        <ul class="tree" data-ui-tree-nodes="" data-ng-model="summaryEditCtrl.structure" data-nodrop-enabled="">
+    <div class="path-summary-tree" ui-tree="summaryEditCtrl.treeOptions" data-ng-if="summaryEditCtrl.structure.length !== 0">
+        <ul class="tree" ui-tree-nodes="" data-ng-model="summaryEditCtrl.structure" data-nodrop-enabled="">
             <summary-item-edit data-ui-tree-node="" data-ng-repeat="step in summaryEditCtrl.structure" data-step="step"></summary-item-edit>
         </ul>
     </div>

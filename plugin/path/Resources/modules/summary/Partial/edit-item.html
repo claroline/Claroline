@@ -4,15 +4,15 @@
     }"
 >
     <div class="tree-item"
-         data-ui-tree-handle=""
+         ui-tree-handle=""
          data-ng-mouseenter="showButtons = true"
          data-ng-mouseleave="showButtons = false"
     >
-        <div class="step lvl lvl-{{ summaryItemEditCtrl.step.lvl }} lvl-border" data-nodrag="" data-ng-click="summaryItemEditCtrl.goTo(step)">
+        <div class="step lvl lvl-{{ summaryItemEditCtrl.step.lvl }} lvl-border" data-ng-click="summaryItemEditCtrl.goTo(step)">
             <!-- Drag&Drop handler -->
-            <span class="fa fa-fw fa-bars step-drag-handler"
-                  data-ng-if="summaryItemEditCtrl.step.lvl !== 0"
-                  data-ui-tree-handle=""
+            <span class="fa fa-fw fa-bars"
+                  data-ng-show="summaryItemEditCtrl.step.lvl !== 0"
+                  ui-tree-handle=""
                   data-toggle="tooltip"
                   data-container="body"
                   title="{{ 'step_drag' | trans:{}:'path_wizards' }}"
@@ -75,7 +75,7 @@
         </div>
     </div>
 
-    <ul class="step-children" data-ui-tree-nodes data-ng-model="summaryItemEditCtrl.step.children" data-ng-hide="summaryItemEditCtrl.collapsed">
-        <summary-item-edit data-ui-tree-node="" data-ng-repeat="step in summaryItemEditCtrl.step.children" data-step="step"></summary-item-edit>
+    <ul class="step-children" ui-tree-nodes="" data-ng-model="summaryItemEditCtrl.step.children" data-ng-hide="summaryItemEditCtrl.collapsed">
+        <summary-item-edit ui-tree-node="" data-ng-repeat="step in summaryItemEditCtrl.step.children" data-step="step"></summary-item-edit>
     </ul>
 </li>
