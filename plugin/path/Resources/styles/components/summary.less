@@ -19,7 +19,7 @@
 
     + .content-container {
         margin-left: @path-summary-collapsed-width;
-        padding-left: @grid-gutter-width; // fake bootstrap grid
+        padding-left: floor(@path-grid-spacing-x / 2); // fake bootstrap grid
     }
 
     .summary-controls {

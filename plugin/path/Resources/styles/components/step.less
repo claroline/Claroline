@@ -1,8 +1,9 @@
-.current-step {
+.current-step-container {
     display: flex;
     flex-direction: column;
+    background-color: @current-step-bg;
 
-    > nav {
+    .current-step-navs {
         order: 2;
         display: flex;
         .btn {
@@ -26,14 +27,11 @@
         }
     }
 
-    .current-step-content {
+    .current-step {
         order: 1;
     }
 
-    .current-step-content > .panel {
-        margin-bottom: 0;
-        position: relative;
-
+    .current-step-content {
         > .panel-body {
             padding: 50px 15%;
         }
@@ -43,7 +41,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding-left: 15px;
+            padding-left: floor(@grid-gutter-width / 2) - 4px; // -4 because of the border left
             border-left: 4px solid transparent;
 
             // removes default h* margin & padding
@@ -55,59 +53,17 @@
             .dropdown {
                 white-space: nowrap;
             }
-        }
 
-        .panel {
-            /* Apply same margin bottom as `.form-group` (unfortunately Bootstrap doesn't use var for this value) */
-            margin-bottom: 15px;
-
-            &:last-child {
-                margin-bottom: 0;
-            }
-
-            .panel-heading {
-                position: relative;
-
-                /* Panels can be collapsed by clicking on heading => change cursor to help User */
-                cursor: pointer;
-
-                /* Use a custom Angular accordion system */
-                border-bottom: none;
-
-                .panel-title > * {
-                    vertical-align: middle;
-                }
-
-                .btns {
-                    position: absolute;
-                    right: 10px; /* Same as `.panel-heading` padding (unfortunately Bootstrap doesn't use var for this value) */
-                    top: 4px;
-                }
-
-                + .panel-body {
-                    border-top: 1px solid @panel-inner-border;
+            .actions {
+                white-space: nowrap;
+                > .btn {
+                    padding: 2px; // arbitrary value
                 }
             }
         }
-
-        /* Override TinyMCE styles to make it fit a Bootstrap panel in the step form */
-        .mce-tinymce.mce-container.mce-panel {
-            border: none;
-            border-top: 1px solid @panel-inner-border !important;
-            border-radius: 0;
-        }
-
-        /* Description of the step Block */
-        .step-description {
-            margin-bottom: @component-margin-bottom;
-        }
-
-        /* Primary resource block */
-        iframe {
-            border: none;
-            padding: 0;
-            width: 100%;
-        }
-
     }
+}
+
+.current-step-condition {
+    order: 2; // force position to be between step form and navs
 }

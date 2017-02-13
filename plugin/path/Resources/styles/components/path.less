@@ -23,10 +23,10 @@
 }
 
 .current-step-container {
-    flex: 1; // Make the current step fill the remaining space if any
+    //flex: 1; // Make the current step fill the remaining space if any
 }
 
 .path-progression {
     color: @path-progression-color;
-    margin-right: floor(@grid-gutter-width / 2);
+    margin-right: floor(@grid-gutter-width / 2); // todo : on small screen this breaks the centering of the gauge's text
 }

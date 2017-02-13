@@ -5,9 +5,17 @@
 // Claroline & bootstrap variables
 @import "../../../../main/core/Resources/less/themes/default/variables";
 
+
 // -
 // Base & utilities
 // ---
+
+// Due to the complexity of the path UI we need to use a custom grid (based on flexboxes)
+// By default uses the same configuration than bootstrap grid,
+// It can be disabled for theme purposes
+@path-grid-spacing-v: @component-margin-bottom;
+@path-grid-spacing-x: @grid-gutter-width;
+
 @lvl-gray:        #7B7B7B;
 @lvl-blue:        #4790aD;
 @lvl-purple:      #8C6796;
@@ -17,6 +25,7 @@
 @lvl-light-green: #b8d855;
 @lvl-green:       #47aD90;
 @lvl-light-blue:  #91deea;
+
 
 // -
 // Slideshow widget
@@ -31,18 +40,21 @@
 @path-card-content-padding:   @panel-body-padding;
 @path-card-content-font-size: @font-size-large;
 
+
 // -
 // List widget
 // ---
+
 
 // -
 // Breadcrumb
 // ---
 
+
 // -
 // Summary
 // ---
-@path-summary-width:                40%; // do not affect sm screens : in this case, summary is full screen
+@path-summary-width:                percentage((5 / @grid-columns)); // do not affect sm screens : in this case, summary is full screen
 @path-summary-collapsed-width:      50px;
 
 @path-summary-font:                 @summary-font;
@@ -72,18 +84,35 @@
 @path-summary-link-active-bg:       @summary-link-active-bg;
 @path-summary-link-active-color:    @summary-link-active-color;
 
+
 // -
-// Step
+// Current step
 // ---
+@current-step-bg: @panel-bg;
 
 // -
 // Progression
 // ---
-@path-progression-color: #F15E22;
+@path-progression-color:      #F15E22; // color to use when we display the progression gauge
 
-@step-status-size:            10px;
+@step-status-size:            10px; // size of the dot status in the summary
+
+// colors for each progression status
 @step-status-unseen-color:    @text-muted;
 @step-status-seen-color:      @path-progression-color;
 @step-status-to_do-color:     @brand-warning;
 @step-status-done-color:      @brand-success;
 @step-status-to_review-color: @brand-danger;
+
+
+// -
+// Resources
+// ---
+@resource-icon-size:     26px;
+@resource-icon-size-sm:  18px;
+
+
+// -
+// Secondary resources
+// ---
+

@@ -1,73 +1,41 @@
-.resource-tabs {
-    border-bottom: none;
+.resources-secondary {
+    margin-bottom: @path-grid-spacing-v;
+}
 
-    /* Remove border radius of the underline panel */
-    + .panel {
-        border-top-left-radius: 0;
+.resource-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
-        .lvl-indicator {
-            border-top-left-radius: 0;
-        }
+.resource {
+    &.excluded {
+        text-decoration: line-through;
     }
+}
 
-    .resource {
-        position: relative;
+.resource-icon {
+    height: @resource-icon-size;
+    margin-right: floor(@grid-gutter-width / 2);
+}
 
-        &.excluded {
-            text-decoration: line-through;
-        }
-
-        .lvl-indicator {
-            content: " ";
-            display: block;
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 12px;
-            height: 12px;
-            border-top-left-radius: @border-radius-base;
-            border-bottom-right-radius: @border-radius-base / 2;
-        }
-
-        .resource-icon {
-            border: none;
-            height: 18px;
-            margin-right: 10px;
-        }
-
-        // Fix dropdown menu styles
-        &, &:hover, &:focus, &.active {
-            .caret {
-                border-bottom-color: @navbar-inverse-link-color;
-                border-top-color: @navbar-inverse-link-color;
-            }
-        }
-
-        /*.dropdown-menu {
-            li a {
-                background: inherit;
-                border: none;
-                margin: 0 !important;
-
-                &:hover, &:focus, &.active {
-                    color: @dropdown-link-hover-color;
-                    background: @dropdown-link-hover-bg;
-                }
-            }
-        }*/
+.resource-actions {
+    .btn {
+        padding: 2px; // arbitrary value
     }
+}
 
-    li {
-        /* Need to set !important to force override of the bootstrap nav-tabs styles */
-        /*.resource-add {
-            color: @btn-primary-color !important;
-            background-color: @btn-primary-bg !important;
-            border-color: @btn-primary-border !important;
+.no-resource {
+    text-align: center;
+    em {
+        text-align: left;
+        display: block;
+        margin-bottom: @form-group-margin-bottom;
+    }
+}
 
-            &:hover, &:focus {
-                background-color: darken(@btn-primary-bg, 8%) !important;
-                border-color: darken(@btn-primary-border, 12%) !important;
-            }
-        }*/
+@media (max-width: @screen-sm-min) {
+    .resource-icon {
+        height: @resource-icon-size-sm;
     }
 }
