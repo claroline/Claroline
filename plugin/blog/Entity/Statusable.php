@@ -74,7 +74,7 @@ class Statusable
     /**
      * @return bool
      * @VirtualProperty
-     * @Groups({"blog_list"})
+     * @Groups({"blog_list", "blog_post"})
      */
     public function isPublished()
     {
