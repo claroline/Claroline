@@ -70,6 +70,15 @@ class Exercise extends AbstractResource
     private $interruptible = false;
 
     /**
+     * Show overview to users or directly start the quiz.
+     *
+     * @ORM\Column(name="show_overview", type="boolean")
+     *
+     * @var bool
+     */
+    private $showOverview = true;
+
+    /**
      * Show the Exercise meta in the overview of the Exercise.
      *
      * @var bool
@@ -291,6 +300,26 @@ class Exercise extends AbstractResource
     public function isInterruptible()
     {
         return $this->interruptible;
+    }
+
+    /**
+     * Set show overview.
+     *
+     * @param bool $showOverview
+     */
+    public function setShowOverview($showOverview)
+    {
+        $this->showOverview = $showOverview;
+    }
+
+    /**
+     * Is overview shown ?
+     *
+     * @return bool
+     */
+    public function getShowOverview()
+    {
+        return $this->showOverview;
     }
 
     /**

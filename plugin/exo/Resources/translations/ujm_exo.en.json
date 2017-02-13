@@ -481,6 +481,7 @@
     "show_instructions": "Show instructions",
     "show_interact_fields": "Hints and global feedback",
     "show_metadata_fields": "Title and other fields",
+    "show_overview": "Display quiz overview to users",
     "signing": "Signing",
     "size": "Size",
     "solution_score": "{0} %score% point|{1} %score% point|[2,Inf] %score% points",
