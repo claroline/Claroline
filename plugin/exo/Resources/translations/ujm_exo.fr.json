@@ -496,6 +496,7 @@
     "show_instructions": "Montrer les consignes",
     "show_interact_fields": "Indices et commentaire final",
     "show_metadata_fields": "Titre et autres champs",
+    "show_overview": "Afficher l'accueil du questionnaire aux utilisateurs",
     "signing": "Passation",
     "size": "Taille",
     "solution_score": "{-1, 0, 1} %score% point|[2,+Inf[ %score% points|]-Inf, -2] %score% points",

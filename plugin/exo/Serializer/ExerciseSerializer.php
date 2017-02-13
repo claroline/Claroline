@@ -166,6 +166,7 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->interruptible = $exercise->isInterruptible();
 
         // Visibility parameters
+        $parameters->showOverview = $exercise->getShowOverview();
         $parameters->showMetadata = $exercise->isMetadataVisible();
         $parameters->showStatistics = $exercise->hasStatistics();
         $parameters->showFullCorrection = !$exercise->isMinimalCorrection();
@@ -246,6 +247,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (isset($parameters->interruptible)) {
             $exercise->setInterruptible($parameters->interruptible);
+        }
+
+        if (isset($parameters->showOverview)) {
+            $exercise->setShowOverview($parameters->showOverview);
         }
 
         if (isset($parameters->showMetadata)) {
