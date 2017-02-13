@@ -10,6 +10,16 @@
     {% endif %}
 {% endif %}
 
+{# Checks if we need to hide the breadcrumb #}
+{% if workspace is defined and
+    workspace.getOptions() is not empty and
+    workspace.getOptions().getDetails() is not empty and
+    workspace.getOptions().getDetails()['hide_breadcrumb'] is defined and
+    workspace.getOptions().getDetails()['hide_breadcrumb']
+%}
+    {% set hideBreadcrumb = true %}
+{% endif %}
+
 {% block claroline_danger %}
     {{ parent() }}
 
@@ -36,34 +46,27 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    {# FIXME : this may have broken the hide_breadcrumb feature for WS tool or any template overriding the block #}
-    {% if
-        (workspace is not defined or
-        workspace.getOptions() is empty or
-        workspace.getOptions().getDetails() is empty or
-        workspace.getOptions().getDetails()['hide_breadcrumb'] is not defined or
-        workspace.getOptions().getDetails()['hide_breadcrumb']) and
-        _resource is defined
-    %}
-    <ul class="breadcrumb">
-        {% if not has_role('ROLE_ANONYMOUS') and workspace is defined and workspace != null %}
-            <li>
-                {# we're finding wich is the workspace we want to display here #}
-                <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
-                    {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
-                </a>
-            </li>
+    {# Create resource breadcrumb #}
+    {% if _resource is defined %}
+        <ul class="breadcrumb">
+            {% if not has_role('ROLE_ANONYMOUS') and workspace is defined and workspace != null %}
+                <li>
+                    {# we're finding wich is the workspace we want to display here #}
+                    <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
+                        {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
+                    </a>
+                </li>
 
-            {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs", {
-                'node': _resource.getResourceNode(),
-                '_breadcrumbs': app.request.query.get('_breadcrumbs', {})
-            })) %}
-        {% endif %}
+                {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs", {
+                    'node': _resource.getResourceNode(),
+                    '_breadcrumbs': app.request.query.get('_breadcrumbs', {})
+                })) %}
+            {% endif %}
 
-        {% block resourceBreadcrumb %}
-            <li class="active">{{ _resource.getResourceNode().getName() }}</li>
-        {% endblock %}
-    </ul>
+            {% block resourceBreadcrumb %}
+                <li class="active">{{ _resource.getResourceNode().getName() }}</li>
+            {% endblock %}
+        </ul>
     {% endif %}
 {% endblock %}
 

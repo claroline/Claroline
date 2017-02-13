@@ -70,7 +70,9 @@
     </div>
 
     <div id="wrap" class="app-content container-fluid">
-        {% block breadcrumb %}{% endblock %}
+        {% if hideBreadcrumb is not defined or not hideBreadcrumb %}
+            {% block breadcrumb %}{% endblock %}
+        {% endif %}
 
         {% block content %}{% endblock %}
     </div>
