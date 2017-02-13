@@ -1,4 +1,7 @@
 {
     "type": "Tipo",
-    "menu": ""
+    "menu": "",
+    "apply": "Aplicar",
+    "cancel": "Cancelar",
+    "content": "Contenido"
 }
