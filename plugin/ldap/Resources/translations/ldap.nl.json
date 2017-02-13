@@ -23,7 +23,7 @@
     "ldap_user_class": "",
     "name": "Naam",
     "password": "Wachtwoord",
-    "port": "",
+    "port": "Poort",
     "protocol_version": "Versie",
     "username": "Gebruikersnaam",
     "users_settings": ""
