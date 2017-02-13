@@ -2,5 +2,8 @@
     "type": "Tipo",
     "end_date": "Fecha de  finalización",
     "actions": "Acciones",
-    "name": "Nombre"
+    "name": "Nombre",
+    "add_choice": "",
+    "comments": "",
+    "publication_date": ""
 }
