@@ -33,10 +33,14 @@
     position: relative;
     width: 1em;
     height: 1em;
-    font-size: 50px;
+    font-size: @path-progression-size;
     border-radius: 50%;
     display: inline-block;
     background-color: @secondary-color;
+
+    &.sm {
+        font-size: @path-progression-size-sm;
+    }
 
     // centered value inside circle
     > span {

@@ -177,6 +177,11 @@ class PathManager
         return $paths;
     }
 
+    public function calculateUserProgression(User $user, array $paths)
+    {
+        return $this->om->getRepository('InnovaPathBundle:UserProgression')->findUserProgression($user, $paths);
+    }
+
     /**
      * Get progression of a User into a Path.
      *

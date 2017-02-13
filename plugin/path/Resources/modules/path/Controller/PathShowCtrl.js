@@ -52,6 +52,8 @@ export default class PathShowCtrl extends PathBaseCtrl {
   }
 
   getTotalProgression() {
-    return Math.round((this.userProgressionService.getTotalProgression() * 100) / this.pathService.getTotalSteps())
+    const total = Math.round((this.userProgressionService.getTotalProgression() * 100) / this.pathService.getTotalSteps())
+
+    return total || 0
   }
 }
