@@ -1,5 +1,8 @@
 {
     "type": "Tipo",
     "host": "",
-    "port": ""
+    "port": "",
+    "open": "Abrir",
+    "status": "Estado",
+    "visitor": "Visitante"
 }
