@@ -1,28 +1,39 @@
 #footer,
+.footer-container,
 .footer-preview {
+    display: flex; // just to have child content taking full height
     width: 100%;
-    position: relative;
 
-    // Hack to force display footer at the bottom of the page if no scroll
-    margin-top: -@navbar-height;
+    // hack to force display footer at the bottom of the page if no scroll
+    margin-top: -@footer-height;
 
-    min-height: @navbar-height;
+    min-height: @footer-height;
     background: @footer-bg;
     color: @footer-color;
 
     .footer-content {
         max-width: @footer-max-width;
         margin: 0 auto;
+        flex: 1; // take parent full height
     }
 
+    // don't know what to do with that
     .container-fluid {
         p, h1, h2, h3, h4, h5, h6 {
             margin: floor(@grid-gutter-width / 2);
             max-height: 100%;
+        }
+    }
 
-            a {
-                color: @footer-color;
-            }
+    // allow to customize links in footer
+    a {
+        color: @footer-link-color;
+
+        &:hover {
+            color: @footer-link-hover-color;
+        }
+        &:focus {
+            color: @footer-link-active-color;
         }
     }
 }

@@ -25,8 +25,8 @@ body.claroline-app-container {
     padding: floor(@grid-gutter-width / 2);
 
     // Hack to force the display of footer at the bottom of the page if no scroll
-    // todo : find a better way to do it to expose content padding as a var
-    padding-bottom: @navbar-height + floor(@grid-gutter-width / 2);
+    // todo : find a better way to do it. expose content padding as a var
+    padding-bottom: @footer-height + floor(@grid-gutter-width / 2);
 
     .page-container {
         flex: 1; // only specifying flex property here make the item fill the remaining space in its parent
