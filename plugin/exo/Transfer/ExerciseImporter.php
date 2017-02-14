@@ -2,7 +2,6 @@
 
 namespace UJM\ExoBundle\Transfer;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
@@ -124,7 +123,7 @@ class ExerciseImporter extends Importer implements RichTextInterface
         $this->om->persist($exercise);
     }
 
-    public function export(Workspace $workspace, array &$files, $exercise)
+    public function export($workspace, array &$files, $exercise)
     {
         $exerciseData = $this->serializer->serialize($exercise, [Transfer::INCLUDE_SOLUTIONS]);
 

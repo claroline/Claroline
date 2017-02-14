@@ -1,4 +1,4 @@
-<article data-ng-class="{'unpublished': !post.is_published}">
+<article data-ng-class="{'unpublished': !post.is_published}" data-ng-if="post.is_published || vm.blog.isGrantedAdmin">
 
     <header>
         <h1><a data-ng-click="vm.displayPost(post)" title="">{{ post.title }}</a></h1>
@@ -8,7 +8,7 @@
                 data-ng-if="vm.blog.isGrantedEdit || vm.blog.isGrantedPost && post.author.id == vm.blog.user">
 
             <button
-                    data-ng-if="vm.blog.isGrantedEdit"
+                    data-ng-if="vm.blog.isGrantedEdit && post.publication_date && postCtrl.isPublishable(post)"
                     class="btn btn-default btn-xs"
                     data-ng-click="postCtrl.togglePostVisibility(post)"
                     data-ng-disabled="post.is_request_pending">
@@ -57,6 +57,7 @@
     </header>
 
     <div class="content" data-ng-bind-html="post.content | trust_html"></div>
+    <div class="content" data-ng-if="post.isAbstract"><a data-ng-click="vm.displayPost(post)" class="read_more">{{ 'read_more' | trans:{}:'icap_blog' }} <span class="fa fa-long-arrow-right"></span></a></div>
 
     <footer>
         <p class="pull-right">

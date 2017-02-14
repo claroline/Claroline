@@ -69,8 +69,12 @@ class WorkspaceAccessExtension extends \Twig_Extension
         ];
     }
 
-    public function isDateAccessValid(Workspace $workspace)
+    public function isDateAccessValid($workspace)
     {
+        if (!$workspace) {
+            return true;
+        }
+
         $isEndValid = $workspace->getEndDate() ? $workspace->getEndDate() > new \DateTime() : true;
         $isStartValid = $workspace->getStartDate() ? $workspace->getStartDate() < new \DateTime() : true;
 

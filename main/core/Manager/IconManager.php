@@ -11,16 +11,19 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Repository\ResourceIconRepository;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
-use Symfony\Component\HttpFoundation\File\File;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Repository\ResourceIconRepository;
 use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -28,6 +31,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class IconManager
 {
+    use LoggableTrait;
+
     /** @var ThumbnailCreator */
     private $creator;
     /** @var ResourceIconRepository */
@@ -271,7 +276,7 @@ class IconManager
         if ($icon->getMimeType() === 'custom') {
             //search if this icon is used elsewhere (ie copy)
             $res = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                ->findBy(array('icon' => $icon));
+                ->findBy(['icon' => $icon]);
 
             if (count($res) <= 1 && $icon->isShortcut() === false) {
                 $shortcut = $icon->getShortcutIcon();
@@ -303,7 +308,7 @@ class IconManager
 
             if (!is_null($oldShortcutIcon) && !is_null($shortcutIcon)) {
                 $nodes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                    ->findBy(array('icon' => $oldShortcutIcon));
+                    ->findBy(['icon' => $oldShortcutIcon]);
 
                 foreach ($nodes as $node) {
                     $node->setIcon($shortcutIcon);
@@ -352,117 +357,117 @@ class IconManager
 
     public function getDefaultIconMap()
     {
-        return array(
-            array('res_default.png', 'custom/default'),
-            array('res_activity.png', 'custom/activity'),
-            array('res_file.png', 'custom/file'),
-            array('res_folder.png', 'custom/directory'),
-            array('res_text.png', 'text/plain'),
-            array('res_text.png', 'custom/text'),
+        return [
+            ['res_default.png', 'custom/default'],
+            ['res_activity.png', 'custom/activity'],
+            ['res_file.png', 'custom/file'],
+            ['res_folder.png', 'custom/directory'],
+            ['res_text.png', 'text/plain'],
+            ['res_text.png', 'custom/text'],
 
             //array('res_url.png', 'custom/url'),
             //array('res_exercice.png', 'custom/exercice'),
-            array('res_jpeg.png', 'image'),
-            array('res_audio.png', 'audio'),
-            array('res_avi.png', 'video'),
+            ['res_jpeg.png', 'image'],
+            ['res_audio.png', 'audio'],
+            ['res_avi.png', 'video'],
 
             //images
-            array('res_bmp.png', 'image/bmp'),
-            array('res_bmp.png', 'image/x-windows-bmp'),
-            array('res_jpeg.png', 'image/jpeg'),
-            array('res_jpeg.png', 'image/pjpeg'),
-            array('res_gif.png', 'image/gif'),
-            array('res_tiff.png', 'image/tiff'),
-            array('res_tiff.png', 'image/x-tiff'),
+            ['res_bmp.png', 'image/bmp'],
+            ['res_bmp.png', 'image/x-windows-bmp'],
+            ['res_jpeg.png', 'image/jpeg'],
+            ['res_jpeg.png', 'image/pjpeg'],
+            ['res_gif.png', 'image/gif'],
+            ['res_tiff.png', 'image/tiff'],
+            ['res_tiff.png', 'image/x-tiff'],
 
             //videos
-            array('res_mp4.png', 'video/mp4'),
-            array('res_mpeg.png', 'video/mpeg'),
-            array('res_mpeg.png', 'audio/mpeg'),
+            ['res_mp4.png', 'video/mp4'],
+            ['res_mpeg.png', 'video/mpeg'],
+            ['res_mpeg.png', 'audio/mpeg'],
 
             //sounds
-            array('res_wav.png', 'audio/wav'),
-            array('res_wav.png', 'audio/x-wav'),
+            ['res_wav.png', 'audio/wav'],
+            ['res_wav.png', 'audio/x-wav'],
 
-            array('res_mp3.png', 'audio/mpeg3'),
-            array('res_mp3.png', 'audio/x-mpeg3'),
-            array('res_mp3.png', 'audio/mp3'),
-            array('res_mp3.png', 'audio/mpeg'),
+            ['res_mp3.png', 'audio/mpeg3'],
+            ['res_mp3.png', 'audio/x-mpeg3'],
+            ['res_mp3.png', 'audio/mp3'],
+            ['res_mp3.png', 'audio/mpeg'],
 
             //html
-            array('res_html.png', 'text/html'),
+            ['res_html.png', 'text/html'],
 
             //xls
-            array('res_xls.png', 'application/excel'),
-            array('res_xls.png', 'application/vnd.ms-excel'),
-            array('res_xls.png', 'application/msexcel'),
-            array('res_xls.png', 'application/x-msexcel'),
-            array('res_xls.png', 'application/x-ms-excel'),
-            array('res_xls.png', 'application/x-excel'),
-            array('res_xls.png', 'application/xls'),
-            array('res_xls.png', 'application/x-xls'),
-            array('res_xls.png', 'application/x-dos_ms_excel'),
+            ['res_xls.png', 'application/excel'],
+            ['res_xls.png', 'application/vnd.ms-excel'],
+            ['res_xls.png', 'application/msexcel'],
+            ['res_xls.png', 'application/x-msexcel'],
+            ['res_xls.png', 'application/x-ms-excel'],
+            ['res_xls.png', 'application/x-excel'],
+            ['res_xls.png', 'application/xls'],
+            ['res_xls.png', 'application/x-xls'],
+            ['res_xls.png', 'application/x-dos_ms_excel'],
 
             //xlsx
-            array('res_xlsx.png', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+            ['res_xlsx.png', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'],
 
             //odt
-            array('res_odt.png', 'application/vnd.oasis.opendocument.text '),
+            ['res_odt.png', 'application/vnd.oasis.opendocument.text '],
 
             //ppt
-            array('res_ppt.png', 'application/mspowerpoint'),
-            array('res_ppt.png', 'application/powerpoint'),
-            array('res_ppt.png', 'application/vnd.ms-powerpoint'),
-            array('res_ppt.png', 'application/application/x-mspowerpoint'),
+            ['res_ppt.png', 'application/mspowerpoint'],
+            ['res_ppt.png', 'application/powerpoint'],
+            ['res_ppt.png', 'application/vnd.ms-powerpoint'],
+            ['res_ppt.png', 'application/application/x-mspowerpoint'],
 
             //pptx
-            array('res_pptx.png', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'),
+            ['res_pptx.png', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'],
 
             //doc
-            array('res_doc.png', 'application/msword'),
+            ['res_doc.png', 'application/msword'],
 
             //doc
-            array('res_docx.png', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
+            ['res_docx.png', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
 
             //pdf
-            array('res_pdf.png', 'application/pdf'),
+            ['res_pdf.png', 'application/pdf'],
 
             //zip
-            array('res_zip.png', 'application/zip'),
-            array('res_rar.png', 'application/x-rar-compressed'),
+            ['res_zip.png', 'application/zip'],
+            ['res_rar.png', 'application/x-rar-compressed'],
 
             //rar
-            array('res_archive.png', 'application/x-gtar'),
-            array('res_archive.png', 'application/x-7z-compressed'),
+            ['res_archive.png', 'application/x-gtar'],
+            ['res_archive.png', 'application/x-7z-compressed'],
 
             //gz
-            array('res_gz.png', 'application/x-compressed'),
-            array('res_gz.png', 'application/x-gzip'),
-            array('res_gz.png', 'multipart/x-gzip'),
+            ['res_gz.png', 'application/x-compressed'],
+            ['res_gz.png', 'application/x-gzip'],
+            ['res_gz.png', 'multipart/x-gzip'],
 
             //tar
-            array('res_tar.png', 'application/x-tar'),
+            ['res_tar.png', 'application/x-tar'],
 
             //array('res_dot.png') alias for msword
 
             //odp
-            array('res_odp.png', 'application/vnd.oasis.opendocument.presentation'),
+            ['res_odp.png', 'application/vnd.oasis.opendocument.presentation'],
 
             //ods
-            array('res_ods.png', 'application/vnd.oasis.opendocument.spreadsheet'),
+            ['res_ods.png', 'application/vnd.oasis.opendocument.spreadsheet'],
 
             //array('res_pps.png') alias for powerpoint
             //array('res_psp.png') couldn't find mime type
 
-            array('res_rtf.png', 'application/rtf'),
-            array('res_rtf.png', 'application/x-rtf'),
-            array('res_rtf.png', 'text/richtext'),
-        );
+            ['res_rtf.png', 'application/rtf'],
+            ['res_rtf.png', 'application/x-rtf'],
+            ['res_rtf.png', 'text/richtext'],
+        ];
     }
 
     private function isDirectoryEmpty($dirName)
     {
-        $files = array();
+        $files = [];
         $dirHandle = opendir($dirName);
 
         if ($dirHandle) {
@@ -486,16 +491,25 @@ class IconManager
             $originalIconLocation = "{$this->rootDir}{$ds}..{$ds}web{$ds}{$url}";
             $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation, $workspace);
         } catch (\Exception $e) {
-            $shortcutLocation = "{$this->rootDir}{$ds}.."
-                ."{$ds}web{$ds}bundles{$ds}clarolinecore{$ds}images{$ds}resources{$ds}icons{$ds}shortcut-default.png";
+            $this->log("Couldn't create the shortcut icon: using the default one...", LogLevel::ERROR);
+            $this->log(get_class($e).": {$e->getMessage()}", LogLevel::ERROR);
+            $shortcutLocation = "{$this->rootDir}{$ds}..{$ds}web{$ds}{$url}";
         }
 
-        if (strstr($shortcutLocation, 'bundles')) {
-            $tmpRelativeUrl = strstr($shortcutLocation, 'bundles');
-        } else {
-            $tmpRelativeUrl = strstr($shortcutLocation, $this->basepath);
-        }
+        $tmpRelativeUrl = (strstr($shortcutLocation, 'bundles')) ?
+            strstr($shortcutLocation, 'bundles') :
+            strstr($shortcutLocation, $this->basepath);
 
         return str_replace('\\', '/', $tmpRelativeUrl);
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

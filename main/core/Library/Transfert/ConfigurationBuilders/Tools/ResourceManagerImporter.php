@@ -184,7 +184,17 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 if ($fullImport) {
                     //add the missing roles
                     foreach ($directory['directory']['roles'] as $role) {
-                        $this->setPermissions($role, $entityRoles[$role['role']['name']], $directoryEntity);
+                        //don't bother injecting the right if no permissions are set
+                        if ($role['role']['rights'] !== [
+                        'open' => false,
+                        'copy' => false,
+                        'export' => false,
+                        'delete' => false,
+                        'edit' => false,
+                        'administrate' => false,
+                      ]) {
+                            $this->setPermissions($role, $entityRoles[$role['role']['name']], $directoryEntity);
+                        }
                     }
                 }
             }
@@ -280,7 +290,17 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                             //add the missing roles
                             if (isset($item['item']['roles'])) {
                                 foreach ($item['item']['roles'] as $role) {
-                                    $this->setPermissions($role, $entityRoles[$role['role']['name']], $entity);
+                                    //don't bother injecting the right if no permissions are set
+                                    if ($role['role']['rights'] !== [
+                                      'open' => false,
+                                      'copy' => false,
+                                      'export' => false,
+                                      'delete' => false,
+                                      'edit' => false,
+                                      'administrate' => false,
+                                    ]) {
+                                        $this->setPermissions($role, $entityRoles[$role['role']['name']], $entity);
+                                    }
                                 }
                             }
                         }
@@ -306,7 +326,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         }
     }
 
-    public function export(Workspace $workspace, array &$_files, $object)
+    public function export($workspace, array &$_files, $object)
     {
         $_data = [];
         //first we get the root
@@ -724,7 +744,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $this->getCreationRightsArray($role['role']['rights']['create']) :
             [];
 
-        //is it in the identity map ?
         $createdRights = $this->rightManager->getRightsFromIdentityMapOrScheduledForInsert(
             $role['role']['name'],
             $resourceEntity->getResourceNode()
@@ -818,9 +837,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         $resource = $this->resourceManager->getResourceFromNode($resourceNode);
 
         if ($resource) {
-            // We are not processing an orphan Node so we can run the export of the Resource
             $importer = $this->getImporterByName($resourceNode->getResourceType()->getName());
-            if ($importer && $workspace) {
+            if ($importer) {
                 $importer->setExtendedData($_data);
                 $data = $importer->export(
                     $workspace,

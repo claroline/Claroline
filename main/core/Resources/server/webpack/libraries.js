@@ -31,5 +31,6 @@ module.exports = {
     'ng-file-upload',
     'at-table/dist/angular-table',
     'angular-dragula'
-  ]
+  ],
+  'es6_dll': ['core-js', 'whatwg-fetch']
 }

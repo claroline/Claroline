@@ -46,7 +46,9 @@ class BadgeController extends Controller
         $badgeClaimRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:BadgeClaim');
         $badgeClaimQuery = $badgeClaimRepository->findByWorkspace($badgeClaimsWorkspace, false);
 
-        $userQuery = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findByWorkspaceWithUsersFromGroup($badgeClaimsWorkspace, false);
+        $userQuery = $badgeClaimsWorkspace ?
+            $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findByWorkspaceWithUsersFromGroup($badgeClaimsWorkspace, false) :
+            $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findAll(false);
 
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
         $pagerFactory = $this->get('claroline.pager.pager_factory');

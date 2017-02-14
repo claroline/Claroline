@@ -2,7 +2,6 @@
 
 namespace Innova\PathBundle\Transfer;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -160,7 +159,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
         return $this->container->get('innova_path.manager.path')->import($structure, $data, $created);
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export($workspace, array &$files, $object)
     {
         return $this->container->get('innova_path.manager.path')->export($workspace, $files, $object);
     }

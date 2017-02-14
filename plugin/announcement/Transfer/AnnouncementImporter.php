@@ -13,7 +13,6 @@ namespace Claroline\AnnouncementBundle\Transfer;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -157,7 +156,7 @@ class AnnouncementImporter extends Importer implements ConfigurationInterface, R
         return $announcementAggregate;
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export($workspace, array &$files, $object)
     {
         $data = [];
         $announcements = $object->getAnnouncements();

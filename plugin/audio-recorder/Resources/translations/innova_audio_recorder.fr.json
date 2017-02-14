@@ -20,5 +20,6 @@
     "resource_name_placeholder": "Le nom de la ressource est obligatoire.",
     "start_recording": "Démarrer",
     "stop_recording": "Stop",
-    "submit_config_label": "Sauvegarder la configuration"
+    "submit_config_label": "Sauvegarder la configuration",
+    "validate": "Valider"
 }
