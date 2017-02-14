@@ -22,14 +22,23 @@
         padding-left: floor(@path-grid-spacing-x / 2); // fake bootstrap grid
     }
 
+    .summary-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: @path-summary-header-margin-bottom;
+    }
+
     .summary-controls {
-        text-align: center;
+        // todo : this selector is ugly
         .summary-control:first-child {
             display: none;
         }
     }
 
-    .summary-title-text,
+    // todo : those selectors are ugly
+    .summary-title,
     .step,
     .step-actions *:not(.step-progression) {
         display: none;
@@ -42,16 +51,12 @@
     &.opened {
         width: @path-summary-width;
         .summary-controls {
-            text-align: right;
             .summary-control:first-child {
                 display: inline-block;
             }
         }
 
-        .summary-title-text {
-            display: inline;
-        }
-
+        .summary-title,
         .step,
         .step-actions *{
             display: inline-block;
@@ -90,16 +95,10 @@
 }
 
 .summary-title {
-    padding: 0;
-}
-.summary-title-icon {
-    width: @path-summary-collapsed-width - (@path-summary-padding * 2);
-    text-align: center;
-    color: @path-summary-icon-color;
-}
-.summary-title-text {
-    padding-left: floor(@grid-gutter-width / 2);
     color: @path-summary-title-color;
+    // remove default h* spacing
+    padding: 0;
+    margin: 0;
 }
 
 .summary-empty {
