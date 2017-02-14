@@ -10,7 +10,7 @@
                 data-ng-if="postCtrl.blog.isGrantedEdit || postCtrl.blog.isGrantedPost && postCtrl.blog.currentPost.author.id == postCtrl.blog.user">
 
             <button
-                    data-ng-if="postCtrl.blog.isGrantedEdit"
+                    data-ng-if="postCtrl.blog.isGrantedEdit && postCtrl.blog.currentPost.publication_date && postCtrl.isPublishable(postCtrl.blog.currentPost)"
                     class="btn btn-default btn-xs"
                     data-ng-click="postCtrl.togglePostVisibility(postCtrl.blog.currentPost)"
                     data-ng-disabled="postCtrl.blog.currentPost.is_request_pending">
@@ -48,7 +48,7 @@
                                 data-ng-click="panelsCtrl.filterByAuthor(postCtrl.blog.currentPost.author)">{{ postCtrl.blog.currentPost.author.firstName }} {{ postCtrl.blog.currentPost.author.lastName }}</a></small>
             </li>
 
-            <li data-ng-if="postCtrl.blog.currentPost.publication_date"><span class="fa fa-calendar"></span> <small><time>{{ postCtrl.blog.currentPost.publication_date | datetime }}</time></small></li>
+            <li data-ng-if="postCtrl.blog.currentPost.publication_date != null"><span class="fa fa-calendar"></span> <small><time>{{ postCtrl.blog.currentPost.publication_date | datetime }}</time></small></li>
 
             <li data-ng-if="postCtrl.blog.options.display_post_view_counter && postCtrl.blog.currentPost.view_counter > 0">
                 <span class="fa fa-eye"></span> <small>{{ 'view'|transChoice:postCtrl.blog.currentPost.view_counter:{'viewCounter': postCtrl.blog.currentPost.view_counter}:'icap_blog' }}</small>
@@ -77,7 +77,7 @@
 
         <ul class="list-unstyled list-inline tags">
             <li><span class="fa fa-tags"></span></li>
-            <li data-ng-repeat="tag in postCtrl.blog.currentPost.tags"><a title="{{ tag.name }}">{{ tag.text }}</a></li>
+            <li data-ng-repeat="tag in postCtrl.blog.currentPost.tags"><a title="{{ tag.name }}" data-ng-click="postCtrl.filterByTag(tag)">{{ tag.text }}</a></li>
             <li data-ng-if="postCtrl.blog.currentPost.tags.length === 0">{{ 'no_tags'|trans:{}:'icap_blog' }}</li>
         </ul>
     </footer>

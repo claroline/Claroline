@@ -26,7 +26,7 @@ class Comment extends Statusable
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Expose
-     * @Groups({"blog_list"})
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $id;
 
@@ -35,7 +35,7 @@ class Comment extends Statusable
      *
      * @ORM\Column(type="text")
      * @Expose
-     * @Groups({"blog_list"})
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $message;
 
@@ -45,7 +45,7 @@ class Comment extends Statusable
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", name="creation_date")
      * @Expose
-     * @Groups({"blog_list"})
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $creationDate;
 
@@ -55,7 +55,7 @@ class Comment extends Statusable
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="status", value="1")
      * @Expose
-     * @Groups({"blog_list"})
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $publicationDate;
 
@@ -65,7 +65,7 @@ class Comment extends Statusable
      * @ORM\Column(type="datetime", name="update_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="message")
      * @Expose
-     * @Groups({"blog_list"})
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $updateDate;
 
@@ -75,7 +75,7 @@ class Comment extends Statusable
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
      * @Expose
-     * @Groups({"blog_list"})
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $author;
 

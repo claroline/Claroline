@@ -163,5 +163,5 @@ abstract class Importer
       * @param mixed $object
       * @param mixed $data
       */
-     abstract public function export(Workspace $workspace, array &$files, $object);
+     abstract public function export($workspace, array &$files, $object);
 }

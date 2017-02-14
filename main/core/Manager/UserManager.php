@@ -1694,17 +1694,10 @@ class UserManager
                     $this->log('Add default organization for user '.$user->getUsername());
                     $user->addOrganization($default);
                     $this->objectManager->persist($user);
-                    $detach[] = $user;
 
                     if ($i % 250 === 0) {
                         $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
                         $this->objectManager->forceFlush();
-
-                        foreach ($detach as $el) {
-                            $this->objectManager->detach($el);
-                        }
-
-                        $detach = [];
                     }
                 } else {
                     $this->log("Organization for user {$user->getUsername()} already exists");
@@ -1713,9 +1706,7 @@ class UserManager
 
             $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
             $this->objectManager->forceFlush();
-            $this->objectManager->clear();
             $default = $this->organizationManager->getDefault();
-            $this->objectManager->merge($default);
 
             $offset += $limit;
         }

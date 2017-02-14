@@ -45,7 +45,7 @@ class IPWhiteListManager
                 $ips[] = $ip;
             }
         } else {
-            $ips = array($ip);
+            $ips = [$ip];
         }
 
         $yaml = Yaml::dump($ips);
@@ -78,7 +78,7 @@ class IPWhiteListManager
 
             if (is_array($ips)) {
                 foreach ($ips as $ip) {
-                    if ($ip === $_SERVER['REMOTE_ADDR']) {
+                    if (isset($_SERVER['REMOTE_ADDR']) && $ip === $_SERVER['REMOTE_ADDR']) {
                         return true;
                     }
                 }
@@ -109,6 +109,6 @@ class IPWhiteListManager
 
     public function cleanWhiteList()
     {
-        file_put_contents($this->ipFile, Yaml::dump(array()));
+        file_put_contents($this->ipFile, Yaml::dump([]));
     }
 }

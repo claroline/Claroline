@@ -18,7 +18,6 @@ class PostRepository extends EntityRepository
         $query = $this->createQueryBuilder('post')
             ->select(['post'])
             ->andWhere('post.blog = :blogId')
-            ->andWhere('post.publicationDate IS NOT NULL')
             ->setParameter('blogId', $blog->getId())
             ->orderBy('post.publicationDate', 'DESC')
             ->getQuery();

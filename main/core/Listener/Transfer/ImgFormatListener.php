@@ -9,6 +9,8 @@ use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Routing\RouterInterface;
 
 /**
@@ -50,21 +52,18 @@ class ImgFormatListener
     /**
      * @DI\Observe("rich_text_format_event_export")
      *
+     * This is pretty much the same as the RichTextFormatter one
+     *
      * @param RichTextFormatEvent $event
-     *                                   This is pretty much the same as the RichTextFormatter one
      */
     public function export(RichTextFormatEvent $event)
     {
-        //urls to be matched...
-        //'/file/resource/media/([^']+)#'
-        //'/resource/open/([^/]+)/([^']+)'
         $text = $event->getText();
-        $baseUrl = $this->router->getContext()->getBaseUrl();
         $_data = $event->getData();
         $_files = $event->getFiles();
 
         //first regex
-        $regex = '#'.$baseUrl.'/file/resource/media/([^\'"]+)#';
+        $regex = '#"/file/resource/media/([^\'"]+)#';
 
         preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
 
@@ -87,15 +86,17 @@ class ImgFormatListener
                             'name' => 'ROLE_USER',
                             'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('file')),
                         ]]];
-                        $_data['data']['items'][] = $el;
+
+                        //check if the element isn't already set
+                        if (!$this->formatter->getItemFromUid($el['item']['uid'], $_data)) {
+                            $_data['data']['items'][] = $el;
+                        }
                     }
                 }
 
                 $text = $this->replaceLink($text, $match[0], $match[1]);
             }
         }
-
-        $event->setText($text);
     }
 
     /**
@@ -164,7 +165,7 @@ class ImgFormatListener
         $width = $imgdata[1];
         $height = $imgdata[2];
         $style = $imgdata[3];
-        $url = $this->router->generate('claro_file_get_media', ['node' => $node->getId()]);
+        $url = $this->router->generate('claro_file_get_media', ['node' => $node->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
         $img = '<img ';
 
         if ($width !== '') {
@@ -180,5 +181,15 @@ class ImgFormatListener
         $img .= "src='{$url}' alt='{$node->getName()}'>";
 
         return $img;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 }

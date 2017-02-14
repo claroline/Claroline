@@ -13,14 +13,14 @@ namespace Icap\WikiBundle\Transfert;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Icap\WikiBundle\Manager\WikiManager;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\Processor;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Icap\WikiBundle\Manager\WikiManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.importer.icap_wiki_importer")
@@ -68,7 +68,6 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function addWikiDescription($rootNode)
     {
-        $rootPath = $this->getRootPath();
         $rootNode
             ->children()
                 ->arrayNode('options')
@@ -112,7 +111,7 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
     public function validate(array $data)
     {
         $processor = new Processor();
-        $result = $processor->processConfiguration($this, $data);
+        $processor->processConfiguration($this, $data);
     }
 
     public function import(array $data)
@@ -130,7 +129,7 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
      *
      * @return array
      */
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export($workspace, array &$files, $object)
     {
         return $this->wikiManager->exportWiki($workspace, $files, $object);
     }
@@ -139,13 +138,13 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
     {
         if (isset($data['sections'])) {
             foreach ($data['sections'] as $section) {
-                if (isset($data['contributions'])) {
+                if (isset($section['contributions'])) {
                     foreach ($section['contributions'] as $contribution) {
                         //look for the text with the exact same content (it's really bad I know but at least it works
-                         $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$contribution['contribution']['path']);
+                        $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$contribution['contribution']['path']);
                         $entities = $this->om->getRepository('Icap\WikiBundle\Entity\Contribution')->findByText($text);
                          //avoid circulary dependency
-                         $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                        $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
 
                         foreach ($entities as $entity) {
                             $entity->setText($text);

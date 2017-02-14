@@ -11,7 +11,6 @@
 
 namespace Claroline\ForumBundle\Transfert;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\ForumBundle\Entity\Category;
 use Claroline\ForumBundle\Entity\Forum;
@@ -170,7 +169,7 @@ class ForumImporter extends Importer implements ConfigurationInterface
         return $forum;
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export($workspace, array &$files, $object)
     {
         $categories = $object->getCategories();
         $data = [];

@@ -23,8 +23,8 @@ class AudioRecorderConfigurationType extends AbstractType
                         'min' => 0,
                       ],
                     ])
-                ->add('', 'submit', [
-                  'label' => 'submit_config_label',
+                ->add('validate', 'submit', [
+                  'label' => 'validate',
                   'translation_domain' => 'innova_audio_recorder',
                   'attr' => [
                       'class' => 'btn btn-primary pull-right',

@@ -17,12 +17,12 @@ export default class BlogService {
     _$q.set(this, $q)
 
     this.posts = []
+    this.info = ''
 
     this.totalItems = null
     this.fixedTitle = null
     this.currentPost = null
     this.newPost = null
-    this.currentPostDate = null
     this.tempInfo = this.info
   }
 
@@ -33,8 +33,6 @@ export default class BlogService {
   set panels(panels) { return _blogData.get(this).panels = panels }
   get archives() { return _blogData.get(this).archives }
   set archives(archives) { _blogData.get(this).archives = archives }
-  get info() { return _blogData.get(this).info }
-  set info(info) { _blogData.get(this).info = info }
   get isGrantedAdmin() { return _blogData.get(this).isGrantedAdmin }
   get isGrantedEdit() { return _blogData.get(this).isGrantedEdit }
   get isGrantedPost() { return _blogData.get(this).isGrantedPost }
@@ -45,11 +43,24 @@ export default class BlogService {
   set options(options) { _blogData.get(this).options = options }
   get tags() { return _blogData.get(this).tags }
   set tags(tags) { return _blogData.get(this).tags = tags }
-  get eventsPath() { return _blogData.get(this).eventsPath }
+  get eventSources() { return _blogData.get(this).eventSources }
   get img_dir() { return _blogData.get(this).img_dir  }
   get banner_dir() { return _blogData.get(this).banner_dir  }
   get user() { return _blogData.get(this).user }
   get loginUrl() { return _blogData.get(this).loginUrl }
+
+  getInfo() {
+    const url = _url.get(this)('icap_blog_api_get_blog', {
+      'blog': this.id
+    })
+
+    let Info = _$resource.get(this)(url)
+    Info.get(
+      success => {
+        this.info = success.info
+      }
+    )
+  }
 
   getPosts(page = null) {
     const url = _url.get(this)('icap_blog_api_get_blog_post', {
@@ -279,7 +290,7 @@ export default class BlogService {
     })
 
     let Archives = _$resource.get(this)(url)
-    Archives.query(
+    Archives.get(
       success => {
         this.archives = success
       }
@@ -327,7 +338,7 @@ export default class BlogService {
 
   setCurrentPost(post) {
     this.currentPost = post
-    this.currentPostDate = new Date(post.publication_date)
+    this.currentPost.publication_date = post.publication_date ? new Date(post.publication_date) : null
     this.fixedTitle = post.title
   }
 
@@ -399,7 +410,7 @@ export default class BlogService {
     let post = new Post({
       'title': this.currentPost.title,
       'content': this.currentPost.content,
-      'publication_date': this.currentPostDate,
+      'publication_date': this.currentPost.publication_date,
       'tags': this.currentPost.tags
     })
 

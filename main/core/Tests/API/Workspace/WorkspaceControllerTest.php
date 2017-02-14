@@ -1,10 +1,10 @@
 <?php
 
-namespace Claroline\CoreBubdle\Tests\API\Workspace;
+namespace Claroline\CoreBundle\Tests\API\Workspace;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Library\Testing\Persister;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 
 class WorkspaceControllerTest extends TransactionalTestCase
 {
@@ -43,13 +43,13 @@ class WorkspaceControllerTest extends TransactionalTestCase
         $admin = $this->createAdmin();
         $this->logIn($admin);
 
-        $values = array(
+        $values = [
             'name' => 'workspace',
             'code' => 'workspace',
             'maxStorageSize' => '10MB',
             'maxUploadResources' => '50',
             'maxUsers' => '50',
-        );
+        ];
 
         $data['workspace_form'] = $values;
         $this->client->request('POST', "/api/workspace/user/{$admin->getId()}", $data);
@@ -64,13 +64,13 @@ class WorkspaceControllerTest extends TransactionalTestCase
         $workspace = $this->persister->workspace('workspace', $admin);
         $this->logIn($admin);
 
-        $values = array(
+        $values = [
             'name' => 'new',
             'code' => 'workspace',
             'maxStorageSize' => '10MB',
             'maxUploadResources' => '50',
             'maxUsers' => '50',
-        );
+        ];
 
         $data['workspace_form'] = $values;
         $this->client->request('PUT', "/api/workspace/{$workspace->getId()}}", $data);

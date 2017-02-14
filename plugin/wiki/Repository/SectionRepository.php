@@ -30,7 +30,7 @@ class SectionRepository extends NestedTreeRepository
                 $queryBuilder->expr()->isNull('section.deleted')
             )
         )->setParameter('deleted', false);
-        if ($isAdmin === false) {
+        if ($isAdmin === false && $user !== null) {
             $queryBuilder
                 ->andWhere(
                     $queryBuilder->expr()->orX(
@@ -38,6 +38,11 @@ class SectionRepository extends NestedTreeRepository
                         'section.author = :userId'
                     )
                 )->setParameter('visible', true)->setParameter('userId', $user->getId());
+        }
+        if ($isAdmin === false && $user === null) {
+            $queryBuilder
+                ->andWhere('section.visible = :visible')
+                ->setParameter('visible', true);
         }
         $options = ['decorate' => false];
         $tree = $this->buildTree($queryBuilder->getQuery()->getArrayResult(), $options);

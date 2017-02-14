@@ -15,6 +15,8 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 
 class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterface
 {
+    use ResourceNotifiableTrait;
+
     const ACTION = 'resource-create';
 
     /**
@@ -131,17 +133,5 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
         $notificationDetails = array_merge($this->details, []);
 
         return $notificationDetails;
-    }
-
-    /**
-     * Get if event is allowed to create notification or not.
-     *
-     * @return bool
-     */
-    public function isAllowedToNotify()
-    {
-        if ($this->node->isPublished()) {
-            return true;
-        }
     }
 }

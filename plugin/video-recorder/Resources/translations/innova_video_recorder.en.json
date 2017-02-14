@@ -18,6 +18,7 @@
     "start_recording": "Start recording",
     "stop": "Stop",
     "stop_recording": "Stop recording",
+    "validate": "Validate",
     "video_recorder_configuration_max_recording_time": "Maximum recording time (Secondes, 0 = infinite)",
     "warning_message_record_end": "The recording is finished.<br/>Click on \"Validate\" if it suits you or \"Retry\".<br/>(Retry will delete the current recording.)"
 }

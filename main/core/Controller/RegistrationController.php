@@ -16,22 +16,22 @@ use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Manager\FacetManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Symfony\Component\Validator\ValidatorInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Component\Validator\ValidatorInterface;
 
 /**
  * Controller for user self-registration. Access to this functionality requires
@@ -100,7 +100,7 @@ class RegistrationController extends Controller
             $user
         );
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -129,7 +129,7 @@ class RegistrationController extends Controller
             $user = $this->get('claroline.manager.user_manager')->createUser(
                 $user,
                 true,
-                array(PlatformRoles::USER)
+                [PlatformRoles::USER]
             );
             $this->roleManager->setRoleToRoleSubject($user, $this->configHandler->getParameter('default_role'));
             //then we adds the differents value for facets.
@@ -141,11 +141,11 @@ class RegistrationController extends Controller
                 }
             }
 
-            $msg = $this->get('translator')->trans('account_created', array(), 'platform');
+            $msg = $this->get('translator')->trans('account_created', [], 'platform');
             $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
 
             if ($this->configHandler->getParameter('registration_mail_validation')) {
-                $msg = $this->get('translator')->trans('please_validate_your_account', array(), 'platform');
+                $msg = $this->get('translator')->trans('please_validate_your_account', [], 'platform');
                 $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
             }
 
@@ -162,7 +162,7 @@ class RegistrationController extends Controller
             return $this->redirect($this->generateUrl('claro_security_login'));
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -171,7 +171,7 @@ class RegistrationController extends Controller
      */
     public function postUserRegistrationAction($format)
     {
-        $formats = array('json', 'xml');
+        $formats = ['json', 'xml'];
 
         if (!in_array($format, $formats)) {
             return new Response(
@@ -181,7 +181,7 @@ class RegistrationController extends Controller
         }
 
         $status = 200;
-        $content = array();
+        $content = [];
 
         if ($this->configHandler->getParameter('allow_self_registration')) {
             $request = $this->request;
@@ -198,7 +198,7 @@ class RegistrationController extends Controller
             if (count($errorList) > 0) {
                 $status = 422;
                 foreach ($errorList as $error) {
-                    $content[] = array('property' => $error->getPropertyPath(), 'message' => $error->getMessage());
+                    $content[] = ['property' => $error->getPropertyPath(), 'message' => $error->getMessage()];
                 }
             } else {
                 $this->userManager->createUser($user);
@@ -224,7 +224,12 @@ class RegistrationController extends Controller
         $user = $this->userManager->getByResetPasswordHash($hash);
 
         if (!$user) {
-            throw new \Exception('Hash not found');
+            $this->get('session')->getFlashBag()->add(
+                'warning',
+                $this->translator->trans('link_outdated', [], 'platform')
+            );
+
+            return $this->redirect($this->generateUrl('claro_security_login'));
         }
 
         $this->userManager->activateUser($user);
