@@ -1161,7 +1161,7 @@
     "tune_public_url_success": "Het personnaliseren van de URL van uw openbaar profiel is met succes uitgevoerd.",
     "tune_your_public_profile": "Personnaliseer uw openbaar profiel",
     "tune_your_public_profile_url": "Personnaliseer de URL van uw openbaar profiel",
-    "type": "Type",
+    "type": "Soort",
     "type_s": "Type(s)",
     "unable_to_start_gmail": "De verbinding met de SMTP-server van Gmail kan niet tot stand gebracht worden. Gelieve na te kijken of de gebruikersnaam en het wachtwoord correct zijn.",
     "unable_to_start_sendmail": "De verbinding me Sendmail of Postfix kan niet tot stand gebracht worden. Gelieve na te kijken of één van deze paketten coorrect geinstalleerd en ingesteld is.",
