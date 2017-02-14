@@ -12,7 +12,7 @@
     "chat_accounts_creation": "",
     "chat_configuration": "",
     "chat_room_closed_alert": "",
-    "chat_room_closed_msg": "La Chat room est fermée",
+    "chat_room_closed_msg": "",
     "chat_room_configuration": "",
     "chat_room_id": "",
     "chat_room_open_msg": "",
@@ -34,7 +34,7 @@
     "has_been_unbanned_from_the_chat_room": "",
     "has_joined_the_chat_room": "",
     "has_left_the_chat_room": "",
-    "host": "",
+    "host": "Host",
     "ice_servers": "",
     "init_room": "",
     "invalid_authentication": "",
@@ -58,7 +58,7 @@
     "ssl": "SSL",
     "status": "Statuut",
     "text_only": "Tekst alleen",
-    "type": "Type",
+    "type": "Soort",
     "uninitialized": "",
     "visitor": "Bezoeker"
 }
