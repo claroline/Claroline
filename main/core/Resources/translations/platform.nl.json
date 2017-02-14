@@ -520,7 +520,7 @@
     "home_tab_widgets_configuration": "De widgets van de tab instellen",
     "home_tabs": "Tabs van de startpagina",
     "home_tabs_configuration": "De tabs van de startpagina instellen",
-    "host": "",
+    "host": "Host",
     "hour": "uur",
     "hours": "uur",
     "icon": "Pictogram",
@@ -1343,5 +1343,7 @@
     "roles_for_desktop_widget": "Rollen (Desktop)",
     "ssl_enabled": "Is SSL geactiveerd ?",
     "visible_facet_form_explanation": "Het veld \"Zichtbaar\" laat u toe het element zichtbaar of onzichtbaar te maken voor de gebruiker.",
-    "workspace_access_disabled": "Uw toegang tot de werkruimte is uitschakeld."
+    "workspace_access_disabled": "Uw toegang tot de werkruimte is uitschakeld.",
+    "rich_text": "Rich text",
+    "temporary_directory": "Tijdelijke map"
 }
