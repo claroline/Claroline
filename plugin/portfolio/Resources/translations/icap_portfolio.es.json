@@ -1,4 +1,11 @@
 {
     "revoke_access": "Revocar acceso",
-    "configuration": "Configuración"
+    "configuration": "Configuración",
+    "see": "Ver",
+    "title": "Título",
+    "visibility": "Visibilidad",
+    "import": "Importar",
+    "owner": "Propietario",
+    "rename": "Renombrar",
+    "statistics": "Estadísticos"
 }

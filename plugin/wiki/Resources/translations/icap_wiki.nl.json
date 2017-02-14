@@ -16,7 +16,7 @@
     "create_section": "Een sectie maken",
     "date_format": "m/d/Y 'at' H:i",
     "delete": "Verwijderen",
-    "delete_confirmation": "",
+    "delete_confirmation": "Bent u er zeker van dat u de sectie \"%sectionTitle%\" wenst te verwijderen ?",
     "delete_section": "Een sectie verwijderen",
     "deleted": "Verwijderd",
     "deleted_sections": "Verwijderde secties",
@@ -73,5 +73,7 @@
     "set_active_contribution": "Publiceer deze herziening",
     "waiting_for_moderation": "Wacht op goedkeuring",
     "wiki_contents": "Inhoud",
-    "history": "Geschiedenis"
+    "history": "Geschiedenis",
+    "back_to_top": "Terug naar boven",
+    "display_section_numbers_message": "Automatische sectienummers worden weergegeven in de wiki, vóór elke sectietitel."
 }

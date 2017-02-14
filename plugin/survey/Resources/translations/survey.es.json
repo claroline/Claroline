@@ -8,5 +8,15 @@
     "publication_date": "",
     "answer": "Respuesta",
     "close": "Cerrar",
-    "comment": ""
+    "comment": "",
+    "no_model": "",
+    "published": "Publicado",
+    "results": "Resultados",
+    "title": "Título",
+    "description": "Descripción",
+    "model": "Modelo",
+    "parameters": "Parámetros",
+    "publish": "Publicado",
+    "status": "Estado",
+    "unpublished": "No publicado"
 }

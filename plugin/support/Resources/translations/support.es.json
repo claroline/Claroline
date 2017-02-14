@@ -3,5 +3,9 @@
     "created_on": "Creado en",
     "add_comment": "",
     "comments": "",
-    "no_comment": ""
+    "no_comment": "",
+    "new": "Nuevo",
+    "technical": "Técnicos",
+    "status": "Estado",
+    "total_time": "Tempo total"
 }

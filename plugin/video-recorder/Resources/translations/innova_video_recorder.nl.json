@@ -1,5 +1,11 @@
 {
     "ok": "Valideren",
     "resource_creation_error": "Er is een fout opgetreden tijdens het maken van de leermiddel.",
-    "resource_name_placeholder": "De naamvan de leermiddel is verplicht."
+    "resource_name_placeholder": "De naam van de leermiddel is verplicht.",
+    "retry": "Herbeginnen",
+    "start": "Starten",
+    "start_recording": "Start opname",
+    "stop": "Stop",
+    "stop_recording": "Stop opname",
+    "video_recorder_configuration_max_recording_time": ""
 }

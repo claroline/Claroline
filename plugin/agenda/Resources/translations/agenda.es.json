@@ -4,7 +4,7 @@
     "close": "Cerrar",
     "confirm": "Confirmar la modificación?",
     "date_agenda_display_format": "MM-DD-YYYY",
-    "date_agenda_display_format_for_form": "MM-dd-yyyy",
+    "date_agenda_display_format_for_form": "dd-MM-yyyy",
     "date_invalid": "Ha ocurrido un error. Por favor, compruebe que su evento no termina antes de que empiece",
     "day.fri": "Vi",
     "day.friday": "Viernes",

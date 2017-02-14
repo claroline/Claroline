@@ -17,7 +17,7 @@
     "resource_creation_error": "Er is een fout opgetreden tijdens het maken van de leermiddel.",
     "resource_creation_error_download": "Gebruik de downloadknop om uw bestand locaal op te slaan.",
     "resource_name": "Naam :",
-    "resource_name_placeholder": "De naamvan de leermiddel is verplicht.",
+    "resource_name_placeholder": "De naam van de leermiddel is verplicht.",
     "start_recording": "Starten",
     "stop_recording": "Stop",
     "submit_config_label": "De instellingen opslaan"

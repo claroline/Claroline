@@ -22,5 +22,5 @@
     "google_meta_tag_error": "Het veld moet een meta tag zijn, bijvoorbeeld: <meta name=\"google-site-verification\" content=\"XXX\" />.",
     "invalid_date_range": "Het begin moet voorafgaan aan de einddatum.",
     "invalid_size_message": "Deze opslag eenheid is ongeldig (B, KB, MB, GB).",
-    "public_profile_url_not_valid": "Uw openbaar URL progiel is ongeldig."
+    "public_profile_url_not_valid": "Uw openbaar URL profiel is niet geldig."
 }

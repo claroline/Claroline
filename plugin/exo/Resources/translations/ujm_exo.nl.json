@@ -1,10 +1,10 @@
 {
-    "type": "Type",
+    "type": "Soort",
     "actions": "Acties",
     "add": "Toevoegen",
     "all": "Allen",
     "none": "Geen",
-    "open": "Openen",
+    "open": "Open",
     "reset": "Resetten",
     "yes": "Ja",
     "comment": "Commentaar",
