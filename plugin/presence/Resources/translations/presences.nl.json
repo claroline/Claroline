@@ -28,5 +28,6 @@
     "student_firstname": "Voornaam van de leerling",
     "student_name": "Naam van de leerling",
     "supprimer": "Verwijderen",
-    "valider": "Valideren"
+    "valider": "Valideren",
+    "NC": "onbekend"
 }
