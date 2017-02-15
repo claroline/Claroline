@@ -7,7 +7,7 @@ import {WarningIcon} from './utils/warning-icon.jsx'
 
 export const ChoiceFeedback = props => {
   return (
-    <div className="container choice-paper">
+    <div className="choice-paper">
     {props.item.solutions.map(solution =>
       <div
         key={utils.answerId(solution.id)}

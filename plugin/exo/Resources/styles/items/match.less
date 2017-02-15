@@ -1,165 +1,100 @@
-/* MATCH QUESTION */
-
-
-/* jsPlumb Endpoints z-index */
-.jsplumb-endpoint,
-.endPoints{
+.jsplumb-endpoint {
   z-index: 1;
 }
 
-/* MATCH EDITOR */
-.match-question-editor {
-  padding: 0;
+.jsplumb-endpoint,
+.jsplumb-connector {
+  cursor: pointer;
+}
+
+.match-editor,
+.match-player,
+.match-paper {
   /* required by jsPlumb for proper drawing */
   position: relative;
-  .match-items {
-    display: flex;
-    justify-content: space-around;
 
+  .item-col {
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+    }
+  }
+}
+
+/* MATCH EDITOR */
+.match-editor {
+  .match-items {
     .footer {
       text-align: center;
     }
-    
-    .item-col {
-      flex-grow: 0;
-      width: 260px;
-      ul {
-        padding: 0;
-        margin: 0;
-        li {
-          list-style: none;
-          display: flex;
-          flex-direction: column;
-        }
-      }
-      .text-editor.minimal {
-        width: 201px;
-        max-width: 201px;
-        min-width: 201px;
-        height: 100px;
-        min-height: 100px;
-        max-height: 100px;
-        .form-control {
-          width: 100%;
-          max-width: 100%;
-          min-width: 100%;
-          height: 100%;
-          min-height: 100%;
-          max-height: 100%;
-          overflow: auto;
-        }
-      }
 
-      .item {
-        display: flex;
-        background-color: #eee;
-        padding: @panel-body-padding;
-        margin-bottom: @form-group-margin-bottom;
+    .match-item {
+      display: flex;
+      .text-fields {
+        flex-grow: 1;
       }
+    }
+
+    // no need to indent feedback
+    .feedback-container {
+      padding-left: 0;
     }
 
     .popover-container{
       /* required for position computing */
       position: relative;
-      flex-grow: 6;
-      .popover {
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        max-width: 450px !important;
-        min-width: 250px !important;
-        .popover-title {
-          display: block;
-          height: 30px;
-          &:after {
-            clear: both;
-            content: ".";
-            display: inline-block;
-            height: 0;
-            visibility: hidden;
-          }
-          .pull-right {
-            margin-top: -5px;
+    }
+
+    .popover {
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 250px !important;
+
+      .popover-title {
+        > div {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .btn {
+            padding: 0 4px; // horizontal : same as feedback and delete item btns
           }
         }
-        .popover-content {
-          .connection-parameters {
-            display: flex;
-            align-items: baseline;
-          }
-          .feedback-container {
-            color:red;
-            margin-top: 5px;
-          }
+      }
+
+      .association {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-end;
+
+        .btn {
+          padding-left: 4px;
+          padding-right: 4px;
+        }
+
+        .association-score {
+          width: 60px;
+          margin-right: floor(@grid-gutter-width / 2);
         }
       }
     }
   }
 }
-
 
 /* MATCH PLAYER */
-.match-question-player {
-  padding: 0;
-  /* required by jsPlumb for proper drawing */
-  position: relative;
-  display: flex;
-  justify-content: space-around;
-
-  .jsplumb-connector {
-    &:hover {
-      cursor: crosshair;
-    }
-  }
-
+.match-player {
   .item-col {
-    flex-grow: 0;
-    width: 260px;
-    ul {
-      padding: 0;
-      margin: 0;
-      li {
-        list-style: none;
-        display: flex;
-        flex-direction: column;
+    li:last-child {
+      .match-item {
+        margin-bottom: 0;
       }
-    }
-
-    .item {
-      display: flex;
-      background-color: #eee;
-      padding: 15px;
-      margin: 5px;
-      justify-content: center;
-    }
-  }
-
-  .divide-col {
-    min-width: 150px;
-  }
-
-}
-
-
-/* PART OF PAPER BUT SINCE JSPLUMB DRAWS OUTSIDE NEED EXTRA DEFINITIONS */
-.jsplumb-container {
-  .jsplumb-connector {
-    &:hover {
-      cursor: pointer;
     }
   }
 }
 
 /* MATCH PAPER */
-.match-question-paper {
-  padding: 0;
-  /* required by jsPlumb for proper drawing */
-  position: relative;
-  border: solid 1px #ddd;
-  border-radius: 4px;
-  margin: 0;
-  width: 100%;
-
+.match-paper {
   .jsplumb-row {
     /* required by jsPlumb for proper drawing */
     position: relative;
@@ -235,7 +170,6 @@
 
       .feedback-btn {
         margin: 5px;
-        cursor: pointer;
       }
     }
   }
@@ -250,11 +184,7 @@
   width: 100%;
   display: flex;
   justify-content: space-around;
-  .jsplumb-connector {
-    &:hover {
-      cursor: pointer;
-    }
-  }
+
   .item-col {
     flex-grow: 0;
     width: 260px;
@@ -296,3 +226,8 @@
     }
   }
 }
+
+.association-default {}
+.association-selected {}
+.association-valid {}
+.association-invalid {}

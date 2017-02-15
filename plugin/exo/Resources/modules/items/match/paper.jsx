@@ -214,7 +214,7 @@ export class MatchPaper extends Component
                   <span className="help-block">
                     <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
                   </span>
-                  <div id={`match-question-paper-${this.props.item.id}-first`} className="match-question-paper">
+                  <div id={`match-question-paper-${this.props.item.id}-first`} className="match-paper">
                     <div className="jsplumb-row">
                       <div className="item-col">
                         <ul>

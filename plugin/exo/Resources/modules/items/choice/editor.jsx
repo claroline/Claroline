@@ -21,7 +21,7 @@ class ChoiceItem extends Component {
     return (
       <div
         className={classes(
-          'choice-item',
+          'answer-item choice-item',
           {'positive-score' : !this.props.fixedScore && this.props.score > 0},
           {'negative-score' : !this.props.fixedScore && this.props.score <= 0}
         )}
@@ -59,6 +59,7 @@ class ChoiceItem extends Component {
             </div>
           }
         </div>
+
         <div className="right-controls">
           {!this.props.fixedScore &&
             <input
@@ -163,12 +164,19 @@ ChoiceItems.propTypes = {
 
 export const Choice = props =>
   <fieldset className="choice-editor">
-    <CheckGroup
-      checkId={`item-${props.item.id}-random`}
-      checked={props.item.random}
-      label={tex('qcm_shuffle')}
-      onChange={checked => props.onChange(actions.updateProperty('random', checked))}
+    <Radios
+      groupName="multiple"
+      options={[
+        {value: QCM_SINGLE, label: tex('qcm_single_answer')},
+        {value: QCM_MULTIPLE, label: tex('qcm_multiple_answers')}
+      ]}
+      checkedValue={props.item.multiple ? QCM_MULTIPLE : QCM_SINGLE}
+      inline={true}
+      onChange={value => props.onChange(
+        actions.updateProperty('multiple', value === QCM_MULTIPLE)
+      )}
     />
+
     <CheckGroup
       checkId={`item-${props.item.id}-fixedScore`}
       checked={props.item.score.type === SCORE_FIXED}
@@ -177,6 +185,7 @@ export const Choice = props =>
         actions.updateProperty('score.type', checked ? SCORE_FIXED : SCORE_SUM)
       )}
     />
+
     {props.item.score.type === SCORE_FIXED &&
       <div className="sub-fields">
         <FormGroup
@@ -214,20 +223,16 @@ export const Choice = props =>
         </FormGroup>
       </div>
     }
-    <Radios
-      groupName="multiple"
-      options={[
-        {value: QCM_SINGLE, label: tex('qcm_single_answer')},
-        {value: QCM_MULTIPLE, label: tex('qcm_multiple_answers')}
-      ]}
-      checkedValue={props.item.multiple ? QCM_MULTIPLE : QCM_SINGLE}
-      inline={true}
-      onChange={value => props.onChange(
-        actions.updateProperty('multiple', value === QCM_MULTIPLE)
-      )}
-    >
-    </Radios>
+
     <hr className="item-content-separator" />
+
+    <CheckGroup
+      checkId={`item-${props.item.id}-random`}
+      checked={props.item.random}
+      label={tex('qcm_shuffle')}
+      onChange={checked => props.onChange(actions.updateProperty('random', checked))}
+    />
+
     <ChoiceItems {...props}/>
   </fieldset>
 

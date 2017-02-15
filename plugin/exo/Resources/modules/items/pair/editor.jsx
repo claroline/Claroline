@@ -234,7 +234,7 @@ class Odd extends Component {
 
   render(){
     return (
-      <div className="item negative-score">
+      <div className="answer-item item negative-score">
         <div className="text-fields">
           <Textarea
             onChange={(value) => this.props.onChange(
@@ -319,7 +319,7 @@ OddList.propTypes = {
 
 let Item = props => {
   return props.connectDragPreview (
-    <div className="item">
+    <div className="answer-item item">
       <div className="text-fields">
         <Textarea
           onChange={(value) => props.onChange(
@@ -352,6 +352,7 @@ let Item = props => {
                 className={classes(
                   'tooltiped-button',
                   'btn',
+                  'btn-link-default',
                   'fa fa-fw',
                   'fa-bars',
                   'drag-handle'
@@ -384,7 +385,7 @@ const ItemList = props => {
           </li>
         )}
       </ul>
-      <div className="footer text-center">
+      <div className="footer">
         <button
           type="button"
           className="btn btn-default"
@@ -420,6 +421,9 @@ const PairForm = (props) => {
           )}
         />
       </div>
+
+      <hr className="item-content-separator" />
+
       <div className="checkbox">
         <label>
           <input
@@ -429,11 +433,9 @@ const PairForm = (props) => {
               actions.updateProperty('random', e.target.checked)
             )}
           />
-        {tex('pair_shuffle_pairs')}
+          {tex('pair_shuffle_pairs')}
         </label>
       </div>
-
-      <hr className="item-content-separator" />
 
       {get(props.item, '_errors.item') &&
         <ErrorBlock text={props.item._errors.item} warnOnly={!props.validating}/>

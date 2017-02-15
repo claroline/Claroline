@@ -1,6 +1,6 @@
 .quiz-editor {
   display: flex;
-  width: 100%;
+  /*width: 100%;*/
   min-height: 100%;
 
   .thumbnail-box {
@@ -135,7 +135,7 @@
   }
 
   .hint-items  {
-    & > ul {
+    > ul {
       padding-left: 0;
       list-style-type: none;
       margin: 0;
@@ -199,7 +199,10 @@
   }
 
   .sub-fields {
-    margin-left: @grid-gutter-width;
+    // this is used to conditionally display fields on radio/checkbox check
+    // we align the displayed fields with the label of the radio/checkbox
+    // but there is no var in bootstrap for this
+    margin-left: 20px;
   }
 
   .react-datepicker__input-container {
@@ -207,12 +210,12 @@
   }
 
   .positive-score {
-    background-color: transparent;
+    /*background-color: transparent;*/
     border: 1px solid @brand-success;
   }
 
   .negative-score {
-    background-color: transparent;
+    /*background-color: transparent;*/
     border: 1px solid @brand-danger;
   }
 

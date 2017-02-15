@@ -5,7 +5,7 @@ export const SubSection = props =>
   <div className="sub-section">
     {props.hidden &&
       <a role="button" onClick={props.toggle}>
-        <span className="fa fa-fw fa-caret-right"/>
+        <span className="fa fa-caret-right"/>
         {props.showText}
       </a>
     }
@@ -13,7 +13,7 @@ export const SubSection = props =>
         <div>
           {props.children}
           <a role="button" onClick={props.toggle}>
-            <span className="fa fa-fw fa-caret-right"/>
+            <span className="fa fa-caret-right"/>
             {props.hideText}
           </a>
         </div>

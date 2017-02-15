@@ -16,7 +16,7 @@ export const ChoicePaper = props => {
             <div
               key={utils.answerId(solution.id)}
               className={classes(
-                'item',
+                'answer-item choice-item',
                 props.item.multiple ? 'checkbox': 'radio',
                 utils.getAnswerClassForSolution(solution, props.answer)
               )}
@@ -50,7 +50,7 @@ export const ChoicePaper = props => {
             <div
               key={utils.expectedId(solution.id)}
               className={classes(
-                'item',
+                'answer-item choice-item',
                 props.item.multiple ? 'checkbox': 'radio',
                 {
                   'bg-info text-info': solution.score > 0

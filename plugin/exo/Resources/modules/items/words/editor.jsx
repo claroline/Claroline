@@ -18,7 +18,7 @@ class WordItem extends Component {
     return (
       <div className={
         classes(
-          'word-item',
+          'word-item answer-item',
           {'positive-score': this.props.score > 0 },
           {'negative-score': this.props.score <= 0 }
         )
