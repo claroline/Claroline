@@ -29,5 +29,8 @@
     "student_name": "Naam van de leerling",
     "supprimer": "Verwijderen",
     "valider": "Valideren",
-    "NC": "onbekend"
+    "NC": "onbekend",
+    "aucune_periode": "Geen  bestaande of geselecteerde periode ",
+    "bonjour": "Goeiedag ",
+    "valider_presences": "Aanwezigheden valideren"
 }
