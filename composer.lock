@@ -54,20 +54,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BeSimple/BeSimpleSsoAuthBundle.git",
-                "reference": "f6f3317f12d180f9d275e85a9bf210b99efc8831"
+                "reference": "8baf8167d1f609728d1fe28ed8e91aa28efb2f84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BeSimple/BeSimpleSsoAuthBundle/zipball/f6f3317f12d180f9d275e85a9bf210b99efc8831",
-                "reference": "f6f3317f12d180f9d275e85a9bf210b99efc8831",
+                "url": "https://api.github.com/repos/BeSimple/BeSimpleSsoAuthBundle/zipball/8baf8167d1f609728d1fe28ed8e91aa28efb2f84",
+                "reference": "8baf8167d1f609728d1fe28ed8e91aa28efb2f84",
                 "shasum": ""
             },
             "require": {
                 "kriswallsmith/buzz": ">=0.7,<1.0-dev",
                 "php": ">=5.3.3",
-                "symfony/framework-bundle": "~2.1",
-                "symfony/security-bundle": "~2.1",
-                "symfony/twig-bundle": "~2.1"
+                "symfony/framework-bundle": "~2.1|~3.0",
+                "symfony/security-bundle": "~2.1|~3.0",
+                "symfony/twig-bundle": "~2.1|~3.0"
             },
             "require-dev": {
                 "symfony/browser-kit": "~2.1",
@@ -112,7 +112,7 @@
                 "Symfony2",
                 "cas"
             ],
-            "time": "2016-01-19 19:47:22"
+            "time": "2017-02-14 14:01:10"
         },
         {
             "name": "claroline/distribution",
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "315103c8be31412fcc32b952c5d0ac905a10ff01"
+                "reference": "e0cd46963c2525bf0a28d8ae1062a052c9ecb635"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/315103c8be31412fcc32b952c5d0ac905a10ff01",
-                "reference": "315103c8be31412fcc32b952c5d0ac905a10ff01",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/e0cd46963c2525bf0a28d8ae1062a052c9ecb635",
+                "reference": "e0cd46963c2525bf0a28d8ae1062a052c9ecb635",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-02-13 13:57:07"
+            "time": "2017-02-14 17:23:50"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -731,17 +731,20 @@
         },
         {
             "name": "container-interop/container-interop",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/container-interop/container-interop.git",
-                "reference": "fc08354828f8fd3245f77a66b9e23a6bca48297e"
+                "reference": "79cbf1341c22ec75643d841642dd5d6acd83bdb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/container-interop/container-interop/zipball/fc08354828f8fd3245f77a66b9e23a6bca48297e",
-                "reference": "fc08354828f8fd3245f77a66b9e23a6bca48297e",
+                "url": "https://api.github.com/repos/container-interop/container-interop/zipball/79cbf1341c22ec75643d841642dd5d6acd83bdb8",
+                "reference": "79cbf1341c22ec75643d841642dd5d6acd83bdb8",
                 "shasum": ""
+            },
+            "require": {
+                "psr/container": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -754,7 +757,8 @@
                 "MIT"
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
-            "time": "2014-12-30 15:22:37"
+            "homepage": "https://github.com/container-interop/container-interop",
+            "time": "2017-02-14 19:40:03"
         },
         {
             "name": "ddeboer/data-import",
@@ -4397,6 +4401,55 @@
                 "type"
             ],
             "time": "2015-07-25 16:39:46"
+        },
+        {
+            "name": "psr/container",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/container.git",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Container\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https://github.com/php-fig/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "time": "2017-02-14 16:28:37"
         },
         {
             "name": "psr/log",
