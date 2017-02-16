@@ -126,7 +126,7 @@ class Activity extends AbstractResource
     /**
      * Get parameters.
      *
-     * @return string
+     * @return ActivityParameters
      */
     public function getParameters()
     {

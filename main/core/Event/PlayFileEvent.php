@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Event;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
 use Claroline\CoreBundle\Entity\Resource\File;
@@ -33,7 +34,7 @@ class PlayFileEvent extends Event
     /**
      * Returns the resource on which the action is to be taken.
      *
-     * @return Claroline\CoreBundle\Entity\Resource\AbstractResource
+     * @return AbstractResource
      */
     public function getResource()
     {

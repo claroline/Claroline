@@ -37,7 +37,7 @@ class CustomActionResourceEvent extends Event implements DataConveyorEventInterf
     /**
      * Returns the id of the resource on which the action is to be taken.
      *
-     * @return int
+     * @return AbstractResource
      */
     public function getResource()
     {
