@@ -38,7 +38,7 @@
     "notifications_explanation": "L'activation des notifications globales entraîne l'envoi d'un courriel aux utilisateurs ayant accès au forum lors de l'ajout d'un message.",
     "please_connect_to_answer": "Il est nécessaire de se connecter pour participer au forum.",
     "posted_by": "Posté par %author% le %date%",
-    "posts": "Messages",
+    "posts": "Articles",
     "quote": "Citer",
     "remove_category_confirm_message": "Êtes-vous sûr de vouloir supprimer cette catégorie ?",
     "remove_subject_confirm_message": "Êtes-vous sûr de vouloir supprimer ce sujet ?",
