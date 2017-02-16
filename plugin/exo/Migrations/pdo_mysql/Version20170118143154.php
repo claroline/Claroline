@@ -212,7 +212,7 @@ class Version20170118143154 extends AbstractMigration
         // Link old proposals to rows
         $this->addSql('
             INSERT INTO ujm_grid_row_item (row_id, item_id, entity_order) (
-                SELECT r.id AS row_id, gi.id AS item_id, 0 AS entity_order
+                SELECT DISTINCT r.id AS row_id, gi.id AS item_id, 0 AS entity_order
                 FROM ujm_proposal AS p
                 JOIN ujm_grid_item AS gi ON (p.uuid = gi.uuid)
                 JOIN ujm_proposal_label AS pl ON (p.id = pl.proposal_id)
