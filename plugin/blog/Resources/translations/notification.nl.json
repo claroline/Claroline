@@ -1,1 +1,3 @@
-{}
+{
+    "resource-icap_blog-comment_create": "heeft een commentaar gemaakt in het item %post%\" van de blog \"%blog%\"."
+}
