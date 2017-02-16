@@ -119,5 +119,7 @@
     "unpublish": "Rendre non-visible",
     "valid_banner_modification": "Valider les modifications",
     "view": "%viewCounter% vue | %viewCounter% vues",
-    "widget_list_no_blog": "Aucun blog affiché"
+    "widget_list_no_blog": "Aucun blog affiché",
+    "Post": "Billet",
+    "post_filtered_by_monthe": "Liste des billets filtrée par mois %date%"
 }
