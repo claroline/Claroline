@@ -40,6 +40,7 @@
 
     &.sm {
         font-size: @path-progression-size-sm;
+        min-width: @path-progression-size-sm;
     }
 
     // centered value inside circle
@@ -87,6 +88,13 @@
     // circle to show the status
     .bar {
         &:extend(.pie);
+    }
+
+    // hide "0%" when gauge is empty
+    &.p0 {
+        > span {
+            visibility: hidden;
+        }
     }
 
     // loop to create all needed elements automatically

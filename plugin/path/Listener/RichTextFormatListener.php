@@ -1,7 +1,8 @@
 <?php
 
-namespace Innova\PathBundle\EventListener;
+namespace Innova\PathBundle\Listener;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\RichTextFormatEvent;
 use Claroline\CoreBundle\Library\Transfert\RichTextFormatter;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -22,12 +23,19 @@ class RichTextFormatListener
     private $resourceManager;
 
     /**
+     * RichTextFormatListener constructor.
+     *
      * @DI\InjectParams({
      *     "router"          = @DI\Inject("router"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "formatter"       = @DI\Inject("claroline.importer.rich_text_formatter"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
      * })
+     *
+     * @param RouterInterface $router
+     * @param ObjectManager $om
+     * @param RichTextFormatter $formatter
+     * @param ResourceManager $resourceManager
      */
     public function __construct(
         RouterInterface $router,
@@ -78,8 +86,12 @@ class RichTextFormatListener
             $uid = (int) $match[1];
             $parent = $this->formatter->findParentFromDataUid($uid);
             $el = $this->formatter->findItemFromUid($uid);
-            $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                ->findOneBy(['parent' => $parent, 'name' => $el['name']]);
+
+            /** @var ResourceNode $node */
+            $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneBy([
+                'parent' => $parent,
+                'name' => $el['name'],
+            ]);
 
             if ($node) {
                 $resource = $this->resourceManager->getResourceFromNode($node);

@@ -1,10 +1,11 @@
 <?php
 
-namespace Innova\PathBundle\EventListener\Widget;
+namespace Innova\PathBundle\Listener\Widget;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Innova\PathBundle\Manager\PathManager;
+use Innova\PathBundle\Form\Type\PathWidgetConfigType;
+use Innova\PathBundle\Manager\WidgetManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -17,7 +18,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 class PathSlideshowListener
 {
     /**
-     * @var \Symfony\Bundle\TwigBundle\TwigEngine
+     * @var TwigEngine
      */
     private $twig;
 
@@ -27,31 +28,31 @@ class PathSlideshowListener
     private $formFactory;
 
     /**
-     * @var \Innova\PathBundle\Manager\PathManager
+     * @var WidgetManager
      */
-    private $pathManager;
+    private $widgetManager;
 
     /**
      * PathWidgetListener.
      *
      * @DI\InjectParams({
-     *     "twig"        = @DI\Inject("templating"),
-     *     "formFactory" = @DI\Inject("form.factory"),
-     *     "pathManager" = @DI\Inject("innova_path.manager.path")
+     *     "twig"          = @DI\Inject("templating"),
+     *     "formFactory"   = @DI\Inject("form.factory"),
+     *     "widgetManager" = @DI\Inject("innova_path.manager.widget")
      * })
      *
      * @param TwigEngine           $twig
      * @param FormFactoryInterface $formFactory
-     * @param PathManager          $pathManager
+     * @param WidgetManager        $widgetManager
      */
     public function __construct(
         TwigEngine           $twig,
         FormFactoryInterface $formFactory,
-        PathManager          $pathManager)
+        WidgetManager        $widgetManager)
     {
         $this->twig = $twig;
         $this->formFactory = $formFactory;
-        $this->pathManager = $pathManager;
+        $this->widgetManager = $widgetManager;
     }
 
     /**
@@ -61,15 +62,8 @@ class PathSlideshowListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $widgetInstance = $event->getInstance();
-        $workspace = $widgetInstance->getWorkspace();
-
-        $config = $this->pathManager->getWidgetConfig($widgetInstance);
-
         $content = $this->twig->render('InnovaPathBundle:Widget:slideshow.html.twig', [
-            'workspace' => $workspace,
-            'isDesktop' => $widgetInstance->isDesktop(),
-            'paths' => $this->pathManager->getWidgetPaths($config, $workspace),
+            'paths' => $this->widgetManager->getPaths($event->getInstance(), true),
         ]);
 
         $event->setContent($content);
@@ -84,9 +78,9 @@ class PathSlideshowListener
     public function onConfigure(ConfigureWidgetEvent $event)
     {
         $instance = $event->getInstance();
-        $config = $this->pathManager->getWidgetConfig($instance);
+        $config = $this->widgetManager->getConfig($instance);
 
-        $form = $this->formFactory->create('innova_path_widget_config', $config);
+        $form = $this->formFactory->create(new PathWidgetConfigType(), $config);
         $content = $this->twig->render(
             'InnovaPathBundle:Widget:config.html.twig',
             [

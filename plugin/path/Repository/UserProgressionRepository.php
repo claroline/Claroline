@@ -92,7 +92,12 @@ class UserProgressionRepository extends EntityRepository
             ])
             ->getSingleResult();
 
-        return round(($result['countDone'] / $result['countTotal']) * 100);
+        if (0 < $result['countTotal']) {
+            return round(($result['countDone'] / $result['countTotal']) * 100);
+        } else {
+            // No step in the path
+            return 0;
+        }
     }
 
     /**

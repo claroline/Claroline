@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\EventListener\Notifications;
+namespace Innova\PathBundle\Listener\Notification;
 
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
 use JMS\DiExtraBundle\Annotation as DI;

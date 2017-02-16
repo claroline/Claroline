@@ -1,4 +1,4 @@
-{% extends "InnovaPathBundle:Wizard:layout.html.twig" %}
+{% extends "InnovaPathBundle:Path:layout.html.twig" %}
 
 {% block resourceBreadcrumb %}
     <li>
@@ -24,5 +24,6 @@
 
 {% block javascripts %}
     {{ parent() }}
+
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-path-editor.js') }}"></script>
 {% endblock %}

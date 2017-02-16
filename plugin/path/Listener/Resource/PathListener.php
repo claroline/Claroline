@@ -1,8 +1,10 @@
 <?php
 
-namespace Innova\PathBundle\EventListener\Resource;
+namespace Innova\PathBundle\Listener\Resource;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
@@ -12,43 +14,34 @@ use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Innova\PathBundle\Entity\Path\Path;
+use Innova\PathBundle\Form\Type\PathType;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
- * Path Event Listener
  * Used to integrate Path to Claroline resource manager.
  *
- * @DI\Service()
+ * @DI\Service("innova_path.listener.path")
  */
 class PathListener
 {
     private $container;
-    private $httpKernel;
-    private $request;
-    private $resourceManager;
 
     /**
+     * PathListener constructor.
+     *
      * @DI\InjectParams({
-     *     "container"       = @DI\Inject("service_container"),
-     *     "httpKernel"      = @DI\Inject("http_kernel"),
-     *     "requestStack"    = @DI\Inject("request_stack"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
+     *     "container" = @DI\Inject("service_container")
      * })
+     *
+     * @param ContainerInterface $container
      */
-    public function __construct(
-        ContainerInterface $container,
-        HttpKernelInterface $httpKernel,
-        RequestStack $requestStack,
-        ResourceManager $resourceManager
-    ) {
+    public function __construct(ContainerInterface $container)
+    {
         $this->container = $container;
-        $this->httpKernel = $httpKernel;
-        $this->request = $requestStack->getCurrentRequest();
-        $this->resourceManager = $resourceManager;
     }
 
     /**
@@ -56,23 +49,20 @@ class PathListener
      *
      * @DI\Observe("open_innova_path")
      *
-     * @param \Claroline\CoreBundle\Event\OpenResourceEvent $event
+     * @param OpenResourceEvent $event
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $params = [];
-        $path = $event->getResource();
+        $path = $this->getPathFromEvent($event->getResource());
 
-        if ($path->isPublished()) {
-            // Path is published => display the Player
-            $params['_controller'] = 'innova_path.controller.path_player:displayAction';
-        } else {
-            // Path is not published (so we can't play the Path) => display the Editor
-            $params['_controller'] = 'innova_path.controller.path_editor:displayAction';
-        }
-        $params['id'] = $path->getId();
-        $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        // Forward request to the Resource controller
+        $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate([], null, [
+            '_controller' => 'InnovaPathBundle:Resource\Path:open',
+            'id' => $path->getId(),
+        ]);
+
+        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
+
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -80,18 +70,20 @@ class PathListener
     /**
      * @DI\Observe("administrate_innova_path")
      *
-     * @param \Claroline\CoreBundle\Event\CustomActionResourceEvent $event
+     * @param CustomActionResourceEvent $event
      */
     public function onAdministrate(CustomActionResourceEvent $event)
     {
-        $path = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
-            $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
-            $event->getResource();
-        $params = [];
-        $params['_controller'] = 'innova_path.controller.path_editor:displayAction';
-        $params['id'] = $path->getId();
-        $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $path = $this->getPathFromEvent($event->getResource());
+
+        // Forward request to the Resource controller
+        $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate([], null, [
+            '_controller' => 'InnovaPathBundle:Resource\Path:edit',
+            'id' => $path->getId(),
+        ]);
+
+        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
+
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -101,16 +93,15 @@ class PathListener
      *
      * @DI\Observe("create_form_innova_path")
      *
-     * @param \Claroline\CoreBundle\Event\CreateFormResourceEvent $event
+     * @param CreateFormResourceEvent $event
      */
     public function onCreateForm(CreateFormResourceEvent $event)
     {
-        // Create form
-        $form = $this->container->get('form.factory')->create('innova_path', new Path());
+        /** @var FormInterface $form */
+        $form = $this->container->get('form.factory')->create(new PathType(), new Path());
 
         $content = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Resource:createForm.html.twig',
-            [
+            'ClarolineCoreBundle:Resource:createForm.html.twig', [
                 'form' => $form->createView(),
                 'resourceType' => 'innova_path',
             ]
@@ -125,17 +116,15 @@ class PathListener
      *
      * @DI\Observe("create_innova_path")
      *
-     * @param \Claroline\CoreBundle\Event\CreateResourceEvent $event
+     * @param CreateResourceEvent $event
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        // Create form
-        $form = $this->container->get('form.factory')->create('innova_path', new Path());
+        /** @var FormInterface $form */
+        $form = $this->container->get('form.factory')->create(new PathType(), new Path());
 
-        // Try to process form
-        $request = $this->container->get('request');
-        $form->handleRequest($request);
-
+        // Try to process the form data
+        $form->handleRequest($this->container->get('request'));
         if ($form->isValid()) {
             $path = $form->getData();
 
@@ -155,8 +144,7 @@ class PathListener
             $event->setResources([$path]);
         } else {
             $content = $this->container->get('templating')->render(
-                'ClarolineCoreBundle:Resource:createForm.html.twig',
-                [
+                'ClarolineCoreBundle:Resource:createForm.html.twig', [
                     'form' => $form->createView(),
                     'resourceType' => 'innova_path',
                 ]
@@ -173,7 +161,7 @@ class PathListener
      *
      * @DI\Observe("delete_innova_path")
      *
-     * @param \Claroline\CoreBundle\Event\DeleteResourceEvent $event
+     * @param DeleteResourceEvent $event
      */
     public function onDelete(DeleteResourceEvent $event)
     {
@@ -185,7 +173,7 @@ class PathListener
      *
      * @DI\Observe("copy_innova_path")
      *
-     * @param \Claroline\CoreBundle\Event\CopyResourceEvent $event
+     * @param CopyResourceEvent $event
      *
      * @throws \Exception
      */
@@ -194,8 +182,8 @@ class PathListener
         $om = $this->container->get('claroline.persistence.object_manager');
         // Start the transaction. We'll copy every resource in one go that way.
         $om->startFlushSuite();
-        // Get Path to duplicate
-        $pathToCopy = $event->getResource();
+
+        $pathToCopy = $this->getPathFromEvent($event->getResource());
 
         // Create new Path
         $path = new Path();
@@ -237,6 +225,40 @@ class PathListener
         // Force the unpublished state (the publication will recreate the correct links, and create new Activities)
         // If we directly copy all the published Entities we can't remap some relations
         $event->setPublish(false);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("unlock_innova_path")
+     *
+     * @param CustomActionResourceEvent $event
+     */
+    public function onUnlock(CustomActionResourceEvent $event)
+    {
+        $path = $this->getPathFromEvent($event->getResource());
+
+        $route = $this->container->get('router')->generate('innova_path_unlock_management', [
+            'id' => $path->getId(),
+        ]);
+
+        $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("manageresults_innova_path")
+     *
+     * @param CustomActionResourceEvent $event
+     */
+    public function onManageResults(CustomActionResourceEvent $event)
+    {
+        $path = $this->getPathFromEvent($event->getResource());
+
+        $route = $this->container->get('router')->generate('innova_path_manage_results', [
+            'id' => $path->getId(),
+        ]);
+
+        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 
@@ -376,11 +398,10 @@ class PathListener
         // Get current User
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
-        // Get resource manager
+        /** @var ResourceManager $manager */
         $manager = $this->container->get('claroline.manager.resource_manager');
 
         $resourceNode = $manager->getNode($resource->resourceId);
-
         if ($resourceNode) {
             // Check if Node is in a subdirectory
             $wsRoot = $manager->getWorkspaceRoot($resourceNode->getWorkspace());
@@ -455,8 +476,15 @@ class PathListener
         }
     }
 
-    private function replaceResourceId(\stdClass $resource, $processedNodes)
+    /**
+     * @param \stdClass $resource
+     * @param ResourceNode[] $processedNodes
+     *
+     * @return bool
+     */
+    private function replaceResourceId(\stdClass $resource, array $processedNodes)
     {
+        /** @var ResourceManager $manager */
         $manager = $this->container->get('claroline.manager.resource_manager');
         $resourceNode = $manager->getNode($resource->resourceId);
 
@@ -470,42 +498,18 @@ class PathListener
     }
 
     /**
-     * @DI\Observe("unlock_innova_path")
+     * @param AbstractResource $convoyedResource
      *
-     * @param \Claroline\CoreBundle\Event\CustomActionResourceEvent $event
+     * @return Path
      */
-    public function onUnlock(CustomActionResourceEvent $event)
+    private function getPathFromEvent(AbstractResource $convoyedResource)
     {
-        $path = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
-            $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
-            $event->getResource();
-        $route = $this->container->get('router')->generate(
-            'innova_path_unlock_management',
-            [
-                'id' => $path->getId(),
-            ]
-        );
-        $event->setResponse(new RedirectResponse($route));
-        $event->stopPropagation();
-    }
+        if ($convoyedResource instanceof ResourceShortcut) {
+            return $this->container->get('resource_manager')->getResourceFromShortcut($convoyedResource->getResourceNode());
+        } else if ($convoyedResource instanceof Path) {
+            return $convoyedResource;
+        }
 
-    /**
-     * @DI\Observe("manageresults_innova_path")
-     *
-     * @param \Claroline\CoreBundle\Event\CustomActionResourceEvent $event
-     */
-    public function onManageresults(CustomActionResourceEvent $event)
-    {
-        $path = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
-            $this->resourceManager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
-            $event->getResource();
-        $route = $this->container->get('router')->generate(
-            'innova_path_manage_results',
-            [
-                'id' => $path->getId(),
-            ]
-        );
-        $event->setResponse(new RedirectResponse($route));
-        $event->stopPropagation();
+        return null;
     }
 }

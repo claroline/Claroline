@@ -35,7 +35,7 @@
 
             <td class="text-right">
                 {% if path.canEdit %}
-                <a href="{{ path('innova_path_publish', { id: path.entity.id, redirect: true }) }}" class="btn btn-default btn-xs">
+                <a href="{{ path('innova_path_publish', { id: path.entity.id }) }}" class="btn btn-default btn-xs">
                     <span class="fa fa-share-square-o"></span>
                     {{ 'publish'|trans({}, 'innova_tools') }}
                 </a>

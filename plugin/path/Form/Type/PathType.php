@@ -1,12 +1,12 @@
 <?php
 
-namespace Innova\PathBundle\Form;
+namespace Innova\PathBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-abstract class AbstractPathType extends AbstractType
+class PathType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options = [])
     {
@@ -20,14 +20,27 @@ abstract class AbstractPathType extends AbstractType
         $builder->add('completeBlockingCondition',  'checkbox', ['required' => false]);
         $builder->add('manualProgressionAllowed',   'checkbox', ['required' => false]);
         $builder->add('structure',                  'hidden',   ['required' => true]);
+
+        $builder->add(
+            'published',
+            'checkbox',
+            [
+                'required' => true,
+                'mapped' => false,
+                'attr' => ['checked' => 'checked'],
+            ]
+        );
     }
 
-    abstract public function getDefaultOptions();
+    public function getName()
+    {
+        return 'innova_path';
+    }
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults($this->getDefaultOptions());
-
-        return $this;
+        $resolver->setDefaults([
+            'data_class' => 'Innova\PathBundle\Entity\Path\Path',
+        ]);
     }
 }

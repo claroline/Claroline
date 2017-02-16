@@ -1,11 +1,12 @@
 <?php
 
-namespace Innova\PathBundle\EventListener\Widget;
+namespace Innova\PathBundle\Listener\Widget;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\TagBundle\Manager\TagManager;
-use Innova\PathBundle\Manager\PathManager;
+use Innova\PathBundle\Form\Type\PathWidgetConfigType;
+use Innova\PathBundle\Manager\WidgetManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -18,42 +19,49 @@ use Symfony\Component\Form\FormFactoryInterface;
 class PathWidgetListener
 {
     /**
-     * @var \Symfony\Bundle\TwigBundle\TwigEngine
+     * @var TwigEngine
      */
     private $twig;
 
     /**
-     * @var \Claroline\CoreBundle\Form\Factory\FormFactory
+     * @var FormFactoryInterface
      */
     private $formFactory;
 
     /**
-     * @var \Innova\PathBundle\Manager\PathManager
+     * @var WidgetManager
      */
-    private $pathManager;
+    private $widgetManager;
 
     /**
-     * @var \Claroline\TagBundle\Manager\TagManager
+     * @var TagManager
      */
     private $tagManager;
 
     /**
+     * PathWidgetListener constructor.
+     *
      * @DI\InjectParams({
-     *     "twig"        = @DI\Inject("templating"),
-     *     "formFactory" = @DI\Inject("form.factory"),
-     *     "pathManager" = @DI\Inject("innova_path.manager.path"),
-     *     "tagManager"  = @DI\Inject("claroline.manager.tag_manager")
+     *     "twig"          = @DI\Inject("templating"),
+     *     "formFactory"   = @DI\Inject("form.factory"),
+     *     "widgetManager" = @DI\Inject("innova_path.manager.widget"),
+     *     "tagManager"    = @DI\Inject("claroline.manager.tag_manager")
      * })
+     *
+     * @param TwigEngine           $twig
+     * @param FormFactoryInterface $formFactory
+     * @param WidgetManager        $widgetManager
+     * @param TagManager           $tagManager
      */
     public function __construct(
         TwigEngine           $twig,
         FormFactoryInterface $formFactory,
-        PathManager          $pathManager,
+        WidgetManager        $widgetManager,
         TagManager           $tagManager)
     {
         $this->twig = $twig;
         $this->formFactory = $formFactory;
-        $this->pathManager = $pathManager;
+        $this->widgetManager = $widgetManager;
         $this->tagManager = $tagManager;
     }
 
@@ -64,15 +72,8 @@ class PathWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $widgetInstance = $event->getInstance();
-        $workspace = $widgetInstance->getWorkspace();
-
-        $config = $this->pathManager->getWidgetConfig($widgetInstance);
-
         $content = $this->twig->render('InnovaPathBundle:Widget:list.html.twig', [
-            'workspace' => $workspace,
-            'isDesktop' => $widgetInstance->isDesktop(),
-            'paths' => $this->pathManager->getWidgetPaths($config, $workspace),
+            'paths' => $this->widgetManager->getPaths($event->getInstance()),
         ]);
 
         $event->setContent($content);
@@ -87,9 +88,9 @@ class PathWidgetListener
     public function onConfigure(ConfigureWidgetEvent $event)
     {
         $instance = $event->getInstance();
-        $config = $this->pathManager->getWidgetConfig($instance);
+        $config = $this->widgetManager->getConfig($instance);
 
-        $form = $this->formFactory->create('innova_path_widget_config', $config);
+        $form = $this->formFactory->create(new PathWidgetConfigType(), $config);
         $content = $this->twig->render(
             'InnovaPathBundle:Widget:config.html.twig',
             [

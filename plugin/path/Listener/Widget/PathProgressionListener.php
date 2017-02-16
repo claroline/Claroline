@@ -1,11 +1,14 @@
 <?php
 
-namespace Innova\PathBundle\EventListener\Widget;
+namespace Innova\PathBundle\Listener\Widget;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Innova\PathBundle\Form\Type\PathWidgetConfigType;
 use Innova\PathBundle\Manager\PathManager;
+use Innova\PathBundle\Manager\UserProgressionManager;
+use Innova\PathBundle\Manager\WidgetManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -34,35 +37,53 @@ class PathProgressionListener
     private $formFactory;
 
     /**
+     * @var WidgetManager
+     */
+    private $widgetManager;
+
+    /**
      * @var PathManager
      */
     private $pathManager;
 
     /**
+     * @var UserProgressionManager
+     */
+    private $userProgressionManager;
+
+    /**
      * PathWidgetListener.
      *
      * @DI\InjectParams({
-     *     "tokenStorage" = @Di\Inject("security.token_storage"),
-     *     "twig"         = @DI\Inject("templating"),
-     *     "formFactory"  = @DI\Inject("form.factory"),
-     *     "pathManager"  = @DI\Inject("innova_path.manager.path")
+     *     "tokenStorage"           = @Di\Inject("security.token_storage"),
+     *     "twig"                   = @DI\Inject("templating"),
+     *     "formFactory"            = @DI\Inject("form.factory"),
+     *     "widgetManager"          = @DI\Inject("innova_path.manager.widget"),
+     *     "pathManager"            = @DI\Inject("innova_path.manager.path"),
+     *     "userProgressionManager" = @DI\Inject("innova_path.manager.user_progression")
      * })
      *
-     * @param TokenStorageInterface $tokenStorage
-     * @param TwigEngine            $twig
-     * @param FormFactoryInterface  $formFactory
-     * @param PathManager           $pathManager
+     * @param TokenStorageInterface  $tokenStorage
+     * @param TwigEngine             $twig
+     * @param FormFactoryInterface   $formFactory
+     * @param WidgetManager          $widgetManager
+     * @param PathManager            $pathManager
+     * @param UserProgressionManager $userProgressionManager
      */
     public function __construct(
-        TokenStorageInterface $tokenStorage,
-        TwigEngine           $twig,
-        FormFactoryInterface $formFactory,
-        PathManager          $pathManager)
+        TokenStorageInterface  $tokenStorage,
+        TwigEngine             $twig,
+        FormFactoryInterface   $formFactory,
+        WidgetManager          $widgetManager,
+        PathManager            $pathManager,
+        UserProgressionManager $userProgressionManager)
     {
         $this->tokenStorage = $tokenStorage;
         $this->twig = $twig;
         $this->formFactory = $formFactory;
+        $this->widgetManager = $widgetManager;
         $this->pathManager = $pathManager;
+        $this->userProgressionManager = $userProgressionManager;
     }
 
     /**
@@ -72,23 +93,16 @@ class PathProgressionListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $widgetInstance = $event->getInstance();
-        $workspace = $widgetInstance->getWorkspace();
-
         // We can calculate progression only for authenticated users
         $progression = 0;
         if ($this->tokenStorage->getToken() && $this->tokenStorage->getToken()->getUser() instanceof User) {
-            $config = $this->pathManager->getWidgetConfig($widgetInstance);
-
-            $progression = $this->pathManager->calculateUserProgression(
+            $progression = $this->userProgressionManager->calculateUserProgression(
                 $this->tokenStorage->getToken()->getUser(),
-                $this->pathManager->getWidgetPaths($config, $workspace)
+                $this->widgetManager->getPaths($event->getInstance())
             );
         }
 
         $content = $this->twig->render('InnovaPathBundle:Widget:progression.html.twig', [
-            'workspace' => $workspace,
-            'isDesktop' => $widgetInstance->isDesktop(),
             'userProgression' => $progression,
         ]);
 
@@ -104,9 +118,9 @@ class PathProgressionListener
     public function onConfigure(ConfigureWidgetEvent $event)
     {
         $instance = $event->getInstance();
-        $config = $this->pathManager->getWidgetConfig($instance);
+        $config = $this->widgetManager->getConfig($instance);
 
-        $form = $this->formFactory->create('innova_path_widget_config', $config);
+        $form = $this->formFactory->create(new PathWidgetConfigType(), $config);
         $content = $this->twig->render(
             'InnovaPathBundle:Widget:config.html.twig',
             [

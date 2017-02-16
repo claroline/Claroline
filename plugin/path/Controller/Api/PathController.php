@@ -1,14 +1,18 @@
 <?php
 
-namespace Innova\PathBundle\Controller\Wizard;
+namespace Innova\PathBundle\Controller\Api;
 
+use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Doctrine\Common\Persistence\ObjectManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\Path\Path;
+use Innova\PathBundle\Form\Type\PathType;
 use Innova\PathBundle\Manager\PathManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Innova\PathBundle\Manager\PublishingManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -16,118 +20,109 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
- * Class EditorController.
+ * Path API Controller exposes REST API.
  *
- * @Route(
- *      "/editor",
- *      service = "innova_path.controller.path_editor"
- * )
+ * @todo use HTTP status code for error handling
+ *
+ * @EXT\Route("/paths", options={"expose"=true})
  */
-class EditorController
+class PathController
 {
     /**
-     * Object manager.
-     *
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var AuthorizationCheckerInterface
      */
-    protected $om;
+    private $authorization;
 
     /**
-     * Router.
-     *
-     * @var \Symfony\Component\Routing\RouterInterface
+     * @var ObjectManager
      */
-    protected $router;
+    private $om;
 
     /**
-     * Form factory.
-     *
-     * @var \Symfony\Component\Form\FormFactoryInterface
+     * @var RouterInterface
      */
-    protected $formFactory;
+    private $router;
 
     /**
-     * Path manager.
-     *
-     * @var \Innova\PathBundle\Manager\PathManager
+     * @var FormFactoryInterface
      */
-    protected $pathManager;
+    private $formFactory;
 
     /**
-     * Resource manager.
-     *
-     * @var \Claroline\CoreBundle\Manager\ResourceManager
+     * @var ResourceManager
      */
-    protected $resourceManager;
+    private $resourceManager;
 
     /**
-     * Class constructor.
+     * @var PathManager
+     */
+    private $pathManager;
+
+    /**
+     * @var PublishingManager
+     */
+    private $publishingManager;
+
+    /**
+     * PathController constructor.
      *
-     * @param \Doctrine\Common\Persistence\ObjectManager    $objectManager
-     * @param \Symfony\Component\Routing\RouterInterface    $router
-     * @param \Symfony\Component\Form\FormFactoryInterface  $formFactory
-     * @param \Claroline\CoreBundle\Manager\ResourceManager $resourceManager
-     * @param \Innova\PathBundle\Manager\PathManager        $pathManager
+     * @DI\InjectParams({
+     *     "authorization"     = @DI\Inject("security.authorization_checker"),
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "router"            = @DI\Inject("router"),
+     *     "formFactory"       = @DI\Inject("form.factory"),
+     *     "resourceManager"   = @DI\Inject("claroline.manager.resource_manager"),
+     *     "pathManager"       = @DI\Inject("innova_path.manager.path"),
+     *     "publishingManager" = @DI\Inject("innova_path.manager.publishing")
+     * })
+     *
+     * @param AuthorizationCheckerInterface $authorization
+     * @param ObjectManager $om
+     * @param RouterInterface $router
+     * @param FormFactoryInterface $formFactory
+     * @param ResourceManager $resourceManager
+     * @param PathManager $pathManager
+     * @param PublishingManager $publishingManager
      */
     public function __construct(
-        ObjectManager        $objectManager,
-        RouterInterface      $router,
+        AuthorizationCheckerInterface $authorization,
+        ObjectManager $om,
+        RouterInterface $router,
         FormFactoryInterface $formFactory,
-        ResourceManager      $resourceManager,
-        PathManager          $pathManager)
+        ResourceManager $resourceManager,
+        PathManager $pathManager,
+        PublishingManager $publishingManager)
     {
-        $this->om = $objectManager;
+        $this->authorization = $authorization;
+        $this->om = $om;
         $this->router = $router;
         $this->formFactory = $formFactory;
         $this->resourceManager = $resourceManager;
         $this->pathManager = $pathManager;
+        $this->publishingManager = $publishingManager;
     }
 
     /**
-     * Display Path Editor.
+     * Update a Path.
      *
-     * @Route(
-     *      "/{id}",
-     *      name    = "innova_path_editor_wizard",
-     *      options = { "expose" = true }
-     * )
-     * @Template("InnovaPathBundle:Wizard:editor.html.twig")
-     * @Method("GET|POST")
+     * @EXT\Route("/{id}", name="innova_path_editor_wizard_save")
+     * @EXT\Method("PUT")
+     *
+     * @param Path    $path
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
-    public function displayAction(Path $path)
+    public function updateAction(Path $path, Request $request)
     {
-        // Check User credentials
-        $this->pathManager->checkAccess('EDIT', $path);
-
-        return [
-            '_resource' => $path,
-            'workspace' => $path->getWorkspace(),
-        ];
-    }
-
-    /**
-     * Save Path.
-     *
-     * @param Path                                      $path
-     * @param \Symfony\Component\HttpFoundation\Request $request
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     *
-     * @Route(
-     *      "/{id}",
-     *      name    = "innova_path_editor_wizard_save",
-     *      options = { "expose" = true }
-     * )
-     * @Method("PUT")
-     */
-    public function saveAction(Path $path, Request $request)
-    {
-        $this->pathManager->checkAccess('EDIT', $path);
+        $this->assertHasPermission('ADMINISTRATE', $path);
 
         // Create form
-        $form = $this->formFactory->create('innova_path', $path, [
+        $form = $this->formFactory->create(new PathType(), $path, [
             'method' => 'PUT',
             'csrf_protection' => false,
         ]);
@@ -155,26 +150,53 @@ class EditorController
     }
 
     /**
+     *
+     * @EXT\Route("/{id}/publish", name="innova_path_publish_api")
+     * @EXT\Method("PUT")
+     *
+     * @param Path $path
+     *
+     * @return JsonResponse
+     */
+    public function publishAction(Path $path)
+    {
+        $this->assertHasPermission('ADMINISTRATE', $path);
+
+        try {
+            $this->publishingManager->publish($path);
+
+            return new JsonResponse([
+                'status' => 'OK',
+                'messages' => [],
+                'data' => json_decode($path->getStructure()),
+            ]);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'status' => 'ERROR',
+                'messages' => [$e->getMessage()],
+                'data' => null,
+            ]);
+        }
+    }
+
+    /**
      * Load activity data from ResourceNode id.
+     *
+     * @EXT\Route("/load_activity/{nodeId}", name="innova_path_load_activity")
+     * @EXT\Method("GET")
      *
      * @param int $nodeId
      *
      * @return JsonResponse
-     *
-     * @Route(
-     *      "/load_activity/{nodeId}",
-     *      name         = "innova_path_load_activity",
-     *      requirements = { "id"     = "\d+" },
-     *      options      = { "expose" = true }
-     * )
-     * @Method("GET")
      */
     public function loadActivityAction($nodeId)
     {
         $activity = [];
 
-        $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($nodeId);
+        /** @var ResourceNode $node */
+        $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find($nodeId);
         if (!empty($node)) {
+            /** @var Activity $resource */
             $resource = $this->resourceManager->getResourceFromNode($node);
             if (!empty($resource)) {
                 $activity['id'] = $resource->getId();
@@ -183,6 +205,8 @@ class EditorController
 
                 // Primary resources
                 $activity['primaryResource'] = null;
+
+                /** @var ResourceNode $primaryResource */
                 $primaryResource = $resource->getPrimaryResource();
                 if (!empty($primaryResource)) {
                     $activity['primaryResource'] = [
@@ -228,24 +252,19 @@ class EditorController
     /**
      * Redirect to Activity using Activity ID.
      *
+     * @EXT\Route("/show_activity/{activityId}", name="innova_path_show_activity")
+     * @EXT\Method("GET")
+     *
      * @param int $activityId
      *
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      *
      * @return RedirectResponse
-     *
-     * @Route(
-     *      "/show_activity/{activityId}",
-     *      name         = "innova_path_show_activity",
-     *      requirements = { "id"     = "\d+" },
-     *      options      = { "expose" = true }
-     * )
-     * @Method("GET")
      */
     public function showActivityAction($activityId)
     {
         // Retrieve node from Activity id
-        $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findOneById($activityId);
+        $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->find($activityId);
         if (empty($activity)) {
             throw new NotFoundHttpException('Unable to find Activity referenced by ID : '.$activityId);
         }
@@ -278,5 +297,14 @@ class EditorController
         }
 
         return $errors;
+    }
+
+    private function assertHasPermission($permission, Path $path)
+    {
+        $collection = new ResourceCollection([$path->getResourceNode()]);
+
+        if (!$this->authorization->isGranted($permission, $collection)) {
+            throw new AccessDeniedException($collection->getErrorsForDisplay());
+        }
     }
 }

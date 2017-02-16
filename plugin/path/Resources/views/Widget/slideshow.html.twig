@@ -18,20 +18,42 @@
                 {% if paths[current] is defined %}
                     {% set path = paths[current] %}
                     <div class="path-card carousel-card">
-                        <img src="{{ asset('bundles/innovapath/images/path-cover.png') }}" />
+                        <div class="carousel-card-header">
+                            <img src="{{ asset('bundles/innovapath/images/path-cover.png') }}" />
 
-                        <div class="carousel-card-content">
-                            {{ path.entity.resourceNode.name }}
+                            <div class="c100 p{{ path.progression }} path-progression sm">
+                                <span>
+                                    {% if 100 != path.progression %}
+                                        {{ path.progression }}%
+                                    {% else %}
+                                        <span class="fa fa-fw fa-check"></span>
+                                        <span class="sr-only">{{ path.progression }}%</span>
+                                    {% endif %}
+                                </span>
+
+                                <div class="slice" role="presentation">
+                                    <div class="bar" role="presentation"></div>
+                                    <div class="fill" role="presentation"></div>
+                                </div>
+                            </div>
                         </div>
+
+                        <div class="carousel-card-content">{{ path.entity.resourceNode.name }}</div>
 
                         <div class="carousel-card-btns btn-group btn-group-justified" role="group">
                             <a class="btn btn-link" href="{{ path('innova_path_player_wizard', { id: path.entity.id }) }}">
-                                REALISER
+                                {% if path.progression == 0 %}
+                                    {{ 'path_start'|trans({}, 'widget') }}
+                                {% elseif path.progression == 100 %}
+                                    {{ 'path_restart'|trans({}, 'widget') }}
+                                {% else %}
+                                    {{ 'path_continue'|trans({}, 'widget') }}
+                                {% endif %}
                             </a>
 
                             {% if path.canEdit %}
-                            <a class="btn btn-link" href="{{ path('innova_path_editor_wizard', { id: path.entity.id }) }}" style="text-transform: uppercase;">
-                                {{ 'edit'|trans({}, 'innova_tools') }}
+                            <a class="btn btn-link" href="{{ path('innova_path_editor_wizard', { id: path.entity.id }) }}">
+                                {{ 'edit'|trans({}, 'platform') }}
                             </a>
                             {% endif %}
                         </div>

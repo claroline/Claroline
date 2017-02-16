@@ -1,40 +1,34 @@
 <?php
 
-namespace Innova\PathBundle\Controller;
+namespace Innova\PathBundle\Controller\Api;
 
 use Claroline\CoreBundle\Entity\User;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\UserProgressionManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * Class UserProgressionController.
- *
- * @Route(
- *     "/step/{id}/progression",
- *     service      = "innova_path.controller.user_progression",
- *     requirements = {"id" = "\d+"},
- *     options      = { "expose" = true }
- * )
- * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
+ * @EXT\Route("/step/{id}/progression", options={"expose"=true})
+ * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
  */
 class UserProgressionController
 {
     /**
-     * User Progression manager.
-     *
-     * @var \Innova\PathBundle\Manager\UserProgressionManager
+     * @var UserProgressionManager
      */
     protected $userProgressionManager;
 
     /**
-     * Class constructor.
+     * UserProgressionController constructor.
      *
-     * @param \Innova\PathBundle\Manager\UserProgressionManager $userProgressionManager
+     * @DI\InjectParams({
+     *     "userProgressionManager" = @DI\Inject("innova_path.manager.user_progression")
+     * })
+     *
+     * @param UserProgressionManager $userProgressionManager
      */
     public function __construct(UserProgressionManager $userProgressionManager)
     {
@@ -44,17 +38,14 @@ class UserProgressionController
     /**
      * Log a new action from User (mark the the  step as to do).
      *
-     * @param User                           $user
-     * @param \Innova\PathBundle\Entity\Step $step
-     * @param Request                        $request
+     * @EXT\Route("", name="innova_path_progression_create")
+     * @EXT\Method("POST")
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param User    $user
+     * @param Step    $step
+     * @param Request $request
      *
-     * @Route(
-     *     "",
-     *     name = "innova_path_progression_create"
-     * )
-     * @Method("POST")
+     * @return JsonResponse
      */
     public function createAction(User $user, Step $step, Request $request)
     {
@@ -69,17 +60,14 @@ class UserProgressionController
     /**
      * Update progression of a User.
      *
-     * @param User                           $user
-     * @param \Innova\PathBundle\Entity\Step $step
-     * @param Request                        $request
+     * @EXT\Route("", name="innova_path_progression_update")
+     * @EXT\Method("PUT")
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param User    $user
+     * @param Step    $step
+     * @param Request $request
      *
-     * @Route(
-     *     "",
-     *     name = "innova_path_progression_update"
-     * )
-     * @Method("PUT")
+     * @return JsonResponse
      */
     public function updateAction(User $user, Step $step, Request $request)
     {

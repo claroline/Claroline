@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\Form\Widget;
+namespace Innova\PathBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

@@ -1,6 +1,18 @@
 @import "../variables";
 
 .path-slideshow {
+    // ugly
+    // todo : find a better way to do it
+    .path-progression {
+        margin-right: 0;
+        position: absolute;
+        right: @path-card-content-padding;
+        top: @path-card-content-padding;
+        &:after {
+            background-color: @path-card-bg;
+        }
+    }
+
     .carousel-inner {
         height: 100%; // fill the widget content
         width: 100% - (@carousel-control-width * 2); // avoid having the controls hover the cards
@@ -47,6 +59,10 @@
     .carousel-card-empty {
         flex: 1;
         margin: @path-card-margin;
+    }
+
+    .carousel-card-header {
+        position: relative; // to contain path progression gauge
     }
 
     .carousel-card-content {

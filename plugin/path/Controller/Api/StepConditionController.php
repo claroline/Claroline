@@ -1,6 +1,6 @@
 <?php
 
-namespace Innova\PathBundle\Controller;
+namespace Innova\PathBundle\Controller\Api;
 
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\User;
@@ -12,83 +12,90 @@ use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Event\Log\LogStepUnlockDoneEvent;
 use Innova\PathBundle\Event\Log\LogStepUnlockEvent;
 use Innova\PathBundle\Manager\UserProgressionManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * Class StepConditionController.
- *
- * @Route(
- *     "/condition",
- *     options = {"expose" = true},
- *     service = "innova_path.controller.step_condition"
- * )
+ * @EXT\Route("/condition", options={"expose"=true})
  */
 class StepConditionController extends Controller
 {
     /**
-     * Object manager.
-     *
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var ObjectManager
      */
     private $om;
-    private $groupManager;
-    private $teamManager;
-    private $eventDispatcher;
-    /**
-     * Security Token.
-     *
-     * @var \Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface
-     */
-    protected $securityToken;
-    /**
-     * User Progression manager.
-     *
-     * @var \Innova\PathBundle\Manager\UserProgressionManager
-     */
-    protected $userProgressionManager;
 
     /**
-     * Constructor.
+     * @var GroupManager
+     */
+    private $groupManager;
+
+    /**
+     * @var TeamManager
+     */
+    private $teamManager;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
+     * @var TokenStorageInterface
+     */
+    protected $tokenStorage;
+
+    /**
+     * StepConditionController constructor.
+     *
+     * @DI\InjectParams({
+     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
+     *     "eventDispatcher"        = @DI\Inject("event_dispatcher"),
+     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
+     *     "teamManager"            = @DI\Inject("claroline.manager.team_manager"),
+     *     "userProgressionManager" = @DI\Inject("innova_path.manager.user_progression")
+     * })
      *
      * @param ObjectManager            $objectManager
-     * @param GroupManager             $groupManager
-     * @param TokenStorageInterface    $securityToken
-     * @param TeamManager              $teamManager
+     * @param TokenStorageInterface    $tokenStorage
      * @param EventDispatcherInterface $eventDispatcher
+     * @param GroupManager             $groupManager
+     * @param TeamManager              $teamManager
      * @param UserProgressionManager   $userProgressionManager
      */
     public function __construct(
         ObjectManager $objectManager,
-        GroupManager $groupManager,
-        TokenStorageInterface $securityToken,
-        TeamManager $teamManager,
+        TokenStorageInterface $tokenStorage,
         EventDispatcherInterface $eventDispatcher,
+        GroupManager $groupManager,
+        TeamManager $teamManager,
         UserProgressionManager $userProgressionManager
     ) {
-        $this->groupManager = $groupManager;
         $this->om = $objectManager;
-        $this->securityToken = $securityToken;
-        $this->teamManager = $teamManager;
+        $this->tokenStorage = $tokenStorage;
         $this->eventDispatcher = $eventDispatcher;
+        $this->groupManager = $groupManager;
+        $this->teamManager = $teamManager;
         $this->userProgressionManager = $userProgressionManager;
     }
 
     /**
+     * @var UserProgressionManager
+     */
+    protected $userProgressionManager;
+
+    /**
      * Get user group for criterion.
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @EXT\Route("/group", name="innova_path_criteria_groups")
+     * @EXT\Method("GET")
      *
-     * @Route(
-     *     "/group",
-     *     name = "innova_path_criteria_groups"
-     * )
-     * @Method("GET")
+     * @return JsonResponse
      */
     public function listGroupsAction()
     {
@@ -108,16 +115,13 @@ class StepConditionController extends Controller
     /**
      * Get list of groups a user belongs to.
      *
+     * @EXT\Route("/group/current_user", name="innova_path_criteria_user_groups")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
+     *
      * @param User $user
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     *
-     * @Route(
-     *     "/group/current_user",
-     *     name = "innova_path_criteria_user_groups"
-     * )
-     * @Method("GET")
-     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
+     * @return JsonResponse
      */
     public function listUserGroupsAction(User $user = null)
     {
@@ -138,11 +142,8 @@ class StepConditionController extends Controller
      * Get list of Evaluation statuses to display in select
      * (data from \CoreBundle\Entity\Activity\AbstractEvaluation.php).
      *
-     * @Route(
-     *     "/activity/statuses",
-     *     name = "innova_path_criteria_activity_statuses",
-     * )
-     * @Method("GET")
+     * @EXT\Route("/activity/statuses", name="innova_path_criteria_activity_statuses")
+     * @EXT\Method("GET")
      *
      * @return JsonResponse
      */
@@ -165,16 +166,12 @@ class StepConditionController extends Controller
     /**
      * Get evaluation data for an activity.
      *
+     * @EXT\Route("/activity/evaluation/{id}", name="innova_path_criteria_evaluation")
+     * @EXT\Method("GET")
+     *
      * @param Activity $activity
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     *
-     * @Route(
-     *     "/activity/evaluation/{id}",
-     *     name         = "innova_path_criteria_evaluation",
-     *     options      = { "expose" = true }
-     * )
-     * @Method("GET")
+     * @return JsonResponse
      */
     public function getActivityEvaluation(Activity $activity)
     {
@@ -200,16 +197,13 @@ class StepConditionController extends Controller
     /**
      * Get list of teams a user belongs to.
      *
+     * @EXT\Route("/team/current_user", name="innova_path_criteria_user_teams")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
+     *
      * @param User $user
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     *
-     * @Route(
-     *     "/team/current_user",
-     *     name = "innova_path_criteria_user_teams"
-     * )
-     * @Method("GET")
-     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
+     * @return JsonResponse
      */
     public function listUserTeamsAction(User $user = null)
     {
@@ -232,15 +226,12 @@ class StepConditionController extends Controller
     /**
      * Get list of teams available in the Workspace of the current Path.
      *
+     * @EXT\Route("/team/{id}", name="innova_path_criteria_teams")
+     * @EXT\Method("GET")
+     *
      * @param Path $path
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     *
-     * @Route(
-     *     "/team/{id}",
-     *     name = "innova_path_criteria_teams"
-     * )
-     * @Method("GET")
+     * @return JsonResponse
      */
     public function listTeamsAction(Path $path)
     {
@@ -259,17 +250,15 @@ class StepConditionController extends Controller
     }
 
     /**
+     *
+     * @EXT\Route("/stepunlock/{step}", name="innova_path_step_callforunlock")
+     * @EXT\Method("GET")
+     *
      * @param Step $step
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     * @Route(
-     *     "/stepunlock/{step}",
-     *     name         = "innova_path_step_callforunlock",
-     *     options      = { "expose" = true }
-     * )
-     * @Method("GET")
+     * @return JsonResponse
      */
-    public function callForUnlock(Step $step)
+    public function callForUnlockAction(Step $step)
     {
         //array of user id to send the notification to = users who will receive the call : the path creator
         $creator = $step->getPath()->getCreator()->getId();
@@ -279,8 +268,8 @@ class StepConditionController extends Controller
         //send the event to the event dispatcher
         $this->eventDispatcher->dispatch('log', $event);
 
-        //update lockedcall value : set to true = called
-        $user = $this->securityToken->getToken()->getUser();
+        // update locked call value : set to true = called
+        $user = $this->tokenStorage->getToken()->getUser();
         $progression = $this->userProgressionManager
             ->updateLockedState($user, $step, true, null, null, '');
         //return response
@@ -290,23 +279,22 @@ class StepConditionController extends Controller
     /**
      * Ajax call for unlocking step.
      *
-     * @Route(
-     *     "unlockstep/{step}/user/{user}",
-     *     name="innova_path_unlock_step",
-     *     options={"expose"=true}
-     * )
-     * @Method("GET")
+     * @EXT\Route("unlockstep/{step}/user/{user}", name="innova_path_unlock_step")
+     * @EXT\Method("GET")
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Step $step
+     * @param User $user
+     *
+     * @return JsonResponse
      */
-    public function unlockStep(Step $step, User $user)
+    public function unlockStepAction(Step $step, User $user)
     {
         $userIds = [$user->getId()];
         //create an event, and pass parameters
         $event = new LogStepUnlockDoneEvent($step, $userIds);
         //send the event to the event dispatcher
         $this->eventDispatcher->dispatch('log', $event);
-        //update lockedcall value : set to true = called
+        //update locked call value : set to true = called
         $progression = $this->userProgressionManager
             ->updateLockedState($user, $step, false, false, true, 'unseen');
         //return response
