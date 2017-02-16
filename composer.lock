@@ -54,20 +54,20 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BeSimple/BeSimpleSsoAuthBundle.git",
-                "reference": "f6f3317f12d180f9d275e85a9bf210b99efc8831"
+                "reference": "8baf8167d1f609728d1fe28ed8e91aa28efb2f84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BeSimple/BeSimpleSsoAuthBundle/zipball/f6f3317f12d180f9d275e85a9bf210b99efc8831",
-                "reference": "f6f3317f12d180f9d275e85a9bf210b99efc8831",
+                "url": "https://api.github.com/repos/BeSimple/BeSimpleSsoAuthBundle/zipball/8baf8167d1f609728d1fe28ed8e91aa28efb2f84",
+                "reference": "8baf8167d1f609728d1fe28ed8e91aa28efb2f84",
                 "shasum": ""
             },
             "require": {
                 "kriswallsmith/buzz": ">=0.7,<1.0-dev",
                 "php": ">=5.3.3",
-                "symfony/framework-bundle": "~2.1",
-                "symfony/security-bundle": "~2.1",
-                "symfony/twig-bundle": "~2.1"
+                "symfony/framework-bundle": "~2.1|~3.0",
+                "symfony/security-bundle": "~2.1|~3.0",
+                "symfony/twig-bundle": "~2.1|~3.0"
             },
             "require-dev": {
                 "symfony/browser-kit": "~2.1",
@@ -112,7 +112,7 @@
                 "Symfony2",
                 "cas"
             ],
-            "time": "2016-01-19 19:47:22"
+            "time": "2017-02-14 14:01:10"
         },
         {
             "name": "claroline/distribution",
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "a0d2c96741cc63ebdde755ae358e3c91d475495a"
+                "reference": "049300256d4befcd7165364638631a985f405d03"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a0d2c96741cc63ebdde755ae358e3c91d475495a",
-                "reference": "a0d2c96741cc63ebdde755ae358e3c91d475495a",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/049300256d4befcd7165364638631a985f405d03",
+                "reference": "049300256d4befcd7165364638631a985f405d03",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-02-12 17:19:02"
+            "time": "2017-02-15 17:52:35"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -731,17 +731,20 @@
         },
         {
             "name": "container-interop/container-interop",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/container-interop/container-interop.git",
-                "reference": "fc08354828f8fd3245f77a66b9e23a6bca48297e"
+                "reference": "79cbf1341c22ec75643d841642dd5d6acd83bdb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/container-interop/container-interop/zipball/fc08354828f8fd3245f77a66b9e23a6bca48297e",
-                "reference": "fc08354828f8fd3245f77a66b9e23a6bca48297e",
+                "url": "https://api.github.com/repos/container-interop/container-interop/zipball/79cbf1341c22ec75643d841642dd5d6acd83bdb8",
+                "reference": "79cbf1341c22ec75643d841642dd5d6acd83bdb8",
                 "shasum": ""
+            },
+            "require": {
+                "psr/container": "^1.0"
             },
             "type": "library",
             "autoload": {
@@ -754,7 +757,8 @@
                 "MIT"
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
-            "time": "2014-12-30 15:22:37"
+            "homepage": "https://github.com/container-interop/container-interop",
+            "time": "2017-02-14 19:40:03"
         },
         {
             "name": "ddeboer/data-import",
@@ -3512,17 +3516,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "950499a6a1dcdaabc23fdfa5276029d634f4fe95"
+                "reference": "5a5720d98bf23d015d462e1c26b2f780a4c9e22f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/950499a6a1dcdaabc23fdfa5276029d634f4fe95",
-                "reference": "950499a6a1dcdaabc23fdfa5276029d634f4fe95",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/5a5720d98bf23d015d462e1c26b2f780a4c9e22f",
+                "reference": "5a5720d98bf23d015d462e1c26b2f780a4c9e22f",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-02-09 09:57:34"
+            "time": "2017-02-15 14:48:40"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -4399,6 +4403,55 @@
             "time": "2015-07-25 16:39:46"
         },
         {
+            "name": "psr/container",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/container.git",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Container\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common Container Interface (PHP FIG PSR-11)",
+            "homepage": "https://github.com/php-fig/container",
+            "keywords": [
+                "PSR-11",
+                "container",
+                "container-interface",
+                "container-interop",
+                "psr"
+            ],
+            "time": "2017-02-14 16:28:37"
+        },
+        {
             "name": "psr/log",
             "version": "1.0.2",
             "source": {
@@ -4940,16 +4993,16 @@
         },
         {
             "name": "swiftmailer/swiftmailer",
-            "version": "v5.4.5",
+            "version": "v5.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swiftmailer/swiftmailer.git",
-                "reference": "cd142238a339459b10da3d8234220963f392540c"
+                "reference": "81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/cd142238a339459b10da3d8234220963f392540c",
-                "reference": "cd142238a339459b10da3d8234220963f392540c",
+                "url": "https://api.github.com/repos/swiftmailer/swiftmailer/zipball/81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e",
+                "reference": "81fdccfaf8bdc5d5d7a1ef6bb3a61bbb1a6c4a3e",
                 "shasum": ""
             },
             "require": {
@@ -4990,7 +5043,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2016-12-29 10:02:40"
+            "time": "2017-02-13 07:52:53"
         },
         {
             "name": "symfony/assetic-bundle",
