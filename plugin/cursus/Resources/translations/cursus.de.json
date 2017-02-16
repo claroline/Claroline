@@ -10,5 +10,6 @@
     "register": "",
     "registration_validation": "",
     "unregister": "",
-    "yes": "Ja"
+    "yes": "Ja",
+    "no": "Nein"
 }
