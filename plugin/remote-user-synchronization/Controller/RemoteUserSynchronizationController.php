@@ -112,14 +112,24 @@ class RemoteUserSynchronizationController extends Controller
                             $user->setPlainPassword($password);
                             $this->userManager->persistUser($user);
                         } else {
-                            $user = new User();
-                            $user->setUsername($username);
-                            $user->setFirstName($firstName);
-                            $user->setLastName($lastName);
-                            $user->setMail($email);
-                            $user->setPlainPassword($password);
-                            $this->userManager->createUser($user);
-                            $user->setIsMailValidated(true);
+                            $user = $this->userManager->getUserByUsernameOrMail($username, $email);
+
+                            if (is_null($user)) {
+                                $user = new User();
+                                $user->setUsername($username);
+                                $user->setFirstName($firstName);
+                                $user->setLastName($lastName);
+                                $user->setMail($email);
+                                $user->setPlainPassword($password);
+                                $this->userManager->createUser($user);
+                                $user->setIsMailValidated(true);
+                            } else {
+                                $user->setUsername($username);
+                                $user->setFirstName($firstName);
+                                $user->setLastName($lastName);
+                                $user->setMail($email);
+                                $user->setPlainPassword($password);
+                            }
                             $this->userManager->persistUser($user);
                         }
                     } catch (\Exception $e) {
