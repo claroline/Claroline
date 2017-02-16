@@ -49,10 +49,11 @@
         border-radius: @path-card-border-radius;
         margin: @path-card-margin;
 
-        > img {
+        img {
             display: block;
             max-width: 100%;
-            margin: 0 auto;
+            max-height: 100%;
+            margin: auto;
         }
     }
 
@@ -63,6 +64,10 @@
 
     .carousel-card-header {
         position: relative; // to contain path progression gauge
+        padding: @path-card-header-padding;
+        height: @path-card-header-height;
+
+        display: flex; // for vertical centering. Mostly used when there is an image
     }
 
     .carousel-card-content {

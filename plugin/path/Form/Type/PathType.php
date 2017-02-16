@@ -10,10 +10,13 @@ class PathType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options = [])
     {
-        $builder->add('name',                       'text',     [
-            'required' => true,
-            'attr' => ['autofocus' => true],
-        ]);
+        $builder->add(
+            'name',
+            'text', [
+                'required' => true,
+                'attr' => ['autofocus' => true],
+            ]
+        );
         $builder->add('description',                'tinymce',  ['required' => false]);
         $builder->add('breadcrumbs',                'checkbox', ['required' => false]);
         $builder->add('summaryDisplayed',           'checkbox', ['required' => false]);

@@ -19,7 +19,7 @@
                     {% set path = paths[current] %}
                     <div class="path-card carousel-card">
                         <div class="carousel-card-header">
-                            <img src="{{ asset('bundles/innovapath/images/path-cover.png') }}" />
+                            <img src="{{ asset(path.entity.resourceNode.icon.relativeUrl) }}" />
 
                             <div class="c100 p{{ path.progression }} path-progression sm">
                                 <span>
