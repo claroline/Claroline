@@ -5,7 +5,7 @@ const T = React.PropTypes
 export default class PageHeader extends Component {
   render() {
     return (
-      <div className="page-header">
+      <header className="page-header">
         <h1>
           {this.props.title}
           &nbsp;
@@ -13,7 +13,7 @@ export default class PageHeader extends Component {
         </h1>
 
         {this.props.children}
-      </div>
+      </header>
     )
   }
 }

@@ -100,14 +100,14 @@ export default class PageActions extends Component {
     const secondaryActions = this.props.actions.filter(action => !action.primary)
 
     return (
-      <div className="page-actions">
+      <nav className="page-actions">
         {primaryActions.map((primaryAction, index) => primaryAction.divider ?
           (<Divider key={index} />) :
           (<PagePrimaryAction key={index} icon={primaryAction.icon} badge={primaryAction.badge} label={primaryAction.label} handleAction={primaryAction.handleAction} />)
         )}
 
         {0 !== secondaryActions.length && <MoreActionsDropdown actions={secondaryActions} />}
-      </div>
+      </nav>
     )
   }
 }
