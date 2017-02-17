@@ -163,5 +163,7 @@
     "user_progression_step_unseen": "Vous n'avez pas encore vu cette étape.",
     "user_progression_unlock_sent": "Déblocage de l'étape effectué.",
     "with_tutor": "Tutoré",
-    "yes": "Oui"
+    "yes": "Oui",
+    "resources_browse": "Ajouter une ressource",
+    "resources_replace": "Remplacer"
 }
