@@ -103,7 +103,7 @@
     "post_filtered_by_month": "Liste des articles filtrés sur le mois : <strong>%date%</strong>.",
     "post_filtered_by_search": "Liste des articles filtrés par la recherche %searchTerms%",
     "post_filtered_by_tag": "Liste des articles filtrés par le tag %tagName%",
-    "posts": "Articles",
+    "posts": "Messages",
     "publish": "Rendre visible",
     "read_more": "Voir plus",
     "redactor": "Rédacteurs",
