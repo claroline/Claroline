@@ -39,8 +39,7 @@
             {{ event.getStartInDateTime()|date('d/m/Y') }},
         {% endif %}
 
-        <a href="#"
-           class="{{ event.isTask ? 'info-of-task' : 'info-of-event' }}"
+        <a class="{{ event.isTask ? 'info-of-task' : 'info-of-event' }}"
            tabindex="0"
            role="button"
            data-placement="top"
