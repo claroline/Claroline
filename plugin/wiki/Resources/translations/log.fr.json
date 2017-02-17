@@ -47,7 +47,7 @@
     "moved_from_section_to_section": "La section %section% a été déplacée de %oldParent% vers %newParent%.",
     "moved_from_section_to_wiki": "La section %section% a été déplacée de %oldParent% vers la racine du wiki.",
     "moved_from_wiki_to_section": "La section %section% a été déplacée de la racine du wiki vers %newParent%.",
-    "moved_up_section": "La section %section% a été rémontée.",
+    "moved_up_section": "La section %section% a été remontée.",
     "no": "Non",
     "normal": "Normal",
     "read_only": "Consultation",
