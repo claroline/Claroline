@@ -73,6 +73,11 @@
     .carousel-card-content {
         font-size: @path-card-content-font-size;
         padding: @path-card-content-padding;
+        max-height: 40%; // Avoid long content pushing the buttons outside the card
+
+        // hide content that doesn't fit the box
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .carousel-card-btns {
