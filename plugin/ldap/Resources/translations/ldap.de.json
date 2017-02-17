@@ -1,5 +1,7 @@
 {
     "name": "",
     "host": "",
-    "port": ""
+    "port": "",
+    "username": "Gebrauchername",
+    "password": "Passwort"
 }
