@@ -192,11 +192,16 @@ class Updater090000
                     $newData = array_map(function ($association) use ($propNames, $labels, $proposals) {
                         $associationData = explode(',', $association);
 
-                        $data = new \stdClass();
+                        $data = null;
 
-                        // Convert ids into uuids
-                        $data->{$propNames[0]} = $this->getAnswerPartUuid($associationData[0], $proposals);
-                        $data->{$propNames[1]} = $this->getAnswerPartUuid($associationData[1], $labels);
+                        // The new system only allows complete association in answers
+                        if (!empty($associationData) && 2 === count($associationData)) {
+                            $data = new \stdClass();
+
+                            // Convert ids into uuids
+                            $data->{$propNames[0]} = $this->getAnswerPartUuid($associationData[0], $proposals);
+                            $data->{$propNames[1]} = $this->getAnswerPartUuid($associationData[1], $labels);
+                        }
 
                         return $data;
                     }, $answerData);
@@ -216,10 +221,14 @@ class Updater090000
                         $pairData = explode(',', $pair);
 
                         // Convert ids into uuids
-                        return [
-                            $this->getAnswerPartUuid($pairData[0], $proposals),
-                            $this->getAnswerPartUuid($pairData[1], $labels),
-                        ];
+                        if (!empty($pairData) && 2 === count($pairData)) {
+                            return [
+                                $this->getAnswerPartUuid($pairData[0], $proposals),
+                                $this->getAnswerPartUuid($pairData[1], $labels),
+                            ];
+                        } else {
+                            return null;
+                        }
                     }, $answerData);
 
                     break;
@@ -288,10 +297,14 @@ class Updater090000
                     $newData = array_map(function ($coords) {
                         $coordsData = explode(',', $coords);
 
-                        return [
-                            $coordsData[0],
-                            $coordsData[1],
-                        ];
+                        if (!empty($coordsData) && 2 === count($coordsData)) {
+                            return [
+                                $coordsData[0],
+                                $coordsData[1],
+                            ];
+                        } else {
+                            return null;
+                        }
                     }, $answerData);
                     break;
 
@@ -303,9 +316,19 @@ class Updater090000
             $sth = $this->connection->prepare('
                 UPDATE ujm_response SET `response` = :data WHERE id = :id 
             ');
+
+            $insertData = null;
+            if (!empty($newData)) {
+                $insertData = json_encode(
+                    array_filter($newData, function ($data) {
+                        return !empty($data);
+                    })
+                );
+            }
+
             $sth->execute([
                 'id' => $answer['answerId'],
-                'data' => !empty($newData) ? json_encode($newData) : null,
+                'data' => $insertData,
             ]);
         }
 
