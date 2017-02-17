@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "049300256d4befcd7165364638631a985f405d03"
+                "reference": "0134b845e33e78d1c3c98f1a9b108d4e2a1bc7e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/049300256d4befcd7165364638631a985f405d03",
-                "reference": "049300256d4befcd7165364638631a985f405d03",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/0134b845e33e78d1c3c98f1a9b108d4e2a1bc7e3",
+                "reference": "0134b845e33e78d1c3c98f1a9b108d4e2a1bc7e3",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-02-15 17:52:35"
+            "time": "2017-02-16 15:27:07"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3516,17 +3516,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "5a5720d98bf23d015d462e1c26b2f780a4c9e22f"
+                "reference": "51fc264612e03ce226820a49e53b9e48034b5685"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/5a5720d98bf23d015d462e1c26b2f780a4c9e22f",
-                "reference": "5a5720d98bf23d015d462e1c26b2f780a4c9e22f",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/51fc264612e03ce226820a49e53b9e48034b5685",
+                "reference": "51fc264612e03ce226820a49e53b9e48034b5685",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-02-15 14:48:40"
+            "time": "2017-02-16 12:51:51"
         },
         {
             "name": "justinrainbow/json-schema",
