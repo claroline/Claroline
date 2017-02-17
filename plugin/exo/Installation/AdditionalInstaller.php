@@ -8,6 +8,7 @@ use UJM\ExoBundle\Installation\Updater\Updater060001;
 use UJM\ExoBundle\Installation\Updater\Updater060200;
 use UJM\ExoBundle\Installation\Updater\Updater070000;
 use UJM\ExoBundle\Installation\Updater\Updater090000;
+use UJM\ExoBundle\Installation\Updater\Updater090002;
 
 class AdditionalInstaller extends BaseInstaller
 {
@@ -59,6 +60,14 @@ class AdditionalInstaller extends BaseInstaller
                 $this->container->get('ujm_exo.serializer.exercise'),
                 $this->container->get('ujm_exo.serializer.step'),
                 $this->container->get('ujm_exo.serializer.item')
+            );
+            $updater->setLogger($this->logger);
+            $updater->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '9.0.2', '<')) {
+            $updater = new Updater090002(
+                $this->container->get('doctrine.dbal.default_connection')
             );
             $updater->setLogger($this->logger);
             $updater->postUpdate();
