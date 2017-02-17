@@ -1,4 +1,5 @@
 {
     "content": "Inhoud",
-    "message": "Boodschap"
+    "message": "Boodschap",
+    "log.blog.configure": "heeft de blog % blog% ingesteld."
 }
