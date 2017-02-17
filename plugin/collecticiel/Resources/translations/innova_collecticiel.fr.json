@@ -403,7 +403,7 @@
     "awaiting for drop": "Evaluation commencée",
     "cancel_unlock": "Annuler le déblocage",
     "common_explication": "Cet outil met à la disposition des utilisateurs un espace dans lequel ils peuvent déposer des documents de différents types : fichier (à téléverser), texte libre (à rédiger en ligne), ressources (à sélectionner depuis l'espace des ressoures) et lien Internet.<br/>L'utilisateur peut demander une évaluation ou un simple commentaire pour l'un ou l'autre des documents déposés dans son espace. Ces deux types de demandes (simple commentaire ou évaluation) ont été regroupés sous le terme \"demande de commentaire\".<br/>Dans cette version 1 du collecticiel, seuls les enseignants reçoivent des \"demandes de commentaires\".",
-    "copy": "document",
+    "copy": "copie",
     "copy author's": "Document de",
     "corrected copy": "Document corrigé, évaluation terminée",
     "correction n°%nb_correction%/%expected_correction%": "correction n°%nb_correction%/%expected_correction% effectuée",

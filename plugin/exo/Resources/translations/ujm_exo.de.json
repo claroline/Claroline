@@ -34,5 +34,7 @@
     "unpublish": "",
     "upload": "",
     "validate": "",
-    "yes": "Ja"
+    "yes": "Ja",
+    "no": "Nein",
+    "search": "Suchen"
 }

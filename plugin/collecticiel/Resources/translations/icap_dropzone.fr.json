@@ -274,7 +274,7 @@
     "awaiting for drop": "The evaluation has started. Waiting for drops.",
     "cancel_unlock": "Cancel unlocking",
     "common_explication": "This tool provides the learners a space to drop their documents in order to be evaluated.<br/>The corrections can be made by the teachers or by the learners themselves thanks to peer review.<br/>The planning tool allows you to manage the different evaluation phases, manually or automatically, by dates.",
-    "copy": "copy",
+    "copy": "copie",
     "copy authors": "Copy of",
     "corrected copy": "Copy corrected, evaluation finished.",
     "correction n°%nb_correction%/%expected_correction%": "correction \\# %nb_correction% / %expected_correction% made",

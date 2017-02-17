@@ -17,9 +17,9 @@
     "condition_criterion_test_repetition": "L'activité doit être tentée <b>%activityRep%</b> fois. Actuellement vous l'avez tentée <b>%userRep%</b> fois.",
     "condition_criterion_test_status": "Le statut de l'activité doit être <b>%activityStatus%</b>. Actuellement il est <b>%userStatus%</b>.",
     "condition_criterion_test_usergroup": "Vous devez appartenir au groupe <b>%activityGroup%</b>. Actuellement vous appartenez au(x) groupe(s) <b>%userGroup%</b>.",
-    "condition_criterion_test_usergroup_nogroup": "Vous devez appartenir au groupe <b>%activityGroup%</b>. Actuellement vous n'appartenez à <b>aucun groupe</b>.",
+    "condition_criterion_test_usergroup_nogroup": "Vous devez appartenir au groupe %activityGroup%. Actuellement, vous n'appartenez à aucun groupe.",
     "condition_criterion_test_userteam": "Vous devez appartenir à l'équipe <b>%activityTeam%</b>. Actuellement vous appartenez à l'équipe <b>%userTeam%</b>.",
-    "condition_criterion_test_userteam_noteam": "Vous devez appartenir à l'équipe <b>%activityTeam%</b>. Actuellement vous n'appartenez à <b>aucune équipe</b>.",
+    "condition_criterion_test_userteam_noteam": "Vous devez appartenir à l'équipe %activityTeam%. Actuellement, vous n'appartenez à aucune équipe.",
     "condition_criterion_type": "Type de critère",
     "condition_criterion_type_activityrepetition": "Répétition de l'activité",
     "condition_criterion_type_activitystatus": "Statut de l'activité",
@@ -28,10 +28,10 @@
     "condition_criterion_usergroup": "Utilisateur appartient au groupe",
     "condition_criterion_userteam": "Utilisateur appartient à l'équipe",
     "condition_delete": "Supprimer",
-    "condition_delete_confirm": "Attention, vous êtes sur le point de supprimer la condition. Sans condition, tous les utilisateurs pourront passer à l'étape suivante",
+    "condition_delete_confirm": "Attention: Vous êtes sur le point de supprimer la condition. Sans condition, tous les utilisateurs pourront passer à l'étape suivante.",
     "condition_delete_title": "Suppression de la condition",
     "condition_init_conditionstructure": "Créer une condition d'accès pour l'étape",
-    "condition_no_conditionstructure": "Aucune condition n'est définie pour l'étape",
+    "condition_no_conditionstructure": "Aucune condition n'est définie pour l'étape.",
     "condition_or": "OU",
     "condition_step_activity_notmanageable": "Pour cette étape, vous avez choisi un type d'évaluation manuel. Les critères disponibles se limitent dans ce cas aux utilisateurs (groupe ou équipe).",
     "condition_step_no_activity": "Attention, vous n'avez pas associé d'activité à cette étape.",
@@ -163,5 +163,7 @@
     "user_progression_step_unseen": "Vous n'avez pas encore vu cette étape.",
     "user_progression_unlock_sent": "Déblocage de l'étape effectué.",
     "with_tutor": "Tutoré",
-    "yes": "Oui"
+    "yes": "Oui",
+    "resources_browse": "Ajouter une ressource",
+    "resources_replace": "Remplacer"
 }
