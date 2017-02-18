@@ -31,5 +31,8 @@
     "log_resource-icap_blog-post_read_shortname": "Een artikel openen",
     "log_resource-icap_blog-post_update_shortname": "Een artikel bewerken",
     "log_resource-icap_blog-post_update_title": "Een artikel in een blog bewerken",
-    "postPerPage": "Artikels per pagina"
+    "postPerPage": "Artikels per pagina",
+    "log.blog.update_comment": "heeft een commentaar over het artikel%post% in de blog %blog% bewerkt.",
+    "log.blog.update_post": "heeft het artikel%post% in de blog %blog% bewerkt.",
+    "log_post_author": "Auteur"
 }
