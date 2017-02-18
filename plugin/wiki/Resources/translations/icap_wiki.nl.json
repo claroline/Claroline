@@ -75,5 +75,6 @@
     "wiki_contents": "Inhoud",
     "history": "Geschiedenis",
     "back_to_top": "Terug naar boven",
-    "display_section_numbers_message": "Automatische sectienummers worden weergegeven in de wiki, vóór elke sectietitel."
+    "display_section_numbers_message": "Automatische sectienummers worden weergegeven in de wiki, vóór elke sectietitel.",
+    "display_section_numbers": "De sectienummers weergeven"
 }
