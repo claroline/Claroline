@@ -7,5 +7,6 @@
     "start_recording": "Start opname",
     "stop": "Stop",
     "stop_recording": "Stop opname",
-    "video_recorder_configuration_max_recording_time": ""
+    "video_recorder_configuration_max_recording_time": "",
+    "validate": "Valideren"
 }
