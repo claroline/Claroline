@@ -30,7 +30,7 @@
     "info.create_learning_objective": "Click the button below to create a new objective.",
     "info.no_ability_activities": "No activity is associated with this ability.",
     "info.no_competency_activities": "No activity is associated with this competency.",
-    "info.no_competency_association": "There are no associatied competencies yet.",
+    "info.no_competency_association": "There are no associated competencies yet.",
     "info.no_frame": "There are no frameworks yet. You can create a new framework or manage the scales of difficulty using the buttons below.",
     "info.no_frame_no_scale": "There are no frameworks and no scales yet. If you choose to create a framework now, it will be assigned a default scale of one level. Alternatively, you can create a scale and then directly associate it with your framework.",
     "info.no_frame_to_select": "No competency framework has been defined yet.",
