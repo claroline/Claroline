@@ -32,5 +32,7 @@
     "NC": "onbekend",
     "aucune_periode": "Geen  bestaande of geselecteerde periode ",
     "bonjour": "Goeiedag ",
-    "valider_presences": "Aanwezigheden valideren"
+    "valider_presences": "Aanwezigheden valideren",
+    "access_error": "U bent niet toegelaten deze pagina te bekijken. Als u denkt dat dit een bug is, neem dan contact op met de beheerder van het platform.",
+    "actual_periode": "Huidige periode ?"
 }

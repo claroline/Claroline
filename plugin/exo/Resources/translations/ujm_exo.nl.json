@@ -18,7 +18,7 @@
     "start_date": "Startdatum",
     "end_date": "Einddatum",
     "back": "Terug",
-    "add_choice": "",
+    "add_choice": "Voeg een keuze",
     "create": "Maken",
     "creation_date": "Aanmaakdatum",
     "date": "Datum",
@@ -43,5 +43,6 @@
     "size": "Grootte",
     "unpublish": "Niet meer publiceren",
     "upload": "Upload",
-    "validate": "Valideren"
+    "validate": "Valideren",
+    "questions": "Vragen"
 }
