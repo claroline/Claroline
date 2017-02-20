@@ -10,7 +10,7 @@
     "course": "Opleiding",
     "form_not_blank_error": "Deze waarde mag niet leeg zijn.",
     "form_not_unique_error": "Deze waarde wordt al gebruikt.",
-    "form_number_superior_error": "",
+    "form_number_superior_error": "Deze waarde moet % value% zijn of meer.",
     "no": "Nee",
     "public_registration": "Openbare inschrijving",
     "self_register": "Zich inschrijven",
