@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "191e982101a7eeb302c78f3e8c6bfeac5e2a8f1d"
+                "reference": "8f4de642caddda866a03a2c409eca71e658c3e67"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/191e982101a7eeb302c78f3e8c6bfeac5e2a8f1d",
-                "reference": "191e982101a7eeb302c78f3e8c6bfeac5e2a8f1d",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/8f4de642caddda866a03a2c409eca71e658c3e67",
+                "reference": "8f4de642caddda866a03a2c409eca71e658c3e67",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-02-17 15:57:34"
+            "time": "2017-02-19 05:46:42"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -7657,16 +7657,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "d3157d942a4590121dfd23f9cadf519ca6ad4ac7"
+                "reference": "6f8f293bb16e94aca2bc9052d098bd31eccf1fdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/d3157d942a4590121dfd23f9cadf519ca6ad4ac7",
-                "reference": "d3157d942a4590121dfd23f9cadf519ca6ad4ac7",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/6f8f293bb16e94aca2bc9052d098bd31eccf1fdf",
+                "reference": "6f8f293bb16e94aca2bc9052d098bd31eccf1fdf",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
+            },
+            "conflict": {
+                "phpunit/phpunit": ">=6.0"
             },
             "suggest": {
                 "ext-zip": "Zip support is required when using bin/simple-phpunit",
@@ -7708,7 +7711,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-01-21 17:10:26"
+            "time": "2017-02-18 17:35:19"
         },
         {
             "name": "webmozart/assert",
