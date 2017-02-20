@@ -1,6 +1,6 @@
 {
     "client_active": "Activer",
-    "client_force_reauthenticate": "",
+    "client_force_reauthenticate": "Re-authenticatie eisen",
     "client_id": "Applicatie ID",
     "client_secret": "Application geheim",
     "client_tenant_domain": "Domein",
