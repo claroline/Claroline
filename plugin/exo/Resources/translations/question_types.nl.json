@@ -1,3 +1,9 @@
 {
-    "open": "Open"
+    "open": "Open",
+    "choice": "Meerdere keuzes",
+    "choice_desc": "Kies een of meerdere antwoorden (bijv. tekst, beeld, audio, video) in een lijst van vooraf gedefinieerde keuzes.",
+    "cloze": "Cloze-test",
+    "match": "Associatie",
+    "words": "Sleutelwoorden",
+    "words_desc": "Schrijf een antwoord met één of meerdere verwachte sleutelwoorden."
 }

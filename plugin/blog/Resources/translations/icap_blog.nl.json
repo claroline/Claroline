@@ -112,5 +112,10 @@
     "to_comment": "Commentaar",
     "valid_banner_modification": "Bijwerkingen valideren",
     "view": "%viewCounter% view | %viewCounter% views",
-    "widget_list_no_blog": "Geen blog getoond"
+    "widget_list_no_blog": "Geen blog getoond",
+    "infobar": "Informatiebalk",
+    "post_filtered_by_day": "Lijst van de artikels met een filter op de dag %date%",
+    "post_filtered_by_monthe": "Lijst van de artikels met een filter op de maand %date%",
+    "post_filtered_by_search": "Lijst van de artikels met een filter op de zoektermen %searchTerms%",
+    "post_filtered_by_tag": "Lijst van de artikels met een filter op de tags %tagName%"
 }
