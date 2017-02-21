@@ -47,7 +47,7 @@
     "badge_awarding_some_rules_respected": "%nbvalidRules% regels gerespecteerd op %nbRules% om de badge toe te wijzen.",
     "badge_check_state": "Validatie statuut",
     "badge_claim_error_message": "Er is een fout opgetreden bij het eisen van een badge.",
-    "badge_claim_form_badge": "",
+    "badge_claim_form_badge": "Naam van de geëiste badge",
     "badge_claim_nothing_selected_warning_message": "Geen badge geselecteerd om een badge te eisen.",
     "badge_claim_success_message": "Badge met succes geëist.",
     "badge_claimed": "Badge geëist",
