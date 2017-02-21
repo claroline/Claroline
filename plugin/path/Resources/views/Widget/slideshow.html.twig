@@ -1,11 +1,12 @@
-<div id="paths-slideshow" class="path-slideshow carousel slide" data-ride="carousel" data-interval="false">
-    {% set perPage = 3 %}
-    {% set carouselPages = ((paths|length / perPage)|round(0, 'ceil')) - 1 %}
+{% set slideshowId = 'path-slideshow-' ~ random() %}
+{% set perPage = 3 %}
+{% set carouselPages = ((paths|length / perPage)|round(0, 'ceil')) - 1 %}
 
+<div id="{{ slideshowId }}" class="widget-slideshow path-slideshow carousel slide" data-ride="carousel" data-interval="false">
     <!-- Indicators -->
     <ul class="carousel-indicators">
         {% for page in 0..carouselPages %}
-        <li {% if loop.first %}class="active"{% endif %} data-target="#paths-slideshow" data-slide-to="{{ loop.index0 }}"></li>
+        <li {% if loop.first %}class="active"{% endif %} data-target="#{{ slideshowId }}" data-slide-to="{{ loop.index0 }}"></li>
         {% endfor %}
     </ul>
 
@@ -68,12 +69,12 @@
     </div>
 
     <!-- Controls -->
-    <a class="left carousel-control" href="#paths-slideshow" data-slide="prev">
+    <a class="left carousel-control" href="#{{ slideshowId }}" data-slide="prev">
         <span class="fa fa-fw fa-chevron-left">&nbsp;</span>
         <span class="sr-only">Previous</span>
     </a>
 
-    <a class="right carousel-control" href="#paths-slideshow" data-slide="next">
+    <a class="right carousel-control" href="#{{ slideshowId }}" data-slide="next">
         <span class="fa fa-fw fa-chevron-right">&nbsp;</span>
         <span class="sr-only">Next</span>
     </a>
