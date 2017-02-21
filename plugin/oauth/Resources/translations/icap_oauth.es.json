@@ -1,7 +1,7 @@
 {
     "client_active": "Activar",
     "client_force_reauthenticate": "Forzar la reautenticación",
-    "client_id": "Id de la aplicación",
+    "client_id": "ID de la aplicación",
     "client_secret": "Secret de la aplicación",
     "client_tenant_domain": "Dominio",
     "create_new_oauth_account": "Crear una nueva cuenta",
