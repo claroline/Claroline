@@ -20,5 +20,6 @@
     "general_parameters": "Algemene instellingen",
     "list_view": "Lijstweergave",
     "locations": "Plaatsen",
-    "registration_validation": "Validatie van de inschrijving"
+    "registration_validation": "Validatie van de inschrijving",
+    "no_result": "Geen resultaat"
 }
