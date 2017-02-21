@@ -61,6 +61,7 @@ const ItemActions = props =>
         <span className="fa fa-fw fa-trash-o" />
       </button>
     </OverlayTrigger>
+
     {props.connectDragSource(
       <span>
         <OverlayTrigger
