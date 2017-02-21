@@ -1,3 +1,9 @@
 {
-    "new": "Nieuw"
+    "new": "Nieuw",
+    "claroline_video_player": "Video speler",
+    "delete_track": "Track verwijderen",
+    "delete_track_confirm": "Bent u er zeker van dat u deze track wenst te verwijderen ?",
+    "is_default": "Standaard",
+    "lang": "Long",
+    "player": "Speler"
 }
