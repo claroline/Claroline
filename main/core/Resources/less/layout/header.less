@@ -6,9 +6,11 @@
     border: none;
     border-bottom: @top-bar-border-bottom;
     margin-bottom: 0;
+    font-size: @top-bar-font-size;
     .box-shadow(@top-bar-box-shadow);
 
     .top-bar-content {
+        height: @top-bar-height - @top-bar-border-bottom-size; // permits to fill parent height when using flex boxes
         max-width: @top-bar-max-width;
         margin: 0 auto;
     }
@@ -37,9 +39,13 @@
             display: flex;
             align-items: center;
 
-            // Let some space between logo img and platform name
-            img ~ span {
-                margin-left: 5px;
+            img {
+                height: @top-bar-logo-height;
+
+                // Let some space between logo img and platform name
+                & ~ span {
+                    margin-left: 5px;
+                }
             }
         }
     }

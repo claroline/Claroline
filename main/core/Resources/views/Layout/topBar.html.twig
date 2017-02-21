@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:Layout:topBarItems.html.twig" %}
 
 {% block topBar %}
-    <div id="top_bar" class="navbar navbar-fixed-top" role="navigation">
+    <div id="top_bar" class="top-bar navbar navbar-fixed-top" role="navigation">
         <div class="top-bar-content container-fluid">
             <div class="navbar-header">
                 <button class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -16,7 +16,6 @@
                     title="{{ 'home' | trans({}, "platform") }}"
                 >
                     <img
-                        height="35"
                         src="{{ getAssetPath() ~ '/uploads/logos/' ~ config.getParameter('logo') }}"
                         {% if config.getParameter('name') is not empty %}
                         alt="{{ config.getParameter('name') }}"
