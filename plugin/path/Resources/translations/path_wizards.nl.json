@@ -6,5 +6,20 @@
     "save": "Opslaan",
     "publish": "Gepubliceerd",
     "published": "Gepubliceerd",
-    "with_tutor": "Begeleid"
+    "with_tutor": "Begeleid",
+    "path_description": "Beschrijving",
+    "path_name": "Naam",
+    "activity_height": "Min. hoogte van de middel",
+    "close_summary": "Overzicht sluiten",
+    "completed": "voltooid",
+    "condition_and": "EN",
+    "condition_condition_delete": "Verwijderen",
+    "condition_criteria_group_add": "Voeg een groep criteria",
+    "condition_criteria_group_delete": "Verwijderen",
+    "condition_criteria_group_no_criterion": "Er is geen criterium.",
+    "condition_criterion_activityrepetition": "Het aantal keren dat de activiteit is uitgevoerd.",
+    "condition_criterion_add": "Voeg een criterium",
+    "condition_criterion_choice": "Uw keuze",
+    "condition_criterion_delete": "Criterium verwijderen",
+    "condition_criterion_usergroup": "Gebruiker behoort tot de groep"
 }
