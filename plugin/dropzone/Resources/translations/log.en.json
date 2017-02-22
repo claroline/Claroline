@@ -37,7 +37,7 @@
     "log_resource-icap_dropzone-correction_start_shortname": "Start of a correction",
     "log_resource-icap_dropzone-correction_start_title": "Start of a correction",
     "log_resource-icap_dropzone-correction_update_filter": "Updating a correction in an evaluation",
-    "log_resource-icap_dropzone-correction_update_sentence": "has updateed a correction in %resource%",
+    "log_resource-icap_dropzone-correction_update_sentence": "has updated a correction in %resource%",
     "log_resource-icap_dropzone-correction_update_shortname": "Updating a correction",
     "log_resource-icap_dropzone-correction_update_title": "Updating a correction in an evaluation",
     "log_resource-icap_dropzone-correction_validation_change_filter": "Changing the validation of a correction in an evaluation",
