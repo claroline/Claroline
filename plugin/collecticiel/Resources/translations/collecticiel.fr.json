@@ -338,5 +338,6 @@
     "user": "Utilisateur",
     "waiting for correction": "En attente de correction",
     "was reported": "A été signalé",
-    "yes": "Oui"
+    "yes": "Oui",
+    "Hidden folder for \"%dropzoneName%\"": "Dossier caché pour \"%dropzoneName%\""
 }

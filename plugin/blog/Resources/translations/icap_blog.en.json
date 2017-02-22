@@ -56,7 +56,7 @@
     "icap_blog_options_form_Order_Widget_Right": "Manage the side bar of the widget",
     "icap_blog_options_form_authorize_anonymous_comment": "Anonymous comments allowed (authentication not required)",
     "icap_blog_options_form_authorize_comment": "Allow comments about the articles",
-    "icap_blog_options_form_auto_publish_comment": "Comments published automatically once they''re created. (without moderation)",
+    "icap_blog_options_form_auto_publish_comment": "Comments published automatically once they're created. (No moderation)",
     "icap_blog_options_form_auto_publish_post": "Post published automatically once it''s created.",
     "icap_blog_options_form_display_post_view_counter": "Display amount of views for every post",
     "icap_blog_options_form_display_title": "Display title of the blog",
