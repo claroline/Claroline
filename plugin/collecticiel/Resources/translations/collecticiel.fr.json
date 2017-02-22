@@ -314,7 +314,7 @@
     "number of Report": "Nombre de signalements :",
     "number_of_denied_corrections": "Nombre de copies signalées par le correcteur :",
     "only reported drops": "Seulement les copies signalées",
-    "peerReview": "correction par les pairs",
+    "peerReview": "Évaluation par les pairs",
     "peerReviewManualState": "Les apprenants peuvent corriger les copies. (Évaluation par les pairs).",
     "recalculate_helper": "Utile si vous avez supprimé des critères de correction alors que des gens avaient déjà commencé à corriger. Cela adaptera la note. Si vous avez ajouté de nouveaux critères, la note pour ce critère sera de 0 par défaut.",
     "reportComment": "Commentaire du signalement",
