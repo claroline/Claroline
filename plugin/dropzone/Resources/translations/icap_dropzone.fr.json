@@ -360,5 +360,6 @@
     "user": "Utilisateur",
     "waiting for correction": "En attente de correction",
     "was reported": "A été signalé",
-    "yes": "Oui"
+    "yes": "Oui",
+    "text_placeholder": "Votre texte ici"
 }
