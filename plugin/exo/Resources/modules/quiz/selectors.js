@@ -22,6 +22,7 @@ const editorOpened = state => state.editor.opened
 const noItems = state =>
   Object.keys(state.quiz.steps).length === 1 && Object.keys(state.items).length === 0
 const firstStepId = state => state.quiz.steps[0]
+const hasOverview = state => state.quiz.parameters.showOverview
 
 export default {
   id,
@@ -43,5 +44,6 @@ export default {
   modal,
   editorOpened,
   noItems,
-  firstStepId
+  firstStepId,
+  hasOverview
 }

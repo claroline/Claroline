@@ -6,12 +6,12 @@ use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\ExerciseSerializer;
-use UJM\ExoBundle\Serializer\Question\QuestionSerializer;
+use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 use UJM\ExoBundle\Serializer\StepSerializer;
 
 /**
@@ -33,9 +33,9 @@ class PaperGenerator
     private $stepSerializer;
 
     /**
-     * @var QuestionSerializer
+     * @var ItemSerializer
      */
-    private $questionSerializer;
+    private $itemSerializer;
 
     /**
      * PaperGenerator constructor.
@@ -43,21 +43,21 @@ class PaperGenerator
      * @DI\InjectParams({
      *     "exerciseSerializer" = @DI\Inject("ujm_exo.serializer.exercise"),
      *     "stepSerializer" = @DI\Inject("ujm_exo.serializer.step"),
-     *     "questionSerializer" = @DI\Inject("ujm_exo.serializer.question")
+     *     "itemSerializer" = @DI\Inject("ujm_exo.serializer.item")
      * })
      *
      * @param ExerciseSerializer $exerciseSerializer
      * @param StepSerializer     $stepSerializer
-     * @param QuestionSerializer $questionSerializer
+     * @param ItemSerializer     $itemSerializer
      */
     public function __construct(
         ExerciseSerializer $exerciseSerializer,
         StepSerializer $stepSerializer,
-        QuestionSerializer $questionSerializer)
+        ItemSerializer $itemSerializer)
     {
         $this->exerciseSerializer = $exerciseSerializer;
         $this->stepSerializer = $stepSerializer;
-        $this->questionSerializer = $questionSerializer;
+        $this->itemSerializer = $itemSerializer;
     }
 
     /**
@@ -160,7 +160,7 @@ class PaperGenerator
      * @param Step           $step
      * @param \stdClass|null $previousStep
      *
-     * @return Question[]
+     * @return Item[]
      */
     private function pickItems(Step $step, \stdClass $previousStep = null)
     {
@@ -179,8 +179,8 @@ class PaperGenerator
         }
 
         // Serialize items
-        $pickedItems = array_map(function (Question $pickedItem) {
-            return $this->questionSerializer->serialize($pickedItem, [
+        $pickedItems = array_map(function (Item $pickedItem) {
+            return $this->itemSerializer->serialize($pickedItem, [
                 Transfer::SHUFFLE_ANSWERS,
                 Transfer::INCLUDE_SOLUTIONS,
             ]);

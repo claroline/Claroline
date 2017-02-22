@@ -1,4 +1,0 @@
-log_resource-ujm_exercise-exercise_evaluated_filter: 'Get the evaluation on a quiz'
-log_resource-ujm_exercise-exercise_evaluated_title: 'Get an evaluation on a quiz'
-log_resource-ujm_exercise-exercise_evaluated_shortname: 'Evaluation on a quiz'
-log_resource-ujm_exercise-exercise_evaluated_sentence: 'has been evaluated on the quiz %resource%'

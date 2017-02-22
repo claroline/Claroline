@@ -1,0 +1,18 @@
+{
+    "type": "Tipo",
+    "menu": "",
+    "apply": "Aplicar",
+    "cancel": "Cancelar",
+    "content": "Contenido",
+    "error": "",
+    "general": "",
+    "title": "Título",
+    "description": "Descripción",
+    "footer": "Pie de página",
+    "height": "Altura",
+    "none": "Ninguno",
+    "reset": "Reinicializar",
+    "resource": "Recurso",
+    "save": "Guardar",
+    "width": "Ancho"
+}

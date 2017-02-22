@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Library\Options\Recurrence;
@@ -43,7 +43,7 @@ class PaperGeneratorTest extends TransactionalTestCase
     private $exercise;
 
     /**
-     * @var Question[]
+     * @var Item[]
      */
     private $questions;
 
@@ -185,7 +185,7 @@ class PaperGeneratorTest extends TransactionalTestCase
             return $item->id;
         }, $decodedStructure->steps[0]->items);
 
-        $questionIds = array_map(function (Question $question) {
+        $questionIds = array_map(function (Item $question) {
             return $question->getUuid();
         }, $step->getQuestions());
 

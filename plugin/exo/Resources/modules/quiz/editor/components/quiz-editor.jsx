@@ -61,12 +61,21 @@ const Properties = props =>
       />
     </FormGroup>
     <CheckGroup
-      checkId="quiz-show-metadata"
-      checked={props.parameters.showMetadata}
-      label={tex('metadata_visible')}
-      help={tex('metadata_visible_help')}
-      onChange={checked => props.onChange('parameters.showMetadata', checked)}
+      checkId="quiz-show-overview"
+      checked={props.parameters.showOverview}
+      label={tex('show_overview')}
+      onChange={checked => props.onChange('parameters.showOverview', checked)}
     />
+
+    {props.parameters.showOverview &&
+      <CheckGroup
+        checkId="quiz-show-metadata"
+        checked={props.parameters.showMetadata}
+        label={tex('metadata_visible')}
+        help={tex('metadata_visible_help')}
+        onChange={checked => props.onChange('parameters.showMetadata', checked)}
+      />
+    }
   </fieldset>
 
 Properties.propTypes = {
@@ -74,6 +83,7 @@ Properties.propTypes = {
   description: T.string.isRequired,
   parameters: T.shape({
     type: T.string.isRequired,
+    showOverview: T.bool.isRequired,
     showMetadata: T.bool.isRequired
   }).isRequired,
   validating: T.bool.isRequired,
@@ -369,6 +379,7 @@ QuizEditor.propTypes = {
     description: T.string.isRequired,
     parameters: T.shape({
       type: T.string.isRequired,
+      showOverview: T.bool.isRequired,
       showMetadata: T.bool.isRequired,
       randomOrder: T.string.isRequired,
       randomPick: T.string.isRequired,

@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Tests\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Library\Testing\Json\JsonDataTestCase;
 use UJM\ExoBundle\Library\Testing\Persister;
@@ -118,9 +118,9 @@ class ExerciseManagerTest extends JsonDataTestCase
         $this->assertNotEquals($firstStepOri->getId(), $firstStepCopy->getId());
 
         // Checks questions have been reused
-        /** @var Question $questionOri */
+        /** @var Item $questionOri */
         $questionOri = $firstStepOri->getStepQuestions()->get(0)->getQuestion();
-        /** @var Question $questionCopy */
+        /** @var Item $questionCopy */
         $questionCopy = $firstStepCopy->getStepQuestions()->get(0)->getQuestion();
 
         $this->assertEquals($questionOri->getId(), $questionCopy->getId());

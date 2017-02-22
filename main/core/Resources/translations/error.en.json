@@ -1,0 +1,5 @@
+{
+    "insufficient_permissions": "Insufficient permissions.",
+    "invalid_move": "You cannot move a directory into itself.",
+    "recursivity_not_supported": "Recursivity is not supported."
+}

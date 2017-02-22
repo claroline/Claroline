@@ -26,13 +26,13 @@ ujm_api_paper:
 
 # Exposes CRUD actions for questions
 ujm_api_question:
-    resource: "@UJMExoBundle/Controller/Api/Question/QuestionController.php"
+    resource: "@UJMExoBundle/Controller/Api/Item/ItemController.php"
     type: annotation
     prefix: /api
 
 # Exposes CRUD actions for categories
 ujm_api_category:
-    resource: "@UJMExoBundle/Controller/Api/Question/CategoryController.php"
+    resource: "@UJMExoBundle/Controller/Api/Item/CategoryController.php"
     type: annotation
     prefix: /api
 
@@ -50,7 +50,7 @@ ujm_api_correction:
 
 # Exposes actions to share and manage shared questions
 ujm_api_share:
-    resource: "@UJMExoBundle/Controller/Api/Question/ShareController.php"
+    resource: "@UJMExoBundle/Controller/Api/Item/ShareController.php"
     type: annotation
     prefix: /api
 

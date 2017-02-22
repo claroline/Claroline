@@ -8,7 +8,7 @@ use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Library\Testing\Persister;
 
@@ -72,9 +72,9 @@ class CorrectionControllerTest extends TransactionalTestCase
 
     public function testListQuestions()
     {
-        /** @var Question $firstQuestion */
+        /** @var Item $firstQuestion */
         $firstQuestion = $this->exercise->getSteps()->get(0)->getStepQuestions()->get(0)->getQuestion();
-        /** @var Question $secondQuestion */
+        /** @var Item $secondQuestion */
         $secondQuestion = $this->exercise->getSteps()->get(1)->getStepQuestions()->get(0)->getQuestion();
 
         $paper = $this->paperGenerator->create($this->exercise, $this->bob);
@@ -119,7 +119,7 @@ class CorrectionControllerTest extends TransactionalTestCase
 
     public function testNonAdminSave()
     {
-        /** @var Question $question */
+        /** @var Item $question */
         $question = $this->exercise->getSteps()->get(0)->getStepQuestions()->get(0)->getQuestion();
 
         $this->request('PUT', "/api/exercises/{$this->exercise->getUuid()}/correction/{$question->getUuid()}", $this->bob);
@@ -128,7 +128,7 @@ class CorrectionControllerTest extends TransactionalTestCase
 
     public function testSaveInvalidData()
     {
-        /** @var Question $question */
+        /** @var Item $question */
         $question = $this->exercise->getSteps()->get(1)->getStepQuestions()->get(0)->getQuestion();
 
         // Don't send anything to the server, this will throw a validation error
@@ -139,7 +139,7 @@ class CorrectionControllerTest extends TransactionalTestCase
 
     public function testSaveUnknownAnswer()
     {
-        /** @var Question $question */
+        /** @var Item $question */
         $question = $this->exercise->getSteps()->get(0)->getStepQuestions()->get(0)->getQuestion();
         $answerData = [[
             'id' => uniqid(), // Unknown answer
@@ -164,7 +164,7 @@ class CorrectionControllerTest extends TransactionalTestCase
 
     public function testSave()
     {
-        /** @var Question $question */
+        /** @var Item $question */
         $question = $this->exercise->getSteps()->get(0)->getStepQuestions()->get(0)->getQuestion();
 
         $paper = $this->paperGenerator->create($this->exercise, $this->bob);

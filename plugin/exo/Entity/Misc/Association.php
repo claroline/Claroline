@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Entity\Misc;
 
 use Doctrine\ORM\Mapping as ORM;
-use UJM\ExoBundle\Entity\QuestionType\MatchQuestion;
+use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Library\Attempt\AnswerPartInterface;
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
 use UJM\ExoBundle\Library\Model\ScoreTrait;
@@ -26,7 +26,7 @@ class Association implements AnswerPartInterface
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\QuestionType\MatchQuestion", inversedBy="associations")
+     * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\ItemType\MatchQuestion", inversedBy="associations")
      * @ORM\JoinColumn(name="match_question_id", referencedColumnName="id")
      */
     private $question;

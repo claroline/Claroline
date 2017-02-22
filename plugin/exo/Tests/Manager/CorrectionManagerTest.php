@@ -6,8 +6,8 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
-use UJM\ExoBundle\Entity\Question\Hint;
-use UJM\ExoBundle\Entity\Question\Question;
+use UJM\ExoBundle\Entity\Item\Hint;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Library\Testing\Json\JsonDataTestCase;
 use UJM\ExoBundle\Library\Testing\Persister;
@@ -26,7 +26,7 @@ class CorrectionManagerTest extends JsonDataTestCase
 
     /** @var Exercise */
     private $exercise;
-    /** @var Question[] */
+    /** @var Item[] */
     private $questions = [];
     /** @var Hint[] */
     private $hints = [];

@@ -7,9 +7,9 @@ use Claroline\CoreBundle\Library\Testing\RequestTrait;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Entity\Item\Hint;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Misc\Choice;
-use UJM\ExoBundle\Entity\Question\Hint;
-use UJM\ExoBundle\Entity\Question\Question;
 use UJM\ExoBundle\Library\Attempt\PaperGenerator;
 use UJM\ExoBundle\Library\Testing\Persister;
 use UJM\ExoBundle\Manager\AttemptManager;
@@ -37,7 +37,7 @@ class AttemptControllerTest extends TransactionalTestCase
     private $ch1;
     /** @var Choice */
     private $ch2;
-    /** @var Question */
+    /** @var Item */
     private $qu1;
     /** @var Hint */
     private $hi1;

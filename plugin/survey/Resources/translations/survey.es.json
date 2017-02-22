@@ -1,0 +1,22 @@
+{
+    "type": "Tipo",
+    "end_date": "Fecha de  finalización",
+    "actions": "Acciones",
+    "name": "Nombre",
+    "add_choice": "",
+    "comments": "",
+    "publication_date": "",
+    "answer": "Respuesta",
+    "close": "Cerrar",
+    "comment": "",
+    "no_model": "",
+    "published": "Publicado",
+    "results": "Resultados",
+    "title": "Título",
+    "description": "Descripción",
+    "model": "Modelo",
+    "parameters": "Parámetros",
+    "publish": "Publicado",
+    "status": "Estado",
+    "unpublished": "No publicado"
+}
