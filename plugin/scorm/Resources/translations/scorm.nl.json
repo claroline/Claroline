@@ -18,5 +18,12 @@
     "no_result": "Geen resultaat",
     "not attempted": "Niet gepoogd",
     "scorm_results": "SCORM resultaten",
-    "workspace_opening": "Een werkruimte openen"
+    "workspace_opening": "Een werkruimte openen",
+    "browsed": "Browsed",
+    "completion_status": "Voltooiingsstatuut",
+    "exit_destination": "Exit bestemming",
+    "full_screen": "Volledige scherm",
+    "hide_top_bar": "Bovenste balk verbergen",
+    "session_time": "Laatste sessie tijd",
+    "success_status": "Succes statuut"
 }
