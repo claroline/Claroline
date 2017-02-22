@@ -1,1 +1,20 @@
-{}
+{
+    "Add": "Voegen",
+    "Add a %type% document": "Voeg een %type% document",
+    "Add a correction": "Voeg een correctie",
+    "Add a document": "Voeg een document",
+    "Add at least one document": "Voeg tenminste één document",
+    "Allow upload": "Geüploade bestanden",
+    "Allow url": "Weblinks",
+    "Allow workspace resource": "Leermiddelen van de werkruimte",
+    "Are you sure to want to delete this document": "Bent u er zeker van dat u dit document wenst te verwijderen ?",
+    "Awaiting": "In afwachting",
+    "Back to corrections": "Terug naar correcties",
+    "Cancel": "Annuleren",
+    "Change": "Veranderen",
+    "Choose a date": "Kies een datum",
+    "Choose a resource": "Kies een leermiddel",
+    "Comment": "Commentaar",
+    "Complete my copy": "Mijn kopie voltooien",
+    "Complete my correction": "Mijn correctie voltooien"
+}

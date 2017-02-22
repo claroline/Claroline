@@ -9,7 +9,7 @@
     "endAllowDrop": "Fin du dépôt",
     "expectedTotalCorrection": "Nombre de corrections attendues. (Évaluation par les pairs)",
     "instruction": "instruction",
-    "log_correction": "Propriété de la correction",
+    "log_correction": "Propriétés de la correction",
     "log_create_document": "Document ajouté",
     "log_created_criterion": "Nouveau critère",
     "log_criterion_change_set": "Liste des propriétés modifiées pour le critère",
@@ -74,7 +74,7 @@
     "log_resource-icap_dropzone-drop_end_title": "Fin d'une copie dans une évaluation",
     "log_resource-icap_dropzone-drop_evaluate_filter": "Evaluation d'une copie",
     "log_resource-icap_dropzone-drop_evaluate_sentence": "a été évalué dans %resource%",
-    "log_resource-icap_dropzone-drop_evaluate_shortname": "Evaluation",
+    "log_resource-icap_dropzone-drop_evaluate_shortname": "Évaluation",
     "log_resource-icap_dropzone-drop_evaluate_title": "Evaluation d'une copie",
     "log_resource-icap_dropzone-drop_grade_available_filter": "Note disponible",
     "log_resource-icap_dropzone-drop_grade_available_sentence": "a effectué la dernière correction d'une copie dans %resource%",
@@ -99,7 +99,7 @@
     "manualPlanning": "Planification manuelle",
     "manualState": "État choisi",
     "minimumScoreToPass": "Note minimum pour réussir l'évaluation",
-    "peerReview": "évaluation par les pairs",
+    "peerReview": "Évaluation par les pairs",
     "startAllowDrop": "Début du dépôt",
     "totalCriteriaColumn": "echelle de notation pour les critères d'évaluation"
 }

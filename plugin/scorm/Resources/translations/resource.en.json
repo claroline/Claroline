@@ -12,7 +12,7 @@
     "quit": "Quit",
     "sco_resource_without_href_message": "A SCO defined in \"imsmanifest.xml\" is attached to an empty resource",
     "sco_with_no_identifier_message": "A SCO defined in \"imsmanifest.xml\" has no identifier",
-    "sco_without_resource_message": "A SCO defined in \"imsmanifest.xml\" isnt attached to a resource",
+    "sco_without_resource_message": "A SCO defined in \"imsmanifest.xml\" isn't attached to a resource.",
     "scorm_form_file": "File",
     "scorm_form_name": "Name"
 }

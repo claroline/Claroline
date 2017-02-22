@@ -25,5 +25,7 @@
     "log_resource-icap_lesson-chapter_read_title": "Een hoofdstuk in een les openen",
     "log_resource-icap_lesson-chapter_update_filter": "Een hoofdstuk in een les bijwerken",
     "log_resource-icap_lesson-chapter_update_shortname": "Een hoofdstuk bijwerken",
-    "log_resource-icap_lesson-chapter_update_title": "Een hoofdstuk in een les bijwerken"
+    "log_resource-icap_lesson-chapter_update_title": "Een hoofdstuk in een les bijwerken",
+    "log.lesson.new_parent": "Nieuwe ouder",
+    "log.lesson.old_parent": "Vorige ouder"
 }
