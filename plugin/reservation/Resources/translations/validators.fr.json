@@ -11,7 +11,7 @@
     "invalid_type_for_max_time_reservation": "La colonne max_time_reservation doit être au format hh:mm ou hh:mm:ss. Ligne %lineNb%.",
     "number_reservations_exceeded": "Nombre des réservations dépassées pour cette ressource. Veuillez changer la date ou la ressource que vous voulez réserver.",
     "resource_already_exists_for_resource_type": "Le nom de la ressource existe déjà pour ce type de ressource. Ligne %lineNb%.",
-    "valid_date_range_required": "La date de fin ne peut pas précéder ou être égale à la date de début",
+    "valid_date_range_required": "La date de fin ne peut pas précéder ou être égale à la date de début.",
     "valid_duration_format_required": "Format invalide de la durée de réservation. Doit être sous la forme hh:mm.",
     "valid_max_duration_required": "Le temps maximal de réservation de cette ressource est dépassé."
 }
