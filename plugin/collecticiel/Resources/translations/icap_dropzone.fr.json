@@ -2,10 +2,10 @@
     "Add": "Ajouter",
     "Add a %type% document": "Ajouter un document %type%",
     "Add a correction": "Ajouter une correction",
-    "Add a criterion": "Add an INNOVA criterion",
-    "Add a document": "Add a document",
-    "Add at least one document": "Add at least one document",
-    "Allow comment in correction": "Propose a comment box",
+    "Add a criterion": "Ajouter un critère INNOVA",
+    "Add a document": "Ajouter un document",
+    "Add at least one document": "Ajouter au moins un document",
+    "Allow comment in correction": "Permettre des commentaires dans la correction",
     "Allow correction deny": "Allow the learners to report a correction they perceive to be unfair.",
     "Allow drop in review": "Allow document drop during peer review.",
     "Allow rich text": "Rich text box",
@@ -337,5 +337,10 @@
     "user": "User",
     "waiting for correction": "Waiting for corrections",
     "was reported": "Has been reported",
-    "yes": "Yes"
+    "yes": "Yes",
+    "Are you sure you want to delete the %number%": "Êtes-vous sûr de vouloir supprimer le %number%",
+    "Hidden folder for %dropzoneName%": "Dossier caché pour \"%dropzoneName%\"",
+    "Note that you will assign depends on the following criteria": "La note que vous allez attribuer dépend des critères suivants :",
+    "You are about to make your correction. This action is final. The rating is %grade%/20": "Vous êtes sur le point de soumettre votre correction. Cette action est définitive. La note attribuée sera %grade%/20.",
+    "text_placeholder": "Votre texte ici"
 }
