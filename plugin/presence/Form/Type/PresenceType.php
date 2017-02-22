@@ -30,7 +30,6 @@ class PresenceType extends AbstractType
                      'expanded' => true,
                      'label' => 'Status:',
                      'class' => 'FormaLibre\PresenceBundle\Entity\Status',
-                     'data_class' => 'FormaLibre\PresenceBundle\Entity\Status',
                      'property' => 'statusName',
 
                  ]
