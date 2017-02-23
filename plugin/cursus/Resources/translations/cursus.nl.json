@@ -274,5 +274,21 @@
     "session_event_invitation": "Uitnodiging tot een sessie",
     "session_event_location": "Locatie",
     "session_event_registration": "Inschrijving tot sessies",
-    "session_event_self_registration_message": "Bent u er zeker van dat u een inschrijving tot deze sessie wenst ?"
+    "session_event_self_registration_message": "Bent u er zeker van dat u een inschrijving tot deze sessie wenst ?",
+    "workspace_model": "Model van werkruimte",
+    "session_event_title": "Sessie \"%eventName%\"",
+    "session_events": "Sessies",
+    "session_events_details": "Details van de sessies",
+    "session_invitation": "Uitnodiging tot een sessie",
+    "session_not_started": "Niet begonnen",
+    "session_open": "Lopend",
+    "session_registration": "Inschrijving tot een opleidingssessie",
+    "session_start_title": "Begin van sessie \"%sessionName%\"",
+    "sessions": "Opleidingssessies",
+    "sessions_details": "Details van de sessies",
+    "sessions_for_registration_selection": "Opleidingssessies kiezen",
+    "sessions_management": "Opleidingssessies beheren",
+    "sessions_registration": "Inschrijving tot opleidingssessies",
+    "sessions_registration_as_learner": "Inschrijving tot opleidingssessies als lerende",
+    "sessions_registration_as_tutor": "Inschrijving tot opleidingssessies als opleider"
 }
