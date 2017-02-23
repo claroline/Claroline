@@ -88,7 +88,6 @@ img {
     max-width: 100%;
 }
 
-
 .mce-container.mce-panel {
     &.mce-abs-layout-item {
         background: @modal-content-bg !important;
@@ -230,14 +229,17 @@ img {
 }
 
 .mce-fullscreen {
-    z-index: (@zindex-navbar-fixed + 1) !important;
+
+    &.mce-container {
+        z-index: (@zindex-navbar-fixed + 1) !important;
+    }
+
     .mce-container.mce-menubar.mce-toolbar.mce-first.mce-stack-layout-item,
     .mce-statusbar.mce-container.mce-panel.mce-last.mce-stack-layout-item,
     .mce-container.mce-toolbar.mce-last.mce-stack-layout-item {
         display: block;
     }
 
-    z-index: (@zindex-navbar-fixed + 1) !important;
     .mce-i-fullscreen:before,
     .mce-i-fullpage:before {
         content: "\f066";
