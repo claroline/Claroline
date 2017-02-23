@@ -302,5 +302,6 @@
     "tutor": "Opleider",
     "tutor_role_name": "Rol van de opleiders",
     "tutors": "Opleiders",
-    "unregister_selected_users": "De inschrijving van geselecteerde gebruikers verwijderen"
+    "unregister_selected_users": "De inschrijving van de geselecteerde gebruikers verwijderen",
+    "unregister_selected_users_message": "Bent u er zeker van dat u de inschrijving van de geselecteerde gebruikers wenst te verwijderen ?"
 }
