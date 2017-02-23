@@ -2,7 +2,7 @@
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
-<html lang="{{ app.request.locale|default('fr') }}" class="claroline-app">
+<html lang="{{ app.request.locale|default('fr') }}" class="claroline-app-container">
     <head>
         {% set description = getContent('platformDescription') %}
         {% block meta %}
@@ -57,7 +57,7 @@
         {% block javascripts_header %}{% endblock %}
     </head>
 
-    <body class="claroline-app-container">
+    <body class="claroline-app">
         {% block layout %}{% endblock %}
 
         {% block javascripts %}{% endblock %}

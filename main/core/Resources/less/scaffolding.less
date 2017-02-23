@@ -1,17 +1,17 @@
 // We use classes for `html` and `body` tags
 // to avoid adding unwanted styles in iframe or tinyMCE
-html.claroline-app,
-body.claroline-app-container {
+html.claroline-app-container,
+body.claroline-app {
     height: 100%;
 }
 
 // Moves the app scroll bar after the fixed header
-html.claroline-app {
+html.claroline-app-container {
     overflow-y: hidden;
     padding-top: @top-bar-height;
 }
 
-body.claroline-app-container {
+body.claroline-app {
     // Get the scroll bar
     // Using `scroll` is not really aesthetic because it adds an empty one if no scroll
     // but this is the only way to avoid content to move when the scroll appears in `auto` mode
