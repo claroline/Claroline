@@ -290,5 +290,17 @@
     "sessions_management": "Opleidingssessies beheren",
     "sessions_registration": "Inschrijving tot opleidingssessies",
     "sessions_registration_as_learner": "Inschrijving tot opleidingssessies als lerende",
-    "sessions_registration_as_tutor": "Inschrijving tot opleidingssessies als opleider"
+    "sessions_registration_as_tutor": "Inschrijving tot opleidingssessies als opleider",
+    "session_and_event_registration_failed": "Hallo, <br>\nHelaas bent u nog niet ingeschreven in de sessie event \"%event_name%\" op %event_start_date% omdat geen plaats beschikbaar is in de opleidingssessie.",
+    "session_and_event_registration_pending_msg": "Hallo, <br>\nU bent ingeschreven in de sessie event \"%event_name%\" en al zijn verplichte opleidingssessies.\nAangezien geen plaats beschikbaar is in de gekozen opleidingssessie \"%event_name%\" op %event_start_date% bent u gezet in een wachtrij.\nU wordt geïnformeerd als er beschikbaarheid is.",
+    "session_and_event_registration_success_msg": "Hallo,\nU bent ingeschreven in opleidingssessie \"%event_name%\" op %event_start_date%.\nDeze sessie maakt deel uit van de opleidingssessie \"%session_name%\". U bent dus ook ingeschreven in alle verplichte opleidingen.\n",
+    "session_self_registration_message": "Bent u er zeker van dat u een inschrijving voor deze opleidingssessies wenst ?",
+    "the_displayed_word_for": "Het weergegeven woord voor",
+    "to_define": "Te definiëren",
+    "trainer": "Opleider",
+    "trainers": "Opleiders",
+    "tutor": "Opleider",
+    "tutor_role_name": "Rol van de opleiders",
+    "tutors": "Opleiders",
+    "unregister_selected_users": "De inschrijving van geselecteerde gebruikers verwijderen"
 }
