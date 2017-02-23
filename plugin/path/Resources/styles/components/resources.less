@@ -3,7 +3,7 @@
 }
 
 .resource-container {
-    display: flex;
+    display: flex !important; // why the fuck .list-group-item adds a `position: relative` ?
     align-items: center;
     justify-content: space-between;
     white-space: nowrap; // avoid btns and text to breaks on multi line
