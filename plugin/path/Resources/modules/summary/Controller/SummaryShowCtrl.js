@@ -12,17 +12,5 @@ export default class SummaryShowCtrl extends SummaryBaseCtrl {
 
     this.userProgressionService = UserProgressionService
     this.progression = this.userProgressionService.get()
-
-    // Check if summary is displayed by default or not
-    const path = this.pathService.getPath()
-    if (angular.isObject(path)) {
-      if (!path.summaryDisplayed) {
-        this.SummaryService.setOpened(false)
-        this.SummaryService.setPinned(false)
-      } else {
-        this.SummaryService.setOpened(true)
-        this.SummaryService.setPinned(true)
-      }
-    }
   }
 }
