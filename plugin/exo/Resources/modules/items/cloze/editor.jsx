@@ -19,8 +19,8 @@ class ChoiceItem extends Component {
     return (
       <div className={classes(
           'choice-item-cloze',
-          {'positive-score': this.props.answer.score > 0},
-          {'negative-score': this.props.answer.score <= 0}
+          {'expected-answer': this.props.answer.score > 0},
+          {'unexpected-answer': this.props.answer.score <= 0}
         )
       }>
         <div className='row'>

@@ -14,8 +14,8 @@ export const PairFeedback = (props) => {
             <li key={`your-answer-orphean-${item.id}`}>
               <div className={classes(
                   'item',
-                  {'bg-success text-success': item.score},
-                  {'bg-danger text-danger': !item.score}
+                  {'correct-answer': item.score},
+                  {'incorrect-answer': !item.score}
                 )}>
                 <WarningIcon valid={item.score !== '' && item.score <= 0}/>
                 <div className="item-data" dangerouslySetInnerHTML={{__html: item.data}} />
@@ -30,8 +30,8 @@ export const PairFeedback = (props) => {
             <li key={`your-answer-id-${answer.leftItem.id}-${answer.rightItem.id}`}>
               <div className={classes(
                   'item',
-                  {'bg-success text-success': answer.valid},
-                  {'bg-danger text-danger': !answer.valid}
+                  {'correct-answer': answer.valid},
+                  {'incorrect-answer': !answer.valid}
                 )}>
                 <WarningIcon valid={answer.valid}/>
                 <div className="item-data" dangerouslySetInnerHTML={{__html: answer.leftItem.data}} />

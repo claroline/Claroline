@@ -13,70 +13,79 @@ export const ChoicePaper = props => {
       yours={
         <div className="choice-paper">
           {props.item.solutions.map(solution =>
-            <div
+            <label
               key={utils.answerId(solution.id)}
+              htmlFor={utils.answerId(solution.id)}
               className={classes(
                 'answer-item choice-item',
-                props.item.multiple ? 'checkbox': 'radio',
                 utils.getAnswerClassForSolution(solution, props.answer)
               )}
             >
-              <WarningIcon solution={solution} answers={props.answer}/>
-              <input
-                className={props.item.multiple ? 'checkbox': 'radio'}
-                checked={utils.isSolutionChecked(solution, props.answer)}
-                id={utils.answerId(solution.id)}
-                name={utils.answerId(props.item.id)}
-                type={props.item.multiple ? 'checkbox': 'radio'}
-                disabled
-              />
-              <label
-                className="control-label"
-                htmlFor={utils.answerId(solution.id)}
+              {utils.isSolutionChecked(solution, props.answer) ?
+                <WarningIcon className="choice-item-tick" solution={solution} answers={props.answer}/> :
+
+                <input
+                  id={utils.answerId(solution.id)}
+                  className="choice-item-tick"
+                  name={utils.answerId(props.item.id)}
+                  type={props.item.multiple ? 'checkbox': 'radio'}
+                  disabled
+                />
+              }
+
+              <div
+                className="choice-item-content"
                 dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
               />
-              <Feedback
-                id={`${solution.id}-feedback`}
-                feedback={solution.feedback}
-              />
-              <SolutionScore score={solution.score}/>
-            </div>
+
+              <div className="choice-item-feedback">
+                <Feedback
+                  id={`${solution.id}-feedback`}
+                  feedback={solution.feedback}
+                />
+              </div>
+
+              <SolutionScore score={solution.score} />
+            </label>
           )}
         </div>
       }
       expected={
         <div className="choice-paper">
           {props.item.solutions.map(solution =>
-            <div
+            <label
               key={utils.expectedId(solution.id)}
+              htmlFor={utils.expectedId(solution.id)}
               className={classes(
                 'answer-item choice-item',
-                props.item.multiple ? 'checkbox': 'radio',
                 {
                   'bg-info text-info': solution.score > 0
                 }
               )}
             >
-              <span className="answer-warning-span"></span>
               <input
-                className={props.item.multiple ? 'checkbox': 'radio'}
+                className="choice-item-tick"
                 checked={solution.score > 0}
                 id={utils.expectedId(solution.id)}
                 name={utils.expectedId(props.item.id)}
                 type={props.item.multiple ? 'checkbox': 'radio'}
                 disabled
               />
-              <label
-                className="control-label"
-                htmlFor={utils.expectedId(solution.id)}
+
+              <div
+                className="choice-item-content"
                 dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
               />
-              <Feedback
-                id={`${solution.id}-feedback-expected`}
-                feedback={solution.feedback}
-              />
-              <SolutionScore score={solution.score}/>
-            </div>
+
+              <div className="choice-item-feedback">
+                <Feedback
+                  id={`${solution.id}-feedback-expected`}
+                  feedback={solution.feedback}
+                />
+              </div>
+
+              <SolutionScore score={solution.score} />
+            </label>
           )}
         </div>
       }

@@ -39,7 +39,7 @@ class Association extends Component {
 
   render(){
     return (
-      <div className={classes('association answer-item', {'positive-score' : this.props.association.score > 0}, {'negative-score': this.props.association.score < 1})}>
+      <div className={classes('association answer-item', {'expected-answer' : this.props.association.score > 0}, {'unexpected-answer': this.props.association.score < 1})}>
         <div className="text-fields">
           <div className="association-data" dangerouslySetInnerHTML={{__html: this.props.association._itemData}} />
 
@@ -316,7 +316,7 @@ class Odd extends Component {
 
   render(){
     return (
-      <div className={classes('set-item answer-item', {'positive-score' : this.props.solution.score > 0}, {'negative-score': this.props.solution.score < 1})}>
+      <div className={classes('set-item answer-item', {'expected-answer' : this.props.solution.score > 0}, {'unexpected-answer': this.props.solution.score < 1})}>
         <div className="text-fields">
           <Textarea
             onChange={(value) => this.props.onChange(

@@ -19,8 +19,8 @@ class WordItem extends Component {
       <div className={
         classes(
           'word-item answer-item',
-          {'positive-score': this.props.score > 0 },
-          {'negative-score': this.props.score <= 0 }
+          {'expected-answer': this.props.score > 0 },
+          {'unexpected-answer': this.props.score <= 0 }
         )
       }>
         <div className="text-fields">

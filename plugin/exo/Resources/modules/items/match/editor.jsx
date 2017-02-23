@@ -416,9 +416,11 @@ class Match extends Component {
     delete this.jsPlumbInstance
   }
 
+  // todo : make onClick={(event) => this.handlePopoverFocusOut(event)} work
+
   render() {
     return (
-      <div id={`match-question-editor-id-${this.props.item.id}`} className="match-editor" ref={(el) => { this.container = el }}>
+      <div className="match-editor">
         <div className="form-group">
           <label htmlFor="match-penalty">{tex('editor_penalty_label')}</label>
           <input
@@ -462,7 +464,11 @@ class Match extends Component {
           <span className="fa fa-info-circle"></span>{tex('match_editor_click_link_help')}
         </span>
 
-        <div className="row match-items" onClick={(event) => this.handlePopoverFocusOut(event)}>
+        <div
+          id={`match-question-editor-id-${this.props.item.id}`}
+          className="match-items row"
+          ref={(el) => { this.container = el }}
+        >
           <div className="item-col col-md-5 col-sm-5 col-xs-5">
             <ul>
             {this.props.item.firstSet.map((item) =>
@@ -489,7 +495,7 @@ class Match extends Component {
             </div>
           </div>
 
-          <div id={`popover-place-holder-${this.props.item.id}`} className="popover-container col-md-2 col-sm-2 col-xs-2">
+          <div id={`popover-place-holder-${this.props.item.id}`} className="divide-col col-md-2 col-sm-2 col-xs-2">
             { this.state.popover.visible &&
                 <MatchLinkPopover
                   handleConnectionDelete={(firstId, secondId) => this.removeConnection(firstId, secondId)}

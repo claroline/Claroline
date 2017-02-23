@@ -44,8 +44,8 @@ class Pair extends Component {
     return (
       <div className={classes(
         'pair',
-        {'negative-score' : this.props.pair.score < 1},
-        {'positive-score' : this.props.pair.score > 0}
+        {'unexpected-answer' : this.props.pair.score < 1},
+        {'expected-answer' : this.props.pair.score > 0}
       )}>
         <div className="first-row">
           {this.props.pair.itemIds[0] === -1 ?
@@ -234,7 +234,7 @@ class Odd extends Component {
 
   render(){
     return (
-      <div className="answer-item item negative-score">
+      <div className="answer-item item unexpected-answer">
         <div className="text-fields">
           <Textarea
             onChange={(value) => this.props.onChange(

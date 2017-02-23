@@ -2,7 +2,7 @@ import React, {PropTypes as T} from 'react'
 import {tcex} from '../../utils/translate'
 
 export const SolutionScore = props =>
-  <span className="item-score">
+  <span className="solution-score">
     {tcex('solution_score', props.score, {'score': props.score})}
   </span>
 

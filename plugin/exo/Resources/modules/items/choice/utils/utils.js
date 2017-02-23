@@ -18,5 +18,5 @@ utils.expectedId = (id) => {
 
 utils.getAnswerClassForSolution = (solution, answers) => {
   return utils.isSolutionChecked(solution, answers) ?
-    solution.score > 0 ? 'bg-success text-success' : 'bg-danger text-danger' : ''
+    solution.score > 0 ? 'correct-answer' : 'incorrect-answer' : ''
 }

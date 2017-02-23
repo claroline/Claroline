@@ -186,7 +186,7 @@ class MatchPlayer extends Component {
 
   render() {
     return (
-        <div id={`match-question-player-${this.props.item.id}`} className="match-player row" ref={(el) => { this.container = el }}>
+        <div id={`match-question-player-${this.props.item.id}`} className="match-player match-items row" ref={(el) => { this.container = el }}>
           <div className="item-col col-md-5 col-sm-5 col-xs-5">
             <ul>
             {this.state.firstSet.map((item) =>
@@ -201,8 +201,10 @@ class MatchPlayer extends Component {
             )}
             </ul>
           </div>
+
           <div className="divide-col col-md-2 col-sm-2 col-xs-2" />
-          <div className="item-col  col-md-5 col-sm-5 col-xs-5">
+
+          <div className="item-col col-md-5 col-sm-5 col-xs-5">
             <ul>
             {this.state.secondSet.map((item) =>
               <li key={'target_' + item.id}>

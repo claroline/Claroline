@@ -8,17 +8,15 @@ export const Highlight = props => {
   return(
     <div>
       {utils.split(props.text, props.solutions).map((el, key) =>
-        <span key={key}>
-          <span dangerouslySetInnerHTML={{__html: el.text}}></span>{'\u00a0'}
-          <span className={classes({
-            'word-success': el.score > 0,
-            'word-danger': el.score < 1
-          })}>
-            <Feedback feedback={el.feedback} id={key}/>{'\u00a0'}
-            {el.score !== null && props.showScore &&
-              <SolutionScore score={el.score}/>
-            }
-          </span>
+        <span key={key} className={classes({
+          'correct-answer': el.score > 0,
+          'incorrect-answer': el.score < 1
+        })}>
+          <span dangerouslySetInnerHTML={{__html: el.text}}></span>
+          <Feedback feedback={el.feedback} id={key} />
+          {el.score !== null && props.showScore &&
+            <SolutionScore score={el.score} />
+          }
         </span>
       )}
     </div>

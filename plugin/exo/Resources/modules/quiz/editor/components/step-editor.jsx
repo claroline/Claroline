@@ -136,7 +136,6 @@ let ItemPanel = props =>
   props.connectDragPreview(
     props.connectDropTarget(
       <div
-        className="panel"
         style={{opacity: props.isDragging ? 0 : 1}}
       >
         <Panel

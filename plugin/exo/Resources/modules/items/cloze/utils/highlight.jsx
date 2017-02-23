@@ -14,7 +14,7 @@ function getWarningIcon(solution, answer) {
 function getSolutionScore(score) {
   const scoreTranslation = tcex('solution_score', score, {'score': score})
 
-  return `<span class="item-score"> ${scoreTranslation} </span>`
+  return `<span class="solution-score"> ${scoreTranslation} </span>`
 }
 
 function getFeedback(feedback) {
@@ -36,16 +36,16 @@ function getFeedback(feedback) {
 function getSelectClasses(displayTrueAnswer, isSolutionValid) {
   const inputClasses = ['form-control', 'inline-select']
   if (displayTrueAnswer) inputClasses.push('select-info')
-  if (isSolutionValid && !displayTrueAnswer) inputClasses.push('select-success')
-  if (!isSolutionValid && !displayTrueAnswer) inputClasses.push('select-error')
+  if (isSolutionValid && !displayTrueAnswer) inputClasses.push('correct-answer')
+  if (!isSolutionValid && !displayTrueAnswer) inputClasses.push('incorrect-answer')
 
   return inputClasses.reduce((a, b) => a += ' ' + b)
 }
 
 function getSpanClasses(displayTrueAnswer, isSolutionValid) {
   const classes = []
-  if (isSolutionValid && !displayTrueAnswer) classes.push('score-success')
-  if (!isSolutionValid && !displayTrueAnswer) classes.push('score-error')
+  if (isSolutionValid && !displayTrueAnswer) classes.push('correct-answer')
+  if (!isSolutionValid && !displayTrueAnswer) classes.push('incorrect-answer')
   if (displayTrueAnswer) classes.push('score-info')
 
   return classes.reduce((a, b) => a += ' ' + b)

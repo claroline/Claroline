@@ -5,18 +5,13 @@
       margin: 0;
       list-style-type: none;
     }
+
     .footer {
       text-align: center;
     }
   }
 
   .choice-item {
-    display: flex;
-
-    .choice-tick {
-      margin-right: floor(@grid-gutter-width / 2);
-    }
-
     .text-fields {
       flex-grow: 1;
       margin-right: floor(@grid-gutter-width / 2);
@@ -30,22 +25,6 @@
     .right-controls {
       display: flex;
       align-items: flex-start;
-    }
-  }
-}
-
-.choice-player,
-.choice-paper {
-  input[type="checkbox"],
-  input[type="radio"] {
-    margin-right: floor(@grid-gutter-width / 2);
-  }
-
-  .choice-item {
-    display: flex;
-
-    &:last-child {
-      margin-bottom: 0;
     }
   }
 }
@@ -64,24 +43,26 @@
 }
 
 .choice-paper {
-  input[type=checkbox],
-  input[type=radio],
-  .control-label {
-    cursor: default;
-  }
-
-  .item-feedback {
-    width: 20px;
-  }
-
-  .item-score {
+  /*.solution-score {
     margin-left: 12px;
     width: 58px;
     text-align: right;
+  }*/
+}
+
+.choice-item {
+  display: flex;
+
+  .choice-item-tick {
+    margin-top: 4px; // same as checkboxes/radios
+    margin-right: floor(@grid-gutter-width / 2);
   }
 
-  .answer-warning-span {
-    margin-left: 12px;
-    width: 28px;
+  .choice-item-content {
+    flex-grow: 1;
+  }
+
+  .choice-item-feedback {
+    margin-left: floor(@grid-gutter-width / 2);
   }
 }

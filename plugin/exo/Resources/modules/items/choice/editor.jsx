@@ -19,24 +19,23 @@ class ChoiceItem extends Component {
 
   render() {
     return (
-      <div
+      <li
         className={classes(
           'answer-item choice-item',
-          {'positive-score' : !this.props.fixedScore && this.props.score > 0},
-          {'negative-score' : !this.props.fixedScore && this.props.score <= 0}
+          {'expected-answer' : !this.props.fixedScore && this.props.score > 0},
+          {'unexpected-answer' : !this.props.fixedScore && this.props.score <= 0}
         )}
       >
-        <div className="choice-tick">
-          <input
-            disabled={!this.props.fixedScore}
-            type={this.props.multiple ? 'checkbox' : 'radio'}
-            checked={this.props.checked}
-            readOnly={!this.props.fixedScore}
-            onChange={e => this.props.onChange(
-              actions.updateChoice(this.props.id, 'checked', e.target.checked)
-            )}
-          />
-        </div>
+        <input
+          className="choice-item-tick"
+          disabled={!this.props.fixedScore}
+          type={this.props.multiple ? 'checkbox' : 'radio'}
+          checked={this.props.checked}
+          readOnly={!this.props.fixedScore}
+          onChange={e => this.props.onChange(
+            actions.updateChoice(this.props.id, 'checked', e.target.checked)
+          )}
+        />
         <div className="text-fields">
           <Textarea
             id={`choice-${this.props.id}-data`}
@@ -90,7 +89,7 @@ class ChoiceItem extends Component {
             )}
           />
         </div>
-      </div>
+      </li>
     )
   }
 }
@@ -114,19 +113,18 @@ const ChoiceItems = props =>
     }
     <ul>
       {props.item.choices.map(choice =>
-        <li key={choice.id}>
-          <ChoiceItem
-            id={choice.id}
-            data={choice.data}
-            score={choice._score}
-            feedback={choice._feedback}
-            multiple={props.item.multiple}
-            fixedScore={props.item.score.type === SCORE_FIXED}
-            checked={choice._checked}
-            deletable={choice._deletable}
-            onChange={props.onChange}
-          />
-        </li>
+        <ChoiceItem
+          key={choice.id}
+          id={choice.id}
+          data={choice.data}
+          score={choice._score}
+          feedback={choice._feedback}
+          multiple={props.item.multiple}
+          fixedScore={props.item.score.type === SCORE_FIXED}
+          checked={choice._checked}
+          deletable={choice._deletable}
+          onChange={props.onChange}
+        />
       )}
     </ul>
 
