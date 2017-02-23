@@ -22,14 +22,14 @@
 // -
 // Header
 // ---
-@top-bar-max-width:           @app-max-width; // max width for the top bar content (do not affect top bar container)
+@top-bar-max-width:           none; // max width for the top bar content (do not affect top bar container)
 @top-bar-height:              @navbar-height + @top-bar-border-bottom-size;
 @top-bar-font-size:           @font-size-base;
 @top-bar-color:               lighten(@top-bar-bg, 30%);
 @top-bar-bg:                  @component-active-bg;
 @top-bar-border-bottom-size:  3px;
 @top-bar-border-bottom:       @top-bar-border-bottom-size solid #f89406;
-@top-bar-box-shadow:          @box-shadow-base;
+@top-bar-box-shadow:          0 0 2px rgba(0, 0, 0, 0.5);
 
 @top-bar-logo-height:         35px;
 
@@ -70,7 +70,7 @@
 @breadcrumb-box-shadow:     none;
 @breadcrumb-font-size:      @font-size-small;
 @breadcrumb-text-transform: inherit;
-@breadcrumb-margin-bottom:  10px;
+@breadcrumb-margin-bottom:  5px;
 
 
 // -
@@ -101,6 +101,7 @@
 @summary-font:              @font-size-base;
 @summary-bg:                #262626;
 @summary-color:             white;
+@summary-border-radius:     0;
 @summary-box-shadow-v:      2px 0 4px 0 rgba(0, 0, 0, 0.4); // box shadow for vertical summaries
 @summary-box-shadow-h:      0 2px 4px 0 rgba(0, 0, 0, 0.4); // box shadow for horizontal summaries
 
@@ -117,7 +118,7 @@
 // Footer
 // ---
 @footer-height:            @navbar-height;
-@footer-max-width:         @app-max-width; // max width for the footer content (do not affect footer container)
+@footer-max-width:         none; // max width for the footer content (do not affect footer container)
 @footer-bg:                #F3F3F3;
 @footer-color:             @gray-light;
 
@@ -142,8 +143,11 @@
 // -
 // Panels
 // ---
-@panel-box-shadow:    @box-shadow-base;
-@panel-margin-bottom: @component-margin-bottom;
+@panel-box-shadow:         @box-shadow-base;
+@panel-margin-bottom:      @component-margin-bottom;
+
+// Groups
+@panel-group-panel-margin: 5px;
 
 
 // -

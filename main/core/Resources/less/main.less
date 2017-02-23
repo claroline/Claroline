@@ -26,30 +26,32 @@
     body.left-bar-push {
         margin-left: 40px;
     }
-    #top_bar.left-bar-push, .impersonalitation > .navbar-fixed-top.left-bar-push {
+    /*#top_bar.left-bar-push,*/
+    /*.impersonalitation > .navbar-fixed-top.left-bar-push {
         padding-left: 40px;
-    }
+    }*/
     body.right-bar-push {
         margin-right: 40px;
     }
-    #top_bar.right-bar-push, .impersonalitation > .navbar-fixed-top.right-bar-push {
+    /*#top_bar.right-bar-push, */
+    /*.impersonalitation > .navbar-fixed-top.right-bar-push {
         padding-right: 40px;
-    }
+    }*/
 }
 
 @media (max-width: (@screen-sm - 1)) {
     body.left-bar-push {
         margin-left: 0;
     }
-    #top_bar.left-bar-push, .impersonalitation > .navbar-fixed-top.left-bar-push {
+    /*#top_bar.left-bar-push, .impersonalitation > .navbar-fixed-top.left-bar-push {
         padding-left: 0;
-    }
+    }*/
     body.right-bar-push {
         margin-right: 0;
     }
-    #top_bar.right-bar-push, .impersonalitation > .navbar-fixed-top.right-bar-push {
+    /*#top_bar.right-bar-push, .impersonalitation > .navbar-fixed-top.right-bar-push {
         padding-right: 0;
-    }
+    }*/
 }
 
 /*****************************/
@@ -61,26 +63,24 @@ ul.desktop-parameters-menu {
         &:hover,
         &:focus{
             background-color: @list-group-hover-bg;
-            a{
+            a {
                 color: @list-group-link-hover-color;
             }
         }
+
         a {
             padding: 10px 15px;
             position: relative;
             display: block;
             color: @list-group-link-color;
             text-decoration: none;
-        }
-        a:hover,
-        a:focus{
-            text-decoration: none;
+
+            &:hover,
+            &:focus{
+                text-decoration: none;
+            }
         }
     }
-}
-
-.ui-state-highlight {
-    height: 50px;
 }
 
 /***********/

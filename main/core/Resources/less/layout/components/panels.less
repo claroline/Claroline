@@ -40,3 +40,13 @@
         .box-shadow(none);
     }
 }
+
+.panel-group {
+    > div,
+    .panel {
+        + div, // allow containers (some SPA requires additional containers)
+        + .panel {
+            margin-top: @panel-group-panel-margin; // use a var
+        }
+    }
+}

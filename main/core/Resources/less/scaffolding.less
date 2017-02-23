@@ -12,7 +12,11 @@ html.claroline-app {
 }
 
 body.claroline-app-container {
-    overflow-y: auto; // Get the scroll bar
+    // Get the scroll bar
+    // Using `scroll` is not really aesthetic because it adds an empty one if no scroll
+    // but this is the only way to avoid content to move when the scroll appears in `auto` mode
+    // todo : try https://aykevl.nl/2014/09/fix-jumping-scrollbar
+    overflow-y: scroll;
 }
 
 .app-content {
