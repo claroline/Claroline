@@ -12,7 +12,6 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 class NotificationListener extends ContainerAware
 {
     /**
-     *
      * @DI\Observe("create_notification_item_resource-innova_path-step_unlock")
      *
      * @param NotificationCreateDelegateViewEvent $event

@@ -32,6 +32,7 @@ const Actions = props =>
   </span>
 
 Actions.propTypes = {
+  id: T.string.isRequired,
   onDeleteClick: T.func.isRequired,
   showModal: T.func.isRequired,
   connectDragSource: T.func.isRequired

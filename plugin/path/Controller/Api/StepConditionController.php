@@ -250,7 +250,6 @@ class StepConditionController extends Controller
     }
 
     /**
-     *
      * @EXT\Route("/stepunlock/{step}", name="innova_path_step_callforunlock")
      * @EXT\Method("GET")
      *

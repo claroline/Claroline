@@ -3,9 +3,9 @@
 namespace Innova\PathBundle\Controller\Widget;
 
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\TagBundle\Entity\Tag;
 use Claroline\TagBundle\Manager\TagManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\PathWidgetConfig;
 use Innova\PathBundle\Form\Type\PathWidgetConfigType;
 use Innova\PathBundle\Manager\WidgetManager;

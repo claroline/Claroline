@@ -2,8 +2,6 @@
  * Path summary show
  */
 
-import angular from 'angular/index'
-
 import SummaryBaseCtrl from './SummaryBaseCtrl'
 
 export default class SummaryShowCtrl extends SummaryBaseCtrl {

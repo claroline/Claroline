@@ -32,10 +32,10 @@ class RichTextFormatListener
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
      * })
      *
-     * @param RouterInterface $router
-     * @param ObjectManager $om
+     * @param RouterInterface   $router
+     * @param ObjectManager     $om
      * @param RichTextFormatter $formatter
-     * @param ResourceManager $resourceManager
+     * @param ResourceManager   $resourceManager
      */
     public function __construct(
         RouterInterface $router,
@@ -119,7 +119,7 @@ class RichTextFormatListener
             $matchReplaced
         );
 
-        if (count($matchReplaced)  > 0) {
+        if (count($matchReplaced) > 0) {
             $txt = str_replace($matchReplaced[0], "[[path_node_id={$nodeId}]]", $txt);
         }
 

@@ -12,9 +12,9 @@
 namespace Claroline\CoreBundle\Event;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\File;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Entity\Resource\File;
 
 class PlayFileEvent extends Event
 {

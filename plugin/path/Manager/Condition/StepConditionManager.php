@@ -99,9 +99,9 @@ class StepConditionManager
      * Update or create the Criteria of a StepCondition.
      *
      * @param StepCondition $condition The condition to Update
-     * @param int $level
+     * @param int           $level
      * @param Criteriagroup $parent
-     * @param array $criteria The list of criteria of the StepCondition
+     * @param array         $criteria  The list of criteria of the StepCondition
      *
      * @return array
      */
@@ -154,7 +154,7 @@ class StepConditionManager
         $toRemove = array_filter($existingGroups, function (Criteriagroup $current) use ($neededGroups) {
             $removeGroup = true;
             foreach ($neededGroups as $group) {
-                if ($current->getId() == $group->getId()) {
+                if ($current->getId() === $group->getId()) {
                     $removeGroup = false;
                     break;
                 }

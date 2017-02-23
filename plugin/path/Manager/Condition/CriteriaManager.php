@@ -48,7 +48,7 @@ class CriteriaManager
      *
      * @return Criteriagroup
      */
-    public function createGroup(StepCondition $condition, $level = 0, Criteriagroup $parent = null, $order = 0, \stdClass $groupStructure)
+    public function createGroup(StepCondition $condition, $level, Criteriagroup $parent = null, $order, \stdClass $groupStructure)
     {
         $group = new Criteriagroup();
 
@@ -67,7 +67,7 @@ class CriteriaManager
      *
      * @return Criteriagroup
      */
-    public function editGroup(StepCondition $condition, $level = 0, Criteriagroup $parent = null, $order = 0, \stdClass $groupStructure, Criteriagroup $group)
+    public function editGroup(StepCondition $condition, $level, Criteriagroup $parent = null, $order, \stdClass $groupStructure, Criteriagroup $group)
     {
         // Update group properties
         $group->setCondition($condition);
@@ -136,7 +136,7 @@ class CriteriaManager
         $toRemove = array_filter($existingCriteria, function (Criterion $current) use ($neededCriteria) {
             $removeCriterion = true;
             foreach ($neededCriteria as $criterion) {
-                if ($current->getId() == $criterion->getId()) {
+                if ($current->getId() === $criterion->getId()) {
                     $removeCriterion = false;
                     break;
                 }

@@ -171,7 +171,7 @@ class StepManager
      *
      * @param Step      $step
      * @param \stdClass $stepStructure
-
+     *
      * @throws \LogicException
      */
     public function updateActivity(Step $step, \stdClass $stepStructure)
@@ -229,7 +229,7 @@ class StepManager
 
             /** @var ResourceType $activityType */
             $activityType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy([
-                'name' => 'activity'
+                'name' => 'activity',
             ]);
             $creator = $step->getPath()->getCreator();
             $workspace = $step->getWorkspace();

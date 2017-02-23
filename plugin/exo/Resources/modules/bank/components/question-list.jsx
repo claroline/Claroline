@@ -187,6 +187,7 @@ QuestionRow.propTypes = {
     }).isRequired
   }).isRequired,
   isSelected: T.bool,
+  toggleSelect: T.func.isRequired,
   onShare: T.func.isRequired,
   onDelete: T.func.isRequired
 }

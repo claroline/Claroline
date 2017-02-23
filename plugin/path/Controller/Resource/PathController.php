@@ -5,7 +5,6 @@ namespace Innova\PathBundle\Controller\Resource;
 use Blameable\Fixture\Document\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Innova\PathBundle\Entity\Path\Path;
-use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;

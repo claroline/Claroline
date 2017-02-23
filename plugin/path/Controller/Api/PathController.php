@@ -81,12 +81,12 @@ class PathController
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
-     * @param ObjectManager $om
-     * @param RouterInterface $router
-     * @param FormFactoryInterface $formFactory
-     * @param ResourceManager $resourceManager
-     * @param PathManager $pathManager
-     * @param PublishingManager $publishingManager
+     * @param ObjectManager                 $om
+     * @param RouterInterface               $router
+     * @param FormFactoryInterface          $formFactory
+     * @param ResourceManager               $resourceManager
+     * @param PathManager                   $pathManager
+     * @param PublishingManager             $publishingManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -150,7 +150,6 @@ class PathController
     }
 
     /**
-     *
      * @EXT\Route("/{id}/publish", name="innova_path_publish_api")
      * @EXT\Method("PUT")
      *

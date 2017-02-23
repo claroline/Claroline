@@ -477,7 +477,7 @@ class PathListener
     }
 
     /**
-     * @param \stdClass $resource
+     * @param \stdClass      $resource
      * @param ResourceNode[] $processedNodes
      *
      * @return bool
@@ -506,7 +506,7 @@ class PathListener
     {
         if ($convoyedResource instanceof ResourceShortcut) {
             return $this->container->get('resource_manager')->getResourceFromShortcut($convoyedResource->getResourceNode());
-        } else if ($convoyedResource instanceof Path) {
+        } elseif ($convoyedResource instanceof Path) {
             return $convoyedResource;
         }
 
