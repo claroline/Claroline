@@ -237,7 +237,7 @@
     "remove_course_confirm_message": "Êtes-vous sûr de vouloir retirer cette formation ?",
     "remove_participant": "Supprimer le participant",
     "remove_participant_confirm_message": "Êtes-vous sûr de vouloir supprimer cet utilisateur de cette séance ?",
-    "repeat_session_event": "Dupliquer la séance",
+    "repeat_session_event": "Répéter la séance",
     "repetition": "Répétition",
     "required_places_msg": "Seulement %remainingPlaces% place(s) restante(s). Nécessaire : %requiredPlaces%.",
     "select_course_for_session_creation": "Sélectionnez la formation pour laquelle vous voulez créer une session",
