@@ -239,7 +239,7 @@
     "remove_course_confirm_message": "Bent u er zeker van dat u deze opleiding wenst te verwijderen ?",
     "remove_participant": "Deelnemer verwijderen",
     "remove_participant_confirm_message": "Bent u er zeker van dat u deze gebruiker van deze sessie wenst te verwijderen ?",
-    "repeat_session_event": "De sessie dupliceren",
+    "repeat_session_event": "De sessie herhalen",
     "repetition": "Herhaling",
     "required_places_msg": "Alléén %remainingPlaces% resterende plaats(en). Nodig : %requiredPlaces%.",
     "select_course_for_session_creation": "Opleiding kiezen waarvoor u wenst een sessie te maken.",
