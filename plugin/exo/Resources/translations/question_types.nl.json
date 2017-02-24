@@ -11,5 +11,8 @@
     "graphic_desc": "Punt één of meerdere gebieden op een afbeelding.",
     "match_desc": "Link een element (bijv. tekst, beeld, audio, video) met één of vele andere (bijv. tekst, beeld, audio, video).",
     "open_desc": "Beantwoord een vraag met een tekst die middelen kan bevatten (bijv. tekst, beeld, audio, video). De open vraag vereist een manuele correctie.",
-    "pair": "Koppeling"
+    "pair": "Koppeling",
+    "pair_desc": "Plaats elementen (bijv. tekst, beeld, audio, video) in paren.",
+    "set": "Classificeren",
+    "set_desc": "Verplaats elementen (bijv. tekst, beeld, audio, video) in sets."
 }
