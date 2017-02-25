@@ -1,3 +1,9 @@
 {
-    "published": "Gepubliceerd"
+    "published": "Gepubliceerd",
+    "draft": "Niet gepubliceerd",
+    "innova_path_widget_config_status": "Statuut",
+    "innova_path_widget_config_tags": "Weergegeven tags",
+    "modified": "",
+    "no_path_widget_message": "",
+    "path_author": "Auteur"
 }
