@@ -68,5 +68,12 @@
     "already_exist": "Deze naam bestaat al.",
     "anonymous": "Kopieën van gebruikers anonimiseren",
     "answer_coched": "Geen verwacht antwoord wordt gemarkeerd.",
-    "answer_of": "antwoord van"
+    "answer_of": "antwoord van",
+    "application/x.short+json": "Geopend",
+    "at_the_same_time_that_the_correction": "Tegelijk met de correctie",
+    "attempt_info2plur": "pogingen",
+    "attempt_info2sing": "poging",
+    "attempt_info3": "Poging n°",
+    "attempt_info5": "om uw score te bevorden.",
+    "back_to_the_quiz": "Terug naar de quiz"
 }
