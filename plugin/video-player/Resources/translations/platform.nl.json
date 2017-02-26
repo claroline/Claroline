@@ -5,5 +5,8 @@
     "delete_track_confirm": "Bent u er zeker van dat u deze track wenst te verwijderen ?",
     "is_default": "Standaard",
     "lang": "Long",
-    "player": "Speler"
+    "player": "Speler",
+    "track": "Track",
+    "track_list": "Track lijst",
+    "tracks": "Tracks"
 }

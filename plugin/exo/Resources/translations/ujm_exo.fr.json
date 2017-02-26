@@ -35,7 +35,7 @@
     "already": "Cette question est déjà partagée avec cet utilisateur.",
     "already_answered": "Vous avez déjà répondu à ce questionnaire.",
     "already_exist": "Ce nom existe déjà.",
-    "anonymous": "Rendre les résultats des utilisateurs anonymes",
+    "anonymous": "Rendre les copies des utilisateurs anonymes",
     "answer_coched": "Aucune réponse attendue n'est cochée.",
     "answer_of": "réponse de",
     "answer_zone": "Zone de réponse",
@@ -552,5 +552,5 @@
     "yes": "Oui",
     "your_answer": "Votre réponse",
     "your_answers": "Vos réponses",
-    "paper_legend": "Papiers qui nécessitent une correction manuelle."
+    "paper_legend": "Copies qui nécessitent une correction manuelle."
 }

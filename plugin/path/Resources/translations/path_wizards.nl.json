@@ -21,5 +21,6 @@
     "condition_criterion_add": "Voeg een criterium",
     "condition_criterion_choice": "Uw keuze",
     "condition_criterion_delete": "Criterium verwijderen",
-    "condition_criterion_usergroup": "Gebruiker behoort tot de groep"
+    "condition_criterion_usergroup": "Gebruiker behoort tot de groep",
+    "draft": "Niet gepubliceerd"
 }
