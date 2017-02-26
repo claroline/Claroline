@@ -75,5 +75,18 @@
     "attempt_info2sing": "poging",
     "attempt_info3": "Poging n°",
     "attempt_info5": "om uw score te bevorden.",
-    "back_to_the_quiz": "Terug naar de quiz"
+    "back_to_the_quiz": "Terug naar de quiz",
+    "application/x.choice+json": "Meerkeuze vragen",
+    "application/x.cloze+json": "Cloze vraag",
+    "application/x.graphic+json": "Grafisch",
+    "application/x.match+json": "Associatie",
+    "at_each_attempt": "Bij elke poging",
+    "at_first_attempt": "Bij de eerste poging",
+    "at_the_end_of_assessment": "Op het einde van de quiz",
+    "attempt_info1": "U hebt",
+    "attempt_info4": "U hebt",
+    "attempt_info6": "U hebt geen pogingen meer.",
+    "availability_of_correction": "Beschikbaarheid van de correctie",
+    "availability_of_score": "Beschikbaarheid van de score",
+    "back_to_overview": "Ga terug naar de overzicht van de quiz"
 }
