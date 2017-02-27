@@ -98,7 +98,7 @@
     "correction": "Correction",
     "correction_date": "Date de la correction",
     "correction_invalid_no_save": "Correction non valide",
-    "correction_invalid_no_save_desc": "La correction a échouée.",
+    "correction_invalid_no_save_desc": "La correction a échoué.",
     "correspondence": "correspondance",
     "correspondence_empty": "Vous n'avez réalisé aucune correspondance !",
     "correspondence_error": "Vous ne pouvez pas associer une même proposition avec plusieurs labels !",
