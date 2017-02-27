@@ -23,5 +23,6 @@
     "condition_criterion_delete": "Criterium verwijderen",
     "condition_criterion_usergroup": "Gebruiker behoort tot de groep",
     "draft": "Niet gepubliceerd",
-    "delete_step": "De stap verwijderen"
+    "delete_step": "De stap verwijderen",
+    "undo": "Annuleren"
 }
