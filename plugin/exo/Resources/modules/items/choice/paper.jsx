@@ -1,5 +1,7 @@
 import React, {PropTypes as T} from 'react'
 import classes from 'classnames'
+
+import {SCORE_FIXED} from '../../quiz/enums'
 import {Feedback} from '../components/feedback-btn.jsx'
 import {SolutionScore} from '../components/score.jsx'
 import {WarningIcon} from './utils/warning-icon.jsx'
@@ -45,7 +47,9 @@ export const ChoicePaper = props => {
                 />
               </div>
 
-              <SolutionScore score={solution.score} />
+              {SCORE_FIXED !== props.item.score.type &&
+                <SolutionScore score={solution.score} />
+              }
             </label>
           )}
         </div>
@@ -84,7 +88,9 @@ export const ChoicePaper = props => {
                 />
               </div>
 
-              <SolutionScore score={solution.score} />
+              {SCORE_FIXED !== props.item.score.type &&
+                <SolutionScore score={solution.score} />
+              }
             </label>
           )}
         </div>
@@ -96,14 +102,15 @@ export const ChoicePaper = props => {
 ChoicePaper.propTypes = {
   item: T.shape({
     id: T.string.isRequired,
+    score: T.shape({
+      type: T.string.isRequired
+    }),
     choices: T.arrayOf(T.shape({
       id: T.string.isRequired,
       data: T.string.isRequired
     })).isRequired,
     multiple: T.bool.isRequired,
-    solutions: T.arrayOf(T.object),
-    title: T.string,
-    description: T.string
+    solutions: T.arrayOf(T.object)
   }).isRequired,
   answer: T.array
 }
