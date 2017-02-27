@@ -29,5 +29,6 @@
     "local": "Plaatselijk",
     "locked": "Blokkerend",
     "my_paths": "Mijn leerpaden",
-    "name": "Naam van het leerpad"
+    "name": "Naam van het leerpad",
+    "step": "Stap"
 }
