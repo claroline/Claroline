@@ -298,7 +298,7 @@
     "fully corrected copies": "Finished copies with complete evaluation",
     "innova_collecticiel_common_form_instruction": "Instruction",
     "innova_collecticiel_criterion_form_instruction": "Instruction",
-    "innova_collecticiel_form_name": "Evaluation name",
+    "innova_collecticiel_form_name": "Titre du collecticiel",
     "loading": "Loading...",
     "manualPlanning": "Manually",
     "nb correction remains": "one: You have one remaining copy to correct to finish this evaluation. |some: You have %count% remaining copies to correct to finish this evaluation.",
