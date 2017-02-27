@@ -64,6 +64,13 @@ final class ItemType
     const OPEN = 'application/x.open+json';
 
     /**
+     * The user has to write his answer using predefined keywords in a grid.
+     *
+     * @var string
+     */
+    const GRID = 'application/x.grid+json';
+
+    /**
      * Get the list of managed item types.
      *
      * @return array
@@ -79,6 +86,7 @@ final class ItemType
             static::SET,
             static::WORDS,
             static::OPEN,
+            static::GRID,
         ];
     }
 

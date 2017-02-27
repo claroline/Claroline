@@ -14,5 +14,7 @@
     "set": "Classifying",
     "set_desc": "Move items (e.g. text, image, audio, video) inside sets.",
     "words": "Keywords",
-    "words_desc": "Write an answer with one or many expected keywords."
+    "words_desc": "Write an answer with one or many expected keywords.",
+    "grid": "Table",
+    "grid_desc": "Bridging gaps in a table. They can be completed either by writing a text or by choosing the item from a predefined list."
 }
