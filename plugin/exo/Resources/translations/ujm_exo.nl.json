@@ -141,5 +141,18 @@
     "duration": "Duur (in minuten)",
     "edit_category": "Een categorie bewerken",
     "edit_question": "Een vraag bewerken",
-    "edit_step": "De informaties bewerken"
+    "edit_step": "De informaties bewerken",
+    "contain_search": "Waarvan de vraag het volgende bevat",
+    "correspondence_error": "U kunt hetzelfde voorstel niet associëren met verschillende labels!",
+    "create_cloze": "Een blank maken",
+    "create_hole": "Een blank maken",
+    "delete_items": "{1} Verwijder vraag|[2,Inf[ Verwijder %count% vragen",
+    "display_pagination": "Met paginering weergeven",
+    "duplicate_this_question": "<input type =\"text\" name='nbq' value='0' size='2' /> keer deze vraag (maximaal 10 toegelaten)",
+    "duration_help": "Voer 0 voor onbepaalde duur",
+    "editor_invalid_no_save": "Ongeldige quiz",
+    "editor_invalid_no_save_desc": "Deze quiz kan niet opgeslagen worden als gevolg van ontbrekende of ongeldige gegevens. Gelieve deze problemen op te lossen voor het opslaan.",
+    "editor_not_validating_desc": "Werk in uitvoering: sommige informaties ontbreken of vereisen wiizigen.",
+    "editor_penalty_label": "Sanctie voor elk niet gedefinieerd fout antwoord.",
+    "editor_validating_desc": "Sommige fouten of ontbrekende informatie voorkomen het opslaan van gegevens."
 }
