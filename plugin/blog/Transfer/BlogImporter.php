@@ -45,7 +45,7 @@ class BlogImporter extends Importer implements ConfigurationInterface
                 ->arrayNode('options')
                     ->children()
                         ->booleanNode('authorize_comment')->defaultFalse()->end()
-                        ->booleanNode('a$configurationuthorize_anonymous_comment')->defaultFalse()->end()
+                        ->booleanNode('authorize_anonymous_comment')->defaultFalse()->end()
                         ->integerNode('post_per_page')->defaultValue(10)->end()
                         ->booleanNode('auto_publish_post')->defaultFalse()->end()
                         ->booleanNode('auto_publish_comment')->defaultFalse()->end()
