@@ -96,5 +96,8 @@
     "minimumScoreToPass": "Minimale score om te slagen",
     "peerReview": "Peer review",
     "startAllowDrop": "Begin van de drop",
-    "totalCriteriaColumn": "Notatieschaal voor de evaluatiecriteria"
+    "totalCriteriaColumn": "Notatieschaal voor de evaluatiecriteria",
+    "log_criterion_change_set": "Lijst van de gewijzigde eigenschappen voor het criterium",
+    "log_dropzone_change_set": "Lijst van de gewijzigde eigenschappen voor de evaluatie",
+    "log_resource-icap_dropzone-correction_delete_filter": "Een correctie in een evaluatie verwijderen"
 }
