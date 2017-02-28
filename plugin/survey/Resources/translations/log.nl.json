@@ -1,6 +1,6 @@
 {
-    "log_resource-claroline_survey-answer_filter": "Aan de opiniepeiling antwoorden",
-    "log_resource-claroline_survey-answer_sentence": "heeft op de opiniepeiling geantwoord.",
-    "log_resource-claroline_survey-answer_shortname": "Op de opiniepeiling antwoorden",
-    "log_resource-claroline_survey-answer_title": "Op de opiniepeiling antwoorden"
+    "log_resource-claroline_survey-answer_filter": "De opiniepeiling beantwoorden",
+    "log_resource-claroline_survey-answer_sentence": "heeft de opiniepeiling beantwoord.",
+    "log_resource-claroline_survey-answer_shortname": "De opiniepeiling beantwoorden",
+    "log_resource-claroline_survey-answer_title": "De opiniepeiling beantwoorden"
 }
