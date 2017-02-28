@@ -117,5 +117,7 @@
     "post_filtered_by_day": "Lijst van de artikels met een filter op de dag %date%",
     "post_filtered_by_monthe": "Lijst van de artikels met een filter op de maand %date%",
     "post_filtered_by_search": "Lijst van de artikels met een filter op de zoektermen %searchTerms%",
-    "post_filtered_by_tag": "Lijst van de artikels met een filter op de tags %tagName%"
+    "post_filtered_by_tag": "Lijst van de artikels met een filter op de tags %tagName%",
+    "expand_year": "Dit jaar ontplooien",
+    "limit_to": "De weergave beperken tot"
 }
