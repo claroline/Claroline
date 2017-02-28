@@ -17,7 +17,7 @@
     "errors.not_blank": "Deze waarde mag niet leeg zijn.",
     "errors.not_unique": "Deze waarde moet uniek zijn.",
     "errors.note.creation_failure": "Fout bij het maken van de nota's.",
-    "errors.note_type.edition_failure": "",
+    "errors.note_type.edition_failure": "Fout bij het bewerken van het notensjabloon",
     "errors.title": "Fout",
     "field.add": "Voeg een nieuw veld toe",
     "field.image.src": "Bron van het beeld",
@@ -27,5 +27,10 @@
     "new_cards": "Nieuwe kaarten",
     "questions": "Vragen",
     "study.begin": "Studeer nu",
-    "study.stop": ""
+    "study.stop": "",
+    "card_to_review": "Kaarten te herzien",
+    "card_type.add": "Een kaartsjabloon voegen",
+    "card_type.create_reverse": "Het omgekeerde kaartsjabloon maken",
+    "card_types": "Kaartsjabloon",
+    "field.image.alt": "Alternatieve tekst voor het beeld"
 }
