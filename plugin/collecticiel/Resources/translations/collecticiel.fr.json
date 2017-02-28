@@ -7,7 +7,7 @@
     "Add at least one document": "Ajouter au moins un document",
     "Allow comment in correction": "Proposer une zone de commentaire",
     "Allow correction deny": "Autoriser les apprenants à signaler une correction qu'ils trouvent injuste.",
-    "Allow drop in review": "Autoriser le dépôt de document lors de l'évaluation par les pairs",
+    "Allow drop in review": "Autoriser le dépôt de document lors de l'évaluation par les pairs.",
     "Allow rich text": "Texte libre (rédaction en ligne)",
     "Allow student to see his copy whereas the copy didnt received the expected number of correction.": "Permettre à l'étudiant de voir sa copie, même si celle-ci n'a pas reçu le nombre de corrections requises.",
     "Allow upload": "Fichiers (téléversement depuis leur ordinateur)",
@@ -339,5 +339,10 @@
     "waiting for correction": "En attente de correction",
     "was reported": "A été signalé",
     "yes": "Oui",
-    "Hidden folder for \"%dropzoneName%\"": "Dossier caché pour \"%dropzoneName%\""
+    "Hidden folder for \"%dropzoneName%\"": "Dossier caché pour \"%dropzoneName%\"",
+    "There are no evaluation criterionthe %number%": "Il n'y a pas d'évaluation",
+    "You are about to make your correction. This action is final. The score is %grade%/20": "Vous êtes sur le point de rendre votre correction. Cette action est définitive. Le score que vous donnez est le suivant: %grade%/20.",
+    "innova_collecticiel_common_form_instruction": "Instruction",
+    "innova_collecticiel_criterion_form_instruction": "Instruction",
+    "innova_collecticiel_form_name": "Titre du collecticiel"
 }

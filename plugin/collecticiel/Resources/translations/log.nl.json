@@ -7,5 +7,7 @@
     "log_drop_documents": "Documenten",
     "log_open_document": "Document geopend",
     "log_owner_drop": "Eigenaar van de copie",
-    "peerReview": "Peer review"
+    "peerReview": "Peer review",
+    "log_criterion_change_set": "Lijst van de gewijzigde eigenschappen voor het criterium",
+    "log_dropzone_change_set": "Lijst van de gewijzigde eigenschappen voor de evaluatie"
 }

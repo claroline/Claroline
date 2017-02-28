@@ -59,5 +59,6 @@
     "log_unpublished_post": "Article dépublié",
     "log_updated_comment": "Commentaire mis à jour",
     "message": "Message",
-    "postPerPage": "Articles par page"
+    "postPerPage": "Articles par page",
+    "log_publsihed_comment": "Commentaire publié"
 }
