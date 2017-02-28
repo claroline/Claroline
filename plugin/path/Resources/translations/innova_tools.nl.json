@@ -30,5 +30,16 @@
     "locked": "Blokkerend",
     "my_paths": "Mijn leerpaden",
     "name": "Naam van het leerpad",
-    "step": "Stap"
+    "step": "Stap",
+    "groupware": "Groupware",
+    "heritated_from": "Geërfd van",
+    "library": "In een bibliotheek",
+    "no_path": "Er is geen leerpad te tonen.",
+    "no_path_found": "Geen leerpad gevonden",
+    "others_paths": "Andere leerpaden",
+    "path_back": "Terug naar leerpad",
+    "path_dashboard": "Leerpad dashboard",
+    "path_delete_error": "Het pad niet is verwijderd omwille van technische problemen. Probeer het opnieuw.",
+    "path_delete_success": "Het leerpad is verwijderd.",
+    "path_not_found": "Leerpad niet gevonden"
 }
