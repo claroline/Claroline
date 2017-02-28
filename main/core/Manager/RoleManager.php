@@ -186,6 +186,7 @@ class RoleManager
     }
 
     /**
+     * @param Role   $role
      * @param string $username
      */
     public function renameUserRole(Role $role, $username)
@@ -193,8 +194,8 @@ class RoleManager
         $roleName = 'ROLE_USER_'.strtoupper($username);
         $role->setName($roleName);
         $role->setTranslationKey($username);
+
         $this->om->persist($role);
-        $this->om->flush();
     }
 
     /**
@@ -943,11 +944,6 @@ class RoleManager
         return $this->roleRepo->findAllUserRoles($executeQuery);
     }
 
-    public function getUserRoleByUser(User $user, $executeQuery = true)
-    {
-        return $this->roleRepo->findUserRoleByUser($user, $executeQuery);
-    }
-
     public function getUserRolesByTranslationKeys(array $keys, $executeQuery = true)
     {
         return count($keys) === 0 ?
@@ -1117,9 +1113,9 @@ class RoleManager
         $this->om->endFlushSuite();
     }
 
-    public function getUserRole(User $user)
+    public function getUserRole($username)
     {
-        return $this->roleRepo->findUserRoleByUser($user);
+        return $this->roleRepo->findUserRoleByUsername($username);
     }
 
     public function emptyRole(Role $role, $mode)
