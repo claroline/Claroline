@@ -18,5 +18,13 @@
     "options_form_view_mode_choices_pause": "Voorlopend pauze",
     "options_form_view_mode_choices_scripted_active": "Scripted actief",
     "options_panel_title": "Leermiddel opties",
-    "show_hide_options_panel": "Toon / Verberg panel opties"
+    "show_hide_options_panel": "Toon / Verberg panel opties",
+    "accent_no_accent": "Normale tekst",
+    "accent_weak_vowel": "Zwakke klinker",
+    "add": "Voegen",
+    "add_marker": "Voeg een marker",
+    "alert_only_one_region_left": "Er blijft slechts één segment. U kunt het niet verwijderen!",
+    "annotation_panel_title": "Annotaties",
+    "back": "Verlaten",
+    "btn_active_listening": "Actief luisteren"
 }
