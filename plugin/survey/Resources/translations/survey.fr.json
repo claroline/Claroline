@@ -72,7 +72,7 @@
     "published_survey_message": "Le sondage est publié.",
     "published_user_message": "Le sondage est ouvert.",
     "question_answers_deletion_warning": "Si vous modifiez la question, toutes les réponses liées à cette question (présentes dans d'autres sondages) seront supprimées.",
-    "question_creation": "Création dune question",
+    "question_creation": "Création d'une question",
     "question_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer cette question ?",
     "question_delete_confirm_title": "Suppression de la question",
     "question_disabled_edit_button_info": "Les questions dont le bouton d'édition est désactivé ne peuvent pas être modifiées car des réponses y sont associées.",
