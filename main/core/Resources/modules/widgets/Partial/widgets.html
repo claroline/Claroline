@@ -2,8 +2,8 @@
     <ul>
         <li gridster-item="widget"
             class="widget gridster-item-content"
-            ng-repeat="widget in dhmc.widgets"
-            ng-style="{'border-color': '{{ widget['color'] }}', 'background-color': '{{ widget['color'] }}'}"
+            data-ng-repeat="widget in dhmc.widgets"
+            data-ng-style="{'border-color': '{{ widget['color'] }}', 'background-color': '{{ widget['color'] }}'}"
         >
             <div class="widget-header">
                 <h3 class="widget-title" style="color: {{ widget['textTitleColor'] }}">

@@ -2,11 +2,13 @@
     <ul>
         <li gridster-item="widget"
             class="widget gridster-item-content"
-            ng-repeat="widget in ahtcc.widgets"
-            ng-style="{'border-color': '{{ widget['color'] }}', 'background-color': '{{ widget['color'] }}'}"
+            data-ng-repeat="widget in ahtcc.widgets"
+            data-ng-style="{'border-color': '{{ widget['color'] }}', 'background-color': '{{ widget['color'] }}'}"
         >
-            <div class="widget-header" style="">
-                <h3 class="widget-title" style="color: {{ widget['textTitleColor'] }}">
+            <div class="widget-header">
+                <h3
+                    class="widget-title"
+                    style="color: {{ widget['textTitleColor'] }}">
                     <span class="pull-right widget-header-control-box">
                         <i class="fa fa-times close" ng-click="ahtcc.deleteAdminWidget($event, widget['configId'])">
                         </i>
