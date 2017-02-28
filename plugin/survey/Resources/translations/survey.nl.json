@@ -81,7 +81,7 @@
     "question_creation": "Een vraag maken",
     "question_delete_confirm_message": "Bent u er zeker van dat u deze vraag wenst te verwijderen ?",
     "question_delete_confirm_title": "De vraag verwijderen",
-    "question_disabled_edit_button_info": "De vragen die een uitgeschakelde knop \"Bewerken\" hebben, kunnen niet worden bewerkt want er zijn antwoorden geassocieerd met hen.",
+    "question_disabled_edit_button_info": "De vragen die een uitgeschakelde knop \"Bewerken\" hebben, kunnen niet worden bewerkt want er zijn antwoorden die met hen geassocieerd zijn.",
     "question_edition": "De vraag bewerken",
     "question_form_commentAllowed": "Met commentaar",
     "question_form_commentLabel": "Label van de commentaar",
