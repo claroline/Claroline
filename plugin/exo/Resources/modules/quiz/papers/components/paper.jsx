@@ -35,6 +35,10 @@ let Paper = props =>
                 getDefinition(item.type).paper,
                 {item, answer: getAnswer(item.id, props.paper.answers), answerObject: getAnswerObject(item.id, props.paper.answers)}
               )}
+
+              {item.feedback &&
+                <div className="item-feedback" dangerouslySetInnerHTML={{__html: item.feedback}} />
+              }
             </Panel> :
             ''
         )}

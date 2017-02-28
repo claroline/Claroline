@@ -1,6 +1,7 @@
 import React, {PropTypes as T} from 'react'
 
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
+import {Hint} from './../../../items/components/hint.jsx'
 
 import {tex, transChoice} from './../../../utils/translate'
 
@@ -23,13 +24,13 @@ UsedHint.propTypes = {
   penalty: T.number
 }
 
-const Hint = props =>
+/*const Hint = props =>
   <button
     type="button"
-    className="btn btn-default btn-block hint-btn"
+    className="btn btn-link btn-block hint-btn"
     onClick={props.showHint}
   >
-    <span className="fa fa-fw fa-eye"/>
+    <span className="fa fa-fw fa-lightbulb-o"/>
     &nbsp;{tex('hint')}&nbsp;{props.number}
 
     {props.penalty > 0 &&
@@ -45,7 +46,7 @@ Hint.propTypes = {
   penalty: T.number,
   number: T.number.isRequired,
   showHint: T.func.isRequired
-}
+}*/
 
 const Hints = props => {
   const hints = props.hints.map((hint, index) => {
@@ -91,7 +92,7 @@ Hints.propTypes = {
 }
 
 const ItemPlayer = props =>
-  <div className="item-player">
+  <div className="quiz-item item-player">
     {props.item.title &&
       <h3 className="item-title">{props.item.title}</h3>
     }
@@ -101,6 +102,10 @@ const ItemPlayer = props =>
     <hr className="item-content-separator" />
 
     {props.children}
+
+    {props.item.hints && 0 !== props.item.hints.length &&
+      <hr className="item-content-separator" />
+    }
 
     {props.item.hints && 0 !== props.item.hints.length &&
       <Hints

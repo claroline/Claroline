@@ -160,6 +160,8 @@ class MatchQuestionSerializer implements SerializerInterface
             // Force client ID if needed
             if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
                 $label->setUuid($secondSetData->id);
+            } else {
+                $secondSetData->id = $label->getUuid();
             }
 
             $label->setOrder($index);
@@ -207,6 +209,8 @@ class MatchQuestionSerializer implements SerializerInterface
 
             if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
                 $proposal->setUuid($firstSetData->id);
+            } else {
+                $firstSetData->id = $proposal->getUuid();
             }
 
             $proposal->setOrder($index);
