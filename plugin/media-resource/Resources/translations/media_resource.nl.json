@@ -55,5 +55,16 @@
     "label_play_mode_scripted_active": "Gescenariseerd actief",
     "marker_drag_title": "Slepen en neerzetten",
     "media_resource_options_explain": "Tenminste één view soort moet ingeschakeld worden.",
-    "media_resource_save": "Opslaan"
+    "media_resource_save": "Opslaan",
+    "media_resource_save_regions": "Leermiddelstreken en streekopties opslaan",
+    "move_backward": "Ga naar vorige marker",
+    "move_forward": "Ga naar volgende marker",
+    "no_media_resource": "Geen leermiddel gevonden",
+    "no_problems_detected_message_first": "Hartelijk gefeliciteerd ! U hebt geen probleem ontmoet !",
+    "no_problems_detected_message_second": "Als u wilt herbeginnen, gebruik de knop hieronder.",
+    "play_current_region": "Play / Pause voor de huidige streek",
+    "play_pause": "Play / Pause",
+    "play_pause_region": "Play / Pause voor de streek",
+    "popover_players_active": "De student krijgt toegang tot de hulp op aanvraag",
+    "popover_players_free": "Hulp en streek worden weergegeven zodra het lezen op pauze is. Deze speler kan de teksttranscriptie tonen."
 }
