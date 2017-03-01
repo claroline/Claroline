@@ -14,7 +14,7 @@
       <div class="card-front">
         <div class="card-content">
           <div ng-repeat="question in vm.questions"
-               class="fullheight">
+               class="card-field">
             <div class="field-label">
               {{ question.field_label.name }}
             </div>
@@ -38,7 +38,8 @@
       </div>
       <div class="card-back">
         <div class="card-content">
-          <div ng-repeat="answer in vm.answers">
+          <div ng-repeat="answer in vm.answers"
+               class="card-field">
             <div class="field-label">
               {{ answer.field_label.name }}
             </div>
