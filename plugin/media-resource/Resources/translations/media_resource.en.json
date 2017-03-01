@@ -68,7 +68,7 @@
     "popover_players_live": "The student will be able to listen freely to the document and acces loop & slow helps everywhere",
     "popover_players_pause": "The player will automatically pause playback (2s) on each region end",
     "popover_players_popover_title": "Play modes",
-    "popover_players_scripted": "2 steps playback. First the student will tell each time he encounter a problem. Second he'll access all related help",
+    "popover_players_scripted": "2 steps playback. First the student will tell each time he encounters a problem. Then he'll get access to the related help",
     "popover_transcription_popover_explain_first": "This field allow you to set the region text transcription",
     "popover_transcription_popover_explain_second": "This data will be used by TextToSpeach (i.e. Backward building help) and in the Free player mode",
     "popover_transcription_popover_title": "Region textual transcription",
