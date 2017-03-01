@@ -35,14 +35,20 @@
         max-width: 100%;
     }
 
+    // remove box-shadow of some components when contained in a panel
     .panel,
-    .breadcrumb {
-        .box-shadow(none);
+    .breadcrumb, // this should not happen
+    .table > tbody {
+         .box-shadow(none);
+     }
+
+    .table > tbody {
+        border: none;
     }
 }
 
 .panel-group {
-    > div,
+    > div, // allow containers (some SPA requires additional containers)
     .panel {
         + div, // allow containers (some SPA requires additional containers)
         + .panel {

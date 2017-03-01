@@ -1,13 +1,9 @@
-table {
+.table {
     th {
-        background: @gray-lighter;
-
-        &, a {
-            color: @gray;
-            font-weight: bold;
-        }
-
+        // todo : this needs to be removed
         a {
+            color: @gray;
+
             &:after {
                 content: " \25BE";
             }
@@ -17,12 +13,12 @@ table {
             }
         }
     }
-}
 
-// Fixes vertical align in tables
-.table > thead > tr > th,
-.table > thead > tr > td,
-.table > tbody > tr > th,
-.table > tbody > tr > td {
-    vertical-align: middle;
+    // Fixes vertical align in tables
+    > thead > tr > th,
+    > thead > tr > td,
+    > tbody > tr > th,
+    > tbody > tr > td {
+        vertical-align: middle;
+    }
 }

@@ -1,19 +1,22 @@
-#left-bar, #right-bar {
+// todo : do not use ids
+#left-bar,
+#right-bar {
     position: fixed;
     top: 0;
     width: 40px;
     overflow: hidden;
     height: 100%;
     z-index: (@zindex-navbar-fixed - 1);
-    padding-top: (@top-bar-height + 5); // why the +5 ?
+    padding-top: @top-bar-height;
 
-    &, & .list-group,
+    &,
+    & .list-group,
     & .list-group .list-group-item,
     & .list-group .list-group-item.disabled,
     & .list-group .list-group-item.disabled:hover {
-        background: @navbar-default-bg;
-        color: @navbar-default-link-color;
-        font-size: 16px;
+        background: @sidebar-bg;
+        color: @sidebar-color;
+        font-size: @sidebar-font-size;
     }
 
     .list-group {
@@ -45,22 +48,21 @@
                 white-space: nowrap;
                 overflow: hidden;
                 text-overflow: ellipsis;
-                //height: (@navbar-height + 4);
                 border-bottom: 4px solid @gray-light !important;
-                //padding: 15px 0 0  40px !important;
                 font-weight: bold;
                 color: darken(@navbar-default-link-color, 10%);
             }
 
-            &:first-child, &:last-child {
-                .border-top-radius(0);
-                .border-bottom-radius(0);
+            &:first-child,
+            &:last-child {
+                border-radius: 0;
             }
         }
     }
 
-    .scroll-up, .scroll-down {
-        background: @navbar-default-bg;
+    .scroll-up,
+    .scroll-down {
+        background: @sidebar-bg;
         position: absolute;
         width: 100%;
         margin: 0;
@@ -80,7 +82,7 @@
     }
 
     .scroll-up {
-        top: 50px;
+        top: @top-bar-height;
         border-bottom: 2px solid  @navbar-default-border;
     }
 
@@ -92,8 +94,10 @@
 
 #left-bar {
     left: 0;
+    .box-shadow(@left-bar-box-shadow);
 }
 
 #right-bar {
     right: 0;
+    .box-shadow(@right-bar-box-shadow);
 }

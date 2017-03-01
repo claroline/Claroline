@@ -26,9 +26,9 @@
 @top-bar-height:              @navbar-height + @top-bar-border-bottom-size;
 @top-bar-font-size:           @font-size-base;
 @top-bar-color:               lighten(@top-bar-bg, 30%);
-@top-bar-bg:                  @component-active-bg;
+@top-bar-bg:                  @navbar-inverse-bg;
 @top-bar-border-bottom-size:  3px;
-@top-bar-border-bottom:       @top-bar-border-bottom-size solid #f89406;
+@top-bar-border-bottom:       @top-bar-border-bottom-size solid @brand-primary;
 @top-bar-box-shadow:          0 0 2px rgba(0, 0, 0, 0.5);
 
 @top-bar-logo-height:         35px;
@@ -38,12 +38,12 @@
 @top-bar-brand-hover-color:   #fff;
 @top-bar-brand-hover-bg:      transparent;
 
-@top-bar-link-color:          lighten(@top-bar-bg, 40%);
-@top-bar-link-hover-color:    lighten(@top-bar-bg, 50%);
+@top-bar-link-color:          lighten(@top-bar-bg, 60%);
+@top-bar-link-hover-color:    lighten(@top-bar-bg, 70%);
 @top-bar-link-hover-bg:       darken(@top-bar-bg, 5%);
-@top-bar-link-active-color:   lighten(@top-bar-bg, 60%);
+@top-bar-link-active-color:   lighten(@top-bar-bg, 80%);
 @top-bar-link-active-bg:      darken(@top-bar-bg, 6.5%);
-@top-bar-link-disabled-color: lighten(@top-bar-bg, 20%);
+@top-bar-link-disabled-color: lighten(@top-bar-bg, 30%);
 @top-bar-link-disabled-bg:    transparent;
 @top-bar-inner-border-color:  darken(@top-bar-bg, 5%);
 
@@ -55,7 +55,7 @@
 // -
 // Loader
 // ---
-@loader-bg:            @label-warning-bg;
+@loader-bg:            @label-primary-bg;
 @loader-color:         @label-color;
 @loader-border:        transparent;
 @loader-font-size:     @font-size-small;
@@ -76,7 +76,12 @@
 // -
 // Sidebars
 // ---
+@sidebar-bg:            white;
+@sidebar-color:         #555;
+@sidebar-font-size:     16px;
 
+@left-bar-box-shadow:   2px 0 2px rgba(0, 0, 0, 0.25);
+@right-bar-box-shadow: -2px 0 2px rgba(0, 0, 0, 0.25);
 
 // -
 // Page
@@ -205,3 +210,17 @@
 // ---
 @carousel-indicator-size:        10px;
 @carousel-indicator-active-size: 12px;
+
+
+// -
+// Dropdown
+// ---
+@dropdown-menu-box-shadow:    0 1px 2px rgba(0, 0, 0, 0.25);
+@dropdown-menu-border-radius: 0;
+
+
+// -
+// Modal
+// ---
+@modal-content-box-shadow:    0 0 10px rgba(0, 0, 0, 0.5);
+@modal-content-border-radius: 0;
