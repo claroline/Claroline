@@ -42,7 +42,7 @@
     "move_backward": "Go to previous marker",
     "move_forward": "Go to next marker",
     "no_media_resource": "None found.",
-    "no_problems_detected_message_first": "Congratulation ! You did not point any problem !",
+    "no_problems_detected_message_first": "Congratulations ! You haven't pointed any problem !",
     "no_problems_detected_message_second": "If you want to restart please use the button below.",
     "none": "None",
     "options_form_enable_text_transcription": "Display textual transcription",
