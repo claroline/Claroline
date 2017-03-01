@@ -1,7 +1,7 @@
 import React, {PropTypes as T} from 'react'
 
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
-import {Hint} from './../../../items/components/hint.jsx'
+// import {Hint} from './../../../items/components/hint.jsx'
 
 import {tex, transChoice} from './../../../utils/translate'
 
@@ -24,7 +24,7 @@ UsedHint.propTypes = {
   penalty: T.number
 }
 
-/*const Hint = props =>
+const Hint = props =>
   <button
     type="button"
     className="btn btn-link btn-block hint-btn"
@@ -46,7 +46,7 @@ Hint.propTypes = {
   penalty: T.number,
   number: T.number.isRequired,
   showHint: T.func.isRequired
-}*/
+}
 
 const Hints = props => {
   const hints = props.hints.map((hint, index) => {

@@ -52,7 +52,7 @@ const Player = props =>
           >
             {React.createElement(getDefinition(item.type).feedback, {
               item: item,
-              answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined,
+              answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined
             })}
           </ItemFeedback>
         )}
