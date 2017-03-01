@@ -84,6 +84,12 @@ export function resetTypes() {
   registeredTypes = {}
 }
 
+export function isQuestionType(type) {
+  const matches = type.match(/^application\/x\.[^/]+\+json$/)
+
+  return matches !== null
+}
+
 function assertValidItemType(definition) {
   invariant(
     definition.name,

@@ -21,6 +21,7 @@ abstract class AbstractItem
 
     /**
      * @ORM\OneToOne(targetEntity="UJM\ExoBundle\Entity\Item\Item")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      *
      * @var Item
      */
@@ -50,5 +51,13 @@ abstract class AbstractItem
     public function getQuestion()
     {
         return $this->question;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isContentItem()
+    {
+        return false;
     }
 }

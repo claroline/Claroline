@@ -45,6 +45,7 @@ class ScoreManager
                 break;
 
             case 'manual':
+            case 'none':
                 break;
 
             default:

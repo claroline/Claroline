@@ -1,5 +1,6 @@
 import {update, makeId} from './../../utils/utils'
 import {makeReducer} from './../../utils/reducers'
+import {isQuestionType} from './../../items/item-types'
 import {decorateAnswer} from './decorators'
 import moment from 'moment'
 
@@ -57,7 +58,7 @@ function submitAnswers(state, action) {
 
 function initCurrentStepAnswers(state, action) {
   const newAnswers = action.step.items.reduce((acc, item) => {
-    if (!state[item.id]) {
+    if (!state[item.id] && isQuestionType(item.type)) {
       acc[item.id] = decorateAnswer({
         id: makeId(),
         questionId: item.id,

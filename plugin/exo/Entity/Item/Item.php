@@ -49,7 +49,7 @@ class Item
     private $title;
 
     /**
-     * @ORM\Column(name="invite", type="text")
+     * @ORM\Column(name="invite", type="text", nullable=true)
      *
      * @var string
      */
@@ -140,7 +140,7 @@ class Item
     private $resources;
 
     /**
-     * @ORM\Column(type="text")
+     * @ORM\Column(type="text", nullable=true)
      *
      * @var string
      */

@@ -2,7 +2,7 @@ import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
 import Panel from 'react-bootstrap/lib/Panel'
 import {tex} from './../../../utils/translate'
-import {getDefinition} from './../../../items/item-types'
+import {getDefinition, isQuestionType} from './../../../items/item-types'
 import {selectors} from './../selectors'
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
 import {ScoreBox} from './../../../items/components/score-box.jsx'
@@ -20,25 +20,27 @@ let Paper = props =>
         </h3>
 
         {step.items.map(item =>
-          <Panel key={item.id}>
-            {getAnswerScore(item.id, props.paper.answers) !== undefined && getAnswerScore(item.id, props.paper.answers) !== null &&
-              <span className="pull-right">
-                <h4>
-                  <ScoreBox score={getAnswerScore(item.id, props.paper.answers)} scoreMax={getItemScoreMax(item)}/>
-                </h4>
-              </span>
-            }
-            {item.title &&
-              <h4 className="item-title">{item.title}</h4>
-            }
+          isQuestionType(item.type) ?
+            <Panel key={item.id}>
+              {getAnswerScore(item.id, props.paper.answers) !== undefined && getAnswerScore(item.id, props.paper.answers) !== null &&
+                <span className="pull-right">
+                  <h4>
+                    <ScoreBox score={getAnswerScore(item.id, props.paper.answers)} scoreMax={getItemScoreMax(item)}/>
+                  </h4>
+                </span>
+              }
+              {item.title &&
+                <h4 className="item-title">{item.title}</h4>
+              }
 
-            <ItemMetadata item={item} />
+              <ItemMetadata item={item} />
 
-            {React.createElement(
-              getDefinition(item.type).paper,
-              {item, answer: getAnswer(item.id, props.paper.answers), answerObject: getAnswerObject(item.id, props.paper.answers)}
-            )}
-          </Panel>
+              {React.createElement(
+                getDefinition(item.type).paper,
+                {item, answer: getAnswer(item.id, props.paper.answers), answerObject: getAnswerObject(item.id, props.paper.answers)}
+              )}
+            </Panel> :
+            ''
         )}
       </div>
     )}
@@ -52,7 +54,7 @@ Paper.propTypes = {
   steps: T.arrayOf(T.shape({
     items: T.arrayOf(T.shape({
       id: T.string.isRequired,
-      content: T.string.isRequired,
+      content: T.string,
       type: T.string.isRequired
     })).isRequired
   })).isRequired

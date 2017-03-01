@@ -60,6 +60,10 @@ function selectSubEditor(props) {
           handleItemHintsUpdate={props.updateItemHints}
           handleItemDetailUpdate={props.updateItemDetail}
           handleItemsImport={props.importItems}
+          handleContentItemCreate={props.createContentItem}
+          handleContentItemUpdate={props.updateContentItem}
+          handleContentItemDetailUpdate={props.updateContentItemDetail}
+          handleFileUpload={props.saveContentItemFile}
           showModal={props.showModal}
           closeModal={props.fadeModal}
         />
@@ -87,6 +91,10 @@ selectSubEditor.propTypes = {
   updateItemHints: T.func.isRequired,
   updateItemDetail: T.func.isRequired,
   importItems: T.func.isRequired,
+  createContentItem: T.func.isRequired,
+  updateContentItem: T.func.isRequired,
+  updateContentItemDetail: T.func.isRequired,
+  saveContentItemFile: T.func,
   showModal: T.func.isRequired,
   fadeModal: T.func.isRequired
 }

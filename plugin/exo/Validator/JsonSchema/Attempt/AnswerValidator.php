@@ -68,7 +68,7 @@ class AnswerValidator extends JsonSchemaValidator
                 'path' => '/questionId',
                 'message' => 'question does not exist',
             ];
-        } elseif (!empty($answer->data)) {
+        } elseif (!empty($answer->data) && $this->itemDefinitions->isQuestionType($question->getMimeType())) {
             // Forward to item type validator
             $definition = $this->itemDefinitions->get($question->getMimeType());
 
