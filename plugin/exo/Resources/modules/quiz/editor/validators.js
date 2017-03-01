@@ -1,5 +1,6 @@
 import {notBlank, number, gteZero, chain, setIfError} from './../../utils/validate'
 import {getDefinition} from './../../items/item-types'
+import {getContentDefinition} from './../../contents/content-types'
 
 function validateQuiz(quiz) {
   const parameters = quiz.parameters
@@ -37,6 +38,13 @@ function validateItem(item) {
   return Object.assign(errors, subErrors)
 }
 
+function validateContentItem(contentItem) {
+  const errors = {}
+  const subErrors = getContentDefinition(contentItem.type).editor.validate(contentItem)
+
+  return Object.assign(errors, subErrors)
+}
+
 function validateBaseItem(item) {
   const errors = {}
 
@@ -48,5 +56,6 @@ function validateBaseItem(item) {
 export default {
   quiz: validateQuiz,
   step: validateStep,
-  item: validateItem
+  item: validateItem,
+  contentItem: validateContentItem
 }

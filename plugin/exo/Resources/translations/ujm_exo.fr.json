@@ -13,6 +13,7 @@
     "active_filters": "{0} Il n'y a aucun filtre actif|{1} Il y a 1 filtre actif|]1,Inf[ Il y a %count% filtres actifs",
     "add": "Ajouter",
     "add_choice": "Ajouter un choix",
+    "add_content": "Ajouter du contenu",
     "add_hint": "Ajouter un indice",
     "add_label": "Ajouter un label",
     "add_new_picture": "Ajouter une nouvelle image",

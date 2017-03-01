@@ -146,7 +146,9 @@ class PaperManager
         $structure = json_decode($paper->getStructure());
         foreach ($structure->steps as $step) {
             foreach ($step->items as $item) {
-                $total += $this->itemManager->calculateTotal($item);
+                if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $item->type)) {
+                    $total += $this->itemManager->calculateTotal($item);
+                }
             }
         }
 

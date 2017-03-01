@@ -6,6 +6,7 @@ import validate from './validators'
 import {decorateItem} from './../decorators'
 import {getIndex, makeId, makeItemPanelKey, update} from './../../utils/utils'
 import {getDefinition} from './../../items/item-types'
+import {getContentDefinition} from './../../contents/content-types'
 import {ATTEMPT_FINISH} from './../player/actions'
 import {VIEW_MODE_UPDATE, OPEN_FIRST_STEP} from './../actions'
 import {
@@ -40,7 +41,10 @@ import {
   HINT_ADD,
   HINT_CHANGE,
   HINT_REMOVE,
-  quizChangeActions
+  quizChangeActions,
+  CONTENT_ITEM_CREATE,
+  CONTENT_ITEM_UPDATE,
+  CONTENT_ITEM_DETAIL_UPDATE
 } from './actions'
 
 function initialQuizState() {
@@ -138,6 +142,8 @@ function reduceSteps(steps = {}, action = {}) {
       })
       return update(steps, {[action.stepId]: {items: {$push: ids}}})
     }
+    case CONTENT_ITEM_CREATE:
+      return update(steps, {[action.stepId]: {items: {$push: [action.id]}}})
   }
   return steps
 }
@@ -233,6 +239,37 @@ function reduceItems(items = {}, action = {}) {
       updatedItem = update(updatedItem, {_errors: {$set: errors}})
       return update(items, {[action.id]: {$set: updatedItem}})
     }
+    case CONTENT_ITEM_CREATE: {
+      let newItem = {
+        id: action.id,
+        type: action.contentType,
+        data: action.data,
+        title: '',
+        description: ''
+      }
+      const errors = validate.contentItem(newItem)
+      newItem = Object.assign({}, newItem, {_errors: errors})
+
+      return update(items, {[action.id]: {$set: newItem}})
+    }
+    case CONTENT_ITEM_UPDATE: {
+      let updatedItem = merge(
+        {},
+        items[action.id],
+        set({}, action.propertyPath, action.value)
+      )
+      updatedItem._errors = validate.contentItem(updatedItem)
+
+      return update(items, {[action.id]: {$set: updatedItem}})
+    }
+    case CONTENT_ITEM_DETAIL_UPDATE: {
+      const def = getContentDefinition(items[action.id].type)
+      let updatedItem = def.editor.reduce(items[action.id], action.subAction)
+      const errors = validate.contentItem(updatedItem)
+      updatedItem = update(updatedItem, {_errors: {$set: errors}})
+
+      return update(items, {[action.id]: {$set: updatedItem}})
+    }
   }
   return items
 }
@@ -282,6 +319,10 @@ function reduceOpenPanels(panels = initialPanelState(), action = {}) {
     }
     case ITEM_CREATE: {
       const panelKey = makeItemPanelKey(action.itemType, action.id)
+      return update(panels, {[TYPE_STEP]: {[action.stepId]: {$set: panelKey}}})
+    }
+    case CONTENT_ITEM_CREATE: {
+      const panelKey = makeItemPanelKey(action.contentType, action.id)
       return update(panels, {[TYPE_STEP]: {[action.stepId]: {$set: panelKey}}})
     }
   }

@@ -165,8 +165,10 @@ class PaperSerializer extends AbstractSerializer
         $decoded = json_decode($paper->getStructure());
         foreach ($decoded->steps as $step) {
             foreach ($step->items as $item) {
-                foreach ($item->hints as $hint) {
-                    $options['hints'][$hint->id] = $hint;
+                if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $item->type)) {
+                    foreach ($item->hints as $hint) {
+                        $options['hints'][$hint->id] = $hint;
+                    }
                 }
             }
         }

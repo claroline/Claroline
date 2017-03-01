@@ -43,7 +43,8 @@ class ItemListener
      */
     public function postLoad(Item $item, LifecycleEventArgs $event)
     {
-        $definition = $this->itemDefinitions->get($item->getMimeType());
+        $type = $this->itemDefinitions->getConvertedType($item->getMimeType());
+        $definition = $this->itemDefinitions->get($type);
         $repository = $event
             ->getEntityManager()
             ->getRepository($definition->getEntityClass());

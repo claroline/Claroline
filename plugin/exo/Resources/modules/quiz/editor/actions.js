@@ -31,6 +31,9 @@ export const QUIZ_SAVING = 'QUIZ_SAVING'
 export const QUIZ_VALIDATING = 'QUIZ_VALIDATING'
 export const QUIZ_SAVED = 'QUIZ_SAVED'
 export const QUIZ_SAVE_ERROR = 'QUIZ_SAVE_ERROR'
+export const CONTENT_ITEM_CREATE = 'CONTENT_ITEM_CREATE'
+export const CONTENT_ITEM_UPDATE = 'CONTENT_ITEM_UPDATE'
+export const CONTENT_ITEM_DETAIL_UPDATE = 'CONTENT_ITEM_DETAIL_UPDATE'
 
 // the following action types lead to quiz data changes that need to be
 // properly saved (please maintain this list up-to-date)
@@ -49,7 +52,10 @@ export const quizChangeActions = [
   QUIZ_UPDATE,
   HINT_ADD,
   HINT_CHANGE,
-  HINT_REMOVE
+  HINT_REMOVE,
+  CONTENT_ITEM_CREATE,
+  CONTENT_ITEM_UPDATE,
+  CONTENT_ITEM_DETAIL_UPDATE
 ]
 
 export const actions = {}
@@ -73,6 +79,8 @@ actions.quizValidating = makeActionCreator(QUIZ_VALIDATING)
 actions.quizSaving = makeActionCreator(QUIZ_SAVING)
 actions.quizSaved = makeActionCreator(QUIZ_SAVED)
 actions.quizSaveError = makeActionCreator(QUIZ_SAVE_ERROR)
+actions.updateContentItem = makeActionCreator(CONTENT_ITEM_UPDATE, 'id', 'propertyPath', 'value')
+actions.updateContentItemDetail = makeActionCreator(CONTENT_ITEM_DETAIL_UPDATE, 'id', 'subAction')
 
 actions.createItem = (stepId, type) => {
   invariant(stepId, 'stepId is mandatory')
@@ -127,5 +135,39 @@ actions.save = () => {
         }
       })
     }
+  }
+}
+
+actions.saveContentItemFile = (itemId, file) => {
+  return (dispatch) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('fileName', file.name)
+    formData.append('sourceType', 'exo_content_item')
+
+    dispatch({
+      [REQUEST_SEND]: {
+        route: ['upload_public_file'],
+        request: {
+          method: 'POST',
+          body: formData
+        },
+        success: (url) => {
+          dispatch(actions.updateContentItem(itemId, 'data', url))
+        }
+      }
+    })
+  }
+}
+
+actions.createContentItem = (stepId, type, data = '') => {
+  invariant(stepId, 'stepId is mandatory')
+  invariant(type, 'type is mandatory')
+  return {
+    type: CONTENT_ITEM_CREATE,
+    id: makeId(),
+    stepId,
+    contentType: type,
+    data: data
   }
 }

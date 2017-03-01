@@ -110,7 +110,7 @@ class ItemManager
                 'user' => $user,
             ]);
 
-        if ($question->getCreator()->getId() === $user->getId()
+        if (($question->getCreator() && ($question->getCreator()->getId() === $user->getId()))
             || ($shared && $shared->hasAdminRights())) {
             // User has admin rights so he can delete question
             return true;
@@ -226,6 +226,21 @@ class ItemManager
         }
 
         $this->om->remove($question);
+        $this->om->flush();
+    }
+
+    /**
+     * Deletes an array of Item without rights check.
+     *
+     * @param array $questions - the uuids of questions to delete
+     */
+    public function forcedDelete(array $questions)
+    {
+        // Reload the list of questions to delete
+        $toDelete = $this->repository->findByUuids($questions);
+        foreach ($toDelete as $question) {
+            $this->om->remove($question);
+        }
         $this->om->flush();
     }
 

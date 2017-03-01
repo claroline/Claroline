@@ -24,5 +24,13 @@ class ItemDefinitionsPass implements CompilerPassInterface
         foreach ($serviceIds as $id) {
             $definition->addMethodCall('addDefinition', [new Reference($id)]);
         }
+
+        // Get all defined content item serializers
+        $taggedContentItemServices = $container->findTaggedServiceIds('ujm_exo.definition.content_item');
+        $contentItemServiceIds = array_keys($taggedContentItemServices);
+
+        foreach ($contentItemServiceIds as $id) {
+            $definition->addMethodCall('addContentItemDefinition', [new Reference($id)]);
+        }
     }
 }

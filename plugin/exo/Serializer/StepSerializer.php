@@ -8,6 +8,7 @@ use UJM\ExoBundle\Entity\StepItem;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Serializer\SerializerInterface;
+use UJM\ExoBundle\Manager\Item\ItemManager;
 use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 
 /**
@@ -23,17 +24,25 @@ class StepSerializer implements SerializerInterface
     private $itemSerializer;
 
     /**
+     * @var ItemManager
+     */
+    private $itemManager;
+
+    /**
      * StepSerializer constructor.
      *
      * @param ItemSerializer $itemSerializer
+     * @param ItemManager    $itemManagere
      *
      * @DI\InjectParams({
-     *     "itemSerializer" = @DI\Inject("ujm_exo.serializer.item")
+     *     "itemSerializer" = @DI\Inject("ujm_exo.serializer.item"),
+     *     "itemManager"    = @DI\Inject("ujm_exo.manager.item")
      * })
      */
-    public function __construct(ItemSerializer $itemSerializer)
+    public function __construct(ItemSerializer $itemSerializer, ItemManager $itemManager)
     {
         $this->itemSerializer = $itemSerializer;
+        $this->itemManager = $itemManager;
     }
 
     /**

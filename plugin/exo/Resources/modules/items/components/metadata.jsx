@@ -3,7 +3,7 @@ import React, {PropTypes as T} from 'react'
 export const Metadata = props => {
   return(
       <div className="item-metadata">
-        {props.item.content &&
+        {props.item.content && !props.isContentItem &&
           <div className="item-content" dangerouslySetInnerHTML={{__html: props.item.content}}></div>
         }
 
@@ -17,7 +17,8 @@ export const Metadata = props => {
 Metadata.propTypes = {
   item: T.shape({
     title: T.string,
-    content: T.string.isRequired,
+    content: T.string,
     description: T.string
-  }).isRequired
+  }).isRequired,
+  isContentItem: T.bool
 }

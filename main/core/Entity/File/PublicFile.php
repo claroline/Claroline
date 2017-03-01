@@ -41,7 +41,7 @@ class PublicFile
     /**
      * @ORM\Column(name="hash_name")
      */
-    protected $hashName;
+    protected $url;
 
     /**
      * @ORM\Column(name="directory_name")
@@ -63,6 +63,11 @@ class PublicFile
      * @ORM\Column(name="mime_type", nullable=true)
      */
     protected $mimeType;
+
+    /**
+     * @ORM\Column(name="source_type", nullable=true)
+     */
+    protected $sourceType;
 
     /**
      * @ORM\OneToMany(
@@ -122,14 +127,14 @@ class PublicFile
         $this->filename = $filename;
     }
 
-    public function getHashName()
+    public function getUrl()
     {
-        return $this->hashName;
+        return $this->url;
     }
 
-    public function setHashName($hashName)
+    public function setUrl($url)
     {
-        $this->hashName = $hashName;
+        $this->url = $url;
     }
 
     public function getDirectoryName()
@@ -170,6 +175,16 @@ class PublicFile
     public function setMimeType($mimeType)
     {
         $this->mimeType = $mimeType;
+    }
+
+    public function getSourceType()
+    {
+        return $this->sourceType;
+    }
+
+    public function setSourceType($sourceType)
+    {
+        $this->sourceType = $sourceType;
     }
 
     public function getPublicFileUses()
