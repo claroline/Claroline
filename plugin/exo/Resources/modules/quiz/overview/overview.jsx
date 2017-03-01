@@ -48,7 +48,6 @@ const Parameters = props =>
             <Parameter name="type">
               {tex(quizTypes.find(type => type[0] === props.parameters.type)[1])}
             </Parameter>
-            <Parameter name="creation_date">{props.meta.created}</Parameter>
             <Parameter name="number_steps_draw">
               {props.parameters.pick || tex('all_step')}
             </Parameter>
@@ -98,10 +97,7 @@ Parameters.propTypes = {
     correctionDate: T.string,
     anonymizeAttempts: T.bool.isRequired,
     showScoreAt: T.string.isRequired
-  }).isRequired,
-  meta: T.shape({
-    created: T.string.isRequired
-  })
+  }).isRequired
 }
 
 const Layout = props =>
@@ -140,7 +136,6 @@ const Layout = props =>
       (props.parameters.maxAttempts === 0
         || props.meta.userPaperCount < props.parameters.maxAttempts) &&
       <a href="#play" className="btn btn-start btn-lg btn-primary btn-block">
-        <span className="fa fa-fw fa-play"></span>
         {tex('exercise_start')}
       </a>
     }

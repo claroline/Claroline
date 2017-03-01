@@ -10,12 +10,20 @@ export const PaperRow = props =>
       <td>{props.user.name}</td>
     }
     <td>{props.number}</td>
-    <td>{props.startDate}</td>
-    <td>{props.endDate || '-'}</td>
+    <td className="text-right">
+      <small className="text-muted">{props.startDate}</small>
+    </td>
+    <td className="text-right">
+      <small className="text-muted">{props.endDate || '-'}</small>
+    </td>
     <td>{tex(props.finished ? 'yes' : 'no')}</td>
-    <td>{props.score || '-'}</td>
-    <td>
-      <a href={`#papers/${props.id}`}>
+    <td className="text-right">
+      {props.score || 0 === props.score ?
+        <span className="label label-primary">{props.score}</span> : '-'
+      }
+    </td>
+    <td className="text-right table-actions">
+      <a href={`#papers/${props.id}`} className="btn btn-link">
         <span className="fa fa-fw fa-eye"></span>
       </a>
     </td>
@@ -47,7 +55,7 @@ let Papers = props =>
           <th>{tex('paper_list_table_end_date')}</th>
           <th>{tex('paper_finished')}</th>
           <th>{tex('paper_list_table_score')}</th>
-          <th>{tex('actions')}</th>
+          <th><span className="sr-only">{tex('actions')}</span></th>
         </tr>
       </thead>
       <tbody>

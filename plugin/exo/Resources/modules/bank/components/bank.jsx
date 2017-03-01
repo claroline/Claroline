@@ -41,7 +41,7 @@ const Bank = (props) => {
   ]
 
   return (
-    <div className="page-container">
+    <div className="page">
       <PageHeader
         title={<span>{tex('questions_bank')} <small>{props.totalResults}&nbsp;questions</small></span>}
       >

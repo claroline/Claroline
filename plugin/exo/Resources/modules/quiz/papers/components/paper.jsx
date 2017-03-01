@@ -37,6 +37,10 @@ let Paper = props =>
               )}
 
               {item.feedback &&
+                <hr className="item-content-separator" />
+              }
+
+              {item.feedback &&
                 <div className="item-feedback" dangerouslySetInnerHTML={{__html: item.feedback}} />
               }
             </Panel> :

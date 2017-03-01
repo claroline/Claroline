@@ -173,7 +173,7 @@ function viewActions(view, props) {
     case VIEW_CORRECTION_ANSWERS:
       return [
         saveCorrectionAction,
-        // add back to question list
+        overviewAction,
         divider,
         papersAction,
         manualCorrectionAction

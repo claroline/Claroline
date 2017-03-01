@@ -27,7 +27,7 @@ const SelectedRow = props =>
     <td className="table-actions text-right">
       <button
         role="button"
-        className="btn btn-sm btn-link"
+        className="btn btn-link"
         onClick={() => props.onShare(props.selected)}
       >
         <span className="fa fa-fw fa-share" />
@@ -35,7 +35,7 @@ const SelectedRow = props =>
       </button>
       <button
         role="button"
-        className="btn btn-sm btn-link btn-link-danger"
+        className="btn btn-link btn-link-danger"
         onClick={() => props.onDelete(props.selected)}
       >
         <span className="fa fa-fw fa-trash-o" />
@@ -146,7 +146,6 @@ const QuestionRow = props =>
         bsStyle="link"
         noCaret={true}
         pullRight={true}
-        className="btn-sm"
       >
         <MenuItem header>Actions</MenuItem>
         <MenuItem
