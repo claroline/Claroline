@@ -71,7 +71,7 @@
     "published": "Published",
     "published_survey_message": "The survey is published.",
     "published_user_message": "The survey is published.",
-    "question_answers_deletion_warning": "By editing the question, you will delete all the answers to this question in others surveys.",
+    "question_answers_deletion_warning": "By editing the question, you will delete all the answers to this question in other surveys.",
     "question_creation": "Creating question",
     "question_delete_confirm_message": "Do you really want to delete this question ?",
     "question_delete_confirm_title": "Delete question",

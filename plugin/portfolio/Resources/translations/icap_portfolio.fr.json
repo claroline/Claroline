@@ -1,7 +1,7 @@
 {
     "add_data_widget": "Ajouter %widgetType%",
     "add_portfolio": "Ajouter un portfolio",
-    "adding_portfolio": "Ajout dun portfolio",
+    "adding_portfolio": "Ajout d'un portfolio",
     "check_before_do_import": "Si les données affichées sont correctes vous pouvez",
     "choose_import_portfolio_format": "Choisir le format d'importation",
     "comment_date_format": "dd/MM/yyyy HH:mm:ss",
