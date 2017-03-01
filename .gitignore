@@ -34,6 +34,7 @@ webpack-dlls.json
 webpack-stats.json
 web/bundles/*
 web/css/*
+web/data
 web/dist
 web/js/*
 web/packages
