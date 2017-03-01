@@ -13,8 +13,11 @@ export default class StudyCtrl {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
+    this.initialNbrOfCards = 0
     this.newCards = []
+    this.initialNbrOfNewCards = 0
     this.learningCards = []
+    this.initialNbrOfLearningCards = 0
     // Revised cards during this session
     this.revisedCards = []
     this.sessionId = 0
@@ -36,6 +39,8 @@ export default class StudyCtrl {
     service.findNewCardToLearn(this.deck).then(
       d => {
         this.newCards = d.data
+        this.initialNbrOfNewCards = this.newCards.length
+        this.initialNbrOfCards += this.newCards.length
         if (!this.currentCard) {
           this.chooseCard()
         }
@@ -44,6 +49,8 @@ export default class StudyCtrl {
     service.findCardToLearn(this.deck).then(
       d => {
         this.learningCards = d.data
+        this.initialNbrOfLearningCards = this.learningCards.length
+        this.initialNbrOfCards += this.learningCards.length
         if (!this.currentCard) {
           this.chooseCard()
         }
@@ -124,11 +131,11 @@ export default class StudyCtrl {
     ).then(
       d => {
         this.sessionId = d.data
+        this.revisedCards.push(this.currentCard)
+        this.chooseCard()
       }
     )
-    this.revisedCards.push(this.currentCard)
-    this.answersShown = false
-    this.chooseCard()
+    this.flipCard()
   }
 
   cancelLastStudy() {

@@ -71,15 +71,15 @@
   </div>
 
   <div class="progress learning-progress small"
-       data-ng-if="vm.newCards.length > 0 || vm.learningCards.length > 0">
+       data-ng-if="vm.currentCard">
     <div class="progress-bar"
          role="progessbar"
-         aria-valuenow="{{ vm.revisedCards.length }}"
-         aria-valuemax="{{ vm.revisedCards.length + vm.newCards.length + vm.learningCards.length }}"
-         style="width: {{ vm.revisedCards.length / (vm.revisedCards.length + vm.newCards.length + vm.learningCards.length) * 100 }}%">
-      {{ vm.revisedCards.length }}
+         aria-valuenow="{{ vm.initialNbrOfCards - vm.newCards.length - vm.learningCards.length - 1 }}"
+         aria-valuemax="{{ vm.initialNbrOfCards }}"
+         style="width: {{ (vm.initialNbrOfCards - vm.newCards.length - vm.learningCards.length - 1) / vm.initialNbrOfCards * 100 }}%">
+      {{ vm.initialNbrOfCards - vm.newCards.length - vm.learningCards.length - 1}}
     </div>
-    {{ vm.revisedCards.length + vm.newCards.length + vm.learningCards.length }}
+    {{ vm.newCards.length + vm.learningCards.length + 1}}
   </div>
 
 </div>
