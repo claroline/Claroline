@@ -66,5 +66,9 @@
     "play_pause": "Play / Pause",
     "play_pause_region": "Play / Pause voor de streek",
     "popover_players_active": "De student krijgt toegang tot de hulp op aanvraag",
-    "popover_players_free": "Hulp en streek worden weergegeven zodra het lezen op pauze is. Deze speler kan de teksttranscriptie tonen."
+    "popover_players_free": "Hulp en streek worden weergegeven zodra het lezen op pauze is. Deze speler kan de teksttranscriptie tonen.",
+    "popover_players_live": "De student zal vrij naar het document kunnen luisteren en overal toegang krijgen tot loop & slow hulp.",
+    "popover_players_pause": "De speler zal automatisch voor 2 seconden pauzeren op elke streekgrens.",
+    "popover_players_popover_title": "Speelmodus",
+    "popover_players_scripted": "2=stappen playback. Eerst klikt de student elke keer dat hij een probleem tegenkomt. Dan zal hij toegang krijgen tot de bijbehorende hulp."
 }
