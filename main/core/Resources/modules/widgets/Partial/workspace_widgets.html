@@ -10,9 +10,10 @@
                     class="widget-title"
                     data-ng-class="whc.widgetsOptions['canEdit'] && !widget['visible'] ? 'strike' : ''"
                     data-ng-bind-html="widget['instanceName']"
-                    data-ng-style="{'color': '{{ widget['textTitleColor']' }}"
+                    data-ng-style="{'color': '{{ widget['textTitleColor'] }}'"
                 >
                 </h3>
+
                 <div class="widget-header-buttons" data-ng-if="whc.widgetsOptions['canEdit']">
                     <!-- Edit widget button -->
                     <button
