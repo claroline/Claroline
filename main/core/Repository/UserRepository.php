@@ -1597,11 +1597,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * Returns the users who are members of one of the given workspaces. Users's groups ARE
+     * taken into account.
+     *
      * @param Workspace $workspace
+     * @param bool      $executeQuery
      *
      * @return array
      */
-    public function findByWorkspaceWithUsersFromGroup(Workspace $workspace)
+    public function findByWorkspaceWithUsersFromGroup(Workspace $workspace, $executeQuery = true)
     {
         $dql = '
             SELECT u
@@ -1617,9 +1621,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
          ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('wsId', $workspace->getId());
-        $res = $query->getResult();
 
-        return $res;
+        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findUsersExcludingRoles(array $roles, $offset, $limit)
@@ -1642,5 +1645,25 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setMaxResults($limit);
 
         return $query->getResult();
+    }
+
+    /**
+     * Finds users with a list of IDs.
+     *
+     * @param array $ids
+     *
+     * @return User[]
+     */
+    public function findByIds(array $ids)
+    {
+        return $this->getEntityManager()
+            ->createQuery('
+                SELECT u FROM Claroline\CoreBundle\Entity\User u
+                WHERE u IN (:ids)
+                  AND u.isRemoved = false
+                  AND u.isEnabled = true
+            ')
+            ->setParameter('ids', $ids)
+            ->getResult();
     }
 }

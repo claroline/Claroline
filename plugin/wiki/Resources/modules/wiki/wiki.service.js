@@ -1,3 +1,5 @@
+import angular from 'angular/index'
+
 let _wiki = new WeakMap()
 let _$resource = new WeakMap()
 let _$q = new WeakMap()
@@ -14,7 +16,7 @@ export default class WikiService {
 
     this.displayedSection = null
     this.diff = null
-    this.oldMode = this.mode
+    this.oldWiki = angular.copy(_wiki.get(this))
   }
 
   get activeUserId() { return _wiki.get(this).activeUserId }
@@ -22,6 +24,8 @@ export default class WikiService {
   get title() { return _wiki.get(this).title }
   get mode() { return _wiki.get(this).mode }
   set mode(mode) { _wiki.get(this).mode = mode }
+  get displaySectionNumbers() { return _wiki.get(this).displaySectionNumbers }
+  set displaySectionNumbers(displaySectionNumbers) { _wiki.get(this).displaySectionNumbers = displaySectionNumbers }
   get isLoggedIn() { return _wiki.get(this).isLoggedIn }
   get isAdmin() { return _wiki.get(this).isAdmin }
   get isPDFExportActive() { return _wiki.get(this).isPDFExportActive }
@@ -192,8 +196,8 @@ export default class WikiService {
   }
 
   updateOptions() {
-    // Save old mode
-    this.oldMode = this.mode
+    // Save old options
+    this.oldWiki = angular.copy(_wiki.get(this))
 
     const url = _url.get(this)('icap_wiki_api_patch_wiki', {
       'wiki': this.id
@@ -208,14 +212,14 @@ export default class WikiService {
       () => {},
       () => {
         // revert wiki mode
-        this.revertMode()
+        this.revertOptions()
       }
     )
   }
 
-  revertMode() {
+  revertOptions() {
     // This function is also called by wiki controller
-    this.mode = this.oldMode
+    this.wiki = this.oldWiki
   }
 
   softDeleteSection(sect, withChildren) {

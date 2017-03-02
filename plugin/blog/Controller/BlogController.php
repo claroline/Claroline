@@ -5,17 +5,11 @@ namespace Icap\BlogBundle\Controller;
 use Claroline\CoreBundle\Entity\User;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Post;
-use Icap\BlogBundle\Entity\Statusable;
 use Icap\BlogBundle\Entity\Tag;
-use Icap\BlogBundle\Exception\TooMuchResultException;
-use Icap\BlogBundle\Form\BlogBannerType;
-use Icap\BlogBundle\Form\BlogInfosType;
-use Icap\BlogBundle\Form\BlogOptionsType;
-use Pagerfanta\Adapter\ArrayAdapter;
+use JMS\Serializer\SerializationContext;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Exception\NotValidCurrentPageException;
 use Pagerfanta\Pagerfanta;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -30,13 +24,14 @@ class BlogController extends BaseController
      * @Route("/{blogId}/{page}", name="icap_blog_view", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
      * @Route("/{blogId}/{filter}/{page}", name="icap_blog_view_filter", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @Template()
+     * @Template("@IcapBlog/layout.angular.twig")
      */
-    public function viewAction(Request $request, Blog $blog, $page = 1, $filter = null)
+    public function viewAction(Request $request, Blog $blog, $page, $filter = null)
     {
         $this->checkAccess('OPEN', $blog);
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
+        $userId = is_a($user, 'Claroline\\CoreBundle\\Entity\\User') ? $user->getId() : null;
 
         $search = $request->get('search');
         if (null !== $search && '' !== $search) {
@@ -94,66 +89,20 @@ class BlogController extends BaseController
             throw new NotFoundHttpException();
         }
 
+        $serializer = $this->get('jms_serializer');
+
         return [
             '_resource' => $blog,
             'bannerForm' => $this->getBannerForm($blog->getOptions()),
-            'user' => $user,
+            'user' => $userId,
             'pager' => $pager,
             'tag' => $tag,
             'author' => $author,
             'date' => $date,
-        ];
-    }
-
-    /**
-     * @Route("/{blogId}/search/{search}/{page}", name="icap_blog_view_search", requirements={"blogId" = "\d+", "page" = "\d+"}, defaults={"page" = 1})
-     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @Template()
-     */
-    public function viewSearchAction(Blog $blog, $page, $search)
-    {
-        $this->checkAccess('OPEN', $blog);
-
-        $user = $this->get('security.token_storage')->getToken()->getUser();
-
-        /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
-        $postRepository = $this->get('icap.blog.post_repository');
-
-        try {
-            /** @var \Doctrine\ORM\QueryBuilder $query */
-            $query = $postRepository->searchByBlog($blog, $search, false);
-
-            if (!$this->isUserGranted('EDIT', $blog)) {
-                $query
-                    ->andWhere('post.publicationDate IS NOT NULL')
-                    ->andWhere('post.status = :publishedStatus')
-                    ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
-                ;
-            }
-
-            $adapter = new DoctrineORMAdapter($query);
-            $pager = new PagerFanta($adapter);
-
-            $pager
-                ->setMaxPerPage($blog->getOptions()->getPostPerPage())
-                ->setCurrentPage($page)
-            ;
-        } catch (NotValidCurrentPageException $exception) {
-            throw new NotFoundHttpException();
-        } catch (TooMuchResultException $exception) {
-            $this->get('session')->getFlashBag()->add('error', $this->get('translator')->trans('icap_blog_post_search_too_much_result', [], 'icap_blog'));
-            $adapter = new ArrayAdapter([]);
-            $pager = new PagerFanta($adapter);
-
-            $pager->setCurrentPage($page);
-        }
-
-        return [
-            '_resource' => $blog,
-            'bannerForm' => $this->getBannerForm($blog->getOptions()),
-            'user' => $user,
-            'pager' => $pager,
-            'search' => $search,
+            'orderPanels' => $this->orderPanels($blog),
+            'archiveData' => $this->getArchiveDatas($blog),
+            'options' => $serializer->serialize($blog->getOptions(), 'json'),
+            'posts' => $serializer->serialize($blog->getPosts(), 'json', SerializationContext::create()->setGroups(['blog_list', 'api_user_min'])),
         ];
     }
 
@@ -170,7 +119,7 @@ class BlogController extends BaseController
 
         $posts = $postRepository->findAllPublicByBlog($blog);
 
-        $content = $this->renderView('IcapBlogBundle:Blog:view.pdf.twig',
+        $content = $this->renderView('IcapBlogBundle::view.pdf.twig',
             [
                 '_resource' => $blog,
                 'posts' => $posts,
@@ -194,143 +143,6 @@ class BlogController extends BaseController
                 'Content-Disposition' => 'inline; filename="'.$blog->getResourceNode()->getName(),
             ]
         );
-    }
-
-    /**
-     * @Route("/configure/{blogId}", name="icap_blog_configure", requirements={"blogId" = "\d+"})
-     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @Template()
-     */
-    public function configureAction(Request $request, Blog $blog, User $user)
-    {
-        $this->checkAccess('ADMINISTRATE', $blog);
-
-        $blogOptions = $blog->getOptions();
-
-        $form = $this->createForm(new BlogOptionsType(), $blogOptions);
-
-        if ('POST' === $request->getMethod()) {
-            $form->submit($request);
-            if ($form->isValid()) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $translator = $this->get('translator');
-                $flashBag = $this->get('session')->getFlashBag();
-
-                try {
-                    $unitOfWork = $entityManager->getUnitOfWork();
-                    $unitOfWork->computeChangeSets();
-                    $changeSet = $unitOfWork->getEntityChangeSet($blogOptions);
-
-                    $entityManager->persist($blogOptions);
-                    $entityManager->flush();
-
-                    $this->dispatchBlogConfigureEvent($blogOptions, $changeSet);
-
-                    $flashBag->add('success', $translator->trans('icap_blog_post_configure_success', [], 'icap_blog'));
-                } catch (\Exception $exception) {
-                    $flashBag->add('error', $translator->trans('icap_blog_post_configure_error', [], 'icap_blog'));
-                }
-
-                return $this->redirect($this->generateUrl('icap_blog_configure', ['blogId' => $blog->getId()]));
-            }
-        }
-
-        return [
-            '_resource' => $blog,
-            'bannerForm' => $this->getBannerForm($blog->getOptions()),
-            'form' => $form->createView(),
-            'user' => $user,
-        ];
-    }
-
-    /**
-     * @Route("/banner/{blogId}", name="icap_blog_configure_banner", requirements={"blogId" = "\d+"})
-     * @Method({"POST"})
-     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @Template()
-     */
-    public function configureBannerAction(Request $request, Blog $blog)
-    {
-        $this->checkAccess('ADMINISTRATE', $blog);
-
-        $blogOptions = $blog->getOptions();
-
-        $form = $this->createForm(new BlogBannerType(), $blogOptions);
-
-        $form->submit($request);
-        if ($form->isValid()) {
-            $this->container->get('icap_blog.manager.blog')->updateBanner(
-                $form->get('file')->getData(),
-                $blogOptions
-            );
-            $entityManager = $this->getDoctrine()->getManager();
-            $translator = $this->get('translator');
-            $flashBag = $this->get('session')->getFlashBag();
-
-            try {
-                $unitOfWork = $entityManager->getUnitOfWork();
-                $unitOfWork->computeChangeSets();
-                $changeSet = $unitOfWork->getEntityChangeSet($blogOptions);
-
-                $entityManager->persist($blogOptions);
-                $entityManager->flush();
-
-                $this->dispatchBlogConfigureBannerEvent($blogOptions, $changeSet);
-
-                $flashBag->add('success', $translator->trans('icap_blog_post_configure_banner_success', [], 'icap_blog'));
-            } catch (\Exception $exception) {
-                $flashBag->add('error', $translator->trans('icap_blog_post_configure_banner_error', [], 'icap_blog'));
-            }
-        }
-
-        return $this->redirect($this->generateUrl('icap_blog_view', ['blogId' => $blog->getId()]));
-    }
-
-    /**
-     * @Route("/edit/{blogId}", name="icap_blog_edit_infos", requirements={"blogId" = "\d+"})
-     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @Template()
-     */
-    public function editAction(Request $request, Blog $blog, User $user)
-    {
-        $this->checkAccess('ADMINISTRATE', $blog);
-
-        $form = $this->createForm(new BlogInfosType(), $blog);
-
-        if ('POST' === $request->getMethod()) {
-            $form->submit($request);
-            if ($form->isValid()) {
-                $entityManager = $this->getDoctrine()->getManager();
-                $translator = $this->get('translator');
-                $flashBag = $this->get('session')->getFlashBag();
-
-                try {
-                    $unitOfWork = $entityManager->getUnitOfWork();
-                    $unitOfWork->computeChangeSets();
-                    $changeSet = $unitOfWork->getEntityChangeSet($blog);
-
-                    $entityManager->persist($blog);
-                    $entityManager->flush();
-
-                    $this->dispatchBlogUpdateEvent($blog, $changeSet);
-
-                    $flashBag->add('success', $translator->trans('icap_blog_edit_infos_success', [], 'icap_blog'));
-                } catch (\Exception $exception) {
-                    $flashBag->add('error', $translator->trans('icap_blog_edit_infos_error', [], 'icap_blog'));
-                }
-
-                return $this->redirect($this->generateUrl('icap_blog_view', ['blogId' => $blog->getId()]));
-            }
-        }
-
-        return [
-            '_resource' => $blog,
-            'bannerForm' => $this->getBannerForm($blog->getOptions()),
-            'form' => $form->createView(),
-            'user' => $user,
-        ];
     }
 
     /**
@@ -363,13 +175,13 @@ class BlogController extends BaseController
             ];
         }
 
-        return new Response($this->renderView('IcapBlogBundle:Blog:rss.html.twig', [
-                'feed' => $feed,
-                'items' => $items,
-            ]), 200, [
-                'Content-Type' => 'application/rss+xml',
-                'charset' => 'utf-8',
-            ]);
+        return new Response($this->renderView('IcapBlogBundle::rss.html.twig', [
+            'feed' => $feed,
+            'items' => $items,
+        ]), 200, [
+            'Content-Type' => 'application/rss+xml',
+            'charset' => 'utf-8',
+        ]);
     }
 
     /**
@@ -391,17 +203,13 @@ class BlogController extends BaseController
 
         foreach ($posts as $post) {
             $publicationDate = $post->getPublicationDate()->format('Y-m-d');
-            $publicationDateForSort = $post->getPublicationDate()->format('d-m-Y');
 
             if (!isset($calendarDatasTemp[$publicationDate])) {
                 $calendarDatasTemp[$publicationDate] = [
                     'id' => '12',
                     'start' => $publicationDate,
                     'title' => '1',
-                    'url' => $this->generateUrl(
-                        'icap_blog_view_filter',
-                        ['blogId' => $blog->getId(), 'filter' => $publicationDateForSort]
-                    ),
+                    'angularParams' => $post->getPublicationDate()->format('Y/m/d'),
                 ];
             } else {
                 $title = intval($calendarDatasTemp[$publicationDate]['title']);

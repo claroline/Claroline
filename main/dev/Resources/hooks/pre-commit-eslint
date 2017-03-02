@@ -4,7 +4,6 @@
 /**
  * This pre-commit hook checks for ESLint errors.
  */
-
 $moduleBinDir = __DIR__.'/../../../../../../../node_modules/.bin';
 $eslint = realpath("{$moduleBinDir}/eslint");
 
@@ -15,17 +14,21 @@ if (!$eslint) {
 
 // collect all files which have been added, copied or
 // modified and store them in an array called output
-exec('git diff --cached --name-status --diff-filter=ACM', $files);
+exec('git diff --cached --name-status --diff-filter=ACM', $output);
 
-foreach ($files as $file) {
-    $fileName = trim(substr($file, 1));
+// filter js(x) files
+$files = array_filter($output, function ($line) {
+    $file = trim(substr($line, 1));
 
-    if (preg_match('#Resources/modules/.+\.js$#', $fileName)) {
-        exec("{$eslint} {$fileName}", $output, $code);
+    return preg_match('#Resources/modules/.+\.jsx?$#', $file);
+});
 
-        if ($code !== 0) {
-            echo implode("\n", $output)."\n";
-            exit(1);
-        }
-    }
+$fileString = implode($files, ' ');
+
+// exec eslint
+exec("{$eslint} {$fileString}", $output, $code);
+
+if ($code !== 0) {
+    echo implode("\n", $output)."\n";
+    exit(1);
 }

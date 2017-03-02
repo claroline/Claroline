@@ -1,0 +1,228 @@
+.grid-editor {
+
+  .small-input {
+    max-width: 60px;
+    width: 60px;
+    margin: 0 auto;
+  }
+
+  .picker-container {
+    margin-left: 5px;
+  }
+
+  .table-options {
+    background: #eee;
+    padding: 5px;
+    margin-bottom: @panel-body-padding;
+  }
+
+  .form-inline .control-label {
+    padding: 0 5px;
+  }
+
+  .grid-body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    .grid-table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      width: 100%;
+    }
+
+    .grid-table td {
+      display: table-cell;
+      vertical-align: top;
+    }
+
+    .grid-table td:last-child {
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .grid-table tr:last-child {
+      text-align: center;
+    }
+  }
+
+  .grid-cell {
+    width: 100%;
+    .cell-header {
+      background: #eee;
+      padding: 5px;
+      display: flex;
+      justify-content: flex-end;
+      border-bottom: 1px solid #aaa;
+      align-items: center;
+    }
+
+    .cell-body {
+      padding: 5px;
+      text-align: center;
+    }
+
+    .dropdown-menu {
+      left: 50%;
+      transform: translateX(-50%);
+    }
+  }
+
+  textarea {
+    resize: none;
+  }
+}
+
+/* POPOVER IS OUTSIDE EDITOR CONTAINER */
+.grid-editor-popover {
+  max-width: 600px;
+  .popover-title {
+    display: block;
+    height: 30px;
+    &:after {
+      clear: both;
+      content: ".";
+      display: inline-block;
+      height: 0;
+      visibility: hidden;
+    }
+    .pull-right {
+      margin-top: -5px;
+    }
+  }
+
+  .popover-body {
+    padding: 5px;
+    .keywords {
+      margin-bottom: 5px;
+    }
+
+    .keyword {
+      padding: 5px;
+    }
+
+    .keyword-text {
+      margin-right: 5px;
+    }
+
+    .text-fields {
+      display: flex;
+      flex-grow: 1;
+    }
+
+    .score {
+      width: 60px;
+      margin-left: 5px;
+    }
+
+    .feedback-container {
+      margin-top: 5px;
+    }
+
+    .positive-score {
+      background-color: #d4ffb0;
+      border: 1px solid #d6e9c6;
+    }
+
+    .negative-score {
+      background-color: #f9e2e2;
+      border: 1px solid #ebccd1;
+    }
+
+    .error-text {
+      color: #b94a48;
+      margin: 5px auto 10px auto;
+    }
+
+    .warning-text {
+      color: #c09853;
+    }
+
+    .help-block .fa,
+    .error-text .fa,
+    .btn .fa,
+    .sub-section a[role="button"] .fa {
+      margin-right: 7px;
+    }
+  }
+
+}
+
+.grid-player {
+
+  .grid-body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    .grid-table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      width: 100%;
+    }
+
+    .grid-table td {
+      display: table-cell;
+      vertical-align: middle;
+    }
+  }
+
+  .grid-cell {
+    width: 100%;
+    .cell-body {
+      padding: 5px;
+    }
+  }
+}
+
+
+.grid-paper {
+
+  .cell-header {
+    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .additional-infos {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+    }
+  }
+
+  .item-score {
+    margin-left: 5px;
+  }
+
+  .cell-header-expected {
+    padding: 5px;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+
+  .grid-body {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+
+    .grid-table {
+      border-collapse: collapse;
+      border-spacing: 0;
+      width: 100%;
+    }
+
+    .grid-table td {
+      display: table-cell;
+      vertical-align: middle;
+      min-width: 100px;
+    }
+  }
+
+  .grid-cell {
+    width: 100%;
+    .cell-body {
+      padding: 5px;
+    }
+  }
+}

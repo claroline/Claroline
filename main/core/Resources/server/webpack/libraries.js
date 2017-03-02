@@ -32,7 +32,5 @@ module.exports = {
     'at-table/dist/angular-table',
     'angular-dragula'
   ],
-  'es6_shim_dll': [
-    'core-js/shim'
-  ]
+  'es6_dll': ['core-js', 'whatwg-fetch']
 }

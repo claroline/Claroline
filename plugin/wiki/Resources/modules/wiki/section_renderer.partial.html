@@ -9,58 +9,67 @@
         {{ section.activeContribution.title }}
     </dynamic-header>
 
-    <small
-        data-ng-if="vm.wiki.isLoggedIn && (vm.wiki.isAdmin || vm.wiki.mode !== 2)"
-        class="wiki-actions">
+    <small>
         <span
-            data-ng-if="vm.wiki.isAdmin && !section.visible"
-            class="invisible-section-text">
-            ({{ 'invisible'|trans:{}:'icap_wiki' }})
-        </span>
-        <span
-                data-ng-if="!vm.wiki.isAdmin && !section.visible"
+            data-ng-if="vm.wiki.isLoggedIn && (vm.wiki.isAdmin || vm.wiki.mode !== 2)"
+            class="wiki-actions">
+            <span
+                data-ng-if="vm.wiki.isAdmin && !section.visible"
                 class="invisible-section-text">
-            ({{ 'waiting_for_moderation'|trans:{}:'icap_wiki' }})
-        </span>
-        [
-        <button
-            data-ng-click="vm.addSection(section)"
-            class="new-section link-style"
-            data-ng-disabled="vm.isFormOpen">
-            {{ 'add_new_subsection'|trans:{}:'icap_wiki' }}
-        </button>
-        |
-        <button
-            data-ng-click="vm.editSection(section)"
-            class="edit-section link-style"
-            data-ng-disabled="vm.isFormOpen">
-            {{ 'edit'|trans:{}:'icap_wiki' }}
-        </button>
-        |
-        <button
-                data-ng-click="vm.displaySection(section)"
-                class="history-section link-style"
+                ({{ 'invisible'|trans:{}:'icap_wiki' }})
+            </span>
+            <span
+                    data-ng-if="!vm.wiki.isAdmin && !section.visible"
+                    class="invisible-section-text">
+                ({{ 'waiting_for_moderation'|trans:{}:'icap_wiki' }})
+            </span>
+            [
+            <button
+                data-ng-click="vm.addSection(section)"
+                class="new-section link-style"
                 data-ng-disabled="vm.isFormOpen">
-            {{ 'history'|trans:{}:'icap_wiki' }}
-        </button>
-        <span data-ng-if="vm.wiki.isLoggedIn && vm.wiki.isAdmin">
+                {{ 'add_new_subsection'|trans:{}:'icap_wiki' }}
+            </button>
             |
             <button
-                    data-ng-if="section.visible"
-                    data-ng-click="vm.toggleVisibility(section)"
-                    class="history-section link-style"
-                    data-ng-disabled="vm.isToggling">
-                {{ 'Rendre invisible'|trans:{}:'icap_wiki' }}
+                data-ng-click="vm.editSection(section)"
+                class="edit-section link-style"
+                data-ng-disabled="vm.isFormOpen">
+                {{ 'edit'|trans:{}:'icap_wiki' }}
             </button>
+            |
             <button
-                    data-ng-if="!section.visible"
-                    data-ng-click="vm.toggleVisibility(section)"
+                    data-ng-click="vm.displaySection(section)"
                     class="history-section link-style"
-                    data-ng-disabled="vm.isToggling">
-                {{ 'Rendre visible'|trans:{}:'icap_wiki' }}
+                    data-ng-disabled="vm.isFormOpen">
+                {{ 'history'|trans:{}:'icap_wiki' }}
             </button>
-            </span>
-        ]
+            <span data-ng-if="vm.wiki.isLoggedIn && vm.wiki.isAdmin">
+                |
+                <button
+                        data-ng-if="section.visible"
+                        data-ng-click="vm.toggleVisibility(section)"
+                        class="history-section link-style"
+                        data-ng-disabled="vm.isToggling">
+                    {{ 'Rendre invisible'|trans:{}:'icap_wiki' }}
+                </button>
+                <button
+                        data-ng-if="!section.visible"
+                        data-ng-click="vm.toggleVisibility(section)"
+                        class="history-section link-style"
+                        data-ng-disabled="vm.isToggling">
+                    {{ 'Rendre visible'|trans:{}:'icap_wiki' }}
+                </button>
+                </span>
+            ]
+        </span>
+        <button
+            class="history-section link-style back-to-top"
+            data-ng-click="vm.backToTop()"
+            uib-tooltip="{{ 'back_to_top' | trans:{}:'icap_wiki' }}"
+            tooltip-placement="top-right">
+            <i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i>
+        </button>
     </small>
 </div>
 
@@ -215,12 +224,12 @@
     </div>
 </div>
 
-<ul >
+<ol class="wiki-sections-list-elem">
     <li
         data-section
         data-ng-repeat="section in section.__children"
         data-ng-if="!section.isStale"
         data-ng-include="'section_renderer.html'"
-        data-ng-class="{'invisible-wiki-section': !section.visible}">
+        data-ng-class="{'invisible-wiki-section': !section.visible, 'with-numbers': vm.wiki.displaySectionNumbers}">
     </li>
-</ul>
+</ol>

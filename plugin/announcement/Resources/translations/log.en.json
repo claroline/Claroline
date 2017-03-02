@@ -1,0 +1,14 @@
+{
+    "log_resource-claroline_announcement_aggregate-create_filter": "Create announcement",
+    "log_resource-claroline_announcement_aggregate-create_sentence": "has created an announcement in %resource%",
+    "log_resource-claroline_announcement_aggregate-create_shortname": "Create",
+    "log_resource-claroline_announcement_aggregate-create_title": "Create announcement",
+    "log_resource-claroline_announcement_aggregate-delete_filter": "Delete announcement",
+    "log_resource-claroline_announcement_aggregate-delete_sentence": "has deleted an announcement in %resource%",
+    "log_resource-claroline_announcement_aggregate-delete_shortname": "Delete",
+    "log_resource-claroline_announcement_aggregate-delete_title": "Delete announcement",
+    "log_resource-claroline_announcement_aggregate-edit_filter": "Edit announcement",
+    "log_resource-claroline_announcement_aggregate-edit_sentence": "has edited an announcement in %resource%",
+    "log_resource-claroline_announcement_aggregate-edit_shortname": "Edit",
+    "log_resource-claroline_announcement_aggregate-edit_title": "Edit announcement"
+}

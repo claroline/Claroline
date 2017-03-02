@@ -1,0 +1,10 @@
+{
+    "resource-icap_blog-comment-user_tagged": "has mentioned you in the post \"%post%\" of the blog \"%blog%\"",
+    "resource-icap_blog-comment_create": "has created a comment in the post \"%post%\" of the blog \"%blog%\"",
+    "resource-icap_blog-comment_publish": "has published a comment in the post \"%post%\" of the blog \"%blog%\"",
+    "resource-icap_blog-comment_update": "has updated a comment in the post \"%post%\" of the blog \"%blog%\"",
+    "resource-icap_blog-post-user_tagged": "has mentioned you in a comment about the post \"%post%\" of the blog \"%blog%\"",
+    "resource-icap_blog-post_create": "has created the post \"%post%\" in the blog \"%blog%\"",
+    "resource-icap_blog-post_publish": "has published the post \"%post%\" in the blog \"%blog%\"",
+    "resource-icap_blog-post_update": "has updated the post \"%post%\" in the blog \"%blog%\""
+}

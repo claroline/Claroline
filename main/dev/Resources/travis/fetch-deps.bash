@@ -80,9 +80,11 @@ fetch() {
 
 fetch composer $COMPOSER_SUM "composer update --prefer-dist" vendor
 
+# we don't want the sources present in the cache
 echo "Overriding distribution package with local build/repo..."
 rm -rf vendor/claroline/distribution
 cp -r $DIST vendor/claroline/distribution
+
 # this is normally done in the post-update-cmd script
 echo "Building app/config/bundles.ini..."
 composer bundles

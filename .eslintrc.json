@@ -4,7 +4,10 @@
     "es6": true,
     "mocha": true
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended"
+  ],
   "parserOptions": {
     "sourceType": "module",
     "ecmaFeatures": {
@@ -16,6 +19,10 @@
     "linebreak-style": [2, "unix"],
     "quotes": [2, "single"],
     "semi": [2, "never"],
-    "space-before-function-paren": ["error", "never"]
-  }
+    "space-before-function-paren": ["error", {
+      "anonymous": "always",
+      "named": "never"
+    }]
+  },
+  "plugins": ["react"]
 }

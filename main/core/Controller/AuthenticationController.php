@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -38,6 +39,8 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Authentication/login controller.
+ *
+ * @DI\Tag("security.secure_service")
  */
 class AuthenticationController
 {
@@ -362,6 +365,26 @@ class AuthenticationController
         return $format === 'json' ?
             new JsonResponse($content, $status) :
             new XmlResponse($content, $status);
+    }
+
+    /**
+     * Returns a page communicating a hash through a js custom event to its parent
+     * window. As the route is behind the firewall, this controller will act like
+     * an authentication trigger, returning the page with the hash event only if
+     * the authentication succeeded.
+     *
+     * @Route(
+     *     "/trigger-auth/{hash}",
+     *     name="trigger_auth",
+     *     options={"expose"=true}
+     * )
+     * @Method("GET")
+     * @SEC\PreAuthorize("hasRole('ROLE_USER')")
+     * @Template("ClarolineCoreBundle:Authentication:authenticated.html.twig")
+     */
+    public function triggerAuthenticationAction($hash)
+    {
+        return ['hash' => $hash];
     }
 
     //not routed...

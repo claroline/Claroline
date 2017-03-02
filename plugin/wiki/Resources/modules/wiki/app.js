@@ -30,7 +30,7 @@ import contributionController from './contribution.controller'
 import diffTemplate from './diff.partial.html'
 import diffController from './diff.controller'
 
-angular.element(document).ready(function() {
+angular.element(document).ready(function () {
   angular.bootstrap(angular.element(document).find('body')[0], ['WikiModule'], {
     strictDi: true
   })
@@ -120,7 +120,7 @@ angular
   }))
   .directive('flattenedTreeOptions', ['WikiService', (wikiService) => {
 
-    let recur = function(tree, flattenedTree = [] , loop = '') {
+    let recur = function (tree, flattenedTree = [] , loop = '') {
       let treeLength = tree.length
 
       for (let i = 0; i < treeLength; i++) {

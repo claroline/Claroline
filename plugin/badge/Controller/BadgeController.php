@@ -4,15 +4,15 @@ namespace Icap\BadgeBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Icap\BadgeBundle\Manager\BadgeManager;
 use Claroline\CoreBundle\Rule\Validator;
-use Icap\BadgeBundle\Entity\Badge;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Icap\BadgeBundle\Entity\Badge;
+use Icap\BadgeBundle\Manager\BadgeManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,7 +31,7 @@ class BadgeController extends Controller
             false
         );
 
-        if ($inWorkspace = isset($parameters['workspace']) && null !== $parameters['workspace']) {
+        if (isset($parameters['workspace']) && null !== $parameters['workspace']) {
             $badgeQueryBuilder
                 ->andWhere('badge.workspace = :workspace')
                 ->setParameter('workspace', $parameters['workspace']);
@@ -46,7 +46,9 @@ class BadgeController extends Controller
         $badgeClaimRepository = $this->getDoctrine()->getRepository('IcapBadgeBundle:BadgeClaim');
         $badgeClaimQuery = $badgeClaimRepository->findByWorkspace($badgeClaimsWorkspace, false);
 
-        $userQuery = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findUsersByWorkspace($badgeClaimsWorkspace, false);
+        $userQuery = $badgeClaimsWorkspace ?
+            $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findByWorkspaceWithUsersFromGroup($badgeClaimsWorkspace, false) :
+            $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findAll(false);
 
         /** @var \Claroline\CoreBundle\Pager\PagerFactory $pagerFactory */
         $pagerFactory = $this->get('claroline.pager.pager_factory');
@@ -61,14 +63,14 @@ class BadgeController extends Controller
 
         return $this->render(
             'IcapBadgeBundle::Template/list.html.twig',
-            array(
+            [
                 'badgePager' => $badgePager,
                 'claimPager' => $claimPager,
                 'userPager' => $userPager,
                 'parameters' => $parameters,
                 'badges' => $badges,
                 'badgeRuleChecker' => $this->get('claroline.rule.validator'),
-            )
+            ]
         );
     }
 
@@ -89,27 +91,27 @@ class BadgeController extends Controller
         /** @var \Icap\BadgeBundle\Manager\BadgeManager $badgeManager */
         $badgeManager = $this->get('icap_badge.manager.badge');
 
-        $parameters = array(
+        $parameters = [
             'locale' => $platformConfigHandler->getParameter('locale_language'),
             'mode' => $requestParameters->get('mode', BadgeManager::BADGE_PICKER_DEFAULT_MODE),
             'user' => $user,
             'workspace' => $requestParameters->get('workspace', null),
-            'blacklist' => $requestParameters->get('blacklist', array()),
-        );
+            'blacklist' => $requestParameters->get('blacklist', []),
+        ];
 
         $badges = $badgeManager->getForBadgePicker($parameters);
 
-        $value = $requestParameters->get('value', array());
+        $value = $requestParameters->get('value', []);
 
         if (!is_array($value)) {
-            $value = array($value);
+            $value = [$value];
         }
 
-        return array(
+        return [
             'badges' => $badges,
             'multiple' => $requestParameters->get('multiple', true),
             'value' => $value,
-        );
+        ];
     }
 
     /**
@@ -134,10 +136,10 @@ class BadgeController extends Controller
             $showBanner = ($this->getUser() === $userBadge->getUser());
         }
 
-        return array(
+        return [
             'userBadge' => $userBadge,
             'user' => $userBadge->getUser(),
             'showBanner' => $showBanner,
-        );
+        ];
     }
 }

@@ -10,15 +10,14 @@
 
 namespace Claroline\WebResourceBundle\Transfer;
 
+use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Claroline\CoreBundle\Entity\Resource\File;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 /**
  * @DI\Service("claroline.tool.resources.web_resource")
@@ -62,7 +61,7 @@ class WebResourceImporter extends Importer implements ConfigurationInterface
                                             function ($v) use ($rootPath) {
                                                 return call_user_func_array(
                                                     __CLASS__.'::fileNotExists',
-                                                    array($v, $rootPath)
+                                                    [$v, $rootPath]
                                                 );
                                             }
                                         )
@@ -78,7 +77,7 @@ class WebResourceImporter extends Importer implements ConfigurationInterface
 
     public function supports($type)
     {
-        return $type == 'yml' ? true : false;
+        return $type === 'yml' ? true : false;
     }
 
     public function validate(array $data)
@@ -102,18 +101,18 @@ class WebResourceImporter extends Importer implements ConfigurationInterface
         );
     }
 
-    public function export(Workspace $workspace, array &$_files, $object)
+    public function export($workspace, array &$_files, $object)
     {
         $hash = $object->getHashName();
         $uid = uniqid().'.'.pathinfo($hash, PATHINFO_EXTENSION);
         $_files[$uid] = $this->container
             ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$hash;
-        $data = array();
+        $data = [];
 
         if (file_exists($_files[$uid])) {
-            $data = array(array('file' => array(
+            $data = [['file' => [
                 'path' => $uid,
-            )));
+            ]]];
         }
 
         return $data;

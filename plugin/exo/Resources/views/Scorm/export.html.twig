@@ -6,15 +6,10 @@
 {% endblock %}
 
 {% block content %}
-    {# Initialize AngularJS application #}
-    <div class="panel panel-default">
-        <div data-ng-app="ExerciseApp" data-ng-cloak="">
-            <exercise
-                    data-exercise="{{ exercise | json_encode | raw | escape }}"
-                    data-edit-enabled="false"
-                    data-offline="true">
-            </exercise>
-        </div>
+    <div
+        class="quiz-container"
+        data-quiz="{{ exercise | json_encode | raw | escape }}"
+    >
     </div>
 {% endblock %}
 
@@ -33,8 +28,8 @@
     <script src="../translations/platform.js"></script>
     <script src="../translations/error.js"></script>
     <script src="../translations/validators.js"></script>
-    <script src="../translations/ujm_sequence.js"></script>
     <script src="../translations/ujm_exo.js"></script>
+    <script src="../translations/question_types.js"></script>
 
     <script src="../assets/jsPlumb-2.1.3-min.js"></script>
     <script src="../assets/claroline-distribution-plugin-exo-app.js"></script>

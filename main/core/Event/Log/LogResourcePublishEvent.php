@@ -17,6 +17,8 @@ class LogResourcePublishEvent extends LogGenericEvent implements NotifiableInter
 {
     const ACTION = 'resource-publish';
 
+    use ResourceNotifiableTrait;
+
     /**
      * Constructor.
      */
@@ -131,17 +133,5 @@ class LogResourcePublishEvent extends LogGenericEvent implements NotifiableInter
         $notificationDetails = array_merge($this->details, []);
 
         return $notificationDetails;
-    }
-
-    /**
-     * Get if event is allowed to create notification or not.
-     *
-     * @return bool
-     */
-    public function isAllowedToNotify()
-    {
-        if ($this->node->isPublished()) {
-            return true;
-        }
     }
 }

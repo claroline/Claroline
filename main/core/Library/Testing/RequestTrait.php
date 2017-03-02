@@ -7,7 +7,7 @@ use Symfony\Component\BrowserKit\Client;
 
 trait RequestTrait
 {
-    public function request($method, $uri, User $user = null, array $parameters = [])
+    public function request($method, $uri, User $user = null, array $parameters = [], $content = null)
     {
         if (!$this->client instanceof Client) {
             throw new \Exception(
@@ -23,6 +23,6 @@ trait RequestTrait
             ] :
             [];
 
-        return $this->client->request($method, $uri, $parameters, [], $server);
+        return $this->client->request($method, $uri, $parameters, [], $server, $content);
     }
 }

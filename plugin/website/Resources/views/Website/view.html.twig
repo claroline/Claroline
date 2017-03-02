@@ -84,6 +84,13 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script src="{{ hotAsset('dist/es6_dll.js') }}"></script>
+    <script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
+    <script>
+        if (window.sessionStorage.getItem('hide_brower_warning')) {
+            $('.outdated-browser-warning').hide();
+        }
+    </script>
     {% if app.environment == 'prod' %}
         <script src="{{ hotAsset('dist/commons.js') }}"></script>
     {% endif %}

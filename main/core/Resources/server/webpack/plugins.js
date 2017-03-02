@@ -1,6 +1,7 @@
 const webpack = require('webpack')
 const AssetsPlugin = require('assets-webpack-plugin')
 const FailPlugin = require('webpack-fail-plugin')
+const CircularDependencyPlugin = require('circular-dependency-plugin')
 const paths = require('./paths')
 const ConfigurationPlugin = require('./build/configuration/plugin')
 
@@ -142,6 +143,40 @@ const clarolineConfiguration = () => {
   return new ConfigurationPlugin()
 }
 
+/**
+ * Detects circular dependencies in modules and issues warnings or errors.
+ * Circular dependencies can be a source of mysterious bugs:
+ *
+ * @see http://stackoverflow.com/questions/35240716/webpack-import-returns-undefined-depending-on-the-order-of-imports
+ */
+const noCircularDependencies = () => {
+  return new CircularDependencyPlugin({
+    exclude: /web\/packages|node_modules/,
+    failOnError: false // default: only warnings
+  })
+}
+
+/**
+ * Makes the build crash in case of babel compilation errors. That
+ * behaviour is pretty much needed when testing with karma.
+ *
+ * @see https://github.com/webpack/karma-webpack/issues/49
+ */
+const rethrowCompilationErrors = () => {
+  return function () {
+    this.plugin('done', stats => {
+      if (stats.compilation.errors.length > 0) {
+        if (stats.compilation.errors[0].name === 'ModuleBuildError') {
+          // assume it's a babel syntax error and rethrow it
+          throw stats.compilation.errors[0].error.error
+        }
+
+        throw new Error(stats.compilation.errors[0].message)
+      }
+    })
+  }
+}
+
 module.exports = {
   bowerFileLookup,
   distributionShortcut,
@@ -151,6 +186,8 @@ module.exports = {
   defineProdEnv,
   rejectBuildErrors,
   exitWithErrorCode,
+  noCircularDependencies,
+  rethrowCompilationErrors,
   dllReferences,
   dlls,
   configShortcut,

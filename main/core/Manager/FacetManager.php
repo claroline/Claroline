@@ -472,7 +472,7 @@ class FacetManager
 
     public function getFieldFacets()
     {
-        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findPlatformFieldFacets();
     }
 
     /**

@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/21/15
  */
 
@@ -28,26 +28,34 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
      * @param Post    $post
      * @param Comment $comment
      */
-    public function __construct(Post $post, Comment $comment)
+    public function __construct(Post $post, Comment $comment, $translator = null)
     {
         $this->blog = $post->getBlog();
         $this->comment = $comment;
         $this->post = $post;
 
-        $this->details = array(
-            'post' => array(
+        $author = $comment->getAuthor()
+            ? $comment->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName()
+            : $translator->trans('anonymous', [], 'platform');
+
+        $authorId = $comment->getAuthor()
+            ? $comment->getAuthor()->getId()
+            : null;
+
+        $this->details = [
+            'post' => [
                 'blog' => $this->blog->getId(),
                 'title' => $post->getTitle(),
                 'slug' => $post->getSlug(),
-            ),
-            'comment' => array(
+            ],
+            'comment' => [
                 'id' => $comment->getId(),
                 'content' => $comment->getMessage(),
                 'published' => $comment->isPublished(),
-                'author' => $comment->getAuthor()->getFirstName().' '.$post->getAuthor()->getLastName(),
-                'authorId' => $comment->getAuthor()->getId(),
-            ),
-        );
+                'author' => $author,
+                'authorId' => $authorId,
+            ],
+        ];
 
         parent::__construct($this->blog->getResourceNode(), $this->details);
     }
@@ -57,7 +65,7 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE);
+        return [self::DISPLAYED_WORKSPACE];
     }
 
     /**
@@ -79,7 +87,7 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
      */
     public function getIncludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -89,7 +97,7 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -119,12 +127,12 @@ class LogCommentPublishEvent extends AbstractLogResourceEvent implements Notifia
      */
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
-        $notificationDetails['resource'] = array(
+        $notificationDetails = array_merge($this->details, []);
+        $notificationDetails['resource'] = [
             'id' => $this->blog->getId(),
             'name' => $this->resource->getName(),
             'type' => $this->resource->getResourceType()->getName(),
-        );
+        ];
 
         return $notificationDetails;
     }

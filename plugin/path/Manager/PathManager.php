@@ -282,7 +282,7 @@ class PathManager
         return $this;
     }
 
-    public function export(Workspace $workspace, array &$files, Path $path)
+    public function export($workspace, array &$files, Path $path)
     {
         $data = [];
 

@@ -2,12 +2,11 @@
 
 namespace Innova\CollecticielBundle\Transfer;
 
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Symfony\Component\Config\Definition\Processor;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class CollecticielImporter extends Importer implements ConfigurationInterface, RichTextInterface
@@ -80,7 +79,7 @@ class CollecticielImporter extends Importer implements ConfigurationInterface, R
         return $this->container->get('innova.manager.collecticiel_manager')->import($data, $created, $this->getRootPath());
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export($workspace, array &$files, $object)
     {
         return $this->container->get('innova.manager.collecticiel_manager')->export($workspace, $files, $object);
     }

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Transfert;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
@@ -28,6 +29,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
  */
 class RichTextFormatter
 {
+    use LoggableTrait;
+
     //placeholder = [[uid=123]]
     const REGEX_PLACEHOLDER = '#\[\[uid=([^\]]+)\]\]#';
 
@@ -183,7 +186,10 @@ class RichTextFormatter
                             'name' => 'ROLE_USER',
                             'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('file')),
                         ]]];
-                        $_data['data']['items'][] = $el;
+
+                        if (!$this->getItemFromUid($el['item']['uid'], $_data)) {
+                            $_data['data']['items'][] = $el;
+                        }
                     }
                 }
 

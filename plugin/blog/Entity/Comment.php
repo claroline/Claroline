@@ -3,15 +3,19 @@
 namespace Icap\BlogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\User;
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Icap\NotificationBundle\Entity\UserPickerContent;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Table(name="icap__blog_comment")
  * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\CommentRepository")
  * @ORM\EntityListeners({"Icap\BlogBundle\Listener\CommentListener"})
  * @ORM\HasLifecycleCallbacks()
+ * @ExclusionPolicy("all")
  */
 class Comment extends Statusable
 {
@@ -21,6 +25,8 @@ class Comment extends Statusable
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Expose
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $id;
 
@@ -28,6 +34,8 @@ class Comment extends Statusable
      * @var string
      *
      * @ORM\Column(type="text")
+     * @Expose
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $message;
 
@@ -36,6 +44,8 @@ class Comment extends Statusable
      *
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime", name="creation_date")
+     * @Expose
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $creationDate;
 
@@ -44,6 +54,8 @@ class Comment extends Statusable
      *
      * @ORM\Column(type="datetime", name="publication_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="status", value="1")
+     * @Expose
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $publicationDate;
 
@@ -52,6 +64,8 @@ class Comment extends Statusable
      *
      * @ORM\Column(type="datetime", name="update_date", nullable=true)
      * @Gedmo\Timestampable(on="change", field="message")
+     * @Expose
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $updateDate;
 
@@ -60,6 +74,8 @@ class Comment extends Statusable
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Expose
+     * @Groups({"blog_list", "blog_post"})
      */
     protected $author;
 

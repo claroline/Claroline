@@ -1,0 +1,12 @@
+[
+  {
+    "text": "lorem",
+    "caseSensitive": false,
+    "score": -2
+  },
+  {
+    "text": "ipsum",
+    "caseSensitive": false,
+    "score": -1
+  }
+]

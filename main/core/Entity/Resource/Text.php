@@ -88,4 +88,19 @@ class Text extends AbstractResource
     {
         return $this->text;
     }
+
+    /**
+     * Get the current content of the Resource.
+     *
+     * @return string
+     */
+    public function getContent()
+    {
+        $content = null;
+        if (!empty($this->revisions)) {
+            $content = $this->revisions->get(0)->getContent();
+        }
+
+        return $content;
+    }
 }

@@ -1,0 +1,4 @@
+{
+    "forum": "Forum",
+    "resource-claroline_forum-create_message": "A new message has been posted in the forum <a href=\"%url%\"> %forum% </a>"
+}

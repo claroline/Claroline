@@ -2,15 +2,29 @@
 
 namespace Icap\BlogBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Statusable;
+use Icap\BlogBundle\Entity\Tag;
 use Icap\BlogBundle\Exception\TooMuchResultException;
 
 class PostRepository extends EntityRepository
 {
+    public function getByDateDesc(Blog $blog, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('post')
+            ->select(['post'])
+            ->andWhere('post.blog = :blogId')
+            ->setParameter('blogId', $blog->getId())
+            ->orderBy('post.publicationDate', 'DESC')
+            ->getQuery();
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
+
     /**
      * @param Blog $blog
      * @param bool $executeQuery
@@ -41,7 +55,7 @@ class PostRepository extends EntityRepository
      *
      * @return array|\Doctrine\ORM\QueryBuilder
      */
-    public function searchByBlog(Blog $blog, $search, $executeQuery = true)
+    public function searchByBlog(Blog $blog, $search, $executeQuery = true, $isAdmin = true)
     {
         $query = $this->createQueryBuilder('post')
             ->andWhere('post.blog = :blogId')
@@ -49,12 +63,20 @@ class PostRepository extends EntityRepository
             ->orderBy('post.publicationDate', 'ASC')
         ;
 
-        $forbiddenWords = array('le', 'la', 'là', 'les', 'des', 'de', 'du', 'en', 'et', 'à', 'dans', 'me', 'mes', 'mon', 'ma',
+        if (!$isAdmin) {
+            $query
+                ->andWhere('post.publicationDate IS NOT NULL')
+                ->andWhere('post.status = :publishedStatus')
+                ->setParameter('publishedStatus', Statusable::STATUS_PUBLISHED)
+            ;
+        }
+
+        $forbiddenWords = ['le', 'la', 'là', 'les', 'des', 'de', 'du', 'en', 'et', 'à', 'dans', 'me', 'mes', 'mon', 'ma',
             'te', 'tes', 'ton', 'ta', 'se', 'ses', 'son', 'sa', 'ça', 'un', 'une', 'ou', 'donc', 'il', 'elle',
             'on', 'nous', 'vous', 'ils', 'elles', 'eux', 'mien', 'sien', 'pour', 'que', 'qui', 'quand', 'quoi', 'quel',
             'quels', 'quelle', 'quelles', 'par', 'tout', 'tous', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
             'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-        );
+        ];
 
         $searchParameters = explode(' ', trim($search));
         $titleCondition = '';
@@ -117,7 +139,7 @@ class PostRepository extends EntityRepository
         }
 
         $query = $this->createQueryBuilder('post')
-            ->select(array('post'))
+            ->select(['post'])
             ->andWhere('post.blog = :blogId')
             ->andWhere('post.status = :postStatus')
             ->andWhere('post.publicationDate IS NOT NULL')
@@ -141,7 +163,7 @@ class PostRepository extends EntityRepository
     public function findRssDatas(Blog $blog, $executeQuery = true)
     {
         $query = $this->createQueryBuilder('post')
-            ->select(array('post'))
+            ->select(['post'])
             ->andWhere('post.blog = :blogId')
             ->andWhere('post.status = :postStatus')
             ->andWhere('post.publicationDate IS NOT NULL')
@@ -252,5 +274,74 @@ class PostRepository extends EntityRepository
         ;
 
         return $query;
+    }
+
+    public function getByTag(Blog $blog, Tag $tag, $filterByPublishPost, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('post')
+            ->select(['post', 'author'])
+            ->join('post.author', 'author')
+            ->andWhere('post.blog = :blogId');
+
+        if ($filterByPublishPost) {
+            $query = $this->filterByPublishPost($query);
+        }
+
+        $criterias = [
+            'tag' => $tag,
+            'author' => null,
+            'date' => null,
+            'blogId' => $blog->getId(),
+        ];
+
+        $query = $this->createCriteriaQueryBuilder($criterias, $query);
+
+        return $executeQuery ? $query->getQuery()->getResult() : $query;
+    }
+
+    public function getByAuthor(Blog $blog, User $author, $filterByPublishPost, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('post')
+            ->select(['post', 'author'])
+            ->join('post.author', 'author')
+            ->andWhere('post.blog = :blogId');
+
+        if ($filterByPublishPost) {
+            $query = $this->filterByPublishPost($query);
+        }
+
+        $criterias = [
+            'tag' => null,
+            'author' => $author,
+            'date' => null,
+            'blogId' => $blog->getId(),
+        ];
+
+        $query = $this->createCriteriaQueryBuilder($criterias, $query);
+
+        return $executeQuery ? $query->getQuery()->getResult() : $query;
+    }
+
+    public function getByDate(Blog $blog, $date, $filterByPublishPost, $executeQuery = true)
+    {
+        $query = $this->createQueryBuilder('post')
+            ->select(['post', 'author'])
+            ->join('post.author', 'author')
+            ->andWhere('post.blog = :blogId');
+
+        if ($filterByPublishPost) {
+            $query = $this->filterByPublishPost($query);
+        }
+
+        $criterias = [
+            'tag' => null,
+            'author' => null,
+            'date' => $date,
+            'blogId' => $blog->getId(),
+        ];
+
+        $query = $this->createCriteriaQueryBuilder($criterias, $query);
+
+        return $executeQuery ? $query->getQuery()->getResult() : $query;
     }
 }

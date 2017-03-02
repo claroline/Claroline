@@ -38,7 +38,8 @@ module.exports = {
       loaders.jqueryUiNoAmd(),
       loaders.css(),
       loaders.imageUris(),
-      loaders.modernizr()
+      loaders.modernizr(),
+      loaders.json()
     ]
   },
   externals: shared.externals(),

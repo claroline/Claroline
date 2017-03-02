@@ -48,7 +48,6 @@ class PlatformConfiguration
     {
         if (strpos($name, 'get') === 0) {
             $property = lcfirst(str_replace('get', '', $name));
-
             if (property_exists($this, $property)) {
                 return $this->$property;
             } else {
@@ -80,5 +79,11 @@ class PlatformConfiguration
         } else {
             throw new \RuntimeException("Property {$property} doesn't exist in the configuration file.");
         }
+    }
+
+    public function __set($key, $value)
+    {
+        $property = $this->toCamelCase($key);
+        $this->$property = $value;
     }
 }

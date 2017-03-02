@@ -86,11 +86,43 @@
                         </div>
                     </div>
                 </div>
+
+                <div class="well well-sm col-md-9 col-md-offset-3">
+                    <small data-ng-bind-html="'note_well' | trans: {}:'icap_wiki' | trustedHtml"></small>
+                </div>
+
+                <div class="form-group row">
+                    <label class="control-label col-md-3">
+                        {{ 'icap_wiki_options_type_display' | trans:{}:'icap_wiki' }}
+                    </label>
+
+                    <div class="col-md-9">
+                        <div id="icap_wiki_options_type_display">
+                            <div>
+                                <div class="wiki-display-option-label">
+                                    <label
+                                            class="checkbox required"
+                                            for="icap_wiki_options_display_chapter_numbers">
+                                        <input
+                                            type="checkbox"
+                                            id="icap_wiki_options_display_chapter_numbers"
+                                            name="icap_wiki_options_display_chapter_numbers"
+                                            data-ng-model="vm.wiki.displaySectionNumbers"
+                                            >{{ 'display_section_numbers' | trans:{}:'icap_wiki' }}
+                                    </label>
+                                </div>
+                                <div class="wiki-mode-option-text">
+                                    <small class="text-muted">
+                                        {{ 'display_section_numbers_message' | trans:{}:'icap_wiki' }}
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="well well-sm col-md-9 col-md-offset-3">
-                <small data-ng-bind-html="'note_well' | trans: {}:'icap_wiki' | trustedHtml"></small>
-            </div>
             <button
                 class="btn btn-default cancel-btn"
                 data-ng-click="vm.cancelEditOptions()"

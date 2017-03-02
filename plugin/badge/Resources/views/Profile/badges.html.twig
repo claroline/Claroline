@@ -30,7 +30,6 @@
         <div class="panel-body">
             <div class="col-md-12 list_badges">
                 <a href="{{ path('icap_badge_claim_badge') }}" class="btn btn-primary btn-md" role="button"><span class="fa fa-plus"></span>{{ 'claim_badge'|trans({}, 'icap_badge') }}</a>
-                <a href="#" class="btn btn-primary btn-md" role="button"><span class="fa fa-folder-open"></span>{{ 'import_export'|trans({}, 'icap_badge') }}</a>
                 <ul class="list-inline my_badges badge_list" id="badge_list" data-action-url="{{ path('icap_badge_user_badge_edit') }}">
 
                     {% for userBadge in userBadges %}

@@ -1,0 +1,43 @@
+{
+  "id": "1",
+  "type": "application/x.choice+json",
+  "content": "Question ?",
+  "choices": [
+    {
+      "id": "1",
+      "type": "image/png",
+      "url": "http://domain.com/image-1.png",
+      "meta": {
+        "description": "Image 1"
+      }
+    },
+    {
+      "id": "2",
+      "type": "image/jpg",
+      "url": "http://domain.com/image-2.jpg",
+      "meta": {
+        "description": "Image 2"
+      }
+    },
+    {
+      "id": "3",
+      "type": "image/png",
+      "url": "http://domain.com/image-3.png",
+      "meta": {
+        "description": "Image 3"
+      }
+    }
+  ],
+  "random": false,
+  "multiple": false,
+  "solutions": [
+    {
+      "id": "1",
+      "score": -2
+    },
+    {
+      "id": "3",
+      "score": -1
+    }
+  ]
+}

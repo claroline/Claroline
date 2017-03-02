@@ -19,7 +19,7 @@
     <div data-ng-repeat="(j, note) in notes">
       <table class="col-md-12 table table-condensed table-bordered">
         <tbody>
-          <tr> 
+          <tr>
             <td class="col-xs-{{ vm.colWidth[i][f] }} text-center"
                 style="vertical-align: middle"
                 data-ng-repeat="(f, fieldValue) in note.field_values.sort(vm.compareFieldValuesById)">
@@ -119,7 +119,11 @@
               <img data-ng-if="answer.type == 'image'"
                    class="img-responsive img-thumbnail"
                    style="width: 80%"
+<<<<<<< HEAD
+                   src="{{ answer.value }}"
+=======
                    ng-src="{{ answer.value }}"
+>>>>>>> master
                    alt="{{ answer.alt}}" />
             </td>
             <td class="col-xs-2 text-center"

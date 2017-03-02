@@ -3,7 +3,13 @@
 namespace Icap\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation\VirtualProperty;
 
+/**
+ * @ExclusionPolicy("all")
+ */
 class Statusable
 {
     const STATUS_UNPUBLISHED = 0;
@@ -12,10 +18,10 @@ class Statusable
     /**
      * @var array
      */
-    protected $statusList = array(
+    protected $statusList = [
         self::STATUS_PUBLISHED,
         self::STATUS_UNPUBLISHED,
-    );
+    ];
 
     /**
      * @var int
@@ -67,6 +73,8 @@ class Statusable
 
     /**
      * @return bool
+     * @VirtualProperty
+     * @Groups({"blog_list", "blog_post"})
      */
     public function isPublished()
     {

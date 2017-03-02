@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 
-use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Symfony\Component\Config\Definition\Builder\TreeBuilder;
-use Claroline\CoreBundle\Library\Transfert\Importer;
-use Symfony\Component\Config\Definition\Processor;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Processor;
 
 /**
  * @DI\Service("claroline.importer.users_importer")
@@ -53,14 +53,14 @@ class UsersImporter extends Importer implements ConfigurationInterface
 
     public function addUsersSection($rootNode)
     {
-        $usernames = array();
+        $usernames = [];
 
         foreach ($this->om->getRepository('Claroline\CoreBundle\Entity\User')->findUsernames() as $username) {
             $usernames[] = $username['username'];
         }
 
         $configuration = $this->getConfiguration();
-        $availableRoleName = array();
+        $availableRoleName = [];
 
         if (isset($configuration['roles'])) {
             foreach ($configuration['roles'] as $role) {
@@ -91,7 +91,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                         function ($v) use ($usernames) {
                                             return call_user_func_array(
                                                 __CLASS__.'::usernameMissingInDatabase',
-                                                array($v, $usernames)
+                                                [$v, $usernames]
                                             );
                                         }
                                     )
@@ -107,7 +107,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
                                                 function ($v) use ($availableRoleName) {
                                                     return call_user_func_array(
                                                         __CLASS__.'::roleNameExists',
-                                                        array($v, $availableRoleName)
+                                                        [$v, $availableRoleName]
                                                     );
                                                 }
                                             )
@@ -138,7 +138,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
     {
         $processor = new Processor();
         self::setData($data);
-        $configuration = $processor->processConfiguration($this, $data);
+        $processor->processConfiguration($this, $data);
     }
 
     public function import(array $data, array $entityRoles)
@@ -147,7 +147,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
 
         foreach ($data as $user) {
             $userEntities = $this->om->getRepository('ClarolineCoreBundle:User')
-                ->findBy(array('username' => $user['user']['username']));
+                ->findBy(['username' => $user['user']['username']]);
 
             if (isset($user['user']['roles']) && count($userEntities) === 1) {
                 foreach ($user['user']['roles'] as $role) {
@@ -180,8 +180,8 @@ class UsersImporter extends Importer implements ConfigurationInterface
         return $owner === $v ? true : false;
     }
 
-    public function export(Workspace $workspace, array &$files, $object)
+    public function export($workspace, array &$files, $object)
     {
-        return array();
+        return [];
     }
 }

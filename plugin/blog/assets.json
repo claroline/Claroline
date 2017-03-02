@@ -1,0 +1,8 @@
+{
+  "webpack": {
+    "entry": {
+      "app": "app",
+      "widget-tagcanvas": "widget-tagcanvas"
+    }
+  }
+}

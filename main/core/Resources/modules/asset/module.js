@@ -1,9 +1,7 @@
-import 'angular/angular.min'
+import angular from 'angular/index'
 
-angular.module('ui.asset', [])
-  .filter('asset', () => {
-    return (name) => {
-      const basePath = angular.element('#baseAsset').html()
-      return basePath + name
-    }
-  })
+import {asset} from './index'
+
+angular
+  .module('ui.asset', [])
+  .filter('asset', () => asset)

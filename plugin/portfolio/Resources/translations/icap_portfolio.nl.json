@@ -1,0 +1,20 @@
+{
+    "see": "Zien",
+    "revoke_access": "De toegang intrekken",
+    "rename": "Hernoemen",
+    "portfolio": "Portfolio",
+    "configuration": "Configuratie",
+    "title": "Titel",
+    "import": "Invoeren",
+    "owner": "Eigenaar",
+    "statistics": "Statistieken",
+    "visibility": "Zichtbaarheid",
+    "my_portfolios": "Mijn portfolio ruimte",
+    "add_data_widget": "Gegevens voegen",
+    "add_portfolio": "Een portfolio voegen",
+    "adding_portfolio": "Een portfolio voegen",
+    "check_before_do_import": "Als de weergegeven gegevens correct zijn, kunt u",
+    "choose_import_portfolio_format": "Kies invoerformaat",
+    "comment_date_format": "dd/MM/yyyy HH:mm:ss",
+    "comment_send": "Zenden"
+}
