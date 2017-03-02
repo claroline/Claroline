@@ -161,5 +161,8 @@
     "Previous": "Vorige",
     "Rating": "Notatie",
     "Recalculate all grade": "Al de notaties herberekenen",
-    "Recalculate the score": "De score herberekenen"
+    "Recalculate the score": "De score herberekenen",
+    "Evaluation %dropzonename% opening": "Dropfase van de evaluatie %dropzonename%",
+    "Finished! Patience your copy is being corrected.": "Klaar! Even geduld : uw kopie wordt gecorrigeerd.",
+    "Finished! You have realized the nb corrections expected. Patience your copy is being corrected.": "one: Klaar! Even geduld : uw kopie wordt gecorrigeerd.|some: Klaar! U hebt het verwachte %count% kopieën. Even geduld : uw kopie wordt gecorrigeerd."
 }
