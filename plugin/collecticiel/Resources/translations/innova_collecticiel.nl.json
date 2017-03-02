@@ -156,5 +156,12 @@
     "Peer Review is starting in %dropzonename% evaluation": "Peer review fase van %dropzonename%",
     "Peer review evaluation": "Lerenden corrigeren elkaar. (Peer review)",
     "Peer review phase": "Peer review fase",
-    "was reported": "Is gemeld"
+    "was reported": "Is gemeld",
+    "Notify on drop": "De evaluatie beheerders notificeren wanneer iemand een kopie neerzet.",
+    "PeerReview_helper_unlock_tool": "Opmerking: Een tool laat beheerder toe om een kopie te \"ontgrendelen\" indien deze tenminste één keer gecorrigeerd is. Hij kan die zelf corrigeren. Het laat de beheerder toe om te voorkomen alle verwachte correcties te maken (bijv. 3) als er geen correcties zijn voor een kopie. Deze tool is alleen beschikbaar als de evaluatie in de \"voltooide\" fase is.",
+    "Planification instruction": "De opening van de evaluatie kan manueel gemaakt worden of automatisch met data.",
+    "Please comment": "Gelieve een reactie te laten.",
+    "Report": "Melden",
+    "Report reason": "Reden",
+    "Reported": "Heeft gemeld"
 }
