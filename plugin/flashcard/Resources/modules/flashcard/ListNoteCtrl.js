@@ -101,7 +101,7 @@ export default class ListNoteCtrl {
 
   resetCard(card) {
     this._service.resetCard(card).then(
-      function() {
+      function () {
         for (let i=0; i<this.cardLearnings.length; i++) {
           if (this.cardLearnings[i].card.id == card.id) {
             this.cardLearnings.splice(i, 1)
@@ -114,7 +114,7 @@ export default class ListNoteCtrl {
 
   suspendCard(card, suspend) {
     this._service.suspendCard(card, suspend).then(
-      function() {
+      function () {
         for (let i=0; i<this.cardLearnings.length; i++) {
           if (this.cardLearnings[i].card.id == card.id) {
             this.cardLearnings[i].painful = suspend

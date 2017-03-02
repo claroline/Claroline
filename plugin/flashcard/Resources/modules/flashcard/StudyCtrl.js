@@ -187,22 +187,12 @@ export default class StudyCtrl {
    * For the moment this function is not used.
    */
   fitText($event) {
-    console.log("Run fitText")
-    let elem = angular.element($event.currentTarget);
+    let elem = angular.element($event.currentTarget)
     let fontsize = parseInt(elem.parent().css('font-size'))
 
     while (elem.height() > elem.parent().height() && fontsize > 1) {
-      console.log("Before:")
-      console.log(fontsize)
-      console.log(elem.height())
-      console.log(elem.parent().height())
       fontsize -= 1
-      elem.css('font-size', fontsize + "px")
-      console.log("After:")
-      console.log(fontsize)
-      console.log(elem.height())
-      console.log(elem.parent().height())
+      elem.css('font-size', fontsize + 'px')
     }
-    console.log("End fitText")
   }
 }
