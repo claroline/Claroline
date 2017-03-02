@@ -65,5 +65,7 @@
     "Here is the list of documents which you must correct": "Dit is de lijst van de documenten die u moet corrigeren : ",
     "Hidden folder for %dropzoneName%": "Verborgen map voor %dropzoneName%",
     "Must be an integer": "Moet een geheel getal zijn",
-    "Peer review phase": "Peer review fase"
+    "Peer review phase": "Peer review fase",
+    "Report": "Melden",
+    "Resource": "Leermiddel"
 }
