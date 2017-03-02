@@ -14,7 +14,7 @@
     "Allow rich text": "Rich text box",
     "Allow upload": "Geüploade bestanden",
     "Allow url": "Weblinks",
-    "Allow workspace resource": "Leermiddelen van de werkruimte",
+    "Allow workspace resource": "Bronnen van de werkruimte",
     "Are you sure to want to delete this document": "Bent u er zeker van dat u dit document wenst te verwijderen ?",
     "Are you sure you have done?": "Bent u er zeker van dat u gedaan hebt ?",
     "Are you sure you want to do this?": "Bent u er zeker van dat u dit wenst te doen ?",
@@ -25,7 +25,7 @@
     "Change": "Veranderen",
     "Change scale": "Verander de schaal",
     "Choose a date": "Kies een datum",
-    "Choose a resource": "Kies een leermiddel",
+    "Choose a resource": "Kies een bron",
     "Comment": "Commentaar",
     "Complete Corrections": "Voltooide correcties",
     "Complete my copy": "Mijn kopie voltooien",
@@ -202,5 +202,5 @@
     "Report reason": "Reden",
     "Reported": "Heeft gemeld",
     "Reported copy": "Kopie is gemeld.",
-    "Resource": "Leermiddel"
+    "Resource": "Bron"
 }
