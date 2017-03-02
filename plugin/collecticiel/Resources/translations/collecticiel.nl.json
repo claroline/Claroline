@@ -172,5 +172,19 @@
     "Peer Review is starting in %dropzonename% evaluation": "Peer review fase van %dropzonename%",
     "Peer review evaluation": "Lerenden corrigeren elkaar. (Peer review)",
     "Peer review phase": "Peer review fase",
-    "was reported": "Is gemeld"
+    "was reported": "Is gemeld",
+    "Notify on drop": "De evaluatie beheerders notificeren wanneer iemand een kopie neerzet.",
+    "PeerReview_helper_ideal_case": "In de peer review, zullen de respondenten elkaar autonoom corrigeren in ideale omstandigheden waar het aantal deelnemers gelijk is aan het aantal correcties + 1 of een veelvoud van dit aantal.",
+    "PeerReview_helper_ideal_case_example": "Voorbeeld: als twee correcties verwacht worden, zal de evaluatie volledig autonoom zijn indien het aantal deelnemers een veelvoud van 3 is. (Student 1 corrigeert 2 en 3, Student 2 corrigeert 1 en 3, Student 3 corrigeert 1 en 2).",
+    "PeerReview_helper_other_cases": "In andere gevallen moet de evaluatiebeheerder tussenkomen om de ontbrekende correctie(s) toe te voegen wanneer de evaluatie voltooid is.",
+    "PeerReview_helper_unlock_tool": "Opmerking: Een tool laat beheerder toe om een kopie te \"ontgrendelen\" indien deze tenminste één keer gecorrigeerd is. Hij kan die zelf corrigeren. Het laat de beheerder toe om te voorkomen alle verwachte correcties te maken (bijv. 3) als er geen correcties zijn voor een kopie. Deze tool is alleen beschikbaar als de evaluatie in de \"voltooide\" fase is.",
+    "People that have a copy in this dropzone": "Er is een kopie in deze dropzone neergezet.",
+    "People will not be able to drop anymore": "De gebruikers zullen niet worden toegestaan om kopieën neer te zetten of voltooien.",
+    "Planification instruction": "De opening van de evaluatie kan manueel gemaakt worden of automatisch met data.",
+    "Please comment": "Gelieve een reactie te laten.",
+    "Report": "Melden",
+    "Report reason": "Reden",
+    "Reported": "Heeft gemeld",
+    "Reported copy": "Kopie is gemeld.",
+    "Resource": "Leermiddel"
 }
