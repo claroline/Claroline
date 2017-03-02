@@ -179,20 +179,4 @@ export default class StudyCtrl {
     }
     this.answersShown = !this.answersShown
   }
-
-  /*
-   * This function can be used with a ng-mouseover attribute.
-   * It shrink the size of the text until the text fit in the size of
-   * the parent element.
-   * For the moment this function is not used.
-   */
-  fitText($event) {
-    let elem = angular.element($event.currentTarget)
-    let fontsize = parseInt(elem.parent().css('font-size'))
-
-    while (elem.height() > elem.parent().height() && fontsize > 1) {
-      fontsize -= 1
-      elem.css('font-size', fontsize + 'px')
-    }
-  }
 }
