@@ -9,8 +9,8 @@
 namespace Icap\WebsiteBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation as JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity
@@ -1050,7 +1050,7 @@ class WebsiteOptions
         $bannerBgImageUid = $this->bannerBgImage;
         $footerBgImageUid = $this->footerBgImage;
 
-        $optionsArray = array(
+        $optionsArray = [
             'copyright_enabled' => $this->copyrightEnabled,
             'copyright_text' => $this->copyrightText,
             'analytics_provider' => $this->analyticsProvider,
@@ -1084,7 +1084,7 @@ class WebsiteOptions
             'menu_font_weight' => $this->menuFontWeight,
             'menu_width' => $this->menuWidth,
             'menu_orientation' => $this->menuOrientation,
-        );
+        ];
 
         if (isset($files) && $files !== null) {
             //Create bgImage file
@@ -1136,9 +1136,17 @@ class WebsiteOptions
         return $optionsArray;
     }
 
+    public function createUploadFolder($uploadFolderPath)
+    {
+        if (!file_exists($uploadFolderPath)) {
+            mkdir($uploadFolderPath, 0777, true);
+        }
+    }
+
     public function importFromArray($webDir, array $optionsArray, $rootPath = null)
     {
         $uploadedDir = $webDir.DIRECTORY_SEPARATOR.$this->getUploadDir();
+        $this->createUploadFolder($uploadedDir);
         $this->copyrightEnabled = $optionsArray['copyright_enabled'];
         $this->copyrightText = $optionsArray['copyright_text'];
         $this->analyticsProvider = $optionsArray['analytics_provider'];

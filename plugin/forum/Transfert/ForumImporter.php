@@ -12,6 +12,7 @@
 namespace Claroline\ForumBundle\Transfert;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Claroline\ForumBundle\Entity\Category;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
@@ -25,7 +26,7 @@ use Symfony\Component\Config\Definition\Processor;
  * @DI\Service("claroline.importer.forum_importer")
  * @DI\Tag("claroline.importer")
  */
-class ForumImporter extends Importer implements ConfigurationInterface
+class ForumImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     private $container;
     private $om;
@@ -184,5 +185,32 @@ class ForumImporter extends Importer implements ConfigurationInterface
         }
 
         return $data;
+    }
+
+    public function format($data)
+    {
+        if (isset($data)) {
+            foreach ($data as $elem) {
+                foreach ($elem['category']['subjects'] as $subjects) {
+                    foreach ($subjects as $subject) {
+                        foreach ($subject['messages'] as $message) {
+                            //look for the text with the exact same content (it's really bad I know but at least it works
+                            $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$message['message']['path']);
+                            $messages = $this->om->getRepository('Claroline\ForumBundle\Entity\Message')->findByContent($text);
+
+                            foreach ($messages as $entity) {
+                                //avoid circulary dependency
+                                $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                                $entity->setContent($text);
+                                $this->om->persist($entity);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        //this could be bad, but the corebundle can use a transaction and force flush itself anyway
+        $this->om->flush();
     }
 }

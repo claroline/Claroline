@@ -23,13 +23,13 @@ class WebsiteManagerTest extends TransactionalTestCase
     private $om;
     /** @var Persister */
     private $persist;
-    /** @var  WebsitePageManager */
+    /** @var WebsitePageManager */
     private $pageManager;
-    /** @var  WebsiteManager */
+    /** @var WebsiteManager */
     private $websiteManager;
-    /** @var  Website */
+    /** @var Website */
     private $website;
-    /** @var  User */
+    /** @var User */
     private $user;
 
     private $websitePageParams;
@@ -47,14 +47,14 @@ class WebsiteManagerTest extends TransactionalTestCase
         $this->persist = new Persister($this->om);
         $this->user = $this->persist->user('john');
         $this->website = $this->persist->website('Test Website', $this->user);
-        $this->websitePageParams = array(
+        $this->websitePageParams = [
             'title' => 'Test page',
             'type' => WebsitePageTypeEnum::BLANK_PAGE,
             'description' => 'Test description',
             'visible' => true,
             'isSection' => false,
             'richText' => '<div>this is a test page</div>',
-        );
+        ];
     }
 
     public function testCopy()
@@ -83,7 +83,7 @@ class WebsiteManagerTest extends TransactionalTestCase
         $files = null;
         $data = $this->websiteManager->exportWebsite($this->user->getPersonalWorkspace(), $files, $this->website);
         $this->assertEquals(4, count($data['pages']), 'Test Website export');
-        $this->websiteManager->importWebsite(array('data' => $data), null, true);
+        $this->websiteManager->importWebsite(['data' => $data], null, [], true);
         $this->assertEquals(2, count($websiteRepo->findAll()), 'Test if Website was imported correctly');
         $this->assertEquals(8, count($pageRepo->findAll()), 'Test if all Website pages were imported correctly');
     }
