@@ -1,7 +1,7 @@
 {
     "ok": "Valideren",
-    "resource_creation_error": "Er is een fout opgetreden tijdens het maken van de leermiddel.",
-    "resource_name_placeholder": "De naam van de leermiddel is verplicht.",
+    "resource_creation_error": "Er is een fout opgetreden tijdens het maken van de bron.",
+    "resource_name_placeholder": "De naam van de bron is verplicht.",
     "retry": "Herbeginnen",
     "start": "Starten",
     "start_recording": "Start opname",
@@ -11,7 +11,7 @@
     "validate": "Valideren",
     "config_update_error": "Probleem tijdens het bijwerken van videorecorder configuratie.",
     "config_update_success": "Video recorder configuratie-update succesvol.",
-    "creating_resource": "Leermiddel maken",
+    "creating_resource": "Bron maken",
     "db_meter": "Db meter",
     "download_video": "Download videobestand",
     "innova_video_recorder_config": "Video recorder configuratie",
