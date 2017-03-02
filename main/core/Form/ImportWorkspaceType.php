@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Form;
 
-use Symfony\Component\Form\FormBuilderInterface;
+use Claroline\CoreBundle\Validator\Constraints\FileUpload;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ImportWorkspaceType extends AbstractType
 {
@@ -23,44 +24,49 @@ class ImportWorkspaceType extends AbstractType
         $builder->add(
             'name',
             'text',
-            array('label' => 'name', 'constraints' => array(new NotBlank()))
+            ['label' => 'name', 'constraints' => [new NotBlank()]]
         );
         $builder->add(
             'code',
             'text',
-            array('label' => 'code', 'constraints' => array(new NotBlank()))
+            ['label' => 'code', 'constraints' => [new NotBlank()]]
         );
         $builder->add(
             'workspace',
             'file',
-            array('label' => 'file', 'constraints' => array(new NotBlank()), 'mapped' => false)
+            ['label' => 'file', 'mapped' => false, 'required' => false, 'constraints' => [new FileUpload()]]
+        );
+        $builder->add(
+            'fileUrl',
+            'url',
+            ['label' => 'URL', 'mapped' => false, 'required' => false]
         );
         $builder->add(
             'description',
             isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce'] ?
                 'textarea' :
                 'tinymce',
-            array('required' => false, 'label' => 'description')
+            ['required' => false, 'label' => 'description']
         );
         $builder->add(
             'displayable',
             'checkbox',
-            array('required' => false, 'label' => 'displayable_in_workspace_list')
+            ['required' => false, 'label' => 'displayable_in_workspace_list']
         );
         $builder->add(
             'selfRegistration',
             'checkbox',
-            array('required' => false, 'label' => 'public_registration')
+            ['required' => false, 'label' => 'public_registration']
         );
         $builder->add(
             'registrationValidation',
             'checkbox',
-            array('required' => false, 'label' => 'registration_validation')
+            ['required' => false, 'label' => 'registration_validation']
         );
         $builder->add(
             'selfUnregistration',
             'checkbox',
-            array('required' => false, 'label' => 'public_unregistration')
+            ['required' => false, 'label' => 'public_unregistration']
         );
     }
 
@@ -71,6 +77,6 @@ class ImportWorkspaceType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(['translation_domain' => 'platform']);
     }
 }

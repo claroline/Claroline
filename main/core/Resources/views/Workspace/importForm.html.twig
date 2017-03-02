@@ -22,6 +22,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'import'|trans({}, 'platform') }}</h3>
     </div>
+    {{ macros.flashBox() }}
     <form role="form" class="form-horizontal" id="ws_import_form" action="{{ path('claro_workspace_import') }}" method="post" {{ form_enctype(form) }}>
         <div class="panel-body">
             {{ form_errors(form) }}
