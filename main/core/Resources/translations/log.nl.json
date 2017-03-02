@@ -179,7 +179,7 @@
     "log_workspace_read": "Toegang tot de werkruimte",
     "log_workspace_roles": "Rollen in de werkruimte",
     "log_workspace_source": "Bronwerkruimte",
-    "resource": "Leermiddel",
+    "resource": "Bron",
     "role": "Rol",
     "user": "Gebruiker",
     "user_list": "Lijst van de gebruikers",
