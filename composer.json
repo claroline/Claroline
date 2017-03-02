@@ -21,7 +21,7 @@
             "php app/console doctrine:database:create --if-not-exists",
             "php vendor/bin/doctrine dbal:import claroline.sql -vvv",
             "php app/console assets:install web --symlink",
-            "ln -s files/data web"
+            "php scripts/fast-install.php"
         ],
         "sync": [
             "composer fetch",
