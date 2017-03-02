@@ -1,7 +1,7 @@
 {
     "anywhere": "Waar dan ook",
     "path": "Plaats",
-    "resources": "Leermiddelen",
+    "resources": "Bronnen",
     "status": "Statuut",
     "select": "Kiezen",
     "delete": "Verwijderen",
@@ -47,7 +47,7 @@
     "paths_list": "Lijst van de leerpaden",
     "paths_template_list": "Lijst van de leerpadensjablonen",
     "play": "Uitvoeren",
-    "progression": "Progressie",
+    "progression": "Vordering",
     "student": "Individueel",
     "submit": "Voorleggen",
     "unlockit": "Ontgrendelen",
