@@ -99,7 +99,7 @@
     "Dropzone progress": "Status van uw evaluatie",
     "Edit a criterion": "Een criterium bewerken",
     "Edit evaluation": "De evaluatie bewerken",
-    "Empty field warning": "Waarschuwing: Sommige velden zijn niet leeg. Ze zullen alleen worden geïntegreerd in de kopie als je eenmaal op 'Toevoegen' hebt geklikt. Alleen de hierboven genoemde documenten zullen deel maken van de kopie.",
+    "Empty field warning": "Waarschuwing: Sommige velden zijn niet leeg. Ze zullen pas in de kopie geïntegreerd worden als u eenmaal op \"Voegen\" hebt geklikt. Alléén de hierboven genoemde documenten zullen deel maken van de kopie.",
     "End allow drop": "Einde van de dropperiode",
     "End review": "Einde van peer review",
     "Entirely": "Helemaal",
@@ -202,5 +202,10 @@
     "Report reason": "Reden",
     "Reported": "Heeft gemeld",
     "Reported copy": "Kopie is gemeld.",
-    "Resource": "Bron"
+    "Resource": "Bron",
+    "Planification peer review instruction": "Het is verdeeld in een aantal stappen: de opening van de evaluatie door het neerzetten van kopieën toe te laten, het begin van de peer review die de dropperiode sluit en het einde van de evaluatie.",
+    "Reason of reporting": "Reden van de melding",
+    "Recall instructions": "Herinnering instructies",
+    "Relevant documents": "Relevante documenten",
+    "Remove report": "De melding verwijderen"
 }
