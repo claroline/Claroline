@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ad21799563e8ab291dea4759de1e3473",
+    "hash": "e35db19ae37ec780be2b85f3835f0649",
     "content-hash": "69f498c1bcce371cdd1e0a86a959eb17",
     "packages": [
         {
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "66bf1c6316cbc144860fa792f1aaaa7f8920b055"
+                "reference": "5e2286a5f35e241aad017eb80086fe82fa1ee33a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/66bf1c6316cbc144860fa792f1aaaa7f8920b055",
-                "reference": "66bf1c6316cbc144860fa792f1aaaa7f8920b055",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/5e2286a5f35e241aad017eb80086fe82fa1ee33a",
+                "reference": "5e2286a5f35e241aad017eb80086fe82fa1ee33a",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-02-28 12:41:15"
+            "time": "2017-03-01 16:20:25"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3516,17 +3516,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "b5ea3cafc3d96b332552877d89b1a97d02539579"
+                "reference": "e63470479cb91a4805159101b70d6f7102e52c8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/b5ea3cafc3d96b332552877d89b1a97d02539579",
-                "reference": "b5ea3cafc3d96b332552877d89b1a97d02539579",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/e63470479cb91a4805159101b70d6f7102e52c8d",
+                "reference": "e63470479cb91a4805159101b70d6f7102e52c8d",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-02-20 09:08:56"
+            "time": "2017-03-01 15:30:58"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -7662,12 +7662,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "2e15ba97ddfa7dad4ea3a27e700ddea4da146997"
+                "reference": "a2729259652ff6f4fe75d76aaa47d51ad433c886"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/2e15ba97ddfa7dad4ea3a27e700ddea4da146997",
-                "reference": "2e15ba97ddfa7dad4ea3a27e700ddea4da146997",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/a2729259652ff6f4fe75d76aaa47d51ad433c886",
+                "reference": "a2729259652ff6f4fe75d76aaa47d51ad433c886",
                 "shasum": ""
             },
             "require": {
@@ -7716,7 +7716,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-02-28 15:34:28"
+            "time": "2017-03-01 14:33:32"
         },
         {
             "name": "webmozart/assert",
