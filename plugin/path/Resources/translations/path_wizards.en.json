@@ -112,7 +112,7 @@
     "see_step_siblings": "See siblings of the step",
     "seen": "Seen",
     "select_activity": "Select existing activity",
-    "show_path_info": "Show information of the path",
+    "show_path_info": "Show information about the path",
     "sidebar_close": "Close",
     "step_access_denied": "You haven't passed the previous steps",
     "step_access_denied_condition": "You don't meet the condition to access this step %stepName% because : %conditionList%",
