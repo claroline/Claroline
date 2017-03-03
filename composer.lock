@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "5e2286a5f35e241aad017eb80086fe82fa1ee33a"
+                "reference": "d54445f6a015af2b4ced84a27a4f165e78e8781a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/5e2286a5f35e241aad017eb80086fe82fa1ee33a",
-                "reference": "5e2286a5f35e241aad017eb80086fe82fa1ee33a",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/d54445f6a015af2b4ced84a27a4f165e78e8781a",
+                "reference": "d54445f6a015af2b4ced84a27a4f165e78e8781a",
                 "shasum": ""
             },
             "require": {
@@ -376,7 +376,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-03-01 16:20:25"
+            "time": "2017-03-02 17:03:41"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -6804,27 +6804,27 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "v1.6.2",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "6c52c2722f8460122f96f86346600e1077ce22cb"
+                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/6c52c2722f8460122f96f86346600e1077ce22cb",
-                "reference": "6c52c2722f8460122f96f86346600e1077ce22cb",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/93d39f1f7f9326d746203c7c056f300f7f126073",
+                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
                 "php": "^5.3|^7.0",
                 "phpdocumentor/reflection-docblock": "^2.0|^3.0.2",
-                "sebastian/comparator": "^1.1",
-                "sebastian/recursion-context": "^1.0|^2.0"
+                "sebastian/comparator": "^1.1|^2.0",
+                "sebastian/recursion-context": "^1.0|^2.0|^3.0"
             },
             "require-dev": {
-                "phpspec/phpspec": "^2.0",
+                "phpspec/phpspec": "^2.5|^3.2",
                 "phpunit/phpunit": "^4.8 || ^5.6.5"
             },
             "type": "library",
@@ -6863,7 +6863,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2016-11-21 14:58:47"
+            "time": "2017-03-02 20:05:34"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -7662,12 +7662,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "a2729259652ff6f4fe75d76aaa47d51ad433c886"
+                "reference": "10ba9296665d42b56470f87b157781e21a768338"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/a2729259652ff6f4fe75d76aaa47d51ad433c886",
-                "reference": "a2729259652ff6f4fe75d76aaa47d51ad433c886",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/10ba9296665d42b56470f87b157781e21a768338",
+                "reference": "10ba9296665d42b56470f87b157781e21a768338",
                 "shasum": ""
             },
             "require": {
@@ -7716,7 +7716,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-03-01 14:33:32"
+            "time": "2017-03-02 12:54:15"
         },
         {
             "name": "webmozart/assert",
