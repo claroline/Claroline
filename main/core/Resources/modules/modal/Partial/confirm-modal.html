@@ -1,4 +1,4 @@
-<div class="modal-body" data-ng-bind-html="confirmCtrl.content"></div>
+<div class="modal-body" data-ng-bind-html="confirmCtrl.content|trust_html"></div>
 
 <div class="modal-footer">
     <button class="btn btn-primary" data-ng-click="confirmCtrl.confirm()">

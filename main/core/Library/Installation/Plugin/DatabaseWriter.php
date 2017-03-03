@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Claroline\CoreBundle\Manager\IconManager;
+use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
@@ -50,6 +51,7 @@ class DatabaseWriter
     private $modifyTemplate = false;
     private $toolManager;
     private $toolMaskManager;
+    private $iconSetManager;
 
     /**
      * Constructor.
@@ -61,7 +63,8 @@ class DatabaseWriter
      *     "fileSystem"      = @DI\Inject("filesystem"),
      *     "kernel"          = @DI\Inject("kernel"),
      *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "toolMaskManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager")
+     *     "toolMaskManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
+     *     "iconSetManager"  = @DI\Inject("claroline.manager.icon_set_manager")
      * })
      */
     public function __construct(
@@ -71,7 +74,8 @@ class DatabaseWriter
         KernelInterface $kernel,
         MaskManager $mm,
         ToolManager $toolManager,
-        ToolMaskDecoderManager $toolMaskManager
+        ToolMaskDecoderManager $toolMaskManager,
+        IconSetManager $iconSetManager
     ) {
         $this->em = $em;
         $this->im = $im;
@@ -81,6 +85,7 @@ class DatabaseWriter
         $this->modifyTemplate = $kernel->getEnvironment() !== 'test';
         $this->toolManager = $toolManager;
         $this->toolMaskManager = $toolMaskManager;
+        $this->iconSetManager = $iconSetManager;
     }
 
     /**
@@ -147,6 +152,8 @@ class DatabaseWriter
 
         foreach ($resourceTypes as $resourceType) {
             $this->deleteActivityRules($resourceType);
+            // delete all icons for this resource type in icon sets
+            $this->iconSetManager->deleteAllResourceIconItemsForMimeType('custom/'.$resourceType->getName());
         }
 
         // deletion of other plugin db dependencies is made via a cascade mechanism
@@ -269,13 +276,11 @@ class DatabaseWriter
     {
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->findOneByName($resourceConfiguration['name']);
-        $isExistResourceType = true;
 
         if (null === $resourceType) {
             $resourceType = new ResourceType();
             $resourceType->setName($resourceConfiguration['name']);
             $resourceType->setPlugin($plugin);
-            $isExistResourceType = false;
         }
 
         $resourceType->setExportable($resourceConfiguration['is_exportable']);
@@ -381,6 +386,8 @@ class DatabaseWriter
         $resourceIcon->setShortcut(false);
         $this->em->persist($resourceIcon);
         $this->im->createShortcutIcon($resourceIcon);
+        // Also add the new resource type icon to default resource icon set
+        $this->iconSetManager->addOrUpdateIconItemToDefaultResourceIconSet($resourceIcon);
     }
 
     /**
@@ -393,24 +400,33 @@ class DatabaseWriter
         $resourceIcon = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
             ->findOneByMimeType('custom/'.$resourceType->getName());
-
+        $isNew = false;
         if (null === $resourceIcon) {
             $resourceIcon = new ResourceIcon();
             $resourceIcon->setMimeType('custom/'.$resourceType->getName());
+            $isNew = true;
         }
 
         if (isset($resource['icon'])) {
-            $resourceIcon->setRelativeUrl("bundles/{$pluginBundle->getAssetsFolder()}/images/icons/{$resource['icon']}");
+            $newRelativeUrl = "bundles/{$pluginBundle->getAssetsFolder()}/images/icons/{$resource['icon']}";
         } else {
             $defaultIcon = $this->em
                 ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
                 ->findOneByMimeType('custom/default');
-            $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
+            $newRelativeUrl = $defaultIcon->getRelativeUrl();
         }
-
-        $resourceIcon->setShortcut(false);
-        $this->em->persist($resourceIcon);
-        $this->im->createShortcutIcon($resourceIcon);
+        // If icon is new, create it and persist it to db
+        if ($isNew) {
+            $resourceIcon->setRelativeUrl($newRelativeUrl);
+            $resourceIcon->setShortcut(false);
+            $this->em->persist($resourceIcon);
+            $this->im->createShortcutIcon($resourceIcon);
+        }
+        // Also add/update the resource type icon to default resource icon set
+        $this->iconSetManager->addOrUpdateIconItemToDefaultResourceIconSet(
+            $resourceIcon,
+            $newRelativeUrl
+        );
     }
 
     /**
