@@ -107,6 +107,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'login_target_route' => 'claro_security_login',
             'enable_opengraph' => true,
             'tmp_dir' => sys_get_temp_dir(),
+            'resource_icon_set' => 'claroline',
         ];
     }
 }

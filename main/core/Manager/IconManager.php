@@ -49,6 +49,8 @@ class IconManager
     private $om;
     /** @var string */
     private $basepath;
+    /** @var string */
+    private $iconSetRepo;
 
     /**
      * @DI\InjectParams({
@@ -72,6 +74,7 @@ class IconManager
     ) {
         $this->creator = $creator;
         $this->repo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon');
+        $this->iconSetRepo = $om->getRepository('ClarolineCoreBundle:Icon\IconSet');
         $this->fileDir = $fileDir;
         $this->thumbDir = $thumbDir;
         $this->rootDir = $rootDir;
@@ -128,6 +131,11 @@ class IconManager
 
         //default & fallback
         return $this->searchIcon($node->getMimeType());
+    }
+
+    public function listResourceIcons()
+    {
+        return $this->repo->findBaseIcons();
     }
 
     /**
@@ -488,8 +496,11 @@ class IconManager
         $ds = DIRECTORY_SEPARATOR;
 
         try {
+            // Get active icon set stamp image to create thumbnail
+            $stampImg = $this->iconSetRepo->findActiveRepositoryResourceStampIcon();
+            $stampImg = (empty($stampImg)) ? null : "{$this->rootDir}{$ds}..{$ds}web{$ds}{$stampImg}";
             $originalIconLocation = "{$this->rootDir}{$ds}..{$ds}web{$ds}{$url}";
-            $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation, $workspace);
+            $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation, $workspace, $stampImg);
         } catch (\Exception $e) {
             $this->log("Couldn't create the shortcut icon: using the default one...", LogLevel::ERROR);
             $this->log(get_class($e).": {$e->getMessage()}", LogLevel::ERROR);

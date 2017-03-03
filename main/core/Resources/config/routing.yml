@@ -463,3 +463,8 @@ claro_client:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ClientController.php"
     type: annotation
     prefix: api
+
+claro_admin_resource_icons:
+    resource: "@ClarolineCoreBundle/Controller/Administration/IconController.php"
+    prefix: admin/parameters/appearance/icon
+    type: annotation
