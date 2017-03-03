@@ -5,6 +5,7 @@ namespace Innova\PathBundle\Listener\Widget;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\TagBundle\Manager\TagManager;
 use Innova\PathBundle\Form\Type\PathWidgetConfigType;
 use Innova\PathBundle\Manager\PathManager;
 use Innova\PathBundle\Manager\UserProgressionManager;
@@ -42,6 +43,11 @@ class PathProgressionListener
     private $widgetManager;
 
     /**
+     * @var TagManager
+     */
+    private $tagManager;
+
+    /**
      * @var PathManager
      */
     private $pathManager;
@@ -59,6 +65,7 @@ class PathProgressionListener
      *     "twig"                   = @DI\Inject("templating"),
      *     "formFactory"            = @DI\Inject("form.factory"),
      *     "widgetManager"          = @DI\Inject("innova_path.manager.widget"),
+     *     "tagManager"             = @DI\Inject("claroline.manager.tag_manager"),
      *     "pathManager"            = @DI\Inject("innova_path.manager.path"),
      *     "userProgressionManager" = @DI\Inject("innova_path.manager.user_progression")
      * })
@@ -67,6 +74,7 @@ class PathProgressionListener
      * @param TwigEngine             $twig
      * @param FormFactoryInterface   $formFactory
      * @param WidgetManager          $widgetManager
+     * @param TagManager             $tagManager
      * @param PathManager            $pathManager
      * @param UserProgressionManager $userProgressionManager
      */
@@ -75,6 +83,7 @@ class PathProgressionListener
         TwigEngine             $twig,
         FormFactoryInterface   $formFactory,
         WidgetManager          $widgetManager,
+        TagManager             $tagManager,
         PathManager            $pathManager,
         UserProgressionManager $userProgressionManager)
     {
@@ -82,6 +91,7 @@ class PathProgressionListener
         $this->twig = $twig;
         $this->formFactory = $formFactory;
         $this->widgetManager = $widgetManager;
+        $this->tagManager = $tagManager;
         $this->pathManager = $pathManager;
         $this->userProgressionManager = $userProgressionManager;
     }
@@ -126,6 +136,7 @@ class PathProgressionListener
             [
                 'form' => $form->createView(),
                 'instance' => $instance,
+                'tags' => $this->tagManager->getPlatformTags(),
             ]
         );
 
