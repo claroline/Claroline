@@ -3,10 +3,17 @@
         <li gridster-item="widget"
             class="widget gridster-item-content"
             data-ng-repeat="widget in dhmc.widgets"
-            data-ng-style="{'border-color': '{{ widget['color'] }}', 'background-color': '{{ widget['color'] }}'}"
+            data-ng-style="{
+                'border-color': '{{ widget['color'] }}',
+                'background-color': '{{ widget['color'] }}'
+            }"
         >
             <div class="widget-header">
-                <h3 class="widget-title" style="color: {{ widget['textTitleColor'] }}">
+                <h3 class="widget-title"
+                    data-ng-style="{
+                        'color': '{{ widget['textTitleColor'] }}'
+                    }"
+                >
                     <span class="pull-right widget-header-control-box" ng-if="dhmc.widgetsOptions['canEdit'] && !widget['locked']">
                         <span ng-if="widget['type'] === 'desktop'">
                             <i class="fa fa-times close"

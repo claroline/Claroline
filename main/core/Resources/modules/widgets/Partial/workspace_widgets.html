@@ -3,14 +3,19 @@
         <li gridster-item="widget"
             class="widget gridster-item-content"
             data-ng-repeat="widget in whc.widgets"
-            data-ng-style="{'border-color': '{{ widget['color'] }}', 'background-color': '{{ widget['color'] }}'}"
+            data-ng-style="{
+                'border-color': '{{ widget['color'] }}',
+                'background-color': '{{ widget['color'] }}'
+            }"
         >
             <div class="widget-header">
                 <h3
                     class="widget-title"
                     data-ng-class="whc.widgetsOptions['canEdit'] && !widget['visible'] ? 'strike' : ''"
                     data-ng-bind-html="widget['instanceName']"
-                    data-ng-style="{'color': '{{ widget['textTitleColor'] }}'"
+                    data-ng-style="{
+                        'color': '{{ widget['textTitleColor'] }}'
+                    }"
                 >
                 </h3>
 
