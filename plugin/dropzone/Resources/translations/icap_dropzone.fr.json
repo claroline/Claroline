@@ -327,7 +327,7 @@
     "noCopyExpectedCorrection": "one: Aucune copie nest evaluée.|some: Aucune copie n'a reçu les %count% corrections attendues.",
     "noCorrectionExeption": "Aucune correction disponible.",
     "notStarted": "non démarrée",
-    "notStartedManualState": "L'évaluation na pas encore commencé.",
+    "notStartedManualState": "L'évaluation n'a pas encore commencé.",
     "number of Report": "Nombre de signalements",
     "number_of_denied_corrections": "Nombre de copies signalées par le correcteur",
     "only reported drops": "Seulement les copies signalées",
