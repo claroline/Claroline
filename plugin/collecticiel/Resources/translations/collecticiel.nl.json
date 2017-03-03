@@ -327,5 +327,15 @@
     "url": "Weblink",
     "url_placeholder": "http://...",
     "url_type": "Weblink",
-    "waiting for correction": "In afwachting van correcties"
+    "waiting for correction": "In afwachting van correcties",
+    "Add a criterion": "Een INNOVA-criterium voegen",
+    "Confirm delete": "Het verwijderen bevestigen",
+    "Copy n°%number%": "Kopie nr. %number%",
+    "Document invalid": "Ongeldig document",
+    "Document n°%count%": "Document",
+    "Here is the list of documents which you must correct": "Dit is de lijst van de documenten die u moet corrigeren. De score is afhankelijk van de volgende criteria : ",
+    "Hidden folder for \"%dropzoneName%\"": "Verborgen map voor  \"%dropzoneName%\"",
+    "Resource selected": "Geselecteerde bron",
+    "You are about to make your correction. This action is final. The score is %grade%/20": "U bent op het punt uw correctie weer te geven. Deze actie is definitief. De score die u geeft is : %grade%/20",
+    "innova_collecticiel_form_name": "Naam van de evaluatie"
 }
