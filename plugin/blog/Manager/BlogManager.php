@@ -47,6 +47,12 @@ class BlogManager
     {
         $data = [];
 
+        $infosUid = uniqid().'.txt';
+        $infosTemporaryPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$infosUid;
+        file_put_contents($infosTemporaryPath, $object->getInfos());
+        $files[$infosUid] = $infosTemporaryPath;
+
+        $data['infos_path'] = $infosUid;
         $data['options'] = [
             'authorize_comment' => $object->getOptions()->getAuthorizeComment(),
             'authorize_anonymous_comment' => $object->getOptions()->getAuthorizeAnonymousComment(),
@@ -116,6 +122,13 @@ class BlogManager
         return $data;
     }
 
+    public function createUploadFolder($uploadFolderPath)
+    {
+        if (!file_exists($uploadFolderPath)) {
+            mkdir($uploadFolderPath, 0777, true);
+        }
+    }
+
     /**
      * @param array  $data
      * @param string $rootPath
@@ -140,13 +153,32 @@ class BlogManager
             ->setDisplayPostViewCounter($optionsData['display_post_view_counter'])
             ->setBannerBackgroundColor($optionsData['banner_background_color'])
             ->setBannerHeight($optionsData['banner_height'])
-            ->setBannerBackgroundImage($optionsData['banner_background_image'])
             ->setBannerBackgroundImagePosition($optionsData['banner_background_image_position'])
             ->setBannerBackgroundImageRepeat($optionsData['banner_background_image_repeat'])
             ->setTagCloud($optionsData['tag_cloud']);
 
         $blog = new Blog();
+        if (isset($blogDatas['infos_path']) && $blogDatas['infos_path'] !== null) {
+            $infos = file_get_contents(
+                $rootPath.DIRECTORY_SEPARATOR.$blogDatas['infos_path']
+            );
+            $blog->setInfos($infos);
+        }
         $blog->setOptions($blogOptions);
+        $this->objectManager->persist($blog);
+        //flush, otherwise we dont have the website ID needed for building uploadPath for banner
+        $this->objectManager->forceFlush();
+
+        //Copy banner bg image to web folder
+        if ($optionsData['banner_background_image'] !== null && !filter_var($optionsData['banner_background_image'], FILTER_VALIDATE_URL)) {
+            $this->createUploadFolder(DIRECTORY_SEPARATOR.$this->uploadDir);
+            $uniqid = uniqid();
+            copy(
+                $rootPath.DIRECTORY_SEPARATOR.$optionsData['banner_background_image'],
+                DIRECTORY_SEPARATOR.$this->uploadDir.DIRECTORY_SEPARATOR.$uniqid
+            );
+            $blogOptions->setBannerBackgroundImage($uniqid);
+        }
 
         $postsDatas = $blogDatas['posts'];
         $posts = new ArrayCollection();
@@ -170,9 +202,9 @@ class BlogManager
                 $comment
                     ->setMessage($commentMessage)
                     ->setAuthor($this->retrieveUser($commentsData['author'], $owner))
-                    ->setCreationDate(new \DateTime($commentsData['creation_date']))
-                    ->setUpdateDate(new \DateTime($commentsData['update_date']))
-                    ->setPublicationDate(new \DateTime($commentsData['publication_date']))
+                    ->setCreationDate((new \DateTime())->setTimestamp($postsData['creation_date']))
+                    ->setUpdateDate((new \DateTime())->setTimestamp($postsData['modification_date']))
+                    ->setPublicationDate((new \DateTime())->setTimestamp($postsData['publication_date']))
                     ->setStatus($commentsData['status'])
                 ;
                 $comments->add($comment);
@@ -184,9 +216,9 @@ class BlogManager
                 ->setTitle($postsData['title'])
                 ->setContent($postContent)
                 ->setAuthor($this->retrieveUser($postsData['author'], $owner))
-                ->setCreationDate(new \DateTime($postsData['creation_date']))
-                ->setModificationDate(new \DateTime($postsData['modification_date']))
-                ->setPublicationDate(new \DateTime($postsData['publication_date']))
+                ->setCreationDate((new \DateTime())->setTimestamp($postsData['creation_date']))
+                ->setModificationDate((new \DateTime())->setTimestamp($postsData['modification_date']))
+                ->setPublicationDate((new \DateTime())->setTimestamp($postsData['publication_date']))
                 ->setTags($tags)
                 ->setComments($comments)
                 ->setStatus($postsData['status'])

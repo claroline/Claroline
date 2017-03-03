@@ -89,7 +89,7 @@ class LessonImporter extends Importer implements ConfigurationInterface, RichTex
         $processor->processConfiguration($this, $data);
     }
 
-    public function import(array $data)
+    public function import(array $data, $name)
     {
         return $this->lessonManager->importLesson($data, $this->getRootPath());
     }

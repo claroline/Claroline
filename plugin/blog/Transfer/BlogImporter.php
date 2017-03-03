@@ -4,17 +4,20 @@ namespace Icap\BlogBundle\Transfer;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\BlogBundle\Manager\BlogManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.importer.icap_blog_importer")
  * @DI\Tag("claroline.importer")
  */
-class BlogImporter extends Importer implements ConfigurationInterface
+class BlogImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     /**
      * @var BlogManager
@@ -24,11 +27,18 @@ class BlogImporter extends Importer implements ConfigurationInterface
     /**
      * @DI\InjectParams({
      *      "blogManager" = @DI\Inject("icap_blog.manager.blog"),
+     *      "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *      "container"     = @DI\Inject("service_container")
      * })
      */
-    public function __construct(BlogManager $blogManager)
-    {
+    public function __construct(
+        BlogManager $blogManager,
+        ObjectManager $om,
+        ContainerInterface $container
+    ) {
         $this->blogManager = $blogManager;
+        $this->om = $om;
+        $this->container = $container;
     }
 
     /**
@@ -42,10 +52,12 @@ class BlogImporter extends Importer implements ConfigurationInterface
         $rootNode = $treeBuilder->root('data');
         $rootNode
             ->children()
+                ->scalarNode('infos_path')
+                    ->end()
                 ->arrayNode('options')
                     ->children()
                         ->booleanNode('authorize_comment')->defaultFalse()->end()
-                        ->booleanNode('a$configurationuthorize_anonymous_comment')->defaultFalse()->end()
+                        ->booleanNode('authorize_anonymous_comment')->defaultFalse()->end()
                         ->integerNode('post_per_page')->defaultValue(10)->end()
                         ->booleanNode('auto_publish_post')->defaultFalse()->end()
                         ->booleanNode('auto_publish_comment')->defaultFalse()->end()
@@ -133,5 +145,35 @@ class BlogImporter extends Importer implements ConfigurationInterface
     public function export($workspace, array &$files, $object)
     {
         return $this->blogManager->exportBlog($workspace, $files, $object);
+    }
+
+    public function format($data)
+    {
+        foreach ($data['posts'] as $post) {
+            //look for the text with the exact same content (it's really bad I know but at least it works
+            $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$post['content']);
+            $posts = $this->om->getRepository('Icap\BlogBundle\Entity\Post')->findByContent($text);
+
+            foreach ($posts as $entity) {
+                //avoid circulary dependency
+                $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                $entity->setContent($text);
+                $this->om->persist($entity);
+            }
+        }
+        //format infobar
+        if (isset($data['infos_path'])) {
+            $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$data['infos_path']);
+            $infobars = $this->om->getRepository('Icap\BlogBundle\Entity\Blog')->findByInfos($text);
+            foreach ($infobars as $entity) {
+                //avoid circulary dependency
+                $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                $entity->setInfos($text);
+                $this->om->persist($entity);
+            }
+        }
+
+        //this could be bad, but the corebundle can use a transaction and force flush itself anyway
+        $this->om->flush();
     }
 }

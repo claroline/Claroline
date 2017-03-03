@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 3/12/15
  */
 
@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsiteOptions;
 use Icap\WebsiteBundle\Entity\WebsitePage;
+use Icap\WebsiteBundle\Entity\WebsitePageTypeEnum;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Routing\Router;
 
@@ -80,7 +81,7 @@ class WebsiteManager
         $orgOptions = $orgWebsite->getOptions();
         $websitePages = $this->websitePageRepository->children($orgRoot);
         array_unshift($websitePages, $orgRoot);
-        $newWebsitePagesMap = array();
+        $newWebsitePagesMap = [];
 
         $newWebsite = new Website($orgWebsite->isTest());
         foreach ($websitePages as $websitePage) {
@@ -90,7 +91,6 @@ class WebsiteManager
             if ($websitePage->isRoot()) {
                 $newWebsite->setRoot($newWebsitePage);
                 $this->om->persist($newWebsite);
-                //$this->websitePageRepository->persistAsFirstChild($newWebsitePage);
             } else {
                 $newWebsitePageParent = $newWebsitePagesMap[$websitePage->getParent()->getId()];
                 $newWebsitePage->setParent($newWebsitePageParent);
@@ -122,7 +122,7 @@ class WebsiteManager
      *
      * @return Website
      */
-    public function importWebsite(array $data, $rootPath, $test = false)
+    public function importWebsite(array $data, $rootPath, array $resourcesCreated = [], $test = false)
     {
         $website = new Website($test);
         if (isset($data['data'])) {
@@ -131,15 +131,34 @@ class WebsiteManager
             $websiteOptions->setWebsite($website);
             $website->setOptions($websiteOptions);
 
-            $websitePagesMap = array();
+            $websitePagesMap = [];
             foreach ($websiteData['pages'] as $websitePage) {
                 $entityWebsitePage = new WebsitePage();
                 $entityWebsitePage->setWebsite($website);
+
+                //resource link case, need no map manifest IDs to matching resource
+                if ($websitePage['type'] === WebsitePageTypeEnum::RESOURCE_PAGE) {
+                    $resource_node = null;
+                    //full workspace import, external resource ID, search matching resource amongst other imported resources
+                    if (isset($resourcesCreated) && isset($websitePage['resource_node_id']) && isset($resourcesCreated[$websitePage['resource_node_id']])) {
+                        //resource_node_id is the UID of the resource
+                        if (isset($resourcesCreated[$websitePage['resource_node_id']])) {
+                            $resource_node = $resourcesCreated[$websitePage['resource_node_id']]->getResourceNode();
+                        }
+                    //standalone website import, ID references existing entity
+                    } elseif (isset($websitePage['resource_node_id'])) {
+                        $resource_node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                            ->findOneBy(['id' => $websitePage['resource_node_id']]);
+                    }
+                    if ($resource_node !== null) {
+                        $websitePage['resource_node'] = $resource_node;
+                    }
+                }
+
                 $entityWebsitePage->importFromArray($websitePage, $rootPath);
                 if ($websitePage['is_root']) {
                     $website->setRoot($entityWebsitePage);
                     $this->om->persist($website);
-                    //$this->websitePageRepository->persistAsFirstChild($entityWebsitePage);
                 } else {
                     $entityWebsitePageParent = $websitePagesMap[$websitePage['parent_id']];
                     $entityWebsitePage->setParent($entityWebsitePageParent);
@@ -151,8 +170,10 @@ class WebsiteManager
 
                 $websitePagesMap[$websitePage['id']] = $entityWebsitePage;
             }
-            $this->om->flush();
-            $websiteOptions->importFromArray(
+            //flush, otherwise we dont have the website ID needed for building uploadPath for banner
+            $this->om->forceFlush();
+
+            $website->getOptions()->importFromArray(
                 $this->webDir,
                 $websiteData['options'],
                 $rootPath
@@ -168,15 +189,15 @@ class WebsiteManager
         $rootWebsitePage = $object->getRoot();
         $websitePages = $this->websitePageRepository->children($rootWebsitePage);
         array_unshift($websitePages, $rootWebsitePage);
-        $websitePagesArray = array();
+        $websitePagesArray = [];
         foreach ($websitePages as $websitePage) {
             $websitePagesArray[] = $websitePage->exportToArray($this->router, $files);
         }
         $websiteOptionsArray = $object->getOptions()->exportToArray($this->webDir, $files);
-        $data = array(
+        $data = [
             'options' => $websiteOptionsArray,
             'pages' => $websitePagesArray,
-        );
+        ];
 
         return $data;
     }
