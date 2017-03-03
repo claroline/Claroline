@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
+use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * Resource images data fixture.
@@ -37,6 +37,9 @@ class LoadResourceImagesData implements RequiredFixture
 
             $this->container->get('claroline.manager.icon_manager')
                 ->createShortcutIcon($rimg);
+            // Also add the new resource type icon to default resource icon set
+            $this->container->get('claroline.manager.icon_set_manager')
+                ->addOrUpdateIconItemToDefaultResourceIconSet($rimg);
         }
     }
 

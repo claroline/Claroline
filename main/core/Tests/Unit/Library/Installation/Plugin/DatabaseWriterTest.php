@@ -35,6 +35,7 @@ class DatabaseWriterTest extends MockeryTestCase
         $this->mm = $this->mock('Claroline\CoreBundle\Manager\MaskManager');
         $this->tm = $this->mock('Claroline\CoreBundle\Manager\ToolManager');
         $this->tmd = $this->mock('Claroline\CoreBundle\Manager\ToolMaskDecoderManager');
+        $this->ism = $this->mock('Claroline\CoreBundle\Manager\IconSetManager');
         $this->fileSystem = $this->mock('Symfony\Component\Filesystem\Filesystem');
         $this->kernel = $this->mock('Symfony\Component\HttpKernel\KernelInterface');
         $this->templateDir = 'path/to/templateDir';
@@ -48,7 +49,8 @@ class DatabaseWriterTest extends MockeryTestCase
             $this->kernel,
             $this->mm,
             $this->tm,
-            $this->tmd
+            $this->tmd,
+            $this->ism
         );
     }
 
