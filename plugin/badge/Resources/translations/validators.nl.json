@@ -18,7 +18,7 @@
     "2047_characters_max": "Maximaal 2047 tekens.",
     "Each row requires at least 5 parameters.": "Elke regel vereist tenminste 5 parameters (gescheiden door puntkomma's).",
     "badge_expiring_need_period_and_duration": "De badge vereist een geldigheidsduur.",
-    "badge_need_image": "Een beeld moet worden gekoppeld aan de badge.",
+    "badge_need_image": "Een afbeelding moet worden gekoppeld aan de badge.",
     "google_meta_tag_error": "Het veld moet een meta tag zijn, bijvoorbeeld: <meta name=\"google-site-verification\" content=\"XXX\" />.",
     "invalid_date_range": "Het begin moet voorafgaan aan de einddatum.",
     "invalid_size_message": "Deze opslag eenheid is ongeldig (B, KB, MB, GB).",
