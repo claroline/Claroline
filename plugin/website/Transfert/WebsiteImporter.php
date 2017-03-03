@@ -13,6 +13,7 @@ namespace Icap\WebsiteBundle\Transfert;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Icap\WebsiteBundle\Manager\WebsiteManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -23,7 +24,7 @@ use Symfony\Component\Config\Definition\Processor;
  * @DI\Service("claroline.importer.icap_website_importer")
  * @DI\Tag("claroline.importer")
  */
-class WebsiteImporter extends Importer implements ConfigurationInterface
+class WebsiteImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     /**
      * @var \Icap\WebsiteBundle\Manager\WebsiteManager
@@ -35,13 +36,15 @@ class WebsiteImporter extends Importer implements ConfigurationInterface
     /**
      * @DI\InjectParams({
      *      "websiteManager"        = @DI\Inject("icap.website.manager"),
-     *      "container"          = @DI\Inject("service_container")
+     *      "container"          = @DI\Inject("service_container"),
+     *      "om"            = @DI\Inject("claroline.persistence.object_manager")
      * })
      */
-    public function __construct(WebsiteManager $websiteManager, $container)
+    public function __construct(WebsiteManager $websiteManager, $container, $om)
     {
         $this->websiteManager = $websiteManager;
         $this->container = $container;
+        $this->om = $om;
     }
 
     public function getConfigTreeBuilder()
@@ -116,6 +119,7 @@ class WebsiteImporter extends Importer implements ConfigurationInterface
                             ->scalarNode('description')->end()
                             ->scalarNode('type')->end()
                             ->scalarNode('url')->end()
+                            ->scalarNode('resource_node_id')->end()
                             ->scalarNode('rich_text_path')->end()
                         ->end()
                     ->end()
@@ -130,11 +134,11 @@ class WebsiteImporter extends Importer implements ConfigurationInterface
         $processor->processConfiguration($this, $data);
     }
 
-    public function import(array $data)
+    public function import(array $data, $name, $created)
     {
         $rootPath = $this->getRootPath();
 
-        return $this->websiteManager->importWebsite($data, $rootPath);
+        return $this->websiteManager->importWebsite($data, $rootPath, $created);
     }
 
     /**
@@ -147,5 +151,26 @@ class WebsiteImporter extends Importer implements ConfigurationInterface
     public function export($workspace, array &$files, $object)
     {
         return $this->websiteManager->exportWebsite($workspace, $files, $object);
+    }
+
+    public function format($data)
+    {
+        foreach ($data['pages'] as $page) {
+            if (isset($page['rich_text_path'])) {
+                //look for the text with the exact same content (it's really bad I know but at least it works
+                $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$page['rich_text_path']);
+                $pages = $this->om->getRepository('Icap\WebsiteBundle\Entity\WebsitePage')->findByRichText($text);
+
+                foreach ($pages as $entity) {
+                    //avoid circulary dependency
+                    $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                    $entity->setRichText($text);
+                    $this->om->persist($entity);
+                }
+            }
+        }
+
+        //this could be bad, but the corebundle can use a transaction and force flush itself anyway
+        $this->om->flush();
     }
 }

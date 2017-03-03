@@ -73,6 +73,7 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
                 ->arrayNode('options')
                     ->children()
                         ->integerNode('mode')->defaultValue(0)->end()
+                        ->booleanNode('display_section_numbers')->defaultFalse()->end()
                     ->end()
                 ->end()
                 ->arrayNode('sections')

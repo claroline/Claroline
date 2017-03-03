@@ -38,4 +38,28 @@ class ResourceIconRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findByMimeTypes($mimeTypes, $includeShortcuts = false)
+    {
+        // If mimetypes is empty, return no elements
+        if (empty($mimeTypes)) {
+            return [];
+        }
+        // If not array turn to array
+        if (!is_array($mimeTypes)) {
+            $mimeTypes = [$mimeTypes];
+        }
+        $qb = $this->createQueryBuilder('i')
+            ->select('i');
+        $qb
+            ->andWhere($qb->expr()->in('i.mimeType', '?1'))
+            ->setParameter(1, $mimeTypes);
+        if (!$includeShortcuts) {
+            $qb
+                ->andWhere('i.isShortcut = ?2')
+                ->setParameter(2, false);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

@@ -237,7 +237,7 @@ class WebsitePage
      */
     public function getTarget()
     {
-        if ($this->target == null) {
+        if ($this->target === null) {
             return 0;
         }
 
@@ -487,17 +487,17 @@ class WebsitePage
 
     public function isRoot()
     {
-        return $this->level == 0;
+        return $this->level === 0;
     }
 
     public function exportToArray(RouterInterface $router = null, &$files = null)
     {
         $tmpFilePath = sys_get_temp_dir().DIRECTORY_SEPARATOR;
 
-        $pageArray = array(
+        $pageArray = [
             'id' => $this->id,
             'parent_id' => ($this->parent !== null) ? $this->parent->getId() : null,
-            'is_root' => $this->level == 0,
+            'is_root' => $this->level === 0,
             'visible' => $this->visible,
             'creation_date' => $this->creationDate,
             'title' => $this->title,
@@ -506,20 +506,24 @@ class WebsitePage
             'type' => $this->type,
             'is_homepage' => $this->getIsHomepage(),
             'url' => $this->url,
-        );
+        ];
+
+        //export
         if (isset($files) && $files !== null) {
-            if ($this->type == WebsitePageTypeEnum::RESOURCE_PAGE) {
-                $pageArray['type'] = WebsitePageTypeEnum::URL_PAGE;
-                $pageArray['url'] = $router->generate('claro_resource_open', array(
+            if ($this->type === WebsitePageTypeEnum::RESOURCE_PAGE) {
+                $pageArray['resource_node_id'] = $this->resourceNode->getId();
+                //also set URL as fallback if refereced resource is not found during import
+                $pageArray['url'] = $router->generate('claro_resource_open', [
                     'resourceType' => $this->resourceNodeType,
                     'node' => $this->resourceNode->getId(),
-                ), true);
-            } elseif ($this->type == WebsitePageTypeEnum::BLANK_PAGE) {
+                ], true);
+            } elseif ($this->type === WebsitePageTypeEnum::BLANK_PAGE) {
                 $richTextUid = uniqid('ws_page_content_').'.txt';
                 file_put_contents($tmpFilePath.$richTextUid, $this->richText);
                 $files[$richTextUid] = $tmpFilePath.$richTextUid;
                 $pageArray['rich_text_path'] = $richTextUid;
             }
+        //copy
         } else {
             $pageArray['resource_node'] = $this->resourceNode;
             $pageArray['resource_node_type'] = $this->resourceNodeType;
@@ -538,8 +542,7 @@ class WebsitePage
         $this->isSection = $optionsArray['is_section'];
         $this->description = $optionsArray['description'];
         $this->isHomepage = $optionsArray['is_homepage'];
-        $this->url = $optionsArray['url'];
-        if ($this->type == WebsitePageTypeEnum::BLANK_PAGE) {
+        if ($this->type === WebsitePageTypeEnum::BLANK_PAGE) {
             if (isset($optionsArray['rich_text'])) {
                 $this->richText = $optionsArray['rich_text'];
             } elseif (isset($optionsArray['rich_text_path'])) {
@@ -547,11 +550,17 @@ class WebsitePage
                     $rootPath.DIRECTORY_SEPARATOR.$optionsArray['rich_text_path']
                 );
             }
-        } elseif ($this->type == WebsitePageTypeEnum::RESOURCE_PAGE) {
-            if (isset($pageArray['resource_node']) && isset($pageArray['resource_node_type'])) {
-                $this->resourceNode = $pageArray['resource_node'];
-                $this->resourceNodeType = $pageArray['resource_node_type'];
+        } elseif ($this->type === WebsitePageTypeEnum::RESOURCE_PAGE) {
+            if (isset($optionsArray['resource_node'])) {
+                $this->resourceNode = $optionsArray['resource_node'];
+                $this->resourceNodeType = $this->resourceNode->getResourceType()->getName();
+            } else {
+                //fallback to url if resource not found
+                $this->url = $optionsArray['url'];
+                $this->type = WebsitePageTypeEnum::URL_PAGE;
             }
+        } elseif ($this->type === WebsitePageTypeEnum::URL_PAGE) {
+            $this->url = $optionsArray['url'];
         }
     }
 

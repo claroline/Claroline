@@ -8,7 +8,7 @@
 
 namespace Icap\WebsiteBundle\Entity;
 
-use Icap\WebsiteBundle\Library\Utilities\Enum;
+use Claroline\CoreBundle\Library\Utilities\Enum;
 
 class WebsitePageTypeEnum extends Enum
 {

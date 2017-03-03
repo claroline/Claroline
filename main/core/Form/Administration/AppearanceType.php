@@ -18,11 +18,13 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 class AppearanceType extends AbstractType
 {
     private $themes;
+    private $iconSets;
     private $lockedParams;
 
-    public function __construct(array $themes, array $lockedParams = array())
+    public function __construct(array $themes, array $iconSets, array $lockedParams = [])
     {
         $this->themes = $themes;
+        $this->iconSets = $iconSets;
         $this->lockedParams = $lockedParams;
     }
 
@@ -32,29 +34,38 @@ class AppearanceType extends AbstractType
             ->add(
                 'name_active',
                 'checkbox',
-                array(
+                [
                     'required' => false,
                     'label' => 'show_name_in_top_bar',
                     'disabled' => isset($this->lockedParams['nameActive']),
-                )
+                ]
             )
             ->add(
                 'footer',
                 'text',
-                array(
+                [
                     'required' => false,
                     'disabled' => isset($this->lockedParams['footer']),
                     'label' => 'footer',
-                )
+                ]
             )
             ->add(
                 'theme',
                 'choice',
-                array(
+                [
                     'choices' => $this->themes,
                     'disabled' => isset($this->lockedParams['theme']),
                     'label' => 'theme',
-                )
+                ]
+            )
+            ->add(
+                'resource_icon_set',
+                'choice',
+                [
+                    'choices' => $this->iconSets,
+                    'disabled' => isset($this->lockedParams['resource_icon_set']),
+                    'label' => 'resource_icon_set',
+                ]
             );
     }
 
@@ -65,6 +76,6 @@ class AppearanceType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(['translation_domain' => 'platform']);
     }
 }
