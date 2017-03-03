@@ -285,5 +285,9 @@
     "Add a criterion Innova": "Een INNOVA-criterium voegen",
     "Add a new": "Informatie/criterium",
     "Add comment": "Een commentaar voegen",
-    "Author": "Auteur : "
+    "Author": "Auteur : ",
+    "Confirm delete": "Het verwijderen bevestigen",
+    "Here is the list of documents which you must correct": "Dit is de lijst van de documenten die u moet corrigeren. De score is afhankelijk van de volgende criteria : ",
+    "Hidden folder for \"%dropzoneName%\"": "Verborgen map voor  \"%dropzoneName%\"",
+    "innova_collecticiel_form_name": "Naam van de evaluatie"
 }
