@@ -3,6 +3,10 @@
     flex-direction: column;
     background-color: @current-step-bg;
 
+    .current-step {
+        order: 1;
+    }
+
     .current-step-navs {
         order: 2;
         display: flex;
@@ -21,14 +25,12 @@
         }
         .btn-previous {
             text-align: left;
+            margin-right: floor(@path-grid-spacing-x / 2);
         }
         .btn-next {
             text-align: right;
+            margin-left: floor(@path-grid-spacing-x / 2);
         }
-    }
-
-    .current-step {
-        order: 1;
     }
 
     .current-step-content {
@@ -41,7 +43,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 30px;
-            padding-left: floor(@grid-gutter-width / 2) - 4px; // -4 because of the border left
+            padding-left: floor(@path-grid-spacing-x / 2) - 4px; // -4 because of the border left
             border-left: 4px solid transparent;
 
             // removes default h* margin & padding
@@ -74,7 +76,10 @@
     list-style-type: none;
 }
 
-.lockmsg{display: none;}
+.lockmsg {
+    display: none;
+}
+
 .userliststeps th:nth-child(1) {
     width: 60%;
 }

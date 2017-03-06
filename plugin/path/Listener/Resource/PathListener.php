@@ -58,7 +58,7 @@ class PathListener
         // Forward request to the Resource controller
         $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate([], null, [
             '_controller' => 'InnovaPathBundle:Resource\Path:open',
-            'id' => $path->getId(),
+            'id' => $path ? $path->getId() : null,
         ]);
 
         $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
@@ -79,7 +79,7 @@ class PathListener
         // Forward request to the Resource controller
         $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate([], null, [
             '_controller' => 'InnovaPathBundle:Resource\Path:edit',
-            'id' => $path->getId(),
+            'id' => $path ? $path->getId() : null,
         ]);
 
         $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
