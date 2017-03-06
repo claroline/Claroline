@@ -1,4 +1,4 @@
-<div class="panel-body"
+<div class="panel-body study-body"
      ng-class="vm.fullscreenClass">
   <button class="btn btn-default btn-fullscreen"
           data-ng-click="vm.toggleFullscreen()">
@@ -6,53 +6,59 @@
        ng-class="vm.fullscreenClassButton"></i>
   </button>
 
-
-  <div class="text-center"
-       data-ng-if="vm.currentCard">
-    <div ng-repeat="question in vm.questions">
-      <!-- Display Generic value -->
-      <div ng-if="question.type == 'generic'">
-        <span class="h2">{{ question.field_label.name }} : </span>
-        <span class="h2">{{ question.value }}</span>
-      </div>
-      <!-- Display Text value -->
-      <div ng-if="question.type == 'text'">
-        <span class="h2">{{ question.field_label.name }} : </span>
-        <span class="h2">{{ question.value }}</span>
-      </div>
-      <!-- Display Image value -->
-      <div ng-if="question.type == 'image'"
-           class="row">
-        <div class="col-xs-offset-4 col-xs-4">
-        <span class="h2">{{ question.field_label.name }} : </span>
-        <img class="img-responsive img-thumbnail"
-             style="width: 80%"
-             ng-src="{{ question.value }}"
-             alt="{{ question.alt}}" />
+  <div class="card-container">
+    <div class="card clearfix"
+         ng-class="vm.flippedClass"
+         data-ng-click="vm.flipCard()"
+         data-ng-if="vm.currentCard">
+      <div class="card-front">
+        <div class="card-content">
+          <div ng-repeat="question in vm.questions"
+               class="card-field">
+            <div class="field-label">
+              {{ question.field_label.name }}
+            </div>
+            <!-- Display Generic value -->
+            <div ng-if="question.type == 'generic'"
+                 class="field-value">
+              {{ question.value }}
+            </div>
+            <!-- Display Text value -->
+            <div ng-if="question.type == 'text'"
+                 class="field-value">
+              {{ question.value }}
+            </div>
+            <!-- Display Image value -->
+            <img class="field-value-img img-responsive img-thumbnail"
+                 ng-if="question.type == 'image'"
+                 ng-src="{{ question.value }}"
+                 alt="{{ question.alt}}" />
+          </div>
         </div>
       </div>
-    </div>
-    <hr/>
-    <div ng-repeat="answer in vm.answers">
-      <!-- Display Generic value -->
-      <div ng-if="answer.type == 'generic'">
-        <span class="h2">{{ answer.field_label.name }} : </span>
-        <span class="h2">{{ answer.value }}</span>
-      </div>
-      <!-- Display Text value -->
-      <div ng-if="answer.type == 'text'">
-        <span class="h2">{{ answer.field_label.name }} : </span>
-        <span class="h2">{{ answer.value }}</span>
-      </div>
-      <!-- Display Image value -->
-      <div ng-if="answer.type == 'image'"
-           class="row">
-        <div class="col-xs-offset-4 col-xs-4">
-        <span class="h2">{{ answer.field_label.name }} : </span>
-        <img class="img-responsive img-thumbnail"
-             style="width: 80%"
-             ng-src="{{ answer.value }}"
-             alt="{{ answer.alt}}" />
+      <div class="card-back">
+        <div class="card-content">
+          <div ng-repeat="answer in vm.answers"
+               class="card-field">
+            <div class="field-label">
+              {{ answer.field_label.name }}
+            </div>
+            <!-- Display Generic value -->
+            <div ng-if="answer.type == 'generic'"
+                 class="field-value">
+              {{ answer.value }}
+            </div>
+            <!-- Display Text value -->
+            <div ng-if="answer.type == 'text'"
+                 class="field-value">
+              {{ answer.value }}
+            </div>
+            <!-- Display Image value -->
+            <img class="field-value-img img-responsive img-thumbnail"
+                 ng-if="answer.type == 'image'"
+                 ng-src="{{ answer.value }}"
+                 alt="{{ answer.alt}}" />
+          </div>
         </div>
       </div>
     </div>
@@ -64,6 +70,18 @@
     {{ 'info.no_cards_today'|trans:'flashcard' }}
   </div>
 
+  <div class="progress learning-progress small"
+       data-ng-if="vm.currentCard">
+    <div class="progress-bar"
+         role="progessbar"
+         aria-valuenow="{{ vm.initialNbrOfCards - vm.newCards.length - vm.learningCards.length - 1 }}"
+         aria-valuemax="{{ vm.initialNbrOfCards }}"
+         style="width: {{ (vm.initialNbrOfCards - vm.newCards.length - vm.learningCards.length - 1) / vm.initialNbrOfCards * 100 }}%">
+      {{ vm.initialNbrOfCards - vm.newCards.length - vm.learningCards.length - 1}}
+    </div>
+    {{ vm.newCards.length + vm.learningCards.length + 1}}
+  </div>
+
 </div>
 
 <div class="panel-footer text-center"
@@ -73,35 +91,35 @@
      href="#/">
     {{ 'study.stop'|trans:'flashcard' }}
   </a>
-  <button class="btn btn-primary"
-          data-ng-click="vm.showAnswers()"
-          data-ng-if="vm.answers.length == 0 && vm.currentCard">
-    {{ 'answer.show'|trans:'flashcard' }}
-  </button>
   <button class="btn btn-default"
           data-ng-click="vm.cancelLastStudy()"
-          data-ng-if="vm.answers.length == 0 && vm.currentCard &&
+          data-ng-if="!vm.answersShown && vm.currentCard &&
           vm.revisedCards.length != 0">
     {{ 'study.cancelLastStudy'|trans:'flashcard' }}
   </button>
+  <button class="btn btn-primary"
+          data-ng-click="vm.flipCard()"
+          data-ng-if="!vm.answersShown && vm.currentCard">
+    {{ 'answer.show'|trans:'flashcard' }}
+  </button>
   <button class="btn btn-danger"
           data-ng-click="vm.validAnswer(0)"
-          data-ng-if="vm.answers.length > 0">
+          data-ng-if="vm.answersShown">
     {{ 'answer.again'|trans:'flashcard' }}
   </button>
   <button class="btn btn-warning"
           data-ng-click="vm.validAnswer(1)"
-          data-ng-if="vm.answers.length > 0">
+          data-ng-if="vm.answersShown">
     {{ 'answer.hard'|trans:'flashcard' }}
   </button>
   <button class="btn btn-success"
           data-ng-click="vm.validAnswer(2)"
-          data-ng-if="vm.answers.length > 0">
+          data-ng-if="vm.answersShown">
     {{ 'answer.good'|trans:'flashcard' }}
   </button>
   <button class="btn btn-info"
           data-ng-click="vm.validAnswer(3)"
-          data-ng-if="vm.answers.length > 0">
+          data-ng-if="vm.answersShown">
     {{ 'answer.easy'|trans:'flashcard' }}
   </button>
 
