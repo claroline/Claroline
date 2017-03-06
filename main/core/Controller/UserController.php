@@ -151,12 +151,12 @@ class UserController extends Controller
             'ROLE_ADMIN'
         );
         $isAdmin = !is_null($adminRole);
-        $excludedIds = array();
-        $forcedUsersIds = array();
-        $forcedGroupsIds = array();
-        $forcedRolesIds = array();
-        $forcedWorkspacesIds = array();
-        $shownWorkspacesIds = array();
+        $excludedIds = [];
+        $forcedUsersIds = [];
+        $forcedGroupsIds = [];
+        $forcedRolesIds = [];
+        $forcedWorkspacesIds = [];
+        $shownWorkspacesIds = [];
 
         foreach ($excludedUsers as $excludedUser) {
             $excludedIds[] = $excludedUser->getId();
@@ -182,7 +182,7 @@ class UserController extends Controller
             $shownWorkspacesIds[] = $shownWorkspace->getId();
         }
 
-        return array(
+        return [
             'pickerName' => $pickerName,
             'pickerTitle' => $pickerTitle,
             'mode' => $mode,
@@ -204,7 +204,7 @@ class UserController extends Controller
             'forcedWorkspacesIds' => $forcedWorkspacesIds,
             'shownWorkspacesIds' => $shownWorkspacesIds,
             'isAdmin' => $isAdmin,
-        );
+        ];
     }
 
     /**
@@ -300,7 +300,7 @@ class UserController extends Controller
         $withMail = intval($showMail) === 1;
         $withCode = intval($showCode) === 1;
         $profilePreferences = $this->facetManager->getVisiblePublicPreference();
-        $shownWorkspaceIds = array();
+        $shownWorkspaceIds = [];
 
         $users = $this->userManager->getUsersForUserPicker(
             $authenticatedUser,
@@ -327,7 +327,7 @@ class UserController extends Controller
             $shownWorkspaceIds[] = $ws->getId();
         }
 
-        return array(
+        return [
             'users' => $users,
             'search' => $search,
             'page' => $page,
@@ -346,7 +346,7 @@ class UserController extends Controller
             'attachName' => $attachName,
             'profilePreferences' => $profilePreferences,
             'shownWorkspaceIds' => $shownWorkspaceIds,
-        );
+        ];
     }
 
     /**
@@ -361,7 +361,7 @@ class UserController extends Controller
         User $authenticatedUser,
         $filterType
     ) {
-        $datas = array();
+        $datas = [];
         $adminRole = $this->roleManager->getRoleByUserAndRoleName(
             $authenticatedUser,
             'ROLE_ADMIN'
@@ -380,30 +380,30 @@ class UserController extends Controller
                 foreach ($groups as $group) {
                     $id = $group->getId();
                     $name = $group->getName();
-                    $datas[] = array('id' => $id, 'name' => $name);
+                    $datas[] = ['id' => $id, 'name' => $name];
                 }
                 break;
 
-            case 'role' :
+            case 'role':
 
                 if ($isAdmin) {
                     $roles = $this->roleManager->getAllPlatformRoles();
                 } else {
-                    $roles = array();
+                    $roles = [];
                 }
 
                 foreach ($roles as $role) {
                     $id = $role->getId();
                     $name = $this->translator->trans(
                         $role->getTranslationKey(),
-                        array(),
+                        [],
                         'platform'
                     );
-                    $datas[] = array('id' => $id, 'name' => $name);
+                    $datas[] = ['id' => $id, 'name' => $name];
                 }
                 break;
 
-            case 'workspace' :
+            case 'workspace':
 
                 if ($isAdmin) {
                     $workspaces = $this->workspaceManager->getAllNonPersonalWorkspaces();
@@ -415,11 +415,11 @@ class UserController extends Controller
                 foreach ($workspaces as $workspace) {
                     $id = $workspace->getId();
                     $name = $workspace->getName().' ['.$workspace->getCode().']';
-                    $datas[] = array('id' => $id, 'name' => $name);
+                    $datas[] = ['id' => $id, 'name' => $name];
                 }
                 break;
 
-            default :
+            default:
                 break;
         }
 
@@ -436,18 +436,18 @@ class UserController extends Controller
      */
     public function workspaceRolesListForUserPickerAction(Workspace $workspace)
     {
-        $datas = array();
+        $datas = [];
         $wsRoles = $this->roleManager->getWorkspaceRoles($workspace);
 
         foreach ($wsRoles as $role) {
-            $datas[] = array(
+            $datas[] = [
                 'id' => $role->getId(),
                 'name' => $this->translator->trans(
                     $role->getTranslationKey(),
-                    array(),
+                    [],
                     'platform'
                 ),
-            );
+            ];
         }
 
         return new JsonResponse($datas, 200);
@@ -462,7 +462,7 @@ class UserController extends Controller
      */
     public function userInfosRequestAction(User $user)
     {
-        $datas = array(
+        $datas = [
             'id' => $user->getId(),
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
@@ -470,7 +470,7 @@ class UserController extends Controller
             'mail' => $user->getMail(),
             'phone' => $user->getPhone(),
             'picture' => $user->getPicture(),
-        );
+        ];
 
         return new JsonResponse($datas, 200);
     }
@@ -486,15 +486,19 @@ class UserController extends Controller
      *      class="ClarolineCoreBundle:User",
      *      options={"multipleIds" = true, "name" = "userIds"}
      * )
+     *
+     * @param User[] $users
+     *
+     * @return JsonResponse
      */
     public function usersInfosRequestAction(array $users)
     {
-        $datas = array();
+        $data = [];
 
         foreach ($users as $user) {
-            $userRole = $this->roleManager->getUserRoleByUser($user);
+            $userRole = $this->roleManager->getUserRole($user->getUsername());
 
-            $datas[] = array(
+            $data[] = [
                 'id' => $user->getId(),
                 'firstName' => $user->getFirstName(),
                 'lastName' => $user->getLastName(),
@@ -509,9 +513,9 @@ class UserController extends Controller
                     $user->getPersonalWorkspace()->getId(),
                 'user_role_id' => is_null($userRole) ? null : $userRole->getId(),
 
-            );
+            ];
         }
 
-        return new JsonResponse($datas, 200);
+        return new JsonResponse($data, 200);
     }
 }

@@ -38,6 +38,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -46,6 +47,24 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class UserController extends FOSRestController
 {
+    private $authenticationManager;
+    private $eventDispatcher;
+    private $formFactory;
+    private $localeManager;
+    private $request;
+    private $userManager;
+    private $groupManager;
+    private $roleManager;
+    private $workspaceManager;
+    private $om;
+    private $userRepo;
+    private $roleRepo;
+    private $groupRepo;
+    private $profilePropertyManager;
+    private $mailManager;
+    private $apiManager;
+    private $facetManager;
+
     /**
      * @DI\InjectParams({
      *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
@@ -63,6 +82,21 @@ class UserController extends FOSRestController
      *     "apiManager"             = @DI\Inject("claroline.manager.api_manager"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
      * })
+     *
+     * @param AuthenticationManager  $authenticationManager
+     * @param StrictDispatcher       $eventDispatcher
+     * @param FormFactory            $formFactory
+     * @param LocaleManager          $localeManager
+     * @param Request                $request
+     * @param UserManager            $userManager
+     * @param GroupManager           $groupManager
+     * @param RoleManager            $roleManager
+     * @param FacetManager           $facetManager
+     * @param ObjectManager          $om
+     * @param ProfilePropertyManager $profilePropertyManager
+     * @param MailManager            $mailManager
+     * @param ApiManager             $apiManager
+     * @param WorkspaceManager       $workspaceManager
      */
     public function __construct(
         AuthenticationManager $authenticationManager,
@@ -181,6 +215,10 @@ class UserController extends FOSRestController
     /**
      * @View(serializerGroups={"api_user"})
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
+     *
+     * @param User $user
+     *
+     * @return User|FormInterface
      */
     public function putUserAction(User $user)
     {
@@ -197,15 +235,16 @@ class UserController extends FOSRestController
             $this->authenticationManager->getDrivers()
         );
 
-        $formType->enableApi();
-        $userRole = $this->roleManager->getUserRoleByUser($user);
-        $form = $this->formFactory->create($formType, $user);
-        $form->submit($this->request);
+        // keep track of the previous username before submittingthe form
+        $previousUsername = $user->getUsername();
 
+        $formType->enableApi();
+        $form = $this->formFactory->create($formType, $user);
+
+        $form->submit($this->request);
         if ($form->isValid()) {
             $user = $form->getData();
-            $this->roleManager->renameUserRole($userRole, $user->getUsername());
-            $this->userManager->rename($user, $user->getUsername());
+            $this->userManager->rename($user, $previousUsername);
 
             if (isset($form['platformRoles'])) {
                 //verification:

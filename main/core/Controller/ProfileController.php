@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Profile\ProfileLinksEvent;
@@ -26,12 +27,15 @@ use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Repository\UserRepository;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\UnitOfWork;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -71,6 +75,19 @@ class ProfileController extends Controller
      *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
      *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager")
      * })
+     *
+     * @param UserManager                  $userManager
+     * @param RoleManager                  $roleManager
+     * @param StrictDispatcher             $eventDispatcher
+     * @param TokenStorageInterface        $tokenStorage
+     * @param Request                      $request
+     * @param LocaleManager                $localeManager
+     * @param EncoderFactory               $encoderFactory
+     * @param ToolManager                  $toolManager
+     * @param FacetManager                 $facetManager
+     * @param PlatformConfigurationHandler $ch
+     * @param AuthenticationManager        $authenticationManager
+     * @param ProfilePropertyManager       $profilePropertyManager
      */
     public function __construct(
         UserManager $userManager,
@@ -100,17 +117,6 @@ class ProfileController extends Controller
         $this->profilePropertyManager = $profilePropertyManager;
     }
 
-    private function isInRoles($role, $roles)
-    {
-        foreach ($roles as $current) {
-            if ($role->getId() === $current->getId()) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     /**
      * @EXT\Route(
      *     "/{publicUrl}",
@@ -118,8 +124,12 @@ class ProfileController extends Controller
      *      options={"expose"=true}
      * )
      * @EXT\Template()
+     *
+     * @param string $publicUrl
+     *
+     * @return array
      */
-    public function publicProfileAction(Request $request, $publicUrl)
+    public function publicProfileAction($publicUrl)
     {
         $isAccessibleForAnon = $this->ch->getParameter('anonymous_public_profile');
 
@@ -128,7 +138,9 @@ class ProfileController extends Controller
         }
 
         try {
-            $user = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByIdOrPublicUrl($publicUrl);
+            /** @var UserRepository $userRepo */
+            $userRepo = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User');
+            $user = $userRepo->findOneByIdOrPublicUrl($publicUrl);
 
             return ['user' => $user];
         } catch (NoResultException $e) {
@@ -144,14 +156,22 @@ class ProfileController extends Controller
      * )
      * @SEC\Secure(roles="ROLE_USER")
      * @EXT\Template("ClarolineCoreBundle:Profile:publicProfile.html.twig")
+     *
+     * @param User $user
+     *
+     * @return array
      */
-    public function viewAction(Request $request, User $user)
+    public function viewAction(User $user)
     {
-        return $this->publicProfileAction($request, $user->getPublicUrl());
+        return $this->publicProfileAction($user->getPublicUrl());
     }
 
     /**
      * @EXT\Template()
+     *
+     * @param Request $request
+     *
+     * @return array
      */
     public function myProfileWidgetAction(Request $request)
     {
@@ -169,10 +189,10 @@ class ProfileController extends Controller
                 'profile_link_event',
                 $profileLinksEvent
             );
-            $dektopBadgesEvent = new DisplayToolEvent();
+            $desktopBadgesEvent = new DisplayToolEvent();
             $this->get('event_dispatcher')->dispatch(
                 'list_all_my_badges',
-                $dektopBadgesEvent
+                $desktopBadgesEvent
             );
 
             //Test profile completeness
@@ -201,7 +221,7 @@ class ProfileController extends Controller
                 'fieldFacetValues' => $fieldFacetValues,
                 'fieldFacets' => $fieldFacets,
                 'links' => $links,
-                'badges' => $dektopBadgesEvent->getContent(),
+                'badges' => $desktopBadgesEvent->getContent(),
                 'completion' => $completion,
                 'isAnon' => false,
             ];
@@ -209,6 +229,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Edit & Update a user profile.
+     *
      * @EXT\Route(
      *     "/profile/edit/{user}",
      *     name="claro_user_profile_edit",
@@ -218,6 +240,11 @@ class ProfileController extends Controller
      *
      * @EXT\Template()
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     *
+     * @param User $loggedUser
+     * @param User $user
+     *
+     * @return array|RedirectResponse
      */
     public function editProfileAction(User $loggedUser, User $user = null)
     {
@@ -248,6 +275,9 @@ class ProfileController extends Controller
             $this->authenticationManager->getDrivers()
         );
 
+        // Keep the old username before submitting the form
+        $previousUsername = $user->getUsername();
+
         $form = $this->createForm($profileType, $user);
         $form->handleRequest($this->request);
         $unavailableRoles = [];
@@ -276,20 +306,21 @@ class ProfileController extends Controller
             $translator = $this->get('translator');
 
             $user = $form->getData();
-            $this->userManager->rename($user, $user->getUsername());
+
+            $this->userManager->rename($user, $previousUsername);
 
             $successMessage = $translator->trans('edit_profile_success', [], 'platform');
-            $errorMessage = $translator->trans('edit_profile_error', [], 'platform');
             $errorRight = $translator->trans('edit_profile_error_right', [], 'platform');
             $redirectUrl = $this->generateUrl('claro_admin_users_index');
 
             if ($editYourself) {
                 $successMessage = $translator->trans('edit_your_profile_success', [], 'platform');
-                $errorMessage = $translator->trans('edit_your_profile_error', [], 'platform');
                 $redirectUrl = $this->generateUrl('claro_public_profile_view', ['publicUrl' => $user->getPublicUrl()]);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
+
+            /** @var UnitOfWork $unitOfWork */
             $unitOfWork = $entityManager->getUnitOfWork();
             $unitOfWork->computeChangeSets();
 
@@ -297,21 +328,21 @@ class ProfileController extends Controller
             $newRoles = [];
 
             if (isset($form['platformRoles'])) {
-                //verification:
-                //only the admin can grant the role admin
-                //simple users cannot change anything. Don't let them put whatever they want with a fake form.
+                // verification:
+                // only the admin can grant the role admin
+                // simple users cannot change anything. Don't let them put whatever they want with a fake form.
                 $newRoles = $form['platformRoles']->getData();
                 $this->userManager->setPlatformRoles($user, $newRoles);
             }
 
             $rolesChangeSet = [];
-            //Detect added
+            // Detect added
             foreach ($newRoles as $role) {
                 if (!$this->isInRoles($role, $roles)) {
                     $rolesChangeSet[$role->getTranslationKey()] = [false, true];
                 }
             }
-            //Detect removed
+            // Detect removed
             foreach ($roles as $role) {
                 if (!$this->isInRoles($role, $newRoles)) {
                     $rolesChangeSet[$role->getTranslationKey()] = [true, false];
@@ -351,6 +382,11 @@ class ProfileController extends Controller
      * )
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
+     *
+     * @param User $user
+     * @param User $loggedUser
+     *
+     * @return array|RedirectResponse
      */
     public function editPasswordAction(User $user, User $loggedUser)
     {
@@ -415,6 +451,10 @@ class ProfileController extends Controller
      * @SEC\Secure(roles="ROLE_USER")
      * @EXT\Template()
      * @EXT\ParamConverter("loggedUser", options={"authenticatedUser" = true})
+     *
+     * @param User $loggedUser
+     *
+     * @return array|RedirectResponse
      */
     public function editPublicUrlAction(User $loggedUser)
     {
@@ -460,13 +500,21 @@ class ProfileController extends Controller
      * )
      * @SEC\Secure(roles="ROLE_USER")
      * @EXT\Method({"POST"})
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
     public function checkPublicUrlAction(Request $request)
     {
         $publicUrl = $request->request->get('publicUrl');
         $data = ['check' => false];
         if (preg_match('/^[^\/]+$/', $publicUrl)) {
-            $existedUser = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
+            /** @var UserRepository $userRepo */
+            $userRepo = $this->getDoctrine()->getRepository('ClarolineCoreBundle:User');
+            $existedUser = $userRepo->findOneBy([
+                'publicUrl' => $publicUrl,
+            ]);
             if (null === $existedUser) {
                 $data['check'] = true;
             }
@@ -477,6 +525,28 @@ class ProfileController extends Controller
         return $response;
     }
 
+    /**
+     * @param Role   $role
+     * @param Role[] $roles
+     *
+     * @return bool
+     */
+    private function isInRoles(Role $role, $roles)
+    {
+        foreach ($roles as $current) {
+            if ($role->getId() === $current->getId()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @param User $user
+     *
+     * @return string
+     */
     private function encodePassword(User $user)
     {
         return $this->encoderFactory
