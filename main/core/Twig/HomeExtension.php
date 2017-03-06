@@ -247,9 +247,14 @@ class HomeExtension extends \Twig_Extension
     public function assetExists($path)
     {
         $webRoot = realpath($this->kernel->getRootDir().'/../web/');
-        $toCheck = realpath($webRoot.'/'.$path);
+        $toCheck = realpath($webRoot.$path);
 
         if (!is_file($toCheck)) {
+            return false;
+        }
+
+        // check if file is well contained in web/ directory (prevents ../ in paths)
+        if (strncmp($webRoot, $toCheck, strlen($webRoot)) !== 0) {
             return false;
         }
 

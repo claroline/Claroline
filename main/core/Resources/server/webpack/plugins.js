@@ -2,7 +2,7 @@ const webpack = require('webpack')
 const AssetsPlugin = require('assets-webpack-plugin')
 const FailPlugin = require('webpack-fail-plugin')
 const CircularDependencyPlugin = require('circular-dependency-plugin')
-const paths = require('./paths')
+const paths = require('../paths')
 const ConfigurationPlugin = require('./build/configuration/plugin')
 
 /**

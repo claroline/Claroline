@@ -44,7 +44,7 @@ class Theme
     protected $plugin;
 
     /**
-     * @ORM\Column(name="extending_default", type="boolean", options={"default" = 0})
+     * @ORM\Column(name="extending_default", type="boolean")
      */
     protected $extendingDefault = false;
 
