@@ -1,5 +1,5 @@
 {
-    "choose_share_network": "Kies het netwerk waarop u deze leermiddel wenst te delen:",
+    "choose_share_network": "Kies het netwerk waarop u deze bron wenst te delen:",
     "commented": "Heeft een commentaar achtergelaten :",
     "comments": "Commentaren",
     "comments_are_public": "Alle commentaren zijn openbaar",
@@ -13,8 +13,8 @@
     "load_next_wall_items": "Zie de volgende elementen",
     "load_previous_comments": "Zie voorafgaande commentaren",
     "no_comment": "Wees de eerste die een commentaar achterlaat.",
-    "no_like": "Wees de eerste die van deze leermiddel houdt.",
-    "no_note": "Laat een eerste aantekening achter voor deze leermiddel.",
+    "no_like": "Wees de eerste die van deze bron houdt.",
+    "no_note": "Laat een eerste aantekening achter voor deze bron.",
     "no_wall_item": "Geen activiteit tot nu toe.",
     "notes_are_private": "Alle aantekeningen zijn privé",
     "people_who_like_this": "De personen die ervan houden",

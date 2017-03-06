@@ -71,7 +71,7 @@
     "popover_players_popover_title": "Mode de lecture",
     "popover_players_scripted": "Lecture en 2 étapes. L'étudiant écoute d'abord le document et clique à chaque fois qu'il rencontre un problème. Dans un deuxième temps, il pourra accéder aux aides correspondantes.",
     "popover_transcription_popover_explain_first": "Ce champ vous permet de renseigner la transcription textuelle pour la région",
-    "popover_transcription_popover_explain_second": "Il sera utilisé par le TextToSpeach (i.e. l'aide de type Backward building) et dans le lecteur de type Free",
+    "popover_transcription_popover_explain_second": "Ces données seront utilisées par le TextToSpeach (i.e. l'aide de type Backward building) et dans le lecteur de type Free",
     "popover_transcription_popover_title": "Transcription textuelle de la région",
     "previous_region_help": "Aide pour la région précédente",
     "previous_segment": "Région précédente",

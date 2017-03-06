@@ -1,7 +1,7 @@
 {
     "open": "Open",
     "choice": "Meerdere keuzes",
-    "choice_desc": "Kies een of meerdere antwoorden (bijv. tekst, beeld, audio, video) in een lijst van vooraf gedefinieerde keuzes.",
+    "choice_desc": "Kies een of meerdere antwoorden (bijv. tekst, afbeelding, audio, video) in een lijst van vooraf gedefinieerde keuzes.",
     "cloze": "Cloze-test",
     "match": "Associatie",
     "words": "Sleutelwoorden",
@@ -9,10 +9,10 @@
     "cloze_desc": "Vul in met elementen die relevant zijn in de context. Schrijf in een tekstvak of kies een element in een vooraf gedefinieerde lijst.",
     "graphic": "Grafisch",
     "graphic_desc": "Punt één of meerdere gebieden op een afbeelding.",
-    "match_desc": "Link een element (bijv. tekst, beeld, audio, video) met één of vele andere (bijv. tekst, beeld, audio, video).",
-    "open_desc": "Beantwoord een vraag met een tekst die middelen kan bevatten (bijv. tekst, beeld, audio, video). De open vraag vereist een manuele correctie.",
+    "match_desc": "Link een element (bijv. tekst, afbeelding, audio, video) met één of vele andere (bijv. tekst, afbeelding, audio, video).",
+    "open_desc": "Beantwoord een vraag met een tekst die middelen kan bevatten (bijv. tekst, afbeelding, audio, video). De open vraag vereist een manuele correctie.",
     "pair": "Koppeling",
-    "pair_desc": "Plaats elementen (bijv. tekst, beeld, audio, video) in paren.",
+    "pair_desc": "Plaats elementen (bijv. tekst, afbeelding, audio, video) in paren.",
     "set": "Classificeren",
-    "set_desc": "Verplaats elementen (bijv. tekst, beeld, audio, video) in sets."
+    "set_desc": "Verplaats elementen (bijv. tekst, afbeelding, audio, video) in sets."
 }
