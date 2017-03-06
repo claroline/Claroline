@@ -11,7 +11,9 @@
 
     .page-content {
         position: relative;
-        flex: 1; // only specifying flex property here make the item fill the remaining space in its parent
+        display: flex;
+        flex-direction: column;
+        flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
     }
 }
 
