@@ -41,15 +41,14 @@
             {% endblock %}
         {% endspaceless %}</title>
 
-        {% block stylesheets %}{% endblock %}
-
-        {# Theme is loaded after standard stylesheets to allow override plugin styles #}
         {% block theme %}
             {% if config.getParameter('theme_extending_default') %}
                 <link rel="stylesheet" type="text/css" href="{{ macros.getDefaultTheme()|trim }}" />
             {% endif %}
             <link rel="stylesheet" type="text/css" href="{{ macros.getTheme(config)|trim }}" />
         {% endblock %}
+
+        {% block stylesheets %}{% endblock %}
 
         {% block favicon %}
             <link rel="shortcut icon" href="{{ asset('favicon.ico') }}" />
