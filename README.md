@@ -18,6 +18,5 @@ provides:
 
 - [ ] check if PdfGeneratorBundle is usable before activation (requires wkhtmltopdf)
 - [ ] remove the innova/angular bundles (required by portfolio)
-- [ ] remove the "innova/angular-ui-pageslide-bundle" (for path)
 - [ ] remove the front-end-bundle (required by icapbadge for jqplot and by core/Resouces/less/layout.less and by ujmexo)
 - [ ] add install and doc sections (require claroline/Claroline to be updated as well)
