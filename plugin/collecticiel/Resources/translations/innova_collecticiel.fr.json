@@ -443,7 +443,7 @@
     "noCorrectionExeption": " Aucune correction disponible",
     "noEvaluation": "Pas dévaluation",
     "notStarted": "non démarrée",
-    "notStartedManualState": "Fermé",
+    "notStartedManualState": "L'évaluation n'a pas encore commencé.",
     "notation": "Notation",
     "number of Report": "Nombre de signalements",
     "number_of_denied_corrections": "Nombre de travaux signalés par le correcteur",
