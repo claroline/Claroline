@@ -2,7 +2,9 @@
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
-<html lang="{{ app.request.locale|default('fr') }}" class="claroline-app-container">
+<html lang="{{ app.request.locale|default('fr') }}"
+      class="claroline-app-container {{ config.getParameter('theme') }}"
+>
     <head>
         {% set description = getContent('platformDescription') %}
         {% block meta %}
