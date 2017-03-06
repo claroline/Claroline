@@ -286,22 +286,28 @@ class UserManager
 
     /**
      * Rename a user.
+     * It renames the user role and its personal WS if needed.
      *
-     * @param User $user
-     * @param $username
+     * @param User   $user
+     * @param string $previousUsername
      */
-    public function rename(User $user, $username)
+    public function rename(User $user, $previousUsername)
     {
-        $userRole = $this->roleManager->getUserRoleByUser($user);
-        if ($userRole) {
-            $this->roleManager->renameUserRole($userRole, $user->getUsername());
+        if ($user->getUsername() !== $previousUsername) {
+            // Rename user role
+            $userRole = $this->roleManager->getUserRole($previousUsername);
+            if ($userRole) {
+                $this->roleManager->renameUserRole($userRole, $user->getUsername());
+            }
+
+            // Rename personal WS
+            $pws = $user->getPersonalWorkspace();
+            if ($pws) {
+                $personalWorkspaceName = $this->translator->trans('personal_workspace', [], 'platform').' '.$user->getUsername();
+                $this->workspaceManager->rename($pws, trim($personalWorkspaceName));
+            }
         }
-        $user->setUsername($username);
-        $personalWorkspaceName = $this->translator->trans('personal_workspace', [], 'platform').$user->getUsername();
-        $pws = $user->getPersonalWorkspace();
-        if ($pws) {
-            $this->workspaceManager->rename($pws, $personalWorkspaceName);
-        }
+
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
@@ -325,7 +331,7 @@ class UserManager
         if ($this->container->get('security.token_storage')->getToken()->getUser()->getId() === $user->getId()) {
             throw new \Exception('A user cannot delete himself');
         }*/
-        $userRole = $this->roleManager->getUserRoleByUser($user);
+        $userRole = $this->roleManager->getUserRole($user->getUsername());
 
         //soft delete~
         $user->setIsRemoved(true);
