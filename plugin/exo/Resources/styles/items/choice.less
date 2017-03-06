@@ -13,7 +13,7 @@
 
   .choice-item {
     .text-fields {
-      flex-grow: 1;
+      flex: 1;
       margin-right: floor(@grid-gutter-width / 2);
     }
 
@@ -54,12 +54,14 @@
   display: flex;
 
   .choice-item-tick {
+    flex-shrink: 0;
+    align-self: flex-start; // make sure tick is always in the top left corner
     margin-top: 4px; // same as checkboxes/radios
     margin-right: floor(@grid-gutter-width / 2);
   }
 
   .choice-item-content {
-    flex-grow: 1;
+    flex: 1;
   }
 
   .choice-item-feedback {

@@ -3,11 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
 
-    {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/docimology.css'
-        '@UJMExoBundle/Resources/styles/main.less'
-    %}
-    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-exo-quiz-resource.css') }}" />
 {% endblock %}
 
 {# Content of the Page #}
