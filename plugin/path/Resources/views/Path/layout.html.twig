@@ -4,11 +4,13 @@
     {{ parent() }}
 
     {# Path Editor styles #}
-    {% stylesheets filter='claroline_theme, less, cssmin' output='vendor/innovapath/wizards.css'
-        '@InnovaPathBundle/Resources/styles/main.less'
+    {% stylesheets filter='less, cssmin' output='vendor/innovapath/wizards.css'
+        '@InnovaPathBundle/Resources/styles/resources/path.less'
     %}
     <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
+
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-path-path-resource.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
