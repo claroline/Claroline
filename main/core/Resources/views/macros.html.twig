@@ -11,7 +11,6 @@
     </ul>
 {% endmacro %}
 
-
 {% macro flashBox() %}
     {% import _self as self %}
     {% set flashBag = app.session.getFlashBag() %}
@@ -62,7 +61,6 @@
     {% import _self as self %}
 
     {% set myDesktop = [{
-            'icon': 'fa fa-home',
             'name': 'desktop'|trans({}, 'platform'),
             'href': path('claro_desktop_open')
         }]
@@ -79,7 +77,6 @@
         {% set workspaceElements =
             [
                 {
-                    'icon': 'fa fa-book',
                     'name': 'workspaces'|trans({}, 'platform'),
                     'href': path('claro_workspace_list')
                 },
@@ -93,7 +90,6 @@
         {% set workspaceElements =
             [
                 {
-                    'icon': 'fa fa-book',
                     'name': 'my_workspaces'|trans({}, 'platform'),
                     'href': path('claro_workspace_by_user')
                 },
