@@ -6,6 +6,10 @@
     }
 </script>
 
+{# Polyfills #}
+<script src="{{ hotAsset('dist/claroline-distribution-main-core-core-js.js') }}"></script>
+<script src="{{ hotAsset('dist/claroline-distribution-main-core-whatwg-fetch.js') }}"></script>
+
 {# SVG external reference polyfill for IE<13 #}
 {% javascripts debug=false filter='jsmin' output='vendor/svg4everybody/svg4everybody.js'
     '../node_modules/svg4everybody/dist/svg4everybody.js'
