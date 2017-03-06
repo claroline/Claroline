@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "d54445f6a015af2b4ced84a27a4f165e78e8781a"
+                "reference": "0b6caf47dab240fe152a05c3b2ef9cf20925ec5a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/d54445f6a015af2b4ced84a27a4f165e78e8781a",
-                "reference": "d54445f6a015af2b4ced84a27a4f165e78e8781a",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/0b6caf47dab240fe152a05c3b2ef9cf20925ec5a",
+                "reference": "0b6caf47dab240fe152a05c3b2ef9cf20925ec5a",
                 "shasum": ""
             },
             "require": {
@@ -159,6 +159,7 @@
                 "innova/angular-js-bundle": "5.1.0",
                 "innova/angular-ui-resource-picker-bundle": "6.0.0",
                 "innova/angular-ui-tinymce-bundle": "5.1.1",
+                "jangobrick/php-svg": "dev-master",
                 "jdorn/sql-formatter": "1.2.17",
                 "jms/di-extra-bundle": "1.5.0",
                 "jms/security-extra-bundle": "1.5.1",
@@ -376,7 +377,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-03-02 17:03:41"
+            "time": "2017-03-03 09:03:08"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -2908,6 +2909,45 @@
                 "tinymce"
             ],
             "time": "2015-09-03 13:13:32"
+        },
+        {
+            "name": "jangobrick/php-svg",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/JangoBrick/php-svg.git",
+                "reference": "e2148fb5bc88b1355f36e24079c6e2e325e66bfc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/JangoBrick/php-svg/zipball/e2148fb5bc88b1355f36e24079c6e2e325e66bfc",
+                "reference": "e2148fb5bc88b1355f36e24079c6e2e325e66bfc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "JangoBrick\\SVG\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "JangoBrick"
+                }
+            ],
+            "description": "Read, edit, write, and render SVG files with PHP",
+            "homepage": "https://github.com/JangoBrick/php-svg",
+            "keywords": [
+                "svg"
+            ],
+            "time": "2017-02-15 17:41:38"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -5886,7 +5926,7 @@
             ],
             "authors": [
                 {
-                    "name": "William Durand",
+                    "name": "William DURAND",
                     "email": "william.durand1@gmail.com"
                 }
             ],
