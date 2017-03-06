@@ -13,26 +13,34 @@ export default class StudyCtrl {
     this.deck = service.getDeck()
     this.deckNode = service.getDeckNode()
     this.canEdit = service._canEdit
+    this.initialNbrOfCards = 0
     this.newCards = []
+    this.initialNbrOfNewCards = 0
     this.learningCards = []
+    this.initialNbrOfLearningCards = 0
     // Revised cards during this session
     this.revisedCards = []
     this.sessionId = 0
     this.currentCard = false
     this.currentCardIsNew = 0
+    this.fieldValues = []
     this.questions = []
     this.answers = []
+    this.answersShown = false
     this.answerQuality = -1
 
     this.fullscreenClass = ''
     this.fullscreenClassButton = 'fa-expand'
     this.fullscreenClassFooter = ''
+    this.flippedClass = ''
 
     this._service = service
 
     service.findNewCardToLearn(this.deck).then(
       d => {
         this.newCards = d.data
+        this.initialNbrOfNewCards = this.newCards.length
+        this.initialNbrOfCards += this.newCards.length
         if (!this.currentCard) {
           this.chooseCard()
         }
@@ -41,6 +49,8 @@ export default class StudyCtrl {
     service.findCardToLearn(this.deck).then(
       d => {
         this.learningCards = d.data
+        this.initialNbrOfLearningCards = this.learningCards.length
+        this.initialNbrOfCards += this.learningCards.length
         if (!this.currentCard) {
           this.chooseCard()
         }
@@ -68,6 +78,7 @@ export default class StudyCtrl {
           this.currentCard = this.newCards.splice(rand, 1)[0]
           this.currentCardIsNew = 1
           this.showQuestions()
+          this.showAnswers()
         } else {
           this.chooseCard()
         }
@@ -77,6 +88,7 @@ export default class StudyCtrl {
           this.currentCard = this.learningCards.splice(rand, 1)[0]
           this.currentCardIsNew = 0
           this.showQuestions()
+          this.showAnswers()
         } else {
           this.chooseCard()
         }
@@ -119,10 +131,11 @@ export default class StudyCtrl {
     ).then(
       d => {
         this.sessionId = d.data
+        this.revisedCards.push(this.currentCard)
+        this.chooseCard()
       }
     )
-    this.revisedCards.push(this.currentCard)
-    this.chooseCard()
+    this.flipCard()
   }
 
   cancelLastStudy() {
@@ -156,5 +169,14 @@ export default class StudyCtrl {
       this.fullscreenClassButton = 'fa-compress'
       this.fullscreenClassFooter = 'footer-fullscreen'
     }
+  }
+
+  flipCard() {
+    if (this.answersShown) {
+      this.flippedClass = ''
+    } else {
+      this.flippedClass = 'flipped'
+    }
+    this.answersShown = !this.answersShown
   }
 }
