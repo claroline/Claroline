@@ -1032,7 +1032,7 @@
     "search_workspace": "Rechercher un espace d''activités",
     "second": "seconde",
     "seconds": "secondes",
-    "security_token": "Jeton d''authentification",
+    "security_token": "Jeton d'authentification",
     "security_token_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer ce jeton d'authentification ?",
     "security_token_delete_confirm_title": "Suppression du jeton d'authentification",
     "security_token_list": "Liste des jetons d'authentification",
@@ -1364,6 +1364,6 @@
     "your_profile_is_n_complete": "Votre profil est complété à %n%%",
     "your_username": "Votre nom d'utilisateur est",
     "your_workspace_activity_overview": "Aperçu des activités récentes de vos espaces de travail",
-    "ssl_enabled": "SSL est-il activé ?",
+    "ssl_enabled": "Activer SSL ?",
     "visible_facet_form_explanation": "Le champ \"Visible\" vous permet de rendre l'élément visible ou non pour l'utilisateur."
 }
