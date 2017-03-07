@@ -1032,7 +1032,7 @@
     "search_workspace": "Rechercher un espace d''activités",
     "second": "seconde",
     "seconds": "secondes",
-    "security_token": "Jeton d''authentification",
+    "security_token": "Jeton d'authentification",
     "security_token_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer ce jeton d'authentification ?",
     "security_token_delete_confirm_title": "Suppression du jeton d'authentification",
     "security_token_list": "Liste des jetons d'authentification",
