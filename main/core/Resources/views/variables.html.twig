@@ -22,7 +22,7 @@
 <div id="platform-configuration" data-enable-opengraph="{{ config.getParameter('enable_opengraph') }}"></div>
 <div id="homeAsset">{{ homeAsset }}</div>
 <div id="baseAsset">{{ asset('') }}</div>
-<div id="homeTheme">{{ macros.getTheme(config)|trim }}</div>
+<div id="homeTheme">{{ themeAsset('bootstrap.css') }}</div>
 <div id="homeLocale">{% spaceless %}
     {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
         {{ app.request.locale }}

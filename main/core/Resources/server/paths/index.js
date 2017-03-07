@@ -9,7 +9,10 @@ const root = () => path.resolve(distribution(), '..', '..', '..')
 // bower directory (currently main third-party modules dir instead of node_modules)
 const bower = () => path.resolve(root(), 'web', 'packages')
 
-// output directory (compiled entries)
-const output = () => path.resolve(root(), 'web', 'dist')
+// platform web directory
+const web = () => path.resolve(root(), 'web')
 
-module.exports = {distribution, root, bower, output}
+// output directory (compiled entries)
+const output = () => path.resolve(web(), 'dist')
+
+module.exports = {distribution, root, web, bower, output}
