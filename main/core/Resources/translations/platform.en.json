@@ -1086,7 +1086,7 @@
     "show_username": "Show username",
     "simple": "Simple",
     "size": "Size",
-    "ssl_enabled": "is SSL enabled ?",
+    "ssl_enabled": "Enable SSL ?",
     "start_date": "Start date",
     "start_maintenance": "Start maintenance mode",
     "statistics": "Statistics",
