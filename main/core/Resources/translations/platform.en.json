@@ -765,7 +765,7 @@
     "oauth_required_data": "The following data will be sent:",
     "object": "Object",
     "occurrence": "Occurrence",
-    "ok": "Ok",
+    "ok": "OK",
     "only_for_workspace_creation": "Only for workspace creation",
     "open": "Open",
     "open_resource_when_opening_ws": "Open a resource when opening the workspace",
