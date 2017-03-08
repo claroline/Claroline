@@ -28,7 +28,7 @@ import {
 } from './../enums'
 
 let Quiz = props =>
-  <div className="page">
+  <main className="page">
     <PageHeader title={props.quiz.title}>
       {props.editable &&
         <PageActions actions={viewActions(props.viewMode, props)} />
@@ -44,7 +44,7 @@ let Quiz = props =>
     <div className="page-content">
       {viewComponent(props.viewMode, props)}
     </div>
-  </div>
+  </main>
 
 Quiz.propTypes = {
   quiz: T.shape({

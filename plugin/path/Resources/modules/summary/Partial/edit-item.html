@@ -4,25 +4,21 @@
     }"
 >
     <div class="tree-item"
-         ui-tree-handle=""
          data-ng-mouseenter="showButtons = true"
          data-ng-mouseleave="showButtons = false"
     >
-        <div class="step lvl lvl-{{ summaryItemEditCtrl.step.lvl }} lvl-border" data-ng-click="summaryItemEditCtrl.goTo(step)">
-            <!-- Drag&Drop handler -->
-            <span class="fa fa-fw fa-bars"
-                  data-ng-show="summaryItemEditCtrl.step.lvl !== 0"
-                  ui-tree-handle=""
+        <div class="step" data-ng-click="summaryItemEditCtrl.goTo(step)">
+            <span class="step-progression fa fa-circle"
                   data-toggle="tooltip"
+                  data-placement="right"
                   data-container="body"
-                  title="{{ 'step_drag' | trans:{}:'path_wizards' }}"
+                  data-title="{{ summaryItemEditCtrl.step.name }}"
             ></span>
 
             {{ summaryItemEditCtrl.step.name }}
         </div>
 
         <div class="step-actions"
-             data-nodrag=""
         >
             <!-- Add child -->
             <button type="button" class="btn btn-link"
@@ -53,7 +49,12 @@
             <!-- Paste from clipboard -->
             <button type="button" class="btn btn-link"
                     data-ng-show="summaryItemEditCtrl.areActionsShown(showButtons)"
-                    data-ng-click="summaryItemEditCtrl.paste()" data-ng-disabled="summaryItemEditCtrl.clipboardDisabled.paste" data-toggle="tooltip" data-container="body" title="{{ 'step_paste' | trans:{}:'path_wizards' }}">
+                    data-ng-click="summaryItemEditCtrl.paste()"
+                    data-ng-disabled="summaryItemEditCtrl.clipboardDisabled.paste"
+                    data-toggle="tooltip"
+                    data-container="body"
+                    title="{{ 'step_paste' | trans:{}:'path_wizards' }}"
+            >
                 <span class="fa fa-fw fa-paste"></span>
                 <span class="sr-only">{{ 'step_paste' | trans:{}:'path_wizards' }}</span>
             </button>
@@ -61,12 +62,31 @@
             <!-- Delete step -->
             <button type="button" class="btn btn-link-danger"
                     data-ng-show="summaryItemEditCtrl.areActionsShown(showButtons)"
-                    data-ng-click="summaryItemEditCtrl.removeStep()" data-ng-disabled="0 === summaryItemEditCtrl.step.lvl" data-toggle="tooltip" data-container="body" title="{{ 'step_delete' | trans:{}:'path_wizards' }}">
+                    data-ng-click="summaryItemEditCtrl.removeStep()"
+                    data-ng-disabled="0 === summaryItemEditCtrl.step.lvl"
+                    data-toggle="tooltip"
+                    data-container="body"
+                    title="{{ 'step_delete' | trans:{}:'path_wizards' }}"
+            >
                 <span class="fa fa-fw fa-trash-o"></span>
                 <span class="sr-only">{{ 'step_delete' | trans:{}:'path_wizards' }}</span>
             </button>
 
-            <a role="button" class="step-toggle" href=""
+            <!-- Move step in tree -->
+            <span role="button" class="btn btn-link"
+                  ui-tree-handle=""
+                  data-ng-show="summaryItemEditCtrl.areActionsShown(showButtons)"
+                  data-ng-style="{'visibility': 0 !== summaryItemEditCtrl.step.lvl ? 'visible' : 'hidden'}"
+                  data-toggle="tooltip"
+                  data-container="body"
+                  title="{{ 'step_drag' | trans:{}:'path_wizards' }}"
+            >
+                <span class="fa fa-fw fa-arrows"></span>
+                <span class="sr-only">{{ 'step_move' | trans:{}:'path_wizards' }}</span>
+            </span>
+
+            <!-- Show/hide children -->
+            <a role="button" class="btn btn-link" href=""
                data-ng-style="{'visibility': 0 !== summaryItemEditCtrl.step.children.length ? 'visible' : 'hidden'}"
                data-ng-click="summaryItemEditCtrl.collapsed = !summaryItemEditCtrl.collapsed;"
             >

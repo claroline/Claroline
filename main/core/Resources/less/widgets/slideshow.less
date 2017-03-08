@@ -58,6 +58,10 @@
         height: @widget-card-header-height;
 
         display: flex; // for vertical centering. Mostly used when there is an image
+
+        img {
+            flex: 1; // avoid img overflow the container in IE11 (maybe safari too)
+        }
     }
 
     .carousel-card-content {

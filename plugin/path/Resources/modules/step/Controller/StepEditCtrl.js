@@ -5,8 +5,8 @@
 import StepBaseCtrl from './StepBaseCtrl'
 
 export default class StepEditCtrl extends StepBaseCtrl {
-  constructor(step, inheritedResources, PathService, url, $scope, StepService, tinymceConfig) {
-    super(step, inheritedResources, PathService)
+  constructor(step, inheritedResources, PathService, SummaryService, url, $scope, StepService, tinymceConfig) {
+    super(step, inheritedResources, PathService, SummaryService)
 
     this.scope       = $scope
     this.stepService = StepService

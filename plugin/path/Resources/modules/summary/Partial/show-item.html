@@ -6,21 +6,24 @@
     <div class="tree-item"
          data-nodrag=""
     >
-        <div class="step lvl lvl-{{ summaryItemShowCtrl.step.lvl }} lvl-border" data-ng-click="summaryItemShowCtrl.goTo(step)">
-            {{ summaryItemShowCtrl.step.name }}
-        </div>
-
-        <div class="step-actions">
-            <a role="button" class="step-toggle" href="" data-ng-click="summaryItemShowCtrl.collapsed = !summaryItemShowCtrl.collapsed" data-ng-if="0 !== summaryItemShowCtrl.step.children.length">
-                <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': summaryItemShowCtrl.collapsed, 'fa-caret-down': !summaryItemShowCtrl.collapsed }"></span>
-            </a>
-
+        <div class="step" data-ng-click="summaryItemShowCtrl.goTo(step)">
             <span class="step-progression {{ summaryItemShowCtrl.userProgression.status || 'unseen' }} fa fa-circle"
                   data-toggle="tooltip"
                   data-placement="right"
                   data-container="body"
-                  data-title="{{ summaryItemShowCtrl.getProgressionText()|trans:{}:'path_wizards' }}"
+                  data-title="{{ summaryItemShowCtrl.step.name }}"
             ></span>
+
+            {{ summaryItemShowCtrl.step.name }}
+        </div>
+
+        <div class="step-actions">
+            <button type="button" class="btn btn-link"
+               data-ng-click="summaryItemShowCtrl.collapsed = !summaryItemShowCtrl.collapsed"
+               data-ng-if="0 !== summaryItemShowCtrl.step.children.length"
+            >
+                <span class="fa fa-fw" data-ng-class="{ 'fa-caret-right': summaryItemShowCtrl.collapsed, 'fa-caret-down': !summaryItemShowCtrl.collapsed }"></span>
+            </button>
         </div>
     </div>
 

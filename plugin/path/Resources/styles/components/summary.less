@@ -30,17 +30,11 @@
         margin-bottom: @path-summary-header-margin-bottom;
     }
 
-    .summary-controls {
-        // todo : this selector is ugly
-        .summary-control:first-child {
-            display: none;
-        }
-    }
-
     // todo : those selectors are ugly
     .summary-title,
-    .step,
-    .step-actions *:not(.step-progression) {
+    .summary-controls .summary-control:first-child,
+    .step *:not(.step-progression),
+    .step-actions {
         display: none;
     }
 
@@ -50,20 +44,22 @@
 
     &.opened {
         width: @path-summary-width;
-        .summary-controls {
-            .summary-control:first-child {
-                display: inline-block;
-            }
+        .summary-controls .summary-control:first-child {
+            display: inline-block;
         }
 
         .summary-title,
-        .step,
-        .step-actions *{
+        .step *,
+        .step-actions {
             display: inline-block;
         }
 
         .step-children {
             padding-left: @path-summary-lvl-indent !important;
+        }
+
+        .tree-item {
+            border-bottom-color: @path-summary-link-border-color;
         }
     }
 
@@ -99,6 +95,11 @@
     // remove default h* spacing
     padding: 0;
     margin: 0;
+
+    .fa {
+        text-align: center;
+        width: 20px; // same as step progression
+    }
 }
 
 .summary-empty {
@@ -107,7 +108,6 @@
 
 .summary-link {
     list-style: none;
-    cursor: pointer;
     font-size: @path-summary-font;
     color: @path-summary-link-color;
     background-color: @path-summary-link-bg;
@@ -116,14 +116,21 @@
         color: @path-summary-link-active-color;
         background-color: @path-summary-link-active-bg;
 
-        > .step-actions .step-progression {
+        .step-progression {
             color: @path-summary-link-active-color !important; // override status color
         }
     }
+
+    /*&:last-child > .tree-item {
+        border-bottom: 1px solid @path-summary-link-border-color;
+    }*/
 }
 
 .tree-item {
-    margin: 10px 0;
+    font-weight: normal; // override default styles of angular-ui-tree
+    padding: 6px 0;
+    border-bottom: 1px solid transparent;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -132,12 +139,15 @@
     &:hover {
         color: @path-summary-link-hover-color;
         background-color: @path-summary-link-hover-bg;
+
+        .step-progression {
+            color: @path-summary-link-hover-color;
+        }
     }
 
     .step {
-        padding: 0 15px;
-        border-left: 3px solid;
-        max-width: 90%;
+        cursor: pointer;
+        /*max-width: 90%;*/
         text-overflow: ellipsis;
         overflow-x: hidden;
         white-space: nowrap;
@@ -149,30 +159,28 @@
     line-height: 2em;
     vertical-align: middle;
 
-    .step-toggle {
-        vertical-align: middle;
+    .btn {
+        padding: 2px;
         color: @path-summary-link-color;
 
-        &:hover {
+        &:hover:not(.disabled):not([disabled]) {
             color: @path-summary-link-hover-color;
         }
 
-        &:focus {
+        &:focus:not(.disabled):not([disabled]) {
             color: @path-summary-link-active-color;
         }
     }
-
-    .btn {
-        padding: 2px;
-    }
 }
 
+// todo : rename it in step indicator
 .step-progression {
+    line-height: inherit;
     width: @path-summary-collapsed-width - (@path-summary-padding * 2);
     text-align: center;
     font-size: @step-status-size !important; // override font-awesome
     color: @path-summary-link-color;
-    vertical-align: middle;
+    vertical-align: top;
 
     &.unseen    { color: @step-status-unseen-color; }
     &.seen      { color: @step-status-seen-color; }
@@ -182,5 +190,7 @@
 }
 
 .step-children {
-    padding-left: @path-summary-lvl-indent !important;
+    //padding-left: @path-summary-lvl-indent !important;
+
+
 }

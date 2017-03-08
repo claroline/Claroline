@@ -31,11 +31,16 @@
 
     <!-- Current step form -->
     <div class="current-step row" data-ng-if="stepEditCtrl.step">
-        <div class="col-md-9 col-sm-12">
+        <div class="col-sm-12"
+             data-ng-class="{
+                'col-md-9': !stepEditCtrl.summaryState.opened || !stepEditCtrl.summaryState.pinned,
+                'col-md-12': stepEditCtrl.summaryState.opened && stepEditCtrl.summaryState.pinned
+             }"
+        >
             <!-- Form of the Step -->
             <div class="current-step-content panel panel-default">
                 <div class="panel-body">
-                    <div class="panel-step-heading lvl lvl-{{ stepEditCtrl.step.lvl }} lvl-border">
+                    <div class="panel-step-heading">
                         <h2>{{ stepEditCtrl.step.name }}</h2>
 
                         <div class="actions">
@@ -148,7 +153,12 @@
             </div>
         </div>
 
-        <div class="col-md-3 col-sm-12">
+        <div class="col-sm-12"
+             data-ng-class="{
+                'col-md-3': !stepEditCtrl.summaryState.opened || !stepEditCtrl.summaryState.pinned,
+                'col-md-12': stepEditCtrl.summaryState.opened && stepEditCtrl.summaryState.pinned
+             }"
+        >
             <resources-secondary-edit
                 data-resources="stepEditCtrl.step.resources"
                 data-inherited="stepEditCtrl.inheritedResources"

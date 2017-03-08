@@ -90,8 +90,8 @@
 @page-header-padding:          0;
 @page-header-font-size:        @font-size-h1;
 @page-header-weight:           700;
-@page-header-link-color:       @gray-light;
-@page-header-link-hover-color: @gray-dark;
+@page-header-link-color:       @gray; // todo : should be #666 for WCAG AA or #555 for AAA
+@page-header-link-hover-color: @gray-darker;
 @page-header-divider-color:    #CCCCCC;
 
 
@@ -104,7 +104,7 @@
 // and adapt to the use case in order to keep common look & feel between all summary implementations
 // ---
 @summary-padding:           15px;
-@summary-font:              @font-size-base;
+@summary-font:              16px;
 @summary-bg:                #262626;
 @summary-color:             white;
 @summary-border-radius:     0;
@@ -113,9 +113,10 @@
 
 // Links
 @summary-link-bg:           transparent;
-@summary-link-color:        #707070;
+@summary-link-border-color: #444444;
+@summary-link-color:        @gray-light;
 @summary-link-hover-bg:     transparent;
-@summary-link-hover-color:  #939393;
+@summary-link-hover-color:  #bbb;
 @summary-link-active-bg:    transparent;
 @summary-link-active-color: white;
 
@@ -127,6 +128,8 @@
 @footer-max-width:         none; // max width for the footer content (do not affect footer container)
 @footer-bg:                #F3F3F3;
 @footer-color:             @gray-light;
+@footer-border-color:      white;
+@footer-box-shadow:        @box-shadow-base;
 
 // Links
 @footer-link-color:        @gray;

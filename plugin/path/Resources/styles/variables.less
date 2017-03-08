@@ -43,7 +43,7 @@
 @path-summary-bg:                   @summary-bg;
 @path-summary-color:                @summary-color;
 @path-summary-box-shadow:           @summary-box-shadow-v;
-@path-summary-lvl-indent:           0; // indent children of a step in the summary
+@path-summary-lvl-indent:           20px; // indent children of a step in the summary
 
 // Header
 @path-summary-header-margin-bottom: @component-margin-bottom;
@@ -60,6 +60,7 @@
 // Links
 @path-summary-link-bg:              @summary-link-bg;
 @path-summary-link-color:           @summary-link-color;
+@path-summary-link-border-color:    @summary-link-border-color;
 @path-summary-link-hover-bg:        @summary-link-hover-bg;
 @path-summary-link-hover-color:     @summary-link-hover-color;
 @path-summary-link-active-bg:       @summary-link-active-bg;
@@ -72,10 +73,11 @@
 @current-step-bg:              transparent;
 @current-step-content-padding: @panel-body-padding;
 
+
 // -
 // Progression
 // ---
-@path-progression-color:      #FF6440; // color to use when we display the progression gauge
+@path-progression-color:      #C51162; // color to use when we display the progression gauge
 
 // size of the gauge
 @path-progression-size:       100px;
@@ -85,7 +87,7 @@
 
 // colors for each progression status
 @step-status-unseen-color:    @text-muted;
-@step-status-seen-color:      @gray;
+@step-status-seen-color:      @path-progression-color;
 @step-status-to_do-color:     @brand-warning;
 @step-status-done-color:      @brand-success;
 @step-status-to_review-color: @brand-danger;

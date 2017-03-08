@@ -40,12 +40,12 @@
     <div class="current-step row" data-ng-if="stepShowCtrl.step && stepShowCtrl.authorization.granted">
         <div class="col-sm-12"
             data-ng-class="{
-                'col-md-9': 0 !== stepShowCtrl.inheritedResources.length || 0 !== stepShowCtrl.step.resources.length,
-                'col-md-12': 0 === stepShowCtrl.inheritedResources.length && 0 === stepShowCtrl.step.resources.length
+                'col-md-9': (0 !== stepShowCtrl.inheritedResources.length || 0 !== stepShowCtrl.step.resources.length) && (!stepShowCtrl.summaryState.opened || !stepShowCtrl.summaryState.pinned),
+                'col-md-12': (0 === stepShowCtrl.inheritedResources.length && 0 === stepShowCtrl.step.resources.length) || (stepShowCtrl.summaryState.opened && stepShowCtrl.summaryState.pinned)
             }">
             <div class="current-step-content panel panel-default">
                 <div class="panel-body">
-                    <div class="panel-step-heading lvl lvl-{{ stepShowCtrl.step.lvl }} lvl-border">
+                    <div class="panel-step-heading">
                         <h2>{{ stepShowCtrl.step.name }}</h2>
 
                         <div class="dropdown" data-ng-if="stepShowCtrl.path.manualProgressionAllowed">
@@ -100,7 +100,13 @@
             </div>
         </div>
 
-        <div class="col-md-3 col-sm-12" data-ng-if="0 !== stepShowCtrl.inheritedResources.length || 0 !== stepShowCtrl.step.resources.length">
+        <div class="col-sm-12"
+             data-ng-class="{
+                'col-md-3': !stepShowCtrl.summaryState.opened || !stepShowCtrl.summaryState.pinned,
+                'col-md-12': stepShowCtrl.summaryState.opened && stepShowCtrl.summaryState.pinned
+             }"
+             data-ng-if="0 !== stepShowCtrl.inheritedResources.length || 0 !== stepShowCtrl.step.resources.length"
+        >
             <resources-secondary-show
                 data-resources="stepShowCtrl.step.resources"
                 data-inherited="stepShowCtrl.inheritedResources">

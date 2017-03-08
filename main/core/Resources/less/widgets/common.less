@@ -19,12 +19,13 @@
 .widget-content {
     overflow: auto;
     background-color: @widget-content-bg;
-    flex-grow: 1; // make the content to take the full height of the widget
+    flex: 1; // make the content to take the full height of the widget
     display: flex; // this ensures the child take the full height of the widget content
 
     &:extend(.clearfix all);
 
-    & > * {
+    // todo : ugly selector
+    & > div {
         min-height: 100%;
         min-width: 100%;
     }

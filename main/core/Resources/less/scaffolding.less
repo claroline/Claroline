@@ -1,17 +1,16 @@
 // We use classes for `html` and `body` tags
 // to avoid adding unwanted styles in iframe or tinyMCE
-html.claroline-app-container,
-body.claroline-app {
-    height: 100%;
-}
 
 // Moves the app scroll bar after the fixed header
 html.claroline-app-container {
+    height: 100%;
     overflow-y: hidden;
     padding-top: @top-bar-height;
 }
 
 body.claroline-app {
+    height: 100%;
+
     // Get the scroll bar
     // Using `scroll` is not really aesthetic because it adds an empty one if no scroll
     // but this is the only way to avoid content to move when the scroll appears in `auto` mode
@@ -29,7 +28,7 @@ body.claroline-app {
 
     // Hack to force the display of footer at the bottom of the page if no scroll
     // todo : find a better way to do it. expose content padding as a var
-    padding-bottom: @footer-height + floor(@grid-gutter-width / 2);
+    padding-bottom: @footer-height + 1 + floor(@grid-gutter-width / 2); // + 1 for the border of the footer
 
     .page-container {
         flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent

@@ -150,11 +150,11 @@
 {% block stylesheets %}
     {{ parent() }}
 
+    {% if workspace is defined and workspace.backgroundColor is not null %}
     <style type="text/css">
-        {% if workspace is defined and workspace.backgroundColor is not null %}
-            body {
-                background-color: {{ workspace.getOptions().getDetails()['background_color'] }};
-            }
-        {% endif %}
+        body {
+            background-color: {{ workspace.getOptions().getDetails()['background_color'] }};
+        }
     </style>
+    {% endif %}
 {% endblock %}

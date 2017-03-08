@@ -4,11 +4,13 @@
     width: 100%;
 
     // hack to force display footer at the bottom of the page if no scroll
-    margin-top: -@footer-height;
+    margin-top: -(@footer-height + 1); // + 1 for the border
 
     min-height: @footer-height;
     background: @footer-bg;
     color: @footer-color;
+    border-top: 1px solid @footer-border-color;
+    box-shadow: @footer-box-shadow;
 
     .footer-content {
         max-width: @footer-max-width;
