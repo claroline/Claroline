@@ -68,6 +68,12 @@
 
 .current-step-condition {
     order: 2; // force position to be between step form and navs
+
+    // Truncate step name in create condition btn if too long
+    .btn-block {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 .criteria-group,

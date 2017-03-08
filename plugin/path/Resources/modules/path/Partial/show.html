@@ -43,7 +43,7 @@
     </header>
 
     <!-- Description of the path -->
-    <div data-ng-if="pathShowCtrl.path.description" data-ng-bind-html="pathShowCtrl.path.description | trustAsHtml"></div>
+    <div class="path-description" data-ng-if="pathShowCtrl.path.description" data-ng-bind-html="pathShowCtrl.path.description | trustAsHtml"></div>
 
     <div class="page-content path-container" data-ng-if="pathShowCtrl.path.steps.length !== 0">
         <!-- Summary of the Path-->

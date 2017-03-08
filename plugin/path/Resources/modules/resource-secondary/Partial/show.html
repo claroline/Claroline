@@ -14,8 +14,8 @@
                 <!-- Resource icon -->
                 <img class="resource-icon"
                      alt="{{ resource.mimeType }}"
-                     data-ng-if="0 !== resourcesSecondaryShowCtrl.resourceIcons.length"
-                     data-ng-src="{{ (resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'])|asset }}" />
+                     data-ng-if="resource.icon"
+                     data-ng-src="{{ resource.icon|asset }}" />
 
                 <!-- Resource name -->
                 {{ resource.name }}
@@ -32,8 +32,8 @@
                 <!-- Resource icon -->
                 <img class="resource-icon"
                      alt="{{ resource.mimeType }}"
-                     data-ng-if="0 !== resourcesSecondaryShowCtrl.resourceIcons.length"
-                     data-ng-src="{{ (resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'])|asset }}" />
+                     data-ng-if="resource.icon"
+                     data-ng-src="{{ resource.icon|asset }}" />
 
                 <!-- Resource name -->
                 {{ resource.name }}
