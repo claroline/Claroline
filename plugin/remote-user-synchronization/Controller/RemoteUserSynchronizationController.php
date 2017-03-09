@@ -16,13 +16,19 @@ use Claroline\CoreBundle\Library\Security\Authenticator;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\SecurityTokenManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\RemoteUserSynchronizationBundle\Library\Security\Token\UserToken;
+use Claroline\RemoteUserSynchronizationBundle\Manager\RemoteUserTokenManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class RemoteUserSynchronizationController extends Controller
@@ -30,34 +36,50 @@ class RemoteUserSynchronizationController extends Controller
     private $authenticator;
     private $request;
     private $roleManager;
+    private $router;
     private $session;
-    private $tokenManager;
+    private $securityTokenManager;
+    private $tokenStorage;
     private $userManager;
+    private $remoteUserTokenManager;
+    private $workspaceManager;
 
     /**
      * @DI\InjectParams({
-     *     "authenticator"      = @DI\Inject("claroline.authenticator"),
-     *     "requestStack"       = @DI\Inject("request_stack"),
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "session"            = @DI\Inject("session"),
-     *     "tokenManager"       = @DI\Inject("claroline.manager.security_token_manager"),
-     *     "userManager"        = @DI\Inject("claroline.manager.user_manager")
+     *     "authenticator"          = @DI\Inject("claroline.authenticator"),
+     *     "requestStack"           = @DI\Inject("request_stack"),
+     *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
+     *     "router"                 = @DI\Inject("router"),
+     *     "session"                = @DI\Inject("session"),
+     *     "securityTokenManager"   = @DI\Inject("claroline.manager.security_token_manager"),
+     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
+     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
+     *     "remoteUserTokenManager" = @DI\Inject("claroline.manager.remote_user_token_manager"),
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
         Authenticator $authenticator,
         RequestStack $requestStack,
         RoleManager $roleManager,
+        RouterInterface $router,
         SessionInterface $session,
-        SecurityTokenManager $tokenManager,
-        UserManager $userManager
+        SecurityTokenManager $securityTokenManager,
+        TokenStorageInterface $tokenStorage,
+        UserManager $userManager,
+        RemoteUserTokenManager $remoteUserTokenManager,
+        WorkspaceManager $workspaceManager
     ) {
         $this->authenticator = $authenticator;
         $this->request = $requestStack;
         $this->roleManager = $roleManager;
+        $this->router = $router;
         $this->session = $session;
-        $this->tokenManager = $tokenManager;
+        $this->securityTokenManager = $securityTokenManager;
+        $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
+        $this->remoteUserTokenManager = $remoteUserTokenManager;
+        $this->workspaceManager = $workspaceManager;
     }
 
     /**
@@ -83,21 +105,20 @@ class RemoteUserSynchronizationController extends Controller
         $password = isset($datas['password']) ? $datas['password'] : null;
         $workspacesTab = isset($datas['workspaces']) ? $datas['workspaces'] : [];
         $userId = isset($datas['userId']) ? $datas['userId'] : null;
+        $workspacesAddOnly = isset($datas['workspacesAddOnly']) ? boolval($datas['workspacesAddOnly']) : false;
 
         if (!empty($token) && !empty($clientName)) {
-            $securityToken = $this->tokenManager
-                ->getSecurityTokenByClientNameAndTokenAndIp($clientName, $token, $clientIp);
+            $securityToken = $this->securityTokenManager->getSecurityTokenByClientNameAndTokenAndIp($clientName, $token, $clientIp);
 
             if (is_null($securityToken)) {
-                $securityToken =
-                    $this->tokenManager->getSecurityTokenByClientNameAndTokenAndIp(
-                        $clientName,
-                        $token,
-                        $clientIp.':'.$port
-                    );
+                $securityToken = $this->securityTokenManager->getSecurityTokenByClientNameAndTokenAndIp(
+                    $clientName,
+                    $token,
+                    $clientIp.':'.$port
+                );
             }
             if (!is_null($securityToken)) {
-                if (!empty($username) && !empty($firstName) && !empty($lastName) && !empty($email) && !empty($password)) {
+                if (!empty($username) && !empty($firstName) && !empty($lastName) && !empty($email)) {
                     try {
                         if (!is_null($userId)) {
                             $user = $this->userManager->getUserById($userId);
@@ -109,12 +130,17 @@ class RemoteUserSynchronizationController extends Controller
                             $user->setFirstName($firstName);
                             $user->setLastName($lastName);
                             $user->setMail($email);
-                            $user->setPlainPassword($password);
+                            if (!empty($password)) {
+                                $user->setPlainPassword($password);
+                            }
                             $this->userManager->persistUser($user);
                         } else {
                             $user = $this->userManager->getUserByUsernameOrMail($username, $email);
 
                             if (is_null($user)) {
+                                if (empty($password)) {
+                                    return new Response('Bad Request', 400);
+                                }
                                 $user = new User();
                                 $user->setUsername($username);
                                 $user->setFirstName($firstName);
@@ -128,7 +154,10 @@ class RemoteUserSynchronizationController extends Controller
                                 $user->setFirstName($firstName);
                                 $user->setLastName($lastName);
                                 $user->setMail($email);
-                                $user->setPlainPassword($password);
+
+                                if (!empty($password)) {
+                                    $user->setPlainPassword($password);
+                                }
                             }
                             $this->userManager->persistUser($user);
                         }
@@ -147,8 +176,11 @@ class RemoteUserSynchronizationController extends Controller
                             $refreshedRoles[] = $role;
                         }
                     }
-                    $this->updateUserRoles($user, $userRoles, $refreshedRoles);
-                    $this->authenticator->authenticate($username, $password);
+                    $this->updateUserRoles($user, $userRoles, $refreshedRoles, $workspacesAddOnly);
+
+                    if (!empty($password)) {
+                        $this->authenticator->authenticate($username, $password);
+                    }
 
                     return new JsonResponse($user->getId(), 200);
                 } else {
@@ -160,14 +192,93 @@ class RemoteUserSynchronizationController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *     "/remote/user/token/generate",
+     *     name = "claro_generate_remote_user_token",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("POST")
+     */
+    public function generateRemoteUserTokenAction()
+    {
+        $request = $this->request->getCurrentRequest();
+        $clientIp = $request->getClientIp();
+        $port = $request->getPort();
+        $datas = $request->request->all();
+        $token = isset($datas['token']) ? $datas['token'] : null;
+        $clientName = isset($datas['client']) ? $datas['client'] : null;
+        $userId = isset($datas['userId']) ? $datas['userId'] : null;
+
+        if (!empty($token) && !empty($clientName) && !empty($userId)) {
+            $securityToken = $this->securityTokenManager->getSecurityTokenByClientNameAndTokenAndIp($clientName, $token, $clientIp);
+
+            if (is_null($securityToken)) {
+                $securityToken = $this->securityTokenManager->getSecurityTokenByClientNameAndTokenAndIp(
+                    $clientName,
+                    $token,
+                    $clientIp.':'.$port
+                );
+            }
+            if (!is_null($securityToken)) {
+                $user = $this->userManager->getUserById($userId);
+
+                if (!empty($user) && !$user->hasRole('ROLE_ADMIN')) {
+                    $remoteUserToken = $this->remoteUserTokenManager->createRemoteUserToken($user);
+
+                    return new JsonResponse($remoteUserToken->getToken(), 200);
+                }
+            }
+        }
+        throw new AccessDeniedException();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/remote/user/{user}/token/{token}/connect/{workspaceCode}",
+     *     name = "claro_remote_user_token_connect",
+     *     defaults={"workspaceCode"=""},
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method("GET")
+     *
+     * @param User   $user
+     * @param string $token
+     * @param string $workspaceCode
+     *
+     * @return RedirectResponse|AccessDeniedException
+     */
+    public function connectRemoteUserWithTokenAction(User $user, $token, $workspaceCode = '')
+    {
+        $validToken = $this->remoteUserTokenManager->checkRemoteUserToken($user, $token);
+
+        if ($validToken) {
+            $workspace = empty($workspaceCode) ? null : $this->workspaceManager->getWorkspaceByCode($workspaceCode);
+            $userToken = new UserToken($user);
+            $this->tokenStorage->setToken($userToken);
+
+            if (!is_null($workspace)) {
+                return new RedirectResponse(
+                    $this->router->generate('claro_workspace_open', ['workspaceId' => $workspace->getId()])
+                );
+            }
+
+            return new RedirectResponse(
+                $this->router->generate('claro_desktop_open')
+            );
+        }
+        throw new AccessDeniedException();
+    }
+
+    /**
      * Assiociates given user to roles that are in $newRoles and dissociates
      * him/her from roles that are in $currentRoles and not in $newRoles.
      *
      * @param User  $user
      * @param array $currentRoles
      * @param array $newRoles
+     * @param bool  $addOnly
      */
-    private function updateUserRoles(User $user, array $currentRoles, array $newRoles)
+    private function updateUserRoles(User $user, array $currentRoles, array $newRoles, $addOnly)
     {
         $rolesToDissociate = [];
 
@@ -180,9 +291,10 @@ class RemoteUserSynchronizationController extends Controller
                 unset($newRoles[$index]);
             }
         }
-
-        foreach ($rolesToDissociate as $roleToDissociate) {
-            $this->roleManager->dissociateRole($user, $roleToDissociate);
+        if (!$addOnly) {
+            foreach ($rolesToDissociate as $roleToDissociate) {
+                $this->roleManager->dissociateRole($user, $roleToDissociate);
+            }
         }
         $this->roleManager->associateRoles($user, $newRoles);
     }
