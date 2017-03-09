@@ -61,7 +61,7 @@
     "portfolio_deleted_ajax_notification": "Portfolio supprimé avec succès",
     "portfolio_deletion_confirm_message": "Etes-vous sûr de vouloir supprimer le portfolio <strong>%portfolioName%</strong> ?",
     "portfolio_deletion_confirm_title": "Suppression d'un portfolio",
-    "portfolio_empty": "Aucune information n''est affichée sur ce portfolio.",
+    "portfolio_empty": "Aucune information n'est affichée sur ce portfolio.",
     "portfolio_error_401": "Connexion requise",
     "portfolio_error_401_text": "Vous devez être <a href=\"%loginUrl%\" title=\"Connexion\">connecté</a> à la plateforme pour accéder au portfolio <strong>%portfolioSlug%</strong>.",
     "portfolio_error_403": "Accès au portfolio interdit",
