@@ -62,6 +62,11 @@ class ItemSerializer extends AbstractSerializer
     private $resourceContentSerializer;
 
     /**
+     * @var ItemObjectSerializer
+     */
+    private $itemObjectSerializer;
+
+    /**
      * ItemSerializer constructor.
      *
      * @param ObjectManager             $om
@@ -71,6 +76,7 @@ class ItemSerializer extends AbstractSerializer
      * @param CategorySerializer        $categorySerializer
      * @param HintSerializer            $hintSerializer
      * @param ResourceContentSerializer $resourceContentSerializer
+     * @param ItemObjectSerializer      $itemObjectSerializer
      *
      * @DI\InjectParams({
      *     "om"                        = @DI\Inject("claroline.persistence.object_manager"),
@@ -79,7 +85,8 @@ class ItemSerializer extends AbstractSerializer
      *     "userSerializer"            = @DI\Inject("ujm_exo.serializer.user"),
      *     "categorySerializer"        = @DI\Inject("ujm_exo.serializer.category"),
      *     "hintSerializer"            = @DI\Inject("ujm_exo.serializer.hint"),
-     *     "resourceContentSerializer" = @DI\Inject("ujm_exo.serializer.resource_content")
+     *     "resourceContentSerializer" = @DI\Inject("ujm_exo.serializer.resource_content"),
+     *     "itemObjectSerializer"      = @DI\Inject("ujm_exo.serializer.item_object")
      * })
      */
     public function __construct(
@@ -89,7 +96,8 @@ class ItemSerializer extends AbstractSerializer
         UserSerializer $userSerializer,
         CategorySerializer $categorySerializer,
         HintSerializer $hintSerializer,
-        ResourceContentSerializer $resourceContentSerializer)
+        ResourceContentSerializer $resourceContentSerializer,
+        ItemObjectSerializer $itemObjectSerializer)
     {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
@@ -98,6 +106,7 @@ class ItemSerializer extends AbstractSerializer
         $this->categorySerializer = $categorySerializer;
         $this->hintSerializer = $hintSerializer;
         $this->resourceContentSerializer = $resourceContentSerializer;
+        $this->itemObjectSerializer = $itemObjectSerializer;
     }
 
     /**
@@ -417,7 +426,7 @@ class ItemSerializer extends AbstractSerializer
 
     /**
      * Serializes Item objects.
-     * Forwards the object serialization to ResourceContentSerializer.
+     * Forwards the object serialization to ItemObjectSerializer.
      *
      * @param Item  $question
      * @param array $options
@@ -427,7 +436,7 @@ class ItemSerializer extends AbstractSerializer
     private function serializeObjects(Item $question, array $options = [])
     {
         return array_map(function (ItemObject $object) use ($options) {
-            return $this->resourceContentSerializer->serialize($object->getResourceNode(), $options);
+            return $this->itemObjectSerializer->serialize($object, $options);
         }, $question->getObjects()->toArray());
     }
 
@@ -442,25 +451,25 @@ class ItemSerializer extends AbstractSerializer
     {
         $objectEntities = $question->getObjects()->toArray();
 
-        foreach ($objects as $objectData) {
+        foreach ($objects as $index => $objectData) {
             $existingObject = null;
 
             // Searches for an existing object entity.
             foreach ($objectEntities as $entityIndex => $entityObject) {
                 /** @var ItemObject $entityObject */
-                if ((string) $entityObject->getId() === $objectData->id) {
+                if ($entityObject->getUuid() === $objectData->id) {
                     $existingObject = $entityObject;
                     unset($objectEntities[$entityIndex]);
                     break;
                 }
             }
+            $toAdd = empty($existingObject);
+            $itemObject = $this->itemObjectSerializer->deserialize($objectData, $existingObject, $options);
+            $itemObject->setOrder($index);
 
             // Link object to item
-            if (empty($existingObject)) {
-                $node = $this->resourceContentSerializer->deserialize($objectData, $existingObject, $options);
-                if ($node) {
-                    $question->addObject($node);
-                }
+            if ($toAdd) {
+                $question->addObject($itemObject);
             }
         }
 
@@ -468,6 +477,7 @@ class ItemSerializer extends AbstractSerializer
         if (0 < count($objectEntities)) {
             foreach ($objectEntities as $objectToRemove) {
                 $question->removeObject($objectToRemove);
+                $this->om->remove($objectToRemove);
             }
         }
     }

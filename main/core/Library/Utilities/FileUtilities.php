@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\File\PublicFileUse;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Filesystem as SymfonyFileSystem;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -47,7 +47,7 @@ class FileUtilities
     public function __construct(
         ClaroUtilities $claroUtils,
         $filesDir,
-        Filesystem $fileSystem,
+        SymfonyFileSystem $fileSystem,
         ObjectManager $om,
         $publicFilesDir,
         TokenStorageInterface $tokenStorage
@@ -60,6 +60,19 @@ class FileUtilities
         $this->tokenStorage = $tokenStorage;
     }
 
+    /**
+     * Creates a file into public files directory.
+     * Then creates a <PublicFileUse> for created public file if $objectClass and $objectUuid are specified.
+     *
+     * @param File   $tmpFile
+     * @param string $name
+     * @param string $objectClass
+     * @param string $objectUuid
+     * @param string $objectName
+     * @param string $sourceType
+     *
+     * @return PublicFile
+     */
     public function createFile(
         File $tmpFile,
         $name = null,
@@ -92,6 +105,72 @@ class FileUtilities
             $publicFile->setCreator($user);
         }
         $tmpFile->move($this->filesDir.DIRECTORY_SEPARATOR.$prefix, $hashName);
+        $this->om->persist($publicFile);
+
+        if (!is_null($objectClass) && !is_null($objectUuid)) {
+            $this->createFileUse($publicFile, $objectClass, $objectUuid, $objectName);
+        }
+        $this->om->endFlushSuite();
+
+        return $publicFile;
+    }
+
+    /**
+     * Creates a file from given data into public files directory.
+     * Then creates a <PublicFileUse> for created public file if $objectClass and $objectUuid are specified.
+     *
+     * @param string $data
+     * @param string $fileName
+     * @param string $objectClass
+     * @param string $objectUuid
+     * @param string $objectName
+     * @param string $sourceType
+     *
+     * @return PublicFile
+     */
+    public function createFileFromData(
+        $data,
+        $fileName,
+        $objectClass = null,
+        $objectUuid = null,
+        $objectName = null,
+        $sourceType = null
+    ) {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $directoryName = $this->getActiveDirectoryName();
+        $dataParts = explode(',', $data);
+        $dataBin = base64_decode($dataParts[1]);
+        $length = strlen($dataBin);
+        $size = ceil(4 * $length / 3);
+        $matches = [];
+        $extension = '';
+        if (1 === preg_match('#^.+\.([^\.]+)$#', $fileName, $matches)) {
+            if (isset($matches[1])) {
+                $extension = $matches[1];
+            }
+        }
+        $hashName = $this->claroUtils->generateGuid();
+        if (!empty($extension)) {
+            $hashName .= '.'.$extension;
+        }
+        $prefix = 'data'.DIRECTORY_SEPARATOR.$directoryName;
+        $url = $prefix.DIRECTORY_SEPARATOR.$hashName;
+
+        $this->om->startFlushSuite();
+        $publicFile = new PublicFile();
+        $publicFile->setDirectoryName($directoryName);
+        $publicFile->setFilename($fileName);
+        $publicFile->setSize($size);
+        $publicFile->setCreationDate(new \DateTime());
+        $publicFile->setUrl($url);
+        $publicFile->setSourceType($sourceType);
+
+        if ($user !== 'anon.') {
+            $publicFile->setCreator($user);
+        }
+        $this->fileSystem->dumpFile($url, $dataBin);
+        $mimeType = mime_content_type($url);
+        $publicFile->setMimeType($mimeType);
         $this->om->persist($publicFile);
 
         if (!is_null($objectClass) && !is_null($objectUuid)) {

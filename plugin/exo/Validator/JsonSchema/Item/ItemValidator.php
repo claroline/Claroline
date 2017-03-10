@@ -6,6 +6,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
+use UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator;
 
 /**
  * @DI\Service("ujm_exo.validator.item")
@@ -28,26 +29,35 @@ class ItemValidator extends JsonSchemaValidator
     private $hintValidator;
 
     /**
+     * @var ContentValidator
+     */
+    private $contentValidator;
+
+    /**
      * ItemValidator constructor.
      *
      * @param ItemDefinitionsCollection $itemDefinitions
      * @param CategoryValidator         $categoryValidator
      * @param HintValidator             $hintValidator
+     * @param ContentValidator          $contentValidator
      *
      * @DI\InjectParams({
      *     "itemDefinitions"   = @DI\Inject("ujm_exo.collection.item_definitions"),
      *     "categoryValidator" = @DI\Inject("ujm_exo.validator.category"),
-     *     "hintValidator"     = @DI\Inject("ujm_exo.validator.hint")
+     *     "hintValidator"     = @DI\Inject("ujm_exo.validator.hint"),
+     *     "contentValidator"  = @DI\Inject("ujm_exo.validator.content")
      * })
      */
     public function __construct(
         ItemDefinitionsCollection $itemDefinitions,
         CategoryValidator $categoryValidator,
-        HintValidator $hintValidator)
+        HintValidator $hintValidator,
+        ContentValidator $contentValidator)
     {
         $this->itemDefinitions = $itemDefinitions;
         $this->categoryValidator = $categoryValidator;
         $this->hintValidator = $hintValidator;
+        $this->contentValidator = $contentValidator;
     }
 
     public function getJsonSchemaUri()
@@ -109,6 +119,13 @@ class ItemValidator extends JsonSchemaValidator
             array_map(function ($hint) use (&$errors, $options) {
                 $errors = array_merge($errors, $this->hintValidator->validateAfterSchema($hint, $options));
             }, $question->hints);
+        }
+
+        // Validate objects
+        if (isset($question->objects)) {
+            array_map(function ($object) use (&$errors, $options) {
+                $errors = array_merge($errors, $this->contentValidator->validateAfterSchema($object, $options));
+            }, $question->objects);
         }
 
         // Validates specific data of the question type

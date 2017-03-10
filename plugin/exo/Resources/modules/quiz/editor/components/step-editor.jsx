@@ -156,6 +156,8 @@ let ItemPanel = props =>
             <ItemForm
               item={props.item}
               validating={props.validating}
+              showModal={props.showModal}
+              closeModal={props.closeModal}
               onChange={(propertyPath, value) =>
                 props.handleItemUpdate(props.item.id, propertyPath, value)
               }
@@ -189,6 +191,7 @@ ItemPanel.propTypes = {
   handleItemUpdate: T.func.isRequired,
   handleItemDetailUpdate: T.func.isRequired,
   showModal: T.func.isRequired,
+  closeModal: T.func.isRequired,
   connectDragSource: T.func.isRequired,
   isDragging: T.bool.isRequired,
   onSort: T.func.isRequired,
@@ -461,6 +464,7 @@ export const StepEditor = props =>
           handleItemHintsUpdate={props.handleItemHintsUpdate}
           handleItemDetailUpdate={props.handleItemDetailUpdate}
           showModal={props.showModal}
+          closeModal={props.closeModal}
           {...props}
         /> :
         <ContentPanel

@@ -3,7 +3,8 @@
 namespace UJM\ExoBundle\Entity\Item;
 
 use Doctrine\ORM\Mapping as ORM;
-use UJM\ExoBundle\Entity\Content\OrderedResource;
+use Ramsey\Uuid\Uuid;
+use UJM\ExoBundle\Library\Model\OrderTrait;
 
 /**
  * A Resource on which the Item is referred.
@@ -11,8 +12,10 @@ use UJM\ExoBundle\Entity\Content\OrderedResource;
  * @ORM\Entity()
  * @ORM\Table(name="ujm_object_question")
  */
-class ItemObject extends OrderedResource
+class ItemObject
 {
+    use OrderTrait;
+
     /**
      * @var int
      *
@@ -21,6 +24,13 @@ class ItemObject extends OrderedResource
      * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
+
+    /**
+     * @ORM\Column("uuid", type="string", length=36, unique=true)
+     *
+     * @var string
+     */
+    private $uuid;
 
     /**
      * Owning Item.
@@ -33,6 +43,28 @@ class ItemObject extends OrderedResource
     private $question;
 
     /**
+     * The mime type of the Item object.
+     *
+     * @ORM\Column("mime_type", type="string")
+     *
+     * @var string
+     */
+    private $mimeType;
+
+    /**
+     * @ORM\Column(name="object_data", type="text")
+     */
+    private $data;
+
+    /**
+     * ItemObject constructor.
+     */
+    public function __construct()
+    {
+        $this->uuid = Uuid::uuid4()->toString();
+    }
+
+    /**
      * Get id.
      *
      * @return int
@@ -40,6 +72,26 @@ class ItemObject extends OrderedResource
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Gets UUID.
+     *
+     * @return string
+     */
+    public function getUuid()
+    {
+        return $this->uuid;
+    }
+
+    /**
+     * Sets UUID.
+     *
+     * @param $uuid
+     */
+    public function setUuid($uuid)
+    {
+        $this->uuid = $uuid;
     }
 
     /**
@@ -60,5 +112,45 @@ class ItemObject extends OrderedResource
     public function getQuestion()
     {
         return $this->question;
+    }
+
+    /**
+     * Gets mime type.
+     *
+     * @return string
+     */
+    public function getMimeType()
+    {
+        return $this->mimeType;
+    }
+
+    /**
+     * Sets mime type.
+     *
+     * @param $mimeType
+     */
+    public function setMimeType($mimeType)
+    {
+        $this->mimeType = $mimeType;
+    }
+
+    /**
+     * Gets data.
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Sets data.
+     *
+     * @param string $data
+     */
+    public function setData($data)
+    {
+        $this->data = $data;
     }
 }
