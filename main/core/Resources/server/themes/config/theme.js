@@ -1,7 +1,9 @@
 const path = require('path')
 const shell = require('shelljs')
 
-const DEFAULT_THEMES_PATH = path.resolve(__dirname, '../../../less/themes')
+const paths = require('../../paths')
+
+const DEFAULT_THEMES_PATH = path.resolve(paths.distribution(), 'main/core/Resources/less/themes')
 
 const THEME_ROOT_FILE    = 'index.less'
 const THEME_VARS_FILE    = 'variables.less'
@@ -41,6 +43,14 @@ const Theme = function (themeName, themeLocation) {
   if (shell.test('-e', pluginsVarsFile)) {
     this.pluginsVars = pluginsVarsFile
   }
+
+  // Get static assets
+  this.staticAssets = [];
+  ['fonts', 'images'].map(assetType => {
+    if (shell.test('-e', path.join(this.location, this.name, assetType))) {
+      this.staticAssets.push(assetType)
+    }
+  })
 }
 
 Theme.prototype = {
@@ -165,6 +175,24 @@ Theme.prototype = {
    */
   getPluginsVars() {
     return this.pluginsVars
+  },
+
+  /**
+   * Checks if theme as some static assets (eg. fonts, images).
+   *
+   * @returns {boolean}
+   */
+  hasStaticAssets() {
+    return !!this.staticAssets
+  },
+
+  /**
+   * Gets the static assets of the themes (eg. fonts, images).
+   *
+   * @returns {Array}
+   */
+  getStaticAssets() {
+    return this.staticAssets
   }
 }
 

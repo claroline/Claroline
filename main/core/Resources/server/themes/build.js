@@ -5,7 +5,6 @@ const shell = require('shelljs')
 
 const paths = require('../paths')
 const entries = require('./entries')
-const themeConf = require('./config/theme')
 const compile = require('./compile')
 
 const BUILD_DIR = path.resolve(paths.web(), 'themes')
@@ -15,37 +14,27 @@ const BUILD_FILE = path.resolve(paths.root(), 'theme-assets.json')
 const registeredPackages = entries.collectEntries()
 const registeredPackagesNames = Object.keys(registeredPackages)
 
-// Get previous build result if any
-const previousBuild = getBuildState()
-
-// TODO : add no cache option
-// TODO : add build one theme option
-// TODO : add build one theme from custom location
-// TODO : add build many themes from custom location
-
 /**
- * Builds all installed themes.
+ * Builds themes.
  *
- * @todo rebuild custom themes
+ * @param {Theme[]} themes  - the themes to build
+ * @param {boolean} noCache - if true, all files will be forced recompiled without checking cache
  */
-function run() {
-  shell.echo('Rebuild themes: START')
-
+function build(themes, noCache) {
   const previousBuild = getBuildState()
 
   if (!fs.existsSync(BUILD_DIR)) {
     fs.mkdirSync(BUILD_DIR)
   }
 
-  // Build default themes
-  const defaultThemes = shell.ls(themeConf.DEFAULT_THEMES_PATH)
-
   Promise.all(
-    defaultThemes.map(theme =>
-      buildTheme(
-        new themeConf.Theme(path.basename(theme, '.less'), themeConf.DEFAULT_THEMES_PATH)
-      )
-    )
+    themes.map(theme => {
+      if (!previousBuild[theme.name] || noCache) {
+        previousBuild[theme.name] = {}
+      }
+
+      return buildTheme(theme, previousBuild[theme.name])
+    })
   ).then(() => {
     dumpBuildState(previousBuild)
 
@@ -74,10 +63,6 @@ function buildTheme(theme, themeState) {
   }
 
   if (theme.canCompile()) {
-    if (!previousBuild[theme.name]) {
-      previousBuild[theme.name] = {}
-    }
-
     // Create build dir for the theme
     const themeDir = path.join(BUILD_DIR, theme.name)
     if (!fs.existsSync(themeDir)) {
@@ -89,19 +74,19 @@ function buildTheme(theme, themeState) {
       createAsset(
         theme.getRoot(),
         path.resolve(themeDir, 'bootstrap.css'),
-        previousBuild[theme.name]['bootstrap.css']
+        themeState['bootstrap.css']
       ).then(
-        newVersion => previousBuild[theme.name]['bootstrap.css'] = newVersion
+        newVersion => themeState['bootstrap.css'] = newVersion
       ),
 
       // 2. Build plugins styles using theme vars
       ...registeredPackagesNames.map(packageAssets => createAsset(
         registeredPackages[packageAssets], // src file path
         path.resolve(themeDir, packageAssets+'.css'), // destination file path
-        previousBuild[theme.name][packageAssets+'.css'],
+        themeState[packageAssets+'.css'],
         theme.getVars() // global vars
       ).then(
-        newVersion => previousBuild[theme.name][packageAssets+'.css'] = newVersion)
+        newVersion => themeState[packageAssets+'.css'] = newVersion)
       )
     ]).then(
       result => onThemeSuccess(theme, result),
@@ -132,22 +117,25 @@ function createAsset(asset, outputFile, currentVersion, globalVars) {
 
     if (currentVersion !== newVersion || !fs.existsSync(outputFile)) {
       // Content has changed => update the build
-      shell.echo(`Rebuild ${outputFile}.`)
-
-      // Write new css file
-      fs.writeFileSync(outputFile, output.css)
-
-      // Write new map file
-      if (output.map) {
-        fs.writeFileSync(outputFile + '.map', output.map)
-      }
+      shell.echo(`+++ ${outputFile}.`)
 
       // Post process
-    } else {
-      shell.echo(`Keep ${outputFile}.`)
-    }
+      return compile.optimize(output.css).then(optimized => {
+        // Write new css file
+        fs.writeFileSync(outputFile, optimized)
 
-    return newVersion
+        // Write new map file
+        if (output.map) {
+          fs.writeFileSync(outputFile + '.map', output.map)
+        }
+
+        return Promise.resolve(newVersion)
+      })
+    } else {
+      shell.echo(`    ${outputFile}.`)
+
+      return Promise.resolve(newVersion)
+    }
   })
 }
 
@@ -182,5 +170,6 @@ function getBuildState() {
   }
 }
 
-// Run command
-run()
+module.exports = {
+  build
+}

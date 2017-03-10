@@ -1,8 +1,11 @@
 const fs = require('fs')
 const less = require('less')
 const path = require('path')
-const paths = require('../paths')
 const postcss = require('postcss')
+const autoprefixer = require('autoprefixer')
+const cssnano = require('cssnano')
+
+const paths = require('../paths')
 
 function compile(srcFile, outputFile, additionalVarsFiles) {
   const baseName = path.basename(outputFile, '.css')
@@ -21,28 +24,26 @@ function compile(srcFile, outputFile, additionalVarsFiles) {
   var src = fs.readFileSync(srcFile, 'utf8')
   if (additionalVarsFiles) {
     // Add vars from all additional vars file
-    src.concat(...additionalVarsFiles.map(varsFile => fs.readFileSync(varsFile, 'utf8')))
+    src = src.concat(...additionalVarsFiles.map(varsFile => `@import "${varsFile}";\n`))
   }
 
   return less.render(src, compileOptions)
 }
 
 function optimize(input) {
-  /*const postCmd = [
-    'node_modules/postcss-cli/bin/postcss',
-    '-u autoprefixer -u cssnano',
-    '--autoprefixer.browsers "last 2 versions"',
-    '--cssnano.safe true',
-    '-o',
-    cssFile,
-    cssFile
-  ].join(' ')*/
-
   return postcss([
-
-  ]).process(input, { from, to });
+    autoprefixer({
+      browsers: 'last 2 versions'
+    }),
+    cssnano({
+      safe: true
+    })
+  ])
+    .process(input)
+    .then(result => result.css)
 }
 
 module.exports = {
-  compile
+  compile,
+  optimize
 }
