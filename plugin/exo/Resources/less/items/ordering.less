@@ -1,0 +1,166 @@
+
+.ordering-editor {
+
+  .items-row {
+    margin-bottom: @panel-body-padding;
+  }
+
+  .item-footer {
+    text-align: center;
+  }
+
+  ul {
+    list-style-type:none;
+    padding: 0;
+
+    li {
+      vertical-align: top;
+      padding: 5px;
+    }
+  }
+
+  .text-editor {
+    word-break: break-all;
+  }
+
+  .item-container {
+    display: flex;
+    background-color: #eee;
+    padding: 5px;
+    justify-content: space-between;
+  }
+
+  .item-score {
+    width: 60px;
+  }
+
+  .vertical {
+    width: 100%;
+    .item {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .right-controls {
+      margin-left: 5px;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .text-fields {
+      flex-grow: 1;
+    }
+
+  }
+
+  .horizontal {
+    display:inline-block;
+    .item-container {
+      max-width: 250px;
+      .item {
+        flex-direction: column;
+      }
+
+      .right-controls {
+        display: flex;
+        align-self: flex-end;
+        align-items: flex-start;
+      }
+
+      .feedback-container {
+        margin-top: @panel-body-padding;
+      }
+
+      .drag-handle {
+        margin-left: 5px;
+        align-items: flex-start;
+      }
+    }
+  }
+}
+
+
+.ordering-player {
+  padding: @panel-body-padding;
+  .answer-zone {
+    border: 1px solid #eee;
+    padding: 5px;
+  }
+
+  .horizontal {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .item {
+    display: flex;
+    background-color: #f5f5f5;
+    padding-bottom: 5px;
+    margin: 5px;
+    padding: 5px;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .horizontal .item {
+    width: 100%;
+  }
+
+  .drop-container {
+    background-color: #ffffff;
+    border: 1px dashed #bbb;
+    border-radius: 5px;
+    height: auto;
+    text-align: center;
+    padding: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+    &.on-hover {
+      background-color: #eee;
+    }
+  }
+}
+
+
+.ordering-paper {
+  padding: @panel-body-padding;
+  .answer-zone {
+    border: 1px solid #eee;
+    padding: 5px;
+  }
+
+  .horizontal {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .item {
+    display: flex;
+    padding-bottom: 5px;
+    margin: 5px;
+    padding: 5px;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .item-bg {    
+    background-color: #f5f5f5;
+  }
+
+  .horizontal .item {
+    width: 100%;
+    max-width: 250px;
+  }
+
+  .positive-score {
+    background-color: #d4ffb0;
+    border: 1px solid #d6e9c6;
+  }
+
+  .negative-score {
+    background-color: #f9e2e2;
+    border: 1px solid #ebccd1;
+  }
+}
