@@ -29,6 +29,7 @@ node_modules
 npm-debug.log
 templates/*
 vendor/*
+theme-assets.json
 webpack-assets.json
 webpack-dlls.json
 webpack-stats.json
