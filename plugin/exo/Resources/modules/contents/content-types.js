@@ -10,12 +10,15 @@ const typeProperties = [
   'type',
   'mimeType',
   'content',
+  'editable',
   'editor',
   'player',
   'validate',
   'icon',
   'altIcon',
-  'browseFiles'
+  'browseFiles',
+  'thumbnail',
+  'modal'
 ]
 
 let registeredContentTypes = {}

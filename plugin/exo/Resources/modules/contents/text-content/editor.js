@@ -1,6 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 import {makeActionCreator} from './../../utils/utils'
 import {TextContent as component} from './editor.jsx'
+import {TextObjectEditor as objectEditor} from './object-editor.jsx'
 import {notBlank, setIfError} from './../../utils/validate'
 
 const UPDATE_ITEM_CONTENT_TEXT = 'UPDATE_ITEM_CONTENT_TEXT'
@@ -31,5 +32,6 @@ function validate(item) {
 export default {
   component,
   reduce,
-  validate
+  validate,
+  objectEditor
 }

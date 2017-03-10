@@ -8,7 +8,7 @@ import {actions} from './editor'
 export const TextContent = (props) =>
   <fieldset>
     <FormGroup
-      controlId={`item-${props.item.id}-description`}
+      controlId={`item-${props.item.id}-data`}
       label={trans('text', {}, 'question_types')}
       warnOnly={!props.validating}
       error={get(props.item, '_errors.data')}

@@ -5,6 +5,7 @@ import {HINT_ADD, HINT_CHANGE, HINT_REMOVE} from './../actions'
 import {FormGroup} from './../../../components/form/form-group.jsx'
 import {Textarea} from './../../../components/form/textarea.jsx'
 import {SubSection} from './../../../components/form/sub-section.jsx'
+import ObjectsEditor from './item-objects-editor.jsx'
 
 // TODO: add categories, objects, resources, define-as-model
 
@@ -32,6 +33,17 @@ const Metadata = props =>
         onChange={text => props.onChange('description', text)}
       />
     </FormGroup>
+    <FormGroup
+      controlId={`item-${props.item.id}-objects`}
+      label={tex('question_objects')}
+    >
+      <ObjectsEditor
+        showModal={props.showModal}
+        closeModal={props.closeModal}
+        validating={props.validating}
+        item={props.item}
+      />
+    </FormGroup>
   </fieldset>
 
 Metadata.propTypes = {
@@ -40,7 +52,10 @@ Metadata.propTypes = {
     title: T.string.isRequired,
     description: T.string.isRequired
   }).isRequired,
-  onChange: T.func.isRequired
+  showModal: T.func.isRequired,
+  closeModal: T.func.isRequired,
+  onChange: T.func.isRequired,
+  validating: T.bool.isRequired
 }
 
 const Hint = props =>
@@ -151,7 +166,13 @@ export class ItemForm extends Component {
           hideText={tex('hide_metadata_fields')}
           toggle={() => this.setState({metaHidden: !this.state.metaHidden})}
         >
-          <Metadata item={this.props.item} onChange={this.props.onChange}/>
+          <Metadata
+            item={this.props.item}
+            showModal={this.props.showModal}
+            closeModal={this.props.closeModal}
+            onChange={this.props.onChange}
+            validating={this.props.validating}
+          />
         </SubSection>
         <hr/>
         {this.props.children}
@@ -195,6 +216,8 @@ ItemForm.propTypes = {
   }).isRequired,
   children: T.element.isRequired,
   validating: T.bool.isRequired,
+  showModal: T.func.isRequired,
+  closeModal: T.func.isRequired,
   onChange: T.func.isRequired,
   onHintsChange: T.func.isRequired
 }

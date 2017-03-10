@@ -34,6 +34,11 @@ export const QUIZ_SAVE_ERROR = 'QUIZ_SAVE_ERROR'
 export const CONTENT_ITEM_CREATE = 'CONTENT_ITEM_CREATE'
 export const CONTENT_ITEM_UPDATE = 'CONTENT_ITEM_UPDATE'
 export const CONTENT_ITEM_DETAIL_UPDATE = 'CONTENT_ITEM_DETAIL_UPDATE'
+export const ITEM_OBJECTS_UPDATE = 'ITEM_OBJECTS_UPDATE'
+export const OBJECT_ADD = 'OBJECT_ADD'
+export const OBJECT_CHANGE = 'OBJECT_CHANGE'
+export const OBJECT_REMOVE = 'OBJECT_REMOVE'
+export const OBJECT_MOVE = 'OBJECT_MOVE'
 
 // the following action types lead to quiz data changes that need to be
 // properly saved (please maintain this list up-to-date)
@@ -55,7 +60,12 @@ export const quizChangeActions = [
   HINT_REMOVE,
   CONTENT_ITEM_CREATE,
   CONTENT_ITEM_UPDATE,
-  CONTENT_ITEM_DETAIL_UPDATE
+  CONTENT_ITEM_DETAIL_UPDATE,
+  ITEM_OBJECTS_UPDATE,
+  OBJECT_ADD,
+  OBJECT_CHANGE,
+  OBJECT_REMOVE,
+  OBJECT_MOVE
 ]
 
 export const actions = {}
@@ -81,6 +91,7 @@ actions.quizSaved = makeActionCreator(QUIZ_SAVED)
 actions.quizSaveError = makeActionCreator(QUIZ_SAVE_ERROR)
 actions.updateContentItem = makeActionCreator(CONTENT_ITEM_UPDATE, 'id', 'propertyPath', 'value')
 actions.updateContentItemDetail = makeActionCreator(CONTENT_ITEM_DETAIL_UPDATE, 'id', 'subAction')
+actions.updateItemObjects = makeActionCreator(ITEM_OBJECTS_UPDATE, 'itemId', 'updateType', 'data')
 
 actions.createItem = (stepId, type) => {
   invariant(stepId, 'stepId is mandatory')
@@ -169,5 +180,41 @@ actions.createContentItem = (stepId, type, data = '') => {
     stepId,
     contentType: type,
     data: data
+  }
+}
+
+actions.createItemObject = (itemId, type) => {
+  invariant(itemId, 'itemId is mandatory')
+  invariant(type, 'type is mandatory')
+  return {
+    type: ITEM_OBJECTS_UPDATE,
+    id: makeId(),
+    itemId: itemId,
+    updateType: OBJECT_ADD,
+    data: {
+      mimeType: type
+    }
+  }
+}
+
+actions.saveItemObjectFile = (itemId, objectId, file) => {
+  return (dispatch) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    formData.append('fileName', file.name)
+    formData.append('sourceType', 'exo_item_object')
+
+    dispatch({
+      [REQUEST_SEND]: {
+        route: ['upload_public_file'],
+        request: {
+          method: 'POST',
+          body: formData
+        },
+        success: (url) => {
+          dispatch(actions.updateItemObjects(itemId, 'OBJECT_CHANGE', {id: objectId, property: 'data', value: url}))
+        }
+      }
+    })
   }
 }

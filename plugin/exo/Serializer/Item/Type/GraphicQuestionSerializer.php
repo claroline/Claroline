@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Serializer\Item\Type;
 
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Filesystem\Filesystem;
 use UJM\ExoBundle\Entity\Content\Image;
 use UJM\ExoBundle\Entity\ItemType\GraphicQuestion;
 use UJM\ExoBundle\Entity\Misc\Area;
@@ -15,6 +15,21 @@ use UJM\ExoBundle\Library\Serializer\SerializerInterface;
  */
 class GraphicQuestionSerializer implements SerializerInterface
 {
+    /**
+     * @var FileUtilities
+     */
+    private $fileUtils;
+
+    /**
+     * @DI\InjectParams({
+     *     "fileUtils" = @DI\Inject("claroline.utilities.file")
+     * })
+     */
+    public function __construct(FileUtilities $fileUtils)
+    {
+        $this->fileUtils = $fileUtils;
+    }
+
     /**
      * Converts a Graphic question into a JSON-encodable structure.
      *
@@ -107,20 +122,23 @@ class GraphicQuestionSerializer implements SerializerInterface
         $image->setTitle($imageData->id);
         $image->setWidth($imageData->width);
         $image->setHeight($imageData->height);
+        $objectClass = get_class($graphicQuestion);
+        $objectUuid = $graphicQuestion->getQuestion() ? $graphicQuestion->getQuestion()->getUuid() : null;
+        $title = $graphicQuestion->getQuestion() ? $graphicQuestion->getQuestion()->getTitle() : null;
 
         if (isset($imageData->data)) {
-            $imageParts = explode(',', $imageData->data);
-            $imageBin = base64_decode($imageParts[1]);
-            $imageDir = __DIR__.'/../../../../../../../../web/uploads/ujmexo';
             $imageName = "{$imageData->id}.{$typeParts[1]}";
-            $fs = new Filesystem();
-
-            if (!$fs->exists($imageDir)) {
-                $fs->mkdir($imageDir);
+            $publicFile = $this->fileUtils->createFileFromData(
+                $imageData->data,
+                $imageName,
+                $objectClass,
+                $objectUuid,
+                $title,
+                $objectClass
+            );
+            if ($publicFile) {
+                $image->setUrl($publicFile->getUrl());
             }
-
-            $fs->dumpFile("{$imageDir}/{$imageName}", $imageBin);
-            $image->setUrl("uploads/ujmexo/{$imageName}");
         }
 
         $graphicQuestion->setImage($image);

@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Tests\Validator\JsonSchema\Item;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Testing\Json\JsonSchemaTestCase;
+use UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\CategoryValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\HintValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator;
@@ -30,6 +31,11 @@ class ItemValidatorTest extends JsonSchemaTestCase
      * @var HintValidator|\PHPUnit_Framework_MockObject_MockObject
      */
     private $hintValidator;
+
+    /**
+     * @var ContentValidator|\PHPUnit_Framework_MockObject_MockObject
+     */
+    private $contentValidator;
 
     protected function setUp()
     {
@@ -62,8 +68,14 @@ class ItemValidatorTest extends JsonSchemaTestCase
             ->method('validateAfterSchema')
             ->willReturn([]);
 
+        // Do not validate Contents
+        $this->contentValidator = $this->getMock('UJM\ExoBundle\Validator\JsonSchema\Content\ContentValidator', [], [], '', false);
+        $this->contentValidator->expects($this->any())
+            ->method('validateAfterSchema')
+            ->willReturn([]);
+
         $this->validator = $this->injectJsonSchemaMock(
-            new ItemValidator($this->itemDefinitions, $this->categoryValidator, $this->hintValidator)
+            new ItemValidator($this->itemDefinitions, $this->categoryValidator, $this->hintValidator, $this->contentValidator)
         );
     }
 

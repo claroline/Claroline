@@ -49,6 +49,14 @@ function validateBaseItem(item) {
   const errors = {}
 
   setIfError(errors, 'content', notBlank(item.content, true))
+  const objectsErrors = validateItemObjects(item)
+
+  return Object.assign(errors, objectsErrors)
+}
+
+function validateItemObjects(item) {
+  let errors = {}
+  item.objects.forEach(o => errors = Object.assign(errors, validateContentItem(o)))
 
   return errors
 }
