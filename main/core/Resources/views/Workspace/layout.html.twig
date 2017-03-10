@@ -100,6 +100,7 @@
 
 {% block javascripts %}
     {{ parent() }}
+
     <script type="text/javascript">
         window.Workspace = {};
         {% if _resource is defined %}
@@ -110,39 +111,39 @@
     </script>
 
     <script>
-        var intervalFunction;
-        var postHeight = function postHeight(height) {
-            if (parent) {
-                var screenHeight = screen.height;
-                var newHeight = height || document.body.scrollHeight;
-
-                if (newHeight > screenHeight) {
-                    return;
-                }
-                var message = 'documentHeight:' + newHeight;
-                parent.postMessage(message, "*");
-            }
-        };
-
         $(document).ready(function () {
-            postHeight();
-            /* Hack for constantly polling iframe inner height and react when angular router loads another page */
-            var getIframeWindowHeight = function() {
-                return $("iframe#embeddedActivity").contents().find('body').height();
-            }
-            var oldHeight= getIframeWindowHeight();
-            intervalFunction = setInterval(function() {
-                var newHeight = getIframeWindowHeight();
+            if (window.self !== window.top) {
+              // I'm an IFrame
+              var currentHeight = 0;
+              var element = document.getElementById('wrap');
 
-                if (newHeight === null) {
-                    clearInterval(intervalFunction);
-                } else if (newHeight !== oldHeight) {
-                    postHeight(newHeight);
-                    oldHeight = newHeight;
+              function getHeight() {
+                return Math.max(
+                  document.body.scrollHeight,
+                  document.body.offsetHeight
+                );
+              }
+
+              function postHeight(height) {
+                if (parent && height !== currentHeight) {
+                  currentHeight = height;
+                  parent.postMessage('documentHeight:'+height, "*");
                 }
+              }
 
-            }, 2000);
-            /* End of Hack */
+              // post height
+              postHeight(getHeight());
+
+              // attach mutation observer
+              new MutationObserver(function () {
+                postHeight(getHeight());
+              }).observe(element, {
+                attributes: true,
+                childList: true,
+                characterData: true,
+                subtree: true
+              })
+            }
         });
     </script>
 {% endblock %}

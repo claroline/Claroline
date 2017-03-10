@@ -2,8 +2,10 @@
 
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
+{% set isRenderedInIframe = app.request.query.get('iframe') %}
+
 <html lang="{{ app.request.locale|default('fr') }}"
-      class="claroline-app-container {{ config.getParameter('theme') }}"
+      class="claroline-app-container {{ config.getParameter('theme') }}{% if isRenderedInIframe %} claroline-app-iframe{% endif %}"
 >
     <head>
         {% set description = getContent('platformDescription') %}

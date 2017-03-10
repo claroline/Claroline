@@ -35,50 +35,55 @@
     {# Alerts #}
     {% include "ClarolineCoreBundle::alerts.html.twig" %}
 
-    {# Topbars #}
-    {% if (hideTopBar is not defined or not hideTopBar) and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
-        {% block topBarRender %}
-            {% if workspace is defined %}
-                {% render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id})) %}
-            {% else %}
-                {% render(controller('ClarolineCoreBundle:Layout:topBar')) %}
+    {% if not isRenderedInIframe %}
+        {# Main navigation #}
+        {% if (hideTopBar is not defined or not hideTopBar) and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
+            {% block topBarRender %}
+                {% if workspace is defined %}
+                    {% render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id})) %}
+                {% else %}
+                    {% render(controller('ClarolineCoreBundle:Layout:topBar')) %}
+                {% endif %}
+            {% endblock %}
+        {% endif %}
+
+        {# User impersonated notification #}
+        {% block impersonation %}
+            {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated() %}
+                {% render(controller('ClarolineCoreBundle:Layout:renderWarningImpersonation')) %}
             {% endif %}
         {% endblock %}
+
+        {# Sidebars #}
+        <div class="hidden-xs">
+            <div id="left-bar" class="sidebar hide">
+                {% block leftbar %}{% endblock %}
+            </div>
+
+            <div id="right-bar" class="sidebar hide">
+                {% block rightbar %}{% endblock %}
+            </div>
+        </div>
+
+        {# FIXME : As is we get the sidebar 2 times in the DOM. Responsivity should be fully managed in LESS #}
+        <div class="menu-xs visible-xs">
+            {{ block("leftbar") }}
+        </div>
     {% endif %}
 
-    {% block impersonation %}
-        {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated() %}
-            {% render(controller('ClarolineCoreBundle:Layout:renderWarningImpersonation')) %}
-        {% endif %}
-    {% endblock %}
-
-    {# Sidebars #}
-    <div class="hidden-xs">
-        <div id="left-bar" class="sidebar hide">
-            {% block leftbar %}{% endblock %}
-        </div>
-
-        <div id="right-bar" class="sidebar hide">
-            {% block rightbar %}{% endblock %}
-        </div>
-    </div>
-
-    {# FIXME : As is we get the sidebar 2 times in the DOM. Responsivity should be fully managed in LESS #}
-    <div class="menu-xs visible-xs">
-        {{ block("leftbar") }}
-    </div>
-
     <div id="wrap" class="app-content container-fluid">
-        {% if hideBreadcrumb is not defined or not hideBreadcrumb %}
+        {% if (hideBreadcrumb is not defined or not hideBreadcrumb) and not isRenderedInIframe %}
             {% block breadcrumb %}{% endblock %}
         {% endif %}
 
         {% block content %}{% endblock %}
     </div>
 
-    {% block footer %}
-        {% render(controller('ClarolineCoreBundle:Layout:footer')) %}
-    {% endblock%}
+    {% if not isRenderedInIframe %}
+        {% block footer %}
+            {% render(controller('ClarolineCoreBundle:Layout:footer')) %}
+        {% endblock%}
+    {% endif %}
 {% endblock %}
 
 {% block javascripts %}

@@ -29,7 +29,10 @@
             </header>
 
             <div class="page-content">
-                {% include "ClarolineVideoPlayerBundle::player.html.twig" with {video: _resource, noExplain: true} %}
+                {# the extra container is required because the `display: flex` on .page-content breaks videoJS display #}
+                <div class="video-container">
+                    {% include "ClarolineVideoPlayerBundle::player.html.twig" with {video: _resource, noExplain: true} %}
+                </div>
             </div>
         </main>
     </div>

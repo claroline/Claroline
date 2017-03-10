@@ -13,17 +13,33 @@ body.iframe {
     background-color: transparent;
 }
 
+html.claroline-app-iframe,
+html.claroline-app-iframe body {
+    /*height: 100%;*/
+}
+
+html.iframe {
+    overflow: hidden;
+}
+
 body.iframe {
-    overflow-y: auto;
+    overflow: auto;
+    /*overflow-y: auto;*/
 
     // Hide some UI parts when rendered in an iframe (mostly for Path and Activities)
     // This should not be done here
     .carousel-control, // but why ?
-    #top_bar,
-    #left-bar,
-    .footer-container,
-    .breadcrumb,
-    .menu-xs,
+    /*
+        We keep it for now as sometimes the query param that permits to avoid server rendering is loosen in symfony
+        requests forwarding
+    */
+    //#top_bar,
+    //#left-bar,
+    //.footer-container,
+    //.breadcrumb,
+    //.menu-xs,
+    /* end compatibility */
+
     .page-header {
         display: none !important;
     }

@@ -30,7 +30,7 @@
      */
     sidebar.initialize = function (side) {
         var sidebar = $('#' + side + '-bar');
-        if (sidebar.html().replace(/^\s+/g, '').replace(/\s+$/g, '') !== '') {
+        if (sidebar && sidebar.html() && sidebar.html().replace(/^\s+/g, '').replace(/\s+$/g, '') !== '') {
 
             sidebar.removeClass('hide');
 

@@ -10,7 +10,7 @@ export default class ResourcesPrimaryEditDirective {
     this.replace = true
     this.controller = 'ResourcesPrimaryShowCtrl'
     this.controllerAs = 'resourcesPrimaryShowCtrl'
-    this.template = '<iframe id="embeddedActivity" style="width: 100%; min-height: {{ resourcesPrimaryShowCtrl.height }}px;" data-ng-src="{{ resourcesPrimaryShowCtrl.resources[0].url }}" allowfullscreen></iframe>'
+    this.template = '<iframe id="embeddedActivity" style="height: 0; min-height: {{ resourcesPrimaryShowCtrl.height }}px;" data-ng-src="{{ resourcesPrimaryShowCtrl.resources[0].url }}" allowfullscreen></iframe>'
     this.scope = {
       resources : '=', // Resources of the Step
       height    : '='  // Min height for Resource display
@@ -23,7 +23,7 @@ export default class ResourcesPrimaryEditDirective {
           const height = e.originalEvent.data.split('documentHeight:')[1]
 
             // do stuff with the height
-          $(element).css('height', parseInt(height) + 15)
+          $(element).css('height', parseInt(height))
         }
       })
     }
