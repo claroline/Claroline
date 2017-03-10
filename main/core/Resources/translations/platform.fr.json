@@ -651,7 +651,7 @@
     "maintenance": "Maintenance",
     "maintenance_message_edit_success": "Le message de maintenance a bien été modifié",
     "maintenance_mode_enabled": "Le mode maintenance est activé",
-    "maintenance_mode_message": "L'accès à la plateforme est désactivé pour les utilisateurs. Vous pouvez le réactiver dans la section maintenance des paramètres de l'administration.",
+    "maintenance_mode_message": "L'accès à la plateforme est désactivé pour les utilisateurs. Vous pouvez le réactiver dans la section maintenance des paramètres de la plateforme.",
     "make_my_public_profil_visible": "Rendre mon profil public visible",
     "make_public_profile_visible_to_everybody": "à <strong>tout le monde</strong>",
     "make_public_profile_visible_to_nobody": "à <strong>personne</strong>",
@@ -738,7 +738,7 @@
     "no": "Non",
     "no_action_found": "Aucune action trouvée.",
     "no_activity_in_workspace": "Cet espace ne contient actuellement aucune activité.",
-    "no_category": "Il n'y a aucune catégorie",
+    "no_category": "Il n'y a aucune catégorie.",
     "no_contact": "Aucun contact",
     "no_email": "Ce courriel ne correspond pas à un utilisateur inscrit.",
     "no_filter": "Aucun filtre",
@@ -1363,7 +1363,7 @@
     "your_platform_id": "Votre identifiant sur la plateforme",
     "your_profile_is_n_complete": "Votre profil est complété à %n%%",
     "your_username": "Votre nom d'utilisateur est",
-    "your_workspace_activity_overview": "Aperçu des activités récentes de vos espaces de travail",
+    "your_workspace_activity_overview": "Aperçu des activités récentes de vos espaces d'activités",
     "ssl_enabled": "Activer SSL ?",
     "visible_facet_form_explanation": "Le champ \"Visible\" vous permet de rendre l'élément visible ou non pour l'utilisateur."
 }
