@@ -59,22 +59,25 @@ class AnswerValidator extends JsonSchemaValidator
     {
         $errors = [];
 
-        // Checks the item exists
-        $question = $this->om->getRepository('UJMExoBundle:Item\Item')->findOneBy([
-            'uuid' => $answer->questionId,
-        ]);
-        if (empty($question)) {
+        if (empty($options[Validation::QUESTION])) {
+            $question = $this->om->getRepository('UJMExoBundle:Item\Item')->findOneBy([
+                'uuid' => $answer->questionId,
+            ]);
+
+            $options[Validation::QUESTION] = $question->getInteraction();
+        }
+
+        if (empty($options[Validation::QUESTION])) {
             $errors[] = [
                 'path' => '/questionId',
                 'message' => 'question does not exist',
             ];
-        } elseif (!empty($answer->data) && $this->itemDefinitions->isQuestionType($question->getMimeType())) {
+        } elseif (!empty($answer->data) && $this->itemDefinitions->isQuestionType($options[Validation::QUESTION]->getQuestion()->getMimeType())) {
             // Forward to item type validator
-            $definition = $this->itemDefinitions->get($question->getMimeType());
-
+            $definition = $this->itemDefinitions->get($options[Validation::QUESTION]->getQuestion()->getMimeType());
             $errors = array_merge(
                 $errors,
-                $definition->validateAnswer($answer->data, $question->getInteraction(), array_merge($options, [Validation::NO_SCHEMA]))
+                $definition->validateAnswer($answer->data, $options[Validation::QUESTION], array_merge($options, [Validation::NO_SCHEMA]))
             );
         }
 

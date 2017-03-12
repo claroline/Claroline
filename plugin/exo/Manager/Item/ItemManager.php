@@ -225,38 +225,19 @@ class ItemManager
             }
         }
 
-        $this->om->remove($question);
-        $this->om->flush();
-    }
-
-    /**
-     * Deletes an array of Item without rights check.
-     *
-     * @param array $questions - the uuids of questions to delete
-     */
-    public function forcedDelete(array $questions)
-    {
-        // Reload the list of questions to delete
-        $toDelete = $this->repository->findByUuids($questions);
-        foreach ($toDelete as $question) {
-            $this->om->remove($question);
-        }
         $this->om->flush();
     }
 
     /**
      * Calculates the score of an answer to a question.
      *
-     * @param \stdClass $questionData
-     * @param Answer    $answer
+     * @param Item   $question
+     * @param Answer $answer
      *
      * @return float
      */
-    public function calculateScore(\stdClass $questionData, Answer $answer)
+    public function calculateScore(Item $question, Answer $answer)
     {
-        // Get entities for score calculation
-        $question = $this->serializer->deserialize($questionData);
-
         // Let the question correct the answer
         $definition = $this->itemDefinitions->get($question->getMimeType());
         $corrected = $definition->correctAnswer($question->getInteraction(), json_decode($answer->getData()));
@@ -268,15 +249,15 @@ class ItemManager
         foreach ($answer->getUsedHints() as $hintId) {
             // Get hint definition from question data
             $hint = null;
-            foreach ($questionData->hints as $questionHint) {
-                if ($hintId === $questionHint->id) {
+            foreach ($question->getHints() as $questionHint) {
+                if ($hintId === $questionHint->getUuid()) {
                     $hint = $questionHint;
                     break;
                 }
             }
-            $corrected->addPenalty(
-                $this->hintSerializer->deserialize($hint)
-            );
+            if ($hint) {
+                $corrected->addPenalty($hint);
+            }
         }
 
         return $this->scoreManager->calculate(json_decode($question->getScoreRule()), $corrected);
