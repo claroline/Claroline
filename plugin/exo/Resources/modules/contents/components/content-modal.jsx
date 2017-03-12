@@ -29,8 +29,14 @@ export class ContentModal  extends Component {
   }
 
   componentDidMount() {
-    if (this.contentModal._modal.lastFocus.classList.contains('modal-open')) {
-      this.contentModal._modal.lastFocus.classList.add('content-modal-open')
+    if (document.body.classList.contains('modal-open')) {
+      document.body.classList.add('content-modal-open')
+    }
+  }
+
+  componentWillUnmount() {
+    if (document.body.classList.contains('content-modal-open')) {
+      document.body.classList.remove('content-modal-open')
     }
   }
 }
