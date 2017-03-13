@@ -209,18 +209,18 @@ const ContentHeader = props =>
       makeItemPanelKey(props.item.type, props.item.id)
     )}
   >
-    <span>
+    <span className="panel-title">
       <span className={classes('item-icon', 'item-icon-sm', getContentDefinition(props.item.type).altIcon)}></span>
-      <span className="panel-title">
-        {props.item.title || trans(getContentDefinition(props.item.type).type, {}, 'question_types')}
-      </span>
-      {props.hasErrors &&
+      {props.item.title || trans(getContentDefinition(props.item.type).type, {}, 'question_types')}
+    </span>
+
+    {props.hasErrors &&
       <ValidationStatus
         id={`${props.item.id}-panel-tip`}
         validating={props.validating}
       />
-      }
-    </span>
+    }
+
     <ItemActions
       itemId={props.item.id}
       stepId={props.stepId}
@@ -245,7 +245,6 @@ let ContentPanel = props =>
   props.connectDragPreview(
     props.connectDropTarget(
       <div
-        className="panel"
         style={{opacity: props.isDragging ? 0 : 1}}
       >
         <Panel
