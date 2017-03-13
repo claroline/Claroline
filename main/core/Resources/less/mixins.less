@@ -11,3 +11,41 @@
         color: darken(@color, 10%) !important;
     }
 }
+
+// Buttons
+
+// expose a mixin to generate button links variant (this is not down by bootstrap)
+.btn-link-variant(@color, @hover-color, @hover-decoration: none) {
+    color: @color;
+    font-weight: normal;
+    border-radius: 0;
+
+    &,
+    &:active,
+    &.active,
+    &[disabled],
+    fieldset[disabled] & {
+        background-color: transparent;
+        .box-shadow(none);
+    }
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+        border-color: transparent;
+    }
+    &:hover,
+    &:focus {
+        color: @hover-color;
+        text-decoration: @hover-decoration;
+        background-color: transparent;
+    }
+    &[disabled],
+    fieldset[disabled] & {
+        &:hover,
+        &:focus {
+            color: @color;
+            text-decoration: none;
+        }
+    }
+}

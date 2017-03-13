@@ -4,9 +4,9 @@
 }
 
 .btn-link-danger {
-    .button-variant(@brand-danger; transparent; transparent);
+    .btn-link-variant(@brand-danger, darken(@brand-danger, 10%), @link-hover-decoration);
 }
 
 .btn-link-default {
-    .button-variant(@gray; transparent; transparent);
+    .btn-link-variant(@gray, @gray-dark, @link-hover-decoration);
 }
