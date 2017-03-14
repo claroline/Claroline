@@ -22,5 +22,7 @@
     "grid": "Tableau",
     "grid_desc": "Combler des lacunes dans un tableau. Il est possible de les compléter soit en rédigeant une zone de texte soit en choisissant l'élément dans une liste prédéfinie.",
     "ordering": "Ordonnancement",
-    "ordering_desc": "Déplacer des éléments (texte, image, son, vidéo, etc.) pour les mettre en ordre."
+    "ordering_desc": "Déplacer des éléments (texte, image, son, vidéo, etc.) pour les mettre en ordre.",
+    "boolean": "Vrai / Faux",
+    "boolean_desc": "Choisir entre deux réponses : vrai / faux, oui / non ou toute autre paire personalisée."
 }

@@ -18,5 +18,7 @@
     "grid": "Table",
     "grid_desc": "Bridging gaps in a table. They can be completed either by writing a text or by choosing the item from a predefined list.",
     "ordering": "Ordering",
-    "ordering_desc": "Reorder elements."
+    "ordering_desc": "Reorder elements.",
+    "boolean": "True / False",
+    "boolean_desc": "Choose between two answers true / false, yes / no or any other personalized pair."
 }
