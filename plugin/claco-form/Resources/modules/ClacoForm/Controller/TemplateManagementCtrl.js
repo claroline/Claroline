@@ -62,7 +62,7 @@ export default class TemplateManagementCtrl {
         this.duplicatedErrors.push({name: 'clacoform_entry_title'})
       }
       this.mandatory.forEach(f => {
-        const regex = new RegExp(`%${this.removeAccent(f['name'])}%`, 'g')
+        const regex = new RegExp(`%${this.removeAccent(this.removeQuote(f['name']))}%`, 'g')
         const matches = this.template.match(regex)
 
         if (matches === null) {
@@ -72,7 +72,7 @@ export default class TemplateManagementCtrl {
         }
       })
       this.optional.forEach(f => {
-        const regex = new RegExp(`%${f['name']}%`, 'g')
+        const regex = new RegExp(`%${this.removeAccent(this.removeQuote(f['name']))}%`, 'g')
         const matches = this.template.match(regex)
 
         if (matches !== null && matches.length > 1) {
@@ -82,6 +82,10 @@ export default class TemplateManagementCtrl {
     }
 
     return this.requiredErrors.length === 0 && this.duplicatedErrors.length === 0
+  }
+
+  removeQuote(str) {
+    return str.replace(/'/g, ' ')
   }
 
   removeAccent(str) {

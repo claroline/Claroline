@@ -70,7 +70,7 @@
                             <b>%clacoform_entry_title%</b> : {{ 'entry_title_info'|trans:{}:'clacoform' }}
                         </li>
                         <li ng-repeat="field in cfc.mandatory">
-                            <b>%{{ cfc.removeAccent(field['name']) }}%</b> : {{ field['typeName'] }}
+                            <b>%{{ cfc.removeAccent(cfc.removeQuote(field['name'])) }}%</b> : {{ field['typeName'] }}
                         </li>
                     </ul>
                 </div>
@@ -79,7 +79,7 @@
                     <h4>{{ 'optional'|trans:{}:'clacoform' }}</h4>
                     <ul>
                         <li ng-repeat="field in cfc.optional">
-                            <b>%{{ cfc.removeAccent(field['name']) }}%</b> : {{ field['typeName'] }}
+                            <b>%{{ cfc.removeAccent(cfc.removeQuote(field['name'])) }}%</b> : {{ field['typeName'] }}
                         </li>
                     </ul>
                 </div>
@@ -89,7 +89,7 @@
                     {{ 'template_missing_mandatory_variables_message'|trans:{}:'clacoform' }}
                     <ul>
                         <li ng-repeat="field in cfc.requiredErrors">
-                            %{{ field['name'] }}%
+                            %{{ cfc.removeAccent(cfc.removeQuote(field['name'])) }}%
                         </li>
                     </ul>
                 </div>
@@ -97,7 +97,7 @@
                     {{ 'template_duplicated_variables_message'|trans:{}:'clacoform' }}
                     <ul>
                         <li ng-repeat="field in cfc.duplicatedErrors">
-                            %{{ field['name'] }}%
+                            %{{ cfc.removeAccent(cfc.removeQuote(field['name'])) }}%
                         </li>
                     </ul>
                 </div>
