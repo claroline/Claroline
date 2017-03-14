@@ -582,5 +582,18 @@
     "InteractionHole": "Cloze",
     "InteractionQCM": "Meerdere keuzes",
     "To drag": "Set",
-    "To pair": "Paarsgewijze rangschikken"
+    "To pair": "Paarsgewijze rangschikken",
+    "ordering_editor_penalty_label": "Sanctie voor elk niet-gedefinieerd verkeerd antwoord.",
+    "ordering_mode_inside": "Opnieuw in plaats ordenen",
+    "ordering_mode_beside": "Opnieuw ordenen door te verplaatsen",
+    "ordering_add_odd": "Voeg een indringer",
+    "ordering_feedback": "Feedback voor het item",
+    "question_objects": "Object(en) van de vraag",
+    "watch_at_the_original_size": "Kijk naar de oorspronkelijke grootte",
+    "boolean_pair_select_empty": "Selecteer een vooraf gedefinieerde paar",
+    "boolean_pair_yes": "Ja",
+    "boolean_pair_no": "Nee",
+    "boolean_pair_true": "Juist",
+    "boolean_pair_false": "Verkeerd",
+    "boolean_no_correct_answer_error": "Één keuze moet een positieve score hebben."
 }
