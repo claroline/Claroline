@@ -617,6 +617,19 @@ class CourseSession
         $this->details['total'] = $total;
     }
 
+    public function getCertificated()
+    {
+        return !is_null($this->details) && isset($this->details['certificated']) ? $this->details['certificated'] : true;
+    }
+
+    public function setCertificated($certificated)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['certificated'] = $certificated;
+    }
+
     public function __toString()
     {
         return $this->getName();
