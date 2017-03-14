@@ -49,3 +49,17 @@
         }
     }
 }
+
+.placeholder-variant(@font-size, @padding, @border-radius, @border, @border-hover) {
+    font-size: @font-size;
+    padding: @padding;
+    border: @border;
+    border-radius: @border-radius;
+
+    &.placeholder-hover {
+        &.hover,
+        &:hover {
+            border: @border-hover;
+        }
+    }
+}

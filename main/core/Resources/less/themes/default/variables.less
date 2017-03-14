@@ -9,6 +9,8 @@
 // -
 // Base & utilities
 // ---
+@brand-secondary:         #C51162;
+
 @box-shadow-base:         0 0 2px rgba(0, 0, 0, 0.10);
 @component-margin-bottom: @line-height-computed;
 
@@ -219,7 +221,7 @@
 // -
 // Dropdown
 // ---
-@dropdown-menu-box-shadow:    0 1px 2px rgba(0, 0, 0, 0.25);
+@dropdown-menu-box-shadow:    0 1px 2px rgba(0, 0, 0, 0.2);
 @dropdown-menu-border-radius: 0;
 
 
@@ -228,3 +230,36 @@
 // ---
 @modal-content-box-shadow:    0 0 10px rgba(0, 0, 0, 0.5);
 @modal-content-border-radius: 0;
+
+// -
+// Popover
+// ---
+@popover-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+
+// -
+// Placeholders
+// ---
+@placeholder-color:            @gray;
+@placeholder-hover-color:      @brand-primary;
+
+// default variant
+@placeholder-font-size:        @font-size-base;
+@placeholder-border:           1px dashed @placeholder-color;
+@placeholder-hover-border:     1px dashed @placeholder-hover-color;
+@placeholder-border-radius:    @border-radius-base;
+@placeholder-padding:          @padding-base-vertical @padding-base-horizontal;
+
+// small variant
+@placeholder-sm-font-size:     @font-size-small;
+@placeholder-sm-border:        1px dashed @placeholder-color;
+@placeholder-sm-hover-border:  1px dashed @placeholder-hover-color;
+@placeholder-sm-border-radius: @border-radius-small;
+@placeholder-sm-padding:       @padding-small-vertical @padding-small-horizontal;
+
+// large variant
+@placeholder-lg-font-size:     @font-size-large;
+@placeholder-lg-border:        1px dashed @placeholder-color;
+@placeholder-lg-hover-border:  1px dashed @placeholder-hover-color;
+@placeholder-lg-border-radius: @border-radius-large;
+@placeholder-lg-padding:       @padding-large-vertical @padding-large-horizontal;

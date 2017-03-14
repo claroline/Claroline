@@ -1,0 +1,52 @@
+// ATTENTION : never create a .placeholder class as bootstrap already define a mixin with that name.
+.drop-placeholder {
+    color: @placeholder-color;
+    min-height: @input-height-base;
+    line-height: @line-height-computed;
+
+    .fa {
+        opacity: .5;
+        margin-right: 7px; // todo: find a better way to do this
+    }
+
+    &.placeholder-hover {
+        &.hover,
+        &:hover {
+            color: @placeholder-hover-color;
+        }
+    }
+
+    .placeholder-variant(
+        @placeholder-font-size,
+        @placeholder-padding,
+        @placeholder-border-radius,
+        @placeholder-border,
+        @placeholder-hover-border
+    );
+
+    &.placeholder-sm {
+        min-height: @input-height-base;
+        line-height: @line-height-small;
+
+        .placeholder-variant(
+            @placeholder-sm-font-size,
+            @placeholder-sm-padding,
+            @placeholder-sm-border-radius,
+            @placeholder-sm-border,
+            @placeholder-sm-hover-border
+        );
+    }
+
+    &.placeholder-lg {
+        min-height: @input-height-large;
+        line-height: @line-height-large;
+
+        .placeholder-variant(
+            @placeholder-lg-font-size,
+            @placeholder-lg-padding,
+            @placeholder-lg-border-radius,
+            @placeholder-lg-border,
+            @placeholder-lg-hover-border
+        );
+    }
+}

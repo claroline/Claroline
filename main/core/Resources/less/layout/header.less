@@ -10,7 +10,8 @@
     .box-shadow(@top-bar-box-shadow);
 
     .top-bar-content {
-        height: @top-bar-height - @top-bar-border-bottom-size; // permits to fill parent height when using flex boxes
+        min-height: @top-bar-height - @top-bar-border-bottom-size; // permits to fill parent height when using flex boxes
+        height: 100%;
         max-width: @top-bar-max-width;
         margin: 0 auto;
     }
