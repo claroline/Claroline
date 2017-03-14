@@ -88,10 +88,11 @@ export default class EntryEditionCtrl {
       this.template = this.template.replace('%clacoform_entry_title%', replacedTitleField)
       this.fields.forEach(f => {
         const id = f['id']
-        const name = f['name']
+        const name = f['name'].replace(/'/g, ' ')
 
         if (this.template) {
           let choices = JSON.stringify(f['fieldFacet']['field_facet_choices'])
+          choices = choices.replace(/'/g, '\\\'')
           choices = choices.replace(/"/g, '\'')
           const replacedField = `
             <form-field field="['${name}',
