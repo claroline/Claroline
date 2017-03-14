@@ -1,20 +1,20 @@
 import React, {PropTypes as T} from 'react'
+import classes from 'classnames'
 
 import {tex} from '../../utils/translate'
 import {Highlight} from './utils/highlight.jsx'
 import {Feedback} from '../components/feedback-btn.jsx'
 import {SolutionScore} from '../components/score.jsx'
 import {PaperTabs} from '../components/paper-tabs.jsx'
-import classes from 'classnames'
 
 const AnswerTable = (props) => {
   return(
-    <div className="word-paper">
+    <div className="words-paper">
       {props.solutions.map(solution =>
         <div
           key={solution.text}
           className={classes(
-            'item',
+            'word-item answer-item',
             {
               'bg-info text-info': solution.score > 0
             }

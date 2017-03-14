@@ -1,10 +1,10 @@
-// todo : merge with quiz score gauge
+// todo : merge with path progression gauge
 
 @circle-width:       0.10em;
 @circle-width-hover: 0.06em;
-@primary-color:      @path-progression-color;
-@secondary-color:    lighten(@path-progression-color, 50%);
-@bg-color:           white;
+@primary-color:      @score-bg;
+@secondary-color:    lighten(@score-bg, 50%);
+@bg-color:           @body-bg;
 
 // classes 2 extend
 .rect-auto {
@@ -26,7 +26,9 @@
 }
 
 // main
-.path-progression.c100 {
+.score-gauge.c100 {
+    margin-bottom: @component-margin-bottom;
+
     *, *:before, *:after {
         .box-sizing(content-box);
     }
@@ -34,15 +36,15 @@
     position: relative;
     width: 1em;
     height: 1em;
-    font-size: @path-progression-size;
+    font-size: 120px;
     border-radius: 50%;
     display: inline-block;
     background-color: @secondary-color;
 
-    &.sm {
+    /*&.sm {
         font-size: @path-progression-size-sm;
         min-width: @path-progression-size-sm;
-    }
+    }*/
 
     // centered value inside circle
     > span {

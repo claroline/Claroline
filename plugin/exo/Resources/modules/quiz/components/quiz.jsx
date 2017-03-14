@@ -7,6 +7,7 @@ import {showModal, fadeModal} from './../../modal/actions'
 import {makeModal} from './../../modal'
 import {Overview} from './../overview/overview.jsx'
 import {Player} from './../player/components/player.jsx'
+import {AttemptEnd} from './../player/components/attempt-end.jsx'
 import {Editor} from './../editor/components/editor.jsx'
 import {Papers} from './../papers/components/papers.jsx'
 import {Paper} from './../papers/components/paper.jsx'
@@ -24,7 +25,8 @@ import {
   VIEW_PAPERS,
   VIEW_PAPER,
   VIEW_CORRECTION_QUESTIONS,
-  VIEW_CORRECTION_ANSWERS
+  VIEW_CORRECTION_ANSWERS,
+  VIEW_ATTEMPT_END
 } from './../enums'
 
 let Quiz = props =>
@@ -136,6 +138,7 @@ function viewActions(view, props) {
         manualCorrectionAction
       ]
     case VIEW_PLAYER:
+    case VIEW_ATTEMPT_END:
       return [
         editAction,
         overviewAction,
@@ -197,6 +200,8 @@ function viewComponent(view, props) {
       return <Editor {...props}/>
     case VIEW_PLAYER:
       return <Player {...props}/>
+    case VIEW_ATTEMPT_END:
+      return <AttemptEnd {...props} />
     case VIEW_PAPERS:
       return <Papers {...props}/>
     case VIEW_PAPER:

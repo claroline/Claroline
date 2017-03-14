@@ -23,7 +23,7 @@ let Paper = props =>
           isQuestionType(item.type) ?
             <Panel key={item.id}>
               {getAnswerScore(item.id, props.paper.answers) !== undefined && getAnswerScore(item.id, props.paper.answers) !== null &&
-                <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.paper.answers)} scoreMax={getItemScoreMax(item)}/>
+                <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.paper.answers)} scoreMax={selectors.itemScoreMax(item)}/>
               }
               {item.title &&
                 <h4 className="item-title">{item.title}</h4>

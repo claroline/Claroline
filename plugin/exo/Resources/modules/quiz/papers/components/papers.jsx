@@ -1,8 +1,10 @@
 import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
+
 import selectors from './../../selectors'
 import {selectors as paperSelectors} from './../selectors'
 import {tex} from './../../../utils/translate'
+import {ScoreBox} from './../../../items/components/score-box.jsx'
 
 export const PaperRow = props =>
   <tr>
@@ -16,10 +18,14 @@ export const PaperRow = props =>
     <td className="text-right">
       <small className="text-muted">{props.endDate || '-'}</small>
     </td>
-    <td>{tex(props.finished ? 'yes' : 'no')}</td>
+    <td className="text-center">
+      <span className="sr-only">{tex(props.finished ? 'yes' : 'no')}</span>
+
+      {props.finished && <span className="fa fa-fw fa-check" />}
+    </td>
     <td className="text-right">
       {props.score || 0 === props.score ?
-        <span className="label label-primary">{props.score}</span> : '-'
+        <ScoreBox size="sm" score={props.score} scoreMax={props.scoreMax} /> : '-'
       }
     </td>
     <td className="text-right table-actions">
@@ -39,7 +45,8 @@ PaperRow.propTypes = {
   startDate: T.string.isRequired,
   endDate: T.string,
   finished: T.bool.isRequired,
-  score: T.number
+  score: T.number,
+  scoreMax: T.number
 }
 
 let Papers = props =>
@@ -60,7 +67,7 @@ let Papers = props =>
       </thead>
       <tbody>
         {props.papers.map((paper, idx) =>
-          <PaperRow key={idx} admin={props.admin} {...paper}/>
+          <PaperRow key={idx} admin={props.admin} {...paper} scoreMax={paperSelectors.paperScoreMax(paper)} />
         )}
       </tbody>
     </table>

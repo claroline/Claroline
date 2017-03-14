@@ -42,14 +42,6 @@
   }
 }
 
-.choice-paper {
-  /*.solution-score {
-    margin-left: 12px;
-    width: 58px;
-    text-align: right;
-  }*/
-}
-
 .choice-item {
   display: flex;
 
@@ -62,6 +54,10 @@
 
   .choice-item-content {
     flex: 1;
+
+    > p { // remove margin on tinyMCE container
+      margin-bottom: 0;
+    }
   }
 
   .choice-item-feedback {

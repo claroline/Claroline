@@ -177,6 +177,7 @@ class ExerciseSerializer implements SerializerInterface
 
         // Visibility parameters
         $parameters->showOverview = $exercise->getShowOverview();
+        $parameters->showEndPage = $exercise->getShowEndPage();
         $parameters->showMetadata = $exercise->isMetadataVisible();
         $parameters->showStatistics = $exercise->hasStatistics();
         $parameters->showFullCorrection = !$exercise->isMinimalCorrection();
@@ -261,6 +262,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (isset($parameters->showOverview)) {
             $exercise->setShowOverview($parameters->showOverview);
+        }
+
+        if (isset($parameters->showEndPage)) {
+            $exercise->setShowEndPage($parameters->showEndPage);
         }
 
         if (isset($parameters->showMetadata)) {
@@ -366,12 +371,13 @@ class ExerciseSerializer implements SerializerInterface
 
         // Remaining steps are no longer in the Exercise
         if (0 < count($stepEntities)) {
+            /** @var Step $stepToRemove */
             foreach ($stepEntities as $stepToRemove) {
                 $exercise->removeStep($stepToRemove);
                 $stepQuestions = $stepToRemove->getStepQuestions()->toArray();
 
                 foreach ($stepQuestions as $stepQuestionToRemove) {
-                    $step->removeStepQuestion($stepQuestionToRemove);
+                    $stepToRemove->removeStepQuestion($stepQuestionToRemove);
                 }
             }
         }

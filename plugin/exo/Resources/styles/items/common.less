@@ -1,3 +1,14 @@
+.item-paper {
+    .score-box {
+        margin: @score-margin;
+        border-radius: 0 @panel-border-radius 0 @score-border-radius;
+
+        .user-score {
+            border-top-left-radius: 0;
+        }
+    }
+}
+
 .item-title {
     font-weight: bold;
     font-size: 16px;
@@ -25,21 +36,13 @@
     width: @item-content-separator-width;
 }
 
-.score-box {
-    border-radius: @score-border-radius;
-    border: @score-border;
-    color: @score-color;
-    background: @score-bg;
-    display: inline;
-    font-size: @score-font-size;
-    line-height: 1;
-    padding: @score-padding;
-    text-align: center;
+.solution-score {
     white-space: nowrap;
 }
 
-.solution-score {
-    white-space: nowrap;
+.no-answer {
+    font-style: italic;
+    color: @text-muted;
 }
 
 .answer-item {

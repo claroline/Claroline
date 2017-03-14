@@ -14,9 +14,10 @@ import {utils} from './utils/utils'
 let DropBox = props => {
   return props.connectDropTarget (
      <div className={classes(
-       'pair-item-drop-container',
-       {'on-hover': props.isOver}
+       'pair-item-placeholder drop-placeholder placeholder-hover',
+       {hover: props.isOver}
      )}>
+       <span className="fa fa-fw fa-share fa-rotate-90" />
        {tex('set_drop_item')}
      </div>
    )
@@ -43,108 +44,122 @@ class Pair extends Component {
   render() {
     return (
       <div className={classes(
-        'pair',
+        'pair answer-item',
         {'unexpected-answer' : this.props.pair.score < 1},
         {'expected-answer' : this.props.pair.score > 0}
       )}>
-        <div className="first-row">
-          {this.props.pair.itemIds[0] === -1 ?
-            <DropBox object={{pair:this.props.pair, position:0, index:this.props.index}} onDrop={this.props.onDrop} />
-            :
-            <div className="pair-item">
-              <div className="pair-data" dangerouslySetInnerHTML={{__html: utils.getPairItemData(this.props.pair.itemIds[0], this.props.items)}} />
-              {this.props.showPins &&
-                <TooltipButton
-                  id={`pair-${this.props.index}-${this.props.pair.itemIds[0]}-pin-me`}
-                  title={tex('pair_pin_this_item')}
-                  onClick={() => this.props.onChange(
-                    actions.addItemCoordinates(this.props.pair.itemIds[0], this.props.pair.itemIds[1], [0, this.props.index])
-                  )}
-                  className={classes(
-                    'fa fa-fw fa-thumb-tack',
-                    {'btn-disabled': !utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
-                  )}
-                />
-              }
+        <div className="text-fields">
+          <div className="form-group">
+            {this.props.pair.itemIds[0] === -1 ?
+              <DropBox object={{pair:this.props.pair, position:0, index:this.props.index}} onDrop={this.props.onDrop} />
+              :
+              <div className="pair-item">
+                {this.props.showPins &&
+                  <TooltipButton
+                    id={`pair-${this.props.index}-${this.props.pair.itemIds[0]}-pin-me`}
+                    title={tex('pair_pin_this_item')}
+                    onClick={() => this.props.onChange(
+                      actions.addItemCoordinates(this.props.pair.itemIds[0], this.props.pair.itemIds[1], [0, this.props.index])
+                    )}
+                    className={classes(
+                      'pull-right',
+                      'btn-link-default btn-pin-item',
+                      {'btn-disabled': !utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
+                    )}
+                    label={<span className="fa fa-fw fa-thumb-tack" />}
+                  />
+                }
+
+                <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getPairItemData(this.props.pair.itemIds[0], this.props.items)}} />
+              </div>
+            }
+
+            {this.props.pair.itemIds[1] === -1 ?
+              <DropBox object={{pair:this.props.pair, position:1, index:this.props.index}} onDrop={this.props.onDrop} />
+              :
+              <div className="pair-item">
+                {this.props.showPins &&
+                  <TooltipButton
+                    id={`pair-${this.props.index}-${this.props.pair.itemIds[1]}-pin-me`}
+                    title={tex('pair_pin_this_item')}
+                    onClick={() => this.props.onChange(
+                      actions.addItemCoordinates(this.props.pair.itemIds[1], this.props.pair.itemIds[0], [1, this.props.index])
+                    )}
+                    className={classes(
+                      'pull-right',
+                      'btn-link-default btn-pin-item',
+                      {'btn-disabled': !utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index)}
+                    )}
+                    label={<span className="fa fa-fw fa-thumb-tack" />}
+                  />
+                }
+
+                <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getPairItemData(this.props.pair.itemIds[1], this.props.items)}} />
+              </div>
+            }
+          </div>
+
+          {this.state.showFeedback &&
+            <div className="feedback-container">
+              <Textarea
+                onChange={(value) => this.props.onChange(
+                  actions.updatePair(this.props.index, 'feedback', value)
+                )}
+                id={`${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback`}
+                content={this.props.pair.feedback}
+              />
             </div>
           }
 
-          {this.props.pair.itemIds[1] === -1 ?
-            <DropBox object={{pair:this.props.pair, position:1, index:this.props.index}} onDrop={this.props.onDrop} />
-            :
-            <div className="pair-item">
-              <div className="pair-data" dangerouslySetInnerHTML={{__html: utils.getPairItemData(this.props.pair.itemIds[1], this.props.items)}} />
-
-              {this.props.showPins &&
-                <TooltipButton
-                  id={`pair-${this.props.index}-${this.props.pair.itemIds[1]}-pin-me`}
-                  title={tex('pair_pin_this_item')}
-                  onClick={() => this.props.onChange(
-                    actions.addItemCoordinates(this.props.pair.itemIds[1], this.props.pair.itemIds[0], [1, this.props.index])
-                  )}
-                  className={classes(
-                    'fa fa-fw fa-thumb-tack',
-                    {'btn-disabled': !utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index)}
-                  )}
-                />
-              }
-            </div>
-          }
-          <div className="right-controls">
-            <input
-              title={tex('score')}
-              type="number"
-              className="form-control association-score"
-              value={this.props.pair.score}
-              onChange={e => this.props.onChange(
-                actions.updatePair(this.props.index, 'score', e.target.value)
-              )}
-            />
-            <TooltipButton
-              id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback-toggle`}
-              className="fa fa-fw fa-comments-o"
-              title={tex('feedback_association_created')}
-              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-            />
-            <TooltipButton
-              id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-delete`}
-              className="fa fa-fw fa-trash-o"
-              enabled={this.props.pair._deletable}
-              title={t('delete')}
-              onClick={() => this.props.onChange(
-                actions.removePair(this.props.pair.itemIds[0], this.props.pair.itemIds[1]))
-              }
-            />
+          <div className="checkbox">
+            <label>
+              <input
+                type="checkbox"
+                disabled={this.props.showPins || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ||  utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
+                checked={this.props.pair.ordered || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ||  utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
+                onChange={(e) => this.props.onChange(
+                  actions.updatePair(this.props.index, 'ordered', e.target.checked)
+                )}
+              />
+            {tex('pair_is_ordered')}
+            </label>
           </div>
         </div>
-        {this.state.showFeedback &&
-          <div className="feedback-container">
-            <Textarea
-              onChange={(value) => this.props.onChange(
-                actions.updatePair(this.props.index, 'feedback', value)
-              )}
-              id={`${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback`}
-              content={this.props.pair.feedback}
-            />
-          </div>
-        }
-        <div className="checkbox">
-          <label>
-            <input
-              type="checkbox"
-              disabled={this.props.showPins || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ||  utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
-              checked={this.props.pair.ordered || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ||  utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
-              onChange={(e) => this.props.onChange(
-                actions.updatePair(this.props.index, 'ordered', e.target.checked)
-              )}
-            />
-          {tex('pair_is_ordered')}
-          </label>
+
+        <div className="right-controls">
+          <input
+            title={tex('score')}
+            type="number"
+            className="form-control association-score"
+            value={this.props.pair.score}
+            onChange={e => this.props.onChange(
+              actions.updatePair(this.props.index, 'score', e.target.value)
+            )}
+          />
+          <TooltipButton
+            id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback-toggle`}
+            className="btn-link-default"
+            title={tex('feedback_association_created')}
+            label={<span className="fa fa-fw fa-comments-o" />}
+            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+          />
+
+          <TooltipButton
+            id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-delete`}
+            className="btn-link-default"
+            enabled={this.props.pair._deletable}
+            title={t('delete')}
+            label={<span className="fa fa-fw fa-trash-o" />}
+            onClick={() => this.props.onChange(
+              actions.removePair(this.props.pair.itemIds[0], this.props.pair.itemIds[1]))
+            }
+          />
         </div>
       </div>
     )
   }
 }
+
 Pair.propTypes = {
   onChange: T.func.isRequired,
   pair: T.object.isRequired,
@@ -268,14 +283,16 @@ class Odd extends Component {
           />
           <TooltipButton
             id={`odd-${this.props.odd.id}-feedback-toggle`}
-            className="fa fa-fw fa-comments-o"
+            className="btn-link-default"
             title={tex('feedback_answer_check')}
+            label={<span className="fa fa-fw fa-comments-o" />}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
           <TooltipButton
             id={`odd-${this.props.odd.id}-delete`}
-            className="fa fa-fw fa-trash-o"
+            className="btn-link-default"
             title={t('delete')}
+            label={<span className="fa fa-fw fa-trash-o" />}
             onClick={() => this.props.onChange(actions.removeItem(this.props.odd.id, true))}
           />
         </div>
@@ -299,7 +316,7 @@ const OddList= props =>
         </li>
       )}
     </ul>
-    <div className="footer text-center">
+    <div className="footer">
       <button
         type="button"
         className="btn btn-default"
@@ -332,8 +349,9 @@ let Item = props => {
       <div className="right-controls">
         <TooltipButton
           id={`set-item-${props.item.id}-delete`}
-          className="fa fa-fw fa-trash-o"
+          className="btn-link-default"
           title={t('delete')}
+          label={<span className="fa fa-fw fa-trash-o" />}
           enabled={props.item._deletable}
           onClick={() => props.onChange(
              actions.removeItem(props.item.id, false)
@@ -347,17 +365,17 @@ let Item = props => {
                 <Tooltip id={`item-${props.item.id}-drag`}>{t('move')}</Tooltip>
               }>
               <span
+                role="button"
                 title={t('move')}
                 draggable="true"
                 className={classes(
-                  'tooltiped-button',
                   'btn',
                   'btn-link-default',
-                  'fa fa-fw',
-                  'fa-bars',
                   'drag-handle'
                 )}
-              />
+              >
+                <span className="fa fa-fw fa-bars" />
+              </span>
             </OverlayTrigger>
           </div>
         )}
@@ -379,7 +397,7 @@ const ItemList = props => {
   return (
     <div className="item-list">
       <ul>
-        { utils.getRealItemlist(props.items, props.solutions).map((item) =>
+        {utils.getRealItemlist(props.items, props.solutions).map((item) =>
           <li key={item.id}>
             <Item onChange={props.onChange} item={item}/>
           </li>
