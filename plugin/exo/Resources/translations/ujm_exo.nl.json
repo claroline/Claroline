@@ -577,5 +577,10 @@
     "paper_details_right_answers": "Juiste antwoorden",
     "paper_details_your_answers": "Uw antwoorden",
     "picture_name": "Naam van de afbeelding",
-    "remove_object_confirm_message": "Bent u er zeker van dat u dit object wenst te verwijderen ?"
+    "remove_object_confirm_message": "Bent u er zeker van dat u dit object wenst te verwijderen ?",
+    "InteractionGraphic": "Grafisch",
+    "InteractionHole": "Cloze",
+    "InteractionQCM": "Meerdere keuzes",
+    "To drag": "Set",
+    "To pair": "Paarsgewijze rangschikken"
 }
