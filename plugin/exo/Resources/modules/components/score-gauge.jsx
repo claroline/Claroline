@@ -6,9 +6,9 @@ const ScoreGauge = props =>
     'score-gauge',
     'c100',
     props.size,
-    'p'+(props.userScore ? (props.userScore / props.maxScore) * 100 : 0)
+    'p'+(props.userScore ? Math.round((props.userScore / props.maxScore) * 100) : 0)
   )}>
-    <span>{ props.userScore || 0 === props.userScore ? props.userScore : '-' }</span>
+    <span>{ (props.userScore || 0 === props.userScore ? props.userScore+'' : '-') + ' / ' + props.maxScore }</span>
 
     <div className="slice" role="presentation">
       <div className="bar" role="presentation"></div>
