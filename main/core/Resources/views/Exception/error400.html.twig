@@ -2,8 +2,10 @@
 
 {% set httpCode = 400 %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'bad_request' | trans({}, 'platform') }}{% endblock %}
+{% block title %}
+    {{ 'bad_request'|trans({}, 'platform') }}
+{% endblock %}
 
 {% block message %}
-    {{'bad_request' | trans({}, 'platform') }}
+    {{ 'bad_request'|trans({}, 'platform') }}
 {% endblock %}

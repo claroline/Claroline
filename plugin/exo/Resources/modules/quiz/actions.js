@@ -27,12 +27,18 @@ const updateViewMode = (mode, hasFragment = true) => {
       navigate('editor', false)
       dispatch(openFirstStep(select.firstStepId(state)))
     } else if (mode === VIEW_OVERVIEW &&
-      !select.editable(state) &&
       !select.hasOverview(state)
     ) {
-      // Redirects to player for users if overview is disabled
-      navigate('player', false)
-      dispatch(playerActions.play(null, false))
+      // Redirects to player/test if overview is disabled
+      if (!select.editable(state)) {
+        // User goes to player
+        navigate('player', false)
+        dispatch(playerActions.play(null, false))
+      } else {
+        // Admin goes to test mode
+        navigate('test', false)
+        dispatch(playerActions.play(null, true))
+      }
     } else {
       dispatch({
         type: VIEW_MODE_UPDATE,

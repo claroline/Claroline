@@ -1,0 +1,65 @@
+@import "../../../../../../../web/packages/bootstrap/less/mixins";
+
+// Typography
+
+// rewrite bootstrap method to add `!important` in order to have the correct color on any element
+// (even those who originally have a defined color)
+.text-emphasis-variant(@color) {
+    color: @color !important;
+    a&:hover,
+    a&:focus {
+        color: darken(@color, 10%) !important;
+    }
+}
+
+// Buttons
+
+// expose a mixin to generate button links variant (this is not down by bootstrap)
+.btn-link-variant(@color, @hover-color, @hover-decoration: none) {
+    color: @color;
+    font-weight: normal;
+    border-radius: 0;
+
+    &,
+    &:active,
+    &.active,
+    &[disabled],
+    fieldset[disabled] & {
+        background-color: transparent;
+        .box-shadow(none);
+    }
+    &,
+    &:hover,
+    &:focus,
+    &:active {
+        border-color: transparent;
+    }
+    &:hover,
+    &:focus {
+        color: @hover-color;
+        text-decoration: @hover-decoration;
+        background-color: transparent;
+    }
+    &[disabled],
+    fieldset[disabled] & {
+        &:hover,
+        &:focus {
+            color: @color;
+            text-decoration: none;
+        }
+    }
+}
+
+.placeholder-variant(@font-size, @padding, @border-radius, @border, @border-hover) {
+    font-size: @font-size;
+    padding: @padding;
+    border: @border;
+    border-radius: @border-radius;
+
+    &.placeholder-hover {
+        &.hover,
+        &:hover {
+            border: @border-hover;
+        }
+    }
+}

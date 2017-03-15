@@ -76,6 +76,13 @@ const Properties = props =>
         onChange={checked => props.onChange('parameters.showMetadata', checked)}
       />
     }
+
+    <CheckGroup
+      checkId="quiz-show-end-page"
+      checked={props.parameters.showEndPage}
+      label={tex('show_end_page')}
+      onChange={checked => props.onChange('parameters.showEndPage', checked)}
+    />
   </fieldset>
 
 Properties.propTypes = {
@@ -84,7 +91,8 @@ Properties.propTypes = {
   parameters: T.shape({
     type: T.string.isRequired,
     showOverview: T.bool.isRequired,
-    showMetadata: T.bool.isRequired
+    showMetadata: T.bool.isRequired,
+    showEndPage: T.bool.isRequired
   }).isRequired,
   validating: T.bool.isRequired,
   onChange: T.func.isRequired
@@ -309,7 +317,7 @@ function makePanel(Section, title, key, props, errorProps) {
   const Header =
     <div onClick={() => props.handlePanelClick(key)}>
       <span className="panel-title">
-        <span className={classes('panel-icon', 'fa', caretIcon)}/>
+        <span className={classes('fa fa-fw', caretIcon)}/>
         &nbsp;{title}
       </span>
       {hasPanelError(props, errorProps) &&

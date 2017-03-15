@@ -34,19 +34,23 @@ function initJsPlumb(jsPlumbInstance) {
   jsPlumbInstance.registerConnectionTypes({
     'valid': {
       paintStyle     : { strokeStyle: '#5CB85C', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'green',   lineWidth: 6 }
+      hoverPaintStyle: { strokeStyle: 'green',   lineWidth: 6 },
+      cssClass: 'association-valid'
     },
     'invalid': {
       paintStyle:      { strokeStyle: '#D9534F', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'red',     lineWidth: 6 }
+      hoverPaintStyle: { strokeStyle: 'red',     lineWidth: 6 },
+      cssClass: 'association-invalid'
     },
     'selected': {
       paintStyle:      { strokeStyle: '#006DCC', lineWidth: 6 },
-      hoverPaintStyle: { strokeStyle: '#006DCC', lineWidth: 6 }
+      hoverPaintStyle: { strokeStyle: '#006DCC', lineWidth: 6 },
+      cssClass: 'association-selected'
     },
     'default': {
       paintStyle     : { strokeStyle: 'grey',    lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'orange', lineWidth: 6, cursor: 'pointer'}
+      hoverPaintStyle: { strokeStyle: 'orange', lineWidth: 6, cursor: 'pointer'},
+      cssClass: 'association-default'
     }
   })
 }
@@ -82,28 +86,19 @@ class MatchLinkPopover extends Component {
         title={
           <div>
             {tex('match_edit_connection')}
-            <div className="pull-right">
-              <TooltipButton
-                id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-delete`}
-                title={'delete'}
-                enabled={this.props.solution._deletable}
-                className="btn-sm fa fa-trash"
-                onClick={() => this.props.solution._deletable &&
-                  this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)
-                }
-              />
-              <TooltipButton
-                id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-close`}
-                title={'close'}
-                className="btn-sm fa fa-close"
-                onClick={() => this.props.handlePopoverClose()}
-              />
-            </div>
+
+            <TooltipButton
+              id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-close`}
+              title={'close'}
+              className="btn-link-default"
+              label={<span className="fa fa-fw fa-times"></span>}
+              onClick={() => this.props.handlePopoverClose()}
+            />
           </div>
         }>
-          <div className="connection-parameters">
+          <div className="association">
             <input
-              className="form-control"
+              className="form-control association-score"
               onChange={
                 e => this.props.onChange(
                   actions.updateSolution(this.props.solution.firstId, this.props.solution.secondId, 'score', e.target.value)
@@ -114,10 +109,21 @@ class MatchLinkPopover extends Component {
              />
              <TooltipButton
                id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
-               className="fa fa-comments-o"
+               className="btn-link-default"
                title={tex('feedback_association_created')}
+               label={<span className="fa fa-fw fa-comments-o"></span>}
                onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
              />
+            <TooltipButton
+              id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-delete`}
+              title={'delete'}
+              enabled={this.props.solution._deletable}
+              className="btn-link-default"
+              label={<span className="fa fa-fw fa-trash"></span>}
+              onClick={() => this.props.solution._deletable &&
+              this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)
+              }
+            />
           </div>
           {this.state.showFeedback &&
             <div className="feedback-container">
@@ -154,14 +160,15 @@ class MatchItem extends Component{
 
   render() {
     return (
-      <div className={classes('item', this.props.type)} id={this.props.type + '_' + this.props.item.id}>
+      <div className={classes('answer-item match-item', this.props.type)} id={this.props.type + '_' + this.props.item.id}>
         { this.props.type === 'source' &&
           <div className="left-controls">
             <TooltipButton
               id={`match-source-${this.props.item.id}-delete`}
               title={t('delete')}
               enabled={this.props.item._deletable}
-              className={classes('btn-sm', 'fa', 'fa-trash-o')}
+              label={<span className="fa fa-fw fa-trash-o"/>}
+              className="btn-link-default"
               onClick={() => this.props.item._deletable && this.props.onUnmount(
                 true, this.props.item.id, this.props.type + '_' + this.props.item.id
               )}
@@ -169,12 +176,13 @@ class MatchItem extends Component{
           </div>
         }
         <div className="text-fields">
-            <Textarea
-              onChange={data => this.props.onChange(
-                actions.updateItem(this.props.type === 'source', this.props.item.id, data)
-              )}
-              id={`${this.props.type}-${this.props.item.id}-data`}
-              content={this.props.item.data} />
+          <Textarea
+            onChange={data => this.props.onChange(
+              actions.updateItem(this.props.type === 'source', this.props.item.id, data)
+            )}
+            id={`${this.props.type}-${this.props.item.id}-data`}
+            content={this.props.item.data}
+          />
         </div>
         { this.props.type === 'target' &&
           <div className="right-controls">
@@ -182,7 +190,8 @@ class MatchItem extends Component{
               id={`match-target-${this.props.type + '_' + this.props.item.id}-delete`}
               title={t('delete')}
               enabled={this.props.item._deletable}
-              className={classes('btn-sm', 'fa', 'fa-trash-o')}
+              label={<span className="fa fa-fw fa-trash-o"/>}
+              className="btn-link-default"
               onClick={() => this.props.item._deletable && this.props.onUnmount(
                 false, this.props.item.id, this.props.type + '_' + this.props.item.id
               )}
@@ -407,18 +416,11 @@ class Match extends Component {
     delete this.jsPlumbInstance
   }
 
+  // todo : make onClick={(event) => this.handlePopoverFocusOut(event)} work
+
   render() {
     return (
-      <div id={`match-question-editor-id-${this.props.item.id}`} className="match-question-editor" ref={(el) => { this.container = el }}>
-        {get(this.props.item, '_errors.items') &&
-          <ErrorBlock text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
-        }
-        {get(this.props.item, '_errors.solutions') &&
-          <ErrorBlock text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
-        }
-        {get(this.props.item, '_errors.warning') &&
-          <ErrorBlock text={this.props.item._errors.warning} warnOnly={!this.props.validating}/>
-        }
+      <div className="match-editor">
         <div className="form-group">
           <label htmlFor="match-penalty">{tex('editor_penalty_label')}</label>
           <input
@@ -432,6 +434,9 @@ class Match extends Component {
             )}
           />
         </div>
+
+        <hr className="item-content-separator" />
+
         <div className="checkbox">
           <label>
             <input
@@ -444,13 +449,27 @@ class Match extends Component {
             {tex('match_shuffle_labels_and_proposals')}
           </label>
         </div>
-        <hr/>
+
+        {get(this.props.item, '_errors.items') &&
+          <ErrorBlock text={this.props.item._errors.items} warnOnly={!this.props.validating}/>
+        }
+        {get(this.props.item, '_errors.solutions') &&
+          <ErrorBlock text={this.props.item._errors.solutions} warnOnly={!this.props.validating}/>
+        }
+        {get(this.props.item, '_errors.warning') &&
+          <ErrorBlock text={this.props.item._errors.warning} warnOnly={!this.props.validating}/>
+        }
+
         <span className="help-block">
           <span className="fa fa-info-circle"></span>{tex('match_editor_click_link_help')}
         </span>
-        <hr/>
-        <div className="match-items" onClick={(event) => this.handlePopoverFocusOut(event)}>
-          <div className="item-col">
+
+        <div
+          id={`match-question-editor-id-${this.props.item.id}`}
+          className="match-items row"
+          ref={(el) => { this.container = el }}
+        >
+          <div className="item-col col-md-5 col-sm-5 col-xs-5">
             <ul>
             {this.props.item.firstSet.map((item) =>
               <li key={'source_' + item.id}>
@@ -464,18 +483,19 @@ class Match extends Component {
               </li>
             )}
             </ul>
-            <div className="footer text-center">
+            <div className="footer">
               <button
                 type="button"
                 className="btn btn-default"
                 onClick={() => this.props.onChange(actions.addItem(true))}
               >
-                <span className="fa fa-plus"/>
+                <span className="fa fa-fw fa-plus"/>
                 {tex('match_add_item')}
               </button>
             </div>
           </div>
-          <div id={`popover-place-holder-${this.props.item.id}`} className="popover-container">
+
+          <div id={`popover-place-holder-${this.props.item.id}`} className="divide-col col-md-2 col-sm-2 col-xs-2">
             { this.state.popover.visible &&
                 <MatchLinkPopover
                   handleConnectionDelete={(firstId, secondId) => this.removeConnection(firstId, secondId)}
@@ -486,7 +506,8 @@ class Match extends Component {
                 />
               }
           </div>
-          <div className="item-col">
+
+          <div className="item-col col-md-5 col-sm-5 col-xs-5">
             <ul>
               {this.props.item.secondSet.map((item) =>
                 <li key={'target_' + item.id}>
@@ -500,13 +521,14 @@ class Match extends Component {
                 </li>
               )}
             </ul>
-            <div className="footer text-center">
+
+            <div className="footer">
               <button
                 type="button"
                 className="btn btn-default"
                 onClick={() => this.props.onChange(actions.addItem(false))}
               >
-                <span className="fa fa-plus"/>
+                <span className="fa fa-fw fa-plus"/>
                 {tex('match_add_item')}
               </button>
             </div>

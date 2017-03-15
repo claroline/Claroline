@@ -6,7 +6,7 @@ export class ContentInput extends Component {
   render() {
     return (
       <div
-        className={classes('modal-content-entry', {'selected': this.props.selected})}
+        className={classes('modal-item-entry', {'selected': this.props.selected})}
         role="option"
         onMouseOver={() => this.props.handleItemMouseOver(this.props.type)}
         onClick={() => getContentDefinition(this.props.type).browseFiles ?
@@ -29,9 +29,7 @@ export class ContentInput extends Component {
             }}
           />
         }
-        <span className="item-icon item-icon-lg">
-          <span className={classes(getContentDefinition(this.props.type).icon)}></span>
-        </span>
+        <span className={classes('item-icon item-icon-lg', getContentDefinition(this.props.type).icon)}></span>
       </div>
     )
   }

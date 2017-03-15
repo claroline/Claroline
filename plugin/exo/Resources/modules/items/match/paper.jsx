@@ -56,36 +56,31 @@ export const MatchLinkPopover = props =>
     id={`popover-${props.solution.firstId}-${props.solution.secondId}`}
     positionTop={props.top}
     placement="bottom"
-    >
-      <div className={classes(
-        'fa',
-        {'fa-check text-success' : props.solution.score > 0},
-        {'fa-times text-danger' : props.solution.score <= 0 }
-      )}>
-      </div>
-      &nbsp;<label className="label popover-label" dangerouslySetInnerHTML={{__html: props.solution.feedback}}/>
-    &nbsp;<label className="label popover-label">{props.solution.score}</label>
-  </Popover>
+  >
+    <div className={classes(
+      'fa fa-fw',
+      {'fa-check text-success' : props.solution.score > 0},
+      {'fa-times text-danger' : props.solution.score <= 0 }
+    )}>
+    </div>
+    <SolutionScore score={props.solution.score} />
 
+    {props.solution.feedback &&
+      <div className="match-association-feedback" dangerouslySetInnerHTML={{__html: props.solution.feedback}}/>
+    }
+  </Popover>
 
 MatchLinkPopover.propTypes = {
   top: T.number.isRequired,
   solution: T.object.isRequired
 }
 
-class MatchItem extends Component{
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    return (
-      <div className={classes('item', this.props.type)} id={`${this.props.selectedTab}_${this.props.type}_${this.props.item.id}`}>
-        <div className="item-content" dangerouslySetInnerHTML={{__html: this.props.item.data}} />
-      </div>
-    )
-  }
-}
+const MatchItem = props =>
+  <div
+    id={`${props.selectedTab}_${props.type}_${props.item.id}`}
+    className={classes('match-item answer-item', props.type)}
+    dangerouslySetInnerHTML={{__html: props.item.data}}
+  />
 
 MatchItem.propTypes = {
   type: T.string.isRequired,
@@ -199,107 +194,107 @@ export class MatchPaper extends Component
   render() {
     return (
       <Tab.Container id={`match-${this.props.item.id}-paper`} defaultActiveKey="first">
-        <div>
+        <div className="match-paper">
             <Nav bsStyle="tabs">
               <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
-                  <span className="fa fa-user"></span> {tex('your_answer')}
+                  <span className="fa fa-fw fa-user"></span> {tex('your_answer')}
               </NavItem>
               <NavItem eventKey="second" onSelect={() => this.handleSelect('second')}>
-                <span className="fa fa-check"></span> {tex('expected_answer')}
+                <span className="fa fa-fw fa-check"></span> {tex('expected_answer')}
               </NavItem>
             </Nav>
             <div ref={(el) => { this.container = el }} id={`jsplumb-container-${this.props.item.id}`} className="jsplumb-container" style={{position:'relative'}}>
               <Tab.Content animation>
                 <Tab.Pane eventKey="first">
                   <span className="help-block">
-                    <span className="fa fa-info-circle">&nbsp;</span>{tex('match_player_click_link_help')}
+                    <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
                   </span>
-                  <div id={`match-question-paper-${this.props.item.id}-first`} className="match-question-paper">
-                    <div className="jsplumb-row">
-                      <div className="item-col">
-                        <ul>
-                        {this.props.item.firstSet.map((item) =>
-                          <li key={'first_source_' + item.id}>
-                            <MatchItem
-                              item={item}
-                              type="source"
-                              selectedTab={this.state.key}
-                            />
-                          </li>
-                        )}
-                        </ul>
-                      </div>
-                      <div className="divide-col" id={`popover-container-${this.props.item.id}`}>
-                        { this.state.showPopover &&
-                            <MatchLinkPopover
-                              top={this.state.top}
-                              solution={this.state.current}
-                            />
-                          }
-                      </div>
-                      <div className="item-col">
-                        <ul>
-                        {this.props.item.secondSet.map((item) =>
-                          <li key={'first_target_' + item.id}>
-                            <MatchItem
-                              item={item}
-                              type="target"
-                              selectedTab={this.state.key}
-                            />
-                          </li>
-                        )}
-                        </ul>
-                      </div>
+                  <div id={`match-question-paper-${this.props.item.id}-first`} className="match-items row">
+                    <div className="item-col col-md-5 col-sm-5 col-xs-5">
+                      <ul>
+                      {this.props.item.firstSet.map((item) =>
+                        <li key={'first_source_' + item.id}>
+                          <MatchItem
+                            item={item}
+                            type="source"
+                            selectedTab={this.state.key}
+                          />
+                        </li>
+                      )}
+                      </ul>
+                    </div>
+                    <div className="divide-col col-md-2 col-sm-2 col-xs-2" id={`popover-container-${this.props.item.id}`}>
+                      { this.state.showPopover &&
+                          <MatchLinkPopover
+                            top={this.state.top}
+                            solution={this.state.current}
+                          />
+                        }
+                    </div>
+                    <div className="item-col col-md-5 col-sm-5 col-xs-5">
+                      <ul>
+                      {this.props.item.secondSet.map((item) =>
+                        <li key={'first_target_' + item.id}>
+                          <MatchItem
+                            item={item}
+                            type="target"
+                            selectedTab={this.state.key}
+                          />
+                        </li>
+                      )}
+                      </ul>
                     </div>
                   </div>
                 </Tab.Pane>
+
                 <Tab.Pane eventKey="second">
                   <span className="help-block" style={{visibility:'hidden'}} >
-                    <span className="fa fa-info-circle">&nbsp;</span>{tex('match_player_click_link_help')}
+                    <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
                   </span>
-                  <div id={`match-question-paper-${this.props.item.id}-second`} className="match-question-paper">
-                    <div className="jsplumb-row">
-                      <div className="item-col">
-                        <ul>
-                        {this.props.item.firstSet.map((item) =>
-                          <li key={'second_source_' + item.id}>
-                            <MatchItem
-                              item={item}
-                              type="source"
-                              selectedTab={this.state.key}
-                            />
-                          </li>
-                        )}
-                        </ul>
-                      </div>
-                      <div className="divide-col" />
-                      <div className="item-col">
-                        <ul>
-                        {this.props.item.secondSet.map((item) =>
-                          <li key={'second_target_' + item.id}>
-                            <MatchItem
-                              item={item}
-                              type="target"
-                              selectedTab={this.state.key}
-                            />
-                          </li>
-                        )}
-                        </ul>
-                      </div>
+                  <div id={`match-question-paper-${this.props.item.id}-second`} className="match-items row">
+                    <div className="item-col col-md-5 col-sm-5 col-xs-5">
+                      <ul>
+                      {this.props.item.firstSet.map((item) =>
+                        <li key={'second_source_' + item.id}>
+                          <MatchItem
+                            item={item}
+                            type="source"
+                            selectedTab={this.state.key}
+                          />
+                        </li>
+                      )}
+                      </ul>
                     </div>
-                    <div className="solution-row">
+
+                    <div className="divide-col col-md-2 col-sm-2 col-xs-2" />
+
+                    <div className="item-col col-md-5 col-sm-5 col-xs-5">
+                      <ul>
+                      {this.props.item.secondSet.map((item) =>
+                        <li key={'second_target_' + item.id}>
+                          <MatchItem
+                            item={item}
+                            type="target"
+                            selectedTab={this.state.key}
+                          />
+                        </li>
+                      )}
+                      </ul>
+                    </div>
+
+                    <div className="match-associations col-md-12">
                       {this.props.item.solutions.map((solution) =>
                         <div
                           key={`solution-${solution.firstId}-${solution.secondId}`}
                           className={classes(
-                            'item',
-                            {'bg-info text-info' : solution.score > 0}
+                            'answer-item',
+                            {'selected-answer' : solution.score > 0}
                           )}
                         >
                           <div className="sets">
                             <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionData(solution.firstId, this.props.item.firstSet)}} />
-                            <span className="fa fa-chevron-left"></span>
-                            <span className="fa fa-chevron-right"></span>
+                            <span className="fa fa-fw fa-chevron-left"></span>
+                            <span className="fa fa-fw fa-chevron-right"></span>
                             <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionData(solution.secondId, this.props.item.secondSet)}} />
                           </div>
                           <Feedback

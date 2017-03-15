@@ -55,7 +55,7 @@ export class Pointer extends Component {
         )}
 
         {this.props.type !== POINTER_PLACED &&
-          <span className={classes('fa', 'pointer-status-icon', {
+          <span className={classes('fa fa-fw', 'pointer-status-icon', {
             'fa-check': this.props.type === POINTER_CORRECT,
             'fa-times': this.props.type === POINTER_WRONG
           })}/>
@@ -67,7 +67,7 @@ export class Pointer extends Component {
               ref={el => this.feedbackButton = el}
               onMouseOver={() => this.setState({showFeedback: true})}
               onMouseLeave={() => this.setState({showFeedback: false})}
-              className="fa fa-comments-o pointer-feedback-btn"
+              className="fa fa-fw fa-comments-o pointer-feedback-btn"
             />
             <Overlay
               show={this.state.showFeedback}

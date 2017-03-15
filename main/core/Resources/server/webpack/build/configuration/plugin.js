@@ -1,14 +1,14 @@
-const paths = require('../../paths')
-const entries = require('../../entries')
+const paths = require('../../../paths')
+const packages = require('../../../packages')
 const fs = require('fs')
 const validator = require('./validator')
 
 function ConfigurationPlugin() {
 }
 
-ConfigurationPlugin.prototype.apply = function(compiler) {
+ConfigurationPlugin.prototype.apply = function (compiler) {
   var generated = false
-  compiler.plugin('compile', function(compilation) {
+  compiler.plugin('compile', function () {
     if (!generated) {
       console.log('\nGenerating claroline configuration file...')
       str = `module.exports = {${getConfigurations()}}`
@@ -19,11 +19,11 @@ ConfigurationPlugin.prototype.apply = function(compiler) {
 }
 
 function getConfigurations() {
-  const packages = entries.collectPackages(paths.root())
+  const registeredPackages = packages.collect(paths.root())
   var str = ''
 
-  packages.forEach(el => {
-    if (entries.isMetaPackage(el.path)) {
+  registeredPackages.forEach(el => {
+    if (packages.isMetaPackage(el.path)) {
       str += getMetaEntries(el.path)
     } else {
       throw new Error('No implementation for client configuration file for the usual package.')
@@ -36,7 +36,7 @@ function getConfigurations() {
 function getMetaEntries(targetDir) {
   var requirements = []
 
-  entries.getMetaBundles(targetDir).forEach(bundle => {
+  packages.getMetaBundles(targetDir).forEach(bundle => {
     var configFile = `${bundle}/Resources/config/config.js`
     // Fixes path in windows (back slashes are not escaped)
     configFile = configFile.replace(/\\/g, '/')

@@ -10,8 +10,8 @@ export const AnswerTable = props =>
     <h3 className="title">{tex('your_answers')}</h3>
     {props.areas.map((area, idx) =>
       <div key={area.id} className={classes('answer-row', {
-        'bg-success': props.highlightScore && area.score > 0,
-        'bg-danger': props.highlightScore && area.score <= 0
+        'correct-answer': props.highlightScore && area.score > 0,
+        'incorrect-answer': props.highlightScore && area.score <= 0
       })}>
         <span className="info-block">
           <span><strong>{idx + 1}</strong></span>
@@ -24,9 +24,9 @@ export const AnswerTable = props =>
             borderRadius: area.shape === SHAPE_RECT ? 0 : '12px'
           }}/>
         {props.highlightScore &&
-          <span className={classes('fa', 'area-status-icon', {
-            'fa-check text-success': area.score > 0,
-            'fa-times text-danger': area.score <= 0
+          <span className={classes('fa fa-fw', 'area-status-icon', {
+            'fa-check': area.score > 0,
+            'fa-times': area.score <= 0
           })}/>
         }
         </span>
@@ -37,10 +37,7 @@ export const AnswerTable = props =>
               feedback={area.feedback}
             />
           }
-          <span className={classes('score', {
-            'text-success': props.highlightScore && area.score > 0,
-            'text-danger': props.highlightScore && area.score <= 0
-          })}>
+          <span className="solution-score">
             {transChoice('solution_score', area.score, {score: area.score}, 'ujm_exo')}
           </span>
         </span>

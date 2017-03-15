@@ -1,0 +1,105 @@
+.item-paper {
+    .score-box {
+        margin: @score-margin;
+        border-radius: 0 @panel-border-radius 0 @score-border-radius;
+
+        .user-score {
+            border-top-left-radius: 0;
+        }
+    }
+}
+
+.item-title {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 0;
+    padding: 0;
+    margin-bottom: @component-margin-bottom; // normalize margin as item title can be a h
+}
+
+.item-metadata {
+    .item-content,
+    .item-description {
+        margin-bottom: @component-margin-bottom;
+    }
+
+    .item-description {
+        font-style: italic;
+    }
+}
+
+.item-hints {
+    margin-top: @component-margin-bottom;
+}
+
+.item-content-separator {
+    width: @item-content-separator-width;
+}
+
+.solution-score {
+    white-space: nowrap;
+}
+
+.no-answer {
+    font-style: italic;
+    color: @text-muted;
+}
+
+.answer-item {
+    background-color: @answer-item-bg;
+    border: 1px solid @answer-item-border;
+    border-radius: @answer-item-border-radius;
+    padding: @answer-item-padding;
+    margin-bottom: @answer-item-margin-bottom;
+    box-shadow: @answer-item-box-shadow;
+
+    // used to removed default tag styles (e.g. in choices, class is added on a <label> which is bold)
+    // this permits to be consistent between item types
+    font-weight: normal;
+}
+
+.expected-answer {
+    color: @expected-answer-color;
+    border: 1px solid @expected-answer-border;
+    background: @expected-answer-bg;
+}
+
+.unexpected-answer {
+    color: @unexpected-answer-color;
+    border: 1px solid @unexpected-answer-border;
+    background: @unexpected-answer-bg;
+}
+
+.correct-answer {
+    color: @correct-answer-color;
+    border: 1px solid @correct-answer-border;
+    background: @correct-answer-bg;
+
+    .feedback-btn {
+        color: @correct-answer-color;
+    }
+}
+
+.incorrect-answer {
+    color: @incorrect-answer-color;
+    border: 1px solid @incorrect-answer-border;
+    background: @incorrect-answer-bg;
+
+    .feedback-btn {
+        color: @incorrect-answer-color;
+    }
+}
+
+.selected-answer {
+    color: @selected-answer-color;
+    border: 1px solid @selected-answer-border;
+    background: @selected-answer-bg;
+
+    .feedback-btn {
+        color: @selected-answer-color;
+    }
+}
+
+.feedback-btn {
+    padding: 0 !important; // important is needed to override bootstrap .btn
+}

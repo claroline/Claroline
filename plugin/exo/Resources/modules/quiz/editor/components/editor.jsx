@@ -18,7 +18,7 @@ let Editor = props =>
       onStepDeleteClick={props.deleteStepAndItems}
       showModal={props.showModal}
     />
-    <div className="edit-zone">
+    <div className="edit-zone user-select-disabled">
       {selectSubEditor(props)}
     </div>
   </div>

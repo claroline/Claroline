@@ -35,7 +35,7 @@ class AnswerRow extends Component {
               </InputGroup>
             </FormGroup>
             <TooltipButton id={`feedback-${this.props.id}-toggle`}
-                           className="fa fa-comments-o"
+                           className="fa fa-fw fa-comments-o"
                            title={tex('feedback')}
                            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
             />

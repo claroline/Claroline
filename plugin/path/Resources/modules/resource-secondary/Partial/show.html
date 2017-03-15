@@ -1,32 +1,43 @@
-<ul class="nav nav-tabs resource-tabs">
-    <!-- Inherited resources -->
-    <li class="resource" role="presentation" data-ng-repeat="resource in resourcesSecondaryShowCtrl.inherited | filter:{isExcluded: false}">
-        <a href="{{ resource.url || ('claro_resource_open'|path:{node: resource.resourceId, resourceType: resource.type}) }}" role="button" target="_blank">
-            <!-- Resource lvl -->
-            <div class="lvl-indicator lvl lvl-{{ resource.parentStep.lvl }} lvl-bg"></div>
+<div class="resources-secondary panel panel-default">
+    <div class="panel-heading">
+        <h2 class="panel-title">En complément...</h2>
+    </div>
 
-            <!-- Resource icon -->
-            <img class="resource-icon"
-                 alt="{{ resource.mimeType }}"
-                 data-ng-if="0 !== resourcesSecondaryShowCtrl.resourceIcons.length"
-                 data-ng-src="{{ (resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'])|asset }}" />
+    <div class="list-group">
+        <!-- Inherited resources -->
+        <a class="resource-container list-group-item"
+           data-ng-repeat="resource in resourcesSecondaryShowCtrl.inherited | filter:{isExcluded: false}"
+           href="{{ resource.url || ('claro_resource_open'|path:{node: resource.resourceId, resourceType: resource.type}) }}"
+           target="_blank"
+        >
+            <div class="resource lvl lvl-{{ resource.parentStep.lvl }} lvl-border">
+                <!-- Resource icon -->
+                <img class="resource-icon"
+                     alt="{{ resource.mimeType }}"
+                     data-ng-if="resource.icon"
+                     data-ng-src="{{ resource.icon|asset }}" />
 
-            <!-- Resource name -->
-            {{ resource.name }}
+                <!-- Resource name -->
+                {{ resource.name }}
+            </div>
         </a>
-    </li>
 
-    <!-- Owned resources -->
-    <li class="resource" role="presentation" data-ng-repeat="resource in resourcesSecondaryShowCtrl.resources">
-        <a href="{{ resource.url || ('claro_resource_open'|path:{node: resource.resourceId, resourceType: resource.type}) }}" role="button" target="_blank">
-            <!-- Resource icon -->
-            <img class="resource-icon"
-                 alt="{{ resource.mimeType }}"
-                 data-ng-if="0 !== resourcesSecondaryShowCtrl.resourceIcons.length"
-                 data-ng-src="{{ (resourcesSecondaryShowCtrl.resourceIcons[resource.mimeType] || resourcesSecondaryShowCtrl.resourceIcons['custom/default'])|asset }}" />
+        <!-- Owned resources -->
+        <a class="resource-container list-group-item"
+           data-ng-repeat="resource in resourcesSecondaryShowCtrl.resources"
+           href="{{ resource.url || ('claro_resource_open'|path:{node: resource.resourceId, resourceType: resource.type}) }}"
+           target="_blank"
+        >
+            <div class="resource">
+                <!-- Resource icon -->
+                <img class="resource-icon"
+                     alt="{{ resource.mimeType }}"
+                     data-ng-if="resource.icon"
+                     data-ng-src="{{ resource.icon|asset }}" />
 
-            <!-- Resource name -->
-            {{ resource.name }}
+                <!-- Resource name -->
+                {{ resource.name }}
+            </div>
         </a>
-    </li>
-</ul>
+    </div>
+</div>

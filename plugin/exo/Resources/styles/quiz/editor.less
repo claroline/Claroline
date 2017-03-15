@@ -1,0 +1,123 @@
+.quiz-editor {
+  display: flex;
+  flex: 1;
+  min-height: 100%;
+
+  .edit-zone {
+    flex: 1 100%;
+    padding-left: floor(@grid-gutter-width / 2); // fake bootstrap grid
+    .panel-body {
+      & > * {
+        max-width: @quiz-container-width;
+        margin: auto;
+      }
+    }
+
+    .left-controls,
+    .right-controls {
+      display: flex;
+      align-items: flex-start;
+
+      .btn {
+        padding-left: 4px;
+        padding-right: 4px;
+      }
+    }
+
+    .feedback-container {
+      margin-top: @form-group-margin-bottom;
+      padding-left: @grid-gutter-width;
+    }
+  }
+
+  .item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+
+  .item-actions {
+    white-space: nowrap; // Avoid buttons to be displayed on multi lines
+
+    .btn {
+      padding: 0;
+    }
+  }
+
+  .step-footer {
+    text-align: center;
+  }
+
+  .hint-items  {
+    > ul {
+      padding-left: 0;
+      list-style-type: none;
+      margin: 0;
+    }
+
+    .footer {
+      text-align: center;
+    }
+  }
+
+  .hint-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: @form-group-margin-bottom;
+
+    .btn {
+      padding-left: 4px;
+      padding-right: 4px;
+    }
+  }
+
+  .hint-value {
+    flex-grow: 1;
+  }
+
+  .hint-penalty {
+    width: 60px;
+    margin: 0 floor(@grid-gutter-width / 2);
+  }
+
+  .no-hint-info {
+    margin-bottom: @form-group-margin-bottom;
+  }
+
+  .help-block .fa,
+  .error-text .fa,
+  .sub-section a[role="button"] .fa {
+    margin-right: 7px;
+  }
+
+  .fa.disabled {
+    color: #aaa;
+    cursor: not-allowed;
+  }
+
+  .sub-fields {
+    // this is used to conditionally display fields on radio/checkbox check
+    // we align the displayed fields with the label of the radio/checkbox
+    // but there is no var in bootstrap for this
+    margin-left: 20px;
+  }
+
+  .react-datepicker__input-container {
+    display: block;
+  }
+
+  .editor-panel-title:hover {
+    cursor: pointer;
+  }
+}
+
+@media (max-width: @screen-sm-min) {
+  .quiz-editor {
+    flex-direction: column;
+
+    .edit-zone {
+      padding-left: 0;
+    }
+  }
+}

@@ -1,12 +1,13 @@
 import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
+import {t, tex} from './../../utils/translate'
 import PageHeader from './../../components/layout/page-header.jsx'
-import {Loader} from './../../api/components/loader.jsx'
+import PageActions from './../../components/layout/page-actions.jsx'
 import {showModal, fadeModal} from './../../modal/actions'
 import {makeModal} from './../../modal'
-import {TopBar} from './top-bar.jsx'
 import {Overview} from './../overview/overview.jsx'
 import {Player} from './../player/components/player.jsx'
+import {AttemptEnd} from './../player/components/attempt-end.jsx'
 import {Editor} from './../editor/components/editor.jsx'
 import {Papers} from './../papers/components/papers.jsx'
 import {Paper} from './../papers/components/paper.jsx'
@@ -24,15 +25,17 @@ import {
   VIEW_PAPERS,
   VIEW_PAPER,
   VIEW_CORRECTION_QUESTIONS,
-  VIEW_CORRECTION_ANSWERS
+  VIEW_CORRECTION_ANSWERS,
+  VIEW_ATTEMPT_END
 } from './../enums'
 
 let Quiz = props =>
-  <div className="page-container">
-    <PageHeader title={props.quiz.title} />
-    {props.isLoading &&
-      <Loader />
-    }
+  <main className="page">
+    <PageHeader title={props.quiz.title}>
+      {props.editable &&
+        <PageActions actions={viewActions(props.viewMode, props)} />
+      }
+    </PageHeader>
     {props.modal.type &&
       props.createModal(
         props.modal.type,
@@ -40,16 +43,12 @@ let Quiz = props =>
         props.modal.fading
       )
     }
-    {props.editable &&
-      <TopBar {...props} id={props.quiz.id}/>
-    }
     <div className="page-content">
       {viewComponent(props.viewMode, props)}
     </div>
-  </div>
+  </main>
 
 Quiz.propTypes = {
-  isLoading: T.bool.isRequired,
   quiz: T.shape({
     id: T.string.isRequired,
     title: T.string.isRequired
@@ -70,12 +69,139 @@ Quiz.propTypes = {
   })
 }
 
+function viewActions(view, props) {
+  const divider = {
+    primary: true,
+    divider: true
+  }
+
+  const overviewAction = {
+    icon: 'fa fa-fw fa-times',
+    label: t('close'),
+    handleAction: '#overview',
+    primary: true
+  }
+
+  const editAction = {
+    icon: 'fa fa-fw fa-pencil',
+    label: t('edit'),
+    handleAction: '#editor',
+    primary: true
+  }
+
+  const testAction = {
+    icon: 'fa fa-fw fa-play',
+    label: tex('exercise_try'),
+    handleAction: '#test',
+    primary: true
+  }
+
+  const saveAction = {
+    icon: 'fa fa-fw fa-save',
+    label: t('save'),
+    disabled: !props.saveEnabled,
+    handleAction: props.saveQuiz,
+    primary: true
+  }
+
+  const saveCorrectionAction = {
+    icon: 'fa fa-fw fa-save',
+    label: t('save'),
+    disabled: !props.saveCorrectionEnabled,
+    handleAction: () => props.saveCorrection(props.currentQuestionId),
+    primary: true
+  }
+
+  const papersAction = {
+    icon: 'fa fa-fw fa-list',
+    label: tex('results_list'),
+    disabled: !props.hasPapers,
+    handleAction: '#papers'
+  }
+
+  const manualCorrectionAction = {
+    icon: 'fa fa-fw fa-check-square-o',
+    label: tex('manual_correction'),
+    disabled: !props.hasPapers,
+    handleAction: '#correction/questions'
+  }
+
+  switch (view) {
+    case VIEW_EDITOR:
+      return [
+        testAction,
+        divider,
+        saveAction,
+        overviewAction,
+        divider,
+        papersAction,
+        manualCorrectionAction
+      ]
+    case VIEW_PLAYER:
+    case VIEW_ATTEMPT_END:
+      return [
+        editAction,
+        overviewAction,
+        divider,
+        papersAction,
+        manualCorrectionAction
+      ]
+    case VIEW_PAPERS:
+      return [
+        testAction,
+        divider,
+        editAction,
+        overviewAction,
+        divider,
+        papersAction,
+        manualCorrectionAction
+      ]
+    case VIEW_PAPER:
+      return [
+        testAction,
+        divider,
+        editAction,
+        overviewAction,
+        divider,
+        papersAction,
+        manualCorrectionAction
+      ]
+    case VIEW_CORRECTION_QUESTIONS:
+      return [
+        overviewAction,
+        divider,
+        papersAction,
+        manualCorrectionAction
+      ]
+    case VIEW_CORRECTION_ANSWERS:
+      return [
+        saveCorrectionAction,
+        overviewAction,
+        divider,
+        papersAction,
+        manualCorrectionAction
+      ]
+    case VIEW_OVERVIEW:
+    default:
+      return [
+        testAction,
+        divider,
+        editAction,
+        divider,
+        papersAction,
+        manualCorrectionAction
+      ]
+  }
+}
+
 function viewComponent(view, props) {
   switch (view) {
     case VIEW_EDITOR:
       return <Editor {...props}/>
     case VIEW_PLAYER:
       return <Player {...props}/>
+    case VIEW_ATTEMPT_END:
+      return <AttemptEnd {...props} />
     case VIEW_PAPERS:
       return <Papers {...props}/>
     case VIEW_PAPER:
@@ -92,7 +218,6 @@ function viewComponent(view, props) {
 
 function mapStateToProps(state) {
   return {
-    isLoading: select.isLoading(state),
     alerts: select.alerts(state),
     quiz: select.quiz(state),
     steps: select.steps(state),

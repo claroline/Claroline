@@ -67,6 +67,40 @@ class UserProgressionRepository extends EntityRepository
     }
 
     /**
+     * @param User   $user
+     * @param Path[] $paths
+     *
+     * @return int - the user progression in percents
+     */
+    public function findUserProgression(User $user, array $paths)
+    {
+        $result = $this
+            ->getEntityManager()
+            ->createQuery('
+                SELECT 
+                    COUNT(DISTINCT(up)) AS countDone,
+                    COUNT(DISTINCT(s)) AS countTotal
+                FROM Innova\PathBundle\Entity\Path\Path AS p
+                JOIN Innova\PathBundle\Entity\Step AS s WITH s.path = p
+                LEFT JOIN Innova\PathBundle\Entity\UserProgression AS up WITH up.step = s AND up.user = :user AND up.status IN (:statuses)
+                WHERE p IN (:paths)
+            ')
+            ->setParameters([
+                'user' => $user,
+                'paths' => $paths,
+                'statuses' => ['seen', 'done'],
+            ])
+            ->getSingleResult();
+
+        if (0 < $result['countTotal']) {
+            return round(($result['countDone'] / $result['countTotal']) * 100);
+        } else {
+            // No step in the path
+            return 0;
+        }
+    }
+
+    /**
      * Get all step called for unlock for a path.
      *
      * @param Path $path

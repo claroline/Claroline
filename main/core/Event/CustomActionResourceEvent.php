@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Event;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * Event dispatched by the resource controller when a custom action is asked on a resource.
@@ -37,7 +37,7 @@ class CustomActionResourceEvent extends Event implements DataConveyorEventInterf
     /**
      * Returns the id of the resource on which the action is to be taken.
      *
-     * @return int
+     * @return AbstractResource
      */
     public function getResource()
     {

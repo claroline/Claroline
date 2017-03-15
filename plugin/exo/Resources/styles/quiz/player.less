@@ -1,0 +1,50 @@
+/* PLAYER ROOT CONTAINER */
+.quiz-player {
+  max-width: @quiz-container-width;
+  width: 100%; /* for IE11 : can not apply auto margin with max-width */
+  margin: 0 auto;
+
+  .step-title:first-child {
+    margin-top: 0;
+  }
+
+  .step-description {
+    margin-bottom: @line-height-computed;
+    word-break: break-all;
+  }
+
+  .player-nav {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .hint-btn {
+    position: relative;
+
+    .hint-penalty-info {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+    }
+  }
+
+  .used-hint {
+    display: flex;
+    align-items: baseline;
+    margin-top: 20px;
+
+    .fa {
+      margin-right: 12px;
+    }
+
+    .hint-text {
+      flex-grow: 1;
+    }
+
+    .hint-penalty-info {
+      min-width: 64px;
+      margin-left: 12px;
+      text-align: right;
+    }
+  }
+}

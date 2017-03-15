@@ -30,16 +30,17 @@ class AddContentModal extends Component {
 
   render() {
     return (
-      <BaseModal {...this.props} className="add-content-modal">
+      <BaseModal {...this.props} className="add-item-modal">
         <Modal.Body>
-          <div className="modal-content-list" role="listbox">
+          <div className="modal-item-list" role="listbox">
             {this.state.contentTypes.map(type =>
-              <ContentInput key={type}
-                            type={type}
-                            selected={this.state.currentType === type}
-                            handleSelect={type => this.props.handleSelect(type)}
-                            handleItemMouseOver={type => this.handleItemMouseOver(type)}
-                            handleFileUpload={(itemId, file) => this.props.handleFileUpload(itemId, file)}
+              <ContentInput
+                key={type}
+                type={type}
+                selected={this.state.currentType === type}
+                handleSelect={type => this.props.handleSelect(type)}
+                handleItemMouseOver={type => this.handleItemMouseOver(type)}
+                handleFileUpload={(itemId, file) => this.props.handleFileUpload(itemId, file)}
               />
             )}
           </div>

@@ -5,7 +5,7 @@ import {tex} from './../../utils/translate'
 import {FormGroup} from './../../components/form/form-group.jsx'
 
 export const Open = (props) =>
-  <fieldset>
+  <fieldset className="open-editor">
     <FormGroup
       controlId={`item-${props.item.id}-maxScore`}
       label={tex('score_max')}
@@ -27,6 +27,7 @@ export const Open = (props) =>
       controlId={`item-${props.item.id}-maxLength`}
       label={tex('open_maximum_length')}
       error={get(props.item, '_errors.maxLength')}
+      className="form-last"
     >
       <input
         id={`item-${props.item.id}-maxLength`}

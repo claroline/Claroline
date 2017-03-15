@@ -54,7 +54,7 @@ class ResourcePicker extends Component {
     return(
       <div>
         <a role="button" onClick={this.togglePicker.bind(this)}>
-          <span className="fa fa-folder-open"></span>&nbsp;{t('add_resource')}
+          <span className="fa fa-fw fa-folder-open"></span>&nbsp;{t('add_resource')}
         </a>
       </div>
     )

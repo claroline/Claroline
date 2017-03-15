@@ -12,8 +12,8 @@ export const ValidationStatus = props =>
     )}
   >
     <span className={props.validating ?
-      'error-text fa fa-warning' :
-      'warning-text fa fa-clock-o'
+      'text-danger fa fa-warning' :
+      'text-warning fa fa-clock-o'
     }/>
   </TooltipElement>
 

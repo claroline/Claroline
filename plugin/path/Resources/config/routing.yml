@@ -1,4 +1,17 @@
-innova_path:
-    resource: "@InnovaPathBundle/Controller/"
+# API
+innova_path_api:
+    resource: "@InnovaPathBundle/Controller/Api/"
+    type:     annotation
+    prefix:   /api
+
+# Resource
+innova_path_resource:
+    resource: "@InnovaPathBundle/Controller/Resource/"
+    type:     annotation
+    prefix:   /
+
+# Widgets
+innova_path_widgets:
+    resource: "@InnovaPathBundle/Controller/Widget/"
     type:     annotation
     prefix:   /

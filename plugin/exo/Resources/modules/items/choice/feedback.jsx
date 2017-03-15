@@ -7,36 +7,40 @@ import {WarningIcon} from './utils/warning-icon.jsx'
 
 export const ChoiceFeedback = props => {
   return (
-    <div className="container choice-paper">
+    <div className="choice-feedback">
     {props.item.solutions.map(solution =>
-      <div
+      <label
         key={utils.answerId(solution.id)}
         className={classes(
-          'item',
-          props.item.multiple ? 'checkbox': 'radio',
+          'answer-item choice-item',
           utils.getAnswerClassForSolution(solution, props.answer)
         )}>
-        <WarningIcon solution={solution} answers={props.answer}/>
-        <input
-          className={props.item.multiple ? 'checkbox': 'radio'}
-          checked={utils.isSolutionChecked(solution, props.answer)}
-          id={utils.answerId(solution.id)}
-          name={utils.answerId(props.item.id)}
-          type={props.item.multiple ? 'checkbox': 'radio'}
-          disabled
-        />
-        <label
-          className="control-label"
-          htmlFor={utils.answerId(solution.id)}
-          dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
-        />
-        {utils.isSolutionChecked(solution, props.answer) &&
-          <Feedback
-            id={`${solution.id}-feedback`}
-            feedback={solution.feedback}
+        {utils.isSolutionChecked(solution, props.answer) ?
+          <WarningIcon className="choice-item-tick" solution={solution} answers={props.answer} /> :
+
+          <input
+            id={utils.answerId(solution.id)}
+            className="choice-item-tick"
+            name={utils.answerId(props.item.id)}
+            type={props.item.multiple ? 'checkbox': 'radio'}
+            disabled
           />
         }
-      </div>
+
+        <div
+          className="choice-item-content"
+          dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
+        ></div>
+
+        {utils.isSolutionChecked(solution, props.answer) &&
+          <div className="choice-item-feedback">
+            <Feedback
+              id={`${solution.id}-feedback`}
+              feedback={solution.feedback}
+            />
+          </div>
+        }
+      </label>
     )}
   </div>
 )}

@@ -9,18 +9,16 @@ export const OpenPaper = props => {
       hideExpected={true}
       yours={
         <div className="open-paper">
-          {props.answerObject && props.answerObject.feedback &&
-            <div className="row open-paper-feedback">
-              <span className="pull-right">
+          {props.feedback &&
+            <div className="pull-right">
                 <Feedback
-                  id={props.answerObject.id}
-                  feedback={props.answerObject.feedback}
+                  id={props.item.id}
+                  feedback={props.feedback}
                 />
-              </span>
             </div>
           }
-          <div className="open-paper-data" dangerouslySetInnerHTML={{__html: props.answer}}>
-          </div>
+
+          <div dangerouslySetInnerHTML={{__html: props.answer}}></div>
         </div>
       }
     />
@@ -33,5 +31,5 @@ OpenPaper.propTypes = {
     description: T.string
   }).isRequired,
   answer: T.string,
-  answerObject: T.object
+  feedback: T.string
 }

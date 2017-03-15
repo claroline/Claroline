@@ -33,16 +33,17 @@ export class ChoicePlayer extends Component {
     return (
       <div className="choice-player">
         {this.state.choices.map(choice =>
-          <div
+          <label
             key={choice.id}
             className={classes(
-              'item',
-              this.props.item.multiple ? 'checkbox': 'radio'
+              'answer-item choice-item',
+              this.isChecked(choice.id, this.props.answer) ? 'selected-answer' : null
             )}
           >
             <input
               checked={this.isChecked(choice.id, this.props.answer)}
               id={choice.id}
+              className="choice-item-tick"
               name={this.props.item.id}
               type={this.props.item.multiple ? 'checkbox': 'radio'}
               onChange={() => this.props.onChange(this.select(
@@ -51,12 +52,12 @@ export class ChoicePlayer extends Component {
                 this.props.answer
               ))}
             />
-            <label
-              className="control-label"
-              htmlFor={choice.id}
+
+            <div
+              className="choice-item-content"
               dangerouslySetInnerHTML={{__html: choice.data}}
-            />
-          </div>
+            ></div>
+          </label>
         )}
       </div>
     )

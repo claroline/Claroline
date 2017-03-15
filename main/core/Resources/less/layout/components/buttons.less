@@ -1,0 +1,12 @@
+/* CHROME HACK FOR OUTLINED BUTTON WHEN FOCUSED */
+.btn:focus {
+    outline: none;
+}
+
+.btn-link-danger {
+    .btn-link-variant(@brand-danger, darken(@brand-danger, 10%), @link-hover-decoration);
+}
+
+.btn-link-default {
+    .btn-link-variant(@gray, @gray-dark, @link-hover-decoration);
+}

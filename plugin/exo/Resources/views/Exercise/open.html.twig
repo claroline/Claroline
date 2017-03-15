@@ -1,24 +1,15 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% block stylesheets %}
-    {# Claroline CSS #}
     {{ parent() }}
 
-    {# Exercise styles #}
-    {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/exercise.css'
-        '@UJMExoBundle/Resources/less/main.less'
-    %}
-    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-exo-quiz-resource.css') }}" />
 {% endblock %}
 
-{# Title of the Page #}
-{% block title %}{{ _resource.resourceNode.name }}{% endblock %}
-
 {# Content of the Page #}
-{% block section_panel %}
+{% block content %}
     <div
-      class="quiz-container"
+      class="page-container quiz-container"
       data-quiz="{{ exercise | json_encode | raw | escape }}"
     >
     </div>

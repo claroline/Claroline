@@ -159,29 +159,34 @@ actions.handleAttemptEnd = (paper) => {
     // Finish the current attempt
     dispatch(actions.finishAttempt(paper))
     dispatch(paperAction.addPaper(buildPaper(paper, playerSelectors.answers(getState()))))
+
     // We will decide here if we show the correction now or not and where we redirect the user
-
-    switch (playerSelectors.showCorrectionAt(getState())) {
-      case 'validation': {
-        dispatch(paperAction.setCurrentPaper(paper.id))
-        navigate('papers/' + paper.id)
-        break
-      }
-      case 'date': {
-        const correctionDate = moment(playerSelectors.correctionDate(getState()))
-        const today = moment()
-        const showPaper = today.diff(correctionDate, 'days') >= 0
-
-        if (showPaper) {
+    if (playerSelectors.hasEndPage(getState())) {
+      // Show the end page
+      navigate('play/end')
+    } else {
+      switch (playerSelectors.showCorrectionAt(getState())) {
+        case 'validation': {
           dispatch(paperAction.setCurrentPaper(paper.id))
           navigate('papers/' + paper.id)
-        } else {
-          navigate('overview')
+          break
         }
+        case 'date': {
+          const correctionDate = moment(playerSelectors.correctionDate(getState()))
+          const today = moment()
+          const showPaper = today.diff(correctionDate, 'days') >= 0
 
-        break
+          if (showPaper) {
+            dispatch(paperAction.setCurrentPaper(paper.id))
+            navigate('papers/' + paper.id)
+          } else {
+            navigate('overview')
+          }
+
+          break
+        }
+        default: navigate('overview')
       }
-      default: navigate('overview')
     }
   }
 }

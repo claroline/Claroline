@@ -3,7 +3,7 @@ import {actions} from './actions'
 import {actions as paperActions} from './papers/actions'
 import {actions as playerActions} from './player/actions'
 import {actions as correctionActions} from './correction/actions'
-import {VIEW_EDITOR, VIEW_OVERVIEW} from './enums'
+import {VIEW_EDITOR, VIEW_OVERVIEW, VIEW_ATTEMPT_END} from './enums'
 
 let router = null
 
@@ -18,6 +18,7 @@ export function makeRouter(dispatch) {
       'correction/questions/:id': id => dispatch(correctionActions.displayQuestionAnswers(id)),
       'test': () => dispatch(playerActions.play(null, true)),
       'play': () => dispatch(playerActions.play(null, false)),
+      'play/end': () => dispatch(actions.updateViewMode(VIEW_ATTEMPT_END)),
       '': () => dispatch(actions.updateViewMode(VIEW_OVERVIEW, false)),
       '.*': () => dispatch(actions.updateViewMode(VIEW_OVERVIEW))
     }

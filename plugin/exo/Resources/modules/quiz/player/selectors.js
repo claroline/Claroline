@@ -9,6 +9,7 @@ const showFeedback = (state) => state.quiz.parameters.showFeedback
 const feedbackEnabled = state => state.currentStep.feedbackEnabled
 const showCorrectionAt = state => state.quiz.parameters.showCorrectionAt
 const correctionDate = state => state.quiz.parameters.correctionDate
+const hasEndPage = state => state.quiz.parameters.showEndPage
 
 const steps = createSelector(
   paper,
@@ -125,5 +126,6 @@ export const select = {
   currentStepMaxAttempts,
   currentStepSend,
   showCorrectionAt,
+  hasEndPage,
   correctionDate
 }

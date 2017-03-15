@@ -11,59 +11,68 @@ import {select} from './../selectors'
 import {actions as playerActions} from './../actions'
 
 import {ItemPlayer} from './item-player.jsx'
+import {ItemFeedback} from './item-feedback.jsx'
 import {ContentItemPlayer} from './content-item-player.jsx'
 import {PlayerNav} from './nav-bar.jsx'
 
-const Player = props => {
-  return(
-    <div className="quiz-player">
-      <h2 className="step-title">
-        {props.step.title ? props.step.title : tex('step') + ' ' + props.number}
-      </h2>
+const Player = props =>
+  <div className="quiz-player">
+    <h2 className="step-title">
+      {props.step.title ? props.step.title : tex('step') + ' ' + props.number}
+    </h2>
 
-      {props.step.description &&
-        <div className="step-description" dangerouslySetInnerHTML={{ __html: props.step.description }}></div>
-      }
+    {props.step.description &&
+      <div className="step-description" dangerouslySetInnerHTML={{ __html: props.step.description }}></div>
+    }
 
-      {props.items.map((item) => (
-        <Panel
-          key={item.id}
-        >
-          {isQuestionType(item.type) ?
-            <ItemPlayer
-              item={item}
-              showHint={(questionId, hint) => props.showHint(props.quizId, props.paper.id, questionId, hint)}
-              usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
-            >
-              {React.createElement(getDefinition(item.type)[props.feedbackEnabled ? 'feedback': 'player'], {
-                item: item,
-                answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined,
-                onChange: (answerData) => props.updateAnswer(item.id, answerData)
-              })}
-            </ItemPlayer> :
-            <ContentItemPlayer item={item}>
-              {React.createElement(getContentDefinition(item.type)['player'], {item: item})}
-            </ContentItemPlayer>
-          }
-        </Panel>
-      ))}
+    {props.items.map((item) => (
+      <Panel
+        key={item.id}
+      >
+        {!isQuestionType(item.type) ?
+          <ContentItemPlayer item={item}>
+            {React.createElement(getContentDefinition(item.type)['player'], {item: item})}
+          </ContentItemPlayer>
+          : (!props.feedbackEnabled ?
+          <ItemPlayer
+            item={item}
+            showHint={(questionId, hint) => props.showHint(props.quizId, props.paper.id, questionId, hint)}
+            usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+          >
+            {React.createElement(getDefinition(item.type).player, {
+              item: item,
+              answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined,
+              onChange: (answerData) => props.updateAnswer(item.id, answerData)
+            })}
+          </ItemPlayer>
+          :
+          <ItemFeedback
+            item={item}
+            usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+          >
+            {React.createElement(getDefinition(item.type).feedback, {
+              item: item,
+              answer: props.answers[item.id] && props.answers[item.id].data ? props.answers[item.id].data : undefined
+            })}
+          </ItemFeedback>
+        )}
+      </Panel>
+    ))}
 
-      <PlayerNav
-        previous={props.previous}
-        next={props.next}
-        step={props.step}
-        showFeedback={props.showFeedback}
-        feedbackEnabled={props.feedbackEnabled}
-        navigateTo={(step) => props.navigateTo(props.quizId, props.paper.id, step, props.answers, false)}
-        navigateToAndValidate={(step) => props.navigateTo(props.quizId, props.paper.id, step, props.answers, props.currentStepSend)}
-        openFeedbackAndValidate={(step) => props.navigateTo(props.quizId, props.paper.id, step, props.answers, props.currentStepSend, true)}
-        submit={() => props.submit(props.quizId, props.paper.id, props.answers)}
-        finish={() => props.finish(props.quizId, props.paper, props.answers, props.showFeedback)}
-        currentStepSend={props.currentStepSend}
-      />
-    </div>
-  )
-}
+    <PlayerNav
+      previous={props.previous}
+      next={props.next}
+      step={props.step}
+      showFeedback={props.showFeedback}
+      feedbackEnabled={props.feedbackEnabled}
+      navigateTo={(step) => props.navigateTo(props.quizId, props.paper.id, step, props.answers, false)}
+      navigateToAndValidate={(step) => props.navigateTo(props.quizId, props.paper.id, step, props.answers, props.currentStepSend)}
+      openFeedbackAndValidate={(step) => props.navigateTo(props.quizId, props.paper.id, step, props.answers, props.currentStepSend, true)}
+      submit={() => props.submit(props.quizId, props.paper.id, props.answers)}
+      finish={() => props.finish(props.quizId, props.paper, props.answers, props.showFeedback)}
+      currentStepSend={props.currentStepSend}
+    />
+  </div>
 
 Player.propTypes = {
   quizId: T.string.isRequired,

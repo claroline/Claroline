@@ -11,7 +11,6 @@
     </ul>
 {% endmacro %}
 
-
 {% macro flashBox() %}
     {% import _self as self %}
     {% set flashBag = app.session.getFlashBag() %}
@@ -62,7 +61,6 @@
     {% import _self as self %}
 
     {% set myDesktop = [{
-            'icon': 'fa fa-home',
             'name': 'desktop'|trans({}, 'platform'),
             'href': path('claro_desktop_open')
         }]
@@ -79,7 +77,6 @@
         {% set workspaceElements =
             [
                 {
-                    'icon': 'fa fa-book',
                     'name': 'workspaces'|trans({}, 'platform'),
                     'href': path('claro_workspace_list')
                 },
@@ -93,7 +90,6 @@
         {% set workspaceElements =
             [
                 {
-                    'icon': 'fa fa-book',
                     'name': 'my_workspaces'|trans({}, 'platform'),
                     'href': path('claro_workspace_by_user')
                 },
@@ -140,24 +136,4 @@
             <span class="input-group-addon">{{ 'line_per_page'|trans({}, 'platform') }}</span>
         {% endif %}
     </div>
-{% endmacro %}
-
-{% macro getTheme(config) %}
-    {% spaceless %}
-        {% if config.getParameter('theme') is defined and asset_exists('themes/' ~ config.getParameter('theme') ~ '/bootstrap.css') %}
-            {# from theme #}
-            {% set themeCSS = getAssetPath() ~ '/themes/' ~ config.getParameter('theme') ~ '/bootstrap.css' %}
-        {% else %}
-            {# default #}
-            {% set themeCSS = getAssetPath() ~ '/themes/claroline/bootstrap.css' %}
-        {% endif %}
-
-        {{ themeCSS ~ '?commit=' ~ get_current_distribution_commit() }}
-    {% endspaceless %}
-{% endmacro %}
-
-{% macro getDefaultTheme() %}
-    {% spaceless %}
-        {{ getAssetPath() ~ '/themes/claroline/bootstrap.css' }}
-    {% endspaceless %}
 {% endmacro %}

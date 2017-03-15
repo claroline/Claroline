@@ -2,8 +2,10 @@
 
 {% set httpCode = 404 %}
 
-{% block title %}{{ parent() ~ ' - ' ~ '404' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}
+    {{ '404'|trans({}, 'platform') | striptags | raw }}
+{% endblock %}
 
 {% block message %}
-    {{ '404' | trans({}, 'platform') }}
+    {{ '404'|trans({}, 'platform') }}
 {% endblock %}

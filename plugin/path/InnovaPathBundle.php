@@ -21,7 +21,7 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
     {
         $config = new ConfigurationBuilder();
 
-        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'innova_path');
+        return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml');
     }
 
     public function getAdditionalInstaller()

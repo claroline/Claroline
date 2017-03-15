@@ -1,0 +1,69 @@
+.choice-player,
+.choice-editor,
+.choice-feedback,
+.choice-paper {
+  .choice-item {
+    display: flex;
+
+    .choice-item-tick {
+      flex-shrink: 0;
+      align-self: flex-start; // make sure tick is always in the top left corner
+      margin-top: 4px; // same as checkboxes/radios
+      margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    .choice-item-content {
+      flex: 1;
+
+      > p { // remove margin on tinyMCE container
+        margin-bottom: 0;
+      }
+    }
+
+    .choice-item-feedback {
+      margin-left: floor(@grid-gutter-width / 2);
+    }
+  }
+}
+
+.choice-editor {
+  .choice-items {
+    ul {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+    }
+
+    .footer {
+      text-align: center;
+    }
+  }
+
+  .choice-item {
+    .text-fields {
+      flex: 1;
+      margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    .choice-score {
+      width: 60px;
+      margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    .right-controls {
+      display: flex;
+      align-items: flex-start;
+    }
+  }
+}
+
+.choice-player {
+  .choice-item {
+    cursor: pointer;
+
+    &:hover:not(.selected-answer) {
+      background: darken(@answer-item-bg, 10%);
+      border-color: darken(@answer-item-border, 10%);
+    }
+  }
+}

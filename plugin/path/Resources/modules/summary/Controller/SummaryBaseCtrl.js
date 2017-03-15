@@ -26,14 +26,16 @@ export default class SummaryBaseCtrl {
     if (angular.isObject(path)) {
       // Set the structure of the path
       this.structure = path.steps
-    }
-  }
 
-  /**
-   * Close Summary
-   */
-  close() {
-    this.SummaryService.setOpened(false)
+      // Check if summary is displayed by default or not
+      if (!path.summaryDisplayed) {
+        this.SummaryService.setOpened(false)
+        this.SummaryService.setPinned(false)
+      } else {
+        this.SummaryService.setOpened(true)
+        this.SummaryService.setPinned(true)
+      }
+    }
   }
 
   toggleOpened() {
@@ -42,9 +44,5 @@ export default class SummaryBaseCtrl {
 
   togglePinned() {
     this.SummaryService.togglePinned()
-  }
-
-  getPsPushClass() {
-    return this.state.pinned ? 'path-summary-opened' : ''
   }
 }

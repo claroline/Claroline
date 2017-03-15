@@ -12,18 +12,20 @@
         ])
     }}
 {% endblock %}
-{% block section_content %}
+
+{% block content %}
     <div id="data-attributes" data-max-post-size="{{ maxPostSize }}"></div>
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'resources' | trans({}, 'platform') }}<span></span></h3>
+    <div class="page-header">
+        <h1>{{ 'resources' | trans({}, 'platform') }}<span></span></h1>
     </div>
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.createFullManager({
-                "parentElement": $('div.section-content .panel'),
+                "parentElement": $('#wrap > .panel'),
                 "breadcrumbElement": $('ul.breadcrumb'),
                 "isWorkspace": false,
                 "webPath": "{{ getAssetPath() }}",
@@ -69,9 +71,9 @@
             });
         });
     </script>
-    <script type="text/javascript">
+    <script>
         var FileAPI = { debug: false, pingUrl: false }
     </script>
-    <script type="text/javascript" src='{{ asset('packages/fileapi/dist/FileAPI.html5.min.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/resource/dragndrop.js') }}'></script>
+    <script src='{{ asset('packages/fileapi/dist/FileAPI.html5.min.js') }}'></script>
+    <script src='{{ asset('bundles/clarolinecore/js/resource/dragndrop.js') }}'></script>
 {% endblock %}

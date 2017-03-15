@@ -1,0 +1,91 @@
+/*
+ * Quiz plugin vars.
+ */
+
+
+// Claroline & bootstrap variables
+@import "../../../../main/core/Resources/less/themes/default/variables";
+
+
+// -
+// Base & utilities
+// ---
+@quiz-container-width: 820px;
+
+
+// -
+// Summary
+// ---
+@quiz-summary-width:             130px;
+
+@quiz-summary-font:              @summary-font;
+@quiz-summary-padding:           @summary-padding;
+@quiz-summary-bg:                @summary-bg;
+@quiz-summary-color:             @summary-color;
+@quiz-summary-box-shadow-v:      @summary-box-shadow-v;
+@quiz-summary-box-shadow-h:      @summary-box-shadow-h;
+
+// Links
+@quiz-summary-link-bg:           @summary-link-bg;
+@quiz-summary-link-color:        @summary-link-color;
+@quiz-summary-link-hover-bg:     @summary-link-hover-bg;
+@quiz-summary-link-hover-color:  @summary-link-hover-color;
+@quiz-summary-link-active-bg:    @summary-link-active-bg;
+@quiz-summary-link-active-color: @summary-link-active-color;
+
+
+// -
+// Score
+// ---
+@score-border-radius:    @border-radius-base;
+@score-bg:               @brand-secondary;
+@score-color:            white;
+@score-border:           none;
+@score-font-size:        @font-size-base;
+@score-padding-v:        5px;
+@score-padding-h:        10px;
+@score-margin:           -@panel-body-padding -@panel-body-padding @panel-body-padding @panel-body-padding; // only applied in paper, not in list
+
+// small box variant
+@score-border-radius-sm: @border-radius-small;
+@score-font-size-sm:     @font-size-small;
+@score-padding-v-sm:     3px;
+@score-padding-h-sm:     6px;
+
+@item-content-separator-width: 100%;
+
+
+// -
+// Answers
+// ---
+@answer-item-bg:            @gray-lighter;
+@answer-item-border:        @answer-item-bg;
+@answer-item-border-radius: @border-radius-base;
+@answer-item-padding:       10px;
+@answer-item-margin-bottom: 10px;
+@answer-item-box-shadow:    none;
+
+// highlight expected answers in editor
+@expected-answer-color:     inherit; // do not change text color in editor for readability
+@expected-answer-border:    @state-success-border;
+@expected-answer-bg:        @state-success-bg;
+
+// highlight unexpected answers in editor
+@unexpected-answer-color:   inherit; // do not change text color in editor for readability
+@unexpected-answer-border:  @state-danger-border;
+@unexpected-answer-bg:      @state-danger-bg;
+
+// highlight correct answers given by the user (in feedback / paper)
+@correct-answer-color:      @state-success-text;
+@correct-answer-border:     @expected-answer-border;
+@correct-answer-bg:         @expected-answer-bg;
+
+// highlight incorrect answers given by the user (in feedback / paper)
+@incorrect-answer-color:    @state-danger-text;
+@incorrect-answer-border:   @unexpected-answer-border;
+@incorrect-answer-bg:       @unexpected-answer-bg;
+
+// highlight user selected answer (also used to show expected answer in papers)
+@selected-answer-color:     @state-info-text;
+@selected-answer-border:    @state-info-border;
+@selected-answer-bg:        @state-info-bg;

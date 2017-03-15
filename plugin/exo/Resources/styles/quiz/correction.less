@@ -1,0 +1,38 @@
+/* QUESTIONS LIST ROOT CONTAINER */
+.questions-list {
+  max-width: @quiz-container-width;
+  margin: 0 auto;
+  width: 100%; /* for IE11 : can not apply auto margin with max-width */
+}
+
+/* ANSWERS LIST ROOT CONTAINER */
+.answers-list {
+  max-width: @quiz-container-width;
+  margin: 0 auto;
+
+  .answer-row {
+    display: flex;
+
+    .answer-panel {
+      width: 100%;
+    }
+
+    .score-controls {
+      display: flex;
+      align-self: flex-end;
+      align-items: flex-start;
+      padding-bottom: 6px;
+
+      .score-input {
+        width: 110px;
+        margin-right: 8px;
+        margin-left: 8px;
+      }
+    }
+  }
+
+  .row {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

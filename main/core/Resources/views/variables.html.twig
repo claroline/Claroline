@@ -1,0 +1,34 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{# Makes some server vars available to client #}
+
+<div id="sf-environement" data-env="{{ app.environment }}"></div>
+<div id="homePath">{{ path("claro_index") }}</div>
+
+{% if config.getParameter('ssl_enabled') or app.request.isSecure() %}
+    {% set protocol = 'https' %}
+{% else %}
+    {% set protocol = 'http' %}
+{% endif %}
+
+{% if config.getParameter('domain_name') %}
+    {% set host = config.getParameter('domain_name') %}
+{% else %}
+    {% set host = app.request.headers.get('host') %}
+{% endif %}
+
+{% set homeAsset = protocol ~ '://' ~ host ~ app.request.getBasePath() ~ '/' %}
+
+<div id="platform-configuration" data-enable-opengraph="{{ config.getParameter('enable_opengraph') }}"></div>
+<div id="homeAsset">{{ homeAsset }}</div>
+<div id="baseAsset">{{ asset('') }}</div>
+<div id="homeTheme">{{ themeAsset('bootstrap.css') }}</div>
+<div id="homeLocale">{% spaceless %}
+    {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
+        {{ app.request.locale }}
+    {% elseif asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ "_" ~ app.request.locale | upper ~ ".js") %}
+        {{ app.request.locale ~ '_' ~ app.request.locale | upper }}
+    {% else %}
+        en
+    {% endif %}
+{% endspaceless %}</div>

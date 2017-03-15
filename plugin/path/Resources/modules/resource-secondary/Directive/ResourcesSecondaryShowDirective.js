@@ -13,8 +13,7 @@ export default class ResourcesSecondaryShowDirective {
     this.template = template
     this.scope = {
       resources : '=', // Resources of the Step
-      inherited : '=', // Inherited resources of the step
-      excluded  : '='  // Inherited resources which are not available in the Step
+      inherited : '='  // Inherited resources of the step
     }
     this.bindToController = true
   }

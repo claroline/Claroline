@@ -5,5 +5,12 @@
       "bank": "bank/index",
       "docimology": "docimology/index"
     }
+  },
+
+  "styles": {
+    "entry": {
+      "quiz-resource": "main.less",
+      "question-bank-tool": "bank/main.less"
+    }
   }
 }

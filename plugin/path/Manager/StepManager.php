@@ -4,51 +4,59 @@ namespace Innova\PathBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
 use Innova\PathBundle\Manager\Condition\StepConditionManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
+/**
+ * @DI\Service("innova_path.manager.step")
+ */
 class StepManager
 {
     /**
-     * Current session.
-     *
-     * @var \Symfony\Component\HttpFoundation\Session\SessionInterface
+     * @var SessionInterface
      */
     protected $session;
 
     /**
-     * Translation manager.
-     *
-     * @var \Symfony\Component\Translation\TranslatorInterface
+     * @var TranslatorInterface
      */
     protected $translator;
 
     /**
-     * @var \Doctrine\Common\Persistence\ObjectManager
+     * @var ObjectManager
      */
     protected $om;
 
     /**
-     * Resource Manager.
-     *
-     * @var \Claroline\CoreBundle\Manager\ResourceManager
+     * @var ResourceManager
      */
     protected $resourceManager;
 
     /**
-     * Class constructor.
+     * StepManager constructor.
      *
-     * @param \Doctrine\Common\Persistence\ObjectManager                 $om
-     * @param \Symfony\Component\HttpFoundation\Session\SessionInterface $session
-     * @param \Symfony\Component\Translation\TranslatorInterface         $translator
-     * @param \Claroline\CoreBundle\Manager\ResourceManager              $resourceManager
-     * @param \Innova\PathBundle\Manager\Condition\StepConditionManager  $stepConditionManager
+     * @DI\InjectParams({
+     *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
+     *     "session"              = @DI\Inject("session"),
+     *     "translator"           = @DI\Inject("translator"),
+     *     "resourceManager"      = @DI\Inject("claroline.manager.resource_manager"),
+     *     "stepConditionManager" = @DI\Inject("innova_path.manager.condition")
+     * })
+     *
+     * @param ObjectManager        $om
+     * @param SessionInterface     $session
+     * @param TranslatorInterface  $translator
+     * @param ResourceManager      $resourceManager
+     * @param StepConditionManager $stepConditionManager
      */
     public function __construct(
         ObjectManager        $om,
@@ -69,23 +77,23 @@ class StepManager
      *
      * @param int $stepId
      *
-     * @return null|Step
+     * @return object|Step
      */
     public function get($stepId)
     {
-        return $this->om->getRepository('InnovaPathBundle:Step')->findOneById($stepId);
+        return $this->om->getRepository('InnovaPathBundle:Step')->find($stepId);
     }
 
     /**
      * Create a new step from JSON structure.
      *
-     * @param \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
-     * @param int                                 $level         Depth of the step in the path
-     * @param \Innova\PathBundle\Entity\Step      $parent        Parent step of the step
-     * @param int                                 $order         Order of the step relative to its siblings
-     * @param \stdClass                           $stepStructure Data about the step
+     * @param Path      $path          Parent path of the step
+     * @param int       $level         Depth of the step in the path
+     * @param Step      $parent        Parent step of the step
+     * @param int       $order         Order of the step relative to its siblings
+     * @param \stdClass $stepStructure Data about the step
      *
-     * @return \Innova\PathBundle\Entity\Step Edited step
+     * @return Step Edited step
      */
     public function create(Path $path, $level, Step $parent = null, $order, \stdClass $stepStructure)
     {
@@ -97,14 +105,14 @@ class StepManager
     /**
      * Update an existing step from JSON structure.
      *
-     * @param \Innova\PathBundle\Entity\Path\Path $path          Parent path of the step
-     * @param int                                 $level         Depth of the step in the path
-     * @param \Innova\PathBundle\Entity\Step      $parent        Parent step of the step
-     * @param int                                 $order         Order of the step relative to its siblings
-     * @param \stdClass                           $stepStructure Data about the step
-     * @param \Innova\PathBundle\Entity\Step      $step          Current step to edit
+     * @param Path      $path          Parent path of the step
+     * @param int       $level         Depth of the step in the path
+     * @param Step      $parent        Parent step of the step
+     * @param int       $order         Order of the step relative to its siblings
+     * @param \stdClass $stepStructure Data about the step
+     * @param Step      $step          Current step to edit
      *
-     * @return \Innova\PathBundle\Entity\Step Edited step
+     * @return Step Edited step
      */
     public function edit(Path $path, $level, Step $parent = null, $order, \stdClass $stepStructure, Step $step)
     {
@@ -161,10 +169,8 @@ class StepManager
     /**
      * Update or Create the Activity linked to the Step.
      *
-     * @param \Innova\PathBundle\Entity\Step $step
-     * @param \stdClass                      $stepStructure
-     *
-     * @return \Innova\PathBundle\Manager\PublishingManager
+     * @param Step      $step
+     * @param \stdClass $stepStructure
      *
      * @throws \LogicException
      */
@@ -175,7 +181,7 @@ class StepManager
         if (empty($activity)) {
             if (!empty($stepStructure->activityId)) {
                 // Load activity from DB
-                $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->findOneById($stepStructure->activityId);
+                $activity = $this->om->getRepository('ClarolineCoreBundle:Resource\Activity')->find($stepStructure->activityId);
                 if (empty($activity)) {
                     // Can't find Activity => create a new one
                     $newActivity = true;
@@ -203,7 +209,7 @@ class StepManager
 
         // Link resource if needed
         if (!empty($stepStructure->primaryResource) && !empty($stepStructure->primaryResource[0]) && !empty($stepStructure->primaryResource[0]->resourceId)) {
-            $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($stepStructure->primaryResource[0]->resourceId);
+            $resource = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find($stepStructure->primaryResource[0]->resourceId);
             if (!empty($resource)) {
                 $activity->setPrimaryResource($resource);
             } else {
@@ -221,7 +227,10 @@ class StepManager
             // It's a new Activity, so use Step parameters
             $activity->setParameters($step->getParameters());
 
-            $activityType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('activity');
+            /** @var ResourceType $activityType */
+            $activityType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneBy([
+                'name' => 'activity',
+            ]);
             $creator = $step->getPath()->getCreator();
             $workspace = $step->getWorkspace();
 
@@ -239,8 +248,6 @@ class StepManager
 
         // Store Activity in Step
         $step->setActivity($activity);
-
-        return $this;
     }
 
     /**
@@ -305,7 +312,8 @@ class StepManager
         if (!empty($stepStructure->resources)) {
             $i = 0;
             foreach ($stepStructure->resources as $index => $resource) {
-                $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findOneById($resource->resourceId);
+                /** @var ResourceNode $resourceNode */
+                $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find($resource->resourceId);
                 if (!empty($resourceNode)) {
                     $parameters->addSecondaryResource($resourceNode);
                     $publishedResources[] = $resourceNode;

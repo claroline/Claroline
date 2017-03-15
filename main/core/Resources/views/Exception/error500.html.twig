@@ -2,8 +2,10 @@
 
 {% set httpCode = 500 %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'internal_error' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}
+    {{ 'internal_error'|trans({}, 'platform') | striptags | raw }}
+{% endblock %}
 
 {% block message %}
-    {{'internal_error'|trans({}, 'platform')}}
+    {{ 'internal_error'|trans({}, 'platform') }}
 {% endblock %}

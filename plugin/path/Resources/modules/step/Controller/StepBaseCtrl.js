@@ -2,8 +2,14 @@
  * Step base controller
  */
 export default class StepBaseCtrl {
-  constructor(step, inheritedResources, PathService) {
+  constructor(step, inheritedResources, PathService, SummaryService) {
     this.pathService = PathService
+
+    /**
+     * Sate of the summary
+     * @type {boolean}
+     */
+    this.summaryState = SummaryService.getState()
 
     /**
      * Current step

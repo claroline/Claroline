@@ -1,5 +1,16 @@
 {% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+
+    {# Path Editor styles #}
+    {% stylesheets debug=false filter='less, cssmin' output='vendor/innovapath/wizards.css'
+        '@InnovaPathBundle/Resources/styles/wizards.less'
+    %}
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
+    {% endstylesheets %}
+{% endblock %}
+
 {% block content %}
     <div class="alert alert-success navbar navbar-default lockmsg">
         <div class="container-fluid">
@@ -7,17 +18,17 @@
         </div>
     </div>
     <div class="list-group-item">
-        <a class="btn btn-default" href="{{path('innova_path_editor_wizard', {'id':data.path.id}) }}">{{'path_back'|trans({}, 'innova_tools')}}</a>
-        <h1>{{ 'path_dashboard'|trans({}, 'innova_tools') }} : {{ data.path.resourceNode.name }}</h1>
+        <a class="btn btn-default" href="{{path('innova_path_editor_wizard', {'id':_resource.id}) }}">{{'path_back'|trans({}, 'innova_tools')}}</a>
+        <h1>{{ 'path_dashboard'|trans({}, 'innova_tools') }} : {{ _resource.resourceNode.name }}</h1>
 
-        {% if data.userdata is iterable %}
+        {% if userdata is iterable %}
             <div class="table-responsive">
                 <table class="table">
                     <thead>
                     <tr><th>{{ 'user'|trans({}, 'platform') }}</th><th>{{ 'progression'|trans({}, 'innova_tools') }}</th></tr>
                     </thead>
                     <tbody>
-                    {% for userprogressions in data.userdata %}
+                    {% for userprogressions in results %}
                     <tr class="userstepunlock">
                         <td class="username">{{ userprogressions.user.firstName ~ ' ' ~ userprogressions.user.lastName }}</td>
                         <td>
@@ -68,16 +79,4 @@
     <script type='text/javascript' src="{{ url('bazinga_jstranslation_js', {'domain':'path_wizards'}) }}"></script>
 
     <script type='text/javascript' src="{{ asset('bundles/innovapath/js/manageLock.js') }}"></script>
-{% endblock %}
-
-{% block stylesheets %}
-    {# Claroline CSS #}
-    {{ parent() }}
-
-    {# Path Editor styles #}
-    {% stylesheets debug=false filter='less, cssmin' output='vendor/innovapath/wizards.css'
-        '@InnovaPathBundle/Resources/less/wizards.less'
-    %}
-    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
 {% endblock %}

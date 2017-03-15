@@ -172,7 +172,7 @@ export default class PathService {
     const deferred = this.$q.defer()
 
     this.$http
-      .put(this.UrlGenerator('innova_path_publish', { id: this.path.id }))
+      .put(this.UrlGenerator('innova_path_publish_api', { id: this.path.id }))
 
       .success((response) => {
         if ('ERROR' === response.status) {

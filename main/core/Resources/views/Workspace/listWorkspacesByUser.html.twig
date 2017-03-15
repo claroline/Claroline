@@ -71,71 +71,71 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'my_workspaces'|trans({}, 'platform') }}</h3>
+    <div class="page-header">
+        <h1>{{ 'my_workspaces'|trans({}, 'platform') }}</h1>
     </div>
+
     {{ macros.flashBox() }}
 
-    <div class="panel-body">
-        <a href="{{ path('claro_manage_workspace_tag') }}" class="btn btn-default" role="button">
-            {{ 'classify_my_workspaces'|trans({}, 'platform') }}
-        </a>
-        <a href="{{ path('claro_list_workspaces_with_self_unregistration') }}" class="btn btn-default" role="button">
-            {{ 'unregister_from_a_workspace'|trans({}, 'platform') }}
-        </a>
+    <div class="page-buttons">
         {% if is_granted('ROLE_USER') %}
-            <a href="{{ path('claro_list_workspaces_with_self_registration') }}" class="btn btn-default" role="button">
+            <a href="{{ path('claro_list_workspaces_with_self_registration') }}" class="btn btn-primary">
                 {{ 'register_to_a_workspace'|trans({}, 'platform') }}
             </a>
         {% endif %}
-        <hr>
-        {% if workspaces is empty %}
-            {{ 'no_workspace' | trans({}, 'platform') }}
-        {% else %}
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <a  class="accordion-toggle"
-                        data-toggle="collapse"
-                        data-parent="#accordion-all"
-                        href="#collapse-all"
-                    >
-                        <i class="fa fa-align-justify"></i>
-                        {{ 'all_my_workspaces'|trans({}, 'platform') }}
-                        <i class="fa fa-chevron-down pull-right"></i>
-                    </a>
-                </div>
-                <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
-                    {% for workspace in workspaces %}
-                    {% set workspaceId = workspace.getId() %}
-                    {% if has_access_to_workspace(workspace.getId()) %}
-                        <a  class="list-group-item" class="row-workspace row-workspace-id-{{ workspaceId }}"
-                            href="{{ path('claro_workspace_open',
-                            {'workspaceId': workspaceId, 'toolName': 'home'}) }}"
-                            id="link-home-{{ workspaceId }}"
-                        >
-                            <i class="fa fa-book"></i>
-                            {{ workspace.getName() }}
-                            <span><small>({{ workspace.getCode() }})</small></span>
-                            <span class="favourite-workspace-btn pull-right" workspace-id="{{ workspaceId }}">
-                                <i class="favourite-workspace-icon-{{ workspaceId }}
-                                    {% if favourites[workspaceId] is defined %}
-                                        fa fa-star
-                                    {% else %}
-                                        fa fa-star-o
-                                    {% endif %}"
-                                   style="color:gold; font-size:175%"
-                               ></i>
-                            </span>
-                        </a>
-                    {% endif %}
-                    {% endfor %}
-                </div>
-            </div>
-        {% endif %}
-
-        {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, favourites) }}
+        <a href="{{ path('claro_list_workspaces_with_self_unregistration') }}" class="btn btn-default">
+            {{ 'unregister_from_a_workspace'|trans({}, 'platform') }}
+        </a>
+        <a href="{{ path('claro_manage_workspace_tag') }}" class="btn btn-default">
+            {{ 'classify_my_workspaces'|trans({}, 'platform') }}
+        </a>
     </div>
 
+    {% if workspaces is empty %}
+        <div class="list-empty">{{ 'no_workspace' | trans({}, 'platform') }}</div>
+    {% else %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <a  class="accordion-toggle"
+                    data-toggle="collapse"
+                    data-parent="#accordion-all"
+                    href="#collapse-all"
+                >
+                    <i class="fa fa-align-justify"></i>
+                    {{ 'all_my_workspaces'|trans({}, 'platform') }}
+                    <i class="fa fa-chevron-down pull-right"></i>
+                </a>
+            </div>
+            <div id="collapse-all" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
+                {% for workspace in workspaces %}
+                {% set workspaceId = workspace.getId() %}
+                {% if has_access_to_workspace(workspace.getId()) %}
+                    <a  class="list-group-item" class="row-workspace row-workspace-id-{{ workspaceId }}"
+                        href="{{ path('claro_workspace_open',
+                        {'workspaceId': workspaceId, 'toolName': 'home'}) }}"
+                        id="link-home-{{ workspaceId }}"
+                    >
+                        <i class="fa fa-book"></i>
+                        {{ workspace.getName() }}
+                        <span><small>({{ workspace.getCode() }})</small></span>
+                        <span class="favourite-workspace-btn pull-right" workspace-id="{{ workspaceId }}">
+                            <i class="favourite-workspace-icon-{{ workspaceId }}
+                                {% if favourites[workspaceId] is defined %}
+                                    fa fa-star
+                                {% else %}
+                                    fa fa-star-o
+                                {% endif %}"
+                               style="color:gold; font-size:175%"
+                           ></i>
+                        </span>
+                    </a>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {{ showTag(rootTags, tagWorkspaces, hierarchy, "0", displayable, favourites) }}
 {% endblock %}
 
 {% block javascripts %}

@@ -35,14 +35,13 @@ utils.split = (text, solutions, highlight = true) => {
       let regexFlag = 'g'
       if (!el.caseSensitive) regexFlag += 'i'
       const regex = new RegExp('(\\b' + el.word + '\\b)', regexFlag)
-      const classname = el.score > 0 ? 'word-success': 'word-danger'
-      const iconname = el.score > 0 ? 'fa fa-check': 'fa fa-times'
-      const replacer = `<strong><span class='${classname}'>$1&nbsp<i class='${iconname}'></i></span></strong>`
+      const icon = el.score > 0 ? 'fa fa-fw fa-check': 'fa fa-fw fa-times'
+      const replacer = `<strong><span class="${icon}"></span>$1</strong>`
       el.text = el.text.replace(regex, replacer)
     })
   }
 
-  //I want to rember the last element of the text so I add it aswell to the array
+  //I want to remember the last element of the text so I add it as well to the array
   split.push({
     word: '#endoftext#',
     position: null,

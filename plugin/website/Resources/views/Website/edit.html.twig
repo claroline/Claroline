@@ -1,9 +1,17 @@
-{% extends 'IcapWebsiteBundle::edit_layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
 {% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
 {% import 'IcapWebsiteBundle:Website:Macros/edit_macros.html.twig' as editMacros %}
 
+{% block layout %}
+    <div class="loading text-center" data-ng-if="!pageLoaded" >
+        {{ 'loading'|trans({},'icap_website') }}
+    </div>
+    {{ parent() }}
+{% endblock %}
+
 {% set optionTabs = {'structure':'fa-sitemap', 'general':'fa-th-large', 'menu':'fa-list', 'banner':'fa-angle-up', 'footer':'fa-angle-down'} %}
-{% block content %}
+{% block section_panel %}
     <uib-alert ng-repeat="alert in alerts" dismiss-on-timeout="{{'{{ alert.duration }}'}}" type="{{ '{{ alert.type}}' }}" close="alert.close($index)"><b>{{ '{{alert.title}}' }}</b> {{ '{{alert.content}}' }}</uib-alert>
     <div class="website-container">
         <div class="website-body" data-ng-controller="MainController as vm">

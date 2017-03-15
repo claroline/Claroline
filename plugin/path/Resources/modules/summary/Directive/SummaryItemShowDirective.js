@@ -1,4 +1,3 @@
-import angular from 'angular/index'
 
 import template from './../Partial/show-item.html'
 
@@ -11,7 +10,7 @@ export default class SummaryItemShowDirective {
       '$routeParams',
       'PathService',
       'UserProgressionService',
-      function($routeParams, PathService, UserProgressionService) {
+      function ($routeParams, PathService, UserProgressionService) {
         /**
          * Current displayed Step
          * @type {object}
@@ -24,16 +23,32 @@ export default class SummaryItemShowDirective {
 
         this.userProgression = UserProgressionService.getForStep(this.step)
         
-        this.goTo = function() {
+        this.goTo = function () {
           PathService.goTo(this.step)
         }
 
-        this.updateProgression = function(status) {
-          if (!angular.isObject(this.userProgression)) {
-            UserProgressionService.create(this.step, status)
-          } else {
-            UserProgressionService.update(this.step, status)
+        this.getProgressionText = function () {
+          let text = 'user_progression_step_unseen'
+
+          switch (this.userProgression.status) {
+            case 'seen':
+              text = 'user_progression_step_seen'
+              break
+
+            case 'to_do':
+              text = 'user_progression_step_to_do'
+              break
+
+            case 'to_review':
+              text = 'user_progression_step_to_review'
+              break
+
+            case 'done':
+              text = 'user_progression_step_done'
+              break
           }
+
+          return text
         }
       }
     ]

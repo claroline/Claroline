@@ -9,7 +9,7 @@ export const MessageModal = props =>
   <BaseModal {...props}>
     <Modal.Body>
       <Alert bsStyle={props.bsStyle}>
-        <span className={classes('fa',
+        <span className={classes('fa fa-fw',
           {'fa-info-circle': props.bsStyle === 'info'},
           {'fa-check-circle': props.bsStyle === 'success'},
           {'fa-warning': props.bsStyle === 'warning'},

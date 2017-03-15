@@ -39,15 +39,11 @@
 {% endblock %}
 
 {% block section_content %}
-
-    <div class="panel-heading">
-        <h3 class="panel-title">
-            {{ 'unregister_from_a_workspace'|trans({}, 'platform') }}
-        </h3>
+    <div class="page-header">
+        <h1>{{ 'unregister_from_a_workspace'|trans({}, 'platform') }}</h1>
     </div>
 
-    <div id="workspace-list-div" class="panel-body">
-
+    <div id="workspace-list-div">
         <div id="custom-flashbag-div" class="alert alert-danger hide">
             <a id="flashbag-close-button" class="close" href="#" aria-hidden="true">&times;</a>
             <div id="custom-flashbag-msg-div">
@@ -55,7 +51,7 @@
         </div>
 
         {% if workspaces is empty %}
-            {{ 'no_workspace' | trans({}, 'platform') }}
+            <div class="list-empty">{{ 'no_workspace' | trans({}, 'platform') }}</div>
         {% else %}
             {% if nbPages > 1 %}
                 <div>
@@ -86,8 +82,7 @@
         {% endif %}
     </div>
 
-    <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}">
-    </div>
+    <div id="twig-self-registration-user-id" data-user-id="{{ user.getId() }}"></div>
 
     <div id="confirm-unregistration-validation-box" class="modal fade" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
@@ -111,8 +106,5 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script
-        src='{{ asset('bundles/clarolinecore/js/workspace/self_unregistration.js') }}'
-        type="text/javascript">
-    </script>
+    <script src="{{ asset('bundles/clarolinecore/js/workspace/self_unregistration.js') }}"></script>
 {% endblock %}
