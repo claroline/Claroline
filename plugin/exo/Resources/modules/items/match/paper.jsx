@@ -288,7 +288,7 @@ export class MatchPaper extends Component
                           key={`solution-${solution.firstId}-${solution.secondId}`}
                           className={classes(
                             'answer-item',
-                            {'bg-info text-info' : solution.score > 0}
+                            {'selected-answer' : solution.score > 0}
                           )}
                         >
                           <div className="sets">

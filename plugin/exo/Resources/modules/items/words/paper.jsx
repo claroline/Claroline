@@ -16,7 +16,7 @@ const AnswerTable = (props) => {
           className={classes(
             'word-item answer-item',
             {
-              'bg-info text-info': solution.score > 0
+              'selected-answer': solution.score > 0
             }
         )}>
           <span className="word-label">{solution.text}</span>

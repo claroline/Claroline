@@ -90,6 +90,16 @@
     }
 }
 
+.selected-answer {
+    color: @selected-answer-color;
+    border: 1px solid @selected-answer-border;
+    background: @selected-answer-bg;
+
+    .feedback-btn {
+        color: @selected-answer-color;
+    }
+}
+
 .feedback-btn {
     padding: 0 !important; // important is needed to override bootstrap .btn
 }

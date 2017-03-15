@@ -1,3 +1,31 @@
+.choice-player,
+.choice-editor,
+.choice-feedback,
+.choice-paper {
+  .choice-item {
+    display: flex;
+
+    .choice-item-tick {
+      flex-shrink: 0;
+      align-self: flex-start; // make sure tick is always in the top left corner
+      margin-top: 4px; // same as checkboxes/radios
+      margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    .choice-item-content {
+      flex: 1;
+
+      > p { // remove margin on tinyMCE container
+        margin-bottom: 0;
+      }
+    }
+
+    .choice-item-feedback {
+      margin-left: floor(@grid-gutter-width / 2);
+    }
+  }
+}
+
 .choice-editor {
   .choice-items {
     ul {
@@ -33,34 +61,9 @@
   .choice-item {
     cursor: pointer;
 
-    &:hover {
-
+    &:hover:not(.selected-answer) {
+      background: darken(@answer-item-bg, 10%);
+      border-color: darken(@answer-item-border, 10%);
     }
-    &.selected {
-
-    }
-  }
-}
-
-.choice-item {
-  display: flex;
-
-  .choice-item-tick {
-    flex-shrink: 0;
-    align-self: flex-start; // make sure tick is always in the top left corner
-    margin-top: 4px; // same as checkboxes/radios
-    margin-right: floor(@grid-gutter-width / 2);
-  }
-
-  .choice-item-content {
-    flex: 1;
-
-    > p { // remove margin on tinyMCE container
-      margin-bottom: 0;
-    }
-  }
-
-  .choice-item-feedback {
-    margin-left: floor(@grid-gutter-width / 2);
   }
 }

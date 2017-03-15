@@ -63,7 +63,7 @@ export const ChoicePaper = props => {
               className={classes(
                 'answer-item choice-item',
                 {
-                  'bg-info text-info': solution.score > 0
+                  'selected-answer': solution.score > 0
                 }
               )}
             >

@@ -37,7 +37,7 @@ export class ChoicePlayer extends Component {
             key={choice.id}
             className={classes(
               'answer-item choice-item',
-              this.isChecked(choice.id, this.props.answer) ? 'selected' : null
+              this.isChecked(choice.id, this.props.answer) ? 'selected-answer' : null
             )}
           >
             <input

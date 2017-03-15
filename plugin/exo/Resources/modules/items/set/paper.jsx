@@ -99,7 +99,7 @@ export const SetPaper = props => {
                         <li key={`expected-association-${ass.itemId}-${ass.setId}`}>
                           <div className={classes(
                               'association',
-                              {'bg-info text-info': ass.score > 0}
+                              {'selected-answer': ass.score > 0}
                             )}>
                             <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(ass.itemId, props.item.items)}} />
                             <Feedback

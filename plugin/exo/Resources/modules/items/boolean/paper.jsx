@@ -7,7 +7,6 @@ import {utils} from './utils/utils'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 
 export const BooleanPaper = props => {
-
   return (
     <PaperTabs
       id={props.item.id}
@@ -16,16 +15,16 @@ export const BooleanPaper = props => {
           {props.item.solutions.map(solution =>
             <div key={solution.id} className="col-md-6">
               <div className={classes(
-                  'choice',
+                  'answer-item choice-item',
                   utils.getAnswerClass(solution, props.answer)
                 )}>
-                {props.answer !== '' && solution.id === props.answer &&
-                  <WarningIcon valid={solution.score > 0}/>
+                {solution.id === props.answer &&
+                  <WarningIcon className="pull-left" valid={solution.score > 0}/>
                 }
                 {props.item.choices.find(choice => choice.id === solution.id).data}
 
-                {props.answer !== '' && solution.id === props.answer &&
-                  <span>
+                {solution.id === props.answer &&
+                  <span className="pull-right">
                     <Feedback
                       id={`${solution.id}-feedback`}
                       feedback={solution.feedback}/>
@@ -42,8 +41,8 @@ export const BooleanPaper = props => {
           {props.item.solutions.map(solution =>
             <div key={solution.id} className="col-md-6">
               <div className={classes(
-                  'choice',
-                   solution.score > 0 ? 'text-info bg-info' : 'bg-choice'
+                  'answer-item choice-item',
+                   solution.score > 0 ? 'selected-answer' : null
                 )}>
                 {props.item.choices.find(choice => choice.id === solution.id).data}
                 <span>

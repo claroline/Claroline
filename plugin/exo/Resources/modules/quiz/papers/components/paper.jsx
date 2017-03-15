@@ -33,7 +33,7 @@ let Paper = props =>
 
               {React.createElement(
                 getDefinition(item.type).paper,
-                {item, answer: getAnswer(item.id, props.paper.answers), answerObject: getAnswerObject(item.id, props.paper.answers)}
+                {item, answer: getAnswer(item.id, props.paper.answers), feedback: getAnswerFeedback(item.id, props.paper.answers)}
               )}
 
               {item.feedback &&
@@ -70,8 +70,10 @@ function getAnswer(itemId, answers) {
   return answer && answer.data ? answer.data : undefined
 }
 
-function getAnswerObject(itemId, answers) {
-  return answers.find(answer => answer.questionId === itemId)
+function getAnswerFeedback(itemId, answers) {
+  const answer = answers.find(answer => answer.questionId === itemId)
+
+  return answer && answer.feedback ? answer.feedback : null
 }
 
 function getAnswerScore(itemId, answers) {
