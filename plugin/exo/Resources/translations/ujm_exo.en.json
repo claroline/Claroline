@@ -536,7 +536,7 @@
     "should_be_greater_or_equal_to_zero": "This value should be greater than or equal to 0.",
     "show": "Show",
     "show_additional_info": "Display additional information",
-    "show_feedback": "Show step's feedbacks",
+    "show_feedback": "Show feedbacks at the end",
     "show_end_page": "Display quiz end page",
     "show_feedback": "Show step's feedbacks",
     "show_instructions": "Show instructions",
