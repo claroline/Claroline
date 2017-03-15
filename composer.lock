@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "93b32e0dbc383b1dd9c91abf5ab2e10a",
-    "content-hash": "69f498c1bcce371cdd1e0a86a959eb17",
+    "hash": "4cce2d4c0a353d39e8ef223c4f990bdd",
+    "content-hash": "5894f52f8cc00e264483458b90524d12",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -116,16 +116,16 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "dev-master",
+            "version": "dev-themes-update",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "9c7067afb23d950254dcd3eee23dea003cf6d3f6"
+                "reference": "beb56b0253ab96fbd827dbb4ab2595e407865d34"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/9c7067afb23d950254dcd3eee23dea003cf6d3f6",
-                "reference": "9c7067afb23d950254dcd3eee23dea003cf6d3f6",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/beb56b0253ab96fbd827dbb4ab2595e407865d34",
+                "reference": "beb56b0253ab96fbd827dbb4ab2595e407865d34",
                 "shasum": ""
             },
             "require": {
@@ -377,7 +377,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-03-14 10:40:09"
+            "time": "2017-03-15 08:36:43"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -1888,7 +1888,7 @@
                     "homepage": "https://github.com/friendsofsymfony/FOSJsRoutingBundle/contributors"
                 },
                 {
-                    "name": "William Durand",
+                    "name": "William DURAND",
                     "email": "william.durand1@gmail.com"
                 }
             ],
@@ -5930,7 +5930,7 @@
             ],
             "authors": [
                 {
-                    "name": "William DURAND",
+                    "name": "William Durand",
                     "email": "william.durand1@gmail.com"
                 }
             ],
