@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "9c7067afb23d950254dcd3eee23dea003cf6d3f6"
+                "reference": "ea58dd75bc174173a3b901562e9bedc8353c36ae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/9c7067afb23d950254dcd3eee23dea003cf6d3f6",
-                "reference": "9c7067afb23d950254dcd3eee23dea003cf6d3f6",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/ea58dd75bc174173a3b901562e9bedc8353c36ae",
+                "reference": "ea58dd75bc174173a3b901562e9bedc8353c36ae",
                 "shasum": ""
             },
             "require": {
@@ -377,7 +377,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-03-14 10:40:09"
+            "time": "2017-03-15 15:26:09"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -5932,7 +5932,7 @@
             ],
             "authors": [
                 {
-                    "name": "William Durand",
+                    "name": "William DURAND",
                     "email": "william.durand1@gmail.com"
                 }
             ],
