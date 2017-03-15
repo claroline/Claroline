@@ -12,10 +12,10 @@ export const PaperRow = props =>
       <td>{props.user.name}</td>
     }
     <td>{props.number}</td>
-    <td className="text-right">
+    <td>
       <small className="text-muted">{props.startDate}</small>
     </td>
-    <td className="text-right">
+    <td>
       <small className="text-muted">{props.endDate || '-'}</small>
     </td>
     <td className="text-center">
