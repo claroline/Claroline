@@ -17,7 +17,7 @@ export default class ResourcesPrimaryEditDirective {
     }
     this.bindToController = true
     this.link = function (scope, element) {
-      $(window).on('message',function(e) {
+      $(window).on('message', function (e) {
         if (typeof e.originalEvent.data === 'string' && e.originalEvent.data.indexOf('documentHeight:') > -1) {
             // Split string from identifier
           const height = e.originalEvent.data.split('documentHeight:')[1]
