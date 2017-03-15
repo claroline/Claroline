@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "2c46b0feb54b784a231f99416607a85e3174d8cf"
+                "reference": "9c7067afb23d950254dcd3eee23dea003cf6d3f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/2c46b0feb54b784a231f99416607a85e3174d8cf",
-                "reference": "2c46b0feb54b784a231f99416607a85e3174d8cf",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/9c7067afb23d950254dcd3eee23dea003cf6d3f6",
+                "reference": "9c7067afb23d950254dcd3eee23dea003cf6d3f6",
                 "shasum": ""
             },
             "require": {
@@ -377,7 +377,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-03-12 14:25:36"
+            "time": "2017-03-14 10:40:09"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3559,17 +3559,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "7c3e13a0caf545b6b5dd31258452f47c4a022bb0"
+                "reference": "0a3bbcce49f8cf1ffa38b3d4965eef113124756b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/7c3e13a0caf545b6b5dd31258452f47c4a022bb0",
-                "reference": "7c3e13a0caf545b6b5dd31258452f47c4a022bb0",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/0a3bbcce49f8cf1ffa38b3d4965eef113124756b",
+                "reference": "0a3bbcce49f8cf1ffa38b3d4965eef113124756b",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-03-10 20:13:36"
+            "time": "2017-03-14 09:34:07"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -4006,16 +4006,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.22.0",
+            "version": "1.22.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "bad29cb8d18ab0315e6c477751418a82c850d558"
+                "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/bad29cb8d18ab0315e6c477751418a82c850d558",
-                "reference": "bad29cb8d18ab0315e6c477751418a82c850d558",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1e044bc4b34e91743943479f1be7a1d5eb93add0",
+                "reference": "1e044bc4b34e91743943479f1be7a1d5eb93add0",
                 "shasum": ""
             },
             "require": {
@@ -4080,7 +4080,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2016-11-26 00:15:39"
+            "time": "2017-03-13 07:08:03"
         },
         {
             "name": "mrclay/minify",
@@ -4301,16 +4301,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.4.1",
+            "version": "v1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774"
+                "reference": "965cdeb01fdcab7653253aa81d40441d261f1e66"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c7e26a21ba357863de030f0b9e701c7d04593774",
-                "reference": "c7e26a21ba357863de030f0b9e701c7d04593774",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/965cdeb01fdcab7653253aa81d40441d261f1e66",
+                "reference": "965cdeb01fdcab7653253aa81d40441d261f1e66",
                 "shasum": ""
             },
             "require": {
@@ -4345,7 +4345,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-03-18 20:34:03"
+            "time": "2017-03-13 16:22:52"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -7708,12 +7708,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "10ba9296665d42b56470f87b157781e21a768338"
+                "reference": "fc1b0c54b61a30fd15d6de04f6e01c01d0aa4a7b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/10ba9296665d42b56470f87b157781e21a768338",
-                "reference": "10ba9296665d42b56470f87b157781e21a768338",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/fc1b0c54b61a30fd15d6de04f6e01c01d0aa4a7b",
+                "reference": "fc1b0c54b61a30fd15d6de04f6e01c01d0aa4a7b",
                 "shasum": ""
             },
             "require": {
@@ -7762,7 +7762,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-03-02 12:54:15"
+            "time": "2017-03-13 11:11:00"
         },
         {
             "name": "webmozart/assert",
