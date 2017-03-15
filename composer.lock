@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9ffab147504423a1a24ffba5bd68bb8b",
-    "content-hash": "4739d7c0ea82a409eedda0aecb42b9dc",
+    "hash": "819fba76412b069e2f8f93e690012255",
+    "content-hash": "bb54cd38e59bd18976607e3ce574d9dd",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -116,16 +116,16 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "dev-master",
+            "version": "dev-themes-update",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "9c7067afb23d950254dcd3eee23dea003cf6d3f6"
+                "reference": "a69f5322075a13b45e9cdb3aadcfa763241d7e8a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/9c7067afb23d950254dcd3eee23dea003cf6d3f6",
-                "reference": "9c7067afb23d950254dcd3eee23dea003cf6d3f6",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a69f5322075a13b45e9cdb3aadcfa763241d7e8a",
+                "reference": "a69f5322075a13b45e9cdb3aadcfa763241d7e8a",
                 "shasum": ""
             },
             "require": {
@@ -377,7 +377,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-03-14 10:40:09"
+            "time": "2017-03-15 11:59:32"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -1888,7 +1888,7 @@
                     "homepage": "https://github.com/friendsofsymfony/FOSJsRoutingBundle/contributors"
                 },
                 {
-                    "name": "William Durand",
+                    "name": "William DURAND",
                     "email": "william.durand1@gmail.com"
                 }
             ],
