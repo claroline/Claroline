@@ -48,6 +48,8 @@
     "karma-mocha": "^1.0.1",
     "karma-webpack": "^1.7.0",
     "less": "^2.5.3",
+    "lesshint": "^3.1.0",
+    "autolesshint": "^0.1.4",
     "mocha": "^2.5.3",
     "modernizr-loader": "0.0.5",
     "postcss-cli": "^2.5.0",
