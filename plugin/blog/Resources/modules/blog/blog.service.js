@@ -336,6 +336,22 @@ export default class BlogService {
     )
   }
 
+  deleteComment(comment, post) {
+    const url = _url.get(this)('icap_blog_api_delete_blog_post_comment', {
+      'blog': this.id,
+      'post': post.id,
+      'comment': comment.id
+    })
+
+    let Comment = _$resource.get(this)(url)
+    let commentToDelete = new Comment(comment)
+    return commentToDelete.$delete(
+      success => {
+        post.comments = success.comments
+      }
+    )
+  }
+
   setCurrentPost(post) {
     this.currentPost = post
     this.currentPost.publication_date = post.publication_date ? new Date(post.publication_date) : null

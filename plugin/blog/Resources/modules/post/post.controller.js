@@ -1,5 +1,6 @@
 import angular from 'angular/index'
 import confirmDeletionTemplate from '../post/confirmDeletion.partial.html'
+import confirmCommentDeletionTemplate from '../post/confirmCommentDeletion.partial.html'
 
 let _url = new WeakMap()
 let _$routeParams = new WeakMap()
@@ -65,9 +66,10 @@ export default class PostController {
         )
     }
     
-    // Create a new post on controller init with empty tag array
+    // Create a new post on controller init with empty tag array and default publication date
     this.blog.newPost = {
-      tags: []
+      tags: [],
+      publication_date: new Date()
     }
   }
   
@@ -294,6 +296,33 @@ export default class PostController {
         () => {
           this.disableButtons = false
           this.cancelEditComment(comment)
+        }
+      )
+  }
+
+  confirmDeleteComment(comment) {
+    this.commentToDelete = comment
+    this._modal(confirmCommentDeletionTemplate)
+  }
+
+  deleteComment() {
+    // Disable buttons
+    this.disableButtons = true
+
+    this.blog.deleteComment(this.commentToDelete, this.blog.currentPost)
+      .then(
+        () => {
+          this._setMessage('success', 'icap_blog_comment_delete_success')
+        },
+        () => {
+          this._setMessage('danger', 'icap_blog_comment_delete_error')
+        }
+      )
+      .finally(
+        () => {
+          this._cancelModal()
+          // Re-enable buttons
+          this.disableButtons = false
         }
       )
   }
