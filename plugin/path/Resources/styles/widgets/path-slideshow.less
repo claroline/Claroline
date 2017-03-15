@@ -12,7 +12,7 @@
     // todo : find a better way to do it
     .path-progression {
         margin-right: 0;
-        position: absolute;
+        position: absolute !important; // important to override the gauge position: relative
         right: @widget-card-content-padding;
         top: @widget-card-content-padding;
         &:after {
