@@ -1,0 +1,41 @@
+.table > tbody > tr.selected {
+  background-color: @state-info-bg;
+}
+
+.table-cell-tooltip {
+    > * {
+        display: inline-block;
+        cursor: help;
+    }
+}
+
+// todo : this should be in the core. But for now it will break too many things
+.table {
+    > thead > tr > th {
+        position: relative; // for positioning sorting indicator
+        border-bottom: none !important; // important will no longer be required when in the theme
+    }
+
+    > tbody {
+        background: @panel-bg;
+        box-shadow: @box-shadow-base;
+        border: 1px solid @table-border-color;
+    }
+}
+
+.table-actions {
+    .btn {
+        padding: 2px;
+        color: @gray-light;
+
+        &:hover,
+        &.hover {
+            color: @gray;
+        }
+        &:focus,
+        &.focus,
+        &.active {
+            color: @gray-dark;
+        }
+    }
+}

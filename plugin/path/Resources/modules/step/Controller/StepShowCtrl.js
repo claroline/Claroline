@@ -7,8 +7,8 @@ import angular from 'angular/index'
 import StepBaseCtrl from './StepBaseCtrl'
 
 export default class StepShowCtrl extends StepBaseCtrl {
-  constructor(step, inheritedResources, PathService, authorization, $sce, UserProgressionService) {
-    super(step, inheritedResources, PathService)
+  constructor(step, inheritedResources, PathService, SummaryService, authorization, $sce, UserProgressionService) {
+    super(step, inheritedResources, PathService, SummaryService)
 
     this.userProgressionService = UserProgressionService
 

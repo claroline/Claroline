@@ -1,0 +1,67 @@
+.page-container {
+    display: flex; // this permits to have the .page component to fill the available height
+}
+
+.page {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%; // fill parent
+    max-width: 100%;
+
+    .page-content {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
+    }
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    margin-top: 0;
+    margin-bottom: floor(@grid-gutter-width / 2);
+    padding: @page-header-padding;
+
+    h1 {
+        font-size: @page-header-font-size;
+        font-weight: @page-header-weight;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.page-actions {
+    .btn-link {
+        padding-top: 0;
+        padding-bottom: 0;
+        color: @page-header-link-color;
+
+        &:hover,
+        &:focus {
+            color: @page-header-link-hover-color;
+        }
+    }
+
+    .divider {
+        content: " ";
+        display: inline-block;
+        width: 1px;
+        background: @page-header-divider-color;
+        height: 20px; // use a var
+        vertical-align: middle;
+    }
+
+    .label {
+        font-size: 10px;
+        padding: .2em .4em;
+    }
+}
+
+.page-buttons {
+    margin-bottom: @component-margin-bottom;
+}

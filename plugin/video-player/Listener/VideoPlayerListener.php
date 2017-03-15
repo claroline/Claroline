@@ -1,23 +1,17 @@
 <?php
 
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Claroline\VideoPlayerBundle\Listener;
 
 use Claroline\CoreBundle\Event\InjectJavascriptEvent;
 use Claroline\CoreBundle\Event\PlayFileEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bridge\Twig\TwigEngine;
 use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -26,18 +20,37 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class VideoPlayerListener extends ContainerAware
 {
+    /**
+     * @var PlatformConfigurationHandler
+     */
+    private $ch;
+
+    /**
+     * @var string
+     */
     private $fileDir;
+
+    /**
+     * @var TwigEngine
+     */
     private $templating;
 
     /**
+     * VideoPlayerListener constructor.
+     *
      * @DI\InjectParams({
-     *     "fileDir" = @DI\Inject("%claroline.param.files_directory%"),
+     *     "fileDir"    = @DI\Inject("%claroline.param.files_directory%"),
      *     "templating" = @DI\Inject("templating"),
-     *     "ch" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "container" = @DI\Inject("service_container")
+     *     "ch"         = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "container"  = @DI\Inject("service_container")
      * })
+     *
+     * @param string                       $fileDir
+     * @param TwigEngine                   $templating
+     * @param PlatformConfigurationHandler $ch
+     * @param ContainerInterface           $container
      */
-    public function __construct($fileDir, $templating, $ch, $container)
+    public function __construct($fileDir, $templating, $ch, ContainerInterface $container)
     {
         $this->fileDir = $fileDir;
         $this->templating = $templating;
@@ -48,6 +61,8 @@ class VideoPlayerListener extends ContainerAware
     /**
      * @DI\Observe("play_file_video")
      * @DI\Observe("play_file_audio")
+     *
+     * @param PlayFileEvent $event
      */
     public function onOpenVideo(PlayFileEvent $event)
     {
@@ -66,13 +81,15 @@ class VideoPlayerListener extends ContainerAware
                 'canExport' => $canExport,
             ]
         );
-        $response = new Response($content);
-        $event->setResponse($response);
+
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 
     /**
      * @DI\Observe("plugin_options_videoplayerbundle")
+     *
+     * @param PluginOptionsEvent $event
      */
     public function onOpenAdministration(PluginOptionsEvent $event)
     {
@@ -82,6 +99,7 @@ class VideoPlayerListener extends ContainerAware
         $params = ['_controller' => 'ClarolineVideoPlayerBundle:VideoPlayer:AdminOpen'];
         $subRequest = $request->duplicate([], null, $params);
         $response = $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -90,20 +108,19 @@ class VideoPlayerListener extends ContainerAware
      * @DI\Observe("inject_javascript_layout")
      *
      * @param InjectJavascriptEvent $event
-     *
-     * @return string
      */
     public function onInjectJs(InjectJavascriptEvent $event)
     {
         $content = $this->templating->render('ClarolineVideoPlayerBundle::scripts.html.twig', []);
+
         $event->addContent($content);
     }
 
     /**
-     * @param ExportScormResourceEvent $event
-     *
      * @DI\Observe("export_scorm_file_video")
      * @DI\Observe("export_scorm_file_audio")
+     *
+     * @param ExportScormResourceEvent $event
      */
     public function onExportScorm(ExportScormResourceEvent $event)
     {

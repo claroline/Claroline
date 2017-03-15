@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="innova_path")
  * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\PathRepository")
  */
-class Path extends AbstractResource implements PathInterface, \JsonSerializable
+class Path extends AbstractResource implements \JsonSerializable
 {
     /**
      * Name of the path (only for forms).

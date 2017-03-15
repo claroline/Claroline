@@ -3,8 +3,8 @@ import classes from 'classnames'
 
 export const ErrorBlock = ({text, inGroup, warnOnly}) =>
   <span className={classes('help-block', {
-    'warning-text': !inGroup && warnOnly,
-    'error-text': !inGroup && !warnOnly
+    'text-warning': !inGroup && warnOnly,
+    'text-danger': !inGroup && !warnOnly
   })}>
     <span className={classes('fa', warnOnly ? 'fa-clock-o' : 'fa-warning')}/>
     {text}

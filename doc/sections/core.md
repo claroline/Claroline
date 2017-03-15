@@ -31,9 +31,8 @@ bundle
 |-- Library                 (Services)
 |-- Migrations              (Data Base description)
 |-- Resources
+|-- +-- themes              (Default claroline themes)
 |   +-- views
-|       |-- less            (Themes)
-|       |-- less-generated  (Generated themes)
 +-- Templating              (Overwriting of a Symfony Class)
 </pre>
 

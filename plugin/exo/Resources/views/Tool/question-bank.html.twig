@@ -1,28 +1,18 @@
 {% extends "ClarolineCoreBundle:Desktop:layout.html.twig" %}
 
 {% block stylesheets %}
-    {# Claroline CSS #}
     {{ parent() }}
 
-    {# Exercise styles #}
-    {% stylesheets debug=false filter='less, cssmin' output='vendor/ujmexo/bank.css'
-        '@UJMExoBundle/Resources/less/main.less'
-        '@UJMExoBundle/Resources/less/bank/main.less'
-    %}
-    <link rel="stylesheet" media="screen" href="{{ asset_url }}" />
-    {% endstylesheets %}
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-exo-question-bank-tool.css') }}" />
 {% endblock %}
 
 {# Title of the Page #}
-{% block title %}
-    {{ 'bank_of_questions' | trans({}, 'ujm_exo') }}
-{% endblock %}
+{% block title %}{{ 'bank_of_questions' | trans({}, 'ujm_exo') }}{% endblock %}
 
 {# Override breadcrumbs #}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([{
-            'icon': 'fa fa-briefcase',
             'name': 'desktop'|trans({}, 'platform'),
             'href': path('claro_desktop_open')
         }, {
@@ -33,9 +23,10 @@
 {% endblock %}
 
 {# Content of the Page #}
-{% block section_panel %}
+{% block content %}
     <div
         id="questions-bank"
+        class="page-container"
         data-initial="{{ initialSearch | json_encode | raw | escape }}"
         data-user="{{ currentUser | json_encode | raw | escape }}"
     ></div>

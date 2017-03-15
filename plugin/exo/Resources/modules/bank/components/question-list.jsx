@@ -17,7 +17,7 @@ import {
 const SelectedRow = props =>
   <tr className="selected-rows active">
     <td className="text-center">
-      <span className="fa fa-check-square"></span>
+      <span className="fa fa-fw fa-check-square"></span>
     </td>
     <td
       colSpan={5}
@@ -27,7 +27,7 @@ const SelectedRow = props =>
     <td className="table-actions text-right">
       <button
         role="button"
-        className="btn btn-sm btn-link"
+        className="btn btn-link"
         onClick={() => props.onShare(props.selected)}
       >
         <span className="fa fa-fw fa-share" />
@@ -35,7 +35,7 @@ const SelectedRow = props =>
       </button>
       <button
         role="button"
-        className="btn btn-sm btn-link btn-link-danger"
+        className="btn btn-link btn-link-danger"
         onClick={() => props.onDelete(props.selected)}
       >
         <span className="fa fa-fw fa-trash-o" />
@@ -146,7 +146,6 @@ const QuestionRow = props =>
         bsStyle="link"
         noCaret={true}
         pullRight={true}
-        className="btn-sm"
       >
         <MenuItem header>Actions</MenuItem>
         <MenuItem
@@ -187,6 +186,7 @@ QuestionRow.propTypes = {
     }).isRequired
   }).isRequired,
   isSelected: T.bool,
+  toggleSelect: T.func.isRequired,
   onShare: T.func.isRequired,
   onDelete: T.func.isRequired
 }

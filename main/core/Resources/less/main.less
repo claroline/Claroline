@@ -1,0 +1,523 @@
+///////////////////////////////////////////////////////////////////////////
+//                                                                       //
+// This less file includes bootstrap and adds a few global layout rules, //
+// mainly for navbar, grid and footer positioning. It is intended to be  //
+// used by real theme files, and thus should be kept short and           //
+// design-neutral.                                                       //
+//                                                                       //
+///////////////////////////////////////////////////////////////////////////
+
+// Import bootstrap
+@import "../../../../../../../web/packages/bootstrap/less/bootstrap";
+
+// Import claroline layout
+@import "mixins";
+@import "scaffolding";
+@import "utilities";
+@import "type";
+@import "libraries/index";
+@import "layout/index";
+@import "widgets/index";
+@import "tools/index";
+@import "resources/index";
+@import "users/index";
+
+@media (min-width: @screen-sm) {
+    body.left-bar-push {
+        margin-left: 40px;
+    }
+    /*#top_bar.left-bar-push,*/
+    /*.impersonalitation > .navbar-fixed-top.left-bar-push {
+        padding-left: 40px;
+    }*/
+    body.right-bar-push {
+        margin-right: 40px;
+    }
+    /*#top_bar.right-bar-push, */
+    /*.impersonalitation > .navbar-fixed-top.right-bar-push {
+        padding-right: 40px;
+    }*/
+}
+
+@media (max-width: (@screen-sm - 1)) {
+    body.left-bar-push {
+        margin-left: 0;
+    }
+    /*#top_bar.left-bar-push, .impersonalitation > .navbar-fixed-top.left-bar-push {
+        padding-left: 0;
+    }*/
+    body.right-bar-push {
+        margin-right: 0;
+    }
+    /*#top_bar.right-bar-push, .impersonalitation > .navbar-fixed-top.right-bar-push {
+        padding-right: 0;
+    }*/
+}
+
+/*****************************/
+/*  Desktop parameters menu  */
+/*****************************/
+ul.desktop-parameters-menu {
+    li.list-group-item {
+        padding: 0;
+        &:hover,
+        &:focus{
+            background-color: @list-group-hover-bg;
+            a {
+                color: @list-group-link-hover-color;
+            }
+        }
+
+        a {
+            padding: 10px 15px;
+            position: relative;
+            display: block;
+            color: @list-group-link-color;
+            text-decoration: none;
+
+            &:hover,
+            &:focus{
+                text-decoration: none;
+            }
+        }
+    }
+}
+
+/***********/
+/* WIDGETS */
+/***********/
+
+// todo : this should have broken something (but it breaks quiz editor if uncommented)
+/*.panel-group > .panel .panel-heading .btn {
+    position: absolute;
+    right: 3px;
+    top: 3px
+}*/
+
+.notification-date {
+    text-decoration: underline;
+    font-style: italic;
+}
+
+.navbar.desktop {
+    .border-top-radius(@border-radius-base);
+    .border-bottom-radius(@border-radius-base);
+    padding-left: 15px;
+    padding-right: 15px;
+
+    ul li {
+        float: left !important;
+    }
+}
+
+.locale-select {
+   margin-left: 30px ;
+   font-size: 16px;
+   cursor: pointer;
+}
+
+.impersonalitation {
+    &.spaced .spacer {
+        height: @navbar-height;
+    }
+
+    .navbar-fixed-top {
+        @media (max-width: @grid-float-breakpoint) {
+            .navbar-nav {
+                float: left;
+            }
+
+            .navbar-nav.navbar-right {
+                float: right;
+            }
+        }
+
+        z-index: (@zindex-navbar-fixed - 1);
+        background-color: darken(@brand-warning, 5%);
+        border: none;
+        .navbar-nav li a {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .navbar-nav.navbar-right li a {
+            font-size: 20px;
+        }
+    }
+
+    &.spaced .navbar-fixed-top {
+        margin-top: @navbar-height;
+        z-index: (@zindex-navbar-fixed - 3);
+    }
+}
+
+.ordering-icon.disabled {
+    cursor: not-allowed;
+    pointer-events: none; // Future-proof disabling of clicks
+    .opacity(.65);
+    .box-shadow(none);
+}
+
+.general_parameters_form {
+    .redirect-after-login, .portfolio-url {
+        .radio-with-input {
+            line-height: 34px;
+            min-height: 40px;
+            input[type=radio] {
+                margin-top: 10px;
+            }
+        }
+    }
+}
+
+/**********************/
+/***      HOME      ***/
+/**********************/
+
+/* special grid system for content in home page*/
+
+@content-iteration: 12;
+@content-margin: 1.5;
+
+@media (min-width: 767px) {
+    .content-size (@index) when (@index >= 1) {
+        .content-@{index} {
+            width: unit(((@index * 100 / @content-iteration) - @content-margin - 0.1), %);
+            margin-right: unit(@content-margin, %);
+            float: left;
+        }
+
+        .spacing-right {
+            padding-right: unit(@content-margin, %);
+        }
+
+        .content-offset@{index} {
+            margin-left: unit(((@index * 100 / @content-iteration)), %);
+        }
+
+        .content-size(@index - 1);
+    }
+
+    .content-size(@content-iteration);
+}
+
+@media (max-width: 767px) {
+    .content-size (@index) when (@index >= 1) {
+        .content-@{index} {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .content-offset@{index} {
+            margin-left: 0;
+        }
+
+        .spacing-right{
+            padding-right: 0;
+        }
+
+        .content-size(@index - 1);
+    }
+
+    .content-size(@content-iteration);
+}
+
+.content-element {
+    .text {
+        clear: both;
+        margin-bottom: 20px;
+    }
+
+    .read-more {
+        position: relative;
+        max-height: 300px;
+        overflow: hidden;
+
+        .text {
+            max-height: 300px;
+        }
+
+        .show-more {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+        }
+
+        .text-gradient {
+            width: 100%;
+            height: 300px;
+            position: absolute;
+            top: 0;
+
+            background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, transparent),color-stop(1, #fff));
+            background-image: -webkit-linear-gradient(top, transparent, #fff);
+            background-image: -moz-linear-gradient(top, transparent, #fff);
+            background-image: -ms-linear-gradient(top, transparent, #fff);
+            background-image: -o-linear-gradient(top, transparent, #fff);
+        }
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+        margin-top: 0;
+    }
+
+    .dropdown-menu a {
+        cursor: pointer;
+    }
+
+    .text-muted {
+        position: absolute;
+        bottom: 10px;
+    }
+
+    img {
+        padding: 0 0 10px 0;
+        max-width: 100%;
+    }
+
+    .content-menu {
+        button {
+            position: relative;
+            top: -1px;
+            right: -1px;
+            z-index: (@zindex-navbar-fixed - 2);
+        }
+        .dropdown-menu {
+            z-index: (@zindex-navbar-fixed - 1);
+        }
+
+        .btn.btn-primary {
+            background: @navbar-default-bg;
+            border-color: @btn-default-border;
+            color: @btn-default-color;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .btn.btn-link {
+            background: @panel-footer-bg;
+            color: lighten(@gray-light, 10%);
+            text-decoration: none;
+            .border-top-radius(@border-radius-base);
+            .border-bottom-radius(@border-radius-base);
+        }
+    }
+
+    .list-group.menu .list-group-item .btn.btn-link {
+        background: transparent;
+    }
+
+    .panel-heading, .panel-body {
+        overflow: hidden;
+    }
+
+    > .nav.nav-pills{
+        > li > a {
+            background-color: @navbar-inverse-bg;
+            color: #fff;
+            &:hover {
+                background-color: darken(@body-bg, 30%);
+            }
+        }
+        margin-bottom: 5px;
+        border: 1px solid transparent;
+        &.admin:hover{
+            border: 1px dashed lighten(@link-color, 20%);
+        }
+    }
+
+    > .list-group {
+        > div.list-group-item {
+            padding: 0;
+        }
+
+        > a.list-group-item {
+            cursor: pointer;
+        }
+
+        > .list-group-item  {
+            > a {
+                display: block;
+                padding: 10px 15px;
+                color: @gray;
+
+                &:hover {
+                    text-decoration: none;
+                    background: @panel-default-heading-bg;
+                }
+            }
+
+            //link inside a div case
+            &.active > a,
+            &.active > a:hover {
+                color: #fff;
+                background: @link-color;
+            }
+        }
+    }
+}
+
+.content-scroll {
+    width: 100%;
+    height: 400px;
+    border: 1px solid @input-border;
+    .border-top-radius(@border-radius-base);
+    .border-bottom-radius(@border-radius-base);
+    overflow-y: scroll;
+    overflow-x: auto;
+    padding: 5px;
+}
+
+.creator {
+    &.creator-menu .form-control, textarea.form-control {
+        .border-bottom-radius(0);
+        margin: 0;
+        border-bottom: none;
+    }
+
+    .panel {
+        .border-top-radius(0);
+    }
+
+    .navbar.navbar-static-top {
+        z-index: (@zindex-dropdown - 10);
+        .border-bottom-radius(@border-radius-base);
+        margin: 0;
+
+        .navbar-nav {
+            float: left;
+        }
+
+        .navbar-nav.navbar-right {
+            float: right;
+        }
+    }
+
+    textarea {
+        overflow: hidden;
+        resize: none;
+        .transition(all .2s linear);
+    }
+}
+
+.creator-collapse {
+    background: @list-group-bg;
+    border: 1px solid @list-group-border;
+    padding: 10px 10px 0 10px;
+}
+
+#sizes .panel, #regions .panel {
+    cursor: pointer;
+    padding: 5px;
+}
+
+#regions .panel {
+    text-align: center;
+    padding: 20px 5px 20px 5px;
+}
+
+#sizes .panel:hover,
+#sizes .panel.active,
+#regions .panel:hover,
+#regions .panel.active {
+    background: @link-color;
+    color: #fff;
+}
+
+.region-header {
+    padding-bottom: 10px;
+}
+
+/**********************/
+/** Theme Generator  **/
+/**********************/
+
+.bs-example {
+    border-bottom: 1px solid @gray-lighter;
+    margin: 0 0 20px 0;
+    padding: 0 0 20px 0;
+}
+
+.creator {
+    .mce-tinymce.mce-container.mce-panel, .mce-edit-area.mce-container.mce-panel.mce-stack-layout-item {
+        .border-bottom-radius(0);
+        border-bottom: none;
+    }
+}
+
+.user-picture {
+    height:120px;
+    background-repeat:no-repeat;
+    background-size:auto 120px;
+    background-position:center;
+}
+
+.datepicker {
+    z-index: (@zindex-modal + 5) !important;
+}
+
+.claroline-tag-highlight {
+    font-weight: bolder;
+    font-size: larger;
+}
+
+.shared_policy_link {
+    color: @link-color;
+
+    &:hover {
+        cursor:          pointer;
+        text-decoration: underline;
+    }
+}
+
+#public_profile_url {
+    .public_profile_url {
+        label {
+            padding-right: 2px;
+        }
+        div {
+            padding-left: 0;
+        }
+
+        .check-ok {
+            border-color: #3c763d;
+        }
+        .check-ko {
+            border-color: #843534;
+        }
+
+        .feedback {
+            position:    absolute;
+            top:         0;
+            right:       15px;
+            width:       34px;
+            height:      34px;
+            line-height: 34px;
+            text-align:  center;
+            .loading {
+                margin-top: 6px;
+            }
+            .icon-ok {
+                color: #3c763d;
+            }
+            .icon-remove {
+                color: #843534;
+            }
+        }
+    }
+}
+
+.facet-main {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border:1px solid @gray-light;
+}
+
+/***********/
+/** MODAL **/
+/***********/
+
+// fix for datatable
+.dt.dt-loaded {
+    z-index: 0;
+}

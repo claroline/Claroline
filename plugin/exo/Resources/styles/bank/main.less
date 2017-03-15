@@ -1,0 +1,44 @@
+// FIXME
+@import "./../main.less";
+
+.pagination-container {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.empty-list {
+    padding: @panel-body-padding;
+    text-align: center;
+    font-style: italic;
+}
+
+#questions-bank {
+
+}
+
+.dropdown-menu > .link-danger > a,
+.link-danger {
+    color: @brand-danger;
+
+    &:hover,
+    &.hover {
+        color: darken(@brand-danger, 10%);
+    }
+    &:focus,
+    &.focus,
+    &.active {
+        color: darken(@brand-danger, 20%);
+    }
+}
+
+.sorting-cell {
+    padding-right: 16px !important;
+    cursor: pointer;
+}
+
+.sorting-cell .fa {
+    line-height: 1.42857;
+    position: absolute;
+    right: 8px;
+}

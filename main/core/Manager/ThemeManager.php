@@ -100,6 +100,16 @@ class ThemeManager
     }
 
     /**
+     * Returns the app theme directory.
+     *
+     * @return string
+     */
+    public function getThemeDir()
+    {
+        return $this->themeDir;
+    }
+
+    /**
      * Returns whether the theme directory is writable.
      *
      * @return bool
@@ -148,6 +158,7 @@ class ThemeManager
      *
      * @param string $name
      * @param File   $file
+     * @param bool   $extendDefault
      */
     public function createCustomTheme($name, File $file, $extendDefault = false)
     {
@@ -168,8 +179,9 @@ class ThemeManager
     public function getThemeByNormalizedName($name)
     {
         $themes = [];
-        $allThemes = $this->om->getRepository('Claroline\CoreBundle\Entity\Theme\Theme')->findAll();
+        $allThemes = $this->om->getRepository('ClarolineCoreBundle:Theme\Theme')->findAll();
 
+        /** @var Theme $theme */
         foreach ($allThemes as $theme) {
             $normalizedName = $theme->getNormalizedName();
 
@@ -177,6 +189,11 @@ class ThemeManager
                 $themes[] = $theme;
             }
         }
+
+        $name = ucwords(str_replace('-', ' ', $this->config->getParameter('theme')));
+
+        return $this->om->getRepository('ClarolineCoreBundle:Theme\Theme')
+            ->findOneBy(['name' => $name]);
 
         return count($themes) > 0 ? $themes[count($themes) - 1] : null;
     }

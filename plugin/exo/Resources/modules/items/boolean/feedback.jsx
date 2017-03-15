@@ -10,15 +10,15 @@ export const BooleanFeedback = props => {
       {props.item.solutions.map(solution =>
         <div key={solution.id} className="col-md-6">
           <div className={classes(
-              'choice',
+              'answer-item choice-item',
               utils.getAnswerClass(solution, props.answer)
             )}>
-            {props.answer !== '' && solution.id === props.answer &&
+            {solution.id === props.answer &&
               <WarningIcon valid={solution.score > 0}/>
             }
             {props.item.choices.find(choice => choice.id === solution.id).data}
 
-            {props.answer !== '' && solution.id === props.answer &&
+            {solution.id === props.answer &&
               <Feedback
                 id={`${solution.id}-feedback`}
                 feedback={solution.feedback}/>

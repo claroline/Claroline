@@ -1,0 +1,24 @@
+.table {
+    th {
+        // todo : this needs to be removed
+        a {
+            color: @gray;
+
+            &:after {
+                content: " \25BE";
+            }
+
+            &:hover {
+                color: @gray;
+            }
+        }
+    }
+
+    // Fixes vertical align in tables
+    > thead > tr > th,
+    > thead > tr > td,
+    > tbody > tr > th,
+    > tbody > tr > td {
+        vertical-align: middle;
+    }
+}

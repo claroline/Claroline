@@ -11,13 +11,13 @@ import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {actions} from './editor'
 import {utils} from './utils/utils'
 
-
 let DropBox = props => {
   return props.connectDropTarget (
      <div className={classes(
-       'pair-item-drop-container',
-       {'on-hover': props.isOver}
+       'pair-item-placeholder drop-placeholder placeholder-hover',
+       {hover: props.isOver}
      )}>
+       <span className="fa fa-fw fa-share fa-rotate-90" />
        {tex('set_drop_item')}
      </div>
    )
@@ -43,21 +43,17 @@ class Pair extends Component {
 
   render() {
     return (
-      <div className="pair">
-        <div className="pair-label-container">
-          <label>{`${tex('pair_pair')} ${this.props.index + 1}`}</label>
-        </div>
-        <div className={classes(
-            'pair-body',
-            {'negative-score' : this.props.pair.score < 1},
-            {'positive-score' : this.props.pair.score > 0}
-          )}>
-          <div className="first-row">
+      <div className={classes(
+        'pair answer-item',
+        {'unexpected-answer' : this.props.pair.score < 1},
+        {'expected-answer' : this.props.pair.score > 0}
+      )}>
+        <div className="text-fields">
+          <div className="form-group">
             {this.props.pair.itemIds[0] === -1 ?
               <DropBox object={{pair:this.props.pair, position:0, index:this.props.index}} onDrop={this.props.onDrop} />
               :
               <div className="pair-item">
-                <div className="pair-data" dangerouslySetInnerHTML={{__html: utils.getPairItemData(this.props.pair.itemIds[0], this.props.items)}} />
                 {this.props.showPins &&
                   <TooltipButton
                     id={`pair-${this.props.index}-${this.props.pair.itemIds[0]}-pin-me`}
@@ -66,11 +62,15 @@ class Pair extends Component {
                       actions.addItemCoordinates(this.props.pair.itemIds[0], this.props.pair.itemIds[1], [0, this.props.index])
                     )}
                     className={classes(
-                      'fa fa-thumb-tack',
+                      'pull-right',
+                      'btn-link-default btn-pin-item',
                       {'btn-disabled': !utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
                     )}
+                    label={<span className="fa fa-fw fa-thumb-tack" />}
                   />
                 }
+
+                <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getPairItemData(this.props.pair.itemIds[0], this.props.items)}} />
               </div>
             }
 
@@ -78,8 +78,6 @@ class Pair extends Component {
               <DropBox object={{pair:this.props.pair, position:1, index:this.props.index}} onDrop={this.props.onDrop} />
               :
               <div className="pair-item">
-                <div className="pair-data" dangerouslySetInnerHTML={{__html: utils.getPairItemData(this.props.pair.itemIds[1], this.props.items)}} />
-
                 {this.props.showPins &&
                   <TooltipButton
                     id={`pair-${this.props.index}-${this.props.pair.itemIds[1]}-pin-me`}
@@ -88,40 +86,19 @@ class Pair extends Component {
                       actions.addItemCoordinates(this.props.pair.itemIds[1], this.props.pair.itemIds[0], [1, this.props.index])
                     )}
                     className={classes(
-                      'fa fa-thumb-tack',
+                      'pull-right',
+                      'btn-link-default btn-pin-item',
                       {'btn-disabled': !utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index)}
                     )}
+                    label={<span className="fa fa-fw fa-thumb-tack" />}
                   />
                 }
+
+                <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getPairItemData(this.props.pair.itemIds[1], this.props.items)}} />
               </div>
             }
-            <div className="right-controls">
-              <input
-                title={tex('score')}
-                type="number"
-                className="form-control association-score"
-                value={this.props.pair.score}
-                onChange={e => this.props.onChange(
-                  actions.updatePair(this.props.index, 'score', e.target.value)
-                )}
-              />
-              <TooltipButton
-                id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback-toggle`}
-                className="fa fa-comments-o"
-                title={tex('feedback_association_created')}
-                onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-              />
-              <TooltipButton
-                id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-delete`}
-                className="fa fa-trash-o"
-                enabled={this.props.pair._deletable}
-                title={t('delete')}
-                onClick={() => this.props.onChange(
-                  actions.removePair(this.props.pair.itemIds[0], this.props.pair.itemIds[1]))
-                }
-              />
-            </div>
           </div>
+
           {this.state.showFeedback &&
             <div className="feedback-container">
               <Textarea
@@ -133,21 +110,50 @@ class Pair extends Component {
               />
             </div>
           }
-          <div className="pair-option">
-            <div className="checkbox">
-              <label>
-                <input
-                  type="checkbox"
-                  disabled={this.props.showPins || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ||  utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
-                  checked={this.props.pair.ordered || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ||  utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
-                  onChange={(e) => this.props.onChange(
-                    actions.updatePair(this.props.index, 'ordered', e.target.checked)
-                  )}
-                />
-              {tex('pair_is_ordered')}
-              </label>
-            </div>
+
+          <div className="checkbox">
+            <label>
+              <input
+                type="checkbox"
+                disabled={this.props.showPins || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ||  utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
+                checked={this.props.pair.ordered || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ||  utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
+                onChange={(e) => this.props.onChange(
+                  actions.updatePair(this.props.index, 'ordered', e.target.checked)
+                )}
+              />
+            {tex('pair_is_ordered')}
+            </label>
           </div>
+        </div>
+
+        <div className="right-controls">
+          <input
+            title={tex('score')}
+            type="number"
+            className="form-control association-score"
+            value={this.props.pair.score}
+            onChange={e => this.props.onChange(
+              actions.updatePair(this.props.index, 'score', e.target.value)
+            )}
+          />
+          <TooltipButton
+            id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback-toggle`}
+            className="btn-link-default"
+            title={tex('feedback_association_created')}
+            label={<span className="fa fa-fw fa-comments-o" />}
+            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+          />
+
+          <TooltipButton
+            id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-delete`}
+            className="btn-link-default"
+            enabled={this.props.pair._deletable}
+            title={t('delete')}
+            label={<span className="fa fa-fw fa-trash-o" />}
+            onClick={() => this.props.onChange(
+              actions.removePair(this.props.pair.itemIds[0], this.props.pair.itemIds[1]))
+            }
+          />
         </div>
       </div>
     )
@@ -164,7 +170,6 @@ Pair.propTypes = {
 }
 
 class PairList extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -198,7 +203,7 @@ class PairList extends Component {
           {tex('pair_allow_pin_function')}
           </label>
         </div>
-        <hr/>
+        <hr />
         <ul>
           {utils.getRealSolutionList(this.props.solutions).map((pair, index) =>
             <li key={`pair-${index}`}>
@@ -213,13 +218,13 @@ class PairList extends Component {
             </li>
           )}
         </ul>
-        <div className="footer text-center">
+        <div className="footer">
           <button
             type="button"
             className="btn btn-default"
             onClick={() => this.props.onChange(actions.addPair())}
           >
-            <span className="fa fa-plus"/>
+            <span className="fa fa-fw fa-plus"/>
             {tex('pair_add_pair')}
           </button>
         </div>
@@ -235,7 +240,6 @@ PairList.propTypes = {
 }
 
 class Odd extends Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -245,7 +249,7 @@ class Odd extends Component {
 
   render(){
     return (
-      <div className="item negative-score">
+      <div className="answer-item item unexpected-answer">
         <div className="text-fields">
           <Textarea
             onChange={(value) => this.props.onChange(
@@ -279,14 +283,16 @@ class Odd extends Component {
           />
           <TooltipButton
             id={`odd-${this.props.odd.id}-feedback-toggle`}
-            className="fa fa-comments-o"
+            className="btn-link-default"
             title={tex('feedback_answer_check')}
+            label={<span className="fa fa-fw fa-comments-o" />}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
           <TooltipButton
             id={`odd-${this.props.odd.id}-delete`}
-            className="fa fa-trash-o"
+            className="btn-link-default"
             title={t('delete')}
+            label={<span className="fa fa-fw fa-trash-o" />}
             onClick={() => this.props.onChange(actions.removeItem(this.props.odd.id, true))}
           />
         </div>
@@ -301,30 +307,26 @@ Odd.propTypes = {
   solution: T.object.isRequired
 }
 
-const OddList= props => {
-
-  return (
-    <div className="odd-list">
-      <ul>
-        { utils.getOddlist(props.items, props.solutions).map((oddItem, index) =>
-          <li key={`odd-${index}-${oddItem.id}`}>
-            <Odd onChange={props.onChange} odd={oddItem} solution={utils.getOddSolution(oddItem, props.solutions)}/>
-          </li>
-        )}
-      </ul>
-      <div className="footer text-center">
-        <button
-          type="button"
-          className="btn btn-default"
-          onClick={() => props.onChange(actions.addItem(true))}
-        >
-          <span className="fa fa-plus"/>
-          {tex('set_add_odd')}
-        </button>
-      </div>
+const OddList= props =>
+  <div className="odd-list">
+    <ul>
+      { utils.getOddlist(props.items, props.solutions).map((oddItem, index) =>
+        <li key={`odd-${index}-${oddItem.id}`}>
+          <Odd onChange={props.onChange} odd={oddItem} solution={utils.getOddSolution(oddItem, props.solutions)}/>
+        </li>
+      )}
+    </ul>
+    <div className="footer">
+      <button
+        type="button"
+        className="btn btn-default"
+        onClick={() => props.onChange(actions.addItem(true))}
+      >
+        <span className="fa fa-fw fa-plus"/>
+        {tex('set_add_odd')}
+      </button>
     </div>
-  )
-}
+  </div>
 
 OddList.propTypes = {
   onChange: T.func.isRequired,
@@ -334,7 +336,7 @@ OddList.propTypes = {
 
 let Item = props => {
   return props.connectDragPreview (
-    <div className="item">
+    <div className="answer-item item">
       <div className="text-fields">
         <Textarea
           onChange={(value) => props.onChange(
@@ -347,8 +349,9 @@ let Item = props => {
       <div className="right-controls">
         <TooltipButton
           id={`set-item-${props.item.id}-delete`}
-          className="fa fa-trash-o"
+          className="btn-link-default"
           title={t('delete')}
+          label={<span className="fa fa-fw fa-trash-o" />}
           enabled={props.item._deletable}
           onClick={() => props.onChange(
              actions.removeItem(props.item.id, false)
@@ -362,16 +365,17 @@ let Item = props => {
                 <Tooltip id={`item-${props.item.id}-drag`}>{t('move')}</Tooltip>
               }>
               <span
+                role="button"
                 title={t('move')}
                 draggable="true"
                 className={classes(
-                  'tooltiped-button',
                   'btn',
-                  'fa',
-                  'fa-bars',
+                  'btn-link-default',
                   'drag-handle'
                 )}
-              />
+              >
+                <span className="fa fa-fw fa-bars" />
+              </span>
             </OverlayTrigger>
           </div>
         )}
@@ -393,19 +397,19 @@ const ItemList = props => {
   return (
     <div className="item-list">
       <ul>
-        { utils.getRealItemlist(props.items, props.solutions).map((item) =>
+        {utils.getRealItemlist(props.items, props.solutions).map((item) =>
           <li key={item.id}>
             <Item onChange={props.onChange} item={item}/>
           </li>
         )}
       </ul>
-      <div className="footer text-center">
+      <div className="footer">
         <button
           type="button"
           className="btn btn-default"
           onClick={() => props.onChange(actions.addItem(false))}
         >
-          <span className="fa fa-plus"/>
+          <span className="fa fa-fw fa-plus"/>
           {tex('set_add_item')}
         </button>
       </div>
@@ -421,19 +425,7 @@ ItemList.propTypes = {
 
 const PairForm = (props) => {
   return(
-    <div className="pair-editor">
-      {get(props.item, '_errors.item') &&
-        <ErrorBlock text={props.item._errors.item} warnOnly={!props.validating}/>
-      }
-      {get(props.item, '_errors.items') &&
-        <ErrorBlock text={props.item._errors.items} warnOnly={!props.validating}/>
-      }
-      {get(props.item, '_errors.solutions') &&
-        <ErrorBlock text={props.item._errors.solutions} warnOnly={!props.validating}/>
-      }
-      {get(props.item, '_errors.odd') &&
-        <ErrorBlock text={props.item._errors.odd} warnOnly={!props.validating}/>
-      }
+    <fieldset className="pair-editor">
       <div className="form-group">
         <label htmlFor="pair-penalty">{tex('editor_penalty_label')}</label>
         <input
@@ -447,6 +439,9 @@ const PairForm = (props) => {
           )}
         />
       </div>
+
+      <hr className="item-content-separator" />
+
       <div className="checkbox">
         <label>
           <input
@@ -456,21 +451,34 @@ const PairForm = (props) => {
               actions.updateProperty('random', e.target.checked)
             )}
           />
-        {tex('pair_shuffle_pairs')}
+          {tex('pair_shuffle_pairs')}
         </label>
       </div>
-      <hr/>
-      <div className="row pair-builder-container">
-        <div className="col-md-5 items-col">
+
+      {get(props.item, '_errors.item') &&
+        <ErrorBlock text={props.item._errors.item} warnOnly={!props.validating}/>
+      }
+      {get(props.item, '_errors.items') &&
+        <ErrorBlock text={props.item._errors.items} warnOnly={!props.validating}/>
+      }
+      {get(props.item, '_errors.solutions') &&
+        <ErrorBlock text={props.item._errors.solutions} warnOnly={!props.validating}/>
+      }
+      {get(props.item, '_errors.odd') &&
+        <ErrorBlock text={props.item._errors.odd} warnOnly={!props.validating}/>
+      }
+
+      <div className="row pair-items">
+        <div className="col-md-5 col-sm-5 items-col">
           <ItemList onChange={props.onChange} solutions={props.item.solutions} items={props.item.items}/>
           <hr/>
           <OddList onChange={props.onChange} solutions={props.item.solutions} items={props.item.items}/>
         </div>
-        <div className="col-md-7 pairs-col">
+        <div className="col-md-7 col-sm-7 pairs-col">
           <PairList solutions={props.item.solutions} items={props.item.items} onChange={props.onChange}/>
         </div>
       </div>
-    </div>
+    </fieldset>
   )
 }
 

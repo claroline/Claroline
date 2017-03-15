@@ -681,6 +681,7 @@ class Step implements \JsonSerializable
                         'id' => $secondaryResource->getId(),
                         'resourceId' => $secondaryResource->getId(),
                         'name' => $secondaryResource->getName(),
+                        'icon' => $secondaryResource->getIcon()->getRelativeUrl(),
                         'type' => $secondaryResource->getResourceType()->getName(),
                         'mimeType' => $secondaryResource->getMimeType(),
                         'propagateToChildren' => in_array($secondaryResource->getId(), $propagatedResources),

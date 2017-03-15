@@ -102,7 +102,7 @@ export class AnswerArea extends Component {
           {resizers.map(makeResizer)}
 
           <span
-            className="fa fa-pencil"
+            className="fa fa-fw fa-pencil"
             role="button"
             style={common({right: -22})}
             onClick={e => {
@@ -115,7 +115,7 @@ export class AnswerArea extends Component {
             }}
           />
           <span
-            className="fa fa-trash-o"
+            className="fa fa-fw fa-trash-o"
             role="button"
             style={common({right: -22, top: 20})}
             onClick={() => props.onDelete(props.id)}

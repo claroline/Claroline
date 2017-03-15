@@ -1,5 +1,7 @@
 import React, {PropTypes as T} from 'react'
 import classes from 'classnames'
+
+import {SCORE_FIXED} from '../../quiz/enums'
 import {Feedback} from '../components/feedback-btn.jsx'
 import {SolutionScore} from '../components/score.jsx'
 import {WarningIcon} from './utils/warning-icon.jsx'
@@ -13,70 +15,83 @@ export const ChoicePaper = props => {
       yours={
         <div className="choice-paper">
           {props.item.solutions.map(solution =>
-            <div
+            <label
               key={utils.answerId(solution.id)}
+              htmlFor={utils.answerId(solution.id)}
               className={classes(
-                'item',
-                props.item.multiple ? 'checkbox': 'radio',
+                'answer-item choice-item',
                 utils.getAnswerClassForSolution(solution, props.answer)
               )}
             >
-              <WarningIcon solution={solution} answers={props.answer}/>
-              <input
-                className={props.item.multiple ? 'checkbox': 'radio'}
-                checked={utils.isSolutionChecked(solution, props.answer)}
-                id={utils.answerId(solution.id)}
-                name={utils.answerId(props.item.id)}
-                type={props.item.multiple ? 'checkbox': 'radio'}
-                disabled
-              />
-              <label
-                className="control-label"
-                htmlFor={utils.answerId(solution.id)}
+              {utils.isSolutionChecked(solution, props.answer) ?
+                <WarningIcon className="choice-item-tick" solution={solution} answers={props.answer}/> :
+
+                <input
+                  id={utils.answerId(solution.id)}
+                  className="choice-item-tick"
+                  name={utils.answerId(props.item.id)}
+                  type={props.item.multiple ? 'checkbox': 'radio'}
+                  disabled
+                />
+              }
+
+              <div
+                className="choice-item-content"
                 dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
               />
-              <Feedback
-                id={`${solution.id}-feedback`}
-                feedback={solution.feedback}
-              />
-              <SolutionScore score={solution.score}/>
-            </div>
+
+              <div className="choice-item-feedback">
+                <Feedback
+                  id={`${solution.id}-feedback`}
+                  feedback={solution.feedback}
+                />
+              </div>
+
+              {SCORE_FIXED !== props.item.score.type &&
+                <SolutionScore score={solution.score} />
+              }
+            </label>
           )}
         </div>
       }
       expected={
         <div className="choice-paper">
           {props.item.solutions.map(solution =>
-            <div
+            <label
               key={utils.expectedId(solution.id)}
+              htmlFor={utils.expectedId(solution.id)}
               className={classes(
-                'item',
-                props.item.multiple ? 'checkbox': 'radio',
+                'answer-item choice-item',
                 {
-                  'bg-info text-info': solution.score > 0
+                  'selected-answer': solution.score > 0
                 }
               )}
             >
-              <span className="answer-warning-span"></span>
               <input
-                className={props.item.multiple ? 'checkbox': 'radio'}
+                className="choice-item-tick"
                 checked={solution.score > 0}
                 id={utils.expectedId(solution.id)}
                 name={utils.expectedId(props.item.id)}
                 type={props.item.multiple ? 'checkbox': 'radio'}
                 disabled
               />
-              <label
-                className="control-label"
-                htmlFor={utils.expectedId(solution.id)}
+
+              <div
+                className="choice-item-content"
                 dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
               />
-              <Feedback
-                id={`${solution.id}-feedback-expected`}
-                feedback={solution.feedback}
-              />
-              <SolutionScore score={solution.score}/>
-            </div>
+
+              <div className="choice-item-feedback">
+                <Feedback
+                  id={`${solution.id}-feedback-expected`}
+                  feedback={solution.feedback}
+                />
+              </div>
+
+              {SCORE_FIXED !== props.item.score.type &&
+                <SolutionScore score={solution.score} />
+              }
+            </label>
           )}
         </div>
       }
@@ -87,14 +102,15 @@ export const ChoicePaper = props => {
 ChoicePaper.propTypes = {
   item: T.shape({
     id: T.string.isRequired,
+    score: T.shape({
+      type: T.string.isRequired
+    }),
     choices: T.arrayOf(T.shape({
       id: T.string.isRequired,
       data: T.string.isRequired
     })).isRequired,
     multiple: T.bool.isRequired,
-    solutions: T.arrayOf(T.object),
-    title: T.string,
-    description: T.string
+    solutions: T.arrayOf(T.object)
   }).isRequired,
   answer: T.array
 }

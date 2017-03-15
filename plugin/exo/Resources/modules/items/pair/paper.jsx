@@ -19,12 +19,12 @@ export const PairPaper = props => {
                 {yourAnswers.orpheans.map((item) =>
                   <li key={`your-answer-orphean-${item.id}`}>
                     <div className={classes(
-                        'item',
-                        {'bg-success text-success': item.score},
-                        {'bg-danger text-danger': !item.score}
+                        'answer-item item',
+                        {'correct-answer': item.score},
+                        {'incorrect-answer': !item.score}
                       )}>
                       <WarningIcon valid={item.score !== '' && item.score <= 0}/>
-                      <div className="item-data" dangerouslySetInnerHTML={{__html: item.data}} />
+                      <div className="item-content" dangerouslySetInnerHTML={{__html: item.data}} />
                     </div>
                   </li>
                 )}
@@ -36,13 +36,13 @@ export const PairPaper = props => {
                 {yourAnswers.answers.map((answer) =>
                   <li key={`your-answer-id-${answer.leftItem.id}-${answer.rightItem.id}`}>
                     <div className={classes(
-                        'item',
-                        {'bg-success text-success': answer.valid},
-                        {'bg-danger text-danger': !answer.valid}
+                        'answer-item pair',
+                        {'correct-answer': answer.valid},
+                        {'incorrect-answer': !answer.valid}
                       )}>
                       <WarningIcon valid={answer.valid}/>
-                      <div className="item-data" dangerouslySetInnerHTML={{__html: answer.leftItem.data}} />
-                      <div className="item-data" dangerouslySetInnerHTML={{__html: answer.rightItem.data}} />
+                      <div className="item-content" dangerouslySetInnerHTML={{__html: answer.leftItem.data}} />
+                      <div className="item-content" dangerouslySetInnerHTML={{__html: answer.rightItem.data}} />
                       <Feedback
                         id={`pair-${answer.leftItem.id}-${answer.rightItem.id}-feedback`}
                         feedback={answer.feedback}
@@ -65,7 +65,7 @@ export const PairPaper = props => {
                   <li key={`your-answer-orphean-${o.id}`}>
                     <div className={classes(
                         'item',
-                        {'bg-info text-info': o.score}
+                        {'selected-answer': o.score}
                       )}>
                       <WarningIcon valid={o.score && o.score <= 0}/>
                       <div className="item-data" dangerouslySetInnerHTML={{__html: o.item.data}} />
@@ -80,7 +80,7 @@ export const PairPaper = props => {
                   <li key={`expected-answer-id-${answer.leftItem.id}-${answer.rightItem.id}`}>
                     <div className={classes(
                         'item',
-                        {'bg-info text-info': answer.valid}
+                        {'selected-answer': answer.valid}
                       )}>
                       <WarningIcon valid={answer.valid}/>
                       <div className="item-data" dangerouslySetInnerHTML={{__html: answer.leftItem.data}} />

@@ -1,8 +1,0 @@
-services:
-    innova_path.listener.notification_listener:
-        class: Innova\PathBundle\EventListener\Notifications\NotificationListener
-        calls:
-            - [setContainer, ["@service_container"]]
-        tags:
-            - { name: kernel.event_listener, event: create_notification_item_resource-innova_path-step_unlock, method: onCreateNotificationItem }
-            - { name: kernel.event_listener, event: create_notification_item_resource-innova_path-step_unlockdone, method: onCreateNotificationUnlockDone }

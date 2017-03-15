@@ -231,7 +231,6 @@ tinymce.claroline.configuration = {
   'autoresize_max_height': 500,
   'content_css': [
     themeCSS,
-    home.asset + 'bundles/clarolinecore/css/common/tinymce.css',
     home.asset + 'packages/font-awesome/css/font-awesome.min.css'
   ],
   'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +

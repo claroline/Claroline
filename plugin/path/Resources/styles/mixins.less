@@ -1,0 +1,38 @@
+/*
+ * Path plugin mixins.
+ */
+
+// Claroline & bootstrap mixins
+@import "../../../../main/core/Resources/less/mixins";
+
+.createLevel(@lvl, @color) {
+    &.lvl-@{lvl} {
+        &.lvl-bg {
+            background-color: @color !important;
+        }
+
+        &.lvl-text {
+            color: darken(@color, 20%) !important;
+        }
+
+        &.lvl-border {
+            border-color: @color !important;
+
+            &:before {
+                border-color: transparent transparent transparent @color !important;
+            }
+        }
+
+        &.lvl-zindex {
+            z-index: @lvl;
+        }
+
+        &.lvl-zindex-reverse {
+            z-index: 9 - @lvl;
+        }
+
+        &.lvl-hover:hover {
+            box-shadow: 1px 0 3px 1px fadeout(@color, 0.75);
+        }
+    }
+}

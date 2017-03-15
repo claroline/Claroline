@@ -37,7 +37,7 @@
         $(function() {
             Claroline.ResourceManager.createFullManager({
                 "directoryId": {{ directoryId }},
-                "parentElement": $('div.section-content .panel'),
+                "parentElement": $('#wrap > .panel'),
                 "breadcrumbElement": $('ul.breadcrumb'),
                 "isWorkspace": true,
                 "workspaceId" : {{ workspace.getId() }},

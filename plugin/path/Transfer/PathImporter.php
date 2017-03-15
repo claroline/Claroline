@@ -4,22 +4,37 @@ namespace Innova\PathBundle\Transfer;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Innova\PathBundle\Entity\Path\Path;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
+/**
+ * @DI\Service("innova_path.importer.path")
+ * @DI\Tag("claroline.importer")
+ */
 class PathImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {
     /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * PathImporter constructor.
+     *
      * We need to inject the whole service container
      * if we try to only inject PathManager, there is a crash because of a circular reference into services.
      *
-     * @var ContainerInterface
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     *
+     * @param ContainerInterface $container
      */
-    protected $container;
-
-    public function setContainer(ContainerInterface $container = null)
+    public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
@@ -115,6 +130,7 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
                 $structure = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$data['path']['structure']);
                 $entities = $this->container->get('doctrine.orm.entity_manager')->getRepository('InnovaPathBundle:Path\Path')->findByStructure($structure);
 
+                /** @var Path $entity */
                 foreach ($entities as $entity) {
                     $text = $entity->getStructure();
 
@@ -161,6 +177,6 @@ class PathImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function export($workspace, array &$files, $object)
     {
-        return $this->container->get('innova_path.manager.path')->export($workspace, $files, $object);
+        return $this->container->get('innova_path.manager.path')->export($object, $files);
     }
 }

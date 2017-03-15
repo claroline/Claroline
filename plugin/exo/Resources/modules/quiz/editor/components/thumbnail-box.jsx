@@ -56,7 +56,9 @@ export class ThumbnailBox extends Component {
               this.props.onNewStepClick()
               this.setState({addedThumbnail: true})
             }}
-          >+</button>
+          >
+            <span className="fa fa-plus" />
+          </button>
         </OverlayTrigger>
       </div>
     )

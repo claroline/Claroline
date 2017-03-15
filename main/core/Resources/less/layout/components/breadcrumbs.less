@@ -1,0 +1,16 @@
+.breadcrumb {
+    margin-bottom: @breadcrumb-margin-bottom;
+    .box-shadow(@breadcrumb-box-shadow);
+
+    font-size: @breadcrumb-font-size;
+    text-transform: @breadcrumb-text-transform;
+
+    > li {
+        + li:before {
+            // by default, bootstrap adds a nbsp after the separator
+            // this is not needed because there is an horizontal padding
+            // and this breaks the display (the space after the separator is larger than the one before)
+            content: "@{breadcrumb-separator}";
+        }
+    }
+}

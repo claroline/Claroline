@@ -1,0 +1,265 @@
+/*
+ * Default theme values for claroline vars
+ */
+
+// Import bootstrap vars
+@import "variables.bootstrap.less";
+
+
+// -
+// Base & utilities
+// ---
+@brand-secondary:         #C51162;
+
+@box-shadow-base:         0 0 2px rgba(0, 0, 0, 0.10);
+@component-margin-bottom: @line-height-computed;
+
+
+// -
+// Application
+// ---
+@app-max-width:           1200px; // max width for the app content
+
+
+// -
+// Header
+// ---
+@top-bar-max-width:           none; // max width for the top bar content (do not affect top bar container)
+@top-bar-height:              @navbar-height + @top-bar-border-bottom-size;
+@top-bar-font-size:           @font-size-base;
+@top-bar-color:               lighten(@top-bar-bg, 30%);
+@top-bar-bg:                  @navbar-inverse-bg;
+@top-bar-border-bottom-size:  3px;
+@top-bar-border-bottom:       @top-bar-border-bottom-size solid @brand-primary;
+@top-bar-box-shadow:          0 0 3px rgba(0, 0, 0, 0.5);
+
+@top-bar-logo-height:         35px;
+
+@top-bar-brand-font-size:     22px;
+@top-bar-brand-color:         #fff;
+@top-bar-brand-hover-color:   #fff;
+@top-bar-brand-hover-bg:      transparent;
+
+@top-bar-link-color:          lighten(@top-bar-bg, 60%);
+@top-bar-link-hover-color:    lighten(@top-bar-bg, 70%);
+@top-bar-link-hover-bg:       darken(@top-bar-bg, 5%);
+@top-bar-link-active-color:   lighten(@top-bar-bg, 80%);
+@top-bar-link-active-bg:      darken(@top-bar-bg, 6.5%);
+@top-bar-link-disabled-color: lighten(@top-bar-bg, 30%);
+@top-bar-link-disabled-bg:    transparent;
+@top-bar-inner-border-color:  darken(@top-bar-bg, 5%);
+
+@top-bar-toggle-border-color: transparent;
+@top-bar-toggle-hover-bg:     transparent;
+@top-bar-toggle-icon-bar-bg:  @top-bar-link-color;
+
+
+// -
+// Loader
+// ---
+@loader-bg:            @label-primary-bg;
+@loader-color:         @label-color;
+@loader-border:        transparent;
+@loader-font-size:     @font-size-small;
+@loader-padding:       @padding-small-vertical @padding-small-horizontal;
+@loader-border-radius: @border-radius-base;
+@loader-box-shadow:    @box-shadow-base;
+
+
+// -
+// Breadcrumb
+// ---
+@breadcrumb-box-shadow:     none;
+@breadcrumb-font-size:      @font-size-small;
+@breadcrumb-text-transform: inherit;
+@breadcrumb-margin-bottom:  5px;
+
+
+// -
+// Sidebars
+// ---
+@sidebar-bg:           white;
+@sidebar-color:        #555;
+@sidebar-font-size:    16px;
+
+@left-bar-box-shadow:  0 0 3px rgba(0, 0, 0, 0.5);
+@right-bar-box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+
+
+// -
+// Page
+// ---
+@page-header-padding:          0;
+@page-header-font-size:        @font-size-h1;
+@page-header-weight:           700;
+@page-header-link-color:       @gray; // todo : should be #666 for WCAG AA or #555 for AAA
+@page-header-link-hover-color: @gray-darker;
+@page-header-divider-color:    #CCCCCC;
+
+
+// -
+// Summaries
+//
+// As summaries can have very different forms and usage (eg. path, quiz)
+// there is no default implementation in the base layout
+// but each UI component intended to be used as a summary MUST use this vars
+// and adapt to the use case in order to keep common look & feel between all summary implementations
+// ---
+@summary-padding:           15px;
+@summary-font:              16px;
+@summary-bg:                #262626;
+@summary-color:             white;
+@summary-border-radius:     0;
+@summary-box-shadow-v:      2px 0 4px 0 rgba(0, 0, 0, 0.4); // box shadow for vertical summaries
+@summary-box-shadow-h:      0 2px 4px 0 rgba(0, 0, 0, 0.4); // box shadow for horizontal summaries
+
+// Links
+@summary-link-bg:           transparent;
+@summary-link-border-color: #444444;
+@summary-link-color:        @gray-light;
+@summary-link-hover-bg:     transparent;
+@summary-link-hover-color:  #bbb;
+@summary-link-active-bg:    transparent;
+@summary-link-active-color: white;
+
+
+// -
+// Footer
+// ---
+@footer-height:            @navbar-height;
+@footer-max-width:         none; // max width for the footer content (do not affect footer container)
+@footer-bg:                #F3F3F3;
+@footer-color:             @gray-light;
+@footer-border-color:      white;
+@footer-box-shadow:        @box-shadow-base;
+
+// Links
+@footer-link-color:        @gray;
+@footer-link-hover-color:  @gray-dark;
+@footer-link-active-color: @gray-darker;
+
+
+// -
+// Forms
+// ---
+@help-block-color:          lighten(@text-color, 25%); // lighten the text some for contrast
+
+// Labels
+@input-label-color:         @text-color;
+@input-success-label-color: @text-color; // default bootstrap behavior : @state-success-text
+@input-warning-label-color: @text-color; // default bootstrap behavior : @state-warning-text
+@input-error-label-color:   @text-color; // default bootstrap behavior : @state-error-text
+
+
+// -
+// Panels
+// ---
+@panel-box-shadow:         @box-shadow-base;
+@panel-margin-bottom:      @component-margin-bottom;
+
+// Groups
+@panel-group-panel-margin: 5px;
+
+
+// -
+// Navs
+// ---
+@nav-spacing:            5px; // margin between 2 tabs
+
+@nav-tabs-link-color:    @gray;
+@nav-tabs-border-radius: @border-radius-base @border-radius-base 0 0;
+
+@nav-pills-link-color:   @brand-primary;
+@nav-pills-link-bg:      transparent;
+
+
+// -
+// Widgets (by default give the same look as panels)
+// ---
+@widget-bg:                 @panel-bg;
+@widget-text:               @panel-default-text;
+@widget-border:             @panel-default-border;
+@widget-inner-border:       transparent;
+@widget-border-radius:      @panel-border-radius;
+@widget-box-shadow:         @panel-box-shadow;
+@widget-margin-bottom:      @panel-margin-bottom;
+
+@widget-header-bg:          transparent;
+@widget-header-padding:     @panel-heading-padding;
+@widget-title-font-size:    ceil((@font-size-base * 1.125));
+@widget-header-btn-padding: 4px;
+
+// This is mostly used to avoid having the full widget to be colored
+// if the user choose a custom color for his widget.
+// This permits to fake the old behavior (only header and borders were colored)
+// by setting it to `@panel-bg` or `@widget-bg`
+@widget-content-bg:      transparent;
+
+// Slideshow widget
+@widget-sideshow-control-width: 5%;
+
+@widget-card-header-height:     40%; // in percent
+@widget-card-header-padding:    0;
+
+// Widget cards (for slideshow and tills widgets)
+@widget-card-margin:            floor(@grid-gutter-width / 2);
+@widget-card-bg:                @panel-bg;
+@widget-card-border:            @panel-default-border;
+@widget-card-box-shadow:        @box-shadow-base;
+@widget-card-border-radius:     0;
+@widget-card-content-padding:   @panel-body-padding;
+@widget-card-content-font-size: @font-size-large;
+
+
+// -
+// Carousel
+// ---
+@carousel-indicator-size:        10px;
+@carousel-indicator-active-size: 12px;
+
+
+// -
+// Dropdown
+// ---
+@dropdown-menu-box-shadow:    0 1px 2px rgba(0, 0, 0, 0.2);
+@dropdown-menu-border-radius: 0;
+
+
+// -
+// Modal
+// ---
+@modal-content-box-shadow:    0 0 10px rgba(0, 0, 0, 0.5);
+@modal-content-border-radius: 0;
+
+// -
+// Popover
+// ---
+@popover-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+
+// -
+// Placeholders
+// ---
+@placeholder-color:            @gray;
+@placeholder-hover-color:      @brand-primary;
+
+// default variant
+@placeholder-font-size:        @font-size-base;
+@placeholder-border:           1px dashed @placeholder-color;
+@placeholder-hover-border:     1px dashed @placeholder-hover-color;
+@placeholder-border-radius:    @border-radius-base;
+@placeholder-padding:          @padding-base-vertical @padding-base-horizontal;
+
+// small variant
+@placeholder-sm-font-size:     @font-size-small;
+@placeholder-sm-border:        1px dashed @placeholder-color;
+@placeholder-sm-hover-border:  1px dashed @placeholder-hover-color;
+@placeholder-sm-border-radius: @border-radius-small;
+@placeholder-sm-padding:       @padding-small-vertical @padding-small-horizontal;
+
+// large variant
+@placeholder-lg-font-size:     @font-size-large;
+@placeholder-lg-border:        1px dashed @placeholder-color;
+@placeholder-lg-hover-border:  1px dashed @placeholder-hover-color;
+@placeholder-lg-border-radius: @border-radius-large;
+@placeholder-lg-padding:       @padding-large-vertical @padding-large-horizontal;

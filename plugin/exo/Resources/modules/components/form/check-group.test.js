@@ -45,15 +45,14 @@ describe('<CheckGroup/>', () => {
     ensure.propTypesOk()
     ensure.equal(group.name(), 'div')
     ensure.equal(group.hasClass('form-group'), true)
-    ensure.equal(group.children().length, 2)
+    ensure.equal(group.children().length, 1)
 
     const inputContainer = group.childAt(0)
     const input = inputContainer.find('input[type="checkbox"]#ID')
     ensure.equal(input.length, 1)
 
-    const label = group.childAt(1)
+    const label = inputContainer.find('label')
     ensure.equal(label.name(), 'label')
-    ensure.equal(label.hasClass('control-label'), true)
     ensure.equal(label.props().htmlFor, 'ID')
   })
 

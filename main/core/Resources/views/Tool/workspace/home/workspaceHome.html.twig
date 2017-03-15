@@ -20,31 +20,26 @@
     {% endif %}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading relative">
-        <h3 class="panel-title">
-            {{ 'home'|trans({}, 'tools') }}
-        </h3>
+{% block section_panel %}
+    <div class="page-header">
+        <h1>{{ 'home'|trans({}, 'tools') }}</h1>
     </div>
 
-    <div id="workspace-home-panel" ng-app="WorkspaceHomeModule">
-        <div class="panel-body" ui-view>
-        </div>
+    <div id="workspace-home-panel" data-ng-app="WorkspaceHomeModule">
+        <div data-ui-view=""></div>
     </div>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets
-        debug=false
-        filter='less, cssmin'
-        output='css/clarolinecore/hometabs.css'
+
+    {% stylesheets debug=false filter='less, cssmin' output='css/clarolinecore/hometabs.css'
         "@ClarolineCoreBundle/Resources/less/home-tabs.less"
     %}
-        <link rel="stylesheet" href="{{ asset_url }}" screen="media"/>
+        <link rel="stylesheet" type="text/css" media="all" href="{{ asset_url }}" />
     {% endstylesheets %}
-    <link rel='stylesheet' type='text/css' href='{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}'>
-    <link rel='stylesheet' type='text/css' href='{{ asset('packages/angular-gridster/dist/angular-gridster.min.css')}}'>
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}" />
+    <link rel="stylesheet" type="text/css" media="all" href="{{ asset('packages/angular-gridster/dist/angular-gridster.min.css')}}" />
 {% endblock %}
 
 {% block javascripts %}

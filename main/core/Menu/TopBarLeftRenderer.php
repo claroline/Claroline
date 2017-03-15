@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Menu;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Knp\Menu\Renderer\ListRenderer;
 use Knp\Menu\ItemInterface;
+use Knp\Menu\Renderer\ListRenderer;
 
 /**
  * @DI\Service("claroline.menu.top_bar_left_renderer")
@@ -41,13 +41,13 @@ class TopBarLeftRenderer extends ListRenderer
         $uri = $item->getExtra('href') ? $item->getExtra('href') : $item->getUri();
 
         return sprintf(
-            '<a role="menuitem" href="%s" title="%s"><i class="%s"></i><span class="break-hide"> %s</span> <span class="badge">%s</span></a><div>%s</div>',
+            '<a role="menuitem" href="%s" title="%s"><i class="%s"></i><span class="break-hide"> %s</span> %s</a> %s',
             $this->escape($uri),
             $item->getExtra('title'),
             $item->getExtra('icon'),
             $this->renderLabel($item, $options),
-            $item->getExtra('badge'),
-            $item->getExtra('close')
+            !empty($item->getExtra('badge')) ? sprintf('<span class="badge">%s</span>', $item->getExtra('badge')) : '',
+            !empty($item->getExtra('close')) ? sprintf('<div>%s</div>', $item->getExtra('close')) : ''
         );
     }
 

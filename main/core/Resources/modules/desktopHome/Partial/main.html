@@ -4,14 +4,11 @@
 </span>
 
 <desktop-home-tabs></desktop-home-tabs>
-<br>
 <widgets></widgets>
 
-<div ng-if="!dhmc.isHomeTabLocked && dhmc.editionMode && dhmc.homeTabsOptions['selectedTabId'] && !dhmc.homeTabsOptions['selectedTabIsLocked']">
-    <hr>
-    <span class="btn btn-primary" ng-click="dhmc.createUserWidget(dhmc.homeTabsOptions['selectedTabConfigId'])">
-        <i class="fa fa-plus-circle">
-        </i>
+<div class="text-center" data-ng-if="!dhmc.isHomeTabLocked && dhmc.editionMode && dhmc.homeTabsOptions['selectedTabId'] && !dhmc.homeTabsOptions['selectedTabIsLocked']">
+    <button type="button" role="button" class="btn btn-primary" data-ng-click="dhmc.createUserWidget(dhmc.homeTabsOptions['selectedTabConfigId'])">
+        <span class="fa fa-fw fa-plus"></span>
         {{ 'add_widget_to_home_tab'|trans:{}:'platform' }}
-    </span>
+    </button>
 </div>

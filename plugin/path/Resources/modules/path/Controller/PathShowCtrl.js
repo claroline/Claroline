@@ -50,4 +50,10 @@ export default class PathShowCtrl extends PathBaseCtrl {
 
     this.window.location.href = url
   }
+
+  getTotalProgression() {
+    const total = Math.round((this.userProgressionService.getTotalProgression() * 100) / this.pathService.getTotalSteps())
+
+    return total || 0
+  }
 }

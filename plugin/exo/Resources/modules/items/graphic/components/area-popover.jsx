@@ -50,7 +50,7 @@ export class AreaPopover extends Component {
           </div>
           <TooltipButton
             id="area-popover-feedback-tip"
-            className="fa fa-comments-o"
+            className="fa fa-fw fa-comments-o"
             title={tex('graphic_feedback_info')}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
@@ -67,7 +67,7 @@ export class AreaPopover extends Component {
         }
         <TooltipButton
           id="area-popover-close-tip"
-          className="fa fa-close close-tip-btn"
+          className="fa fa-fw fa-close close-tip-btn"
           title={t('close')}
           onClick={this.props.onClose}
         />

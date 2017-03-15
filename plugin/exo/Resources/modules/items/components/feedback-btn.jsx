@@ -3,18 +3,19 @@ import Popover from 'react-bootstrap/lib/Popover'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 
 export const Feedback = props => {
-  if (!props.feedback) return <span className="item-feedback"/>
+  if (!props.feedback) return <span className="feedback-btn" />
 
   const popoverClick = (
-    <Popover className="item-feedback" id={props.id}>
-      <div className="feedback-content" dangerouslySetInnerHTML={{__html: props.feedback}}>
-      </div>
+    <Popover className="feedback-popover" id={props.id}>
+      <div dangerouslySetInnerHTML={{__html: props.feedback}}></div>
     </Popover>
   )
 
   return(
-    <OverlayTrigger trigger="click" placement="top" overlay={popoverClick}>
-      <i className="feedback-btn fa fa-comments-o"></i>
+    <OverlayTrigger trigger="click" placement="bottom" overlay={popoverClick} rootClose={true}>
+      <button type="button" className="btn btn-link-default feedback-btn">
+        <span className="fa fa-fw fa-comments-o" />
+      </button>
     </OverlayTrigger>
   )
 }

@@ -1,10 +1,11 @@
-{% extends 'IcapWebsiteBundle::view_layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
 {% import 'IcapWebsiteBundle:Website:Macros/common_macros.html.twig' as commonMacros %}
 {% import 'IcapWebsiteBundle:Website:Macros/view_macros.html.twig' as viewMacros %}
 
 {% set options = _resource.options %}
 
-{% block content %}
+{% block section_panel %}
     <div class="website-container" data-ng-cloak ng-controller="MainController as vm">
         <div class="loading text-center" ng-if="!pageLoaded" >
             {{ 'loading'|trans({},'icap_website') }}

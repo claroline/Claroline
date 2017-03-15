@@ -17,8 +17,6 @@ import {MODAL_IMPORT_ITEMS, ImportItemsModal} from './editor/components/import-i
 import {MODAL_ADD_CONTENT, AddContentModal} from './editor/components/add-content-modal.jsx'
 import {MODAL_CONTENT, ContentModal} from './../contents/components/content-modal.jsx'
 
-import './editor/style.css'
-
 export class Quiz {
   constructor(rawQuizData, noServer = false) {
     registerDefaultItemTypes()

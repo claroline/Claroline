@@ -1,0 +1,34 @@
+// more configurable nav-tabs
+.nav-tabs > li {
+    > a {
+        color: @nav-tabs-link-color;
+        margin-right: @nav-spacing;
+        border-radius: @nav-tabs-border-radius @nav-tabs-border-radius 0 0; // make border radius configurable
+    }
+}
+
+// adds more vars to configure nav-pills behavior
+// Also rewrite the space between navs to create it the same way `.nav-tabs`
+// this fixes a wrong left alignment when tabs breaks on multi-lines
+.nav-pills > li {
+    > a {
+        color: @nav-pills-link-color;
+        background: @nav-pills-link-bg;
+        margin-right: @nav-spacing; // create space between tabs
+    }
+
+    + li {
+        margin-left: 0; // removes default bootstrap behavior
+    }
+}
+
+// rewrite stacked pills to use new vars and spacing
+.nav-stacked > li {
+    > a {
+        margin-top: @nav-spacing; // use new var for v-spacing
+    }
+
+    + li {
+        margin-right: 0; // horizontal spacing is not needed in this case
+    }
+}

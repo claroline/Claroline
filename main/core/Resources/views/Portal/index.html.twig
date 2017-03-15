@@ -36,19 +36,19 @@
     {% stylesheets debug=false filter='less, cssmin' output='css/corebundle/portal.css'
     '@ClarolineCoreBundle/Resources/less/portal/portal.less'
     %}
-    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
     {% endstylesheets %}
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ hotAsset("dist/claroline-distribution-main-core-portal.js") }}"></script>
-    <script type="text/javascript">
+    <script>
         (function() {
             'use strict';
             angular
-                    .module('portalApp')
-                    .constant('portal.types', {{ types|json_encode|raw }});
+                .module('portalApp')
+                .constant('portal.types', {{ types|json_encode|raw }});
         })();
     </script>
 {% endblock %}

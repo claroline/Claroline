@@ -2,8 +2,10 @@
 
 {% set httpCode = 403 %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'unauthorized' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}
+    {{ 'unauthorized'|trans({}, 'platform') | striptags | raw }}
+{% endblock %}
 
 {% block message %}
-    {{'unauthorized' | trans({}, 'platform') }}
+    {{ 'unauthorized'|trans({}, 'platform') }}
 {% endblock %}

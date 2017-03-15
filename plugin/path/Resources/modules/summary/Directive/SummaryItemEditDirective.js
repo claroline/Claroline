@@ -12,7 +12,7 @@ export default class SummaryItemEditDirective {
       'ConfirmService',
       'IdentifierService',
       'PathService',
-      function($routeParams, Translator, ClipboardService, ConfirmService, IdentifierService, PathService) {
+      function ($routeParams, Translator, ClipboardService, ConfirmService, IdentifierService, PathService) {
         /**
          * Current displayed Step
          * @type {object}
@@ -33,32 +33,36 @@ export default class SummaryItemEditDirective {
          */
         this.clipboardDisabled = ClipboardService.getDisabled()
 
+        this.areActionsShown = function (show) {
+          return show || this.current.stepId == this.step.id || (!this.current.stepId && 0 == this.step.lvl)
+        }
+
         /**
          * Go to a specific Step
          * @param step
          */
-        this.goTo = function() {
+        this.goTo = function () {
           PathService.goTo(this.step)
         }
 
         /**
          * Add a new step child to specified step
          */
-        this.addStep = function() {
+        this.addStep = function () {
           PathService.addStep(this.step, true)
         }
 
         /**
          * Copy step into clipboard
          */
-        this.copy = function() {
+        this.copy = function () {
           ClipboardService.copy(this.step)
         }
 
         /**
          * Paste clipboard content
          */
-        this.paste = function() {
+        this.paste = function () {
           // Paste clipboard content into children of the step
           ClipboardService.paste(this.step.children, (clipboardData) => {
             // Change step IDs before paste them
@@ -82,7 +86,7 @@ export default class SummaryItemEditDirective {
         /**
          * Remove a step from Tree
          */
-        this.removeStep = function() {
+        this.removeStep = function () {
           if (0 !== this.step.lvl) {
             ConfirmService.open({
               title:         Translator.trans('step_delete_title',   { stepName: this.step.name }, 'path_wizards'),

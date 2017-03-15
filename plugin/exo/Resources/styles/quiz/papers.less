@@ -1,0 +1,18 @@
+.paper {
+  max-width: @quiz-container-width;
+  width: 100%; /* for IE11 : can not apply auto margin with max-width */
+  margin: 0 auto;
+
+  .nav-tabs {
+    margin-bottom: @component-margin-bottom;
+  }
+
+  .paper-title {
+    font-size: @font-size-h3;
+    // same margins as a regular bootstrap H
+    margin-top: (@line-height-computed / 2);
+    margin-bottom: (@line-height-computed / 2);
+    padding: 0 0 5px;
+    border-bottom: 1px solid @panel-default-border;
+  }
+}

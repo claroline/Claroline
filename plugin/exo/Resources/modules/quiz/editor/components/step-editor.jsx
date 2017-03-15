@@ -24,8 +24,7 @@ const ParametersHeader = props =>
   <div onClick={props.onClick} className="panel-title editor-panel-title">
     <span className={
       classes(
-        'panel-icon',
-        'fa',
+        'fa fa-fw',
         props.active ? 'fa-caret-down' : 'fa-caret-right'
       )}
     />
@@ -38,7 +37,7 @@ ParametersHeader.propTypes = {
 }
 
 const ItemActions = props =>
-  <span className="item-actions">
+  <div className="item-actions">
     <OverlayTrigger
       placement="left"
       overlay={
@@ -47,9 +46,9 @@ const ItemActions = props =>
         </Tooltip>
       }
     >
-      <span
-        role="button"
-        className="fa fa-trash-o"
+      <button
+        type="button"
+        className="btn btn-link-default"
         onClick={e => {
           e.stopPropagation()
           props.showModal(MODAL_DELETE_CONFIRM, {
@@ -58,8 +57,11 @@ const ItemActions = props =>
             handleConfirm: () => props.handleItemDeleteClick(props.itemId, props.stepId)
           })
         }}
-      />
+      >
+        <span className="fa fa-fw fa-trash-o" />
+      </button>
     </OverlayTrigger>
+
     {props.connectDragSource(
       <span>
         <OverlayTrigger
@@ -72,14 +74,16 @@ const ItemActions = props =>
         >
           <span
             role="button"
-            title={tex('move_item')}
-            className="fa fa-bars drag-handle"
+            className="btn btn-link-default drag-handle"
             draggable="true"
-          />
+            onClick={() => false}
+          >
+            <span className="fa fa-fw fa-bars" />
+          </span>
         </OverlayTrigger>
       </span>
     )}
-  </span>
+  </div>
 
 ItemActions.propTypes = {
   itemId: T.string.isRequired,
@@ -97,18 +101,17 @@ const ItemHeader = props =>
       makeItemPanelKey(props.item.type, props.item.id)
     )}
   >
-    <span>
+    <span className="panel-title">
       <ItemIcon name={getDefinition(props.item.type).name}/>
-      <span className="panel-title">
-        {props.item.title || trans(getDefinition(props.item.type).name, {}, 'question_types')}
-      </span>
-      {props.hasErrors &&
-        <ValidationStatus
-          id={`${props.item.id}-panel-tip`}
-          validating={props.validating}
-        />
-      }
+      {props.item.title || trans(getDefinition(props.item.type).name, {}, 'question_types')}
     </span>
+    {props.hasErrors &&
+      <ValidationStatus
+        id={`${props.item.id}-panel-tip`}
+        validating={props.validating}
+      />
+    }
+
     <ItemActions
       itemId={props.item.id}
       stepId={props.stepId}
@@ -133,7 +136,6 @@ let ItemPanel = props =>
   props.connectDragPreview(
     props.connectDropTarget(
       <div
-        className="panel"
         style={{opacity: props.isDragging ? 0 : 1}}
       >
         <Panel
@@ -207,18 +209,18 @@ const ContentHeader = props =>
       makeItemPanelKey(props.item.type, props.item.id)
     )}
   >
-    <span>
+    <span className="panel-title">
       <span className={classes('item-icon', 'item-icon-sm', getContentDefinition(props.item.type).altIcon)}></span>
-      <span className="panel-title">
-        {props.item.title || trans(getContentDefinition(props.item.type).type, {}, 'question_types')}
-      </span>
-      {props.hasErrors &&
+      {props.item.title || trans(getContentDefinition(props.item.type).type, {}, 'question_types')}
+    </span>
+
+    {props.hasErrors &&
       <ValidationStatus
         id={`${props.item.id}-panel-tip`}
         validating={props.validating}
       />
-      }
-    </span>
+    }
+
     <ItemActions
       itemId={props.item.id}
       stepId={props.stepId}
@@ -243,7 +245,6 @@ let ContentPanel = props =>
   props.connectDragPreview(
     props.connectDropTarget(
       <div
-        className="panel"
         style={{opacity: props.isDragging ? 0 : 1}}
       >
         <Panel

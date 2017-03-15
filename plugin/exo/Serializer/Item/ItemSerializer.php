@@ -153,7 +153,7 @@ class ItemSerializer extends AbstractSerializer
                 ], $question, $questionData);
 
                 // Adds item feedback
-                if (!$this->hasOption(Transfer::INCLUDE_SOLUTIONS, $options)) {
+                if ($this->hasOption(Transfer::INCLUDE_SOLUTIONS, $options)) {
                     $this->mapEntityToObject([
                         'feedback' => 'feedback',
                     ], $question, $questionData);
@@ -217,6 +217,7 @@ class ItemSerializer extends AbstractSerializer
                 'content' => 'content',
                 'title' => 'title',
                 'description' => 'description',
+                'feedback' => 'feedback',
                 'hints' => function (Item $question, \stdClass $data) use ($options) {
                     return $this->deserializeHints($question, $data->hints, $options);
                 },

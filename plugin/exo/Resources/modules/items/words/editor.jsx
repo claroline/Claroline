@@ -4,6 +4,7 @@ import get from 'lodash/get'
 import {t, tex} from './../../utils/translate'
 import {Textarea} from './../../components/form/textarea.jsx'
 import {CheckGroup} from './../../components/form/check-group.jsx'
+import {ErrorBlock} from './../../components/form/error-block.jsx'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {actions} from './editor.js'
 
@@ -17,9 +18,9 @@ class WordItem extends Component {
     return (
       <div className={
         classes(
-          'word-item',
-          {'positive-score': this.props.score > 0 },
-          {'negative-score': this.props.score <= 0 }
+          'word-item answer-item',
+          {'expected-answer': this.props.score > 0 },
+          {'unexpected-answer': this.props.score <= 0 }
         )
       }>
         <div className="text-fields">
@@ -72,15 +73,17 @@ class WordItem extends Component {
 
           <TooltipButton
             id={`words-${this.props.index}-feedback-toggle`}
-            className="fa fa-comments-o"
+            className="btn-link-default"
+            label={<span className="fa fa-fw fa-comments-o"/>}
             title={tex('words_feedback_info')}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
           <TooltipButton
             id={`words-${this.props.index}-delete`}
-            className="fa fa-trash-o"
+            className="btn-link-default"
             enabled={this.props.deletable}
             title={t('delete')}
+            label={<span className="fa fa-fw fa-trash-o"/>}
             onClick={() => this.props.deletable && this.props.onChange(
               actions.removeSolution(this.props.index)
             )}
@@ -103,14 +106,11 @@ WordItem.propTypes = {
 }
 
 const WordsItems = props =>
-  <div>
+  <div className="words-items">
     {get(props.item, '_errors.solutions') &&
-      <div className="error-text">
-        <span className="fa fa-warning"></span>
-        {props.item._errors.solutions}
-      </div>
+      <ErrorBlock text={props.item._errors.solutions} warnOnly={!props.validating}/>
     }
-    <ul className="words-items">
+    <ul>
       {props.item.solutions.map((solution, index) =>
         <li key={index}>
           <WordItem
@@ -126,14 +126,14 @@ const WordsItems = props =>
         </li>
       )}
     </ul>
-    <div className="footer text-center">
+    <div className="footer">
       <button
         id="add-word-button"
         type="button"
         className="btn btn-default"
         onClick={() => props.onChange(actions.addSolution())}
       >
-        <span className="fa fa-plus"/>
+        <span className="fa fa-fw fa-plus"/>
         {tex('words_add_word')}
       </button>
     </div>
@@ -151,11 +151,12 @@ WordsItems.propTypes = {
     _errors: T.object,
     _wordsCaseSensitive: T.bool.isRequired
   }).isRequired,
+  validating: T.bool.isRequired,
   onChange: T.func.isRequired
 }
 
 export const Words = props =>
-  <fieldset>
+  <fieldset className="words-editor">
     <CheckGroup
       checkId={`item-${props.item.id}-_wordsCaseSensitive`}
       checked={props.item._wordsCaseSensitive}
@@ -171,5 +172,6 @@ Words.propTypes = {
     _wordsCaseSensitive: T.bool.isRequired,
     solutions: T.arrayOf(T.object).isRequired
   }).isRequired,
+  validating: T.bool.isRequired,
   onChange: T.func.isRequired
 }

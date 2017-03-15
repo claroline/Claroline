@@ -22,17 +22,17 @@ export const TooltipButton = props =>
     </button>
   </OverlayTrigger>
 
-TooltipButton.defaultProps = {
-  position: 'top',
-  enabled: true
-}
-
 TooltipButton.propTypes = {
   id: T.string.isRequired,
   title: T.string.isRequired,
-  position: T.string.isRequired,
-  enabled: T.bool.isRequired,
+  position: T.oneOf(['top', 'right', 'bottom', 'left']),
+  enabled: T.bool,
   onClick: T.func,
-  label: T.string,
+  label: T.node,
   className: T.string
+}
+
+TooltipButton.defaultProps = {
+  position: 'top',
+  enabled: true
 }

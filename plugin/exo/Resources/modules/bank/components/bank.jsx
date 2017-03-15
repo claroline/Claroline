@@ -41,7 +41,7 @@ const Bank = (props) => {
   ]
 
   return (
-    <div className="page-container">
+    <main className="page">
       <PageHeader
         title={<span>{tex('questions_bank')} <small>{props.totalResults}&nbsp;questions</small></span>}
       >
@@ -56,26 +56,28 @@ const Bank = (props) => {
         )
       }
 
-      {0 === props.totalResults &&
+     <div className="page-content">
+       {0 === props.totalResults &&
         <div className="empty-list">No results found.</div>
-      }
+       }
 
-      {0 < props.totalResults &&
+       {0 < props.totalResults &&
         <VisibleQuestions />
-      }
+       }
 
-      {0 < props.totalResults &&
-        <Pagination
-          current={props.pagination.current}
-          pageSize={props.pagination.pageSize}
-          pages={props.pages}
-          handlePageChange={props.handlePageChange}
-          handlePagePrevious={props.handlePagePrevious}
-          handlePageNext={props.handlePageNext}
-          handlePageSizeUpdate={props.handlePageSizeUpdate}
-        />
-      }
-    </div>
+       {0 < props.totalResults &&
+         <Pagination
+           current={props.pagination.current}
+           pageSize={props.pagination.pageSize}
+           pages={props.pages}
+           handlePageChange={props.handlePageChange}
+           handlePagePrevious={props.handlePagePrevious}
+           handlePageNext={props.handlePageNext}
+           handlePageSizeUpdate={props.handlePageSizeUpdate}
+         />
+       }
+     </div>
+    </main>
   )
 }
 

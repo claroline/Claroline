@@ -8,14 +8,26 @@ plugin:
       is_exportable: true
       icon: res_file.png
       actions:
-        - name: path_administrate
+        - name:      path_administrate
           menu_name: administrate
-        - name: manageresults
+        - name:      manageresults
           menu_name: manageresults
 
   widgets:
-     - name: innova_path_widget
-       is_configurable: true
-       is_displayable_in_desktop: true
+     - name:                        innova_path_widget
+       is_configurable:             true
+       is_displayable_in_desktop:   true
        is_displayable_in_workspace: true
-       is_exportable: false
+       is_exportable:               false
+
+     - name:                        innova_path_slideshow
+       is_configurable:             true
+       is_displayable_in_desktop:   true
+       is_displayable_in_workspace: true
+       is_exportable:               false
+
+     - name:                        innova_path_progression
+       is_configurable:             true
+       is_displayable_in_desktop:   true
+       is_displayable_in_workspace: true
+       is_exportable:               false

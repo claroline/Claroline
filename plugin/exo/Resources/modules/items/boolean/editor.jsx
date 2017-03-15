@@ -14,11 +14,12 @@ class Item extends Component {
       showFeedback: false
     }
   }
+
   render(){
     return(
       <div className={classes(
-          'choice',
-          this.props.choice._score > 0 ? 'positive-score' : 'negative-score'
+          'answer-item choice-item',
+          this.props.choice._score > 0 ? 'expected-answer' : 'unexpected-answer'
         )}>
         <div className="text-fields">
           <Textarea
@@ -52,8 +53,9 @@ class Item extends Component {
           />
           <TooltipButton
             id={`choice-${this.props.choice.id}-feedback-toggle`}
-            className="fa fa-comments-o"
+            className="btn-link-default"
             title={tex('choice_feedback_info')}
+            label={<span className="fa fa-fw fa-comments-o" />}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
           />
         </div>
@@ -92,13 +94,14 @@ const Boolean = props => {
           )}
         </ul>
       </div>
-      <hr/>
+
       {get(props.item, '_errors.choices') &&
-        <ErrorBlock text={props.item._errors.choices} warnOnly={!props.validating}/>
+        <ErrorBlock text={props.item._errors.choices} warnOnly={!props.validating} />
       }
+
       <div className="row">
         {props.item.choices.map(choice =>
-          <div key={choice.id}  className="col-md-6">
+          <div key={choice.id} className="col-md-6">
             <Item choice={choice} onChange={props.onChange}/>
           </div>
         )}

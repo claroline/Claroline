@@ -23,7 +23,7 @@ export class ImageInput extends Component {
           ref={button => this.button = button}
           onClick={() => this.input.click()}
         >
-          <span className="fa fa-file-o"/>
+          <span className="fa fa-fw fa-file-o"/>
           {tex('graphic_pick_image')}
         </button>
       </div>

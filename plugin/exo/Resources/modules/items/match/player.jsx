@@ -59,9 +59,10 @@ class MatchItem extends Component{
 
   render() {
     return (
-      <div className={classes('item', this.props.type)} id={this.props.type + '_' + this.props.item.id}>
-        <div className="item-content" dangerouslySetInnerHTML={{__html: this.props.item.data}} />
-      </div>
+      <div
+        className={classes('answer-item match-item', this.props.type)} id={this.props.type + '_' + this.props.item.id}
+        dangerouslySetInnerHTML={{__html: this.props.item.data}}
+      />
     )
   }
 }
@@ -185,8 +186,8 @@ class MatchPlayer extends Component {
 
   render() {
     return (
-        <div id={`match-question-player-${this.props.item.id}`} className="match-question-player" ref={(el) => { this.container = el }}>
-          <div className="item-col">
+        <div id={`match-question-player-${this.props.item.id}`} className="match-player match-items row" ref={(el) => { this.container = el }}>
+          <div className="item-col col-md-5 col-sm-5 col-xs-5">
             <ul>
             {this.state.firstSet.map((item) =>
               <li key={'source_' + item.id}>
@@ -200,8 +201,10 @@ class MatchPlayer extends Component {
             )}
             </ul>
           </div>
-          <div className="divide-col" />
-          <div className="item-col">
+
+          <div className="divide-col col-md-2 col-sm-2 col-xs-2" />
+
+          <div className="item-col col-md-5 col-sm-5 col-xs-5">
             <ul>
             {this.state.secondSet.map((item) =>
               <li key={'target_' + item.id}>

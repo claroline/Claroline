@@ -50,14 +50,16 @@ export const MatchLinkPopover = props =>
     id={`popover-${props.solution.firstId}-${props.solution.secondId}`}
     positionTop={props.top}
     placement="bottom"
-    >
-      <div className={classes(
-        'fa',
-        {'fa-check text-success' : props.solution.score > 0},
-        {'fa-times text-danger' : props.solution.score <= 0 }
-      )}>
-      </div>
-      &nbsp;<label className="label popover-label" dangerouslySetInnerHTML={{__html: props.solution.feedback}}/>
+  >
+    <span className={classes(
+      'fa fa-fw',
+      {'fa-check text-success' : props.solution.score > 0},
+      {'fa-times text-danger' : props.solution.score <= 0 }
+    )}>
+    </span>
+    {props.solution.feedback &&
+      <div className="match-association-feedback" dangerouslySetInnerHTML={{__html: props.solution.feedback}}/>
+    }
   </Popover>
 
 
@@ -66,19 +68,13 @@ MatchLinkPopover.propTypes = {
   solution: T.object.isRequired
 }
 
-class MatchItem extends Component{
-  constructor(props) {
-    super(props)
-  }
-
-  render() {
-    return (
-      <div className={classes('item', this.props.type)} id={`${this.props.type}_${this.props.item.id}`}>
-        <div className="item-content" dangerouslySetInnerHTML={{__html: this.props.item.data}} />
-      </div>
-    )
-  }
-}
+const MatchItem = props =>
+  <div
+    id={`${props.type}_${props.item.id}`}
+    className={classes('answer-item match-item', props.type)}
+    dangerouslySetInnerHTML={{__html: props.item.data}}
+  >
+  </div>
 
 MatchItem.propTypes = {
   type: T.string.isRequired,
@@ -167,44 +163,47 @@ export class MatchFeedback extends Component
 
   render() {
     return (
-      <div>
+      <div className="match-feedback">
         <span className="help-block">
-          <span className="fa fa-info-circle">&nbsp;</span>{tex('match_player_click_link_help')}
-        </span>      
-        <div ref={(el) => { this.container = el }} id={`match-question-paper-${this.props.item.id}-first`} className="match-question-feedback">
-        <div className="item-col">
-          <ul>
-            {this.props.item.firstSet.map((item) =>
-              <li key={'source_' + item.id}>
-                <MatchItem
-                  item={item}
-                  type="source"
-                />
-              </li>
-            )}
-          </ul>
+          <span className="fa fa-info-circle"></span> {tex('match_player_click_link_help')}
+        </span>
+
+        <div className="match-items row" ref={(el) => { this.container = el }} id={`match-question-paper-${this.props.item.id}-first`}>
+          <div className="item-col col-md-5 col-sm-5 col-xs-5">
+            <ul>
+              {this.props.item.firstSet.map((item) =>
+                <li key={'source_' + item.id}>
+                  <MatchItem
+                    item={item}
+                    type="source"
+                  />
+                </li>
+              )}
+            </ul>
+          </div>
+
+          <div className="divide-col col-md-2 col-sm-2 col-xs-2" id={`popover-container-${this.props.item.id}`}>
+            {this.state.showPopover &&
+              <MatchLinkPopover
+                top={this.state.top}
+                solution={this.state.current}
+              />
+            }
+          </div>
+
+          <div className="item-col col-md-5 col-sm-5 col-xs-5">
+            <ul>
+              {this.props.item.secondSet.map((item) =>
+                <li key={'target_' + item.id}>
+                  <MatchItem
+                    item={item}
+                    type="target"
+                  />
+                </li>
+              )}
+            </ul>
+          </div>
         </div>
-        <div className="divide-col" id={`popover-container-${this.props.item.id}`}>
-          { this.state.showPopover &&
-            <MatchLinkPopover
-              top={this.state.top}
-              solution={this.state.current}
-            />
-          }
-        </div>
-        <div className="item-col">
-          <ul>
-            {this.props.item.secondSet.map((item) =>
-              <li key={'target_' + item.id}>
-                <MatchItem
-                  item={item}
-                  type="target"
-                />
-              </li>
-            )}
-          </ul>
-        </div>
-      </div>
       </div>
     )
   }

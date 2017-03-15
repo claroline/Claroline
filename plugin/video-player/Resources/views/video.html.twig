@@ -7,31 +7,40 @@
 {% extends layout %}
 
 {% set tag = 'video' %}
-{% if "audio" in video.getResourceNode().getMimeType() %}
+{% if "audio" in _resource.resourceNode.mimeType %}
     {% set tag = 'audio' %}
 {% endif %}
 
-{% block title %}{{ video.getResourceNode().getName() ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
+{% block content %}
+    <div class="page-container">
+        <main class="page">
+            <header class="page-header">
+                <h1>{{ _resource.resourceNode.name }}</h1>
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ video.getResourceNode().getName() }}</h3>
-    </div>
-    <div class="panel-body">
-        {% include "ClarolineVideoPlayerBundle::player.html.twig" with {'video': video} %}
-    </div>
-    <div class="panel-footer">
-        {% if canExport %}
-            <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ video.getResourceNode().getId() }}">
-                <i class="fa fa-download"></i> {{ 'download'|trans({}, 'platform') }}
-            </a>
-        {% endif %}
-        <span><video-tracks ng-app="TrackButton"></video-tracks></span>
+                <nav class="page-actions">
+                    {% if canExport %}
+                        <a class="btn btn-link" href="{{ path('claro_resource_download') }}?ids[]={{ video.getResourceNode().getId() }}">
+                            <i class="fa fa-fw fa-download"></i> {{ 'download'|trans({}, 'platform') }}
+                        </a>
+                    {% endif %}
+
+                    <video-tracks data-ng-app="TrackButton"></video-tracks>
+                </nav>
+            </header>
+
+            <div class="page-content">
+                {# the extra container is required because the `display: flex` on .page-content breaks videoJS display #}
+                <div class="video-container">
+                    {% include "ClarolineVideoPlayerBundle::player.html.twig" with {video: _resource, noExplain: true} %}
+                </div>
+            </div>
+        </main>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+
     <script>
         window.videoId = {{ video.getId() }}
         window.nodeId = {{ video.getResourceNode().getId() }}

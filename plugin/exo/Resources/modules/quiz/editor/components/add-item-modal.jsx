@@ -48,6 +48,7 @@ class AddItemModal extends Component {
               </div>
             )}
           </div>
+
           <div className="modal-item-desc">
             <span className="modal-item-name">
               {this.state.currentName}

@@ -1,0 +1,25 @@
+.item-icon {
+    text-align: center;
+
+    &.item-icon-sm {
+        width: 16px;
+        height: 16px;
+        margin-right: 10px;
+        margin-bottom: -2px; /* tmp fix */
+        stroke: #555;
+        fill: #555;
+        color: #555;
+    }
+
+    &.item-icon-lg {
+        width: 64px;
+        height: 64px;
+        padding: 10px;
+        border: solid 2px #777;
+        border-radius: @border-radius-base;
+        fill: #777;
+        stroke: #777;
+        color: #777;
+        font-size: 40px; // this is for when we use font-awesome icon (eg. for content items)
+    }
+}

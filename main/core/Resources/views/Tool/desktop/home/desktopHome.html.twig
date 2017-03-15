@@ -4,10 +4,9 @@
     {{ parent() ~ ' - ' ~ "home" | trans({}, "platform") | striptags | raw }}
 {% endblock %}
 
-{% block section_content %}
+{% block section_panel %}
     <div id="desktop-home-panel" data-ng-app="DesktopHomeModule">
-        <div class="panel-body" data-ui-view="">
-        </div>
+        <div class="panel-body" data-ui-view=""></div>
     </div>
 {% endblock %}
 

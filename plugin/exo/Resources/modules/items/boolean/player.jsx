@@ -3,14 +3,14 @@ import classes from 'classnames'
 
 const Item = props => {
   return(
-    <div
+    <button type="button"
       onClick={props.onClick}
       className={classes(
-        'choice',
-        {'selected': props.selected}
+        'answer-item choice-item',
+        {'selected-answer': props.selected}
       )}>
         {props.choice.data}
-    </div>
+    </button>
   )
 }
 
@@ -42,7 +42,7 @@ class BooleanPlayer extends Component {
     return (
       <div className="boolean-player row">
         {this.props.item.choices.map(choice =>
-          <div key={choice.id}  className="col-md-6">
+          <div key={choice.id}  className="col-md-6 col-sm-6">
             <Item
               selected={this.state.selected && this.state.selected === choice.id ? true : false}
               onClick={() => this.handleItemClick(choice)} choice={choice}/>

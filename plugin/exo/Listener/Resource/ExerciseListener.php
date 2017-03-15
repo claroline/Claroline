@@ -12,6 +12,7 @@ use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Form\Type\ExerciseType;
@@ -114,8 +115,11 @@ class ExerciseListener
         /** @var Exercise $exercise */
         $exercise = $event->getResource();
 
+        /** @var Request $currentRequest */
+        $currentRequest = $this->container->get('request_stack')->getCurrentRequest();
+
         // Forward request to the Resource controller
-        $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate([], null, [
+        $subRequest = $currentRequest->duplicate($currentRequest->query->all(), null, [
             '_controller' => 'UJMExoBundle:Resource\Exercise:open',
             'id' => $exercise->getUuid(),
         ]);

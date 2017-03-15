@@ -19,8 +19,8 @@ class ChoiceItem extends Component {
     return (
       <div className={classes(
           'choice-item-cloze',
-          {'positive-score': this.props.answer.score > 0},
-          {'negative-score': this.props.answer.score <= 0}
+          {'expected-answer': this.props.answer.score > 0},
+          {'unexpected-answer': this.props.answer.score <= 0}
         )
       }>
         <div className='row'>
@@ -76,13 +76,13 @@ class ChoiceItem extends Component {
           <div className="col-xs-3">
             <TooltipButton
               id={`choice-${this.props.id}-feedback-toggle`}
-              className="fa fa-comments-o"
+              className="fa fa-fw fa-comments-o"
               title={tex('choice_feedback_info')}
               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
             />
             <TooltipButton
               id={`answer-${this.props.id}-delete`}
-              className="fa fa-trash-o"
+              className="fa fa-fw fa-trash-o"
               title={t('delete')}
               onClick={() => this.props.onChange(
                 actions.removeAnswer(this.props.answer.text, this.props.answer.caseSensitive)
@@ -189,7 +189,7 @@ class HoleForm extends Component {
       >
         <div className="panel-default">
           <div className="panel-body pull-right close-popover hole-form-row">
-            <i onClick={this.removeAndClose.bind(this)} className="fa fa-trash-o"></i>
+            <i onClick={this.removeAndClose.bind(this)} className="fa fa-fw fa-trash-o"></i>
             {'\u00a0'}
             {!this.props._errors.answers &&
               <b onClick={this.closePopover.bind(this)}>x</b>
@@ -280,7 +280,7 @@ class HoleForm extends Component {
                   actions.addAnswer(this.getHole().id))}
                 type="button"
               >
-                <i className="fa fa-plus"/>
+                <i className="fa fa-fw fa-plus"/>
                 {tex('key_word')}
               </button>
             </div>
@@ -357,7 +357,7 @@ export class Cloze extends Component {
           type="button"
           className="btn btn-default"
           disabled={!this.state.allowCloze}
-          onClick={() => this.props.onChange(this.addHole())}><i className="fa fa-plus"/>
+          onClick={() => this.props.onChange(this.addHole())}><i className="fa fa-fw fa-plus"/>
           {tex('create_cloze')}
         </button>
         {(this.props.item._popover && this.props.item._holeId) &&

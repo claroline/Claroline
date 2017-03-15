@@ -24,8 +24,8 @@ export const SetFeedback = props =>
                     { utils.answerInSolutions(answer, props.item.solutions.associations) ?
                       <div className={classes(
                           'association',
-                          {'bg-success text-success': utils.isValidAnswer(answer, props.item.solutions.associations)},
-                          {'bg-danger text-danger': !utils.isValidAnswer(answer, props.item.solutions.associations)}
+                          {'correct-answer': utils.isValidAnswer(answer, props.item.solutions.associations)},
+                          {'incorrect-answer': !utils.isValidAnswer(answer, props.item.solutions.associations)}
                         )}>
                         <WarningIcon valid={utils.isValidAnswer(answer, props.item.solutions.associations)}/>
                         <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />

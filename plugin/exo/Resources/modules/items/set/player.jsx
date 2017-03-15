@@ -9,8 +9,8 @@ import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 let DropBox = props => {
   return props.connectDropTarget (
      <div className={classes(
-       'set-item-drop-container',
-       {'on-hover': props.isOver}
+       'set-drop-placeholder',
+       {'hover': props.isOver}
      )}>
        {tex('set_drop_item')}
      </div>
@@ -28,18 +28,16 @@ DropBox.propTypes = {
 DropBox = makeDroppable(DropBox, 'ITEM')
 
 const Association = props =>
-  <div className="association">
-    <div className="first-row">
-      <div className="association-data" dangerouslySetInnerHTML={{__html: props.association._itemData}} />
-      <div className="right-controls">
-        <TooltipButton
-          id={`ass-${props.association.itemId}-${props.association.setId}-delete`}
-          className="fa fa-trash-o"
-          title={t('delete')}
-          onClick={() => props.handleItemRemove(props.association.setId, props.association.itemId)}
-        />
-      </div>
-    </div>
+  <div className="association answer-item selected">
+    <div className="association-data" dangerouslySetInnerHTML={{__html: props.association._itemData}} />
+
+    <TooltipButton
+      id={`ass-${props.association.itemId}-${props.association.setId}-delete`}
+      className="btn-link-default"
+      title={t('delete')}
+      label={<span className="fa fa-fw fa-trash-o" />}
+      onClick={() => props.handleItemRemove(props.association.setId, props.association.itemId)}
+    />
   </div>
 
 Association.propTypes = {
@@ -48,20 +46,18 @@ Association.propTypes = {
 }
 
 const Set = props =>
-  <div className="set">
-    <div className="set-heading">
-      <div className="set-heading-content" dangerouslySetInnerHTML={{__html: props.set.data}} />
-    </div>
-    <div className="set-body">
-      <ul>
-      { props.associations.map(ass =>
-        <li key={`${ass.itemId}-${ass.setId}`}>
-          <Association handleItemRemove={props.onAssociationItemRemove} association={ass}/>
-        </li>
-      )}
-      </ul>
-      <DropBox object={props.set} onDrop={props.onDrop} />
-    </div>
+  <div className="set answer-item">
+    <div className="set-heading" dangerouslySetInnerHTML={{__html: props.set.data}} />
+
+    <ul>
+    {props.associations.map(ass =>
+      <li key={`${ass.itemId}-${ass.setId}`}>
+        <Association handleItemRemove={props.onAssociationItemRemove} association={ass} />
+      </li>
+    )}
+    </ul>
+
+    <DropBox object={props.set} onDrop={props.onDrop} />
   </div>
 
 Set.propTypes = {
@@ -95,30 +91,28 @@ SetList.propTypes = {
 
 let Item = props => {
   return props.connectDragPreview (
-    <div className="item">
+    <div className="set-item answer-item">
       <div className="item-content" dangerouslySetInnerHTML={{__html: props.item.data}} />
-      <div className="right-controls">
-        {props.connectDragSource(
-          <div>
-            <OverlayTrigger
-              placement="top"
-              overlay={
-                <Tooltip id={`item-${props.item.id}-drag`}>{t('move')}</Tooltip>
-              }>
-              <span
-                draggable="true"
-                className={classes(
-                  'tooltiped-button',
-                  'btn',
-                  'fa',
-                  'fa-bars',
-                  'drag-handle'
-                )}
-              />
-            </OverlayTrigger>
-          </div>
-        )}
-      </div>
+      {props.connectDragSource(
+        <div>
+          <OverlayTrigger
+            placement="top"
+            overlay={
+              <Tooltip id={`item-${props.item.id}-drag`}>{t('move')}</Tooltip>
+            }>
+            <span
+              draggable="true"
+              className={classes(
+                'tooltiped-button',
+                'btn btn-link-default',
+                'fa fa-fw',
+                'fa-bars',
+                'drag-handle'
+              )}
+            />
+          </OverlayTrigger>
+        </div>
+      )}
     </div>
   )
 }
@@ -173,17 +167,18 @@ class SetPlayer extends Component {
 
   render() {
     return (
-      <div className="set-question-player">
-          <div className="items-col">
-            <ItemList items={this.props.item.items} />
-          </div>
-          <div className="sets-col">
-            <SetList
-              onAssociationItemRemove={(setId, itemId) => this.handleAssociationItemRemove(setId, itemId)}
-              onAssociationItemDrop={(source, target) => this.handleAssociationItemDrop(source, target)}
-              answers={this.props.answer}
-              sets={this.props.item.sets} />
-          </div>
+      <div className="set-player row">
+        <div className="items-col col-md-5 col-sm-5 col-xs-5">
+          <ItemList items={this.props.item.items} />
+        </div>
+
+        <div className="sets-col col-md-7 col-sm-7 col-xs-7">
+          <SetList
+            onAssociationItemRemove={(setId, itemId) => this.handleAssociationItemRemove(setId, itemId)}
+            onAssociationItemDrop={(source, target) => this.handleAssociationItemDrop(source, target)}
+            answers={this.props.answer}
+            sets={this.props.item.sets} />
+        </div>
       </div>
     )
   }
