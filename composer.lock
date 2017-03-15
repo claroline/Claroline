@@ -2916,13 +2916,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/JangoBrick/php-svg.git",
-                "reference": "e2148fb5bc88b1355f36e24079c6e2e325e66bfc"
+                "url": "https://github.com/ptsavdar/php-svg.git",
+                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JangoBrick/php-svg/zipball/e2148fb5bc88b1355f36e24079c6e2e325e66bfc",
-                "reference": "e2148fb5bc88b1355f36e24079c6e2e325e66bfc",
+                "url": "https://api.github.com/repos/ptsavdar/php-svg/zipball/0ca03406b57e29516ce04e02592d28b687b5531a",
+                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a",
                 "shasum": ""
             },
             "require": {
@@ -2934,7 +2934,6 @@
                     "JangoBrick\\SVG\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2948,7 +2947,10 @@
             "keywords": [
                 "svg"
             ],
-            "time": "2017-02-15 17:41:38"
+            "support": {
+                "source": "https://github.com/ptsavdar/php-svg/tree/master"
+            },
+            "time": "2017-02-27 15:14:15"
         },
         {
             "name": "jdorn/sql-formatter",
