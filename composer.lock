@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "93b32e0dbc383b1dd9c91abf5ab2e10a",
-    "content-hash": "69f498c1bcce371cdd1e0a86a959eb17",
+    "hash": "9ffab147504423a1a24ffba5bd68bb8b",
+    "content-hash": "4739d7c0ea82a409eedda0aecb42b9dc",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -2916,13 +2916,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/JangoBrick/php-svg.git",
-                "reference": "e2148fb5bc88b1355f36e24079c6e2e325e66bfc"
+                "url": "https://github.com/ptsavdar/php-svg.git",
+                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/JangoBrick/php-svg/zipball/e2148fb5bc88b1355f36e24079c6e2e325e66bfc",
-                "reference": "e2148fb5bc88b1355f36e24079c6e2e325e66bfc",
+                "url": "https://api.github.com/repos/ptsavdar/php-svg/zipball/0ca03406b57e29516ce04e02592d28b687b5531a",
+                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a",
                 "shasum": ""
             },
             "require": {
@@ -2934,7 +2934,6 @@
                     "JangoBrick\\SVG\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2948,7 +2947,10 @@
             "keywords": [
                 "svg"
             ],
-            "time": "2017-02-15 17:41:38"
+            "support": {
+                "source": "https://github.com/ptsavdar/php-svg/tree/master"
+            },
+            "time": "2017-02-27 15:14:15"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -5930,7 +5932,7 @@
             ],
             "authors": [
                 {
-                    "name": "William DURAND",
+                    "name": "William Durand",
                     "email": "william.durand1@gmail.com"
                 }
             ],
