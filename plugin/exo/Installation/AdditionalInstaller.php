@@ -72,5 +72,13 @@ class AdditionalInstaller extends BaseInstaller
             $updater->setLogger($this->logger);
             $updater->postUpdate();
         }
+
+        if (version_compare($currentVersion, '9.2.0', '<')) {
+            $updater = new Updater090200(
+                $this->container->get('doctrine.dbal.default_connection')
+            );
+            $updater->setLogger($this->logger);
+            $updater->postUpdate();
+        }
     }
 }
