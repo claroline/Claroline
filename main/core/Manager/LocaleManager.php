@@ -79,10 +79,10 @@ class LocaleManager
     public function getImplementedLocales($path = '/../Resources/translations/')
     {
         $locales = [];
-        $finder = $this->finder->files()->in(__DIR__.$path)->name('/platform\.[^.]*\.yml/');
+        $finder = $this->finder->files()->in(__DIR__.$path)->name('/platform\.[^.]*\.json/');
 
         foreach ($finder as $file) {
-            $locale = str_replace(['platform.', '.yml'], '', $file->getRelativePathname());
+            $locale = str_replace(['platform.', '.json'], '', $file->getRelativePathname());
             $locales[$locale] = $locale;
         }
 
