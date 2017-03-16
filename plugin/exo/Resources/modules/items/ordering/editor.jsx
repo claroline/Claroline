@@ -117,7 +117,7 @@ let OrderingItem = props => {
               'tooltiped-button',
               'btn',
               'fa',
-              'fa-bars',
+              'fa-arrows',
               'drag-handle'
             )}
           />

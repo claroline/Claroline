@@ -41,7 +41,7 @@ const Actions = props =>
       <span
         role="button"
         title={t('move')}
-        className="action-button fa fa-bars drag-handle"
+        className="action-button fa fa-arrows drag-handle"
         draggable="true"
       />
     )}

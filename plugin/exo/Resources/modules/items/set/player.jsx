@@ -106,7 +106,7 @@ let Item = props => {
                 'tooltiped-button',
                 'btn btn-link-default',
                 'fa fa-fw',
-                'fa-bars',
+                'fa-arrows',
                 'drag-handle'
               )}
             />

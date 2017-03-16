@@ -78,7 +78,7 @@ const ItemActions = props =>
             draggable="true"
             onClick={() => false}
           >
-            <span className="fa fa-fw fa-bars" />
+            <span className="fa fa-fw fa-arrows" />
           </span>
         </OverlayTrigger>
       </span>
