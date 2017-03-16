@@ -68,7 +68,7 @@ class ChoiceItem extends Component {
                   'score',
                   this.props.answer.text,
                   this.props.answer.caseSensitive,
-                  parseInt(e.target.value)
+                  Number(e.target.value)
                 )
               )}
             />
