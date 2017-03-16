@@ -104,7 +104,7 @@ let Item = props => {
                 'drag-handle'
               )}
             >
-              <span className="fa fa-fw fa-bars" />
+              <span className="fa fa-fw fa-arrows" />
             </span>
           </OverlayTrigger>
         </div>

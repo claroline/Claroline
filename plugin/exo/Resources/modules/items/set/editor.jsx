@@ -247,7 +247,7 @@ let Item = props => {
                   'btn',
                   'btn-link-default',
                   'fa fa-fw',
-                  'fa-bars',
+                  'fa-arrows',
                   'drag-handle'
                 )}
               />

@@ -49,7 +49,7 @@ let SortableItem = props => {
             'tooltiped-button',
             'btn',
             'fa',
-            'fa-bars',
+            'fa-arrows',
             'drag-handle'
           )}
         />
@@ -83,7 +83,7 @@ let DraggableItem = props => {
           'tooltiped-button',
           'btn',
           'fa',
-          'fa-bars',
+          'fa-arrows',
           'drag-handle'
         )}
       />
