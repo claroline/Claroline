@@ -30,7 +30,8 @@ class CreatePublicFilesData implements RequiredFixture
         $dataWebDir = $this->container->getParameter('claroline.param.data_web_dir');
 
         if (!$fileSystem->exists($publicFilesDir)) {
-            $fileSystem->mkdir($publicFilesDir);
+            $fileSystem->mkdir($publicFilesDir, 0775);
+            $fileSystem->chmod($publicFilesDir, 0775, 0000, true);
         }
         if (!$fileSystem->exists($dataWebDir)) {
             $fileSystem->symlink($publicFilesDir, $dataWebDir);
