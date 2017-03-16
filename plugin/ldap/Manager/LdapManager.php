@@ -43,7 +43,7 @@ class LdapManager
     /**
      * This method create the LDAP link identifier on success and test the connection.
      *
-     * @param server   An array containing LDAP informations as host, port or dn.
+     * @param server   An array containing LDAP informations as host, port or dn
      *
      * @return bool
      */
@@ -87,7 +87,6 @@ class LdapManager
                 $server['firstName'],
                 $server['lastName'],
                 $server['email'],
-                'userpassword',
             ]
         );
 
@@ -100,7 +99,6 @@ class LdapManager
                 $user['first_name'] = $entry[$server['firstName']][0];
                 $user['last_name'] = $entry[$server['lastName']][0];
                 $user['email'] = $entry[$server['email']][0];
-                $user['password'] = $entry['userpassword'][0];
             }
         }
 
@@ -112,9 +110,9 @@ class LdapManager
      *
      * @param server An array containing LDAP informations as host, port or dn
      * @param filter Simple or advanced ldap filter
-     * @param attributes An array of the required attributes, e.g. array("mail", "sn", "cn").
+     * @param attributes An array of the required attributes, e.g. array("mail", "sn", "cn")
      *
-     * @return Returns a search result identifier or FALSE on error.
+     * @return Returns a search result identifier or FALSE on error
      */
     public function search($server, $filter, $attributes = [])
     {
@@ -124,9 +122,9 @@ class LdapManager
     /**
      * This method reads the entries of a LDAP search.
      *
-     * @param search LDAP search result identifier.
+     * @param search LDAP search result identifier
      *
-     * @return Returns a complete result information in a multi-dimensional array on success and FALSE on error.
+     * @return Returns a complete result information in a multi-dimensional array on success and FALSE on error
      */
     public function getEntries($search)
     {
@@ -144,7 +142,7 @@ class LdapManager
     /**
      * Get a LDAP server configuration by his name.
      *
-     * @param name The name of server.
+     * @param name The name of server
      *
      * @return An array containing LDAP informations as host, port or dn
      */
@@ -190,7 +188,7 @@ class LdapManager
     /**
      * Delete a server configuration.
      *
-     * @param name The name of the server.
+     * @param name The name of the server
      *
      * @return bool
      */
@@ -348,7 +346,7 @@ class LdapManager
     /**
      * Authenticate ldap user.
      *
-     * @param name The name of the server.
+     * @param name The name of the server
      *
      * @return bool
      */
@@ -365,6 +363,10 @@ class LdapManager
     {
         if ($server['append_dn']) {
             return $server['userName'].'='.$user.','.$server['dn'];
+        }
+
+        if ($server['append_cn']) {
+            return 'CN='.$user.','.$server['dn'];
         }
 
         return $user;
