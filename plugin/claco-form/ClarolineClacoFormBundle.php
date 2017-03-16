@@ -19,4 +19,9 @@ class ClarolineClacoFormBundle extends PluginBundle
     {
         return true;
     }
+
+    public function getRequiredPlugins()
+    {
+        return ['Claroline\\MessageBundle\\ClarolineMessageBundle'];
+    }
 }
