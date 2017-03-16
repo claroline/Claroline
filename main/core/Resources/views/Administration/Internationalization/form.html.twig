@@ -1,12 +1,11 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'indexing' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'i18n' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
             {
-                'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_index')
             },
@@ -15,27 +14,41 @@
                 'href': path('claro_admin_index')
             },
             {
-            'name': 'i18n'|trans({}, 'platform'),
-            'href': ''
+                'name': 'i18n'|trans({}, 'platform'),
+                'href': ''
             }
         ])
     }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'i18n'|trans({}, 'platform') }}</h3>
+{% block content %}
+    <div class="page-container">
+        <main class="page">
+            <header class="page-header">
+                <h1>
+                    {{ 'parameters'|trans({}, 'platform') }}
+                    <small>{{ 'i18n'|trans({}, 'platform') }}</small>
+                </h1>
+            </header>
+
+            <div class="page-content">
+                <form role="form" class="form-horizontal" action="{{ path('claro_admin_i18n_submit') }}" method="post" {{ form_enctype(form) }}>
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            {{ form_widget(form) }}
+                        </div>
+                    </div>
+
+                    <div>
+                        <button type="submit" class="btn btn-primary">
+                            {{ 'save'|trans({}, 'platform') }}
+                        </button>
+                        <a href="{{ path('claro_admin_index') }}" class="btn btn-default">
+                            {{ 'cancel'|trans({}, 'platform') }}
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </main>
     </div>
-    <form role="form" class="form-horizontal" action="{{ path('claro_admin_i18n_submit') }}"
-          method="post" {{ form_enctype(form) }}>
-        <div class="panel-body">
-            {{ form_widget(form) }}
-        </div>
-        <div class="panel-footer">
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_index') }}">
-                <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
-            </a>
-        </div>
-    </form>
 {% endblock %}

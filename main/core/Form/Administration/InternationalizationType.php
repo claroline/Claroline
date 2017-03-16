@@ -17,17 +17,14 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class InternationalizationType extends AbstractType
 {
-    private $activated;
-    private $availables;
-    private $locales;
+    private $activatedLocales = [];
+    private $availableLocales = [];
 
-    public function __construct($activated, $availables)
+    public function __construct(array $activatedLocales, array $availableLocales)
     {
-        $this->activated = $activated;
-        $this->available = array();
-
-        foreach ($availables as $available) {
-            $this->available[$available] = $available;
+        $this->activatedLocales = $activatedLocales;
+        foreach ($availableLocales as $available) {
+            $this->availableLocales[$available] = $available;
         }
     }
 
@@ -35,13 +32,13 @@ class InternationalizationType extends AbstractType
     {
         $builder->add(
             'locales',
-            'choice', array(
-                'choices' => $this->available,
+            'choice', [
+                'choices' => $this->availableLocales,
                 'label' => 'languages',
                 'expanded' => true,
                 'multiple' => true,
-                'data' => $this->activated,
-            )
+                'data' => $this->activatedLocales,
+            ]
         );
     }
 
@@ -52,6 +49,8 @@ class InternationalizationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults([
+            'translation_domain' => 'platform',
+        ]);
     }
 }
