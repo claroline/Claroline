@@ -16,7 +16,8 @@ export const BooleanFeedback = props => {
             {solution.id === props.answer &&
               <WarningIcon valid={solution.score > 0}/>
             }
-            {props.item.choices.find(choice => choice.id === solution.id).data}
+
+            <div dangerouslySetInnerHTML={{__html: props.item.choices.find(choice => choice.id === solution.id).data}}/>
 
             {solution.id === props.answer &&
               <Feedback

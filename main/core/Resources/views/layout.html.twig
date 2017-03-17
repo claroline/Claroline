@@ -76,7 +76,26 @@
             {% block breadcrumb %}{% endblock %}
         {% endif %}
 
-        {% block content %}{% endblock %}
+        {% block content %}
+            <div class="page-container">
+                <main class="page">
+                {% block page %}
+                    <header class="page-header">
+                    {% block page_header %}
+                        <h1>
+                            {% block page_title %}{% endblock %}
+                        </h1>
+                    {% endblock %}
+                    </header>
+
+                    <div class="page-content">
+                    {% block page_content %}
+                    {% endblock %}
+                    </div>
+                {% endblock %}
+                </main>
+            </div>
+        {% endblock %}
     </div>
 
     {% if not isRenderedInIframe %}
