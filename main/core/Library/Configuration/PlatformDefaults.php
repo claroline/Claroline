@@ -92,7 +92,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'help_url' => 'http://doc.claroline.com',
             'register_button_at_login' => false,
             'send_mail_at_workspace_registration' => true,
-            'locales' => ['fr', 'en', 'es'],
+            'locales' => ['fr', 'en'],
             'domain_name' => null,
             'platform_url' => null,
             'mailer_from' => null,
