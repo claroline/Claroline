@@ -15,8 +15,15 @@
 
 {% block content %}
     <div id="data-attributes" data-max-post-size="{{ maxPostSize }}"></div>
-    <div class="page-header">
-        <h1>{{ 'resources' | trans({}, 'platform') }}<span></span></h1>
+    <div class="page-container">
+        <main class="page">
+            <header class="page-header">
+                <h1>{{ 'resources' | trans({}, 'platform') }}</h1>
+            </header>
+
+            {# JS app mount point #}
+            <div class="page-content"></div>
+        </main>
     </div>
 {% endblock %}
 
@@ -25,7 +32,7 @@
     <script type="text/javascript">
         $(function() {
             Claroline.ResourceManager.createFullManager({
-                "parentElement": $('#wrap > .panel'),
+                "parentElement": $('.page-content'),
                 "breadcrumbElement": $('ul.breadcrumb'),
                 "isWorkspace": false,
                 "webPath": "{{ getAssetPath() }}",

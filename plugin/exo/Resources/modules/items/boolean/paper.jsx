@@ -21,16 +21,18 @@ export const BooleanPaper = props => {
                 {solution.id === props.answer &&
                   <WarningIcon className="pull-left" valid={solution.score > 0}/>
                 }
-                {props.item.choices.find(choice => choice.id === solution.id).data}
 
                 {solution.id === props.answer &&
-                  <span className="pull-right">
+                <span className="pull-right">
                     <Feedback
                       id={`${solution.id}-feedback`}
-                      feedback={solution.feedback}/>
+                      feedback={solution.feedback}
+                    />
                     <SolutionScore score={solution.score}/>
                   </span>
                 }
+
+                <div dangerouslySetInnerHTML={{__html: props.item.choices.find(choice => choice.id === solution.id).data}}/>
               </div>
             </div>
           )}
@@ -44,13 +46,16 @@ export const BooleanPaper = props => {
                   'answer-item choice-item',
                    solution.score > 0 ? 'selected-answer' : null
                 )}>
-                {props.item.choices.find(choice => choice.id === solution.id).data}
-                <span>
+
+                <span className="pull-right">
                   <Feedback
                     id={`${solution.id}-feedback`}
-                    feedback={solution.feedback}/>
+                    feedback={solution.feedback}
+                  />
                   <SolutionScore score={solution.score}/>
                 </span>
+
+                <div dangerouslySetInnerHTML={{__html: props.item.choices.find(choice => choice.id === solution.id).data}}/>
               </div>
             </div>
           )}

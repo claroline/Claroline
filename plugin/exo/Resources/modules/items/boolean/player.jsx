@@ -4,12 +4,12 @@ import classes from 'classnames'
 const Item = props => {
   return(
     <button type="button"
+      dangerouslySetInnerHTML={{__html: props.choice.data}}
       onClick={props.onClick}
       className={classes(
         'answer-item choice-item',
         {'selected-answer': props.selected}
       )}>
-        {props.choice.data}
     </button>
   )
 }
