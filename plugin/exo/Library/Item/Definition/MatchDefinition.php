@@ -146,6 +146,12 @@ class MatchDefinition extends AbstractDefinition
                     new GenericPenalty(count($answer) * $question->getPenalty())
                 );
             }
+        } else {
+            foreach ($question->getAssociations() as $association) {
+                if (0 < $association->getScore()) {
+                    $corrected->addMissing($association);
+                }
+            }
         }
 
         return $corrected;
