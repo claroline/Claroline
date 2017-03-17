@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import classes from 'classnames'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 
 const T = React.PropTypes
@@ -11,7 +12,7 @@ const PagePrimaryAction = props => {
     return (
       <button
         type="button"
-        className="btn btn-link"
+        className={classes('btn', 'btn-link', props.disabled ? 'disabled' : null)}
         disabled={props.disabled}
         onClick={() => !props.disabled && props.handleAction()}
       >
@@ -23,7 +24,7 @@ const PagePrimaryAction = props => {
   } else {
     return (
       <a
-        className="btn btn-link"
+        className={classes('btn', 'btn-link', props.disabled ? 'disabled' : null)}
         disabled={props.disabled}
         href={!props.disabled ? props.handleAction : ''}
       >
@@ -103,7 +104,7 @@ export default class PageActions extends Component {
       <nav className="page-actions">
         {primaryActions.map((primaryAction, index) => primaryAction.divider ?
           (<Divider key={index} />) :
-          (<PagePrimaryAction key={index} icon={primaryAction.icon} badge={primaryAction.badge} label={primaryAction.label} handleAction={primaryAction.handleAction} />)
+          (<PagePrimaryAction key={index} icon={primaryAction.icon} badge={primaryAction.badge} label={primaryAction.label} disabled={primaryAction.disabled} handleAction={primaryAction.handleAction} />)
         )}
 
         {0 !== secondaryActions.length && <MoreActionsDropdown actions={secondaryActions} />}
