@@ -9,6 +9,7 @@ use UJM\ExoBundle\Installation\Updater\Updater060200;
 use UJM\ExoBundle\Installation\Updater\Updater070000;
 use UJM\ExoBundle\Installation\Updater\Updater090000;
 use UJM\ExoBundle\Installation\Updater\Updater090002;
+use UJM\ExoBundle\Installation\Updater\Updater090200;
 
 class AdditionalInstaller extends BaseInstaller
 {
