@@ -54,12 +54,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BeSimple/BeSimpleSsoAuthBundle.git",
-                "reference": "8baf8167d1f609728d1fe28ed8e91aa28efb2f84"
+                "reference": "0cd7932bdcb6cc080ae1de456a808c7627963edf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BeSimple/BeSimpleSsoAuthBundle/zipball/8baf8167d1f609728d1fe28ed8e91aa28efb2f84",
-                "reference": "8baf8167d1f609728d1fe28ed8e91aa28efb2f84",
+                "url": "https://api.github.com/repos/BeSimple/BeSimpleSsoAuthBundle/zipball/0cd7932bdcb6cc080ae1de456a808c7627963edf",
+                "reference": "0cd7932bdcb6cc080ae1de456a808c7627963edf",
                 "shasum": ""
             },
             "require": {
@@ -112,7 +112,7 @@
                 "Symfony2",
                 "cas"
             ],
-            "time": "2017-02-14 14:01:10"
+            "time": "2017-03-17 22:32:17"
         },
         {
             "name": "claroline/distribution",
@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "2ca890b3ec3d13ca7e29dcf74f287cc55ffdf701"
+                "reference": "43207d6622010994a2510f39d56af6756c0e5f89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/2ca890b3ec3d13ca7e29dcf74f287cc55ffdf701",
-                "reference": "2ca890b3ec3d13ca7e29dcf74f287cc55ffdf701",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/43207d6622010994a2510f39d56af6756c0e5f89",
+                "reference": "43207d6622010994a2510f39d56af6756c0e5f89",
                 "shasum": ""
             },
             "require": {
@@ -377,7 +377,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-03-16 17:20:23"
+            "time": "2017-03-17 14:03:17"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3559,17 +3559,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "0a3bbcce49f8cf1ffa38b3d4965eef113124756b"
+                "reference": "f10b2951478c6e623bb6ccbaa12d8315a4cfbdb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/0a3bbcce49f8cf1ffa38b3d4965eef113124756b",
-                "reference": "0a3bbcce49f8cf1ffa38b3d4965eef113124756b",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/f10b2951478c6e623bb6ccbaa12d8315a4cfbdb0",
+                "reference": "f10b2951478c6e623bb6ccbaa12d8315a4cfbdb0",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-03-14 09:34:07"
+            "time": "2017-03-17 14:01:51"
         },
         {
             "name": "justinrainbow/json-schema",
