@@ -324,15 +324,6 @@ class QuestionSerializer extends AbstractSerializer
             $question->setModel($metadata->model);
         }
 
-        // Sets the creator of the Question if not set
-        $creator = $question->getCreator();
-        if (empty($creator) || !($creator instanceof User)) {
-            $token = $this->tokenStorage->getToken();
-            if (!empty($token) && $token->getUser() instanceof User) {
-                $question->setCreator($token->getUser());
-            }
-        }
-
         if (isset($metadata->category)) {
             $category = $this->categorySerializer->deserialize($metadata->category);
             $question->setCategory($category);
