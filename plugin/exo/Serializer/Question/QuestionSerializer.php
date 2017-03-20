@@ -178,6 +178,15 @@ class QuestionSerializer extends AbstractSerializer
             }
         }
 
+        // Sets the creator of the Item if not set
+        $creator = $question->getCreator();
+        if (empty($creator) || !($creator instanceof User)) {
+            $token = $this->tokenStorage->getToken();
+            if (!empty($token) && $token->getUser() instanceof User) {
+                $question->setCreator($token->getUser());
+            }
+        }
+
         // Force client ID if needed
         if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
             $question->setUuid($data->id);
@@ -313,15 +322,6 @@ class QuestionSerializer extends AbstractSerializer
     {
         if (isset($metadata->model)) {
             $question->setModel($metadata->model);
-        }
-
-        // Sets the creator of the Question if not set
-        $creator = $question->getCreator();
-        if (empty($creator) || !($creator instanceof User)) {
-            $token = $this->tokenStorage->getToken();
-            if (!empty($token) && $token->getUser() instanceof User) {
-                $question->setCreator($token->getUser());
-            }
         }
 
         if (isset($metadata->category)) {
