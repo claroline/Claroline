@@ -6,10 +6,12 @@ import {getDefinition, isQuestionType} from './../../../items/item-types'
 import {selectors} from './../selectors'
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
 import {ScoreBox} from './../../../items/components/score-box.jsx'
+import {ScoreGauge} from './../../../components/score-gauge.jsx'
 
 let Paper = props =>
   <div className="paper">
     <h2 className="paper-title">
+      <ScoreGauge userScore={props.paper.score} maxScore={selectors.paperScoreMax(props.paper)} size="sm" />
       {tex('correction')}&nbsp;{props.paper.number}
     </h2>
 
@@ -53,7 +55,8 @@ let Paper = props =>
 Paper.propTypes = {
   paper: T.shape({
     id: T.string.isRequired,
-    number: T.number.isRequired
+    number: T.number.isRequired,
+    score: T.number
   }).isRequired,
   steps: T.arrayOf(T.shape({
     items: T.arrayOf(T.shape({
