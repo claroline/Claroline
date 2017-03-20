@@ -27,8 +27,6 @@
 
 // main
 .score-gauge.c100 {
-    margin-bottom: @component-margin-bottom;
-
     *, *:before, *:after {
         .box-sizing(content-box);
     }
@@ -41,10 +39,10 @@
     display: inline-block;
     background-color: @secondary-color;
 
-    /*&.sm {
-        font-size: @path-progression-size-sm;
-        min-width: @path-progression-size-sm;
-    }*/
+    &.sm {
+        font-size: 50px; // same as path
+        min-width: 50px; // same as path
+    }
 
     // centered value inside circle
     > span {
