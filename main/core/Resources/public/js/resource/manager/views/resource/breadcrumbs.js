@@ -43,7 +43,7 @@
             });
         },
         open: function (event) {
-            event.preventDefault()
+            event.preventDefault();
             this.dispatcher.trigger('open-directory', {
                 nodeId: event.currentTarget.getAttribute('data-node-id'),
                 view: this.parameters.viewName,
