@@ -16,7 +16,8 @@ class WikiController extends Controller
      *      "/{wikiId}.{_format}",
      *      defaults={"_format":"html"},
      *      requirements={"wikiId" = "\d+", "_format":"html|pdf"},
-     *      name="icap_wiki_view"
+     *      name="icap_wiki_view",
+     *      options = { "expose" = true }
      * )
      * @ParamConverter("wiki", class="IcapWikiBundle:Wiki", options={"id" = "wikiId"})
      */
