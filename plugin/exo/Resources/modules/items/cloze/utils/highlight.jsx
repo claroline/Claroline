@@ -51,6 +51,21 @@ function getSpanClasses(displayTrueAnswer, isSolutionValid) {
   return classes.reduce((a, b) => a += ' ' + b)
 }
 
+const SelectHole = props =>
+  <span>
+
+  </span>
+
+SelectHole.propTypes = {
+  disabled: T.bool,
+  answer: T.shape({
+
+  }),
+  hole: T.shape({
+
+  })
+}
+
 export class Highlight extends Component {
   constructor(props) {
     super(props)
