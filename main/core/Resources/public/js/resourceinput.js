@@ -159,4 +159,4 @@
             $('.resource-view', activePicker).attr('href', '').addClass('disabled');
         }
     };
-}());
+})();

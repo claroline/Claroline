@@ -32,4 +32,4 @@
         responsiveTopBar();
     });
 
-}());
+})();

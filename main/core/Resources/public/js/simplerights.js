@@ -219,4 +219,4 @@
         var value = $(element).prop('checked');
         $('#advanced-recursive-option').prop('checked', value);
     };
-}());
+})();

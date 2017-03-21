@@ -185,4 +185,4 @@
         clearInterval(sidebar.scrollUp);
         clearInterval(sidebar.scrollDown);
     });
-}());
+})();

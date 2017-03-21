@@ -82,6 +82,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'Claroline\MigrationBundle\ClarolineMigrationBundle',
             'Claroline\Bundle\FrontEndBundle\FrontEndBundle',
             'JMS\SerializerBundle\JMSSerializerBundle',
+            'Cocur\Slugify\Bridge\Symfony\CocurSlugifyBundle', // required by ZenStruck grouped forms
         ];
         // simple container configuration, same for every environment
         $simpleConfigs = [
