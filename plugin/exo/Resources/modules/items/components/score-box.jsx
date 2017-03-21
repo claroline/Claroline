@@ -14,8 +14,8 @@ export const ScoreBox = props =>
   </div>
 
 ScoreBox.propTypes = {
-  score: T.number.required,
-  scoreMax: T.number.required,
+  score: T.number.isRequired,
+  scoreMax: T.number.isRequired,
   size: T.oneOf(['sm']),
   className: T.string
 }

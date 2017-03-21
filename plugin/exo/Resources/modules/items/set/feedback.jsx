@@ -19,7 +19,7 @@ export const SetFeedback = props =>
               </div>
               <div className="set-body">
                 <ul>
-                { utils.getSetItems(set.id, props.answer).map(answer =>
+                { props.answer && props.answer.length > 0 && utils.getSetItems(set.id, props.answer).map(answer =>
                   <li key={`your-answer-assocation-${answer.itemId}-${answer.setId}`}>
                     { utils.answerInSolutions(answer, props.item.solutions.associations) ?
                       <div className={classes(
