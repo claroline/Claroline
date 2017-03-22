@@ -1,5 +1,5 @@
 {
-    "config_update_error": "Problème lors de la mise à jour de la configuration de l'enregistreur vidéo",
+    "config_update_error": "Problème lors de la mise à jour de la configuration de l'enregistreur vidéo.",
     "config_update_success": "Mise à jour de la configuration de l'enregistreur vidéo effectuée avec succès.",
     "creating_resource": "Création de la ressource",
     "db_meter": "Db mètre",
