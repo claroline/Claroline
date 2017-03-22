@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="claro_survey_resource")
+ * @ORM\Entity(repositoryClass="Claroline\SurveyBundle\Repository\SurveyRepository")
  */
 class Survey extends AbstractResource
 {

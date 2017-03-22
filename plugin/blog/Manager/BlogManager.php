@@ -97,9 +97,9 @@ class BlogManager
                 $comments[] = [
                     'message' => $commentUid,
                     'author' => $comment->getAuthor()->getMail(),
-                    'creation_date' => $comment->getCreationDate()->format(\DateTime::ATOM),
-                    'update_date' => (null !== $comment->getUpdateDate()) ? $comment->getUpdateDate()->format(\DateTime::ATOM) : null,
-                    'publication_date' => (null !== $comment->getPublicationDate()) ? $comment->getPublicationDate()->format(\DateTime::ATOM) : null,
+                    'creation_date' => $comment->getCreationDate()->format('Y-m-d H:i:s'),
+                    'update_date' => (null !== $comment->getUpdateDate()) ? $comment->getUpdateDate()->format('Y-m-d H:i:s') : null,
+                    'publication_date' => (null !== $comment->getPublicationDate()) ? $comment->getPublicationDate()->format('Y-m-d H:i:s') : null,
                     'status' => $comment->getStatus(),
                 ];
             }
@@ -109,9 +109,9 @@ class BlogManager
                 'content' => $postUid,
                 'author' => $post->getAuthor()->getMail(),
                 'status' => $post->getStatus(),
-                'creation_date' => $post->getCreationDate()->format(\DateTime::ATOM),
-                'modification_date' => (null !== $post->getModificationDate()) ? $post->getModificationDate()->format(\DateTime::ATOM) : null,
-                'publication_date' => (null !== $post->getPublicationDate()) ? $post->getPublicationDate()->format(\DateTime::ATOM) : null,
+                'creation_date' => $post->getCreationDate()->format('Y-m-d H:i:s'),
+                'modification_date' => (null !== $post->getModificationDate()) ? $post->getModificationDate()->format('Y-m-d H:i:s') : null,
+                'publication_date' => (null !== $post->getPublicationDate()) ? $post->getPublicationDate()->format('Y-m-d H:i:s') : null,
                 'tags' => $tags,
                 'comments' => $comments,
             ];
@@ -202,9 +202,9 @@ class BlogManager
                 $comment
                     ->setMessage($commentMessage)
                     ->setAuthor($this->retrieveUser($commentsData['author'], $owner))
-                    ->setCreationDate((new \DateTime())->setTimestamp($postsData['creation_date']))
-                    ->setUpdateDate((new \DateTime())->setTimestamp($postsData['modification_date']))
-                    ->setPublicationDate((new \DateTime())->setTimestamp($postsData['publication_date']))
+                    ->setCreationDate(new \DateTime($postsData['creation_date']))
+                    ->setUpdateDate(new \DateTime($postsData['modification_date']))
+                    ->setPublicationDate(new \DateTime($postsData['publication_date']))
                     ->setStatus($commentsData['status'])
                 ;
                 $comments->add($comment);
@@ -216,9 +216,9 @@ class BlogManager
                 ->setTitle($postsData['title'])
                 ->setContent($postContent)
                 ->setAuthor($this->retrieveUser($postsData['author'], $owner))
-                ->setCreationDate((new \DateTime())->setTimestamp($postsData['creation_date']))
-                ->setModificationDate((new \DateTime())->setTimestamp($postsData['modification_date']))
-                ->setPublicationDate((new \DateTime())->setTimestamp($postsData['publication_date']))
+                ->setCreationDate(new \DateTime($postsData['creation_date']))
+                ->setModificationDate(new \DateTime($postsData['modification_date']))
+                ->setPublicationDate(new \DateTime($postsData['publication_date']))
                 ->setTags($tags)
                 ->setComments($comments)
                 ->setStatus($postsData['status'])

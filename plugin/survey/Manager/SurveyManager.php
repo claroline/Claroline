@@ -27,6 +27,7 @@ use Claroline\SurveyBundle\Entity\QuestionModel;
 use Claroline\SurveyBundle\Entity\Survey;
 use Claroline\SurveyBundle\Entity\SurveyQuestionRelation;
 use Claroline\SurveyBundle\Event\Log\LogSurveyAnswerDelete;
+use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
@@ -814,5 +815,132 @@ class SurveyManager
             $order,
             $executeQuery
         );
+    }
+
+    public function exportSurvey(Workspace $workspace, array &$files, Survey $survey)
+    {
+        $questionRelations = $survey->getQuestionRelations();
+        $questions = [];
+        foreach ($questionRelations as $questionRelation) {
+            $question = $questionRelation->getQuestion();
+            $question_type = $question->getType();
+
+            $multiple_choices = [];
+            if ($question_type === 'multiple_choice_single' || $question_type === 'multiple_choice_multiple') {
+                $multipleChoiceQuestion = $this->getMultipleChoiceQuestionByQuestion($question);
+
+                $multiple_choices['horizontal'] = $multipleChoiceQuestion->getHorizontal();
+
+                $choices = $multipleChoiceQuestion->getChoices();
+                foreach ($choices as $choice) {
+                    $multiple_choices['choices'][] = [
+                        'contentPath' => $this->makeFile($choice->getContent(), $files),
+                        'other' => $choice->isOther(),
+                    ];
+                }
+            }
+
+            $questions[] = [
+                'title' => $question->getTitle(),
+                'questionPath' => $this->makeFile($question->getQuestion(), $files),
+                'type' => $question->getType(),
+                'multiple_choices' => $multiple_choices,
+                'commentAllowed' => $question->isCommentAllowed(),
+                'commentLabelPath' => $this->makeFile($question->getCommentLabel(), $files),
+                'richText' => $question->isRichText(),
+                'questionOrder' => $questionRelation->getQuestionOrder(),
+                'mandatory' => $questionRelation->getMandatory(),
+            ];
+        }
+
+        return [
+            'descriptionPath' => $this->makeFile($survey->getDescription(), $files),
+            'questions' => $questions,
+            'published' => $survey->isPublished(),
+            'closed' => $survey->isClosed(),
+            'hasPublicResult' => $survey->getHasPublicResult(),
+            'allowAnswerEdition' => $survey->getAllowAnswerEdition(),
+            'startDate' => $survey->getStartDate() ? $survey->getStartDate()->format('Y-m-d H:i:s') : null,
+            'endDate' => $survey->getEndDate() ? $survey->getEndDate()->format('Y-m-d H:i:s') : null,
+        ];
+    }
+
+    public function importSurvey(array $data, $rootPath, $loggedUser, $workspace)
+    {
+        $survey = new Survey();
+        if (isset($data['data'])) {
+            $surveyData = $data['data'];
+
+            $survey->setDescription($this->getFromFile($surveyData['descriptionPath'], $rootPath));
+            $survey->setPublished($surveyData['published']);
+            $survey->setClosed($surveyData['closed']);
+            $survey->setHasPublicResult($surveyData['hasPublicResult']);
+            $survey->setAllowAnswerEdition($surveyData['allowAnswerEdition']);
+            if ($surveyData['startDate'] !== null) {
+                $survey->setStartDate(new \DateTime($surveyData['startDate']));
+            }
+            if ($surveyData['endDate'] !== null) {
+                $survey->setEndDate(new \DateTime($surveyData['endDate']));
+            }
+
+            $questionRelations = new ArrayCollection();
+            foreach ($surveyData['questions'] as $questionData) {
+                $question = new Question();
+                $question->setTitle($questionData['title']);
+                $question->setQuestion($this->getFromFile($questionData['questionPath'], $rootPath));
+                $question->setType($questionData['type']);
+                $question->setWorkspace($workspace);
+                $question->setCommentAllowed($questionData['commentAllowed']);
+                $question->setCommentLabel($this->getFromFile($questionData['commentLabelPath'], $rootPath));
+                $question->setRichText($questionData['richText']);
+
+                $this->om->persist($question);
+
+                if ($questionData['type'] === 'multiple_choice_single' || $questionData['type'] === 'multiple_choice_multiple') {
+                    $multipleQuestion = new MultipleChoiceQuestion();
+                    $multipleQuestion->setHorizontal($questionData['multiple_choices']['horizontal']);
+                    $multipleQuestion->setQuestion($question);
+                    $this->om->persist($multipleQuestion);
+
+                    $choices = new ArrayCollection();
+                    foreach ($questionData['multiple_choices']['choices'] as $choiceData) {
+                        $choice = new Choice();
+                        $choice->setContent($this->getFromFile($choiceData['contentPath'], $rootPath));
+                        $choice->setOther($choiceData['other']);
+                        $choice->setChoiceQuestion($multipleQuestion);
+                        $this->om->persist($choice);
+
+                        $choices->add($choice);
+                    }
+                }
+
+                $relation = new SurveyQuestionRelation();
+                $relation->setSurvey($survey);
+                $relation->setQuestion($question);
+                $relation->setQuestionOrder($questionData['questionOrder']);
+                $relation->setMandatory($questionData['mandatory']);
+                $this->om->persist($relation);
+
+                $questionRelations->add($relation);
+            }
+            $survey->setQuestionRelations($questionRelations);
+        }
+
+        return $survey;
+    }
+
+    private function makeFile($content, &$files)
+    {
+        $uid = uniqid().'.txt';
+        $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
+        file_put_contents($tmpPath, $content);
+        $files[$uid] = $tmpPath;
+
+        return $uid;
+    }
+
+    private function getFromFile($filePath, $rootPath)
+    {
+        return file_get_contents($rootPath.DIRECTORY_SEPARATOR.$filePath);
     }
 }
