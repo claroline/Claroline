@@ -80,12 +80,12 @@ utils.switchItemDisplay = (items, id, display) => {
 utils.generateAnswerPairItems = (items, rows) => {
   let data = []
   times(rows, i => data[i] = [-1, -1])
-  items.forEach(item => {
-    if (item.coordinates) {
-      data[item.coordinates[0]][item.coordinates[1]] = Object.assign({}, item, {removable: false})
+  Array.apply(null, {length: rows}).map((x, i) => {
+    const item = items.find(item => item.coordinates && item.coordinates[1] === i)
+    if(undefined !== item) {
+      data[i][item.coordinates[0]] = Object.assign({}, item, {removable: false})
     }
   })
-
   return data
 }
 

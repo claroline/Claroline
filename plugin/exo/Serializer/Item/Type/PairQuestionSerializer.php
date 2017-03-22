@@ -163,6 +163,10 @@ class PairQuestionSerializer implements SerializerInterface
             if (isset($itemData->coordinates)) {
                 $item->setCoordsX($itemData->coordinates[0]);
                 $item->setCoordsY($itemData->coordinates[1]);
+            } else {
+                // explicitly set coordinates to NULL in case of previous values
+                $item->setCoordsX(null);
+                $item->setCoordsY(null);
             }
 
             // Deserialize choice content

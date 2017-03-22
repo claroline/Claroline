@@ -30,16 +30,16 @@ export const PairFeedback = (props) => {
           {yourAnswers.answers.map((answer) =>
             <li key={`your-answer-id-${answer.leftItem.id}-${answer.rightItem.id}`}>
               <div className={classes(
-                  'answer-item pair',
+                  'item',
                   {'correct-answer': answer.valid},
                   {'incorrect-answer': !answer.valid}
                 )}
               >
                 <WarningIcon valid={answer.valid} />
-                
+
                 <div className="item-content" dangerouslySetInnerHTML={{__html: answer.leftItem.data}} />
                 <div className="item-content" dangerouslySetInnerHTML={{__html: answer.rightItem.data}} />
-                
+
                 <Feedback
                   id={`pair-${answer.leftItem.id}-${answer.rightItem.id}-feedback`}
                   feedback={answer.feedback}
