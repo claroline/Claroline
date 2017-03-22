@@ -6,7 +6,7 @@ const T = React.PropTypes
 
 const Icon = props =>
   <svg className={`item-icon item-icon-${props.size}`}>
-    <use xlinkHref={`${asset('bundles/ujmexo/images/item-icons.svg')}#icon-${props.name}`} />
+    <use xlinkHref={`${asset('bundles/ujmexo/images/item-icons.svg')}#icon-quiz-${props.name}`} />
   </svg>
 
 Icon.propTypes = {
