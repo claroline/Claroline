@@ -1407,26 +1407,32 @@ class WorkspaceController extends Controller
 
     private function importFromUrl($url)
     {
-        $filepath = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid();
-        $file = fopen($filepath, 'w+');
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_FILE, $file);
-        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 900);
-        curl_exec($ch);
-        $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $template = null;
-        if (!curl_errno($ch)) {
-            if ($httpcode === 200 || $httpcode === 201) {
-                $template = new File($filepath);
+        //REST URI hash used as unique file identifier for temporary template
+        $filepath = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir').DIRECTORY_SEPARATOR.md5($url).'.zip';
+        //if already exists resume using it, no need to upload it again
+        if (file_exists($filepath)) {
+            return new File($filepath);
+        } else {
+            $fileWriter = fopen($filepath, 'w+');
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($ch, CURLOPT_FILE, $fileWriter);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 900);
+            curl_exec($ch);
+            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $template = null;
+            if (!curl_errno($ch)) {
+                if ($httpcode === 200 || $httpcode === 201) {
+                    $template = new File($filepath);
+                }
             }
-        }
-        curl_close($ch);
-        fclose($file);
+            curl_close($ch);
+            fclose($fileWriter);
 
-        return $template;
+            return $template;
+        }
     }
 
     /**
