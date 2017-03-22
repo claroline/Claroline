@@ -36,7 +36,7 @@ export const PairPaper = props => {
                 {yourAnswers.answers.map((answer) =>
                   <li key={`your-answer-id-${answer.leftItem.id}-${answer.rightItem.id}`}>
                     <div className={classes(
-                        'answer-item pair',
+                        'item',
                         {'correct-answer': answer.valid},
                         {'incorrect-answer': !answer.valid}
                       )}>
@@ -98,7 +98,7 @@ export const PairPaper = props => {
           </div>
         }
       />
-    )
+  )
 }
 
 PairPaper.propTypes = {

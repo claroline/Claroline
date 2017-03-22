@@ -2,11 +2,10 @@ import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
+import times from 'lodash/times'
 import {tex, t} from './../../utils/translate'
 import {utils} from './utils/utils'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import shuffle from 'lodash/shuffle'
-import times from 'lodash/times'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 
 let DropBox = props => {
@@ -142,13 +141,9 @@ class PairPlayer extends Component {
     super(props)
 
     this.state = {
-      items: this.randomize(utils.pairItemsWithDisplayOption(props.item.items), props.item.random),
+      items: utils.pairItemsWithDisplayOption(props.item.items),
       answerItems: utils.generateAnswerPairItems(props.item.items, props.item.rows)
     }
-  }
-
-  randomize(items, random) {
-    return random ? shuffle(items) : items
   }
 
   updateAnswer() {

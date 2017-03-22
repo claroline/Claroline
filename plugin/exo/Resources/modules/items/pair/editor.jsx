@@ -115,8 +115,8 @@ class Pair extends Component {
             <label>
               <input
                 type="checkbox"
-                disabled={this.props.showPins || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ||  utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
-                checked={this.props.pair.ordered || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) ||  utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
+                disabled={this.props.showPins || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) || utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
+                checked={this.props.pair.ordered || utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index) || utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
                 onChange={(e) => this.props.onChange(
                   actions.updatePair(this.props.index, 'ordered', e.target.checked)
                 )}
@@ -190,6 +190,13 @@ class PairList extends Component {
     }
   }
 
+  handlePinnableChange(checked) {
+    this.setState({pinIsAllowed: !this.state.pinIsAllowed})
+    if (!checked) {
+      this.props.onChange(actions.removeAllCoordinates())
+    }
+  }
+
   render(){
     return (
       <div className="pairs">
@@ -198,7 +205,7 @@ class PairList extends Component {
             <input
               type="checkbox"
               checked={this.state.pinIsAllowed}
-              onChange={() => this.setState({pinIsAllowed: !this.state.pinIsAllowed})}
+              onChange={(e) => this.handlePinnableChange(e.target.checked)}
             />
           {tex('pair_allow_pin_function')}
           </label>
