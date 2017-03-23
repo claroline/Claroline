@@ -55,6 +55,11 @@ class ItemRepository extends EntityRepository
                 ->setParameter('types', $filters->types);
         }
 
+        // in any case exlude every mimeType that do not begin with [application] from results
+        $qb
+            ->andWhere('q.mimeType LIKE :includedTypesPrefix')
+            ->setParameter('includedTypesPrefix', 'application%');
+
         // Title / Content
         if (!empty($filters) && !empty($filters->title)) {
             $qb
