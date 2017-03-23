@@ -25,6 +25,7 @@ utils.makeTinyHtml = (solution) => {
           class="hole-input form-control input-sm"
           data-hole-id="${solution.holeId}"
           type="text"
+          disabled="true"
           value="${bestAnswer ? bestAnswer.text : ''}"
         />
         ${getEditButtons(solution)}
@@ -36,9 +37,8 @@ utils.makeTinyHtml = (solution) => {
         <select
           class="hole-input form-control input-sm"
           data-hole-id="${solution.holeId}"
-          type="text"
         >
-          <option>${tex('please_choose')}</option>
+          <option>${bestAnswer ? bestAnswer.text : tex('please_choose')}</option>
         </select>
         ${getEditButtons(solution)}
       </span>
@@ -152,7 +152,7 @@ utils.getTextElements = (text, holes) => {
 utils.getBestAnswer = (answers) => {
   let bestAnswer = null
   answers.map(answer => {
-    if (!bestAnswer || (answer.score > answer.score && 0 < answer.score)) {
+    if (!bestAnswer || (answer.score > bestAnswer && 0 < answer.score)) {
       bestAnswer = answer
     }
   })

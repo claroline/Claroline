@@ -190,6 +190,10 @@ function reduce(item = {}, action) {
       newItem.text = newItem.text.replace(regex, '')
       newItem._text = utils.setEditorHtml(newItem.text, newItem.solutions)
 
+      if (newItem._holeId && newItem._holeId === action.holeId) {
+        newItem._popover = false
+      }
+
       return newItem
     }
     case REMOVE_ANSWER: {

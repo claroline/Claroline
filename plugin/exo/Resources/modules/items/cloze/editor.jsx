@@ -313,24 +313,7 @@ export class Cloze extends Component {
 
   onHoleClick(el) {
     if (el.classList.contains('edit-hole-btn') || el.classList.contains('edit-hole-btn-icon')) {
-      let btnElement
-      if (el.classList.contains('edit-hole-btn-icon')) {
-        btnElement = el.parentElement
-      } else {
-        btnElement = el
-      }
-
-      // Let's calculate the popover position
-      let left = btnElement.offsetLeft
-      let top  = btnElement.offsetTop
-
-      left += btnElement.offsetWidth / 2 // center popover and edit btn
-      top  += btnElement.offsetHeight // position popover below edit btn
-
-      left -= 180 // half size of the popover
-      top  += 25 // take into account the form group label
-
-      this.props.onChange(actions.openHole(el.dataset.holeId, left, top))
+      this.props.onChange(actions.openHole(el.dataset.holeId))
     } else if (el.classList.contains('delete-hole-btn') || el.classList.contains('delete-hole-btn-icon')) {
       this.props.onChange(actions.removeHole(el.dataset.holeId))
     }
