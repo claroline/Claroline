@@ -24,7 +24,7 @@ const CLOSE_POPOVER = 'CLOSE_POPOVER'
 export const actions = {
   updateText: makeActionCreator(UPDATE_TEXT, 'text'),
   addHole: makeActionCreator(ADD_HOLE, 'word', 'cb'),
-  openHole: makeActionCreator(OPEN_HOLE, 'holeId'),
+  openHole: makeActionCreator(OPEN_HOLE, 'holeId', 'positionLeft', 'positionTop'),
   updateHole: makeActionCreator(UPDATE_HOLE, 'holeId', 'parameter', 'value'),
   addAnswer: makeActionCreator(ADD_ANSWER, 'holeId'),
   saveHole: makeActionCreator(SAVE_HOLE),
@@ -100,9 +100,15 @@ function reduce(item = {}, action) {
     case OPEN_HOLE: {
       const newItem = cloneDeep(item)
       const hole = getHoleFromId(newItem, action.holeId)
-      hole._multiple = hole.choices ? true: false
+      hole._multiple = !!hole.choices
       newItem._popover = true
       newItem._holeId = action.holeId
+
+      console.log(action.positionLeft)
+      console.log(action.positionTop)
+
+      newItem._positionLeft = action.positionLeft
+      newItem._positionTop = action.positionTop
 
       return newItem
     }
@@ -115,6 +121,8 @@ function reduce(item = {}, action) {
       )
 
       answer[action.parameter] = action.value
+
+      updateHoleChoices(hole, solution)
 
       return newItem
     }
@@ -130,6 +138,8 @@ function reduce(item = {}, action) {
         score: 1
       })
 
+      updateHoleChoices(hole, solution)
+
       return newItem
     }
     case UPDATE_HOLE: {
@@ -141,6 +151,8 @@ function reduce(item = {}, action) {
       } else {
         throw `${action.parameter} is not a valid hole attribute`
       }
+
+      updateHoleChoices(hole, getSolutionFromHole(newItem, hole))
 
       const choices = hole._multiple ?
          flatten(newItem.solutions.map(solution => solution.answers.map(answer => answer.text))): []
@@ -198,6 +210,8 @@ function reduce(item = {}, action) {
       const answers = solution.answers
       answers.splice(answers.findIndex(answer => answer.text === action.text && answer.caseSensitive === action.caseSensitive), 1)
 
+      updateHoleChoices(hole, solution)
+
       return newItem
     }
     case CLOSE_POPOVER: {
@@ -206,6 +220,14 @@ function reduce(item = {}, action) {
 
       return newItem
     }
+  }
+}
+
+function updateHoleChoices(hole, holeSolution) {
+  if (hole._multiple) {
+    hole.choices = holeSolution.answers.map(answer => answer.text)
+  } else {
+    delete hole.choices
   }
 }
 
@@ -225,13 +247,13 @@ function validate(item) {
     const solution = getSolutionFromHole(item, hole)
     let hasPositiveValue = false
 
-    solution.answers.forEach((answer, key) => {
+    solution.answers.forEach((answer) => {
       if (notBlank(answer.text, true)) {
-        set(_errors, `answers.answer.${key}.text`, tex('cloze_empty_word_error'))
+        set(_errors, `answers.text`, tex('cloze_empty_word_error'))
       }
 
       if (notBlank(answer.score, true) && answer.score !== 0) {
-        set(_errors, `answers.answer.${key}.score`, tex('cloze_empty_score_error'))
+        set(_errors, `answers.score`, tex('cloze_empty_score_error'))
       }
 
       if (answer.score > 0) hasPositiveValue = true

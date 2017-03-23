@@ -1,0 +1,28 @@
+.keyword-items {
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    .footer {
+        text-align: center;
+    }
+
+    .keyword-item {
+        display: flex;
+
+        .keyword-case-sensitive {
+            margin: 0 floor(@grid-gutter-width / 2) 0 floor(@grid-gutter-width / 2);
+        }
+
+        .keyword-score {
+            width: 60px;
+            margin-right: floor(@grid-gutter-width / 2);
+        }
+
+        .text-fields {
+            flex: 1;
+        }
+    }
+}
