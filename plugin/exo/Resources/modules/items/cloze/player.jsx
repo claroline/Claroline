@@ -1,4 +1,4 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {PropTypes as T} from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {ClozeText} from './utils/cloze-text.jsx'
@@ -20,7 +20,6 @@ export const ClozePlayer = props =>
             answer={answer ? answer.answerText : ''}
             choices={hole.choices}
             onChange={(newAnswer) => {
-              console.log(props.answer)
               const answers = cloneDeep(props.answer)
 
               let holeAnswer = answers.find(item => item.holeId === hole.id)

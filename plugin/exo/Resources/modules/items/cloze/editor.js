@@ -103,10 +103,6 @@ function reduce(item = {}, action) {
       hole._multiple = !!hole.choices
       newItem._popover = true
       newItem._holeId = action.holeId
-
-      console.log(action.positionLeft)
-      console.log(action.positionTop)
-
       newItem._positionLeft = action.positionLeft
       newItem._positionTop = action.positionTop
 

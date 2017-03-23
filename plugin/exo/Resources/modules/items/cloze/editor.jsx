@@ -4,7 +4,7 @@ import get from 'lodash/get'
 import Popover from 'react-bootstrap/lib/Popover'
 
 import {t, tex} from './../../utils/translate'
-import {ContentEditable, Textarea} from './../../components/form/textarea.jsx'
+import {Textarea} from './../../components/form/textarea.jsx'
 import {FormGroup} from './../../components/form/form-group.jsx'
 import {CheckGroup} from './../../components/form/check-group.jsx'
 import {actions} from './editor'
@@ -67,7 +67,7 @@ class ChoiceItem extends Component {
           <input
             type="checkbox"
             title={tex('words_case_sensitive')}
-            checked={this.props.caseSensitive}
+            checked={this.props.answer.caseSensitive}
             onChange={e => this.props.onChange(
               actions.updateAnswer(
                 this.props.hole.id,
@@ -144,15 +144,6 @@ ChoiceItem.propTypes = {
 }
 
 class HoleForm extends Component {
-  constructor(props) {
-    super(props)
-
-    /*this.offsetTop = window.scrollY + window.innerHeight / 2 - (420/2)
-    this.offsetLeft = window.scrollX + window.innerWidth / 2 - (420/2)*/
-
-    //this.hole = this.props.item.holes.find(hole => hole.id === this.props.item._holeId)
-  }
-
   getHoleAnswers(hole) {
     //http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
     //concat is here to flatten the array
@@ -248,10 +239,10 @@ class HoleForm extends Component {
           {get(this.props, '_errors.answers.value') &&
             <ErrorBlock text={this.props._errors.answers.value} warnOnly={!this.props.validating}/>
           }
-          {get(this.props, `_errors.answers.text`) &&
+          {get(this.props, '_errors.answers.text') &&
             <ErrorBlock text={this.props._errors.answers.text} warnOnly={!this.props.validating}/>
           }
-          {get(this.props, `_errors.answers.score`) &&
+          {get(this.props, '_errors.answers.score') &&
             <ErrorBlock text={this.props._errors.answers.score} warnOnly={!this.props.validating}/>
           }
 
@@ -404,7 +395,9 @@ Cloze.propTypes = {
     _text: T.string.isRequired,
     _errors: T.object,
     _popover: T.bool,
-    _holeId: T.string
+    _holeId: T.string,
+    _positionLeft: T.number.isRequired,
+    _positionTop: T.number.isRequired
   }),
   onChange: T.func.isRequired,
   validating: T.bool.isRequired

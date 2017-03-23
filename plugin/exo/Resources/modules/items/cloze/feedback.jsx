@@ -30,6 +30,11 @@ export const ClozeFeedback = props =>
 ClozeFeedback.propTypes = {
   item: T.shape({
     id: T.string.isRequired,
+    text: T.string.isRequired,
+    holes: T.arrayOf(T.shape({
+      id: T.string.isRequired,
+      choices: T.arrayOf(T.string)
+    })).isRequired,
     solutions: T.arrayOf(T.object)
   }).isRequired,
   answer: T.array.isRequired

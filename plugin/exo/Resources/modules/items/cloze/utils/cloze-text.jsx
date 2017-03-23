@@ -21,7 +21,7 @@ export class ClozeText extends Component {
 
   renderHoles() {
     this.props.holes.map(hole => {
-      return ReactDOM.render(
+      ReactDOM.render(
         hole.component,
         document.getElementById(`${this.props.anchorPrefix}-${hole.id}`)
       )
