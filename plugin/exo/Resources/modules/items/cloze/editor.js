@@ -245,11 +245,11 @@ function validate(item) {
 
     solution.answers.forEach((answer) => {
       if (notBlank(answer.text, true)) {
-        set(_errors, `answers.text`, tex('cloze_empty_word_error'))
+        set(_errors, 'answers.text', tex('cloze_empty_word_error'))
       }
 
       if (notBlank(answer.score, true) && answer.score !== 0) {
-        set(_errors, `answers.score`, tex('cloze_empty_score_error'))
+        set(_errors, 'answers.score', tex('cloze_empty_score_error'))
       }
 
       if (answer.score > 0) hasPositiveValue = true
