@@ -14,7 +14,9 @@ import {ErrorBlock} from './../../components/form/error-block.jsx'
 class ChoiceItem extends Component {
   constructor(props) {
     super(props)
-    this.state = {showFeedback: false}
+    this.state = {
+      showFeedback: false
+    }
   }
 
   render() {
@@ -32,13 +34,13 @@ class ChoiceItem extends Component {
             title={tex('response')}
             value={this.props.answer.text}
             className="form-control"
-            onChange={text => this.props.onChange(
+            onChange={e => this.props.onChange(
               actions.updateAnswer(
                 this.props.hole.id,
                 'text',
                 this.props.answer.text,
                 this.props.answer.caseSensitive,
-                text
+                e.target.value
               )
             )}
           />
@@ -138,23 +140,25 @@ ChoiceItem.propTypes = {
   }).isRequired,
   id: T.number.isRequired,
   deletable: T.bool.isRequired,
-  onChange: T.func.isRequired,
-  validating: T.bool.isRequired,
-  _errors: T.object
+  onChange: T.func.isRequired
 }
 
 class HoleForm extends Component {
-  getHoleAnswers(hole) {
-    //http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
-    //concat is here to flatten the array
-    return [].concat.apply(
-      [],
-      this.props.item.solutions.filter(solution => solution.holeId === hole.id).map(solution => solution.answers)
-    )
-  }
+  constructor(props) {
+    super(props)
 
-  getHole() {
-    return this.props.item.holes.find(hole => hole.id === this.props.item._holeId)
+    // Let's calculate the popover position
+    // It will be positioned just under the edit button
+    const btnElement = document.querySelector(`.cloze-hole[data-hole-id="${props.hole.id}"] .edit-hole-btn`)
+
+    this.left = btnElement.offsetLeft
+    this.top  = btnElement.offsetTop
+
+    this.left += btnElement.offsetWidth / 2 // center popover and edit btn
+    this.top  += btnElement.offsetHeight // position popover below edit btn
+
+    this.left -= 180 // half size of the popover
+    this.top  += 25 // take into account the form group label
   }
 
   closePopover() {
@@ -162,31 +166,31 @@ class HoleForm extends Component {
   }
 
   removeAndClose() {
-    this.props.onChange(actions.removeHole(this.getHole().id))
+    this.props.onChange(actions.removeHole(this.props.hole.id))
     this.closePopover()
   }
 
   render() {
     return (
       <Popover
-        id={this.getHole().id}
+        id={this.props.hole.id}
         placement="bottom"
-        positionLeft={this.props.positionLeft}
-        positionTop={this.props.positionTop}
+        positionLeft={this.left}
+        positionTop={this.top}
         title={
           <div>
             {tex('cloze_edit_hole')}
 
             <div className="popover-actions">
               <TooltipButton
-                id={`hole-${this.getHole().id}-delete`}
+                id={`hole-${this.props.hole.id}-delete`}
                 title={tex('delete')}
                 className="btn-link-default"
                 label={<span className="fa fa-fw fa-trash-o" />}
                 onClick={this.removeAndClose.bind(this)}
               />
               <TooltipButton
-                id={`hole-${this.getHole().id}-close`}
+                id={`hole-${this.props.hole.id}-close`}
                 title={tex('close')}
                 className="btn-link-default"
                 label={<span className="fa fa-fw fa-times" />}
@@ -197,35 +201,31 @@ class HoleForm extends Component {
         }
       >
         <FormGroup
-          controlId={`item-${this.getHole().id}-size`}
+          controlId={`item-${this.props.hole.id}-size`}
           label={tex('size')}
         >
           <input
-            id={`item-${this.getHole().id}-size`}
+            id={`item-${this.props.hole.id}-size`}
             type="number"
             min="0"
-            value={this.getHole().size}
+            value={this.props.hole.size}
             className="form-control"
             onChange={e => this.props.onChange(
-              actions.updateHole(this.getHole().id, 'size', parseInt(e.target.value))
+              actions.updateHole(this.props.hole.id, 'size', parseInt(e.target.value))
             )}
           />
         </FormGroup>
 
         {get(this.props, '_errors.answers.size') &&
-        <ErrorBlock text={this.props._errors.answers.size} warnOnly={!this.props.validating}/>
+          <ErrorBlock text={this.props._errors.answers.size} warnOnly={!this.props.validating}/>
         }
 
         <CheckGroup
-          checkId={`item-${this.getHole().id}-list`}
+          checkId={`item-${this.props.hole.id}-list`}
           label={tex('submit_a_list')}
-          checked={this.getHole()._multiple}
-          onChange={e => this.props.onChange(
-            actions.updateHole(
-              this.getHole().id,
-              '_multiple',
-              e.target.checked
-            )
+          checked={this.props.hole._multiple}
+          onChange={checked => this.props.onChange(
+            actions.updateHole(this.props.hole.id, '_multiple', checked)
           )}
         />
 
@@ -247,18 +247,14 @@ class HoleForm extends Component {
           }
 
           <ul>
-            {this.props.item.solutions.find(solution => solution.holeId === this.getHole().id).answers.map((answer, index) =>
+            {this.props.solution.answers.map((answer, index) =>
               <ChoiceItem
                 key={index}
                 id={index}
-                score={answer.score}
-                feedback={answer.feedback}
                 deletable={index > 0}
                 onChange={this.props.onChange}
-                hole={this.getHole()}
+                hole={this.props.hole}
                 answer={answer}
-                validating={this.props.validating}
-                _errors={this.props._errors}
               />
             )}
           </ul>
@@ -267,7 +263,8 @@ class HoleForm extends Component {
             <button
               className="btn btn-default"
               onClick={() => this.props.onChange(
-                actions.addAnswer(this.getHole().id))}
+                actions.addAnswer(this.props.hole.id)
+              )}
               type="button"
             >
               <span className="fa fa-fw fa-plus" />
@@ -281,12 +278,18 @@ class HoleForm extends Component {
 }
 
 HoleForm.propTypes = {
-  positionLeft: T.number.isRequired,
-  positionTop: T.number.isRequired,
-  item: T.shape({
-    _holeId: T.string.isRequired,
-    holes: T.array.isRequired,
-    solutions: T.array.isRequired
+  hole: T.shape({
+    id: T.string.isRequired,
+    size: T.number,
+    _multiple: T.bool.isRequired
+  }),
+  solution: T.shape({
+    answers: T.arrayOf(T.shape({
+      text: T.string.isRequired,
+      caseSensitive: T.bool.isRequired,
+      score: T.number.isRequired,
+      feedback: T.string
+    }))
   }),
   onChange: T.func.isRequired,
   validating: T.bool.isRequired,
@@ -375,9 +378,8 @@ export class Cloze extends Component {
 
         {(this.props.item._popover && this.props.item._holeId) &&
           <HoleForm
-            positionLeft={this.props.item._positionLeft}
-            positionTop={this.props.item._positionTop}
-            item={this.props.item}
+            hole={this.props.item.holes.find(hole => hole.id === this.props.item._holeId)}
+            solution={this.props.item.solutions.find(solution => solution.holeId === this.props.item._holeId)}
             onChange={this.props.onChange}
             validating={this.props.validating}
             _errors={this.props.item._errors}
@@ -396,8 +398,12 @@ Cloze.propTypes = {
     _errors: T.object,
     _popover: T.bool,
     _holeId: T.string,
-    _positionLeft: T.number.isRequired,
-    _positionTop: T.number.isRequired
+    holes: T.arrayOf(T.shape({
+      id: T.string.isRequired
+    })).isRequired,
+    solutions: T.arrayOf(T.shape({
+      holeId: T.string.isRequired
+    })).isRequired
   }),
   onChange: T.func.isRequired,
   validating: T.bool.isRequired

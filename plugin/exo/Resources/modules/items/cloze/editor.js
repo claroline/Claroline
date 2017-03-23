@@ -7,7 +7,6 @@ import {notBlank} from './../../utils/validate'
 import set from 'lodash/set'
 import get from 'lodash/get'
 import invariant from 'invariant'
-import flatten from 'lodash/flatten'
 import {tex} from './../../utils/translate'
 
 const UPDATE_TEXT = 'UPDATE_TEXT'
@@ -24,7 +23,7 @@ const CLOSE_POPOVER = 'CLOSE_POPOVER'
 export const actions = {
   updateText: makeActionCreator(UPDATE_TEXT, 'text'),
   addHole: makeActionCreator(ADD_HOLE, 'word', 'cb'),
-  openHole: makeActionCreator(OPEN_HOLE, 'holeId', 'positionLeft', 'positionTop'),
+  openHole: makeActionCreator(OPEN_HOLE, 'holeId'),
   updateHole: makeActionCreator(UPDATE_HOLE, 'holeId', 'parameter', 'value'),
   addAnswer: makeActionCreator(ADD_ANSWER, 'holeId'),
   saveHole: makeActionCreator(SAVE_HOLE),
@@ -103,8 +102,6 @@ function reduce(item = {}, action) {
       hole._multiple = !!hole.choices
       newItem._popover = true
       newItem._holeId = action.holeId
-      newItem._positionLeft = action.positionLeft
-      newItem._positionTop = action.positionTop
 
       return newItem
     }
@@ -150,11 +147,6 @@ function reduce(item = {}, action) {
 
       updateHoleChoices(hole, getSolutionFromHole(newItem, hole))
 
-      const choices = hole._multiple ?
-         flatten(newItem.solutions.map(solution => solution.answers.map(answer => answer.text))): []
-
-      if (choices.length > 0) hole.choices = choices
-
       return newItem
     }
     case ADD_HOLE: {
@@ -165,6 +157,7 @@ function reduce(item = {}, action) {
         feedback: '',
         size: 10,
         _score: 0,
+        _multiple: false,
         placeholder: ''
       }
 
@@ -260,7 +253,7 @@ function validate(item) {
     }
 
     if (!hasPositiveValue) {
-      set(_errors, 'answers.value', tex('solutions_requires_positive_answer'))
+      set(_errors, 'answers.value', tex('cloze_solutions_requires_positive_answer'))
     }
 
     if (hole._multiple && solution.answers.length < 2) {
