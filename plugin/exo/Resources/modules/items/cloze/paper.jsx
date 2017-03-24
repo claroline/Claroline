@@ -1,6 +1,8 @@
 import React, {PropTypes as T} from 'react'
-import {Highlight} from './utils/highlight.jsx'
+
 import {PaperTabs} from '../components/paper-tabs.jsx'
+import {ClozeText} from './utils/cloze-text.jsx'
+import {UserAnswerHole, ExpectedAnswerHole} from './utils/cloze-holes.jsx'
 
 export const ClozePaper = (props) => {
   return (
@@ -9,19 +11,48 @@ export const ClozePaper = (props) => {
       answer={props.answer}
       id={props.item.id}
       yours={
-        <Highlight
-          item={props.item}
-          answer={props.answer}
-          showScore={true}
-          displayTrueAnswer={false}
+        <ClozeText
+          anchorPrefix="cloze-hole-user"
+          className="cloze-paper"
+          text={props.item.text}
+          holes={props.item.holes.map(hole => {
+            let answer = props.answer.find(holeAnswer => holeAnswer.holeId === hole.id)
+            let solution = props.item.solutions.find(solution => solution.holeId === hole.id)
+
+            return {
+              id: hole.id,
+              component: (
+                <UserAnswerHole
+                  id={hole.id}
+                  answer={answer ? answer.answerText : null}
+                  choices={hole.choices}
+                  showScore={true}
+                  solutions={solution.answers}
+                />
+              )
+            }
+          })}
         />
       }
       expected={
-        <Highlight
-          item={props.item}
-          answer={props.answer}
-          showScore={true}
-          displayTrueAnswer={true}
+        <ClozeText
+          anchorPrefix="cloze-hole-expected"
+          className="cloze-paper"
+          text={props.item.text}
+          holes={props.item.holes.map(hole => {
+            let solution = props.item.solutions.find(solution => solution.holeId === hole.id)
+
+            return {
+              id: hole.id,
+              component: (
+                <ExpectedAnswerHole
+                  id={hole.id}
+                  choices={hole.choices}
+                  solutions={solution.answers}
+                />
+              )
+            }
+          })}
         />
       }
     />
@@ -31,8 +62,11 @@ export const ClozePaper = (props) => {
 ClozePaper.propTypes = {
   item: T.shape({
     id: T.string.isRequired,
-    title: T.string.isRequired,
-    description: T.string.isRequired,
+    text: T.string.isRequired,
+    holes: T.arrayOf(T.shape({
+      id: T.string.isRequired,
+      choices: T.arrayOf(T.string)
+    })).isRequired,
     solutions: T.arrayOf(T.object)
   }).isRequired,
   answer: T.array.isRequired

@@ -224,7 +224,7 @@ export class Textarea extends Component {
 
   render() {
     return (
-      <div className={classes('text-editor', {'minimal': this.state.minimal === true})}>
+      <div className={classes('text-editor', this.props.className, {'minimal': this.state.minimal === true})}>
         <span
           role="button"
           title={tex(this.state.minimal ? 'rich_text_tools' : 'minimize')}
@@ -255,7 +255,8 @@ Textarea.propTypes = {
   onChange: T.func.isRequired,
   onSelect: T.func,
   onClick: T.func,
-  onChangeMode: T.func
+  onChangeMode: T.func,
+  className: T.string
 }
 
 Textarea.defaultProps = {

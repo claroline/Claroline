@@ -1,40 +1,60 @@
 import React, {Component, PropTypes as T} from 'react'
+import classes from 'classnames'
+import get from 'lodash/get'
+import Popover from 'react-bootstrap/lib/Popover'
+
 import {t, tex} from './../../utils/translate'
-import {ContentEditable, Textarea} from './../../components/form/textarea.jsx'
+import {Textarea} from './../../components/form/textarea.jsx'
 import {FormGroup} from './../../components/form/form-group.jsx'
+import {CheckGroup} from './../../components/form/check-group.jsx'
 import {actions} from './editor'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
-import Popover from 'react-bootstrap/lib/Popover'
 import {ErrorBlock} from './../../components/form/error-block.jsx'
-import get from 'lodash/get'
-import classes from 'classnames'
 
 class ChoiceItem extends Component {
   constructor(props) {
     super(props)
-    this.state = {showFeedback: false}
+    this.state = {
+      showFeedback: false
+    }
   }
 
   render() {
     return (
       <div className={classes(
-          'choice-item-cloze',
+          'answer-item keyword-item',
           {'expected-answer': this.props.answer.score > 0},
           {'unexpected-answer': this.props.answer.score <= 0}
         )
       }>
-        <div className='row'>
-          <div className='hole-form-row'>
-            <div className="col-xs-4">
-              <ContentEditable
-                id={`item-${this.props.id}-answer`}
-                className="form-control input-sm"
-                type="text"
-                content={this.props.answer.text}
+        <div className="text-fields">
+          <input
+            type="text"
+            id={`keyword-${this.props.id}-answer`}
+            title={tex('response')}
+            value={this.props.answer.text}
+            className="form-control"
+            onChange={e => this.props.onChange(
+              actions.updateAnswer(
+                this.props.hole.id,
+                'text',
+                this.props.answer.text,
+                this.props.answer.caseSensitive,
+                e.target.value
+              )
+            )}
+          />
+
+          {this.state.showFeedback &&
+            <div className="feedback-container">
+              <Textarea
+                id={`keyword-${this.props.id}-feedback`}
+                title={tex('feedback')}
+                content={this.props.answer.feedback}
                 onChange={text => this.props.onChange(
                   actions.updateAnswer(
                     this.props.hole.id,
-                    'text',
+                    'feedback',
                     this.props.answer.text,
                     this.props.answer.caseSensitive,
                     text
@@ -42,81 +62,61 @@ class ChoiceItem extends Component {
                 )}
               />
             </div>
-            <div className="col-xs-1">
-              <input
-                 type="checkbox"
-                 checked={this.props.answer.caseSensitive}
-                 onChange={e => this.props.onChange(
-                   actions.updateAnswer(
-                     this.props.hole.id,
-                     'caseSensitive',
-                     this.props.answer.text,
-                     this.props.answer.caseSensitive,
-                     e.target.checked
-                   )
-                 )}
-               />
-          </div>
-          <div className="col-xs-4">
-            <input
-              className="form-control choice-form"
-              type="number"
-              value={this.props.answer.score}
-              onChange={e => this.props.onChange(
-                actions.updateAnswer(
-                  this.props.hole.id,
-                  'score',
-                  this.props.answer.text,
-                  this.props.answer.caseSensitive,
-                  Number(e.target.value)
-                )
-              )}
-            />
-          </div>
-          <div className="col-xs-3">
-            <TooltipButton
-              id={`choice-${this.props.id}-feedback-toggle`}
-              className="fa fa-fw fa-comments-o"
-              title={tex('choice_feedback_info')}
-              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-            />
-            <TooltipButton
-              id={`answer-${this.props.id}-delete`}
-              className="fa fa-fw fa-trash-o"
-              title={t('delete')}
-              onClick={() => this.props.onChange(
-                actions.removeAnswer(this.props.answer.text, this.props.answer.caseSensitive)
-              )}
-            />
-          </div>
-        </div>
-        <div className="col-xs-12">
-          {get(this.props, `_errors.answers.answer.${this.props.id}.text`) &&
-            <ErrorBlock text={this.props._errors.answers.answer[this.props.id].text} warnOnly={!this.props.validating}/>
-          }
-          {get(this.props, `_errors.answers.answer.${this.props.id}.score`) &&
-            <ErrorBlock text={this.props._errors.answers.answer[this.props.id].score} warnOnly={!this.props.validating}/>
           }
         </div>
-      </div>
-      {this.state.showFeedback &&
-        <div className="feedback-container hole-form-row">
-          <Textarea
-            id={`choice-${this.props.id}-feedback`}
-            title={tex('feedback')}
-            content={this.props.answer.feedback}
-            onChange={text => this.props.onChange(
+
+        <div className="keyword-case-sensitive">
+          <input
+            type="checkbox"
+            title={tex('words_case_sensitive')}
+            checked={this.props.answer.caseSensitive}
+            onChange={e => this.props.onChange(
               actions.updateAnswer(
                 this.props.hole.id,
-                'feedback',
+                'caseSensitive',
                 this.props.answer.text,
                 this.props.answer.caseSensitive,
-                text
+                e.target.checked
               )
             )}
           />
         </div>
-        }
+
+        <div className="right-controls">
+          <input
+            title={tex('score')}
+            className="form-control keyword-score"
+            type="number"
+            value={this.props.answer.score}
+            onChange={e => this.props.onChange(
+              actions.updateAnswer(
+                this.props.hole.id,
+                'score',
+                this.props.answer.text,
+                this.props.answer.caseSensitive,
+                Number(e.target.value)
+              )
+            )}
+          />
+
+          <TooltipButton
+            id={`keyword-${this.props.id}-feedback-toggle`}
+            className="btn-link-default"
+            label={<span className="fa fa-fw fa-comments-o"/>}
+            title={tex('choice_feedback_info')}
+            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+          />
+          <TooltipButton
+            id={`keyword-${this.props.id}-delete`}
+            className="btn-link-default"
+            enabled={this.props.deletable}
+            title={t('delete')}
+            label={<span className="fa fa-fw fa-trash-o"/>}
+            onClick={() => this.props.onChange(
+              actions.removeAnswer(this.props.answer.text, this.props.answer.caseSensitive)
+            )}
+          />
+        </div>
       </div>
     )
   }
@@ -140,33 +140,25 @@ ChoiceItem.propTypes = {
   }).isRequired,
   id: T.number.isRequired,
   deletable: T.bool.isRequired,
-  onChange: T.func.isRequired,
-  validating: T.bool.isRequired,
-  _errors: T.object
+  onChange: T.func.isRequired
 }
 
 class HoleForm extends Component {
   constructor(props) {
     super(props)
-    this.state = {showFeedback: false}
 
-    this.offsetTop = window.scrollY + window.innerHeight / 2 - (420/2)
-    this.offsetLeft = window.scrollX + window.innerWidth / 2 - (420/2)
+    // Let's calculate the popover position
+    // It will be positioned just under the edit button
+    const btnElement = document.querySelector(`.cloze-hole[data-hole-id="${props.hole.id}"] .edit-hole-btn`)
 
-    //this.hole = this.props.item.holes.find(hole => hole.id === this.props.item._holeId)
-  }
+    this.left = btnElement.offsetLeft
+    this.top  = btnElement.offsetTop
 
-  getHoleAnswers(hole) {
-    //http://stackoverflow.com/questions/10865025/merge-flatten-an-array-of-arrays-in-javascript
-    //concat is here to flatten the array
-    return [].concat.apply(
-      [],
-      this.props.item.solutions.filter(solution => solution.holeId === hole.id).map(solution => solution.answers)
-    )
-  }
+    this.left += btnElement.offsetWidth / 2 // center popover and edit btn
+    this.top  += btnElement.offsetHeight // position popover below edit btn
 
-  getHole() {
-    return this.props.item.holes.find(hole => hole.id === this.props.item._holeId)
+    this.left -= 180 // half size of the popover
+    this.top  += 25 // take into account the form group label
   }
 
   closePopover() {
@@ -174,116 +166,110 @@ class HoleForm extends Component {
   }
 
   removeAndClose() {
-    this.props.onChange(actions.removeHole(this.getHole().id))
+    this.props.onChange(actions.removeHole(this.props.hole.id))
     this.closePopover()
   }
 
   render() {
     return (
       <Popover
-        bsClass="hole-form-content"
-        id={this.getHole().id}
-        placement="right"
-        positionLeft={this.offsetLeft}
-        positionTop={this.offsetTop}
-      >
-        <div className="panel-default">
-          <div className="panel-body pull-right close-popover hole-form-row">
-            <i onClick={this.removeAndClose.bind(this)} className="fa fa-fw fa-trash-o"></i>
-            {'\u00a0'}
-            {!this.props._errors.answers &&
-              <b onClick={this.closePopover.bind(this)}>x</b>
-            }
+        id={this.props.hole.id}
+        placement="bottom"
+        positionLeft={this.left}
+        positionTop={this.top}
+        title={
+          <div>
+            {tex('cloze_edit_hole')}
+
+            <div className="popover-actions">
+              <TooltipButton
+                id={`hole-${this.props.hole.id}-delete`}
+                title={tex('delete')}
+                className="btn-link-default"
+                label={<span className="fa fa-fw fa-trash-o" />}
+                onClick={this.removeAndClose.bind(this)}
+              />
+              <TooltipButton
+                id={`hole-${this.props.hole.id}-close`}
+                title={tex('close')}
+                className="btn-link-default"
+                label={<span className="fa fa-fw fa-times" />}
+                onClick={this.closePopover.bind(this)}
+              />
+            </div>
           </div>
-          <div className="panel-body">
-            <div className="row">
-              <div className="hole-form-row">
-                <div className="col-xs-2">
-                  {tex('size')}
-                </div>
-                <input
-                  id={`item-${this.getHole().id}-size`}
-                  type="number"
-                  min="0"
-                  value={this.getHole().size}
-                  className="col-xs-2 form-control hole-size"
-                  onChange={e => this.props.onChange(
-                    actions.updateHole(this.getHole().id, 'size', parseInt(e.target.value))
-                  )}
-                />
-                <div className="col-xs-1">
-                  <input
-                    type="checkbox"
-                    checked={this.getHole()._multiple}
-                    onChange={e => this.props.onChange(
-                      actions.updateHole(
-                        this.getHole().id,
-                        '_multiple',
-                        e.target.checked
-                      )
-                    )}
-                  />
-                </div>
-                <div className="col-xs-6">
-                  {tex('submit_a_list')}
-                </div>
-              </div>
-            </div>
-            <div>
-              {get(this.props, '_errors.answers.size') &&
-                <ErrorBlock text={this.props._errors.answers.size} warnOnly={!this.props.validating}/>
-              }
-              {get(this.props, '_errors.answers.multiple') &&
-                <ErrorBlock text={this.props._errors.answers.multiple} warnOnly={!this.props.validating}/>
-              }
-              {get(this.props, '_errors.answers.duplicate') &&
-                <ErrorBlock text={this.props._errors.answers.duplicate} warnOnly={!this.props.validating}/>
-              }
-              {get(this.props, '_errors.answers.value') &&
-                <ErrorBlock text={this.props._errors.answers.value} warnOnly={!this.props.validating}/>
-              }
-            </div>
-            <div className="hole-form-row">
-              <div className="col-xs-5"><b>{tex('key_word')}</b></div>
-              <div className="col-xs-7"><b>{tex('score')}</b></div>
-            </div>
-            {this.props.item.solutions.find(solution => solution.holeId === this.getHole().id).answers.map((answer, index) => {
-              return (<ChoiceItem
+        }
+      >
+        <FormGroup
+          controlId={`item-${this.props.hole.id}-size`}
+          label={tex('size')}
+        >
+          <input
+            id={`item-${this.props.hole.id}-size`}
+            type="number"
+            min="0"
+            value={this.props.hole.size}
+            className="form-control"
+            onChange={e => this.props.onChange(
+              actions.updateHole(this.props.hole.id, 'size', parseInt(e.target.value))
+            )}
+          />
+        </FormGroup>
+
+        {get(this.props, '_errors.answers.size') &&
+          <ErrorBlock text={this.props._errors.answers.size} warnOnly={!this.props.validating}/>
+        }
+
+        <CheckGroup
+          checkId={`item-${this.props.hole.id}-list`}
+          label={tex('submit_a_list')}
+          checked={this.props.hole._multiple}
+          onChange={checked => this.props.onChange(
+            actions.updateHole(this.props.hole.id, '_multiple', checked)
+          )}
+        />
+
+        <div className="keyword-items">
+          {get(this.props, '_errors.answers.multiple') &&
+            <ErrorBlock text={this.props._errors.answers.multiple} warnOnly={!this.props.validating}/>
+          }
+          {get(this.props, '_errors.answers.duplicate') &&
+            <ErrorBlock text={this.props._errors.answers.duplicate} warnOnly={!this.props.validating}/>
+          }
+          {get(this.props, '_errors.answers.value') &&
+            <ErrorBlock text={this.props._errors.answers.value} warnOnly={!this.props.validating}/>
+          }
+          {get(this.props, '_errors.answers.text') &&
+            <ErrorBlock text={this.props._errors.answers.text} warnOnly={!this.props.validating}/>
+          }
+          {get(this.props, '_errors.answers.score') &&
+            <ErrorBlock text={this.props._errors.answers.score} warnOnly={!this.props.validating}/>
+          }
+
+          <ul>
+            {this.props.solution.answers.map((answer, index) =>
+              <ChoiceItem
                 key={index}
                 id={index}
-                score={answer.score}
-                feedback={answer.feedback}
                 deletable={index > 0}
                 onChange={this.props.onChange}
-                hole={this.getHole()}
+                hole={this.props.hole}
                 answer={answer}
-                validating={this.props.validating}
-                _errors={this.props._errors}
-              />)
-            })}
+              />
+            )}
+          </ul>
 
-            {this.state.showFeedback &&
-              <div className="feedback-container hole-form-row">
-                <Textarea
-                  id={`choice-${this.getHole().id}-feedback`}
-                  title={tex('feedback')}
-                  onChange={text => this.props.onChange(
-                    actions.updateAnswer(this.getHole().id, 'feedback', text)
-                  )}
-                />
-              </div>
-            }
-            <div className="hole-form-row">
-              <button
-                className="btn btn-default"
-                onClick={() => this.props.onChange(
-                  actions.addAnswer(this.getHole().id))}
-                type="button"
-              >
-                <i className="fa fa-fw fa-plus"/>
-                {tex('key_word')}
-              </button>
-            </div>
+          <div className="footer">
+            <button
+              className="btn btn-default"
+              onClick={() => this.props.onChange(
+                actions.addAnswer(this.props.hole.id)
+              )}
+              type="button"
+            >
+              <span className="fa fa-fw fa-plus" />
+              {tex('words_add_word')}
+            </button>
           </div>
         </div>
       </Popover>
@@ -292,10 +278,18 @@ class HoleForm extends Component {
 }
 
 HoleForm.propTypes = {
-  item: T.shape({
-    _holeId: T.string.isRequired,
-    holes: T.array.isRequired,
-    solutions: T.array.isRequired
+  hole: T.shape({
+    id: T.string.isRequired,
+    size: T.number,
+    _multiple: T.bool.isRequired
+  }),
+  solution: T.shape({
+    answers: T.arrayOf(T.shape({
+      text: T.string.isRequired,
+      caseSensitive: T.bool.isRequired,
+      score: T.number.isRequired,
+      feedback: T.string
+    }))
   }),
   onChange: T.func.isRequired,
   validating: T.bool.isRequired,
@@ -318,12 +312,10 @@ export class Cloze extends Component {
   }
 
   onHoleClick(el) {
-    if (el.classList.contains('edit-hole-btn')) {
+    if (el.classList.contains('edit-hole-btn') || el.classList.contains('edit-hole-btn-icon')) {
       this.props.onChange(actions.openHole(el.dataset.holeId))
-    } else {
-      if (el.classList.contains('delete-hole-btn')) {
-        this.props.onChange(actions.removeHole(el.dataset.holeId))
-      }
+    } else if (el.classList.contains('delete-hole-btn') || el.classList.contains('delete-hole-btn-icon')) {
+      this.props.onChange(actions.removeHole(el.dataset.holeId))
     }
   }
 
@@ -337,7 +329,7 @@ export class Cloze extends Component {
 
   render() {
     return(
-      <div>
+      <fieldset className="cloze-editor">
         <FormGroup
           controlId="cloze-text"
           label={t('text')}
@@ -345,7 +337,8 @@ export class Cloze extends Component {
           error={get(this.props.item, '_errors.text')}
         >
           <Textarea
-            id='cloze-item-text'
+            id="cloze-text"
+            className="cloze-text"
             onChange={(value) => this.props.onChange(actions.updateText(value))}
             onSelect={this.onSelect.bind(this)}
             onClick={this.onHoleClick.bind(this)}
@@ -353,24 +346,29 @@ export class Cloze extends Component {
             onChangeMode={this.changeEditorMode}
           />
         </FormGroup>
-        <button
-          type="button"
-          className="btn btn-default"
-          disabled={!this.state.allowCloze}
-          onClick={() => this.props.onChange(this.addHole())}><i className="fa fa-fw fa-plus"/>
-          {tex('create_cloze')}
-        </button>
+
+        <div className="footer">
+          <button
+            type="button"
+            className="btn btn-default"
+            disabled={!this.state.allowCloze}
+            onClick={() => this.props.onChange(this.addHole())}
+          >
+            <span className="fa fa-fw fa-plus" />
+            {tex('create_cloze')}
+          </button>
+        </div>
+
         {(this.props.item._popover && this.props.item._holeId) &&
-          <div>
-            <HoleForm
-              item={this.props.item}
-              onChange={this.props.onChange}
-              validating={this.props.validating}
-              _errors={this.props.item._errors}
-            />
-          </div>
+          <HoleForm
+            hole={this.props.item.holes.find(hole => hole.id === this.props.item._holeId)}
+            solution={this.props.item.solutions.find(solution => solution.holeId === this.props.item._holeId)}
+            onChange={this.props.onChange}
+            validating={this.props.validating}
+            _errors={this.props.item._errors}
+          />
         }
-      </div>
+      </fieldset>
     )
   }
 }
@@ -382,7 +380,13 @@ Cloze.propTypes = {
     _text: T.string.isRequired,
     _errors: T.object,
     _popover: T.bool,
-    _holeId: T.string
+    _holeId: T.string,
+    holes: T.arrayOf(T.shape({
+      id: T.string.isRequired
+    })).isRequired,
+    solutions: T.arrayOf(T.shape({
+      holeId: T.string.isRequired
+    })).isRequired
   }),
   onChange: T.func.isRequired,
   validating: T.bool.isRequired

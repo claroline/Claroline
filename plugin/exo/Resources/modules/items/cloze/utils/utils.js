@@ -14,30 +14,31 @@ utils.setEditorHtml = (text, solutions) => {
 
 utils.makeTinyHtml = (solution) => {
   let input = ''
+
+  const bestAnswer = utils.getBestAnswer(solution.answers)
+
   if (solution.answers.length === 1) {
   //if one solutions
     input = `
-      <span class="cloze-input" data-hole-id="${solution.holeId}">
+      <span class="cloze-hole answer-item" data-hole-id="${solution.holeId}">
         <input
-          style="width: auto; margin: 10px; display: inline;"
-          class="hole-input form-control"
+          class="hole-input form-control input-sm"
           data-hole-id="${solution.holeId}"
           type="text"
-        >
-        </input>
+          disabled="true"
+          value="${bestAnswer ? bestAnswer.text : ''}"
+        />
         ${getEditButtons(solution)}
       </span>
     `
   } else {
     input = `
-      <span class="cloze-input" data-hole-id="${solution.holeId}">
+      <span class="cloze-hole answer-item" data-hole-id="${solution.holeId}">
         <select
-          style="width: auto; margin: 10px; display: inline;"
-          class="hole-input form-control"
+          class="hole-input form-control input-sm"
           data-hole-id="${solution.holeId}"
-          type="text"
         >
-          <option> ${tex('please_choose')} </option>
+          <option>${bestAnswer ? bestAnswer.text : tex('please_choose')}</option>
         </select>
         ${getEditButtons(solution)}
       </span>
@@ -46,12 +47,11 @@ utils.makeTinyHtml = (solution) => {
   return input
 }
 
-utils.getTextWithPlacerHoldersFromHtml = (text) =>
-{
+utils.getTextWithPlacerHoldersFromHtml = (text) => {
   const tmp = document.createElement('div')
   tmp.innerHTML = text
 
-  $(tmp).find('.cloze-input').each(function () {
+  $(tmp).find('.cloze-hole').each(function () {
     let id = $(this).attr('data-hole-id')
     $(this).replaceWith(`[[${id}]]`)
   })
@@ -65,24 +65,21 @@ utils.getTextWithPlacerHoldersFromHtml = (text) =>
 
 function getEditButtons(solution) {
   return `
-    <i style="cursor: pointer"
-      class="fa fa-fw fa-pencil edit-hole-btn"
+    <button 
+      type="button" 
+      class="btn btn-link-default edit-hole-btn"
       data-hole-id="${solution.holeId}"
-    > &nbsp; </i>
-    <i style="cursor: pointer"
-      class="fa fa-fw fa-trash delete-hole-btn"
+    >
+      <span class="fa fa-fw fa-pencil edit-hole-btn-icon" data-hole-id="${solution.holeId}">&nbsp;</span>
+    </button>
+    <button 
+      type="button" 
+      class="btn btn-link-default delete-hole-btn"
       data-hole-id="${solution.holeId}"
-    > &nbsp;
-    </i>
+    >
+      <span class="fa fa-fw fa-trash-o delete-hole-btn-icon" data-hole-id="${solution.holeId}">&nbsp;</span>
+    </button>
   `
-}
-
-utils.getEditButtonsLength = () => {
-  const solution = {
-    guid: 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx'
-  }
-
-  return utils.makeTinyHtml(solution).length
 }
 
 utils.getGuidLength = () => {
@@ -123,6 +120,15 @@ utils.split = (text, holes, solutions) => {
   return split
 }
 
+/**
+ * Searches Holes in text and returns an ordered array of Holes
+ * based on their position in text.
+ *
+ * @param text
+ * @param holes
+ *
+ * @returns {Array}
+ */
 utils.getTextElements = (text, holes) => {
   const data = []
 
@@ -143,22 +149,13 @@ utils.getTextElements = (text, holes) => {
   return data.sort((a, b) => a.position - b.position)
 }
 
-utils.getSolutionForAnswer = (solution, answer) => {
-  let answerText = ''
-  if (typeof answer === 'string') {
-    answerText = answer
-  } else {
-    answerText = answer.text ? answer.text: answer.answerText
-  }
+utils.getBestAnswer = (answers) => {
+  let bestAnswer = null
+  answers.map(answer => {
+    if (!bestAnswer || (answer.score > bestAnswer && 0 < answer.score)) {
+      bestAnswer = answer
+    }
+  })
 
-
-  if (!answerText) return null
-
-  let foundSolution = solution.answers.find(solAnswer => solAnswer.text.toLowerCase() === answerText.toLowerCase())
-
-  if (!foundSolution) return null
-
-  foundSolution = foundSolution.caseSensitive ? foundSolution.text === answer.text ? foundSolution: null: foundSolution
-
-  return foundSolution
+  return bestAnswer
 }

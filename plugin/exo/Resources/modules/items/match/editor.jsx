@@ -87,13 +87,25 @@ class MatchLinkPopover extends Component {
           <div>
             {tex('match_edit_connection')}
 
-            <TooltipButton
-              id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-close`}
-              title={'close'}
-              className="btn-link-default"
-              label={<span className="fa fa-fw fa-times"></span>}
-              onClick={() => this.props.handlePopoverClose()}
-            />
+            <div className="popover-actions">
+              <TooltipButton
+                id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-delete`}
+                title={'delete'}
+                enabled={this.props.solution._deletable}
+                className="btn-link-default"
+                label={<span className="fa fa-fw fa-trash-o"></span>}
+                onClick={() => this.props.solution._deletable &&
+                this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)
+                }
+              />
+              <TooltipButton
+                id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-close`}
+                title={'close'}
+                className="btn-link-default"
+                label={<span className="fa fa-fw fa-times"></span>}
+                onClick={() => this.props.handlePopoverClose()}
+              />
+            </div>
           </div>
         }>
           <div className="association">
@@ -114,16 +126,6 @@ class MatchLinkPopover extends Component {
                label={<span className="fa fa-fw fa-comments-o"></span>}
                onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
              />
-            <TooltipButton
-              id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-delete`}
-              title={'delete'}
-              enabled={this.props.solution._deletable}
-              className="btn-link-default"
-              label={<span className="fa fa-fw fa-trash"></span>}
-              onClick={() => this.props.solution._deletable &&
-              this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)
-              }
-            />
           </div>
           {this.state.showFeedback &&
             <div className="feedback-container">

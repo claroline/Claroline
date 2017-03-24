@@ -1,72 +1,44 @@
-import React, {Component, PropTypes as T} from 'react'
-import {utils} from './utils/utils'
+import React, {PropTypes as T} from 'react'
 import cloneDeep from 'lodash/cloneDeep'
-import {tex} from './../../utils/translate'
 
-export class ClozePlayer extends Component {
-  constructor(props) {
-    super(props)
-    this.onAnswer = this.onAnswer.bind(this)
-    this.elements = utils.split(this.props.item.text, this.props.item.holes, this.props.item.solutions)
-  }
+import {ClozeText} from './utils/cloze-text.jsx'
+import {PlayerHole} from './utils/cloze-holes.jsx'
 
-  onAnswer(holeId, text) {
-    let answer = null
-    const answers = cloneDeep(this.props.answer)
-    if (this.props.answer.length > 0) answer = answers.find(item => item.holeId === holeId)
+export const ClozePlayer = props =>
+  <ClozeText
+    anchorPrefix="cloze-hole-player"
+    className="cloze-player"
+    text={props.item.text}
+    holes={props.item.holes.map(hole => {
+      let answer = props.answer.find(holeAnswer => holeAnswer.holeId === hole.id)
 
-    ;(answer) ?
-      answer.answerText = text:
-      answers.push({answerText: text, holeId})
+      return {
+        id: hole.id,
+        component: (
+          <PlayerHole
+            id={hole.id}
+            answer={answer ? answer.answerText : ''}
+            choices={hole.choices}
+            onChange={(newAnswer) => {
+              const answers = cloneDeep(props.answer)
 
-    return answers
-  }
+              let holeAnswer = answers.find(item => item.holeId === hole.id)
+              if (holeAnswer) {
+                holeAnswer.answerText = newAnswer
+              } else {
+                answers.push({
+                  holeId: hole.id,
+                  answerText: newAnswer
+                })
+              }
 
-  getHtml() {
-    return this.elements.map((el, key) => {
-      return el.choices ?
-        `
-        ${el.text}
-        <select
-          id=${'answer'+key}
-          defaultValue=''
-          class="form-control inline-select"
-        >
-          <option value=''>${tex('please_choose')}</option>
-          ${el.choices.map((choice, idx) => `<option value=${choice} key=${idx}>${ choice }</option>`)}
-        </select>
-      `:
-      el.holeId ?
-       `
-         ${el.text}
-         <input
-           id=${'answer'+key}
-           class="form-control inline-select"
-           type="text"
-           size=${el.size}
-         />
-     `:
-      el.text
-    }).reduce((a, b) => a += b)
-  }
-
-  render() {
-    return <div dangerouslySetInnerHTML={{__html: this.getHtml()}} />
-  }
-
-  componentDidMount() {
-    this.elements.forEach((el, key) => {
-      let htmlElement = document.getElementById('answer' + key)
-      if (htmlElement) {
-        htmlElement.addEventListener(
-          'change',
-          e => this.props.onChange(this.onAnswer(el.holeId, e.target.value))
+              props.onChange(answers)
+            }}
+          />
         )
       }
-    })
-  }
-}
-
+    })}
+  />
 
 ClozePlayer.propTypes = {
   item: T.shape({
@@ -75,7 +47,10 @@ ClozePlayer.propTypes = {
     solutions: T.array.isRequired,
     text: T.string.isRequired
   }).isRequired,
-  answer: T.array,
+  answer: T.arrayOf(T.shape({
+    holeId: T.string.isRequired,
+    answerText: T.string.isRequired
+  })),
   onChange: T.func.isRequired
 }
 
