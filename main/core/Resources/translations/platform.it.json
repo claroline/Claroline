@@ -3,5 +3,8 @@
     "delete_category": "",
     "display": "",
     "mandatory": "",
-    "parameters": "Impostazioni"
+    "parameters": "Impostazioni",
+    "404": "Pagina non trovata",
+    "0_or_1": "0 o 1",
+    "accept": "Accettare"
 }
