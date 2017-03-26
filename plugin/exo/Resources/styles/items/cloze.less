@@ -7,6 +7,7 @@
 
   .cloze-hole {
     .form-control {
+      cursor: pointer; // don't know why it's not done by default
       border-radius: @answer-item-border-radius 0 0 @answer-item-border-radius;
     }
     .btn {
@@ -43,7 +44,7 @@
 
     // restyle input
     .form-control {
-      margin-right: floor(@grid-gutter-width / 2);
+      //margin-right: floor(@grid-gutter-width / 2);
       border: none;
       border-radius: 0;
     }
@@ -68,6 +69,11 @@
 .cloze-feedback {
   .cloze-hole {
     padding: 0 @answer-item-padding; // We need to adjust how answers are rendered
+
+    .form-control + .feedback-btn,
+    .form-control + .solution-score {
+      margin-left: floor(@grid-gutter-width / 2);
+    }
   }
 }
 

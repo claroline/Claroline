@@ -14,9 +14,12 @@ export class ClozeText extends Component {
   }
 
   componentWillUnmount() {
-    this.props.holes.map(hole =>
-      ReactDOM.unmountComponentAtNode(document.getElementById(`${this.props.anchorPrefix}-${hole.id}`))
-    )
+    this.props.holes.map(hole => {
+      const holeContainer = document.getElementById(`${this.props.anchorPrefix}-${hole.id}`)
+      if (holeContainer) {
+        ReactDOM.unmountComponentAtNode(holeContainer)
+      }
+    })
   }
 
   renderHoles() {

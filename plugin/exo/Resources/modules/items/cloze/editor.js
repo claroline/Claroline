@@ -3,6 +3,7 @@ import {makeActionCreator, makeId} from './../../utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {utils} from './utils/utils'
+import {select} from './selectors'
 import {notBlank} from './../../utils/validate'
 import set from 'lodash/set'
 import get from 'lodash/get'
@@ -55,7 +56,7 @@ export default {
 
 function decorate(item) {
   return Object.assign({}, item, {
-    _text: utils.setEditorHtml(item.text, item.solutions)
+    _text: utils.setEditorHtml(item.text, item.holes, item.solutions)
   })
 }
 
@@ -175,7 +176,7 @@ function reduce(item = {}, action) {
       newItem.solutions.push(solution)
       newItem._popover = true
       newItem._holeId = hole.id
-      newItem._text = action.cb(utils.makeTinyHtml(solution))
+      newItem._text = action.cb(utils.makeTinyHtml(hole, solution))
       newItem.text = utils.getTextWithPlacerHoldersFromHtml(newItem._text)
 
       return newItem
@@ -184,11 +185,23 @@ function reduce(item = {}, action) {
       const newItem = cloneDeep(item)
       const holes = newItem.holes
       const solutions = newItem.solutions
+
+      // Remove from holes list
       holes.splice(holes.findIndex(hole => hole.id === action.holeId), 1)
-      solutions.splice(solutions.findIndex(solution => solution.holeId === action.holeId), 1)
+
+      // Remove from solutions
+      const solution = solutions.splice(solutions.findIndex(solution => solution.holeId === action.holeId), 1)
+
+      let bestAnswer
+      if (solution && 0 !== solution.length) {
+        // Retrieve the best answer
+        bestAnswer = select.getBestAnswer(solution[0].answers)
+      }
+
+      // Replace hole with the best answer text
       const regex = new RegExp(`(\\[\\[${action.holeId}\\]\\])`, 'gi')
-      newItem.text = newItem.text.replace(regex, '')
-      newItem._text = utils.setEditorHtml(newItem.text, newItem.solutions)
+      newItem.text = newItem.text.replace(regex, bestAnswer ? bestAnswer.text : '')
+      newItem._text = utils.setEditorHtml(newItem.text, newItem.holes, newItem.solutions)
 
       if (newItem._holeId && newItem._holeId === action.holeId) {
         newItem._popover = false

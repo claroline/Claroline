@@ -11,7 +11,7 @@ import {actions} from './editor'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {ErrorBlock} from './../../components/form/error-block.jsx'
 
-class ChoiceItem extends Component {
+class KeywordItem extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -122,13 +122,13 @@ class ChoiceItem extends Component {
   }
 }
 
-ChoiceItem.defaultProps = {
+KeywordItem.defaultProps = {
   answer: {
     feedback: ''
   }
 }
 
-ChoiceItem.propTypes = {
+KeywordItem.propTypes = {
   answer: T.shape({
     score: T.number,
     feedback: T.string,
@@ -144,23 +144,6 @@ ChoiceItem.propTypes = {
 }
 
 class HoleForm extends Component {
-  constructor(props) {
-    super(props)
-
-    // Let's calculate the popover position
-    // It will be positioned just under the edit button
-    const btnElement = document.querySelector(`.cloze-hole[data-hole-id="${props.hole.id}"] .edit-hole-btn`)
-
-    this.left = btnElement.offsetLeft
-    this.top  = btnElement.offsetTop
-
-    this.left += btnElement.offsetWidth / 2 // center popover and edit btn
-    this.top  += btnElement.offsetHeight // position popover below edit btn
-
-    this.left -= 180 // half size of the popover
-    this.top  += 25 // take into account the form group label
-  }
-
   closePopover() {
     this.props.onChange(actions.closePopover())
   }
@@ -171,12 +154,25 @@ class HoleForm extends Component {
   }
 
   render() {
+    // Let's calculate the popover position
+    // It will be positioned just under the edit button
+    const btnElement = document.querySelector(`.cloze-hole[data-hole-id="${this.props.hole.id}"] .edit-hole-btn`)
+
+    let left = btnElement.offsetLeft
+    let top  = btnElement.offsetTop
+
+    left += btnElement.offsetWidth / 2 // center popover and edit btn
+    top  += btnElement.offsetHeight // position popover below edit btn
+
+    left -= 180 // half size of the popover
+    top  += 25 // take into account the form group label
+
     return (
       <Popover
         id={this.props.hole.id}
         placement="bottom"
-        positionLeft={this.left}
-        positionTop={this.top}
+        positionLeft={left}
+        positionTop={top}
         title={
           <div>
             {tex('cloze_edit_hole')}
@@ -248,7 +244,7 @@ class HoleForm extends Component {
 
           <ul>
             {this.props.solution.answers.map((answer, index) =>
-              <ChoiceItem
+              <KeywordItem
                 key={index}
                 id={index}
                 deletable={index > 0}
@@ -261,11 +257,11 @@ class HoleForm extends Component {
 
           <div className="footer">
             <button
+              type="button"
               className="btn btn-default"
               onClick={() => this.props.onChange(
                 actions.addAnswer(this.props.hole.id)
               )}
-              type="button"
             >
               <span className="fa fa-fw fa-plus" />
               {tex('words_add_word')}
