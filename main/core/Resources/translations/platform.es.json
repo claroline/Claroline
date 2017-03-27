@@ -556,7 +556,7 @@
     "manage_public_profile_preferences": "",
     "manage_rights": "Administrar los derechos",
     "manage_tools": "Gestión de las herramientas",
-    "manager": "Administrar",
+    "manager": "Gestor",
     "manual": "Manual",
     "manual_evaluation_explanation": "Evaluación manual del administrador del espacio de trabajo",
     "max_amount_resources": "",
@@ -1190,5 +1190,6 @@
     "year": "año",
     "activate": "",
     "mandatory": "",
-    "user_list": ""
+    "user_list": "",
+    "0_or_1": "0 o 1"
 }
