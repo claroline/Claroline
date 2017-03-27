@@ -29,6 +29,7 @@
                   action="{{ path('claro_tag_user_tag', {'user': user.getId()}) }}"
                   method="POST"
                   novalidate="novalidate"
+                  autocomplete="off"
             > 
                 {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
                 {{ form_widget(form) }}

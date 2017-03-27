@@ -21,8 +21,8 @@ class TagType extends AbstractType
     {
         $builder->add(
             'tags',
-            'tags',
-            array('mapped' => false)
+            'text',
+            ['mapped' => false]
         );
     }
 
@@ -33,6 +33,6 @@ class TagType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'tag'));
+        $resolver->setDefaults(['translation_domain' => 'tag']);
     }
 }

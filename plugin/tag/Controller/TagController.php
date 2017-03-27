@@ -107,7 +107,7 @@ class TagController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $tags = $form->get('tags')->getData();
+            $tags = explode(',', $form->get('tags')->getData());
             $this->tagManager->tagObject($tags, $resourceNode);
 
             return new JsonResponse('success', 200);
@@ -163,7 +163,7 @@ class TagController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $tags = $form->get('tags')->getData();
+            $tags = explode(',', $form->get('tags')->getData());
             $this->tagManager->tagObject($tags, $group);
 
             return new JsonResponse('success', 200);
@@ -219,7 +219,7 @@ class TagController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $tags = $form->get('tags')->getData();
+            $tags = explode(',', $form->get('tags')->getData());
             $this->tagManager->tagObject($tags, $user);
 
             return new JsonResponse('success', 200);
@@ -275,7 +275,7 @@ class TagController extends Controller
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $tags = $form->get('tags')->getData();
+            $tags = explode(',', $form->get('tags')->getData());
             $this->tagManager->tagObject($tags, $workspace);
 
             return new JsonResponse('success', 200);
