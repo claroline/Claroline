@@ -57,7 +57,7 @@
     "add_role": "Agregar rol",
     "add_role_to_groups": "Agregar un rol a %count% grupo(s)",
     "add_role_to_users": "Agregar un rol a %count% usuario(s)",
-    "add_roles_confirm_message": "Esta seguro que desea agregar los siguientes roles a los %count% elementos selecionados",
+    "add_roles_confirm_message": "Esta seguro que desea agregar los siguientes roles a los %count% elementos seleccionados",
     "add_subcategory": "Agregar subcategoría",
     "add_tab": "",
     "add_tag": "Agregar etiqueta",
