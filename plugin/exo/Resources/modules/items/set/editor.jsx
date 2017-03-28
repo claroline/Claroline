@@ -39,7 +39,7 @@ class Association extends Component {
 
   render(){
     return (
-      <div className={classes('association answer-item', {'expected-answer' : this.props.association.score > 0}, {'unexpected-answer': this.props.association.score < 1})}>
+      <div className={classes('association answer-item', {'expected-answer' : this.props.association.score > 0}, {'unexpected-answer': this.props.association.score <= 0})}>
         <div className="text-fields">
           <div className="association-data" dangerouslySetInnerHTML={{__html: this.props.association._itemData}} />
 
@@ -98,7 +98,7 @@ class Set extends Component {
   constructor(props) {
     super(props)
   }
-  
+
   render(){
     return (
       <div className="set answer-item">
