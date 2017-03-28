@@ -4,7 +4,7 @@
     {{ 
         parent() ~
         ' - ' ~
-        type.getName()|trans({}, 'support')
+        title|trans({}, 'support')
     }}
 {% endblock %}
 
@@ -18,10 +18,10 @@
             },
             {
                 'name': 'formalibre_support_management_tool'|trans({}, 'tools'),
-                'href': path('formalibre_admin_support_index')
+                'href': path('formalibre_admin_support_ongoing_tickets')
             },
             {
-                'name': type.getName()|trans({}, 'support'),
+                'name': title|trans({}, 'support'),
                 'href': ''
             }
         ])
@@ -29,16 +29,49 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
+    <div class="panel-heading clearfix">
         <h3 class="panel-title">
-            {{ type.getName()|trans({}, 'support') }}
+            {{ title|trans({}, 'support') }}
+            <div class="btn-group pull-right">
+                <button class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-cogs"></i>
+                    <i class="fa fa-caret-down"></i>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    {#<li role="menuitem">#}
+                        {#<a href="#">#}
+                            {#{{ 'account_history'|trans({}, 'support') }}#}
+                        {#</a>#}
+                    {#</li>#}
+                    <li role="menuitem">
+                        <a href="{{ path('formalibre_admin_support_types_management') }}">
+                            {{ 'types_management'|trans({}, 'support') }}
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="{{ path('formalibre_admin_support_status_management') }}">
+                            {{ 'status_management'|trans({}, 'support') }}
+                        </a>
+                    </li>
+                    <li role="menuitem">
+                        <a href="{{ path('formalibre_admin_support_notifications_management') }}">
+                            {{ 'notifications_management'|trans({}, 'support') }}
+                        </a>
+                    </li>
+                    {#<li role="menuitem">#}
+                        {#<a href="#">#}
+                            {#{{ 'external_support'|trans({}, 'support') }}#}
+                        {#</a>#}
+                    {#</li>#}
+                </ul>
+            </div>
         </h3>
     </div>
     <div class="panel-body">
-        
-        {% render(controller('FormaLibreSupportBundle:AdminSupport:adminSupportTabs', {'type': type.getId(), 'supportName': supportName})) %}
-        
-        <br>
+        {% if supportType is defined %}
+            {% render(controller('FormaLibreSupportBundle:AdminSupport:adminSupportTabs', {'type': supportType})) %}
+            <br>
+        {% endif %}
         <div>
             {% block adminSupport %}{% endblock %}
         </div>

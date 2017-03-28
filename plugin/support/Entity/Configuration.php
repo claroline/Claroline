@@ -41,4 +41,35 @@ class Configuration
     {
         $this->details = $details;
     }
+
+    public function getContacts()
+    {
+        return !is_null($this->details) && isset($this->details['contacts']) ? $this->details['contacts'] : [];
+    }
+
+    public function setContacts(array $contacts)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['contacts'] = $contacts;
+    }
+
+    public function getNotify($type)
+    {
+        return !is_null($this->details) && isset($this->details['notify']) && isset($this->details['notify'][$type]) ?
+            $this->details['notify'][$type] :
+            true;
+    }
+
+    public function setNotify($type, $value)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        if (!isset($this->details['notify'])) {
+            $this->details['notify'] = [];
+        }
+        $this->details['notify'][$type] = $value;
+    }
 }

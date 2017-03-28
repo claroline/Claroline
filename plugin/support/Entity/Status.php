@@ -14,12 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Status
 {
-    const STATUS_NORMAL = 0;
-    const STATUS_MANDATORY_START = 1;
-    const STATUS_MANDATORY_END = 2;
-    const STATUS_INTERNAL = 3;
-    const STATUS_EXTERNAL = 4;
-
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -46,9 +40,14 @@ class Status
     protected $order = 1;
 
     /**
-     * @ORM\Column(name="status_type", type="integer")
+     * @ORM\Column(type="text", nullable=true)
      */
-    protected $type = 0;
+    protected $description;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default" = 0})
+     */
+    protected $locked = false;
 
     public function getId()
     {
@@ -90,13 +89,23 @@ class Status
         $this->order = $order;
     }
 
-    public function getType()
+    public function getDescription()
     {
-        return $this->type;
+        return $this->description;
     }
 
-    public function setType($type)
+    public function setDescription($description)
     {
-        $this->type = $type;
+        $this->description = $description;
+    }
+
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
     }
 }

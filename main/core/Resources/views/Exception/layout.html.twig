@@ -32,7 +32,6 @@
                                 'httpCode': httpCode is defined ? httpCode: null
                             }
                         ) %}
-
                         {{ knp_menu_render(menu, {}, 'exception_actions') }}
                     </div>
                 {% endif %}
@@ -43,22 +42,25 @@
 
 {% block javascripts %}
     {{ parent() }}
-
     <script>
-        $('.exception-action-btn').on('click', function () {
-            var url = $(this).data('url');
-            var displayMode = $(this).data('display-mode');
+      $('.exception-action-btn').on('click', function () {
+        const url = $(this).data('url')
+        const displayMode = $(this).data('display-mode')
 
-            if (displayMode === 'modal_form') {
-                window.Claroline.Modal.displayForm(
-                    url,
-                    function () {},
-                    function() {}
-                );
-
-            } else {
-                window.location = url;
-            }
-        });
+        if (displayMode === 'modal_form') {
+          window.exceptionData = {}
+          window.exceptionData.message = `{{ exception.getMessage() }}`
+          window.exceptionData.stackTrace = {{ exception.getTrace()|json_encode|raw }}
+          window.exceptionData.exceptionClass = "{{ exception.getClass() }}"
+          window.exceptionData.file = "{{ exception.getFile() }}"
+          window.exceptionData.line = {{ exception.getLine() }}
+          window.exceptionData.url = "{{ app.request.uri }}"
+          window.exceptionData.referer = "{{ app.request.headers.get('referer') }}"
+          window.exceptionData.httpCode = {{ httpCode is defined ? httpCode: null }}
+          window.Claroline.Modal.fromUrl(url)
+        } else {
+          window.location = url
+        }
+      })
     </script>
 {% endblock %}
