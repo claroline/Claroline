@@ -108,6 +108,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'enable_opengraph' => true,
             'tmp_dir' => sys_get_temp_dir(),
             'resource_icon_set' => 'claroline',
+            'direct_third_party_authentication' => false,
         ];
     }
 }

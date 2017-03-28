@@ -15,8 +15,8 @@
         'href': path('claro_admin_index')
     },
     {
-        'name': 'oauth'|trans({}, 'platform'),
-        'href': path('claro_admin_parameters_oauth_index')
+        'name': 'third_party_authentication'|trans({}, 'platform'),
+        'href': path('claro_admin_parameters_third_party_authentication_index')
     },
     {
         'name': service|trans({}, 'icap_oauth'),
@@ -37,7 +37,7 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a href="{{ path('claro_admin_parameters_oauth_index') }}">
+            <a href="{{ path('claro_admin_parameters_third_party_authentication_index') }}">
                 <button type="button" class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</button>
             </a>
         </div>

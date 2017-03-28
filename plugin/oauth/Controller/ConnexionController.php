@@ -66,9 +66,7 @@ class ConnexionController extends Controller
         $service = $session->get('icap.oauth.resource_owner');
         $user = $session->get('icap.oauth.user');
         if ($service !== null && $user !== null && $selfRegistration === true) {
-            $translator = $this->get('translator');
-            $translator->setLocale($request->getLocale());
-            $form = $this->get('icap.oauth.manager')->getRegistrationForm($user, $translator);
+            $form = $this->get('icap.oauth.manager')->getRegistrationForm($user);
 
             return ['form' => $form->createView()];
         }

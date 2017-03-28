@@ -48,7 +48,10 @@
             {{ 'session'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_parameters_oauth_index') }}">
-            {{ 'oauth'|trans({}, 'platform') }}
+            {{ 'claroline_oauth_apps'|trans({}, 'platform') }}
+        </a>
+        <a class="list-group-item" href="{{ path('claro_admin_parameters_third_party_authentication_index') }}">
+            {{ 'third_party_authentication'|trans({}, 'platform') }}
         </a>
         <a class="list-group-item" href="{{ path('claro_admin_parameters_maintenance') }}">
             {{ 'maintenance'|trans({}, 'platform') }}

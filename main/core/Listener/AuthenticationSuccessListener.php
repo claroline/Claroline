@@ -125,8 +125,15 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($uri = $request->getSession()->get('_security.main.target_path')) {
-            return new RedirectResponse($uri);
+        $securityUri = $request->getSession()->get('_security.main.target_path');
+        $securityRoute = $securityUri ?
+            $this->router->match(
+                preg_replace("/(app_dev.php\/|app_dev.php\/)/i", '', parse_url($securityUri, PHP_URL_PATH))
+            )['_route'] :
+            null;
+        // If login route then check other conditions.
+        if ($securityRoute && !$this->isRouteExcluded($securityRoute)) {
+            return new RedirectResponse($securityUri);
         }
 
         if ($this->configurationHandler->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['DESKTOP'])) {
@@ -279,7 +286,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private function isRouteExcluded($route)
     {
         return in_array($route, $this->getExcludedRoutes())
-            || preg_match('/(claro_security_|oauth_|_login|claro_file|media)/', $route);
+            || preg_match('/(claro_security_|oauth_|_login|claro_file|media|claro_cas_)/', $route);
     }
 
     private function getExcludedRoutes()
@@ -291,6 +298,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             'login',
             'claro_registration_user_registration_form',
             'claro_o365_login',
+            'claro_cas_login',
         ];
     }
 

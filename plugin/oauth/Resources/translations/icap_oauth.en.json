@@ -1,5 +1,5 @@
 {
-    "client_active": "Active",
+    "client_active": "Enable",
     "client_force_reauthenticate": "Force re-authentication",
     "client_id": "Application ID",
     "client_secret": "Application secret",

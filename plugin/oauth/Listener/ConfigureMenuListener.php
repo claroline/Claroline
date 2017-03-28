@@ -18,16 +18,16 @@ class ConfigureMenuListener
      *
      * @return \Knp\Menu\ItemInterface $menu
      */
-    public function onTopBarLeftMenuConfigure(ConfigureMenuEvent $event)
+    public function onExternalAuthenticationMenuConfigure(ConfigureMenuEvent $event)
     {
         $menu = $event->getMenu();
         foreach (Configuration::resourceOwners() as $resourceOwner) {
             $menu->addChild(
                 $resourceOwner,
-                array(
+                [
                     'route' => 'claro_admin_oauth_form',
-                    'routeParameters' => array('service' => str_replace(' ', '_', strtolower($resourceOwner))),
-                )
+                    'routeParameters' => ['service' => str_replace(' ', '_', strtolower($resourceOwner))],
+                ]
             )->setExtra('name', $resourceOwner);
         }
 

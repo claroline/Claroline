@@ -91,7 +91,6 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
             'JMS\DiExtraBundle\JMSDiExtraBundle' => 'jms_di_extra',
             'JMS\SecurityExtraBundle\JMSSecurityExtraBundle' => 'jms_security_extra',
             'Stof\DoctrineExtensionsBundle\StofDoctrineExtensionsBundle' => 'stof_doctrine_extensions',
-            'BeSimple\SsoAuthBundle\BeSimpleSsoAuthBundle' => 'sso',
             'Stfalcon\Bundle\TinymceBundle\StfalconTinymceBundle' => 'stfalcon_tinymce',
             'Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle' => 'sensio_framework_extra',
             'FOS\RestBundle\FOSRestBundle' => 'fos_rest',
