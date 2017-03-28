@@ -1,5 +1,5 @@
 {
-    "404": "",
+    "404": "Página no encontrada",
     "6_parameters_min_msg": "El archivo csv  debe incluir, al menos, 6 elementos por línea.",
     "7_parameters_min_msg": "El archivo csv  debe incluir, al menos, 7 elementos por línea.",
     "accept": "Aceptar",
@@ -13,7 +13,7 @@
     "action_list": "Lista de acciones",
     "actions": "Acciones",
     "actions_per_day": "Acciones por día",
-    "activate_account": "",
+    "activate_account": "Activación de la cuenta",
     "activate_account_click": "",
     "activate_maintenance_mode": "",
     "activate_notifications": "Activar notificaciones",
@@ -1188,8 +1188,9 @@
     "month": "mes",
     "week": "semana",
     "year": "año",
-    "activate": "",
+    "activate": "Activar",
     "mandatory": "",
     "user_list": "",
-    "0_or_1": "0 o 1"
+    "0_or_1": "0 o 1",
+    "activated": "Activado"
 }
