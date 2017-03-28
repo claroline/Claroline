@@ -30,50 +30,6 @@ class TicketType extends AbstractType
                 'translation_domain' => 'platform',
             ]
         );
-
-        if ($this->mode === 1) {
-            $builder->add(
-                'description',
-                'textarea',
-                [
-                    'required' => false,
-                    'label' => 'additional_infos',
-                    'translation_domain' => 'support',
-                    'attr' => ['placeholder' => $this->translator->trans('description_placeholder_text', [], 'support')],
-                ]
-            );
-        } else {
-            $builder->add(
-                'description',
-                'tinymce',
-                [
-                    'required' => true,
-                    'label' => 'description',
-                    'translation_domain' => 'platform',
-                ]
-            );
-        }
-
-        if ($this->mode === 0) {
-            $builder->add(
-                'type',
-                'entity',
-                [
-                    'label' => 'type',
-                    'class' => 'FormaLibreSupportBundle:Type',
-                    'translation_domain' => 'support',
-                    'choice_translation_domain' => true,
-                    'query_builder' => function (EntityRepository $er) {
-                        return $er->createQueryBuilder('t')
-                            ->orderBy('t.name', 'ASC');
-                    },
-                    'property' => 'formName',
-                    'expanded' => false,
-                    'multiple' => false,
-                    'required' => true,
-                ]
-            );
-        }
         $builder->add(
             'contactMail',
             'email',
@@ -90,6 +46,51 @@ class TicketType extends AbstractType
                 'label' => 'contact_phone',
             ]
         );
+        if ($this->mode === 1) {
+            $builder->add(
+                'description',
+                'textarea',
+                [
+                    'required' => false,
+                    'label' => 'additional_infos',
+                    'translation_domain' => 'support',
+                    'attr' => [
+                        'placeholder' => $this->translator->trans('description_placeholder_text', [], 'support'),
+                        'rows' => 5,
+                    ],
+                ]
+            );
+        } else {
+            $builder->add(
+                'description',
+                'tinymce',
+                [
+                    'required' => true,
+                    'label' => 'description',
+                    'translation_domain' => 'platform',
+                ]
+            );
+        }
+        if ($this->mode === 0) {
+            $builder->add(
+                'type',
+                'entity',
+                [
+                    'label' => 'type',
+                    'class' => 'FormaLibreSupportBundle:Type',
+                    'translation_domain' => 'support',
+                    'choice_translation_domain' => true,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('t')
+                            ->orderBy('t.name', 'ASC');
+                    },
+                    'property' => 'name',
+                    'expanded' => false,
+                    'multiple' => false,
+                    'required' => true,
+                ]
+            );
+        }
     }
 
     public function getName()

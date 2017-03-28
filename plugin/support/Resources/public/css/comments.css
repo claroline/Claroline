@@ -1,16 +1,29 @@
+.comment-row {
+    display: flex;
+}
+
+.comment-content {
+    display: flex;
+}
+
 .comment-picture {
     width: 100px;
     margin: auto;
 }
 
-.comment-separator {
-    border: solid #000000 1px;
+.comment-content-left {
+    align-items: center;
+    justify-content: flex-end;
 }
 
-.comment-media-left {
-    border-right: #bfb7b7 solid 1px;
+.comment-content-right {
+    align-items: center;
 }
 
-.comment-media-right {
-    border-left: #bfb7b7 solid 1px;
+.comment-contact-left {
+    border-right: #bfb7b7 dashed 1px;
+}
+
+.comment-contact-right {
+    border-left: #bfb7b7 dashed 1px;
 }

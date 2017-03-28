@@ -4,7 +4,6 @@ namespace FormaLibre\SupportBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Menu\ExceptionActionEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -49,11 +48,10 @@ class SupportListener
      */
     public function onAdministrationToolOpen(OpenAdministrationToolEvent $event)
     {
-        $params = array();
-        $params['_controller'] = 'FormaLibreSupportBundle:AdminSupport:adminSupportIndex';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel
-            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $params = [];
+        $params['_controller'] = 'FormaLibreSupportBundle:AdminSupport:adminSupportOngoingTickets';
+        $subRequest = $this->request->duplicate([], null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -65,27 +63,11 @@ class SupportListener
      */
     public function onDesktopToolOpen(DisplayToolEvent $event)
     {
-        $params = array();
-        $params['_controller'] = 'FormaLibreSupportBundle:Support:supportIndex';
-        $subRequest = $this->request->duplicate(array(), null, $params);
+        $params = [];
+        $params['_controller'] = 'FormaLibreSupportBundle:Support:ongoingTickets';
+        $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("plugin_options_supportbundle")
-     *
-     * @param DisplayToolEvent $event
-     */
-    public function onPluginOptionsOpen(PluginOptionsEvent $event)
-    {
-        $params = array();
-        $params['_controller'] = 'FormaLibreSupportBundle:AdminSupport:pluginConfigureForm';
-        $subRequest = $this->request->duplicate(array(), null, $params);
-        $response = $this->httpKernel
-            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
         $event->stopPropagation();
     }
 
@@ -99,37 +81,11 @@ class SupportListener
         $httpCode = $event->getHttpCode();
 
         if ($httpCode === 400 || $httpCode === 500) {
-            $user = $event->getUser();
-            $exceptionClassTemp = $event->getExceptionClass();
-            $messageTemp = $event->getMessage();
-            $fileTemp = $event->getFile();
-            $lineTemp = $event->getLine();
-            $urlTemp = $event->getUrl();
-            $refererTemp = $event->getReferer();
-            $exceptionClass = empty($exceptionClassTemp) ? '-' : $exceptionClassTemp;
-            $message = empty($messageTemp) ? '-' : $messageTemp;
-            $file = empty($fileTemp) ? '-' : $fileTemp;
-            $line = empty($lineTemp) ? '-' : $lineTemp;
-            $url = empty($urlTemp) ? '-' : $urlTemp;
-            $referer = empty($refererTemp) ? '-' : $refererTemp;
-
-            $route = $this->router->generate(
-                'formalibre_ticket_from_issue_create_form',
-                array(
-                    'user' => $user->getId(),
-                    'exceptionClass' => $exceptionClass,
-                    'message' => $message,
-                    'file' => $file,
-                    'line' => $line,
-                    'url' => $url,
-                    'referer' => $referer,
-                )
-            );
-
+            $route = $this->router->generate('formalibre_ticket_from_issue_create_form');
             $menu = $event->getMenu();
             $menu->addChild(
-                $this->translator->trans('create_ticket_for_issue', array(), 'support'),
-                array('uri' => $route)
+                $this->translator->trans('create_ticket_for_issue', [], 'support'),
+                ['uri' => $route]
             )->setExtra('icon', 'fa fa-share')
             ->setExtra('display', 'modal_form');
 

@@ -1,0 +1,7 @@
+#textarea-ticket-description {
+    width: 100%;
+}
+
+#ticket-exception-info {
+    overflow: auto;
+}

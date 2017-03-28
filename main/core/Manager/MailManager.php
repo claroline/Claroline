@@ -172,7 +172,7 @@ class MailManager
      */
     public function send($subject, $body, array $users, $from = null, array $extra = [], $force = false, $replyToMail = null)
     {
-        if (count($users) === 0) {
+        if (count($users) === 0 && !isset($extra['to']) && count($extra['to']) === 0) {
             //obviously, if we're not going to send anything to anyone, it's better to stop
             return false;
         }
