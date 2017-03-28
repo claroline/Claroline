@@ -107,10 +107,11 @@ export class AnswerArea extends Component {
             style={common({right: -22})}
             onClick={e => {
               const rect = e.target.getBoundingClientRect()
+              const containerRect = document.getElementsByClassName('graphic-editor')[0].getBoundingClientRect()
               props.togglePopover(
                 props.id,
-                rect.left + window.pageXOffset - 189, // works with fixed size popover
-                rect.top + window.pageYOffset - 179
+                rect.left + window.pageXOffset - containerRect.left - 130, // works with fixed size popover and position relative container
+                rect.top + window.pageYOffset - containerRect.top - 66
               )
             }}
           />
