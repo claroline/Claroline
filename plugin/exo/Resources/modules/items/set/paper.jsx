@@ -36,10 +36,12 @@ export const SetPaper = props => {
                               <WarningIcon valid={utils.isValidAnswer(answer, props.item.solutions.associations)}/>
                               <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(answer.itemId, props.item.items)}} />
                               <Feedback
-                                    id={`ass-${answer.itemId}-${answer.setId}-feedback`}
-                                    feedback={utils.getAnswerSolutionFeedback(answer, props.item.solutions.associations)}
-                                />
-                              <SolutionScore score={utils.getAnswerSolutionScore(answer, props.item.solutions.associations)}/>
+                                id={`ass-${answer.itemId}-${answer.setId}-feedback`}
+                                feedback={utils.getAnswerSolutionFeedback(answer, props.item.solutions.associations)}
+                              />
+                              {props.showScore &&
+                                <SolutionScore score={utils.getAnswerSolutionScore(answer, props.item.solutions.associations)}/>
+                              }
                             </div>
                             :
                             <div className="association bg-danger text-danger">
@@ -51,7 +53,7 @@ export const SetPaper = props => {
                                   feedback={utils.getAnswerOddFeedback(answer, props.item.solutions.odd)}
                                 />
                               }
-                              {utils.getAnswerOddScore(answer, props.item.solutions.odd) !== '' &&
+                              {props.showScore && utils.getAnswerOddScore(answer, props.item.solutions.odd) !== '' &&
                                 <SolutionScore score={utils.getAnswerOddScore(answer, props.item.solutions.odd)}/>
                               }
                             </div>
@@ -79,7 +81,9 @@ export const SetPaper = props => {
                         id={`odd-${item.itemId}-feedback`}
                         feedback={item.feedback}
                     />
-                    <SolutionScore score={item.score}/>
+                    {props.showScore &&
+                      <SolutionScore score={item.score}/>
+                    }
                   </div>
                 </li>
               )}
@@ -106,7 +110,9 @@ export const SetPaper = props => {
                                   id={`ass-${ass.itemId}-${ass.setId}-feedback`}
                                   feedback={ass.feedback}
                               />
-                            <SolutionScore score={ass.score}/>
+                            {props.showScore &&
+                              <SolutionScore score={ass.score}/>
+                            }
                           </div>
                         </li>
                       )}
@@ -132,7 +138,8 @@ SetPaper.propTypes = {
     sets: T.arrayOf(T.object).isRequired,
     solutions: T.object
   }).isRequired,
-  answer: T.array
+  answer: T.array,
+  showScore: T.bool.isRequired
 }
 
 SetPaper.defaultProps = {

@@ -33,7 +33,7 @@ const OrderingPaper = props => {
                       id={`oredering-answer-${a.itemId}-feedback`}
                       feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
                     />
-                    {props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions) &&
+                  {props.showScore && props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions) &&
                       <SolutionScore score={props.item.solutions.find(solution => solution.itemId === a.itemId).score}/>
                     }
                   </div>
@@ -52,7 +52,7 @@ const OrderingPaper = props => {
                         feedback={solution.feedback}
                       />
                     }
-                    {solution.score > 0 &&
+                    {props.showScore && solution.score > 0 &&
                       <SolutionScore score={solution.score}/>
                     }
                   </div>
@@ -72,7 +72,7 @@ const OrderingPaper = props => {
                       id={`oredering-answer-${a.itemId}-feedback`}
                       feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
                     />
-                    {props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions) &&
+                    {props.showScore && props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions) &&
                       <SolutionScore score={props.item.solutions.find(solution => solution.itemId === a.itemId).score}/>
                     }
                   </div>
@@ -94,7 +94,7 @@ const OrderingPaper = props => {
                       id={`oredering-answer-${a.itemId}-feedback`}
                       feedback={props.item.solutions.find(solution => solution.itemId === a.itemId).feedback}
                     />
-                    {props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions) &&
+                    {props.showScore && props.item.score.type === SCORE_SUM && utils.showScore(a, props.item.solutions) &&
                       <SolutionScore score={props.item.solutions.find(solution => solution.itemId === a.itemId).score}/>
                     }
                   </div>
@@ -120,7 +120,7 @@ const OrderingPaper = props => {
                       id={`oredering-answer-${solution.itemId}-feedback`}
                       feedback={solution.feedback}
                     />
-                    {props.item.score.type === SCORE_SUM &&
+                    {props.showScore && props.item.score.type === SCORE_SUM &&
                       <SolutionScore score={solution.score}/>
                     }
                   </div>
@@ -133,7 +133,7 @@ const OrderingPaper = props => {
                       id={`oredering-solution-${solution.itemId}-feedback`}
                       feedback={solution.feedback}
                     />
-                    {props.item.score.type === SCORE_SUM &&
+                    {props.showScore && props.item.score.type === SCORE_SUM &&
                       <SolutionScore score={solution.score}/>
                     }
                   </div>
@@ -149,7 +149,7 @@ const OrderingPaper = props => {
                       id={`oredering-answer-${solution.itemId}-feedback`}
                       feedback={solution.feedback}
                     />
-                    {props.item.score.type === SCORE_SUM &&
+                    {props.showScore && props.item.score.type === SCORE_SUM &&
                       <SolutionScore score={solution.score}/>
                     }
                   </div>
@@ -167,7 +167,7 @@ const OrderingPaper = props => {
                       id={`oredering-answer-${solution.itemId}-feedback`}
                       feedback={solution.feedback}
                     />
-                    {props.item.score.type === SCORE_SUM &&
+                    {props.showScore && props.item.score.type === SCORE_SUM &&
                       <SolutionScore score={solution.score}/>
                     }
                   </div>
@@ -191,7 +191,8 @@ OrderingPaper.propTypes = {
     items: T.arrayOf(T.object).isRequired,
     solutions: T.arrayOf(T.object).isRequired
   }).isRequired,
-  answer: T.array.isRequired
+  answer: T.array.isRequired,
+  showScore: T.bool.isRequired
 }
 
 OrderingPaper.defaultProps = {

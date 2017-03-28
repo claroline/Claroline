@@ -47,7 +47,7 @@ export const ChoicePaper = props => {
                 />
               </div>
 
-              {SCORE_FIXED !== props.item.score.type &&
+              {props.showScore && SCORE_FIXED !== props.item.score.type &&
                 <SolutionScore score={solution.score} />
               }
             </label>
@@ -88,7 +88,7 @@ export const ChoicePaper = props => {
                 />
               </div>
 
-              {SCORE_FIXED !== props.item.score.type &&
+              {props.showScore && SCORE_FIXED !== props.item.score.type &&
                 <SolutionScore score={solution.score} />
               }
             </label>
@@ -112,7 +112,8 @@ ChoicePaper.propTypes = {
     multiple: T.bool.isRequired,
     solutions: T.arrayOf(T.object)
   }).isRequired,
-  answer: T.array
+  answer: T.array,
+  showScore: T.bool.isRequired
 }
 
 ChoicePaper.defaultProps = {

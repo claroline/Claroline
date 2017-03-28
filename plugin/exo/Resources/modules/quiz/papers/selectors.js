@@ -20,6 +20,18 @@ const paperSteps = createSelector(
   (currentPaper) => currentPaper.structure.steps
 )
 
+const showScoreAt = paper => {
+  return paper.structure.parameters.showScoreAt
+}
+
+const showCorrectionAt = paper => {
+  return paper.structure.parameters.showCorrectionAt
+}
+
+const correctionDate = paper => {
+  return paper.structure.parameters.correctionDate
+}
+
 const itemScoreMax = item => {
   let scoreMax
 
@@ -67,5 +79,8 @@ export const selectors = {
   currentPaper,
   paperSteps,
   itemScoreMax,
-  paperScoreMax
+  paperScoreMax,
+  showScoreAt,
+  showCorrectionAt,
+  correctionDate
 }

@@ -6,6 +6,8 @@ plugin:
           name: ujm_exercise
           is_browsable: false
           icon: res_exo.png
+          actions:
+            - name: MANAGE_PAPERS
           activity_rules:
             - action: resource-ujm_exercise-exercise_evaluated
 

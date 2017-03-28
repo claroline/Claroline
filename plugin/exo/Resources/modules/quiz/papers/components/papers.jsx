@@ -5,6 +5,7 @@ import selectors from './../../selectors'
 import {selectors as paperSelectors} from './../selectors'
 import {tex} from './../../../utils/translate'
 import {ScoreBox} from './../../../items/components/score-box.jsx'
+import {utils} from './../utils'
 
 export const PaperRow = props =>
   <tr>
@@ -20,16 +21,17 @@ export const PaperRow = props =>
     </td>
     <td className="text-center">
       <span className="sr-only">{tex(props.finished ? 'yes' : 'no')}</span>
-
       {props.finished && <span className="fa fa-fw fa-check" />}
     </td>
     <td className="text-right">
-      {props.score || 0 === props.score ?
-        <ScoreBox size="sm" score={props.score} scoreMax={props.scoreMax} /> : '-'
+      {props.showScore ?
+        props.score || 0 === props.score ? <ScoreBox size="sm" score={props.score} scoreMax={props.scoreMax} /> : '-'
+        :
+        tex('paper_score_not_available')
       }
     </td>
     <td className="text-right table-actions">
-      <a href={`#papers/${props.id}`} className="btn btn-link">
+      <a href={`#papers/${props.id}`} disabled={!props.showCorrection} className="btn btn-link">
         <span className="fa fa-fw fa-eye"></span>
       </a>
     </td>
@@ -46,7 +48,9 @@ PaperRow.propTypes = {
   endDate: T.string,
   finished: T.bool.isRequired,
   score: T.number,
-  scoreMax: T.number
+  scoreMax: T.number,
+  showScore: T.bool.isRequired,
+  showCorrection: T.bool.isRequired
 }
 
 let Papers = props =>
@@ -67,7 +71,13 @@ let Papers = props =>
       </thead>
       <tbody>
         {props.papers.map((paper, idx) =>
-          <PaperRow key={idx} admin={props.admin} {...paper} scoreMax={paperSelectors.paperScoreMax(paper)} />
+          <PaperRow
+            key={idx}
+            admin={props.admin}
+            {...paper}
+            showScore={utils.showScore(props.admin, paper.finished, paperSelectors.showScoreAt(paper), paperSelectors.showCorrectionAt(paper), paperSelectors.correctionDate(paper))}
+            showCorrection={utils.showCorrection(props.admin, paper.finished, paperSelectors.showCorrectionAt(paper), paperSelectors.correctionDate(paper))}
+            scoreMax={paperSelectors.paperScoreMax(paper)} />
         )}
       </tbody>
     </table>
@@ -80,7 +90,7 @@ Papers.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    admin: selectors.editable(state),
+    admin: selectors.editable(state) || selectors.papersAdmin(state),
     papers: paperSelectors.papers(state)
   }
 }

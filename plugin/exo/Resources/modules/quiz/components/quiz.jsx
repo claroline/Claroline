@@ -35,6 +35,9 @@ let Quiz = props =>
       {props.editable &&
         <PageActions actions={viewActions(props.viewMode, props)} />
       }
+      {!props.editable && props.registeredUser &&
+        <PageActions actions={userViewActions(props.viewMode, props)} />
+      }
     </PageHeader>
     {props.modal.type &&
       props.createModal(
@@ -55,6 +58,8 @@ Quiz.propTypes = {
   }).isRequired,
   steps: T.object.isRequired,
   editable: T.bool.isRequired,
+  hasUserPapers: T.bool.isRequired,
+  registeredUser: T.bool.isRequired,
   viewMode: T.string.isRequired,
   updateViewMode: T.func.isRequired,
   saveEnabled: T.bool.isRequired,
@@ -67,6 +72,59 @@ Quiz.propTypes = {
     fading: T.bool.isRequired,
     props: T.object.isRequired
   })
+}
+
+function userViewActions(view, props) {
+  const divider = {
+    primary: true,
+    divider: true
+  }
+
+  const overviewAction = {
+    icon: 'fa fa-fw fa-times',
+    label: t('close'),
+    handleAction: '#overview',
+    primary: true
+  }
+
+  const papersAction = {
+    icon: 'fa fa-fw fa-list',
+    label: tex('results_list'),
+    disabled: props.canViewPapers ? !props.canViewPapers && !props.hasPapers : !props.hasUserPapers,
+    handleAction: '#papers'
+  }
+
+  switch (view) {
+    case VIEW_PLAYER:
+      return [
+        overviewAction,
+        divider,
+        papersAction
+      ]
+    case VIEW_ATTEMPT_END:
+      return [
+        overviewAction,
+        divider,
+        papersAction
+      ]
+    case VIEW_PAPERS:
+      return [
+        overviewAction,
+        divider,
+        papersAction
+      ]
+    case VIEW_PAPER:
+      return [
+        overviewAction,
+        divider,
+        papersAction
+      ]
+    case VIEW_OVERVIEW:
+    default:
+      return [
+        papersAction
+      ]
+  }
 }
 
 function viewActions(view, props) {
@@ -226,6 +284,9 @@ function mapStateToProps(state) {
     empty: select.empty(state),
     published: select.published(state),
     hasPapers: select.hasPapers(state),
+    hasUserPapers: select.hasUserPapers(state),
+    papersAdmin: select.papersAdmin(state),
+    registeredUser: select.registered(state),
     saveEnabled: select.saveEnabled(state),
     modal: select.modal(state),
     currentQuestionId: state.correction.currentQuestionId,

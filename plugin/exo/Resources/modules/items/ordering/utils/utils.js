@@ -7,7 +7,7 @@ export const utils = {
   },
   showScore(answer, solutions) {
     return (utils.answerIsValid(answer, solutions) && solutions.find(solution => solution.itemId === answer.itemId).score > 0)
-      || (!utils.answerIsValid(answer, solutions) && solutions.find(solution => solution.itemId === answer.itemId).score < 1)
+      || (!utils.answerIsValid(answer, solutions) && solutions.find(solution => solution.itemId === answer.itemId).score <= 0)
   },
   checkAllAnswers(solutions, answers) {
     const correctAnswers = solutions.filter(solution => solution.score > 0 && undefined !== answers.find(a => a.itemId === solution.itemId && a.position === solution.position))

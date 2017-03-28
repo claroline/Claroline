@@ -46,7 +46,7 @@ export const GraphicPaper = props => {
             />
           </div>
           {pointedAreas.length > 0 &&
-            <AnswerTable areas={pointedAreas} highlightScore={true}/>
+            <AnswerTable areas={pointedAreas} showScore={props.showScore} highlightScore={true}/>
           }
         </div>
       }
@@ -91,7 +91,8 @@ GraphicPaper.propTypes = {
   answer: T.arrayOf(T.shape({
     x: T.number.isRequired,
     y: T.number.isRequired
-  }))
+  })),
+  showScore: T.bool.isRequired
 }
 
 GraphicPaper.defaultProps = {

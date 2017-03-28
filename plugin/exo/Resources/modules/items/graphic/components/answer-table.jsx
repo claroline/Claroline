@@ -37,9 +37,11 @@ export const AnswerTable = props =>
               feedback={area.feedback}
             />
           }
-          <span className="solution-score">
-            {transChoice('solution_score', area.score, {score: area.score}, 'ujm_exo')}
-          </span>
+          {props.showScore &&             
+            <span className="solution-score">
+              {transChoice('solution_score', area.score, {score: area.score}, 'ujm_exo')}
+            </span>
+          }
         </span>
       </div>
     )}
@@ -53,5 +55,6 @@ AnswerTable.propTypes = {
     color: T.string.isRequired,
     shape: T.string.isRequired,
     feedback: T.string
-  })).isRequired
+  })).isRequired,
+  showScore: T.bool.isRequired
 }

@@ -91,7 +91,7 @@ class ExpectedGridCell extends Component {
               id={`ass-${this.props.cell.id}-feedback`}
               feedback={this.getSolutionFeedback()}
             />
-            {this.props.isSumCellMode &&
+          {this.props.showScore && this.props.isSumCellMode &&
               <SolutionScore score={this.getSolutionScore()}/>
             }
           </div>
@@ -139,6 +139,7 @@ ExpectedGridCell.propTypes = {
   cell: T.object.isRequired,
   answers: T.array.isRequired,
   solutions: T.array.isRequired,
+  showScore: T.bool.isRequired,
   isSumCellMode: T.bool.isRequired
 }
 
@@ -451,7 +452,7 @@ class GridPaper extends Component {
               <div className="grid-body">
                 <table className="grid-table">
                   <tbody>
-                    { this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_COL &&
+                    {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_COL &&
                       <tr>
                         {[...Array(this.props.item.cols)].map((x, i) =>
                           <td key={`grid-col-score-col-${i}`} style={{padding: '8px'}}>
@@ -469,7 +470,7 @@ class GridPaper extends Component {
                     }
                     {[...Array(this.props.item.rows)].map((x, i) =>
                       <tr key={`grid-row-${i}`}>
-                        { this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_ROW &&
+                        {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_ROW &&
                           <td key={`grid-row-score-col-${i}`} style={{padding: '8px', verticalAlign: 'middle'}}>
                             { utils.atLeastOneSolutionInRow(i, this.props.item.cells, this.props.item.solutions) &&
                               <span className={classes(
@@ -494,7 +495,7 @@ class GridPaper extends Component {
                                     <div className="cell-body">{cell.data}</div>
                                   </div>
                                 </td>
-                              )
+                            )
                           } else {
                             return (
                                 <td
@@ -504,7 +505,7 @@ class GridPaper extends Component {
                                     isValid={valid}
                                     answers={this.props.answer}
                                     solutions={this.props.item.solutions}
-                                    showScore={this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL}
+                                    showScore={this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL}
                                     cell={cell}
                                     penalty={this.props.item.penalty}/>
                                 </td>
@@ -524,7 +525,7 @@ class GridPaper extends Component {
               <div className="grid-body">
                 <table className="grid-table">
                   <tbody>
-                    { this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_COL &&
+                    {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_COL &&
                       <tr>
                         {[...Array(this.props.item.cols)].map((x, i) =>
                           <td key={`grid-col-score-col-${i}`} style={{padding: '8px'}}>
@@ -539,7 +540,7 @@ class GridPaper extends Component {
                     }
                     {[...Array(this.props.item.rows)].map((x, i) =>
                       <tr key={`grid-row-${i}`}>
-                        { this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_ROW &&
+                        {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_ROW &&
                           <td key={`grid-row-score-col-${i}`} style={{padding: '8px', verticalAlign: 'middle'}}>
                             { utils.atLeastOneSolutionInRow(i, this.props.item.cells, this.props.item.solutions) &&
                               <span className="text-info">
@@ -560,13 +561,14 @@ class GridPaper extends Component {
                                     <div className="cell-body">{cell.data}</div>
                                   </div>
                                 </td>
-                              )
+                            )
                           } else {
                             return (
                                 <td
                                 key={`grid-row-${i}-col-${j}`}
                                 style={Object.assign({border: `${this.props.item.border.width}px solid ${colors.color}`}, colors)}>
                                   <ExpectedGridCell
+                                    showScore = {this.props.showScore}
                                     answers={this.props.answer}
                                     solutions={this.props.item.solutions}
                                     isSumCellMode={this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL}
@@ -584,7 +586,7 @@ class GridPaper extends Component {
             </div>
           }
         />
-      )
+    )
   }
 }
 
@@ -611,7 +613,8 @@ GridPaper.propTypes = {
     }).isRequired,
     solutions: T.arrayOf(T.object).isRequired
   }).isRequired,
-  answer: T.array.isRequired
+  answer: T.array.isRequired,
+  showScore: T.bool.isRequired
 }
 
 GridPaper.defaultProps = {
