@@ -15,13 +15,10 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Form\WorkspaceEditType;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\GroupManager;
-use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\TransferManager;
 use Claroline\CoreBundle\Manager\UserManager;
@@ -49,9 +46,7 @@ class WorkspaceParametersController extends Controller
     private $formFactory;
     private $router;
     private $request;
-    private $localeManager;
     private $userManager;
-    private $tosManager;
     private $utilities;
     private $groupManager;
     private $toolManager;
@@ -66,10 +61,8 @@ class WorkspaceParametersController extends Controller
      *     "eventDispatcher"     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "formFactory"         = @DI\Inject("form.factory"),
      *     "router"              = @DI\Inject("router"),
-     *     "localeManager"       = @DI\Inject("claroline.manager.locale_manager"),
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
      *     "groupManager"        = @DI\Inject("claroline.manager.group_manager"),
-     *     "tosManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),
      *     "utilities"           = @DI\Inject("claroline.utilities.misc"),
      *     "toolManager"         = @DI\Inject("claroline.manager.tool_manager"),
      *     "transferManager"     = @DI\Inject("claroline.manager.transfer_manager"),
@@ -87,10 +80,8 @@ class WorkspaceParametersController extends Controller
         FormFactory $formFactory,
         UrlGeneratorInterface $router,
         Request $request,
-        LocaleManager $localeManager,
         UserManager $userManager,
         GroupManager $groupManager,
-        TermsOfServiceManager $tosManager,
         ClaroUtilities $utilities,
         ToolManager $toolManager
     ) {
@@ -102,10 +93,8 @@ class WorkspaceParametersController extends Controller
         $this->formFactory = $formFactory;
         $this->router = $router;
         $this->request = $request;
-        $this->localeManager = $localeManager;
         $this->userManager = $userManager;
         $this->groupManager = $groupManager;
-        $this->tosManager = $tosManager;
         $this->utilities = $utilities;
         $this->toolManager = $toolManager;
         $this->resourceManager = $resourceManager;
@@ -329,8 +318,7 @@ class WorkspaceParametersController extends Controller
             throw new AccessDeniedHttpException();
         }
 
-        $baseProfileType = new BaseProfileType($this->localeManager, $this->tosManager, $this->get('translator'));
-        $form = $this->formFactory->create($baseProfileType, new User());
+        $form = $this->get('claroline.manager.registration_manager')->getRegistrationForm(new User());
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {

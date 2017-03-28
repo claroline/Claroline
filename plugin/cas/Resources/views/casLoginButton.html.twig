@@ -1,0 +1,31 @@
+<style>
+    .btn.claro-cas-btn {
+        color: #fff;
+        padding-left: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+        line-height: 34px;
+        position: relative;
+        margin-bottom: 5px;
+    }
+    .btn.claro-cas-btn::before{
+        width: 30px;
+        font-size: 1.3em;
+        line-height: 34px;
+        position: absolute;
+        left: 0;
+        font-family: "FontAwesome";
+        border-right: 1px solid;
+    }
+    .claro-cas-btn.cas-connect {
+        background-color: #ec971f;
+    }
+    .claro-cas-btn.cas-connect::before {
+        content: "\f19c";
+        border-right-color: #d58512;
+    }
+</style>
+
+<a href="{{ url("claro_cas_login") }}" type="button" id="cas-connect-btn" class='btn cas-connect claro-cas-btn btn-block'>
+    {{ 'login_cas'|trans({'%name%':name}, 'claroline_cas') }}
+</a>

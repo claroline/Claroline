@@ -740,6 +740,18 @@ class ParametersController extends Controller
     }
 
     /**
+     * @EXT\Route("/third-party-authentication", name="claro_admin_parameters_third_party_authentication_index")
+     * @EXT\Template
+     * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function thirdPartyAuthenticationIndexAction()
+    {
+        return [];
+    }
+
+    /**
      * @EXT\Route("delete/logo/{file}", name="claro_admin_delete_logo", options = {"expose"=true})
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *

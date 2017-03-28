@@ -52,6 +52,14 @@ security:
                 path:     /
                 domain:   ~
 
+        # Won't go here unless cas bundle is present and cas is activated
+        cas:
+            pattern: ^/
+            anonymous: ~
+            switch_user: { role: ROLE_ADMIN, parameter: _switch }
+            # Same context as main firewall to work well with api
+            context: main
+
     access_decision_manager:
         allow_if_all_abstain: false
 

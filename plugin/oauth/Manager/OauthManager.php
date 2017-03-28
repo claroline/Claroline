@@ -13,22 +13,17 @@ namespace Icap\OAuthBundle\Manager;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\RefreshCacheEvent;
-use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Claroline\CoreBundle\Manager\CacheManager;
-use Claroline\CoreBundle\Manager\FacetManager;
-use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\TermsOfServiceManager;
+use Claroline\CoreBundle\Manager\RegistrationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Doctrine\ORM\EntityManager;
 use Icap\OAuthBundle\Entity\OauthUser;
 use Icap\OAuthBundle\Model\Configuration;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 /**
  * @DI\Service("icap.oauth.manager")
@@ -51,26 +46,6 @@ class OauthManager
     private $platformConfigHandler;
 
     /**
-     * @var LocaleManager
-     */
-    private $localeManager;
-
-    /**
-     * @var TermsOfServiceManager
-     */
-    private $termsManager;
-
-    /**
-     * @var FacetManager
-     */
-    private $facetManager;
-
-    /**
-     * @var FormFactory
-     */
-    private $formFactory;
-
-    /**
      * @var TokenStorage
      */
     private $tokenStorage;
@@ -79,6 +54,11 @@ class OauthManager
      * @var UserManager
      */
     private $userManager;
+
+    /**
+     * @var RegistrationManager
+     */
+    private $registrationManager;
 
     private $authenticationHandler;
 
@@ -89,12 +69,9 @@ class OauthManager
      *      "entityManager"         = @DI\Inject("doctrine.orm.entity_manager"),
      *      "cacheManager"          = @DI\Inject("claroline.manager.cache_manager"),
      *      "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *      "localeManager"         = @DI\Inject("claroline.manager.locale_manager"),
-     *      "termsManager"          = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *      "facetManager"          = @DI\Inject("claroline.manager.facet_manager"),
-     *      "formFactory"           = @DI\Inject("form.factory"),
      *      "tokenStorage"          = @DI\Inject("security.token_storage"),
      *      "userManager"           = @DI\Inject("claroline.manager.user_manager"),
+     *      "registrationManager"   = @DI\Inject("claroline.manager.registration_manager"),
      *      "authenticationHandler" = @DI\Inject("claroline.authentication_handler"),
      *      "authenticator"         = @DI\Inject("claroline.authenticator")
      * })
@@ -102,12 +79,9 @@ class OauthManager
      * @param EntityManager                $entityManager
      * @param CacheManager                 $cacheManager
      * @param PlatformConfigurationHandler $platformConfigHandler
-     * @param LocaleManager                $localeManager
-     * @param TermsOfServiceManager        $termsManager
-     * @param FacetManager                 $facetManager
-     * @param FormFactory                  $formFactory
      * @param TokenStorage                 $tokenStorage
      * @param UserManager                  $userManager
+     * @param RegistrationManager          $registrationManager
      * @param $authenticationHandler
      * @param Authenticator $authenticator
      */
@@ -115,24 +89,18 @@ class OauthManager
         EntityManager $entityManager,
         CacheManager $cacheManager,
         PlatformConfigurationHandler $platformConfigHandler,
-        LocaleManager $localeManager,
-        TermsOfServiceManager $termsManager,
-        FacetManager $facetManager,
-        FormFactory $formFactory,
         TokenStorage $tokenStorage,
         UserManager $userManager,
+        registrationManager $registrationManager,
         $authenticationHandler,
         Authenticator $authenticator
     ) {
         $this->em = $entityManager;
         $this->cacheManager = $cacheManager;
         $this->platformConfigHandler = $platformConfigHandler;
-        $this->localeManager = $localeManager;
-        $this->termsManager = $termsManager;
-        $this->facetManager = $facetManager;
-        $this->formFactory = $formFactory;
         $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
+        $this->registrationManager = $registrationManager;
         $this->authenticationHandler = $authenticationHandler;
         $this->authenticator = $authenticator;
     }
@@ -153,14 +121,16 @@ class OauthManager
             );
             $event->addCacheParameter(
                 "is_{$service}_available",
-                (count($errors) === 0 && $this->platformConfigHandler->getParameter($service.'_client_active'))
+                (count($errors) === 0 && $this->isActive($service))
             );
         }
     }
 
     public function isServiceAvailable($service)
     {
-        return $this->cacheManager->getParameter("is_{$service}_available");
+        $isAvailable = $this->cacheManager->getParameter("is_{$service}_available");
+
+        return is_null($isAvailable) ? $this->isActive($service) : !empty($isAvailable);
     }
 
     public function validateService($service, $appId, $secret)
@@ -203,21 +173,10 @@ class OauthManager
         return new Configuration(
             $clientId,
             $clientSecret,
-            $this->isActive($service),
+            $this->isServiceAvailable($service),
             $this->platformConfigHandler->getParameter($service.'_client_force_reauthenticate'),
             $clientTenantDomain
         );
-    }
-
-    public function isActive($service)
-    {
-        $isActive = $this->platformConfigHandler->getParameter($service.'_client_active');
-        // Compatibility with tool FormaLibreOfficeConnect
-        if ($service === 'office_365' && $isActive === null) {
-            $isActive = $this->platformConfigHandler->getParameter('o365_active');
-        }
-
-        return $isActive;
     }
 
     public function getActiveServices()
@@ -225,7 +184,7 @@ class OauthManager
         $services = [];
         foreach (Configuration::resourceOwners() as $resourceOwner) {
             $service = str_replace(' ', '_', strtolower($resourceOwner));
-            if ($this->isActive($service)) {
+            if ($this->isServiceAvailable($service)) {
                 $services[] = $service;
             }
         }
@@ -233,45 +192,24 @@ class OauthManager
         return $services;
     }
 
-    public function getRegistrationForm($user, $translator)
+    public function getRegistrationForm($user)
     {
-        $facets = $this->facetManager->findForcedRegistrationFacet();
-        $form = $this->formFactory->create(
-            new BaseProfileType($this->localeManager, $this->termsManager, $translator, $facets),
-            $user
-        );
-
-        return $form;
+        return $this->registrationManager->getRegistrationForm($user);
     }
 
     public function createNewAccount(Request $request, $translator, $service)
     {
         $user = new User();
-        $form = $this->getRegistrationForm($user, $translator);
+        $form = $this->registrationManager->getRegistrationForm($user);
         $form->handleRequest($request);
         $session = $request->getSession();
         if ($form->isValid()) {
-            $user = $this->userManager->createUser($user);
+            $this->registrationManager->registerNewUser($user, $form);
 
             $oauthUser = new OauthUser($service['name'], $service['id'], $user);
             $this->em->persist($oauthUser);
             $this->em->flush();
             $session->remove('icap.oauth.resource_owner');
-
-            $facets = $this->facetManager->findForcedRegistrationFacet();
-            //then we adds the differents value for facets.
-            foreach ($facets as $facet) {
-                foreach ($facet->getPanelFacets() as $panel) {
-                    foreach ($panel->getFieldsFacet() as $field) {
-                        $this->facetManager->setFieldValue(
-                            $user,
-                            $field,
-                            $form->get($field->getName())->getData(),
-                            true
-                        );
-                    }
-                }
-            }
 
             $msg = $translator->trans('account_created', [], 'platform');
             $session->getFlashBag()->add('success', $msg);
@@ -281,7 +219,7 @@ class OauthManager
                 $session->getFlashBag()->add('success', $msg);
             }
 
-            return $this->loginUser($user, $request);
+            return $this->registrationManager->loginUser($user, $request);
         }
 
         return ['form' => $form->createView()];
@@ -304,7 +242,7 @@ class OauthManager
             $this->em->flush();
             $request->getSession()->remove('icap.oauth.resource_owner');
 
-            return $this->loginUser($user, $request);
+            return $this->registrationManager->loginUser($user, $request);
         } else {
             return ['error' => 'login_error'];
         }
@@ -315,14 +253,15 @@ class OauthManager
         $this->em->getRepository("Icap\OAuthBundle\Entity\OauthUser")->unlinkOAuthUser($userId);
     }
 
-    private function loginUser($user, $request)
+    private function isActive($service)
     {
-        //this is bad but I don't know any other way (yet)
-        $providerKey = 'main';
-        $token = new UsernamePasswordToken($user, $user->getPassword(), $providerKey, $user->getRoles());
-        $this->tokenStorage->setToken($token);
-        //a bit hacky I know ~
-        return $this->authenticationHandler->onAuthenticationSuccess($request, $token);
+        $isActive = $this->platformConfigHandler->getParameter($service.'_client_active');
+        // Compatibility with tool FormaLibreOfficeConnect
+        if ($service === 'office_365' && $isActive === null) {
+            $isActive = $this->platformConfigHandler->getParameter('o365_active');
+        }
+
+        return $isActive;
     }
 
     private function validateFacebook($appId, $secret)

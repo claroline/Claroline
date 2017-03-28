@@ -87,7 +87,7 @@ class OauthController extends Controller
                 $this->configHandler->setParameters($data);
                 $this->cacheManager->refresh();
 
-                return $this->redirectToRoute('claro_admin_parameters_oauth_index');
+                return $this->redirectToRoute('claro_admin_parameters_third_party_authentication_index');
             } else {
                 foreach ($errors as $error) {
                     $trans = $this->translator->trans($error, [], 'platform');
