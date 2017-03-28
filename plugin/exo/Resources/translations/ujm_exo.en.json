@@ -418,6 +418,7 @@
     "paper_list_table_user": "User",
     "paper_need_manual_correction": "This paper needs a manual correction",
     "paper_search": "Search a paper",
+    "paper_score_not_available": "Score not available",
     "partially": "Partially correct",
     "penalty": "Penalty",
     "penalty_not_valid": "Penalty field must be a number.",

@@ -53,7 +53,7 @@ export const WordsPaper = (props) => {
           <Highlight
             text={props.answer}
             solutions={props.item.solutions}
-            showScore={true}
+            showScore={props.showScore}
           /> :
           <div className="no-answer">{tex('no_answer')}</div>
       }
@@ -78,7 +78,8 @@ WordsPaper.propTypes = {
     description: T.string.isRequired,
     solutions: T.arrayOf(T.object)
   }).isRequired,
-  answer: T.string.isRequired
+  answer: T.string.isRequired,
+  showScore: T.bool.isRequired
 }
 
 WordsPaper.defaultProps = {

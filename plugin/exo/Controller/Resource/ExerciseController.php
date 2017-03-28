@@ -53,6 +53,8 @@ class ExerciseController extends Controller
         $exerciseData->meta->editable = $isAdmin;
         $exerciseData->meta->paperCount = (int) $nbPapers;
         $exerciseData->meta->userPaperCount = (int) $nbUserPapers;
+        $exerciseData->meta->registered = $user instanceof User;
+        $exerciseData->meta->canViewPapers = $this->canViewPapers($exercise);
 
         // Display the Summary of the Exercise
         return [
@@ -91,6 +93,13 @@ class ExerciseController extends Controller
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
 
         return $this->get('security.authorization_checker')->isGranted('ADMINISTRATE', $collection);
+    }
+
+    private function canViewPapers(Exercise $exercise)
+    {
+        $collection = new ResourceCollection([$exercise->getResourceNode()]);
+
+        return $this->get('security.authorization_checker')->isGranted('papers', $collection);
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

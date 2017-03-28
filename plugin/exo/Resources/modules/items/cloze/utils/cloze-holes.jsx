@@ -167,7 +167,7 @@ class ExpectedAnswerHole extends Component {
         })}
         answer={this.state.answer}
         choices={this.props.choices}
-        showScore={true}
+        showScore={this.props.showScore}
         solution={solution}
         disabled={!this.props.choices || 0 === this.props.choices.length}
         onChange={(answer) => this.setState({answer: answer})}
@@ -179,6 +179,7 @@ class ExpectedAnswerHole extends Component {
 ExpectedAnswerHole.propTypes = {
   id: T.string.isRequired,
   choices: T.arrayOf(T.string),
+  showScore: T.bool.isRequired,
   solutions: T.arrayOf(T.shape({
     text: T.string.isRequired,
     score: T.number.isRequired,

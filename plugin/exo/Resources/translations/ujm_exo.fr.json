@@ -417,6 +417,7 @@
     "paper_list_table_user": "Utilisateur",
     "paper_need_manual_correction": "Cette copie nécessite une correction manuelle",
     "paper_search": "Rechercher une copie",
+    "paper_score_not_available": "Score non disponible",
     "partially": "Partiellement correcte",
     "penalty": "Pénalité",
     "penalty_not_valid": "Le champ pénalité doit être un chiffre.",

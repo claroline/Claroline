@@ -28,7 +28,9 @@ export const BooleanPaper = props => {
                       id={`${solution.id}-feedback`}
                       feedback={solution.feedback}
                     />
-                    <SolutionScore score={solution.score}/>
+                    {props.showScore &&
+                      <SolutionScore score={solution.score}/>
+                    }
                   </span>
                 }
 
@@ -52,7 +54,9 @@ export const BooleanPaper = props => {
                     id={`${solution.id}-feedback`}
                     feedback={solution.feedback}
                   />
-                  <SolutionScore score={solution.score}/>
+                  {props.showScore &&
+                    <SolutionScore score={solution.score}/>
+                  }
                 </span>
 
                 <div dangerouslySetInnerHTML={{__html: props.item.choices.find(choice => choice.id === solution.id).data}}/>
@@ -75,7 +79,8 @@ BooleanPaper.propTypes = {
     })).isRequired,
     solutions: T.arrayOf(T.object)
   }).isRequired,
-  answer: T.string.isRequired
+  answer: T.string.isRequired,
+  showScore: T.bool.isRequired
 }
 
 BooleanPaper.defaultProps = {
