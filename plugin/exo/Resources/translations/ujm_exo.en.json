@@ -594,7 +594,7 @@
     "words_feedback_info": "Feedback if the keyword is in answer",
     "words_no_valid_solution": "At least one keyword must have a score greater than 0.",
     "words_score_not_valid": "The score of a keyword can not be empty.",
-    "words_show_case_sensitive_option": "Enable/disable \"check case\" functionality.",
+    "words_show_case_sensitive_option": "Enable \"check case\" functionality.",
     "wrong": "Wrong",
     "wrong_name": "The input name is wrong",
     "wrong_point": "The input value is wrong",
