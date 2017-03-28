@@ -54,7 +54,7 @@
     "icap_wiki_section_type_activeContribution_title": "Titre",
     "icap_wiki_section_update_error": "Erreur durant la modification de la section",
     "icap_wiki_section_update_success": "La section a été modifiée avec succès",
-    "icap_wiki_set_active_contribution_error": "La version n'a pas pu être publiée en tant que contribution active",
+    "icap_wiki_set_active_contribution_error": "La version n'a pas pu être publiée en tant que contribution active.",
     "icap_wiki_type_name": "Nom",
     "items_per_page": "Affichage par :",
     "moderate": "Modéré",
