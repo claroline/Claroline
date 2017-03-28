@@ -168,5 +168,8 @@
     "workspace_manage_badges": "Gestión de las insignias del espacio de trabajo",
     "year": "año",
     "select": "Séleccionar",
-    "comment": ""
+    "comment": "",
+    "badge-private": "Privado",
+    "badge-shared": "Compartido",
+    "badge_award_form_comment": "Comentario"
 }
