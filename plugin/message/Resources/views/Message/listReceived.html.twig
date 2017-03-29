@@ -95,9 +95,13 @@
                             pointer-hand"
                             data-route="{{ path('claro_message_show', {'message': userMessage.getMessage().getId()}) }}" >
                             <td><input class="chk-item" value="{{ userMessage.getId() }}" type="checkbox"></input></td>
-                            <td> {{ userMessage.getMessage().getObject() }} </td>
-                            <td> {{ userMessage.getMessage().getSenderUsername() }} ({{ userMessage.getMessage().getSender().getFirstName()}} {{ userMessage.getMessage().getSender().getLastName()}}) </td>
-                            <td> {{ userMessage.getMessage().getDate()|intl_date_format }} </td>
+                            <td>{{ userMessage.getMessage().getObject() }} </td>
+                            <td>{{ userMessage.getMessage().getSenderUsername() }}
+                                {% if userMessage.getMessage().getSender() %}
+                                    ({{ userMessage.getMessage().getSender().getFirstName()}} {{ userMessage.getMessage().getSender().getLastName()}})
+                                {% endif %}
+                            </td>
+                            <td>{{ userMessage.getMessage().getDate()|intl_date_format }} </td>
                             <td>
                                 {% if userMessage.getLastOpenDate() %}
                                     {{ userMessage.getLastOpenDate()|intl_date_format }}
