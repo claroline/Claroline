@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "76ce919d12d113812fe3927fab31c055975c394c"
+                "reference": "07da487c8f1857e3611519c47978fdaf8d4bbc43"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/76ce919d12d113812fe3927fab31c055975c394c",
-                "reference": "76ce919d12d113812fe3927fab31c055975c394c",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/07da487c8f1857e3611519c47978fdaf8d4bbc43",
+                "reference": "07da487c8f1857e3611519c47978fdaf8d4bbc43",
                 "shasum": ""
             },
             "require": {
@@ -299,7 +299,8 @@
                     "Claroline\\ChatBundle\\ClarolineChatBundle",
                     "Claroline\\DashboardBundle\\ClarolineDashboardBundle",
                     "Claroline\\ClacoFormBundle\\ClarolineClacoFormBundle",
-                    "Claroline\\RemoteUserSynchronizationBundle\\ClarolineRemoteUserSynchronizationBundle"
+                    "Claroline\\RemoteUserSynchronizationBundle\\ClarolineRemoteUserSynchronizationBundle",
+                    "Claroline\\CasBundle\\ClarolineCasBundle"
                 ]
             },
             "autoload": {
@@ -357,7 +358,8 @@
                     "Innova\\MediaResourceBundle\\": "plugin/media-resource",
                     "Claroline\\DashboardBundle\\": "plugin/dashboard",
                     "Claroline\\ClacoFormBundle\\": "plugin/claco-form",
-                    "Claroline\\RemoteUserSynchronizationBundle\\": "plugin/remote-user-synchronization"
+                    "Claroline\\RemoteUserSynchronizationBundle\\": "plugin/remote-user-synchronization",
+                    "Claroline\\CasBundle\\": "plugin/cas"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -377,7 +379,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-03-27 08:31:19"
+            "time": "2017-03-28 15:41:35"
         },
         {
             "name": "claroline/front-end-bundle",
