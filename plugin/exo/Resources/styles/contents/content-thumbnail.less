@@ -11,7 +11,7 @@
 
   .content-thumbnail-topbar {
     position: absolute;
-    .warning-text, .error-text {
+    .text-warning, .text-danger {
       position: absolute;
       margin: 8px;
       z-index: 11;
@@ -19,7 +19,7 @@
     .content-thumbnail-actions {
       visibility: hidden;
       position: absolute;
-      background-color: #ffffff;
+      background-color: rgba(0, 0, 0, 0.75);
       width: @content-thumbnail-width - 2px;
       display: flex;
       justify-content: flex-end;
@@ -27,6 +27,7 @@
       z-index: 10;
       .action-button {
         margin: 8px;
+        color: #ffffff;
       }
     }
   }
