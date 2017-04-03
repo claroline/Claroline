@@ -104,7 +104,7 @@ function getFlag(args, longName, shortName) {
 function getParameter(args, longName, shortName) {
   var parameter = null
 
-  const regex = new RegExp('(--'+longName+'=|-'+shortName+')([A-Za-z0-9_\b/\b\]+)')
+  const regex = new RegExp('(--'+longName+'=|-'+shortName+')["\']?(.+)["\']?')
   for (var i = 0; i < args.length; i++) {
     var matches = args[i].match(regex)
     if (matches && matches.length !== 0 && matches[2]) {
