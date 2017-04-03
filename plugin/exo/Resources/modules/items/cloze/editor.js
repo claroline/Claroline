@@ -29,20 +29,19 @@ export const actions = {
   addAnswer: makeActionCreator(ADD_ANSWER, 'holeId'),
   saveHole: makeActionCreator(SAVE_HOLE),
   removeHole: makeActionCreator(REMOVE_HOLE, 'holeId'),
-  removeAnswer: makeActionCreator(REMOVE_ANSWER, 'text', 'caseSensitive'),
+  removeAnswer: makeActionCreator(REMOVE_ANSWER, '_id'),
   closePopover: makeActionCreator(CLOSE_POPOVER),
-  updateAnswer: (holeId, parameter, oldText, caseSensitive, value) => {
+  updateAnswer: (holeId, parameter, _id, value) => {
     invariant(
       ['text', 'caseSensitive', 'feedback', 'score'].indexOf(parameter) > -1,
       'answer attribute is not valid'
     )
     invariant(holeId !== undefined, 'holeId is required')
-    invariant(oldText !== undefined, 'oldText is required')
-    invariant(caseSensitive !== undefined, 'caseSensitive is required')
+    invariant(_id !== undefined, '_id is required')
 
     return {
       type: UPDATE_ANSWER,
-      holeId, parameter, oldText, caseSensitive, value
+      holeId, parameter, _id, value
     }
   }
 }
@@ -55,8 +54,12 @@ export default {
 }
 
 function decorate(item) {
+  const solutions = cloneDeep(item.solutions)
+  solutions.forEach(solution => solution.answers.forEach(answer => answer._id = makeId()))
+
   return Object.assign({}, item, {
-    _text: utils.setEditorHtml(item.text, item.holes, item.solutions)
+    _text: utils.setEditorHtml(item.text, item.holes, item.solutions),
+    solutions
   })
 }
 
@@ -110,9 +113,7 @@ function reduce(item = {}, action) {
       const newItem = cloneDeep(item)
       const hole = getHoleFromId(newItem, newItem._holeId)
       const solution = getSolutionFromHole(newItem, hole)
-      const answer = solution.answers.find(
-        answer => answer.text === action.oldText && answer.caseSensitive === action.caseSensitive
-      )
+      const answer = solution.answers.find(answer => answer._id === action._id)
 
       answer[action.parameter] = action.value
 
@@ -129,7 +130,8 @@ function reduce(item = {}, action) {
         text: '',
         caseSensitive: false,
         feedback: '',
-        score: 1
+        score: 1,
+        _id: makeId()
       })
 
       updateHoleChoices(hole, solution)
@@ -168,7 +170,8 @@ function reduce(item = {}, action) {
           text: action.word,
           caseSensitive: false,
           feedback: '',
-          score: 1
+          score: 1,
+          _id: makeId()
         }]
       }
 
@@ -214,7 +217,7 @@ function reduce(item = {}, action) {
       const hole = getHoleFromId(newItem, item._holeId)
       const solution = getSolutionFromHole(newItem, hole)
       const answers = solution.answers
-      answers.splice(answers.findIndex(answer => answer.text === action.text && answer.caseSensitive === action.caseSensitive), 1)
+      answers.splice(answers.findIndex(answer => answer._id === action._id), 1)
 
       updateHoleChoices(hole, solution)
 

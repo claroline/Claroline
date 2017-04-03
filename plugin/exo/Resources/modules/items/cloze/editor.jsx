@@ -38,8 +38,7 @@ class KeywordItem extends Component {
               actions.updateAnswer(
                 this.props.hole.id,
                 'text',
-                this.props.answer.text,
-                this.props.answer.caseSensitive,
+                this.props.answer._id,
                 e.target.value
               )
             )}
@@ -55,8 +54,7 @@ class KeywordItem extends Component {
                   actions.updateAnswer(
                     this.props.hole.id,
                     'feedback',
-                    this.props.answer.text,
-                    this.props.answer.caseSensitive,
+                    this.props.answer._id,
                     text
                   )
                 )}
@@ -74,8 +72,7 @@ class KeywordItem extends Component {
               actions.updateAnswer(
                 this.props.hole.id,
                 'caseSensitive',
-                this.props.answer.text,
-                this.props.answer.caseSensitive,
+                this.props.answer._id,
                 e.target.checked
               )
             )}
@@ -92,8 +89,7 @@ class KeywordItem extends Component {
               actions.updateAnswer(
                 this.props.hole.id,
                 'score',
-                this.props.answer.text,
-                this.props.answer.caseSensitive,
+                this.props.answer._id,
                 Number(e.target.value)
               )
             )}
@@ -113,7 +109,7 @@ class KeywordItem extends Component {
             title={t('delete')}
             label={<span className="fa fa-fw fa-trash-o"/>}
             onClick={() => this.props.onChange(
-              actions.removeAnswer(this.props.answer.text, this.props.answer.caseSensitive)
+              actions.removeAnswer(this.props.answer._id)
             )}
           />
         </div>
@@ -133,7 +129,8 @@ KeywordItem.propTypes = {
     score: T.number,
     feedback: T.string,
     text: T.string,
-    caseSensitive: T.bool
+    caseSensitive: T.bool,
+    _id: T.string.isRequired
   }).isRequired,
   hole: T.shape({
     id: T.string.isRequired
@@ -284,7 +281,8 @@ HoleForm.propTypes = {
       text: T.string.isRequired,
       caseSensitive: T.bool.isRequired,
       score: T.number.isRequired,
-      feedback: T.string
+      feedback: T.string,
+      _id: T.string.isRequired
     }))
   }),
   onChange: T.func.isRequired,
