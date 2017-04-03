@@ -3,5 +3,11 @@
     "entry": {
       "pdf-viewer": "pdf/module"
     }
+  },
+
+  "styles": {
+    "entry": {
+      "pdf-resource": "resources/pdf.less"
+    }
   }
 }

@@ -2,6 +2,7 @@ import * as pdf from 'pdfjs-dist/build/pdf.combined'
 
 export default class PdfController {
   constructor($http, $scope, url) {
+    this.isLoading = true
     this.pageNum = 1
     this.$http = $http
     this.$scope = $scope
@@ -9,15 +10,9 @@ export default class PdfController {
 
     pdf.PDFJS.disableWorker = true
     this.pdfDoc = null
-    this.scale = 1
+    this.scale = 100
     this.canvas = document.getElementById('the-canvas')
     this.ctx = this.canvas.getContext('2d')
-
-    // Generate download url if download is enabled
-    this.downloadUri = '#'
-    if (this.download) {
-      this.downloadUri = this.UrlGenerator('claro_resource_download') + '?ids[]=' + this.id
-    }
 
     this.renderPdf()
   }
@@ -28,7 +23,7 @@ export default class PdfController {
     if (this.pageNum > this.pdfDoc.numPages) this.pageNum = this.pdfDoc.numPages
     // Using promise to fetch the page
     this.pdfDoc.getPage(this.pageNum).then(page => {
-      const viewport = page.getViewport(this.scale)
+      const viewport = page.getViewport(this.scale / 100)
       this.canvas.height = viewport.height
       this.canvas.width = viewport.width
 
@@ -56,18 +51,23 @@ export default class PdfController {
   }
 
   zoomIn() {
-    this.scale*=1.1
-    this.renderPdf()
+    this.scale += 25
+    this.renderPage()
   }
 
   zoomOut() {
-    this.scale*=0.9
-    this.renderPdf()
+    this.scale -= 25
+    if (5 > this.scale) {
+      this.scale = 5
+    }
+
+    this.renderPage()
   }
 
   renderPdf() {
     pdf.PDFJS.getDocument(this.url).then(_pdfDoc => {
       this.pdfDoc = _pdfDoc
+      this.isLoading = false
       this.$scope.$apply()
       this.renderPage(this.pageNum)
     })
