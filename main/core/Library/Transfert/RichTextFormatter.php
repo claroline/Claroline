@@ -120,6 +120,10 @@ class RichTextFormatter
             if (isset($options['embed'])) {
                 $option_embed = (bool) $options['embed'];
             }
+            $option_target = null;
+            if (isset($options['target'])) {
+                $option_target = $options['target'];
+            }
 
             //meh, fix the following lines late
             $parent = $this->findParentFromDataUid($uid);
@@ -134,7 +138,7 @@ class RichTextFormatter
                 );
 
             if ($node) {
-                $toReplace = $this->generateDisplayedUrlForTinyMce($node, $option_text, $option_embed, $option_style);
+                $toReplace = $this->generateDisplayedUrlForTinyMce($node, $option_text, $option_embed, $option_style, $option_target);
                 $text = str_replace($match[0], $toReplace, $text);
             }
         }
@@ -269,13 +273,19 @@ class RichTextFormatter
             if (isset($css_style)) {
                 $css_style_option = ",style='".addslashes($css_style)."'";
             }
+            //target option
+            $target_option = '';
+            $target = $this->extractTarget($matchReplaced[0]);
+            if (isset($target)) {
+                $target_option = ",target='".$target."'";
+            }
             //simple hyperlink, no embed, option only necessary for medias
             $embed_option = '';
             if (strpos('_'.$node->getMimeType(), 'image') > 0 || strpos('_'.$node->getMimeType(), 'video') > 0 || strpos('_'.$node->getMimeType(), 'audio') > 0) {
                 $embed_option = ',embed=0';
             }
 
-            $tag = '[[uid='.$node->getId().$text_option.$embed_option.$css_style_option.']]';
+            $tag = '[[uid='.$node->getId().$text_option.$embed_option.$css_style_option.$target_option.']]';
             $txt = str_replace($matchReplaced[0], $tag, $txt);
         } else {
             //match embeded media
@@ -303,6 +313,20 @@ class RichTextFormatter
     {
         preg_match(
             "#style=[\"\']([^\"\']+)[\"\']#i",
+            $txt,
+            $match
+        );
+        if (count($match) > 0) {
+            return $match[1];
+        }
+
+        return null;
+    }
+
+    private function extractTarget($txt)
+    {
+        preg_match(
+            "#target=[\"\']([^\"\']+)[\"\']#i",
             $txt,
             $match
         );
@@ -432,7 +456,7 @@ class RichTextFormatter
      *
      * @param ResourceNode $node
      */
-    public function generateDisplayedUrlForTinyMce(ResourceNode $node, $text = null, $embed = true, $style = null)
+    public function generateDisplayedUrlForTinyMce(ResourceNode $node, $text = null, $embed = true, $style = null, $target = null)
     {
         if (strpos('_'.$node->getMimeType(), 'image') > 0) {
             $cssStyle = $style ? $style : 'max-width:100%;';
@@ -469,8 +493,9 @@ class RichTextFormatter
         //hyperlink text, fallback to node name if none
         $link_text = isset($text) ? stripslashes($text) : $node->getName();
         $cssStyle = isset($style) ? "style='".stripslashes($style)."'" : '';
+        $targetProperty = isset($target) ? "target='".$target."'" : '';
 
-        return "<a {$cssStyle} href='{$url}'>{$link_text}</a>";
+        return "<a {$cssStyle} {$targetProperty} href='{$url}'>{$link_text}</a>";
     }
 
     public function addImporter(Importer $importer)
