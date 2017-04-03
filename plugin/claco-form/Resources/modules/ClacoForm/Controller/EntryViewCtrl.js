@@ -102,7 +102,7 @@ export default class EntryViewCtrl {
     if (this.template) {
       this.template = this.template.replace('%clacoform_entry_title%', this.entry['title'])
       this.fields.forEach(f => {
-        const name = f['name']
+        const name = this.ClacoFormService.removeAccent(this.ClacoFormService.removeQuote(f['name']))
         const id = f['id']
         let replacedField = ''
 
@@ -124,7 +124,7 @@ export default class EntryViewCtrl {
         if (replacedField === undefined) {
           replacedField = ''
         }
-        this.template = this.template.replace(`%${this.ClacoFormService.removeAccent(name)}%`, replacedField)
+        this.template = this.template.replace(`%${name}%`, replacedField)
       })
     }
   }

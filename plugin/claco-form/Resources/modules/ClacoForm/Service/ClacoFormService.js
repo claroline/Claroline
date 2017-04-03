@@ -235,6 +235,10 @@ export default class ClacoFormService {
     return convertedStr
   }
 
+  removeQuote(str) {
+    return str.replace(/'/g, ' ')
+  }
+
   static _getGlobal(name) {
     if (typeof window[name] === 'undefined') {
       throw new Error(
