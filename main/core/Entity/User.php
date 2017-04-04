@@ -648,6 +648,23 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         return $roles;
     }
 
+    /**
+     * Checks if the user has a given role.
+     *
+     * @param string $roleName
+     *
+     * @return bool
+     */
+    public function hasRole($roleName, $includeGroup = true)
+    {
+        $roles = $this->getEntityRoles($includeGroup);
+        $roleNames = array_map(function ($role) {
+            return $role->getName();
+        }, $roles);
+
+        return in_array($roleName, $roleNames);
+    }
+
     public function eraseCredentials()
     {
         $this->plainPassword = null;
