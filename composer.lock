@@ -120,12 +120,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "3647c7195f7e9fdb643af97d91564f1781e7dc6e"
+                "reference": "a5c005ad2598eb2b82c1965a1b8974c09ad806c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/3647c7195f7e9fdb643af97d91564f1781e7dc6e",
-                "reference": "3647c7195f7e9fdb643af97d91564f1781e7dc6e",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a5c005ad2598eb2b82c1965a1b8974c09ad806c2",
+                "reference": "a5c005ad2598eb2b82c1965a1b8974c09ad806c2",
                 "shasum": ""
             },
             "require": {
@@ -379,7 +379,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-03-29 14:31:25"
+            "time": "2017-04-03 16:20:32"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -674,16 +674,16 @@
         },
         {
             "name": "composer/spdx-licenses",
-            "version": "1.1.5",
+            "version": "1.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/spdx-licenses.git",
-                "reference": "96c6a07b05b716e89a44529d060bc7f5c263cb13"
+                "reference": "2603a0d7ddc00a015deb576fa5297ca43dee6b1c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/96c6a07b05b716e89a44529d060bc7f5c263cb13",
-                "reference": "96c6a07b05b716e89a44529d060bc7f5c263cb13",
+                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/2603a0d7ddc00a015deb576fa5297ca43dee6b1c",
+                "reference": "2603a0d7ddc00a015deb576fa5297ca43dee6b1c",
                 "shasum": ""
             },
             "require": {
@@ -731,7 +731,7 @@
                 "spdx",
                 "validator"
             ],
-            "time": "2016-09-28 07:17:45"
+            "time": "2017-04-03 19:08:52"
         },
         {
             "name": "container-interop/container-interop",
