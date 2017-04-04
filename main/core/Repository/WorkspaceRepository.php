@@ -911,22 +911,31 @@ class WorkspaceRepository extends EntityRepository
      *
      * @return array[Workspace]
      */
-    public function findAllNonPersonalWorkspaces($orderedBy = 'name', $order = 'ASC')
-    {
-        $dql = "
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE NOT EXISTS (
-                SELECT u
-                FROM Claroline\CoreBundle\Entity\User u
-                JOIN u.personalWorkspace pw
-                WHERE pw = w
-            )
-            ORDER BY w.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
+    public function findAllNonPersonalWorkspaces(
+        $orderedBy = 'name',
+        $order = 'ASC',
+        User $user = null
+    ) {
+        $isAdmin = $user ? $user->hasRole('ROLE_ADMIN') : false;
 
-        return $query->getResult();
+        $qb = $this->createQueryBuilder('w')
+          ->select('w')
+          ->join('w.organizations', 'o')
+          ->leftJoin('o.administrators', 'a')
+          ->where('NOT EXISTS (
+              SELECT u
+              FROM Claroline\CoreBundle\Entity\User u
+              JOIN u.personalWorkspace pw
+              WHERE pw = w
+          )');
+
+        if (!$isAdmin) {
+            $qb->andWhere('a.id = ?1')->setParameter(1, $user->getId());
+        }
+
+        $qb->orderBy("w.{$orderedBy}", $order);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -937,29 +946,34 @@ class WorkspaceRepository extends EntityRepository
     public function findAllNonPersonalWorkspacesBySearch(
         $search,
         $orderedBy = 'name',
-        $order = 'ASC'
+        $order = 'ASC',
+        User $user = null
     ) {
-        $dql = "
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE (
-                UPPER(w.name) LIKE :search
-                OR UPPER(w.code) LIKE :search
-            )
-            AND NOT EXISTS (
-                SELECT u
-                FROM Claroline\CoreBundle\Entity\User u
-                JOIN u.personalWorkspace pw
-                WHERE pw = w
-            )
-            ORDER BY w.{$orderedBy} {$order}
-        ";
+        $isAdmin = $user ? $user->hasRole('ROLE_ADMIN') : false;
 
-        $search = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%{$search}%");
+        $qb = $this->createQueryBuilder('w');
+        $qb->select('w')
+          ->join('w.organizations', 'o')
+          ->leftJoin('o.administrators', 'a')
+          ->where('NOT EXISTS (
+              SELECT u
+              FROM Claroline\CoreBundle\Entity\User u
+              JOIN u.personalWorkspace pw
+              WHERE pw = w
+          )')
+          ->andWhere($qb->expr()->orX(
+            $qb->expr()->like('UPPER(w.name)', '?1'),
+            $qb->expr()->like('UPPER(w.code)', '?1')
+          ))
+          ->setParameter(1, "%{$search}%");
 
-        return $query->getResult();
+        if (!$isAdmin) {
+            $qb->andWhere('a.id = ?2')->setParameter(2, $user->getId());
+        }
+
+        $qb->orderBy("w.{$orderedBy}", $order);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -967,22 +981,28 @@ class WorkspaceRepository extends EntityRepository
      *
      * @return array[Workspace]
      */
-    public function findAllPersonalWorkspaces($orderedBy = 'name', $order = 'ASC')
+    public function findAllPersonalWorkspaces($orderedBy = 'name', $order = 'ASC', User $user = null)
     {
-        $dql = "
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE EXISTS (
-                SELECT u
-                FROM Claroline\CoreBundle\Entity\User u
-                JOIN u.personalWorkspace pw
-                WHERE pw = w
-            )
-            ORDER BY w.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
+        $isAdmin = $user ? $user->hasRole('ROLE_ADMIN') : false;
 
-        return $query->getResult();
+        $qb = $this->createQueryBuilder('w')
+        ->select('w')
+        ->join('w.organizations', 'o')
+        ->leftJoin('o.administrators', 'a')
+        ->where('EXISTS (
+            SELECT u
+            FROM Claroline\CoreBundle\Entity\User u
+            JOIN u.personalWorkspace pw
+            WHERE pw = w
+        )');
+
+        if (!$isAdmin) {
+            $qb->andWhere('a.id = ?2')->setParameter(2, $user->getId());
+        }
+
+        $qb->orderBy("w.{$orderedBy}", $order);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -993,29 +1013,34 @@ class WorkspaceRepository extends EntityRepository
     public function findAllPersonalWorkspacesBySearch(
         $search,
         $orderedBy = 'name',
-        $order = 'ASC'
+        $order = 'ASC',
+        User $user = null
     ) {
-        $dql = "
-            SELECT w
-            FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE (
-                UPPER(w.name) LIKE :search
-                OR UPPER(w.code) LIKE :search
-            )
-            AND EXISTS (
-                SELECT u
-                FROM Claroline\CoreBundle\Entity\User u
-                JOIN u.personalWorkspace pw
-                WHERE pw = w
-            )
-            ORDER BY w.{$orderedBy} {$order}
-        ";
+        $isAdmin = $user ? $user->hasRole('ROLE_ADMIN') : false;
 
-        $search = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%{$search}%");
+        $qb = $this->createQueryBuilder('w');
+        $qb->select('w')
+      ->join('w.organizations', 'o')
+      ->leftJoin('o.administrators', 'a')
+      ->where('EXISTS (
+          SELECT u
+          FROM Claroline\CoreBundle\Entity\User u
+          JOIN u.personalWorkspace pw
+          WHERE pw = w
+      )')
+      ->andWhere($qb->expr()->orX(
+        $qb->expr()->like('UPPER(w.name)', '?1'),
+        $qb->expr()->like('UPPER(w.code)', '?1')
+      ))
+      ->setParameter(1, "%{$search}%");
 
-        return $query->getResult();
+        if (!$isAdmin) {
+            $qb->andWhere('a.id = ?2')->setParameter(2, $user->getId());
+        }
+
+        $qb->orderBy("w.{$orderedBy}", $order);
+
+        return $qb->getQuery()->getResult();
     }
 
     public function findWorkspaceByCode($workspaceCode, $executeQuery = true)

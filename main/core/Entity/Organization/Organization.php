@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Entity\Organization;
 use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
 use Claroline\CoreBundle\Entity\Calendar\Year;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -119,6 +120,17 @@ class Organization
     protected $users;
 
     /**
+     * @var Workspace[]|ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
+     *     mappedBy="organizations"
+     * )
+     * @ORM\JoinTable(name="claro_user_workspace")
+     */
+    protected $workspaces;
+
+    /**
      * @var User[]|ArrayCollection
      *
      * @ORM\ManyToMany(
@@ -165,6 +177,7 @@ class Organization
         $this->locations = new ArrayCollection();
         $this->departments = new ArrayCollection();
         $this->users = new ArrayCollection();
+        $this->workspaces = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->administrators = new ArrayCollection();
         $this->timeSlots = new ArrayCollection();

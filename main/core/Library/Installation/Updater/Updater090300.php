@@ -18,19 +18,27 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Updater090300 extends Updater
 {
     private $container;
+    private $workspaceManager;
+    private $orgaManager;
+    protected $logger;
     private $fileSystem;
     private $iconSetsDir;
 
     public function __construct(ContainerInterface $container, $logger)
     {
         $this->container = $container;
-        $this->fileSystem = $container->get('filesystem');
         $this->logger = $logger;
+        $this->workspaceManager = $this->container->get('claroline.manager.workspace_manager');
+        $this->workspaceManager->setLogger($logger);
+        $this->orgaManager = $this->container->get('claroline.manager.organization.organization_manager');
+        $this->orgaManager->setLogger($logger);
+        $this->fileSystem = $container->get('filesystem');
         $this->iconSetsDir = $container->getParameter('claroline.param.icon_sets_directory');
     }
 
     public function postUpdate()
     {
+        $this->workspaceManager->bindWorkspaceToOrganization();
         $this->createPublicDirectory();
     }
 

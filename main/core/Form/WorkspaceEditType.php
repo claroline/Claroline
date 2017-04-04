@@ -137,6 +137,32 @@ class WorkspaceEditType extends AbstractType
         }
 
         $builder->add('number', 'text', ['disabled' => 'disabled', 'data' => $this->number, 'mapped' => false, 'label' => 'registered_user_amount']);
+
+        //what define wich organization I can bind to a workspace ?
+
+        $builder->add(
+            'organizations',
+            'entity',
+            [
+                'label' => 'organizations',
+                'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
+                //define here the allowed organizations~
+                //what define wich organization I can bind to a workspace ?
+                /*
+                'query_builder' => function (EntityRepository $er) use ($user) {
+                    return $er->createQueryBuilder('o')
+                        ->leftJoin('o.users', 'u')
+                        ->leftJoin('o.groups', 'g')
+                        ->leftJoin('g.users', 'gu')
+                        ->where('u.id = :userId')
+                        ->orWhere('gu.id = :userId')
+                        ->setParameter('userId', $user->getId());
+                },*/
+                'expanded' => true,
+                'multiple' => true,
+                'property' => 'name',
+            ]
+        );
     }
 
     public function getName()
