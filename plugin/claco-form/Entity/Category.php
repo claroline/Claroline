@@ -191,4 +191,19 @@ class Category
         }
         $this->details['notify_removal'] = $notifyRemoval;
     }
+
+    public function getNotifyPendingComment()
+    {
+        return !is_null($this->details) && isset($this->details['notify_pending_comment']) ?
+            $this->details['notify_pending_comment'] :
+            true;
+    }
+
+    public function setNotifyPendingComment($notifyPendingComment)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['notify_pending_comment'] = $notifyPendingComment;
+    }
 }

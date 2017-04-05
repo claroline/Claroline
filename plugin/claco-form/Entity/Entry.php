@@ -129,12 +129,21 @@ class Entry
      */
     protected $keywords;
 
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\ClacoFormBundle\Entity\EntryUser",
+     *     mappedBy="entry"
+     * )
+     */
+    protected $entryUsers;
+
     public function __construct()
     {
         $this->categories = new ArrayCollection();
         $this->comments = new ArrayCollection();
         $this->fieldValues = new ArrayCollection();
         $this->keywords = new ArrayCollection();
+        $this->entryUsers = new ArrayCollection();
     }
 
     public function getId()
@@ -327,5 +336,10 @@ class Entry
     public function emptyKeywords()
     {
         $this->keywords->clear();
+    }
+
+    public function getEntryUsers()
+    {
+        return $this->entryUsers->toArray();
     }
 }

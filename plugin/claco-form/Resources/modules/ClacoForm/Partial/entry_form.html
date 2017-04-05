@@ -80,7 +80,8 @@
                                            values: field['fieldFacet']['field_facet_choices'],
                                            choice_value: 'value',
                                            error: cfc.entryErrors[field['id']],
-                                           noLabel: false
+                                           noLabel: false,
+                                           disabled: cfc.isFieldDisabled(field)
                                        }]"
                                 ng-model="cfc.entry[field['id']]"
                     >

@@ -64,17 +64,21 @@
                         <td class="text-center" data-title="'managers'|trans:{}:'clacoform'" filter="{managersName: 'text'}" sortable="'managersName'">
                             {{ category['managersName'] }}
                         </td>
-                        <td class="text-center" data-title="'category_notify_addition'|trans:{}:'clacoform'" sortable="'details.notify_addition'">
+                        <td class="text-center" data-title="'addition'|trans:{}:'clacoform'" sortable="'details.notify_addition'">
                             <i class="fa fa-check text-success" ng-if="category['details']['notify_addition']"></i>
                             <i class="fa fa-times text-danger" ng-if="!category['details']['notify_addition']"></i>
                         </td>
-                        <td class="text-center" data-title="'category_notify_edition'|trans:{}:'clacoform'" sortable="'details.notify_edition'">
+                        <td class="text-center" data-title="'edition'|trans:{}:'clacoform'" sortable="'details.notify_edition'">
                             <i class="fa fa-check text-success" ng-if="category['details']['notify_edition']"></i>
                             <i class="fa fa-times text-danger" ng-if="!category['details']['notify_edition']"></i>
                         </td>
-                        <td class="text-center" data-title="'category_notify_removal'|trans:{}:'clacoform'" sortable="'details.notify_removal'">
+                        <td class="text-center" data-title="'removal'|trans:{}:'clacoform'" sortable="'details.notify_removal'">
                             <i class="fa fa-check text-success" ng-if="category['details']['notify_removal']"></i>
                             <i class="fa fa-times text-danger" ng-if="!category['details']['notify_removal']"></i>
+                        </td>
+                        <td class="text-center" data-title="'comment'|trans:{}:'platform'" sortable="'details.notify_pending_comment'">
+                            <i class="fa fa-check text-success" ng-if="category['details']['notify_pending_comment']"></i>
+                            <i class="fa fa-times text-danger" ng-if="!category['details']['notify_pending_comment']"></i>
                         </td>
                         <td class="text-center" data-title="'actions'|trans:{}:'platform'">
                             <button class="btn btn-default btn-sm" ng-click="cfc.editCategory(category)">

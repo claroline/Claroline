@@ -40,6 +40,10 @@ export default class FieldController {
     config.trusted = true
     config.format = 'html'
 
+    if (this.options['disabled']) {
+      config.readonly = true
+    }
+
     return config
   }
 }

@@ -43,11 +43,16 @@
                 </span>
             </div>
         </div>
+        <hr>
+        <div>
+            <u><b>{{ 'notifications'|trans:{}:'platform' }} :</b></u>
+        </div>
+        <br>
         <div class="form-group row">
-            <label class="control-label col-md-3">
-                {{ 'category_notify_addition'|trans:{}:'clacoform' }}
+            <label class="control-label col-md-4">
+                {{ 'addition'|trans:{}:'clacoform' }}
             </label>
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <label>
                     <input type="radio" ng-model="cfc.category['notifyAddition']" ng-value="true"/>
                     {{ 'yes'|trans:{}:'platform' }}
@@ -60,10 +65,10 @@
             </div>
         </div>
         <div class="form-group row">
-            <label class="control-label col-md-3">
-                {{ 'category_notify_edition'|trans:{}:'clacoform' }}
+            <label class="control-label col-md-4">
+                {{ 'edition'|trans:{}:'clacoform' }}
             </label>
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <label>
                     <input type="radio" ng-model="cfc.category['notifyEdition']" ng-value="true"/>
                     {{ 'yes'|trans:{}:'platform' }}
@@ -76,10 +81,10 @@
             </div>
         </div>
         <div class="form-group row">
-            <label class="control-label col-md-3">
-                {{ 'category_notify_removal'|trans:{}:'clacoform' }}
+            <label class="control-label col-md-4">
+                {{ 'removal'|trans:{}:'clacoform' }}
             </label>
-            <div class="col-md-9">
+            <div class="col-md-8">
                 <label>
                     <input type="radio" ng-model="cfc.category['notifyRemoval']" ng-value="true"/>
                     {{ 'yes'|trans:{}:'platform' }}
@@ -87,6 +92,22 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <label>
                     <input type="radio" ng-model="cfc.category['notifyRemoval']" ng-value="false"/>
+                    {{ 'no'|trans:{}:'platform' }}
+                </label>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="control-label col-md-4">
+                {{ 'comment_to_moderate'|trans:{}:'clacoform' }}
+            </label>
+            <div class="col-md-8">
+                <label>
+                    <input type="radio" ng-model="cfc.category['notifyPendingComment']" ng-value="true"/>
+                    {{ 'yes'|trans:{}:'platform' }}
+                </label>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <label>
+                    <input type="radio" ng-model="cfc.category['notifyPendingComment']" ng-value="false"/>
                     {{ 'no'|trans:{}:'platform' }}
                 </label>
             </div>

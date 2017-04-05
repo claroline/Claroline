@@ -36,9 +36,7 @@ class Comment
     protected $content;
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\User"
-     * )
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
      * @Groups({"api_user_min"})
      * @SerializedName("user")

@@ -117,10 +117,20 @@
         <div class="form-group row">
             <label class="control-label col-md-3">
                 {{ 'mandatory'|trans:{}:'clacoform' }}
+                <i class="fa fa-info-circle"
+                   data-toggle="tooltip"
+                   data-placement="top"
+                   title="{{ 'mandatory_locked_conflict'|trans:{}:'clacoform' }}"
+                >
+                </i>
             </label>
             <div class="col-md-9">
                 <label>
-                    <input type="radio" ng-model="cfc.field['required']" ng-value="true"/>
+                    <input type="radio"
+                           ng-model="cfc.field['required']"
+                           ng-value="true"
+                           ng-disabled="cfc.field['locked'] && !cfc.field['lockedEditionOnly']"
+                    />
                     {{ 'yes'|trans:{}:'platform' }}
                 </label>
                 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -142,6 +152,39 @@
                 &nbsp;&nbsp;&nbsp;&nbsp;
                 <label>
                     <input type="radio" ng-model="cfc.field['isMetadata']" ng-value="false"/>
+                    {{ 'no'|trans:{}:'platform' }}
+                </label>
+            </div>
+        </div>
+        <hr>
+        <div class="form-group row">
+            <label class="control-label col-md-3">
+                {{ 'locked'|trans:{}:'platform' }}
+            </label>
+            <div class="col-md-9">
+                <label>
+                    <input type="radio" ng-model="cfc.field['locked']" ng-value="true" ng-click="cfc.checkValues()"/>
+                    {{ 'yes'|trans:{}:'platform' }}
+                </label>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <label>
+                    <input type="radio" ng-model="cfc.field['locked']" ng-value="false" ng-click="cfc.checkValues()"/>
+                    {{ 'no'|trans:{}:'platform' }}
+                </label>
+            </div>
+        </div>
+        <div class="form-group row" ng-if="cfc.field['locked']">
+            <label class="control-label col-md-3">
+                {{ 'edition_only'|trans:{}:'clacoform' }}
+            </label>
+            <div class="col-md-9">
+                <label>
+                    <input type="radio" ng-model="cfc.field['lockedEditionOnly']" ng-value="true" ng-click="cfc.checkValues()"/>
+                    {{ 'yes'|trans:{}:'platform' }}
+                </label>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <label>
+                    <input type="radio" ng-model="cfc.field['lockedEditionOnly']" ng-value="false" ng-click="cfc.checkValues()"/>
                     {{ 'no'|trans:{}:'platform' }}
                 </label>
             </div>

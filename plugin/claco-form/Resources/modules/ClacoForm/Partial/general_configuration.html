@@ -197,7 +197,7 @@
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <label>
                             <input type="radio" ng-model="cfc.config['menu_position']" value="both"/>
-                            {{ 'choice_menu_position_both'|trans:{}:'clacoform' }}
+                            {{ 'both'|trans:{}:'clacoform' }}
                         </label>
                     </div>
                 </div>
@@ -347,6 +347,36 @@
                         <label>
                             <input type="radio" ng-model="cfc.config['display_metadata']" value="manager"/>
                             {{ 'choice_manager_only'|trans:{}:'clacoform' }}
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-heading">
+                <span class="pointer-hand" ng-click="cfc.isCollapsed['locked'] = !cfc.isCollapsed['locked']">
+                    {{ 'locked_fields'|trans:{}:'clacoform' }}
+                    <i ng-class="cfc.isCollapsed['locked'] ? 'fa fa-chevron-circle-right' : 'fa fa-chevron-circle-down'">
+                    </i>
+                </span>
+            </div>
+            <div class="panel-body" uib-collapse="cfc.isCollapsed['locked']">
+                <div class="form-group row">
+                    <span class="control-label col-md-3">
+                        {{ 'lock_fields'|trans:{}:'clacoform' }}
+                    </span>
+                    <div class="col-md-9">
+                        <label>
+                            <input type="radio" ng-model="cfc.config['locked_fields_for']" value="user"/>
+                            {{ 'choice_user_only'|trans:{}:'clacoform' }}
+                        </label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <label>
+                            <input type="radio" ng-model="cfc.config['locked_fields_for']" value="manager"/>
+                            {{ 'choice_manager_only'|trans:{}:'clacoform' }}
+                        </label>
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                        <label>
+                            <input type="radio" ng-model="cfc.config['locked_fields_for']" value="all"/>
+                            {{ 'both'|trans:{}:'clacoform' }}
                         </label>
                     </div>
                 </div>

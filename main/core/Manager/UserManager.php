@@ -1507,6 +1507,31 @@ class UserManager
         return $this->pagerFactory->createPagerFromArray($users, $page, $max);
     }
 
+    public function getAllVisibleUsersIdsForUserPicker(User $user)
+    {
+        $usersIds = [];
+        $roles = $this->generateRoleRestrictions($user);
+        $groups = $this->generateGroupRestrictions($user);
+        $workspaces = $this->generateWorkspaceRestrictions($user);
+        $users = $this->userRepo->findUsersForUserPicker(
+            '',
+            false,
+            false,
+            false,
+            'lastName',
+            'ASC',
+            $roles,
+            $groups,
+            $workspaces
+        );
+
+        foreach ($users as $user) {
+            $usersIds[] = $user->getId();
+        }
+
+        return $usersIds;
+    }
+
     private function generateRoleRestrictions(User $user)
     {
         $restrictions = [];
