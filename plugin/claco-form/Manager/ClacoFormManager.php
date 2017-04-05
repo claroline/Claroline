@@ -16,6 +16,7 @@ use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\ClacoFormWidgetConfig;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
+use Claroline\ClacoFormBundle\Entity\EntryUser;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldChoiceCategory;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
@@ -47,9 +48,13 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\Organization\LocationManager;
+use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\MessageBundle\Manager\MessageManager;
+use Claroline\PdfGeneratorBundle\Manager\PdfManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -65,15 +70,20 @@ class ClacoFormManager
     private $authorization;
     private $eventDispatcher;
     private $facetManager;
+    private $locationManager;
     private $messageManager;
     private $om;
+    private $pdfManager;
     private $router;
+    private $templating;
     private $tokenStorage;
     private $translator;
+    private $userManager;
 
     private $categoryRepo;
     private $commentRepo;
     private $entryRepo;
+    private $entryUserRepo;
     private $fieldChoiceCategoryRepo;
     private $fieldRepo;
     private $fieldValueRepo;
@@ -84,36 +94,49 @@ class ClacoFormManager
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *     "facetManager"    = @DI\Inject("claroline.manager.facet_manager"),
+     *     "locationManager" = @DI\Inject("claroline.manager.organization.location_manager"),
      *     "messageManager"  = @DI\Inject("claroline.manager.message_manager"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pdfManager"      = @DI\Inject("claroline.manager.pdf_manager"),
      *     "router"          = @DI\Inject("router"),
+     *     "templating"      = @DI\Inject("templating"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "translator"      = @DI\Inject("translator"),
+     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
      * })
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
         FacetManager $facetManager,
+        LocationManager $locationManager,
         MessageManager $messageManager,
         ObjectManager $om,
+        PdfManager $pdfManager,
         RouterInterface $router,
+        TwigEngine $templating,
         TokenStorageInterface $tokenStorage,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        UserManager $userManager
     ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->facetManager = $facetManager;
+        $this->locationManager = $locationManager;
         $this->messageManager = $messageManager;
         $this->om = $om;
+        $this->pdfManager = $pdfManager;
         $this->router = $router;
+        $this->templating = $templating;
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
+        $this->userManager = $userManager;
         $this->categoryRepo = $om->getRepository('ClarolineClacoFormBundle:Category');
         $this->clacoFormRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoForm');
         $this->clacoFormWidgetConfigRepo = $om->getRepository('ClarolineClacoFormBundle:ClacoFormWidgetConfig');
         $this->commentRepo = $om->getRepository('ClarolineClacoFormBundle:Comment');
         $this->entryRepo = $om->getRepository('ClarolineClacoFormBundle:Entry');
+        $this->entryUserRepo = $om->getRepository('ClarolineClacoFormBundle:EntryUser');
         $this->fieldChoiceCategoryRepo = $om->getRepository('ClarolineClacoFormBundle:FieldChoiceCategory');
         $this->fieldRepo = $om->getRepository('ClarolineClacoFormBundle:Field');
         $this->fieldValueRepo = $om->getRepository('ClarolineClacoFormBundle:FieldValue');
@@ -140,6 +163,8 @@ class ClacoFormManager
         $clacoForm->setSearchColumnEnabled(true);
 
         $clacoForm->setDisplayMetadata('none');
+
+        $clacoForm->setLockedFieldsFor('user');
 
         $clacoForm->setDisplayCategories(false);
         $clacoForm->setOpenCategories(false);
@@ -170,16 +195,6 @@ class ClacoFormManager
     {
         $this->om->persist($clacoForm);
         $this->om->flush();
-    }
-
-    public function copyClacoForm(ClacoForm $clacoForm)
-    {
-        $newClacoForm = new ClacoForm();
-        $newClacoForm->setName($clacoForm->getName());
-        $newClacoForm->setTemplate($clacoForm->getTemplate());
-        $this->om->persist($newClacoForm);
-
-        return $newClacoForm;
     }
 
     public function saveClacoFormConfig(ClacoForm $clacoForm, array $configData)
@@ -225,7 +240,8 @@ class ClacoFormManager
         $color = null,
         $notifyAddition = true,
         $notifyEdition = true,
-        $notifyRemoval = true
+        $notifyRemoval = true,
+        $notifyPendingComment = true
     ) {
         $category = new Category();
         $category->setClacoForm($clacoForm);
@@ -234,6 +250,7 @@ class ClacoFormManager
         $category->setNotifyAddition($notifyAddition);
         $category->setNotifyEdition($notifyEdition);
         $category->setNotifyRemoval($notifyRemoval);
+        $category->setNotifyPendingComment($notifyPendingComment);
 
         foreach ($managers as $manager) {
             $category->addManager($manager);
@@ -252,13 +269,15 @@ class ClacoFormManager
         $color = null,
         $notifyAddition = true,
         $notifyEdition = true,
-        $notifyRemoval = true
+        $notifyRemoval = true,
+        $notifyPendingComment = true
     ) {
         $category->setName($name);
         $category->setColor($color);
         $category->setNotifyAddition($notifyAddition);
         $category->setNotifyEdition($notifyEdition);
         $category->setNotifyRemoval($notifyRemoval);
+        $category->setNotifyPendingComment($notifyPendingComment);
         $category->emptyManagers();
 
         foreach ($managers as $manager) {
@@ -321,6 +340,8 @@ class ClacoFormManager
         $type,
         $required = true,
         $isMetadata = false,
+        $locked = false,
+        $lockedEditionOnly = false,
         array $choices = []
     ) {
         $this->om->startFlushSuite();
@@ -330,6 +351,8 @@ class ClacoFormManager
         $field->setType($type);
         $field->setRequired($required);
         $field->setIsMetadata($isMetadata);
+        $field->setLocked($locked);
+        $field->setLockedEditionOnly($lockedEditionOnly);
         $fieldFacet = $this->facetManager->createField($name, $required, $type, $clacoForm->getResourceNode());
 
         if ($this->facetManager->isTypeWithChoices($type)) {
@@ -356,6 +379,8 @@ class ClacoFormManager
         $type,
         $required = true,
         $isMetadata = false,
+        $locked = false,
+        $lockedEditionOnly = false,
         array $oldChoices = [],
         array $newChoices = []
     ) {
@@ -364,6 +389,8 @@ class ClacoFormManager
         $field->setType($type);
         $field->setRequired($required);
         $field->setIsMetadata($isMetadata);
+        $field->setLocked($locked);
+        $field->setLockedEditionOnly($lockedEditionOnly);
         $fieldFacet = $field->getFieldFacet();
         $this->facetManager->editField($fieldFacet, $name, $required, $type);
 
@@ -564,13 +591,17 @@ class ClacoFormManager
 
     public function canCreateEntry(ClacoForm $clacoForm, User $user = null)
     {
-        $maxEntries = $clacoForm->getMaxEntries();
-
-        if (is_null($user)) {
-            $canCreate = $clacoForm->isCreationEnabled() && ($maxEntries === 0);
+        if ($this->hasRight($clacoForm, 'EDIT')) {
+            $canCreate = true;
         } else {
-            $userEntries = $this->getEntriesByUser($clacoForm, $user);
-            $canCreate = $clacoForm->isCreationEnabled() && (($maxEntries === 0) || ($maxEntries > count($userEntries)));
+            $maxEntries = $clacoForm->getMaxEntries();
+
+            if (is_null($user)) {
+                $canCreate = $clacoForm->isCreationEnabled() && ($maxEntries === 0);
+            } else {
+                $userEntries = $this->getEntriesByUser($clacoForm, $user);
+                $canCreate = $clacoForm->isCreationEnabled() && (($maxEntries === 0) || ($maxEntries > count($userEntries)));
+            }
         }
 
         return $canCreate;
@@ -651,6 +682,10 @@ class ClacoFormManager
             }
         }
         $this->persistEntry($entry);
+
+        if (!is_null($user)) {
+            $this->createEntryUser($entry, $user, false, true, true, true);
+        }
         $event = new LogEntryCreateEvent($entry);
         $this->eventDispatcher->dispatch('log', $event);
         $this->om->endFlushSuite();
@@ -743,6 +778,7 @@ class ClacoFormManager
         $event = new LogEntryEditEvent($entry);
         $this->eventDispatcher->dispatch('log', $event);
         $this->notifyCategoriesManagers($entry, $oldCategories, $entry->getCategories());
+        $this->notifyUsers($entry, 'edition');
         $this->om->endFlushSuite();
 
         return $entry;
@@ -827,6 +863,12 @@ class ClacoFormManager
             $this->om->remove($fieldValue);
         }
         $this->notifyCategoriesManagers($entry, $categories);
+        $this->notifyUsers($entry, 'deletion');
+        $entryUsers = $entry->getEntryUsers();
+
+        foreach ($entryUsers as $entryUser) {
+            $this->om->remove($entryUser);
+        }
         $this->om->remove($entry);
         $this->om->flush();
         $event = new LogEntryDeleteEvent($details);
@@ -862,7 +904,8 @@ class ClacoFormManager
         $editedCategories = [];
         $addedCategories = [];
         $clacoFormId = $entry->getClacoForm()->getId();
-        $url = $this->router->generate('claro_claco_form_open', ['clacoForm' => $clacoFormId], true).'#/entries/'.$entry->getId().'/view';
+        $url = $this->router->generate('claro_claco_form_open', ['clacoForm' => $clacoFormId], true).
+            '#/entries/'.$entry->getId().'/view';
 
         foreach ($oldCategories as $category) {
             if (in_array($category, $currentCategories)) {
@@ -881,7 +924,11 @@ class ClacoFormManager
                 $managers = $category->getManagers();
 
                 if (count($managers) > 0) {
-                    $object = $this->translator->trans('entry_removal_from_category', ['%name%' => $category->getName()], 'clacoform');
+                    $object = $this->translator->trans(
+                        'entry_removal_from_category',
+                        ['%name%' => $category->getName()],
+                        'clacoform'
+                    );
                     $content = $this->translator->trans(
                         'entry_removal_from_category_msg',
                         ['%title%' => $entry->getTitle(), '%category%' => $category->getName()],
@@ -897,7 +944,11 @@ class ClacoFormManager
                 $managers = $category->getManagers();
 
                 if (count($managers) > 0) {
-                    $object = $this->translator->trans('entry_edition_in_category', ['%name%' => $category->getName()], 'clacoform');
+                    $object = $this->translator->trans(
+                        'entry_edition_in_category',
+                        ['%name%' => $category->getName()],
+                        'clacoform'
+                    );
                     $content = $this->translator->trans(
                         'entry_edition_in_category_msg',
                         ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%url%' => $url],
@@ -913,7 +964,11 @@ class ClacoFormManager
                 $managers = $category->getManagers();
 
                 if (count($managers) > 0) {
-                    $object = $this->translator->trans('entry_addition_in_category', ['%name%' => $category->getName()], 'clacoform');
+                    $object = $this->translator->trans(
+                        'entry_addition_in_category',
+                        ['%name%' => $category->getName()],
+                        'clacoform'
+                    );
                     $content = $this->translator->trans(
                         'entry_addition_in_category_msg',
                         ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%url%' => $url],
@@ -922,6 +977,43 @@ class ClacoFormManager
                     $message = $this->messageManager->create($content, $object, $managers);
                     $this->messageManager->send($message, true, false);
                 }
+            }
+        }
+    }
+
+    public function notifyPendingComment(Entry $entry, Comment $comment)
+    {
+        $clacoForm = $entry->getClacoForm();
+
+        if ($clacoForm->getDisplayComments()) {
+            $url = $this->router->generate('claro_claco_form_open', ['clacoForm' => $clacoForm->getId()], true).
+                '#/entries/'.$entry->getId().'/view';
+            $receivers = [];
+            $categories = $entry->getCategories();
+
+            foreach ($categories as $category) {
+                if ($category->getNotifyPendingComment()) {
+                    $managers = $category->getManagers();
+
+                    foreach ($managers as $manager) {
+                        $receivers[$manager->getId()] = $manager;
+                    }
+                }
+            }
+            if (count($receivers) > 0) {
+                $object = '['.
+                    $this->translator->trans('entry_pending_comment', [], 'clacoform').
+                    '] '.
+                    $entry->getTitle();
+                $content = $comment->getContent().
+                    '<br><br>'.
+                    $this->translator->trans('link_to_entry', [], 'clacoform').
+                    ' : <a href="'.$url.'">'.
+                    $this->translator->trans('here', [], 'platform').
+                    '</a><br><br>';
+
+                $message = $this->messageManager->create($content, $object, $receivers);
+                $this->messageManager->send($message, true, false);
             }
         }
     }
@@ -1025,6 +1117,12 @@ class ClacoFormManager
         $event = new LogCommentCreateEvent($comment);
         $this->eventDispatcher->dispatch('log', $event);
 
+        if ($comment->getStatus() === Comment::VALIDATED) {
+            $this->notifyUsers($entry, 'comment', $content);
+        } else {
+            $this->notifyPendingComment($entry, $comment);
+        }
+
         return $comment;
     }
 
@@ -1036,6 +1134,10 @@ class ClacoFormManager
         $event = new LogCommentEditEvent($comment);
         $this->eventDispatcher->dispatch('log', $event);
 
+        if ($comment->getStatus() === Comment::VALIDATED) {
+            $this->notifyUsers($comment->getEntry(), 'comment', $content);
+        }
+
         return $comment;
     }
 
@@ -1045,6 +1147,10 @@ class ClacoFormManager
         $this->persistComment($comment);
         $event = new LogCommentStatusChangeEvent($comment);
         $this->eventDispatcher->dispatch('log', $event);
+
+        if ($comment->getStatus() === Comment::VALIDATED) {
+            $this->notifyUsers($comment->getEntry(), 'comment', $comment->getContent());
+        }
 
         return $comment;
     }
@@ -1132,6 +1238,424 @@ class ClacoFormManager
         }
 
         return $entries;
+    }
+
+    public function createEntryUser(
+        Entry $entry,
+        User $user,
+        $shared = false,
+        $notifyEdition = false,
+        $notifyComment = false,
+        $notifyVote = false
+    ) {
+        $entryUser = new EntryUser();
+        $entryUser->setEntry($entry);
+        $entryUser->setUser($user);
+        $entryUser->setShared($shared);
+        $entryUser->setNotifyEdition($notifyEdition);
+        $entryUser->setNotifyComment($notifyComment);
+        $entryUser->setNotifyVote($notifyVote);
+        $this->om->persist($entryUser);
+        $this->om->flush();
+
+        return $entryUser;
+    }
+
+    public function getEntryUser(Entry $entry, User $user)
+    {
+        $entryUser = $this->entryUserRepo->findOneBy(['entry' => $entry, 'user' => $user]);
+
+        if (empty($entryUser)) {
+            $entryUser = $this->createEntryUser($entry, $user);
+        }
+
+        return $entryUser;
+    }
+
+    public function persistEntryUser(EntryUser $entryUser)
+    {
+        $this->om->persist($entryUser);
+        $this->om->flush();
+    }
+
+    public function notifyUsers(Entry $entry, $type, $data = null)
+    {
+        $sendMessage = false;
+        $receivers = [];
+        $clacoForm = $entry->getClacoForm();
+        $url = $this->router->generate('claro_claco_form_open', ['clacoForm' => $clacoForm->getId()], true).
+            '#/entries/'.$entry->getId().'/view';
+
+        switch ($type) {
+            case 'edition':
+                $sendMessage = true;
+                $entryUsers = $this->entryUserRepo->findBy(['entry' => $entry, 'notifyEdition' => true]);
+
+                foreach ($entryUsers as $entryUser) {
+                    $receivers[] = $entryUser->getUser();
+                }
+                if ($sendMessage && count($receivers) > 0) {
+                    $subject = '['.
+                        $this->translator->trans('entry_edition', [], 'clacoform').
+                        '] '.
+                        $entry->getTitle();
+                    $content = $this->translator->trans('link_to_entry', [], 'clacoform').
+                        ' : <a href="'.$url.'">'.
+                        $this->translator->trans('here', [], 'platform').
+                        '</a><br><br>';
+                }
+                break;
+            case 'deletion':
+                $sendMessage = true;
+                $entryUsers = $this->entryUserRepo->findBy(['entry' => $entry, 'notifyEdition' => true]);
+
+                foreach ($entryUsers as $entryUser) {
+                    $receivers[] = $entryUser->getUser();
+                }
+                if ($sendMessage && count($receivers) > 0) {
+                    $subject = '['.
+                        $this->translator->trans('entry_deletion', [], 'clacoform').
+                        '] '.
+                        $entry->getTitle();
+                    $content = $this->translator->trans('entry_deletion_msg', ['%title%' => $entry->getTitle()], 'clacoform');
+                }
+                break;
+            case 'comment':
+                $sendMessage = $clacoForm->getDisplayComments();
+
+                if ($sendMessage) {
+                    $entryUsers = $this->entryUserRepo->findBy(['entry' => $entry, 'notifyComment' => true]);
+
+                    foreach ($entryUsers as $entryUser) {
+                        $receivers[] = $entryUser->getUser();
+                    }
+                    if (count($receivers) > 0) {
+                        $subject = '['.
+                            $this->translator->trans('entry_comment', [], 'clacoform').
+                            '] '.
+                            $entry->getTitle();
+                        $content = $data.
+                            '<br><br>'.
+                            $this->translator->trans('link_to_entry', [], 'clacoform').
+                            ' : <a href="'.$url.'">'.
+                            $this->translator->trans('here', [], 'platform').
+                            '</a><br><br>';
+                    }
+                }
+                break;
+        }
+        if ($sendMessage && count($receivers) > 0) {
+            $message = $this->messageManager->create($content, $subject, $receivers);
+            $this->messageManager->send($message, true, false);
+        }
+    }
+
+    public function generatePdfForEntry(Entry $entry, User $user)
+    {
+        $clacoForm = $entry->getClacoForm();
+        $fields = $clacoForm->getFields();
+        $fieldValues = [];
+
+        foreach ($entry->getFieldValues() as $fieldValue) {
+            $field = $fieldValue->getField();
+            $fieldValues[$field->getId()] = $fieldValue->getFieldFacetValue()->getValue();
+        }
+        $canEdit = $this->hasRight($clacoForm, 'EDIT');
+        $template = $clacoForm->getTemplate();
+        $displayMeta = $clacoForm->getDisplayMetadata();
+        $isEntryManager = $user !== 'anon.' && $this->isEntryManager($entry, $user);
+        $withMeta = $canEdit || $displayMeta === 'all' || ($displayMeta === 'manager' && $isEntryManager);
+        $countries = empty($template) ? $this->locationManager->getCountries() : [];
+
+        if (!empty($template)) {
+            $template = str_replace('%clacoform_entry_title%', $entry->getTitle(), $template);
+
+            foreach ($fields as $field) {
+                if ($withMeta || !$field->getIsMetadata()) {
+                    switch ($field->getType()) {
+                        case FieldFacet::DATE_TYPE:
+                            $value = $fieldValues[$field->getId()]->format('d/m/Y');
+                            break;
+                        case FieldFacet::CHECKBOXES_TYPE:
+                            $value = implode(', ', $fieldValues[$field->getId()]);
+                            break;
+                        case FieldFacet::COUNTRY_TYPE:
+                            $value = $this->locationManager->getCountryByCode($fieldValues[$field->getId()]);
+                            break;
+                        default:
+                            $value = $fieldValues[$field->getId()];
+                    }
+                } else {
+                    $value = '';
+                }
+                $name = $this->removeAccent($this->removeQuote($field->getName()));
+                $template = str_replace("%$name%", $value, $template);
+            }
+        }
+        $html = $this->templating->render(
+            'ClarolineClacoFormBundle:ClacoForm:entry.html.twig',
+            [
+                'entry' => $entry,
+                'template' => $template,
+                'withMeta' => $withMeta,
+                'fields' => $fields,
+                'fieldValues' => $fieldValues,
+                'countries' => $countries,
+            ]
+        );
+
+        return $this->pdfManager->create($html, $entry->getTitle(), $user, 'clacoform_entries');
+    }
+
+    public function removeQuote($str)
+    {
+        return str_replace('\'', ' ', $str);
+    }
+
+    public function removeAccent($str)
+    {
+        $convertedStr = $str;
+        $convertedStr = str_replace('Ç', 'C', $convertedStr);
+        $convertedStr = str_replace('ç', 'c', $convertedStr);
+        $convertedStr = str_replace('è', 'e', $convertedStr);
+        $convertedStr = str_replace('é', 'e', $convertedStr);
+        $convertedStr = str_replace('ê', 'e', $convertedStr);
+        $convertedStr = str_replace('ë', 'e', $convertedStr);
+        $convertedStr = str_replace('È', 'E', $convertedStr);
+        $convertedStr = str_replace('É', 'E', $convertedStr);
+        $convertedStr = str_replace('Ê', 'E', $convertedStr);
+        $convertedStr = str_replace('Ë', 'E', $convertedStr);
+        $convertedStr = str_replace('à', 'a', $convertedStr);
+        $convertedStr = str_replace('á', 'a', $convertedStr);
+        $convertedStr = str_replace('â', 'a', $convertedStr);
+        $convertedStr = str_replace('ã', 'a', $convertedStr);
+        $convertedStr = str_replace('ä', 'a', $convertedStr);
+        $convertedStr = str_replace('ä', 'a', $convertedStr);
+        $convertedStr = str_replace('@', 'A', $convertedStr);
+        $convertedStr = str_replace('À', 'A', $convertedStr);
+        $convertedStr = str_replace('Á', 'A', $convertedStr);
+        $convertedStr = str_replace('Â', 'A', $convertedStr);
+        $convertedStr = str_replace('Ã', 'A', $convertedStr);
+        $convertedStr = str_replace('Ä', 'A', $convertedStr);
+        $convertedStr = str_replace('Å', 'A', $convertedStr);
+        $convertedStr = str_replace('ì', 'i', $convertedStr);
+        $convertedStr = str_replace('í', 'i', $convertedStr);
+        $convertedStr = str_replace('î', 'i', $convertedStr);
+        $convertedStr = str_replace('ï', 'i', $convertedStr);
+        $convertedStr = str_replace('Ì', 'I', $convertedStr);
+        $convertedStr = str_replace('Í', 'I', $convertedStr);
+        $convertedStr = str_replace('Î', 'I', $convertedStr);
+        $convertedStr = str_replace('Ï', 'I', $convertedStr);
+        $convertedStr = str_replace('ð', 'o', $convertedStr);
+        $convertedStr = str_replace('ò', 'o', $convertedStr);
+        $convertedStr = str_replace('ó', 'o', $convertedStr);
+        $convertedStr = str_replace('ô', 'o', $convertedStr);
+        $convertedStr = str_replace('õ', 'o', $convertedStr);
+        $convertedStr = str_replace('ö', 'o', $convertedStr);
+        $convertedStr = str_replace('Ò', 'O', $convertedStr);
+        $convertedStr = str_replace('Ó', 'O', $convertedStr);
+        $convertedStr = str_replace('Ô', 'O', $convertedStr);
+        $convertedStr = str_replace('Õ', 'O', $convertedStr);
+        $convertedStr = str_replace('Ö', 'O', $convertedStr);
+        $convertedStr = str_replace('ù', 'u', $convertedStr);
+        $convertedStr = str_replace('ú', 'u', $convertedStr);
+        $convertedStr = str_replace('û', 'u', $convertedStr);
+        $convertedStr = str_replace('ü', 'u', $convertedStr);
+        $convertedStr = str_replace('Ù', 'U', $convertedStr);
+        $convertedStr = str_replace('Ú', 'U', $convertedStr);
+        $convertedStr = str_replace('Û', 'U', $convertedStr);
+        $convertedStr = str_replace('Ü', 'U', $convertedStr);
+        $convertedStr = str_replace('ý', 'y', $convertedStr);
+        $convertedStr = str_replace('ÿ', 'y', $convertedStr);
+        $convertedStr = str_replace('Ý', 'Y', $convertedStr);
+
+        return $convertedStr;
+    }
+
+    public function getSharedEntryUsers(Entry $entry)
+    {
+        $users = [];
+        $entryUsers = $this->entryUserRepo->findBy(['entry' => $entry, 'shared' => true]);
+
+        foreach ($entryUsers as $entryUser) {
+            $users[] = $entryUser->getUser();
+        }
+
+        return $users;
+    }
+
+    public function switchEntryUserShared(Entry $entry, User $user, $shared)
+    {
+        $this->om->startFlushSuite();
+        $entryUser = $this->getEntryUser($entry, $user);
+        $entryUser->setShared($shared);
+        $this->om->persist($entryUser);
+        $this->om->endFlushSuite();
+    }
+
+    public function shareEntryWithUsers(Entry $entry, array $usersIds)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($usersIds as $userId) {
+            $user = $this->userManager->getUserById($userId);
+
+            if (!empty($user)) {
+                $this->switchEntryUserShared($entry, $user, true);
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
+    public function getUserEntries(ClacoForm $clacoForm, User $user)
+    {
+        $entries = [];
+        $userEntries = $this->getEntriesByUser($clacoForm, $user);
+        $sharedEntryUser = $this->entryUserRepo->findSharedEntryUserByClacoFormAndUser($clacoForm, $user);
+
+        foreach ($userEntries as $entry) {
+            $entries[$entry->getId()] = $entry;
+        }
+        foreach ($sharedEntryUser as $entryUser) {
+            $entry = $entryUser->getEntry();
+            $entries[$entry->getId()] = $entry;
+        }
+
+        return array_values($entries);
+    }
+
+    public function generateSharedEntriesData(ClacoForm $clacoForm)
+    {
+        $data = [];
+        $sharedEntriesUsers = $this->entryUserRepo->findSharedEntriesUsersByClacoForm($clacoForm);
+
+        foreach ($sharedEntriesUsers as $entryUser) {
+            $entryId = $entryUser->getEntry()->getId();
+            $userId = $entryUser->getUser()->getId();
+
+            if (!isset($data[$entryId])) {
+                $data[$entryId] = [];
+            }
+            $data[$entryId][$userId] = true;
+        }
+
+        return $data;
+    }
+
+    public function copyClacoForm(ClacoForm $clacoForm, ResourceNode $newNode)
+    {
+        $categoryLinks = [];
+        $categories = $clacoForm->getCategories();
+        $keywords = $clacoForm->getKeywords();
+        $fields = $clacoForm->getFields();
+
+        $newClacoForm = $this->copyResource($clacoForm);
+
+        foreach ($categories as $category) {
+            $newCategory = $this->copyCategory($newClacoForm, $category);
+            $categoryLinks[$category->getId()] = $newCategory;
+        }
+        foreach ($keywords as $keyword) {
+            $this->copyKeyword($newClacoForm, $keyword);
+        }
+        foreach ($fields as $field) {
+            $this->copyField($newClacoForm, $newNode, $field, $categoryLinks);
+        }
+
+        return $newClacoForm;
+    }
+
+    private function copyResource(ClacoForm $clacoForm)
+    {
+        $newClacoForm = new ClacoForm();
+        $newClacoForm->setName($clacoForm->getName());
+        $newClacoForm->setTemplate($clacoForm->getTemplate());
+        $newClacoForm->setDetails($clacoForm->getDetails());
+        $this->om->persist($newClacoForm);
+
+        return $newClacoForm;
+    }
+
+    private function copyCategory(ClacoForm $newClacoForm, Category $category)
+    {
+        $newCategory = new Category();
+        $newCategory->setClacoForm($newClacoForm);
+        $newCategory->setName($category->getName());
+        $newCategory->setDetails($category->getDetails());
+        $managers = $category->getManagers();
+
+        foreach ($managers as $manager) {
+            $newCategory->addManager($manager);
+        }
+        $this->om->persist($newCategory);
+
+        return $newCategory;
+    }
+
+    private function copyKeyword(ClacoForm $newClacoForm, Keyword $keyword)
+    {
+        $newKeyword = new Keyword();
+        $newKeyword->setClacoForm($newClacoForm);
+        $newKeyword->setName($keyword->getName());
+        $this->om->persist($newKeyword);
+
+        return $newKeyword;
+    }
+
+    private function copyField(ClacoForm $newClacoForm, ResourceNode $newNode, Field $field, array $categoryLinks)
+    {
+        $fieldFacetChoiceLinks = [];
+        $newField = new Field();
+        $newField->setClacoForm($newClacoForm);
+        $newField->setName($field->getName());
+        $newField->setType($field->getType());
+        $newField->setRequired($field->isRequired());
+        $newField->setIsMetadata($field->getIsMetadata());
+        $newField->setLocked($field->isLocked());
+        $newField->setLockedEditionOnly($field->getLockedEditionOnly());
+
+        $fieldFacet = $field->getFieldFacet();
+        $newFieldFacet = new FieldFacet();
+        $newFieldFacet->setName($fieldFacet->getName());
+        $newFieldFacet->setType($fieldFacet->getType());
+        $newFieldFacet->setPosition($fieldFacet->getPosition());
+        $newFieldFacet->setIsRequired($fieldFacet->isRequired());
+        $newFieldFacet->setIsEditable($fieldFacet->isEditable());
+        $newFieldFacet->setResourceNode($newNode);
+        $this->om->persist($newFieldFacet);
+        $newField->setFieldFacet($newFieldFacet);
+        $this->om->persist($newField);
+
+        $fieldFacetChoices = $fieldFacet->getFieldFacetChoices()->toArray();
+
+        foreach ($fieldFacetChoices as $fieldFacetChoice) {
+            $newFieldFacetChoice = new FieldFacetChoice();
+            $newFieldFacetChoice->setFieldFacet($newFieldFacet);
+            $newFieldFacetChoice->setLabel($fieldFacetChoice->getLabel());
+            $newFieldFacetChoice->setPosition($fieldFacetChoice->getPosition());
+            $this->om->persist($newFieldFacetChoice);
+            $fieldFacetChoiceLinks[$fieldFacetChoice->getId()] = $newFieldFacetChoice;
+        }
+        $fieldChoiceCategories = $field->getFieldChoiceCategories();
+
+        foreach ($fieldChoiceCategories as $fieldChoiceCategory) {
+            $choice = $fieldChoiceCategory->getFieldFacetChoice();
+            $categoryId = $fieldChoiceCategory->getCategory()->getId();
+
+            if (isset($categoryLinks[$categoryId])) {
+                $newFieldChoiceCategory = new FieldChoiceCategory();
+                $newFieldChoiceCategory->setField($newField);
+                $newFieldChoiceCategory->setValue($fieldChoiceCategory->getValue());
+                $newFieldChoiceCategory->setCategory($categoryLinks[$categoryId]);
+
+                if (!empty($choice) && isset($fieldFacetChoiceLinks[$choice->getId()])) {
+                    $newFieldChoiceCategory->setFieldFacetChoice($fieldFacetChoiceLinks[$choice->getId()]);
+                }
+                $this->om->persist($newFieldChoiceCategory);
+            }
+        }
+
+        return $fieldFacetChoiceLinks;
     }
 
     /*****************************************
@@ -1351,11 +1875,13 @@ class ClacoFormManager
         $canOpen = $this->hasRight($clacoForm, 'OPEN');
         $canEdit = $this->hasRight($clacoForm, 'EDIT');
         $editionEnabled = $clacoForm->isEditionEnabled();
+        $isAnon = $user === 'anon.';
+        $isEntryShared = $isAnon ? false : $this->isEntryShared($entry, $user);
 
         return $canEdit || (
             $canOpen && (
-                ($editionEnabled && ($entry->getUser() === $user)) ||
-                (($user !== 'anon.') && $this->isEntryManager($entry, $user))
+                ($editionEnabled && ($entry->getUser() === $user || $isEntryShared)) ||
+                (!$isAnon && $this->isEntryManager($entry, $user))
             )
         );
     }
@@ -1409,6 +1935,30 @@ class ClacoFormManager
         $entry = $comment->getEntry();
 
         if (!$this->hasEntryAccessRight($entry) || (($user !== $comment->getUser()) && !$this->hasEntryModerationRight($entry))) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    public function isEntryShared(Entry $entry, User $user)
+    {
+        $entryUser = $this->entryUserRepo->findOneBy(['entry' => $entry, 'user' => $user, 'shared' => true]);
+
+        return !empty($entryUser);
+    }
+
+    public function hasEntryOwnership(Entry $entry)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $isAnon = $user === 'anon.';
+        $isOwner = !empty($entry->getUser()) && !$isAnon && $entry->getUser()->getId() === $user->getId();
+        $isShared = $isAnon ? false : $this->isEntryShared($entry, $user);
+
+        return $isOwner || $isShared;
+    }
+
+    public function checkEntryShareRight(Entry $entry)
+    {
+        if (!$this->hasRight($entry->getClacoForm(), 'EDIT') && !$this->hasEntryOwnership($entry)) {
             throw new AccessDeniedException();
         }
     }

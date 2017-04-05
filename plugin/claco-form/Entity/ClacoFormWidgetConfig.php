@@ -149,4 +149,17 @@ class ClacoFormWidgetConfig
         }
         $this->options['show_field_label'] = $showFieldLabel;
     }
+
+    public function getShowCreatorPicture()
+    {
+        return !is_null($this->options) && isset($this->options['show_creator_picture']) ? $this->options['show_creator_picture'] : false;
+    }
+
+    public function setShowCreatorPicture($showCreatorPicture)
+    {
+        if (is_null($this->options)) {
+            $this->options = [];
+        }
+        $this->options['show_creator_picture'] = $showCreatorPicture;
+    }
 }

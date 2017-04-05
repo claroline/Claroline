@@ -22,6 +22,7 @@ export default class GeneralConfigurationCtrl {
       random: true,
       find: true,
       data: true,
+      locked: true,
       categories: true,
       comments: true,
       votes: true,

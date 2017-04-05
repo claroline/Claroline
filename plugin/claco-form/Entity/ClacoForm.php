@@ -310,6 +310,19 @@ class ClacoForm extends AbstractResource
         $this->details['display_metadata'] = $displayMetadata;
     }
 
+    public function getLockedFieldsFor()
+    {
+        return !is_null($this->details) && isset($this->details['locked_fields_for']) ? $this->details['locked_fields_for'] : 'user';
+    }
+
+    public function setLockedFieldsFor($lockedFieldsFor)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['locked_fields_for'] = $lockedFieldsFor;
+    }
+
     public function getDisplayCategories()
     {
         return !is_null($this->details) && isset($this->details['display_categories']) ? $this->details['display_categories'] : false;

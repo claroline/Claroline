@@ -98,6 +98,9 @@
                                 </i>
                             </span>
                             <span ng-if="fc['id'] === 'actions'">
+                                <button class="btn btn-default btn-sm" ng-click="cfc.downloadPdf(entry['id'])" ng-if="cfc.canGeneratePdf()">
+                                    <i class="fa fa-print"></i>
+                                </button>
                                 <a class="btn btn-default btn-sm" ui-sref="entry_edition({entryId: entry['id']})">
                                     <i class="fa fa-pencil"></i>
                                 </a>
@@ -138,8 +141,12 @@
                     </tr>
                 </table>
             </div>
-            <div class="alert alert-warning" ng-if="cfc.entries.length === 0">
-                {{ 'no_entry'|trans:{}:'clacoform' }}
+            <div ng-if="cfc.entries.length === 0">
+                <br>
+                <br>
+                <div class="alert alert-warning">
+                    {{ 'no_entry'|trans:{}:'clacoform' }}
+                </div>
             </div>
         </div>
         <div ng-if="cfc.mode === 'my_entries'">
@@ -187,6 +194,9 @@
                                 </i>
                             </span>
                             <span ng-if="fc['id'] === 'actions'">
+                                <button class="btn btn-default btn-sm" ng-click="cfc.downloadPdf(entry['id'])" ng-if="cfc.canGeneratePdf()">
+                                    <i class="fa fa-print"></i>
+                                </button>
                                 <a class="btn btn-default btn-sm" ui-sref="entry_edition({entryId: entry['id']})">
                                     <i class="fa fa-pencil"></i>
                                 </a>
@@ -195,7 +205,12 @@
                                 </button>
                             </span>
                             <span ng-if="cfc.isDefaultField(fc['id'])">
-                                {{ entry[fc['id']] }}
+                                <a ui-sref="entry_view({entryId: entry['id']})" ng-if="fc['id'] === 'title'">
+                                    {{ entry[fc['id']] }}
+                                </a>
+                                <span ng-if="fc['id'] !== 'title'">
+                                    {{ entry[fc['id']] }}
+                                </span>
                             </span>
                             <span ng-if="cfc.isCustomField(fc['id'])">
                                 {{ entry['field_' + fc['id']] }}
@@ -204,8 +219,12 @@
                     </tr>
                 </table>
             </div>
-            <div class="alert alert-warning" ng-if="cfc.myEntries.length === 0">
-                {{ 'no_own_entry'|trans:{}:'clacoform' }}
+            <div ng-if="cfc.myEntries.length === 0">
+                <br>
+                <br>
+                <div class="alert alert-warning">
+                    {{ 'no_own_entry'|trans:{}:'clacoform' }}
+                </div>
             </div>
         </div>
         <div ng-if="cfc.mode === 'manager_entries'">
@@ -253,6 +272,9 @@
                                 </i>
                             </span>
                             <span ng-if="fc['id'] === 'actions'">
+                                <button class="btn btn-default btn-sm" ng-click="cfc.downloadPdf(entry['id'])" ng-if="cfc.canGeneratePdf()">
+                                    <i class="fa fa-print"></i>
+                                </button>
                                 <a class="btn btn-default btn-sm" ui-sref="entry_edition({entryId: entry['id']})">
                                     <i class="fa fa-pencil"></i>
                                 </a>
@@ -279,7 +301,12 @@
                                 </button>
                             </span>
                             <span ng-if="cfc.isDefaultField(fc['id'])">
-                                {{ entry[fc['id']] }}
+                                <a ui-sref="entry_view({entryId: entry['id']})" ng-if="fc['id'] === 'title'">
+                                    {{ entry[fc['id']] }}
+                                </a>
+                                <span ng-if="fc['id'] !== 'title'">
+                                    {{ entry[fc['id']] }}
+                                </span>
                             </span>
                             <span ng-if="cfc.isCustomField(fc['id'])">
                                 {{ entry['field_' + fc['id']] }}
@@ -288,8 +315,12 @@
                     </tr>
                 </table>
             </div>
-            <div class="alert alert-warning" ng-if="cfc.managerEntries.length === 0">
-                {{ 'no_manager_entry'|trans:{}:'clacoform' }}
+            <div ng-if="cfc.managerEntries.length === 0">
+                <br>
+                <br>
+                <div class="alert alert-warning">
+                    {{ 'no_manager_entry'|trans:{}:'clacoform' }}
+                </div>
             </div>
         </div>
     </div>

@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Event;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 /**
  * Event dispatched by the resource controller when a resource copy is asked.
@@ -22,6 +22,7 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
 {
     private $resource;
     private $parent;
+    private $copiedNode;
     private $copy;
     private $isPopulated = false;
 
@@ -37,11 +38,13 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
      *
      * @param \Claroline\CoreBundle\Entity\Resource\AbstractResource $resource
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode     $parent
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode     $copiedNode
      */
-    public function __construct(AbstractResource $resource, ResourceNode $parent)
+    public function __construct(AbstractResource $resource, ResourceNode $parent, ResourceNode $copiedNode = null)
     {
         $this->resource = $resource;
         $this->parent = $parent;
+        $this->copiedNode = $copiedNode;
 
         // By default, use the same published state as the copied node
         if ($this->resource->getResourceNode()) {
@@ -57,6 +60,16 @@ class CopyResourceEvent extends Event implements DataConveyorEventInterface
     public function getParent()
     {
         return $this->parent;
+    }
+
+    /**
+     * Returns the copy of the resource node.
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     */
+    public function getCopiedNode()
+    {
+        return $this->copiedNode;
     }
 
     /**

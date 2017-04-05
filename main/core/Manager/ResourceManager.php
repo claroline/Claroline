@@ -808,15 +808,14 @@ class ResourceManager
                     return;
                 }
             }
-
+            $newNode = $this->copyNode($node, $parent, $user, $withRights, $rights, $index);
             $event = $this->dispatcher->dispatch(
                 'copy_'.$node->getResourceType()->getName(),
                 'CopyResource',
-                [$resource, $parent]
+                [$resource, $parent, $newNode]
             );
 
             $copy = $event->getCopy();
-            $newNode = $this->copyNode($node, $parent, $user, $withRights, $rights, $index);
 
             // Set the published state
             $newNode->setPublished($event->getPublish());

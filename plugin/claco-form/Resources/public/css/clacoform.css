@@ -9,3 +9,7 @@
 .inactive-comment-row {
     background-color: #F2B36F;
 }
+
+.notification-checkbox {
+    margin-left: 8px !important;
+}

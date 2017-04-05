@@ -71,6 +71,29 @@
                             <i class="fa fa-check text-success" ng-if="field['isMetadata']"></i>
                             <i class="fa fa-times text-danger" ng-if="!field['isMetadata']"></i>
                         </td>
+                        <td class="text-center" data-title="'locked'|trans:{}:'platform'" sortable="'locked'">
+                            <i class="fa fa-lock"
+                               ng-if="field['locked'] && !field['lockedEditionOnly']"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'locked'|trans:{}:'platform' }}"
+                            >
+                            </i>
+                            <i class="fa fa-unlock-alt"
+                               ng-if="field['locked'] && field['lockedEditionOnly']"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'edition_only'|trans:{}:'clacoform' }}"
+                            >
+                            </i>
+                            <i class="fa fa-unlock"
+                               ng-if="!field['locked']"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'not_locked'|trans:{}:'clacoform' }}"
+                            >
+                            </i>
+                        </td>
                         <td class="text-center" data-title="'actions'|trans:{}:'platform'">
                             <button class="btn btn-default btn-sm" ng-click="cfc.editField(field)">
                                 <i class="fa fa-pencil"></i>

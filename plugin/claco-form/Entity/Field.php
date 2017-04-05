@@ -89,6 +89,20 @@ class Field
     protected $isMetadata = false;
 
     /**
+     * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
+     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
+     * @SerializedName("locked")
+     */
+    protected $locked = false;
+
+    /**
+     * @ORM\Column(name="locked_edition", type="boolean", options={"default" = 0})
+     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
+     * @SerializedName("lockedEditionOnly")
+     */
+    protected $lockedEditionOnly = false;
+
+    /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\ClacoFormBundle\Entity\FieldChoiceCategory",
      *     mappedBy="field"
@@ -169,6 +183,26 @@ class Field
     public function setIsMetadata($isMetadata)
     {
         $this->isMetadata = $isMetadata;
+    }
+
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
+    }
+
+    public function getLockedEditionOnly()
+    {
+        return $this->lockedEditionOnly;
+    }
+
+    public function setLockedEditionOnly($lockedEditionOnly)
+    {
+        $this->lockedEditionOnly = $lockedEditionOnly;
     }
 
     public function getFieldChoiceCategories()

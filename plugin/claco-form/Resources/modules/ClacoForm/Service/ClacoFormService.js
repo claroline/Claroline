@@ -24,6 +24,7 @@ export default class ClacoFormService {
     this.resourceDetails = ClacoFormService._getGlobal('resourceDetails')
     this.resourceNodeId = ClacoFormService._getGlobal('resourceNodeId')
     this.resourceNodeName = ClacoFormService._getGlobal('resourceNodeName')
+    this.canGeneratePdf = ClacoFormService._getGlobal('canGeneratePdf')
     this.successMessage = null
     this.errorMessage = null
   }
@@ -48,6 +49,10 @@ export default class ClacoFormService {
 
   getCanSearchEntry() {
     return this.resourceDetails['search_enabled'] || this.canEdit || !this.isAnon
+  }
+
+  getCanGeneratePdf() {
+    return this.canGeneratePdf
   }
 
   getResourceId() {
@@ -233,6 +238,10 @@ export default class ClacoFormService {
     convertedStr = convertedStr.replace(/Ý/g, 'Y')
 
     return convertedStr
+  }
+
+  removeQuote(str) {
+    return str.replace(/'/g, ' ')
   }
 
   static _getGlobal(name) {

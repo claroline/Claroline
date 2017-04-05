@@ -21,6 +21,7 @@ export default class EntryViewCtrl {
     this.CommentService = CommentService
     this.entryId = parseInt($stateParams.entryId)
     this.entry = {}
+    this.entryUser = null
     this.userId = ClacoFormService.getUserId()
     this.title= ClacoFormService.getResourceNodeName()
     this.config = ClacoFormService.getResourceDetails()
@@ -96,23 +97,27 @@ export default class EntryViewCtrl {
       this.initializeTemplate()
     }
     this.CommentService.initializeComments(this.entryId)
+
+    if (this.userId) {
+      this.EntryService.getEntryUser(this.entryId).then(d => this.entryUser = d)
+    }
   }
 
   initializeTemplate() {
     if (this.template) {
       this.template = this.template.replace('%clacoform_entry_title%', this.entry['title'])
       this.fields.forEach(f => {
-        const name = f['name']
+        const name = this.ClacoFormService.removeAccent(this.ClacoFormService.removeQuote(f['name']))
         const id = f['id']
         let replacedField = ''
 
-        if (this.metadataAllowed || !f['isMetadata']) {
+        if (this.metadataAllowed || !f['isMetadata'] || this.isEntryOwner() || this.isShared()) {
           switch (f['type']) {
             case 3 :
               replacedField = this.$filter('date')(this.entry[id], 'dd/MM/yyyy')
               break
             case 6 :
-              replacedField = this.entry[id].join(', ')
+              replacedField = this.entry[id] ? this.entry[id].join(', ') : ''
               break
             case 7 :
               replacedField = this.FieldService.getCountryNameFromCode(this.entry[id])
@@ -124,7 +129,7 @@ export default class EntryViewCtrl {
         if (replacedField === undefined) {
           replacedField = ''
         }
-        this.template = this.template.replace(`%${this.ClacoFormService.removeAccent(name)}%`, replacedField)
+        this.template = this.template.replace(`%${name}%`, replacedField)
       })
     }
   }
@@ -274,5 +279,53 @@ export default class EntryViewCtrl {
 
   getCountryName(code) {
     return this.FieldService.getCountryNameFromCode(code)
+  }
+
+  isEntryNotificationEnabled() {
+    return this.entryUser['notifyEdition'] || (this.config['display_comments'] && this.entryUser['notifyComment'])
+  }
+
+  switchEntryNotification() {
+    const enabled = !this.isEntryNotificationEnabled()
+    this.entryUser['notifyEdition'] = enabled
+    this.entryUser['notifyComment'] = enabled
+    this.saveEntryUser()
+  }
+
+  notificationOptionClick($event) {
+    $event.stopPropagation()
+  }
+
+  saveEntryUser() {
+    this.EntryService.saveEntryUser(this.entryId, this.entryUser)
+  }
+
+  switchNotification(type) {
+    this.entryUser[type] = !this.entryUser[type]
+    this.saveEntryUser()
+  }
+
+  downloadPdf() {
+    this.EntryService.downloadPdf(this.entryId)
+  }
+
+  canGeneratePdf() {
+    return this.ClacoFormService.getCanGeneratePdf()
+  }
+
+  isEntryOwner() {
+    return this.entry && this.entry['user'] && this.entry['user']['id'] === this.userId
+  }
+
+  isShared() {
+    return this.entry && this.EntryService.isShared(this.entry['id'], this.userId)
+  }
+
+  canShare() {
+    return this.canEdit() || this.isEntryOwner() || this.isShared()
+  }
+
+  showEntrySharesManagement() {
+    this.EntryService.showEntrySharesManagement(this.entry)
   }
 }

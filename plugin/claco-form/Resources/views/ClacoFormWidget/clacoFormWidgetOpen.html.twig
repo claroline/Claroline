@@ -2,6 +2,16 @@
 {% set perPage = 3 %}
 {% set carouselPages = ((data|length / perPage)|round(0, 'ceil')) - 1 %}
 
+<style>
+    .entry-creator-picture {
+        width: 70px;
+        height: 70px;
+    }
+    .entry-creator-no-picture {
+        font-size: 70px;
+    }
+</style>
+
 <div id="{{ slideshowId }}" class="widget-slideshow path-slideshow carousel slide" data-ride="carousel" data-interval="false">
     <!-- Indicators -->
     <ul class="carousel-indicators">
@@ -22,6 +32,18 @@
                             <div class="carousel-card-content">
                                 {% for v in form['values'] %}
                                     <div class="form-group">
+                                        {% if showCreatorPicture %}
+                                            {% if form['entry'].getUser() is not empty and form['entry'].getUser().getPicture() is not empty %}
+                                                <img src="{{ asset('uploads/pictures/') ~ form['entry'].getUser().getPicture() }}"
+                                                     alt="{{ form['entry'].getUser().getFirstName() }} {{ form['entry'].getUser().getLastName() }}"
+                                                     class="img-circle entry-creator-picture"
+                                                >
+                                            {% else %}
+                                                <div class="text-center">
+                                                    <i class="fa fa-user entry-creator-no-picture"></i>
+                                                </div>
+                                            {% endif %}
+                                        {% endif %}
                                         {% if showFieldLabel %}
                                             <label class="control-label">
                                                 {{ v['label'] }}
