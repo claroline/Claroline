@@ -2,6 +2,7 @@
 
 namespace Icap\DropzoneBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Icap\DropzoneBundle\Entity\Drop;
 use Icap\DropzoneBundle\Entity\Dropzone;
@@ -36,7 +37,7 @@ class DropzoneManager
      *
      * @param \Icap\DropzoneBundle\Entity\Dropzone $dropzone
      *
-     * @return array UserIds.
+     * @return array UserIds
      */
     public function getDropzoneUsersIds(Dropzone $dropzone)
     {
@@ -58,8 +59,8 @@ class DropzoneManager
             // getting decoded rights.
             $decodedRights = $this->maskManager->decodeMask($mask, $ressourceNode->getResourceType());
             // if this role is allowed to open and this role is not an Admin role
-            if (array_key_exists('open', $decodedRights) && $decodedRights['open'] == true
-                && $role->getName() != 'ROLE_ADMIN'
+            if (array_key_exists('open', $decodedRights) && $decodedRights['open'] === true
+                && $role->getName() !== 'ROLE_ADMIN'
             ) {
                 // the role has the 'open' right
                 array_push($test, $role->getName());
@@ -143,7 +144,7 @@ class DropzoneManager
      *
      * @param \Icap\DropzoneBundle\Entity\Dropzone                               $dropzone
      * @param \Icap\DropzoneBundle\Entity\Drop|\Icap\DropzoneBundle\Manager\Drop $drop
-     * @param int                                                                $nbCorrection number of correction the user did.
+     * @param int                                                                $nbCorrection number of correction the user did
      *
      * @return array (states, currentState,percent,nbCorrection)
      */
@@ -173,7 +174,7 @@ class DropzoneManager
             $allow_user_to_not_have_expected_corrections = $this->isPeerReviewEndedOrManualStateFinished($dropzone, $nbCorrection);
             /* --------------------- SPECIAL CASE  END ------------------------------*/
 
-            if (!$allow_user_to_not_have_expected_corrections && $drop != null && !$drop->isUnlockedDrop()) {
+            if (!$allow_user_to_not_have_expected_corrections && $drop !== null && !$drop->isUnlockedDrop()) {
                 for ($i = 0; $i < $expectedCorrections; ++$i) {
                     array_push($states, 'correction n°%nb_correction%/%expected_correction%');
                 }
@@ -252,7 +253,7 @@ class DropzoneManager
     public function isPeerReviewEndedOrManualStateFinished(Dropzone $dropzone, $nbCorrection)
     {
         $specialCase = false;
-        if (($dropzone->getManualPlanning() && $dropzone->getManualState() == Dropzone::MANUAL_STATE_FINISHED) ||
+        if (($dropzone->getManualPlanning() && $dropzone->getManualState() === Dropzone::MANUAL_STATE_FINISHED) ||
             (!$dropzone->getManualPlanning() && $dropzone->getTimeRemaining($dropzone->getEndReview()) <= 0)
         ) {
             if ($dropzone->getExpectedTotalCorrection() > $nbCorrection) {
@@ -289,7 +290,7 @@ class DropzoneManager
     private function isDropzoneDropTimeIsUp(Dropzone $dropzone)
     {
         $dropDatePassed = false;
-        if ($dropzone->getAutoCloseOpenedDropsWhenTimeIsUp() && $dropzone->getManualPlanning() == false) {
+        if ($dropzone->getAutoCloseOpenedDropsWhenTimeIsUp() && $dropzone->getManualPlanning() === false) {
             $now = new \DateTime();
             $dropDatePassed = $now->getTimestamp() > $dropzone->getEndAllowDrop()->getTimeStamp();
         }
@@ -329,8 +330,8 @@ class DropzoneManager
                 //si date début & date de fin
                 // no date => get all completed drops
                 // if dates are not null , get only complete drop between the 2 dates.
-                if (($beginDate == null && $endDate == null) ||
-                    ($beginDate != null && $endDate != null &&
+                if (($beginDate === null && $endDate === null) ||
+                    ($beginDate !== null && $endDate !== null &&
                         $this->isBetweenDates($beginDate, $endDate, $drop->getDropDate()))
                 ) {
                     // on récupère le dossier parent des documents.
@@ -347,5 +348,103 @@ class DropzoneManager
         }
 
         return $ids;
+    }
+
+    /**
+     * Imports dropzone object from array
+     * (see dropzoneImporter for structure and description).
+     *
+     * @param array $data
+     * @param $rootPath
+     *
+     * @return Dropzone
+     */
+    public function importDropzone(array $data, $rootPath)
+    {
+        $dropzone = new Dropzone();
+        if (isset($data['data'])) {
+            $dropzoneData = $data['data'];
+
+            $dropzone->setEditionState($dropzoneData['editionState']);
+            $dropzone->setInstruction($dropzoneData['instruction'] ? $this->getFromFile($dropzoneData['instruction'], $rootPath) : null);
+            $dropzone->setCorrectionInstruction($dropzoneData['correctionInstruction'] ? $this->getFromFile($dropzoneData['correctionInstruction'], $rootPath) : null);
+            $dropzone->setSuccessMessage($dropzoneData['successMessage'] ? $this->getFromFile($dropzoneData['successMessage'], $rootPath) : null);
+            $dropzone->setFailMessage($dropzoneData['failMessage'] ? $this->getFromFile($dropzoneData['failMessage'], $rootPath) : null);
+            $dropzone->setAllowWorkspaceResource($dropzoneData['allowWorkspaceResource']);
+            $dropzone->setAllowUpload($dropzoneData['allowUpload']);
+            $dropzone->setAllowUrl($dropzoneData['allowUrl']);
+            $dropzone->setAllowRichText($dropzoneData['allowRichText']);
+            $dropzone->setPeerReview($dropzoneData['peerReview']);
+            $dropzone->setExpectedTotalCorrection($dropzoneData['expectedTotalCorrection']);
+            $dropzone->setDisplayNotationToLearners($dropzoneData['displayNotationToLearners']);
+            $dropzone->setDisplayNotationMessageToLearners($dropzoneData['displayNotationMessageToLearners']);
+            $dropzone->setMinimumScoreToPass($dropzoneData['minimumScoreToPass']);
+            $dropzone->setManualPlanning($dropzoneData['manualPlanning']);
+            $dropzone->setManualState($dropzoneData['manualState']);
+            $dropzone->setStartAllowDrop($dropzoneData['startAllowDrop'] ? new \DateTime($dropzoneData['startAllowDrop']) : null);
+            $dropzone->setEndAllowDrop($dropzoneData['endAllowDrop'] ? new \DateTime($dropzoneData['endAllowDrop']) : null);
+            $dropzone->setStartReview($dropzoneData['startReview'] ? new \DateTime($dropzoneData['startReview']) : null);
+            $dropzone->setEndReview($dropzoneData['endReview'] ? new \DateTime($dropzoneData['endReview']) : null);
+            $dropzone->setAllowCommentInCorrection($dropzoneData['allowCommentInCorrection']);
+            $dropzone->setForceCommentInCorrection($dropzoneData['forceCommentInCorrection']);
+            $dropzone->setDiplayCorrectionsToLearners($dropzoneData['diplayCorrectionsToLearners']);
+            $dropzone->setAllowCorrectionDeny($dropzoneData['allowCorrectionDeny']);
+            $dropzone->setTotalCriteriaColumn($dropzoneData['totalCriteriaColumn']);
+            $dropzone->setAutoCloseOpenedDropsWhenTimeIsUp($dropzoneData['autoCloseOpenedDropsWhenTimeIsUp']);
+            $dropzone->setAutoCloseState($dropzoneData['autoCloseState']);
+            $dropzone->setNotifyOnDrop($dropzoneData['notifyOnDrop']);
+        }
+
+        return $dropzone;
+    }
+
+    public function exportDropzone(Workspace $workspace, array &$files, Dropzone $dropzone)
+    {
+        return [
+            'editionState' => $dropzone->getEditionState(),
+            'instruction' => $this->makeFile($dropzone->getInstruction(), $files),
+            'correctionInstruction' => $this->makeFile($dropzone->getCorrectionInstruction(), $files),
+            'successMessage' => $this->makeFile($dropzone->getSuccessMessage(), $files),
+            'failMessage' => $this->makeFile($dropzone->getFailMessage(), $files),
+            'allowWorkspaceResource' => $dropzone->getAllowWorkspaceResource(),
+            'allowUpload' => $dropzone->getAllowUpload(),
+            'allowUrl' => $dropzone->getAllowUrl(),
+            'allowRichText' => $dropzone->getAllowRichText(),
+            'peerReview' => $dropzone->getPeerReview(),
+            'expectedTotalCorrection' => $dropzone->getExpectedTotalCorrection(),
+            'displayNotationToLearners' => $dropzone->getDisplayNotationToLearners(),
+            'displayNotationMessageToLearners' => $dropzone->getDisplayNotationMessageToLearners(),
+            'minimumScoreToPass' => $dropzone->getMinimumScoreToPass(),
+            'manualPlanning' => $dropzone->getManualPlanning(),
+            'manualState' => $dropzone->getManualState(),
+            'startAllowDrop' => $dropzone->getstartAllowDrop() ? $dropzone->getstartAllowDrop()->format('Y-m-d H:i:s') : null,
+            'endAllowDrop' => $dropzone->getEndAllowDrop() ? $dropzone->getEndAllowDrop()->format('Y-m-d H:i:s') : null,
+            'startReview' => $dropzone->getStartReview() ? $dropzone->getStartReview()->format('Y-m-d H:i:s') : null,
+            'endReview' => $dropzone->getEndReview() ? $dropzone->getEndReview()->format('Y-m-d H:i:s') : null,
+            'allowCommentInCorrection' => $dropzone->getAllowCommentInCorrection(),
+            'forceCommentInCorrection' => $dropzone->getForceCommentInCorrection(),
+            'diplayCorrectionsToLearners' => $dropzone->getDiplayCorrectionsToLearners(),
+            'allowCorrectionDeny' => $dropzone->getAllowCorrectionDeny(),
+            'totalCriteriaColumn' => $dropzone->getTotalCriteriaColumn(),
+            'autoCloseOpenedDropsWhenTimeIsUp' => $dropzone->getAutoCloseOpenedDropsWhenTimeIsUp(),
+            'autoCloseState' => $dropzone->getAutoCloseState(),
+            'notifyOnDrop' => $dropzone->getNotifyOnDrop(),
+
+        ];
+    }
+
+    private function makeFile($content, &$files)
+    {
+        $uid = uniqid().'.txt';
+        $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$uid;
+        file_put_contents($tmpPath, $content);
+        $files[$uid] = $tmpPath;
+
+        return $uid;
+    }
+
+    private function getFromFile($filePath, $rootPath)
+    {
+        return file_get_contents($rootPath.DIRECTORY_SEPARATOR.$filePath);
     }
 }
