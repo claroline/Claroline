@@ -286,7 +286,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private function isRouteExcluded($route)
     {
         return in_array($route, $this->getExcludedRoutes())
-            || preg_match('/(claro_security_|oauth_|_login|claro_file|media|claro_cas_)/', $route);
+            || preg_match('/(claro_security_|oauth_|_login|claro_file|media|claro_cas_|claro_ldap_)/', $route);
     }
 
     private function getExcludedRoutes()
@@ -299,6 +299,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             'claro_registration_user_registration_form',
             'claro_o365_login',
             'claro_cas_login',
+            'claro_ldap_login',
         ];
     }
 

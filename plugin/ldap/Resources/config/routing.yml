@@ -1,4 +1,9 @@
 claro_ldap:
     resource: "@ClarolineLdapBundle/Controller/LdapController.php"
     type: annotation
-    prefix: /
+    prefix: /admin/ldap
+
+claro_ldap_connection:
+    resource: "@ClarolineLdapBundle/Controller/LdapConnectionController.php"
+    type: annotation
+    prefix: /ldap

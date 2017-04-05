@@ -102,7 +102,7 @@ class CasConnectionController extends Controller
             'casLogin' => $casLogin,
             'selfRegistration' => $selfRegistration,
             'claroUser' => $user,
-            'seviceName' => $this->casServerConfigFactory->getCasConfiguration()->getName(),
+            'serviceName' => $this->casServerConfigFactory->getCasConfiguration()->getName(),
         ];
     }
 
@@ -163,9 +163,8 @@ class CasConnectionController extends Controller
      */
     public function loginLinkAction(Request $request)
     {
-        $selfRegistration = $this->platformConfigHandler->getParameter('allow_self_registration');
         $casLogin = $request->getSession()->get('CAS_AUTHENTICATION_USER_ID');
-        if (empty($casLogin) || !$selfRegistration) {
+        if (empty($casLogin)) {
             return $this->redirectToRoute('claro_index');
         }
         $request->getSession()->set('LOGGED_VIA_CAS', true);
@@ -184,9 +183,8 @@ class CasConnectionController extends Controller
      */
     public function linkAccountAction(Request $request)
     {
-        $selfRegistration = $this->platformConfigHandler->getParameter('allow_self_registration');
         $casLogin = $request->getSession()->get('CAS_AUTHENTICATION_USER_ID');
-        if (empty($casLogin) || !$selfRegistration) {
+        if (empty($casLogin)) {
             return $this->redirectToRoute('claro_index');
         }
         $request->getSession()->set('LOGGED_VIA_CAS', true);
@@ -205,9 +203,8 @@ class CasConnectionController extends Controller
      */
     public function linkAccountByMailAction(Request $request)
     {
-        $selfRegistration = $this->platformConfigHandler->getParameter('allow_self_registration');
         $casLogin = $request->getSession()->get('CAS_AUTHENTICATION_USER_ID');
-        if (empty($casLogin) || !$selfRegistration) {
+        if (empty($casLogin)) {
             return $this->redirectToRoute('claro_index');
         }
         $request->getSession()->set('LOGGED_VIA_CAS', true);

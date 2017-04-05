@@ -11,6 +11,5 @@
   "cas_validation_url": "",
   "create_new_cas_account":"",
   "link_cas_to_account":"",
-  "link_cas_to_account_mail":"",
-  "login_cas": ""
+  "link_cas_to_account_mail":""
 }

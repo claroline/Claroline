@@ -533,6 +533,7 @@
     "locked": "Bloqueado",
     "login": "Conexión",
     "login_failure": "La conexión ha fallado. Compruebe si su nombre de usuario y la contraseña son correctos.",
+    "login_with_third_party": "Conexión %name%",
     "logout": "Cerrar sesión",
     "logs": "Rastreo",
     "logs_error_location": "",

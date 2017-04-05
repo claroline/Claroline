@@ -7,6 +7,7 @@ use Claroline\CasBundle\Library\Configuration\CasServerConfigurationFactory;
 use Claroline\CasBundle\Manager\CasManager;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
+use Claroline\CoreBundle\Event\LoginTargetUrlEvent;
 use Claroline\CoreBundle\Event\RenderAuthenticationButtonEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bridge\Twig\TwigEngine;
@@ -41,7 +42,7 @@ class ExternalAuthenticationListener
     }
 
     /**
-     * @DI\Observe("render_external_authentication_button", priority=1)
+     * @DI\Observe("render_external_authentication_button", priority=3)
      *
      * @param RenderAuthenticationButtonEvent $event
      *
@@ -65,8 +66,6 @@ class ExternalAuthenticationListener
      * @DI\Observe("render_primary_external_authentication_button", priority=1)
      *
      * @param RenderAuthenticationButtonEvent $event
-     *
-     * @return string
      */
     public function onRenderPrimaryButton(RenderAuthenticationButtonEvent $event)
     {
@@ -79,6 +78,18 @@ class ExternalAuthenticationListener
                 ['name' => $this->casServerConfig->getName()]
             );
             $event->addContent($content);
+        }
+    }
+
+    /**
+     * @DI\Observe("external_login_target_url_event", priority=3)
+     *
+     * @param LoginTargetUrlEvent $event
+     */
+    public function onExternalLoginTargetUrl(LoginTargetUrlEvent $event)
+    {
+        if ($this->casServerConfig->isActive()) {
+            $event->addTarget('CAS', 'claro_cas_security_entry_point');
         }
     }
 

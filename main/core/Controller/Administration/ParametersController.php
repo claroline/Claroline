@@ -180,6 +180,16 @@ class ParametersController extends Controller
         $descriptions = $this->contentManager->getTranslatedContent(['type' => 'platformDescription']);
         $platformConfig = $this->configHandler->getPlatformConfig();
         $role = $this->roleManager->getRoleByName($platformConfig->getDefaultRole());
+        $targetEvent = $this->eventDispatcher->dispatch('external_login_target_url_event', 'LoginTargetUrl');
+        $targetLoginUrls = $targetEvent->getTargets();
+        $targetLoginUrls = array_merge(['Claroline' => 'claro_security_login'], $targetLoginUrls);
+        $currentTargetLoginUrl = $this->configHandler->getParameter('login_target_route');
+        if (!empty($currentTargetLoginUrl) && !in_array($currentTargetLoginUrl, $targetLoginUrls)) {
+            $targetLoginUrls = array_merge(
+                ["Custom [${currentTargetLoginUrl}]" => $currentTargetLoginUrl],
+                $targetLoginUrls
+            );
+        }
         $form = $this->formFactory->create(
             new AdminForm\GeneralType(
                 $this->localeManager->getAvailableLocales(),
@@ -187,7 +197,8 @@ class ParametersController extends Controller
                 $descriptions,
                 $this->translator->trans('date_form_format', [], 'platform'),
                 $this->localeManager->getUserLocale($request),
-                $this->configHandler->getLockedParamaters()
+                $this->configHandler->getLockedParamaters(),
+                $targetLoginUrls
             ),
             $platformConfig
         );
