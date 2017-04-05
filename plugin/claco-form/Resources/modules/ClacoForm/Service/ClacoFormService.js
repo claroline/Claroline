@@ -12,8 +12,9 @@
 import $ from 'jquery'
 
 export default class ClacoFormService {
-  constructor($http, $uibModal, EntryService) {
+  constructor($http, $window, $uibModal, EntryService) {
     this.$http = $http
+    this.$window = $window
     this.$uibModal = $uibModal
     this.EntryService = EntryService
     this.isAnon = ClacoFormService._getGlobal('isAnon')
@@ -242,6 +243,10 @@ export default class ClacoFormService {
 
   removeQuote(str) {
     return str.replace(/'/g, ' ')
+  }
+
+  exportEntries() {
+    this.$window.location.href = Routing.generate('claro_claco_form_entries_export', {clacoForm: this.resourceId})
   }
 
   static _getGlobal(name) {

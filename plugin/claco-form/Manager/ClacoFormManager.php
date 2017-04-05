@@ -1350,6 +1350,58 @@ class ClacoFormManager
         }
     }
 
+    public function exportEntries(ClacoForm $clacoForm)
+    {
+        $entriesData = [];
+        $fields = $clacoForm->getFields();
+        $entries = $this->getAllEntries($clacoForm);
+
+        foreach ($entries as $entry) {
+            $user = $entry->getUser();
+            $publicationDate = $entry->getPublicationDate();
+            $editionDate = $entry->getEditionDate();
+            $fieldValues = $entry->getFieldValues();
+            $data = [];
+            $data['title'] = $entry->getTitle();
+            $data['author'] = empty($user) ?
+                $this->translator->trans('anonymous', [], 'platform') :
+                $user->getFirstName().' '.$user->getLastName();
+            $data['publicationDate'] = empty($publicationDate) ? '' : $publicationDate->format('d/m/Y');
+            $data['editionDate'] = empty($editionDate) ? '' : $editionDate->format('d/m/Y');
+
+            foreach ($fieldValues as $fiedValue) {
+                $field = $fiedValue->getField();
+                $fieldFacetValue = $fiedValue->getFieldFacetValue();
+                $val = $fieldFacetValue->getValue();
+
+                switch ($field->getType()) {
+                    case FieldFacet::DATE_TYPE:
+                        $value = !empty($val) ? $val->format('d/m/Y') : '';
+                        break;
+                    case FieldFacet::CHECKBOXES_TYPE:
+                        $value = is_array($val) ? implode(', ', $val) : '';
+                        break;
+                    case FieldFacet::COUNTRY_TYPE:
+                        $value = $this->locationManager->getCountryByCode($val);
+                        break;
+                    default:
+                        $value = $val;
+
+                }
+                $data[$field->getId()] = $value;
+            }
+            $entriesData[] = $data;
+        }
+
+        return $this->templating->render(
+            'ClarolineClacoFormBundle:ClacoForm:entries_export.html.twig',
+            [
+                'fields' => $fields,
+                'entries' => $entriesData,
+            ]
+        );
+    }
+
     public function generatePdfForEntry(Entry $entry, User $user)
     {
         $clacoForm = $entry->getClacoForm();

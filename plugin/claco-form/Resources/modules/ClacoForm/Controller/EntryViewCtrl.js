@@ -328,4 +328,8 @@ export default class EntryViewCtrl {
   showEntrySharesManagement() {
     this.EntryService.showEntrySharesManagement(this.entry)
   }
+
+  exportEntries() {
+    this.ClacoFormService.exportEntries()
+  }
 }

@@ -91,4 +91,8 @@ export default class TemplateManagementCtrl {
   removeAccent(str) {
     return this.ClacoFormService.removeAccent(str)
   }
+
+  exportEntries() {
+    this.ClacoFormService.exportEntries()
+  }
 }

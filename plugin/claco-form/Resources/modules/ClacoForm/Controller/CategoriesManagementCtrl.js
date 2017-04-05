@@ -61,4 +61,8 @@ export default class CategoriesManagementCtrl {
   deleteCategory(category) {
     this.CategoryService.deleteCategory(category, this._removeCategoryCallback)
   }
+
+  exportEntries() {
+    this.ClacoFormService.exportEntries()
+  }
 }

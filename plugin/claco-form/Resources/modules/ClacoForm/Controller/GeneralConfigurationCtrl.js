@@ -124,4 +124,8 @@ export default class GeneralConfigurationCtrl {
         break
     }
   }
+
+  exportEntries() {
+    this.ClacoFormService.exportEntries()
+  }
 }

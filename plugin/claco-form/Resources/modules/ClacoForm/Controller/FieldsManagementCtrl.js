@@ -68,4 +68,8 @@ export default class FieldsManagementCtrl {
   deleteField(field) {
     this.FieldService.deleteField(field, this._removeFieldCallback)
   }
+
+  exportEntries() {
+    this.ClacoFormService.exportEntries()
+  }
 }

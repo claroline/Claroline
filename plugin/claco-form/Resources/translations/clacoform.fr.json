@@ -64,6 +64,7 @@
     "entry_removal_from_category_msg": "La fiche [%title%] a été retirée de la catégorie [%category%].",
     "entry_title": "Titre de la fiche",
     "entry_title_info": "Texte qui sera utilisé comme titre pour la fiche.",
+    "export_all_entries": "Exporter toutes les fiches",
     "fields_management": "Gestion des champs",
     "fields_to_display": "Champs à afficher",
     "find_entry": "Trouver une fiche",

@@ -64,6 +64,7 @@
     "entry_removal_from_category_msg": "Entry [%title%] has been removed from category [%category%].",
     "entry_title": "Entry title",
     "entry_title_info": "Text that will be used as title for the entry.",
+    "export_all_entries": "Export all entries",
     "fields_management": "Fields management",
     "fields_to_display": "Fields to display",
     "find_entry": "Find an entry",
