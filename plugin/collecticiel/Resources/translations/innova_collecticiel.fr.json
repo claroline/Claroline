@@ -432,7 +432,7 @@
     "innova_collecticiel_common_form_instruction": "Instruction",
     "innova_collecticiel_criterion_form_instruction": "Instruction",
     "innova_collecticiel_form_name": "Titre du collecticiel",
-    "loading": "en cours de chargement...",
+    "loading": "En cours de chargement...",
     "manualPlanning": "Manuellement",
     "nb correction remains": "one: Il vous reste une copie à corriger pour terminer cette évaluation.|some: Il vous reste %count% copies à corriger pour terminer cette évaluation.",
     "nbDocumentsInThisEvaluation": "one: Vous avez rendu un document pour cette évaluation :|some: Vous avez rendu %count% documents pour cette évaluation :",

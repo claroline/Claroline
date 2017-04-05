@@ -316,7 +316,7 @@
     "icap_dropzone_criterion_form_instruction": "Instruction",
     "icap_dropzone_form_name": "Nom de l'évaluation",
     "last update": "Dernière modification le :",
-    "loading": "en cours de chargement...",
+    "loading": "En cours de chargement...",
     "manualPlanning": "Manuellement",
     "nb correction remains": "one: Il vous reste une copie à corriger pour terminer cette évaluation.|some: Il vous reste %count% copies à corriger pour terminer cette évaluation",
     "nbDocumentsInThisEvaluation": "one: Vous avez rendu un document pour cette évaluation :|some: Vous avez rendu %count% documents pour cette évaluation :",

@@ -1,3 +1,6 @@
 {
-    "open": "Abrir"
+    "open": "Abrir",
+    "choice": "Pregunta de opción múltiple",
+    "choice_desc": "Elegir una o varias respuestas (texto, imagen, audio, vídeo) en una lista de proposiciones predefinidas.",
+    "cloze": "Rellenar blancos"
 }
