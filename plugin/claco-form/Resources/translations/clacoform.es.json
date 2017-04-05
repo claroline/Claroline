@@ -1,5 +1,6 @@
 {
-    "activate_notifications": "",
+    "activate": "Activar",
+    "activate_notifications": "Activar",
     "add_choice": "",
     "add_comment": "",
     "add_entry": "",

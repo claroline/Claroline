@@ -5,8 +5,8 @@
     "role-subscribe": "Nueva inscripción",
     "role-subscribe_group": "se ha inscrito al rol '%role%'",
     "role-subscribe_user": "se ha inscrito al rol '%role%'",
-    "workspace-registration-decline": "ha rechazado su demanda de inscripción al espacio de trabajo",
-    "workspace-role-change_right": "ha accedido al recurso %resource% del espacio de trabajo %workspace%",
-    "workspace-role-subscribe_group": "se ha inscrito al rol '%role%' del espacio de trabajo %workspace%",
-    "workspace-role-subscribe_user": "se ha inscrito al rol '%role%' del espacio de trabajo %workspace%"
+    "workspace-registration-decline": "ha rechazado su demanda de inscripción al espacio de actividades",
+    "workspace-role-change_right": "ha accedido al recurso %resource% del espacio de actividades %workspace%",
+    "workspace-role-subscribe_group": "se ha inscrito al rol '%role%' del espacio de actividades %workspace%",
+    "workspace-role-subscribe_user": "se ha inscrito al rol '%role%' del espacio de actividades %workspace%"
 }

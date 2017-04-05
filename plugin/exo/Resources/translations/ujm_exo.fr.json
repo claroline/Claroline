@@ -593,7 +593,7 @@
     "words_feedback_info": "Feedback si le mot clé est dans la réponse",
     "words_no_valid_solution": "Au moins un mot clé doit avoir un score supérieur à 0.",
     "words_score_not_valid": "Le score d'un mot clé ne peut pas être vide.",
-    "words_show_case_sensitive_option": "Activer/désactiver la fonctionnalité \"respect de la casse\".",
+    "words_show_case_sensitive_option": "Activer la fonctionnalité \"respect de la casse\".",
     "wrong": "Fausse",
     "wrong_name": "Le nom saisi est incorrect",
     "wrong_point": "La valeur saisie est incorrecte",
