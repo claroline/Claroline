@@ -26,7 +26,7 @@ function getConfigurations() {
     if (packages.isMetaPackage(el.path)) {
       str += getMetaEntries(el.path)
     } else {
-      throw new Error('No implementation for client configuration file for the usual package.')
+      console.log('No implementation for client configuration file for the usual package.')
     }
   })
 
