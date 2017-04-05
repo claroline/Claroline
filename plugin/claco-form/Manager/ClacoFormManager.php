@@ -1594,12 +1594,34 @@ class ClacoFormManager
         return $data;
     }
 
+    public function deleteAllEntries(ClacoForm $clacoForm)
+    {
+        $entries = $this->getAllEntries($clacoForm);
+        $this->om->startFlushSuite();
+
+        foreach ($entries as $entry) {
+            $fieldValues = $entry->getFieldValues();
+
+            foreach ($fieldValues as $fieldValue) {
+                $fieldFacetValue = $fieldValue->getFieldFacetValue();
+                $this->om->remove($fieldFacetValue);
+                $this->om->remove($fieldValue);
+            }
+            $this->om->remove($entry);
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function copyClacoForm(ClacoForm $clacoForm, ResourceNode $newNode)
     {
         $categoryLinks = [];
+        $keywordLinks = [];
+        $fieldLinks = [];
+        $fieldFacetLinks = [];
         $categories = $clacoForm->getCategories();
         $keywords = $clacoForm->getKeywords();
         $fields = $clacoForm->getFields();
+        $entries = $this->getAllEntries($clacoForm);
 
         $newClacoForm = $this->copyResource($clacoForm);
 
@@ -1608,10 +1630,21 @@ class ClacoFormManager
             $categoryLinks[$category->getId()] = $newCategory;
         }
         foreach ($keywords as $keyword) {
-            $this->copyKeyword($newClacoForm, $keyword);
+            $newKeyword = $this->copyKeyword($newClacoForm, $keyword);
+            $keywordLinks[$keyword->getId()] = $newKeyword;
         }
         foreach ($fields as $field) {
-            $this->copyField($newClacoForm, $newNode, $field, $categoryLinks);
+            $links = $this->copyField($newClacoForm, $newNode, $field, $categoryLinks);
+
+            foreach ($links['fields'] as $key => $value) {
+                $fieldLinks[$key] = $value;
+            }
+            foreach ($links['fieldFacets'] as $key => $value) {
+                $fieldFacetLinks[$key] = $value;
+            }
+        }
+        foreach ($entries as $entry) {
+            $this->copyEntry($newClacoForm, $entry, $categoryLinks, $keywordLinks, $fieldLinks, $fieldFacetLinks);
         }
 
         return $newClacoForm;
@@ -1656,7 +1689,11 @@ class ClacoFormManager
 
     private function copyField(ClacoForm $newClacoForm, ResourceNode $newNode, Field $field, array $categoryLinks)
     {
-        $fieldFacetChoiceLinks = [];
+        $links = [
+            'fields' => [],
+            'fieldFacets' => [],
+            'fieldFacetChoices' => [],
+        ];
         $newField = new Field();
         $newField->setClacoForm($newClacoForm);
         $newField->setName($field->getName());
@@ -1675,8 +1712,10 @@ class ClacoFormManager
         $newFieldFacet->setIsEditable($fieldFacet->isEditable());
         $newFieldFacet->setResourceNode($newNode);
         $this->om->persist($newFieldFacet);
+        $links['fieldFacets'][$fieldFacet->getId()] = $newFieldFacet;
         $newField->setFieldFacet($newFieldFacet);
         $this->om->persist($newField);
+        $links['fields'][$field->getId()] = $newField;
 
         $fieldFacetChoices = $fieldFacet->getFieldFacetChoices()->toArray();
 
@@ -1686,7 +1725,7 @@ class ClacoFormManager
             $newFieldFacetChoice->setLabel($fieldFacetChoice->getLabel());
             $newFieldFacetChoice->setPosition($fieldFacetChoice->getPosition());
             $this->om->persist($newFieldFacetChoice);
-            $fieldFacetChoiceLinks[$fieldFacetChoice->getId()] = $newFieldFacetChoice;
+            $links['fieldFacetChoices'][$fieldFacetChoice->getId()] = $newFieldFacetChoice;
         }
         $fieldChoiceCategories = $field->getFieldChoiceCategories();
 
@@ -1707,7 +1746,84 @@ class ClacoFormManager
             }
         }
 
-        return $fieldFacetChoiceLinks;
+        return $links;
+    }
+
+    private function copyEntry(
+        ClacoForm $newClacoForm,
+        Entry $entry,
+        array $categoryLinks,
+        array $keywordLinks,
+        array $fieldLinks,
+        array $fieldFacetLinks
+    ) {
+        $categories = $entry->getCategories();
+        $keywords = $entry->getKeywords();
+        $comments = $entry->getComments();
+        $fieldValues = $entry->getFieldValues();
+        $newEntry = new Entry();
+        $newEntry->setClacoForm($newClacoForm);
+        $newEntry->setTitle($entry->getTitle());
+        $newEntry->setUser($entry->getUser());
+        $newEntry->setCreationDate($entry->getCreationDate());
+        $newEntry->setEditionDate($entry->getEditionDate());
+        $newEntry->setPublicationDate($entry->getPublicationDate());
+        $newEntry->setStatus($entry->getStatus());
+
+        foreach ($categories as $category) {
+            if (isset($categoryLinks[$category->getId()])) {
+                $newEntry->addCategory($categoryLinks[$category->getId()]);
+            }
+        }
+        foreach ($keywords as $keyword) {
+            if (isset($keywordLinks[$keyword->getId()])) {
+                $newEntry->addKeyword($keywordLinks[$keyword->getId()]);
+            }
+        }
+        $this->om->persist($newEntry);
+
+        foreach ($comments as $comment) {
+            $this->copyComment($newEntry, $comment);
+        }
+        foreach ($fieldValues as $fieldValue) {
+            $this->copyFieldValue($newEntry, $fieldValue, $fieldLinks, $fieldFacetLinks);
+        }
+    }
+
+    private function copyComment(Entry $newEntry, Comment $comment)
+    {
+        $newComment = new Comment();
+        $newComment->setEntry($newEntry);
+        $newComment->setUser($comment->getUser());
+        $newComment->setStatus($comment->getStatus());
+        $newComment->setContent($comment->getContent());
+        $newComment->setCreationDate($comment->getCreationDate());
+        $newComment->setEditionDate($comment->getEditionDate());
+        $this->om->persist($newComment);
+    }
+
+    private function copyFieldValue(Entry $newEntry, FieldValue $fieldValue, array $fieldLinks, array $fieldFacetLinks)
+    {
+        $fieldId = $fieldValue->getField()->getId();
+        $fieldFacetValue = $fieldValue->getFieldFacetValue();
+        $fieldFacetId = $fieldFacetValue->getFieldFacet()->getId();
+
+        if (isset($fieldLinks[$fieldId]) && isset($fieldFacetLinks[$fieldFacetId])) {
+            $newFieldFacetValue = new FieldFacetValue();
+            $newFieldFacetValue->setFieldFacet($fieldFacetLinks[$fieldFacetId]);
+            $newFieldFacetValue->setUser($fieldFacetValue->getUser());
+            $newFieldFacetValue->setArrayValue($fieldFacetValue->getArrayValue());
+            $newFieldFacetValue->setDateValue($fieldFacetValue->getDateValue());
+            $newFieldFacetValue->setFloatValue($fieldFacetValue->getFloatValue());
+            $newFieldFacetValue->setStringValue($fieldFacetValue->getStringValue());
+            $this->om->persist($newFieldFacetValue);
+
+            $newFieldValue = new FieldValue();
+            $newFieldValue->setEntry($newEntry);
+            $newFieldValue->setField($fieldLinks[$fieldId]);
+            $newFieldValue->setFieldFacetValue($newFieldFacetValue);
+            $this->om->persist($newFieldValue);
+        }
     }
 
     /*****************************************

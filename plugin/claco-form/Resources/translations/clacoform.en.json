@@ -27,6 +27,8 @@
     "create_a_field": "Create a field",
     "create_a_keyword": "Create a keyword",
     "deactivate_notifications": "Deactivate notifications",
+    "delete_all_entries": "Delete all entries",
+    "delete_all_entries_confirm_msg": "Are you sure you want to delete all entries ?",
     "delete_category": "Delete category",
     "delete_category_confirm_message": "Are you sure you want to delete this category [%name%] ?",
     "delete_comment": "Delete comment",

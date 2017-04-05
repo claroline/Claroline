@@ -27,6 +27,8 @@
     "create_a_field": "Créer un champ",
     "create_a_keyword": "Créer un mot-clé",
     "deactivate_notifications": "Désactiver les notifications",
+    "delete_all_entries": "Supprimer toutes les fiches",
+    "delete_all_entries_confirm_msg": "Êtes-vous sûr de vouloir supprimer toutes les fiches ?",
     "delete_category": "Supprimer la catégorie",
     "delete_category_confirm_message": "Êtes-vous sûr de vouloir supprimer cette catégorie [%name%] ?",
     "delete_comment": "Supprimer le commentaire",

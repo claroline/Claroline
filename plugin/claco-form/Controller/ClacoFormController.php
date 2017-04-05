@@ -1081,7 +1081,7 @@ class ClacoFormController extends Controller
      *     options = {"expose"=true}
      * )
      *
-     * Export entries
+     * Exports entries
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -1096,5 +1096,24 @@ class ClacoFormController extends Controller
         ];
 
         return new Response($content, 200, $headers);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/claco/form/{clacoForm}/all/entries/delete",
+     *     name="claro_claco_form_all_entries_delete",
+     *     options={"expose"=true}
+     * )
+     *
+     * Deletes all entries
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function clacoFormAllEntriesDeleteAction(ClacoForm $clacoForm)
+    {
+        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
+        $this->clacoFormManager->deleteAllEntries($clacoForm);
+
+        return new JsonResponse('success', 200);
     }
 }

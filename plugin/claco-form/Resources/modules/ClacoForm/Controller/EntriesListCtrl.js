@@ -272,4 +272,8 @@ export default class EntriesManagementCtrl {
   exportEntries() {
     this.ClacoFormService.exportEntries()
   }
+
+  deleteAllEntries() {
+    this.EntryService.deleteAllEntries()
+  }
 }
