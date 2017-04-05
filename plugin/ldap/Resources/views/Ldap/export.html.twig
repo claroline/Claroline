@@ -8,11 +8,15 @@
             {
                 'icon': 'fa fa-cog',
                 'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_parameters_index')
+                'href': path('claro_admin_index')
             },
             {
                 'name': 'parameters'|trans({}, 'platform'),
-                'href': path('claro_admin_parameters_index')
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'third_party_authentication'|trans({}, 'platform'),
+                'href': path('claro_admin_parameters_third_party_authentication_index')
             },
             {
                 'name': 'LDAP'|trans({}, 'ldap'),
@@ -64,6 +68,6 @@
 
 {% block javascripts %}
     {{ parent() }}
-    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain_name': 'ldap' }) }}"></script>
+    <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'ldap' }) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/clarolineldap/js/ldap.js') }}"></script>
 {% endblock %}

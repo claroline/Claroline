@@ -1,6 +1,7 @@
 {
     "name": "",
     "host": "",
+    "ldap_check_connexion_info":"",
     "port": "",
     "username": "Gebrauchername",
     "password": "Passwort"

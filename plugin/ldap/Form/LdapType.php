@@ -24,44 +24,48 @@ class LdapType extends AbstractType
         $builder->add(
             'name',
             'text',
-            array(
+            [
                 'label' => 'name',
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank(),
                     new regex('/^[\w ]*$/'),
-                ),
-            )
+                ],
+            ]
         )
         ->add(
             'host',
             'text',
-            array(
+            [
                 'label' => 'host',
-                'constraints' => array(new NotBlank()),
-            )
+                'constraints' => [new NotBlank()],
+            ]
         )
-        ->add('port', 'number', array('label' => 'port'))
-        ->add('dn', 'text', array('label' => 'distinguished_name'))
-        ->add('user', 'text', array('label' => 'username'))
-        ->add('password', 'password', array('label' => 'password'))
+        ->add('port', 'number', ['label' => 'port'])
+        ->add('dn', 'text', ['label' => 'distinguished_name'])
+        ->add('user', 'text', ['label' => 'username'])
+        ->add('password', 'password', ['label' => 'password', 'always_empty' => false])
         ->add(
             'protocol_version',
             'choice',
-            array(
-                'choices' => array('1' => '1', '2' => '2', '3' => '3'),
+            [
+                'choices' => ['1' => '1', '2' => '2', '3' => '3'],
                 'required' => true,
                 'label' => 'protocol_version',
                 'data' => 3,
-            )
+            ]
         );
-        $builder->add('append_dn', 'checkbox', array(
+        $builder->add('append_dn', 'checkbox', [
             'label' => 'append_dn',
             'required' => false,
-        ));
-        $builder->add('auto_creation', 'checkbox', array(
+        ]);
+        $builder->add('auto_creation', 'checkbox', [
             'label' => 'auto_creation',
             'required' => false,
-        ));
+        ]);
+        $builder->add('active', 'checkbox', [
+            'label' => 'active',
+            'required' => false,
+        ]);
     }
 
     public function getName()
@@ -71,6 +75,6 @@ class LdapType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'ldap'));
+        $resolver->setDefaults(['translation_domain' => 'ldap']);
     }
 }

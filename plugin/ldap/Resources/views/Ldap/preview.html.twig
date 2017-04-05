@@ -44,7 +44,7 @@
                             <th>{{ 'administrative_code' | trans({}, 'platform') }}</th>
                             <th>{{ 'Language' | trans({}, 'platform') }}</th>
                         </tr>
-                        {% for i in 1..5 %}
+                        {% for i in 0..4 %}
                             <tr id="users{{ i }}">
                                 {{ item.td(users, server, i, 'userName') }}
                                 {{ item.td(users, server, i, 'firstName') }}

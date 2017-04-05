@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use JangoBrick\SVG\Nodes\Embedded\SVGImageElement;
 use JangoBrick\SVG\SVGImage;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 
 /**
  * @DI\Service("claroline.utilities.thumbnail_creator")
@@ -244,6 +245,9 @@ class ThumbnailCreator
 
     private function getImageAndExtensionFromUrl($url)
     {
+        if (!file_exists($url)) {
+            throw new FileNotFoundException("File not found: '${url}'");
+        }
         $imageType = exif_imagetype($url);
         $imageContent = file_get_contents($url);
         // Check if imagetype is false or if image is svg

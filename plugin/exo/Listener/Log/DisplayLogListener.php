@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Listener\Log;
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service()
@@ -12,6 +13,18 @@ use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 class DisplayLogListener
 {
     use ContainerAwareTrait;
+
+    /**
+     * @DI\InjectParams({
+     *     "container" = @DI\Inject("service_container")
+     * })
+     *
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        $this->setContainer($container);
+    }
 
     /**
      * @DI\Observe("create_log_details_resource-ujm_exercise-exercise_evaluated")

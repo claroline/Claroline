@@ -1,6 +1,2 @@
 plugin:
     has_options: false
-
-    admin_tools:
-        - name: 'LDAP'
-          class: 'database'

@@ -12,7 +12,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ConfigureMenuListener
 {
     /**
-     * @DI\Observe("claroline_external_authentication_menu_configure")
+     * @DI\Observe("claroline_external_authentication_menu_configure", priority=1)
      *
      * @param \Claroline\CoreBundle\Menu\ConfigureMenuEvent $event
      *

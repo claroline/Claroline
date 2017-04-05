@@ -1,6 +1,6 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
-{% block title %}{{ ('login_cas')|trans({}, 'claroline_cas') }}{% endblock %}
+{% block title %}{{ 'login_with_third_party'|trans({'%name%':serviceName}, 'platform') }}{% endblock %}
 
 {% block topBarRender %}
 {% include 'ClarolineCasBundle:Connect:top_bar_render.html.twig' %}
@@ -23,7 +23,7 @@
     <div class="col-sm-4 col-sm-offset-4">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">{{ 'login_cas'|trans({'%name%':seviceName}, 'claroline_cas') }}</h3>
+                <h3 class="panel-title">{{ 'login_with_third_party'|trans({'%name%':serviceName}, 'platform') }}</h3>
             </div>
             <div class="panel-body">
                 {{ 'cas_check_connexion_info'|trans({}, 'claroline_cas') }}

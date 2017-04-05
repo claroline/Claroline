@@ -70,7 +70,6 @@ class CasServerConfigurationType extends AbstractType
                     'choices' => [
                         'cas_default_login' => CasServerConfiguration::DEFAULT_LOGIN,
                         'cas_primary_login' => CasServerConfiguration::PRIMARY_LOGIN,
-                        'cas_override_login' => CasServerConfiguration::OVERRIDE_LOGIN,
                     ],
                     'choices_as_values' => true,
                     'expanded' => true,

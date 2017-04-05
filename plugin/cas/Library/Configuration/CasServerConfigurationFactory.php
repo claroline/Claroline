@@ -108,10 +108,6 @@ class CasServerConfigurationFactory
      */
     private function readCasServerConfiguration()
     {
-        $tmpLoginTargetRoute = !empty($this->platformConfigHandler->getParameter('cas_tmp_login_target_route')) ?
-            $this->platformConfigHandler->getParameter('cas_tmp_login_target_route') :
-            $this->platformConfigHandler->getParameter('login_target_route');
-
         return new CasServerConfiguration(
             $this->platformConfigHandler->getParameter('cas_server_login_active'),
             $this->platformConfigHandler->getParameter('cas_server_login_url'),
@@ -119,7 +115,7 @@ class CasServerConfigurationFactory
             $this->platformConfigHandler->getParameter('cas_server_validation_url'),
             $this->platformConfigHandler->getParameter('cas_server_login_option'),
             $this->platformConfigHandler->getParameter('cas_server_login_name'),
-            $tmpLoginTargetRoute
+            $this->platformConfigHandler->getParameter('login_target_route')
         );
     }
 }

@@ -26,7 +26,8 @@ class IconSetRepository extends EntityRepository
             ->andWhere('iconset.type = :type')
             ->setParameter('active', true)
             ->setParameter('type', IconSetTypeEnum::RESOURCE_ICON_SET);
+        $res = $qb->getQuery()->getSingleScalarResult();
 
-        return $qb->getQuery()->getSingleScalarResult()['stampIcon'];
+        return isset($res['stampIcon']) ? $res['stampIcon'] : null;
     }
 }

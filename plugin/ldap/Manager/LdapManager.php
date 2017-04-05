@@ -11,9 +11,20 @@
 
 namespace Claroline\LdapBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Security\Authenticator;
+use Claroline\CoreBundle\Manager\RegistrationManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\LdapBundle\Entity\LdapUser;
+use Claroline\LdapBundle\Exception\InvalidLdapCredentialsException;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
+use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Yaml\Dumper;
 use Symfony\Component\Yaml\Parser;
 
@@ -22,32 +33,70 @@ use Symfony\Component\Yaml\Parser;
  */
 class LdapManager
 {
+    /** @var Parser */
     private $yml;
+    /** @var string */
     private $path;
+    /** @var array */
     private $config;
+    /** @var mixed */
     private $connect;
+    /** @var ObjectManager */
+    private $om;
+    /** @var RegistrationManager */
+    private $registrationManager;
+    /** @var UserManager */
+    private $userManager;
+    /** @var PlatformConfigurationHandler */
+    private $platformConfigHandler;
+    /** @var \Claroline\LdapBundle\Repository\LdapUserRepository */
+    private $ldapUserRepo;
+    /** @var TranslatorInterface */
+    private $translator;
+    /** @var Authenticator */
+    private $authenticator;
 
     /**
      * @InjectParams({
-     *     "authenticationDir" = @Inject("%claroline.param.authentication_directory%")
+     *     "authenticationDir"      = @Inject("%claroline.param.authentication_directory%"),
+     *     "om"                     = @Inject("claroline.persistence.object_manager"),
+     *     "registrationManager"    = @Inject("claroline.manager.registration_manager"),
+     *     "userManager"            = @Inject("claroline.manager.user_manager"),
+     *     "platformConfigHandler"  = @Inject("claroline.config.platform_config_handler"),
+     *     "translator"             = @Inject("translator"),
+     *     "authenticator"          = @Inject("claroline.authenticator")
      * })
      */
-    public function __construct($authenticationDir)
-    {
+    public function __construct(
+        $authenticationDir,
+        ObjectManager $om,
+        RegistrationManager $registrationManager,
+        UserManager $userManager,
+        PlatformConfigurationHandler $platformConfigHandler,
+        TranslatorInterface $translator,
+        Authenticator $authenticator
+    ) {
         $this->path = $authenticationDir.'claroline.ldap.yml';
         $this->yml = new Parser();
         $this->dumper = new Dumper();
         $this->config = $this->parseYml();
+        $this->om = $om;
+        $this->registrationManager = $registrationManager;
+        $this->userManager = $userManager;
+        $this->ldapUserRepo = $om->getRepository('ClarolineLdapBundle:LdapUser');
+        $this->platformConfigHandler = $platformConfigHandler;
+        $this->translator = $translator;
+        $this->authenticator = $authenticator;
     }
 
     /**
      * This method create the LDAP link identifier on success and test the connection.
      *
-     * @param server   An array containing LDAP informations as host, port or dn.
+     * @param server   An array containing LDAP informations as host, port or dn
      *
      * @return bool
      */
-    public function connect($server, $user = null, $password = null)
+    public function connect($server, $user = null, $password = null, $isAuthentication = false)
     {
         if ($server && isset($server['host'])) {
             if (isset($server['port']) && is_numeric($server['port'])) {
@@ -58,10 +107,16 @@ class LdapManager
 
             ldap_set_option($this->connect, LDAP_OPT_PROTOCOL_VERSION, $server['protocol_version']);
 
-            if ($this->connect && $user && $password) {
-                return ldap_bind($this->connect, $user, $password);
-            } elseif ($this->connect) {
-                return ldap_bind($this->connect);
+            try {
+                if ($isAuthentication && $this->connect && $user && $password) {
+                    $user = $this->findDnFromUserName($server, $user);
+
+                    return ($user === false) ? $user : ldap_bind($this->connect, $user, $password);
+                } elseif ($this->connect) {
+                    return ldap_bind($this->connect);
+                }
+            } catch (\Exception $e) {
+                throw new InvalidLdapCredentialsException();
             }
         }
     }
@@ -74,10 +129,29 @@ class LdapManager
         ldap_close($this->connect);
     }
 
+    public function findUserAsClaroUser($server, $userName)
+    {
+        $user = $this->findUser($server, $userName);
+        $claroUser = new User();
+        if (!empty($user)) {
+            $claroUser->setUsername($userName);
+            $claroUser->setFirstName($user['first_name']);
+            $claroUser->setLastName($user['last_name']);
+            $claroUser->setMail($user['email']);
+            $claroUser->setPassword($user['password']);
+        }
+
+        return $claroUser;
+    }
+
     public function findUser($server, $user)
     {
         $server = $this->get($server);
+        $this->connect($server);
         $filter = '(&(objectClass='.$server['objectClass'].'))';
+        if (($user = $this->findDnFromUserName($server, $user)) === false) {
+            return [];
+        }
         $search = ldap_search(
             $this->connect,
             $this->prepareUsername($server, $user),
@@ -96,11 +170,11 @@ class LdapManager
 
         foreach ($entries as $entry) {
             if ($entry) {
-                $user['username'] = $entry[$server['userName']][0];
-                $user['first_name'] = $entry[$server['firstName']][0];
-                $user['last_name'] = $entry[$server['lastName']][0];
-                $user['email'] = $entry[$server['email']][0];
-                $user['password'] = $entry['userpassword'][0];
+                $user['username'] = (isset($entry[$server['userName']])) ? $entry[$server['userName']][0] : '';
+                $user['first_name'] = (isset($entry[$server['firstName']])) ? $entry[$server['firstName']][0] : '';
+                $user['last_name'] = (isset($entry[$server['lastName']])) ? $entry[$server['lastName']][0] : '';
+                $user['email'] = (isset($entry[$server['email']])) ? $entry[$server['email']][0] : '';
+                $user['password'] = (isset($entry['userpassword'])) ? $entry['userpassword'][0] : '';
             }
         }
 
@@ -112,9 +186,9 @@ class LdapManager
      *
      * @param server An array containing LDAP informations as host, port or dn
      * @param filter Simple or advanced ldap filter
-     * @param attributes An array of the required attributes, e.g. array("mail", "sn", "cn").
+     * @param attributes An array of the required attributes, e.g. array("mail", "sn", "cn")
      *
-     * @return Returns a search result identifier or FALSE on error.
+     * @return Returns a search result identifier or FALSE on error
      */
     public function search($server, $filter, $attributes = [])
     {
@@ -124,9 +198,9 @@ class LdapManager
     /**
      * This method reads the entries of a LDAP search.
      *
-     * @param search LDAP search result identifier.
+     * @param search LDAP search result identifier
      *
-     * @return Returns a complete result information in a multi-dimensional array on success and FALSE on error.
+     * @return Returns a complete result information in a multi-dimensional array on success and FALSE on error
      */
     public function getEntries($search)
     {
@@ -144,7 +218,7 @@ class LdapManager
     /**
      * Get a LDAP server configuration by his name.
      *
-     * @param name The name of server.
+     * @param name The name of server
      *
      * @return An array containing LDAP informations as host, port or dn
      */
@@ -183,6 +257,7 @@ class LdapManager
     public function deleteIfReplace($name, $data)
     {
         if ($name && isset($data['name']) && $name !== $data['name']) {
+            $this->ldapUserRepo->updateUsersByServerName($name, $data['name']);
             $this->deleteServer($name);
         }
     }
@@ -190,7 +265,7 @@ class LdapManager
     /**
      * Delete a server configuration.
      *
-     * @param name The name of the server.
+     * @param $name The name of the server
      *
      * @return bool
      */
@@ -198,6 +273,7 @@ class LdapManager
     {
         if (isset($this->config['servers']) && isset($this->config['servers'][$name])) {
             unset($this->config['servers'][$name]);
+            $this->ldapUserRepo->deleteUsersByServerName($name);
 
             return $this->saveConfig();
         }
@@ -206,7 +282,7 @@ class LdapManager
     /**
      * Save the LDAP mapping settings.
      *
-     * @param settings The settings array containing mapping
+     * @param $settings The settings array containing mapping
      *
      * @return bool
      */
@@ -220,13 +296,16 @@ class LdapManager
     /**
      * Save the LDAP configuration in a .yml file.
      *
-     * @param server An array containing LDAP informations as host, port or dn
+     * @param $server An array containing LDAP informations as host, port or dn
      *
-     * @return
+     * @return mixed
      */
     public function saveConfig($server = null)
     {
         if (is_array($server) && isset($server['name'])) {
+            if (!isset($server['objectClass'])) {
+                $server = $this->setDefaultServerUserObject($server);
+            }
             $this->config['servers'][$server['name']] = $server;
         }
 
@@ -236,7 +315,9 @@ class LdapManager
     /**
      * Get LDAP opbject classes.
      *
-     * @param server An array containing LDAP informations as host, port or dn
+     * @param $server An array containing LDAP informations as host, port or dn
+     *
+     * @return array
      */
     public function getClasses($server)
     {
@@ -318,11 +399,103 @@ class LdapManager
     }
 
     /**
+     * Return a list of active servers.
+     *
+     * @return array
+     */
+    public function getActiveServers()
+    {
+        $activeServers = [];
+
+        if (isset($this->config['servers']) && is_array($this->config['servers'])) {
+            foreach ($this->config['servers'] as $server) {
+                if (isset($server['active']) && isset($server['objectClass']) && $server['active']) {
+                    $activeServers[] = $server['name'];
+                }
+            }
+        }
+
+        return $activeServers;
+    }
+
+    /**
+     * @param $user
+     *
+     * @return \Symfony\Component\Form\FormInterface
+     */
+    public function getRegistrationForm($user)
+    {
+        return $this->registrationManager->getRegistrationForm($user);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function createNewAccount(Request $request, $ldapLogin, $server)
+    {
+        $user = new User();
+        $form = $this->getRegistrationForm($user);
+        $form->handleRequest($request);
+        $session = $request->getSession();
+        if ($form->isValid()) {
+            $user = $this->userManager->createUser($user);
+            $this->createLdapUser($server, $ldapLogin, $user);
+
+            $msg = $this->translator->trans('account_created', [], 'platform');
+            $session->getFlashBag()->add('success', $msg);
+
+            if ($this->platformConfigHandler->getParameter('registration_mail_validation')) {
+                $msg = $this->translator->trans('please_validate_your_account', [], 'platform');
+                $session->getFlashBag()->add('success', $msg);
+            }
+
+            return $this->registrationManager->loginUser($user, $request);
+        }
+
+        return ['form' => $form->createView(), 'serverName' => $server];
+    }
+
+    /**
+     * @param Request $request
+     * @param $ldapLogin
+     * @param $server
+     * @param null $username
+     *
+     * @return array|\Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
+     */
+    public function linkAccount(Request $request, $ldapLogin, $server, $username = null)
+    {
+        $verifyPassword = false;
+        $password = null;
+        if ($username === null) {
+            $verifyPassword = true;
+            $username = $request->get('_username');
+            $password = $request->get('_password');
+        }
+        $isAuthenticated = $this->authenticator->authenticate($username, $password, $verifyPassword);
+        if ($isAuthenticated) {
+            $user = $this->userManager->getUserByUsername($username);
+            $this->createLdapUser($server, $ldapLogin, $user);
+
+            return $this->registrationManager->loginUser($user, $request);
+        } else {
+            return ['error' => 'login_error'];
+        }
+    }
+
+    public function unlinkAccount($userId)
+    {
+        $this->ldapUserRepo->unlinkLdapUser($userId);
+    }
+
+    /**
      * Check if the users settings (mapping) are defined.
      */
     public function userMapping($server)
     {
-        foreach (['userName', 'firstName', 'lastName', 'email', 'password'] as $field) {
+        foreach (['userName', 'firstName', 'lastName', 'email'] as $field) {
             if (!(isset($server[$field]) && $server[$field] !== '')) {
                 return false;
             }
@@ -348,17 +521,38 @@ class LdapManager
     /**
      * Authenticate ldap user.
      *
-     * @param name The name of the server.
+     * @param name The name of the server
      *
      * @return bool
      */
-    public function authenticate($name, $user, $password)
+    public function authenticate(Request $request, $serverName)
     {
-        $server = $this->get($name);
+        $server = $this->get($serverName);
+        $username = $request->get('_username');
+        $password = $request->get('_password');
+        if (
+            !empty($username) &&
+            !empty($password) &&
+            $this->connect($server, $this->prepareUsername($server, $username), $password, true)
+        ) {
+            $ldapUser = $this->ldapUserRepo->findOneBy(['serverName' => $server, 'ldapId' => $username]);
+            if ($ldapUser !== null) {
+                return $this->registrationManager->loginUser($ldapUser->getUser(), $request);
+            }
+            if ($this->platformConfigHandler->getParameter('direct_third_party_authentication')) {
+                $user = $this->userManager->getUserByUsername($username);
+                if ($user === null) {
+                    throw $this->getUsernameNotFoundException($username);
+                }
+                $this->createLdapUser($serverName, $username, $user);
 
-        if ($this->connect($server, $this->prepareUsername($server, $user), $password)) {
-            return true;
+                return $this->registrationManager->loginUser($user);
+            }
+
+            throw $this->getUsernameNotFoundException($username);
         }
+
+        throw new InvalidLdapCredentialsException();
     }
 
     private function prepareUsername($server, $user)
@@ -368,5 +562,57 @@ class LdapManager
         }
 
         return $user;
+    }
+
+    private function createLdapUser($serverName, $ldapUsername, User $user)
+    {
+        $ldapUser = new LdapUser($serverName, $ldapUsername, $user);
+        $this->om->persist($ldapUser);
+        $this->om->flush();
+
+        return $ldapUser;
+    }
+
+    private function getUsernameNotFoundException($username)
+    {
+        $exp = new UsernameNotFoundException();
+        $exp->setUsername($username);
+
+        return $exp;
+    }
+
+    private function findDnFromUserName($server, $user)
+    {
+        if (isset($server['append_dn']) && !$server['append_dn'] && isset($server['userName'])) {
+            $ldap_cursor = ldap_search($this->connect, $server['dn'],  $server['userName'].'='.$user);
+            if ($ldap_cursor === false) {
+                ldap_set_option($this->connect, LDAP_OPT_REFERRALS, 0);
+                $ldap_cursor = ldap_search($this->connect, $server['dn'],  $server['userName'].'='.$user);
+            }
+            if ($ldap_cursor === false) {
+                return false;
+            }
+            $ret = ldap_first_entry($this->connect, $ldap_cursor);
+            if ($ret === false) {
+                return false;
+            }
+            $user = ldap_get_dn($this->connect, $ret);
+            ldap_free_result($ldap_cursor);
+        }
+
+        return $user;
+    }
+
+    private function setDefaultServerUserObject($server)
+    {
+        $server['objectClass'] = 'inetOrgPerson';
+        $server['userName'] = 'uid';
+        $server['firstName'] = 'givenname';
+        $server['lastName'] = 'displayname';
+        $server['email'] = 'mail';
+        $server['code'] = '';
+        $server['locale'] = '';
+
+        return $server;
     }
 }

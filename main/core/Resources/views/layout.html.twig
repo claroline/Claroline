@@ -54,6 +54,7 @@
             {% endif %}
         {% endblock %}
 
+        {% if hideSidebars is not defined or not hideSidebars %}
         {# Sidebars #}
         <div class="hidden-xs">
             <div id="left-bar" class="sidebar hide">
@@ -67,8 +68,9 @@
 
         {# FIXME : As is we get the sidebar 2 times in the DOM. Responsivity should be fully managed in LESS #}
         <div class="menu-xs visible-xs">
-            {{ block("leftbar") }}
+        {{ block("leftbar") }}
         </div>
+        {% endif %}
     {% endif %}
 
     <div id="wrap" class="app-content container-fluid">
@@ -98,7 +100,7 @@
         {% endblock %}
     </div>
 
-    {% if not isRenderedInIframe %}
+    {% if not isRenderedInIframe and (hideFooter is not defined or not hideFooter) %}
         {% block footer %}
             {% render(controller('ClarolineCoreBundle:Layout:footer')) %}
         {% endblock%}

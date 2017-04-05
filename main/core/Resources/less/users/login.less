@@ -14,6 +14,9 @@
     .external-authentication-column {
         padding-top: 10px;
         border-top: 1px solid #ccc;
+        .external_authentication {
+            width: 100%;
+        }
     }
 
     .login-flexbox {
@@ -42,16 +45,80 @@
             }
         }
     }
-}
 
-.facebook-connect {
-    .fb-login-button {
-        opacity: 0;
-        position: absolute;
-        top: -5px;
-        left: 0
-    }
-    i {
-        font-size: 17px;
+    .btn {
+        &.btn-third-party-login {
+            overflow: hidden;
+            color: #fff;
+            padding-left: 30px;
+            padding-top: 0;
+            padding-bottom: 0;
+            line-height: 34px;
+            position:relative;
+            &::before {
+                width: 30px;
+                font-size: 1.3em;
+                line-height: 34px;
+                position: absolute;
+                left: 0;
+                font-family: "FontAwesome";
+                border-right: 1px solid;
+            }
+            &:hover {
+                opacity: 0.8;
+                color: #fff;
+            }
+            &.facebook-connect {
+                background-color: #3b5998;
+            }
+            &.facebook-connect::before{
+                content: "\f09a";
+                border-right-color: #4A70BF;
+            }
+            &.twitter-connect {
+                background-color: #00aced;
+            }
+            &.twitter-connect::before {
+                content: "\f099";
+                border-right-color: #00D5ED;
+            }
+            &.google-connect {
+                background-color: #dd4b39;
+            }
+            &.google-connect::before {
+                content: "\f1a0";
+                border-right-color: #DD6239;
+            }
+            &.linkedin-connect {
+                background-color: #007bb6;
+            }
+            &.linkedin-connect::before {
+                content: "\f0e1";
+                border-right-color: #00A1B6;
+            }
+            &.windows_live-connect,
+            &.office_365-connect{
+                background-color: #0072C6;
+            }
+            &.windows_live-connect::before,
+            &.office_365-connect::before {
+                content: "\f17a";
+                border-right-color: #0085e5;
+            }
+            &.cas-connect {
+                background-color: #ec971f;
+            }
+            &.cas-connect::before {
+                content: "\f19c";
+                border-right-color: #d58512;
+            }
+            &.ldap-connect {
+                background-color: #00B3AC;
+            }
+            &.ldap-connect::before {
+                content: "\f1c0";
+                border-right-color: #18918B;
+            }
+        }
     }
 }

@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Library\Configuration\ParameterProviderInterface;
 class CasServerConfiguration implements ParameterProviderInterface
 {
     const DEFAULT_LOGIN = 'default';
-    const OVERRIDE_LOGIN = 'override';
     const PRIMARY_LOGIN = 'primary';
 
     private $id = 'cas';
@@ -28,7 +27,7 @@ class CasServerConfiguration implements ParameterProviderInterface
     private $active = false;
     private $loginOption = self::DEFAULT_LOGIN;
     private $name = 'CAS';
-    private $tmpLoginRoute;
+    private $loginTargetRoute;
 
     public function __construct(
         $isActive = false,
@@ -37,7 +36,7 @@ class CasServerConfiguration implements ParameterProviderInterface
         $validationUrl = null,
         $loginOption = self::DEFAULT_LOGIN,
         $name = 'CAS',
-        $tmpLoginRoute = null
+        $loginTargetRoute = null
     ) {
         $this->active = $isActive;
         $this->loginOption = $loginOption;
@@ -45,7 +44,7 @@ class CasServerConfiguration implements ParameterProviderInterface
         $this->logoutUrl = $logoutUrl;
         $this->validationUrl = $validationUrl;
         $this->name = $name;
-        $this->tmpLoginRoute = $tmpLoginRoute;
+        $this->loginTargetRoute = $loginTargetRoute;
     }
 
     /**
@@ -177,19 +176,11 @@ class CasServerConfiguration implements ParameterProviderInterface
             'cas_server_logout_url' => null,
             'cas_server_validation_url' => null,
             'cas_server_login_name' => 'CAS',
-            'cas_tmp_login_target_route' => null,
         ];
     }
 
     public function getParameters()
     {
-        $tmpLoginTargetRoute = null;
-        $loginTargetRoute = $this->tmpLoginRoute;
-        if ($this->isOverrideLogin()) {
-            $tmpLoginTargetRoute = $loginTargetRoute;
-            $loginTargetRoute = 'claro_cas_security_entry_point';
-        }
-
         return [
             'cas_server_login_active' => $this->active,
             'cas_server_login_option' => $this->loginOption,
@@ -197,8 +188,6 @@ class CasServerConfiguration implements ParameterProviderInterface
             'cas_server_logout_url' => $this->logoutUrl,
             'cas_server_validation_url' => $this->validationUrl,
             'cas_server_login_name' => $this->name,
-            'cas_tmp_login_target_route' => $tmpLoginTargetRoute,
-            'login_target_route' => $loginTargetRoute,
         ];
     }
 
@@ -227,7 +216,7 @@ class CasServerConfiguration implements ParameterProviderInterface
      */
     public function isOverrideLogin()
     {
-        return $this->loginOption === self::OVERRIDE_LOGIN;
+        return strpos($this->loginTargetRoute, 'claro_cas_') !== false;
     }
 
     /**

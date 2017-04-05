@@ -4,6 +4,9 @@
 {% import 'IcapWebsiteBundle:Website:Macros/view_macros.html.twig' as viewMacros %}
 
 {% set options = _resource.options %}
+{% set hideTopBar = true %}
+{% set hideSidebars = true %}
+{% set hideFooter = true %}
 
 {% block section_panel %}
     <div class="website-container" data-ng-cloak ng-controller="MainController as vm">
@@ -85,25 +88,7 @@
 {% endblock %}
 
 {% block javascripts %}
-<<<<<<< 9f75617f917dea84b1dc75398455757544ff472a
-    <script src="{{ hotAsset('dist/es6_dll.js') }}"></script>
-    <script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
-=======
-    <script src="{{ hotAsset('dist/es6_shim_dll.js') }}"></script>
-    <script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
-    <script src="{{ hotAsset('dist/claroline-distribution-main-core-core-js.js') }}"></script>
->>>>>>> Added Svg support first attempt
-    <script>
-        if (window.sessionStorage.getItem('hide_brower_warning')) {
-            $('.outdated-browser-warning').hide();
-        }
-    </script>
-<<<<<<< 9f75617f917dea84b1dc75398455757544ff472a
-    {% if app.environment == 'prod' %}
-        <script src="{{ hotAsset('dist/commons.js') }}"></script>
-    {% endif %}
-=======
->>>>>>> Added Svg support first attempt
+    {{ parent() }}
     {% if options.menuOrientation == 'horizontal' %}
         <script src="{{ hotAsset('dist/claroline-distribution-plugin-website-view-app-horizontal.js') }}"></script>
     {% else %}
