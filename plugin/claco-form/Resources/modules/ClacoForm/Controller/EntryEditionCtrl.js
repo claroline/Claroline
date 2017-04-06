@@ -249,8 +249,4 @@ export default class EntryEditionCtrl {
   cancel() {
     this.$state.go('entries_list')
   }
-
-  exportEntries() {
-    this.ClacoFormService.exportEntries()
-  }
 }

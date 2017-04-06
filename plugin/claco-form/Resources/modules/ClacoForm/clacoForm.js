@@ -56,7 +56,7 @@ angular.module('ClacoFormModule', [
 ])
 .service('ClacoFormService', ClacoFormService)
 .controller('MenuCtrl', ['$state', 'ClacoFormService', 'EntryService', MenuCtrl])
-.controller('GeneralConfigurationCtrl', ['$state', 'ClacoFormService', 'CategoryService', GeneralConfigurationCtrl])
+.controller('GeneralConfigurationCtrl', ['$state', 'ClacoFormService', 'CategoryService', 'EntryService', GeneralConfigurationCtrl])
 .controller('FieldsManagementCtrl', ['NgTableParams', 'ClacoFormService', 'FieldService', FieldsManagementCtrl])
 .controller('CategoriesManagementCtrl', ['NgTableParams', 'ClacoFormService', 'CategoryService', CategoriesManagementCtrl])
 .controller('KeywordsManagementCtrl', ['NgTableParams', 'ClacoFormService', 'KeywordService', KeywordsManagementCtrl])

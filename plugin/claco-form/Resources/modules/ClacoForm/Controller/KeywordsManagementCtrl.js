@@ -57,8 +57,4 @@ export default class KeywordsManagementCtrl {
   deleteKeyword(keyword) {
     this.KeywordService.deleteKeyword(keyword, this._removeKeywordCallback)
   }
-
-  exportEntries() {
-    this.ClacoFormService.exportEntries()
-  }
 }

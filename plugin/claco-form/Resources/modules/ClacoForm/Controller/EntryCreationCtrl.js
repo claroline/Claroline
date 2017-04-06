@@ -180,8 +180,4 @@ export default class EntryCreationCtrl {
   cancel() {
     this.$state.go('menu')
   }
-
-  exportEntries() {
-    this.ClacoFormService.exportEntries()
-  }
 }

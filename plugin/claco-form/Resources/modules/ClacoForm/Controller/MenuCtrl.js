@@ -69,8 +69,4 @@ export default class MenuCtrl {
       }
     })
   }
-
-  exportEntries() {
-    this.ClacoFormService.exportEntries()
-  }
 }

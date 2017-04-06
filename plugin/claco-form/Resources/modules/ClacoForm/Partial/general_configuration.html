@@ -48,13 +48,24 @@
                             {{ 'keywords_management'|trans:{}:'clacoform' }}
                         </a>
                     </li>
-                    <li role="menuitem">
-                        <a class="pointer-hand" ng-click="cfc.exportEntries()">
-                            {{ 'export_all_entries'|trans:{}:'clacoform' }}
-                        </a>
-                    </li>
                 </ul>
             </div>
+            <button class="btn btn-default btn-sm pull-right config-action-btn"
+                    data-toggle="tooltip"
+                    data-placement="top"
+                    title="{{ 'export_all_entries'|trans:{}:'clacoform' }}"
+                    ng-click="cfc.exportEntries()"
+                    ng-if="cfc.canEdit()"
+            >
+                <i class="fa fa-sign-out"></i>
+            </button>
+            <button class="btn btn-danger btn-sm pull-right config-action-btn"
+                    ng-click="cfc.deleteAllEntries()"
+                    ng-if="cfc.canEdit()"
+            >
+                <i class="fa fa-trash"></i>
+                {{ 'delete_all_entries'|trans:{}:'clacoform' }}
+            </button>
         </h3>
     </div>
     <div class="panel-body">
