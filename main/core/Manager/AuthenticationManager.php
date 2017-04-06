@@ -94,7 +94,10 @@ class AuthenticationManager
         $driver = explode('.', $parts[0]);
 
         if (isset($driver[1])) {
-            return $this->container->get($driver[0].'.'.$driver[1].'_bundle.manager.'.$driver[1].'_manager');
+            $serviceName = $driver[0].'.'.$driver[1].'_bundle.manager.'.$driver[1].'_manager';
+            if ($this->container->has($serviceName)) {
+                return $this->container->get($serviceName);
+            }
         }
     }
 
