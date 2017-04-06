@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Form\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\EventManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -42,32 +42,41 @@ class WorkspaceLogFilterType extends AbstractType
 
         $builder
             ->add(
-                'action', 'twolevelselect', array(
+                'action', 'twolevelselect', [
                     'label' => 'Show actions for',
                     'translation_domain' => 'log',
-                    'attr' => array('class' => 'input-sm'),
+                    'attr' => ['class' => 'input-sm'],
                     'choices' => $actionChoices,
                     'choices_as_values' => true,
                     'empty_value' => 'all',
                     'empty_data' => null,
-                )
+                ]
             )
             ->add(
-                'range', 'daterange', array(
+                'range', 'daterange', [
                     'label' => 'for_period',
                     'required' => false,
-                    'attr' => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
-                )
+                    'attr' => ['class' => 'input-sm'],
+                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                ]
             )
             ->add(
-                'user', 'simpleautocomplete', array(
+                'user', 'simpleautocomplete', [
                     'label' => 'for user',
                     'entity_reference' => 'user',
                     'required' => false,
-                    'attr' => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
-                )
+                    'attr' => ['class' => 'input-sm'],
+                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                ]
+            )
+            ->add(
+                'group', 'simpleautocomplete', [
+                    'label' => 'for group',
+                    'entity_reference' => 'group',
+                    'required' => false,
+                    'attr' => ['class' => 'input-sm'],
+                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                ]
             );
     }
 
@@ -80,10 +89,10 @@ class WorkspaceLogFilterType extends AbstractType
     {
         $resolver
         ->setDefaults(
-            array(
+            [
                 'translation_domain' => 'log',
                 'csrf_protection' => false,
-            )
+            ]
         );
     }
 }

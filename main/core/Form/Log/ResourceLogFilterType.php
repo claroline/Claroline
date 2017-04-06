@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Form\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\EventManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -38,33 +38,44 @@ class ResourceLogFilterType extends AbstractType
             ->add(
                 'action',
                 'choice',
-                array(
+                [
                     'label' => 'Show actions for',
-                    'attr' => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
+                    'attr' => ['class' => 'input-sm'],
+                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
                     'choices' => $actionChoices,
-                )
+                ]
             )
             ->add(
                 'range',
                 'daterange',
-                array(
+                [
                     'label' => 'for_period',
                     'required' => false,
-                    'attr' => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
-                )
+                    'attr' => ['class' => 'input-sm'],
+                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                ]
             )
             ->add(
                 'user',
                 'simpleautocomplete',
-                array(
+                [
                     'label' => 'for user',
                     'entity_reference' => 'user',
                     'required' => false,
-                    'attr' => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-3', 'control_width' => 'col-md-3'),
-                )
+                    'attr' => ['class' => 'input-sm'],
+                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                ]
+            )
+            ->add(
+                'group',
+                'simpleautocomplete',
+                [
+                    'label' => 'for group',
+                    'entity_reference' => 'group',
+                    'required' => false,
+                    'attr' => ['class' => 'input-sm'],
+                    'theme_options' => ['label_width' => 'col-md-3', 'control_width' => 'col-md-3'],
+                ]
             );
     }
 
@@ -75,6 +86,6 @@ class ResourceLogFilterType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'log'));
+        $resolver->setDefaults(['translation_domain' => 'log']);
     }
 }

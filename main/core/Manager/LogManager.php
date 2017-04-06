@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Log\LogWidgetConfig;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
@@ -333,7 +334,8 @@ class LogManager
             $workspaceIds,
             $maxResult,
             $resourceType,
-            $resourceNodeIds
+            $resourceNodeIds,
+            $data['group']
         );
 
         $adapter = new DoctrineORMAdapter($query);
@@ -354,7 +356,8 @@ class LogManager
             $workspaceIds,
             false,
             $resourceType,
-            $resourceNodeIds
+            $resourceNodeIds,
+            $data['group']
         );
 
         //List item delegation
@@ -671,6 +674,8 @@ class LogManager
             }
             $range = isset($formData['range']) ? $formData['range'] : null;
             $userSearch = isset($formData['user']) ? $formData['user'] : null;
+            $groupSearch = isset($formData['group']) ? $formData['group'] : null;
+
             if (!empty($data['orderBy'])) {
                 $orderBy = $data['orderBy'];
                 $order = $data['order'];
@@ -689,6 +694,7 @@ class LogManager
         $data['action'] = $action;
         $data['range'] = $range;
         $data['user'] = $userSearch;
+        $data['group'] = $groupSearch;
 
         if (isset($orderBy) && isset($order)) {
             $data['orderBy'] = $orderBy;
@@ -789,5 +795,29 @@ class LogManager
         }
 
         return ['ids' => $topUsersIdList, 'userData' => $topUsersFormatedArray];
+    }
+
+    public function getDetails(Log $log)
+    {
+        $details = $log->getDetails();
+        $translator = $this->container->get('translator');
+        $receiverUser = isset($details['receiverUser']) ? $details['receiverUser']['firstName'].' '.$details['receiverUser']['lastName'] : null;
+        $receiverGroup = isset($details['receiverGroup']) ? $details['receiverGroup']['name'] : null;
+        $role = isset($details['role']) ? $details['role']['name'] : null;
+        $workspace = isset($details['workspace']) ? $details['workspace']['name'] : null;
+        $resource = $log->getResourceNode() ? $details['resource']['path'] : null;
+
+        return $translator->trans(
+          'log_'.$log->getAction().'_sentence',
+          [
+            '%resource%' => $resource,
+            '%receiver_user%' => $receiverUser,
+            '%receiver_group%' => $receiverGroup,
+            '%role%' => $role,
+            '%workspace%' => $workspace,
+            '%tool%' => $translator->trans($log->getToolName(), [], 'tool'),
+          ],
+          'log'
+        );
     }
 }

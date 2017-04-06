@@ -5,6 +5,7 @@
     "click_to_choose": "Click to display actions list",
     "download_csv_list": "Download list in .CSV format",
     "for user": "For user",
+    "for group": "For group:",
     "global_tracking": "Global tracking",
     "log_add_user": "Add user",
     "log_change_right": "Change rights",

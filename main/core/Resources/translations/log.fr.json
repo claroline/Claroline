@@ -5,6 +5,7 @@
     "click_to_choose": "Cliquer pour afficher la liste des actions",
     "download_csv_list": "Télécharger la liste au format .csv",
     "for user": "Filtrer sur l'utilisateur:",
+    "for group": "Filtrer sur le groupe:",
     "global_tracking": "Suivi global",
     "group": "Groupe",
     "log_add_user": "Ajout d'un utilisateur",

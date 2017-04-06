@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Repository\Log;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
+use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\EntityRepository;
 
 class LogRepository extends EntityRepository
 {
@@ -27,7 +27,7 @@ class LogRepository extends EntityRepository
      */
     public function countByDayThroughConfigs($configs, $range)
     {
-        if ($configs === null || count($configs) == 0) {
+        if ($configs === null || count($configs) === 0) {
             return;
         }
 
@@ -51,7 +51,8 @@ class LogRepository extends EntityRepository
         $workspaceIds = null,
         $unique = false,
         $resourceType = null,
-        $resourceNodeIds = null
+        $resourceNodeIds = null,
+        $groupSearch = null
     ) {
         $queryBuilder = $this
             ->createQueryBuilder('log')
@@ -68,6 +69,7 @@ class LogRepository extends EntityRepository
         $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
         $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
         $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
+        $queryBuilder = $this->addGroupFilterToQueryBuilder($queryBuilder, $groupSearch);
 
         if ($workspaceIds !== null && count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
@@ -87,7 +89,7 @@ class LogRepository extends EntityRepository
      */
     public function findLogsThroughConfigs($configs, $maxResult = -1)
     {
-        if ($configs === null || count($configs) == 0) {
+        if ($configs === null || count($configs) === 0) {
             return;
         }
 
@@ -113,7 +115,8 @@ class LogRepository extends EntityRepository
         $workspaceIds = null,
         $maxResult = -1,
         $resourceType = null,
-        $resourceNodeIds = null
+        $resourceNodeIds = null,
+        $groupSearch = null
     ) {
         $queryBuilder = $this
             ->createQueryBuilder('log')
@@ -123,6 +126,7 @@ class LogRepository extends EntityRepository
         $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
         $queryBuilder = $this->addUserFilterToQueryBuilder($queryBuilder, $userSearch);
         $queryBuilder = $this->addResourceTypeFilterToQueryBuilder($queryBuilder, $resourceType);
+        $queryBuilder = $this->addGroupFilterToQueryBuilder($queryBuilder, $groupSearch);
 
         if ($workspaceIds !== null && count($workspaceIds) > 0) {
             $queryBuilder = $this->addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds);
@@ -319,10 +323,10 @@ class LogRepository extends EntityRepository
                 .'doer.username, count(log.id) AS actions'
             )
             ->groupBy('doer');
-        if ($orderBy == 'name') {
+        if ($orderBy === 'name') {
             $orderBy = 'sortingName';
         }
-        if ($orderBy == null) {
+        if ($orderBy === null) {
             $orderBy = 'actions';
         }
         $queryBuilder->orderBy($orderBy, $order);
@@ -395,9 +399,9 @@ class LogRepository extends EntityRepository
         $action,
         $range,
         $actionsRestriction,
-        $workspaceIds = null,
-        $resourceType = null,
-        $resourceNodeIds = null,
+        $workspaceIds,
+        $resourceType,
+        $resourceNodeIds,
         $userIds
     ) {
         $queryBuilder = $this
@@ -471,7 +475,7 @@ class LogRepository extends EntityRepository
      */
     public function addDateRangeFilterToQueryBuilder(QueryBuilder $queryBuilder, $range)
     {
-        if ($range !== null && count($range) == 2) {
+        if ($range !== null && count($range) === 2) {
             $startDate = new \DateTime();
             $startDate->setTimestamp($range[0]);
             $startDate->setTime(0, 0, 0);
@@ -526,11 +530,34 @@ class LogRepository extends EntityRepository
         return $queryBuilder;
     }
 
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param string       $userSearch
+     *
+     * @return QueryBuilder
+     */
+    private function addGroupFilterToQueryBuilder(QueryBuilder $queryBuilder, $groupSearch)
+    {
+        if ($groupSearch !== null && $groupSearch !== '') {
+            $upperUserSearch = strtoupper($groupSearch);
+            $upperUserSearch = trim($groupSearch);
+            $upperUserSearch = preg_replace('/\s+/', ' ', $upperUserSearch);
+
+            $queryBuilder->leftJoin('log.doer', 'doer');
+            $queryBuilder->leftJoin('doer.groups', 'groupDoer');
+            $queryBuilder->andWhere('groupDoer.name LIKE :groupSearch');
+
+            $queryBuilder->setParameter('groupSearch', '%'.$upperUserSearch.'%');
+        }
+
+        return $queryBuilder;
+    }
+
     private function addWorkspaceFilterToQueryBuilder($queryBuilder, $workspaceIds)
     {
         if ($workspaceIds !== null && count($workspaceIds) > 0) {
             $queryBuilder->leftJoin('log.workspace', 'workspace');
-            if (count($workspaceIds) == 1) {
+            if (count($workspaceIds) === 1) {
                 $queryBuilder->andWhere('workspace.id = :workspaceId');
                 $queryBuilder->setParameter('workspaceId', $workspaceIds[0]);
             } else {
@@ -544,7 +571,7 @@ class LogRepository extends EntityRepository
     private function addUserIdsFilterToQueryBuilder($queryBuilder, $userIds)
     {
         if ($userIds !== null && count($userIds) > 0) {
-            if (count($userIds) == 1) {
+            if (count($userIds) === 1) {
                 $queryBuilder->andWhere('doer.id = :userId');
                 $queryBuilder->setParameter('userId', $userIds[0]);
             } else {
@@ -559,7 +586,7 @@ class LogRepository extends EntityRepository
     {
         if ($resourceNodeIds !== null && count($resourceNodeIds) > 0) {
             $queryBuilder->leftJoin('log.resourceNode', 'resource');
-            if (count($resourceNodeIds) == 1) {
+            if (count($resourceNodeIds) === 1) {
                 $queryBuilder->andWhere('resource.id = :resourceId');
                 $queryBuilder->setParameter('resourceId', $resourceNodeIds[0]);
             } else {
@@ -579,7 +606,6 @@ class LogRepository extends EntityRepository
      */
     private function addConfigurationFilterToQueryBuilder(QueryBuilder $queryBuilder, $configs)
     {
-        $actionIndex = 0;
         foreach ($configs as $config) {
             $workspaceId = $config->getWidgetInstance()->getWorkspace()->getId();
             $queryBuilder
@@ -610,12 +636,12 @@ class LogRepository extends EntityRepository
 
     public function extractChartData($result, $range)
     {
-        $chartData = array();
+        $chartData = [];
         if (count($result) > 0) {
             //We send an array indexed by date dans contains count
             $lastDay = null;
             $endDay = null;
-            if ($range !== null && count($range) == 2) {
+            if ($range !== null && count($range) === 2) {
                 $lastDay = new \DateTime();
                 $lastDay->setTimestamp($range[0]);
 
@@ -626,7 +652,7 @@ class LogRepository extends EntityRepository
             foreach ($result as $line) {
                 if ($lastDay !== null) {
                     while ($lastDay->getTimestamp() < $line['shortDate']->getTimestamp()) {
-                        $chartData[] = array($lastDay->getTimestamp() * 1000, 0);
+                        $chartData[] = [$lastDay->getTimestamp() * 1000, 0];
                         $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
                     }
                 } else {
@@ -634,11 +660,11 @@ class LogRepository extends EntityRepository
                 }
                 $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
 
-                $chartData[] = array($line['shortDate']->getTimestamp() * 1000, intval($line['total']));
+                $chartData[] = [$line['shortDate']->getTimestamp() * 1000, intval($line['total'])];
             }
 
             while ($lastDay->getTimestamp() <= $endDay->getTimestamp()) {
-                $chartData[] = array($lastDay->getTimestamp() * 1000, 0);
+                $chartData[] = [$lastDay->getTimestamp() * 1000, 0];
 
                 $lastDay->add(new \DateInterval('P1D')); // P1D means a period of 1 day
             }
