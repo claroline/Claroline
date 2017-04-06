@@ -9,25 +9,29 @@
     "packages": [
         {
             "name": "behat/transliterator",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Behat/Transliterator.git",
-                "reference": "868e05be3a9f25ba6424c2dd4849567f50715003"
+                "reference": "826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Transliterator/zipball/868e05be3a9f25ba6424c2dd4849567f50715003",
-                "reference": "868e05be3a9f25ba6424c2dd4849567f50715003",
+                "url": "https://api.github.com/repos/Behat/Transliterator/zipball/826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c",
+                "reference": "826ce7e9c2a6664c0d1f381cbb38b1fb80a7ee2c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.3"
             },
+            "require-dev": {
+                "chuyskywalker/rolling-curl": "^3.1",
+                "php-yaoi/php-yaoi": "^1.0"
+            },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1-dev"
+                    "dev-master": "1.2-dev"
                 }
             },
             "autoload": {
@@ -45,7 +49,7 @@
                 "slug",
                 "transliterator"
             ],
-            "time": "2015-09-28 16:26:35"
+            "time": "2017-04-04 11:38:05"
         },
         {
             "name": "besimple/sso-auth-bundle",
@@ -120,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "a5c005ad2598eb2b82c1965a1b8974c09ad806c2"
+                "reference": "e57ad447cd3421654052a1ee3ce79833110cdc33"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a5c005ad2598eb2b82c1965a1b8974c09ad806c2",
-                "reference": "a5c005ad2598eb2b82c1965a1b8974c09ad806c2",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/e57ad447cd3421654052a1ee3ce79833110cdc33",
+                "reference": "e57ad447cd3421654052a1ee3ce79833110cdc33",
                 "shasum": ""
             },
             "require": {
@@ -379,7 +383,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-04-03 16:20:32"
+            "time": "2017-04-05 16:30:07"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -5936,7 +5940,7 @@
             ],
             "authors": [
                 {
-                    "name": "William DURAND",
+                    "name": "William Durand",
                     "email": "william.durand1@gmail.com"
                 }
             ],
