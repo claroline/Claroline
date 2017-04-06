@@ -30,20 +30,20 @@
                         {% set form = data[current] %}
                         <div class="carousel-card">
                             <div class="carousel-card-content">
+                                {% if showCreatorPicture %}
+                                    {% if form['entry'].getUser() is not empty and form['entry'].getUser().getPicture() is not empty %}
+                                        <img src="{{ asset('uploads/pictures/') ~ form['entry'].getUser().getPicture() }}"
+                                             alt="{{ form['entry'].getUser().getFirstName() }} {{ form['entry'].getUser().getLastName() }}"
+                                             class="img-circle entry-creator-picture"
+                                        >
+                                    {% else %}
+                                        <div class="text-center">
+                                            <i class="fa fa-user entry-creator-no-picture"></i>
+                                        </div>
+                                    {% endif %}
+                                {% endif %}
                                 {% for v in form['values'] %}
                                     <div class="form-group">
-                                        {% if showCreatorPicture %}
-                                            {% if form['entry'].getUser() is not empty and form['entry'].getUser().getPicture() is not empty %}
-                                                <img src="{{ asset('uploads/pictures/') ~ form['entry'].getUser().getPicture() }}"
-                                                     alt="{{ form['entry'].getUser().getFirstName() }} {{ form['entry'].getUser().getLastName() }}"
-                                                     class="img-circle entry-creator-picture"
-                                                >
-                                            {% else %}
-                                                <div class="text-center">
-                                                    <i class="fa fa-user entry-creator-no-picture"></i>
-                                                </div>
-                                            {% endif %}
-                                        {% endif %}
                                         {% if showFieldLabel %}
                                             <label class="control-label">
                                                 {{ v['label'] }}
