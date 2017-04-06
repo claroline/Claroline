@@ -3,15 +3,15 @@ import {createSelector} from 'reselect'
 import {getDefinition} from './../../items/item-types'
 
 const quizId = state => state.quiz.id
-const papers = state => state.papers.papers
 const papersFetched = state => state.papers.isFetched
 const currentPaperId = state => state.papers.current
+const papers = state => state.papers.papers
 
 const currentPaper = createSelector(
   papers,
   currentPaperId,
   (papers, currentId) => {
-    return papers.find(paper => paper.id === currentId)
+    return papers[currentId]
   }
 )
 

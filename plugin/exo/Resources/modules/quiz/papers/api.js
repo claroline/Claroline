@@ -1,4 +1,5 @@
 import {generateUrl} from './../../utils/routing'
+import {normalize} from './normalizer'
 
 export const fetchPapers = quizId => {
   return fetch(generateUrl('exercise_papers', {exerciseId: quizId}), {
@@ -6,4 +7,5 @@ export const fetchPapers = quizId => {
     method: 'GET'
   })
   .then(response => response.json())
+  .then(papers => normalize(papers))
 }

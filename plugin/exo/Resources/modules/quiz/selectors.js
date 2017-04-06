@@ -26,6 +26,7 @@ const noItems = state =>
   Object.keys(state.quiz.steps).length === 1 && Object.keys(state.items).length === 0
 const firstStepId = state => state.quiz.steps[0]
 const hasOverview = state => state.quiz.parameters.showOverview
+const testMode = state => state.quiz.testMode
 
 export default {
   id,
@@ -51,5 +52,6 @@ export default {
   editorOpened,
   noItems,
   firstStepId,
-  hasOverview
+  hasOverview,
+  testMode
 }

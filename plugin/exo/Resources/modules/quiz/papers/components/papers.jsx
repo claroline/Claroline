@@ -70,22 +70,27 @@ let Papers = props =>
         </tr>
       </thead>
       <tbody>
-        {props.papers.map((paper, idx) =>
-          <PaperRow
-            key={idx}
-            admin={props.admin}
-            {...paper}
-            showScore={utils.showScore(props.admin, paper.finished, paperSelectors.showScoreAt(paper), paperSelectors.showCorrectionAt(paper), paperSelectors.correctionDate(paper))}
-            showCorrection={utils.showCorrection(props.admin, paper.finished, paperSelectors.showCorrectionAt(paper), paperSelectors.correctionDate(paper))}
-            scoreMax={paperSelectors.paperScoreMax(paper)} />
-        )}
+        {Object.keys(props.papers).map((paperId, idx) => {
+          const paper = props.papers[paperId]
+          return (
+            <PaperRow
+              key={idx}
+              admin={props.admin}
+              {...paper}
+              showScore={utils.showScore(props.admin, paper.finished, paperSelectors.showScoreAt(paper), paperSelectors.showCorrectionAt(paper), paperSelectors.correctionDate(paper))}
+              showCorrection={utils.showCorrection(props.admin, paper.finished, paperSelectors.showCorrectionAt(paper), paperSelectors.correctionDate(paper))}
+              scoreMax={paperSelectors.paperScoreMax(paper)} />
+            )}
+          )
+        }
+
       </tbody>
     </table>
   </div>
 
 Papers.propTypes = {
   admin: T.bool.isRequired,
-  papers: T.arrayOf(T.object).isRequired
+  papers: T.object.isRequired
 }
 
 function mapStateToProps(state) {

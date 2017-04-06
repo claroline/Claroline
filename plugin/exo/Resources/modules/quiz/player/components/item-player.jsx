@@ -129,4 +129,8 @@ ItemPlayer.propTypes = {
   children: T.node.isRequired
 }
 
+ItemPlayer.defaultProps = {
+  usedHints: []
+}
+
 export {ItemPlayer}

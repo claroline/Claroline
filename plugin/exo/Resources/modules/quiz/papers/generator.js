@@ -1,5 +1,7 @@
 import {shuffle, sampleSize} from 'lodash/collection'
+import moment from 'moment'
 
+import {tex} from './../../utils/translate'
 import {makeId} from './../../utils/utils'
 
 import {
@@ -22,6 +24,10 @@ import {
 export function generatePaper(quiz, steps, items, previousPaper = null) {
   return {
     id: makeId(),
+    finished: false,
+    startDate: moment().format('YYYY-MM-DD[T]HH:mm:ss'),
+    endDate: null,
+    user: {name:tex('you')},
     number: previousPaper ? previousPaper.number + 1 : 1,
     anonymized: quiz.parameters.anonymizeAttempts,
     structure: generateStructure(quiz, steps, items, previousPaper)

@@ -583,6 +583,7 @@
     "user_shared": "Name of user to share the question with",
     "users": "Users",
     "validate": "Validate",
+    "view_paper": "View paper",
     "warning": "Are you sure you want to delete this picture ?",
     "warning_change_type_q": "Warning: You may lose the data you've entered. Continue?",
     "warning_one_word": "You have chosen a question word. Caution: You need spaces in your answer.",
@@ -599,6 +600,7 @@
     "wrong_name": "The input name is wrong",
     "wrong_point": "The input value is wrong",
     "yes": "Yes",
+    "you": "You",
     "your_answer": "Your answer",
     "your_answers": "Your answers"
 }
