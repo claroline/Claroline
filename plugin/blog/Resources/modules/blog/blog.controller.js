@@ -44,8 +44,6 @@ export default class BlogController {
   }
 
   pageChanged() {
-    _$location.get(this).hash('top')
-    _$anchorScroll.get(this)()
     this.loadPosts(this.currentPage)
   }
 
@@ -164,8 +162,6 @@ export default class BlogController {
     panel.visibility = + !panel.visibility // cast to integer (with + operator) and toggle at the same time
   }
   
-  
-
   editInfo() {
     // Disable button
     this.disableButtons = true

@@ -161,7 +161,6 @@ class LdapManager
                 $server['firstName'],
                 $server['lastName'],
                 $server['email'],
-                'userpassword',
             ]
         );
 
@@ -559,6 +558,10 @@ class LdapManager
     {
         if ($server['append_dn']) {
             return $server['userName'].'='.$user.','.$server['dn'];
+        }
+
+        if ($server['append_cn']) {
+            return 'CN='.$user.','.$server['dn'];
         }
 
         return $user;

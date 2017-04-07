@@ -15,7 +15,7 @@ class Updater090200
     private $connection;
 
     /**
-     * Updater090002 constructor.
+     * Updater090200 constructor.
      *
      * @param Connection $connection
      */
@@ -39,5 +39,18 @@ class Updater090200
                 ':id' => $keyword['id'],
             ]);
         }
+
+        $this->cleanQuestions();
+    }
+
+    /**
+     * On some instance there are some old question parts that have not been correctly removed.
+     */
+    private function cleanQuestions()
+    {
+        $this->log('Delete truncated question from DB.');
+
+        $sth = $this->connection->prepare('DELETE FROM ujm_question WHERE mime_type IS NULL OR mime_type = ""');
+        $sth->execute();
     }
 }

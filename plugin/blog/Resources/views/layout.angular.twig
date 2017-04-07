@@ -6,9 +6,7 @@
 {% block content %}
     <blog-main>
         <h1 data-ng-cloak data-ng-if="main.blog.options.display_title">
-            <a class="blog_title" data-ng-click="main.goToHome()">
-                {% verbatim %}{{ main.blog.name }}{% endverbatim %}
-            </a>
+            <a class="blog_title" data-ng-click="main.goToHome()" data-ng-bind-html="main.blog.name | trust_html"></a>
         </h1>
 
         <banner-configurator></banner-configurator>

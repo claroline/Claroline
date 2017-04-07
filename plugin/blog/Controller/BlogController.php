@@ -225,4 +225,16 @@ class BlogController extends BaseController
 
         return $response;
     }
+
+    /**
+     * @Route("/configure/{blogId}", name="icap_blog_configure", requirements={"blogId" = "\d+"})
+     * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
+     * @Template()
+     */
+    public function configureAction(Blog $blog)
+    {
+        $this->checkAccess('ADMINISTRATE', $blog);
+
+        return $this->redirect($this->generateUrl('icap_blog_view', ['blogId' => $blog->getId()]).'#/configure');
+    }
 }

@@ -118,6 +118,21 @@ angular
     template: postShortTemplate
   }))
 
+  .directive('scrollTo', ['$location', '$anchorScroll',  ($location, $anchorScroll) => {
+    return (scope, element, attrs) => {
+      element.bind('click', event => {
+        event.stopPropagation()
+        let off = scope.$on('$locationChangeStart', ev => {
+          off()
+          ev.preventDefault()
+        })
+        var location = attrs.scrollTo
+        $location.hash(location)
+        $anchorScroll()
+      })
+    }
+  }])
+
   .config(['$routeProvider', ($routeProvider) => {
     $routeProvider
       .when('/', {

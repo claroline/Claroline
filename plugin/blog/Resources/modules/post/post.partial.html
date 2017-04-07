@@ -122,12 +122,8 @@
 
                     <button
                         class="btn btn-xs btn-danger delete"
-                        data-ng-click="postCtrl.confirmDeletePost(post)"
+                        data-ng-click="postCtrl.confirmDeleteComment(comment)"
                         data-ng-disabled="comment.is_request_pending"
-                        data-confirm-title="{{ 'post_deletion_confirm_title'|trans:{}:'icap_blog' }}"
-                        data-confirm-message="{{ 'post_deletion_confirm_message'|trans:{'postName': post.title}:'icap_blog' }}"
-                        data-confirm-ok="{{ 'delete'|trans:{}:'platform' }}"
-                        data-confirm-cancel="{{ 'cancel'|trans:{}:'platform' }}"
                         data-uib-tooltip="{{ 'delete'|trans:{}:'platform' }}"
                         data-tooltip-placement="top-right">
                         <span class="fa fa-trash-o"></span>

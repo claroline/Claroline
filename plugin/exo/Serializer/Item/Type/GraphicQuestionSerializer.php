@@ -86,18 +86,20 @@ class GraphicQuestionSerializer implements SerializerInterface
 
         $image = new \stdClass();
 
-        $image->id = $questionImg->getUuid();
-        $image->type = $questionImg->getType();
+        if ($questionImg) { // to handle old questions which may have no image
+            $image->id = $questionImg->getUuid();
+            $image->type = $questionImg->getType();
 
-        if (strpos($questionImg->getUrl(), './') === 0) {
-            // the way URLs were written previously isn't spec compliant
-            $image->url = substr($questionImg->getUrl(), 2);
-        } else {
-            $image->url = $questionImg->getUrl();
+            if (strpos($questionImg->getUrl(), './') === 0) {
+                // the way URLs were written previously isn't spec compliant
+                $image->url = substr($questionImg->getUrl(), 2);
+            } else {
+                $image->url = $questionImg->getUrl();
+            }
+
+            $image->width = $questionImg->getWidth();
+            $image->height = $questionImg->getHeight();
         }
-
-        $image->width = $questionImg->getWidth();
-        $image->height = $questionImg->getHeight();
 
         return $image;
     }
