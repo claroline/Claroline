@@ -17,8 +17,14 @@
 
 {% block javascripts %}
     {# Claroline JS #}
+
+
     {{ parent() }}
 
+    <script>
+        window.tinymce.claroline.css = [window.Claroline.Home.asset + 'vendor/ujmexo/exercise.css']
+    </script>
+    
     {# Translations #}
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'question_types' }) }}"></script>

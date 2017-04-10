@@ -21,11 +21,14 @@ tinymce.claroline = {
   'disableBeforeUnload': false,
   'domChange': null,
   'buttons': {},
-  'plugins': {}
+  'plugins': {},
+  'css': []
 }
 
 tinymce.claroline.init = tinymce.claroline.init || {}
 tinymce.claroline.plugins = tinymce.claroline.plugins || {}
+tinymce.claroline.css = tinymce.claroline.init || []
+tinymce.claroline.addCss = css => tinymce.claroline.css.push(css)
 
 /**
  * This method fix the height of TinyMCE after modify it,
@@ -231,6 +234,7 @@ tinymce.claroline.configuration = {
   'autoresize_max_height': 500,
   'content_css': [
     themeCSS,
+    //home.asset + 'bundles/clarolinecore/css/common/tinymce.css',
     home.asset + 'packages/font-awesome/css/font-awesome.min.css'
   ],
   'toolbar2': 'styleselect | undo redo | forecolor backcolor | bullist numlist | outdent indent | ' +
@@ -282,6 +286,7 @@ tinymce.claroline.initialization = function () {
       }
     })
 
+    tinymce.claroline.configuration.content_css = tinymce.claroline.configuration.content_css.concat(tinymce.claroline.css)
     tinymce.claroline.configuration.plugins = plugins
     tinymce.claroline.configuration.toolbar1 = toolbar1
 

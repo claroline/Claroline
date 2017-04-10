@@ -6,7 +6,7 @@ export class ColorPicker extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      open: false
+      open: this.props.autoOpen
     }
   }
 
@@ -52,6 +52,7 @@ export class ColorPicker extends Component {
 
 ColorPicker.defaultProps = {
   forFontColor: false,
+  autoOpen: false,
   colors: ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#FFF', '#000']
 }
 
@@ -60,5 +61,6 @@ ColorPicker.propTypes = {
   onPick: T.func.isRequired,
   id: T.string,
   colors: T.arrayOf(T.string),
-  forFontColor: T.bool
+  forFontColor: T.bool,
+  autoOpen: T.bool
 }

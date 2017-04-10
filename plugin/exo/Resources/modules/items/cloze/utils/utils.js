@@ -124,15 +124,15 @@ function getTextInput(hole, solution) {
  */
 function getEditButtons(solution) {
   return `
-    <button 
-      type="button" 
+    <button
+      type="button"
       class="btn btn-link-default edit-hole-btn"
       data-hole-id="${solution.holeId}"
     >
       <span class="fa fa-fw fa-pencil edit-hole-btn-icon" data-hole-id="${solution.holeId}"></span>
     </button>
-    <button 
-      type="button" 
+    <button
+      type="button"
       class="btn btn-link-default delete-hole-btn"
       data-hole-id="${solution.holeId}"
     >

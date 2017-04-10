@@ -87,6 +87,13 @@ final class ItemType
     const ORDERING = 'application/x.ordering+json';
 
     /**
+     * The user has to write his answer.
+     *
+     * @var string
+     */
+    const SELECTION = 'application/x.selection+json';
+
+    /**
      * Get the list of managed item types.
      *
      * @return array
@@ -102,6 +109,7 @@ final class ItemType
             static::SET,
             static::WORDS,
             static::OPEN,
+            static::SELECTION,
             static::GRID,
             static::CONTENT,
             static::ORDERING,

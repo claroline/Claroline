@@ -1,6 +1,7 @@
 import React, {PropTypes as T} from 'react'
 import Popover from 'react-bootstrap/lib/Popover'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
+import classes from 'classnames'
 
 export const Feedback = props => {
   if (!props.feedback) return <span className="feedback-btn" />
@@ -13,7 +14,7 @@ export const Feedback = props => {
 
   return(
     <OverlayTrigger trigger="click" placement="bottom" overlay={popoverClick} rootClose={true}>
-      <button type="button" className="btn btn-link-default feedback-btn">
+      <button type="button" className={classes('btn', 'btn-link-default', 'feedback-btn', props.className)}>
         <span className="fa fa-fw fa-comments-o" />
       </button>
     </OverlayTrigger>
@@ -21,6 +22,7 @@ export const Feedback = props => {
 }
 
 Feedback.propTypes = {
+  className: T.string,
   feedback: T.string,
   id: T.any
 }

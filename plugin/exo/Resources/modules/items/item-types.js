@@ -5,6 +5,7 @@ import mapValues from 'lodash/mapValues'
 import choice from './choice'
 import match from './match'
 import cloze from './cloze'
+import selection from './selection'
 import graphic from './graphic'
 import open from './open'
 import pair from './pair'
@@ -49,7 +50,7 @@ export function registerItemType(definition) {
 
 export function registerDefaultItemTypes() {
   if (!defaultRegistered) {
-    [choice, match, cloze, graphic, open, pair, words, set, grid, ordering, boolean].forEach(registerItemType)
+    [choice, match, cloze, graphic, open, pair, words, set, grid, ordering, boolean, selection].forEach(registerItemType)
     defaultRegistered = true
   }
 }

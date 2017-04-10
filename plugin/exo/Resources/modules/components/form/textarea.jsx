@@ -1,6 +1,7 @@
 import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 import {tex} from './../../utils/translate'
+import {getOffsets} from './selection/selection'
 
 // see https://github.com/lovasoa/react-contenteditable
 export class ContentEditable extends Component {
@@ -24,8 +25,11 @@ export class ContentEditable extends Component {
       commonAncestorContainer: rng.commonAncestorContainer
 
     })
-    let selected = window.getSelection().toString()
-    this.props.onSelect(selected, this.updateText.bind(this))
+
+    const selected = window.getSelection().toString()
+    const offsets = getOffsets(document.getElementById(this.props.id))
+
+    this.props.onSelect(selected, this.updateText.bind(this), offsets)
   }
 
   updateText(text) {
@@ -87,9 +91,10 @@ export class ContentEditable extends Component {
     }
 
     const content = this.el.innerHTML
+    const offsets = getOffsets(document.getElementById(this.props.id))
 
     if (this.props.onChange && content !== this.lastContent) {
-      this.props.onChange(content)
+      this.props.onChange(content, offsets)
     }
 
     this.lastContent = content
@@ -129,7 +134,12 @@ export class Tinymce extends Component {
           this.getSelection()
         })
         this.editor.on('change', e => {
-          this.props.onChange(e.target.getContent())
+          const tinyContent = this.editor.getContent()
+          const tmp = document.createElement('div')
+          tmp.innerHTML = tinyContent
+
+          const offsets = getOffsets(tmp, this.editor.selection.getSel())
+          this.props.onChange(e.target.getContent(), offsets)
         })
         this.editor.on('click', e => {
           this.props.onClick(e.target)
@@ -165,7 +175,9 @@ export class Tinymce extends Component {
       commonAncestorContainer: rng.commonAncestorContainer
 
     })
-    this.props.onSelect(this.editor.selection.getContent(), this.updateText.bind(this))
+
+    const offsets = getOffsets(this.editor.dom.getRoot(), this.editor.selection.getSel())
+    this.props.onSelect(this.editor.selection.getContent(), this.updateText.bind(this), offsets)
   }
 
   render() {
