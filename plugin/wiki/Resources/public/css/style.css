@@ -90,6 +90,8 @@ div.wiki-sections div.page-header h2 {margin-bottom:2px; font-weight: bold !impo
 div.wiki-sections li.invisible-wiki-section { color: #aaa; }
 div.wiki-sections div.wiki-section-text { overflow: auto;}
 div.wiki-sections ol li { list-style-type: none; padding-left: 0px;}
+div.wiki-sections div.wiki-section-text ul li { list-style-type: disc; }
+div.wiki-sections div.wiki-section-text ol li { list-style-type: decimal; }
 div.wiki-sections .section-title { display: inline; }
 
 

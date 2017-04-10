@@ -38,10 +38,12 @@
             {% set label = id|trans({}, translation_domain) %}
         {% endif %}
         <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>
-            {{ label|trans({}, translation_domain)|raw }}
+            {# Prepend it before label instead of appending it, to resolve checkbox and radio display issue #}
+            {# Combined with change in forms.less #}
             {% if is_multichoice_widget %}
                 {{ form_widget(form) }}
             {% endif %}
+            {{ label|trans({}, translation_domain)|raw }}
         </label>
     {% endspaceless %}
 {% endblock form_label %}

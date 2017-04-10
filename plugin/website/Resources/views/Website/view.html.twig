@@ -7,6 +7,7 @@
 {% set hideTopBar = true %}
 {% set hideSidebars = true %}
 {% set hideFooter = true %}
+{% set hideBreadcrumb = true %}
 
 {% block section_panel %}
     <div class="website-container" data-ng-cloak ng-controller="MainController as vm">
@@ -43,7 +44,8 @@
                             {% elseif currentPage.type == pageTypes.resource %}
                                 <iframe width="100%" iframe-height-on-load="vm.contentHeight" src="{{ path('claro_resource_open', {
                                 'resourceType': currentPage.resourceNodeType,
-                                'node': currentPage.resourceNode.id
+                                'node': currentPage.resourceNode.id,
+                                'iframe': 1
                                 }) }}"></iframe>
                             {% endif %}
                         {% endif %}

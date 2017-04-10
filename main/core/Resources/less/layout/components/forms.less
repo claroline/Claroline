@@ -54,3 +54,16 @@ form .global-error {
         }
     }
 }
+
+// Fixes checkbox and radio button display issue on inline
+// Combine with change in form_theme.html.twig and form_theme_vertical.html.twig
+form.form-horizontal {
+    label {
+        > input {
+            &[type=checkbox], &[type=radio] {
+                position: relative;
+                margin-left: 0;
+            }
+        }
+    }
+}
