@@ -1,7 +1,7 @@
-import {makeActionCreator} from './../../utils/actions'
+import {makeActionCreator} from '#/main/core/utilities/redux'
 
 import {REQUEST_SEND} from './../../api/actions'
-import {fadeModal} from './../../modal/actions'
+import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {actions as questionActions} from './questions'
 import {actions as totalResultsActions} from './total-results'
 
@@ -35,7 +35,7 @@ actions.changeFilters = makeActionCreator(SEARCH_CHANGE_FILTERS, 'filters')
 actions.search = (filters, pagination = {}, sortBy = {}) => {
   return (dispatch) => {
     // Close search modal
-    dispatch(fadeModal())
+    dispatch(modalActions.fadeModal())
 
     // Update filters
     dispatch(actions.changeFilters(filters))
@@ -48,7 +48,7 @@ actions.search = (filters, pagination = {}, sortBy = {}) => {
 actions.clearFilters = (pagination = {}, sortBy = {}) => {
   return (dispatch) => {
     // Close search modal
-    dispatch(fadeModal())
+    dispatch(modalActions.fadeModal())
 
     // Update filters
     dispatch(actions.changeFilters({}))

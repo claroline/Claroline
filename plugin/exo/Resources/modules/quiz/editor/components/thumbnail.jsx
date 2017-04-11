@@ -1,8 +1,8 @@
 import React, {PropTypes as T} from 'react'
 import classes from 'classnames'
-import {t, tex} from './../../../utils/translate'
+import {t, tex} from '#/main/core/translation'
 import {makeSortable} from './../../../utils/sortable'
-import {MODAL_DELETE_CONFIRM} from './../../../modal'
+import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {TYPE_STEP, TYPE_QUIZ} from './../../enums'
 import {ValidationStatus} from './validation-status.jsx'
 

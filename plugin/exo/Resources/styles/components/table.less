@@ -1,7 +1,3 @@
-.table > tbody > tr.selected {
-  background-color: @state-info-bg;
-}
-
 .table-cell-tooltip {
     > * {
         display: inline-block;
@@ -20,10 +16,15 @@
         background: @panel-bg;
         box-shadow: @box-shadow-base;
         border: 1px solid @table-border-color;
+
+        > tr.selected {
+            background-color: @state-info-bg;
+        }
     }
 }
 
 .table-actions {
+    white-space: nowrap; // avoids buttons to break on multi lines
     .btn {
         padding: 2px;
         color: @gray-light;

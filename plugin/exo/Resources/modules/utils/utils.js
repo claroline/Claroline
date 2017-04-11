@@ -1,6 +1,4 @@
 import update from 'immutability-helper'
-import invariant from 'invariant'
-import React from 'react'
 import uuid from 'uuid'
 
 // re-export immutability-helper with a custom delete command
@@ -11,18 +9,6 @@ update.extend('$delete', (property, object) => {
 })
 
 export {update}
-
-// generator for very simple action creators (see redux doc)
-export function makeActionCreator(type, ...argNames) {
-  return (...args) => {
-    let action = { type }
-    argNames.forEach((arg, index) => {
-      invariant(args[index] !== undefined, `${argNames[index]} is required`)
-      action[argNames[index]] = args[index]
-    })
-    return action
-  }
-}
 
 // counter for id generation
 let lastGeneratedIds = []
@@ -80,30 +66,4 @@ export function getIndex(array, element) {
   }
 
   return index
-}
-
-export function extractTextFromHtml(html) {
-  if (!html) {
-    return ''
-  }
-
-  const wrapper = document.createElement('div')
-  wrapper.innerHTML = html
-
-  return wrapper.textContent || isAllowedHtmlTag(wrapper.innerHTML)
-}
-
-export function isAllowedHtmlTag(html) {
-  const allowedTags = ['img', 'audio', 'iframe', 'video']
-  return allowedTags.some((tag) => {
-    return html.indexOf(tag) >= 0
-  })
-}
-
-export function makeInputPropType(valueType) {
-  return React.PropTypes.shape({
-    input: React.PropTypes.shape({
-      value: valueType
-    }).isRequired
-  })
 }

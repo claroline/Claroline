@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Controller\Widget;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Request;
+use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Form\SimpleTextType;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class SimpleTextController extends Controller
 {
@@ -71,11 +71,11 @@ class SimpleTextController extends Controller
             }
 
             return $this->render(
-                'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
-                array(
+                'ClarolineCoreBundle:Widget:SimpleText\configure.html.twig',
+                [
                     'form' => $errorForm->createView(),
                     'config' => $widget,
-                )
+                ]
             );
         }
 

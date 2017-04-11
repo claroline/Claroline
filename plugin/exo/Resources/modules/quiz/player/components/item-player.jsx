@@ -3,7 +3,7 @@ import React, {PropTypes as T} from 'react'
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
 // import {Hint} from './../../../items/components/hint.jsx'
 
-import {tex, transChoice} from './../../../utils/translate'
+import {tex, transChoice} from '#/main/core/translation'
 
 const UsedHint = props =>
   <div className="well well-sm used-hint">

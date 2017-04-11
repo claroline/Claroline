@@ -1,5 +1,5 @@
 import {update, makeId} from './../../utils/utils'
-import {makeReducer} from './../../utils/reducers'
+import {makeReducer} from '#/main/core/utilities/redux'
 import {isQuestionType} from './../../items/item-types'
 import {decorateAnswer} from './decorators'
 import moment from 'moment'

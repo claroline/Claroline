@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Library\Model\ContentTrait;
 use UJM\ExoBundle\Library\Model\OrderTrait;
+use UJM\ExoBundle\Library\Model\UuidTrait;
 
 /**
  * Label.
@@ -25,12 +26,7 @@ class Label
      */
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column("uuid", type="string", length=36, unique=true)
-     */
-    private $uuid;
+    use UuidTrait;
 
     use OrderTrait;
 
@@ -55,26 +51,6 @@ class Label
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Gets UUID.
-     *
-     * @return string
-     */
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-    /**
-     * Sets UUID.
-     *
-     * @param $uuid
-     */
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
     }
 
     /**

@@ -173,6 +173,16 @@ class WordsDefinition extends AbstractDefinition
         return array_values($keywords);
     }
 
+    /**
+     * No additional identifier to regenerate.
+     *
+     * @param AbstractItem $item
+     */
+    public function refreshIdentifiers(AbstractItem $item)
+    {
+        return;
+    }
+
     private function containKeyword($string, Keyword $keyword)
     {
         $found = false;

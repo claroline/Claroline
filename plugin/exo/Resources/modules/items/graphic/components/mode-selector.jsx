@@ -1,7 +1,7 @@
 import React, {PropTypes as T} from 'react'
 import classes from 'classnames'
-import {tex} from './../../../utils/translate'
-import {TooltipElement} from './../../../components/form/tooltip-element.jsx'
+import {tex} from '#/main/core/translation'
+import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 import {MODE_RECT, MODE_CIRCLE, MODE_SELECT} from './../enums'
 
 const ModeButton = props =>
@@ -42,7 +42,7 @@ export const ModeSelector = props =>
       active={props.currentMode === MODE_CIRCLE}
       onClick={props.onChange}
     >
-      <span className="fa fa-fw fa-circle-o"/>
+      <span className="fa fa-fw fa-circle-thin"/>
     </ModeButton>
   </div>
 

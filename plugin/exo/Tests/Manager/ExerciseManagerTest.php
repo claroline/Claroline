@@ -117,13 +117,13 @@ class ExerciseManagerTest extends JsonDataTestCase
 
         $this->assertNotEquals($firstStepOri->getId(), $firstStepCopy->getId());
 
-        // Checks questions have been reused
+        // Checks questions have been duplicated
         /** @var Item $questionOri */
         $questionOri = $firstStepOri->getStepQuestions()->get(0)->getQuestion();
         /** @var Item $questionCopy */
         $questionCopy = $firstStepCopy->getStepQuestions()->get(0)->getQuestion();
 
-        $this->assertEquals($questionOri->getId(), $questionCopy->getId());
+        $this->assertNotEquals($questionOri->getId(), $questionCopy->getId());
     }
 
     /**

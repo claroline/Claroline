@@ -1,8 +1,10 @@
 import React, {Component, PropTypes as T} from 'react'
-import {utils} from './utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
+
+import {tex} from '#/main/core/translation'
+
+import {utils} from './utils/utils'
 import {getOffsets} from '../../components/form/selection/selection'
-import {tex} from './../../utils/translate'
 import {getReactAnswerInputs} from './utils/selection-input.jsx'
 import {SelectionText} from './utils/selection-text.jsx'
 

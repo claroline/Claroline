@@ -323,4 +323,33 @@ class ItemManager
 
         return $questionStats;
     }
+
+    /**
+     * Generates new UUIDs for the entities of an item.
+     *
+     * @param Item $item
+     */
+    public function refreshIdentifiers(Item $item)
+    {
+        // refresh self id
+        $item->refreshUuid();
+
+        // refresh objects ids
+        foreach ($item->getObjects() as $object) {
+            $object->refreshUuid();
+        }
+
+        // refresh resources ids
+        foreach ($item->getResources() as $resource) {
+            $resource->refreshUuid();
+        }
+
+        // refresh hints ids
+        foreach ($item->getHints() as $hint) {
+            $hint->refreshUuid();
+        }
+
+        $definition = $this->itemDefinitions->get($item->getMimeType());
+        $definition->refreshIdentifiers($item->getInteraction());
+    }
 }

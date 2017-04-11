@@ -14,7 +14,7 @@ use UJM\ExoBundle\Validator\JsonSchema\Item\Type\ContentItemValidator;
  * @DI\Service("ujm_exo.definition.item_content")
  * @DI\Tag("ujm_exo.definition.content_item")
  */
-class ContentItemDefinition
+class ContentItemDefinition implements ItemDefinitionInterface
 {
     /**
      * @var ContentItemValidator
@@ -121,5 +121,15 @@ class ContentItemDefinition
     public function deserializeQuestion(\stdClass $itemData, AbstractItem $item = null, array $options = [])
     {
         return $this->getItemSerializer()->deserialize($itemData, $item, $options);
+    }
+
+    /**
+     * No additional identifier to regenerate.
+     *
+     * @param AbstractItem $item
+     */
+    public function refreshIdentifiers(AbstractItem $item)
+    {
+        return;
     }
 }

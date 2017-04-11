@@ -1,10 +1,37 @@
 .dropdown-menu {
+    // adds more customization options
     box-shadow: @dropdown-menu-box-shadow;
     border-radius: @dropdown-menu-border-radius;
 
-    .dropdown-link-danger {
-        color: @brand-danger;
+    > li > a {
+        padding: @dropdown-link-padding;
     }
+
+    // creates contextual links
+    .dropdown-link-danger a {
+        color: @brand-danger;
+
+        &:hover {
+            color: white;
+            background: @brand-danger;
+        }
+    }
+
+    // increases space between icons and text
+    .fa {
+        margin-right: 5px;
+    }
+
+    // removes additional margin when checkboxes/radios are inside dropdown
+    .checkbox,
+    .radio {
+        margin: 0;
+    }
+}
+
+.dropdown-header {
+    font-weight: bold;
+    padding: @dropdown-link-padding;
 }
 
 // todo : check why this is needed

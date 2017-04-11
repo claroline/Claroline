@@ -1,16 +1,23 @@
-import {assertEqual} from './../utils/test'
+import {ensure, mockTranslator} from '#/main/core/tests'
 import {createStore} from './store'
 
 describe('createStore', () => {
+  beforeEach(mockTranslator)
+
   it('initializes the store with initial data and calls reducer', () => {
     const state = {
+      resourceNode: {id: '1'},
       noServer: false,
       quiz: {id: '1'},
       steps: {},
       items: {}
     }
     const store = createStore(state)
-    assertEqual(store.getState(), {
+    ensure.equal(store.getState(), {
+      resourceNode: {id: '1'},
+      page: {
+        fullscreen: false
+      },
       noServer: false,
       testMode: false,
       currentRequests: 0,
@@ -18,6 +25,7 @@ describe('createStore', () => {
       steps: {},
       items: {},
       editor: {
+        opened: false,
         saved: true,
         saving: false,
         validating: false,
@@ -36,7 +44,10 @@ describe('createStore', () => {
         fading: false
       },
       viewMode: 'overview',
-      papers: {},
+      papers: {
+        papers: {},
+        isFetched: false
+      },
       correction: {}
     })
   })

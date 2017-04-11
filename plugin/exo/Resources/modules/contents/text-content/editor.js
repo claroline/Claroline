@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
-import {makeActionCreator} from './../../utils/utils'
+import {makeActionCreator} from '#/main/core/utilities/redux'
 import {TextContent as component} from './editor.jsx'
 import {TextObjectEditor as objectEditor} from './object-editor.jsx'
 import {notBlank, setIfError} from './../../utils/validate'

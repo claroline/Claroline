@@ -1,26 +1,15 @@
 import cloneDeep from 'lodash/cloneDeep'
 import zipObject from 'lodash/zipObject'
+
 import {ITEM_CREATE} from './../../quiz/editor/actions'
-import {makeActionCreator, makeId} from './../../utils/utils'
-import {tex} from './../../utils/translate'
+import {makeActionCreator, makeId} from '#/main/core/utilities/redux'
+import {tex} from '#/main/core/translation'
+import {utils} from './utils/utils'
 import {notBlank} from './../../utils/validate'
 import {Boolean as component} from './editor.jsx'
 
 const UPDATE_CHOICE = 'UPDATE_CHOICE'
 const UPDATE_CHOICES = 'UPDATE_CHOICES'
-
-export const pairs = [
-  {
-    'id': '1',
-    'labelA': tex('boolean_pair_true'),
-    'labelB': tex('boolean_pair_false')
-  },
-  {
-    'id': '2',
-    'labelA': tex('boolean_pair_yes'),
-    'labelB': tex('boolean_pair_no')
-  }
-]
 
 export const actions = {
   updateChoice: makeActionCreator(UPDATE_CHOICE, 'id', 'property', 'value'),
@@ -39,11 +28,9 @@ function decorate(item) {
     })
   )
 
-  let decorated = Object.assign({}, item, {
+  return Object.assign({}, item, {
     choices: choicesWithSolutions
   })
-
-  return decorated
 }
 
 function reduce(item = {}, action) {
@@ -51,6 +38,9 @@ function reduce(item = {}, action) {
     case ITEM_CREATE: {
       const firstChoiceId = makeId()
       const secondChoiceId = makeId()
+
+      const defaultPairs = utils.getDefaultPairs()
+
       return decorate(Object.assign({}, item, {
         multiple: false,
         random: false,
@@ -58,12 +48,12 @@ function reduce(item = {}, action) {
           {
             id: firstChoiceId,
             type: 'text/html',
-            data: pairs[0].labelA
+            data: defaultPairs[0].labelA
           },
           {
             id: secondChoiceId,
             type: 'text/html',
-            data: pairs[0].labelB
+            data: defaultPairs[0].labelB
           }
         ],
         solutions: [

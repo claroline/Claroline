@@ -4,7 +4,6 @@ namespace UJM\ExoBundle\Serializer\Item;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Item\ItemObject;
-use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 
 /**
@@ -48,15 +47,11 @@ class ItemObjectSerializer implements SerializerInterface
      */
     public function deserialize($data, $itemObject = null, array $options = [])
     {
-        if (empty($itemObject)) {
-            $itemObject = new ItemObject();
-        }
+        $itemObject = $itemObject ?: new ItemObject();
+
+        $itemObject->setUuid($data->id);
         $itemObject->setMimeType($data->type);
 
-        // Force client ID if needed
-        if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-            $itemObject->setUuid($data->id);
-        }
         if (isset($data->data)) {
             $itemObject->setData($data->data);
         }

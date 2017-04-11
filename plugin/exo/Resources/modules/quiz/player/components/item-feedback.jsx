@@ -3,7 +3,7 @@ import React, {PropTypes as T} from 'react'
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
 
 const ItemFeedback = props =>
-  <div className="quiz-item item-feedback">
+  <div className="quiz-item quiz-item-feedback">
     {props.item.title &&
       <h3 className="item-title">{props.item.title}</h3>
     }
@@ -15,11 +15,10 @@ const ItemFeedback = props =>
     {props.children}
 
     {props.item.feedback &&
-      <hr className="item-content-separator" />
-    }
-
-    {props.item.feedback &&
-      <div className="item-feedback" dangerouslySetInnerHTML={{__html: props.item.feedback}} />
+      <div className="item-feedback">
+        <span className="fa fa-comment" />
+        <div dangerouslySetInnerHTML={{__html: props.item.feedback}} />
+      </div>
     }
   </div>
 

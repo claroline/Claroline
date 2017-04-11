@@ -8,6 +8,7 @@ use Ramsey\Uuid\Uuid;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
 use UJM\ExoBundle\Library\Model\OrderTrait;
+use UJM\ExoBundle\Library\Model\UuidTrait;
 
 /**
  * A step represents a group of items (questions or content) inside an exercise.
@@ -27,12 +28,7 @@ class Step
      */
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column("uuid", type="string", length=36, unique=true)
-     */
-    private $uuid;
+    use UuidTrait;
 
     use OrderTrait;
 
@@ -81,26 +77,6 @@ class Step
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Gets UUID.
-     *
-     * @return string
-     */
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-    /**
-     * Sets UUID.
-     *
-     * @param $uuid
-     */
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
     }
 
     /**

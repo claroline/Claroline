@@ -1,6 +1,7 @@
 import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
-import {tex} from './../../utils/translate'
+
+import {tex} from '#/main/core/translation'
 import {getOffsets} from './selection/selection'
 
 // see https://github.com/lovasoa/react-contenteditable

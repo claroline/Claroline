@@ -1,6 +1,6 @@
 import isArray from 'lodash/isArray'
 
-import {makeReducer} from './../../utils/reducers'
+import {makeReducer} from '#/main/core/utilities/redux'
 
 import {
   SEARCH_CHANGE_FILTERS,

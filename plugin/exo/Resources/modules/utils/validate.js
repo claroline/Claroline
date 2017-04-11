@@ -1,6 +1,5 @@
 import set from 'lodash/set'
-import {trans} from './translate'
-import {extractTextFromHtml} from './utils'
+import {trans} from '#/main/core/translation'
 
 const tval = msg => trans(msg, {}, 'validators')
 
@@ -11,9 +10,22 @@ export function notBlank(value, isHtml = false) {
     value = ''
   }
 
-  if (value === '' || value === null || isHtml && !extractTextFromHtml(value)) {
+  if (value === '' || value === null || (isHtml && isHtmlEmpty(value))) {
     return tval('This value should not be blank.')
   }
+}
+
+export function isHtmlEmpty(html, allowedTags = ['img', 'audio', 'iframe', 'video']) {
+  if (!html) {
+    return true
+  }
+
+  const wrapper = document.createElement('div')
+  wrapper.innerHTML = html
+
+  return !(wrapper.textContent || allowedTags.some((tag) => {
+    return html.indexOf(tag) >= 0
+  }))
 }
 
 export function number(value) {

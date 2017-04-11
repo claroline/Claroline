@@ -1,293 +1,82 @@
 import React, {Component, PropTypes as T} from 'react'
-import classes from 'classnames'
 import get from 'lodash/get'
-import Popover from 'react-bootstrap/lib/Popover'
 
-import {t, tex} from './../../utils/translate'
+import {t, tex} from '#/main/core/translation'
 import {Textarea} from './../../components/form/textarea.jsx'
-import {FormGroup} from './../../components/form/form-group.jsx'
-import {CheckGroup} from './../../components/form/check-group.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
 import {actions} from './editor'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
-import {ErrorBlock} from './../../components/form/error-block.jsx'
 
-class KeywordItem extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      showFeedback: false
-    }
-  }
+import {KeywordsPopover} from './../components/keywords.jsx'
 
-  render() {
-    return (
-      <div className={classes(
-          'answer-item keyword-item',
-          {'expected-answer': this.props.answer.score > 0},
-          {'unexpected-answer': this.props.answer.score <= 0}
-        )
-      }>
-        <div className="text-fields">
-          <input
-            type="text"
-            id={`keyword-${this.props.id}-answer`}
-            title={tex('response')}
-            value={this.props.answer.text}
-            className="form-control"
-            onChange={e => this.props.onChange(
-              actions.updateAnswer(
-                this.props.hole.id,
-                'text',
-                this.props.answer._id,
-                e.target.value
-              )
-            )}
-          />
+const HolePopover = props => {
+  // Let's calculate the popover position
+  // It will be positioned just under the edit button
+  const btnElement = document.querySelector(`.cloze-hole[data-hole-id="${props.hole.id}"] .edit-hole-btn`)
 
-          {this.state.showFeedback &&
-            <div className="feedback-container">
-              <Textarea
-                id={`keyword-${this.props.id}-feedback`}
-                title={tex('feedback')}
-                content={this.props.answer.feedback}
-                onChange={text => this.props.onChange(
-                  actions.updateAnswer(
-                    this.props.hole.id,
-                    'feedback',
-                    this.props.answer._id,
-                    text
-                  )
-                )}
-              />
-            </div>
-          }
-        </div>
+  let left = btnElement.offsetLeft
+  let top  = btnElement.offsetTop
 
-        <div className="keyword-case-sensitive">
-          <input
-            type="checkbox"
-            title={tex('words_case_sensitive')}
-            checked={this.props.answer.caseSensitive}
-            onChange={e => this.props.onChange(
-              actions.updateAnswer(
-                this.props.hole.id,
-                'caseSensitive',
-                this.props.answer._id,
-                e.target.checked
-              )
-            )}
-          />
-        </div>
+  left += btnElement.offsetWidth / 2 // center popover and edit btn
+  top  += btnElement.offsetHeight // position popover below edit btn
 
-        <div className="right-controls">
-          <input
-            title={tex('score')}
-            className="form-control keyword-score"
-            type="number"
-            value={this.props.answer.score}
-            onChange={e => this.props.onChange(
-              actions.updateAnswer(
-                this.props.hole.id,
-                'score',
-                this.props.answer._id,
-                Number(e.target.value)
-              )
-            )}
-          />
+  left -= 180 // half size of the popover
+  top  += 25 // take into account the form group label
 
-          <TooltipButton
-            id={`keyword-${this.props.id}-feedback-toggle`}
-            className="btn-link-default"
-            label={<span className="fa fa-fw fa-comments-o"/>}
-            title={tex('choice_feedback_info')}
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
-          <TooltipButton
-            id={`keyword-${this.props.id}-delete`}
-            className="btn-link-default"
-            enabled={this.props.deletable}
-            title={t('delete')}
-            label={<span className="fa fa-fw fa-trash-o"/>}
-            onClick={() => this.props.onChange(
-              actions.removeAnswer(this.props.answer._id)
-            )}
-          />
-        </div>
-      </div>
-    )
-  }
-}
-
-KeywordItem.defaultProps = {
-  answer: {
-    feedback: ''
-  }
-}
-
-KeywordItem.propTypes = {
-  answer: T.shape({
-    score: T.number,
-    feedback: T.string,
-    text: T.string,
-    caseSensitive: T.bool,
-    _id: T.string.isRequired
-  }).isRequired,
-  hole: T.shape({
-    id: T.string.isRequired
-  }).isRequired,
-  id: T.number.isRequired,
-  deletable: T.bool.isRequired,
-  onChange: T.func.isRequired
-}
-
-class HoleForm extends Component {
-  closePopover() {
-    this.props.onChange(actions.closePopover())
-  }
-
-  removeAndClose() {
-    this.props.onChange(actions.removeHole(this.props.hole.id))
-    this.closePopover()
-  }
-
-  render() {
-    // Let's calculate the popover position
-    // It will be positioned just under the edit button
-    const btnElement = document.querySelector(`.cloze-hole[data-hole-id="${this.props.hole.id}"] .edit-hole-btn`)
-
-    let left = btnElement.offsetLeft
-    let top  = btnElement.offsetTop
-
-    left += btnElement.offsetWidth / 2 // center popover and edit btn
-    top  += btnElement.offsetHeight // position popover below edit btn
-
-    left -= 180 // half size of the popover
-    top  += 25 // take into account the form group label
-
-    return (
-      <Popover
-        id={this.props.hole.id}
-        placement="bottom"
-        positionLeft={left}
-        positionTop={top}
-        title={
-          <div>
-            {tex('cloze_edit_hole')}
-
-            <div className="popover-actions">
-              <TooltipButton
-                id={`hole-${this.props.hole.id}-delete`}
-                title={tex('delete')}
-                className="btn-link-default"
-                label={<span className="fa fa-fw fa-trash-o" />}
-                onClick={this.removeAndClose.bind(this)}
-              />
-              <TooltipButton
-                id={`hole-${this.props.hole.id}-close`}
-                title={tex('close')}
-                className="btn-link-default"
-                label={<span className="fa fa-fw fa-times" />}
-                onClick={this.closePopover.bind(this)}
-              />
-            </div>
-          </div>
-        }
+  return (
+    <KeywordsPopover
+      id={props.hole.id}
+      positionLeft={left}
+      positionTop={top}
+      title={tex('cloze_edit_hole')}
+      keywords={props.solution.answers}
+      _multiple={props.hole._multiple}
+      _errors={get(props, '_errors')}
+      validating={props.validating}
+      showCaseSensitive={true}
+      showScore={true}
+      close={props.close}
+      remove={props.remove}
+      onChange={props.onChange}
+      addKeyword={props.addKeyword}
+      removeKeyword={props.removeKeyword}
+      updateKeyword={props.updateKeyword}
+    >
+      <FormGroup
+        controlId={`item-${props.hole.id}-size`}
+        label={tex('size')}
+        warnOnly={!props.validating}
+        error={get(props, '_errors.size')}
       >
-        <FormGroup
-          controlId={`item-${this.props.hole.id}-size`}
-          label={tex('size')}
-        >
-          <input
-            id={`item-${this.props.hole.id}-size`}
-            type="number"
-            min="0"
-            value={this.props.hole.size}
-            className="form-control"
-            onChange={e => this.props.onChange(
-              actions.updateHole(this.props.hole.id, 'size', parseInt(e.target.value))
-            )}
-          />
-        </FormGroup>
-
-        {get(this.props, '_errors.answers.size') &&
-          <ErrorBlock text={this.props._errors.answers.size} warnOnly={!this.props.validating}/>
-        }
-
-        <CheckGroup
-          checkId={`item-${this.props.hole.id}-list`}
-          label={tex('submit_a_list')}
-          checked={this.props.hole._multiple}
-          onChange={checked => this.props.onChange(
-            actions.updateHole(this.props.hole.id, '_multiple', checked)
-          )}
+        <input
+          id={`item-${props.hole.id}-size`}
+          type="number"
+          min="0"
+          value={props.hole.size}
+          className="form-control"
+          onChange={e => props.onChange('size', parseInt(e.target.value))}
         />
-
-        <div className="keyword-items">
-          {get(this.props, '_errors.answers.multiple') &&
-            <ErrorBlock text={this.props._errors.answers.multiple} warnOnly={!this.props.validating}/>
-          }
-          {get(this.props, '_errors.answers.duplicate') &&
-            <ErrorBlock text={this.props._errors.answers.duplicate} warnOnly={!this.props.validating}/>
-          }
-          {get(this.props, '_errors.answers.value') &&
-            <ErrorBlock text={this.props._errors.answers.value} warnOnly={!this.props.validating}/>
-          }
-          {get(this.props, '_errors.answers.text') &&
-            <ErrorBlock text={this.props._errors.answers.text} warnOnly={!this.props.validating}/>
-          }
-          {get(this.props, '_errors.answers.score') &&
-            <ErrorBlock text={this.props._errors.answers.score} warnOnly={!this.props.validating}/>
-          }
-
-          <ul>
-            {this.props.solution.answers.map((answer, index) =>
-              <KeywordItem
-                key={index}
-                id={index}
-                deletable={index > 0}
-                onChange={this.props.onChange}
-                hole={this.props.hole}
-                answer={answer}
-              />
-            )}
-          </ul>
-
-          <div className="footer">
-            <button
-              type="button"
-              className="btn btn-default"
-              onClick={() => this.props.onChange(
-                actions.addAnswer(this.props.hole.id)
-              )}
-            >
-              <span className="fa fa-fw fa-plus" />
-              {tex('words_add_word')}
-            </button>
-          </div>
-        </div>
-      </Popover>
-    )
-  }
+      </FormGroup>
+    </KeywordsPopover>
+  )
 }
 
-HoleForm.propTypes = {
+HolePopover.propTypes = {
   hole: T.shape({
     id: T.string.isRequired,
-    size: T.number,
-    _multiple: T.bool.isRequired
-  }),
+    _multiple: T.bool.isRequired,
+    size: T.number
+  }).isRequired,
   solution: T.shape({
-    answers: T.arrayOf(T.shape({
-      text: T.string.isRequired,
-      caseSensitive: T.bool.isRequired,
-      score: T.number.isRequired,
-      feedback: T.string,
-      _id: T.string.isRequired
-    }))
-  }),
-  onChange: T.func.isRequired,
+    answers: T.array.isRequired
+  }).isRequired,
   validating: T.bool.isRequired,
-  _errors: T.object
+  _errors: T.object,
+  close: T.func.isRequired,
+  remove:T.func.isRequired,
+  onChange: T.func.isRequired, // update hole properties
+  addKeyword: T.func.isRequired,
+  removeKeyword: T.func.isRequired,
+  updateKeyword: T.func.isRequired
 }
 
 export class Cloze extends Component {
@@ -346,7 +135,9 @@ export class Cloze extends Component {
             type="button"
             className="btn btn-default"
             disabled={!this.state.allowCloze}
-            onClick={() => this.props.onChange(this.addHole())}
+            onClick={() => this.props.onChange(
+              this.addHole()
+            )}
           >
             <span className="fa fa-fw fa-plus" />
             {tex('create_cloze')}
@@ -354,12 +145,29 @@ export class Cloze extends Component {
         </div>
 
         {(this.props.item._popover && this.props.item._holeId) &&
-          <HoleForm
+          <HolePopover
             hole={this.props.item.holes.find(hole => hole.id === this.props.item._holeId)}
             solution={this.props.item.solutions.find(solution => solution.holeId === this.props.item._holeId)}
-            onChange={this.props.onChange}
+            close={() => this.props.onChange(
+              actions.closePopover()
+            )}
+            remove={() => this.props.onChange(
+              actions.removeHole(this.props.item._holeId)
+            )}
+            onChange={(property, value) => this.props.onChange(
+              actions.updateHole(this.props.item._holeId, property, value)
+            )}
+            addKeyword={() => this.props.onChange(
+              actions.addAnswer(this.props.item._holeId)
+            )}
+            removeKeyword={(keywordId) => this.props.onChange(
+              actions.removeAnswer(this.props.item._holeId, keywordId)
+            )}
+            updateKeyword={(keywordId, property, newValue) => this.props.onChange(
+              actions.updateAnswer(this.props.item._holeId, keywordId, property, newValue)
+            )}
             validating={this.props.validating}
-            _errors={this.props.item._errors}
+            _errors={get(this.props.item, '_errors.'+this.props.item._holeId)}
           />
         }
       </fieldset>

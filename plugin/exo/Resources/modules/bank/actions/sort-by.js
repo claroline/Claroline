@@ -1,4 +1,4 @@
-import {makeActionCreator} from './../../utils/actions'
+import {makeActionCreator} from '#/main/core/utilities/redux'
 
 export const SORT_BY_UPDATE = 'SORT_BY_UPDATE'
 

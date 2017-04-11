@@ -1,6 +1,6 @@
 import thunk from 'redux-thunk'
 import assert from 'assert'
-import {assertEqual} from './../../utils/test'
+import {ensure} from '#/main/core/tests'
 import configureMockStore from 'redux-mock-store'
 import {TYPE_STEP} from './../enums'
 import {
@@ -14,8 +14,8 @@ describe('#createItem', () => {
   it('generates a unique id for each item', () => {
     const item1 = actions.createItem('1', 'application/choice.x+json')
     const item2 = actions.createItem('3', 'application/choice.x+json')
-    assertEqual(typeof item1.id, 'string', 'Item id must a string')
-    assertEqual(typeof item2.id, 'string', 'Item id must be a string')
+    ensure.equal(typeof item1.id, 'string', 'Item id must a string')
+    ensure.equal(typeof item2.id, 'string', 'Item id must be a string')
     assert.notEqual(item1.id, item2.id, 'Item ids must be unique')
   })
 })
@@ -24,8 +24,8 @@ describe('#createStep', () => {
   it('generates a unique id for each step', () => {
     const step1 = actions.createStep()
     const step2 = actions.createStep()
-    assertEqual(typeof step1.id, 'string', 'Step id must a string')
-    assertEqual(typeof step2.id, 'string', 'Step id must be a string')
+    ensure.equal(typeof step1.id, 'string', 'Step id must a string')
+    ensure.equal(typeof step2.id, 'string', 'Step id must be a string')
     assert.notEqual(step1.id, step2.id, 'Item ids must be unique')
   })
 })
@@ -52,6 +52,6 @@ describe('#deleteStepAndItems', () => {
       { type: STEP_DELETE, id: '2' }
     ]
     store.dispatch(actions.deleteStepAndItems('2'))
-    assertEqual(store.getActions(), expectedActions)
+    ensure.equal(store.getActions(), expectedActions)
   })
 })

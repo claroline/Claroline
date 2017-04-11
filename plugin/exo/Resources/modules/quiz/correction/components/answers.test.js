@@ -1,14 +1,15 @@
 import React from 'react'
 import {mount} from 'enzyme'
 import configureMockStore from 'redux-mock-store'
-import {spyConsole, renew, ensure, mockTranslator} from './../../../utils/test'
+
+import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
 import {Answers} from './answers.jsx'
 
 describe('<Answers/>', () => {
+  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     renew(Answers, 'Answers')
-    mockTranslator()
   })
   afterEach(spyConsole.restore)
 
@@ -57,10 +58,14 @@ describe('<Answers/>', () => {
       }
     })
 
-    const answers = mount(<Answers store={store}/>)
+    const answers = mount(
+      React.createElement(Answers, {
+        store: store
+      })
+    )
 
     ensure.propTypesOk()
-    ensure.equal(answers.find('div.answers-list').length, 1)
-    ensure.equal(answers.find('div.answer-row').length, 2)
+    ensure.equal(answers.find('.answers-list').length, 1)
+    ensure.equal(answers.find('div.user-answer').length, 2)
   })
 })

@@ -7,8 +7,12 @@ import {
   createStore as baseCreate
 } from 'redux'
 import thunk from 'redux-thunk'
+
+import {reducer as pageReducer}     from '#/main/core/layout/page/reducer'
+import {reducer as modalReducer}    from '#/main/core/layout/modal/reducer'
+import {reducer as resourceReducer} from '#/main/core/layout/resource/reducer'
+
 import {apiMiddleware} from './../api/middleware'
-import {reduceModal} from './../modal/reducer'
 import {reducers as apiReducers} from './../api/reducers'
 import {reducers as quizReducers} from './reducers'
 import {reducers as editorReducers} from './editor/reducers'
@@ -27,8 +31,11 @@ const identity = (state = null) => state
 
 export function makeReducer(editable) {
   return combineReducers({
+    resourceNode: resourceReducer,
+    page: pageReducer, // page features like fullscreen
+
     noServer: identity,
-    modal: reduceModal,
+    modal: modalReducer,
     currentRequests: apiReducers.currentRequests,
     viewMode: quizReducers.viewMode,
     quiz: editable ? editorReducers.quiz : identity,

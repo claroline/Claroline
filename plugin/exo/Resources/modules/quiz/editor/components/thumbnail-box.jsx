@@ -1,7 +1,7 @@
 import React, {Component, PropTypes as T} from 'react'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
-import {tex} from './../../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {SORT_DETECT} from './../../../utils/sortable'
 import {Thumbnail} from './thumbnail.jsx'
 

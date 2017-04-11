@@ -1,8 +1,9 @@
 import invariant from 'invariant'
-import {makeActionCreator} from './../../utils/utils'
+
+import {makeActionCreator} from '#/main/core/utilities/redux'
 import {actions as baseActions} from './../actions'
 import {VIEW_CORRECTION_QUESTIONS, VIEW_CORRECTION_ANSWERS} from './../enums'
-import {fetchCorrection} from './api'
+import {navigate} from './../router'
 import {selectors} from './selectors'
 import {REQUEST_SEND} from './../../api/actions'
 
@@ -20,11 +21,20 @@ const updateScore = makeActionCreator(SCORE_UPDATE, 'answerId', 'score')
 const updateFeedback = makeActionCreator(FEEDBACK_UPDATE, 'answerId', 'feedback')
 const removeAnswers = makeActionCreator(REMOVE_ANSWERS, 'questionId')
 
+actions.fetchCorrection = quizId => ({
+  [REQUEST_SEND]: {
+    route: ['exercise_correction_questions', {exerciseId: quizId}],
+    success: (data, dispatch) => {
+      dispatch(initCorrection(data))
+    },
+    failure: () => navigate('overview')
+  }
+})
+
 actions.displayQuestions = () => {
   return (dispatch, getState) => {
     if (!selectors.questionsFetched(getState())) {
-      fetchCorrection(selectors.quizId(getState())).then(correction => {
-        dispatch(initCorrection(correction))
+      dispatch(actions.fetchCorrection(selectors.quizId(getState()))).then(() => {
         dispatch(baseActions.updateViewMode(VIEW_CORRECTION_QUESTIONS))
       })
     } else {
@@ -37,8 +47,7 @@ actions.displayQuestionAnswers = id => {
   invariant(id, 'Question id is mandatory')
   return (dispatch, getState) => {
     if (!selectors.questionsFetched(getState())) {
-      fetchCorrection(selectors.quizId(getState())).then(correction => {
-        dispatch(initCorrection(correction))
+      dispatch(actions.fetchCorrection(selectors.quizId(getState()))).then(() => {
         dispatch(setCurrentQuestionId(id))
         dispatch(baseActions.updateViewMode(VIEW_CORRECTION_ANSWERS))
       })

@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {assertEqual} from './../utils/test'
+import {ensure, mockTranslator} from '#/main/core/tests'
 import {
   registerItemType,
   listItemMimeTypes,
@@ -9,6 +9,7 @@ import {
 } from './../items/item-types'
 
 describe('Registering an item type', () => {
+  before(mockTranslator)
   afterEach(resetTypes)
 
   it('throws if item name type is absent or invalid', () => {
@@ -99,15 +100,15 @@ describe('Registering an item type', () => {
   it('registers valid types as expected', () => {
     registerItemType(validDefinitionFixture())
 
-    assertEqual(listItemMimeTypes(), ['foo/bar'])
+    ensure.equal(listItemMimeTypes(), ['foo/bar'])
 
     const def = getDefinition('foo/bar')
 
-    assertEqual(def.name, 'foo')
-    assertEqual(def.type, 'foo/bar')
-    assertEqual(def.editor.component(), 'editor')
-    assertEqual(def.editor.reduce('item'), 'item')
-    assertEqual(def.player(), 'player')
+    ensure.equal(def.name, 'foo')
+    ensure.equal(def.type, 'foo/bar')
+    ensure.equal(def.editor.component(), 'editor')
+    ensure.equal(def.editor.reduce('item'), 'item')
+    ensure.equal(def.player(), 'player')
   })
 
   it('throws if item type is already registered', () => {
@@ -119,17 +120,17 @@ describe('Registering an item type', () => {
 
   it('defaults items to questions', () => {
     registerItemType(validDefinitionFixture())
-    assertEqual(getDefinition('foo/bar').question, true)
+    ensure.equal(getDefinition('foo/bar').question, true)
   })
 
   it('defaults decorators to identity functions', () => {
     registerItemType(validDefinitionFixture())
-    assertEqual(getDefinition('foo/bar').editor.decorate('item'), 'item')
+    ensure.equal(getDefinition('foo/bar').editor.decorate('item'), 'item')
   })
 
   it('defaults validators to noop functions', () => {
     registerItemType(validDefinitionFixture())
-    assertEqual(getDefinition('foo/bar').editor.validate('item'), {})
+    ensure.equal(getDefinition('foo/bar').editor.validate('item'), {})
   })
 
   it('throws if definition contains extra properties', () => {
@@ -141,6 +142,7 @@ describe('Registering an item type', () => {
 })
 
 describe('Getting a type definition', () => {
+  before(mockTranslator)
   afterEach(resetTypes)
 
   it('throws if type does not exist', () => {
@@ -152,23 +154,24 @@ describe('Getting a type definition', () => {
   it('returns the full definition', () => {
     registerItemType(validDefinitionFixture())
     const def = getDefinition('foo/bar')
-    assertEqual(def.type, 'foo/bar')
-    assertEqual(def.editor.component(), 'editor')
-    assertEqual(def.editor.reduce('item'), 'item')
-    assertEqual(def.editor.decorate('item'), 'item')
-    assertEqual(def.editor.validate('item'), {})
-    assertEqual(def.player(), 'player')
+    ensure.equal(def.type, 'foo/bar')
+    ensure.equal(def.editor.component(), 'editor')
+    ensure.equal(def.editor.reduce('item'), 'item')
+    ensure.equal(def.editor.decorate('item'), 'item')
+    ensure.equal(def.editor.validate('item'), {})
+    ensure.equal(def.player(), 'player')
   })
 })
 
 describe('Getting type decorates', () => {
+  before(mockTranslator)
   afterEach(resetTypes)
 
   it('sorts decorators by type', () => {
     registerItemType(validDefinitionFixture())
     const decorators = getDecorators()
-    assertEqual(Object.keys(decorators), ['foo/bar'])
-    assertEqual(typeof decorators['foo/bar'], 'function')
+    ensure.equal(Object.keys(decorators), ['foo/bar'])
+    ensure.equal(typeof decorators['foo/bar'], 'function')
   })
 })
 

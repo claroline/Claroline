@@ -1,44 +1,10 @@
 import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 import shuffle from 'lodash/shuffle'
-
-/* global jsPlumb */
-
-function initJsPlumb(jsPlumbInstance) {
-  // defaults parameters for all connections
-  jsPlumbInstance.importDefaults({
-    Anchors: ['RightMiddle', 'LeftMiddle'],
-    ConnectionsDetachable: true,
-    Connector: 'Straight',
-    DropOptions: {tolerance: 'touch'},
-    HoverPaintStyle: {strokeStyle: '#FC0000'},
-    LogEnabled: true,
-    PaintStyle: {strokeStyle: '#777', lineWidth: 4}
-  })
-
-  jsPlumbInstance.registerConnectionTypes({
-    'valid': {
-      paintStyle     : { strokeStyle: '#5CB85C', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'green',   lineWidth: 6 }
-    },
-    'invalid': {
-      paintStyle:      { strokeStyle: '#D9534F', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'red',     lineWidth: 6 }
-    },
-    'selected': {
-      paintStyle:      { strokeStyle: '#006DCC', lineWidth: 6 },
-      hoverPaintStyle: { strokeStyle: '#006DCC', lineWidth: 6 }
-    },
-    'default': {
-      paintStyle     : { strokeStyle: 'grey',    lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'grey', lineWidth: 6 }
-    }
-  })
-}
+import {utils} from './utils/utils'
 
 /* If any previous answer draw them */
 function drawAnswers(answers, jsPlumbInstance){
-
   for (const answer of answers) {
     jsPlumbInstance.connect({
       source: 'source_' + answer.firstId,
@@ -79,8 +45,7 @@ class MatchPlayer extends Component {
   constructor(props) {
     super(props)
 
-    this.jsPlumbInstance = jsPlumb.getInstance()
-    initJsPlumb(this.jsPlumbInstance)
+    this.jsPlumbInstance = utils.getJsPlumbInstance(true)
 
     this.container = null
     this.handleWindowResize = this.handleWindowResize.bind(this)
@@ -149,9 +114,9 @@ class MatchPlayer extends Component {
 
   componentWillUnmount(){
     window.removeEventListener('resize', this.handleWindowResize)
-    jsPlumb.detachEveryConnection()
-    // use reset instead of deleteEveryEndpoint because reset also remove event listeners
-    jsPlumb.reset()
+
+    utils.resetJsPlumb()
+
     this.jsPlumbInstance = null
     delete this.jsPlumbInstance
   }

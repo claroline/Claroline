@@ -2,10 +2,11 @@ import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
 import Panel from 'react-bootstrap/lib/Panel'
 
-import {tex} from './../../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {getDefinition, isQuestionType} from './../../../items/item-types'
-import selectors from './../../selectors'
-import {selectors as paperSelectors} from './../selectors'
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import quizSelect from './../../selectors'
+import {selectors as paperSelect} from './../selectors'
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
 import {ScoreBox} from './../../../items/components/score-box.jsx'
 import {ScoreGauge} from './../../../components/score-gauge.jsx'
@@ -15,21 +16,21 @@ let Paper = props => {
   const showScore = utils.showScore(
     props.admin,
     props.paper.finished,
-    paperSelectors.showScoreAt(props.paper),
-    paperSelectors.showCorrectionAt(props.paper),
-    paperSelectors.correctionDate(props.paper)
+    paperSelect.showScoreAt(props.paper),
+    paperSelect.showCorrectionAt(props.paper),
+    paperSelect.correctionDate(props.paper)
   )
   return (
     <div className="paper">
       <h2 className="paper-title">
         {showScore &&
-          <ScoreGauge userScore={props.paper.score} maxScore={paperSelectors.paperScoreMax(props.paper)} size="sm" />
+          <ScoreGauge userScore={props.paper.score} maxScore={paperSelect.paperScoreMax(props.paper)} size="sm" />
         }
         {tex('correction')}&nbsp;{props.paper.number}
       </h2>
 
       {props.steps.map((step, idx) =>
-        <div key={idx} className="item-paper">
+        <div key={idx} className="quiz-item item-paper">
           <h3 className="step-title">
             {step.title ? step.title : tex('step') + ' ' + (idx + 1)}
           </h3>
@@ -38,7 +39,7 @@ let Paper = props => {
             isQuestionType(item.type) ?
               <Panel key={item.id}>
                 {showScore && getAnswerScore(item.id, props.paper.answers) !== undefined && getAnswerScore(item.id, props.paper.answers) !== null &&
-                  <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.paper.answers)} scoreMax={paperSelectors.itemScoreMax(item)}/>
+                  <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.paper.answers)} scoreMax={paperSelect.itemScoreMax(item)}/>
                 }
                 {item.title &&
                   <h4 className="item-title">{item.title}</h4>
@@ -56,11 +57,10 @@ let Paper = props => {
                 )}
 
                 {item.feedback &&
-                  <hr className="item-content-separator" />
-                }
-
-                {item.feedback &&
-                  <div className="item-feedback" dangerouslySetInnerHTML={{__html: item.feedback}} />
+                  <div className="item-feedback">
+                    <span className="fa fa-comment" />
+                    <div dangerouslySetInnerHTML={{__html: item.feedback}} />
+                  </div>
                 }
               </Panel> :
               ''
@@ -70,7 +70,6 @@ let Paper = props => {
     </div>
   )
 }
-
 
 Paper.propTypes = {
   admin: T.bool.isRequired,
@@ -110,9 +109,9 @@ function getAnswerScore(itemId, answers) {
 
 function mapStateToProps(state) {
   return {
-    admin: selectors.editable(state) || selectors.papersAdmin(state),
-    paper: paperSelectors.currentPaper(state),
-    steps: paperSelectors.paperSteps(state)
+    admin: resourceSelect.editable(state) || quizSelect.papersAdmin(state),
+    paper: paperSelect.currentPaper(state),
+    steps: paperSelect.paperSteps(state)
   }
 }
 

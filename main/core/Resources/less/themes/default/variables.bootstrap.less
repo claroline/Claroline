@@ -15,10 +15,10 @@
 @gray-lighter:           lighten(@gray-base, 93.5%); // #eee
 
 @brand-primary:         #148AC7; // bootstrap original : #337ab7
-@brand-success:         #5cb85c;
+@brand-success:         #4f7302;
 @brand-info:            #5bc0de;
 @brand-warning:         #f0ad4e;
-@brand-danger:          #d9534f;
+@brand-danger:          #bf0404;
 
 
 //== Scaffolding
@@ -104,7 +104,7 @@
 
 @border-radius-base:        4px;
 @border-radius-large:       6px;
-@border-radius-small:       3px;
+@border-radius-small:       2px;
 
 //** Global color for active items (e.g., navs or dropdowns).
 @component-active-color:    #fff;
@@ -256,7 +256,7 @@
 @dropdown-link-disabled-color:   @gray-light;
 
 //** Text color for headers within dropdown menus.
-@dropdown-header-color:          @gray-light;
+@dropdown-header-color:          @brand-primary;
 
 //** Deprecated `@dropdown-caret-color` as of v3.1.0
 @dropdown-caret-color:           #000;
@@ -430,7 +430,7 @@
 
 @nav-tabs-link-hover-border-color:          @gray-lighter;
 
-@nav-tabs-active-link-hover-bg:             @body-bg;
+@nav-tabs-active-link-hover-bg:             white;
 @nav-tabs-active-link-hover-color:          @gray;
 @nav-tabs-active-link-hover-border-color:   #ddd;
 
@@ -496,19 +496,19 @@
 //
 //## Define colors for form feedback states and, by default, alerts.
 
-@state-success-text:             #4f7302;
+@state-success-text:             @brand-success;
 @state-success-bg:               #dafd8d;
 @state-success-border:           @state-success-bg;
 
-@state-info-text:                #295e79;
-@state-info-bg:                  #cae2ed;
+@state-info-text:                #024f73;
+@state-info-bg:                  #c9edfe;
 @state-info-border:              @state-info-bg;
 
 @state-warning-text:             #c09853;
 @state-warning-bg:               lighten(#FFEE00, 35%);
 @state-warning-border:           darken(spin(@state-warning-bg, -10), 3%);
 
-@state-danger-text:              #bf0404;
+@state-danger-text:              @brand-danger;
 @state-danger-bg:                #ffd5d5;
 @state-danger-border:            @state-danger-bg;
 
@@ -538,14 +538,14 @@
 //** Popover body background color
 @popover-bg:                          #fff;
 //** Popover maximum width
-@popover-max-width:                   276px;
+@popover-max-width:                   280px;
 //** Popover border color
 @popover-border-color:                rgba(0,0,0,.2);
 //** Popover fallback border color
 @popover-fallback-border-color:       #ccc;
 
 //** Popover title background color
-@popover-title-bg:                    darken(@popover-bg, 3%);
+@popover-title-bg:                    #f5f5f5;
 
 //** Popover arrow width
 @popover-arrow-width:                 10px;
@@ -555,7 +555,7 @@
 //** Popover outer arrow width
 @popover-arrow-outer-width:           (@popover-arrow-width + 1);
 //** Popover outer arrow color
-@popover-arrow-outer-color:           fadein(@popover-border-color, 5%);
+@popover-arrow-outer-color:           fadein(@popover-border-color, 7.5%);
 //** Popover outer arrow fallback color
 @popover-arrow-outer-fallback-color:  darken(@popover-fallback-border-color, 20%);
 

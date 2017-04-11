@@ -1,6 +1,6 @@
 import React, {Component, PropTypes as T} from 'react'
 import {asset} from '#/main/core/asset'
-import {tex} from './../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {POINTER_PLACED} from './enums'
 import {PointableImage} from './components/pointable-image.jsx'
 

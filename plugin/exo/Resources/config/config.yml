@@ -4,7 +4,7 @@ plugin:
     resources:
         - class: UJM\ExoBundle\Entity\Exercise
           name: ujm_exercise
-          is_browsable: false
+          is_exportable: true
           icon: res_exo.png
           actions:
             - name: MANAGE_PAPERS

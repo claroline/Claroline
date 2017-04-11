@@ -184,51 +184,34 @@ class ItemSerializer extends AbstractSerializer
      * Converts raw data into a Item entity.
      *
      * @param \stdClass $data
-     * @param Item      $question
+     * @param Item      $item
      * @param array     $options
      *
      * @return Item
      */
-    public function deserialize($data, $question = null, array $options = [])
+    public function deserialize($data, $item = null, array $options = [])
     {
-        if (empty($question)) {
+        if (!$this->hasOption(Transfer::NO_FETCH, $options) && empty($item) && !empty($data->id)) {
             // Loads the Item from DB if already exist
-            if (!empty($data->id)) {
-                $question = $this->om->getRepository('UJMExoBundle:Item\Item')->findOneBy([
-                    'uuid' => $data->id,
-                ]);
-            }
-
-            if (empty($question)) {
-                // Item not exist
-                $question = new Item();
-            }
+            $item = $this->om->getRepository('UJMExoBundle:Item\Item')->findOneBy([
+                'uuid' => $data->id,
+            ]);
         }
 
+        $item = $item ?: new Item();
+        $item->setUuid($data->id);
+
         // Sets the creator of the Item if not set
-        $creator = $question->getCreator();
+        $creator = $item->getCreator();
         if (empty($creator) || !($creator instanceof User)) {
             $token = $this->tokenStorage->getToken();
             if (!empty($token) && $token->getUser() instanceof User) {
-                $question->setCreator($token->getUser());
+                $item->setCreator($token->getUser());
             }
-        }
-
-        // Sets the creator of the Item if not set
-        $creator = $question->getCreator();
-        if (empty($creator) || !($creator instanceof User)) {
-            $token = $this->tokenStorage->getToken();
-            if (!empty($token) && $token->getUser() instanceof User) {
-                $question->setCreator($token->getUser());
-            }
-        }
-
-        // Force client ID if needed
-        if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-            $question->setUuid($data->id);
         }
 
         if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $data->type)) {
+            // question item
             // Map data to entity (dataProperty => entityProperty/function to call)
             $this->mapObjectToEntity([
                 'type' => 'mimeType',
@@ -236,34 +219,35 @@ class ItemSerializer extends AbstractSerializer
                 'title' => 'title',
                 'description' => 'description',
                 'feedback' => 'feedback',
-                'hints' => function (Item $question, \stdClass $data) use ($options) {
-                    return $this->deserializeHints($question, $data->hints, $options);
+                'hints' => function (Item $item, \stdClass $data) use ($options) {
+                    return $this->deserializeHints($item, $data->hints, $options);
                 },
-                'objects' => function (Item $question, \stdClass $data) use ($options) {
-                    return $this->deserializeObjects($question, $data->objects, $options);
+                'objects' => function (Item $item, \stdClass $data) use ($options) {
+                    return $this->deserializeObjects($item, $data->objects, $options);
                 },
-                'resources' => function (Item $question, \stdClass $data) use ($options) {
-                    return $this->deserializeResources($question, $data->resources, $options);
+                'resources' => function (Item $item, \stdClass $data) use ($options) {
+                    return $this->deserializeResources($item, $data->resources, $options);
                 },
-                'meta' => function (Item $question, \stdClass $data) {
-                    return $this->deserializeMetadata($question, $data->meta);
+                'meta' => function (Item $item, \stdClass $data) {
+                    return $this->deserializeMetadata($item, $data->meta);
                 },
-                'score' => function (Item $question, \stdClass $data) {
+                'score' => function (Item $item, \stdClass $data) {
                     $score = $this->sanitizeScore($data->score);
-                    $question->setScoreRule(json_encode($score));
+                    $item->setScoreRule(json_encode($score));
                 },
-            ], $data, $question);
+            ], $data, $item);
         } else {
+            // content item
             $this->mapObjectToEntity([
                 'type' => 'mimeType',
                 'title' => 'title',
                 'description' => 'description',
-            ], $data, $question);
+            ], $data, $item);
         }
 
-        $this->deserializeQuestionType($question, $data, $options);
+        $this->deserializeQuestionType($item, $data, $options);
 
-        return $question;
+        return $item;
     }
 
     /**

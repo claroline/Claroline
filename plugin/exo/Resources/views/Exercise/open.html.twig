@@ -11,6 +11,7 @@
     <div
       class="page-container quiz-container"
       data-quiz="{{ exercise | json_encode | raw | escape }}"
+      data-resource-node="{{ _resource | get_serialized_node | json_encode | raw | escape }}"
     >
     </div>
 {% endblock %}

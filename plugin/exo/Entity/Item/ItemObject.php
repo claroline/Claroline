@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Entity\Item;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use UJM\ExoBundle\Library\Model\OrderTrait;
+use UJM\ExoBundle\Library\Model\UuidTrait;
 
 /**
  * A Resource on which the Item is referred.
@@ -25,12 +26,7 @@ class ItemObject
      */
     private $id;
 
-    /**
-     * @ORM\Column("uuid", type="string", length=36, unique=true)
-     *
-     * @var string
-     */
-    private $uuid;
+    use UuidTrait;
 
     /**
      * Owning Item.
@@ -72,26 +68,6 @@ class ItemObject
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Gets UUID.
-     *
-     * @return string
-     */
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-    /**
-     * Sets UUID.
-     *
-     * @param $uuid
-     */
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
     }
 
     /**

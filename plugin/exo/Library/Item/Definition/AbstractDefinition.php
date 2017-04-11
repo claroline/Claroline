@@ -11,7 +11,7 @@ use UJM\ExoBundle\Library\Validator\ValidatorInterface;
  * Base class for question definitions.
  * Permits to use separate classes to handle Serialization and Validation.
  */
-abstract class AbstractDefinition implements ItemDefinitionInterface
+abstract class AbstractDefinition implements ItemDefinitionInterface, AnswerableItemDefinitionInterface
 {
     /**
      * Gets the question Validator instance.

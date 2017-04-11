@@ -130,8 +130,26 @@ class OpenDefinition extends AbstractDefinition
         return [];
     }
 
+    /**
+     * Not implemented because not relevant.
+     *
+     * @param AbstractItem $openQuestion
+     * @param array        $answers
+     *
+     * @return array
+     */
     public function getStatistics(AbstractItem $openQuestion, array $answers)
     {
         return [];
+    }
+
+    /**
+     * No additional identifier to regenerate.
+     *
+     * @param AbstractItem $item
+     */
+    public function refreshIdentifiers(AbstractItem $item)
+    {
+        return;
     }
 }

@@ -1,4 +1,4 @@
-import { makeActionCreator } from './../utils/actions'
+import { makeActionCreator } from '#/main/core/utilities/redux'
 
 export const REQUEST_SEND     = 'REQUEST_SEND'
 export const RESPONSE_RECEIVE = 'RECEIVE_RESPONSE'

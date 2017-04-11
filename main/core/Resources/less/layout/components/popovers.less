@@ -1,3 +1,23 @@
 .popover {
-    .box-shadow(@popover-box-shadow);
+    padding: 0;
+    border-radius: @popover-border-radius;
+    box-shadow: @popover-box-shadow;
+
+    &.bottom {
+        margin-bottom: @component-margin-bottom;
+        // when arrow is on top of the popover, give it the title bg color
+        > .arrow:after {
+            border-bottom-color: @popover-title-bg;
+        }
+    }
+}
+
+.popover-title {
+    border-bottom: 1px solid @popover-title-border-color;
+    border-radius: (@popover-border-radius - 1) (@popover-border-radius - 1) 0 0;
+    padding: @popover-title-padding;
+}
+
+.popover-content {
+    padding: @popover-content-padding;
 }

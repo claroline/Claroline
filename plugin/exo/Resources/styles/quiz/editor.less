@@ -45,6 +45,11 @@
     }
   }
 
+  .step-parameters + div,
+  .step-parameters + .panel {
+    margin-top: @component-margin-bottom;
+  }
+
   .step-footer {
     text-align: center;
   }
@@ -87,7 +92,7 @@
 
   .help-block .fa,
   .error-text .fa,
-  .sub-section a[role="button"] .fa {
+  .sub-section a[role="button"] .fa { // ugly selector
     margin-right: 7px;
   }
 
@@ -107,7 +112,7 @@
     display: block;
   }
 
-  .editor-panel-title:hover {
+  .editor-panel-title {
     cursor: pointer;
   }
 }

@@ -39,6 +39,7 @@ const item = {
   description: '',
   hints: [],
   feedback: '',
+  objects: [],
   score: {
     type: SCORE_SUM,
     success: 1,

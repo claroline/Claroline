@@ -1,6 +1,6 @@
 import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {makeId} from './../../utils/utils'
-import {tex} from './../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {resizeArea} from './resize'
 import {
   MODE_RECT,
@@ -360,7 +360,7 @@ function validate(item) {
   }
 
   if (!item.image.data && !item.image.url) {
-    return {image: tex('graphic_error_no_image', {count: MAX_IMG_SIZE})}
+    return {image: tex('graphic_error_no_image')}
   }
 
   if (item.solutions.length === 0) {

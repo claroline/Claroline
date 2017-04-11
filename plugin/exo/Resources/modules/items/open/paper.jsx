@@ -1,4 +1,6 @@
 import React, {PropTypes as T} from 'react'
+
+import {tex} from '#/main/core/translation'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {Feedback} from '../components/feedback-btn.jsx'
 
@@ -18,7 +20,10 @@ export const OpenPaper = props => {
             </div>
           }
 
-          <div dangerouslySetInnerHTML={{__html: props.answer}}></div>
+          {props.answer && 0 !== props.answer.length ?
+            <div dangerouslySetInnerHTML={{__html: props.answer}} />
+            : <div className="no-answer">{tex('no_answer')}</div>
+          }
         </div>
       }
     />

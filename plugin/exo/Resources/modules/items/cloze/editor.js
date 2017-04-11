@@ -1,14 +1,16 @@
 import {Cloze as component} from './editor.jsx'
-import {makeActionCreator, makeId} from './../../utils/utils'
+import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeId} from './../../utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
+import isEmpty from 'lodash/isEmpty'
+
 import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {utils} from './utils/utils'
 import {select} from './selectors'
 import {notBlank} from './../../utils/validate'
-import set from 'lodash/set'
-import get from 'lodash/get'
+import {keywords as keywordsUtils} from './../../utils/keywords'
 import invariant from 'invariant'
-import {tex} from './../../utils/translate'
+import {tex} from '#/main/core/translation'
 
 const UPDATE_TEXT = 'UPDATE_TEXT'
 const ADD_HOLE = 'ADD_HOLE'
@@ -29,19 +31,18 @@ export const actions = {
   addAnswer: makeActionCreator(ADD_ANSWER, 'holeId'),
   saveHole: makeActionCreator(SAVE_HOLE),
   removeHole: makeActionCreator(REMOVE_HOLE, 'holeId'),
-  removeAnswer: makeActionCreator(REMOVE_ANSWER, '_id'),
+  removeAnswer: makeActionCreator(REMOVE_ANSWER, 'holeId', 'keywordId'),
   closePopover: makeActionCreator(CLOSE_POPOVER),
-  updateAnswer: (holeId, parameter, _id, value) => {
+  updateAnswer: (holeId, keywordId, parameter, value) => {
     invariant(
       ['text', 'caseSensitive', 'feedback', 'score'].indexOf(parameter) > -1,
       'answer attribute is not valid'
     )
     invariant(holeId !== undefined, 'holeId is required')
-    invariant(_id !== undefined, '_id is required')
 
     return {
       type: UPDATE_ANSWER,
-      holeId, parameter, _id, value
+      holeId, keywordId, parameter, value
     }
   }
 }
@@ -54,12 +55,14 @@ export default {
 }
 
 function decorate(item) {
-  const solutions = cloneDeep(item.solutions)
-  solutions.forEach(solution => solution.answers.forEach(answer => answer._id = makeId()))
-
   return Object.assign({}, item, {
     _text: utils.setEditorHtml(item.text, item.holes, item.solutions),
-    solutions
+    solutions: item.solutions.map(solution => Object.assign({}, solution, {
+      answers: solution.answers.map(keyword => Object.assign({}, keyword, {
+        _id: makeId(),
+        _deletable: solution.answers.length > 1
+      }))
+    }))
   })
 }
 
@@ -73,6 +76,7 @@ function reduce(item = {}, action) {
         _text: ''
       })
     }
+
     case UPDATE_TEXT: {
       item = Object.assign({}, item, {
         text: utils.getTextWithPlacerHoldersFromHtml(action.text),
@@ -80,8 +84,8 @@ function reduce(item = {}, action) {
       })
 
       const holesToRemove = []
-      //we need to check if every hole is mapped to a placeholder
-      //if there is not placeholder, then remove the hole
+      // we need to check if every hole is mapped to a placeholder
+      // if there is not placeholder, then remove the hole
       item.holes.forEach(hole => {
         if (item.text.indexOf(`[[${hole.id}]]`) < 0) {
           holesToRemove.push(hole.id)
@@ -100,6 +104,7 @@ function reduce(item = {}, action) {
 
       return item
     }
+
     case OPEN_HOLE: {
       const newItem = cloneDeep(item)
       const hole = getHoleFromId(newItem, action.holeId)
@@ -109,35 +114,38 @@ function reduce(item = {}, action) {
 
       return newItem
     }
-    case UPDATE_ANSWER: {
+
+    case ADD_HOLE: {
       const newItem = cloneDeep(item)
-      const hole = getHoleFromId(newItem, newItem._holeId)
-      const solution = getSolutionFromHole(newItem, hole)
-      const answer = solution.answers.find(answer => answer._id === action._id)
 
-      answer[action.parameter] = action.value
-
-      updateHoleChoices(hole, solution)
-
-      return newItem
-    }
-    case ADD_ANSWER: {
-      const newItem = cloneDeep(item)
-      const hole = getHoleFromId(newItem, newItem._holeId)
-      const solution = getSolutionFromHole(newItem, hole)
-
-      solution.answers.push({
-        text: '',
-        caseSensitive: false,
+      const hole = {
+        id: makeId(),
         feedback: '',
-        score: 1,
-        _id: makeId()
-      })
+        size: 10,
+        _score: 0,
+        _multiple: false,
+        placeholder: ''
+      }
 
-      updateHoleChoices(hole, solution)
+      const keyword = keywordsUtils.createNew()
+      keyword.text = action.word
+      keyword._deletable = false
+
+      const solution = {
+        holeId: hole.id,
+        answers: [keyword]
+      }
+
+      newItem.holes.push(hole)
+      newItem.solutions.push(solution)
+      newItem._popover = true
+      newItem._holeId = hole.id
+      newItem._text = action.cb(utils.makeTinyHtml(hole, solution))
+      newItem.text = utils.getTextWithPlacerHoldersFromHtml(newItem._text)
 
       return newItem
     }
+
     case UPDATE_HOLE: {
       const newItem = cloneDeep(item)
       const hole = getHoleFromId(newItem, newItem._holeId)
@@ -152,38 +160,7 @@ function reduce(item = {}, action) {
 
       return newItem
     }
-    case ADD_HOLE: {
-      const newItem = cloneDeep(item)
 
-      const hole = {
-        id: makeId(),
-        feedback: '',
-        size: 10,
-        _score: 0,
-        _multiple: false,
-        placeholder: ''
-      }
-
-      const solution = {
-        holeId: hole.id,
-        answers: [{
-          text: action.word,
-          caseSensitive: false,
-          feedback: '',
-          score: 1,
-          _id: makeId()
-        }]
-      }
-
-      newItem.holes.push(hole)
-      newItem.solutions.push(solution)
-      newItem._popover = true
-      newItem._holeId = hole.id
-      newItem._text = action.cb(utils.makeTinyHtml(hole, solution))
-      newItem.text = utils.getTextWithPlacerHoldersFromHtml(newItem._text)
-
-      return newItem
-    }
     case REMOVE_HOLE: {
       const newItem = cloneDeep(item)
       const holes = newItem.holes
@@ -212,17 +189,49 @@ function reduce(item = {}, action) {
 
       return newItem
     }
-    case REMOVE_ANSWER: {
+
+    case ADD_ANSWER: {
       const newItem = cloneDeep(item)
-      const hole = getHoleFromId(newItem, item._holeId)
+      const hole = getHoleFromId(newItem, action.holeId)
       const solution = getSolutionFromHole(newItem, hole)
-      const answers = solution.answers
-      answers.splice(answers.findIndex(answer => answer._id === action._id), 1)
+
+      const keyword = keywordsUtils.createNew()
+      keyword._deletable = solution.answers.length > 0
+
+      solution.answers.push(keyword)
 
       updateHoleChoices(hole, solution)
 
       return newItem
     }
+
+    case UPDATE_ANSWER: {
+      const newItem = cloneDeep(item)
+      const hole = getHoleFromId(newItem, action.holeId)
+      const solution = getSolutionFromHole(newItem, hole)
+      const answer = solution.answers.find(answer => answer._id === action.keywordId)
+
+      answer[action.parameter] = action.value
+
+      updateHoleChoices(hole, solution)
+
+      return newItem
+    }
+
+    case REMOVE_ANSWER: {
+      const newItem = cloneDeep(item)
+      const hole = getHoleFromId(newItem, action.holeId)
+      const solution = getSolutionFromHole(newItem, hole)
+      const answers = solution.answers
+      answers.splice(answers.findIndex(answer => answer._id === action.keywordId), 1)
+
+      updateHoleChoices(hole, solution)
+
+      answers.forEach(keyword => keyword._deletable = answers.length > 1)
+
+      return newItem
+    }
+
     case CLOSE_POPOVER: {
       const newItem = cloneDeep(item)
       newItem._popover = false
@@ -252,70 +261,31 @@ function getSolutionFromHole(item, hole)
 function validate(item) {
   const _errors = {}
 
-  item.holes.forEach(hole => {
-    const solution = getSolutionFromHole(item, hole)
-    let hasPositiveValue = false
-
-    solution.answers.forEach((answer) => {
-      if (notBlank(answer.text, true)) {
-        set(_errors, 'answers.text', tex('cloze_empty_word_error'))
-      }
-
-      if (notBlank(answer.score, true) && answer.score !== 0) {
-        set(_errors, 'answers.score', tex('cloze_empty_score_error'))
-      }
-
-      if (answer.score > 0) hasPositiveValue = true
-    })
-
-    if (hasDuplicates(solution.answers)) {
-      set(_errors, 'answers.duplicate', tex('cloze_duplicate_answers'))
-    }
-
-    if (!hasPositiveValue) {
-      set(_errors, 'answers.value', tex('cloze_solutions_requires_positive_answer'))
-    }
-
-    if (hole._multiple && solution.answers.length < 2) {
-      set(_errors, 'answers.multiple', tex('cloze_multiple_answers_required'))
-    }
-
-    if (notBlank(hole.size, true)) {
-      set(_errors, 'answers.size', tex('cloze_empty_size_error'))
-    }
-
-    if (!_errors.text) {
-      const answerErrors = get(_errors, 'answers.answer')
-      if (answerErrors && answerErrors.length > 0) {
-        _errors.text = tex('cloze_holes_errors')
-      }
-    }
-  })
-
   if (notBlank(item.text, true)) {
     _errors.text = tex('cloze_empty_text_error')
-  }
-
-  if (!_errors.text) {
+  } else {
     if (item.holes.length === 0) {
       _errors.text = tex('cloze_must_contains_clozes_error')
     }
   }
 
-  return _errors
-}
+  item.holes.forEach(hole => {
+    const holeErrors = {}
+    const solution = getSolutionFromHole(item, hole)
 
-function hasDuplicates(answers) {
-  let hasDuplicates = false
-  answers.forEach(answer => {
-    let count = 0
-    answers.forEach(check => {
-      if (answer.text === check.text && answer.caseSensitive === check.caseSensitive) {
-        count++
-      }
-    })
-    if (count > 1) hasDuplicates = true
+    if (notBlank(hole.size, true)) {
+      holeErrors.size = tex('cloze_empty_size_error')
+    }
+
+    const keywordsErrors = keywordsUtils.validate(solution.answers, true, hole._multiple ? 2 : 1)
+    if (!isEmpty(keywordsErrors)) {
+      holeErrors.keywords = keywordsErrors
+    }
+
+    if (!isEmpty(holeErrors)) {
+      _errors[hole.id] = holeErrors
+    }
   })
 
-  return hasDuplicates
+  return _errors
 }

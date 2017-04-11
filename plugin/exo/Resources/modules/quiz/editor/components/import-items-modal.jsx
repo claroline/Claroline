@@ -1,10 +1,11 @@
 import React, {Component, PropTypes as T} from 'react'
-import Modal from 'react-bootstrap/lib/Modal'
 import {connect} from 'react-redux'
+
+import Modal from 'react-bootstrap/lib/Modal'
 import {listItemNames, getDefinition} from './../../../items/item-types'
 import {Icon} from './../../../items/components/icon.jsx'
-import {t, tex, trans} from './../../../utils/translate'
-import {BaseModal} from './../../../modal/components/base.jsx'
+import {t, tex, trans} from '#/main/core/translation'
+import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {REQUEST_SEND} from './../../../api/actions'
 
 
@@ -92,7 +93,7 @@ class ImportItems extends Component {
               onChange={(e) => this.handleSearchTextChange(e.target.value)}
               className="form-control" />
           </div>
-          { this.state.questions.length === 0 && null !== this.state.criterion && '' !== this.state.criterion &&
+          {this.state.questions.length === 0 && null !== this.state.criterion && '' !== this.state.criterion &&
             <div className="text-center">
               <hr/>
               <h4>{t('no_search_results')}</h4>

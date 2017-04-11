@@ -1,8 +1,10 @@
 import React, {PropTypes as T} from 'react'
+
+import {tex} from '#/main/core/translation'
+
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {SelectionText} from './utils/selection-text.jsx'
 import {getReactAnswerSelections} from './utils/selection-answer.jsx'
-import {tex} from './../../utils/translate'
 
 export const SelectionPaper = (props) => {
   return (

@@ -1,7 +1,7 @@
 import React, {Component, PropTypes as T} from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import classes from 'classnames'
-import {t, tex} from './../../utils/translate'
+import {t, tex} from '#/main/core/translation'
 import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL} from './editor'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'

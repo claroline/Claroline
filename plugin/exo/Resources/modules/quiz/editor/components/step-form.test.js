@@ -1,9 +1,11 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure} from './../../../utils/test'
+
+import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
 import {StepForm} from './step-form.jsx'
 
 describe('<StepForm/>', () => {
+  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     renew(StepForm, 'StepForm')
@@ -12,32 +14,31 @@ describe('<StepForm/>', () => {
 
   it('has required props', () => {
     shallow(
-      <StepForm parameters={{}}/>
+      React.createElement(StepForm)
     )
+
     ensure.missingProps('StepForm', [
       'id',
       'title',
       'description',
-      'parameters.maxAttempts',
       'onChange'
     ])
   })
 
   it('has typed props', () => {
     shallow(
-      <StepForm
-        id={[]}
-        title={123}
-        description={{}}
-        parameters={{maxAttempts: false}}
-        onChange="foo"
-      />
+      React.createElement(StepForm, {
+        id: [],
+        title: 123,
+        description: {},
+        onChange: 'foo'
+      })
     )
+
     ensure.invalidProps('StepForm', [
       'id',
       'title',
       'description',
-      'parameters.maxAttempts',
       'onChange'
     ])
   })
@@ -46,26 +47,23 @@ describe('<StepForm/>', () => {
     let updatedValue = null
 
     const form = mount(
-      <StepForm
-        id="ID"
-        title="TITLE"
-        description="DESC"
-        parameters={{maxAttempts: 3}}
-        onChange={value => updatedValue = value}
-      />
+      React.createElement(StepForm, {
+        id: 'ID',
+        title: 'TITLE',
+        description: 'DESC',
+        onChange: value => updatedValue = value
+      })
     )
 
     ensure.propTypesOk()
     ensure.equal(form.find('fieldset').length, 1, 'has fieldset')
 
-    const title = form.find('input#step-ID-title')
+    const title = form.find('#step-ID-title')
     ensure.equal(title.length, 1, 'has title input')
     title.simulate('change', {target: {value: 'FOO'}})
     ensure.equal(updatedValue, {title: 'FOO'})
 
-    const attempts = form.find('input#step-ID-maxAttempts')
-    ensure.equal(attempts.length, 1, 'has maxAttempts checkbox')
-    attempts.simulate('change', {target: {value: 0}})
-    ensure.equal(updatedValue, {parameters: {maxAttempts: 0}})
+    const description = form.find('#step-ID-description')
+    ensure.equal(description.length, 1, 'has description input')
   })
 })

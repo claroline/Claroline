@@ -1,12 +1,13 @@
 import React, {PropTypes as T} from 'react'
 
-import {tex} from '../../utils/translate'
+import {tex} from '#/main/core/translation'
 
 export const OpenFeedback = props =>
   <div className="open-feedback">
     {props.answer && 0 !== props.answer.length ?
       <div dangerouslySetInnerHTML={{__html: props.answer}} />
-      : <div className="no-answer">{tex('no_answer')}</div>
+      :
+      <div className="no-answer">{tex('no_answer')}</div>
     }
   </div>
 

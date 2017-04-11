@@ -1,4 +1,4 @@
-import {tex} from './../../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {select} from '../selectors'
 
 export const utils = {}

@@ -4,7 +4,7 @@ import {Provider} from 'react-redux'
 
 import {createStore} from './store'
 import {registerDefaultItemTypes} from './../items/item-types'
-import {registerModalType} from './../modal'
+import {registerModalType} from '#/main/core/layout/modal'
 import {MODAL_ADD_ITEM, AddItemModal} from './../quiz/editor/components/add-item-modal.jsx'
 import {MODAL_SEARCH, SearchModal} from './components/modal/search.jsx'
 import {MODAL_SHARE, ShareModal} from './components/modal/share.jsx'

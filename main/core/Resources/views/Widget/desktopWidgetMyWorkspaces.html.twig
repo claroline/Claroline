@@ -5,50 +5,53 @@
 {% else %}
     {% set widgetInstanceId = widgetInstance.getId() %}
 
-    <ul class="nav nav-pills">
-        <li id="all-my-workspaces-btn-{{ widgetInstanceId }}">
-            <a href="">
-                {{ 'all_my_workspaces'|trans({}, 'platform') }}
-            </a>
-        </li>
-        <li id="favourite-workspaces-btn-{{ widgetInstanceId }}">
-            <a href="">
-                {{ 'my_favourite_workspaces'|trans({}, 'platform') }}
-            </a>
-        </li>
-    </ul>
-    <br>
+    <div class="panel-body">
+        <ul class="nav nav-pills">
+            <li id="all-my-workspaces-btn-{{ widgetInstanceId }}">
+                <a href="">
+                    {{ 'all_my_workspaces'|trans({}, 'platform') }}
+                </a>
+            </li>
+            <li id="favourite-workspaces-btn-{{ widgetInstanceId }}">
+                <a href="">
+                    {{ 'my_favourite_workspaces'|trans({}, 'platform') }}
+                </a>
+            </li>
+        </ul>
 
-    <div id="workspaces-list-element-{{ widgetInstanceId }}">
-        {% if workspaces|length == 0 %}
-            <div class="alert alert-warning">{{ 'no_workspace'|trans({}, 'platform') }}</div>
-        {% else %}
-            {% for workspace in workspaces %}
-                {% set hasWsAccess = has_access_to_workspace(workspace.getId()) %}
-                <div>
-                    {% if hasWsAccess %}
-                        <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}">
-                    {% endif %}
-                    <i class="fa fa-book"></i>
-                    {{ workspace.getName() }}
-                    <span>
-                        <small>
-                            ({{ workspace.getCode() }})
-                        </small>
-                    </span>
-                    {% if hasWsAccess %}
-                        </a>
-                    {% else %}
-                        <i class="fa fa-warning pointer-hand"
-                           data-toggle="tooltip"
-                           data-placement="top"
-                           title="{{ 'workspace_access_disabled'|trans({}, 'platform') }}"
-                        >
-                        </i>
-                    {% endif %}
-                </div>
-            {% endfor %}
-        {% endif %}
+        <br>
+
+        <div id="workspaces-list-element-{{ widgetInstanceId }}">
+            {% if workspaces|length == 0 %}
+                <div class="alert alert-warning">{{ 'no_workspace'|trans({}, 'platform') }}</div>
+            {% else %}
+                {% for workspace in workspaces %}
+                    {% set hasWsAccess = has_access_to_workspace(workspace.getId()) %}
+                    <div>
+                        {% if hasWsAccess %}
+                            <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}">
+                        {% endif %}
+                        <i class="fa fa-book"></i>
+                        {{ workspace.getName() }}
+                        <span>
+                            <small>
+                                ({{ workspace.getCode() }})
+                            </small>
+                        </span>
+                        {% if hasWsAccess %}
+                            </a>
+                        {% else %}
+                            <i class="fa fa-warning pointer-hand"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'workspace_access_disabled'|trans({}, 'platform') }}"
+                            >
+                            </i>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
     </div>
 
     {% block javascripts %}

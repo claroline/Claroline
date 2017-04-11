@@ -2,15 +2,17 @@ import React from 'react'
 import {mount} from 'enzyme'
 import configureMockStore from 'redux-mock-store'
 import merge from 'lodash/merge'
-import {spyConsole, renew, ensure, mockTranslator} from './../../../utils/test'
+
+import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
 import {registerItemType} from './../../../items/item-types'
 import {Paper} from './paper.jsx'
+import {SHOW_SCORE_AT_CORRECTION} from './../../enums'
 
 describe('<Paper/>', () => {
+  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     renew(Paper, 'Paper')
-    mockTranslator()
   })
   afterEach(spyConsole.restore)
 
@@ -19,12 +21,26 @@ describe('<Paper/>', () => {
     registerFixtureType({name: 'baz', type: 'baz/quz'})
 
     const store = configureMockStore()({
+      resourceNode: {
+        meta: {
+          editable: true
+        }
+      },
+      quiz: {
+        meta: {
+          canViewPapers: true
+        }
+      },
       papers: {
         papers: [
           {
             id: '123',
+            finished: true,
             number: 1,
             structure: {
+              parameters: {
+                showScoreAt: SHOW_SCORE_AT_CORRECTION
+              },
               steps: [
                 {
                   id: '456',
@@ -50,7 +66,11 @@ describe('<Paper/>', () => {
       }
     })
 
-    mount(<Paper store={store}/>)
+    mount(
+      React.createElement(Paper, {
+        store: store
+      })
+    )
     ensure.propTypesOk()
   })
 })

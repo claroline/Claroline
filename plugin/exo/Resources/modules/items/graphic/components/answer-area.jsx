@@ -1,6 +1,9 @@
 import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 import tinycolor from 'tinycolor2'
+
+import {tex} from '#/main/core/translation'
+import {TooltipButton} from './../../../components/form/tooltip-button.jsx'
 import {makeDraggable} from './../../../utils/dragAndDrop'
 import {AreaResizer, AreaResizerDraggable} from './area-resizer.jsx'
 import {
@@ -17,10 +20,10 @@ import {
   DIR_NW
 } from './../enums'
 
-const FRAME_GUTTER = 2
+const FRAME_GUTTER = 6
 const AREA_GUTTER = 8
 const BORDER_WIDTH = 2
-const RESIZER_SIZE = 6
+const RESIZER_SIZE = 12
 
 export class AnswerArea extends Component {
   render() {
@@ -44,6 +47,7 @@ export class AnswerArea extends Component {
     const borderRadius = isRect ? 0 : def.radius
     const halfSizer = RESIZER_SIZE / 2
     const border = BORDER_WIDTH
+    const halfBorder = border / 2
 
     const makeResizer = makeResizerFactory(
       props.resizable,
@@ -52,18 +56,19 @@ export class AnswerArea extends Component {
       this.el
     )
     const resizers = [
-      [-halfSizer - border, -halfSizer - border, DIR_NW],
-      [-halfSizer - border, innerFrameWidth / 2 - halfSizer, DIR_N],
-      [-halfSizer - border, innerFrameWidth + border - halfSizer, DIR_NE],
-      [innerFrameHeight / 2 - halfSizer, innerFrameWidth + border - halfSizer, DIR_E],
-      [innerFrameHeight + border - halfSizer, innerFrameWidth + border - halfSizer, DIR_SE],
-      [innerFrameHeight + border - halfSizer, innerFrameWidth / 2 - halfSizer, DIR_S],
-      [innerFrameHeight + border - halfSizer, - halfSizer - border, DIR_SW],
-      [innerFrameHeight / 2 - halfSizer, - halfSizer - border, DIR_W]
+      [-halfSizer - halfBorder, -halfSizer - border, DIR_NW],
+      [-halfSizer - halfBorder, innerFrameWidth / 2 - halfSizer, DIR_N],
+      [-halfSizer - halfBorder, innerFrameWidth + halfBorder - halfSizer, DIR_NE],
+      [innerFrameHeight / 2 - halfSizer, innerFrameWidth + halfBorder - halfSizer, DIR_E],
+      [innerFrameHeight + halfBorder - halfSizer, innerFrameWidth + border - halfSizer, DIR_SE],
+      [innerFrameHeight + halfBorder - halfSizer, innerFrameWidth / 2 - halfSizer, DIR_S],
+      [innerFrameHeight + halfBorder - halfSizer, - halfSizer - halfBorder, DIR_SW],
+      [innerFrameHeight / 2 - halfSizer, - halfSizer - halfBorder, DIR_W]
     ]
 
+
     return props.connectDragSource(
-      <span
+      <div
         ref={el => this.el = el}
         className={classes('area-handle', {
           selected: props.selected,
@@ -71,13 +76,14 @@ export class AnswerArea extends Component {
         })}
         onMouseDown={() => props.onSelect(props.id)}
         style={common({
+          padding: FRAME_GUTTER,
           left: left - FRAME_GUTTER - AREA_GUTTER,
           top: top - FRAME_GUTTER - AREA_GUTTER,
           width: handleWidth,
           height: handleHeight
         })}
       >
-        <span
+        <div
           className="area-frame"
           style={common({
             left: FRAME_GUTTER,
@@ -87,7 +93,7 @@ export class AnswerArea extends Component {
             borderWidth: BORDER_WIDTH
           })}
         >
-          <span className="area"
+          <div className="area"
             style={common({
               left: AREA_GUTTER - BORDER_WIDTH,
               top: AREA_GUTTER - BORDER_WIDTH,
@@ -100,29 +106,43 @@ export class AnswerArea extends Component {
           />
 
           {resizers.map(makeResizer)}
+        </div>
 
-          <span
-            className="fa fa-fw fa-pencil"
-            role="button"
-            style={common({right: -22})}
-            onClick={e => {
-              const rect = e.target.getBoundingClientRect()
-              const containerRect = document.getElementsByClassName('graphic-editor')[0].getBoundingClientRect()
-              props.togglePopover(
-                props.id,
-                rect.left + window.pageXOffset - containerRect.left - 130, // works with fixed size popover and position relative container
-                rect.top + window.pageYOffset - containerRect.top - 66
-              )
+        {props.selected &&
+          <div
+            className="area-controls"
+            style={{
+              top: FRAME_GUTTER + AREA_GUTTER
             }}
-          />
-          <span
-            className="fa fa-fw fa-trash-o"
-            role="button"
-            style={common({right: -22, top: 20})}
-            onClick={() => props.onDelete(props.id)}
-          />
-        </span>
-      </span>
+          >
+            <TooltipButton
+              id="area-edit"
+              className="btn-default btn-sm"
+              label={<span className="fa fa-fw fa-pencil" />}
+              title={tex('graphic_area_edit')}
+              onClick={e => {
+                const rect = e.target.classList.contains('btn') ?
+                  e.target.getBoundingClientRect() : e.target.parentNode.getBoundingClientRect()
+                const containerRect = document.getElementsByClassName('graphic-editor')[0].getBoundingClientRect()
+
+                props.togglePopover(
+                  props.id,
+                  rect.left + (rect.width / 2) + window.pageXOffset - containerRect.left, // works with position relative container
+                  rect.top + rect.height + window.pageYOffset - containerRect.top
+                )
+              }}
+            />
+
+            <TooltipButton
+              id="area-edit"
+              className="btn-danger btn-sm"
+              label={<span className="fa fa-fw fa-trash-o" />}
+              title={tex('delete')}
+              onClick={() => props.onDelete(props.id)}
+            />
+          </div>
+        }
+      </div>
     )
   }
 }
@@ -171,7 +191,6 @@ export const AnswerAreaDraggable = makeDraggable(
 
 function common(rules) {
   return Object.assign(rules, {
-    display: 'inline-block',
     position: 'absolute'
   })
 }

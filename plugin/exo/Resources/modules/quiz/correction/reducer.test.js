@@ -1,37 +1,39 @@
 import freeze from 'deep-freeze'
-import {assertEqual} from './../../utils/test'
+import {ensure, mockTranslator} from '#/main/core/tests'
 import {reduceCorrection} from './reducer'
 import {CORRECTION_INIT, QUESTION_CURRENT, SCORE_UPDATE, FEEDBACK_UPDATE, REMOVE_ANSWERS} from './actions'
 
 describe('Correction reducer', () => {
+  before(mockTranslator)
+
   it('returns an empty correction object by default', () => {
     const correction = reduceCorrection(undefined, {})
-    assertEqual(correction, {})
+    ensure.equal(correction, {})
   })
 
   it('sets correction on init', () => {
     const correction = reduceCorrection({}, {type: CORRECTION_INIT, correction: {questions: 'QUESTIONS', answers: 'ANSWERS'}})
-    assertEqual(correction.questions, 'QUESTIONS')
-    assertEqual(correction.answers, 'ANSWERS')
-    assertEqual(correction.currentQuestionId, null)
+    ensure.equal(correction.questions, 'QUESTIONS')
+    ensure.equal(correction.answers, 'ANSWERS')
+    ensure.equal(correction.currentQuestionId, null)
   })
 
   it('updates current question id', () => {
     const state = freeze({currentQuestionId: 'q1', questions: {}, answers: {}})
     const correction = reduceCorrection(state, {type: QUESTION_CURRENT, id: 'q2'})
-    assertEqual(correction, {currentQuestionId: 'q2', questions: {}, answers: {}})
+    ensure.equal(correction, {currentQuestionId: 'q2', questions: {}, answers: {}})
   })
 
   it('updates an answer score', () => {
     const state = freeze({currentQuestionId: 'q1', questions: {}, answers: [{id: 'a1'}, {id: 'a2'}]})
     const correction = reduceCorrection(state, {type: SCORE_UPDATE, answerId: 'a2', score: '18'})
-    assertEqual(correction, {currentQuestionId: 'q1', questions: {}, answers: [{id: 'a1'}, {id: 'a2', score: '18'}]})
+    ensure.equal(correction, {currentQuestionId: 'q1', questions: {}, answers: [{id: 'a1'}, {id: 'a2', score: '18'}]})
   })
 
   it('updates an answer feedback', () => {
     const state = freeze({currentQuestionId: 'q1', questions: {}, answers: [{id: 'a1'}, {id: 'a2'}]})
     const correction = reduceCorrection(state, {type: FEEDBACK_UPDATE, answerId: 'a1', feedback: 'feedback'})
-    assertEqual(correction, {currentQuestionId: 'q1', questions: {}, answers: [{id: 'a1', feedback: 'feedback'}, {id: 'a2'}]})
+    ensure.equal(correction, {currentQuestionId: 'q1', questions: {}, answers: [{id: 'a1', feedback: 'feedback'}, {id: 'a2'}]})
   })
 
   it('removes answers with valid score', () => {
@@ -66,7 +68,7 @@ describe('Correction reducer', () => {
       ]
     })
     const correction = reduceCorrection(state, {type: REMOVE_ANSWERS, questionId: 'q1'})
-    assertEqual(
+    ensure.equal(
       correction,
       {
         currentQuestionId: 'q1',

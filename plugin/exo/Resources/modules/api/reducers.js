@@ -1,6 +1,6 @@
 import {LoadingIndicator} from '#/main/core/loader/loading-indicator'
 
-import {makeReducer} from './../utils/reducers'
+import {makeReducer} from '#/main/core/utilities/redux'
 
 import {
   REQUESTS_INCREMENT,

@@ -1,9 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
 import {SetForm as component} from './editor.jsx'
 import {ITEM_CREATE} from './../../quiz/editor/actions'
-import {makeId, makeActionCreator} from './../../utils/utils'
+import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeId} from './../../utils/utils'
 import {notBlank, number, chain} from './../../utils/validate'
-import {tex} from './../../utils/translate'
+import {tex} from '#/main/core/translation'
 
 const UPDATE_PROP = 'UPDATE_PROP'
 

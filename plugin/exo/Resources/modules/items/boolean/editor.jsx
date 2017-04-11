@@ -1,11 +1,12 @@
 import React, {Component, PropTypes as T} from 'react'
 import get from 'lodash/get'
 import classes from 'classnames'
-import {tex} from './../../utils/translate'
-import {ErrorBlock} from './../../components/form/error-block.jsx'
+import {tex} from '#/main/core/translation'
+import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {Textarea} from './../../components/form/textarea.jsx'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
-import {actions, pairs} from './editor'
+import {actions} from './editor'
+import {utils} from './utils/utils'
 
 class Item extends Component {
   constructor(props){
@@ -84,7 +85,7 @@ const Boolean = props => {
           <span className="caret"></span>
         </button>
         <ul className="dropdown-menu" aria-labelledby={`choice-drop-down-${props.item.id}`}>
-          {pairs.map((pair, index) =>
+          {utils.getDefaultPairs().map((pair, index) =>
             <li key={`pair-${index}`}
               onClick={() => props.onChange(
               actions.updateChoices(pair)

@@ -6,10 +6,10 @@ import {
   ERROR_AUTH_WINDOW_CLOSED,
   authenticate
 } from '#/main/core/authentication'
-import {tex} from './../utils/translate'
-import {generateUrl} from './../utils/routing'
-import {showModal} from './../modal/actions'
-import {MODAL_MESSAGE} from './../modal'
+import {tex} from '#/main/core/translation'
+import {generateUrl} from '#/main/core/fos-js-router'
+import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {MODAL_MESSAGE} from '#/main/core/layout/modal'
 import {REQUEST_SEND, actions} from './actions'
 
 const defaultRequest = {
@@ -76,7 +76,7 @@ function handleResponseError(error, failure, request, next) {
 }
 
 function showErrorModal(dispatch, message) {
-  dispatch(showModal(MODAL_MESSAGE, {
+  dispatch(modalActions.showModal(MODAL_MESSAGE, {
     title: tex('request_error'),
     bsStyle: 'danger',
     message

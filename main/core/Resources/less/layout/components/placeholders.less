@@ -1,4 +1,31 @@
 // ATTENTION : never create a .placeholder class as bootstrap already define a mixin with that name.
+.empty-placeholder {
+    color: @placeholder-color;
+    min-height: @input-height-base;
+    line-height: @line-height-computed;
+
+    .placeholder-variant(
+        @placeholder-font-size,
+        @placeholder-padding,
+        @placeholder-border-radius,
+        @placeholder-border,
+        @placeholder-border
+    );
+
+    &.placeholder-lg {
+        min-height: @input-height-large;
+        line-height: @line-height-large;
+
+        .placeholder-variant(
+            @placeholder-lg-font-size,
+            @placeholder-lg-padding,
+            @placeholder-lg-border-radius,
+            @placeholder-lg-border,
+            @placeholder-lg-border
+        );
+    }
+}
+
 .drop-placeholder {
     color: @placeholder-color;
     min-height: @input-height-base;

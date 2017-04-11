@@ -78,24 +78,15 @@ class CategorySerializer extends AbstractSerializer
      */
     public function deserialize($data, $category = null, array $options = [])
     {
-        if (empty($category)) {
+        if (!$this->hasOption(Transfer::NO_FETCH, $options) && empty($category) && !empty($data->id)) {
             // Loads the Category from DB if already exist
-            if (!empty($data->id)) {
-                $category = $this->om->getRepository('UJMExoBundle:Item\Category')->findOneBy([
-                    'uuid' => $data->id,
-                ]);
-            }
-
-            if (empty($category)) {
-                // Item not exist
-                $category = new Category();
-            }
+            $category = $this->om->getRepository('UJMExoBundle:Item\Category')->findOneBy([
+                'uuid' => $data->id,
+            ]);
         }
 
-        // Force client ID if needed
-        if (!$this->hasOption(Transfer::USE_SERVER_IDS, $options)) {
-            $category->setUuid($data->id);
-        }
+        $category = $category ?: new Category();
+        $category->setUuid($data->id);
 
         // Map data to entity (dataProperty => entityProperty/function to call)
         $this->mapObjectToEntity([

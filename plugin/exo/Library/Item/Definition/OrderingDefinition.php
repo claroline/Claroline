@@ -148,6 +148,21 @@ class OrderingDefinition extends AbstractDefinition
 
     public function getStatistics(AbstractItem $question, array $answersData)
     {
+        // TODO: Implement getStatistics() method.
+
         return [];
+    }
+
+    /**
+     * Refreshes item UUIDs.
+     *
+     * @param OrderingQuestion $item
+     */
+    public function refreshIdentifiers(AbstractItem $item)
+    {
+        /** @var OrderingItem $item */
+        foreach ($item->getItems() as $orderingItem) {
+            $orderingItem->refreshUuid();
+        }
     }
 }

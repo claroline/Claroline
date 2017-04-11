@@ -1,6 +1,6 @@
 import React from 'react'
 import {mount} from 'enzyme'
-import {spyConsole, renew, ensure} from './../../utils/test'
+import {spyConsole, renew, ensure} from '#/main/core/tests'
 import {ChoicePlayer} from './player.jsx'
 
 describe('<ChoicePlayer/>', () => {

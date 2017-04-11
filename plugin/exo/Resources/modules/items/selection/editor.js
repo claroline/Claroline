@@ -1,7 +1,11 @@
+import cloneDeep from 'lodash/cloneDeep'
+
+import {makeActionCreator} from '#/main/core/utilities/redux'
+import {tex} from '#/main/core/translation'
+
 import {Selection as component} from './editor.jsx'
 import {ITEM_CREATE} from './../../quiz/editor/actions'
-import {makeActionCreator, makeId} from './../../utils/utils'
-import cloneDeep from 'lodash/cloneDeep'
+import {makeId} from './../../utils/utils'
 import {utils} from './utils/utils'
 import {reduce as findReduce} from './editors/find'
 import {reduce as selectReduce} from './editors/select'
@@ -13,7 +17,6 @@ import {validate as findValidate} from './editors/find'
 import {validate as selectValidate} from './editors/select'
 import {validate as highlightValidate} from './editors/highlight'
 import {notBlank} from './../../utils/validate'
-import {tex} from './../../utils/translate'
 
 const UPDATE_QUESTION = 'UPDATE_QUESTION'
 const CLOSE_POPOVER = 'CLOSE_POPOVER'

@@ -2,3 +2,28 @@
     border-radius: @modal-content-border-radius;
     box-shadow: @modal-content-box-shadow;
 }
+
+// better alignment in header
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    // sometimes `modal-title` class is missing
+    // so we need to grab rules from it
+    h4 {
+        &:extend(.modal-title);
+    }
+
+    .close {
+        order: 2;
+        // reset bootstrap
+        margin-top: 0;
+        float: none;
+    }
+}
+
+.modal-title {
+    order: 1;
+    flex: 1;
+}

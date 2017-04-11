@@ -1,7 +1,7 @@
 import React, {Component, PropTypes as T} from 'react'
 import cloneDeep from 'lodash/cloneDeep'
 import {utils} from './utils/utils'
-import {tex} from './../../utils/translate'
+import {tex} from '#/main/core/translation'
 
 class GridCell extends Component {
   constructor(props) {

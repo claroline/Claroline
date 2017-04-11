@@ -119,6 +119,8 @@ class VideoController extends FOSRestController
     }
 
     /**
+     * @deprecated only kept for HTML contents that embed videos using this URL
+     *
      * @Get("/video/{video}/stream", name="get_video_stream", options={ "method_prefix" = false })
      * @View(serializerGroups={"api_video"})
      */

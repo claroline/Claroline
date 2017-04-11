@@ -1,8 +1,8 @@
 import React, {Component, PropTypes as T} from 'react'
 import Modal from 'react-bootstrap/lib/Modal'
-import {trans} from './../../../utils/translate'
+import {trans} from '#/main/core/translation'
 import {listContentTypes, getContentDefinition} from './../../../contents/content-types'
-import {BaseModal} from './../../../modal/components/base.jsx'
+import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {ContentInput} from './content-input.jsx'
 
 export const MODAL_ADD_CONTENT = 'MODAL_ADD_CONTENT'

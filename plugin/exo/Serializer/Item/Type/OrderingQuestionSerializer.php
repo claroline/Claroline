@@ -159,15 +159,8 @@ class OrderingQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (empty($item)) {
-                // Create a new item
-                $item = new OrderingItem();
-            }
-
-            // Force client ID if needed
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $item->setUuid($itemData->id);
-            }
+            $item = $item ?: new OrderingItem();
+            $item->setUuid($itemData->id);
 
             // Deserialize item content
             $item = $this->contentSerializer->deserialize($itemData, $item, $options);

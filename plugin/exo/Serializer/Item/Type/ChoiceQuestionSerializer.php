@@ -134,15 +134,8 @@ class ChoiceQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (empty($choice)) {
-                // Create a new choice
-                $choice = new Choice();
-            }
-
-            // Force client ID if needed
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $choice->setUuid($choiceData->id);
-            }
+            $choice = $choice ?: new Choice();
+            $choice->setUuid($choiceData->id);
 
             $choice->setOrder($index);
 

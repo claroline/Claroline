@@ -2,15 +2,15 @@ import React, {Component, PropTypes as T} from 'react'
 import Popover from 'react-bootstrap/lib/Popover'
 import classes from 'classnames'
 import get from 'lodash/get'
-import {tex, t} from './../../utils/translate'
+
+import {tex, t} from '#/main/core/translation'
 import {Textarea} from './../../components/form/textarea.jsx'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
-import {ErrorBlock} from './../../components/form/error-block.jsx'
+import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {actions} from './editor'
+import {utils} from './utils/utils'
 
-/* global jsPlumb */
-
-function getPopoverPosition(connectionClass, id){
+function getPopoverPosition(connectionClass, id) {
   const containerRect =  document.getElementById('popover-place-holder-' + id).getBoundingClientRect()
   const connectionRect =  document.querySelectorAll('.' + connectionClass)[0].getBoundingClientRect()
   // only compute top position
@@ -19,58 +19,23 @@ function getPopoverPosition(connectionClass, id){
   }
 }
 
-function initJsPlumb(jsPlumbInstance) {
-  // defaults parameters for all connections
-  jsPlumbInstance.importDefaults({
-    Anchors: ['RightMiddle', 'LeftMiddle'],
-    ConnectionsDetachable: true,
-    Connector: 'Straight',
-    DropOptions: {tolerance: 'touch'},
-    HoverPaintStyle: {strokeStyle: '#FC0000'},
-    LogEnabled: true,
-    PaintStyle: {strokeStyle: '#777', lineWidth: 4}
-  })
-
-  jsPlumbInstance.registerConnectionTypes({
-    'valid': {
-      paintStyle     : { strokeStyle: '#5CB85C', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'green',   lineWidth: 6 },
-      cssClass: 'association-valid'
-    },
-    'invalid': {
-      paintStyle:      { strokeStyle: '#D9534F', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'red',     lineWidth: 6 },
-      cssClass: 'association-invalid'
-    },
-    'selected': {
-      paintStyle:      { strokeStyle: '#006DCC', lineWidth: 6 },
-      hoverPaintStyle: { strokeStyle: '#006DCC', lineWidth: 6 },
-      cssClass: 'association-selected'
-    },
-    'default': {
-      paintStyle     : { strokeStyle: 'grey',    lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'orange', lineWidth: 6, cursor: 'pointer'},
-      cssClass: 'association-default'
-    }
-  })
-}
-
-function drawSolutions(solutions, jsPlumbInstance){
-
+function drawSolutions(solutions, jsPlumbInstance) {
   for (const solution of solutions) {
     const connection = jsPlumbInstance.connect({
       source: 'source_' + solution.firstId,
       target: 'target_' + solution.secondId,
-      type: solution.score > 0 ? 'valid':'invalid'
+      type: solution.score > 0 ? 'expected':'unexpected'
     })
 
     const connectionClass = 'connection-' + solution.firstId + '-' + solution.secondId
-    connection.addClass(connectionClass)
+    if (connection) { // connection doesn't exist in tests has jsPlumb is mocked
+      connection.addClass(connectionClass)
+    }
   }
 }
 
 class MatchLinkPopover extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       showFeedback : false
@@ -93,7 +58,7 @@ class MatchLinkPopover extends Component {
                 title={'delete'}
                 enabled={this.props.solution._deletable}
                 className="btn-link-default"
-                label={<span className="fa fa-fw fa-trash-o"></span>}
+                label={<span className="fa fa-fw fa-trash-o" />}
                 onClick={() => this.props.solution._deletable &&
                 this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)
                 }
@@ -102,7 +67,7 @@ class MatchLinkPopover extends Component {
                 id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-close`}
                 title={'close'}
                 className="btn-link-default"
-                label={<span className="fa fa-fw fa-times"></span>}
+                label={<span className="fa fa-fw fa-times" />}
                 onClick={() => this.props.handlePopoverClose()}
               />
             </div>
@@ -123,7 +88,7 @@ class MatchLinkPopover extends Component {
                id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
                className="btn-link-default"
                title={tex('feedback_association_created')}
-               label={<span className="fa fa-fw fa-comments-o"></span>}
+               label={<span className="fa fa-fw fa-comments-o" />}
                onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
              />
           </div>
@@ -217,9 +182,8 @@ class Match extends Component {
 
   constructor(props) {
     super(props)
-    this.jsPlumbInstance = jsPlumb.getInstance()
-    initJsPlumb(this.jsPlumbInstance)
 
+    this.jsPlumbInstance = utils.getJsPlumbInstance()
     this.container = null
 
     this.state = {
@@ -272,7 +236,9 @@ class Match extends Component {
       const firstId = connection.sourceId.replace('source_', '')
       const secondId = connection.targetId.replace('target_', '')
       const connectionClass = 'connection-' + firstId + '-' + secondId
-      connection.connection.addClass(connectionClass)
+      if (connection) {
+        connection.connection.addClass(connectionClass)
+      }
       const positions = getPopoverPosition(connectionClass, this.props.item.id)
       const solution = {
         firstId: firstId,
@@ -376,12 +342,12 @@ class Match extends Component {
     this.setState({popover: {visible: false}})
     const list = this.jsPlumbInstance.getConnections()
     for(const conn of list){
-      let type = 'valid'
+      let type = 'expected'
       const firstId = conn.sourceId.replace('source_', '')
       const secondId = conn.targetId.replace('target_', '')
       const solution = this.props.item.solutions.find(solution => solution.firstId === firstId && solution.secondId === secondId)
       if(undefined !== solution && solution.score <= 0){
-        type = 'invalid'
+        type = 'unexpected'
       }
       conn.setType(type)
     }
@@ -411,9 +377,9 @@ class Match extends Component {
   componentWillUnmount(){
     this.container.removeEventListener('click', this.handleTextEditorSwitch)
     window.removeEventListener('resize', this.handleWindowResize)
-    jsPlumb.detachEveryConnection()
-    // use reset instead of deleteEveryEndpoint because reset also remove event listeners
-    jsPlumb.reset()
+
+    utils.resetJsPlumb()
+
     this.jsPlumbInstance = null
     delete this.jsPlumbInstance
   }

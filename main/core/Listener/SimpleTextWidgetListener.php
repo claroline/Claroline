@@ -33,12 +33,19 @@ class SimpleTextWidgetListener
     private $om;
 
     /**
+     * SimpleTextWidgetListener constructor.
+     *
      * @DI\InjectParams({
      *      "simpleTextManager" = @DI\Inject("claroline.manager.simple_text_manager"),
      *      "formFactory"       = @DI\Inject("form.factory"),
      *      "templating"        = @DI\Inject("templating"),
      *      "om"                = @DI\Inject("claroline.persistence.object_manager")
      * })
+     *
+     * @param SimpleTextManager $simpleTextManager
+     * @param FormFactory       $formFactory
+     * @param TwigEngine        $templating
+     * @param ObjectManager     $om
      */
     public function __construct(
         SimpleTextManager $simpleTextManager,
@@ -59,12 +66,12 @@ class SimpleTextWidgetListener
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
-        $txtConfig = $this->simpleTextManager->getTextConfig($event->getInstance());
-        if ($txtConfig) {
-            $event->setContent($txtConfig->getContent());
-        } else {
-            $event->setContent('');
-        }
+        $widgetText = $this->simpleTextManager->getTextConfig($event->getInstance());
+        $content = $this->templating->render('ClarolineCoreBundle:Widget:SimpleText\display.html.twig', [
+            'content' => $widgetText ? $widgetText->getContent() : '',
+        ]);
+
+        $event->setContent($content);
         $event->stopPropagation();
     }
 
@@ -83,7 +90,7 @@ class SimpleTextWidgetListener
 
         $form = $this->formFactory->create(new SimpleTextType('widget_text_'.rand(0, 1000000000)), $txtConfig);
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Widget:config_simple_text_form.html.twig',
+            'ClarolineCoreBundle:Widget:SimpleText\configure.html.twig',
             ['form' => $form->createView(), 'config' => $instance]
         );
         $event->setContent($content);

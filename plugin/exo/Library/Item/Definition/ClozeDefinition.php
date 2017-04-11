@@ -212,6 +212,30 @@ class ClozeDefinition extends AbstractDefinition
     }
 
     /**
+     * Refreshes hole UUIDs and update placeholders in text.
+     *
+     * @param ClozeQuestion $item
+     */
+    public function refreshIdentifiers(AbstractItem $item)
+    {
+        $text = $item->getText();
+
+        /** @var Hole $hole */
+        foreach ($item->getHoles() as $hole) {
+            // stash current id
+            $oldId = $hole->getUuid();
+
+            // generate new id for hole
+            $hole->refreshUuid();
+
+            // replace placeholder in text
+            $text = str_replace('[['.$oldId.']]', '[['.$hole->getUuid().']]', $text);
+        }
+
+        $item->setText($text);
+    }
+
+    /**
      * @param Hole $hole
      *
      * @return Keyword|null

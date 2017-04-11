@@ -1,6 +1,6 @@
 import React, {PropTypes as T} from 'react'
-import {t} from './../../../utils/translate'
-import {FormGroup} from './../../../components/form/form-group.jsx'
+import {t} from '#/main/core/translation'
+import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
 import {Textarea} from './../../../components/form/textarea.jsx'
 
 export const ContentItemForm = props =>

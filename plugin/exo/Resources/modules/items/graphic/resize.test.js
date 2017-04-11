@@ -1,5 +1,5 @@
 import {resizeArea} from './resize'
-import {ensure} from './../../utils/test'
+import {ensure} from '#/main/core/tests'
 import {
   SHAPE_RECT,
   SHAPE_CIRCLE,

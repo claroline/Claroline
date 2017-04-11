@@ -6,41 +6,43 @@ import {
   ensure,
   mockTranslator,
   mockTinymce
-} from './../../utils/test'
+} from '#/main/core/tests'
 import {Textarea} from './textarea.jsx'
 
 describe('<Textarea/>', () => {
+  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
-    mockTranslator()
     mockTinymce()
     renew(Textarea, 'Textarea')
   })
   afterEach(spyConsole.restore)
 
   it('has required props', () => {
-    shallow(<Textarea/>)
+    shallow(
+      React.createElement(Textarea)
+    )
     ensure.missingProps('Textarea', ['id', 'content', 'onChange'])
   })
 
   it('has typed props', () => {
     shallow(
-      <Textarea
-        id={true}
-        content={[]}
-        onChange="foo"
-      />
+      React.createElement(Textarea, {
+        id: true,
+        content: [],
+        onChange: 'foo'
+      })
     )
     ensure.invalidProps('Textarea', ['id', 'content', 'onChange'])
   })
 
   it('renders an editable div by default', () => {
     const area = mount(
-      <Textarea
-        id="ID"
-        content="CONTENT"
-        onChange={() => {}}
-      />
+      React.createElement(Textarea, {
+        id: 'ID',
+        content: 'CONTENT',
+        onChange: () => {}
+      })
     )
     ensure.propTypesOk()
     const textBox = area.find('div[role="textbox"]#ID')
@@ -50,11 +52,11 @@ describe('<Textarea/>', () => {
 
   it('renders a tinymce textarea if needed', () => {
     const area = mount(
-      <Textarea
-        id="ID"
-        content="CONTENT"
-        onChange={() => {}}
-      />
+      React.createElement(Textarea, {
+        id: 'ID',
+        content: 'CONTENT',
+        onChange: () => {}
+      })
     )
     ensure.propTypesOk()
 

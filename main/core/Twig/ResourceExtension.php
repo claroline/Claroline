@@ -11,42 +11,77 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\Tag;
-use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\ResourceNodeManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @Service
- * @Tag("twig.extension")
+ * @DI\Service
+ * @DI\Tag("twig.extension")
  */
 class ResourceExtension extends \Twig_Extension
 {
-    protected $resourceManager;
+    /**
+     * @var ResourceManager
+     */
+    private $resourceManager;
 
     /**
-     * @InjectParams({
-     *     "resourceManager" = @Inject("claroline.manager.resource_manager")
-     * })
+     * @var ResourceNodeManager
      */
-    public function __construct(ResourceManager $resourceManager)
+    private $resourceNodeManager;
+
+    /**
+     * ResourceExtension constructor.
+     *
+     * @DI\InjectParams({
+     *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
+     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node")
+     * })
+     *
+     * @param ResourceManager     $resourceManager
+     * @param ResourceNodeManager $resourceNodeManager
+     */
+    public function __construct(
+        ResourceManager $resourceManager,
+        ResourceNodeManager $resourceNodeManager)
     {
         $this->resourceManager = $resourceManager;
-    }
-
-    public function getFunctions()
-    {
-        return array(
-            'isMenuActionImplemented' => new \Twig_Function_Method($this, 'isMenuActionImplemented'),
-            'getCurrentUrl' => new \Twig_Function_Method($this, 'getCurrentUrl'),
-        );
+        $this->resourceNodeManager = $resourceNodeManager;
     }
 
     public function getName()
     {
         return 'resource_extension';
+    }
+
+    public function getFilters()
+    {
+        return [
+            new \Twig_SimpleFilter('get_serialized_node', [$this, 'serializeNode']),
+        ];
+    }
+
+    public function getFunctions()
+    {
+        return [
+            'isMenuActionImplemented' => new \Twig_Function_Method($this, 'isMenuActionImplemented'),
+            'getCurrentUrl' => new \Twig_Function_Method($this, 'getCurrentUrl'),
+        ];
+    }
+
+    /**
+     * Gets a serialized representation of the node of a resource.
+     *
+     * @param AbstractResource $resource
+     *
+     * @return array
+     */
+    public function serializeNode(AbstractResource $resource)
+    {
+        return $this->resourceNodeManager->serialize($resource->getResourceNode());
     }
 
     public function isMenuActionImplemented(ResourceType $resourceType = null, $menuName)

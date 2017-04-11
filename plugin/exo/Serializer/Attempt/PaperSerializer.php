@@ -114,14 +114,8 @@ class PaperSerializer extends AbstractSerializer
      */
     public function deserialize($data, $paper = null, array $options = [])
     {
-        if (empty($paper)) {
-            $paper = new Paper();
-        }
-
-        // Force client ID if needed
-        if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-            $paper->setUuid($data->id);
-        }
+        $paper = $paper ?: new Paper();
+        $paper->setUuid($data->id);
 
         if (isset($data->number)) {
             $paper->setNumber($data->number);

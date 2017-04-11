@@ -1,7 +1,7 @@
 import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 
-import {generateUrl} from './../../utils/routing'
+import {generateUrl} from '#/main/core/fos-js-router'
 
 const UsersList = props =>
   <ul className="dropdown-menu">

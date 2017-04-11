@@ -1,6 +1,6 @@
 import React, {PropTypes as T} from 'react'
 import get from 'lodash/get'
-import {FormGroup} from './../../components/form/form-group.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
 import {Textarea} from './../../components/form/textarea.jsx'
 
 export const TextObjectEditor = (props) =>

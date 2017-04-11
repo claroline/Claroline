@@ -9,6 +9,7 @@ use Ramsey\Uuid\Uuid;
 use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
 use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
+use UJM\ExoBundle\Library\Model\UuidTrait;
 use UJM\ExoBundle\Library\Options\ExerciseType;
 
 /**
@@ -17,12 +18,7 @@ use UJM\ExoBundle\Library\Options\ExerciseType;
  */
 class Exercise extends AbstractResource
 {
-    /**
-     * @var string
-     *
-     * @ORM\Column("uuid", type="string", length=36, unique=true)
-     */
-    private $uuid;
+    use UuidTrait;
 
     /**
      * @var string
@@ -177,26 +173,6 @@ class Exercise extends AbstractResource
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Gets UUID.
-     *
-     * @return string
-     */
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-    /**
-     * Sets UUID.
-     *
-     * @param $uuid
-     */
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
     }
 
     public function getTitle()

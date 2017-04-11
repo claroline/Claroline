@@ -1,6 +1,7 @@
 import invariant from 'invariant'
-import {makeActionCreator} from './../utils/utils'
+import {makeActionCreator} from '#/main/core/utilities/redux'
 import {navigate} from './router'
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 import select from './selectors'
 import {VIEW_OVERVIEW} from './enums'
 import {actions as playerActions} from './player/actions'
@@ -19,7 +20,7 @@ const updateViewMode = (mode, hasFragment = true) => {
     if (
       mode === VIEW_OVERVIEW &&
       !hasFragment &&
-      select.editable(state) &&
+      resourceSelect.editable(state) &&
       !select.editorOpened(state) &&
       select.noItems(state)
     ) {
@@ -30,7 +31,7 @@ const updateViewMode = (mode, hasFragment = true) => {
       !select.hasOverview(state)
     ) {
       // Redirects to player/test if overview is disabled
-      if (!select.editable(state)) {
+      if (!resourceSelect.editable(state)) {
         // User goes to player
         navigate('player', false)
         dispatch(playerActions.play(null, false))

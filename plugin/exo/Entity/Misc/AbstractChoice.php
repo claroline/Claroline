@@ -21,7 +21,7 @@ abstract class AbstractChoice
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    private $id;
+    protected $id;
 
     use UuidTrait;
 

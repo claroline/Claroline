@@ -7,6 +7,14 @@
   cursor: pointer;
 }
 
+.jsplumb-connector {
+  opacity: 0.6;
+
+  &.jsplumb-hover {
+    opacity: 1;
+  }
+}
+
 .match-items {
   /* required by jsPlumb for proper drawing */
   position: relative;
@@ -101,15 +109,7 @@
       flex-grow: 1;
       display: flex;
       align-items: center;
-
-      /*.item-content {
-        padding: 5px;
-      }*/
     }
-
-    /*.feedback-btn {
-      margin: 5px;
-    }*/
   }
 }
 
@@ -117,7 +117,22 @@
   min-width: 250px;
 }
 
-.association-default {}
-.association-selected {}
-.association-valid {}
-.association-invalid {}
+.jsplumb-connector,
+.match-association {
+  stroke: #666;
+}
+.selected-association {
+  stroke: @selected-answer-color;
+}
+.correct-association {
+  stroke: @correct-answer-color;
+}
+.incorrect-association {
+  stroke: @incorrect-answer-color;
+}
+.expected-association {
+  stroke: @correct-answer-color;
+}
+.unexpected-association {
+  stroke: @incorrect-answer-color;
+}

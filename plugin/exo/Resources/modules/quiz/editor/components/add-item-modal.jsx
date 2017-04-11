@@ -1,10 +1,11 @@
 import React, {Component, PropTypes as T} from 'react'
 import Modal from 'react-bootstrap/lib/Modal'
 import classes from 'classnames'
-import {trans} from './../../../utils/translate'
+
+import {trans} from '#/main/core/translation'
 import {listItemMimeTypes, getDefinition} from './../../../items/item-types'
 import {Icon as ItemIcon} from './../../../items/components/icon.jsx'
-import {BaseModal} from './../../../modal/components/base.jsx'
+import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 
 export const MODAL_ADD_ITEM = 'MODAL_ADD_ITEM'
 

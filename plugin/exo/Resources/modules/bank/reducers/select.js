@@ -1,4 +1,4 @@
-import {makeReducer} from './../../utils/reducers'
+import {makeReducer} from '#/main/core/utilities/redux'
 import {update} from './../../utils/utils'
 
 import {

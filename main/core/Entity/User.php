@@ -461,6 +461,11 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         return $this->lastName;
     }
 
+    public function getFullName()
+    {
+        return trim($this->firstName.' '.$this->lastName);
+    }
+
     /**
      * @return string
      */

@@ -1,6 +1,6 @@
 import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
-import {tex} from '../../utils/translate'
+import {tex} from '#/main/core/translation'
 import Tab from 'react-bootstrap/lib/Tab'
 import Nav from 'react-bootstrap/lib/Nav'
 import Popover from 'react-bootstrap/lib/Popover'
@@ -9,8 +9,6 @@ import {Feedback} from '../components/feedback-btn.jsx'
 import {SolutionScore} from '../components/score.jsx'
 import {utils} from './utils/utils'
 
-/* global jsPlumb */
-
 function getPopoverPosition(connectionClass, id){
   const containerRect =  document.getElementById('popover-container-' + id).getBoundingClientRect()
   const connectionRect =  document.querySelectorAll('.' + connectionClass)[0].getBoundingClientRect()
@@ -18,37 +16,6 @@ function getPopoverPosition(connectionClass, id){
   return {
     top:  connectionRect.top + connectionRect.height / 2 - containerRect.top
   }
-}
-
-function initJsPlumb(jsPlumbInstance) {
-  // defaults parameters for all connections
-  jsPlumbInstance.importDefaults({
-    Anchors: ['RightMiddle', 'LeftMiddle'],
-    ConnectionsDetachable: false,
-    Connector: 'Straight',
-    HoverPaintStyle: {strokeStyle: '#FC0000'},
-    LogEnabled: true,
-    PaintStyle: {strokeStyle: '#777', lineWidth: 4}
-  })
-
-  jsPlumbInstance.registerConnectionTypes({
-    'blue': {
-      paintStyle     : { strokeStyle: '#31B0D5', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: '#31B0D5',   lineWidth: 6 }
-    },
-    'green': {
-      paintStyle     : { strokeStyle: '#5CB85C', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: '#5CB85C',   lineWidth: 6 }
-    },
-    'red': {
-      paintStyle     : { strokeStyle: '#D9534F', lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: '#D9534F',   lineWidth: 6 }
-    },
-    'default': {
-      paintStyle     : { strokeStyle: 'grey',    lineWidth: 5 },
-      hoverPaintStyle: { strokeStyle: 'grey', lineWidth: 6 }
-    }
-  })
 }
 
 export const MatchLinkPopover = props =>
@@ -100,8 +67,7 @@ export class MatchPaper extends Component
       showPopover: false
     }
     this.handleSelect = this.handleSelect.bind(this)
-    this.jsPlumbInstance = jsPlumb.getInstance()
-    initJsPlumb(this.jsPlumbInstance)
+    this.jsPlumbInstance = utils.getJsPlumbInstance(false)
     this.container = null
     this.handleConnectionClick = this.handleConnectionClick.bind(this)
     this.handleWindowResize = this.handleWindowResize.bind(this)
@@ -114,16 +80,18 @@ export class MatchPaper extends Component
         const connection = this.jsPlumbInstance.connect({
           source: 'first_source_' + answer.firstId,
           target: 'first_target_' + answer.secondId,
-          type: solution && solution.score > 0 ? 'green' : 'red',
-          deleteEndpointsOnDetach:true
+          type: solution && solution.score > 0 ? 'correct' : 'incorrect',
+          deleteEndpointsOnDetach: true
         })
 
         const connectionClass = 'connection-' + answer.firstId + '-' + answer.secondId
-        connection.addClass(connectionClass)
+        if (connection) {
+          connection.addClass(connectionClass)
 
-        connection.bind('click', (conn) => {
-          this.handleConnectionClick(conn)
-        })
+          connection.bind('click', (conn) => {
+            this.handleConnectionClick(conn)
+          })
+        }
       }
     } else {
       for (const solution of this.props.item.solutions) {
@@ -131,7 +99,7 @@ export class MatchPaper extends Component
           this.jsPlumbInstance.connect({
             source: 'second_source_' + solution.firstId,
             target: 'second_target_' + solution.secondId,
-            type: 'blue',
+            type: 'selected',
             deleteEndpointsOnDetach:true
           })
         }
@@ -187,9 +155,8 @@ export class MatchPaper extends Component
   }
 
   componentWillUnmount(){
-    jsPlumb.detachEveryConnection()
-    // use reset instead of deleteEveryEndpoint because reset also remove event listeners
-    jsPlumb.reset()
+    utils.resetJsPlumb()
+
     this.jsPlumbInstance = null
     delete this.jsPlumbInstance
   }

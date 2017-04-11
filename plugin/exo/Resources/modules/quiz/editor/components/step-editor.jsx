@@ -6,11 +6,11 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import {makeItemPanelKey, makeStepPropPanelKey} from './../../../utils/utils'
-import {t, tex, trans} from './../../../utils/translate'
+import {t, tex, trans} from '#/main/core/translation'
 import {makeSortable, SORT_VERTICAL} from './../../../utils/sortable'
 import {getDefinition, isQuestionType} from './../../../items/item-types'
 import {getContentDefinition} from './../../../contents/content-types'
-import {MODAL_DELETE_CONFIRM} from './../../../modal'
+import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {MODAL_ADD_ITEM} from './../components/add-item-modal.jsx'
 import {MODAL_IMPORT_ITEMS} from './../components/import-items-modal.jsx'
 import {MODAL_ADD_CONTENT} from './../components/add-content-modal.jsx'
@@ -38,6 +38,14 @@ ParametersHeader.propTypes = {
 
 const ItemActions = props =>
   <div className="item-actions">
+    {props.hasErrors &&
+      <ValidationStatus
+        id={`${props.itemId}-panel-tip`}
+        validating={props.validating}
+        position="left"
+      />
+    }
+
     <OverlayTrigger
       placement="left"
       overlay={
@@ -88,6 +96,8 @@ const ItemActions = props =>
 ItemActions.propTypes = {
   itemId: T.string.isRequired,
   stepId: T.string.isRequired,
+  hasErrors: T.bool.isRequired,
+  validating: T.bool.isRequired,
   handleItemDeleteClick: T.func.isRequired,
   showModal: T.func.isRequired,
   connectDragSource: T.func.isRequired
@@ -105,16 +115,12 @@ const ItemHeader = props =>
       <ItemIcon name={getDefinition(props.item.type).name}/>
       {props.item.title || trans(getDefinition(props.item.type).name, {}, 'question_types')}
     </span>
-    {props.hasErrors &&
-      <ValidationStatus
-        id={`${props.item.id}-panel-tip`}
-        validating={props.validating}
-      />
-    }
 
     <ItemActions
       itemId={props.item.id}
       stepId={props.stepId}
+      hasErrors={props.hasErrors}
+      validating={props.validating}
       handleItemDeleteClick={props.handleItemDeleteClick}
       showModal={props.showModal}
       connectDragSource={props.connectDragSource}
@@ -431,6 +437,7 @@ export const StepEditor = props =>
   <div>
     <PanelGroup accordion activeKey={props.activePanelKey}>
       <Panel
+        className="step-parameters"
         eventKey={makeStepPropPanelKey(props.step.id)}
         header={
           <ParametersHeader

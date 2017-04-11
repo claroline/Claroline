@@ -2,7 +2,8 @@ import React from 'react'
 import freeze from 'deep-freeze'
 import merge from 'lodash/merge'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure, mockTranslator} from './../../utils/test'
+import assert from 'assert'
+import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
 import {actions} from './../../quiz/editor/actions'
 import definition from './index'
 import {actions as subActions} from './editor'
@@ -17,13 +18,18 @@ describe('Words reducer', () => {
       content: 'Question?'
     }
     const reduced = reduce(item, actions.createItem('1', 'application/x.words+json'))
+
+    // Check keywords _id are generated
+    assert(!!reduced.solutions[0]._id, 'should generate _id for solutions')
+
     ensure.equal(reduced, {
       id: '1',
       type: 'application/x.words+json',
       content: 'Question?',
       solutions: [
         {
-          text:'',
+          _id: reduced.solutions[0]._id,
+          text: '',
           caseSensitive: false,
           score: 1,
           feedback: '',
@@ -43,28 +49,28 @@ describe('Words reducer', () => {
 
   it('sanitizes incoming solution data', () => {
     const item = makeFixture()
-    const reduced = reduce(item, subActions.updateSolution(0, 'score', '3'))
+    const reduced = reduce(item, subActions.updateSolution(item.solutions[0]._id, 'score', '3'))
     const expected = makeFixture({solutions: [{score: 3}]})
     ensure.equal(reduced, expected)
   })
 
   it('updates solution text', () => {
     const item = makeFixture()
-    const reduced = reduce(item, subActions.updateSolution(0, 'text', 'This is new'))
+    const reduced = reduce(item, subActions.updateSolution(item.solutions[0]._id, 'text', 'This is new'))
     const expected = makeFixture({solutions: [{text: 'This is new'}]})
     ensure.equal(reduced, expected)
   })
 
   it('updates solution score', () => {
     const item = makeFixture()
-    const reduced = reduce(item, subActions.updateSolution(0, 'score', 3))
+    const reduced = reduce(item, subActions.updateSolution(item.solutions[0]._id, 'score', 3))
     const expected = makeFixture({solutions: [{score: 3}, {}]})
     ensure.equal(reduced, expected)
   })
 
   it('updates solution caseSensitive', () => {
     const item = makeFixture()
-    const reduced = reduce(item, subActions.updateSolution(1, 'caseSensitive', true))
+    const reduced = reduce(item, subActions.updateSolution(item.solutions[1]._id, 'caseSensitive', true))
     const expected = makeFixture({solutions: [{}, {caseSensitive: true}]})
     ensure.equal(reduced, expected)
   })
@@ -72,11 +78,16 @@ describe('Words reducer', () => {
   it('updates solutions and deletable property on solution add', () => {
     const item = makeFixture()
     const reduced = reduce(item, subActions.addSolution())
+
+    // Check keywords _id are generated
+    assert(!!reduced.solutions[2]._id, 'should generate _id for solutions')
+
     const expected = makeFixture({
       solutions: [
         {},
         {},
         {
+          _id: reduced.solutions[2]._id,
           text: '',
           feedback: '',
           score: 1,
@@ -90,7 +101,7 @@ describe('Words reducer', () => {
 
   it('updates solutions on solution remove', () => {
     const item = makeFixture()
-    const reduced = reduce(item, subActions.removeSolution(0))
+    const reduced = reduce(item, subActions.removeSolution(item.solutions[0]._id))
     const expected = makeFixture({}, false)
     expected.solutions.splice(0, 1)
     expected.solutions[0]._deletable = false
@@ -98,6 +109,7 @@ describe('Words reducer', () => {
   })
 })
 
+// TODO : move keywords validation in its own test suite
 describe('Words validator', () => {
   before(mockTranslator)
   const validate = definition.editor.validate
@@ -105,15 +117,16 @@ describe('Words validator', () => {
     const errors = validate({
       solutions: [
         {
-          text:'',
-          feedback:'',
+          _id: '123',
+          text: '',
+          feedback: '',
           caseSensitive: false,
           score: 2
         }
       ]
     })
     ensure.equal(errors, {
-      solutions: 'words_empty_text_error'
+      keywords: {text: 'words_empty_text_error'}
     })
   })
 
@@ -121,6 +134,13 @@ describe('Words validator', () => {
     const errors = validate({
       solutions: [
         {
+          _id: '123',
+          text: 'lorem',
+          feedback: '',
+          caseSensitive: false,
+          score: 2
+        }, {
+          _id: '123',
           text:'A',
           feedback:'',
           caseSensitive: false,
@@ -129,7 +149,7 @@ describe('Words validator', () => {
       ]
     })
     ensure.equal(errors, {
-      solutions: 'words_score_not_valid'
+      keywords: {score: 'words_score_not_valid'}
     })
   })
 
@@ -137,6 +157,13 @@ describe('Words validator', () => {
     const errors = validate({
       solutions: [
         {
+          _id: '123',
+          text: 'lorem',
+          feedback: '',
+          caseSensitive: false,
+          score: 2
+        }, {
+          _id: '123',
           text:'A',
           feedback:'',
           caseSensitive: false,
@@ -145,7 +172,7 @@ describe('Words validator', () => {
       ]
     })
     ensure.equal(errors, {
-      solutions: 'words_score_not_valid'
+      keywords: {score: 'words_score_not_valid'}
     })
   })
 
@@ -153,6 +180,7 @@ describe('Words validator', () => {
     const errors = validate({
       solutions: [
         {
+          _id: '123',
           text:'A',
           feedback:'',
           caseSensitive: false,
@@ -161,7 +189,7 @@ describe('Words validator', () => {
       ]
     })
     ensure.equal(errors, {
-      solutions: 'words_no_valid_solution'
+      keywords: {noValidKeyword: 'words_no_valid_solution'}
     })
   })
 
@@ -169,6 +197,7 @@ describe('Words validator', () => {
     const errors = validate({
       solutions: [
         {
+          _id: '123',
           text:'A',
           feedback:'',
           caseSensitive: false,
@@ -190,8 +219,8 @@ describe('<Words/>', () => {
   afterEach(spyConsole.restore)
 
   it('has required props', () => {
-    shallow(<Words item={{foo:'baz'}}/>)
-    ensure.missingProps('Words', ['onChange', 'item.id'])
+    shallow(<Words item={{solutions: [], _wordsCaseSensitive: true}} />)
+    ensure.missingProps('Words', ['item.id', 'onChange', 'validating'])
   })
 
   it('has typed props', () => {
@@ -213,39 +242,43 @@ describe('<Words/>', () => {
   it('renders appropriate fields and handle changes', () => {
     let updatedValue = null
 
+    const item = {
+      id: '1',
+      content: 'Question?',
+      solutions: [
+        {
+          _id: '789',
+          text: 'A',
+          feedback: '',
+          caseSensitive: false,
+          score: 2,
+          _deletable: false
+        }
+      ],
+      _wordsCaseSensitive: true
+    }
+
     const form = mount(
       <Words
-        item={{
-          id: '1',
-          content: 'Question?',
-          solutions: [
-            {
-              text:'A',
-              feedback:'',
-              caseSensitive: false,
-              score: 2,
-              _deletable: false
-            }
-          ],
-          _wordsCaseSensitive: true
-        }}
+        item={item}
+        validating={false}
         onChange={value => updatedValue = value}
       />
     )
     ensure.propTypesOk()
 
-    const text = form.find('input[type="text"]#solution-0-text')
+    const text = form.find('#keyword-'+item.solutions[0]._id+'-text')
     ensure.equal(text.length, 1, 'has text input')
     // @TODO find a way to test that changes are handled
 
-    const score = form.find('input#solution-0-score')
+    const score = form.find('#keyword-'+item.solutions[0]._id+'-score')
     ensure.equal(score.length, 1, 'has score input')
     score.simulate('change', {target: {value: 5}})
     ensure.equal(updatedValue.value, 5)
     ensure.equal(updatedValue.property, 'score')
 
     // @TODO find a way to test that the click action result in a new form-row
-    const addBtn = form.find('button#add-word-button')
+    const addBtn = form.find('.footer .btn')
     ensure.equal(addBtn.length, 1, 'has add button')
     addBtn.simulate('click')
   })
@@ -259,6 +292,7 @@ function makeFixture(props = {}, frozen = true) {
     content: 'Question?',
     solutions: [
       {
+        _id: '1234',
         text:'A',
         caseSensitive: false,
         score: 1,
@@ -266,6 +300,7 @@ function makeFixture(props = {}, frozen = true) {
         _deletable: true
       },
       {
+        _id: '123456',
         text:'B',
         caseSensitive: true,
         score: 2,

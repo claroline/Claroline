@@ -1,70 +1,66 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure, mockTranslator, mockRouting} from './../../../utils/test'
+import {spyConsole, renew, ensure, mockTranslator, mockRouting} from '#/main/core/tests'
 import {PlayerNav} from './nav-bar.jsx'
 
 describe('<PlayerNav/>', () => {
+  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     renew(PlayerNav, 'PlayerNav')
-    mockTranslator()
     mockRouting()
   })
   afterEach(spyConsole.restore)
 
   it('has required props', () => {
-    shallow(<PlayerNav/>)
-    ensure.missingProps(
-      'PlayerNav',
-      [
-        'step',
-        'navigateTo',
-        'navigateToAndValidate',
-        'finish',
-        'openFeedbackAndValidate',
-        'submit',
-        'showFeedback',
-        'feedbackEnabled',
-        'currentStepSend'
-      ]
+    shallow(
+      React.createElement(PlayerNav)
     )
+    ensure.missingProps('PlayerNav', [
+      'step',
+      'navigateTo',
+      'navigateToAndValidate',
+      'finish',
+      'openFeedbackAndValidate',
+      'submit',
+      'showFeedback',
+      'feedbackEnabled',
+      'currentStepSend'
+    ])
   })
 
   it('has typed props', () => {
     shallow(
-      <PlayerNav
-        next={[]}
-        previous={[]}
-        navigateTo={{}}
-        finish={[]}
-        submit={[]}
-      />
+      React.createElement(PlayerNav, {
+        next: [],
+        previous: [],
+        navigateTo: {},
+        finish: [],
+        submit: []
+      })
     )
-    ensure.invalidProps(
-      'PlayerNav',
-      [
-        'next',
-        'previous',
-        'navigateTo',
-        'finish',
-        'submit'
-      ]
-    )
+    ensure.invalidProps('PlayerNav', [
+      'next',
+      'previous',
+      'navigateTo',
+      'finish',
+      'submit'
+    ])
   })
 
   it('renders a navbar', () => {
     const navbar = mount(
-      <PlayerNav
-        navigateTo={() => true}
-        finish={() => true}
-        submit={() => true}
-        openFeedbackAndValidate={() => true}
-        navigateToAndValidate={() => true}
-        step={{id: '1',  items:[]}}
-        currentStepSend={true}
-        showFeedback={false}
-        feedbackEnabled={false}
-      />
+      React.createElement(PlayerNav, {
+        navigateTo: () => true,
+        finish: () => true,
+        submit: () => true,
+        openFeedbackAndValidate: () => true,
+        navigateToAndValidate: () => true,
+        step: {id: '1',  items:[]},
+        currentStepSend: true,
+        showFeedback: false,
+        feedbackEnabled: false
+      })
     )
     ensure.propTypesOk()
     ensure.equal(navbar.find('.player-nav').length, 1)
@@ -86,18 +82,18 @@ describe('<PlayerNav/>', () => {
     }
 
     const navbar = mount(
-      <PlayerNav
-        previous={previousStep}
-        navigateTo={() => true}
-        finish={() => true}
-        submit={() => true}
-        openFeedbackAndValidate={() => true}
-        navigateToAndValidate={() => true}
-        step={{id: '1',  items:[]}}
-        currentStepSend={true}
-        showFeedback={true}
-        feedbackEnabled={true}
-      />
+      React.createElement(PlayerNav, {
+        previous: previousStep,
+        navigateTo: () => true,
+        finish: () => true,
+        submit: () => true,
+        openFeedbackAndValidate: () => true,
+        navigateToAndValidate: () => true,
+        step: {id: '1',  items:[]},
+        currentStepSend: true,
+        showFeedback: true,
+        feedbackEnabled: true
+      })
     )
     ensure.propTypesOk()
     ensure.equal(navbar.find('.btn-previous').length, 1)
@@ -110,19 +106,20 @@ describe('<PlayerNav/>', () => {
     }
 
     const navbar = mount(
-      <PlayerNav
-        next={nextStep}
-        navigateTo={() => true}
-        finish={() => true}
-        submit={() => true}
-        openFeedbackAndValidate={() => true}
-        navigateToAndValidate={() => true}
-        step={{id: '1',  items:[]}}
-        currentStepSend={true}
-        showFeedback={true}
-        feedbackEnabled={true}
-      />
+      React.createElement(PlayerNav, {
+        next: nextStep,
+        navigateTo: () => true,
+        finish: () => true,
+        submit: () => true,
+        openFeedbackAndValidate: () => true,
+        navigateToAndValidate: () => true,
+        step: {id: '1',  items:[]},
+        currentStepSend: true,
+        showFeedback: true,
+        feedbackEnabled: true
+      })
     )
+
     ensure.propTypesOk()
     ensure.equal(navbar.find('.btn-next').length, 1)
     // Finish btn is only shown if there is no next step

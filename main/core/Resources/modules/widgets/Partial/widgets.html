@@ -9,38 +9,38 @@
             }"
         >
             <div class="widget-header">
-                <h3 class="widget-title"
+                <h3
+                    class="widget-title"
+                    data-ng-bind-html="widget['instanceName']"
                     data-ng-style="{
                         'color': '{{ widget['textTitleColor'] }}'
                     }"
                 >
-                    <span class="pull-right widget-header-control-box" ng-if="dhmc.widgetsOptions['canEdit'] && !widget['locked']">
-                        <span ng-if="widget['type'] === 'desktop'">
-                            <i class="fa fa-times close"
-                               ng-if="widget['type'] === 'desktop'"
-                               ng-click="dhmc.deleteUserWidget($event, widget['configId'])"
-                            >
-                            </i>
-                            <span class="close">&nbsp;</span>
-                            <i class="fa fa-pencil close"
-                               ng-if="widget['type'] === 'desktop'"
-                               ng-click="dhmc.editUserWidget($event, widget['instanceId'], widget['displayId'], widget['configurable'])"
-                            >
-                            </i>
-                        </span>
-                        <i class="fa fa-times close"
-                           ng-if="widget['type'] !== 'desktop'"
-                           ng-click="dhmc.hideAdminWidget($event, widget['configId'])"
-                        >
-                        </i>
-                        <span class="close" ng-if="widget['type'] !== 'desktop'">&nbsp;</span>
-                    </span>
-                    <span class="widget-header-content"
-                          title="{{ widget['instanceName'] }}"
-                          ng-bind-html="widget['instanceName']"
-                    >
-                    </span>
                 </h3>
+
+                <div class="widget-header-buttons" data-ng-if="dhmc.widgetsOptions['canEdit'] && !widget['locked']">
+                    <!-- Edit widget button -->
+                    <button
+                        type="button"
+                        class="btn btn-link"
+                        data-ng-if="widget['type'] === 'desktop'"
+                        data-ng-click="dhmc.editUserWidget($event, widget['instanceId'], widget['displayId'], widget['configurable'])"
+                    >
+                        <span class="fa fa-fw fa-pencil"></span>
+                    </button>
+
+                    <!-- Remove widget button -->
+                    <button
+                        type="button"
+                        class="btn btn-link"
+                        data-ng-click="widget['type'] === 'desktop' ?
+                            dhmc.deleteUserWidget($event, widget['configId']) :
+                            dhmc.hideAdminWidget($event, widget['configId'])
+                        "
+                    >
+                        <span class="fa fa-fw fa-times"></span>
+                    </button>
+                </div>
             </div>
 
             <div class="widget-content" data-ng-bind-html="widget['content']"></div>

@@ -1,10 +1,12 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure} from './../../../utils/test'
+
+import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
 import {SHUFFLE_ONCE, SHUFFLE_NEVER} from './../../enums'
 import {QuizEditor} from './quiz-editor.jsx'
 
 describe('<QuizEditor/>', () => {
+  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     renew(QuizEditor, 'QuizEditor')
@@ -12,7 +14,12 @@ describe('<QuizEditor/>', () => {
   afterEach(spyConsole.restore)
 
   it('has required props', () => {
-    shallow(<QuizEditor quiz={{}}/>)
+    shallow(
+      React.createElement(QuizEditor, {
+        quiz: {}
+      })
+    )
+
     ensure.missingProps(
       'QuizEditor',
       [
@@ -27,13 +34,13 @@ describe('<QuizEditor/>', () => {
 
   it('has typed props', () => {
     shallow(
-      <QuizEditor
-        quiz="foo"
-        validating={[]}
-        updateProperties={123}
-        activePanelKey={[]}
-        handlePanelClick="bar"
-      />
+      React.createElement(QuizEditor, {
+        quiz: 'foo',
+        validating: [],
+        updateProperties: 123,
+        activePanelKey: [],
+        handlePanelClick: 'bar'
+      })
     )
     ensure.invalidProps(
       'QuizEditor',
@@ -52,16 +59,16 @@ describe('<QuizEditor/>', () => {
     let updatedValue = null
 
     const form = mount(
-      <QuizEditor
-        quiz={fixture()}
-        validating={false}
-        updateProperties={(path, value) => {
+      React.createElement(QuizEditor, {
+        quiz: fixture(),
+        validating: false,
+        updateProperties: (path, value) => {
           updatedPath = path
           updatedValue = value
-        }}
-        activePanelKey={false}
-        handlePanelClick={() => {}}
-      />
+        },
+        activePanelKey: false,
+        handlePanelClick: () => true
+      })
     )
 
     ensure.propTypesOk()
@@ -94,9 +101,11 @@ function fixture() {
       duration: 123,
       maxAttempts: 4,
       interruptible: true,
+      showEndPage: false,
       showCorrectionAt: 'never',
       correctionDate: null,
       anonymizeAttempts: false,
+      showOverview: true,
       showScoreAt: 'never',
       showStatistics: true,
       showFullCorrection: false,

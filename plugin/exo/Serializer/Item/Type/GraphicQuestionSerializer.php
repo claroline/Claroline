@@ -113,21 +113,19 @@ class GraphicQuestionSerializer implements SerializerInterface
      */
     private function deserializeImage(GraphicQuestion $graphicQuestion, \stdClass $imageData, array $options)
     {
-        $typeParts = explode('/', $imageData->type);
         $image = $graphicQuestion->getImage() ?: new Image();
 
-        if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-            $image->setUuid($imageData->id);
-        }
-
+        $image->setUuid($imageData->id);
         $image->setType($imageData->type);
         $image->setTitle($imageData->id);
         $image->setWidth($imageData->width);
         $image->setHeight($imageData->height);
+
         $objectClass = get_class($graphicQuestion);
         $objectUuid = $graphicQuestion->getQuestion() ? $graphicQuestion->getQuestion()->getUuid() : null;
         $title = $graphicQuestion->getQuestion() ? $graphicQuestion->getQuestion()->getTitle() : null;
 
+        $typeParts = explode('/', $imageData->type);
         if (isset($imageData->data)) {
             $imageName = "{$imageData->id}.{$typeParts[1]}";
             $publicFile = $this->fileUtils->createFileFromData(
@@ -141,6 +139,8 @@ class GraphicQuestionSerializer implements SerializerInterface
             if ($publicFile) {
                 $image->setUrl($publicFile->getUrl());
             }
+        } elseif (isset($imageData->url)) {
+            $image->setUrl($imageData->url);
         }
 
         $graphicQuestion->setImage($image);
@@ -189,13 +189,8 @@ class GraphicQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (null === $area) {
-                $area = new Area();
-
-                if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                    $area->setUuid($solutionData->area->id);
-                }
-            }
+            $area = $area ?: new Area();
+            $area->setUuid($solutionData->area->id);
 
             $area->setScore($solutionData->score);
             $area->setFeedback($solutionData->feedback);

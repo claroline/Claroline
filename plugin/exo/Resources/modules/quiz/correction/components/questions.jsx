@@ -1,16 +1,17 @@
 import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
+
+import {tex} from '#/main/core/translation'
 import {selectors as correctionSelectors} from './../selectors'
-import {tex} from './../../../utils/translate'
 
 export const QuestionRow = props =>
   <tr>
-    <td>{props.question.title}</td>
-    <td dangerouslySetInnerHTML={{__html: props.question.content}}></td>
+    <td>{props.question.title || props.question.content}</td>
     <td>{props.answers.length}</td>
-    <td>
-      <a className="btn btn-default" href={`#correction/questions/${props.question.id}`}>
-        {tex('to_correct')}
+    <td className="table-actions text-right">
+      <a className="btn btn-link-default" href={`#correction/questions/${props.question.id}`}>
+        <span className="fa fa-fw fa-check-square-o" />
+        <span className="sr-only">{tex('to_correct')}</span>
       </a>
     </td>
   </tr>
@@ -34,7 +35,6 @@ let Questions = props =>
       <table className="table table-striped table-hover">
         <thead>
           <tr>
-            <th>{tex('question_title_short')}</th>
             <th>{tex('question')}</th>
             <th>{tex('number_of_papers_to_correct')}</th>
             <th></th>

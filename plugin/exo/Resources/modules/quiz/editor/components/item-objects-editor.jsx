@@ -1,9 +1,10 @@
 import React, {Component, PropTypes as T} from 'react'
-import {tex} from './../../../utils/translate'
-import {MODAL_DELETE_CONFIRM} from './../../../modal'
+import {connect} from 'react-redux'
+
+import {tex} from '#/main/core/translation'
+import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {MODAL_ADD_CONTENT} from './../components/add-content-modal.jsx'
 import {actions, OBJECT_CHANGE, OBJECT_MOVE, OBJECT_REMOVE} from './../actions.js'
-import {connect} from 'react-redux'
 import {getContentDefinition} from './../../../contents/content-types'
 import {ContentThumbnail} from './../../../contents/components/content-thumbnail.jsx'
 
@@ -36,7 +37,7 @@ class ObjectsEditor extends Component {
             <ContentThumbnail
               id={object.id}
               index={index}
-              key={`item-object-${object.id}-thumnnail`}
+              key={`item-object-${object.id}-thumbnail`}
               data={object.data || object.url}
               type={object.type}
               active={this.state.currentObjectId === object.id}
@@ -87,7 +88,7 @@ class ObjectsEditor extends Component {
               })
             }
           >
-            <span className="fa fa-plus"/>
+            <span className="fa fa-fw fa-plus"/>
             {tex('add_object')}
           </button>
         </div>
@@ -124,13 +125,14 @@ ObjectsEditor.propTypes = {
       _errors: T.object
     })).isRequired
   }).isRequired,
+  validating: T.bool.isRequired,
   showModal: T.func.isRequired,
   closeModal: T.func.isRequired,
+
   updateItem: T.func.isRequired,
   createItemObject: T.func.isRequired,
   updateItemObjects: T.func.isRequired,
-  saveItemObjectFile: T.func.isRequired,
-  validating: T.bool.isRequired
+  saveItemObjectFile: T.func.isRequired
 }
 
 function mapStateToProps() {

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
+use UJM\ExoBundle\Library\Model\UuidTrait;
 
 /**
  * @ORM\Entity(repositoryClass="UJM\ExoBundle\Repository\ItemRepository")
@@ -25,12 +26,7 @@ class Item
      */
     private $id;
 
-    /**
-     * @ORM\Column("uuid", type="string", length=36, unique=true)
-     *
-     * @var string
-     */
-    private $uuid;
+    use UuidTrait;
 
     /**
      * The mime type of the Item type.
@@ -173,26 +169,6 @@ class Item
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Gets UUID.
-     *
-     * @return string
-     */
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-    /**
-     * Sets UUID.
-     *
-     * @param $uuid
-     */
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
     }
 
     /**

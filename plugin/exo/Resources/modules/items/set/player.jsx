@@ -2,7 +2,7 @@ import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
-import {tex, t} from './../../utils/translate'
+import {tex, t} from '#/main/core/translation'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 

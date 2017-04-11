@@ -1,5 +1,5 @@
 import {utils} from './utils'
-import {ensure} from './../../../utils/test'
+import {ensure} from '#/main/core/tests'
 
 describe('Test splitting function', () => {
   it('Test the splitting function', () => {

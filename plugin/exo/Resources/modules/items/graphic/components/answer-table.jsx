@@ -1,7 +1,7 @@
 import React, {PropTypes as T} from 'react'
 import classes from 'classnames'
 import tinycolor from 'tinycolor2'
-import {tex, transChoice} from './../../../utils/translate'
+import {tex, transChoice} from '#/main/core/translation'
 import {SHAPE_RECT} from './../enums'
 import {HoverFeedback} from './../../../components/form/hover-feedback.jsx'
 

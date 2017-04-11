@@ -1,7 +1,7 @@
 import {createSelector} from 'reselect'
 import isEmpty from 'lodash/isEmpty'
 import {TYPE_QUIZ, TYPE_STEP} from './../enums'
-import {tex, t} from './../../utils/translate'
+import {tex, t} from '#/main/core/translation'
 
 const quiz = state => state.quiz
 const steps = state => state.steps

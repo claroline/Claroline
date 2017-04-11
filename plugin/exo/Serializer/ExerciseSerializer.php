@@ -97,13 +97,8 @@ class ExerciseSerializer implements SerializerInterface
      */
     public function deserialize($data, $exercise = null, array $options = [])
     {
-        if (empty($exercise)) {
-            $exercise = new Exercise();
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $exercise->setUuid($data->id);
-            }
-        }
-
+        $exercise = $exercise ?: new Exercise();
+        $exercise->setUuid($data->id);
         $exercise->setTitle($data->title);
 
         if (isset($data->description)) {

@@ -150,15 +150,8 @@ class PairQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (empty($item)) {
-                // Create a new item
-                $item = new GridItem();
-            }
-
-            // Force client ID if needed
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $item->setUuid($itemData->id);
-            }
+            $item = $item ?: new GridItem();
+            $item->setUuid($itemData->id);
 
             if (isset($itemData->coordinates)) {
                 $item->setCoordsX($itemData->coordinates[0]);

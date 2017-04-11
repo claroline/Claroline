@@ -1,6 +1,6 @@
 import React, {PropTypes as T} from 'react'
 import classes from 'classnames'
-import {tcex} from '../../utils/translate'
+import {transChoice} from '#/main/core/translation'
 
 export const ScoreBox = props =>
   <div className={classes(
@@ -10,7 +10,7 @@ export const ScoreBox = props =>
   )}>
     <span className="user-score">{props.score}</span>
     <span className="sr-only">/</span>
-    <span className="max-score">{tcex('item_points', props.scoreMax, {count: props.scoreMax})}</span>
+    <span className="max-score">{transChoice('item_points', props.scoreMax, {count: props.scoreMax}, 'ujm_exo')}</span>
   </div>
 
 ScoreBox.propTypes = {

@@ -4,8 +4,8 @@ import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 import get from 'lodash/get'
 import classes from 'classnames'
-import {t, tex} from './../../../utils/translate'
-import {FormGroup} from './../../../components/form/form-group.jsx'
+import {t, tex} from '#/main/core/translation'
+import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
 import {CheckGroup} from './../../../components/form/check-group.jsx'
 import {Textarea} from './../../../components/form/textarea.jsx'
 import {Radios} from './../../../components/form/radios.jsx'
@@ -315,11 +315,9 @@ function makePanel(Section, title, key, props, errorProps) {
     'fa-caret-right'
 
   const Header =
-    <div onClick={() => props.handlePanelClick(key)}>
-      <span className="panel-title">
-        <span className={classes('fa fa-fw', caretIcon)}/>
-        &nbsp;{title}
-      </span>
+    <div onClick={() => props.handlePanelClick(key)} className="editor-panel-title">
+      <span className={classes('fa fa-fw', caretIcon)}/>
+      &nbsp;{title}
       {hasPanelError(props, errorProps) &&
         <ValidationStatus
           id={`quiz-${key}-status-tip`}
@@ -330,7 +328,6 @@ function makePanel(Section, title, key, props, errorProps) {
 
   return (
     <Panel
-      className="editor-panel-title"
       eventKey={key}
       header={Header}
     >

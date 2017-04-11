@@ -1,4 +1,4 @@
-import {makeActionCreator} from './../../utils/actions'
+import {makeActionCreator} from '#/main/core/utilities/redux'
 
 export const SELECT_TOGGLE = 'SELECT_TOGGLE'
 

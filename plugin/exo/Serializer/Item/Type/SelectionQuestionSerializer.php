@@ -79,9 +79,9 @@ class SelectionQuestionSerializer implements SerializerInterface
             $selectionQuestion->setTries($data->tries);
         }
 
-        //colors must be unserialized first because they might be usefull for selections
+        // colors must be deserialized first because they might be useful for selections
         if (isset($data->colors)) {
-            $this->deserializeColors($selectionQuestion, $data->colors, $options);
+            $this->deserializeColors($selectionQuestion, $data->colors);
         }
 
         if (property_exists($data, 'penalty')) {
@@ -131,48 +131,45 @@ class SelectionQuestionSerializer implements SerializerInterface
         }, $selectionQuestion->getColors()->toArray());
     }
 
-    private function deserializeColors(SelectionQuestion $selectionQuestion, $colors, $options)
+    private function deserializeColors(SelectionQuestion $selectionQuestion, $colors)
     {
         $colorEntities = $selectionQuestion->getColors()->toArray();
 
         foreach ($colors as $colorData) {
             $color = null;
 
-          // Searches for an existing color entity.
-          foreach ($colorEntities as $entityIndex => $colorEntity) {
-              /* @var Color $entityHole */
+            // Searches for an existing color entity.
+            foreach ($colorEntities as $entityIndex => $colorEntity) {
+                /* @var Color $colorEntity */
               if ($colorEntity->getUuid() === $colorData->id) {
                   $color = $colorEntity;
                   unset($colorEntities[$entityIndex]);
                   break;
               }
-          }
-
-            if (empty($color)) {
-                $color = new Color();
             }
 
-          // Force client ID if needed
-          if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-              $color->setUuid($colorData->id);
-          }
-
+            $color = $color ?: new Color();
+            $color->setUuid($colorData->id);
             $color->setColorCode($colorData->code);
+
             $selectionQuestion->addColor($color);
         }
 
-      // Remaining color are no longer in the Question
-      foreach ($colorEntities as $colorToRemove) {
-          $selectionQuestion->removeColor($colorToRemove);
-      }
+        // Remaining color are no longer in the Question
+        foreach ($colorEntities as $colorToRemove) {
+            $selectionQuestion->removeColor($colorToRemove);
+        }
     }
 
     /**
      * Deserializes Question selection.
      *
-     * @param SelectionQuestion $clozeQuestion
+     * @param SelectionQuestion $selectionQuestion
+     * @param array             $selections
+     * @param array             $solutions
+     * @param array             $options
      */
-    private function deserializeSelections(SelectionQuestion $selectionQuestion, $selections, $solutions, $options = [])
+    private function deserializeSelections(SelectionQuestion $selectionQuestion, array $selections, array $solutions, array $options = [])
     {
         $selectionEntities = $selectionQuestion->getSelections()->toArray();
 
@@ -180,6 +177,7 @@ class SelectionQuestionSerializer implements SerializerInterface
             $selection = null;
 
             foreach ($selectionEntities as $entityIndex => $selectionEntity) {
+                /** @var Selection $selectionEntity */
                 if ($selectionEntity->getUuid() === $selectionData->id) {
                     $selection = $selectionEntity;
                     unset($selectionEntities[$entityIndex]);
@@ -187,14 +185,8 @@ class SelectionQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (empty($selection)) {
-                $selection = new Selection();
-            }
-
-            // Force client ID if needed
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $selection->setUuid($selectionData->id);
-            }
+            $selection = $selection ?: new Selection();
+            $selection->setUuid($selectionData->id);
 
             $solutionsD = array_values(array_filter($solutions, function ($solution) use ($selectionData) {
                 return $solution->selectionId === $selectionData->id;
@@ -274,9 +266,11 @@ class SelectionQuestionSerializer implements SerializerInterface
     /**
      * Deserializes Question solutions.
      *
-     * @param SelectionQuestion $clozeQuestion
+     * @param SelectionQuestion $selectionQuestion
+     * @param array             $solutions
+     * @param array             $options
      */
-    private function deserializeSolutions(SelectionQuestion $selectionQuestion, $solutions, $options = [])
+    private function deserializeSolutions(SelectionQuestion $selectionQuestion, array $solutions, array $options = [])
     {
         $selectionEntities = $selectionQuestion->getSelections()->toArray();
 
@@ -284,6 +278,7 @@ class SelectionQuestionSerializer implements SerializerInterface
             $selection = null;
 
             foreach ($selectionEntities as $entityIndex => $selectionEntity) {
+                /** @var Selection $selectionEntity */
                 if ($selectionEntity->getUuid() === $solutionData->selectionId) {
                     $selection = $selectionEntity;
                     unset($selectionEntities[$entityIndex]);
@@ -291,14 +286,8 @@ class SelectionQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (empty($selection)) {
-                $selection = new Selection();
-            }
-
-            // Force client ID if needed
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $selection->setUuid($solutionData->selectionId);
-            }
+            $selection = $selection ?: new Selection();
+            $selection->setUuid($solutionData->selectionId);
 
             if (isset($solutionData->feedback)) {
                 $selection->setFeedback($solutionData->feedback);

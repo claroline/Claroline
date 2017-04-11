@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Library\Transfert;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\RichTextFormatEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\MaskManager;
@@ -36,6 +37,7 @@ class RichTextFormatter
 
     private $data;
     private $router;
+    private $resourceManager;
     private $resourceManagerData;
     private $om;
     private $listImporters;
@@ -46,6 +48,8 @@ class RichTextFormatter
     private $config;
 
     /**
+     * RichTextFormatter constructor.
+     *
      * @DI\InjectParams({
      *     "router"          = @DI\Inject("router"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
@@ -55,6 +59,14 @@ class RichTextFormatter
      *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
      *     "config"          = @DI\Inject("claroline.config.platform_config_handler")
      * })
+     *
+     * @param UrlGeneratorInterface        $router
+     * @param ResourceManager              $resourceManager
+     * @param ObjectManager                $om
+     * @param TransferManager              $transferManager
+     * @param MaskManager                  $maskManager
+     * @param StrictDispatcher             $eventDispatcher
+     * @param PlatformConfigurationHandler $config
      */
     public function __construct(
         UrlGeneratorInterface $router,
@@ -91,7 +103,6 @@ class RichTextFormatter
 
     /**
      * @param $text
-     * @param array $resources
      *
      * The $resource array MUST be formatter this way:
      * where the sub array key is an the element uid.
@@ -107,7 +118,7 @@ class RichTextFormatter
         foreach ($matches as $match) {
             $options = $this->extractFormatOptions($match[1]);
             $uid = (int) $options['uid'];
-            //optionnal parameters
+            // optional parameters
             $option_text = null;
             if (isset($options['text'])) {
                 $option_text = $options['text'];
@@ -128,14 +139,15 @@ class RichTextFormatter
             //meh, fix the following lines late
             $parent = $this->findParentFromDataUid($uid);
             $el = $this->findItemFromUid($uid);
-            $node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
-                ->findOneBy(
-                    [
-                        'parent' => $parent,
-                        'name' => $el['name'],
-                        'resourceType' => $this->resourceManager->getResourceTypeByName($el['type']),
-                    ]
-                );
+
+            /** @var ResourceNode $node */
+            $node = $this->om
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
+                ->findOneBy([
+                    'parent' => $parent,
+                    'name' => $el['name'],
+                    'resourceType' => $this->resourceManager->getResourceTypeByName($el['type']),
+                ]);
 
             if ($node) {
                 $toReplace = $this->generateDisplayedUrlForTinyMce($node, $option_text, $option_embed, $option_style, $option_target);
@@ -181,73 +193,135 @@ class RichTextFormatter
     }
 
     /**
-     * If we find an resource id wich is a file and not in the export yet, then we
-     * export is aswell. It's a link towards "something else".
+     * If we find an resource id which is a file and not in the export yet, then we
+     * export it as well. It's a link towards "something else".
+     *
+     * URLs to be matched :
+     *   - '/file/resource/media/([^']+)#'
+     *   - '/resource/open/([^/]+)/([^']+)'
+     *   - '/video-player/api/video/([^']+)/stream' (this one is really ugly, see `getOldVideos` for more info)
+     *
+     * @param string $file
+     * @param array  $_data
+     * @param array  $_files
+     *
+     * @return string
      */
     private function setPlaceHolder($file, &$_data, &$_files)
     {
-        //urls to be matched...
-        //'/file/resource/media/([^']+)#'
-        //'/resource/open/([^/]+)/([^']+)'
         $text = file_get_contents($file);
         $baseUrl = $this->router->getContext()->getBaseUrl();
 
-        //first regex
-        $regex = '#'.$baseUrl.'/file/resource/media/([^\'"]+)#';
+        $nodes = []; // nodes referenced into current HTML text
 
+        // Get file resources
+        $regex = '#'.$baseUrl.'/file/resource/media/([^\'"]+)#';
         preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
         if (count($matches) > 0) {
             foreach ($matches as $match) {
-                $node = $this->resourceManager->getNode($match[1]);
-                //if not yet in imported datas array, start its import
-                if (!$this->getItemFromUid($match[1], $_data)) {
-                    $this->createDataFolder($_data);
-                    if ($node && $node->getResourceType()->getName() === 'file') {
-                        $el = $this->getImporterByName('resource_manager')->getResourceElement(
-                            $node,
-                            $node->getWorkspace(),
-                            $_files,
-                            $_data,
-                            true
-                        );
-                        $el['item']['parent'] = 'data_folder';
-                        $el['item']['roles'] = [['role' => [
-                            'name' => 'ROLE_USER',
-                            'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('file')),
-                        ]]];
-
-                        if (!$this->getItemFromUid($el['item']['uid'], $_data)) {
-                            $_data['data']['items'][] = $el;
-                        }
-                    }
-                }
-
-                $text = $this->replaceLink($node, $text, $match[0], $match[1]);
+                $nodes[$match[0]] = $this->resourceManager->getNode($match[1]);
             }
         }
 
-        //second regex
+        // Get other resources
         $regex = '#'.$baseUrl.'/resource/open/([^/]+)/([^\'"]+)#';
         preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
-
         if (count($matches) > 0) {
             foreach ($matches as $match) {
-                $node = $this->resourceManager->getNode($match[2]);
-                $text = $this->replaceLink($node, $text, $match[0]);
+                $nodes[$match[0]] = $this->resourceManager->getNode($match[2]);
             }
         }
 
+        // Get videos with old URL format
+        $nodes = array_merge($nodes, $this->getOldVideos($text));
+
+        // Replace placeholders for all found nodes
+        // Will also import missing ones
+        foreach ($nodes as $match => $node) {
+            if ($node) {
+                // if not yet in export data array, start its import
+                $this->includeNodeIfMissing($node, $_data, $_files);
+                $text = $this->replaceLink($node, $text, $match);
+            }
+        }
+
+        /** @var RichTextFormatEvent $event */
         $event = $this->eventDispatcher->dispatch(
             'rich_text_format_event_export',
             'RichTextFormat',
             [$text, &$_data, &$_files]
         );
-        $text = $event->getText();
 
-        return $text;
+        return $event->getText();
     }
 
-    private function replaceLink($node, $txt, $fullMatch)
+    /**
+     * Get videos from HTML text which uses old URL format.
+     *
+     * This is for retro compatibility purpose.
+     * In last version, video URLs have the same format than other file types.
+     *
+     * Old format :
+     *   '/BASE_PATH/video-player/api/video/([^']+)/stream'
+     *
+     * Problems / differences with other resources :
+     *   - main format pattern is not the same has other files
+     *   - the ID in the URL is not the ResourceNode ID
+     *   - the URL does not contain scheme and host
+     *
+     * @param string $text
+     *
+     * @return array
+     */
+    private function getOldVideos($text)
+    {
+        $nodes = [];
+
+        $basePath = str_replace(
+            $this->router->getContext()->getScheme().'://'.$this->router->getContext()->getHost(),
+            '',
+            $this->router->getContext()->getBaseUrl()
+        );
+
+        $regex = '#'.$basePath.'/video-player/api/video/([^/]+)/stream#';
+        preg_match_all($regex, $text, $matches, PREG_SET_ORDER);
+        if (count($matches) > 0) {
+            foreach ($matches as $match) {
+                $video = $this->om->getRepository('ClarolineCoreBundle:Resource\File')->find($match[1]);
+                if ($video) {
+                    $nodes[$match[0]] = $video->getResourceNode();
+                }
+            }
+        }
+
+        return $nodes;
+    }
+
+    private function includeNodeIfMissing(ResourceNode $node, &$_data, &$_files)
+    {
+        if (!$this->getItemFromUid($node->getId(), $_data)) {
+            $this->createDataFolder($_data);
+
+            $el = $this->getImporterByName('resource_manager')->getResourceElement(
+                $node,
+                $node->getWorkspace(),
+                $_files,
+                $_data,
+                true
+            );
+            $el['item']['parent'] = 'data_folder';
+            $el['item']['roles'] = [['role' => [
+                'name' => 'ROLE_USER',
+                'rights' => $this->maskManager->decodeMask(7, $node->getResourceType()),
+            ]]];
+
+            if (!$this->getItemFromUid($el['item']['uid'], $_data)) {
+                $_data['data']['items'][] = $el;
+            }
+        }
+    }
+
+    private function replaceLink(ResourceNode $node, $txt, $fullMatch)
     {
         //videos <source type="video/webm" src=...media...></source>
         //files <a href=...open...> - name - </a>

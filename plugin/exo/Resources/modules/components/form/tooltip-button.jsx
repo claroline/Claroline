@@ -1,26 +1,31 @@
-import React, {PropTypes as T} from 'react'
+import React, {Component, PropTypes as T} from 'react'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import classes from 'classnames'
 
 // TODO inherit from TooltipElement
 
-export const TooltipButton = props =>
-  <OverlayTrigger
-    placement={props.position}
-    overlay={
-      <Tooltip id={props.id}>{props.title}</Tooltip>
-    }
-  >
-    <button
-      type="button"
-      disabled={!props.enabled}
-      className={classes('tooltiped-button', 'btn', props.className, {disabled: !props.enabled})}
-      onClick={props.onClick}
-    >
-      {props.label}
-    </button>
-  </OverlayTrigger>
+export class TooltipButton extends Component {
+  render() {
+    return (
+      <OverlayTrigger
+        placement={this.props.position}
+        overlay={
+          <Tooltip id={this.props.id}>{this.props.title}</Tooltip>
+        }
+      >
+        <button
+          type="button"
+          disabled={!this.props.enabled}
+          className={classes('tooltiped-button', 'btn', this.props.className, {disabled: !this.props.enabled})}
+          onClick={this.props.onClick}
+        >
+          {this.props.label}
+        </button>
+      </OverlayTrigger>
+    )
+  }
+}
 
 TooltipButton.propTypes = {
   id: T.string.isRequired,

@@ -49,14 +49,8 @@ class HintSerializer implements SerializerInterface
      */
     public function deserialize($data, $hint = null, array $options = [])
     {
-        if (empty($hint)) {
-            $hint = new Hint();
-        }
-
-        // Force client ID if needed
-        if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-            $hint->setUuid($data->id);
-        }
+        $hint = $hint ?: new Hint();
+        $hint->setUuid($data->id);
 
         if (!empty($data->penalty) || 0 === $data->penalty) {
             $hint->setPenalty($data->penalty);

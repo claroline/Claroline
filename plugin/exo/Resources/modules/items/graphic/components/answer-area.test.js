@@ -1,6 +1,6 @@
 import React from 'react'
 import {shallow} from 'enzyme'
-import {spyConsole, renew, ensure} from './../../../utils/test'
+import {spyConsole, renew, ensure} from '#/main/core/tests'
 import {AnswerAreaDraggable as BaseArea} from './answer-area.jsx'
 import {SHAPE_CIRCLE, SHAPE_RECT} from './../enums'
 

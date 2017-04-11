@@ -12,7 +12,7 @@ export const Metadata = props => {
           <div className="item-description" dangerouslySetInnerHTML={{__html: props.item.description}}></div>
         }
 
-        {props.item.objects &&
+        {props.item.objects && 0 !== props.item.objects.length &&
           <ObjectsPlayer item={props.item} />
         }
       </div>

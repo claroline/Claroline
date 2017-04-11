@@ -1,7 +1,10 @@
-import {makeActionCreator, makeId} from '../../../utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
+
+import {tex} from '#/main/core/translation'
+import {makeActionCreator} from '#/main/core/utilities/redux'
+
+import {makeId} from '../../../utils/utils'
 import {utils} from '../utils/utils'
-import {tex} from './../../../utils/translate'
 
 const FIND_ADD_ANSWER = 'FIND_ADD_ANSWER'
 const FIND_UPDATE_ANSWER = 'FIND_UPDATE_ANSWER'

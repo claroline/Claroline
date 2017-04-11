@@ -6,6 +6,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Entity\Misc\Association;
+use UJM\ExoBundle\Entity\Misc\Label;
+use UJM\ExoBundle\Entity\Misc\Proposal;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Item\ItemType;
@@ -174,5 +176,23 @@ class MatchDefinition extends AbstractDefinition
         // TODO: Implement getStatistics() method.
 
         return [];
+    }
+
+    /**
+     * Refreshes items UUIDs.
+     *
+     * @param MatchQuestion $item
+     */
+    public function refreshIdentifiers(AbstractItem $item)
+    {
+        /** @var Label $label */
+        foreach ($item->getLabels() as $label) {
+            $label->refreshUuid();
+        }
+
+        /** @var Proposal $proposal */
+        foreach ($item->getProposals() as $proposal) {
+            $proposal->refreshUuid();
+        }
     }
 }

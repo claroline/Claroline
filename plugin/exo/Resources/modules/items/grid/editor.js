@@ -1,10 +1,13 @@
 import cloneDeep from 'lodash/cloneDeep'
-import set from 'lodash/set'
+import invariant from 'invariant'
+import isEmpty from 'lodash/isEmpty'
+
+import {keywords as keywordsUtils} from './../../utils/keywords'
 import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
-import {makeActionCreator, makeId} from './../../utils/utils'
-import {tex} from './../../utils/translate'
-import {notBlank} from './../../utils/validate'
+import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeId} from './../../utils/utils'
+import {tex} from '#/main/core/translation'
 import {Grid as component} from './editor.jsx'
 import {utils} from './utils/utils'
 
@@ -13,10 +16,14 @@ const DELETE_COLUMN = 'DELETE_COLUMN'
 const DELETE_ROW = 'DELETE_ROW'
 const UPDATE_COLUMN_SCORE = 'UPDATE_COLUMN_SCORE'
 const UPDATE_ROW_SCORE = 'UPDATE_ROW_SCORE'
-const UPDATE_CELL_STYLE = 'UPDATE_CELL_STYLE'
-const UPDATE_CELL_DATA = 'UPDATE_CELL_DATA'
-const ADD_OR_UPDATE_SOLUTION = 'ADD_OR_UPDATE_SOLUTION'
-const DELETE_SOLUTION = 'DELETE_SOLUTION'
+const UPDATE_CELL = 'UPDATE_CELL'
+const CREATE_CELL_SOLUTION = 'CREATE_CELL_SOLUTION'
+const DELETE_CELL_SOLUTION = 'DELETE_CELL_SOLUTION'
+const OPEN_CELL_POPOVER = 'OPEN_CELL_POPOVER'
+const CLOSE_CELL_POPOVER = 'CLOSE_CELL_POPOVER'
+const ADD_SOLUTION_ANSWER = 'ADD_SOLUTION_ANSWER'
+const UPDATE_SOLUTION_ANSWER = 'UPDATE_SOLUTION_ANSWER'
+const REMOVE_SOLUTION_ANSWER = 'REMOVE_SOLUTION_ANSWER'
 
 export const SUM_CELL = 'cell'
 export const SUM_COL = 'col'
@@ -28,12 +35,37 @@ export const actions = {
   deleteRow: makeActionCreator(DELETE_ROW, 'index'),
   updateColumnScore: makeActionCreator(UPDATE_COLUMN_SCORE, 'index', 'score'),
   updateRowScore: makeActionCreator(UPDATE_ROW_SCORE, 'index', 'score'),
-  updateCellData: makeActionCreator(UPDATE_CELL_DATA, 'id', 'value'),
-  updateCellStyle: makeActionCreator(UPDATE_CELL_STYLE, 'id', 'property', 'value'),
-  addOrUpdateSolution: makeActionCreator(ADD_OR_UPDATE_SOLUTION, 'data'),
-  deleteSolution: makeActionCreator(DELETE_SOLUTION, 'id')
+  updateCell: makeActionCreator(UPDATE_CELL, 'cellId', 'property', 'value'),
+  createCellSolution: makeActionCreator(CREATE_CELL_SOLUTION, 'cellId'),
+  deleteCellSolution: makeActionCreator(DELETE_CELL_SOLUTION, 'cellId'),
+  openCellPopover: makeActionCreator(OPEN_CELL_POPOVER, 'cellId'),
+  closeCellPopover: makeActionCreator(CLOSE_CELL_POPOVER),
+  addSolutionAnswer: makeActionCreator(ADD_SOLUTION_ANSWER, 'cellId'),
+  removeSolutionAnswer: makeActionCreator(REMOVE_SOLUTION_ANSWER, 'cellId', 'keywordId'),
+  updateSolutionAnswer: (cellId, keywordId, parameter, value) => {
+    invariant(
+      ['text', 'caseSensitive', 'expected', 'feedback', 'score'].indexOf(parameter) > -1,
+      'answer attribute is not valid'
+    )
+    invariant(cellId !== undefined, 'cellId is required')
+
+    return {
+      type: UPDATE_SOLUTION_ANSWER,
+      cellId, keywordId, parameter, value
+    }
+  }
 }
 
+function decorate(item) {
+  return Object.assign({}, item, {
+    solutions: item.solutions.map(solution => Object.assign({}, solution, {
+      answers: solution.answers.map(keyword => Object.assign({}, keyword, {
+        _id: makeId(),
+        _deletable: solution.answers.length > 1
+      }))
+    }))
+  })
+}
 
 function reduce(grid = {}, action) {
   switch (action.type) {
@@ -51,12 +83,13 @@ function reduce(grid = {}, action) {
         rows: 2,
         cols: 2,
         border: {
-          color: '#000',
+          color: '#DDDDDD',
           width: 1
         },
         solutions: []
       })
     }
+
     case UPDATE_PROP: {
       const newItem = cloneDeep(grid)
       switch (action.property) {
@@ -160,14 +193,17 @@ function reduce(grid = {}, action) {
       }
       return newItem
     }
+
     case DELETE_COLUMN: {
       const newItem = cloneDeep(grid)
       return deleteCol(action.index, newItem, true)
     }
+
     case DELETE_ROW: {
       const newItem = cloneDeep(grid)
       return deleteRow(action.index, newItem, true)
     }
+
     case UPDATE_COLUMN_SCORE: {
       const newItem = cloneDeep(grid)
       const cellsInRow = utils.getCellsByCol(action.index, newItem.cells)
@@ -179,6 +215,7 @@ function reduce(grid = {}, action) {
       })
       return newItem
     }
+
     case UPDATE_ROW_SCORE: {
       const newItem = cloneDeep(grid)
       const cellsInRow = utils.getCellsByRow(action.index, newItem.cells)
@@ -190,57 +227,142 @@ function reduce(grid = {}, action) {
       })
       return newItem
     }
-    case UPDATE_CELL_STYLE: {
+
+    case UPDATE_CELL: {
       const newItem = cloneDeep(grid)
-      // action property = color / background
-      const cellToUpdate = newItem.cells.find(cell => cell.id === action.id)
+      const cellToUpdate = newItem.cells.find(cell => cell.id === action.cellId)
       cellToUpdate[action.property] = action.value
-      return newItem
-    }
-    case UPDATE_CELL_DATA: {
-      const newItem = cloneDeep(grid)
-      // action property = color / background
-      const cellToUpdate = newItem.cells.find(cell => cell.id === action.id)
-      cellToUpdate.data = action.value
-      return newItem
-    }
-    case ADD_OR_UPDATE_SOLUTION: {
-      const newItem = cloneDeep(grid)
-      const solution = newItem.solutions.find(solution => solution.cellId === action.data.solution.cellId)
-      if(undefined !== solution) {
-        // update
-        solution.answers = action.data.solution.answers
-      } else {
-        // new
-        newItem.solutions.push({
-          cellId: action.data.solution.cellId,
-          answers: action.data.solution.answers
-        })
-      }
-      const cell = newItem.cells.find(cell => cell.id === action.data.solution.cellId)
-      // ensure cell data is empty
-      cell.data = ''
-      cell.choices = []
-      cell.input = true
-      if(action.data.isList) {
-        // fill cell choices
-        action.data.solution.answers.forEach(answer => {
-          cell.choices.push(answer.text)
-        })
+
+      if ('_multiple' === action.property) {
+        if (action.value) {
+          const solution = newItem.solutions.find(solution => solution.cellId === cellToUpdate.id)
+
+          cellToUpdate.choices = solution.answers.map(answer => answer.text)
+        } else {
+          cellToUpdate.choices = []
+        }
       }
 
       return newItem
     }
-    case DELETE_SOLUTION: {
+
+    case CREATE_CELL_SOLUTION: {
       const newItem = cloneDeep(grid)
-      const cell = newItem.cells.find(cell => cell.id === action.id)
+      const cell = newItem.cells.find(cell => cell.id === action.cellId)
+
+      newItem.solutions.push({
+        cellId: action.cellId,
+        answers: [
+          {
+            _id: makeId(),
+            text: cell.data ? cell.data : '',
+            score: 1,
+            caseSensitive: false,
+            feedback: '',
+            expected: true,
+            _deletable: false
+          }
+        ]
+      })
+
+      // ensure cell data is empty
+      cell.data = ''
+      cell.choices = []
+      cell.input = true
+
+      // automatically open popover for the new solution
+      newItem._popover = cell.id
+
+      return newItem
+    }
+
+    case DELETE_CELL_SOLUTION: {
+      const newItem = cloneDeep(grid)
+      const cell = newItem.cells.find(cell => cell.id === action.cellId)
       cell.choices = []
       cell.input = false
-      const solutionIndex = newItem.solutions.findIndex(solution => solution.cellId === action.id)
+      const solutionIndex = newItem.solutions.findIndex(solution => solution.cellId === action.cellId)
       newItem.solutions.splice(solutionIndex, 1)
+
+      // Close popover on solution delete if needed
+      if (newItem._popover === cell.id) {
+        newItem._popover = null
+      }
+
+      return newItem
+    }
+
+    case CLOSE_CELL_POPOVER: {
+      return Object.assign({}, grid, {
+        _popover: null
+      })
+    }
+
+    case OPEN_CELL_POPOVER: {
+      return Object.assign({}, grid, {
+        _popover: action.cellId
+      })
+    }
+
+    case ADD_SOLUTION_ANSWER: {
+      const newItem = cloneDeep(grid)
+      const cellToUpdate = newItem.cells.find(cell => cell.id === action.cellId)
+      const solution = newItem.solutions.find(solution => solution.cellId === cellToUpdate.id)
+
+      solution.answers.push({
+        _id: makeId(),
+        text: '',
+        caseSensitive: false,
+        feedback: '',
+        score: 1,
+        expected: true,
+        _deletable: solution.answers.length > 0
+      })
+
+      if (cellToUpdate._multiple) {
+        cellToUpdate.choices = solution.answers.map(answer => answer.text)
+      }
+
+      return newItem
+    }
+
+    case UPDATE_SOLUTION_ANSWER: {
+      const newItem = cloneDeep(grid)
+      const cellToUpdate = newItem.cells.find(cell => cell.id === action.cellId)
+      const solution = newItem.solutions.find(solution => solution.cellId === cellToUpdate.id)
+      const answer = solution.answers.find(answer => answer._id === action.keywordId)
+
+      answer[action.parameter] = action.value
+
+      if ('score' === action.parameter && SCORE_SUM === newItem.score.type && SUM_CELL === newItem.sumMode) {
+        answer.expected = action.value > 0
+      } else if ('expected' === action.parameter) {
+        answer.score = action.value ? 1 : 0
+      }
+
+      if (cellToUpdate._multiple) {
+        cellToUpdate.choices = solution.answers.map(answer => answer.text)
+      }
+
+      return newItem
+    }
+
+    case REMOVE_SOLUTION_ANSWER: {
+      const newItem = cloneDeep(grid)
+      const cellToUpdate = newItem.cells.find(cell => cell.id === action.cellId)
+      const solution = newItem.solutions.find(solution => solution.cellId === cellToUpdate.id)
+      const answers = solution.answers
+      answers.splice(answers.findIndex(answer => answer._id === action.keywordId), 1)
+
+      answers.forEach(keyword => keyword._deletable = answers.length > 1)
+      if (cellToUpdate._multiple) {
+        cellToUpdate.choices = solution.answers.map(answer => answer.text)
+      }
+
       return newItem
     }
   }
+
   return grid
 }
 
@@ -290,55 +412,28 @@ function deleteCol(colIndex, grid, updateCoords){
 function validate(grid) {
   const _errors = {}
 
-  grid.cells.forEach(cell => {
-    const solution = grid.solutions.find(solution => solution.cellId === cell.id)
-    let hasPositiveValue = false
-    if(undefined !== solution) {
-
-      solution.answers.forEach((answer) => {
-        if (notBlank(answer.text)) {
-          set(_errors, 'answers.text', tex('grid_empty_word_error'))
-        }
-
-        if (grid.score.type === SCORE_SUM && grid.sumMode === SUM_CELL && answer.score > 0) {
-          hasPositiveValue = true
-        } else if (answer.expected) {
-          hasPositiveValue = true
-        }
-      })
-
-      if (hasDuplicates(solution.answers)) {
-        set(_errors, 'answers.duplicate', tex('grid_duplicate_answers'))
-      }
-
-      if (!hasPositiveValue) {
-        set(_errors, 'answers.value', tex('solutions_requires_positive_answer'))
-      }
-    }
-  })
-
-  // no solution at all
   if (grid.solutions.length === 0) {
+    // no solution at all
     _errors.solutions = tex('grid_at_least_one_solution')
+  } else {
+    grid.cells.forEach(cell => {
+      const solution = grid.solutions.find(solution => solution.cellId === cell.id)
+      if (solution) {
+        const cellErrors = {}
+
+        const keywordsErrors = keywordsUtils.validate(solution.answers, SCORE_SUM === grid.score.type && SUM_CELL === grid.sumMode, cell._multiple ? 2 : 1)
+        if (!isEmpty(keywordsErrors)) {
+          cellErrors.keywords = keywordsErrors
+        }
+
+        if (!isEmpty(cellErrors)) {
+          _errors[cell.id] = cellErrors
+        }
+      }
+    })
   }
 
   return _errors
-}
-
-
-function hasDuplicates(answers) {
-  let hasDuplicates = false
-  answers.forEach(answer => {
-    let count = 0
-    answers.forEach(check => {
-      if (answer.text === check.text && answer.caseSensitive === check.caseSensitive) {
-        count++
-      }
-    })
-    if (count > 1) hasDuplicates = true
-  })
-
-  return hasDuplicates
 }
 
 function makeDefaultCell(x, y) {
@@ -347,7 +442,8 @@ function makeDefaultCell(x, y) {
     data: '',
     coordinates: [x, y],
     background: '#fff',
-    color: '#000',
+    color: '#333',
+    _multiple: false,
     choices: [],
     input: false
   }
@@ -356,5 +452,6 @@ function makeDefaultCell(x, y) {
 export default {
   component,
   reduce,
+  decorate,
   validate
 }

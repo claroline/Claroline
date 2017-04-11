@@ -1,6 +1,7 @@
 import React, {Component, PropTypes as T} from 'react'
-import {TwitterPicker} from 'react-color'
 import classes from 'classnames'
+import {TwitterPicker} from 'react-color'
+import Overlay from 'react-bootstrap/lib/Overlay'
 
 export class ColorPicker extends Component {
   constructor(props) {
@@ -11,40 +12,46 @@ export class ColorPicker extends Component {
   }
 
   render() {
-    let style = this.props.forFontColor ? {
-      color: this.props.color
-    } : {
-      backgroundColor: this.props.color
-    }
-
     return (
       <span className="color-picker" id={this.props.id}>
         <button
-          className={classes(
-            {'fa fa-font font': this.props.forFontColor},
-            {'bg-colored': !this.props.forFontColor}
-          )}
+          className={classes('btn', this.props.className)}
           role="button"
           type="button"
-          style={style}
+          ref="target"
           onClick={() => this.setState({open: !this.state.open})}
         >
+          <span
+            className={classes('fa fa-fw',
+              {'fa-font': this.props.forFontColor},
+              {'fa-paint-brush': !this.props.forFontColor}
+            )}
+          />
+          <span
+            className="color-indicator"
+            style={{
+              backgroundColor: this.props.color
+            }}
+          />
         </button>
-        {this.state.open &&
-          <span className={classes(
-            {'font-picker-container': this.props.forFontColor},
-            {'bg-colored-picker-container': !this.props.forFontColor}
-          )}>
-            <TwitterPicker
-              color={this.props.color}
-              colors={this.props.colors}
-              onChangeComplete={color => {
-                this.setState({open: false})
-                this.props.onPick(color)
-              }}
-            />
-          </span>
-        }
+
+        <Overlay
+          show={this.state.open}
+          onHide={() => this.setState({ open: false })}
+          placement="bottom"
+          container={this}
+          target={this.refs.target}
+          rootClose={true}
+        >
+          <TwitterPicker
+            color={this.props.color}
+            colors={this.props.colors}
+            onChangeComplete={color => {
+              this.setState({open: false})
+              this.props.onPick(color)
+            }}
+          />
+        </Overlay>
       </span>
     )
   }
@@ -52,8 +59,19 @@ export class ColorPicker extends Component {
 
 ColorPicker.defaultProps = {
   forFontColor: false,
-  autoOpen: false,
-  colors: ['#FF6900', '#FCB900', '#7BDCB5', '#00D084', '#8ED1FC', '#0693E3', '#ABB8C3', '#EB144C', '#FFF', '#000']
+  colors: [
+    '#FF6900',
+    '#FCB900',
+    '#7BDCB5',
+    '#00D084',
+    '#8ED1FC',
+    '#0693E3',
+    '#ABB8C3',
+    '#EB144C',
+    '#FFFFFF',
+    '#000000'
+  ],
+  autoOpen: false
 }
 
 ColorPicker.propTypes = {
@@ -62,5 +80,6 @@ ColorPicker.propTypes = {
   id: T.string,
   colors: T.arrayOf(T.string),
   forFontColor: T.bool,
+  className: T.string,
   autoOpen: T.bool
 }

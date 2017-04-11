@@ -2,7 +2,7 @@ import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
 import Panel from 'react-bootstrap/lib/Panel'
 
-import {tex} from './../../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {getDefinition, isQuestionType} from './../../../items/item-types'
 import {getContentDefinition} from './../../../contents/content-types'
 import selectQuiz from './../../selectors'

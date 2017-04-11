@@ -1,10 +1,11 @@
 import React, {Component, PropTypes as T} from 'react'
 import get from 'lodash/get'
+
 import {asset} from '#/main/core/asset'
-import {tex} from './../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {makeDroppable} from './../../utils/dragAndDrop'
 import {FileDropZone} from './../../components/form/file-drop-zone.jsx'
-import {ErrorBlock} from './../../components/form/error-block.jsx'
+import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {ImageInput} from './components/image-input.jsx'
 import {ModeSelector} from './components/mode-selector.jsx'
 import {AreaPopover} from './components/area-popover.jsx'
@@ -201,6 +202,9 @@ export class Graphic extends Component {
             )}
             onClose={() => this.props.onChange(
               actions.togglePopover(this.props.item._popover.areaId, 0, 0, false)
+            )}
+            onDelete={() => this.props.onChange(
+              actions.deleteArea(this.props.item._popover.areaId)
             )}
           />
         }

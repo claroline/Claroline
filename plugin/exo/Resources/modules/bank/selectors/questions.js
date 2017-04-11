@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-import {trans} from './../../utils/translate'
+import {trans} from '#/main/core/translation'
 import {getDefinition} from './../../items/item-types'
 
 const getQuestions = (state) => state.questions

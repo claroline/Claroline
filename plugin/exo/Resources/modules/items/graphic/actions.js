@@ -1,4 +1,4 @@
-import {makeActionCreator} from './../../utils/utils'
+import {makeActionCreator} from '#/main/core/utilities/redux'
 
 export const SELECT_MODE = 'SELECT_MODE'
 export const SELECT_IMAGE = 'SELECT_IMAGE'

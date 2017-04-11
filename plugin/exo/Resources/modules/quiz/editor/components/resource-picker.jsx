@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 const T = React.PropTypes
 const PICKER_NAME = 'EXO_OBJECT_PICKER'
-import {t} from './../../../utils/translate'
+import {t} from '#/main/core/translation'
 
 /* global Claroline */
 

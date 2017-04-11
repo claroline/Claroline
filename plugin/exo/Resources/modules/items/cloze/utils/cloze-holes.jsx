@@ -1,7 +1,7 @@
 import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 
-import {tex} from './../../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {select} from '../selectors'
 import {Feedback} from '../../components/feedback-btn.jsx'
 import {SolutionScore} from '../../components/score.jsx'

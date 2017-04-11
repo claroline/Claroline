@@ -1,5 +1,5 @@
 import React, {PropTypes as T} from 'react'
-import {t, tex} from './../../../utils/translate'
+import {t, tex} from '#/main/core/translation'
 
 const PreviousButton = props =>
   <button className="btn btn-previous btn-default" onClick={props.onClick}>

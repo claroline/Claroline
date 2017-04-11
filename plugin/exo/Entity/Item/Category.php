@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Entity\Item;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
+use UJM\ExoBundle\Library\Model\UuidTrait;
 
 /**
  * Category.
@@ -23,12 +24,7 @@ class Category
      */
     private $id;
 
-    /**
-     * @var string
-     *
-     * @ORM\Column("uuid", type="string", length=36, unique=true)
-     */
-    private $uuid;
+    use UuidTrait;
 
     /**
      * @var string
@@ -65,26 +61,6 @@ class Category
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Gets UUID.
-     *
-     * @return string
-     */
-    public function getUuid()
-    {
-        return $this->uuid;
-    }
-
-    /**
-     * Sets UUID.
-     *
-     * @param $uuid
-     */
-    public function setUuid($uuid)
-    {
-        $this->uuid = $uuid;
     }
 
     /**

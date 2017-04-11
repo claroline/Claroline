@@ -132,16 +132,10 @@ class ClozeQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (empty($hole)) {
-                $hole = new Hole();
-            }
-
-            // Force client ID if needed
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $hole->setUuid($holeData->id);
-            }
-
+            $hole = $hole ?: new Hole();
+            $hole->setUuid($holeData->id);
             $hole->setSize($holeData->size);
+
             if (!empty($holeData->choices)) {
                 $hole->setSelector(true);
             } else {

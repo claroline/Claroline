@@ -1,10 +1,11 @@
 import invariant from 'invariant'
 import select from './selectors'
-import {makeActionCreator, makeId} from './../../utils/utils'
+import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeId} from './../../utils/utils'
 import {REQUEST_SEND} from './../../api/actions'
-import {showModal} from './../../modal/actions'
-import {tex} from './../../utils/translate'
-import {MODAL_MESSAGE} from './../../modal'
+import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {tex} from '#/main/core/translation'
+import {MODAL_MESSAGE} from '#/main/core/layout/modal'
 import {denormalize} from './../normalizer'
 
 export const ITEM_CREATE = 'ITEM_CREATE'
@@ -126,7 +127,7 @@ actions.save = () => {
 
     if (!select.valid(state)) {
       dispatch(actions.quizValidating())
-      dispatch(showModal(MODAL_MESSAGE, {
+      dispatch(modalActions.showModal(MODAL_MESSAGE, {
         title: tex('editor_invalid_no_save'),
         message: tex('editor_invalid_no_save_desc'),
         bsStyle: 'warning'

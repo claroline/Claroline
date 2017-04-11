@@ -4,11 +4,11 @@ import size from 'lodash/size'
 import Modal from 'react-bootstrap/lib/Modal'
 
 import {update} from './../../../utils/utils'
-import {t, tex, trans} from './../../../utils/translate'
-import {FormGroup} from './../../../components/form/form-group.jsx'
+import {t, tex, trans} from '#/main/core/translation'
+import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
 
 import {listItemMimeTypes, getDefinition} from './../../../items/item-types'
-import {BaseModal} from './../../../modal/components/base.jsx'
+import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 
 export const MODAL_SEARCH = 'MODAL_SEARCH'
 

@@ -1,5 +1,5 @@
 import sanitize from './sanitizers'
-import {ensure} from './../../utils/test'
+import {ensure} from '#/main/core/tests'
 
 describe('sanitize quiz', () => {
   it('converts numeric fields to integers', () => {

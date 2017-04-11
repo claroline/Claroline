@@ -1,9 +1,11 @@
 import merge from 'lodash/merge'
 import validate from './validators'
 import {registerItemType, resetTypes} from './../../items/item-types'
-import {assertEqual} from './../../utils/test'
+import {ensure, mockTranslator} from '#/main/core/tests'
 
 describe('quiz validator', () => {
+  before(mockTranslator)
+
   it('returns no errors on valid quiz', () => {
     const quiz = {
       title: 'foo',
@@ -13,7 +15,7 @@ describe('quiz validator', () => {
         maxAttempts: 3
       }
     }
-    assertEqual(validate.quiz(quiz), {})
+    ensure.equal(validate.quiz(quiz), {})
   })
 
   it('returns validation errors if invalid', () => {
@@ -25,7 +27,7 @@ describe('quiz validator', () => {
         maxAttempts: -3
       }
     }
-    assertEqual(validate.quiz(quiz), {
+    ensure.equal(validate.quiz(quiz), {
       title: 'This value should not be blank.',
       parameters: {
         pick: 'This value should not be blank.',
@@ -43,7 +45,7 @@ describe('step validator', () => {
         maxAttempts: 3
       }
     }
-    assertEqual(validate.step(step), {})
+    ensure.equal(validate.step(step), {})
   })
 
   it('returns validation errors if invalid', () => {
@@ -52,7 +54,7 @@ describe('step validator', () => {
         maxAttempts: -3
       }
     }
-    assertEqual(validate.step(step), {
+    ensure.equal(validate.step(step), {
       parameters: {
         maxAttempts: 'This value should be 0 or more.'
       }
@@ -70,7 +72,7 @@ describe('item validator', () => {
       type: 'foo/bar',
       content: ''
     }
-    assertEqual(validate.item(item), {
+    ensure.equal(validate.item(item), {
       content: 'This value should not be blank.'
     })
   })
@@ -89,7 +91,7 @@ describe('item validator', () => {
       content: 'Question?',
       foo: false
     }
-    assertEqual(validate.item(item), {
+    ensure.equal(validate.item(item), {
       foo: 'Should be bar'
     })
   })
@@ -108,7 +110,7 @@ describe('item validator', () => {
       content: '',
       foo: 'baz'
     }
-    assertEqual(validate.item(item), {
+    ensure.equal(validate.item(item), {
       content: 'This value should not be blank.',
       foo: 'Should be bar'
     })
@@ -121,7 +123,7 @@ describe('item validator', () => {
       type: 'foo/bar',
       content: 'Question'
     }
-    assertEqual(validate.item(item), {})
+    ensure.equal(validate.item(item), {})
   })
 })
 

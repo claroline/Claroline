@@ -1,8 +1,9 @@
 import React, {Component, PropTypes as T} from 'react'
 import get from 'lodash/get'
-import {t, tex} from './../../../utils/translate'
+
+import {t, tex} from '#/main/core/translation'
 import {HINT_ADD, HINT_CHANGE, HINT_REMOVE} from './../actions'
-import {FormGroup} from './../../../components/form/form-group.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
 import {Textarea} from './../../../components/form/textarea.jsx'
 import {SubSection} from './../../../components/form/sub-section.jsx'
 import {TooltipButton} from './../../../components/form/tooltip-button.jsx'

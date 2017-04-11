@@ -1,5 +1,5 @@
 import freeze from 'deep-freeze'
-import {assertEqual} from './../utils/test'
+import {ensure, mockTranslator} from '#/main/core/tests'
 import {decorate} from './decorators'
 import {
   TYPE_QUIZ,
@@ -12,6 +12,8 @@ import {
 } from './enums'
 
 describe('Decorator', () => {
+  before(mockTranslator)
+
   it('adds editor state sections and default values to quiz state', () => {
     const state = freeze({
       quiz: {
@@ -38,7 +40,7 @@ describe('Decorator', () => {
       items: {
         x: {
           id: 'x',
-          type: 'foo/bar',
+          type: 'application/x.test+json',
           hints: [
             {value: 'Foo'},
             {value: 'Bar'}
@@ -46,7 +48,7 @@ describe('Decorator', () => {
         },
         y: {
           id: 'y',
-          type: 'bar/quz',
+          type: 'application/x.test+json',
           score: {
             type: SCORE_FIXED,
             success: 5,
@@ -55,12 +57,12 @@ describe('Decorator', () => {
         },
         z: {
           id: 'z',
-          title: 'Item Z',
-          type: 'text/html'
+          type: 'text/html',
+          title: 'Item Z'
         }
       }
     })
-    assertEqual(decorate(state), {
+    ensure.equal(decorate(state), {
       quiz: {
         id: '1',
         description: '',
@@ -105,9 +107,10 @@ describe('Decorator', () => {
       items: {
         x: {
           id: 'x',
-          type: 'foo/bar',
           title: '',
           description: '',
+          type: 'application/x.test+json',
+          objects: [],
           hints: [
             {
               value: 'Foo',
@@ -131,7 +134,8 @@ describe('Decorator', () => {
           description: '',
           hints: [],
           feedback: '',
-          type: 'bar/quz',
+          objects: [],
+          type: 'application/x.test+json',
           score: {
             type: SCORE_FIXED,
             success: 5,
@@ -141,15 +145,7 @@ describe('Decorator', () => {
         z: {
           id: 'z',
           type: 'text/html',
-          title: 'Item Z',
-          description: '',
-          hints: [],
-          feedback: '',
-          score: {
-            type: SCORE_SUM,
-            success: 1,
-            failure: 0
-          }
+          title: 'Item Z'
         }
       },
       editor: {
@@ -176,18 +172,18 @@ describe('Decorator', () => {
       items: {
         x: {
           id: 'x',
-          type: 'application/foo.bar+json'
+          type: 'application/x.bar+json'
         }
       }
     })
     const itemDecorators = {
-      'application/foo.bar+json': item => {
+      'application/x.bar+json': item => {
         return Object.assign({}, item, {
           _foo: `${item.id}-bar`
         })
       }
     }
-    assertEqual(decorate(state, itemDecorators), {
+    ensure.equal(decorate(state, itemDecorators), {
       quiz: {
         id: '1',
         steps: ['a'],
@@ -223,11 +219,12 @@ describe('Decorator', () => {
       items: {
         x: {
           id: 'x',
-          type: 'application/foo.bar+json',
+          type: 'application/x.bar+json',
           title: '',
           description: '',
           hints: [],
           feedback: '',
+          objects: [],
           score: {
             type: SCORE_SUM,
             success: 1,

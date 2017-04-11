@@ -1,5 +1,5 @@
 import freeze from 'deep-freeze'
-import {assertEqual} from './../utils/test'
+import {ensure} from '#/main/core/tests'
 import {normalize} from './normalizer'
 
 describe('Normalizer', () => {
@@ -37,7 +37,7 @@ describe('Normalizer', () => {
         }
       ]
     })
-    assertEqual(normalize(quiz), {
+    ensure.equal(normalize(quiz), {
       quiz: {
         id: '1',
         title: 'Quiz title',

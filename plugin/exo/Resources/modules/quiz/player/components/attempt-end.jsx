@@ -1,7 +1,7 @@
 import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
 
-import {tex} from './../../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {select as playerSelectors} from './../selectors'
 import selectors from './../../selectors'
 import {selectors as paperSelectors} from './../../papers/selectors'

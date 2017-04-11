@@ -130,8 +130,8 @@ class SetQuestionSerializer implements SerializerInterface
         }
 
         // deserialize proposals labels and solutions
-        $this->deserializeLabels($setQuestion, $data->sets, $options);
-        $this->deserializeProposals($setQuestion, $data->items, $options);
+        $this->deserializeLabels($setQuestion, $data->sets);
+        $this->deserializeProposals($setQuestion, $data->items);
         $this->deserializeSolutions($setQuestion, array_merge($data->solutions->associations, $data->solutions->odd));
 
         return $setQuestion;
@@ -142,9 +142,8 @@ class SetQuestionSerializer implements SerializerInterface
      *
      * @param MatchQuestion $setQuestion
      * @param array         $sets        ie labels
-     * @param array         $options
      */
-    private function deserializeLabels(MatchQuestion $setQuestion, array $sets, array $options = [])
+    private function deserializeLabels(MatchQuestion $setQuestion, array $sets)
     {
         $labelsEntities = $setQuestion->getLabels()->toArray();
 
@@ -160,14 +159,8 @@ class SetQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (null === $label) {
-                // Create a new Label
-                $label = new Label();
-            }
-
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $label->setUuid($setData->id);
-            }
+            $label = $label ?: new Label();
+            $label->setUuid($setData->id);
 
             $label->setOrder($index);
 
@@ -187,9 +180,8 @@ class SetQuestionSerializer implements SerializerInterface
      *
      * @param MatchQuestion $setQuestion
      * @param array         $items       ie proposals
-     * @param array         $options
      */
-    private function deserializeProposals(MatchQuestion $setQuestion, array $items, array $options = [])
+    private function deserializeProposals(MatchQuestion $setQuestion, array $items)
     {
         $proposalsEntities = $setQuestion->getProposals()->toArray();
 
@@ -207,15 +199,8 @@ class SetQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (null === $proposal) {
-                // Create a new Proposal
-                $proposal = new Proposal();
-            }
-
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $proposal->setUuid($itemData->id);
-            }
-
+            $proposal = $proposal ?: new Proposal();
+            $proposal->setUuid($itemData->id);
             $proposal->setOrder($index);
 
             // Deserialize proposal content

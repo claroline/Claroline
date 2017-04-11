@@ -115,7 +115,7 @@ class BooleanQuestionSerializer implements SerializerInterface
 
             // Searches for an existing choice entity.
             foreach ($choiceEntities as $entityIndex => $entityChoice) {
-                /** @var Choice $entityChoice */
+                /** @var BooleanChoice $entityChoice */
                 if ($entityChoice->getUuid() === $choiceData->id) {
                     $choice = $entityChoice;
                     unset($choiceEntities[$entityIndex]);
@@ -123,15 +123,8 @@ class BooleanQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (empty($choice)) {
-                // Create a new choice
-                $choice = new BooleanChoice();
-            }
-
-            // Force client ID if needed
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $choice->setUuid($choiceData->id);
-            }
+            $choice = $choice ?: new BooleanChoice();
+            $choice->setUuid($choiceData->id);
 
             // Deserialize choice content
             $choice = $this->contentSerializer->deserialize($choiceData, $choice, $options);

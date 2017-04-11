@@ -84,7 +84,7 @@ class GridDefinition extends AbstractDefinition
     /**
      * Gets the grid question validator.
      *
-     * @return PairQuestionValidator
+     * @return GridQuestionValidator
      */
     protected function getQuestionValidator()
     {
@@ -94,7 +94,7 @@ class GridDefinition extends AbstractDefinition
     /**
      * Gets the grid answer validator.
      *
-     * @return PairAnswerValidator
+     * @return GridAnswerValidator
      */
     protected function getAnswerValidator()
     {
@@ -104,7 +104,7 @@ class GridDefinition extends AbstractDefinition
     /**
      * Gets the grid question serializer.
      *
-     * @return PairQuestionSerializer
+     * @return GridQuestionSerializer
      */
     protected function getQuestionSerializer()
     {
@@ -394,6 +394,19 @@ class GridDefinition extends AbstractDefinition
         // TODO: Implement getStatistics() method.
 
         return [];
+    }
+
+    /**
+     * Refreshes cells UUIDs.
+     *
+     * @param GridQuestion $item
+     */
+    public function refreshIdentifiers(AbstractItem $item)
+    {
+        /** @var Cell $cell */
+        foreach ($item->getCells() as $cell) {
+            $cell->refreshUuid();
+        }
     }
 
     /**

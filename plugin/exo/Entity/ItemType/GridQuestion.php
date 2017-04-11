@@ -87,7 +87,7 @@ class GridQuestion extends AbstractItem
      *
      * @var string
      */
-    private $borderColor = '#eee';
+    private $borderColor = '#DDDDDD';
 
     /**
      * GridQuestion constructor.

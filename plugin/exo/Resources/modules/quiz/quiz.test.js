@@ -1,10 +1,11 @@
 import assert from 'assert'
 import freeze from 'deep-freeze'
 import {resetTypes} from './../items/item-types'
-import {spyConsole, mockRouting} from './../utils/test'
+import {spyConsole, mockRouting, mockTranslator} from '#/main/core/tests'
 import {Quiz} from './quiz'
 
 describe('Quiz', () => {
+  before(mockTranslator)
   beforeEach(spyConsole.watch)
 
   afterEach(() => {
@@ -13,11 +14,12 @@ describe('Quiz', () => {
   })
 
   it('takes raw quiz data and renders a full quiz', () => {
-    const quiz = new Quiz(quizFixture())
+    const quiz = new Quiz(quizFixture(), resourceNodeFixture())
     const element = document.createElement('div')
 
     mockRouting()
     quiz.render(element)
+
     // this is just a rough test to check main components have been rendered
     assert(element.querySelector('.quiz-overview'), 'a .quiz-overview element is present')
   })
@@ -28,7 +30,9 @@ function quizFixture() {
     id: '1',
     title: 'Quiz title',
     description: 'Quiz desc',
-    parameters: {},
+    parameters: {
+      showOverview: true
+    },
     meta: {
       created: '2016-12-12',
       published: false
@@ -61,5 +65,13 @@ function quizFixture() {
         ]
       }
     ]
+  })
+}
+
+function resourceNodeFixture() {
+  return freeze({
+    meta: {
+      editable: true
+    }
   })
 }

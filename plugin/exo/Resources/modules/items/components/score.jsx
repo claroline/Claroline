@@ -1,9 +1,9 @@
 import React, {PropTypes as T} from 'react'
-import {tcex} from '../../utils/translate'
+import {transChoice} from '#/main/core/translation'
 
 export const SolutionScore = props =>
   <span className="solution-score">
-    {tcex('solution_score', props.score, {score: props.score})}
+    {transChoice('solution_score', props.score, {score: props.score}, 'ujm_exo')}
   </span>
 
 SolutionScore.propTypes = {

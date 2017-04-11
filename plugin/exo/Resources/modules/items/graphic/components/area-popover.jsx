@@ -1,7 +1,9 @@
 import React, {Component, PropTypes as T} from 'react'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
-import {t, tex} from './../../../utils/translate'
+
+import {tex} from '#/main/core/translation'
+import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
 import {ColorPicker} from './../../../components/form/color-picker.jsx'
 import {TooltipButton} from './../../../components/form/tooltip-button.jsx'
 import {Textarea} from './../../../components/form/textarea.jsx'
@@ -18,61 +20,78 @@ export class AreaPopover extends Component {
     return (
       <Popover
         id="area-popover"
-        className={classes('area-popover', {
-          'has-feedback': this.state.showFeedback
-        })}
-        placement="top"
+        className="area-popover"
+        placement="bottom"
         positionLeft={this.props.left}
         positionTop={this.props.top}
-      >
-        <div className="base-controls">
+        title={
           <div>
-            <label className="control-label" htmlFor="popover-color-picker">
-              {tex('color')}
-            </label>
+            {tex('graphic_area_edit')}
+
+            <div className="popover-actions">
+              <TooltipButton
+                id="area-popover-delete"
+                className="btn-link-default"
+                title={tex('delete')}
+                label={<span className="fa fa-fw fa-trash-o" />}
+                onClick={this.props.onDelete}
+              />
+
+              <TooltipButton
+                id="area-popover-close"
+                title={tex('close')}
+                className="btn-link-default"
+                label={<span className="fa fa-fw fa-times" />}
+                onClick={this.props.onClose}
+              />
+            </div>
+          </div>
+        }
+      >
+        <div className={classes('form-group', 'base-controls', {'form-last': !this.state.showFeedback})}>
+          <div>
             <ColorPicker
               id="popover-color-picker"
+              className="btn-default"
               color={this.props.color}
               onPick={color => this.props.onPickColor(color.hex)}
             />
           </div>
-          <div>
-            <label className="control-label" htmlFor="popover-score">
-              {tex('score')}
-            </label>
+
+          <div className="right-controls">
             <input
               type="number"
-              id="popover-score"
-              className="form-control score-input"
+              id="area-score"
+              className="form-control area-score"
               value={this.props.score}
               onChange={e => this.props.onChangeScore(parseFloat(e.target.value))}
             />
+
+            <TooltipButton
+              id="area-popover-feedback-tip"
+              className="btn-link-default"
+              label={<span className="fa fa-fw fa-comments-o" />}
+              title={tex('graphic_feedback_info')}
+              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+            />
           </div>
-          <TooltipButton
-            id="area-popover-feedback-tip"
-            className="btn-link-default btn-feedback"
-            label={<span className="fa fa-fw fa-comments-o"></span>}
-            title={tex('graphic_feedback_info')}
-            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
         </div>
+
         {this.state.showFeedback &&
-          <div className="feedback-container">
+          <FormGroup
+            controlId="area-feedback"
+            label={tex('feedback')}
+            hideLabel={true}
+            className="feedback-container form-last"
+          >
             <Textarea
               id="graphic-popover-feedback"
               title={tex('feedback')}
               content={this.props.feedback}
               onChange={this.props.onChangeFeedback}
             />
-          </div>
+          </FormGroup>
         }
-        <TooltipButton
-          id="area-popover-close-tip"
-          className="close-tip-btn btn-link-default"
-          label={<span className="fa fa-fw fa-close"></span>}
-          title={t('close')}
-          onClick={this.props.onClose}
-        />
       </Popover>
     )
   }
@@ -87,5 +106,6 @@ AreaPopover.propTypes = {
   onChangeScore: T.func.isRequired,
   onChangeFeedback: T.func.isRequired,
   onPickColor: T.func.isRequired,
-  onClose: T.func.isRequired
+  onClose: T.func.isRequired,
+  onDelete: T.func.isRequired
 }

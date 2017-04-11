@@ -173,17 +173,10 @@ class GridQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (empty($cell)) {
-                $cell = new Cell();
-                $cell->setCoordsX($cellData->coordinates[0]);
-                $cell->setCoordsY($cellData->coordinates[1]);
-            }
-
-            // Force client ID if needed
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $cell->setUuid($cellData->id);
-            }
-
+            $cell = $cell ?: new Cell();
+            $cell->setUuid($cellData->id);
+            $cell->setCoordsX($cellData->coordinates[0]);
+            $cell->setCoordsY($cellData->coordinates[1]);
             $cell->setColor($cellData->color);
             $cell->setBackground($cellData->background);
             $cell->setData($cellData->data);

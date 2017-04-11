@@ -1,6 +1,6 @@
 import React from 'react'
 import {mount} from 'enzyme'
-import {spyConsole, renew, ensure} from './../../../utils/test'
+import {spyConsole, renew, ensure} from '#/main/core/tests'
 import {AreaPopover} from './area-popover.jsx'
 
 describe('<AreaPopover/>', () => {
@@ -22,6 +22,7 @@ describe('<AreaPopover/>', () => {
         onChangeFeedback={() => {}}
         onPickColor={() => {}}
         onClose={() => {}}
+        onDelete={() => {}}
       />
     )
     ensure.propTypesOk()

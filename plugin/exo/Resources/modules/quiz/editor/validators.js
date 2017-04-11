@@ -56,7 +56,10 @@ function validateBaseItem(item) {
 
 function validateItemObjects(item) {
   let errors = {}
-  item.objects.forEach(o => errors = Object.assign(errors, validateContentItem(o)))
+
+  if (item.objects) {
+    item.objects.forEach(o => errors = Object.assign(errors, validateContentItem(o)))
+  }
 
   return errors
 }

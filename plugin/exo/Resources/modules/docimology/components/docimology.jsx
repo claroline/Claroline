@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 
 import {actions as currentObjectActions} from './../actions/current-object'
 
-import PageHeader from './../../components/layout/page-header.jsx'
-import PageActions from './../../components/layout/page-actions.jsx'
+import {PageHeader} from '#/main/core/layout/page/components/page.jsx'
+import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
 
 // TODO : use barrel instead
 import BarChart from './../../components/chart/bar/bar-chart.jsx'

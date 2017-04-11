@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBubdle\Tests\API\User;
+namespace Claroline\CoreBundle\Tests\API\User;
 
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;

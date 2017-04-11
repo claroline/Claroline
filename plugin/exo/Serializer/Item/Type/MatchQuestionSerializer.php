@@ -152,18 +152,8 @@ class MatchQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (empty($label)) {
-                // Create a new Label
-                $label = new Label();
-            }
-
-            // Force client ID if needed
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $label->setUuid($secondSetData->id);
-            } else {
-                $secondSetData->id = $label->getUuid();
-            }
-
+            $label = $label ?: new Label();
+            $label->setUuid($secondSetData->id);
             $label->setOrder($index);
 
             // Deserialize firstSet content
@@ -202,17 +192,8 @@ class MatchQuestionSerializer implements SerializerInterface
                 }
             }
 
-            if (empty($proposal)) {
-                // Create a new Proposal
-                $proposal = new Proposal();
-            }
-
-            if (!in_array(Transfer::USE_SERVER_IDS, $options)) {
-                $proposal->setUuid($firstSetData->id);
-            } else {
-                $firstSetData->id = $proposal->getUuid();
-            }
-
+            $proposal = $proposal ?: new Proposal();
+            $proposal->setUuid($firstSetData->id);
             $proposal->setOrder($index);
 
             // Deserialize proposal content

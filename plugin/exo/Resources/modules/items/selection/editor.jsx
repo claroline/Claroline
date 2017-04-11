@@ -1,18 +1,20 @@
 import React, {Component, PropTypes as T} from 'react'
-import {FormGroup} from './../../components/form/form-group.jsx'
 import classes from 'classnames'
-import {tex} from './../../utils/translate'
+import get from 'lodash/get'
+import Popover from 'react-bootstrap/lib/Popover'
+
+import {tex} from '#/main/core/translation'
+import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
+import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
+
 import {Textarea} from './../../components/form/textarea.jsx'
 import {Radios} from './../../components/form/radios.jsx'
 import {ColorPicker} from './../../components/form/color-picker.jsx'
 import {actions} from './editor'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {utils} from './utils/utils'
-import get from 'lodash/get'
-import {ErrorBlock} from './../../components/form/error-block.jsx'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {CheckGroup} from './../../components/form/check-group.jsx'
-import Popover from 'react-bootstrap/lib/Popover'
 
 function updateAnswer(value, parameter, selectionId, mode) {
   switch(mode) {

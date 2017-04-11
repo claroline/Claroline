@@ -1,11 +1,11 @@
 import React, {PropTypes as T} from 'react'
 import classes from 'classnames'
 import {makeSortable} from './../../utils/sortable'
-import {t, tex} from './../../utils/translate'
+import {t, tex} from '#/main/core/translation'
 import {ValidationStatus} from './../../quiz/editor/components/validation-status.jsx'
 import {getContentDefinition} from './../content-types'
 import {connect} from 'react-redux'
-import {showModal, fadeModal, hideModal} from './../../modal/actions'
+import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_CONTENT} from './content-modal.jsx'
 
 const Actions = props =>
@@ -139,9 +139,9 @@ function mapStateToProps() {
 
 function mapDispatchToProps(dispatch) {
   return {
-    showModal: (type, props) => dispatch(showModal(type, props)),
-    fadeModal: () => dispatch(fadeModal()),
-    hideModal: () => dispatch(hideModal())
+    showModal: (type, props) => dispatch(modalActions.showModal(type, props)),
+    fadeModal: () => dispatch(modalActions.fadeModal()),
+    hideModal: () => dispatch(modalActions.hideModal())
   }
 }
 

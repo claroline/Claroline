@@ -1,6 +1,6 @@
 import React from 'react'
 import {shallow} from 'enzyme'
-import {spyConsole, renew, ensure} from './../../utils/test'
+import {spyConsole, renew, ensure} from '#/main/core/tests'
 import {SubSection} from './sub-section.jsx'
 
 describe('<SubSection/>', () => {

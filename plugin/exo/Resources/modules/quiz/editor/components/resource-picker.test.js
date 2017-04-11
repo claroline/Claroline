@@ -1,6 +1,6 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure} from './../../../utils/test'
+import {spyConsole, renew, ensure} from '#/main/core/tests'
 import {ResourcePicker} from './resource-picker.jsx'
 
 describe('<ResourcePicker/>', () => {

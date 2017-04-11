@@ -1,8 +1,9 @@
 import cloneDeep from 'lodash/cloneDeep'
 import {ITEM_CREATE} from './../../quiz/editor/actions'
-import {makeId, makeActionCreator} from './../../utils/utils'
+import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeId} from './../../utils/utils'
 import {notBlank, number, chain} from './../../utils/validate'
-import {tex} from './../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {utils} from './utils/utils'
 import {PairForm as component} from './editor.jsx'
 

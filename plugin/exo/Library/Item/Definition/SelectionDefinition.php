@@ -4,6 +4,8 @@ namespace UJM\ExoBundle\Library\Item\Definition;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
+use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
+use UJM\ExoBundle\Entity\Misc\Color;
 use UJM\ExoBundle\Entity\Misc\Selection;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\ItemType;
@@ -256,13 +258,28 @@ class SelectionDefinition extends AbstractDefinition
         }
     }
 
-    /**
-     * @param SelectionQuestion $selectionQuestion
-     * @param array             $answersData
-     *
-     * @return array
-     */
     public function getStatistics(AbstractItem $selectionQuestion, array $answersData)
     {
+        // TODO: Implement getStatistics() method.
+
+        return [];
+    }
+
+    /**
+     * Refreshes selections and colors UUIDs.
+     *
+     * @param SelectionQuestion $item
+     */
+    public function refreshIdentifiers(AbstractItem $item)
+    {
+        /** @var Color $color */
+        foreach ($item->getColors() as $color) {
+            $color->refreshUuid();
+        }
+
+        /** @var Selection $selection */
+        foreach ($item->getSelections() as $selection) {
+            $selection->refreshUuid();
+        }
     }
 }

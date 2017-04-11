@@ -1,7 +1,7 @@
 import {shuffle, sampleSize} from 'lodash/collection'
 import moment from 'moment'
 
-import {tex} from './../../utils/translate'
+import {tex} from '#/main/core/translation'
 import {makeId} from './../../utils/utils'
 
 import {

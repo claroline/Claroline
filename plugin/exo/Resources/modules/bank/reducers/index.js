@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux'
 
+import {reducer as modalReducer} from '#/main/core/layout/modal/reducer'
 import {reducers as apiReducers} from './../../api/reducers'
-import {reduceModal}       from './../../modal/reducer'
 import questionsReducer    from './questions'
 import selectReducer       from './select'
 import sortByReducer       from './sort-by'
@@ -10,7 +10,7 @@ import searchReducer       from './search'
 import totalResultsReducer from './total-results'
 
 export const bankApp = combineReducers({
-  modal: reduceModal,
+  modal: modalReducer,
   currentRequests: apiReducers.currentRequests,
   questions: questionsReducer,
   selected: selectReducer,

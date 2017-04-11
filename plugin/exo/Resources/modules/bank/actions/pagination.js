@@ -1,4 +1,4 @@
-import {makeActionCreator} from './../../utils/actions'
+import {makeActionCreator} from '#/main/core/utilities/redux'
 
 export const PAGE_SIZE_UPDATE = 'PAGE_SIZE_UPDATE'
 export const PAGE_CHANGE      = 'PAGE_CHANGE'

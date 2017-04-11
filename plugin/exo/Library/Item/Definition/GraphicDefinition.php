@@ -108,11 +108,18 @@ class GraphicDefinition extends AbstractDefinition
         return $this->answerValidator;
     }
 
+    /**
+     * @param GraphicQuestion $question
+     * @param $answer
+     *
+     * @return CorrectedAnswer
+     */
     public function correctAnswer(AbstractItem $question, $answer)
     {
         $corrected = new CorrectedAnswer();
 
-        foreach ($question->getAreas()->toArray() as $area) {
+        /** @var Area $area */
+        foreach ($question->getAreas() as $area) {
             if (is_array($answer)) {
                 foreach ($answer as $coords) {
                     if ($this->isPointInArea($area, $coords->x, $coords->y)) {
@@ -169,6 +176,22 @@ class GraphicDefinition extends AbstractDefinition
         }
 
         return $areas;
+    }
+
+    /**
+     * Refreshes image and areas UUIDs.
+     *
+     * @param GraphicQuestion $item
+     */
+    public function refreshIdentifiers(AbstractItem $item)
+    {
+        // generate image id
+        $item->getImage()->refreshUuid();
+
+        /** @var Area $area */
+        foreach ($item->getAreas() as $area) {
+            $area->refreshUuid();
+        }
     }
 
     private function isPointInArea(Area $area, $x, $y)
