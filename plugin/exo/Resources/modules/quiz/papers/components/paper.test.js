@@ -32,8 +32,8 @@ describe('<Paper/>', () => {
         }
       },
       papers: {
-        papers: [
-          {
+        papers: {
+          '123': {
             id: '123',
             finished: true,
             number: 1,
@@ -61,7 +61,7 @@ describe('<Paper/>', () => {
             },
             answers: []
           }
-        ],
+        },
         current: '123'
       }
     })

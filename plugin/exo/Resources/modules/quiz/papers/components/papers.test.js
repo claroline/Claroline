@@ -27,8 +27,8 @@ describe('<Papers/>', () => {
         }
       },
       papers: {
-        papers: [
-          {
+        papers: {
+          '123': {
             id: '123',
             number: 1,
             structure: {
@@ -45,7 +45,7 @@ describe('<Papers/>', () => {
             startDate: '1986/02/12',
             finished: true
           },
-          {
+          '456': {
             id: '456',
             number: 2,
             structure: {
@@ -62,7 +62,7 @@ describe('<Papers/>', () => {
             startDate: '2015/11/03',
             finished: false
           }
-        ]
+        }
       }
     })
 
