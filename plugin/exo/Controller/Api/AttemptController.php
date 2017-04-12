@@ -85,7 +85,7 @@ class AttemptController extends AbstractController
 
         $paper = $this->attemptManager->startOrContinue($exercise, $user);
 
-        return new JsonResponse($this->paperManager->export($paper));
+        return new JsonResponse($this->paperManager->serialize($paper));
     }
 
     /**
@@ -150,7 +150,7 @@ class AttemptController extends AbstractController
 
         $this->attemptManager->end($paper, true);
 
-        return new JsonResponse($this->paperManager->export($paper), 200);
+        return new JsonResponse($this->paperManager->serialize($paper), 200);
     }
 
     /**

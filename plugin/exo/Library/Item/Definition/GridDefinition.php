@@ -12,6 +12,7 @@ use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Attempt\GenericScore;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\GridQuestionSerializer;
+use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\GridAnswerValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\GridQuestionValidator;
 
@@ -407,6 +408,21 @@ class GridDefinition extends AbstractDefinition
         foreach ($item->getCells() as $cell) {
             $cell->refreshUuid();
         }
+    }
+
+    /**
+     * Parses cells contents.
+     *
+     * @param ContentParserInterface $contentParser
+     * @param \stdClass              $item
+     */
+    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
+    {
+        array_walk($item->cells, function (\stdClass $cell) use ($contentParser) {
+            if (isset($cell->data)) {
+                $cell->data = $contentParser->parse($cell->data);
+            }
+        });
     }
 
     /**

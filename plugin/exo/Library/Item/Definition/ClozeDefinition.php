@@ -10,6 +10,7 @@ use UJM\ExoBundle\Entity\Misc\Keyword;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\ClozeQuestionSerializer;
+use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\ClozeAnswerValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\ClozeQuestionValidator;
 
@@ -251,5 +252,16 @@ class ClozeDefinition extends AbstractDefinition
         }
 
         return $best;
+    }
+
+    /**
+     * Parses item text.
+     *
+     * @param ContentParserInterface $contentParser
+     * @param \stdClass              $item
+     */
+    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
+    {
+        $item->text = $contentParser->parse($item->text);
     }
 }

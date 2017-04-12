@@ -21,9 +21,13 @@ class GraphicQuestionSerializer implements SerializerInterface
     private $fileUtils;
 
     /**
+     * GraphicQuestionSerializer constructor.
+     *
      * @DI\InjectParams({
      *     "fileUtils" = @DI\Inject("claroline.utilities.file")
      * })
+     *
+     * @param FileUtilities $fileUtils
      */
     public function __construct(FileUtilities $fileUtils)
     {
@@ -67,8 +71,8 @@ class GraphicQuestionSerializer implements SerializerInterface
             $graphicQuestion = new GraphicQuestion();
         }
 
-        $this->deserializeImage($graphicQuestion, $data->image, $options);
-        $this->deserializeAreas($graphicQuestion, $data->solutions, $options);
+        $this->deserializeImage($graphicQuestion, $data->image);
+        $this->deserializeAreas($graphicQuestion, $data->solutions);
 
         return $graphicQuestion;
     }
@@ -109,9 +113,8 @@ class GraphicQuestionSerializer implements SerializerInterface
      *
      * @param GraphicQuestion $graphicQuestion
      * @param \stdClass       $imageData
-     * @param array           $options
      */
-    private function deserializeImage(GraphicQuestion $graphicQuestion, \stdClass $imageData, array $options)
+    private function deserializeImage(GraphicQuestion $graphicQuestion, \stdClass $imageData)
     {
         $image = $graphicQuestion->getImage() ?: new Image();
 
@@ -170,9 +173,8 @@ class GraphicQuestionSerializer implements SerializerInterface
      *
      * @param GraphicQuestion $graphicQuestion
      * @param array           $solutions
-     * @param array           $options
      */
-    private function deserializeAreas(GraphicQuestion $graphicQuestion, array $solutions, array $options)
+    private function deserializeAreas(GraphicQuestion $graphicQuestion, array $solutions)
     {
         $areaEntities = $graphicQuestion->getAreas()->toArray();
 

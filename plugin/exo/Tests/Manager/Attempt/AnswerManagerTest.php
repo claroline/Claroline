@@ -31,7 +31,7 @@ class AnswerManagerTest extends TransactionalTestCase
         $this->manager = new AnswerManager($this->om, $this->validator, $this->serializer);
     }
 
-    public function testExport()
+    public function testSerialize()
     {
         $answer = new Answer();
         $options = [
@@ -44,7 +44,7 @@ class AnswerManagerTest extends TransactionalTestCase
             ->with($answer, $options)
             ->willReturn(new \stdClass());
 
-        $data = $this->manager->export($answer, $options);
+        $data = $this->manager->serialize($answer, $options);
 
         // Checks the result of the serializer is returned
         $this->assertInstanceOf('\stdClass', $data);

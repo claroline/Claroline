@@ -36,8 +36,8 @@ class BooleanQuestionSerializer implements SerializerInterface
     /**
      * Converts a Boolean question into a JSON-encodable structure.
      *
-     * @param ChoiceQuestion $choiceQuestion
-     * @param array          $options
+     * @param BooleanQuestion $question
+     * @param array           $options
      *
      * @return \stdClass
      */
@@ -63,11 +63,11 @@ class BooleanQuestionSerializer implements SerializerInterface
     /**
      * Converts raw data into a Boolean question entity.
      *
-     * @param \stdClass      $data
-     * @param ChoiceQuestion $choiceQuestion
-     * @param array          $options
+     * @param \stdClass       $data
+     * @param BooleanQuestion $question
+     * @param array           $options
      *
-     * @return ChoiceQuestion
+     * @return BooleanQuestion
      */
     public function deserialize($data, $question = null, array $options = [])
     {

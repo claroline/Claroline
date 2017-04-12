@@ -94,7 +94,7 @@ class ItemController extends AbstractController
         if (empty($errors)) {
             // Item updated
             return new JsonResponse(
-                $this->itemManager->export($question, [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_ADMIN_META])
+                $this->itemManager->serialize($question, [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_ADMIN_META])
             );
         } else {
             // Invalid data received
@@ -137,7 +137,7 @@ class ItemController extends AbstractController
         if (empty($errors)) {
             // Item updated
             return new JsonResponse(
-                $this->itemManager->export($question, [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_ADMIN_META])
+                $this->itemManager->serialize($question, [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_ADMIN_META])
             );
         } else {
             // Invalid data received

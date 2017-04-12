@@ -11,6 +11,7 @@ use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\PairQuestionSerializer;
+use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\PairAnswerValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\PairQuestionValidator;
 
@@ -196,6 +197,19 @@ class PairDefinition extends AbstractDefinition
         foreach ($item->getItems() as $pairItem) {
             $pairItem->refreshUuid();
         }
+    }
+
+    /**
+     * Parses items contents.
+     *
+     * @param ContentParserInterface $contentParser
+     * @param \stdClass              $item
+     */
+    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
+    {
+        array_walk($item->items, function (\stdClass $item) use ($contentParser) {
+            $item->data = $contentParser->parse($item->data);
+        });
     }
 
     private function findRowByAnswer(array $items, array &$rows)

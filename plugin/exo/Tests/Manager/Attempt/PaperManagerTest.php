@@ -31,7 +31,7 @@ class PaperManagerTest extends \PHPUnit_Framework_TestCase
         );
     }
 
-    public function testExport()
+    public function testSerialize()
     {
         $paper = new Paper();
         $exercise = new Exercise();
@@ -46,7 +46,7 @@ class PaperManagerTest extends \PHPUnit_Framework_TestCase
             ->with($paper, $options)
             ->willReturn(new \stdClass());
 
-        $data = $this->manager->export($paper, $options);
+        $data = $this->manager->serialize($paper, $options);
 
         // Checks the result of the serializer is returned
         $this->assertInstanceOf('\stdClass', $data);

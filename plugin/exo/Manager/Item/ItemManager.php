@@ -9,7 +9,9 @@ use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
+use UJM\ExoBundle\Library\Item\Definition\AnswerableItemDefinitionInterface;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
+use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\ValidationException;
@@ -18,6 +20,7 @@ use UJM\ExoBundle\Repository\AnswerRepository;
 use UJM\ExoBundle\Repository\ItemRepository;
 use UJM\ExoBundle\Serializer\Item\HintSerializer;
 use UJM\ExoBundle\Serializer\Item\ItemSerializer;
+use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Item\ItemValidator;
 
 /**
@@ -138,7 +141,7 @@ class ItemManager
         $searchResults = new \stdClass();
         $searchResults->totalResults = count($results);
         $searchResults->questions = array_map(function (Item $question) {
-            return $this->export($question, [Transfer::INCLUDE_ADMIN_META, Transfer::INCLUDE_SOLUTIONS]);
+            return $this->serialize($question, [Transfer::INCLUDE_ADMIN_META, Transfer::INCLUDE_SOLUTIONS]);
         }, $results);
 
         // Add pagination
@@ -195,14 +198,14 @@ class ItemManager
     }
 
     /**
-     * Exports a question.
+     * Serializes a question.
      *
      * @param Item  $question
      * @param array $options
      *
      * @return \stdClass
      */
-    public function export(Item $question, array $options = [])
+    public function serialize(Item $question, array $options = [])
     {
         return $this->serializer->serialize($question, $options);
     }
@@ -318,7 +321,9 @@ class ItemManager
 
             // Let the handler of the question type parse and compile the data
             $definition = $this->itemDefinitions->get($question->getMimeType());
-            $questionStats->solutions = $definition->getStatistics($question->getInteraction(), $answersData);
+            if ($definition instanceof AnswerableItemDefinitionInterface) {
+                $questionStats->solutions = $definition->getStatistics($question->getInteraction(), $answersData);
+            }
         }
 
         return $questionStats;
@@ -349,7 +354,38 @@ class ItemManager
             $hint->refreshUuid();
         }
 
-        $definition = $this->itemDefinitions->get($item->getMimeType());
+        if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $item->getMimeType())) {
+            // it's a question
+            $definition = $this->itemDefinitions->get($item->getMimeType());
+        } else {
+            // it's a content
+            $definition = $this->itemDefinitions->get(ItemType::CONTENT);
+        }
+
         $definition->refreshIdentifiers($item->getInteraction());
+    }
+
+    public function parseContents(ContentParserInterface $contentParser, \stdClass $itemData)
+    {
+        if (isset($itemData->description)) {
+            $itemData->description = $contentParser->parse($itemData->description);
+        }
+
+        if (1 === preg_match('#^application\/x\.[^/]+\+json$#', $itemData->type)) {
+            // it's a question
+            $itemData->content = $contentParser->parse($itemData->content);
+            if (isset($itemData->hints)) {
+                array_walk($itemData->hints, function (\stdClass $hint) use ($contentParser) {
+                    $hint->value = $contentParser->parse($hint->value);
+                });
+            }
+
+            $definition = $this->itemDefinitions->get($itemData->type);
+        } else {
+            // it's a content
+            $definition = $this->itemDefinitions->get(ItemType::CONTENT);
+        }
+
+        $definition->parseContents($contentParser, $itemData);
     }
 }

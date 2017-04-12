@@ -44,14 +44,14 @@ class HintManager
     }
 
     /**
-     * Exports an Hint.
+     * Serializes an Hint.
      *
      * @param Hint  $hint
      * @param array $options
      *
      * @return \stdClass
      */
-    public function export(Hint $hint, array $options = [])
+    public function serialize(Hint $hint, array $options = [])
     {
         return $this->serializer->serialize($hint, $options);
     }

@@ -104,14 +104,14 @@ class AnswerManager
     }
 
     /**
-     * Exports an answer.
+     * Serializes an answer.
      *
      * @param Answer $answer
      * @param array  $options
      *
      * @return \stdClass
      */
-    public function export(Answer $answer, array $options = [])
+    public function serialize(Answer $answer, array $options = [])
     {
         return $this->serializer->serialize($answer, $options);
     }

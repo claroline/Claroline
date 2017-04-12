@@ -194,7 +194,7 @@ class ExerciseListener
         /** @var Exercise $exercise */
         $exercise = $event->getResource();
 
-        $exerciseExport = $this->container->get('ujm_exo.manager.exercise')->export($exercise, [Transfer::INCLUDE_SOLUTIONS]);
+        $exerciseExport = $this->container->get('ujm_exo.manager.exercise')->serialize($exercise, [Transfer::INCLUDE_SOLUTIONS]);
 
         if (!empty($exerciseExport->description)) {
             $exerciseExport->description = $this->exportHtmlContent($event, $exerciseExport->description);

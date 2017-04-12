@@ -44,7 +44,7 @@ class CategoryManagerTest extends TransactionalTestCase
             ->with($category, $options)
             ->willReturn(new \stdClass());
 
-        $data = $this->manager->export($category, $options);
+        $data = $this->manager->serialize($category, $options);
 
         // Checks the result of the serializer is returned
         $this->assertInstanceOf('\stdClass', $data);

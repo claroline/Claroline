@@ -71,14 +71,14 @@ class PaperManager
     }
 
     /**
-     * Exports a user paper.
+     * Serializes a user paper.
      *
      * @param Paper $paper
      * @param array $options
      *
      * @return \stdClass
      */
-    public function export(Paper $paper, array $options = [])
+    public function serialize(Paper $paper, array $options = [])
     {
         // Adds user score if available and the method options do not already request it
         if (!in_array(Transfer::INCLUDE_USER_SCORE, $options)
@@ -163,7 +163,7 @@ class PaperManager
      *
      * @return array
      */
-    public function exportExercisePapers(Exercise $exercise, User $user = null)
+    public function serializeExercisePapers(Exercise $exercise, User $user = null)
     {
         if (!empty($user)) {
             // Load papers for of a singe user
@@ -179,7 +179,7 @@ class PaperManager
         }
 
         return array_map(function (Paper $paper) {
-            return $this->export($paper);
+            return $this->serialize($paper);
         }, $papers);
     }
 

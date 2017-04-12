@@ -66,7 +66,7 @@ class ExerciseController extends AbstractController
         $this->assertHasPermission('ADMINISTRATE', $exercise);
 
         return new JsonResponse(
-            $this->exerciseManager->export($exercise, [Transfer::INCLUDE_SOLUTIONS])
+            $this->exerciseManager->serialize($exercise, [Transfer::INCLUDE_SOLUTIONS])
         );
     }
 

@@ -9,6 +9,7 @@ use UJM\ExoBundle\Entity\Misc\Area;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\GraphicQuestionSerializer;
+use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerData\GraphicAnswerValidator;
 use UJM\ExoBundle\Validator\JsonSchema\Item\Type\GraphicQuestionValidator;
 
@@ -149,33 +150,9 @@ class GraphicDefinition extends AbstractDefinition
 
     public function getStatistics(AbstractItem $graphicQuestion, array $answers)
     {
-        $areasMap = [];
-        foreach ($graphicQuestion->getAreas() as $area) {
-            $areasMap[$area->getId()] = $this->exportArea($area);
-        }
+        // TODO : implement
 
-        $areas = [];
-
-        /** @var Answer $answer */
-        foreach ($answers as $answer) {
-            $decoded = $this->convertAnswerDetails($answer);
-
-            foreach ($decoded as $coords) {
-                foreach ($areasMap as $area) {
-                    if ($this->graphicService->isInArea($coords, $area)) {
-                        if (!isset($areas[$area->id])) {
-                            $areas[$area->id] = new \stdClass();
-                            $areas[$area->id]->id = $area->id;
-                            $areas[$area->id]->count = 0;
-                        }
-
-                        ++$areas[$area->id]->count;
-                    }
-                }
-            }
-        }
-
-        return $areas;
+        return [];
     }
 
     /**
@@ -192,6 +169,17 @@ class GraphicDefinition extends AbstractDefinition
         foreach ($item->getAreas() as $area) {
             $area->refreshUuid();
         }
+    }
+
+    /**
+     * No additional content fields to process.
+     *
+     * @param ContentParserInterface $contentParser
+     * @param \stdClass              $item
+     */
+    public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
+    {
+        return;
     }
 
     private function isPointInArea(Area $area, $x, $y)

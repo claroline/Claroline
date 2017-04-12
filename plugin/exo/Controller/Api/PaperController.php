@@ -72,7 +72,7 @@ class PaperController extends AbstractController
         $this->assertHasPermission('OPEN', $exercise);
 
         return new JsonResponse(
-            $this->paperManager->exportExercisePapers($exercise, $this->isAdmin($exercise) ? null : $user)
+            $this->paperManager->serializeExercisePapers($exercise, $this->isAdmin($exercise) ? null : $user)
         );
     }
 
@@ -101,7 +101,7 @@ class PaperController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        return new JsonResponse($this->paperManager->export($paper));
+        return new JsonResponse($this->paperManager->serialize($paper));
     }
 
     /**

@@ -55,7 +55,7 @@ class CategoryController extends AbstractController
         $categories = $this->categoryManager->all($user);
 
         return new JsonResponse(array_map(function (Category $category) {
-            return $this->categoryManager->export($category);
+            return $this->categoryManager->serialize($category);
         }, $categories));
     }
 
@@ -91,7 +91,7 @@ class CategoryController extends AbstractController
 
         if (empty($errors)) {
             // Category created
-            return new JsonResponse($this->categoryManager->export($category), 201);
+            return new JsonResponse($this->categoryManager->serialize($category), 201);
         } else {
             // Invalid data received
             return new JsonResponse($errors, 422);
@@ -135,7 +135,7 @@ class CategoryController extends AbstractController
 
         if (empty($errors)) {
             // Category updated
-            return new JsonResponse($this->categoryManager->export($category));
+            return new JsonResponse($this->categoryManager->serialize($category));
         } else {
             // Invalid data received
             return new JsonResponse($errors, 422);

@@ -120,14 +120,14 @@ class CategoryManager
     }
 
     /**
-     * Exports a Category.
+     * Serializes a Category.
      *
      * @param Category $category
      * @param array    $options
      *
      * @return \stdClass
      */
-    public function export(Category $category, array $options = [])
+    public function serialize(Category $category, array $options = [])
     {
         return $this->serializer->serialize($category, $options);
     }

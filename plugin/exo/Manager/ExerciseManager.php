@@ -12,6 +12,7 @@ use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\Item\ItemManager;
 use UJM\ExoBundle\Repository\ExerciseRepository;
 use UJM\ExoBundle\Serializer\ExerciseSerializer;
+use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator;
 
 /**
@@ -127,20 +128,20 @@ class ExerciseManager
     }
 
     /**
-     * Exports an Exercise.
+     * Serializes an Exercise.
      *
      * @param Exercise $exercise
      * @param array    $options
      *
      * @return \stdClass
      */
-    public function export(Exercise $exercise, array $options = [])
+    public function serialize(Exercise $exercise, array $options = [])
     {
         return $this->serializer->serialize($exercise, $options);
     }
 
     /**
-     * Creates a copy of an Exercise.
+     * Copies an Exercise resource.
      *
      * @param Exercise $exercise
      *
@@ -158,26 +159,6 @@ class ExerciseManager
         $this->om->flush();
 
         return $newExercise;
-    }
-
-    /**
-     * Creates a copy of a quiz definition.
-     * (aka it creates a new entity if needed and generate new IDs for quiz data).
-     *
-     * @param \stdClass     $srcData
-     * @param Exercise|null $copyDestination - an existing Exercise entity to store the copy
-     *
-     * @return Exercise
-     */
-    public function createCopy(\stdClass $srcData, Exercise $copyDestination = null)
-    {
-        $copyDestination = $this->serializer->deserialize($srcData, $copyDestination, [Transfer::NO_FETCH]);
-        $this->refreshIdentifiers($copyDestination);
-
-        // Persist copy
-        $this->om->persist($copyDestination);
-
-        return $copyDestination;
     }
 
     /**
@@ -238,5 +219,48 @@ class ExerciseManager
                 $this->itemManager->refreshIdentifiers($item);
             }
         }
+    }
+
+    /**
+     * Applies an arbitrary parser on all HTML contents in the quiz definition.
+     *
+     * @param ContentParserInterface $contentParser
+     * @param \stdClass              $quizData
+     */
+    public function parseContents(ContentParserInterface $contentParser, \stdClass $quizData)
+    {
+        if (isset($quizData->description)) {
+            $quizData->description = $contentParser->parse($quizData->description);
+        }
+
+        array_walk($quizData->steps, function (\stdClass $step) use ($contentParser) {
+            if (isset($step->description)) {
+                $step->description = $contentParser->parse($step->description);
+            }
+
+            array_walk($step->items, function (\stdClass $item) use ($contentParser) {
+                $this->itemManager->parseContents($contentParser, $item);
+            });
+        });
+    }
+
+    /**
+     * Creates a copy of a quiz definition.
+     * (aka it creates a new entity if needed and generate new IDs for quiz data).
+     *
+     * @param \stdClass     $srcData
+     * @param Exercise|null $copyDestination - an existing Exercise entity to store the copy
+     *
+     * @return Exercise
+     */
+    public function createCopy(\stdClass $srcData, Exercise $copyDestination = null)
+    {
+        $copyDestination = $this->serializer->deserialize($srcData, $copyDestination, [Transfer::NO_FETCH]);
+        $this->refreshIdentifiers($copyDestination);
+
+        // Persist copy
+        $this->om->persist($copyDestination);
+
+        return $copyDestination;
     }
 }

@@ -40,9 +40,9 @@ class ExerciseManagerTest extends JsonDataTestCase
         $this->om->flush();
     }
 
-    public function testExport()
+    public function testSerialize()
     {
-        $data = $this->manager->export($this->exercise);
+        $data = $this->manager->serialize($this->exercise);
 
         // Checks the result of the serializer is returned
         $this->assertInstanceOf('\stdClass', $data);

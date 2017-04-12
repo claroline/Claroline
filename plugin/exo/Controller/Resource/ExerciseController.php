@@ -44,7 +44,7 @@ class ExerciseController extends Controller
         // TODO : no need to count the $nbPapers for regular users as it's only for admins
         $nbPapers = $this->container->get('ujm_exo.manager.paper')->countExercisePapers($exercise);
         $isAdmin = $this->isAdmin($exercise);
-        $exerciseData = $this->get('ujm_exo.manager.exercise')->export(
+        $exerciseData = $this->get('ujm_exo.manager.exercise')->serialize(
             $exercise,
             $isAdmin ? [Transfer::INCLUDE_SOLUTIONS] : []
         );
@@ -84,7 +84,7 @@ class ExerciseController extends Controller
         return [
             'workspace' => $exercise->getResourceNode()->getWorkspace(),
             '_resource' => $exercise,
-            'exercise' => $this->get('ujm_exo.manager.exercise')->export($exercise),
+            'exercise' => $this->get('ujm_exo.manager.exercise')->serialize($exercise),
         ];
     }
 
