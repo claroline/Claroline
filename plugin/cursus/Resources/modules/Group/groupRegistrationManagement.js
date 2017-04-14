@@ -112,7 +112,7 @@ $('#search-sessions-btn').on('click', function () {
   refreshSessionsList(url)
 })
 
-$('#search-sessions-input').keypress(function(e) {
+$('#search-sessions-input').keypress(function (e) {
   if (e.keyCode === 13) {
     var search = $(this).val()
     var url = Routing.generate('claro_cursus_sessions_datas_list', {'search': search})

@@ -19,15 +19,11 @@ use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
-use Claroline\CursusBundle\Entity\Cursus;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Entity\SessionEvent;
 use Claroline\CursusBundle\Entity\SessionEventComment;
 use Claroline\CursusBundle\Entity\SessionEventUser;
 use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
-use Claroline\CursusBundle\Form\CourseType;
-use Claroline\CursusBundle\Form\CursusType;
-use Claroline\CursusBundle\Form\FileSelectType;
 use Claroline\CursusBundle\Form\MyCoursesWidgetConfigurationType;
 use Claroline\CursusBundle\Form\PluginConfigurationType;
 use Claroline\CursusBundle\Manager\CursusManager;
@@ -36,13 +32,11 @@ use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
-use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -55,7 +49,6 @@ class CursusController extends Controller
     private $formFactory;
     private $platformConfigHandler;
     private $request;
-    private $router;
     private $serializer;
     private $tokenStorage;
     private $toolManager;
@@ -68,7 +61,6 @@ class CursusController extends Controller
      *     "formFactory"           = @DI\Inject("form.factory"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "requestStack"          = @DI\Inject("request_stack"),
-     *     "router"                = @DI\Inject("router"),
      *     "serializer"            = @DI\Inject("jms_serializer"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
      *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
@@ -82,7 +74,6 @@ class CursusController extends Controller
         PlatformConfigurationHandler $platformConfigHandler,
         Serializer $serializer,
         RequestStack $requestStack,
-        RouterInterface $router,
         TokenStorageInterface $tokenStorage,
         ToolManager $toolManager,
         TranslatorInterface $translator
@@ -92,712 +83,10 @@ class CursusController extends Controller
         $this->formFactory = $formFactory;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
-        $this->router = $router;
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
         $this->toolManager = $toolManager;
         $this->translator = $translator;
-    }
-
-    /******************
-     * Cursus methods *
-     ******************/
-
-    /**
-     * @EXT\Route(
-     *     "/cursus/management/tool/menu",
-     *     name="claro_cursus_management_tool_menu"
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template()
-     */
-    public function cursusManagementToolMenuAction()
-    {
-        $this->checkToolAccess();
-        $displayedWords = [];
-
-        foreach (CursusDisplayedWord::$defaultKey as $key) {
-            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
-        }
-
-        return [
-            'defaultWords' => CursusDisplayedWord::$defaultKey,
-            'displayedWords' => $displayedWords,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/tool/index",
-     *     name="claro_cursus_tool_index"
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template()
-     */
-    public function cursusToolIndexAction()
-    {
-        $this->checkToolAccess();
-        $displayedWords = [];
-
-        foreach (CursusDisplayedWord::$defaultKey as $key) {
-            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
-        }
-        $allRootCursus = $this->cursusManager->getAllRootCursus();
-
-        return [
-            'defaultWords' => CursusDisplayedWord::$defaultKey,
-            'displayedWords' => $displayedWords,
-            'allRootCursus' => $allRootCursus,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/create/form",
-     *     name="claro_cursus_create_form",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusCreateModalForm.html.twig")
-     */
-    public function cursusCreateFormAction()
-    {
-        $this->checkToolAccess();
-        $form = $this->formFactory->create(new CursusType());
-
-        return ['form' => $form->createView()];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/create",
-     *     name="claro_cursus_create",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusCreateModalForm.html.twig")
-     */
-    public function cursusCreateAction()
-    {
-        $this->checkToolAccess();
-        $cursus = new Cursus();
-        $form = $this->formFactory->create(new CursusType(), $cursus);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $orderMax = $this->cursusManager->getLastRootCursusOrder();
-
-            if (is_null($orderMax)) {
-                $cursus->setCursusOrder(1);
-            } else {
-                $cursus->setCursusOrder(intval($orderMax) + 1);
-            }
-            $color = $form->get('color')->getData();
-            $details = ['color' => $color];
-            $cursus->setDetails($details);
-            $this->cursusManager->persistCursus($cursus);
-
-            $message = $this->translator->trans(
-                'cursus_creation_confirm_msg',
-                [],
-                'cursus'
-            );
-            $session = $this->request->getSession();
-            $session->getFlashBag()->add('success', $message);
-
-            return new JsonResponse('success', 200);
-        } else {
-            return ['form' => $form->createView()];
-        }
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/edit/form",
-     *     name="claro_cursus_edit_form",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusEditModalForm.html.twig")
-     *
-     * @param Cursus $cursus
-     */
-    public function cursusEditFormAction(Cursus $cursus)
-    {
-        $this->checkToolAccess();
-        $form = $this->formFactory->create(
-            new CursusType($cursus),
-            $cursus
-        );
-
-        return [
-            'form' => $form->createView(),
-            'cursus' => $cursus,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/edit",
-     *     name="claro_cursus_edit",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusEditModalForm.html.twig")
-     *
-     * @param Cursus $cursus
-     */
-    public function cursusEditAction(Cursus $cursus)
-    {
-        $this->checkToolAccess();
-        $form = $this->formFactory->create(
-            new CursusType($cursus),
-            $cursus
-        );
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $color = $form->get('color')->getData();
-            $details = $cursus->getDetails();
-
-            if (is_null($details)) {
-                $details = ['color' => $color];
-            } else {
-                $details['color'] = $color;
-            }
-            $cursus->setDetails($details);
-            $this->cursusManager->persistCursus($cursus);
-
-            $message = $this->translator->trans(
-                'cursus_edition_confirm_msg',
-                [],
-                'cursus'
-            );
-            $session = $this->request->getSession();
-            $session->getFlashBag()->add('success', $message);
-
-            return new JsonResponse('success', 200);
-        } else {
-            return [
-                'form' => $form->createView(),
-                'cursus' => $cursus,
-            ];
-        }
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/view",
-     *     name="claro_cursus_view",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusViewModal.html.twig")
-     *
-     * @param Cursus $cursus
-     */
-    public function cursusViewAction(Cursus $cursus)
-    {
-        $this->checkToolAccess();
-
-        return ['cursus' => $cursus];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/view/hierarchy",
-     *     name="claro_cursus_view_hierarchy",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusViewHierarchyModal.html.twig")
-     *
-     * @param Cursus $cursus
-     */
-    public function cursusViewHierarchyAction(Cursus $cursus)
-    {
-        $this->checkToolAccess();
-        $hierarchy = [];
-        $allCursus = $this->cursusManager->getHierarchyByCursus($cursus);
-
-        foreach ($allCursus as $oneCursus) {
-            $parent = $oneCursus->getParent();
-
-            if (!is_null($parent)) {
-                $parentId = $parent->getId();
-
-                if (!isset($hierarchy[$parentId])) {
-                    $hierarchy[$parentId] = [];
-                }
-                $hierarchy[$parentId][] = $oneCursus;
-            }
-        }
-
-        return ['cursus' => $cursus, 'hierarchy' => $hierarchy];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/delete",
-     *     name="claro_cursus_delete",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     *
-     * @param Cursus $cursus
-     */
-    public function cursusDeleteAction(Cursus $cursus)
-    {
-        $this->checkToolAccess();
-        $this->cursusManager->deleteCursus($cursus);
-
-        $message = $this->translator->trans(
-            'cursus_deletion_confirm_msg',
-            [],
-            'cursus'
-        );
-        $session = $this->request->getSession();
-        $session->getFlashBag()->add('success', $message);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/cursus/{cursus}/description/display",
-     *     name="claro_cursus_display_description",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusDescriptionDisplayModal.html.twig")
-     *
-     * @param Cursus $cursus
-     */
-    public function cursusDescriptionDisplayAction(Cursus $cursus)
-    {
-        $this->checkToolAccess();
-
-        return ['description' => $cursus->getDescription()];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/management",
-     *     name="claro_cursus_management",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template()
-     *
-     * @param Cursus $cursus
-     */
-    public function cursusManagementAction(Cursus $cursus)
-    {
-        $this->checkToolAccess();
-        $displayedWords = [];
-
-        foreach (CursusDisplayedWord::$defaultKey as $key) {
-            $displayedWords[$key] = $this->cursusManager->getDisplayedWord($key);
-        }
-        $hierarchy = [];
-        $allCursus = $this->cursusManager->getHierarchyByCursus($cursus);
-
-        foreach ($allCursus as $oneCursus) {
-            $parent = $oneCursus->getParent();
-
-            if (!is_null($parent)) {
-                $parentId = $parent->getId();
-
-                if (!isset($hierarchy[$parentId])) {
-                    $hierarchy[$parentId] = [];
-                }
-                $hierarchy[$parentId][] = $oneCursus;
-            }
-        }
-
-        return [
-            'defaultWords' => CursusDisplayedWord::$defaultKey,
-            'displayedWords' => $displayedWords,
-            'cursus' => $cursus,
-            'hierarchy' => $hierarchy,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{parent}/child/create/form",
-     *     name="claro_cursus_child_create_form",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusChildCreateModalForm.html.twig")
-     */
-    public function cursusChildCreateFormAction(Cursus $parent)
-    {
-        $this->checkToolAccess();
-        $form = $this->formFactory->create(new CursusType());
-
-        return [
-            'form' => $form->createView(),
-            'parent' => $parent,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{parent}/child/create",
-     *     name="claro_cursus_child_create",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusChildCreateModalForm.html.twig")
-     */
-    public function cursusChildCreateAction(Cursus $parent)
-    {
-        $this->checkToolAccess();
-        $cursus = new Cursus();
-        $form = $this->formFactory->create(new CursusType(), $cursus);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $cursus->setParent($parent);
-            $orderMax = $this->cursusManager->getLastCursusOrderByParent($parent);
-
-            if (is_null($orderMax)) {
-                $cursus->setCursusOrder(1);
-            } else {
-                $cursus->setCursusOrder(intval($orderMax) + 1);
-            }
-            $color = $form->get('color')->getData();
-            $details = ['color' => $color];
-            $cursus->setDetails($details);
-            $this->cursusManager->persistCursus($cursus);
-
-            return new JsonResponse(
-                [
-                    'parent_id' => $parent->getId(),
-                    'id' => $cursus->getId(),
-                    'title' => $cursus->getTitle(),
-                ],
-                200
-            );
-        } else {
-            return [
-                'form' => $form->createView(),
-                'parent' => $parent,
-            ];
-        }
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/add/courses/list/page/{page}/max/{max}/ordered/by/{orderedBy}/order/{order}/search/{search}",
-     *     name="claro_cursus_add_courses_users_list",
-     *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="title","order"="ASC"},
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template()
-     *
-     * Displays the list of courses.
-     *
-     * @param Cursus $cursus
-     * @param string $search
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     * @param string $order
-     */
-    public function cursusAddCoursesListAction(
-        Cursus $cursus,
-        $search = '',
-        $page = 1,
-        $max = 50,
-        $orderedBy = 'title',
-        $order = 'ASC'
-    ) {
-        $this->checkToolAccess();
-
-        $courses = $this->cursusManager->getUnmappedCoursesByCursus(
-            $cursus,
-            $search,
-            $orderedBy,
-            $order,
-            true,
-            $page,
-            $max
-        );
-
-        return [
-            'cursus' => $cursus,
-            'courses' => $courses,
-            'search' => $search,
-            'page' => $page,
-            'max' => $max,
-            'orderedBy' => $orderedBy,
-            'order' => $order,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/associate/course/{course}",
-     *     name="claro_cursus_associate_course",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     */
-    public function cursusCourseAssociateAction(Cursus $cursus, Course $course)
-    {
-        $this->checkToolAccess();
-        $cursus->setCourse($course);
-        $this->cursusManager->persistCursus($cursus);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/dissociate/course",
-     *     name="claro_cursus_dissociate_course",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     */
-    public function cursusCourseDissociateAction(Cursus $cursus)
-    {
-        $this->checkToolAccess();
-        $cursus->setCourse(null);
-        $this->cursusManager->persistCursus($cursus);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/add/course/{course}",
-     *     name="claro_cursus_add_course",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     *
-     * @param Cursus $cursus
-     * @param Course $course
-     */
-    public function cursusCourseAddAction(Cursus $cursus, Course $course)
-    {
-        $this->checkToolAccess();
-        $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, [$course]);
-        $results = [];
-
-        foreach ($createdCursus as $created) {
-            $results[] = ['id' => $created->getId(), 'title' => $created->getTitle()];
-        }
-
-        return new JsonResponse($results, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/add/courses",
-     *     name="claro_cursus_add_courses",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *     "courses",
-     *      class="ClarolineCursusBundle:Course",
-     *      options={"multipleIds" = true, "name" = "courseIds"}
-     * )
-     *
-     * @param Cursus   $cursus
-     * @param Course[] $courses
-     */
-    public function cursusCoursesAddAction(Cursus $cursus, array $courses)
-    {
-        $this->checkToolAccess();
-        $this->cursusManager->addCoursesToCursus($cursus, $courses);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/remove/course/{course}",
-     *     name="claro_cursus_remove_course",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     *
-     * @param Cursus $cursus
-     * @param Course $course
-     */
-    public function cursusCourseRemoveAction(Cursus $cursus, Course $course)
-    {
-        $this->checkToolAccess();
-        $this->cursusManager->removeCoursesFromCursus($cursus, [$course]);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/remove/courses",
-     *     name="claro_cursus_remove_courses",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\ParamConverter(
-     *     "courses",
-     *      class="ClarolineCursusBundle:Course",
-     *      options={"multipleIds" = true, "name" = "courseIds"}
-     * )
-     *
-     * @param Cursus   $cursus
-     * @param Course[] $courses
-     */
-    public function cursusCoursesRemoveAction(Cursus $cursus, array $courses)
-    {
-        $this->checkToolAccess();
-        $this->cursusManager->removeCoursesFromCursus($cursus, $courses);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/course/create/form",
-     *     name="claro_cursus_course_into_cursus_create_form",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusCourseCreateModalForm.html.twig")
-     */
-    public function cursusCourseCreateFormAction(User $authenticatedUser, Cursus $cursus)
-    {
-        $this->checkToolAccess();
-        $form = $this->formFactory->create(
-            new CourseType($authenticatedUser, $this->cursusManager, $this->translator),
-            new Course()
-        );
-
-        return [
-            'form' => $form->createView(),
-            'cursus' => $cursus,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/course/create",
-     *     name="claro_cursus_course_into_cursus_create",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusCourseCreateModalForm.html.twig")
-     */
-    public function cursusCourseCreateAction(User $authenticatedUser, Cursus $cursus)
-    {
-        $this->checkToolAccess();
-        $course = new Course();
-        $form = $this->formFactory->create(
-            new CourseType($authenticatedUser, $this->cursusManager, $this->translator),
-            $course
-        );
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $icon = $form->get('icon')->getData();
-
-            if (!is_null($icon)) {
-                $hashName = $this->cursusManager->saveIcon($icon);
-                $course->setIcon($hashName);
-            }
-            $this->cursusManager->persistCourse($course);
-            $createdCursus = $this->cursusManager->addCoursesToCursus($cursus, [$course]);
-            $results = [];
-
-            foreach ($createdCursus as $created) {
-                $results[] = [
-                    'id' => $created->getId(),
-                    'title' => $created->getTitle(),
-                    'course_id' => $course->getId(),
-                    'code' => $course->getCode(),
-                    'root' => $cursus->getRoot(),
-                ];
-            }
-
-            return new JsonResponse($results, 200);
-        } else {
-            return [
-                'form' => $form->createView(),
-                'cursus' => $cursus,
-            ];
-        }
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/order/update/with/cursus/{otherCursus}/mode/{mode}",
-     *     name="claro_cursus_update_order",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     */
-    public function updateCursusOrderAction(
-        Cursus $cursus,
-        Cursus $otherCursus,
-        $mode
-    ) {
-        $this->checkToolAccess();
-
-        if ($cursus->getParent() === $otherCursus->getParent()) {
-            $newOrder = $otherCursus->getCursusOrder();
-
-            if ($mode === 'next') {
-                $this->cursusManager->updateCursusOrder($cursus, $newOrder);
-            } else {
-                $cursus->setCursusOrder($newOrder + 1);
-                $this->cursusManager->persistCursus($cursus);
-            }
-
-            return new JsonResponse('success', 204);
-        } else {
-            return new JsonResponse('Forbidden', 403);
-        }
-    }
-
-    /**
-     * @EXT\Route(
-     *     "cursus/{cursus}/update/parent/{parent}/order/with/cursus/{nextCursusId}",
-     *     name="claro_cursus_update_parent_and_order",
-     *     defaults={"nextCursusId"=-1},
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     */
-    public function updateCursusParentAndOrderAction(
-        Cursus $cursus,
-        Cursus $parent,
-        $nextCursusId = -1
-    ) {
-        $this->checkToolAccess();
-
-        if ($nextCursusId === -1) {
-            $order = -1;
-        } else {
-            $nextCursus = $this->cursusManager->getOneCursusById($nextCursusId);
-            $order = is_null($nextCursus) ? -1 : $nextCursus->getCursusOrder();
-        }
-        $this->cursusManager->updateCursusParentAndOrder($cursus, $parent, $order);
-
-        return new JsonResponse('success', 204);
     }
 
     /********************************
@@ -956,8 +245,9 @@ class CursusController extends Controller
         $extra = $config->getExtra();
         $collapseCourses = isset($extra['collapseCourses']) ? $extra['collapseCourses'] : false;
         $collapseSessions = isset($extra['collapseSessions']) ? $extra['collapseSessions'] : false;
+        $displayAll = isset($extra['displayAll']) ? $extra['displayAll'] : false;
 
-        if (is_null($configCursus)) {
+        if ($displayAll || (is_null($configCursus) && !$isAnon && $authenticatedUser->hasRole('ROLE_ADMIN'))) {
             $courses = $this->cursusManager->getAllCourses(
                 $search,
                 $orderedBy,
@@ -967,15 +257,32 @@ class CursusController extends Controller
                 $max
             );
         } else {
-            $courses = $this->cursusManager->getDescendantCoursesByCursus(
-                $configCursus,
-                $search,
-                $orderedBy,
-                $order,
-                true,
-                $page,
-                $max
-            );
+            if (is_null($configCursus)) {
+                $courses = [];
+
+                if (!$isAnon) {
+                    $organizations = $authenticatedUser->getOrganizations();
+                    $courses = $this->cursusManager->getAllCoursesByOrganizations(
+                        $organizations,
+                        $search,
+                        $orderedBy,
+                        $order,
+                        true,
+                        $page,
+                        $max
+                    );
+                }
+            } else {
+                $courses = $this->cursusManager->getDescendantCoursesByCursus(
+                    $configCursus,
+                    $search,
+                    $orderedBy,
+                    $order,
+                    true,
+                    $page,
+                    $max
+                );
+            }
         }
         $coursesArray = [];
 
@@ -1062,11 +369,22 @@ class CursusController extends Controller
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $configCursus = $config->getCursus();
         $configPublicSessions = $config->isPublicSessionsOnly();
+        $extra = $config->getExtra();
+        $displayAll = isset($extra['displayAll']) ? $extra['displayAll'] : false;
 
-        if (is_null($configCursus)) {
+        if ($displayAll || (is_null($configCursus) && !$isAnon && $authenticatedUser->hasRole('ROLE_ADMIN'))) {
             $courses = $this->cursusManager->getAllCourses($search, 'title', 'ASC', false);
         } else {
-            $courses = $this->cursusManager->getDescendantCoursesByCursus($configCursus, $search, 'title', 'ASC', false);
+            if (is_null($configCursus)) {
+                $courses = [];
+
+                if (!$isAnon) {
+                    $organizations = $authenticatedUser->getOrganizations();
+                    $courses = $this->cursusManager->getAllCoursesByOrganizations($organizations, $search);
+                }
+            } else {
+                $courses = $this->cursusManager->getDescendantCoursesByCursus($configCursus, $search, 'title', 'ASC', false);
+            }
         }
         $courseSessions = $this->cursusManager->getSessionsByCourses($courses, 'creationDate', 'ASC');
 
@@ -1200,14 +518,21 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/courses/registration/widget/{widgetInstance}/configure/form",
+     *     "/courses/registration/widget/{widgetInstance}/configure/form/admin/{admin}",
      *     name="claro_cursus_courses_registration_widget_configure_form",
+     *     defaults={"admin"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Template("ClarolineCursusBundle:Widget:coursesRegistrationWidgetConfigureForm.html.twig")
+     *
+     * @param User           $user
+     * @param WidgetInstance $widgetInstance
+     * @param string         $admin
+     *
+     * @return array
      */
-    public function coursesRegistrationWidgetConfigureFormAction(WidgetInstance $widgetInstance)
+    public function coursesRegistrationWidgetConfigureFormAction(User $user, WidgetInstance $widgetInstance, $admin = '')
     {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $extra = $config->getExtra();
@@ -1215,23 +540,36 @@ class CursusController extends Controller
         if (is_null($extra)) {
             $extra = [];
         }
-        $form = $this->formFactory->create(new CoursesWidgetConfigurationType($this->translator, $extra), $config);
+        $form = $this->formFactory->create(
+            new CoursesWidgetConfigurationType($user, $this->translator, $extra, !empty($admin)),
+            $config
+        );
 
-        return ['form' => $form->createView(), 'config' => $config];
+        return ['form' => $form->createView(), 'config' => $config, 'admin' => $admin];
     }
 
     /**
      * @EXT\Route(
-     *     "/courses/registration/widget/configure/config/{config}",
+     *     "/courses/registration/widget/configure/config/{config}/admin/{admin}",
      *     name="claro_cursus_courses_registration_widget_configure",
+     *     defaults={"admin"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Template("ClarolineCursusBundle:Widget:coursesRegistrationWidgetConfigureForm.html.twig")
+     *
+     * @param User                $user
+     * @param CoursesWidgetConfig $config
+     * @param string              $admin
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse | array
      */
-    public function coursesRegistrationWidgetConfigureAction(CoursesWidgetConfig $config)
+    public function coursesRegistrationWidgetConfigureAction(User $user, CoursesWidgetConfig $config, $admin = '')
     {
-        $form = $this->formFactory->create(new CoursesWidgetConfigurationType($this->translator), $config);
+        $form = $this->formFactory->create(
+            new CoursesWidgetConfigurationType($user, $this->translator, [], !empty($admin)),
+            $config
+        );
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -1242,12 +580,13 @@ class CursusController extends Controller
             }
             $extra['collapseCourses'] = $form->get('collapseCourses')->getData();
             $extra['collapseSessions'] = $form->get('collapseSessions')->getData();
+            $extra['displayAll'] = $form->has('displayAll') ? $form->get('displayAll')->getData() : false;
             $config->setExtra($extra);
             $this->cursusManager->persistCoursesWidgetConfiguration($config);
 
             return new JsonResponse('success', 204);
         } else {
-            return ['form' => $form->createView(), 'config' => $config];
+            return ['form' => $form->createView(), 'config' => $config, 'admin' => $admin];
         }
     }
 
@@ -1257,10 +596,15 @@ class CursusController extends Controller
      *     name="claro_cursus_my_courses_widget_configure_form",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidgetConfigureForm.html.twig")
+     *
+     * @param User           $user
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return array
      */
-    public function myCoursesWidgetConfigureFormAction(WidgetInstance $widgetInstance)
+    public function myCoursesWidgetConfigureFormAction(User $user, WidgetInstance $widgetInstance)
     {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
         $extra = $config->getExtra();
@@ -1268,7 +612,7 @@ class CursusController extends Controller
         if (is_null($extra)) {
             $extra = [];
         }
-        $form = $this->formFactory->create(new MyCoursesWidgetConfigurationType($this->translator, $extra), $config);
+        $form = $this->formFactory->create(new MyCoursesWidgetConfigurationType($user, $this->translator, $extra), $config);
 
         return ['form' => $form->createView(), 'config' => $config];
     }
@@ -1279,12 +623,17 @@ class CursusController extends Controller
      *     name="claro_cursus_my_courses_widget_configure",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidgetConfigureForm.html.twig")
+     *
+     * @param User           $user
+     * @param WidgetInstance $widgetInstance
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse | array
      */
-    public function myCoursesRegistrationWidgetConfigureAction(CoursesWidgetConfig $config)
+    public function myCoursesRegistrationWidgetConfigureAction(User $user, CoursesWidgetConfig $config)
     {
-        $form = $this->formFactory->create(new MyCoursesWidgetConfigurationType($this->translator), $config);
+        $form = $this->formFactory->create(new MyCoursesWidgetConfigurationType($user, $this->translator), $config);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -1438,7 +787,7 @@ class CursusController extends Controller
 
         foreach ($sessionUsers as $sessionUser) {
             $session = $sessionUser->getSession();
-            $sessions[] = $session;
+            $sessions[$session->getId()] = $session;
             $workspace = $session->getWorkspace();
 
             if (!is_null($workspace)) {
@@ -1454,7 +803,7 @@ class CursusController extends Controller
             }
         }
         $serializedSessions = $this->serializer->serialize(
-            $sessions,
+            array_values($sessions),
             'json',
             SerializationContext::create()->setGroups(['api_user_min'])
         );
@@ -1668,96 +1017,6 @@ class CursusController extends Controller
         $response->send();
 
         return new Response();
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/cursus/import/form",
-     *     name="claro_cursus_import_form",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusImportModalForm.html.twig")
-     */
-    public function cursusImportFormAction()
-    {
-        $this->checkToolAccess();
-        $form = $this->formFactory->create(new FileSelectType());
-
-        return ['form' => $form->createView()];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/cursus/import",
-     *     name="claro_cursus_import",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:cursusImportModalForm.html.twig")
-     */
-    public function cursusImportAction()
-    {
-        $this->checkToolAccess();
-        $form = $this->formFactory->create(new FileSelectType());
-        $form->handleRequest($this->request);
-        $file = $form->get('archive')->getData();
-        $zip = new \ZipArchive();
-
-        if (empty($file) ||
-            !$zip->open($file) ||
-            !$zip->getStream('cursus.json') ||
-            !$zip->getStream('courses.json')) {
-            $form->get('archive')->addError(
-                new FormError($this->translator->trans('invalid_file', [], 'cursus'))
-            );
-        }
-
-        if ($form->isValid()) {
-            $coursesStream = $zip->getStream('courses.json');
-            $coursesContents = '';
-
-            while (!feof($coursesStream)) {
-                $coursesContents .= fread($coursesStream, 2);
-            }
-            fclose($coursesStream);
-            $courses = json_decode($coursesContents, true);
-            $importedCourses = $this->cursusManager->importCourses($courses);
-
-            $iconsDir = $this->container->getParameter('claroline.param.thumbnails_directory').'/';
-
-            for ($i = 0; $i < $zip->numFiles; ++$i) {
-                $name = $zip->getNameIndex($i);
-
-                if (strpos($name, 'icons/') !== 0) {
-                    continue;
-                }
-                $iconFileName = $iconsDir.substr($name, 6);
-                $stream = $zip->getStream($name);
-                $destStream = fopen($iconFileName, 'w');
-
-                while ($data = fread($stream, 1024)) {
-                    fwrite($destStream, $data);
-                }
-                fclose($stream);
-                fclose($destStream);
-            }
-            $cursusStream = $zip->getStream('cursus.json');
-            $cursuscontents = '';
-
-            while (!feof($cursusStream)) {
-                $cursuscontents .= fread($cursusStream, 2);
-            }
-            fclose($cursusStream);
-            $cursus = json_decode($cursuscontents, true);
-            $this->cursusManager->importCursus($cursus, $importedCourses);
-
-            $zip->close();
-
-            return new JsonResponse('success', 200);
-        } else {
-            return ['form' => $form->createView()];
-        }
     }
 
     /**

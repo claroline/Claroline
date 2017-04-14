@@ -75,14 +75,20 @@ class CursusRegistrationController extends Controller
      *     name="claro_cursus_tool_registration_index",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
+     *
+     * @param User $user
+     *
+     * @return array
      */
-    public function cursusToolRegistrationIndexAction()
+    public function cursusToolRegistrationIndexAction(User $user)
     {
         $this->checkToolAccess();
+        $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
+        $organizations = $isAdmin ? [] : $user->getAdministratedOrganizations()->toArray();
 
-        return [];
+        return ['isAuthorized' => $isAdmin || count($organizations) > 0];
     }
 
     /**

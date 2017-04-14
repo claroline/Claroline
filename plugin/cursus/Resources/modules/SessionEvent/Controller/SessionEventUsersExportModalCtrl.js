@@ -16,7 +16,7 @@ export default class SessionEvantUsersExportModalCtrl {
     this.trainers = false
   }
 
-  submit () {
+  submit() {
     let exportType = 0
 
     if (this.participants) {

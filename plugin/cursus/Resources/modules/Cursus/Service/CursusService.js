@@ -16,7 +16,7 @@ import cursusHierarchyTemplate from '../Partial/cursus_hierarchy_modal.html'
 import cursusImportTemplate from '../Partial/cursus_import_form.html'
 
 export default class CursusService {
-  constructor ($http, $uibModal, ClarolineAPIService, CourseService) {
+  constructor($http, $uibModal, ClarolineAPIService, CourseService) {
     this.$http = $http
     this.$uibModal = $uibModal
     this.ClarolineAPIService = ClarolineAPIService
@@ -76,24 +76,26 @@ export default class CursusService {
     }
   }
 
-  getCursus () {
+  getCursus() {
     return this.cursus
   }
 
-  getHierarchy () {
+  getHierarchy() {
     return this.hierarchy
   }
 
-  initialize (cursusId = null) {
+  initialize(cursusId = null) {
     if (this.initialized && cursusId === this.rootCursusId) {
       return null
     } else {
       this.cursus.splice(0, this.cursus.length)
-      const route = cursusId === null ? Routing.generate('api_get_all_root_cursus') : Routing.generate('api_get_one_cursus', {cursus: cursusId})
+      const route = cursusId === null ?
+        Routing.generate('claroline_cursus_all_root_cursus_retrieve') :
+        Routing.generate('claroline_cursus_retrieve', {cursus: cursusId})
 
       return this.$http.get(route).then(d => {
         if (d['status'] === 200) {
-          angular.merge(this.cursus, d['data'])
+          angular.merge(this.cursus, JSON.parse(d['data']))
           this.rootCursusId = cursusId
           this.initializeHierarchy()
           this.initialized = true
@@ -104,7 +106,7 @@ export default class CursusService {
     }
   }
 
-  initializeHierarchy () {
+  initializeHierarchy() {
     for (const key in this.hierarchy) {
       delete this.hierarchy[key]
     }
@@ -134,7 +136,7 @@ export default class CursusService {
       controllerAs: 'cmc',
       resolve: {
         title: () => { return Translator.trans('cursus_creation', {}, 'cursus') },
-        cursusId: () => { return cursusId },
+        parentId: () => { return cursusId },
         callback: () => { return addCallback }
       }
     })
@@ -165,7 +167,7 @@ export default class CursusService {
     )
   }
 
-  importCursus () {
+  importCursus() {
     this.$uibModal.open({
       template: cursusImportTemplate,
       controller: 'CursusImportModalCtrl',
@@ -176,7 +178,7 @@ export default class CursusService {
     })
   }
 
-  viewRootCursus (cursusId) {
+  viewRootCursus(cursusId) {
     const index = this.cursus.findIndex(c => c['id'] === cursusId)
 
     if (index > -1) {
@@ -193,7 +195,7 @@ export default class CursusService {
     }
   }
 
-  addCursusToHierarchy (cursus) {
+  addCursusToHierarchy(cursus) {
     const index = cursus['parentId'] ? cursus['parentId'] : 'root'
 
     if (!this.hierarchy[index]) {
@@ -206,7 +208,7 @@ export default class CursusService {
     this.CourseService.createCourse(cursusId, this._addCursusCallback)
   }
 
-  showCoursesListForCursus (cursusId, title) {
+  showCoursesListForCursus(cursusId, title) {
     this.$uibModal.open({
       template: cursusCourseSelectionTemplate,
       controller: 'CursusCourseSelectionModalCtrl',
@@ -218,7 +220,7 @@ export default class CursusService {
     })
   }
 
-  addCourseToCursus (cursusId, courseId, callback = null) {
+  addCourseToCursus(cursusId, courseId, callback = null) {
     const route = Routing.generate('api_post_cursus_course_add', {cursus: cursusId, course: courseId})
     this.$http.post(route).then(d => {
       if (d['status'] === 200) {
@@ -237,7 +239,7 @@ export default class CursusService {
     })
   }
 
-  removeCourseFromCursus (cursusId) {
+  removeCourseFromCursus(cursusId) {
     const url = Routing.generate('api_delete_cursus', {cursus: cursusId})
 
     this.ClarolineAPIService.confirm(
@@ -248,12 +250,12 @@ export default class CursusService {
     )
   }
 
-  getRootCursus () {
-    const url = Routing.generate('api_get_root_cursus')
+  getRootCursus() {
+    const url = Routing.generate('claroline_cursus_all_root_cursus_retrieve')
 
     return this.$http.get(url).then(d => {
       if (d['status'] === 200) {
-        return d['data']
+        return JSON.parse(d['data'])
       }
     })
   }

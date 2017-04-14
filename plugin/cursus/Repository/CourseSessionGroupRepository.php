@@ -118,10 +118,10 @@ class CourseSessionGroupRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findSearchedUnregisteredGroupsBySession(
+    public function findUnregisteredGroupsBySessionAndOrganizations(
         CourseSession $session,
+        array $organizations,
         $groupType,
-        $search = '',
         $orderedBy = 'name',
         $order = 'ASC',
         $executeQuery = true
@@ -129,7 +129,8 @@ class CourseSessionGroupRepository extends EntityRepository
         $dql = "
             SELECT DISTINCT g
             FROM Claroline\CoreBundle\Entity\Group g
-            WHERE UPPER(g.name) LIKE :search
+            JOIN g.organizations go
+            WHERE go IN (:organizations)
             AND NOT EXISTS (
                 SELECT csg
                 FROM Claroline\CursusBundle\Entity\CourseSessionGroup csg
@@ -142,8 +143,7 @@ class CourseSessionGroupRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('session', $session);
         $query->setParameter('groupType', $groupType);
-        $upperSearch = strtoupper($search);
-        $query->setParameter('search', "%{$upperSearch}%");
+        $query->setParameter('organizations', $organizations);
 
         return $executeQuery ? $query->getResult() : $query;
     }

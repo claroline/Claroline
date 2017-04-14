@@ -13,7 +13,7 @@ import locationsManagementTemplate from './Partial/locations_management.html'
 import documentModelsManagementTemplate from './Partial/document_models_management.html'
 import documentModelFormTemplate from './Partial/document_model_form.html'
 
-export default function($stateProvider, $urlRouterProvider) {
+export default function ($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state ('root_cursus_management', {
       url: '/cursus',

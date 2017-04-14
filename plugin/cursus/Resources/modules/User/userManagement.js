@@ -7,7 +7,7 @@ let sourceId
 let documentId
 let documentData = []
 
-function initializeSelect (type)
+function initializeSelect(type)
 {
   documentId = null
   $('#document-selection-select').empty()

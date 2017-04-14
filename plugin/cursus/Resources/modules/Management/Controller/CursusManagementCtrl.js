@@ -29,27 +29,27 @@ export default class CursusManagementCtrl {
     }
   }
 
-  editCursus (cursus) {
+  editCursus(cursus) {
     this.CursusService.editCursus(cursus)
   }
 
-  createChildCursus (cursusId) {
+  createChildCursus(cursusId) {
     this.CursusService.createCursus(cursusId)
   }
 
-  deleteCursus (cursusId) {
+  deleteCursus(cursusId) {
     this.CursusService.deleteCursus(cursusId)
   }
 
-  createCourse (cursusId) {
+  createCourse(cursusId) {
     this.CursusService.createCursusCourse(cursusId)
   }
 
-  addCourse (cursusId, title) {
+  addCourse(cursusId, title) {
     this.CursusService.showCoursesListForCursus(cursusId, title)
   }
 
-  removeCourse (cursusId) {
+  removeCourse(cursusId) {
     this.CursusService.removeCourseFromCursus(cursusId)
   }
 }

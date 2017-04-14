@@ -8,7 +8,7 @@
  */
 
 export default class DocumentModelsManagementCtrl {
-  constructor (NgTableParams, CourseService, DocumentModelService) {
+  constructor(NgTableParams, CourseService, DocumentModelService) {
     this.CourseService = CourseService
     this.DocumentModelService = DocumentModelService
     this.models = []
@@ -22,14 +22,14 @@ export default class DocumentModelsManagementCtrl {
     this._removeDocumentModelCallback = this._removeDocumentModelCallback.bind(this)
   }
 
-  _addDocumentModelCallback (data) {
+  _addDocumentModelCallback(data) {
     let documentModel = JSON.parse(data)
     documentModel['documentTypeName'] = this.DocumentModelService.getDocumentTypeName(documentModel['documentType'])
     this.models.push(documentModel)
     this.tableParams.reload()
   }
 
-  _updateDocumentModelCallback (data) {
+  _updateDocumentModelCallback(data) {
     let documentModel = JSON.parse(data)
     documentModel['documentTypeName'] = this.DocumentModelService.getDocumentTypeName(documentModel['documentType'])
     const index = this.models.findIndex(m => m['id'] === documentModel['id'])
@@ -40,7 +40,7 @@ export default class DocumentModelsManagementCtrl {
     }
   }
 
-  _removeDocumentModelCallback (data) {
+  _removeDocumentModelCallback(data) {
     const documentModel = JSON.parse(data)
     const index = this.models.findIndex(m => m['id'] === documentModel['id'])
 
@@ -50,7 +50,7 @@ export default class DocumentModelsManagementCtrl {
     }
   }
 
-  initialize () {
+  initialize() {
     this.DocumentModelService.getAllDocumentModels().then(d => {
       d.forEach(m => {
         m['documentTypeName'] = this.DocumentModelService.getDocumentTypeName(m['documentType'])
@@ -59,7 +59,7 @@ export default class DocumentModelsManagementCtrl {
     })
   }
 
-  deleteDocumentModel (modelId) {
+  deleteDocumentModel(modelId) {
     this.DocumentModelService.deleteDocumentModel(modelId, this._removeDocumentModelCallback)
   }
 }

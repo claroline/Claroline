@@ -16,7 +16,7 @@ import participantsRegistrationTemplate from '../Partial/participants_registrati
 import sessionEventUsersExportTemplate from '../Partial/session_event_users_export_modal.html'
 
 export default class SessionEventService {
-  constructor ($http, $uibModal, ClarolineAPIService, CourseService) {
+  constructor($http, $uibModal, ClarolineAPIService, CourseService) {
     this.$http = $http
     this.$uibModal = $uibModal
     this.ClarolineAPIService = ClarolineAPIService
@@ -82,7 +82,7 @@ export default class SessionEventService {
     this.computeSessionEventsStatusBySession(sessionId)
   }
 
-  _addUsersCallback (data) {
+  _addUsersCallback(data) {
     const sessionEventUsers = JSON.parse(data)
     sessionEventUsers.forEach(seu => {
       const sessionEventId = seu['sessionEvent']['id']
@@ -90,26 +90,26 @@ export default class SessionEventService {
     })
   }
 
-  _removeUserCallback (data) {
+  _removeUserCallback(data) {
     const sessionEventUser = JSON.parse(data)
     const id = sessionEventUser['id']
     const sessionEventId = sessionEventUser['sessionEvent']['id']
     this.CourseService.removeFromArray(this.users[sessionEventId], id)
   }
 
-  getSessionEvent () {
+  getSessionEvent() {
     return this.sessionEvent
   }
 
-  getSessionEvents () {
+  getSessionEvents() {
     return this.sessionEvents
   }
 
-  getOpenSessionEvents () {
+  getOpenSessionEvents() {
     return this.openSessionEvents
   }
 
-  getOpenSessionEventsBySession (sessionId) {
+  getOpenSessionEventsBySession(sessionId) {
     if (!this.openSessionEvents[sessionId]) {
       this.openSessionEvents[sessionId] = []
     }
@@ -117,11 +117,11 @@ export default class SessionEventService {
     return this.openSessionEvents[sessionId]
   }
 
-  getClosedSessionEvents () {
+  getClosedSessionEvents() {
     return this.closedSessionEvents
   }
 
-  getClosedSessionEventsBySession (sessionId) {
+  getClosedSessionEventsBySession(sessionId) {
     if (!this.closedSessionEvents[sessionId]) {
       this.closedSessionEvents[sessionId] = []
     }
@@ -129,7 +129,7 @@ export default class SessionEventService {
     return this.closedSessionEvents[sessionId]
   }
 
-  getUsersBySessionEvent (sessionEventId) {
+  getUsersBySessionEvent(sessionEventId) {
     if (!this.users[sessionEventId]) {
       this.users[sessionEventId] = []
     }
@@ -137,7 +137,7 @@ export default class SessionEventService {
     return this.users[sessionEventId]
   }
 
-  generateUserDatas (datas) {
+  generateUserDatas(datas) {
     datas['userId'] = datas['user']['id']
     datas['username'] = datas['user']['username']
     datas['firstName'] = datas['user']['firstName']
@@ -158,7 +158,7 @@ export default class SessionEventService {
     return datas
   }
 
-  loadEventsBySession (sessionId, callback = null) {
+  loadEventsBySession(sessionId, callback = null) {
     if (this.sessionEvents[sessionId] !== undefined) {
       this.computeSessionEventsStatusBySession(sessionId)
     } else {
@@ -176,13 +176,13 @@ export default class SessionEventService {
     }
   }
 
-  loadUsersBySessionEvent (sessionEventId, callback = null) {
+  loadUsersBySessionEvent(sessionEventId, callback = null) {
     if (this.users[sessionEventId] === undefined || this.users[sessionEventId].length === 0) {
       this.forceLoadUsersBySessionEvent(sessionEventId, callback)
     }
   }
 
-  forceLoadUsersBySessionEvent (sessionEventId, callback = null) {
+  forceLoadUsersBySessionEvent(sessionEventId, callback = null) {
     const route = Routing.generate('api_get_session_event_users_by_session_event', {sessionEvent: sessionEventId})
     this.$http.get(route).then(d => {
       if(d['status'] === 200) {
@@ -203,7 +203,7 @@ export default class SessionEventService {
     })
   }
 
-  createSessionEvent (session, callback = null) {
+  createSessionEvent(session, callback = null) {
     const addCallback = (callback !== null) ? callback : this._addSessionEventCallback
     this.$uibModal.open({
       template: sessionEventFormTemplate,
@@ -217,7 +217,7 @@ export default class SessionEventService {
     })
   }
 
-  editSessionEvent (sessionEvent, callback = null) {
+  editSessionEvent(sessionEvent, callback = null) {
     const updateCallback = callback !== null ? callback : this._updateSessionEventCallback
     this.$uibModal.open({
       template: sessionEventFormTemplate,
@@ -231,7 +231,7 @@ export default class SessionEventService {
     })
   }
 
-  deleteSessionEvent (sessionEventId, callback = null) {
+  deleteSessionEvent(sessionEventId, callback = null) {
     const url = Routing.generate('api_delete_session_event', {sessionEvent: sessionEventId})
     const deleteCallback = (callback !== null) ? callback : this._removeSessionEventCallback
 
@@ -243,7 +243,7 @@ export default class SessionEventService {
     )
   }
 
-  getSessionEventStatus (start, end, now = null) {
+  getSessionEventStatus(start, end, now = null) {
     let status = ''
     const startDate = new Date(start)
     const endDate = new Date(end)
@@ -260,7 +260,7 @@ export default class SessionEventService {
     return status
   }
 
-  computeSessionEventsStatusBySession (sessionId) {
+  computeSessionEventsStatusBySession(sessionId) {
     const now = new Date()
 
     if (this.openSessionEvents[sessionId]) {
@@ -294,7 +294,7 @@ export default class SessionEventService {
     })
   }
 
-  repeatEvent (sessionEvent, callback = null) {
+  repeatEvent(sessionEvent, callback = null) {
     const addCallback = callback !== null ? callback : this._addMultipleSessionEventsCallback
     this.$uibModal.open({
       template: sessionEventRepeatModalTemplate,
@@ -307,7 +307,7 @@ export default class SessionEventService {
     })
   }
 
-  manageComments (sessionEvent) {
+  manageComments(sessionEvent) {
     this.$uibModal.open({
       template: sessionEventCommentsManagementTemplate,
       controller: 'SessionEventCommentsManagementModalCtrl',
@@ -318,7 +318,7 @@ export default class SessionEventService {
     })
   }
 
-  createComment (sessionEventId, content) {
+  createComment(sessionEventId, content) {
     const url = Routing.generate('api_post_session_event_comment', {sessionEvent: sessionEventId})
 
     return this.$http.post(url, {comment: content}).then(d => {
@@ -328,7 +328,7 @@ export default class SessionEventService {
     })
   }
 
-  editComment (commentId, content) {
+  editComment(commentId, content) {
     const url = Routing.generate('api_put_session_event_comment_edit', {sessionEventComment: commentId})
 
     return this.$http.put(url, {comment: content}).then(d => {
@@ -338,7 +338,7 @@ export default class SessionEventService {
     })
   }
 
-  deleteComment (commentId) {
+  deleteComment(commentId) {
     const url = Routing.generate('api_delete_session_event_comment', {sessionEventComment: commentId})
 
     return this.$http.delete(url).then(d => {
@@ -348,7 +348,7 @@ export default class SessionEventService {
     })
   }
 
-  getSessionEventById (sessionId, sessionEventId) {
+  getSessionEventById(sessionId, sessionEventId) {
     const index = this.sessionEvents[sessionId] ?
       this.sessionEvents[sessionId].findIndex(se => se['id'] === sessionEventId) :
       -1
@@ -376,7 +376,7 @@ export default class SessionEventService {
     }
   }
 
-  registerParticipants (sessionId, sessionEventId, callback = null) {
+  registerParticipants(sessionId, sessionEventId, callback = null) {
     const addCallback = (callback !== null) ? callback : this._addUsersCallback
     this.$uibModal.open({
       template: participantsRegistrationTemplate,
@@ -390,7 +390,7 @@ export default class SessionEventService {
     })
   }
 
-  deleteParticipant (sessionEventUserId, callback = null) {
+  deleteParticipant(sessionEventUserId, callback = null) {
     const removeCallback = (callback !== null) ? callback : this._removeUserCallback
     const url = Routing.generate('api_delete_session_event_user', {sessionEventUser: sessionEventUserId})
 
@@ -402,7 +402,7 @@ export default class SessionEventService {
     )
   }
 
-  exportUsersForm (sessionEventId) {
+  exportUsersForm(sessionEventId) {
     this.$uibModal.open({
       template: sessionEventUsersExportTemplate,
       controller: 'SessionEventUsersExportModalCtrl',
@@ -413,7 +413,7 @@ export default class SessionEventService {
     })
   }
 
-  exportUsers (sessionEventId, type) {
+  exportUsers(sessionEventId, type) {
     const url = Routing.generate('api_get_session_event_users_csv_export', {sessionEvent: sessionEventId, type: type})
     window.location.href = url
   }

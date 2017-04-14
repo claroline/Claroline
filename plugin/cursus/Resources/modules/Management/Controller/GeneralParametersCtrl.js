@@ -8,7 +8,7 @@
  */
 
 export default class GeneralParametersCtrl {
-  constructor ($state, CourseService) {
+  constructor($state, CourseService) {
     this.$state = $state
     this.CourseService = CourseService
     this.configs = {
@@ -22,7 +22,7 @@ export default class GeneralParametersCtrl {
     this.initialize()
   }
 
-  initialize () {
+  initialize() {
     this.CourseService.getGeneralParameters().then(d => {
       this.configs['disableInvitations'] = d['disableInvitations']
       this.configs['disableCertificates'] = d['disableCertificates']
@@ -30,10 +30,11 @@ export default class GeneralParametersCtrl {
       this.configs['enableCoursesProfileTab'] = d['enableCoursesProfileTab']
       this.configs['enableWsInCoursesProfileTab'] = d['enableWsInCoursesProfileTab']
       this.configs['sessionDefaultTotal'] = parseInt(d['sessionDefaultTotal'])
+      this.configs['sessionDefaultDuration'] = parseInt(d['sessionDefaultDuration'])
     })
   }
 
-  validate () {
+  validate() {
     this.CourseService.setGeneralParameters(this.configs).then(d => {
       if (d === 'success') {
         this.$state.go('configuration')

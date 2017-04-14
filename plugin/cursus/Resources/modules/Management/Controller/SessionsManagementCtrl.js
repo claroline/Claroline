@@ -42,17 +42,17 @@ export default class SessionsManagementCtrl {
     this.initialize()
   }
 
-  _addSessionCallback (data) {
+  _addSessionCallback(data) {
     this.SessionService._addSessionCallback(data)
     this.tableParams.reload()
   }
 
-  _updateSessionCallback (data) {
+  _updateSessionCallback(data) {
     this.SessionService._updateSessionCallback(data)
     this.tableParams.reload()
   }
 
-  _deleteSessionCallback (data) {
+  _deleteSessionCallback(data) {
     this.SessionService._removeSessionCallback(data)
     this.tableParams.reload()
   }
@@ -61,37 +61,37 @@ export default class SessionsManagementCtrl {
     this.SessionService.loadSessions()
   }
 
-  isInitialized () {
+  isInitialized() {
     return this.SessionService.isInitialized()
   }
 
-  loadEvents (sessionId) {
+  loadEvents(sessionId) {
     this.SessionEventService.loadEventsBySession(sessionId)
   }
 
-  editSession (session) {
+  editSession(session) {
     this.SessionService.editSession(session, this._updateSessionCallback)
   }
 
-  deleteSession (sessionId) {
+  deleteSession(sessionId) {
     this.SessionService.deleteSession(sessionId, this._deleteSessionCallback)
   }
 
-  createEvent (session) {
+  createEvent(session) {
     this.SessionService.loadUsersBySession(session['id'])
     this.loadEvents(session['id'])
     this.SessionEventService.createSessionEvent(session)
   }
 
-  openStartDatePicker () {
+  openStartDatePicker() {
     this.filterStartDate['open'] = true
   }
 
-  openEndDatePicker () {
+  openEndDatePicker() {
     this.filterEndDate['open'] = true
   }
 
-  isValidStartDate (startDate) {
+  isValidStartDate(startDate) {
     let isValid = false
 
     if (startDate) {
@@ -109,7 +109,7 @@ export default class SessionsManagementCtrl {
     return isValid
   }
 
-  displayCoursesList () {
+  displayCoursesList() {
     this.$uibModal.open({
       template: coursesListTemplate,
       controller: 'SessionCreationCoursesListModalCtrl',
@@ -120,11 +120,11 @@ export default class SessionsManagementCtrl {
     })
   }
 
-  sendMessageToSessionLearners (session) {
+  sendMessageToSessionLearners(session) {
     this.SessionService.sendMessageToSession(session)
   }
 
-  manageEventComments (sessionEvent) {
+  manageEventComments(sessionEvent) {
     this.SessionEventService.manageComments(sessionEvent)
   }
 }

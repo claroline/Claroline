@@ -25,12 +25,12 @@ export default class SessionEventCommentsManagementModalCtrl {
     this.updateComment = null
   }
 
-  addCommentCallback (comment) {
+  addCommentCallback(comment) {
     this.comments.push(comment)
     this.tableParams.reload()
   }
 
-  updateCommentCallback (comment) {
+  updateCommentCallback(comment) {
     const index = this.comments.findIndex(c => c['id'] === comment['id'])
 
     if (index > -1) {
@@ -40,7 +40,7 @@ export default class SessionEventCommentsManagementModalCtrl {
     }
   }
 
-  removeCommentCallback (commentId) {
+  removeCommentCallback(commentId) {
     const index = this.comments.findIndex(c => c['id'] === commentId)
 
     if (index > -1) {
@@ -49,11 +49,11 @@ export default class SessionEventCommentsManagementModalCtrl {
     }
   }
 
-  displayCommentCreationForm () {
+  displayCommentCreationForm() {
     this.isCreationFormVisible = true
   }
 
-  confirmCommentCreation () {
+  confirmCommentCreation() {
     if (this.newComment) {
       this.SessionEventService.createComment(this.sessionEvent['id'], this.newComment).then(d => this.addCommentCallback(d))
     }
@@ -61,17 +61,17 @@ export default class SessionEventCommentsManagementModalCtrl {
     this.newComment = null
   }
 
-  cancelCommentCreation () {
+  cancelCommentCreation() {
     this.isCreationFormVisible = false
     this.newComment = null
   }
 
-  displayCommentEditionForm (comment) {
+  displayCommentEditionForm(comment) {
     this.updateId = comment['id']
     this.updateComment = comment['content']
   }
 
-  confirmCommentEdition () {
+  confirmCommentEdition() {
     if (this.updateId, this.updateComment) {
       this.SessionEventService.editComment(this.updateId, this.updateComment).then(d => this.updateCommentCallback(d))
     }
@@ -79,12 +79,12 @@ export default class SessionEventCommentsManagementModalCtrl {
     this.updateComment = null
   }
 
-  cancelCommentEdition () {
+  cancelCommentEdition() {
     this.updateId = null
     this.updateComment = null
   }
 
-  deleteComment (commentId) {
+  deleteComment(commentId) {
     this.SessionEventService.deleteComment(commentId).then(d => {
       if (d === 'success') {
         this.removeCommentCallback(commentId)

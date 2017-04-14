@@ -8,33 +8,33 @@
  */
 
 export default class RootCursusManagementCtrl {
-  constructor (CursusService) {
+  constructor(CursusService) {
     this.CursusService = CursusService
     this.cursus = CursusService.getCursus()
     this.initialize()
   }
 
-  initialize () {
+  initialize() {
     this.CursusService.initialize()
   }
 
-  createCursus () {
+  createCursus() {
     this.CursusService.createCursus()
   }
 
-  editCursus (cursusId) {
+  editCursus(cursusId) {
     this.CursusService.editCursus(cursusId)
   }
 
-  deleteCursus (cursusId) {
+  deleteCursus(cursusId) {
     this.CursusService.deleteCursus(cursusId)
   }
 
-  viewCursus (cursusId) {
+  viewCursus(cursusId) {
     this.CursusService.viewRootCursus(cursusId)
   }
 
-  importCursus () {
+  importCursus() {
     this.CursusService.importCursus()
   }
 }

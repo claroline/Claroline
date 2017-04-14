@@ -37,6 +37,7 @@ class LogCourseEditEvent extends LogGenericEvent
         $details['withSessionEvent'] = $course->getWithSessionEvent();
         $workspace = $course->getWorkspace();
         $workspaceModel = $course->getWorkspaceModel();
+        $organizations = $course->getOrganizations();
 
         if (!is_null($workspace)) {
             $details['workspaceId'] = $workspace->getId();
@@ -44,10 +45,16 @@ class LogCourseEditEvent extends LogGenericEvent
             $details['workspaceCode'] = $workspace->getCode();
             $details['workspaceGuid'] = $workspace->getGuid();
         }
-
         if (!is_null($workspaceModel)) {
             $details['workspaceModelId'] = $workspaceModel->getId();
             $details['workspaceModelName'] = $workspaceModel->getName();
+        }
+        foreach ($organizations as $organization) {
+            $details['organizations'][] = [
+                'id' => $organization->getId(),
+                'name' => $organization->getName(),
+                'default' => $organization->isDefault(),
+            ];
         }
 
         parent::__construct(self::ACTION, $details);

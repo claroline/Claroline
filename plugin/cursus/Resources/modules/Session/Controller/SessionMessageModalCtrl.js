@@ -28,7 +28,7 @@ export default class SessionMessageModalCtrl {
     this.tinymceOptions = CourseService.getTinymceConfiguration()
   }
 
-  submit () {
+  submit() {
     this.resetErrors()
 
     if (!this.message['object']) {
@@ -53,13 +53,13 @@ export default class SessionMessageModalCtrl {
     }
   }
 
-  resetErrors () {
+  resetErrors() {
     for (const key in this.messageErrors) {
       this.messageErrors[key] = null
     }
   }
 
-  isValid () {
+  isValid() {
     let valid = true
 
     for (const key in this.messageErrors) {

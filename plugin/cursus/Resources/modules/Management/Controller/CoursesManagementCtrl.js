@@ -24,7 +24,7 @@ export default class CoursesManagementCtrl {
     this.initialize()
   }
 
-  _addCourseCallback (data) {
+  _addCourseCallback(data) {
     const coursesJson = JSON.parse(data)
 
     if (Array.isArray(coursesJson)) {
@@ -37,7 +37,7 @@ export default class CoursesManagementCtrl {
     this.tableParams.reload()
   }
 
-  _updateCourseCallback (data) {
+  _updateCourseCallback(data) {
     const courseJson = JSON.parse(data)
     const index = this.courses.findIndex(c => c['id'] === courseJson['id'])
 
@@ -47,7 +47,7 @@ export default class CoursesManagementCtrl {
     }
   }
 
-  _removeCourseCallback (data) {
+  _removeCourseCallback(data) {
     const courseJson = JSON.parse(data)
     const index = this.courses.findIndex(c => c['id'] === courseJson['id'])
 
@@ -61,48 +61,48 @@ export default class CoursesManagementCtrl {
     this.CourseService.loadCourses()
   }
 
-  isInitialized () {
+  isInitialized() {
     return this.CourseService.isInitialized()
   }
 
-  createCourse () {
+  createCourse() {
     this.CourseService.createCourse(null, this._addCourseCallback)
   }
 
-  editCourse (courseId) {
+  editCourse(courseId) {
     this.CourseService.editCourse(courseId, this._updateCourseCallback)
   }
 
-  deleteCourse (courseId) {
+  deleteCourse(courseId) {
     this.CourseService.deleteCourse(courseId, this._removeCourseCallback)
   }
 
-  viewCourse (courseId) {
+  viewCourse(courseId) {
     this.CourseService.viewCourse(courseId)
   }
 
-  importCourses () {
+  importCourses() {
     this.CourseService.importCourses(this._addCourseCallback)
   }
 
-  loadSessions (courseId) {
+  loadSessions(courseId) {
     this.SessionService.loadSessionsByCourse(courseId)
   }
 
-  createSession (course) {
+  createSession(course) {
     this.loadSessions(course['id'])
     this.SessionService.createSession(course)
   }
 
-  editSession (session) {
+  editSession(session) {
     this.SessionService.editSession(session)
   }
 
-  deleteSession (sessionId) {
+  deleteSession(sessionId) {
     this.SessionService.deleteSession(sessionId)
   }
 
-  sendMessageToSessionLearners (session) {
+  sendMessageToSessionLearners(session) {
     this.SessionService.sendMessageToSession(session)
   }
 }

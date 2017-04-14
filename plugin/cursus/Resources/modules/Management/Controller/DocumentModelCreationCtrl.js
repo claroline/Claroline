@@ -35,7 +35,7 @@ export default class DocumentModelCreationCtrl {
     this.tinymceOptions = CourseService.getTinymceConfiguration()
   }
 
-  submit () {
+  submit() {
     this.resetErrors()
 
     if (!this.documentModel['name']) {
@@ -61,13 +61,13 @@ export default class DocumentModelCreationCtrl {
     }
   }
 
-  resetErrors () {
+  resetErrors() {
     for (const key in this.documentModelErrors) {
       this.documentModelErrors[key] = null
     }
   }
 
-  isValid () {
+  isValid() {
     let valid = true
 
     for (const key in this.documentModelErrors) {
@@ -80,11 +80,11 @@ export default class DocumentModelCreationCtrl {
     return valid
   }
 
-  isSessionEvent () {
+  isSessionEvent() {
     return this.documentType && (this.documentType['value'] === 1 || this.documentType['value'] === 3)
   }
 
-  isSession () {
+  isSession() {
     return this.documentType && (this.documentType['value'] === 0 || this.documentType['value'] === 2)
   }
 }

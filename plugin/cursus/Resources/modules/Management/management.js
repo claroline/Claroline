@@ -74,7 +74,7 @@ angular.module('CursusManagementModule', [
 .config(Routing)
 .config([
   'cfpLoadingBarProvider',
-  function configureLoadingBar (cfpLoadingBarProvider) {
+  function configureLoadingBar(cfpLoadingBarProvider) {
     // Configure loader
     cfpLoadingBarProvider.latencyThreshold = 200
     cfpLoadingBarProvider.includeBar = true

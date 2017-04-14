@@ -17,11 +17,8 @@ use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class CursusRepository extends NestedTreeRepository
 {
-    public function findAllCursus(
-        $orderedBy = 'cursusOrder',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
+    public function findAllCursus($orderedBy = 'cursusOrder', $order = 'ASC', $executeQuery = true)
+    {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Cursus c
@@ -70,28 +67,20 @@ class CursusRepository extends NestedTreeRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findSearchedRootCursus(
-        $search = '',
-        $orderedBy = 'id',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
+    public function findAllRootCursusByOrganizations(array $organizations, $orderedBy = 'id', $order = 'ASC')
+    {
         $dql = "
             SELECT c
             FROM Claroline\CursusBundle\Entity\Cursus c
+            JOIN c.organizations o
             WHERE c.parent IS NULL
-            AND (
-                UPPER(c.title) LIKE :search
-                OR UPPER(c.code) LIKE :search
-                OR UPPER(cc.code) LIKE :search
-            )
+            AND o IN (:organizations)
             ORDER BY c.{$orderedBy} {$order}
         ";
         $query = $this->_em->createQuery($dql);
-        $upperSearch = strtoupper($search);
-        $query->setParameter('search', "%{$upperSearch}%");
+        $query->setParameter('organizations', $organizations);
 
-        return $executeQuery ? $query->getResult() : $query;
+        return $query->getResult();
     }
 
     public function findLastRootCursusOrder($executeQuery = true)
@@ -121,24 +110,6 @@ class CursusRepository extends NestedTreeRepository
         return $executeQuery ?
             $query->getSingleScalarResult() :
             $query;
-    }
-
-    public function findHierarchyByCursus(
-        Cursus $cursus,
-        $orderedBy = 'cursusOrder',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        $dql = "
-            SELECT c
-            FROM Claroline\CursusBundle\Entity\Cursus c
-            WHERE c.root = :root
-            ORDER BY c.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('root', $cursus->getRoot());
-
-        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findRelatedHierarchyByCursus(
@@ -187,59 +158,6 @@ class CursusRepository extends NestedTreeRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findCursusByParentAndCourses(
-        Cursus $parent,
-        array $courses,
-        $executeQuery = true
-    ) {
-        $dql = '
-            SELECT c
-            FROM Claroline\CursusBundle\Entity\Cursus c
-            WHERE c.parent = :parent
-            AND c.course IN (:courses)
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('parent', $parent);
-        $query->setParameter('courses', $courses);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function updateCursusOrderByParent(
-        Cursus $parent,
-        $cursusOrder,
-        $executeQuery = true
-    ) {
-        $dql = '
-            UPDATE Claroline\CursusBundle\Entity\Cursus c
-            SET c.cursusOrder = c.cursusOrder + 1
-            WHERE c.parent = :parent
-            AND c.cursusOrder >= :cursusOrder
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('parent', $parent);
-        $query->setParameter('cursusOrder', $cursusOrder);
-
-        return $executeQuery ? $query->execute() : $query;
-    }
-
-    public function updateCursusOrderWithoutParent(
-        $cursusOrder,
-        $executeQuery = true
-    ) {
-        $dql = '
-            UPDATE Claroline\CursusBundle\Entity\Cursus c
-            SET c.cursusOrder = c.cursusOrder + 1
-            WHERE c.parent IS NULL
-            AND c.cursusOrder >= :cursusOrder
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('cursusOrder', $cursusOrder);
-
-        return $executeQuery ? $query->execute() : $query;
-    }
-
     public function findCursusByIds(array $ids, $executeQuery = true)
     {
         $dql = '
@@ -251,19 +169,6 @@ class CursusRepository extends NestedTreeRepository
         $query->setParameter('ids', $ids);
 
         return $executeQuery ? $query->execute() : $query;
-    }
-
-    public function findOneCursusById($cursusId, $executeQuery = true)
-    {
-        $dql = '
-            SELECT c
-            FROM Claroline\CursusBundle\Entity\Cursus c
-            WHERE c.id = :cursusId
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('cursusId', $cursusId);
-
-        return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
     public function findCursusByGroup(Group $group, $executeQuery = true)
@@ -281,51 +186,6 @@ class CursusRepository extends NestedTreeRepository
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('group', $group->getName());
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function findCursusByParent(
-        Cursus $parent,
-        $orderedBy = 'cursusOrder',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        $dql = "
-            SELECT c
-            FROM Claroline\CursusBundle\Entity\Cursus c
-            WHERE c.parent = :parent
-            ORDER BY c.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('parent', $parent);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function findSearchedCursusByParent(
-        Cursus $parent,
-        $search = '',
-        $orderedBy = 'title',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        $dql = "
-            SELECT c
-            FROM Claroline\CursusBundle\Entity\Cursus c
-            LEFT JOIN c.course cc
-            WHERE c.parent = :parent
-            AND (
-                UPPER(c.title) LIKE :search
-                OR UPPER(c.code) LIKE :search
-                OR UPPER(cc.code) LIKE :search
-            )
-            ORDER BY c.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('parent', $parent);
-        $upperSearch = strtoupper($search);
-        $query->setParameter('search', "%{$upperSearch}%");
 
         return $executeQuery ? $query->getResult() : $query;
     }

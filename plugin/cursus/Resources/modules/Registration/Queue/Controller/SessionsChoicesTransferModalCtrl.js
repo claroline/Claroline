@@ -11,8 +11,7 @@
 /*global Translator*/
 
 export default class SessionsChoicesTransferModalCtrl {
-        
-  constructor ($http, $uibModal, $uibModalInstance, queueId, courseId, callback) {
+  constructor($http, $uibModal, $uibModalInstance, queueId, courseId, callback) {
     this.$http = $http
     this.$uibModal = $uibModal
     this.$uibModalInstance = $uibModalInstance
@@ -85,11 +84,11 @@ export default class SessionsChoicesTransferModalCtrl {
     this.getAvailableSessions()
   }
 
-  closeModal () {
+  closeModal() {
     this.$uibModalInstance.close()
   }
 
-  confirmModal () {
+  confirmModal() {
     if (this.selectedSession) {
       const route = Routing.generate('api_post_course_queued_user_transfer', {'queue': this.queueId, session: this.selectedSession})
       this.$http.post(route).then(datas => {
@@ -116,11 +115,11 @@ export default class SessionsChoicesTransferModalCtrl {
     }
   }
 
-  deleteErrorMessage () {
+  deleteErrorMessage() {
     this.errorMessage = ''
   }
 
-  getAvailableSessions () {
+  getAvailableSessions() {
     const route = Routing.generate('api_get_available_sessions_by_course', {course: this.courseId})
     this.$http.get(route).then(datas => {
       if (datas['status'] === 200) {

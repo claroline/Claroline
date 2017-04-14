@@ -80,7 +80,7 @@
             let selectedEventId = null
             let selectedCommentId = null
 
-            function refreshCoursesList () {
+            function refreshCoursesList() {
               let url
 
               switch (mode) {
@@ -207,7 +207,7 @@
               })
             })
 
-            function registerComment (eventId, comment) {
+            function registerComment(eventId, comment) {
               const index = events.findIndex(e => (e['id'] === eventId) && (e['type'] === 'session_event'))
 
               if (index > -1) {
@@ -215,7 +215,7 @@
               }
             }
 
-            function updateComment (eventId, commentId, content) {
+            function updateComment(eventId, commentId, content) {
               const index = events.findIndex(e => (e['id'] === eventId) && (e['type'] === 'session_event'))
 
               if (index > -1) {
@@ -227,7 +227,7 @@
               }
             }
 
-            function removeComment (eventId, commentId) {
+            function removeComment(eventId, commentId) {
               const index = events.findIndex(e => (e['id'] === eventId) && (e['type'] === 'session_event'))
 
               if (index > -1) {
@@ -239,7 +239,7 @@
               }
             }
 
-            function getCommentContent (eventId, commentId) {
+            function getCommentContent(eventId, commentId) {
               const index = events.findIndex(e => (e['id'] === eventId) && (e['type'] === 'session_event'))
 
               if (index > -1) {
@@ -253,7 +253,7 @@
               return ''
             }
 
-            function t (key) {
+            function t(key) {
               if (typeof key === 'object') {
                 let transWords = []
 
@@ -265,11 +265,11 @@
               return Translator.trans(key, {}, 'agenda')
             }
 
-            function computeEventColor (sessionId, tutors) {
+            function computeEventColor(sessionId, tutors) {
               if (editableSessions[sessionId]) {
                 const tutor = tutors.find(t => t['id'] === currentUserId)
 
-                if (!tutor) {
+                if (tutor) {
                   return '#777777'
                 }
               }
@@ -277,7 +277,17 @@
               return '#337AB7'
             }
 
-            function initializeEvents () {
+            function isTutor(sessionId, tutors) {
+              let tutor = null
+
+              if (editableSessions[sessionId]) {
+                tutor = tutors.find(t => t['id'] === currentUserId)
+              }
+
+              return tutor
+            }
+
+            function initializeEvents() {
               events = []
               sessions.forEach(s => {
                 let sessionStartEvent = {}
@@ -307,14 +317,16 @@
                 events.push(sessionStartEvent)
                 events.push(sessionEndEvent)
                 s['events'].forEach(e => {
-                  if (sessionEventUsersStatus[e['id']] === 0) {
+                  const tutor = isTutor(s['id'], e['tutors'])
+
+                  if (tutor || sessionEventUsersStatus[e['id']] === 0) {
                     e['title'] = e['comments'].length > 0 ? `!!! ${e['name']}` :  e['name']
                     e['start']= e['startDate']
                     e['end']= e['endDate']
                     e['editable']= false
                     e['allDay']= false
                     e['className']= 'pointer-hand'
-                    e['color'] = computeEventColor(s['id'], e['tutors'])
+                    e['color'] = tutor ? '#777777' : '#337AB7'
                     e['type'] = 'session_event'
                     e['sessionId'] = s['id']
                     e['sessionName'] = s['name']
@@ -331,7 +343,7 @@
               })
             }
 
-            function initializeCalendar () {
+            function initializeCalendar() {
               sessions = (typeof window[sessionsIdx] === 'undefined') ? [] : JSON.parse(window[sessionsIdx])
               editableSessions = (typeof window[editableSessionsIdx] === 'undefined') ? [] : window[editableSessionsIdx]
               workspaces = (typeof window[workspacesIdx] === 'undefined') ? {} : window[workspacesIdx]
@@ -377,7 +389,7 @@
               })
             }
 
-            function onEventClick (event, jsEvent) {
+            function onEventClick(event, jsEvent) {
               jsEvent.stopPropagation()
               jsEvent.preventDefault()
               let title = ''

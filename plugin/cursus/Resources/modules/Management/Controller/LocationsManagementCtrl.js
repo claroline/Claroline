@@ -39,13 +39,13 @@ export default class LocationsManagementCtrl {
     this.initialize()
   }
 
-  _addLocationCallback (datas) {
+  _addLocationCallback(datas) {
     const locationJson = JSON.parse(datas)
     this.locations.push(this.generateLocationAddress(locationJson))
     this.tableParams['locations'].reload()
   }
 
-  _updateLocationCallback (datas) {
+  _updateLocationCallback(datas) {
     const locationJson = JSON.parse(datas)
     const index = this.locations.findIndex(l => l['id'] === locationJson['id'])
 
@@ -55,7 +55,7 @@ export default class LocationsManagementCtrl {
     }
   }
 
-  _removeLocationCallback (datas) {
+  _removeLocationCallback(datas) {
     const locationJson = JSON.parse(datas)
     const index = this.locations.findIndex(l => l['id'] === locationJson['id'])
 
@@ -69,7 +69,7 @@ export default class LocationsManagementCtrl {
     this.loadLocations()
   }
 
-  loadLocations () {
+  loadLocations() {
     const url = Routing.generate('api_get_cursus_locations')
     this.$http.get(url).then(d => {
       if (d['status'] === 200) {
@@ -82,7 +82,7 @@ export default class LocationsManagementCtrl {
     })
   }
 
-  loadLocationResources () {
+  loadLocationResources() {
     const url = Routing.generate('api_get_cursus_reservation_resources')
     this.$http.get(url).then(d => {
       if (d['status'] === 200) {
@@ -96,7 +96,7 @@ export default class LocationsManagementCtrl {
     })
   }
 
-  loadResources () {
+  loadResources() {
     const url = Routing.generate('api_get_reservation_resources')
     this.$http.get(url).then(d => {
       if (d['status'] === 200) {
@@ -110,7 +110,7 @@ export default class LocationsManagementCtrl {
     })
   }
 
-  addLocationResource (resource) {
+  addLocationResource(resource) {
     const url = Routing.generate('api_post_cursus_reservation_resources_tag', {resource: resource['id']})
     this.$http.post(url).then(d => {
       if (d['status'] === 200 && d['data'] === 'success') {
@@ -119,7 +119,7 @@ export default class LocationsManagementCtrl {
     })
   }
 
-  removeLocationResource (resourceId) {
+  removeLocationResource(resourceId) {
     const url = Routing.generate('api_delete_cursus_reservation_resources_tag', {resource: resourceId})
     this.$http.delete(url).then(d => {
       if (d['status'] === 200 && d['data'] === 'success') {
@@ -132,11 +132,11 @@ export default class LocationsManagementCtrl {
     })
   }
 
-  isLocationResource (resourceId) {
+  isLocationResource(resourceId) {
     return this.locationResources.findIndex(l => l['id'] === resourceId) > -1
   }
 
-  generateLocationAddress (location) {
+  generateLocationAddress(location) {
     location['address'] = `
       ${location['street']}, ${location['street_number']} ${location['box_number'] ? '(' + location['box_number'] + ')' : ''}
       <br>
@@ -148,7 +148,7 @@ export default class LocationsManagementCtrl {
     return location
   }
 
-  createLocation () {
+  createLocation() {
     this.$uibModal.open({
       template: locationFormTemplate,
       controller: 'LocationCreationModalCtrl',
@@ -160,7 +160,7 @@ export default class LocationsManagementCtrl {
     })
   }
 
-  editLocation (location) {
+  editLocation(location) {
     this.$uibModal.open({
       template: locationFormTemplate,
       controller: 'LocationEditionModalCtrl',
@@ -173,7 +173,7 @@ export default class LocationsManagementCtrl {
     })
   }
 
-  deleteLocation (locationId) {
+  deleteLocation(locationId) {
     const url = Routing.generate('api_delete_cursus_location', {location: locationId})
     this.ClarolineAPIService.confirm(
       {url, method: 'DELETE'},

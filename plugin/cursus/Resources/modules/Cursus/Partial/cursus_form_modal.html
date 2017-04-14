@@ -26,6 +26,22 @@
                 </div>
             </div>
         </div>
+        <div class="form-group row" ng-class="cmc.cursusErrors['organizations'] ? 'has-error' : ''" ng-if="!cmc.parentId">
+            <label class="control-label col-md-3">
+                {{ 'organizations'|trans:{}:'platform' }}
+            </label>
+            <div class="col-md-9">
+                <select multiple
+                        class="form-control"
+                        ng-model="cmc.organizations"
+                        ng-options="o['name'] disable when o['disabled'] for o in cmc.organizationsList"
+                >
+                </select>
+                <div class="help-block field-error" ng-if="cmc.cursusErrors['organizations']">
+                    {{ cmc.cursusErrors['organizations'] }}
+                </div>
+            </div>
+        </div>
         <div class="form-group row">
             <label class="control-label col-md-3">
                 {{ 'description'|trans:{}:'platform' }}

@@ -1250,6 +1250,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         array $forcedGroups = [],
         array $forcedRoles = [],
         array $forcedWorkspaces = [],
+        $withOrganizations = false,
+        array $forcedOrganizations = [],
         $executeQuery = true
     ) {
         $withSearch = !empty($search);
@@ -1265,6 +1267,14 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = '
             SELECT DISTINCT u
             FROM Claroline\CoreBundle\Entity\User u
+        ';
+
+        if ($withOrganizations) {
+            $dql .= '
+                JOIN u.organizations o
+            ';
+        }
+        $dql .= '
             WHERE u.isRemoved = false
         ';
 
@@ -1290,7 +1300,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     )
                 ';
             }
-
             if ($withGroups) {
                 if ($withRoles) {
                     $dql .= 'OR';
@@ -1305,7 +1314,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                     )
                 ';
             }
-
             if ($withWorkspaces) {
                 if ($withRoles || $withGroups) {
                     $dql .= 'OR';
@@ -1331,19 +1339,16 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 )
             ';
         }
-
         if ($withExcludedUsers) {
             $dql .= '
                 AND u NOT IN (:excludedUsers)
             ';
         }
-
         if ($withForcedUsers) {
             $dql .= '
                 AND u IN (:forcedUsers)
             ';
         }
-
         if ($withForcedGroups) {
             $dql .= '
                 AND u IN (
@@ -1354,7 +1359,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 )
             ';
         }
-
         if ($withForcedRoles) {
             $dql .= '
                 AND (
@@ -1374,7 +1378,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 )
             ';
         }
-
         if ($withForcedWorkspaces) {
             $dql .= '
                 AND (
@@ -1394,7 +1397,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 )
             ';
         }
-
         if ($withSearch) {
             $dql .= '
                 AND (
@@ -1425,6 +1427,11 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 )
             ';
         }
+        if ($withOrganizations) {
+            $dql .= '
+                AND o IN (:forcedOrganizations)
+            ';
+        }
         $dql .= "
             ORDER BY u.{$orderedBy} {$order}
         ";
@@ -1433,38 +1440,33 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         if ($withGroups) {
             $query->setParameter('groupRestrictions', $groupRestrictions);
         }
-
         if ($withRoles) {
             $query->setParameter('roleRestrictions', $roleRestrictions);
         }
-
         if ($withWorkspaces) {
             $query->setParameter('workspaceRestrictions', $workspaceRestrictions);
         }
-
         if ($withForcedUsers) {
             $query->setParameter('forcedUsers', $forcedUsers);
         }
-
         if ($withForcedGroups) {
             $query->setParameter('forcedGroups', $forcedGroups);
         }
-
         if ($withForcedRoles) {
             $query->setParameter('forcedRoles', $forcedRoles);
         }
-
         if ($withForcedWorkspaces) {
             $query->setParameter('forcedWorkspaces', $forcedWorkspaces);
         }
-
         if ($withExcludedUsers) {
             $query->setParameter('excludedUsers', $excludedUsers);
         }
-
         if ($withSearch) {
             $upperSearch = strtoupper($search);
             $query->setParameter('search', "%{$upperSearch}%");
+        }
+        if ($withOrganizations) {
+            $query->setParameter('forcedOrganizations', $forcedOrganizations);
         }
 
         return $executeQuery ? $query->getResult() : $query;

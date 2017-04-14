@@ -63,7 +63,7 @@ export default class SessionEventEditionModalCtrl {
     this.initializeSessionEvent()
   }
 
-  initializeSessionEvent () {
+  initializeSessionEvent() {
     this.sessionEvent['name'] = this.source['name']
     this.sessionEvent['startDate'] = this.source['startDate'].replace(/\+.*$/, '')
     this.sessionEvent['endDate'] = this.source['endDate'].replace(/\+.*$/, '')
@@ -111,7 +111,7 @@ export default class SessionEventEditionModalCtrl {
     })
   }
 
-  submit () {
+  submit() {
     this.resetErrors()
 
     if (!this.sessionEvent['name']) {
@@ -186,13 +186,13 @@ export default class SessionEventEditionModalCtrl {
     }
   }
 
-  resetErrors () {
+  resetErrors() {
     for (const key in this.sessionEventErrors) {
       this.sessionEventErrors[key] = null
     }
   }
 
-  isValid () {
+  isValid() {
     let valid = true
 
     for (const key in this.sessionEventErrors) {
@@ -205,7 +205,7 @@ export default class SessionEventEditionModalCtrl {
     return valid
   }
 
-  openDatePicker (type) {
+  openDatePicker(type) {
     if (type === 'start') {
       this.dates['start']['open'] = true
     } else if (type === 'end') {
@@ -213,7 +213,7 @@ export default class SessionEventEditionModalCtrl {
     }
   }
 
-  isAuto () {
+  isAuto() {
     return this.registrationType === this.registrationTypeChoices[0]
   }
 }

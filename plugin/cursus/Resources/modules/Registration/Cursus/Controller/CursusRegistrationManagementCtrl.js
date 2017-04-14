@@ -18,8 +18,7 @@ import userUnregistrationTemplate from '../Partial/cursus_user_unregistration_mo
 import usersUnregistrationTemplate from '../Partial/cursus_users_unregistration_modal.html'
 
 export default class CursusRegistrationManagementCtrl {
-
-  constructor ($stateParams, $http, $uibModal) {
+  constructor($stateParams, $http, $uibModal) {
     this.$http = $http
     this.$uibModal = $uibModal
     this.unlockedCursusTxt = ''
@@ -197,7 +196,7 @@ export default class CursusRegistrationManagementCtrl {
     this.initialize()
   }
 
-  userPickerCallBack (datas) {
+  userPickerCallBack(datas) {
     if (datas === null) {
       this.usersIdsTxt = '0'
     } else {
@@ -230,7 +229,7 @@ export default class CursusRegistrationManagementCtrl {
     })
   }
 
-  registerGroups () {
+  registerGroups() {
     this.$uibModal.open({
       template: groupsListRegistrationTemplate,
       controller: 'CursusGroupsListRegistrationModalCtrl',
@@ -244,7 +243,7 @@ export default class CursusRegistrationManagementCtrl {
     })
   }
 
-  registerUsers () {
+  registerUsers() {
     let usersIds = []
 
     for (let i = 0; i < this.cursusUsers.length; i++) {
@@ -257,13 +256,14 @@ export default class CursusRegistrationManagementCtrl {
       multiple: true,
       blacklist: usersIds,
       return_datas: true,
-      attach_name: false
+      attach_name: false,
+      filter_admin_orgas: true
     }
     userPicker.configure(config, this.userPickerCallBack)
     userPicker.open()
   }
 
-  unregisterGroup (group) {
+  unregisterGroup(group) {
     const cursusGroupId = group.id
     const groupName = group.groupName
     this.$uibModal.open({
@@ -281,7 +281,7 @@ export default class CursusRegistrationManagementCtrl {
     })
   }
 
-  unregisterSelectedGroups () {
+  unregisterSelectedGroups() {
     let cursusGroupsIdsTxt = ''
 
     for (let cursusGroupId in this.selectedCursusGroups) {
@@ -307,7 +307,7 @@ export default class CursusRegistrationManagementCtrl {
     })
   }
 
-  removeCursusGroup (cursusGroupId) {
+  removeCursusGroup(cursusGroupId) {
     for (let i = 0; i < this.cursusGroups.length; i++) {
       if (this.cursusGroups[i]['id'] === cursusGroupId) {
         this.cursusGroups.splice(i, 1)
@@ -317,7 +317,7 @@ export default class CursusRegistrationManagementCtrl {
     this.updateCursusUsers()
   }
 
-  removeCursusGroups (cursusGroupIds) {
+  removeCursusGroups(cursusGroupIds) {
     for (let i = this.cursusGroups.length - 1; i >= 0; i--) {
       if (cursusGroupIds.indexOf(this.cursusGroups[i]['id']) >= 0) {
         this.cursusGroups.splice(i, 1)
@@ -326,7 +326,7 @@ export default class CursusRegistrationManagementCtrl {
     this.updateCursusUsers()
   }
 
-  removeCursusUsers (userIds) {
+  removeCursusUsers(userIds) {
     for (let i = this.cursusUsers.length - 1; i >= 0; i--) {
       if (userIds.indexOf(this.cursusUsers[i]['userId']) >= 0) {
         this.cursusUsers.splice(i, 1)
@@ -334,7 +334,7 @@ export default class CursusRegistrationManagementCtrl {
     }
   }
 
-  unregisterUser (user) {
+  unregisterUser(user) {
     const cursusUserId = user.id
     const name = `${user['firstName']} ${user['lastName']} (${user['username']})`
     this.$uibModal.open({
@@ -352,7 +352,7 @@ export default class CursusRegistrationManagementCtrl {
     })
   }
 
-  unregisterSelectedUsers () {
+  unregisterSelectedUsers() {
     let idsTxt = ''
 
     for (let userId in this.selectedUsers) {
@@ -380,7 +380,7 @@ export default class CursusRegistrationManagementCtrl {
     })
   }
 
-  removeCursusUser (cursusUserId) {
+  removeCursusUser(cursusUserId) {
     for (let i = 0; i < this.cursusUsers.length; i++) {
       if (this.cursusUsers[i]['id'] === cursusUserId) {
         this.cursusUsers.splice(i, 1)
@@ -389,7 +389,7 @@ export default class CursusRegistrationManagementCtrl {
     }
   }
 
-  isGroupSelected () {
+  isGroupSelected() {
     let selected = false
 
     for (let cursusGroupId in this.selectedCursusGroups) {
@@ -402,7 +402,7 @@ export default class CursusRegistrationManagementCtrl {
     return selected
   }
 
-  isUserSelected () {
+  isUserSelected() {
     let selected = false
 
     for (let userId in this.selectedUsers) {
@@ -415,7 +415,7 @@ export default class CursusRegistrationManagementCtrl {
     return selected
   }
 
-  toggleAllGroups () {
+  toggleAllGroups() {
     this.allGroups = !this.allGroups
 
     for (let cursusGroupId in this.selectedCursusGroups) {
@@ -423,7 +423,7 @@ export default class CursusRegistrationManagementCtrl {
     }
   }
 
-  toggleAllUsers () {
+  toggleAllUsers() {
     this.allUsers = !this.allUsers
 
     for (let userId in this.selectedUsers) {
@@ -431,7 +431,7 @@ export default class CursusRegistrationManagementCtrl {
     }
   }
 
-  updateCursusUsers () {
+  updateCursusUsers() {
     const route = Routing.generate(
       'api_get_cursus_users_for_cursus_registration',
       {cursus: this.currentCursusId}
@@ -443,7 +443,7 @@ export default class CursusRegistrationManagementCtrl {
     })
   }
 
-  initialize () {
+  initialize() {
     const route = Routing.generate('api_get_datas_for_cursus_registration', {cursus: this.currentCursusId})
     this.$http.get(route).then(datas => {
       const data = datas['data']
