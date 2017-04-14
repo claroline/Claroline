@@ -19,6 +19,8 @@ import {ValidationStatus} from './validation-status.jsx'
 import {StepForm} from './step-form.jsx'
 import {ItemForm} from './item-form.jsx'
 import {ContentItemForm} from './content-item-form.jsx'
+import {ItemPanelDragPreview} from './item-panel-drag-preview.jsx'
+import {ContentPanelDragPreview} from './content-panel-drag-preview.jsx'
 
 const ParametersHeader = props =>
   <div onClick={props.onClick} className="panel-title editor-panel-title">
@@ -139,7 +141,6 @@ ItemHeader.propTypes = {
 }
 
 let ItemPanel = props =>
-  props.connectDragPreview(
     props.connectDropTarget(
       <div
         style={{opacity: props.isDragging ? 0 : 1}}
@@ -186,7 +187,7 @@ let ItemPanel = props =>
           }
         </Panel>
       </div>
-  ))
+  )
 
 ItemPanel.propTypes = {
   id: T.string.isRequired,
@@ -248,7 +249,6 @@ ContentHeader.propTypes = {
 }
 
 let ContentPanel = props =>
-  props.connectDragPreview(
     props.connectDropTarget(
       <div
         style={{opacity: props.isDragging ? 0 : 1}}
@@ -290,7 +290,7 @@ let ContentPanel = props =>
           }
         </Panel>
       </div>
-    ))
+    )
 
 ContentPanel.propTypes = {
   id: T.string.isRequired,
@@ -312,8 +312,16 @@ ContentPanel.propTypes = {
   validating: T.bool.isRequired
 }
 
-ItemPanel = makeSortable(ItemPanel, 'STEP_ITEM')
-ContentPanel = makeSortable(ContentPanel, 'STEP_ITEM')
+ItemPanel = makeSortable(
+  ItemPanel,
+  'STEP_ITEM',
+  ItemPanelDragPreview
+)
+ContentPanel = makeSortable(
+  ContentPanel,
+  'STEP_ITEM',
+  ContentPanelDragPreview
+)
 
 class StepFooter extends Component {
   constructor(props) {
@@ -368,7 +376,6 @@ class StepFooter extends Component {
   render() {
     return (
       <div className="step-footer">
-
         <div className="btn-group">
           <button type="button" onClick={() => this.handleBtnClick(this.state.currentAction)} className="btn btn-primary">{this.state.currentLabel}</button>
           <button type="button" className="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -6,6 +6,7 @@ import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL} from
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {OrderingItemDragPreview} from './ordering-item-drag-preview.jsx'
 
 let DropBox = props => {
   return props.connectDropTarget (
@@ -28,34 +29,30 @@ DropBox.propTypes = {
 DropBox = makeDroppable(DropBox, 'ITEM')
 
 let SortableItem = props => {
-  return props.connectDragPreview (
-      props.connectDropTarget (
+  return props.connectDropTarget (
     props.connectDragSource(
-    <div className="item">
-      <div className="item-data" dangerouslySetInnerHTML={{__html: props.data}} />
-      <div className="item-actions">
-        {props.canDelete &&
-          <TooltipButton
-            id={`answer-${props.index}-delete`}
-            title={t('delete')}
-            className="fa fa-trash"
-            onClick={props.onDelete}
-          />
-        }
-        <span
-          title={t('move')}
-          draggable="true"
-          className={classes(
-            'tooltiped-button',
-            'btn',
-            'fa',
-            'fa-arrows',
-            'drag-handle'
-          )}
-        />
+      <div className="item">
+        <div className="item-data" dangerouslySetInnerHTML={{__html: props.data}} />
+        <div className="item-actions">
+          {props.canDelete &&
+            <TooltipButton
+              id={`answer-${props.index}-delete`}
+              title={t('delete')}
+              className="fa fa-trash"
+              onClick={props.onDelete}
+            />
+          }
+          <span
+            title={t('move')}
+            draggable="true"
+            className="tooltiped-button btn"
+          >
+            <span className="fa fa-arrows drag-handle"/>
+          </span>
+        </div>
       </div>
-    </div>
-  )))
+    )
+  )
 }
 
 SortableItem.propTypes = {
@@ -63,41 +60,42 @@ SortableItem.propTypes = {
   canDelete: T.bool.isRequired,
   onDelete: T.func,
   connectDragSource: T.func.isRequired,
-  connectDragPreview: T.func.isRequired,
   connectDropTarget: T.func.isRequired,
   onSort: T.func.isRequired,
   index: T.number.isRequired
 }
 
-SortableItem = makeSortable(SortableItem, 'ORDERING_PLAYER_SORTABLE_ITEM')
+SortableItem = makeSortable(
+  SortableItem,
+  'ORDERING_ITEM',
+  OrderingItemDragPreview
+)
 
 let DraggableItem = props => {
-  return props.connectDragPreview (
-    props.connectDragSource(
+  return props.connectDragSource(
     <div className="item">
-      <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.data}} />
+      <div className="item-data" dangerouslySetInnerHTML={{__html: props.item.data}} />      
       <span
         title={t('move')}
         draggable="true"
-        className={classes(
-          'tooltiped-button',
-          'btn',
-          'fa',
-          'fa-arrows',
-          'drag-handle'
-        )}
-      />
+        className="tooltiped-button btn"
+      >
+        <span className="fa fa-arrows drag-handle"/>
+      </span>
     </div>
-  ))
+  )
 }
 
 DraggableItem.propTypes = {
   connectDragSource: T.func.isRequired,
-  connectDragPreview: T.func.isRequired,
   item: T.object.isRequired
 }
 
-DraggableItem = makeDraggable(DraggableItem, 'ITEM')
+DraggableItem = makeDraggable(
+  DraggableItem,
+  'ITEM',
+  OrderingItemDragPreview
+)
 
 class OrderingPlayer extends Component {
 

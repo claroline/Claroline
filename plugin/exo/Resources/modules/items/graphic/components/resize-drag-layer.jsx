@@ -17,8 +17,7 @@ class ResizeDragLayer extends Component {
       return null
     }
 
-    const area = this.props.areas.find(area => area.id === this.props.item.areaId)
-
+    const area = this.props.areas.find(area => area.id === this.props.item.item.areaId)
     return (
       <AnswerArea
         id="area-drag-preview"
@@ -26,7 +25,7 @@ class ResizeDragLayer extends Component {
         shape={area.shape}
         geometry={resizeArea(
           area,
-          this.props.item.position,
+          this.props.item.item.position,
           this.props.currentOffset.x,
           this.props.currentOffset.y
         )}

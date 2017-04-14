@@ -10,6 +10,7 @@ import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {actions} from './editor'
 import {utils} from './utils/utils'
+import {PairItemDragPreview} from './pair-item-drag-preview.jsx'
 
 let DropBox = props => {
   return props.connectDropTarget (
@@ -342,7 +343,7 @@ OddList.propTypes = {
 }
 
 let Item = props => {
-  return props.connectDragPreview (
+  return (
     <div className="answer-item item">
       <div className="text-fields">
         <Textarea
@@ -394,11 +395,14 @@ let Item = props => {
 Item.propTypes = {
   onChange: T.func.isRequired,
   connectDragSource: T.func.isRequired,
-  connectDragPreview: T.func.isRequired,
   item: T.object.isRequired
 }
 
-Item = makeDraggable(Item, 'ITEM')
+Item = makeDraggable(
+  Item,
+  'ITEM',
+  PairItemDragPreview  
+)
 
 const ItemList = props => {
   return (

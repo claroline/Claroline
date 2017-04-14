@@ -6,6 +6,7 @@ import {StepEditor} from './step-editor.jsx'
 import {actions} from './../actions'
 import {TYPE_QUIZ, TYPE_STEP} from './../../enums'
 import select from './../selectors'
+import {CustomDragLayer} from './../../../utils/custom-drag-layer.jsx'
 
 let Editor = props =>
   <div className="quiz-editor">
@@ -21,6 +22,7 @@ let Editor = props =>
     <div className="edit-zone user-select-disabled">
       {selectSubEditor(props)}
     </div>
+    <CustomDragLayer/>
   </div>
 
 Editor.propTypes = {

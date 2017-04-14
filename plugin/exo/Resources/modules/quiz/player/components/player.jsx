@@ -15,6 +15,8 @@ import {ItemFeedback} from './item-feedback.jsx'
 import {ContentItemPlayer} from './content-item-player.jsx'
 import {PlayerNav} from './nav-bar.jsx'
 
+import {CustomDragLayer} from './../../../utils/custom-drag-layer.jsx'
+
 const Player = props =>
   <div className="quiz-player">
     <h2 className="step-title">
@@ -72,6 +74,7 @@ const Player = props =>
       finish={() => props.finish(props.quizId, props.paper, props.answers, props.showFeedback)}
       currentStepSend={props.currentStepSend}
     />
+    <CustomDragLayer />
   </div>
 
 Player.propTypes = {

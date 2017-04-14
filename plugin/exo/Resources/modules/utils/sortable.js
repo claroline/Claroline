@@ -1,18 +1,24 @@
 import {findDOMNode} from 'react-dom'
 import {DragSource, DropTarget} from 'react-dnd'
 import invariant from 'invariant'
+import {DefaultPreviewComponent} from './default-preview-component.jsx'
 
 export const SORT_HORIZONTAL = 'SORT_HORIZONTAL'
 export const SORT_VERTICAL = 'SORT_VERTICAL'
 export const SORT_DETECT = 'SORT_DETECT'
 
+
+
 // see https://gaearon.github.io/react-dnd/examples-sortable-simple.html
-export function makeSortable(component, type) {
+export function makeSortable(component, type, previewComponnent = null) {
   const source = {
     beginDrag(props) {
       return {
         id: props.id,
-        index: props.index
+        index: props.index,
+        previewComponnent: previewComponnent ? previewComponnent : DefaultPreviewComponent,
+        props: props
+
       }
     }
   }

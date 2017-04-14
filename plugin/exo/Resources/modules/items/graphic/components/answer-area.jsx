@@ -6,6 +6,7 @@ import {tex} from '#/main/core/translation'
 import {TooltipButton} from './../../../components/form/tooltip-button.jsx'
 import {makeDraggable} from './../../../utils/dragAndDrop'
 import {AreaResizer, AreaResizerDraggable} from './area-resizer.jsx'
+import {AnswerAreaDragPreview} from './answer-area-drag-preview.jsx'
 import {
   SHAPE_RECT,
   SHAPE_CIRCLE,
@@ -21,7 +22,7 @@ import {
 } from './../enums'
 
 const FRAME_GUTTER = 6
-const AREA_GUTTER = 8
+export const AREA_GUTTER = 8
 const BORDER_WIDTH = 2
 const RESIZER_SIZE = 12
 
@@ -108,7 +109,7 @@ export class AnswerArea extends Component {
           {resizers.map(makeResizer)}
         </div>
 
-        {props.selected &&
+        {props.selected && !props.isDragging &&
           <div
             className="area-controls"
             style={{
@@ -124,7 +125,6 @@ export class AnswerArea extends Component {
                 const rect = e.target.classList.contains('btn') ?
                   e.target.getBoundingClientRect() : e.target.parentNode.getBoundingClientRect()
                 const containerRect = document.getElementsByClassName('graphic-editor')[0].getBoundingClientRect()
-
                 props.togglePopover(
                   props.id,
                   rect.left + (rect.width / 2) + window.pageXOffset - containerRect.left, // works with position relative container
@@ -132,7 +132,6 @@ export class AnswerArea extends Component {
                 )
               }}
             />
-
             <TooltipButton
               id="area-edit"
               className="btn-danger btn-sm"
@@ -183,9 +182,11 @@ AnswerArea.defaultProps = {
 export const AnswerAreaDraggable = makeDraggable(
   AnswerArea,
   TYPE_ANSWER_AREA,
+  AnswerAreaDragPreview,
   props => ({
+    id: props.id,
     type: TYPE_ANSWER_AREA,
-    id: props.id
+    props: props
   })
 )
 

@@ -7,6 +7,7 @@ import {getContentDefinition} from './../content-types'
 import {connect} from 'react-redux'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_CONTENT} from './content-modal.jsx'
+import {ContentThumbnailDragPreview} from './content-thumbnail-drag-preview.jsx'
 
 const Actions = props =>
   <span className="content-thumbnail-actions">
@@ -59,8 +60,7 @@ Actions.propTypes = {
 }
 
 let ContentThumbnail = props => {
-  return props.connectDragPreview(
-    props.connectDropTarget(
+  return props.connectDropTarget(
       <span
         className={classes('content-thumbnail', {'active': props.active})}
         style={{opacity: props.isDragging ? 0 : 1}}
@@ -106,7 +106,7 @@ let ContentThumbnail = props => {
         </span>
       </span>
     )
-  )
+
 }
 
 ContentThumbnail.propTypes = {
@@ -130,7 +130,11 @@ ContentThumbnail.propTypes = {
   connectDropTarget: T.func.isRequired
 }
 
-ContentThumbnail = makeSortable(ContentThumbnail, 'CONTENT_THUMBNAIL')
+ContentThumbnail = makeSortable(
+  ContentThumbnail,
+  'CONTENT_THUMBNAIL',
+  ContentThumbnailDragPreview
+)
 
 
 function mapStateToProps() {

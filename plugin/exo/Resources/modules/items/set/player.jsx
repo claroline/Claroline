@@ -5,6 +5,7 @@ import Tooltip from 'react-bootstrap/lib/Tooltip'
 import {tex, t} from '#/main/core/translation'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {SetItemDragPreview} from './set-item-drag-preview.jsx'
 
 let DropBox = props => {
   return props.connectDropTarget (
@@ -90,7 +91,7 @@ SetList.propTypes = {
 }
 
 let Item = props => {
-  return props.connectDragPreview (
+  return (
     <div className="set-item answer-item">
       <div className="item-content" dangerouslySetInnerHTML={{__html: props.item.data}} />
       {props.connectDragSource(
@@ -119,11 +120,14 @@ let Item = props => {
 
 Item.propTypes = {
   connectDragSource: T.func.isRequired,
-  connectDragPreview: T.func.isRequired,
   item: T.object.isRequired
 }
 
-Item = makeDraggable(Item, 'ITEM')
+Item = makeDraggable(
+  Item,
+  'ITEM',
+  SetItemDragPreview
+)
 
 const ItemList = props =>
     <ul>

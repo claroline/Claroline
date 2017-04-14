@@ -5,6 +5,7 @@ import {makeSortable} from './../../../utils/sortable'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {TYPE_STEP, TYPE_QUIZ} from './../../enums'
 import {ValidationStatus} from './validation-status.jsx'
+import {ThumbnailDragPreview} from './thumbnail-drag-preview.jsx'
 
 const Actions = props =>
   <span className="step-actions">
@@ -39,8 +40,7 @@ Actions.propTypes = {
 }
 
 let Thumbnail = props => {
-  return props.connectDragPreview(
-    props.connectDropTarget(
+  return props.connectDropTarget (
       <span
         className={classes('thumbnail', {'active': props.active})}
         onClick={() => props.onClick(props.id, props.type)}
@@ -66,7 +66,6 @@ let Thumbnail = props => {
         </span>
       </span>
     )
-  )
 }
 
 Thumbnail.propTypes = {
@@ -87,6 +86,10 @@ Thumbnail.propTypes = {
   connectDropTarget: T.func.isRequired
 }
 
-Thumbnail = makeSortable(Thumbnail, 'THUMBNAIL')
+Thumbnail = makeSortable(
+  Thumbnail,
+  'THUMBNAIL',
+  ThumbnailDragPreview
+)
 
 export {Thumbnail}

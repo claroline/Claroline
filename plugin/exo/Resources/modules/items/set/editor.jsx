@@ -9,6 +9,7 @@ import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {actions} from './editor'
+import {SetItemDragPreview} from './set-item-drag-preview.jsx'
 
 let DropBox = props => props.connectDropTarget(
   <div className={classes(
@@ -210,7 +211,7 @@ SetList.propTypes = {
 }
 
 let Item = props => {
-  return props.connectDragPreview (
+  return (
     <div className="set-item answer-item">
       <div className="text-fields">
         <Textarea
@@ -262,11 +263,14 @@ let Item = props => {
 Item.propTypes = {
   onChange: T.func.isRequired,
   connectDragSource: T.func.isRequired,
-  connectDragPreview: T.func.isRequired,
   item: T.object.isRequired
 }
 
-Item = makeDraggable(Item, 'ITEM')
+Item = makeDraggable(
+  Item,
+  'ITEM',
+  SetItemDragPreview
+)
 
 class ItemList extends Component {
   constructor(props) {

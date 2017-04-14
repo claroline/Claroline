@@ -42,6 +42,7 @@ AreaResizer.propTypes = {
 export const AreaResizerDraggable = makeDraggable(
   AreaResizer,
   TYPE_AREA_RESIZER,
+  null,
   props => ({
     type: TYPE_AREA_RESIZER,
     areaId: props.areaId,
