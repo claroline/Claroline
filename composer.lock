@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "43ec7ef698e0c936364c7d5f20772c7603d58831"
+                "reference": "2609355e9f5772e6c946ae8e666ad88582129fa4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/43ec7ef698e0c936364c7d5f20772c7603d58831",
-                "reference": "43ec7ef698e0c936364c7d5f20772c7603d58831",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/2609355e9f5772e6c946ae8e666ad88582129fa4",
+                "reference": "2609355e9f5772e6c946ae8e666ad88582129fa4",
                 "shasum": ""
             },
             "require": {
@@ -383,7 +383,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-04-12 16:34:36"
+            "time": "2017-04-14 15:40:27"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -6493,12 +6493,12 @@
             "version": "0.9.6",
             "source": {
                 "type": "git",
-                "url": "https://github.com/padraic/mockery.git",
+                "url": "https://github.com/mockery/mockery.git",
                 "reference": "65d4ca18e15cb02eeb1e5336f884e46b9b905be0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/65d4ca18e15cb02eeb1e5336f884e46b9b905be0",
+                "url": "https://api.github.com/repos/mockery/mockery/zipball/65d4ca18e15cb02eeb1e5336f884e46b9b905be0",
                 "reference": "65d4ca18e15cb02eeb1e5336f884e46b9b905be0",
                 "shasum": ""
             },
