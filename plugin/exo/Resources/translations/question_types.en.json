@@ -20,5 +20,7 @@
     "ordering": "Ordering",
     "ordering_desc": "Reorder elements.",
     "boolean": "True / False",
-    "boolean_desc": "Choose between two answers true / false, yes / no or any other personalized pair."
+    "boolean_desc": "Choose between two answers true / false, yes / no or any other personalized pair.",
+    "selection_desc": "Search, pick or highlight a zone of text.",
+    "selection": "Selection"
 }

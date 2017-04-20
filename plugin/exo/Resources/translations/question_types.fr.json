@@ -24,5 +24,7 @@
     "ordering": "Ordonnancement",
     "ordering_desc": "Déplacer des éléments (texte, image, son, vidéo, etc.) pour les mettre en ordre.",
     "boolean": "Vrai / Faux",
-    "boolean_desc": "Choisir entre deux réponses : vrai / faux, oui / non ou toute autre paire personalisée."
+    "boolean_desc": "Choisir entre deux réponses : vrai / faux, oui / non ou toute autre paire personalisée.",
+    "selection_desc": "Rechercher, choisir ou surligner des zones de texte.",
+    "selection": "Selection"
 }
