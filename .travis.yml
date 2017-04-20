@@ -15,7 +15,6 @@ before_install:
   - sh -e /etc/init.d/xvfb start
 
 before_script:
-  - composer validate
   - php scripts/configure.php --default
   - composer sync-dev
   - php app/console claroline:install --env=test
