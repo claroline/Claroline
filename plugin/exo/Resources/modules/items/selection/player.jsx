@@ -115,8 +115,8 @@ export class SelectionPlayer extends Component {
           const leftTries = (this.props.item.tries || 0) - (this.props.answer ? this.props.answer.tries: 0)
           if (leftTries > 0) {
             this.props.item.solutions.forEach(element => {
-              if (offsets.start >= element.begin && offsets.end <= element.end) {
-                this.onFindAnswer(offsets.start)
+              if (offsets.trueStart >= element.begin && offsets.trueEnd <= element.end) {
+                this.onFindAnswer(offsets.trueStart)
               }
             })
             this.onFindAnswer(null, true)

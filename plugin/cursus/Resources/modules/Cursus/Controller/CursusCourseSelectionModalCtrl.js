@@ -22,16 +22,16 @@ export default class CursusCourseSelectionModalCtrl {
     this._removeCourseCallback = this._removeCourseCallback.bind(this)
   }
 
-  _removeCourseCallback (courseId) {
+  _removeCourseCallback(courseId) {
     this.CourseService.removeCourse(courseId)
     this.tableParams.reload()
   }
 
-  isInitialized () {
+  isInitialized() {
     return this.CourseService.isInitialized()
   }
 
-  addCourseToCursus (courseId) {
+  addCourseToCursus(courseId) {
     this.CursusService.addCourseToCursus(this.cursusId, courseId, this._removeCourseCallback)
   }
 }

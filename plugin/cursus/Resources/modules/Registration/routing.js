@@ -4,7 +4,7 @@ import searchedCursusListTemplate from './Cursus/Partial/cursus_registration_sea
 import cursusManagementTemplate from './Cursus/Partial/cursus_registration_cursus_management.html'
 import queueManagementTemplate from './Queue/Partial/cursus_queue_management.html'
 
-export default function($stateProvider, $urlRouterProvider) {
+export default function ($stateProvider, $urlRouterProvider) {
   $stateProvider
     .state ('registration_main_menu', {
       url: '/registration/main/menu',

@@ -21,25 +21,33 @@
 {% endblock %}
 
 {% block section_content %}
-    <div id="cursus-registration-panel" ng-app="CursusRegistrationModule">
-        <div class="panel panel-default" ui-view>
+    {% if isAuthorized %}
+        <div id="cursus-registration-panel" ng-app="CursusRegistrationModule">
+            <div class="panel panel-default" ui-view>
+            </div>
         </div>
-    </div>
+    {% else %}
+        <div class="alert alert-danger">
+            {{ 'no_use_right_msg'|trans({}, 'cursus') }}
+        </div>
+    {% endif %}
 {% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-ui-tree/dist/angular-ui-tree.min.css') }}" />
-    <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/dataTable.css') }}" />
-    <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/material.css') }}" />
-{% endblock %}
+{% if isAuthorized %}
+    {% block stylesheets %}
+        {{ parent() }}
+        <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-ui-tree/dist/angular-ui-tree.min.css') }}" />
+        <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/dataTable.css') }}" />
+        <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/material.css') }}" />
+    {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    {% javascripts debug=false
-    'js/translations/cursus/*.js'
-    'js/translations/tools/*.js'
-    %}<script src="{{ asset_url }}"></script>
-{% endjavascripts %}
-    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-registration.js') }}"></script>
-{% endblock %}
+    {% block javascripts %}
+        {{ parent() }}
+        {% javascripts debug=false
+        'js/translations/cursus/*.js'
+        'js/translations/tools/*.js'
+        %}<script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+        <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-registration.js') }}"></script>
+    {% endblock %}
+{% endif %}

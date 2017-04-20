@@ -168,7 +168,8 @@
                     forced_groups: {{ forcedGroupIds|json_encode }},
                     forced_roles: {{ forcedRoleIds|json_encode }},
                     forced_workspaces: {{ forcedWorkspaceIds|json_encode }},
-                    shown_workspaces: {{ shownWorkspaceIds|json_encode }}
+                    shown_workspaces: {{ shownWorkspaceIds|json_encode }},
+                    filter_admin_orgas: {% if filter_admin_orgas %}true{% else %}false{% endif %}
                 };
                 userPicker.configure(settings, null);
                 userPicker.open();

@@ -23,13 +23,13 @@ export default class DocumentModelSelectionModalCtrl {
     this.initialize()
   }
 
-  initialize () {
+  initialize() {
     this.DocumentModelService.getPopulatedDocumentModelsByType(this.documentType, this.datas['id']).then(d => {
       d.forEach(dc => this.documentModels.push(dc))
     })
   }
 
-  submit () {
+  submit() {
     if (this.documentModel) {
       const url = Routing.generate('api_post_cursus_document_send', {documentModel: this.documentModel['id'], sourceId: this.datas['id']})
       this.$http.post(url).then(d => {

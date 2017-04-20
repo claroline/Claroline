@@ -38,14 +38,16 @@ export default class CourseEditionModalCtrl {
       organizationValidation: false,
       registrationValidation: false,
       validators: [],
-      displayOrder: 500
+      displayOrder: 500,
+      organizations: []
     }
     this.courseErrors = {
       title: null,
       code: null,
       defaultSessionDuration: null,
       maxUsers: null,
-      displayOrder: null
+      displayOrder: null,
+      organizations: null
     }
     this.tinymceOptions = CourseService.getTinymceConfiguration()
     this.cursusList = []
@@ -57,16 +59,19 @@ export default class CourseEditionModalCtrl {
     this.workspaceModels = []
     this.model = null
     this.rolesChoices = []
+    this.organizations = []
+    this.lockedOrganizations = []
+    this.organizationsList = []
     this._userpickerCallback = this._userpickerCallback.bind(this)
     this.initializeCourse()
   }
 
-  _userpickerCallback (datas) {
+  _userpickerCallback(datas) {
     this.validators = datas === null ? [] : datas
     this.refreshScope()
   }
 
-  initializeCourse () {
+  initializeCourse() {
     if (this.source['tutorRoleName']) {
       this.course['tutorRoleName'] = this.source['tutorRoleName']
     }
@@ -109,6 +114,27 @@ export default class CourseEditionModalCtrl {
         datas.forEach(r => this.validatorsRoles.push(r['id']))
       }
     })
+    const organizationsUrl = Routing.generate('claro_cursus_organizations_retrieve')
+    this.$http.get(organizationsUrl).then(d => {
+      if (d['status'] === 200) {
+        const datas = JSON.parse(d['data'])
+        datas.forEach(o => this.organizationsList.push(o))
+
+        if (this.source['organizations']) {
+          this.source['organizations'].forEach(o => {
+            const selectedOrganization = this.organizationsList.find(organization => organization['id'] === o['id'])
+
+            if (selectedOrganization) {
+              this.organizations.push(selectedOrganization)
+            } else {
+              o['disabled'] = true
+              this.organizationsList.push(o)
+              this.lockedOrganizations.push(o)
+            }
+          })
+        }
+      }
+    })
     this.source['validators'].forEach(v => this.validators.push(v))
     this.course['title'] = this.source['title']
     this.course['code'] = this.source['code']
@@ -129,14 +155,14 @@ export default class CourseEditionModalCtrl {
     }
   }
 
-  displayValidators () {
+  displayValidators() {
     let value = ''
     this.validators.forEach(u => value += `${u['firstName']} ${u['lastName']}, `)
 
     return value
   }
 
-  submit () {
+  submit() {
     this.resetErrors()
 
     if (!this.course['title']) {
@@ -176,6 +202,12 @@ export default class CourseEditionModalCtrl {
       }
     }
 
+    if (this.organizations.length === 0) {
+      this.courseErrors['organizations'] = Translator.trans('form_not_blank_error', {}, 'cursus')
+    } else {
+      this.courseErrors['organizations'] = null
+    }
+
     if (this.workspace) {
       this.course['workspace'] = this.workspace['id']
     } else {
@@ -196,9 +228,10 @@ export default class CourseEditionModalCtrl {
       this.course['learnerRoleName'] = ''
     }
     this.course['validators'] = []
-    this.validators.forEach(v => {
-      this.course['validators'].push(v['id'])
-    })
+    this.validators.forEach(v => this.course['validators'].push(v['id']))
+    this.course['organizations'] = []
+    this.lockedOrganizations.forEach(o => this.course['organizations'].push(o['id']))
+    this.organizations.forEach(o => this.course['organizations'].push(o['id']))
 
     if (this.isValid()) {
       const checkCodeUrl = Routing.generate('api_get_course_by_code_without_id', {code: this.course['code'], id: this.source['id']})
@@ -218,13 +251,13 @@ export default class CourseEditionModalCtrl {
     }
   }
 
-  resetErrors () {
+  resetErrors() {
     for (const key in this.courseErrors) {
       this.courseErrors[key] = null
     }
   }
 
-  isValid () {
+  isValid() {
     let valid = true
 
     for (const key in this.courseErrors) {
@@ -237,11 +270,11 @@ export default class CourseEditionModalCtrl {
     return valid
   }
 
-  isUserpickerAvailable () {
+  isUserpickerAvailable() {
     return this.validatorsRoles.length > 0
   }
 
-  getSelectedUsersIds () {
+  getSelectedUsersIds() {
     let selectedUsersIds = []
     this.validators.forEach(v => {
       selectedUsersIds.push(v['id'])
@@ -250,7 +283,7 @@ export default class CourseEditionModalCtrl {
     return selectedUsersIds
   }
 
-  openUserPicker () {
+  openUserPicker() {
     let userPicker = new UserPicker()
     const options = {
       picker_name: 'validators-picker',
@@ -258,13 +291,14 @@ export default class CourseEditionModalCtrl {
       multiple: true,
       selected_users: this.getSelectedUsersIds(),
       forced_roles: this.validatorsRoles,
-      return_datas: true
+      return_datas: true,
+      filter_admin_orgas: true
     }
     userPicker.configure(options, this._userpickerCallback)
     userPicker.open()
   }
 
-  manageRolesChoices () {
+  manageRolesChoices() {
     if (this.workspace) {
       this.getWorkspaceRoles()
     } else if (this.model) {
@@ -274,7 +308,7 @@ export default class CourseEditionModalCtrl {
     }
   }
 
-  getWorkspaceRoles () {
+  getWorkspaceRoles() {
     if (this.workspace) {
       const url = Routing.generate('course_workspace_roles_translation_keys_retrieve', {workspace: this.workspace['id']})
       this.$http.get(url).then(d => {
@@ -294,7 +328,7 @@ export default class CourseEditionModalCtrl {
     }
   }
 
-  getModelRoles () {
+  getModelRoles() {
     if (this.model) {
       const url = Routing.generate('ws_model_roles_translation_keys_retrieve', {model: this.model['id']})
       this.$http.get(url).then(d => {
@@ -314,7 +348,7 @@ export default class CourseEditionModalCtrl {
     }
   }
 
-  refreshScope () {
+  refreshScope() {
     this.$rootScope.$apply()
   }
 }

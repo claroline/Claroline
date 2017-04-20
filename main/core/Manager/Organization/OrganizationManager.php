@@ -117,4 +117,9 @@ class OrganizationManager
     {
         return $this->logger;
     }
+
+    public function getOrganizationsByIds(array $ids)
+    {
+        return $this->repo->findOrganizationsByIds($ids);
+    }
 }

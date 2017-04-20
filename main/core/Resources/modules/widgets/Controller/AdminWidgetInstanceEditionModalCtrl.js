@@ -30,7 +30,7 @@ export default class AdminWidgetInstanceEditionModalCtrl {
 
   initializeContentConfigForm() {
     if (this.contentConfig === null) {
-      const route = Routing.generate('api_get_widget_instance_content_configuration_form', {widgetInstance: this.widgetInstanceId})
+      const route = Routing.generate('api_get_widget_instance_content_configuration_form', {widgetInstance: this.widgetInstanceId, admin: 'admin'})
       this.$http.get(route).then(d => {
         if (d['status'] === 200) {
           this.contentConfig = this.secureHtml(d['data'])

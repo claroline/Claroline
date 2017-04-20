@@ -11,12 +11,12 @@
 /*global Translator*/
 
 export default class CursusCreationModalCtrl {
-  constructor($http, $uibModalInstance, FormBuilderService, CourseService, title, cursusId, callback) {
+  constructor($http, $uibModalInstance, FormBuilderService, CourseService, title, parentId, callback) {
     this.$http = $http
     this.$uibModalInstance = $uibModalInstance
     this.FormBuilderService = FormBuilderService
     this.title = title
-    this.cursusId = cursusId
+    this.parentId = parentId
     this.callback = callback
     this.cursus = {
       title: null,
@@ -25,19 +25,23 @@ export default class CursusCreationModalCtrl {
       icon: '',
       workspace: null,
       blocking: false,
-      color: ''
+      color: '',
+      organizations: []
     }
     this.cursusErrors = {
       title: null,
-      code: null
+      code: null,
+      organizations: null
     }
     this.tinymceOptions = CourseService.getTinymceConfiguration()
     this.workspaces = []
     this.workspace = null
+    this.organizations = []
+    this.organizationsList = []
     this.initializeCursus()
   }
 
-  initializeCursus () {
+  initializeCursus() {
     const url = Routing.generate('api_get_workspaces')
     this.$http.get(url).then(d => {
       if (d['status'] === 200) {
@@ -45,9 +49,22 @@ export default class CursusCreationModalCtrl {
         datas.forEach(w => this.workspaces.push(w))
       }
     })
+
+    if (!this.parentId) {
+      const organizationsUrl = Routing.generate('claro_cursus_organizations_retrieve')
+      this.$http.get(organizationsUrl).then(d => {
+        if (d['status'] === 200) {
+          const datas = JSON.parse(d['data'])
+          datas.forEach(o => {
+            this.organizationsList.push(o)
+            this.organizations.push(o)
+          })
+        }
+      })
+    }
   }
 
-  submit () {
+  submit() {
     this.resetErrors()
 
     if (!this.cursus['title']) {
@@ -62,10 +79,21 @@ export default class CursusCreationModalCtrl {
       this.cursusErrors['code'] = null
     }
 
+    if (!this.parentId && this.organizations.length === 0) {
+      this.cursusErrors['organizations'] = Translator.trans('form_not_blank_error', {}, 'cursus')
+    } else {
+      this.cursusErrors['organizations'] = null
+    }
+
     if (this.workspace) {
       this.cursus['workspace'] = this.workspace['id']
     } else {
       this.cursus['workspace'] = null
+    }
+
+    if (!this.parentId) {
+      this.cursus['organizations'] = []
+      this.organizations.forEach(o => this.cursus['organizations'].push(o['id']))
     }
 
     if (this.isValid()) {
@@ -73,9 +101,9 @@ export default class CursusCreationModalCtrl {
       this.$http.get(checkCodeUrl).then(d => {
         if (d['status'] === 200) {
           if (d['data'] === 'null') {
-            const url = this.cursusId === null ?
+            const url = !this.parentId ?
               Routing.generate('api_post_cursus_creation') :
-              Routing.generate('api_post_cursus_child_creation', {parent: this.cursusId})
+              Routing.generate('api_post_cursus_child_creation', {parent: this.parentId})
             this.FormBuilderService.submit(url, {cursusDatas: this.cursus}).then(d => {
               this.callback(d['data'])
               this.$uibModalInstance.close()
@@ -88,13 +116,13 @@ export default class CursusCreationModalCtrl {
     }
   }
 
-  resetErrors () {
+  resetErrors() {
     for (const key in this.cursusErrors) {
       this.cursusErrors[key] = null
     }
   }
 
-  isValid () {
+  isValid() {
     let valid = true
 
     for (const key in this.cursusErrors) {

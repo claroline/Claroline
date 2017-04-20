@@ -69,12 +69,12 @@ export default class SessionEditionModalCtrl {
     this.initializeSession()
   }
 
-  _userpickerCallback (datas) {
+  _userpickerCallback(datas) {
     this.validators = datas === null ? [] : datas
     this.refreshScope()
   }
 
-  initializeSession () {
+  initializeSession() {
     const startDate = this.source['startDate'] ? this.source['startDate'].replace(/\+.*$/, '') : new Date()
     const endDate = this.source['endDate'] ? this.source['endDate'].replace(/\+.*$/, '') : new Date(startDate)
     this.CursusService.getRootCursus().then(d => {
@@ -116,14 +116,14 @@ export default class SessionEditionModalCtrl {
     this.eventRegistrationType = this.eventRegistrationTypeChoices[this.source['eventRegistrationType']]
   }
 
-  displayValidators () {
+  displayValidators() {
     let value = ''
     this.validators.forEach(u => value += `${u['firstName']} ${u['lastName']}, `)
 
     return value
   }
 
-  submit () {
+  submit() {
     this.resetErrors()
 
     if (!this.session['name']) {
@@ -190,13 +190,13 @@ export default class SessionEditionModalCtrl {
     }
   }
 
-  resetErrors () {
+  resetErrors() {
     for (const key in this.sessionErrors) {
       this.sessionErrors[key] = null
     }
   }
 
-  isValid () {
+  isValid() {
     let valid = true
 
     for (const key in this.sessionErrors) {
@@ -209,11 +209,11 @@ export default class SessionEditionModalCtrl {
     return valid
   }
 
-  isUserpickerAvailable () {
+  isUserpickerAvailable() {
     return this.validatorsRoles.length > 0
   }
 
-  openDatePicker (type) {
+  openDatePicker(type) {
     if (type === 'start') {
       this.dates['start']['open'] = true
     } else if (type === 'end') {
@@ -221,7 +221,7 @@ export default class SessionEditionModalCtrl {
     }
   }
 
-  getSelectedUsersIds () {
+  getSelectedUsersIds() {
     let selectedUsersIds = []
     this.validators.forEach(v => {
       selectedUsersIds.push(v['id'])
@@ -230,7 +230,7 @@ export default class SessionEditionModalCtrl {
     return selectedUsersIds
   }
 
-  openUserPicker () {
+  openUserPicker() {
     let userPicker = new UserPicker()
     const options = {
       picker_name: 'validators-picker',
@@ -238,13 +238,14 @@ export default class SessionEditionModalCtrl {
       multiple: true,
       selected_users: this.getSelectedUsersIds(),
       forced_roles: this.validatorsRoles,
-      return_datas: true
+      return_datas: true,
+      filter_admin_orgas: true
     }
     userPicker.configure(options, this._userpickerCallback)
     userPicker.open()
   }
 
-  refreshScope () {
+  refreshScope() {
     this.$rootScope.$apply()
   }
 }

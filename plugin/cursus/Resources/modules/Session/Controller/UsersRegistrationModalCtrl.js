@@ -26,7 +26,7 @@ export default class UsersRegistrationModalCtrl {
     this.loadUsers()
   }
 
-  loadUsers () {
+  loadUsers() {
     const route = Routing.generate('api_get_session_unregistered_users', {session: this.sessionId, userType: this.userType})
     this.$http.get(route).then(d => {
       if (d['status'] === 200) {
@@ -39,7 +39,7 @@ export default class UsersRegistrationModalCtrl {
     })
   }
 
-  registerUser (userId) {
+  registerUser(userId) {
     this.errorMessages = []
     const route = Routing.generate('api_post_session_user_registration', {session: this.sessionId, user: userId, userType: this.userType})
     this.$http.post(route).then(d => {

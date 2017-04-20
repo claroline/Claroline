@@ -38,7 +38,7 @@ angular.module('SessionModule', [
 .controller('GroupsRegistrationModalCtrl', GroupsRegistrationModalCtrl)
 .controller('SessionMessageModalCtrl', SessionMessageModalCtrl)
 .controller('SessionUsersExportModalCtrl', SessionUsersExportModalCtrl)
-.directive('datetimepickerNeutralTimezone', function() {
+.directive('datetimepickerNeutralTimezone', function () {
   return {
     restrict: 'A',
     priority: 1,

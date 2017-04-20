@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Event dispatched when a widget is configured.
@@ -22,15 +22,17 @@ class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface
 {
     private $isPopulated = false;
     private $instance;
+    private $admin;
 
     /**
      * Constructor.
      *
      * @param Workspace $workspace
      */
-    public function __construct(WidgetInstance $instance)
+    public function __construct(WidgetInstance $instance, $admin = false)
     {
         $this->instance = $instance;
+        $this->admin = $admin;
     }
 
     public function setContent($content)
@@ -52,5 +54,10 @@ class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface
     public function getInstance()
     {
         return $this->instance;
+    }
+
+    public function isAdmin()
+    {
+        return $this->admin;
     }
 }

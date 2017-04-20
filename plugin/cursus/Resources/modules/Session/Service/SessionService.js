@@ -19,7 +19,7 @@ import sessionMessageTemplate from '../Partial/session_message_modal.html'
 import sessionUsersExportTemplate from '../Partial/session_users_export_modal.html'
 
 export default class SessionService {
-  constructor ($http, $uibModal, ClarolineAPIService, CourseService) {
+  constructor($http, $uibModal, ClarolineAPIService, CourseService) {
     this.$http = $http
     this.$uibModal = $uibModal
     this.ClarolineAPIService = ClarolineAPIService
@@ -126,7 +126,7 @@ export default class SessionService {
     this.computeSessionsStatusByCourse(courseId)
   }
 
-  _resetDefaultSessionCallback (courseId, sessionId) {
+  _resetDefaultSessionCallback(courseId, sessionId) {
     this.courseSessions[courseId].forEach(s => {
       if (s['defaultSession'] && s['id'] !== sessionId) {
         s['defaultSession'] = false
@@ -134,7 +134,7 @@ export default class SessionService {
     })
   }
 
-  _removeLearnerCallback (data) {
+  _removeLearnerCallback(data) {
     const sessionUser = JSON.parse(data)
     const id = sessionUser['id']
     const sessionId = sessionUser['session']['id']
@@ -142,7 +142,7 @@ export default class SessionService {
     this.CourseService.removeFromArray(this.learners[sessionId], id)
   }
 
-  _removeTutorCallback (data) {
+  _removeTutorCallback(data) {
     const sessionUser = JSON.parse(data)
     const id = sessionUser['id']
     const sessionId = sessionUser['session']['id']
@@ -150,7 +150,7 @@ export default class SessionService {
     this.CourseService.removeFromArray(this.tutors[sessionId], id)
   }
 
-  _removeGroupCallback (data) {
+  _removeGroupCallback(data) {
     const sessionGroup = JSON.parse(data['group'])
     const sessionUsers = JSON.parse(data['users'])
     const sessionId = sessionGroup['session']['id']
@@ -161,13 +161,13 @@ export default class SessionService {
     })
   }
 
-  _removePendingLearnerCallback (data) {
+  _removePendingLearnerCallback(data) {
     const pendingLearner = JSON.parse(data)
     const sessionId = pendingLearner['session']['id']
     this.CourseService.removeFromArray(this.pendingLearners[sessionId], pendingLearner['id'])
   }
 
-  _acceptQueueCallback (data) {
+  _acceptQueueCallback(data) {
     const queue = JSON.parse(data['queue'])
     const sessionUsers = JSON.parse(data['sessionUsers'])
     const sessionId = queue['session']['id']
@@ -180,7 +180,7 @@ export default class SessionService {
     })
   }
 
-  _addLearnersCallback (data) {
+  _addLearnersCallback(data) {
     const sessionUsers = JSON.parse(data)
     sessionUsers.forEach(su => {
       const sessionId = su['session']['id']
@@ -190,7 +190,7 @@ export default class SessionService {
     })
   }
 
-  _addLearnersGroupsCallback (groupData, usersData) {
+  _addLearnersGroupsCallback(groupData, usersData) {
     const sessionGroup = JSON.parse(groupData)
     const sessionId = sessionGroup['session']['id']
     const generatedSG = this.generateGroupDatas(sessionGroup)
@@ -204,7 +204,7 @@ export default class SessionService {
     })
   }
 
-  _addTutorsCallback (data) {
+  _addTutorsCallback(data) {
     const sessionUsers = JSON.parse(data)
     sessionUsers.forEach(su => {
       const sessionId = su['session']['id']
@@ -214,31 +214,31 @@ export default class SessionService {
     })
   }
 
-  isInitialized () {
+  isInitialized() {
     return this.initialized
   }
 
-  getSession () {
+  getSession() {
     return this.session
   }
 
-  getSessions () {
+  getSessions() {
     return this.sessions
   }
 
-  getCourseSessions () {
+  getCourseSessions() {
     return this.courseSessions
   }
 
-  getOpenCourseSessions () {
+  getOpenCourseSessions() {
     return this.openCourseSessions
   }
 
-  getClosedCourseSessions () {
+  getClosedCourseSessions() {
     return this.closedCourseSessions
   }
 
-  getOpenCourseSessionsByCourse (courseId) {
+  getOpenCourseSessionsByCourse(courseId) {
     if (!this.openCourseSessions[courseId]) {
       this.openCourseSessions[courseId] = []
     }
@@ -246,7 +246,7 @@ export default class SessionService {
     return this.openCourseSessions[courseId]
   }
 
-  getClosedCourseSessionsByCourse (courseId) {
+  getClosedCourseSessionsByCourse(courseId) {
     if (!this.closedCourseSessions[courseId]) {
       this.closedCourseSessions[courseId] = []
     }
@@ -254,11 +254,11 @@ export default class SessionService {
     return this.closedCourseSessions[courseId]
   }
 
-  getGroupsBySession (sessionId) {
+  getGroupsBySession(sessionId) {
     return this.groups[sessionId] ? this.groups[sessionId] : []
   }
 
-  getLearnersBySession (sessionId) {
+  getLearnersBySession(sessionId) {
     if (!this.learners[sessionId]) {
       this.learners[sessionId] = []
     }
@@ -266,7 +266,7 @@ export default class SessionService {
     return this.learners[sessionId]
   }
 
-  getTutorsBySession (sessionId) {
+  getTutorsBySession(sessionId) {
     if (!this.tutors[sessionId]) {
       this.tutors[sessionId] = []
     }
@@ -274,7 +274,7 @@ export default class SessionService {
     return this.tutors[sessionId]
   }
 
-  getPendingLearnersBySession (sessionId) {
+  getPendingLearnersBySession(sessionId) {
     if (!this.pendingLearners[sessionId]) {
       this.pendingLearners[sessionId] = []
     }
@@ -282,14 +282,14 @@ export default class SessionService {
     return this.pendingLearners[sessionId]
   }
 
-  loadSessions (callback = null) {
+  loadSessions(callback = null) {
     if (!this.initialized) {
       this.sessions.splice(0, this.sessions.length)
-      const route = Routing.generate('api_get_sessions')
+      const route = Routing.generate('claroline_cursus_all_sessions_retrieve')
 
       return this.$http.get(route).then(d => {
         if (d['status'] === 200) {
-          angular.merge(this.sessions, d['data'])
+          angular.merge(this.sessions, JSON.parse(d['data']))
           this.computeSessionsStatus()
           this.generateCourseInfos()
           this.generateCourseSessions()
@@ -321,7 +321,7 @@ export default class SessionService {
     }
   }
 
-  createSession (course, callback = null) {
+  createSession(course, callback = null) {
     const addCallback = (callback !== null) ? callback : this._addSessionCallback
     this.$uibModal.open({
       template: sessionFormTemplate,
@@ -335,7 +335,7 @@ export default class SessionService {
     })
   }
 
-  editSession (session, callback = null) {
+  editSession(session, callback = null) {
     const updateCallback = callback !== null ? callback : this._updateSessionCallback
     this.$uibModal.open({
       template: sessionFormTemplate,
@@ -349,7 +349,7 @@ export default class SessionService {
     })
   }
 
-  deleteSession (sessionId, callback = null) {
+  deleteSession(sessionId, callback = null) {
     const deleteCallback = callback !== null ? callback : this._removeSessionCallback
     this.$uibModal.open({
       template: sessionDeleteTemplate,
@@ -362,7 +362,7 @@ export default class SessionService {
     })
   }
 
-  resetDefaultSession (courseId, sessionId) {
+  resetDefaultSession(courseId, sessionId) {
     const route = Routing.generate('api_put_session_default_reset', {course: courseId, session: sessionId})
     this.$http.put(route).then(d => {
       if (d['status'] === 200) {
@@ -371,7 +371,7 @@ export default class SessionService {
     })
   }
 
-  getSessionStatus (start, end, now = null) {
+  getSessionStatus(start, end, now = null) {
     let status = ''
     const startDate = new Date(start)
     const endDate = new Date(end)
@@ -388,7 +388,7 @@ export default class SessionService {
     return status
   }
 
-  generateCourseInfos () {
+  generateCourseInfos() {
     this.sessions.forEach(s => {
       const courseTitle = s['course']['title']
       const courseCode = s['course']['code']
@@ -397,7 +397,7 @@ export default class SessionService {
     })
   }
 
-  generateCourseSessions () {
+  generateCourseSessions() {
     let coursesDone = {}
     this.sessions.forEach(s => {
       const courseId = s['course']['id']
@@ -414,7 +414,7 @@ export default class SessionService {
     })
   }
 
-  computeSessionsStatus () {
+  computeSessionsStatus() {
     const now = new Date()
 
     this.sessions.forEach(s => {
@@ -422,7 +422,7 @@ export default class SessionService {
     })
   }
 
-  computeSessionsStatusByCourse (courseId) {
+  computeSessionsStatusByCourse(courseId) {
     const now = new Date()
 
     if (this.openCourseSessions[courseId]) {
@@ -450,7 +450,7 @@ export default class SessionService {
     }
   }
 
-  getWorkspaceFromSessionId (sessionId) {
+  getWorkspaceFromSessionId(sessionId) {
     const route = Routing.generate('api_get_workspace_id_from_session', {session: sessionId})
 
     return this.$http.get(route).then(d => {
@@ -460,7 +460,7 @@ export default class SessionService {
     })
   }
 
-  getSessionById (sessionId) {
+  getSessionById(sessionId) {
     const index = this.sessions.findIndex(s => s['id'] === sessionId)
 
     if (index > -1) {
@@ -486,7 +486,7 @@ export default class SessionService {
     }
   }
 
-  generateUserDatas (datas) {
+  generateUserDatas(datas) {
     datas['userId'] = datas['user']['id']
     datas['username'] = datas['user']['username']
     datas['firstName'] = datas['user']['firstName']
@@ -496,14 +496,14 @@ export default class SessionService {
     return datas
   }
 
-  generateGroupDatas (datas) {
+  generateGroupDatas(datas) {
     datas['groupId'] = datas['group']['id']
     datas['groupName'] = datas['group']['name']
 
     return datas
   }
 
-  loadGroupsBySession (sessionId, callback = null) {
+  loadGroupsBySession(sessionId, callback = null) {
     if (this.groups[sessionId] === undefined) {
       const route = Routing.generate('api_get_session_groups_by_session', {session: sessionId})
       this.$http.get(route).then(d => {
@@ -522,7 +522,7 @@ export default class SessionService {
     }
   }
 
-  loadUsersBySession (sessionId, callback = null) {
+  loadUsersBySession(sessionId, callback = null) {
     if (this.users[sessionId] === undefined) {
       const route = Routing.generate('api_get_session_users_by_session', {session: sessionId})
       this.$http.get(route).then(d => {
@@ -542,7 +542,7 @@ export default class SessionService {
     }
   }
 
-  loadPendingUsersBySession (sessionId, callback = null) {
+  loadPendingUsersBySession(sessionId, callback = null) {
     if (!this.pendingInitialized[sessionId]) {
       const route = Routing.generate('api_get_session_pending_users_by_session', {session: sessionId})
       this.$http.get(route).then(d => {
@@ -566,7 +566,7 @@ export default class SessionService {
     }
   }
 
-  sortSessionUsersbyType (sessionId) {
+  sortSessionUsersbyType(sessionId) {
     if (this.learners[sessionId]) {
       this.learners[sessionId].splice(0, this.learners[sessionId].length)
     } else {
@@ -587,7 +587,7 @@ export default class SessionService {
     })
   }
 
-  deleteTutor (sessionUserId, callback = null) {
+  deleteTutor(sessionUserId, callback = null) {
     const url = Routing.generate('api_delete_session_user', {sessionUser: sessionUserId})
     const deleteCallback = (callback !== null) ? callback : this._removeTutorCallback
 
@@ -599,7 +599,7 @@ export default class SessionService {
     )
   }
 
-  deleteLearner (sessionUserId, callback = null) {
+  deleteLearner(sessionUserId, callback = null) {
     const url = Routing.generate('api_delete_session_user', {sessionUser: sessionUserId})
     const deleteCallback = (callback !== null) ? callback : this._removeLearnerCallback
 
@@ -611,7 +611,7 @@ export default class SessionService {
     )
   }
 
-  deleteGroup (sessionGroupId, callback = null) {
+  deleteGroup(sessionGroupId, callback = null) {
     const url = Routing.generate('api_delete_session_group', {sessionGroup: sessionGroupId})
     const deleteCallback = (callback !== null) ? callback : this._removeGroupCallback
 
@@ -623,7 +623,7 @@ export default class SessionService {
     )
   }
 
-  sendConfirmationMail (sessionId, userId) {
+  sendConfirmationMail(sessionId, userId) {
     const url = Routing.generate('claro_cursus_course_session_user_confirmation_mail_send', {session: sessionId, user: userId})
 
     this.ClarolineAPIService.confirm(
@@ -634,7 +634,7 @@ export default class SessionService {
     )
   }
 
-  acceptQueue (queueId, callback = null) {
+  acceptQueue(queueId, callback = null) {
     const url = Routing.generate('api_accept_session_registration_queue', {queue: queueId})
     const acceptCallback = (callback !== null) ? callback : this._acceptQueueCallback
 
@@ -646,7 +646,7 @@ export default class SessionService {
     )
   }
 
-  declineQueue (queueId, callback = null) {
+  declineQueue(queueId, callback = null) {
     const url = Routing.generate('api_delete_session_registration_queue', {queue: queueId})
     const deleteCallback = (callback !== null) ? callback : this._removePendingLearnerCallback
 
@@ -658,7 +658,7 @@ export default class SessionService {
     )
   }
 
-  registerLearners (sessionId, callback = null) {
+  registerLearners(sessionId, callback = null) {
     const addCallback = (callback !== null) ? callback : this._addLearnersCallback
     this.$uibModal.open({
       template: learnersRegistrationTemplate,
@@ -672,7 +672,7 @@ export default class SessionService {
     })
   }
 
-  registerLearnersGroups (sessionId, callback = null) {
+  registerLearnersGroups(sessionId, callback = null) {
     const addCallback = (callback !== null) ? callback : this._addLearnersGroupsCallback
     this.$uibModal.open({
       template: learnersGroupsRegistrationTemplate,
@@ -686,7 +686,7 @@ export default class SessionService {
     })
   }
 
-  registerTutors (sessionId, callback = null) {
+  registerTutors(sessionId, callback = null) {
     const addCallback = (callback !== null) ? callback : this._addTutorsCallback
     this.$uibModal.open({
       template: tutorsRegistrationTemplate,
@@ -700,7 +700,7 @@ export default class SessionService {
     })
   }
 
-  sendMessageToSession (session) {
+  sendMessageToSession(session) {
     this.$uibModal.open({
       template: sessionMessageTemplate,
       controller: 'SessionMessageModalCtrl',
@@ -711,7 +711,7 @@ export default class SessionService {
     })
   }
 
-  exportUsersForm (sessionId) {
+  exportUsersForm(sessionId) {
     this.$uibModal.open({
       template: sessionUsersExportTemplate,
       controller: 'SessionUsersExportModalCtrl',
@@ -722,7 +722,7 @@ export default class SessionService {
     })
   }
 
-  exportUsers (sessionId, type) {
+  exportUsers(sessionId, type) {
     const url = Routing.generate('api_get_session_users_csv_export', {session: sessionId, type: type})
     window.location.href = url
   }

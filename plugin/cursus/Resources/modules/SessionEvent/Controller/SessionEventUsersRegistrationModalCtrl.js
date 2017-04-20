@@ -26,7 +26,7 @@ export default class SessionEventUsersRegistrationModalCtrl {
     this.loadUsers()
   }
 
-  loadUsers () {
+  loadUsers() {
     const route = Routing.generate('api_get_session_event_unregistered_users', {sessionEvent: this.sessionEventId})
     this.$http.get(route).then(d => {
       if (d['status'] === 200) {
@@ -39,7 +39,7 @@ export default class SessionEventUsersRegistrationModalCtrl {
     })
   }
 
-  registerUser (userId) {
+  registerUser(userId) {
     this.errorMessages = []
     const route = Routing.generate('api_post_session_event_user_registration', {sessionEvent: this.sessionEventId, user: userId})
     this.$http.post(route).then(d => {

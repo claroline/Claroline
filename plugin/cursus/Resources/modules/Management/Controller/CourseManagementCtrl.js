@@ -43,14 +43,14 @@ export default class CourseManagementCtrl {
     this._removeSessionCallback = this._removeSessionCallback.bind(this)
   }
 
-  _updateCourseCallback (data) {
+  _updateCourseCallback(data) {
     this.CourseService._updateCourseCallback(data)
     const courseJson = JSON.parse(data)
     this.course = courseJson
     this.breadCrumbLabel = courseJson['title']
   }
 
-  _addSessionCallback (data) {
+  _addSessionCallback(data) {
     this.SessionService._addSessionCallback(data)
     this.refreshSessionsTables()
   }
@@ -84,23 +84,23 @@ export default class CourseManagementCtrl {
     this.SessionService.loadSessionsByCourse(this.courseId)
   }
 
-  editCourse () {
+  editCourse() {
     this.CourseService.editCourse(this.course, this._updateCourseCallback)
   }
 
-  createSession () {
+  createSession() {
     this.SessionService.createSession(this.course, this._addSessionCallback)
   }
 
-  editSession (session) {
+  editSession(session) {
     this.SessionService.editSession(session, this._updateSessionCallback)
   }
 
-  deleteSession (sessionId) {
+  deleteSession(sessionId) {
     this.SessionService.deleteSession(sessionId, this._removeSessionCallback)
   }
 
-  openWorkspace (sessionId) {
+  openWorkspace(sessionId) {
     this.SessionService.getWorkspaceFromSessionId(sessionId).then(d => {
       if (d) {
         window.location = Routing.generate('claro_workspace_open', {workspaceId: d})
@@ -108,20 +108,20 @@ export default class CourseManagementCtrl {
     })
   }
 
-  refreshSessionsTables () {
+  refreshSessionsTables() {
     this.tableParams['openSessions'].reload()
     this.tableParams['closedSessions'].reload()
   }
 
-  sendMessageToSessionLearners (session) {
+  sendMessageToSessionLearners(session) {
     this.SessionService.sendMessageToSession(session)
   }
 
-  inviteLearners (session) {
+  inviteLearners(session) {
     this.DocumentModelService.displayDocumentSelection(session, 0)
   }
 
-  generateCertificates (session) {
+  generateCertificates(session) {
     this.DocumentModelService.displayDocumentSelection(session, 2)
   }
 }

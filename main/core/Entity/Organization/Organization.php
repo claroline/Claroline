@@ -23,7 +23,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Organization\OrganizationRepository")
  * @ORM\Table(name="claro__organization")
  * @DoctrineAssert\UniqueEntity("name")
  * @Gedmo\Tree(type="nested")
@@ -34,7 +34,7 @@ class Organization
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})
+     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_organization_tree", "api_organization_list"})
      */
     protected $id;
 
@@ -47,7 +47,7 @@ class Organization
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})
+     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_organization_tree", "api_organization_list"})
      */
     protected $name;
 
@@ -168,7 +168,7 @@ class Organization
 
     /**
      * @ORM\Column(name="is_default", type="boolean")
-     * @Groups({"api_user", "api_organization_tree", "api_organization_list"})
+     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_organization_tree", "api_organization_list"})
      */
     protected $default = false;
 

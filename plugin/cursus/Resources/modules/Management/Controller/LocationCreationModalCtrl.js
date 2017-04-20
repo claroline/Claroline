@@ -36,7 +36,7 @@ export default class LocationCreationModalCtrl {
     }
   }
 
-  submit () {
+  submit() {
     this.resetErrors()
 
     if (!this.location['name']) {
@@ -86,13 +86,13 @@ export default class LocationCreationModalCtrl {
     }
   }
 
-  resetErrors () {
+  resetErrors() {
     for (const key in this.locationErrors) {
       this.locationErrors[key] = null
     }
   }
 
-  isValid () {
+  isValid() {
     let valid = true
 
     for (const key in this.locationErrors) {

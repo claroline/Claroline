@@ -75,55 +75,55 @@ export default class SessionManagementCtrl {
     this.initialize()
   }
 
-  _updateSessionCallback (data) {
+  _updateSessionCallback(data) {
     this.SessionService._updateSessionCallback(data)
     const sessionJson = JSON.parse(data)
     this.session = sessionJson
     this.breadCrumbLabel = sessionJson['name']
   }
 
-  _addSessionEventCallback (data) {
+  _addSessionEventCallback(data) {
     this.SessionEventService._addSessionEventCallback(data)
     this.refreshEventsTables()
   }
 
-  _addMultipleSessionEventsCallback (data) {
+  _addMultipleSessionEventsCallback(data) {
     this.SessionEventService._addMultipleSessionEventsCallback(data)
     this.refreshEventsTables()
   }
 
-  _updateSessionEventCallback (data) {
+  _updateSessionEventCallback(data) {
     this.SessionEventService._updateSessionEventCallback(data)
     this.refreshEventsTables()
   }
 
-  _removeSessionEventCallback (data) {
+  _removeSessionEventCallback(data) {
     this.SessionEventService._removeSessionEventCallback(data)
     this.refreshEventsTables()
   }
 
-  _removeLearnerCallback (data) {
+  _removeLearnerCallback(data) {
     this.SessionService._removeLearnerCallback(data)
     this.tableParams['learners'].reload()
   }
 
-  _removeTutorCallback (data) {
+  _removeTutorCallback(data) {
     this.SessionService._removeTutorCallback(data)
     this.tableParams['tutors'].reload()
   }
 
-  _removeGroupCallback (data) {
+  _removeGroupCallback(data) {
     this.SessionService._removeGroupCallback(data)
     this.tableParams['groups'].reload()
     this.tableParams['learners'].reload()
   }
 
-  _removePendingLearnerCallback (data) {
+  _removePendingLearnerCallback(data) {
     this.SessionService._removePendingLearnerCallback(data)
     this.tableParams['pendingLearners'].reload()
   }
 
-  _initializeGroupsCallback () {
+  _initializeGroupsCallback() {
     this.groups = this.SessionService.getGroupsBySession(this.sessionId)
 
     this.tableParams['groups'] = new this.NgTableParams(
@@ -132,24 +132,24 @@ export default class SessionManagementCtrl {
     )
   }
 
-  _acceptQueueCallback (data) {
+  _acceptQueueCallback(data) {
     this.SessionService._acceptQueueCallback(data)
     this.tableParams['learners'].reload()
     this.tableParams['pendingLearners'].reload()
   }
 
-  _addLearnersCallback (data) {
+  _addLearnersCallback(data) {
     this.SessionService._addLearnersCallback(data)
     this.tableParams['learners'].reload()
   }
 
-  _addLearnersGroupsCallback (groupData, usersData) {
+  _addLearnersGroupsCallback(groupData, usersData) {
     this.SessionService._addLearnersGroupsCallback(groupData, usersData)
     this.tableParams['groups'].reload()
     this.tableParams['learners'].reload()
   }
 
-  _addTutorsCallback (data) {
+  _addTutorsCallback(data) {
     this.SessionService._addTutorsCallback(data)
     this.tableParams['tutors'].reload()
   }
@@ -176,98 +176,98 @@ export default class SessionManagementCtrl {
     this.SessionEventService.loadEventsBySession(this.sessionId)
   }
 
-  createSessionEvent () {
+  createSessionEvent() {
     this.SessionEventService.createSessionEvent(this.session, this._addSessionEventCallback)
   }
 
-  editSession () {
+  editSession() {
     this.SessionService.editSession(this.session, this._updateSessionCallback)
   }
 
-  editEvent (event) {
+  editEvent(event) {
     this.SessionEventService.editSessionEvent(event, this._updateSessionEventCallback)
   }
 
-  deleteEvent (eventId) {
+  deleteEvent(eventId) {
     this.SessionEventService.deleteSessionEvent(eventId, this._removeSessionEventCallback)
   }
 
-  repeatEvent (sessionEvent) {
+  repeatEvent(sessionEvent) {
     this.SessionEventService.repeatEvent(sessionEvent, this._addMultipleSessionEventsCallback)
   }
 
-  refreshEventsTables () {
+  refreshEventsTables() {
     this.tableParams['openEvents'].reload()
     this.tableParams['closedEvents'].reload()
   }
 
-  deleteTutor (sessionUserId) {
+  deleteTutor(sessionUserId) {
     this.SessionService.deleteTutor(sessionUserId, this._removeTutorCallback)
   }
 
-  deleteLearner (sessionUserId) {
+  deleteLearner(sessionUserId) {
     this.SessionService.deleteLearner(sessionUserId, this._removeLearnerCallback)
   }
 
-  deleteGroup (sessionGroupId) {
+  deleteGroup(sessionGroupId) {
     this.SessionService.deleteGroup(sessionGroupId, this._removeGroupCallback)
   }
 
-  sendConfirmationMail (userId) {
+  sendConfirmationMail(userId) {
     this.SessionService.sendConfirmationMail(this.sessionId, userId)
   }
 
-  acceptQueue (queueId) {
+  acceptQueue(queueId) {
     this.SessionService.acceptQueue(queueId, this._acceptQueueCallback)
   }
 
-  declineQueue (queueId) {
+  declineQueue(queueId) {
     this.SessionService.declineQueue(queueId, this._removePendingLearnerCallback)
   }
 
-  registerLearners ($event) {
+  registerLearners($event) {
     $event.preventDefault()
     $event.stopPropagation()
     this.SessionService.registerLearners(this.sessionId, this._addLearnersCallback)
   }
 
-  registerLearnersGroups ($event) {
+  registerLearnersGroups($event) {
     $event.preventDefault()
     $event.stopPropagation()
     this.SessionService.registerLearnersGroups(this.sessionId, this._addLearnersGroupsCallback)
   }
 
-  registerTutors ($event) {
+  registerTutors($event) {
     $event.preventDefault()
     $event.stopPropagation()
     this.SessionService.registerTutors(this.sessionId, this._addTutorsCallback)
   }
 
-  manageEventComments (sessionEvent) {
+  manageEventComments(sessionEvent) {
     this.SessionEventService.manageComments(sessionEvent)
   }
 
-  inviteLearners () {
+  inviteLearners() {
     this.DocumentModelService.displayDocumentSelection(this.session, 0)
   }
 
-  generateCertificates () {
+  generateCertificates() {
     this.DocumentModelService.displayDocumentSelection(this.session, 2)
   }
 
-  generateEventCertificates (sessionEvent) {
+  generateEventCertificates(sessionEvent) {
     this.DocumentModelService.displayDocumentSelection(sessionEvent, 3)
   }
 
-  inviteLearnersToEvent (sessionEvent) {
+  inviteLearnersToEvent(sessionEvent) {
     this.DocumentModelService.displayDocumentSelection(sessionEvent, 1)
   }
 
-  sendMessageToSessionLearners () {
+  sendMessageToSessionLearners() {
     this.SessionService.sendMessageToSession(this.session)
   }
 
-  exportUsers () {
+  exportUsers() {
     this.SessionService.exportUsersForm(this.sessionId)
   }
 }

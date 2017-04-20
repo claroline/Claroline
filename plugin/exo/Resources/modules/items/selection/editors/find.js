@@ -38,6 +38,7 @@ export function reduce(item = {}, action) {
         _selectionPopover: true,
         _selectionId: id,
         solutions,
+        tries: item.tries + 1,
         text,
         _text: utils.makeTextHtml(text, solutions)
       })
@@ -53,7 +54,8 @@ export function reduce(item = {}, action) {
         item,
         {
           solutions,
-          _text: utils.makeTextHtml(item.text, solutions, 'editor')
+          _text: utils.makeTextHtml(item.text, solutions, 'editor'),
+          tries: item.tries - 1
         }
       )
 

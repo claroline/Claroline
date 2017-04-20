@@ -108,6 +108,7 @@ class CursusWidgetListener
         $params = [];
         $params['_controller'] = 'ClarolineCursusBundle:Cursus:coursesRegistrationWidgetConfigureForm';
         $params['widgetInstance'] = $widgetInstance->getId();
+        $params['admin'] = $event->isAdmin() ? 'admin' : '';
         $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());

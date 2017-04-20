@@ -29,6 +29,30 @@ class CourseSessionRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
+    public function findAllSessionsByOrganizations(array $organizations, $orderedBy = 'startDate', $order = 'ASC')
+    {
+        $dql = "
+            SELECT cs
+            FROM Claroline\CursusBundle\Entity\CourseSession cs
+            JOIN cs.course c
+            JOIN c.organizations o
+            WHERE o IN (:organizations)
+            OR EXISTS (
+                SELECT cu
+                FROM Claroline\CursusBundle\Entity\Cursus cu
+                JOIN cu.course cuc
+                JOIN cu.organizations cuo
+                WHERE cuc = c
+                AND cuo IN (:organizations)
+            )
+            ORDER BY cs.{$orderedBy} {$order}
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('organizations', $organizations);
+
+        return $query->getResult();
+    }
+
     public function findSessionsByCourse(
         Course $course,
         $orderedBy = 'creationDate',
@@ -64,38 +88,6 @@ class CourseSessionRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('course', $course);
         $query->setParameter('status', $status);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function findUnclosedSessions($orderedBy = 'startDate', $order = 'ASC', $executeQuery = true)
-    {
-        $dql = "
-            SELECT cs
-            FROM Claroline\CursusBundle\Entity\CourseSession cs
-            WHERE cs.endDate > :now
-            ORDER BY cs.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $now = new \DateTime();
-        $query->setParameter('now', $now);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function findUnclosedSessionsByCourse(Course $course, $orderedBy = 'startDate', $order = 'ASC', $executeQuery = true)
-    {
-        $dql = "
-            SELECT cs
-            FROM Claroline\CursusBundle\Entity\CourseSession cs
-            WHERE cs.course = :course
-            AND cs.endDate > :now
-            ORDER BY cs.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('course', $course);
-        $now = new \DateTime();
-        $query->setParameter('now', $now);
 
         return $executeQuery ? $query->getResult() : $query;
     }

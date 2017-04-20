@@ -26,7 +26,7 @@ export default class GroupsRegistrationModalCtrl {
     this.loadGroups()
   }
 
-  loadGroups () {
+  loadGroups() {
     const route = Routing.generate('api_get_session_unregistered_groups', {session: this.sessionId, groupType: this.groupType})
     this.$http.get(route).then(d => {
       if (d['status'] === 200) {
@@ -39,7 +39,7 @@ export default class GroupsRegistrationModalCtrl {
     })
   }
 
-  registerGroup (groupId) {
+  registerGroup(groupId) {
     this.errorMessages = []
     const route = Routing.generate('api_post_session_group_registration', {session: this.sessionId, group: groupId, groupType: this.groupType})
     this.$http.post(route).then(d => {

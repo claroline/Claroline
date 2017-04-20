@@ -17,10 +17,8 @@ use Doctrine\ORM\EntityRepository;
 
 class CursusUserRepository extends EntityRepository
 {
-    public function findCursusUsersByCursus(
-        Cursus $cursus,
-        $executeQuery = true
-    ) {
+    public function findCursusUsersByCursus(Cursus $cursus, $executeQuery = true)
+    {
         $dql = '
             SELECT cu
             FROM Claroline\CursusBundle\Entity\CursusUser cu
@@ -33,11 +31,8 @@ class CursusUserRepository extends EntityRepository
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findOneCursusUserByCursusAndUser(
-        Cursus $cursus,
-        User $user,
-        $executeQuery = true
-    ) {
+    public function findOneCursusUserByCursusAndUser(Cursus $cursus, User $user, $executeQuery = true)
+    {
         $dql = '
             SELECT cu
             FROM Claroline\CursusBundle\Entity\CursusUser cu
@@ -51,10 +46,8 @@ class CursusUserRepository extends EntityRepository
         return $executeQuery ? $query->getOneOrNullResult() : $query;
     }
 
-    public function findCursusUsersFromCursusAndUsers(
-        array $cursus,
-        array $users
-    ) {
+    public function findCursusUsersFromCursusAndUsers(array $cursus, array $users)
+    {
         $dql = '
             SELECT cu
             FROM Claroline\CursusBundle\Entity\CursusUser cu
@@ -68,11 +61,8 @@ class CursusUserRepository extends EntityRepository
         return $query->getResult();
     }
 
-    public function findCursusUsersOfCursusChildren(
-        Cursus $cursus,
-        User $user,
-        $executeQuery = true
-    ) {
+    public function findCursusUsersOfCursusChildren(Cursus $cursus, User $user, $executeQuery = true)
+    {
         $dql = '
             SELECT cu
             FROM Claroline\CursusBundle\Entity\CursusUser cu
@@ -131,63 +121,6 @@ class CursusUserRepository extends EntityRepository
                 OR UPPER(u.username) LIKE :search
             )
             AND NOT EXISTS (
-                SELECT cu
-                FROM Claroline\CursusBundle\Entity\CursusUser cu
-                WHERE cu.cursus = :cursus
-                AND cu.user = u
-            )
-            ORDER BY u.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('cursus', $cursus);
-        $upperSearch = strtoupper($search);
-        $query->setParameter('search', "%{$upperSearch}%");
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function findUsersByCursus(
-        Cursus $cursus,
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        $dql = "
-            SELECT DISTINCT u
-            FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isRemoved = false
-            AND EXISTS (
-                SELECT cu
-                FROM Claroline\CursusBundle\Entity\CursusUser cu
-                WHERE cu.cursus = :cursus
-                AND cu.user = u
-            )
-            ORDER BY u.{$orderedBy} {$order}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('cursus', $cursus);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function findSearchedUsersByCursus(
-        Cursus $cursus,
-        $search = '',
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        $dql = "
-            SELECT DISTINCT u
-            FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isRemoved = false
-            AND
-            (
-                UPPER(u.firstName) LIKE :search
-                OR UPPER(u.lastName) LIKE :search
-                OR UPPER(u.username) LIKE :search
-            )
-            AND EXISTS (
                 SELECT cu
                 FROM Claroline\CursusBundle\Entity\CursusUser cu
                 WHERE cu.cursus = :cursus

@@ -12,13 +12,13 @@
 import documentSelectionTemplate from '../Partial/document_model_selection_modal.html'
 
 export default class DocumentModelService {
-  constructor ($http, $uibModal, ClarolineAPIService) {
+  constructor($http, $uibModal, ClarolineAPIService) {
     this.$http = $http
     this.$uibModal = $uibModal
     this.ClarolineAPIService = ClarolineAPIService
   }
 
-  getAllDocumentModels () {
+  getAllDocumentModels() {
     const url = Routing.generate('api_get_cursus_document_models')
 
     return this.$http.get(url).then(d => {
@@ -28,7 +28,7 @@ export default class DocumentModelService {
     })
   }
 
-  getDocumentModelById (modelId) {
+  getDocumentModelById(modelId) {
     const url = Routing.generate('api_get_cursus_document_model', {documentModel: modelId})
 
     return this.$http.get(url).then(d => {
@@ -38,7 +38,7 @@ export default class DocumentModelService {
     })
   }
 
-  getDocumentModelsByType (type) {
+  getDocumentModelsByType(type) {
     const url = Routing.generate('api_get_cursus_document_models_by_type', {type: type})
 
     return this.$http.get(url).then(d => {
@@ -48,7 +48,7 @@ export default class DocumentModelService {
     })
   }
 
-  getPopulatedDocumentModelsByType (type, sourceId) {
+  getPopulatedDocumentModelsByType(type, sourceId) {
     const url = Routing.generate('api_get_cursus_populated_document_models_by_type', {type: type, sourceId: sourceId})
 
     return this.$http.get(url).then(d => {
@@ -58,7 +58,7 @@ export default class DocumentModelService {
     })
   }
 
-  getDocumentTypeName (documentType) {
+  getDocumentTypeName(documentType) {
     let name = ''
 
     switch (documentType) {
@@ -81,7 +81,7 @@ export default class DocumentModelService {
     return name
   }
 
-  deleteDocumentModel (documentModelId, callback = null) {
+  deleteDocumentModel(documentModelId, callback = null) {
     const url = Routing.generate('api_delete_cursus_document_model', {documentModel: documentModelId})
     this.ClarolineAPIService.confirm(
       {url, method: 'DELETE'},
@@ -91,7 +91,7 @@ export default class DocumentModelService {
     )
   }
 
-  displayDocumentSelection (datas, documentType, callback = null) {
+  displayDocumentSelection(datas, documentType, callback = null) {
     this.$uibModal.open({
       template: documentSelectionTemplate,
       controller: 'DocumentModelSelectionModalCtrl',

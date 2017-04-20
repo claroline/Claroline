@@ -38,7 +38,7 @@ export default class SessionEventManagementCtrl {
     this.initialize()
   }
 
-  _updateSessionEventCallback (data) {
+  _updateSessionEventCallback(data) {
     this.SessionEventService._updateSessionEventCallback(data)
     const sessionEventJson = JSON.parse(data)
     this.sessionEvent = sessionEventJson
@@ -46,17 +46,17 @@ export default class SessionEventManagementCtrl {
     this.SessionEventService.forceLoadUsersBySessionEvent(this.sessionEventId, this._updateTableParamsCallback)
   }
 
-  _addUsersCallback (data) {
+  _addUsersCallback(data) {
     this.SessionEventService._addUsersCallback(data)
     this.tableParams.reload()
   }
 
-  _removeUserCallback (data) {
+  _removeUserCallback(data) {
     this.SessionEventService._removeUserCallback(data)
     this.tableParams.reload()
   }
 
-  _updateTableParamsCallback () {
+  _updateTableParamsCallback() {
     this.tableParams.reload()
   }
 
@@ -84,31 +84,31 @@ export default class SessionEventManagementCtrl {
     this.SessionEventService.loadUsersBySessionEvent(this.sessionEventId)
   }
 
-  editSessionEvent () {
+  editSessionEvent() {
     this.SessionEventService.editSessionEvent(this.sessionEvent, this._updateSessionEventCallback)
   }
 
-  registerParticipants () {
+  registerParticipants() {
     this.SessionEventService.registerParticipants(this.sessionId, this.sessionEventId, this._addUsersCallback)
   }
 
-  deleteParticipant (sessionEventUserId) {
+  deleteParticipant(sessionEventUserId) {
     this.SessionEventService.deleteParticipant(sessionEventUserId, this._removeUserCallback)
   }
 
-  manageEventComments () {
+  manageEventComments() {
     this.SessionEventService.manageComments(this.sessionEvent)
   }
 
-  inviteLearnersToEvent () {
+  inviteLearnersToEvent() {
     this.DocumentModelService.displayDocumentSelection(this.sessionEvent, 1)
   }
 
-  generateEventCertificates () {
+  generateEventCertificates() {
     this.DocumentModelService.displayDocumentSelection(this.sessionEvent, 3)
   }
 
-  exportUsers () {
+  exportUsers() {
     this.SessionEventService.exportUsersForm(this.sessionEventId)
   }
 }

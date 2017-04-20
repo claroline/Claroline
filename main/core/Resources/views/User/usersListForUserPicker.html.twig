@@ -1,4 +1,4 @@
-{% macro renderPager(pager, search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName) %}
+{% macro renderPager(pager, search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas) %}
     {% if search is empty %}
         {{
             pagerfanta(
@@ -20,7 +20,8 @@
                         'showCode': showCode,
                         'showGroups': showGroups,
                         'showPlatformRoles': showPlatformRoles,
-                        'attachName': attachName
+                        'attachName': attachName,
+                        'filterAdminOrgas': filterAdminOrgas
                     }
                 }
             )
@@ -47,7 +48,8 @@
                         'showCode': showCode,
                         'showGroups': showGroups,
                         'showPlatformRoles': showPlatformRoles,
-                        'attachName': attachName
+                        'attachName': attachName,
+                        'filterAdminOrgas': filterAdminOrgas
                     }
                 }
             )
@@ -55,7 +57,7 @@
     {% endif %}
 {% endmacro %}
 
-{% macro sortUrl(search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName) %}
+{% macro sortUrl(search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas) %}
     {% if order == 'ASC' %}
         {% set newOrder = 'DESC' %}
     {% else %}
@@ -79,7 +81,8 @@
                     'showCode': showCode,
                     'showGroups': showGroups,
                     'showPlatformRoles': showPlatformRoles,
-                    'attachName': attachName
+                    'attachName': attachName,
+                    'filterAdminOrgas': filterAdminOrgas
                 }
             )
         }}
@@ -101,7 +104,8 @@
                     'showCode': showCode,
                     'showGroups': showGroups,
                     'showPlatformRoles': showPlatformRoles,
-                    'attachName': attachName
+                    'attachName': attachName,
+                    'filterAdminOrgas': filterAdminOrgas
                 }
             ) 
         }}
@@ -146,7 +150,7 @@
 </div>
 
 {% if users.getNbPages() > 1 %}
-    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName) }}
+    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas) }}
 {% endif %}
 <div class="table-responsive">
     <table class="table">
@@ -160,7 +164,7 @@
                 
                 {% if showId == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'id', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'id', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas)|trim }}">
                             {{ 'id'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -168,7 +172,7 @@
                 
                 {% if showPicture == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'picture', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'picture', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas)|trim }}">
                             {{ 'picture'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -176,18 +180,18 @@
                     
                 {% if attachName == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas)|trim }}">
                             {{ 'name'|trans({}, 'platform') }}
                         </a>
                     </th>
                 {% else %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'firstName', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'firstName', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas)|trim }}">
                             {{ 'firstName'|trans({}, 'platform') }}
                         </a>
                     </th>
                     <th>
-                        <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'lastName', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas)|trim }}">
                             {{ 'lastName'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -195,7 +199,7 @@
                 
                 {% if showUsername == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'username', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'username', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas)|trim }}">
                             {{ 'username'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -203,7 +207,7 @@
                 
                 {% if showMail == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'mail', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'mail', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas)|trim }}">
                             {{ 'mail'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -211,7 +215,7 @@
                 
                 {% if showCode == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'administrativeCode', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName)|trim }}">
+                        <a href="{{ sortUrl(search, max, 'administrativeCode', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas)|trim }}">
                             {{ 'code'|trans({}, 'platform') }}
                         </a>
                     </th>
@@ -405,7 +409,7 @@
 </div>
 
 {% if users.getNbPages() > 1 %}
-    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName) }}
+    {{ renderPager(users, search, max, orderedBy, order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas) }}
 {% endif %}
 
 <div id="user-picker-datas-box"

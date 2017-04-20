@@ -39,7 +39,7 @@ export default class DocumentModelEditionCtrl {
     this.initializeDocumentModel()
   }
 
-  initializeDocumentModel () {
+  initializeDocumentModel() {
     this.DocumentModelService.getDocumentModelById(this.modelId).then(d => {
       this.source['id'] = d['id']
       this.source['name'] = d['name']
@@ -54,7 +54,7 @@ export default class DocumentModelEditionCtrl {
     })
   }
 
-  submit () {
+  submit() {
     this.resetErrors()
 
     if (!this.documentModel['name']) {
@@ -80,13 +80,13 @@ export default class DocumentModelEditionCtrl {
     }
   }
 
-  resetErrors () {
+  resetErrors() {
     for (const key in this.documentModelErrors) {
       this.documentModelErrors[key] = null
     }
   }
 
-  isValid () {
+  isValid() {
     let valid = true
 
     for (const key in this.documentModelErrors) {
@@ -99,11 +99,11 @@ export default class DocumentModelEditionCtrl {
     return valid
   }
 
-  isSessionEvent () {
+  isSessionEvent() {
     return this.documentType && (this.documentType['value'] === 1 || this.documentType['value'] === 3)
   }
 
-  isSession () {
+  isSession() {
     return this.documentType && (this.documentType['value'] === 0 || this.documentType['value'] === 2)
   }
 }

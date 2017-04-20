@@ -41,7 +41,7 @@ export default class SessionEventRepeatModalCtrl {
     this.endDate = {date: null, format: 'dd/MM/yyyy', open: false}
   }
 
-  submit () {
+  submit() {
     this.repeatOptions['endDate'] = null
     this.resetErrors()
 
@@ -86,13 +86,13 @@ export default class SessionEventRepeatModalCtrl {
     }
   }
 
-  resetErrors () {
+  resetErrors() {
     for (const key in this.repeatOptionsErrors) {
       this.repeatOptionsErrors[key] = null
     }
   }
 
-  isValid () {
+  isValid() {
     let valid = true
 
     for (const key in this.repeatOptionsErrors) {
@@ -105,11 +105,11 @@ export default class SessionEventRepeatModalCtrl {
     return valid
   }
 
-  openDatePicker () {
+  openDatePicker() {
     this.endDate['open'] = true
   }
 
-  checkDay (day) {
+  checkDay(day) {
     this.repeatOptions[day] = !this.repeatOptions[day]
   }
 }

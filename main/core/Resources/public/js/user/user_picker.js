@@ -21,6 +21,7 @@ var UserPicker = function () {
     this.showGroups = 0;
     this.showPlatformRoles = 0;
     this.attachName = 1;
+    this.filterAdminOrgas = 0;
     this.returnDatas = 0;
     this.userIds = [];
     this.forcedUserIds = [];
@@ -41,43 +42,33 @@ var UserPicker = function () {
 };
 
 UserPicker.prototype.configure = function (configurationDatas, callBack) {
-
     if (configurationDatas['picker_name'] !== undefined) {
         this.pickerName = configurationDatas['picker_name'];
     }
-
     if (configurationDatas['picker_title'] !== undefined) {
         this.pickerTitle = configurationDatas['picker_title'];
     }
-
     if (configurationDatas['multiple'] !== undefined) {
         this.multiple = configurationDatas['multiple'] ? 'multiple' : 'single';
     }
-
     if (configurationDatas['show_all_users'] !== undefined) {
         this.showAllUsers = configurationDatas['show_all_users'] ? 1 : 0;
     }
-
     if (configurationDatas['show_filters'] !== undefined) {
         this.showFilters = configurationDatas['show_filters'] ? 1 : 0;
     }
-
     if (configurationDatas['show_id'] !== undefined) {
         this.showId = configurationDatas['show_id'] ? 1 : 0;
     }
-
     if (configurationDatas['show_picture'] !== undefined) {
         this.showPicture = configurationDatas['show_picture'] ? 1 : 0;
     }
-
     if (configurationDatas['show_username'] !== undefined) {
         this.showUsername = configurationDatas['show_username'] ? 1 : 0;
     }
-
     if (configurationDatas['show_mail'] !== undefined) {
         this.showMail = configurationDatas['show_mail'] ? 1 : 0;
     }
-
     if (configurationDatas['show_code'] !== undefined) {
         this.showCode = configurationDatas['show_code'] ? 1 : 0;
     }
@@ -85,43 +76,36 @@ UserPicker.prototype.configure = function (configurationDatas, callBack) {
     if (configurationDatas['show_groups'] !== undefined) {
         this.showGroups = configurationDatas['show_groups'] ? 1 : 0;
     }
-
     if (configurationDatas['show_platform_roles'] !== undefined) {
         this.showPlatformRoles = configurationDatas['show_platform_roles'] ? 1 : 0;
     }
-
     if (configurationDatas['attach_name'] !== undefined) {
         this.attachName = configurationDatas['attach_name'] ? 1 : 0;
     }
-
+    if (configurationDatas['filter_admin_orgas'] !== undefined) {
+        this.filterAdminOrgas = configurationDatas['filter_admin_orgas'] ? 1 : 0;
+    }
     if (configurationDatas['return_datas'] !== undefined) {
         this.returnDatas = configurationDatas['return_datas'] ? 1 : 0;
     }
-
     if (configurationDatas['blacklist'] !== undefined) {
         this.userIds = configurationDatas['blacklist'];
     }
-
     if (configurationDatas['whitelist'] !== undefined) {
         this.forcedUserIds = configurationDatas['whitelist'];
     }
-
     if (configurationDatas['selected_users'] !== undefined) {
         this.selectedUserIds = configurationDatas['selected_users'];
     }
-
     if (configurationDatas['forced_groups'] !== undefined) {
         this.forcedGroupIds = configurationDatas['forced_groups'];
     }
-
     if (configurationDatas['forced_roles'] !== undefined) {
         this.forcedRoleIds = configurationDatas['forced_roles'];
     }
-
     if (configurationDatas['forced_workspaces'] !== undefined) {
         this.forcedWorkspaceIds = configurationDatas['forced_workspaces'];
     }
-
     if (configurationDatas['shown_workspaces'] !== undefined) {
         this.shownWorkspaceIds = configurationDatas['shown_workspaces'];
     }
@@ -154,7 +138,8 @@ UserPicker.prototype.open = function () {
             'showCode': userPicker.showCode,
             'showGroups': userPicker.showGroups,
             'showPlatformRoles': userPicker.showPlatformRoles,
-            'attachName': userPicker.attachName
+            'attachName': userPicker.attachName,
+            'filterAdminOrgas': userPicker.filterAdminOrgas
         }
     );
     route += '?' + $.param(this.parameters);
@@ -555,7 +540,8 @@ UserPicker.prototype.open = function () {
                             'showCode': userPicker.showCode,
                             'showGroups': userPicker.showGroups,
                             'showPlatformRoles': userPicker.showPlatformRoles,
-                            'attachName': userPicker.attachName
+                            'attachName': userPicker.attachName,
+                            'filterAdminOrgas': userPicker.filterAdminOrgas
                         }
                     ) :
                     Routing.generate(
@@ -574,7 +560,8 @@ UserPicker.prototype.open = function () {
                             'showCode': userPicker.showCode,
                             'showGroups': userPicker.showGroups,
                             'showPlatformRoles': userPicker.showPlatformRoles,
-                            'attachName': userPicker.attachName
+                            'attachName': userPicker.attachName,
+                            'filterAdminOrgas': userPicker.filterAdminOrgas
                         }
                     );
                 route += '?' + $.param(userPicker.parameters);

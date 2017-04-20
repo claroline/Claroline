@@ -144,5 +144,10 @@ utils.getSelectionText = (item, selectionId = null) => {
     item.solutions.find(solution => solution.selectionId === selectionId):
     item.selections.find(selection => selection.id === selectionId)
 
-  return item.text.substring(selection.begin, selection.end)
+  const string = item.text.substring(selection.begin, selection.end)
+
+  const tmp = document.createElement('div')
+  tmp.innerHTML = string
+
+  return tmp.textContent
 }

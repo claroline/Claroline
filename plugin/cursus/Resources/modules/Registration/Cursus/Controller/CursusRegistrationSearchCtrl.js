@@ -12,7 +12,6 @@
 import cursusDescriptionTemplate from '../Partial/cursus_description_modal.html'
 
 export default class CursusRegistrationSearchCtrl {
-        
   constructor($stateParams, $http, $uibModal) {
     this.$http = $http
     this.$uibModal = $uibModal
@@ -147,7 +146,7 @@ export default class CursusRegistrationSearchCtrl {
     return infos
   }
 
-  getHierarchy (cursusId) {
+  getHierarchy(cursusId) {
     this.selectedCursusId = cursusId
 
     const route = Routing.generate('api_get_datas_for_cursus_hierarchy', {cursus: cursusId})

@@ -1,34 +1,3 @@
-{% macro renderPager(pager, widgetInstanceId, search, max, orderedBy, order) %}
-    {% if search is empty %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_cursus_my_courses_widget_chronologic',
-                    'routeParams': {'widgetInstance': widgetInstanceId}
-                }
-            )
-        }}
-    {% else %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_cursus_my_courses_widget_chronologic',
-                    'routeParams': {'widgetInstance': widgetInstanceId, 'search': search}
-                }
-            )
-        }}
-    {% endif %}
-{% endmacro %}
-
-{% from _self import renderPager %}
-{% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
-
 {% if search != '' %}
     <div class="alert alert-info">
         {{ 'results_for_search_on'|trans({}, 'platform') }} :

@@ -35,20 +35,12 @@ class Version20170403165005 extends AbstractMigration
             REFERENCES claro__organization (id) 
             ON DELETE CASCADE
         ');
-        $this->addSql('
-            ALTER TABLE claro_public_file 
-            DROP source_type
-        ');
     }
 
     public function down(Schema $schema)
     {
         $this->addSql('
             DROP TABLE workspace_organization
-        ');
-        $this->addSql('
-            ALTER TABLE claro_public_file 
-            ADD source_type VARCHAR(255) DEFAULT NULL COLLATE utf8_unicode_ci
         ');
     }
 }

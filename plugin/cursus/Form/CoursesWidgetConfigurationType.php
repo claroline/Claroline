@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Form;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
@@ -20,26 +21,55 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 class CoursesWidgetConfigurationType extends AbstractType
 {
+    private $user;
     private $extra;
     private $translator;
+    private $isAdmin;
 
-    public function __construct(TranslatorInterface $translator, $extra = [])
+    public function __construct(User $user, TranslatorInterface $translator, $extra = [], $isAdmin = false)
     {
+        $this->user = $user;
         $this->translator = $translator;
         $this->extra = $extra;
+        $this->isAdmin = $isAdmin;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $user = $this->user;
+
+        if ($this->isAdmin) {
+            $builder->add(
+                'displayAll',
+                'checkbox',
+                [
+                    'mapped' => false,
+                    'data' => isset($this->extra['displayAll']) ? $this->extra['displayAll'] : false,
+                    'label' => 'display_all_courses',
+                    'translation_domain' => 'cursus',
+                ]
+            );
+        }
         $builder->add(
             'cursus',
             'entity',
             [
                 'class' => 'ClarolineCursusBundle:Cursus',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
-                        ->where('c.course IS NULL')
-                        ->orderBy('c.title', 'ASC');
+                'query_builder' => function (EntityRepository $er) use ($user) {
+                    if ($user->hasRole('ROLE_ADMIN')) {
+                        return $er->createQueryBuilder('c')
+                            ->where('c.course IS NULL')
+                            ->orderBy('c.title', 'ASC');
+                    } else {
+                        $organizations = $user->getOrganizations();
+
+                        return $er->createQueryBuilder('c')
+                            ->join('c.organizations', 'o')
+                            ->where('c.course IS NULL')
+                            ->andWhere('o IN (:organizations)')
+                            ->setParameter('organizations', $organizations)
+                            ->orderBy('c.title', 'ASC');
+                    }
                 },
                 'property' => 'titleAndCode',
                 'required' => false,
