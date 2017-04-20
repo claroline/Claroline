@@ -2,8 +2,9 @@ import React, {PropTypes as T} from 'react'
 import {connect} from 'react-redux'
 
 import {tex} from '#/main/core/translation'
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 import {select as playerSelectors} from './../selectors'
-import selectors from './../../selectors'
+import {selectors as quizSelectors} from './../../selectors'
 import {selectors as paperSelectors} from './../../papers/selectors'
 import {utils as paperUtils} from './../../papers/utils'
 import {ScoreGauge} from './../../../components/score-gauge.jsx'
@@ -49,7 +50,7 @@ AttemptEnd.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    admin: selectors.editable(state) || selectors.papersAdmin(state),
+    admin: resourceSelect.editable(state) || quizSelectors.papersAdmin(state),
     paper: playerSelectors.paper(state)
   }
 }

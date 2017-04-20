@@ -4,14 +4,14 @@ import {connect} from 'react-redux'
 import quizSelect from './../selectors'
 import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 import {selectors as paperSelect} from './../selectors'
-import {tex} from '#/main/core/translation'
+import {tex, t} from '#/main/core/translation'
 import {ScoreBox} from './../../../items/components/score-box.jsx'
 import {utils} from './../utils'
 
 export const PaperRow = props =>
   <tr>
     {props.admin &&
-      <td>{props.user.name}</td>
+      <td>{props.user ? props.user.name:t('anonymous')}</td>
     }
     <td>{props.number}</td>
     <td>
@@ -43,7 +43,7 @@ PaperRow.propTypes = {
   id: T.string.isRequired,
   user: T.shape({
     name: T.string.isRequired
-  }).isRequired,
+  }),
   number: T.number.isRequired,
   startDate: T.string.isRequired,
   endDate: T.string,
