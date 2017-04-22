@@ -12,7 +12,7 @@ export const Highlight = props => {
           <span dangerouslySetInnerHTML={{__html: el.text}}></span>{'\u00a0'}
           <span className={classes({
             'word-success': el.score > 0,
-            'word-danger': el.score < 1
+            'word-danger': el.score <= 0
           })}>
             <Feedback feedback={el.feedback} id={key}/>{'\u00a0'}
             {el.score !== null && props.showScore &&
