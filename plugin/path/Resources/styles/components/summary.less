@@ -60,6 +60,11 @@
 
         .tree-item {
             border-bottom-color: @path-summary-link-border-color;
+
+            .step {
+                overflow-x: hidden;
+                text-overflow: ellipsis;
+            }
         }
     }
 
@@ -147,9 +152,6 @@
 
     .step {
         cursor: pointer;
-        /*max-width: 90%;*/
-        text-overflow: ellipsis;
-        overflow-x: hidden;
         white-space: nowrap;
     }
 }
