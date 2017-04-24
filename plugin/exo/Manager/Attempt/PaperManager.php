@@ -122,7 +122,7 @@ class PaperManager
     public function calculateScore(Paper $paper, $base = null)
     {
         $score = $this->repository->findScore($paper);
-        if (!empty($base)) {
+        if (!empty($base) && $base > 0) {
             $scoreTotal = $this->calculateTotal($paper);
             if ($scoreTotal !== $base) {
                 $score = ($score / $scoreTotal) * $base;

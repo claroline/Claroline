@@ -32,6 +32,10 @@ const correctionDate = paper => {
   return paper.structure.parameters.correctionDate
 }
 
+const totalScoreOn = paper => {
+  return paper.structure.parameters.totalScoreOn && paper.structure.parameters.totalScoreOn > 0 ? paper.structure.parameters.totalScoreOn : null
+}
+
 const itemScoreMax = item => {
   let scoreMax
 
@@ -63,6 +67,10 @@ const itemScoreMax = item => {
 }
 
 const paperScoreMax = paper => {
+  if (totalScoreOn(paper)) {
+    return totalScoreOn(paper)
+  }
+
   let scoreMax = 0
 
   paper.structure.steps.map(step =>
@@ -82,5 +90,6 @@ export const selectors = {
   paperScoreMax,
   showScoreAt,
   showCorrectionAt,
-  correctionDate
+  correctionDate,
+  totalScoreOn
 }

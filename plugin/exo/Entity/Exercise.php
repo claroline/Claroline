@@ -156,6 +156,17 @@ class Exercise extends AbstractResource
     private $showFeedback = false;
 
     /**
+     * Score on which we wish to render a paper.
+     * If 0, the score will be computed based on question maxs score.
+     * Else score will be computed based on this value.
+     *
+     * @ORM\Column(type="float")
+     *
+     * @var float
+     */
+    private $totalScoreOn = 0;
+
+    /**
      * Exercise constructor.
      */
     public function __construct()
@@ -519,5 +530,25 @@ class Exercise extends AbstractResource
     public function getShowFeedback()
     {
         return $this->showFeedback;
+    }
+
+    /**
+     * Sets totalScoreOn.
+     *
+     * @param float $totalScoreOn
+     */
+    public function setTotalScoreOn($totalScoreOn)
+    {
+        $this->totalScoreOn = $totalScoreOn;
+    }
+
+    /**
+     * Gets totalScoreOn.
+     *
+     * @return float
+     */
+    public function getTotalScoreOn()
+    {
+        return $this->totalScoreOn;
     }
 }
