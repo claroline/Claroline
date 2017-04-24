@@ -17,7 +17,7 @@
                 {{ resource.name }}
             </div>
 
-            <div class="resource-actions">
+            <div class="embedded-resource-actions">
                 <!-- Show resource -->
                 <a class="btn btn-link-default"
                    href="{{ resource.url || ('claro_resource_open'|path:{node: resource.resourceId, resourceType: resource.type}) }}"
@@ -63,7 +63,7 @@
                 {{ resource.name }}
             </div>
 
-            <div class="resource-actions">
+            <div class="embedded-resource-actions">
                 <!-- Show resource -->
                 <a class="btn btn-link-default"
                    href="{{ resource.url || ('claro_resource_open'|path:{node: resource.resourceId, resourceType: resource.type}) }}"
