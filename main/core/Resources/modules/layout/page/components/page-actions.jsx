@@ -2,6 +2,7 @@ import React, { PropTypes as T } from 'react'
 import classes from 'classnames'
 import DropdownButton from 'react-bootstrap/lib/DropdownButton'
 
+import {t} from '#/main/core/translation'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 
 /**
@@ -87,7 +88,7 @@ PageAction.defaultProps = {
 const FullScreenAction = props =>
   <PageAction
     id="page-fullscreen"
-    title={props.fullscreen ? 'Close fullscreen' : 'Show in fullscreen'}
+    title={t(props.fullscreen ? 'fullscreen_off' : 'fullscreen_on')}
     icon={classes('fa', {
       'fa-expand': !props.fullscreen,
       'fa-compress': props.fullscreen

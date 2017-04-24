@@ -1,4 +1,7 @@
-<main class="page path-player">
+<main
+    class="page path-player"
+    data-ng-class="{fullscreen: pathShowCtrl.fullscreen}"
+>
     <header class="page-header resource-header">
         <h1 data-ng-init="progression = pathShowCtrl.getTotalProgression()">
             <div class="c100 sm p{{ progression }} path-progression" data-ng-if="pathShowCtrl.userProgression">
@@ -26,6 +29,17 @@
             </div>
 
             <div class="page-actions-group">
+                <button type="button" class="btn page-action-btn" data-ng-click="pathShowCtrl.toggleFullscreen()">
+                    <span
+                        class="page-action-icon fa"
+                        data-ng-class="{
+                            'fa-expand': !pathShowCtrl.fullscreen,
+                            'fa-compress': pathShowCtrl.fullscreen
+                        }"
+                    ></span>
+                    <span class="sr-only" data-ng-if="!pathShowCtrl.fullscreen">{{ 'fullscreen_on'|trans:{}:'platform' }}</span>
+                    <span class="sr-only" data-ng-if="pathShowCtrl.fullscreen">{{ 'fullscreen_off'|trans:{}:'platform' }}</span>
+                </button>
                 <div class="btn-group dropdown">
                     <button class="btn page-action-btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         <span class="page-action-icon fa fa-ellipsis-v"></span>

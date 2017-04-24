@@ -1,4 +1,7 @@
-<main class="page path-editor">
+<main
+    class="page path-editor"
+    data-ng-class="{fullscreen: pathEditCtrl.fullscreen}"
+>
     <header class="page-header resource-header">
         <h1>
             {{ pathEditCtrl.path.name }}
@@ -63,6 +66,18 @@
             </div>
 
             <div class="page-actions-group">
+                <button type="button" class="btn page-action-btn" data-ng-click="pathEditCtrl.toggleFullscreen()">
+                    <span
+                        class="page-action-icon fa"
+                        data-ng-class="{
+                            'fa-expand': !pathEditCtrl.fullscreen,
+                            'fa-compress': pathEditCtrl.fullscreen
+                        }"
+                    ></span>
+                    <span class="sr-only" data-ng-if="!pathEditCtrl.fullscreen">{{ 'fullscreen_on'|trans:{}:'platform' }}</span>
+                    <span class="sr-only" data-ng-if="pathEditCtrl.fullscreen">{{ 'fullscreen_off'|trans:{}:'platform' }}</span>
+                </button>
+
                 <div class="dropdown btn-group">
                     <button class="btn page-action-btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                         <span class="page-action-icon fa fa-ellipsis-v"></span>
