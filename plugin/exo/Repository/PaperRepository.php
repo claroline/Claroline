@@ -69,9 +69,9 @@ class PaperRepository extends EntityRepository
      */
     public function findScore(Paper $paper)
     {
-        return (int) $this->getEntityManager()
+        return (float) $this->getEntityManager()
             ->createQuery('
-                SELECT SUM(a.score) 
+                SELECT SUM(a.score)
                 FROM UJM\ExoBundle\Entity\Attempt\Answer AS a
                 WHERE a.paper = :paper
                   AND a.score IS NOT NULL
@@ -93,7 +93,7 @@ class PaperRepository extends EntityRepository
     {
         return 0 === (int) $this->getEntityManager()
             ->createQuery('
-                SELECT COUNT(a) 
+                SELECT COUNT(a)
                 FROM UJM\ExoBundle\Entity\Attempt\Answer AS a
                 WHERE a.paper = :paper
                   AND a.score IS NULL
@@ -115,7 +115,7 @@ class PaperRepository extends EntityRepository
     {
         return (int) $this->getEntityManager()
             ->createQuery('
-                SELECT COUNT(p) 
+                SELECT COUNT(p)
                 FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
                 WHERE p.exercise = :exercise
             ')
@@ -136,7 +136,7 @@ class PaperRepository extends EntityRepository
     {
         return $this->getEntityManager()
             ->createQuery('
-                SELECT p 
+                SELECT p
                 FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
                 JOIN UJM\ExoBundle\Entity\Attempt\Answer AS a WITH (a.paper = p)
                 WHERE p.exercise = :exercise
@@ -162,7 +162,7 @@ class PaperRepository extends EntityRepository
     {
         return (int) $this->getEntityManager()
             ->createQuery('
-                SELECT COUNT(p) 
+                SELECT COUNT(p)
                 FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
                 WHERE p.user = :user
                   AND p.exercise = :exercise
