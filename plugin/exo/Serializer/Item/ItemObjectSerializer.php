@@ -54,6 +54,8 @@ class ItemObjectSerializer implements SerializerInterface
 
         if (isset($data->data)) {
             $itemObject->setData($data->data);
+        } elseif (isset($data->url)) {
+            $itemObject->setData($data->url);
         }
 
         return $itemObject;

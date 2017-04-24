@@ -151,6 +151,7 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 
     public function import(array $tools, Workspace $workspace, array $entityRoles, Directory $root)
     {
+        $importerResult = [];
         $position = 1;
 
         foreach ($tools as $tool) {
@@ -190,9 +191,11 @@ class ToolsImporter extends Importer implements ConfigurationInterface
 
             if (isset($tool['tool']['data'])) {
                 $data['data'] = $tool['tool']['data'];
-                $importer->import($data, $workspace, $entityRoles, $root);
+                $importerResult[$tool['tool']['type']] = $importer->import($data, $workspace, $entityRoles, $root);
             }
         }
+
+        return $importerResult;
     }
 
     public function getName()
