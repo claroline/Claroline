@@ -17,21 +17,24 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\FormBuilderInterface;
 
 /**
  * @Service()
  * @FormType(alias = "resourcePicker")
+ *
+ * Required because the normalizer anonymous function screws up PHPMD
+ * @SuppressWarnings(PHPMD)
  */
 class ResourcePickerType extends TextType
 {
     private $resourceManager;
     private $transformer;
-    private $defaultAttributes = array('class' => 'hide resource-picker');
+    private $defaultAttributes = ['class' => 'hide resource-picker'];
 
     /**
      * @InjectParams({
@@ -70,19 +73,22 @@ class ResourcePickerType extends TextType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'label' => 'resource',
                 'attr' => $this->defaultAttributes,
                 'display_view_button' => true,
                 'display_browse_button' => true,
                 'display_download_button' => true,
-            )
+            ]
         );
 
         $resolver
-            ->setNormalizer('attr', function (Options $options, $value) {
-                return array_merge($this->defaultAttributes, $value);
-            });
+            ->setNormalizer(
+                'attr',
+                function (Options $options, $value) {
+                    return array_merge($this->defaultAttributes, $value);
+                }
+            );
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options)
@@ -92,6 +98,7 @@ class ResourcePickerType extends TextType
         if ($resourceNode = $this->getResourceNode($form)) {
             $view->vars['attr']['data-name'] = $resourceNode->getName();
             $view->vars['attr']['data-type'] = $resourceNode->getResourceType()->getName();
+            $view->vars['attr']['value'] = $resourceNode->getId();
         }
     }
 
@@ -102,7 +109,7 @@ class ResourcePickerType extends TextType
     {
         if ($form->getData() instanceof ResourceNode) {
             return $form->getData();
-        } elseif ($form->getData() && $form->getData() != '') {
+        } elseif ($form->getData() && $form->getData() !== '') {
             return $this->resourceManager->getById($form->getData());
         }
     }

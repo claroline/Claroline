@@ -28,7 +28,7 @@ class WorkspaceOptionsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $details = is_null($this->workspaceOptions) ?
-            array() :
+            [] :
             $this->workspaceOptions->getDetails();
         $backgroundColor = isset($details['background_color']) ?
             $details['background_color'] :
@@ -49,52 +49,52 @@ class WorkspaceOptionsType extends AbstractType
         $builder->add(
             'hideToolsMenu',
             'checkbox',
-            array(
+            [
                 'required' => false,
                 'mapped' => false,
                 'data' => $hideToolsMenu,
                 'label' => 'hide_tools_menu',
-            )
+            ]
         );
         $builder->add(
             'hideBreadcrumb',
             'checkbox',
-            array(
+            [
                 'required' => false,
                 'mapped' => false,
                 'data' => $hideBreadcrumb,
                 'label' => 'hide_breadcrumb',
-            )
+            ]
         );
         $builder->add(
             'backgroundColor',
             'text',
-            array(
+            [
                 'required' => false,
                 'mapped' => false,
                 'data' => $backgroundColor,
                 'label' => 'background_color',
-            )
+            ]
         );
         $builder->add(
             'useWorkspaceOpeningResource',
             'checkbox',
-            array(
+            [
                 'required' => false,
                 'mapped' => false,
                 'data' => $useDefaultResource,
                 'label' => 'open_resource_when_opening_ws',
-            )
+            ]
         );
         $builder->add(
             'workspaceOpeningResource',
             'resourcePicker',
-            array(
+            [
                 'required' => false,
                 'mapped' => false,
                 'data' => $defaultResourceId,
                 'label' => 'resource_to_open',
-            )
+            ]
         );
     }
 
@@ -105,6 +105,6 @@ class WorkspaceOptionsType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(['translation_domain' => 'platform']);
     }
 }

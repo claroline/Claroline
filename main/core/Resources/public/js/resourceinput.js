@@ -74,6 +74,7 @@
         var name = field.data('name');
 
         if (name) {
+            console.log(name, element)
             $('input', element).val(name);
         }
 
