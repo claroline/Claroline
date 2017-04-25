@@ -145,4 +145,15 @@ class OrganizationController extends FOSRestController
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editLocationForm.html.twig', $form, $options);
     }
+
+    /**
+     * @View(serializerGroups={"api_organization_list"})
+     * @Get("/organization/{organization}/move/{parent}")
+     */
+    public function moveOrganizationAction(Organization $organization, $parent)
+    {
+        $parent = $this->om->getRepository('ClarolineCoreBundle:Organization\Organization')->find($parent);
+
+        return $this->organizationManager->setParent($organization, $parent);
+    }
 }

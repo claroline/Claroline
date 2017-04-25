@@ -7,7 +7,7 @@
                   'fa fa-chevron-down': !collapsed
                 }"></span>
             </a>
-            <div class="col-xs-6">{{ organization.name }}</div>
+            <div class="col-xs-6">{{ organization.name }} {{ organization.id }}</div>
             <button class="pull-right btn btn-danger btn-xs" ng-disabled="organization.default" data-nodrag ng-click="oc.deleteOrganization(organization)"><span
                 class="fa fa-trash-o"></span>
             </button>
@@ -28,7 +28,7 @@
 <div>
     <button class="btn btn-primary" ng-click="oc.addRootOrganization()"> {{ 'add'|trans:{}:'platform' }} </button>
     <a class="btn btn-primary" ui-sref="organizations.locations"> {{ 'locations'|trans:{}:'platform' }} </a>
-    <div ui-tree id="tree-root">
+    <div ui-tree="oc.treeOptions" id="tree-root">
         <ol ui-tree-nodes ng-model="oc.organizations">
             <li ng-repeat="organization in oc.organizations" ui-tree-node ng-include="'nodes_renderer.html'"></li>
         </ol>
