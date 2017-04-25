@@ -14,7 +14,6 @@
     "by": "por",
     "create_new_announcement": "Agregar nuevo anuncio",
     "created_on": "Creado en",
-    "notify_user": "Notificar al usuario",
     "published_on": "Publicado el",
     "visible_from_until_condition": "La fecha de inicio debe ser anterior a la fecha de finalización"
 }
