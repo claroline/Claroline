@@ -236,6 +236,14 @@ class Correction extends Component {
     }
   }
 
+  handleScoreModeChange(mode) {
+    this.setState({totalScoreOnMode: mode})
+    // reset value to default if needed
+    if (mode ===  TOTAL_SCORE_ON_DEFAULT) {
+      this.props.onChange('parameters.totalScoreOn', 0)
+    }
+  }
+
   render() {
     return(
       <fieldset>
@@ -295,7 +303,7 @@ class Correction extends Component {
                 {value: TOTAL_SCORE_ON_CUSTOM, label: tex('quiz_total_score_on_mode_custom')}
               ]}
               checkedValue={this.state.totalScoreOnMode}
-              onChange={mode => this.setState({totalScoreOnMode: mode})}
+              onChange={mode => this.handleScoreModeChange(mode)}
             />
             { this.state.totalScoreOnMode ===  TOTAL_SCORE_ON_CUSTOM &&
               <input
