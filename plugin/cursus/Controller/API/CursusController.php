@@ -12,9 +12,6 @@
 namespace Claroline\CursusBundle\Controller\API;
 
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
@@ -28,9 +25,7 @@ use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @NamePrefix("api_")
@@ -38,32 +33,15 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class CursusController extends FOSRestController
 {
     private $cursusManager;
-    private $facetManager;
-    private $formFactory;
-    private $platformConfigHandler;
-    private $request;
 
     /**
      * @DI\InjectParams({
-     *     "cursusManager"         = @DI\Inject("claroline.manager.cursus_manager"),
-     *     "facetManager"          = @DI\Inject("claroline.manager.facet_manager"),
-     *     "formFactory"           = @DI\Inject("form.factory"),
-     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "requestStack"          = @DI\Inject("request_stack")
+     *     "cursusManager" = @DI\Inject("claroline.manager.cursus_manager")
      * })
      */
-    public function __construct(
-        CursusManager $cursusManager,
-        FacetManager $facetManager,
-        FormFactory $formFactory,
-        PlatformConfigurationHandler $platformConfigHandler,
-        RequestStack $requestStack
-    ) {
+    public function __construct(CursusManager $cursusManager)
+    {
         $this->cursusManager = $cursusManager;
-        $this->facetManager = $facetManager;
-        $this->formFactory = $formFactory;
-        $this->platformConfigHandler = $platformConfigHandler;
-        $this->request = $requestStack->getCurrentRequest();
     }
 
     /**
@@ -363,34 +341,5 @@ class CursusController extends FOSRestController
     public function getSessionEventsBySessionAction(CourseSession $session)
     {
         return $this->cursusManager->getEventsBySession($session, 'startDate', 'ASC');
-    }
-
-    /**
-     * @View(serializerGroups={"api_cursus"})
-     * @Get("/courses/profile/tab/option")
-     */
-    public function getCoursesProfileTabOptionAction()
-    {
-        $facetPreferences = $this->facetManager->getVisiblePublicPreference();
-        $displayCourses = $facetPreferences['baseData'] ?
-            $this->platformConfigHandler->getParameter('cursus_enable_courses_profile_tab') :
-            false;
-        $displayWorkspace = $this->platformConfigHandler->getParameter('cursus_enable_ws_in_courses_profile_tab');
-
-        return ['displayCourses' => $displayCourses, 'displayWorkspace' => $displayWorkspace];
-    }
-
-    /**
-     * @View(serializerGroups={"api_workspace_min"})
-     * @Get("/user/{user}/closed/sessions")
-     */
-    public function getClosedSessionsByLeanerAction(User $user)
-    {
-        $facetPreferences = $this->facetManager->getVisiblePublicPreference();
-        $enabled = $facetPreferences['baseData'] ?
-            $this->platformConfigHandler->getParameter('cursus_enable_courses_profile_tab') :
-            false;
-
-        return $enabled ? $this->cursusManager->getClosedSessionsByUser($user) : [];
     }
 }
