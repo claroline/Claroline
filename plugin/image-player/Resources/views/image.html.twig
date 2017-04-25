@@ -42,6 +42,9 @@
             <a class="btn btn-primary" href="{{ path('claro_resource_download') }}?ids[]={{ _resource.getResourceNode().getId() }}">
                 <i class="fa fa-download"></i> {{ 'download'|trans({}, 'platform') }}
             </a>
+            <a id="copy-permalink-to-clipboard" class="btn btn-default" href="{{ path ("claro_image", {"node": image.getResourceNode.getId()}) }}">
+                <i class="fa fa-clipboard"></i> {{ 'copy_permalink_to_clipboard'|trans({}, 'platform') }}
+            </a>
         </div>
     {% endif %}
 {% endblock %}
@@ -96,7 +99,16 @@
                 $('.panel-heading .panel-title').html(title);
                 $('.breadcrumb li').last().html(title);
                 $('.panel-footer .btn.btn-primary').attr('href', $('.panel-footer .btn.btn-primary').attr('href').replace(/(ids\[\]=)[^\&]+/, '$1' + id));
+                $('.panel-footer #copy-permalink-to-clipboard').attr('href', $('.panel-footer #copy-permalink-to-clipboard').attr('href').replace(/\d+$/, id));
             });
         })();
+    </script>
+
+    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-core-copy-text-to-clipboard.js') }}" ></script>
+    <script>
+        document.querySelector('a#copy-permalink-to-clipboard').addEventListener('click', function(event) {
+            event.preventDefault();
+            copyTextToClipboard('http://' + window.location.hostname + $(this).attr('href'));
+        });
     </script>
 {% endblock %}
