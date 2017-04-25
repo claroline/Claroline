@@ -239,7 +239,7 @@ export default class EntryService {
       if (v['fieldFacetValue']['field_facet']['type'] === 3) {
         const valueDate = new Date(v['fieldFacetValue']['value'])
         entry[fieldLabel] = `${valueDate.getDate()}/${valueDate.getMonth() + 1}/${valueDate.getFullYear()}`
-      } else if (v['fieldFacetValue']['field_facet']['type'] === 6) {
+      } else if (v['fieldFacetValue']['field_facet']['type'] === 6 || v['fieldFacetValue']['field_facet']['type'] === 10) {
         entry[fieldLabel] = v['fieldFacetValue']['value'] ? v['fieldFacetValue']['value'].join(', ') : ''
       } else if (v['fieldFacetValue']['field_facet']['type'] === 7) {
         entry[fieldLabel] = this.FieldService.getCountryNameFromCode(v['fieldFacetValue']['value'])

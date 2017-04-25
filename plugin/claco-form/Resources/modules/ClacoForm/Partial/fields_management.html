@@ -58,6 +58,13 @@
                 <table class="table" ng-table="cfc.tableParams" show-filter="true">
                     <tr ng-repeat="field in $data">
                         <td data-title="'name'|trans:{}:'platform'" filter="{name: 'text'}" sortable="'name'">
+                            <i class="fa fa-eye-slash"
+                               data-toggle="tooltip"
+                               data-placement="top"
+                               title="{{ 'hidden_field'|trans:{}:'clacoform' }}"
+                               ng-if="field['hidden']"
+                            >
+                            </i>
                             {{ field['name'] }}
                         </td>
                         <td class="text-center" data-title="'type'|trans:{}:'platform'" filter="{typeName: 'text'}" sortable="'typeName'">

@@ -73,7 +73,7 @@
             <div ng-if="!cfc.template">
                 <form-field field="[cfc.entryTitle['label'], 'text', {error: cfc.entryErrors['entry_title']}]" ng-model="cfc.entryTitle['value']">
                 </form-field>
-                <div ng-repeat="field in cfc.fields">
+                <div ng-repeat="field in cfc.fields" ng-if="!field['hidden']">
                     <form-field field="[field['name'],
                                        field['fieldFacet']['translation_key'],
                                        {

@@ -10,7 +10,7 @@
 /*global Translator*/
 
 export default class GeneralConfigurationCtrl {
-  constructor($state, ClacoFormService, CategoryService, EntryService) {
+  constructor($state, ClacoFormService, CategoryService, EntryService, FieldService) {
     this.$state = $state
     this.ClacoFormService = ClacoFormService
     this.EntryService = EntryService
@@ -36,6 +36,16 @@ export default class GeneralConfigurationCtrl {
     this.dateOptions = {formatYear: 'yy', startingDay: 1, placeHolder: 'jj/mm/aaaa'}
     this.categoriesList = CategoryService.getCategories()
     this.categories = []
+    this.fields = FieldService.getFields()
+    this.searchColumnsList = [
+      {name: Translator.trans('title', {}, 'platform'), id: 'title'},
+      {name: Translator.trans('date', {}, 'platform'), id: 'creationDateString'},
+      {name: Translator.trans('user', {}, 'platform'), id: 'userString'},
+      {name: Translator.trans('categories', {}, 'platform'), id: 'categoriesString'},
+      {name: Translator.trans('keywords', {}, 'clacoform'), id: 'keywordsString'},
+      {name: Translator.trans('actions', {}, 'platform'), id: 'actions'}
+    ]
+    this.searchColumns = []
     this.initialize()
   }
 
@@ -60,6 +70,20 @@ export default class GeneralConfigurationCtrl {
         this.categories.push(selectedCategory)
       })
     }
+    this.fields.forEach(f => this.searchColumnsList.push(f))
+
+    if (this.config['search_columns']) {
+      this.config['search_columns'].forEach(value => {
+        const column = this.searchColumnsList.find(sc => sc['id'] === value)
+        this.searchColumns.push(column)
+      })
+    } else {
+      this.searchColumnsList.forEach(f => {
+        if (['title', 'creationDateString', 'userString', 'categoriesString', 'keywordsString', 'actions'].findIndex(key => key === f['id']) > -1) {
+          this.searchColumns.push(f)
+        }
+      })
+    }
   }
 
   canEdit() {
@@ -80,6 +104,8 @@ export default class GeneralConfigurationCtrl {
     }
     this.config['random_categories'] = []
     this.categories.forEach(c => this.config['random_categories'].push(c['id']))
+    this.config['search_columns'] = []
+    this.searchColumns.forEach(sc => this.config['search_columns'].push(sc['id']))
 
     if (this.isValid()) {
       this.ClacoFormService.saveConfiguration(this.resourceId, this.config).then(d => {

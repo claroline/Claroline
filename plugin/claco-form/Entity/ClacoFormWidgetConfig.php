@@ -162,4 +162,17 @@ class ClacoFormWidgetConfig
         }
         $this->options['show_creator_picture'] = $showCreatorPicture;
     }
+
+    public function getCategories()
+    {
+        return !is_null($this->options) && isset($this->options['categories']) ? $this->options['categories'] : [];
+    }
+
+    public function setCategories(array $categoriesIds)
+    {
+        if (is_null($this->options)) {
+            $this->options = [];
+        }
+        $this->options['categories'] = $categoriesIds;
+    }
 }

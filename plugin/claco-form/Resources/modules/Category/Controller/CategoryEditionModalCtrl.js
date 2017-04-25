@@ -49,7 +49,7 @@ export default class CategoryEditionModalCtrl {
     this.category['notifyEdition'] = this.source['details']['notify_edition']
     this.category['notifyRemoval'] = this.source['details']['notify_removal']
 
-    if (this.source['details']['notify_pending_comment']) {
+    if (this.source['details']['notify_pending_comment'] !== undefined) {
       this.category['notifyPendingComment'] = this.source['details']['notify_pending_comment']
     }
     if (this.source['details']['color']) {

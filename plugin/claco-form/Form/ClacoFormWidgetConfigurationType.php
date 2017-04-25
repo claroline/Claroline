@@ -12,6 +12,7 @@
 namespace Claroline\ClacoFormBundle\Form;
 
 use Claroline\ClacoFormBundle\Entity\ClacoFormWidgetConfig;
+use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -23,10 +24,12 @@ use Symfony\Component\Validator\Constraints\Range;
 class ClacoFormWidgetConfigurationType extends AbstractType
 {
     private $config;
+    private $clacoFormManager;
 
-    public function __construct(ClacoFormWidgetConfig $config)
+    public function __construct(ClacoFormWidgetConfig $config, ClacoFormManager $clacoFormManager)
     {
         $this->config = $config;
+        $this->clacoFormManager = $clacoFormManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -128,6 +131,83 @@ class ClacoFormWidgetConfigurationType extends AbstractType
                                 ->where('r.id = :resourceNodeId')
                                 ->andWhere('f.isMetadata = false')
                                 ->setParameter('resourceNodeId', $resourceNodeId);
+                        },
+                    ]
+                );
+            }
+        );
+        $builder->addEventListener(
+            FormEvents::PRE_SET_DATA,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                $clacoFormWidgetConfig = $event->getData();
+                $resourceNode = $clacoFormWidgetConfig->getResourceNode();
+
+                if (empty($resourceNode)) {
+                    $displayCategories = false;
+                    $categories = [];
+                } else {
+                    $clacoForm = $this->clacoFormManager->getClacoFormByResourceNode($resourceNode);
+                    $displayCategories = $clacoForm->getDisplayCategories();
+                    $categoriesIds = $this->config->getCategories();
+                    $categories = $displayCategories ? $this->clacoFormManager->getCategoriesByIds($categoriesIds) : [];
+                }
+
+                $form->add(
+                    'categories',
+                    'entity',
+                    [
+                        'class' => 'ClarolineClacoFormBundle:Category',
+                        'mapped' => false,
+                        'property' => 'name',
+                        'required' => false,
+                        'multiple' => true,
+                        'data' => $categories,
+                        'label' => 'categories_to_filter',
+                        'query_builder' => function (EntityRepository $er) use ($resourceNode, $displayCategories) {
+                            return $displayCategories ?
+                                $er->createQueryBuilder('cat')
+                                    ->join('cat.clacoForm', 'c')
+                                    ->join('c.resourceNode', 'r')
+                                    ->where('r = :resourceNode')
+                                    ->setParameter('resourceNode', $resourceNode) :
+                                $er->createQueryBuilder('cat')
+                                    ->where('cat.id = -1');
+                        },
+                    ]
+                );
+            }
+        );
+        $builder->addEventListener(
+            FormEvents::PRE_SUBMIT,
+            function (FormEvent $event) {
+                $form = $event->getForm();
+                $data = $event->getData();
+                $resourceNodeId = intval($data['resourceNode']);
+                $clacoForm = $this->clacoFormManager->getClacoFormByResourceNodeId($resourceNodeId);
+                $displayCategories = $clacoForm->getDisplayCategories();
+                $categoriesIds = $this->config->getCategories();
+                $categories = $displayCategories ? $this->clacoFormManager->getCategoriesByIds($categoriesIds) : [];
+
+                $form->add(
+                    'categories',
+                    'entity',
+                    [
+                        'class' => 'ClarolineClacoFormBundle:Category',
+                        'mapped' => false,
+                        'property' => 'name',
+                        'multiple' => true,
+                        'data' => $categories,
+                        'label' => 'categories_to_filter',
+                        'query_builder' => function (EntityRepository $er) use ($resourceNodeId, $displayCategories) {
+                            return $displayCategories ?
+                                $er->createQueryBuilder('cat')
+                                    ->join('cat.clacoForm', 'c')
+                                    ->join('c.resourceNode', 'r')
+                                    ->where('r.id = :resourceNodeId')
+                                    ->setParameter('resourceNodeId', $resourceNodeId) :
+                                $er->createQueryBuilder('cat')
+                                    ->where('cat.id = -1');
                         },
                     ]
                 );

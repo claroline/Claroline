@@ -15,15 +15,27 @@
       (function() {
         $('#claco_form_widget_configuration_form_resourceNode').on('change', function() {
           const value = $(this).val()
-          const url = Routing.generate('claro_claco_form_non_confidential_fields_retrieve', {resourceNode: value})
+          const fieldsUrl = Routing.generate('claro_claco_form_non_confidential_fields_retrieve', {resourceNode: value})
           $.ajax({
-            url: url,
+            url: fieldsUrl,
             type: 'GET',
             success: (fields) => {
               $('#claco_form_widget_configuration_form_fields').empty()
               fields.forEach(f => {
                 const option = `<option value="${f['id']}">${f['name']}</option>`
                 $('#claco_form_widget_configuration_form_fields').append(option)
+              })
+            }
+          })
+          const categoriesUrl = Routing.generate('claro_claco_form_categories_retrieve', {resourceNode: value})
+          $.ajax({
+            url: categoriesUrl,
+            type: 'GET',
+            success: (categories) => {
+              $('#claco_form_widget_configuration_form_categories').empty()
+              categories.forEach(c => {
+                const option = `<option value="${c['id']}">${c['name']}</option>`
+                $('#claco_form_widget_configuration_form_categories').append(option)
               })
             }
           })

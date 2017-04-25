@@ -155,6 +155,7 @@
     "cannot_delete_unique_manager": "You may not remove the unique manager.",
     "cannot_unsubscribe_from_workspace": "You can't unsubscribe from the workspace.",
     "captcha": "Captcha",
+    "cascade_select": "Cascade select list",
     "categories": "Categories",
     "categories_organization": "Categories organization",
     "categorize": "Categorize",

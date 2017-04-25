@@ -11,11 +11,12 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
+use JMS\Serializer\Annotation\Accessor;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
-use JMS\Serializer\Annotation\Accessor;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity()
@@ -60,6 +61,29 @@ class FieldFacetChoice
      */
     protected $value;
 
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",
+     *     inversedBy="children"
+     * )
+     * @ORM\JoinColumn(nullable=true, onDelete="CASCADE")
+     * @Groups({"api_facet_admin"})
+     */
+    protected $parent;
+
+    /**
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",
+     *     mappedBy="parent"
+     * )
+     */
+    protected $children;
+
+    public function __construct()
+    {
+        $this->children = new ArrayCollection();
+    }
+
     public function getId()
     {
         return $this->id;
@@ -94,6 +118,21 @@ class FieldFacetChoice
     public function getPosition()
     {
         return $this->position;
+    }
+
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function setParent(FieldFacetChoice $parent = null)
+    {
+        $this->parent = $parent;
+    }
+
+    public function getChildren()
+    {
+        return $this->children->toArray();
     }
 
     //for the api form select field.

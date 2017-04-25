@@ -18,6 +18,7 @@ export default class FieldService {
     this.ClarolineAPIService = ClarolineAPIService
     this.canEdit = FieldService._getGlobal('canEdit')
     this.fields = FieldService._getGlobal('fields')
+    this.cascadeLevelMax = FieldService._getGlobal('cascadeLevelMax')
     this.types = [
       {value: 1, name: Translator.trans('text', {}, 'platform')},
       {value: 2, name: Translator.trans('number', {}, 'platform')},
@@ -321,6 +322,10 @@ export default class FieldService {
     const country = this.countries.find(c => c['value'] === code)
 
     return country ? country['label'] : '-'
+  }
+
+  getCascadeLevelMax() {
+    return this.cascadeLevelMax
   }
 
   formatField(field) {

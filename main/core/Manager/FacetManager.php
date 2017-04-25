@@ -578,12 +578,13 @@ class FacetManager
             ->findBy(['forceCreationForm' => true]);
     }
 
-    public function addFacetFieldChoice($label, FieldFacet $field)
+    public function addFacetFieldChoice($label, FieldFacet $field, FieldFacetChoice $parent = null)
     {
         $choice = new FieldFacetChoice();
         $choice->setFieldFacet($field);
         $choice->setLabel($label);
         $choice->setPosition($this->om->count('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice'));
+        $choice->setParent($parent);
         $this->om->persist($choice);
         $this->om->flush();
 
@@ -670,5 +671,17 @@ class FacetManager
         }
 
         return $withChoices;
+    }
+
+    public function getFieldFacetChoiceById($id)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetChoice')->findOneById($id);
+    }
+
+    public function getChoiceByFieldFacetAndValueAndParent(FieldFacet $fieldFacet, $value, FieldFacetChoice $parent = null)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetChoice')->findOneBy(
+            ['fieldFacet' => $fieldFacet, 'name' => $value, 'parent' => $parent]
+        );
     }
 }

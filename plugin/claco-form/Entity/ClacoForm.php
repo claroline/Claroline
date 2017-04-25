@@ -18,7 +18,7 @@ use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\ClacoFormRepository")
  * @ORM\Table(name="claro_clacoformbundle_claco_form")
  */
 class ClacoForm extends AbstractResource
@@ -295,6 +295,21 @@ class ClacoForm extends AbstractResource
             $this->details = [];
         }
         $this->details['search_column_enabled'] = $searchColumnEnabled;
+    }
+
+    public function getSearchColumns()
+    {
+        return !is_null($this->details) && isset($this->details['search_columns']) ?
+            $this->details['search_columns'] :
+            ['title', 'creationDateString', 'userString', 'categoriesString', 'keywordsString', 'actions'];
+    }
+
+    public function setSearchColumns(array $searchColumns)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['search_columns'] = $searchColumns;
     }
 
     public function getDisplayMetadata()

@@ -157,6 +157,7 @@
     "cannot_delete_unique_manager": "Impossible de supprimer le seul gestionnaire.",
     "cannot_unsubscribe_from_workspace": "Impossible de vous désinscrire de l'espace d'activités.",
     "captcha": "Captcha",
+    "cascade_select": "Liste déroulante en cascade",
     "categories": "Catégories",
     "categories_organization": "Organisation des catégories",
     "categorize": "Classer par catégorie",

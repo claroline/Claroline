@@ -107,29 +107,32 @@ export default class EntryViewCtrl {
     if (this.template) {
       this.template = this.template.replace('%clacoform_entry_title%', this.entry['title'])
       this.fields.forEach(f => {
-        const name = this.ClacoFormService.removeAccent(this.ClacoFormService.removeQuote(f['name']))
-        const id = f['id']
-        let replacedField = ''
+        if (!f['hidden']) {
+          const name = this.ClacoFormService.removeAccent(this.ClacoFormService.removeQuote(f['name']))
+          const id = f['id']
+          let replacedField = ''
 
-        if (this.metadataAllowed || !f['isMetadata'] || this.isEntryOwner() || this.isShared()) {
-          switch (f['type']) {
-            case 3 :
-              replacedField = this.$filter('date')(this.entry[id], 'dd/MM/yyyy')
-              break
-            case 6 :
-              replacedField = this.entry[id] ? this.entry[id].join(', ') : ''
-              break
-            case 7 :
-              replacedField = this.FieldService.getCountryNameFromCode(this.entry[id])
-              break
-            default :
-              replacedField = this.entry[id]
+          if (this.metadataAllowed || !f['isMetadata'] || this.isEntryOwner() || this.isShared()) {
+            switch (f['fieldFacet']['type']) {
+              case 3 :
+                replacedField = this.$filter('date')(this.entry[id], 'dd/MM/yyyy')
+                break
+              case 6 :
+              case 10 :
+                replacedField = this.entry[id] ? this.entry[id].join(', ') : ''
+                break
+              case 7 :
+                replacedField = this.FieldService.getCountryNameFromCode(this.entry[id])
+                break
+              default :
+                replacedField = this.entry[id]
+            }
           }
+          if (replacedField === undefined) {
+            replacedField = ''
+          }
+          this.template = this.template.replace(`%${name}%`, replacedField)
         }
-        if (replacedField === undefined) {
-          replacedField = ''
-        }
-        this.template = this.template.replace(`%${name}%`, replacedField)
       })
     }
   }

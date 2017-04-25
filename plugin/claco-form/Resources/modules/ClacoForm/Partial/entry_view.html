@@ -197,14 +197,14 @@
                 </div>
                 <div ng-if="!cfc.template">
                     <div ng-repeat="field in cfc.fields"
-                         ng-if="cfc.metadataAllowed || !field['isMetadata'] || cfc.isEntryOwner() || cfc.isShared()"
+                         ng-if="(cfc.metadataAllowed || !field['isMetadata'] || cfc.isEntryOwner() || cfc.isShared()) && !field['hidden']"
                     >
                         <div class="row">
                             <label class="col-md-3">
                                 {{ field['name'] }}
                             </label>
                             <div class="col-md-9">
-                                <span ng-switch="field['type']">
+                                <span ng-switch="field['fieldFacet']['type']">
                                     <span ng-switch-when="3">
                                         {{ cfc.entry[field['id']]|date:'dd/MM/yyyy' }}
                                     </span>
@@ -215,6 +215,9 @@
                                         {{ cfc.getCountryName(cfc.entry[field['id']]) }}
                                     </span>
                                     <span ng-switch-when="9" ng-bind-html="cfc.entry[field['id']]|trust_html">
+                                    </span>
+                                    <span ng-switch-when="10">
+                                        {{ cfc.entry[field['id']].join(', ') }}
                                     </span>
                                     <span ng-switch-default>
                                         {{ cfc.entry[field['id']] }}

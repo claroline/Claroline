@@ -33,6 +33,7 @@ class FieldFacet
     const COUNTRY_TYPE = 7;
     const EMAIL_TYPE = 8;
     const RICH_TEXT_TYPE = 9;
+    const CASCADE_SELECT_TYPE = 10;
 
     protected static $types = [
         self::STRING_TYPE,
@@ -44,6 +45,7 @@ class FieldFacet
         self::COUNTRY_TYPE,
         self::EMAIL_TYPE,
         self::RICH_TEXT_TYPE,
+        self::CASCADE_SELECT_TYPE,
     ];
 
     /**
@@ -234,6 +236,7 @@ class FieldFacet
             case self::COUNTRY_TYPE: return 'country';
             case self::EMAIL_TYPE: return 'email';
             case self::RICH_TEXT_TYPE: return 'rich_text';
+            case self::CASCADE_SELECT_TYPE: return 'cascade_select';
             default: return 'error';
         }
     }
@@ -250,6 +253,7 @@ class FieldFacet
             case self::COUNTRY_TYPE: return 'country';
             case self::EMAIL_TYPE: return 'email';
             case self::RICH_TEXT_TYPE: return 'rich_text';
+            case self::CASCADE_SELECT_TYPE: return 'cascade_select';
             default: return 'error';
         }
     }
