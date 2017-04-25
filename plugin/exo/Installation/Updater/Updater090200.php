@@ -39,7 +39,6 @@ class Updater090200
                 ':id' => $keyword['id'],
             ]);
         }
-
         $this->cleanQuestions();
     }
 
