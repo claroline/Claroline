@@ -1280,4 +1280,14 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         $this->isEnabled = false;
     }
+
+    public function addGroup(Group $group)
+    {
+        $this->groups->add($group);
+    }
+
+    public function removeGroup(Group $group)
+    {
+        $this->groups->remove($group);
+    }
 }

@@ -193,6 +193,17 @@ class ProfileType extends AbstractType
                         'multiple' => true,
                         'property' => 'name',
                     ]
+                )
+                ->add(
+                    'groups',
+                    'entity',
+                    [
+                        'label' => 'groups',
+                        'class' => 'Claroline\CoreBundle\Entity\Group',
+                        'expanded' => true,
+                        'multiple' => true,
+                        'property' => 'name',
+                    ]
                 );
         }
     }
