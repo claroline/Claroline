@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "313a878eefb988e92fbbe7925716f5e1310dff7e"
+                "reference": "ebe974c2f3f3d2955f5e59b77a193ff43d8390d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/313a878eefb988e92fbbe7925716f5e1310dff7e",
-                "reference": "313a878eefb988e92fbbe7925716f5e1310dff7e",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/ebe974c2f3f3d2955f5e59b77a193ff43d8390d9",
+                "reference": "ebe974c2f3f3d2955f5e59b77a193ff43d8390d9",
                 "shasum": ""
             },
             "require": {
@@ -304,6 +304,7 @@
                     "Claroline\\DashboardBundle\\ClarolineDashboardBundle",
                     "Claroline\\ClacoFormBundle\\ClarolineClacoFormBundle",
                     "Claroline\\RemoteUserSynchronizationBundle\\ClarolineRemoteUserSynchronizationBundle",
+                    "UJM\\LtiBundle\\UJMLtiBundle",
                     "Claroline\\CasBundle\\ClarolineCasBundle"
                 ]
             },
@@ -363,6 +364,7 @@
                     "Claroline\\DashboardBundle\\": "plugin/dashboard",
                     "Claroline\\ClacoFormBundle\\": "plugin/claco-form",
                     "Claroline\\RemoteUserSynchronizationBundle\\": "plugin/remote-user-synchronization",
+                    "UJM\\LtiBundle\\": "plugin/lti",
                     "Claroline\\CasBundle\\": "plugin/cas"
                 }
             },
@@ -383,7 +385,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-04-25 18:45:17"
+            "time": "2017-04-26 11:45:34"
         },
         {
             "name": "claroline/front-end-bundle",
