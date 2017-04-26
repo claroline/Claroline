@@ -408,6 +408,7 @@
     listMode: function (event) {
       var chk = $(event.target)
       var mode = chk.is(':checked') ? 'list': 'default'
+      $('#select-all-nodes-chk').attr('checked', false)
       this.displayMode = mode
       this.dispatcher.trigger('list-mode', {'viewName': this.parameters.viewName, 'mode': mode})
       this.registerDisplayMode()
