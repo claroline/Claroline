@@ -577,7 +577,7 @@ class ResourceManager
 
         foreach ($nodes as $node) {
             if ($node->getIndex() <= $index) {
-                $node->setIndex($node->getIndex());
+                $node->setIndex($node->getIndex() - 1);
             }
             $this->om->persist($node);
         }
