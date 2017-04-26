@@ -9,8 +9,8 @@
 namespace Icap\WebsiteBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Event\LifecycleEventArgs;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
@@ -121,7 +121,7 @@ class Website extends AbstractResource
         $em = $event->getEntityManager();
         $rootPage = $this->getRoot();
         $options = $this->getOptions();
-        if ($rootPage == null) {
+        if ($rootPage === null) {
             $rootPage = new WebsitePage();
             $rootPage->setWebsite($this);
             $rootPage->setIsSection(true);
@@ -129,23 +129,19 @@ class Website extends AbstractResource
             $rootPage->setType(WebsitePageTypeEnum::ROOT_PAGE);
             $this->setRoot($rootPage);
         }
-        if ($rootPage->getId() == null) {
+        if ($rootPage->getId() === null) {
             $em->getRepository('IcapWebsiteBundle:WebsitePage')->persistAsFirstChild($rootPage);
         }
 
-        if ($options == null) {
+        if ($options === null) {
             $options = new WebsiteOptions();
             $options->setWebsite($this);
             $this->setOptions($options);
         }
 
-        if ($options->getId() == null) {
+        if ($options->getId() === null) {
             $em->persist($options);
         }
-
-        /*if ($rootPage != null || $options != null) {
-            $em->flush();
-        }*/
     }
 
     public function isTest()
