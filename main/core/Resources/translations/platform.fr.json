@@ -1375,5 +1375,6 @@
     "your_username": "Votre nom d'utilisateur est",
     "your_workspace_activity_overview": "Aperçu des activités récentes de vos espaces d'activités",
     "ssl_enabled": "Activer SSL ?",
-    "visible_facet_form_explanation": "Le champ \"Visible\" vous permet de rendre l'élément visible ou non pour l'utilisateur."
+    "visible_facet_form_explanation": "Le champ \"Visible\" vous permet de rendre l'élément visible ou non pour l'utilisateur.",
+    "geolocate": "Géolocaliser"
 }

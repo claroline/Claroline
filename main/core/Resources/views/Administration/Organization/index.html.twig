@@ -4,6 +4,7 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'organizations' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block content %}
+    <div id="geolocate-key" data-key="{{ config.getParameter('google_geocoding_key') }}"/>
     <div id="organization-panel" class="panel panel-default" ng-app="OrganizationManager">
         <div ncy-breadcrumb></div>
         <div class="panel-body" ui-view></div>

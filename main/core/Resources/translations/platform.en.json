@@ -1356,5 +1356,6 @@
     "your_platform_id": "Your platform login",
     "your_profile_is_n_complete": "Your profile is %n%% complete",
     "your_username": "Your username is",
-    "your_workspace_activity_overview": "Overview of recent activities in your workspaces"
+    "your_workspace_activity_overview": "Overview of recent activities in your workspaces",
+    "geolocate": "Geolocate"
 }
