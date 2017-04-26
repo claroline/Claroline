@@ -39,7 +39,7 @@
         {# Main navigation #}
         {% if (hideTopBar is not defined or not hideTopBar) and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
             {% block topBarRender %}
-                {% if workspace is defined %}
+                {% if workspace is defined and workspace is not null %}
                     {% render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id})) %}
                 {% else %}
                     {% render(controller('ClarolineCoreBundle:Layout:topBar')) %}

@@ -254,12 +254,13 @@ class ResourceController
         // Fetch workspace details, otherwise it won't store them in session.
         // I know it's not pretty but it's the only way
         // I could think of to load them before the node gets stored is session
-        $options = $node->getWorkspace()->getOptions();
+        if ($node->getWorkspace()) {
+            $options = $node->getWorkspace()->getOptions();
 
-        if ($options) {
-            $options->getDetails();
+            if ($options) {
+                $options->getDetails();
+            }
         }
-
         $this->request->getSession()->set('current_resource_node', $node);
         $isIframe = (bool) $this->request->query->get('iframe');
         //double check... first the resource, then the target
