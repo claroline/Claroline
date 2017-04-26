@@ -41,11 +41,25 @@
     'packages/bootstrap/js/tooltip.js'
     'packages/bootstrap/js/popover.js'
     'packages/bootstrap/js/affix.js'
-    '../vendor/claroline/distribution/main/core/Resources/public/js/sidebar.js'
-    '../vendor/claroline/distribution/main/core/Resources/public/js/topbar.js'
-    '../vendor/claroline/distribution/main/core/Resources/public/js/checkbox-dropdown.js'
     %}<script src="{{ asset_url }}"></script>
 {% endjavascripts %}
+
+{% javascripts debug=false filter='jsmin' output='vendor/twitter/bootstrap/js/bootstrap.js'
+    'packages/bootstrap/js/transition.js'
+    'packages/bootstrap/js/alert.js'
+    'packages/bootstrap/js/button.js'
+    'packages/bootstrap/js/carousel.js'
+    'packages/bootstrap/js/collapse.js'
+    'packages/bootstrap/js/dropdown.js'
+    'packages/bootstrap/js/modal.js'
+    'packages/bootstrap/js/scrollspy.js'
+    'packages/bootstrap/js/tab.js'
+    'packages/bootstrap/js/tooltip.js'
+    'packages/bootstrap/js/popover.js'
+    'packages/bootstrap/js/affix.js'
+%}<script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
 {% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
     '../vendor/jms/twig-js/twig.js'
     %}<script src="{{ asset_url }}"></script>
@@ -121,6 +135,9 @@
     'bundles/clarolinecore/js/common.js'
     'bundles/clarolinecore/js/modal.js'
     'bundles/clarolinecore/js/simplerights.js'
+    'bundles/clarolinecore/js/sidebar.js'
+    'bundles/clarolinecore/js/topbar.js'
+    'bundles/clarolinecore/js/checkbox-dropdown.js'
     'bundles/clarolinecore/js/resource/manager/views/resource/actions.js'
     'bundles/clarolinecore/js/resource/manager/views/resource/breadcrumbs.js'
     'bundles/clarolinecore/js/resource/manager/views/resource/confirm.js'

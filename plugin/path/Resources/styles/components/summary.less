@@ -33,7 +33,7 @@
     // todo : those selectors are ugly
     .summary-title,
     .summary-controls .summary-control:first-child,
-    .step *:not(.step-progression),
+    .step-name,
     .step-actions {
         display: none;
     }
@@ -60,6 +60,11 @@
 
         .tree-item {
             border-bottom-color: @path-summary-link-border-color;
+
+            .step {
+                overflow-x: hidden;
+                text-overflow: ellipsis;
+            }
         }
     }
 
@@ -120,10 +125,6 @@
             color: @path-summary-link-active-color !important; // override status color
         }
     }
-
-    /*&:last-child > .tree-item {
-        border-bottom: 1px solid @path-summary-link-border-color;
-    }*/
 }
 
 .tree-item {
@@ -147,9 +148,6 @@
 
     .step {
         cursor: pointer;
-        /*max-width: 90%;*/
-        text-overflow: ellipsis;
-        overflow-x: hidden;
         white-space: nowrap;
     }
 }
@@ -187,10 +185,4 @@
     &.to_do     { color: @step-status-to_do-color; }
     &.done      { color: @step-status-done-color; }
     &.to_review { color: @step-status-to_review-color; }
-}
-
-.step-children {
-    //padding-left: @path-summary-lvl-indent !important;
-
-
 }

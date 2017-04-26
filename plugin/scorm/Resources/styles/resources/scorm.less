@@ -1,0 +1,29 @@
+.scorm-container {
+    .full-size {
+        height: 100%;
+        width: 100%;
+    }
+
+    .page-content {
+        display: flex;
+        flex-direction: row;
+    }
+
+    .scorm-menu {
+        display: none;
+
+        &.opened {
+            display: block;
+            width: 30%;
+
+            + .scorm-content {
+                width: 70%; // let some space for the menu
+            }
+        }
+    }
+
+    .scorm-content {
+        flex: 1;
+        width: 100%;
+    }
+}

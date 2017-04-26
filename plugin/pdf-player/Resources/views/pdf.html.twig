@@ -24,12 +24,14 @@
 
                 <nav class="page-actions">
                     {% if canDownload %}
-                        <a class="btn btn-link" href="{{ path('claro_resource_download') }}?ids[]={{ pdf.resourceNode.id }}">
-                            <span class="fa fa-fw fa-download"></span> {{ 'download'|trans({}, 'platform') }}
-                        </a>
-                        <a id="copy-permalink-to-clipboard" class="btn btn-link" href="{{ path('claro_pdf', {node: pdf.resourceNode.id}) }}">
-                            <span class="fa fa-fw fa-clipboard"></span> {{ 'copy_permalink_to_clipboard'|trans({}, 'platform') }}
-                        </a>
+                    <a class="btn page-action-btn" href="{{ path('claro_resource_download') }}?ids[]={{ pdf.resourceNode.id }}">
+                        <span class="page-action-icon fa fa-download"></span>
+                        <span class="sr-only">{{ 'download'|trans({}, 'platform') }}</span>
+                    </a>
+					<a id="copy-permalink-to-clipboard" class="btn page-action-btn" href="{{ path('claro_pdf', {node: pdf.resourceNode.id}) }}">
+                        <span class="page-action-icon fa fa-clipboard"></span> 
+						<span class="sr-only">{{ 'copy_permalink_to_clipboard'|trans({}, 'platform') }}</span>
+                    </a>
                     {% endif %}
                 </nav>
             </header>

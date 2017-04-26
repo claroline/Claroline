@@ -3,5 +3,11 @@
     "entry": {
       "results": "Results/results"
     }
+  },
+
+  "styles": {
+    "entry": {
+      "scorm-resource": "resources/scorm.less"
+    }
   }
 }
