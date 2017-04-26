@@ -157,7 +157,7 @@ class ApiController extends BaseController
         $this->checkAccess('OPEN', $blog);
 
         $post = null;
-        if ((int) $postId) {
+        if (preg_match('/^\d+$/', $postId)) {
             $post = $this->get('icap.blog.post_repository')->findOneBy([
                 'blog' => $blog,
                 'id' => $postId,
@@ -223,7 +223,7 @@ class ApiController extends BaseController
         $this->checkAccess('OPEN', $blog);
 
         $tag = null;
-        if ((int) $tagId) {
+        if (preg_match('/^\d+$/', $tagId)) {
             $tag = $this->get('icap.blog.tag_repository')->findOneById($tagId);
         } else {
             $tag = $this->get('icap.blog.tag_repository')->findOneBySlug($tagId);

@@ -40,6 +40,10 @@ utils.makeFindHtml = (text, solutions) => {
   return text
 }
 
+utils.getFindElementLength = () => {
+  return '<span class="checked-selection"></span>'.length
+}
+
 
 utils.getFirstSpan = (item) => {
   const id = item.selectionId ? item.selectionId: item.id

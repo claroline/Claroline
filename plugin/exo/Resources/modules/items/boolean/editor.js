@@ -2,10 +2,11 @@ import cloneDeep from 'lodash/cloneDeep'
 import zipObject from 'lodash/zipObject'
 
 import {ITEM_CREATE} from './../../quiz/editor/actions'
-import {makeActionCreator, makeId} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/utilities/redux'
 import {tex} from '#/main/core/translation'
 import {utils} from './utils/utils'
 import {notBlank} from './../../utils/validate'
+import {makeId} from './../../utils/utils'
 import {Boolean as component} from './editor.jsx'
 
 const UPDATE_CHOICE = 'UPDATE_CHOICE'

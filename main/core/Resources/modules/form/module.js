@@ -14,6 +14,7 @@ import './Field/Date/module'
 import './Field/File/module'
 import './Field/Lang/module'
 import './Field/Email/module'
+import './Field/CascadeSelect/module'
 
 import FormDirective from './FormDirective'
 import FormBuilderService from './FormBuilderService'
@@ -33,7 +34,8 @@ angular.module('FormBuilder', [
   'FieldDate',
   'FieldFile',
   'FieldLang',
-  'FieldEmail'
+  'FieldEmail',
+  'FieldCascadeSelect'
 ])
   .directive('formbuilder', () => new FormDirective)
   .directive('formField', () => new FieldDirective)

@@ -110,6 +110,13 @@ class Field
      */
     protected $fieldChoiceCategories;
 
+    /**
+     * @ORM\Column(name="hidden", type="boolean", options={"default" = 0})
+     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
+     * @SerializedName("hidden")
+     */
+    protected $hidden = false;
+
     public function __construct()
     {
         $this->fieldChoiceCategories = new ArrayCollection();
@@ -208,5 +215,15 @@ class Field
     public function getFieldChoiceCategories()
     {
         return $this->fieldChoiceCategories->toArray();
+    }
+
+    public function isHidden()
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
     }
 }

@@ -155,6 +155,7 @@
     "cannot_delete_unique_manager": "You may not remove the unique manager.",
     "cannot_unsubscribe_from_workspace": "You can't unsubscribe from the workspace.",
     "captcha": "Captcha",
+    "cascade_select": "Cascade select list",
     "categories": "Categories",
     "categories_organization": "Categories organization",
     "categorize": "Categorize",
@@ -204,6 +205,9 @@
     "copiable": "Copiable",
     "copies": "Copies",
     "copy": "Copy",
+    "copy_permalink_to_clipboard": "Copy permalink to clipboard",
+    "copy_to_clipboard_error": "An error occured while copying data to clipboard.",
+    "copy_to_clipboard_success": "Data copied to clipboard.",
     "count_resources": "Amount of resources",
     "country": "Country",
     "create": "Create",
@@ -1352,5 +1356,6 @@
     "your_platform_id": "Your platform login",
     "your_profile_is_n_complete": "Your profile is %n%% complete",
     "your_username": "Your username is",
-    "your_workspace_activity_overview": "Overview of recent activities in your workspaces"
+    "your_workspace_activity_overview": "Overview of recent activities in your workspaces",
+    "geolocate": "Geolocate"
 }

@@ -8,7 +8,7 @@ export const ScoreBox = props =>
     props.className,
     props.size ? 'score-box-'+props.size : null
   )}>
-    <span className="user-score">{props.score}</span>
+    <span className="user-score">{Math.round(props.score * 100) / 100}</span>
     <span className="sr-only">/</span>
     <span className="max-score">{transChoice('item_points', props.scoreMax, {count: props.scoreMax}, 'ujm_exo')}</span>
   </div>

@@ -265,6 +265,7 @@ class LdapManager
      * Delete a server configuration.
      *
      * @param $name The name of the server
+     * @param name The name of the server
      *
      * @return bool
      */

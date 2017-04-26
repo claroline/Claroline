@@ -3,9 +3,8 @@
 namespace UJM\ExoBundle\Transfer;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Claroline\CoreBundle\Library\Transfert\ResourceRichTextInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Ramsey\Uuid\Uuid;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Options\Transfer;
@@ -18,7 +17,7 @@ use UJM\ExoBundle\Transfer\Parser\ImportContentParser;
  * @DI\Service("ujm_exo.importer.exercise")
  * @DI\Tag("claroline.importer")
  */
-class ExerciseImporter extends Importer implements RichTextInterface
+class ExerciseImporter extends Importer implements ResourceRichTextInterface
 {
     /**
      * @var ContainerInterface
@@ -60,12 +59,11 @@ class ExerciseImporter extends Importer implements RichTextInterface
         // The rest of the structure will be created at the same time than the rich texts
         // Because this will not be possible to retrieves created entities as all ids are re-generated
         $exercise = new Exercise();
-        $exercise->setUuid($data['data']['id']);
 
         return $exercise;
     }
 
-    public function format($data)
+    public function format($data, $exercise)
     {
         $quizData = json_decode(json_encode($data['quiz']));
 
@@ -79,11 +77,7 @@ class ExerciseImporter extends Importer implements RichTextInterface
         );
 
         // Retrieve the new exercise
-        $exercise = $this->container->get('claroline.persistence.object_manager')
-            ->getRepository('UJMExoBundle:Exercise')
-            ->findOneBy([
-                'uuid' => $data['id'],
-            ]);
+        //$exercise = $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($node);
 
         // Create entities from import data
         $this->container->get('ujm_exo.manager.exercise')->createCopy($quizData, $exercise);
@@ -107,8 +101,6 @@ class ExerciseImporter extends Importer implements RichTextInterface
         $files = array_merge($files, $contentParser->getDumpedContents());
 
         return [
-            // The id will be used to retrieve the imported entity to replace the HTML contents
-            'id' => Uuid::uuid4()->toString(),
             // YML which will receive the quiz structure can not handle stdClasses (he prefers associative arrays)
             // So we do some ugly encoding/decoding to give him what he wants
             'quiz' => json_decode(json_encode($exerciseData), true),

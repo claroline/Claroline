@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Claroline\CoreBundle\Library\Transfert\ToolRichTextInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
@@ -128,7 +129,7 @@ class TransferManager
         }
 
         $this->log('Importing tools...');
-        $this->getImporterByName('tools')->import($data['tools'], $workspace, $importedRoles, $root);
+        $importerResult = $this->getImporterByName('tools')->import($data['tools'], $workspace, $importedRoles, $root);
         $this->om->endFlushSuite();
         //flush has to be forced unless it's a default template
         $defaults = [
@@ -140,7 +141,7 @@ class TransferManager
             $this->om->forceFlush();
         }
 
-        $this->importRichText($workspace, $data);
+        $this->importRichText($workspace, $data, $importerResult['resource_manager']);
     }
 
     /**
@@ -247,7 +248,7 @@ class TransferManager
         return $workspace;
     }
 
-    public function importRichText(Workspace $workspace, array $data)
+    public function importRichText(Workspace $workspace, array $data, array $resourceNodes = [])
     {
         $this->log('Parsing rich texts...');
         $this->container->get('claroline.importer.rich_text_formatter')->setData($data);
@@ -259,9 +260,9 @@ class TransferManager
             if ($importer) {
                 $importer->setWorkspace($workspace);
 
-                if (isset($tool['tool']['data']) && $importer instanceof RichTextInterface) {
+                if (isset($tool['tool']['data']) && ($importer instanceof RichTextInterface || $importer instanceof ToolRichTextInterface)) {
                     $data['data'] = $tool['tool']['data'];
-                    $importer->format($data);
+                    $importer->format($data, $resourceNodes);
                 }
             }
         }
@@ -464,7 +465,7 @@ class TransferManager
                 $tool = $dataTool['tool'];
 
                 if ($tool['type'] === 'resource_manager') {
-                    $resourceImporter->import(
+                    $resourceNodes = $resourceImporter->import(
                         $tool,
                         $workspace,
                         [],
@@ -476,7 +477,7 @@ class TransferManager
             }
         }
         $this->om->endFlushSuite();
-        $this->importRichText($directory->getWorkspace(), $data);
+        $this->importRichText($directory->getWorkspace(), $data, $resourceNodes);
         $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
     }
 

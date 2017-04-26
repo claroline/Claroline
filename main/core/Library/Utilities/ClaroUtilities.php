@@ -59,10 +59,10 @@ class ClaroUtilities
     {
         ksort($fillable);
         $saveKey = 1;
-        $filledArray = array();
+        $filledArray = [];
 
         foreach ($fillable as $key => $value) {
-            if ($key - $saveKey != 0) {
+            if ($key - $saveKey !== 0) {
                 while ($key - $saveKey >= 1) {
                     $filledArray[$saveKey] = array_shift($array);
                     ++$saveKey;
@@ -96,14 +96,14 @@ class ClaroUtilities
             return '0s';
         }
 
-        $bit = array(
+        $bit = [
             'y' => $secs / 31556926 % 12,
             'w' => $secs / 604800 % 52,
             'd' => $secs / 86400 % 7,
             'h' => $secs / 3600 % 24,
             'm' => $secs / 60 % 60,
             's' => $secs % 60,
-            );
+            ];
 
         foreach ($bit as $k => $v) {
             if ($v > 0) {
@@ -193,7 +193,7 @@ class ClaroUtilities
     public function formatFileSize($fileSize)
     {
         //don't format if it's already formatted.
-        $validUnits = array('KB', 'MB', 'GB', 'TB');
+        $validUnits = ['KB', 'MB', 'GB', 'TB'];
 
         foreach ($validUnits as $unit) {
             if (strpos($unit, $fileSize)) {
@@ -220,12 +220,11 @@ class ClaroUtilities
     public function getRealFileSize($fileSize)
     {
         //B goes at the end because it's always matched otherwise
-        $validUnits = array('KB', 'MB', 'GB', 'TB');
+        $validUnits = ['KB', 'MB', 'GB', 'TB'];
         $value = str_replace(' ', '', $fileSize);
 
-        $replacements = array('');
         $pattern = '/(\d+)/';
-        $data = preg_grep($pattern, array($value));
+        $data = preg_grep($pattern, [$value]);
 
         foreach ($validUnits as $unit) {
             if (strpos($fileSize, $unit)) {
@@ -249,10 +248,47 @@ class ClaroUtilities
 
     public function formatCsvOutput($data)
     {
+        // If encoding not UTF-8 then convert it to UTF-8
+        $encoding = $this->detectEncoding($data);
+        if ($encoding && $encoding !== 'UTF-8') {
+            $data = iconv($encoding, 'UTF-8', $data);
+        }
         $data = str_replace("\r\n", PHP_EOL, $data);
         $data = str_replace("\r", PHP_EOL, $data);
         $data = str_replace("\n", PHP_EOL, $data);
 
         return $data;
+    }
+
+    /**
+     * Detect if encoding is UTF-8, ASCII, ISO-8859-1 or Windows-1252.
+     *
+     * @param $string
+     *
+     * @return bool|string
+     */
+    public function detectEncoding($string)
+    {
+        static $enclist = ['UTF-8', 'ASCII', 'ISO-8859-1', 'Windows-1252'];
+
+        if (function_exists('mb_detect_encoding')) {
+            return mb_detect_encoding($string, $enclist, true);
+        }
+
+        $result = false;
+
+        foreach ($enclist as $item) {
+            try {
+                $sample = iconv($item, $item, $string);
+                if (md5($sample) === md5($string)) {
+                    $result = $item;
+                    break;
+                }
+            } catch (ContextErrorException $e) {
+                unset($e);
+            }
+        }
+
+        return $result;
     }
 }

@@ -16,7 +16,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\ResourceRichTextInterface;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
+use Claroline\CoreBundle\Library\Transfert\ToolRichTextInterface;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
@@ -34,7 +36,7 @@ use Symfony\Component\HttpFoundation\File\File;
  * @DI\Service("claroline.tool.resource_manager_importer")
  * @DI\Tag("claroline.importer")
  */
-class ResourceManagerImporter extends Importer implements ConfigurationInterface, RichTextInterface
+class ResourceManagerImporter extends Importer implements ConfigurationInterface, ToolRichTextInterface
 {
     private $result;
     private $data;
@@ -324,6 +326,8 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 }
             }
         }
+
+        return $resourceNodes;
     }
 
     public function export($workspace, array &$_files, $object)
@@ -334,7 +338,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
         if ($root) {
             $_data['root'] = [
-                'uid' => $root->getId(),
+                'uid' => $root->getGuid(),
                 'roles' => $this->getPermsArray($root),
             ];
             $directory = $this->resourceManager->getResourceTypeByName('directory');
@@ -774,7 +778,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         }
     }
 
-    public function format($data)
+    public function format($data, array $resourceNodes)
     {
         $resourceImporter = null;
 
@@ -787,10 +791,10 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     }
                 }
 
-                if ($resourceImporter && $resourceImporter instanceof RichTextInterface) {
-                    if (isset($item['item']['data']) && $resourceImporter) {
+                if ($resourceImporter && ($resourceImporter instanceof RichTextInterface || $resourceImporter instanceof ResourceRichTextInterface)) {
+                    if (isset($item['item']['data'])) {
                         $itemData = $item['item']['data'];
-                        $resourceImporter->format($itemData);
+                        $resourceImporter->format($itemData, $resourceNodes[$item['item']['uid']]);
                     }
                 }
             }
@@ -799,7 +803,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     private function getDirectoryElement(ResourceNode $resourceNode, &$_files, $setParentNull = false)
     {
-        $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getId() : null;
+        $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getGuid() : null;
         if ($setParentNull) {
             $parentId = null;
         }
@@ -809,7 +813,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             'creator' => null,
             'parent' => $parentId,
             'published' => $resourceNode->isPublished(),
-            'uid' => $resourceNode->getId(),
+            'uid' => $resourceNode->getGuid(),
             'roles' => $this->getPermsArray($resourceNode),
             'index' => $resourceNode->getIndex(),
         ]];
@@ -828,7 +832,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         &$_data = [],
         $setParentNull = false
     ) {
-        $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getId() : null;
+        $parentId = $resourceNode->getParent() ? $resourceNode->getParent()->getGuid() : null;
         $resourceNode = $this->resourceManager->getRealTarget($resourceNode, false);
 
         $data = [];
@@ -859,7 +863,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 'published' => $resourceNode->isPublished(),
                 'type' => $resourceNode->getResourceType()->getName(),
                 'roles' => $this->getPermsArray($resourceNode),
-                'uid' => $resourceNode->getId(),
+                'uid' => $resourceNode->getGuid(),
                 'data' => $data,
             ]];
 

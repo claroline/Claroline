@@ -142,7 +142,7 @@ class ContentItemDefinition implements ItemDefinitionInterface
      */
     public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
     {
-        if ($item->data) {
+        if (property_exists($item, 'data')) {
             $item->data = $contentParser->parse($item->data);
         }
     }

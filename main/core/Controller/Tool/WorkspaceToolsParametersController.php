@@ -102,13 +102,13 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $toolsDatas = $this->toolManager->getWorkspaceToolsConfigurationArray($workspace);
         $pwsToolConfigs = $this->toolManager->getPersonalWorkspaceToolConfigForCurrentUser();
 
-        return array(
+        return [
             'roles' => $this->roleManager->getWorkspaceConfigurableRoles($workspace),
             'workspace' => $workspace,
             'toolPermissions' => $toolsDatas['existingTools'],
             'maskDecoders' => $toolsDatas['maskDecoders'],
             'pwsToolConfigs' => $pwsToolConfigs,
-        );
+        ];
     }
 
     /**
@@ -129,11 +129,11 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $this->checkAccess($workspace);
         $ot = $this->toolManager->getOneByWorkspaceAndTool($workspace, $tool);
 
-        return array(
+        return [
             'form' => $this->formFactory->create(new WorkspaceOrderToolEditType(), $ot)->createView(),
             'workspace' => $workspace,
             'wot' => $ot,
-        );
+        ];
     }
 
     /**
@@ -160,19 +160,19 @@ class WorkspaceToolsParametersController extends AbstractParametersController
             $this->toolManager->editOrderedTool($form->getData());
 
             return new JsonResponse(
-                array(
+                [
                     'tool_id' => $workspaceOrderTool->getTool()->getId(),
                     'ordered_tool_id' => $workspaceOrderTool->getId(),
                     'name' => $workspaceOrderTool->getName(),
-                )
+                ]
             );
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspace' => $workspace,
             'wot' => $workspaceOrderTool,
-        );
+        ];
     }
 
     /**
@@ -274,10 +274,10 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $workspaceOptions = $this->workspaceManager->getWorkspaceOptions($workspace);
         $form = $this->formFactory->create(new WorkspaceOptionsType($workspaceOptions));
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspace' => $workspace,
-        );
+        ];
     }
 
     /**
@@ -316,14 +316,14 @@ class WorkspaceToolsParametersController extends AbstractParametersController
             return new RedirectResponse(
                 $this->router->generate(
                     'claro_workspace_open_tool',
-                    array('workspaceId' => $workspace->getId(), 'toolName' => 'parameters')
+                    ['workspaceId' => $workspace->getId(), 'toolName' => 'parameters']
                 )
             );
         } else {
-            return array(
+            return [
                 'form' => $form->createView(),
                 'workspace' => $workspace,
-            );
+            ];
         }
     }
 }

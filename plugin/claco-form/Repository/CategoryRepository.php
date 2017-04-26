@@ -33,4 +33,17 @@ class CategoryRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findCategoriesByIds(array $ids)
+    {
+        $dql = '
+            SELECT c
+            FROM Claroline\ClacoFormBundle\Entity\Category c
+            WHERE c.id IN (:ids)
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('ids', $ids);
+
+        return $query->getResult();
+    }
 }

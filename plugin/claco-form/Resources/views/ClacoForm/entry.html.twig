@@ -35,14 +35,18 @@
                                 </label>
                                 <div class="col-md-9 entry-value">
                                     {% if fieldValues[field.getId()] is defined %}
-                                        {% if field.getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::DATE_TYPE') %}
+                                        {% if field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::DATE_TYPE') %}
                                             {{ fieldValues[field.getId()]|date('d/m/Y') }}
-                                        {% elseif field.getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::CHECKBOXES_TYPE') %}
+                                        {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::CHECKBOXES_TYPE') %}
                                             {{ fieldValues[field.getId()]|join(', ') }}
-                                        {% elseif field.getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::COUNTRY_TYPE') %}
-                                            {{ countries[fieldValues[field.getId()]] }}
-                                        {% elseif field.getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::RICH_TEXT_TYPE') %}
+                                        {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::COUNTRY_TYPE') %}
+                                            {% if fieldValues[field.getId()] %}
+                                                {{ countries[fieldValues[field.getId()]] }}
+                                            {% endif %}
+                                        {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::RICH_TEXT_TYPE') %}
                                             {{ fieldValues[field.getId()]|raw }}
+                                        {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::CASCADE_SELECT_TYPE') %}
+                                            {{ fieldValues[field.getId()]|join(', ') }}
                                         {% else %}
                                             {{ fieldValues[field.getId()] }}
                                         {% endif %}

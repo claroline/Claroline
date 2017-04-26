@@ -15,7 +15,8 @@
       "core-js": "core-js",
       "whatwg-fetch": "fetch-shim",
       "resource-icon-set-list": "icon/resource-icon-set-list/module",
-      "resource-icon-item-list": "icon/resource-icon-item-list/module"
+      "resource-icon-item-list": "icon/resource-icon-item-list/module",
+      "copy-text-to-clipboard": "copy-text-to-clipboard/copy-text-to-clipboard"
     }
   }
 }

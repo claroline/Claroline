@@ -46,31 +46,33 @@ export default class EntryCreationCtrl {
       this.template = this.template.replace('%clacoform_entry_title%', replacedField)
     }
     this.fields.forEach(f => {
-      const id = f['id']
-      const name = f['name'].replace(/'/g, ' ')
-      this.entry[id] = null
+      if (!f['hidden']) {
+        const id = f['id']
+        const name = f['name'].replace(/'/g, ' ')
+        this.entry[id] = null
 
-      if (f['required']) {
-        this.entryErrors[id] = null
-      }
-      if (this.template) {
-        let choices = JSON.stringify(f['fieldFacet']['field_facet_choices'])
-        choices = choices.replace(/'/g, '\\\'')
-        choices = choices.replace(/"/g, '\'')
-        const replacedField = `
-          <form-field field="['${name}',
-                             '${f['fieldFacet']['translation_key']}',
-                             {
-                                 values: ${choices},
-                                 choice_value: 'value',
-                                 error: cfc.entryErrors[${id}],
-                                 noLabel: true
-                             }]"
-                      ng-model="cfc.entry[${id}]"
-          >
-          </form-field>
-        `
-        this.template = this.template.replace(`%${this.ClacoFormService.removeAccent(name)}%`, replacedField)
+        if (f['required']) {
+          this.entryErrors[id] = null
+        }
+        if (this.template) {
+          let choices = JSON.stringify(f['fieldFacet']['field_facet_choices'])
+          choices = choices.replace(/'/g, '\\\'')
+          choices = choices.replace(/"/g, '\'')
+          const replacedField = `
+            <form-field field="['${name}',
+                               '${f['fieldFacet']['translation_key']}',
+                               {
+                                   values: ${choices},
+                                   choice_value: 'value',
+                                   error: cfc.entryErrors[${id}],
+                                   noLabel: true
+                               }]"
+                        ng-model="cfc.entry[${id}]"
+            >
+            </form-field>
+          `
+          this.template = this.template.replace(`%${this.ClacoFormService.removeAccent(name)}%`, replacedField)
+        }
       }
     })
     this.initializeKeywords()
@@ -140,11 +142,13 @@ export default class EntryCreationCtrl {
       this.entryErrors['entry_title'] = Translator.trans('form_not_blank_error', {}, 'clacoform')
     }
     this.fields.forEach(f => {
-      const id = f['id']
+      if (!f['hidden']) {
+        const id = f['id']
 
-      if (f['required'] && (this.entry[id] === undefined || this.entry[id] === null || this.entry[id] === '' || this.entry[id].length === 0)) {
-        this.entryErrors[id] = Translator.trans('form_not_blank_error', {}, 'clacoform')
-        this.entry[id] = null
+        if (f['required'] && (this.entry[id] === undefined || this.entry[id] === null || this.entry[id] === '' || this.entry[id].length === 0)) {
+          this.entryErrors[id] = Translator.trans('form_not_blank_error', {}, 'clacoform')
+          this.entry[id] = null
+        }
       }
     })
 

@@ -26,10 +26,12 @@ export default class TemplateManagementCtrl {
   initialize() {
     this.ClacoFormService.clearMessages()
     this.fields.forEach(f => {
-      if (f['required']) {
-        this.mandatory.push(f)
-      } else {
-        this.optional.push(f)
+      if (!f['hidden']) {
+        if (f['required']) {
+          this.mandatory.push(f)
+        } else {
+          this.optional.push(f)
+        }
       }
     })
   }

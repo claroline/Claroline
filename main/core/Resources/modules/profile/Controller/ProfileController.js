@@ -3,7 +3,7 @@ import NotBlank from '../../form/Validator/NotBlank'
 /*global Translator*/
 
 export default class ProfileController {
-  constructor ($http, $scope, FormBuilderService, ClarolineAPIService, NgTableParams) {
+  constructor($http, $scope, FormBuilderService, ClarolineAPIService, NgTableParams) {
     this.$http = $http
     this.$scope = $scope
     this.FormBuilderService = FormBuilderService
@@ -34,15 +34,19 @@ export default class ProfileController {
       {count: 20},
       {counts: [10, 20, 50, 100], dataset: this.sessions}
     )
-    $http.get(Routing.generate('api_get_courses_profile_tab_option')).then(d => {
-      this.displayCourses = d['data']['displayCourses']
-      this.displayCourseWorkspace = d['data']['displayWorkspace']
+    $http.get(Routing.generate('claro_user_profile_courses_tab_options')).then(d => {
+      if (d['data']['displayCourses']) {
+        this.displayCourses = d['data']['displayCourses']
+      }
+      if (d['data']['displayWorkspace']) {
+        this.displayCourseWorkspace = d['data']['displayWorkspace']
+      }
     })
 
     this.fieldTypes = ['text', 'number', 'date', 'radio', 'select', 'checkboxes', 'country', 'email']
   }
 
-  onSubmit (facet) {
+  onSubmit(facet) {
     const fields = []
 
     facet.panels.forEach(panel => {
@@ -56,7 +60,7 @@ export default class ProfileController {
     )
   }
 
-  switchProfileMode () {
+  switchProfileMode() {
     if (this.disabled) {
       this.disabled = false
       this.profileModeLabel = Translator.trans('display_mode', {}, 'platform')
@@ -81,7 +85,7 @@ export default class ProfileController {
     return fieldForms
   }
 
-  getFieldDefinition (field) {
+  getFieldDefinition(field) {
     const validators = []
 
     if (field.is_required) {
@@ -101,14 +105,15 @@ export default class ProfileController {
     ]
   }
 
-  loadCoursesProfile () {
+  loadCoursesProfile() {
     if (this.displayCourses && !this.coursesLoaded) {
       this.coursesLoaded = true
-      const url = Routing.generate('api_get_closed_sessions_by_leaner', {user: this.userId})
+      const url = Routing.generate('claro_user_profile_closed_sessions', {user: this.userId})
       this.$http.get(url).then(d => {
         if (d['status'] === 200) {
           this.sessions.splice(0, this.sessions.length)
-          d['data'].forEach(s => {
+          const data = JSON.parse(d['data'])
+          data.forEach(s => {
             s['courseId'] = s['course']['id']
             s['courseTitle'] = s['course']['title']
             s['courseCode'] = s['course']['code']

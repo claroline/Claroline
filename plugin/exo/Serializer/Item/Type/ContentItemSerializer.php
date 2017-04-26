@@ -46,8 +46,11 @@ class ContentItemSerializer implements SerializerInterface
         if (empty($contentItem)) {
             $contentItem = new ContentItem();
         }
+
         if (isset($data->data)) {
             $contentItem->setData($data->data);
+        } elseif (isset($data->url)) {
+            $contentItem->setData($data->url);
         }
 
         return $contentItem;

@@ -160,6 +160,7 @@ class FieldFacetValue
             case FieldFacet::FLOAT_TYPE: return $this->getFloatValue();
             case FieldFacet::DATE_TYPE: return $this->getDateValue();
             case FieldFacet::CHECKBOXES_TYPE: return $this->getArrayValue();
+            case FieldFacet::CASCADE_SELECT_TYPE: return $this->getArrayValue();
             default: return $this->getStringValue();
         }
     }

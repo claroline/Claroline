@@ -157,6 +157,7 @@
     "cannot_delete_unique_manager": "Impossible de supprimer le seul gestionnaire.",
     "cannot_unsubscribe_from_workspace": "Impossible de vous désinscrire de l'espace d'activités.",
     "captcha": "Captcha",
+    "cascade_select": "Liste déroulante en cascade",
     "categories": "Catégories",
     "categories_organization": "Organisation des catégories",
     "categorize": "Classer par catégorie",
@@ -206,6 +207,9 @@
     "copiable": "Copiable",
     "copies": "Copies",
     "copy": "Copier",
+    "copy_permalink_to_clipboard": "Copier le permalien dans le presse-papiers",
+    "copy_to_clipboard_error": "La copie des données vers le presse-papiers a échoué.",
+    "copy_to_clipboard_success": "Les données ont été copiées dans le presse-papiers.",
     "count_resources": "Nombre de ressources",
     "country": "Pays",
     "create": "Créer",
@@ -1371,5 +1375,6 @@
     "your_username": "Votre nom d'utilisateur est",
     "your_workspace_activity_overview": "Aperçu des activités récentes de vos espaces d'activités",
     "ssl_enabled": "Activer SSL ?",
-    "visible_facet_form_explanation": "Le champ \"Visible\" vous permet de rendre l'élément visible ou non pour l'utilisateur."
+    "visible_facet_form_explanation": "Le champ \"Visible\" vous permet de rendre l'élément visible ou non pour l'utilisateur.",
+    "geolocate": "Géolocaliser"
 }

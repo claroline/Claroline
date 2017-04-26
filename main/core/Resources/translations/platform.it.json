@@ -6,5 +6,8 @@
     "parameters": "Impostazioni",
     "404": "Pagina non trovata",
     "0_or_1": "0 o 1",
-    "accept": "Accettare"
+    "accept": "Accettare",
+    "copy_permalink_to_clipboard": "",
+    "copy_to_clipboard_error": "",
+    "copy_to_clipboard_success": ""
 }

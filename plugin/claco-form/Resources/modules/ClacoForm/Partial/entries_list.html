@@ -74,9 +74,9 @@
                         </li>
                     </ul>
                 </div>
-                <br>
-                <br>
             </div>
+            <br>
+            <br>
             <div class="table-responsive" ng-if="cfc.entries.length > 0">
                 <table class="table" ng-table-dynamic="cfc.tableParams['entries'] with cfc.getDisplayedColumns('entries')" show-filter="true">
                     <tr ng-repeat="entry in $data" ng-class="cfc.getStatusClass(entry['status'])">
@@ -96,6 +96,14 @@
                                    ng-if="entry['comments'].length > 0"
                                 >
                                 </i>
+                                <a ui-sref="entry_view({entryId: entry['id']})" ng-if="!cfc.isColumnDisplayed('entries', 'title')">
+                                    <i class="fa fa-search"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       title="{{ 'open_entry'|trans:{}:'clacoform' }}"
+                                    >
+                                    </i>
+                                </a>
                             </span>
                             <span ng-if="fc['id'] === 'actions'">
                                 <button class="btn btn-default btn-sm" ng-click="cfc.downloadPdf(entry['id'])" ng-if="cfc.canGeneratePdf()">
@@ -170,9 +178,9 @@
                         </li>
                     </ul>
                 </div>
-                <br>
-                <br>
             </div>
+            <br>
+            <br>
             <div class="table-responsive" ng-if="cfc.myEntries.length > 0">
                 <table class="table" ng-table-dynamic="cfc.tableParams['myEntries'] with cfc.getDisplayedColumns('myEntries')" show-filter="true">
                     <tr ng-repeat="entry in $data" ng-class="cfc.getStatusClass(entry['status'])">
@@ -192,6 +200,14 @@
                                    ng-if="entry['comments'].length > 0"
                                 >
                                 </i>
+                                <a ui-sref="entry_view({entryId: entry['id']})" ng-if="!cfc.isColumnDisplayed('myEntries', 'title')">
+                                    <i class="fa fa-search"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       title="{{ 'open_entry'|trans:{}:'clacoform' }}"
+                                    >
+                                    </i>
+                                </a>
                             </span>
                             <span ng-if="fc['id'] === 'actions'">
                                 <button class="btn btn-default btn-sm" ng-click="cfc.downloadPdf(entry['id'])" ng-if="cfc.canGeneratePdf()">
@@ -248,9 +264,9 @@
                         </li>
                     </ul>
                 </div>
-                <br>
-                <br>
             </div>
+            <br>
+            <br>
             <div class="table-responsive" ng-if="cfc.managerEntries.length > 0">
                 <table class="table" ng-table-dynamic="cfc.tableParams['managerEntries'] with cfc.getDisplayedColumns('managerEntries')" show-filter="true">
                     <tr ng-repeat="entry in $data" ng-class="cfc.getStatusClass(entry['status'])">
@@ -270,6 +286,14 @@
                                    ng-if="entry['comments'].length > 0"
                                 >
                                 </i>
+                                <a ui-sref="entry_view({entryId: entry['id']})" ng-if="!cfc.isColumnDisplayed('managerEntries', 'title')">
+                                    <i class="fa fa-search"
+                                       data-toggle="tooltip"
+                                       data-placement="top"
+                                       title="{{ 'open_entry'|trans:{}:'clacoform' }}"
+                                    >
+                                    </i>
+                                </a>
                             </span>
                             <span ng-if="fc['id'] === 'actions'">
                                 <button class="btn btn-default btn-sm" ng-click="cfc.downloadPdf(entry['id'])" ng-if="cfc.canGeneratePdf()">

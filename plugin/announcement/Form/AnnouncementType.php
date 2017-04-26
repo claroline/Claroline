@@ -19,19 +19,19 @@ class AnnouncementType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text', array('required' => false));
-        $builder->add('announcer', 'text', array('required' => false));
-        $builder->add('content', 'tinymce', array('required' => true));
+        $builder->add('title', 'text', ['required' => false]);
+        $builder->add('announcer', 'text', ['required' => false]);
+        $builder->add('content', 'tinymce', ['required' => true]);
         $builder->add(
             'visible',
             'checkbox',
-            array(
+            [
                 'required' => false,
-                'attr' => array('class' => 'visible-chk'),
-            )
+                'attr' => ['class' => 'visible-chk'],
+            ]
         );
 
-        $attr = array();
+        $attr = [];
         $attr['class'] = 'datepicker input-small';
         $attr['data-date-format'] = 'dd-mm-yyyy';
         $attr['autocomplete'] = 'off';
@@ -39,31 +39,31 @@ class AnnouncementType extends AbstractType
         $builder->add(
             'visible_from',
             'date',
-            array(
+            [
                 'required' => false,
                 'format' => 'dd-MM-yyyy',
                 'widget' => 'single_text',
                 'attr' => $attr,
                 'input' => 'datetime',
-            )
+            ]
         );
         $builder->add(
             'visible_until',
             'date',
-            array(
+            [
                 'required' => false,
                 'format' => 'dd-MM-yyyy',
                 'widget' => 'single_text',
                 'attr' => $attr,
                 'input' => 'datetime',
-            )
+            ]
         );
         $builder->add(
-            'notify_user', 'checkbox', array(
-                'label' => 'notify_user',
+            'notify_user', 'checkbox', [
+                'label' => 'send_email_to_users',
                 'required' => false,
                 'mapped' => false,
-            )
+            ]
         );
     }
 
@@ -75,9 +75,9 @@ class AnnouncementType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'translation_domain' => 'announcement',
-            )
+            ]
         );
     }
 }

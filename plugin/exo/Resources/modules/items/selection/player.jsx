@@ -112,11 +112,20 @@ export class SelectionPlayer extends Component {
         'click',
         () => {
           let offsets = getOffsets(document.getElementById('selection-text-box-' + this.props.item.id))
+          if (offsets.trueStart !== offsets.trueEnd) {
+            //must be a click and not a selection
+            return
+          }
           const leftTries = (this.props.item.tries || 0) - (this.props.answer ? this.props.answer.tries: 0)
           if (leftTries > 0) {
             this.props.item.solutions.forEach(element => {
-              if (offsets.trueStart >= element.begin && offsets.trueEnd <= element.end) {
-                this.onFindAnswer(offsets.trueStart)
+              //remove the appended span size for style
+              let toRemove = 0
+              this.props.answer.positions.filter(position => position <= element.end).sort().forEach(() => toRemove += utils.getFindElementLength())
+
+              const position = offsets.trueStart - toRemove
+              if (position >= element.begin && position <= element.end) {
+                this.onFindAnswer(position)
               }
             })
             this.onFindAnswer(null, true)

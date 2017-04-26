@@ -108,6 +108,15 @@ class OrganizationManager
         return $orga;
     }
 
+    public function setParent(Organization $organization, Organization $parent = null)
+    {
+        $organization->setParent($parent);
+        $this->om->persist($organization);
+        $this->om->flush();
+
+        return $organization;
+    }
+
     public function setLogger(LoggerInterface $logger)
     {
         $this->logger = $logger;

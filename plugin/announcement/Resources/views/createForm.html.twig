@@ -42,7 +42,7 @@
         {{ form_row(form.visible_until) }}
         <div class="form-group row">
             <label class="control-label col-md-3" for="announcement_form_notify_user">
-                {{ 'notify_user'|trans({}, 'announcement') }}
+                {{ 'send_email_to_users'|trans({}, 'announcement') }}
                 <i class="fa fa-info-circle pointer-hand"
                    data-toggle="tooltip"
                    data-placement="top"
@@ -50,7 +50,9 @@
                 >
                 </i>
             </label>
-            {{ form_widget(form.notify_user) }}
+            <div class="col-md-9">
+                {{ form_widget(form.notify_user) }}
+            </div>
         </div>
         {{ form_rest(form) }}
     </div>

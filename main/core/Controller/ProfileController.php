@@ -526,6 +526,50 @@ class ProfileController extends Controller
     }
 
     /**
+     * @EXT\Route(
+     *     "/courses/profile/tab/option",
+     *     name="claro_user_profile_courses_tab_options",
+     *     options={"expose"=true}
+     * )
+     * @SEC\Secure(roles="ROLE_USER")
+     * @EXT\Method({"GET"})
+     *
+     * @return JsonResponse
+     */
+    public function getCoursesProfileTabOptionAction()
+    {
+        $event = $this->eventDispatcher->dispatch(
+            'claroline_profile_courses_tab_options',
+            'GenericDatas'
+        );
+        $data = $event->getResponse();
+
+        return new JsonResponse($data, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/user/{user}/profile/sessions/closed",
+     *     name="claro_user_profile_closed_sessions",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Method({"GET"})
+     *
+     * @return JsonResponse
+     */
+    public function getUserClosedSessionsAction(User $user)
+    {
+        $event = $this->eventDispatcher->dispatch(
+            'claroline_learner_closed_sessions',
+            'GenericDatas',
+            [$user]
+        );
+        $data = $event->getResponse();
+
+        return new JsonResponse($data, 200);
+    }
+
+    /**
      * @param Role   $role
      * @param Role[] $roles
      *

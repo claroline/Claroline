@@ -22,6 +22,9 @@
                         <a class="btn btn-link" href="{{ path('claro_resource_download') }}?ids[]={{ video.getResourceNode().getId() }}">
                             <i class="fa fa-fw fa-download"></i> {{ 'download'|trans({}, 'platform') }}
                         </a>
+                        <a id="copy-permalink-to-clipboard" class="btn btn-link" href="{{ url('claro_file_get_media', {'node': video.resourceNode.id}) }}">
+                            <i class="fa fa-fw fa-clipboard"></i> {{ 'copy_permalink_to_clipboard'|trans({}, 'platform') }}
+                        </a>
                     {% endif %}
 
                     <video-tracks data-ng-app="TrackButton"></video-tracks>
@@ -47,4 +50,12 @@
         window.tracks = {{ tracks|json_serialize('api_resource')|raw }}
     </script>
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-video-player-track-management.js') | raw }}"></script>
+
+    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-core-copy-text-to-clipboard.js') }}" ></script>
+    <script>
+        document.querySelector('a#copy-permalink-to-clipboard').addEventListener('click', function(event) {
+            event.preventDefault();
+            copyTextToClipboard($(this).attr('href'));
+        });
+    </script>
 {% endblock %}

@@ -14,6 +14,7 @@ export default class FieldEditionModalCtrl {
   constructor($http, $uibModalInstance, FieldService, CategoryService, resourceId, field, title, callback) {
     this.$http = $http
     this.$uibModalInstance = $uibModalInstance
+    this.FieldService = FieldService
     this.CategoryService = CategoryService
     this.resourceId = resourceId
     this.source = field
@@ -26,21 +27,28 @@ export default class FieldEditionModalCtrl {
       isMetadata: false,
       locked: false,
       lockedEditionOnly: false,
-      choices: []
+      hidden: false
     }
     this.fieldErrors = {
       name: null
     }
     this.types = FieldService.getTypes()
     this.type = null
-    this.oldChoices = []
-    this.oldChoicesErrors = {}
     this.index = 1
     this.choices = []
     this.choicesErrors = {}
+    this.choicesChildren = {}
+    this.choicesChildrenErrors = {}
     this.categories = CategoryService.getCategories()
+    this.currentParentIndex = null
+    this.currentParent = null
+    this.currentMode = 'button'
+    this.cascadeLevelMax = FieldService.getCascadeLevelMax()
+    this.selectFields = []
+    this.selectFieldToCopy = null
     this.initializeField()
     this.initializeChoices()
+    this.initializeSelectFields()
   }
 
   initializeField() {
@@ -58,8 +66,36 @@ export default class FieldEditionModalCtrl {
     if (this.source['fieldFacet']['field_facet_choices'].length > 0) {
       this.source['fieldFacet']['field_facet_choices'].forEach(c => {
         const id = c['id']
-        this.oldChoices.push({index: id, value: c['label'], category: null, categoryEnabled: false})
-        this.oldChoicesErrors[id] = null
+
+        if (id >= this.index) {
+          this.index = id + 1
+        }
+        if (c['parent']) {
+          const parentId = c['parent']['id']
+
+          if (!this.choicesChildren[parentId]) {
+            this.choicesChildren[parentId] = []
+          }
+          this.choicesChildren[parentId].push({
+            index: id,
+            value: c['label'],
+            category: null,
+            categoryEnabled: false,
+            cascadeEnabled: false,
+            new: false
+          })
+          this.choicesChildrenErrors[id] = null
+        } else {
+          this.choices.push({
+            index: id,
+            value: c['label'],
+            category: null,
+            categoryEnabled: false,
+            cascadeEnabled: false,
+            new: false
+          })
+          this.choicesErrors[id] = null
+        }
       })
       const choicesCategoriesUrl = Routing.generate('claro_claco_form_field_choices_categories_retrieve', {field: this.source['id']})
       this.$http.get(choicesCategoriesUrl).then(d => {
@@ -67,24 +103,51 @@ export default class FieldEditionModalCtrl {
           const choicesCategories = JSON.parse(d['data'])
           choicesCategories.forEach(cc => {
             const id = cc['fieldFacetChoice']['id']
-            const oldChoiceIndex = this.oldChoices.findIndex(oc => oc['index'] === id)
+            const choiceIndex = this.choices.findIndex(oc => oc['index'] === id)
 
-            if (oldChoiceIndex > -1) {
+            if (choiceIndex > -1) {
               const selectedCategory = this.categories.find(c => c['id'] === cc['category']['id'])
 
               if (selectedCategory) {
-                this.oldChoices[oldChoiceIndex]['category'] = selectedCategory
-                this.oldChoices[oldChoiceIndex]['categoryEnabled'] = true
+                this.choices[choiceIndex]['category'] = selectedCategory
+                this.choices[choiceIndex]['categoryEnabled'] = true
+              }
+            } else {
+              let found = false
+
+              for (const parentId in this.choicesChildren) {
+                if (!found) {
+                  const childChoiceIndex = this.choicesChildren[parentId].findIndex(oc => oc['index'] === id)
+
+                  if (childChoiceIndex > -1) {
+                    found = true
+                    const selectedCategory = this.categories.find(c => c['id'] === cc['category']['id'])
+
+                    if (selectedCategory) {
+                      this.choicesChildren[parentId][childChoiceIndex]['category'] = selectedCategory
+                      this.choicesChildren[parentId][childChoiceIndex]['categoryEnabled'] = true
+                    }
+                  }
+                }
               }
             }
           })
         }
       })
     } else {
-      this.choices = [{index: this.index, value: ''}]
+      this.choices = [{index: this.index, value: '', category: null, categoryEnabled: false, cascadeEnabled: false, new: true}]
       this.choicesErrors[this.index] = null
       ++this.index
     }
+  }
+
+  initializeSelectFields() {
+    const fields = this.FieldService.getFields()
+    fields.forEach(f => {
+      if (f['type'] === 5 && f['id'] !== this.source['id']) {
+        this.selectFields.push(f)
+      }
+    })
   }
 
   checkValues() {
@@ -95,6 +158,8 @@ export default class FieldEditionModalCtrl {
 
   submit() {
     this.resetErrors()
+    this.currentMode = 'button'
+    this.selectFieldToCopy = null
 
     if (!this.field['name']) {
       this.fieldErrors['name'] = Translator.trans('form_not_blank_error', {}, 'clacoform')
@@ -104,24 +169,6 @@ export default class FieldEditionModalCtrl {
     this.field['type'] = this.type['value']
 
     if (this.hasChoices()) {
-      this.oldChoices.forEach(c => {
-        if (!c['value']) {
-          this.oldChoicesErrors[c['index']] = Translator.trans('form_not_blank_error', {}, 'clacoform')
-        } else {
-          this.oldChoices.forEach(oc => {
-            if ((oc['index'] !== c['index']) && (oc['value'] === c['value'])) {
-              this.oldChoicesErrors[c['index']] = Translator.trans('form_not_unique_error', {}, 'clacoform')
-              this.oldChoicesErrors[oc['index']] = Translator.trans('form_not_unique_error', {}, 'clacoform')
-            }
-          })
-          this.choices.forEach(nc => {
-            if (nc['value'] === c['value']) {
-              this.oldChoicesErrors[c['index']] = Translator.trans('form_not_unique_error', {}, 'clacoform')
-              this.choicesErrors[nc['index']] = Translator.trans('form_not_unique_error', {}, 'clacoform')
-            }
-          })
-        }
-      })
       this.choices.forEach(c => {
         if (!c['value']) {
           this.choicesErrors[c['index']] = Translator.trans('form_not_blank_error', {}, 'clacoform')
@@ -132,14 +179,22 @@ export default class FieldEditionModalCtrl {
               this.choicesErrors[nc['index']] = Translator.trans('form_not_unique_error', {}, 'clacoform')
             }
           })
-          this.oldChoices.forEach(oc => {
-            if (oc['value'] === c['value']) {
-              this.choicesErrors[c['index']] = Translator.trans('form_not_unique_error', {}, 'clacoform')
-              this.oldChoicesErrors[oc['index']] = Translator.trans('form_not_unique_error', {}, 'clacoform')
-            }
-          })
         }
       })
+      for (const parentIndex in this.choicesChildren) {
+        this.choicesChildren[parentIndex].forEach(c => {
+          if (!c['value']) {
+            this.choicesChildrenErrors[c['index']] = Translator.trans('form_not_blank_error', {}, 'clacoform')
+          } else {
+            this.choicesChildren[parentIndex].forEach(nc => {
+              if ((nc['index'] !== c['index']) && (nc['value'] === c['value'])) {
+                this.choicesChildrenErrors[c['index']] = Translator.trans('form_not_unique_error', {}, 'clacoform')
+                this.choicesChildrenErrors[nc['index']] = Translator.trans('form_not_unique_error', {}, 'clacoform')
+              }
+            })
+          }
+        })
+      }
     }
     if (this.isValid()) {
       const checkNameUrl = Routing.generate(
@@ -150,7 +205,7 @@ export default class FieldEditionModalCtrl {
         if (d['status'] === 200) {
           if (d['data'] === 'null') {
             const url = Routing.generate('claro_claco_form_field_edit', {field: this.source['id']})
-            this.$http.put(url, {fieldData: this.field, oldChoicesData: this.oldChoices, choicesData: this.choices}).then(d => {
+            this.$http.put(url, {fieldData: this.field, choicesData: this.choices, choicesChildrenData: this.choicesChildren}).then(d => {
               this.callback(d['data'])
               this.$uibModalInstance.close()
             })
@@ -166,11 +221,11 @@ export default class FieldEditionModalCtrl {
     for (const key in this.fieldErrors) {
       this.fieldErrors[key] = null
     }
-    for (const key in this.oldChoicesErrors) {
-      this.oldChoicesErrors[key] = null
-    }
     for (const key in this.choicesErrors) {
       this.choicesErrors[key] = null
+    }
+    for (const key in this.choicesChildrenErrors) {
+      this.choicesChildrenErrors[key] = null
     }
   }
 
@@ -193,15 +248,15 @@ export default class FieldEditionModalCtrl {
   isChoicesValid() {
     let valid = true
 
-    for (const key in this.oldChoicesErrors) {
-      if (this.oldChoicesErrors[key]) {
+    for (const key in this.choicesErrors) {
+      if (this.choicesErrors[key]) {
         valid = false
         break
       }
     }
     if (valid) {
-      for (const key in this.choicesErrors) {
-        if (this.choicesErrors[key]) {
+      for (const key in this.choicesChildrenErrors) {
+        if (this.choicesChildrenErrors[key]) {
           valid = false
           break
         }
@@ -225,18 +280,16 @@ export default class FieldEditionModalCtrl {
   }
 
   addChoice() {
-    this.choices.push({index: this.index, value: '', category: null, categoryEnabled: false})
+    this.choices.push({
+      index: this.index,
+      value: '',
+      category: null,
+      categoryEnabled: false,
+      cascadeEnabled: false,
+      new: true
+    })
     this.choicesErrors[this.index] = null
     ++this.index
-  }
-
-  removeOldChoice(index) {
-    const choiceIndex = this.oldChoices.findIndex(c => c['index'] === index)
-
-    if (choiceIndex > -1) {
-      this.oldChoices.splice(choiceIndex, 1)
-      delete this.oldChoicesErrors[index]
-    }
   }
 
   removeChoice(index) {
@@ -245,23 +298,7 @@ export default class FieldEditionModalCtrl {
     if (choiceIndex > -1) {
       this.choices.splice(choiceIndex, 1)
       delete this.choicesErrors[index]
-    }
-  }
-
-  enableOldChoiceCategory(index) {
-    const choiceIndex = this.oldChoices.findIndex(c => c['index'] === index)
-
-    if (choiceIndex > -1) {
-      this.oldChoices[choiceIndex]['categoryEnabled'] = true
-    }
-  }
-
-  disableOldChoiceCategory(index) {
-    const choiceIndex = this.oldChoices.findIndex(c => c['index'] === index)
-
-    if (choiceIndex > -1) {
-      this.oldChoices[choiceIndex]['categoryEnabled'] = false
-      this.oldChoices[choiceIndex]['category'] = null
+      this.removeAllChildren(index)
     }
   }
 
@@ -280,5 +317,136 @@ export default class FieldEditionModalCtrl {
       this.choices[choiceIndex]['categoryEnabled'] = false
       this.choices[choiceIndex]['category'] = null
     }
+  }
+
+  switchChoiceCascade(index) {
+    this.currentMode = 'button'
+    this.selectFieldToCopy = null
+
+    if (index === this.currentParentIndex) {
+      this.currentParentIndex = null
+      this.currentParent['cascadeEnabled'] = false
+      this.currentParent = null
+    } else {
+      this.closeAllCascades()
+      const choiceIndex = this.choices.findIndex(c => c['index'] === index)
+
+      if (choiceIndex > -1) {
+        this.choices[choiceIndex]['cascadeEnabled'] = true
+        this.currentParent = this.choices[choiceIndex]
+        this.currentParentIndex = index
+      }
+    }
+  }
+
+  switchChildChoiceCascade(parentIndex, index) {
+    this.currentMode = 'button'
+    this.selectFieldToCopy = null
+
+    if (index === this.currentParentIndex) {
+      this.currentParentIndex = null
+      this.currentParent['cascadeEnabled'] = false
+      this.currentParent = null
+    } else {
+      this.closeRelativeCascades(parentIndex, index)
+      const choiceIndex = this.choicesChildren[parentIndex].findIndex(c => c['index'] === index)
+
+      if (choiceIndex > -1) {
+        this.choicesChildren[parentIndex][choiceIndex]['cascadeEnabled'] = true
+        this.currentParentIndex = index
+        this.currentParent = this.choicesChildren[parentIndex][choiceIndex]
+      }
+    }
+  }
+
+  closeRelativeCascades(parentIndex, index) {
+    this.choicesChildren[parentIndex].forEach(c => c['cascadeEnabled'] = false)
+
+    if (this.choicesChildren[index]) {
+      this.choicesChildren[index].forEach(c => c['cascadeEnabled'] = false)
+    }
+  }
+
+  closeAllCascades() {
+    this.choices.forEach(c => c['cascadeEnabled'] = false)
+
+    for (const parentId in this.choicesChildren) {
+      this.choicesChildren[parentId].forEach(c => c['cascadeEnabled'] = false)
+    }
+    this.currentParentIndex = null
+    this.currentParent = null
+  }
+
+  addChildChoice(parentIndex, value = '') {
+    if (!this.choicesChildren[parentIndex]) {
+      this.choicesChildren[parentIndex] = []
+    }
+    this.choicesChildren[parentIndex].push({
+      index: this.index,
+      value: value,
+      category: null,
+      categoryEnabled: false,
+      cascadeEnabled: false,
+      new: true
+    })
+    this.choicesChildrenErrors[this.index] = null
+    ++this.index
+  }
+
+  removeChildChoice(parentIndex, index) {
+    const choiceIndex = this.choicesChildren[parentIndex].findIndex(c => c['index'] === index)
+
+    if (choiceIndex > -1) {
+      this.choicesChildren[parentIndex].splice(choiceIndex, 1)
+      delete this.choicesErrors[index]
+      this.removeAllChildren(index)
+    }
+  }
+
+  enableChildChoiceCategory(parentIndex, index) {
+    const choiceIndex = this.choicesChildren[parentIndex].findIndex(c => c['index'] === index)
+
+    if (choiceIndex > -1) {
+      this.choicesChildren[parentIndex][choiceIndex]['categoryEnabled'] = true
+    }
+  }
+
+  disableChildChoiceCategory(parentIndex, index) {
+    const choiceIndex = this.choicesChildren[parentIndex].findIndex(c => c['index'] === index)
+
+    if (choiceIndex > -1) {
+      this.choicesChildren[parentIndex][choiceIndex]['categoryEnabled'] = false
+      this.choicesChildren[parentIndex][choiceIndex]['category'] = null
+    }
+  }
+
+  removeAllChildren(index) {
+    if (this.choicesChildren[index]) {
+      this.choicesChildren[index].forEach(c => this.removeAllChildren(c['index']))
+      delete this.choicesChildren[index]
+    }
+  }
+
+  showSelectLists() {
+    this.currentMode = 'list'
+    this.selectFieldToCopy = null
+  }
+
+  cancelListCopy() {
+    this.currentMode = 'button'
+    this.selectFieldToCopy = null
+  }
+
+  copyList(parentIndex) {
+    const allChoices = this.selectFieldToCopy['fieldFacet'] && this.selectFieldToCopy['fieldFacet']['field_facet_choices'] ?
+      this.selectFieldToCopy['fieldFacet']['field_facet_choices'] :
+      []
+    allChoices.forEach(c => {
+      if (!c['parent']) {
+        this.addChildChoice(parentIndex, c['label'])
+      }
+    })
+    this.currentMode = 'button'
+    this.selectFieldToCopy = null
   }
 }
