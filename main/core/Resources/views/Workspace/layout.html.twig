@@ -12,6 +12,7 @@
 
 {# Checks if we need to hide the breadcrumb #}
 {% if workspace is defined and
+    workspace is not null and
     workspace.getOptions() is not empty and
     workspace.getOptions().getDetails() is not empty and
     workspace.getOptions().getDetails()['hide_breadcrumb'] is defined and
@@ -103,7 +104,7 @@
 
     <script type="text/javascript">
         window.Workspace = {};
-        {% if _resource is defined %}
+        {% if _resource is defined and _resource.getResourceNode().getWorkspace() is not null %}
             window.Workspace.id = {{ _resource.getResourceNode().getWorkspace().getId() }};
         {% else %}
             window.Workspace.id = null;
@@ -151,7 +152,7 @@
 {% block stylesheets %}
     {{ parent() }}
 
-    {% if workspace is defined and workspace.backgroundColor is not null %}
+    {% if workspace is defined and workspace is not null and workspace.backgroundColor is not null %}
     <style type="text/css">
         body {
             background-color: {{ workspace.getOptions().getDetails()['background_color'] }};
