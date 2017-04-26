@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Form;
 
-use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Entity\Role;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class ProfileCreationType extends AbstractType
 {
@@ -53,41 +54,41 @@ class ProfileCreationType extends AbstractType
         parent::buildForm($builder, $options);
         $isAdmin = $this->isAdmin;
 
-        $builder->add('firstName', 'text', array('label' => 'first_name'))
-            ->add('lastName', 'text', array('label' => 'last_name'))
-            ->add('username', 'text', array('label' => 'username'))
+        $builder->add('firstName', 'text', ['label' => 'first_name'])
+            ->add('lastName', 'text', ['label' => 'last_name'])
+            ->add('username', 'text', ['label' => 'username'])
             ->add(
                 'plainPassword',
                 'repeated',
-                array(
+                [
                     'type' => 'password',
-                    'first_options' => array('label' => 'password'),
-                    'second_options' => array('label' => 'verification'),
-                )
+                    'first_options' => ['label' => 'password'],
+                    'second_options' => ['label' => 'verification'],
+                ]
             )
             ->add(
                 'administrativeCode',
                 'text',
-                array(
+                [
                     'required' => false, 'label' => 'administrative_code',
-                )
+                ]
             )
-            ->add('mail', 'email', array('required' => true, 'label' => 'email'))
-            ->add('phone', 'text', array('required' => false, 'label' => 'phone'))
-            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'language'))
+            ->add('mail', 'email', ['required' => true, 'label' => 'email'])
+            ->add('phone', 'text', ['required' => false, 'label' => 'phone'])
+            ->add('locale', 'choice', ['choices' => $this->langs, 'required' => false, 'label' => 'language'])
             ->add(
                 'authentication',
                 'choice',
-                array(
+                [
                     'choices' => $this->authenticationDrivers,
                     'required' => false,
                     'label' => 'authentication',
-                )
+                ]
             )
             ->add(
                 'platformRoles',
                 'entity',
-                array(
+                [
                     'label' => 'roles',
                     'choice_translation_domain' => true,
                     'mapped' => false,
@@ -96,7 +97,7 @@ class ProfileCreationType extends AbstractType
                     'expanded' => true,
                     'multiple' => true,
                     'property' => 'translationKey',
-                    'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($isAdmin) {
+                    'query_builder' => function (EntityRepository $er) use ($isAdmin) {
                         $query = $er->createQueryBuilder('r')
                                 ->where('r.type = '.Role::PLATFORM_ROLE)
                                 ->andWhere("r.name != 'ROLE_USER'")
@@ -107,18 +108,29 @@ class ProfileCreationType extends AbstractType
 
                         return $query;
                     },
-                )
+                ]
             )
             ->add(
                 'organizations',
                 'entity',
-                array(
+                [
                     'label' => 'organizations',
                     'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
                     'expanded' => true,
                     'multiple' => true,
                     'property' => 'name',
-                )
+                ]
+            )
+            ->add(
+                'groups',
+                'entity',
+                [
+                    'label' => 'groups',
+                    'class' => 'Claroline\CoreBundle\Entity\Group',
+                    'expanded' => true,
+                    'multiple' => true,
+                    'property' => 'name',
+                ]
             );
     }
 
@@ -129,11 +141,11 @@ class ProfileCreationType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $default = array(
+        $default = [
             'data_class' => 'Claroline\CoreBundle\Entity\User',
-            'validation_groups' => array('registration', 'Default'),
+            'validation_groups' => ['registration', 'Default'],
             'translation_domain' => 'platform',
-        );
+        ];
         if ($this->forApi) {
             $default['csrf_protection'] = false;
         }

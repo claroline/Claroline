@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Form\ImportUserType;
 use Claroline\CoreBundle\Form\ProfileCreationType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
+use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RightsManager;
@@ -68,6 +69,7 @@ class UsersController extends Controller
     private $userManager;
     private $workspaceManager;
     private $authorization;
+    private $groupManager;
 
     /**
      * @DI\InjectParams({
@@ -87,7 +89,8 @@ class UsersController extends Controller
      *     "toolMaskDecoderManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
      *     "translator"             = @DI\Inject("translator"),
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager")
      * })
      */
     public function __construct(
@@ -107,7 +110,8 @@ class UsersController extends Controller
         ToolMaskDecoderManager $toolMaskDecoderManager,
         TranslatorInterface $translator,
         UserManager $userManager,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        GroupManager $groupManager
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->configHandler = $configHandler;
@@ -127,6 +131,7 @@ class UsersController extends Controller
         $this->userAdminTool = $this->toolManager->getAdminToolByName('user_management');
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
+        $this->groupManager = $groupManager;
     }
 
     /**
@@ -164,11 +169,27 @@ class UsersController extends Controller
         if (!$this->mailManager->isMailerAvailable()) {
             $error = 'mail_not_available';
         }
+        $groupsData = [];
+        $groups = $this->groupManager->getAllGroupsWithoutPager();
+
+        foreach ($groups as $group) {
+            $organizations = $group->getOrganizations();
+
+            foreach ($organizations as $organization) {
+                $organizationId = $organization->getId();
+
+                if (!isset($groups[$organizationId])) {
+                    $groupsData[$organizationId] = [];
+                }
+                $groupsData[$organizationId][] = $group->getId();
+            }
+        }
 
         return [
             'form_complete_user' => $form->createView(),
             'error' => $error,
             'unavailableRoles' => $unavailableRoles,
+            'groupsData' => $groupsData,
         ];
     }
 
@@ -200,11 +221,26 @@ class UsersController extends Controller
         $form->handleRequest($this->request);
         $roles = $form->get('platformRoles')->getData();
         $unavailableRoles = $this->roleManager->validateNewUserRolesInsert($roles);
+        $groupsData = [];
+        $groups = $this->groupManager->getAllGroupsWithoutPager();
 
+        foreach ($groups as $group) {
+            $organizations = $group->getOrganizations();
+
+            foreach ($organizations as $organization) {
+                $organizationId = $organization->getId();
+
+                if (!isset($groups[$organizationId])) {
+                    $groupsData[$organizationId] = [];
+                }
+                $groupsData[$organizationId][] = $group->getId();
+            }
+        }
         if ($form->isValid() && count($unavailableRoles) === 0) {
             $user = $form->getData();
             $newRoles = $form->get('platformRoles')->getData();
-            $this->userManager->createUser($user, true, $newRoles);
+            $orgas = $form->get('organizations')->getData();
+            $this->userManager->createUser($user, true, $newRoles, null, null, $orgas);
             $sessionFlashBag->add(
                 'success',
                 $this->translator->trans('user_creation_success', [], 'platform')
@@ -223,6 +259,7 @@ class UsersController extends Controller
             'form_complete_user' => $form->createView(),
             'error' => $error,
             'unavailableRoles' => $unavailableRoles,
+            'groupsData' => $groupsData,
         ];
     }
 

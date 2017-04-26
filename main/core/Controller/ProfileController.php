@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Form\UserPublicProfileUrlType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\ProfilePropertyManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -59,6 +60,7 @@ class ProfileController extends Controller
     private $ch;
     private $authenticationManager;
     private $profilePropertyManager;
+    private $groupManager;
 
     /**
      * @DI\InjectParams({
@@ -73,7 +75,8 @@ class ProfileController extends Controller
      *     "facetManager"           = @DI\Inject("claroline.manager.facet_manager"),
      *     "ch"                     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
-     *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager")
+     *     "profilePropertyManager" = @DI\Inject("claroline.manager.profile_property_manager"),
+     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager")
      * })
      *
      * @param UserManager                  $userManager
@@ -88,6 +91,7 @@ class ProfileController extends Controller
      * @param PlatformConfigurationHandler $ch
      * @param AuthenticationManager        $authenticationManager
      * @param ProfilePropertyManager       $profilePropertyManager
+     * @param GroupManager                 $groupManager
      */
     public function __construct(
         UserManager $userManager,
@@ -101,7 +105,8 @@ class ProfileController extends Controller
         FacetManager $facetManager,
         PlatformConfigurationHandler $ch,
         AuthenticationManager $authenticationManager,
-        ProfilePropertyManager $profilePropertyManager
+        ProfilePropertyManager $profilePropertyManager,
+        GroupManager $groupManager
     ) {
         $this->userManager = $userManager;
         $this->roleManager = $roleManager;
@@ -115,6 +120,7 @@ class ProfileController extends Controller
         $this->ch = $ch;
         $this->authenticationManager = $authenticationManager;
         $this->profilePropertyManager = $profilePropertyManager;
+        $this->groupManager = $groupManager;
     }
 
     /**
@@ -298,7 +304,21 @@ class ProfileController extends Controller
                 $unavailableRoles[] = $role;
             }
         }
+        $groupsData = [];
+        $groups = $this->groupManager->getAllGroupsWithoutPager();
 
+        foreach ($groups as $group) {
+            $organizations = $group->getOrganizations();
+
+            foreach ($organizations as $organization) {
+                $organizationId = $organization->getId();
+
+                if (!isset($groups[$organizationId])) {
+                    $groupsData[$organizationId] = [];
+                }
+                $groupsData[$organizationId][] = $group->getId();
+            }
+        }
         if ($form->isValid() && count($unavailableRoles) === 0) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
@@ -372,6 +392,7 @@ class ProfileController extends Controller
             'user' => $user,
             'editYourself' => $editYourself,
             'unavailableRoles' => $unavailableRoles,
+            'groupsData' => $groupsData,
         ];
     }
 

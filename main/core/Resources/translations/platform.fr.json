@@ -121,7 +121,7 @@
     "attempt": "Tentative",
     "attempts": "Tentatives",
     "auth_mode": "Mode d'authentification",
-    "authentication": "Authentificatio",
+    "authentication": "Authentification",
     "authentication_invalid": "La source d'authentification %authentication% de la ligne %line% n'est pas valide.",
     "authentication_source": "Source d'authentification",
     "author": "Auteur",
