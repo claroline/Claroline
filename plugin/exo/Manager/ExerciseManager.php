@@ -263,4 +263,34 @@ class ExerciseManager
 
         return $copyDestination;
     }
+
+    public function exportPapersToCsv(Exercise $exercise)
+    {
+        /** @var PaperRepository $repo */
+        $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
+        $papers = $repo->findBy([
+            'exercise' => $exercise,
+        ]);
+
+        $handle = fopen('php://output', 'w+');
+        /** @var Paper $paper */
+        foreach ($papers as $paper) {
+            $structure = json_decode($paper->getStructure());
+            $totalScoreOn = $structure->parameters->totalScoreOn && floatval($structure->parameters->totalScoreOn) > 0 ? floatval($structure->parameters->totalScoreOn) : $this->paperManager->calculateTotal($paper);
+            $user = $paper->getUser();
+            $score = $this->paperManager->calculateScore($paper, $totalScoreOn);
+            fputcsv($handle, [
+                $user && !$paper->isAnonymized() ? $user->getFirstName().' - '.$user->getLastName() : '',
+                $paper->getNumber(),
+                $paper->getStart()->format('Y-m-d H:i:s'),
+                $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : '',
+                $paper->isInterrupted(),
+                $score !== floor($score) ? number_format($score, 2) : $score,
+                $totalScoreOn,
+            ], ';');
+        }
+        fclose($handle);
+
+        return $handle;
+    }
 }
