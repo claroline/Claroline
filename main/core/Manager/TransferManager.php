@@ -142,6 +142,17 @@ class TransferManager
         }
 
         $this->importRichText($workspace, $data, $importerResult['resource_manager']);
+
+        if (isset($data['tabs']) && is_array($data['tabs'])) {
+            $homeTabManager = $this->container->get('claroline.manager.home_tab_manager');
+            $translator = $this->container->get('translator');
+
+            foreach ($data['tabs'] as $tab) {
+                if (isset($tab['tab']) && isset($tab['tab']['name'])) {
+                    $homeTabManager->createHomeTab($translator->trans($tab['tab']['name'], [], 'platform'), $workspace);
+                }
+            }
+        }
     }
 
     /**
