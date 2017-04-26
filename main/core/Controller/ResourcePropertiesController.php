@@ -212,16 +212,8 @@ class ResourcePropertiesController extends Controller
             }
 
             if ($node->isPublished() !== $wasPublished) {
-                $eventName = "publication_change_{$node->getResourceType()->getName()}";
-                $resource = $this->resourceManager->getResourceFromNode($node);
-                $this->dispatcher->dispatch($eventName, 'PublicationChange', [$resource]);
+                $this->resourceManager->setPublishedStatus([$node], $node->isPublished());
             }
-
-            $usersToNotify = $node->getWorkspace() ?
-                $this->container->get('claroline.manager.user_manager')->getUsersByWorkspaces([$node->getWorkspace()], null, null, false) :
-                [];
-
-            $this->dispatcher->dispatch('log', 'Log\LogResourcePublish', [$node, $usersToNotify]);
 
             if (
                 $this->hasAccess('ADMINISTRATE', $collection) &&
