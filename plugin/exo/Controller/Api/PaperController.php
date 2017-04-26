@@ -14,7 +14,7 @@ use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
-use UJM\ExoBundle\Repository\PaperRepository;
+use UJM\ExoBundle\Manager\ExerciseManager;
 
 /**
  * Paper Controller.
@@ -36,22 +36,31 @@ class PaperController extends AbstractController
     private $paperManager;
 
     /**
+     * @var ExerciseManager
+     */
+    private $exerciseManager;
+
+    /**
      * PaperController constructor.
      *
      * @DI\InjectParams({
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "paperManager"    = @DI\Inject("ujm_exo.manager.paper")
+     *     "paperManager"    = @DI\Inject("ujm_exo.manager.paper"),
+     *     "exerciseManager" = @DI\Inject("ujm_exo.manager.exercise")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param PaperManager                  $paperManager
+     * @param EntityManager                 $em
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        PaperManager $paperManager)
-    {
+        PaperManager $paperManager,
+        ExerciseManager $exerciseManager
+    ) {
         $this->authorization = $authorization;
         $this->paperManager = $paperManager;
+        $this->exerciseManager = $exerciseManager;
     }
 
     /**
@@ -160,7 +169,7 @@ class PaperController extends AbstractController
     /**
      * Exports papers into a CSV file.
      *
-     * @EXT\Route("/export", name="exercise_papers_export")
+     * @EXT\Route("/export/csv", name="exercise_papers_export")
      * @EXT\Method("GET")
      *
      * @param Exercise $exercise
@@ -169,36 +178,13 @@ class PaperController extends AbstractController
      */
     public function exportCsvAction(Exercise $exercise)
     {
-        if (!$this->isAdmin($paper->getExercise())) {
-            // Only administrator or Paper Managers can axport Papers
+        if (!$this->isAdmin($exercise)) {
+            // Only administrator or Paper Managers can export Papers
             throw new AccessDeniedException();
         }
 
-        /** @var PaperRepository $repo */
-        $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
-
-        $papers = $repo->findBy([
-            'exercise' => $exercise,
-        ]);
-
-        return new StreamedResponse(function () use ($papers) {
-            $handle = fopen('php://output', 'w+');
-
-            /** @var Paper $paper */
-            foreach ($papers as $paper) {
-                $structure = json_decode($paper->getStructure());
-                $totalScoreOn = $structure->parameters->totalScoreOn && floatval($structure->parameters->totalScoreOn) > 0 ? floatval($structure->parameters->totalScoreOn) : 20;
-                fputcsv($handle, [
-                    $paper->getUser()->getFirstName().'-'.$paper->getUser()->getLastName(),
-                    $paper->getNumber(),
-                    $paper->getStart()->format('Y-m-d H:i:s'),
-                    $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : '',
-                    $paper->isInterrupted(),
-                    $this->paperManager->calculateScore($paper, $totalScoreOn),
-                ], ';');
-            }
-
-            fclose($handle);
+        return new StreamedResponse(function () use ($exercise) {
+            $this->exerciseManager->exportPapersToCsv($exercise);
         }, 200, [
             'Content-Type' => 'application/force-download',
             'Content-Disposition' => 'attachment; filename="export.csv"',
