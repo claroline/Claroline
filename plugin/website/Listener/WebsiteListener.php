@@ -12,9 +12,12 @@ use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\Log\LogGenericEvent;
+use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Form\WebsiteType;
+use Icap\WebsiteBundle\Manager\WebsiteManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -28,19 +31,22 @@ class WebsiteListener
     private $container;
     private $httpKernel;
     private $request;
+    private $websiteManager;
 
     /**
      * @DI\InjectParams({
      *     "container"    = @DI\Inject("service_container"),
      *     "httpKernel"   = @DI\Inject("http_kernel"),
-     *     "requestStack" = @DI\Inject("request_stack")
+     *     "requestStack" = @DI\Inject("request_stack"),
+     *     "websiteManager"= @DI\Inject("icap.website.manager")
      * })
      */
-    public function __construct(ContainerInterface $container, HttpKernelInterface $httpKernel, RequestStack $requestStack)
+    public function __construct(ContainerInterface $container, HttpKernelInterface $httpKernel, RequestStack $requestStack, WebsiteManager $websiteManager)
     {
         $this->container = $container;
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
+        $this->websiteManager = $websiteManager;
     }
 
     /**
@@ -129,5 +135,24 @@ class WebsiteListener
 
         $event->setCopy($newWebsite);
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("log")
+     *
+     * @param LogGenericEvent $event
+     */
+    public function onRename(LogGenericEvent $event)
+    {
+        if (
+            $event instanceof LogResourceUpdateEvent
+            && $event->getAction() === 'resource-update_rename'
+            && $event->getDetails()['resource']['changeSet']['name'][0] !== $event->getDetails()['resource']['changeSet']['name'][1]
+        ) {
+            $resourceNode = $event->getResource();
+            $newTitle = $event->getDetails()['resource']['changeSet']['name'][1];
+
+            $this->websiteManager->renameRootPageByResourceNode($newTitle, $resourceNode);
+        }
     }
 }

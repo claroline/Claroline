@@ -11,6 +11,7 @@
 
 namespace Icap\WebsiteBundle\Manager;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -208,6 +209,13 @@ class WebsiteManager
         $fs = new FileSystem();
         $fs->remove($websiteUploadFolder);
         $this->om->remove($website);
+        $this->om->flush();
+    }
+
+    public function renameRootPageByResourceNode($newTitle, ResourceNode $resourceNode)
+    {
+        $rootPage = $this->websitePageRepository->findRootPageByResourceNode($resourceNode);
+        $rootPage->setTitle($newTitle);
         $this->om->flush();
     }
 }

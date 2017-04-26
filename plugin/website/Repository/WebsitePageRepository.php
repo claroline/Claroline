@@ -8,6 +8,7 @@
 
 namespace Icap\WebsiteBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use Icap\WebsiteBundle\Entity\Website;
 
@@ -73,7 +74,7 @@ class WebsitePageRepository extends NestedTreeRepository
                 ->setParameter('visible', true);
         }
 
-        $options = array('decorate' => false);
+        $options = ['decorate' => false];
         $nodes = $queryBuilder->getQuery()->getArrayResult();
         $tree = $this->buildTreeArray($nodes, $options);
 
@@ -117,5 +118,23 @@ class WebsitePageRepository extends NestedTreeRepository
         }
 
         return $queryBuilder->getQuery()->getResult();
+    }
+
+    /**
+     * @param ResourceNode $resourceNode
+     *
+     * @return WebsitePage
+     */
+    public function findRootPageByResourceNode(ResourceNode $resourceNode)
+    {
+        return $this->createQueryBuilder('page')
+            ->leftJoin('page.website', 'website')
+            ->leftJoin('website.resourceNode', 'resource')
+            ->where('resource = :resourceNode')
+            ->andWhere('page.type = :type')
+            ->setParameter('resourceNode', $resourceNode)
+            ->setParameter('type', 'root')
+            ->getQuery()
+            ->getSingleResult();
     }
 }
