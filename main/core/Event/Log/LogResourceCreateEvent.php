@@ -37,6 +37,8 @@ class LogResourceCreateEvent extends LogGenericEvent implements NotifiableInterf
                     'resourceType' => $node->getResourceType()->getName(),
                 ],
                 'workspace' => [
+                    'id' => $node->getWorkspace() ? $node->getWorkspace()->getId() : null,
+                    'guid' => $node->getWorkspace() ? $node->getWorkspace()->getGuid() : null,
                     'name' => $node->getWorkspace() ? $node->getWorkspace()->getName() : ' - ',
                 ],
                 'owner' => [
