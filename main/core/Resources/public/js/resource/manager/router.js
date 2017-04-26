@@ -20,7 +20,8 @@
             this.dispatcher.on('open-directory', this.recordRoute, this);
             this.dispatcher.on('filter', this.recordRoute, this);
             this.route(/^$/, 'default', this.openDefault, this);
-            this.route(/^resources\/(\d+)(\?.*)?$/, 'handle', this.handleRequest, this);
+            //we authorize guid usage
+            this.route(/^resources\/(.*)?$/, 'handle', this.handleRequest, this);
         },
         recordRoute: function (event) {
             if (event.view === 'main' && !event.fromRouter) { // avoid event loop

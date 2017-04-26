@@ -1,5 +1,9 @@
 {% if notification.details.resource.guid is defined %}
-    {% set path = path('claro_resource_open', {'node': notification.details.resource.guid, 'resourceType': notification.details.resource.resourceType}) %}
+    {% if notification.details.resource.resourceType == 'directory' and notification.details.workspace.id is defined  %}
+      {% set path = path('claro_workspace_open_tool', {'workspaceId': notification.details.workspace.id, 'toolName': 'resource_manager'}) ~ '#resources/' ~ notification.details.resource.guid %}
+    {% else %}
+      {% set path = path('claro_resource_open', {'node': notification.details.resource.guid, 'resourceType': notification.details.resource.resourceType}) %}
+    {% endif %}
     {% set resource = '<a href="' ~ path ~ '">' ~ notification.details.resource.name ~ '</a>' %}
 {% else %}
     {# old notifications do not store the resource id in their details field #}
