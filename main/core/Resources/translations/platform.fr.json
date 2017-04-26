@@ -460,6 +460,8 @@
     "friend_platform": "Plateformes amies",
     "from": "Depuis",
     "from_message": "De",
+    "fullscreen_off": "Fermer le plein écran",
+    "fullscreen_on": "Afficher en plein écran",
     "fullscreen_text_editor": "Vous pouvez utiliser la version plein écran de l'éditeur afin d'y inclure du HTML.",
     "general": "Général",
     "general_parameters": "Paramètres généraux",

@@ -1,5 +1,8 @@
-<main class="page path-editor">
-    <header class="page-header">
+<main
+    class="page path-editor"
+    data-ng-class="{fullscreen: pathEditCtrl.fullscreen}"
+>
+    <header class="page-header resource-header">
         <h1>
             {{ pathEditCtrl.path.name }}
 
@@ -16,70 +19,84 @@
             <small data-ng-if="pathEditCtrl.published && pathEditCtrl.modified && !pathEditCtrl.unsaved" class="text-warning">{{ 'published'|trans:{}:'path_wizards' }} {{ 'modified'|trans:{}:'path_wizards' }}</small>
         </h1>
 
-        <nav class="page-actions">
-            <!-- Undo from history button -->
-            <button type="button" class="btn btn-link"
-                data-ng-disabled="pathEditCtrl.historyDisabled.undo"
-                data-ng-click="pathEditCtrl.undo()"
-                data-placement="bottom"
-                data-toggle="tooltip"
-                data-original-title="{{ 'undo'|trans:{}:'path_wizards' }}"
-            >
-                <span class="fa fa-fw fa-reply"></span>
-                <span class="sr-only">{{ 'undo'|trans:{}:'path_wizards' }}</span>
-            </button>
-
-            <!-- Redo from history button -->
-            <button type="button" class="btn btn-link"
-                data-ng-disabled="pathEditCtrl.historyDisabled.redo"
-                data-ng-click="pathEditCtrl.redo()"
-                data-placement="bottom"
-                data-toggle="tooltip"
-                data-original-title="{{ 'redo'|trans:{}:'path_wizards' }}"
-            >
-                <span class="fa fa-fw fa-share"></span>
-                <span class="sr-only">{{ 'redo'|trans:{}:'path_wizards' }}</span>
-            </button>
-
-            <span class="divider" role="separator"></span>
-
-            <!-- Save button -->
-            <button type="button" class="btn btn-link"
-                data-ng-disabled="!pathEditCtrl.unsaved"
-                data-ng-click="pathEditCtrl.save()"
-            >
-                <span class="fa fa-fw fa-floppy-o"></span>
-                <span class="hidden-xs">{{ 'save'|trans:{}:'path_wizards' }}</span>
-            </button>
-
-            <button type="button" class="btn btn-link"
-                data-ng-disabled="!pathEditCtrl.published"
-                data-ng-click="pathEditCtrl.preview()"
-            >
-                <span class="fa fa-fw fa-times"></span>
-                <span class="hidden-xs">{{ 'preview'|trans:{}:'path_wizards' }}</span>
-            </button>
-
-            <span class="divider" role="separator"></span>
-
-            <div class="btn-group">
-                <button class="btn btn-link dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span class="fa fa-fw fa-ellipsis-v"></span>
-                    <span class="sr-only">{{ 'more_actions'|trans:{}:'path_wizards' }}</span>
+        <nav class="page-actions resource-actions">
+            <div class="page-actions-group">
+                <!-- Undo from history button -->
+                <button type="button" class="btn page-action-btn"
+                    data-ng-disabled="pathEditCtrl.historyDisabled.undo"
+                    data-ng-click="pathEditCtrl.undo()"
+                    data-placement="bottom"
+                    data-toggle="tooltip"
+                    data-original-title="{{ 'undo'|trans:{}:'path_wizards' }}"
+                >
+                    <span class="page-action-icon fa fa-reply"></span>
+                    <span class="sr-only">{{ 'undo'|trans:{}:'path_wizards' }}</span>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-right">
-                    <li class="dropdown-header">{{ 'more_actions'|trans:{}:'path_wizards' }}</li>
-                    <li data-ng-class="{disabled: pathEditCtrl.published && !pathEditCtrl.modified}">
-                        <a href="" data-ng-click="pathEditCtrl.publish()">
-                            <span class="fa fa-fw fa-share-square-o"></span> {{ 'publish'|trans:{}:'path_wizards' }}
-                        </a>
-                    </li>
-                    <li>
-                        <a href="" data-ng-click="pathEditCtrl.unlockManager()">
-                            <span class="fa fa-fw fa-lock"></span> {{ 'path_dashboard'|trans:{}:'path_wizards' }}
-                        </a>
-                    </li>
-                </ul>
+
+                <!-- Redo from history button -->
+                <button type="button" class="btn page-action-btn"
+                    data-ng-disabled="pathEditCtrl.historyDisabled.redo"
+                    data-ng-click="pathEditCtrl.redo()"
+                    data-placement="bottom"
+                    data-toggle="tooltip"
+                    data-original-title="{{ 'redo'|trans:{}:'path_wizards' }}"
+                >
+                    <span class="page-action-icon fa fa-share"></span>
+                    <span class="sr-only">{{ 'redo'|trans:{}:'path_wizards' }}</span>
+                </button>
+            </div>
+
+            <div class="page-actions-group">
+                <!-- Save button -->
+                <button type="button" class="btn page-action-btn page-action-primary"
+                    data-ng-disabled="!pathEditCtrl.unsaved"
+                    data-ng-click="pathEditCtrl.save()"
+                >
+                    <span class="page-action-icon fa fa-floppy-o"></span>
+                    <span class="sr-only">{{ 'save'|trans:{}:'path_wizards' }}</span>
+                </button>
+
+                <button type="button" class="btn page-action-btn"
+                    data-ng-disabled="!pathEditCtrl.published"
+                    data-ng-click="pathEditCtrl.preview()"
+                >
+                    <span class="page-action-icon fa fa-times"></span>
+                    <span class="sr-only">{{ 'preview'|trans:{}:'path_wizards' }}</span>
+                </button>
+            </div>
+
+            <div class="page-actions-group">
+                <button type="button" class="btn page-action-btn" data-ng-click="pathEditCtrl.toggleFullscreen()">
+                    <span
+                        class="page-action-icon fa"
+                        data-ng-class="{
+                            'fa-expand': !pathEditCtrl.fullscreen,
+                            'fa-compress': pathEditCtrl.fullscreen
+                        }"
+                    ></span>
+                    <span class="sr-only" data-ng-if="!pathEditCtrl.fullscreen">{{ 'fullscreen_on'|trans:{}:'platform' }}</span>
+                    <span class="sr-only" data-ng-if="pathEditCtrl.fullscreen">{{ 'fullscreen_off'|trans:{}:'platform' }}</span>
+                </button>
+
+                <div class="dropdown btn-group">
+                    <button class="btn page-action-btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span class="page-action-icon fa fa-ellipsis-v"></span>
+                        <span class="sr-only">{{ 'more_actions'|trans:{}:'path_wizards' }}</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-right">
+                        <li class="dropdown-header">{{ 'more_actions'|trans:{}:'path_wizards' }}</li>
+                        <li data-ng-class="{disabled: pathEditCtrl.published && !pathEditCtrl.modified}">
+                            <a href="" data-ng-click="pathEditCtrl.publish()">
+                                <span class="fa fa-fw fa-share-square-o"></span> {{ 'publish'|trans:{}:'path_wizards' }}
+                            </a>
+                        </li>
+                        <li>
+                            <a href="" data-ng-click="pathEditCtrl.unlockManager()">
+                                <span class="fa fa-fw fa-lock"></span> {{ 'path_dashboard'|trans:{}:'path_wizards' }}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </div>
         </nav>
     </header>
