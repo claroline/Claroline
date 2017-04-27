@@ -12,7 +12,7 @@
         data-ng-show="vm.blog.totalItems > vm.blog.options.post_per_page"
     ></ul>
 
-    <div data-ng-repeat="post in vm.blog.posts"
+    <div data-ng-repeat="post in vm.blog.posts | orderBy:publication_date:reverse"
          data-ng-show="!vm.hidePosts">
         <post></post>
     </div>
