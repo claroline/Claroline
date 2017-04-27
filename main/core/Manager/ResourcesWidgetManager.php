@@ -14,10 +14,11 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Widget\ResourcesWidgetConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Claroline\CoreBundle\Event\GenericDatasEvent;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -27,35 +28,35 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 class ResourcesWidgetManager
 {
     private $authorization;
+    private $eventDispatcher;
     private $om;
     private $resourceManager;
     private $resourcesWidgetConfigRepo;
-    private $tagManager;
     private $tokenStorage;
     private $utils;
 
     /**
      * @DI\InjectParams({
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "tagManager"      = @DI\Inject("claroline.manager.tag_manager"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "utils"           = @DI\Inject("claroline.security.utilities")
      * })
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
+        EventDispatcherInterface $eventDispatcher,
         ObjectManager $om,
         ResourceManager $resourceManager,
-        TagManager $tagManager,
         TokenStorageInterface $tokenStorage,
         Utilities $utils
     ) {
         $this->authorization = $authorization;
+        $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
         $this->resourceManager = $resourceManager;
-        $this->tagManager = $tagManager;
         $this->tokenStorage = $tokenStorage;
         $this->utils = $utils;
         $this->resourcesWidgetConfigRepo = $om->getRepository('ClarolineCoreBundle:Widget\ResourcesWidgetConfig');
@@ -98,16 +99,21 @@ class ResourcesWidgetManager
     {
         $resources = [];
         $resourceNodes = [];
-        $nodes = $this->tagManager->getTaggedResourceNodesByTagName($tagName);
+        $options = [
+            'tag' => $tagName,
+            'strict' => true,
+            'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceNode',
+            'object_response' => true,
+        ];
+        $event = $this->eventDispatcher->dispatch('claroline_retrieve_tagged_objects', new GenericDatasEvent($options));
+        $nodes = $event->getResponse();
 
-        if (!is_null($workspaceId)) {
-            foreach ($nodes as $node) {
-                if ($node->getWorkspace()->getId() === $workspaceId) {
-                    $resourceNodes[] = $node;
-                }
+        foreach ($nodes as $node) {
+            $isDirectory = $node->getResourceType()->getName() === 'directory';
+
+            if (!$isDirectory && (is_null($workspaceId) || $node->getWorkspace()->getId() === $workspaceId)) {
+                $resourceNodes[] = $node;
             }
-        } else {
-            $resourceNodes = $nodes;
         }
         $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
 

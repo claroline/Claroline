@@ -311,7 +311,8 @@ class TagManager
         $order = 'ASC',
         $withPager = false,
         $page = 1,
-        $max = 50
+        $max = 50,
+        array $ids = []
     ) {
         $objects = empty($search) ?
             $this->taggedObjectRepo->findAllTaggedObjects(
@@ -319,7 +320,8 @@ class TagManager
                 $withPlatform,
                 $class,
                 $orderedBy,
-                $order
+                $order,
+                $ids
             ) :
             $this->taggedObjectRepo->findSearchedTaggedObjects(
                 $search,
@@ -328,7 +330,8 @@ class TagManager
                 $class,
                 $orderedBy,
                 $order,
-                $strictSearch
+                $strictSearch,
+                $ids
             );
 
         return $withPager ? $this->pagerFactory->createPagerFromArray($objects, $page, $max) : $objects;
@@ -359,10 +362,5 @@ class TagManager
     public function getTaggedResourcesByRoles($user = 'anon.', array $roleNames = ['ROLE_ANONYMOUS'])
     {
         return $this->taggedObjectRepo->findTaggedResourcesByRoles($user, $roleNames);
-    }
-
-    public function getTaggedResourceNodesByTagName($tagName)
-    {
-        return $this->taggedObjectRepo->findTaggedResourceNodesByTagName($tagName);
     }
 }

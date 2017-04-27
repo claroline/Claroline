@@ -24,9 +24,11 @@ class TaggedObjectRepository extends EntityRepository
         $withPlatform = false,
         $class = null,
         $orderedBy = 'name',
-        $order = 'ASC'
+        $order = 'ASC',
+        array $ids = []
     ) {
         $classTest = is_null($class) ? '' : 'AND to.objectClass = :class';
+        $idsTest = count($ids) > 0 ? 'AND to.objectId IN (:ids)' : '';
 
         if (is_null($user)) {
             $dql = "
@@ -35,6 +37,7 @@ class TaggedObjectRepository extends EntityRepository
                 JOIN to.tag t
                 WHERE t.user IS NULL
                 $classTest
+                $idsTest
                 ORDER BY t.{$orderedBy} {$order}
             ";
             $query = $this->_em->createQuery($dql);
@@ -49,6 +52,7 @@ class TaggedObjectRepository extends EntityRepository
                         OR t.user = :user
                     )
                     $classTest
+                    $idsTest
                     ORDER BY t.{$orderedBy} {$order}
                 ";
             } else {
@@ -58,6 +62,7 @@ class TaggedObjectRepository extends EntityRepository
                     JOIN to.tag t
                     WHERE t.user = :user
                     $classTest
+                    $idsTest
                     ORDER BY t.{$orderedBy} {$order}
                 ";
             }
@@ -67,6 +72,9 @@ class TaggedObjectRepository extends EntityRepository
 
         if (!is_null($class)) {
             $query->setParameter('class', $class);
+        }
+        if (count($ids) > 0) {
+            $query->setParameter('ids', $ids);
         }
 
         return $query->getResult();
@@ -79,10 +87,12 @@ class TaggedObjectRepository extends EntityRepository
         $class = null,
         $orderedBy = 'name',
         $order = 'ASC',
-        $strictSearch = false
+        $strictSearch = false,
+        array $ids = []
     ) {
         $classTest = is_null($class) ? '' : 'AND to.objectClass = :class';
         $searchTest = $strictSearch ? '= :search' : 'LIKE :search';
+        $idsTest = count($ids) > 0 ? 'AND to.objectId IN (:ids)' : '';
 
         if (is_null($user)) {
             $dql = "
@@ -92,6 +102,7 @@ class TaggedObjectRepository extends EntityRepository
                 WHERE t.user IS NULL
                 AND UPPER(t.name) $searchTest
                 $classTest
+                $idsTest
                 ORDER BY t.{$orderedBy} {$order}
             ";
             $query = $this->_em->createQuery($dql);
@@ -106,6 +117,7 @@ class TaggedObjectRepository extends EntityRepository
                         OR t.user = :user
                     )
                     $classTest
+                    $idsTest
                     AND UPPER(t.name) $searchTest
                     ORDER BY t.{$orderedBy} {$order}
                 ";
@@ -116,6 +128,7 @@ class TaggedObjectRepository extends EntityRepository
                     JOIN to.tag t
                     WHERE t.user = :user
                     $classTest
+                    $idsTest
                     AND UPPER(t.name) $searchTest
                     ORDER BY t.{$orderedBy} {$order}
                 ";
@@ -130,9 +143,11 @@ class TaggedObjectRepository extends EntityRepository
         } else {
             $query->setParameter('search', "%{$upperSearch}%");
         }
-
         if (!is_null($class)) {
             $query->setParameter('class', $class);
+        }
+        if (count($ids) > 0) {
+            $query->setParameter('ids', $ids);
         }
 
         return $query->getResult();
@@ -351,30 +366,6 @@ class TaggedObjectRepository extends EntityRepository
         $query->setParameter('tag', $tag);
         $query->setParameter('open', ToolMaskDecoder::$defaultValues['open']);
         $query->setParameter('type', $type);
-
-        return $query->getResult();
-    }
-
-    public function findTaggedResourceNodesByTagName($tagName)
-    {
-        $dql = "
-            SELECT DISTINCT r
-            FROM Claroline\CoreBundle\Entity\Resource\ResourceNode r
-            JOIN r.resourceType rt
-            WHERE rt.name != :directoryType
-            AND r.id IN (
-                SELECT to.objectId
-                FROM Claroline\TagBundle\Entity\TaggedObject to
-                JOIN to.tag t
-                WHERE to.objectClass = :resourceClass
-                AND t.name = :tagName
-            )
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('directoryType', 'directory');
-        $query->setParameter('resourceClass', 'Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $query->setParameter('tagName', $tagName);
 
         return $query->getResult();
     }

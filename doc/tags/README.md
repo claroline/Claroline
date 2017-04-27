@@ -58,6 +58,7 @@ array (
     'object_response' => [Boolean] // Optional. Define if returned values are casted to class option. If not, it is simply an array of values. False by default. 'class' option is required.
     'ordered_by' => [String]       // Optional. Field to order. Define order of casted returned objects. 'id' by default. 'class' option is required.
     'order' => [String]            // Optional. Order. Define order of casted returned objects. 'ASC' by default. 'class' option is required.
+    'ids' => [Array]               // Optional. List of ids. Only objects that have their id in the list will be fetched.
 )
 
 Here is an example to fetch all workspaces tagged as "My Tags", ordered by name :

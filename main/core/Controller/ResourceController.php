@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\GenericDatasEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ImportResourcesType;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
@@ -31,6 +32,7 @@ use Exception;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -59,6 +61,7 @@ class ResourceController
     private $transferManager;
     private $formFactory;
     private $userManager;
+    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
@@ -77,6 +80,7 @@ class ResourceController
      *     "transferManager" = @DI\Inject("claroline.manager.transfer_manager"),
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      */
     public function __construct(
@@ -94,7 +98,8 @@ class ResourceController
         FileManager $fileManager,
         TransferManager $transferManager,
         FormFactory $formFactory,
-        UserManager $userManager
+        UserManager $userManager,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -111,6 +116,7 @@ class ResourceController
         $this->transferManager = $transferManager;
         $this->formFactory = $formFactory;
         $this->userManager = $userManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -913,6 +919,30 @@ class ResourceController
         //by criteria recursive => infinite loop
         $resources = $this->resourceManager->getByCriteria($criteria, $userRoles);
 
+        //if a search option has been provided, tagged resources are also fetched
+        if (isset($criteria['name'])) {
+            $search = $criteria['name'];
+            //retrieve all resources that respect the criteria except the search to generate a whitelist
+            unset($criteria['name']);
+            $unsearchedResources = $this->resourceManager->getByCriteria($criteria, $userRoles);
+            $ids = [];
+
+            foreach ($unsearchedResources as $resource) {
+                $ids[] = $resource['id'];
+            }
+            $options = [
+                'tag' => $search,
+                'strict' => false,
+                'class' => 'Claroline\CoreBundle\Entity\Resource\ResourceNode',
+                'object_response' => true,
+                'ordered_by' => 'name',
+                'ids' => $ids,
+            ];
+            $event = $this->eventDispatcher->dispatch('claroline_retrieve_tagged_objects', new GenericDatasEvent($options));
+            $taggedResources = $event->getResponse();
+            $resources = $this->mergeSearchedResources($resources, $taggedResources);
+        }
+
         return new JsonResponse(
             [
                 'id' => $node ? $node->getId() : '0',
@@ -1233,5 +1263,37 @@ class ResourceController
         }
 
         return false;
+    }
+
+    private function mergeSearchedResources(array $resources, array $taggedResourceNodes)
+    {
+        $resourcesIds = array_column($resources, 'id');
+
+        foreach ($taggedResourceNodes as $node) {
+            if (!in_array($node->getId(), $resourcesIds)) {
+                $taggedResource = [
+                    'id' => $node->getId(),
+                    'name' => $node->getName(),
+                    'path' => $node->getPath(),
+                    'creator_username' => $node->getCreator()->getUsername(),
+                    'creator_id' => $node->getCreator()->getId(),
+                    'type' => $node->getResourceType()->getName(),
+                    'mime_type' => $node->getMimeType(),
+                    'index_dir' => $node->getIndex(),
+                    'creation_date' => $node->getCreationDate(),
+                    'modification_date' => $node->getModificationDate(),
+                    'published' => $node->isPublished(),
+                    'accessible_from' => $node->getAccessibleFrom(),
+                    'accessible_until' => $node->getAccessibleUntil(),
+                ];
+                $parent = $node->getParent();
+                $icon = $node->getIcon();
+                $taggedResource['parent_id'] = empty($parent) ? null : $parent->getId();
+                $taggedResource['large_icon'] = empty($icon) ? null : $icon->getRelativeUrl();
+                $resources[] = $taggedResource;
+            }
+        }
+
+        return $resources;
     }
 }

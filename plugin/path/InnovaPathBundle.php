@@ -28,4 +28,11 @@ class InnovaPathBundle extends PluginBundle implements AutoConfigurableInterface
     {
         return new AdditionalInstaller();
     }
+
+    public function getRequiredPlugins()
+    {
+        return [
+            'Claroline\\TagBundle\\ClarolineTagBundle',
+        ];
+    }
 }

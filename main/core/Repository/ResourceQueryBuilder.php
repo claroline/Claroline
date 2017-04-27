@@ -279,7 +279,8 @@ class ResourceQueryBuilder
     {
         if (count($types) > 0) {
             $this->joinSingleRelatives = true;
-            $clause = '';
+            $eol = PHP_EOL;
+            $clause = "{$eol}({$eol}";
 
             for ($i = 0, $count = count($types); $i < $count; ++$i) {
                 $clause .= $i === 0 ?
@@ -289,7 +290,7 @@ class ResourceQueryBuilder
                 $this->parameters[":type_{$i}"] = $types[$i];
             }
 
-            $this->addWhereClause($clause);
+            $this->addWhereClause($clause.')');
         }
 
         return $this;
