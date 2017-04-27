@@ -13,10 +13,10 @@
             <small data-ng-if="!pathEditCtrl.published && !pathEditCtrl.unsaved" class="text-danger">{{ 'draft'|trans:{}:'path_wizards' }}</small>
 
             <!-- Path published without modifications -->
-            <small data-ng-if="pathEditCtrl.published && !pathEditCtrl.modified && !pathEditCtrl.unsaved" class="text-success">{{ 'published'|trans:{}:'path_wizards' }}</small>
+            <small data-ng-if="pathEditCtrl.published && !pathEditCtrl.modified && !pathEditCtrl.unsaved" class="text-success">{{ 'saved'|trans:{}:'path_wizards' }}</small>
 
             <!-- Path published with modifications -->
-            <small data-ng-if="pathEditCtrl.published && pathEditCtrl.modified && !pathEditCtrl.unsaved" class="text-warning">{{ 'published'|trans:{}:'path_wizards' }} {{ 'modified'|trans:{}:'path_wizards' }}</small>
+            <small data-ng-if="pathEditCtrl.published && pathEditCtrl.modified && !pathEditCtrl.unsaved" class="text-warning">{{ 'saved'|trans:{}:'path_wizards' }} {{ 'modified'|trans:{}:'path_wizards' }}</small>
         </h1>
 
         <nav class="page-actions resource-actions">
