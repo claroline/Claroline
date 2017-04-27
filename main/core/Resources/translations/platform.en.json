@@ -208,6 +208,7 @@
     "copy_permalink_to_clipboard": "Copy permalink to clipboard",
     "copy_to_clipboard_error": "An error occured while copying data to clipboard.",
     "copy_to_clipboard_success": "Data copied to clipboard.",
+    "count_connections_and_users_by_date_range": "%countConnections%<span class=\"small\"> connection(s) in selected time range by </span>%countUsers%<span class=\"small\"> unique user(s).</small>",
     "count_resources": "Amount of resources",
     "country": "Country",
     "create": "Create",

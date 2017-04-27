@@ -448,6 +448,22 @@ class LogRepository extends EntityRepository
         return $result[0]['users'];
     }
 
+    public function activeUsersByDateRange($range)
+    {
+        $queryBuilder = $this
+            ->createQueryBuilder('log')
+            ->select('COUNT(DISTINCT log.doer) AS users');
+
+        $queryBuilder = $this->addActionFilterToQueryBuilder($queryBuilder, LogUserLoginEvent::ACTION);
+
+        $queryBuilder = $this->addDateRangeFilterToQueryBuilder($queryBuilder, $range);
+
+        $query = $queryBuilder->getQuery();
+        $result = $query->getResult();
+
+        return $result[0]['users'];
+    }
+
     public function addActionFilterToQueryBuilder(QueryBuilder $queryBuilder, $action, $actionRestriction = null)
     {
         if (null !== $actionRestriction) {
