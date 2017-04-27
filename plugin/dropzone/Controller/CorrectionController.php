@@ -1259,7 +1259,7 @@ class CorrectionController extends DropzoneBaseController
             throw new AccessDeniedException();
         }
         // if loggued user is not the drop owner and is not admin.
-        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') && $this->get('security.authorization_checker')->getToken()->getUser()->getId() != $dropUser->getId()) {
+        if (false === $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') && $this->get('security.token_storage')->getToken()->getUser()->getId() != $dropUser->getId()) {
             throw new AccessDeniedException();
         }
 
