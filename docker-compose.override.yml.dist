@@ -34,7 +34,7 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
     image: mysql
     volumes:
-      - ./.docker/mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./.docker/mysql:/etc/mysql/conf.d
       - mysql_data:/var/lib/mysql
 
 volumes:
