@@ -5,6 +5,7 @@ import {findArea} from './player'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {PointableImage} from './components/pointable-image.jsx'
 import {AnswerTable} from './components/answer-table.jsx'
+import {tex} from '#/main/core/translation'
 
 export const GraphicPaper = props => {
   const pointedAreas = props.item.solutions
@@ -46,7 +47,7 @@ export const GraphicPaper = props => {
             />
           </div>
           {pointedAreas.length > 0 &&
-            <AnswerTable areas={pointedAreas} showScore={props.showScore} highlightScore={true}/>
+            <AnswerTable title={tex('your_answers')} areas={pointedAreas} showScore={props.showScore} highlightScore={true}/>
           }
         </div>
       }
@@ -60,7 +61,7 @@ export const GraphicPaper = props => {
               areas={expectedAreas}
             />
           </div>
-          <AnswerTable areas={expectedAreas} showScore={props.showScore} highlightScore={false}/>
+          <AnswerTable title={tex('expected_answers')} areas={expectedAreas} showScore={props.showScore} highlightScore={false}/>
         </div>
       }
     />
