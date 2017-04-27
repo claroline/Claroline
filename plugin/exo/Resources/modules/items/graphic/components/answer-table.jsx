@@ -1,13 +1,13 @@
 import React, {PropTypes as T} from 'react'
 import classes from 'classnames'
 import tinycolor from 'tinycolor2'
-import {tex, transChoice} from '#/main/core/translation'
+import {transChoice} from '#/main/core/translation'
 import {SHAPE_RECT} from './../enums'
 import {HoverFeedback} from './../../../components/form/hover-feedback.jsx'
 
 export const AnswerTable = props =>
   <div className="answers-table">
-    <h3 className="title">{tex('your_answers')}</h3>
+    <h3 className="title">{props.title}</h3>
     {props.areas.map((area, idx) =>
       <div key={area.id} className={classes('answer-row', {
         'correct-answer': props.highlightScore && area.score > 0,
@@ -37,7 +37,7 @@ export const AnswerTable = props =>
               feedback={area.feedback}
             />
           }
-          {props.showScore &&             
+          {props.showScore &&
             <span className="solution-score">
               {transChoice('solution_score', area.score, {score: area.score}, 'ujm_exo')}
             </span>
@@ -49,6 +49,7 @@ export const AnswerTable = props =>
 
 AnswerTable.propTypes = {
   highlightScore: T.bool.isRequired,
+  title: T.string.isRequired,
   areas: T.arrayOf(T.shape({
     id: T.string.isRequired,
     score: T.number,
