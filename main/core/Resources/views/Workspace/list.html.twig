@@ -101,8 +101,7 @@
                            type="text"
                            id="search-workspace-input"
                            placeholder="{{ 'search'|trans({}, 'platform') }}"
-                           value={{search}}
-                    />
+                           value="{{search}}"                    />
                     <span class="input-group-btn">
                         <button class="filter btn btn-default" type="button" id="search-workspace-btn">
                             <i class="fa fa-search"></i>
@@ -111,7 +110,7 @@
                 </div>
             </div>
         </div>
-        
+
         {% if search is not empty %}
             <div class="alert alert-info">
                 {{ 'results_for_search_on'|trans({}, 'platform') }} :
