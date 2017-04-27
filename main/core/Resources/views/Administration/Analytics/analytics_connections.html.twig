@@ -69,6 +69,10 @@
 
         <div class="margin">
             <h3>{{'users_visits'|trans({}, 'platform')}}</h3>
+            <div class="margin">
+                <h4>{{'count_connections_and_users_by_date_range'|trans({'%countConnections%': countConnectionsForDateRange, '%countUsers%': activeUsersForDateRange}, 'platform')|raw}}</h4>
+            </div>
+
             <div id="connections-line-chart" class="line-chart"></div>
             <br/>
             <div class="count_by_day_chart_legend"><i class="fa fa-hand-o-up"></i> <em>{{ 'graph_draw_area'|trans({}, 'platform') }}</em></div>

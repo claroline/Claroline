@@ -11,7 +11,8 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Symfony\Component\Form\FormFactory;
+use Claroline\CoreBundle\Form\AdminAnalyticsConnectionsType;
+use Claroline\CoreBundle\Form\AdminAnalyticsTopType;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -19,10 +20,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\Form\AdminAnalyticsConnectionsType;
-use Claroline\CoreBundle\Form\AdminAnalyticsTopType;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -82,13 +82,13 @@ class AnalyticsController extends Controller
         $mostDownloadedResources = $this->analyticsManager->topResourcesByAction(null, 'resource_export', 5);
         $usersCount = $this->userManager->countUsersForPlatformRoles();
 
-        return array(
+        return [
             'barChartData' => $lastMonthActions,
             'usersCount' => $usersCount,
             'mostViewedWS' => $mostViewedWS,
             'mostViewedMedia' => $mostViewedMedia,
             'mostDownloadedResources' => $mostDownloadedResources,
-        );
+        ];
     }
 
     /**
@@ -108,10 +108,10 @@ class AnalyticsController extends Controller
     public function analyticsConnectionsAction()
     {
         $analyticsType = new AdminAnalyticsConnectionsType();
-        $criteriaForm = $this->formFactory->create($analyticsType, array(
+        $criteriaForm = $this->formFactory->create($analyticsType, [
             'range' => $this->analyticsManager->getDefaultRange(),
             'unique' => 'false',
-        ));
+        ]);
 
         $criteriaForm->handleRequest($this->request);
         $unique = false;
@@ -125,14 +125,22 @@ class AnalyticsController extends Controller
         $actionsForRange = $this->analyticsManager
             ->getDailyActionNumberForDateRange($range, 'user_login', $unique);
 
+        $activeUsersForDateRange = $this->analyticsManager
+            ->getActiveUsersForDateRange($range);
+
         $connections = $actionsForRange;
+        $countConnectionsForDateRange = array_sum(array_map(function ($item) {
+            return $item[1];
+        }, $connections));
         $activeUsers = $this->analyticsManager->getActiveUsers();
 
-        return array(
+        return [
             'connections' => $connections,
             'form_criteria' => $criteriaForm->createView(),
             'activeUsers' => $activeUsers,
-        );
+            'activeUsersForDateRange' => $activeUsersForDateRange,
+            'countConnectionsForDateRange' => $countConnectionsForDateRange,
+        ];
     }
 
     /**
@@ -162,11 +170,11 @@ class AnalyticsController extends Controller
             'Analytics\PlatformContentItem'
         );
 
-        return array(
+        return [
             'wsCount' => $wsCount,
             'resourceCount' => $resourceCount,
             'otherItems' => $event->getItems(),
-        );
+        ];
     }
 
     /**
@@ -192,11 +200,11 @@ class AnalyticsController extends Controller
         $analyticsTopType = new AdminAnalyticsTopType();
         $criteriaForm = $this->formFactory->create(
             $analyticsTopType,
-            array(
+            [
                 'top_type' => $topType,
                 'top_number' => 30,
                 'range' => $this->analyticsManager->getDefaultRange(),
-            )
+            ]
         );
 
         $criteriaForm->handleRequest($request);
@@ -206,10 +214,10 @@ class AnalyticsController extends Controller
         $max = $criteriaForm->get('top_number')->getData();
         $listData = $this->analyticsManager->getTopByCriteria($range, $topType, $max);
 
-        return array(
+        return [
             'form_criteria' => $criteriaForm->createView(),
             'list_data' => $listData,
-        );
+        ];
     }
 
     /**

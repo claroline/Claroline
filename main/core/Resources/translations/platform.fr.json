@@ -210,6 +210,7 @@
     "copy_permalink_to_clipboard": "Copier le permalien dans le presse-papiers",
     "copy_to_clipboard_error": "La copie des données vers le presse-papiers a échoué.",
     "copy_to_clipboard_success": "Les données ont été copiées dans le presse-papiers.",
+    "count_connections_and_users_by_date_range": "%countConnections%<span class=\"small\"> connexion(s) sur la plateforme sur la période sélectionnée par </span>%countUsers%<span class=\"small\"> utilisateur(s) unique(s).</small>",
     "count_resources": "Nombre de ressources",
     "country": "Pays",
     "create": "Créer",
