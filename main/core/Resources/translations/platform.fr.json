@@ -4,7 +4,7 @@
     "6_parameters_min_msg": "Le fichier csv doit comprendre au minimum 6 éléments par ligne.",
     "7_parameters_min_msg": "Le fichier csv doit comprendre au minimum 7 éléments par ligne.",
     "accept": "Accepter",
-    "accessible_from": "Accessible à partir du",
+    "accessible_from": "Accessíble à partir du",
     "accessible_until": "Accessible jusqu'au",
     "account_created": "Les informations de votre compte vous ont été envoyées par courriel. (Il est possible qu'elles arrivent dans votre dossier dédié aux pourriels).",
     "account_created_awaiting_validation": "Votre compte a été crée avec succès. Toutefois, il ne sera possible d'accéder à l'espace de travail qu'après la validation par un administrateur.",
