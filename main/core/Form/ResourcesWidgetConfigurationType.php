@@ -67,6 +67,7 @@ class ResourcesWidgetConfigurationType extends AbstractType
                 'attr' => [
                     'data-is-picker-multi-select-allowed' => false,
                     'data-is-directory-selection-allowed' => true,
+                    'data-allow-root-selection' => true,
                     'data-type-white-list' => 'directory',
 //                    'data-workspace-id' => !is_null($this->workspace) ? $this->workspace->getId() : null,
 //                    'data-is-workspace' => !is_null($this->workspace),

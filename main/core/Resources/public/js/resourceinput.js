@@ -93,6 +93,7 @@
             'restrictForOwner',
             'isPickerMultiSelectAllowed',
             'isDirectorySelectionAllowed',
+            'allowRootSelection'
         ];
         var arrayParameterList = [
             'typeBlackList',

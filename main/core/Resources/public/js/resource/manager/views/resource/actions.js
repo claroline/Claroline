@@ -295,7 +295,7 @@
     setActionsEnabledState: function (isPickerMode) {
       var isSelectionNotEmpty = _.size(this.checkedNodes.nodes) > 0
             // enable picker "add" button on non-root directories if selection is not empty
-      if (isPickerMode && (this.currentDirectoryId !== '0' || this.isSearchMode)) {
+      if (isPickerMode && (this.currentDirectoryId !== '0' || this.isSearchMode || this.parameters.allowRootSelection)) {
         this.setButtonEnabledState(this.$('a.add'), isSelectionNotEmpty)
       } else {
                 // enable download if selection is not empty
@@ -303,7 +303,7 @@
         this.setButtonEnabledState(this.$('a.export'), isSelectionNotEmpty)
                 // other actions are only available on non-root directories
                 // (so they are available in search mode too, as roots are not displayed in that mode)
-        if (this.currentDirectoryId !== '0' || this.isSearchMode) {
+        if (this.currentDirectoryId !== '0' || this.isSearchMode || this.parameters.allowRootSelection) {
           this.setButtonEnabledState(this.$('a.cut'), isSelectionNotEmpty)
           this.setButtonEnabledState(this.$('a.copy'), isSelectionNotEmpty)
           this.setButtonEnabledState(this.$('a.delete'), isSelectionNotEmpty)
@@ -347,7 +347,7 @@
       this.isSearchMode = event.isSearchMode
 
       var creatableTypes = event.creatableTypes || []
-      var isCreationAllowed = this.currentDirectoryId !== '0'
+      var isCreationAllowed = (this.currentDirectoryId !== '0')
                 && !this.parameters.isPickerMode
                 && !this.isSearchMode
       var isCreateAllowed = isCreationAllowed && _.size(creatableTypes) > 0
@@ -362,6 +362,7 @@
         searchedName: this.lastSearchedName,
         isPickerMode: this.parameters.isPickerMode,
         isSearchMode: this.isSearchMode,
+        allowRootSelection: this.parameters.allowRootSelection,
         isAddAllowed: isCreateAllowed,
         isPasteAllowed: isPasteAllowed,
         isCreateAllowed: isCreateAllowed,

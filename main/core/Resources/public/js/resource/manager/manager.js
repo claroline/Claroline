@@ -207,6 +207,7 @@
         var mergedParameters = {
             viewName: viewName,
             isPickerMode: isPicker,
+            allowRootSelection: parameters.allowRootSelection || false,
             restrictForOwner: parameters.restrictForOwner || false,
             isWorkspace: parameters.isWorkspace || false,
             directoryId: resolveDirectoryId(parameters, isPicker, isDefault),
