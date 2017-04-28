@@ -45,6 +45,38 @@ class LtiController extends Controller
     }
 
     /**
+     * @Route("/edit/form/app/{appId}", name="ujm_lti_edit_form_app")
+     *
+     * @param int appId
+     * @Template
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function editFormAction($appId, Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $app = $em->getRepository('UJMLtiBundle:LtiApp')->find($appId);
+
+        if (!$app) {
+            throw $this->createNotFoundException('No app found');
+        }
+
+        $form = $this->createForm(new AppType(), $app);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
+
+            return $this->redirectToRoute('ujm_admin_lti');
+        }
+
+        return $this->render('UJMLtiBundle:Lti:appEdit.html.twig', [
+            'form' => $form->createView(),
+            'appId' => $app->getId(),
+        ]);
+    }
+
+    /**
      * @Route("/delete/app/{appId}", name="ujm_lti_delete_app")
      *
      * @param int appId
