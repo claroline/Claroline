@@ -32,7 +32,7 @@
                 <th>{{ 'title' | trans({}, 'platform') }}</th>
                 <th>{{ 'url' | trans({}, 'lti') }}</th>
                 <th>{{ 'description' | trans({}, 'platform') }}</th>
-                <th>{{ 'delete'|trans({}, 'platform') }}</th>
+                <th>{{ 'action'|trans({}, 'platform') }}</th>
             </tr>
             {% for app in apps %}
                 <tr>
@@ -40,6 +40,7 @@
                     <td>{{ app.url }}</td>
                     <td>{{ app.description  }}</td>
                     <td>
+                        <a href="{{ path('ujm_lti_edit_form_app', {'appId': app.id}) }}"><i class="fa fa-edit" title="{{ 'edit'|trans({}, 'platform') }}"></i></a>
                         <a href="{{ path('ujm_lti_delete_app', {'appId': app.id}) }}"><i class="fa fa-remove" title="{{ 'delete'|trans({}, 'platform') }}"></i></a>
                     </td>
                 </tr>
