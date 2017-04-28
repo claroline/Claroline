@@ -22,7 +22,8 @@
                                     value="{{ node.id }}"
                                     data-node-name="{{ node.name }}"
                                     data-type="{{ node.type }}"
-                                    data-mime-type="{{ node.mime_type }}"/>
+                                    data-mime-type="{{ node.mime_type }}"
+                                />
                             </td>
                             <td>
                                 <a
