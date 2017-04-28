@@ -358,7 +358,9 @@ class UsersController extends Controller
             $max = $roleUser->getMaxUsers();
             $total = $this->userManager->countUsersByRoleIncludingGroup($roleUser);
 
-            if ($total + count($users) > $max) {
+            $countUsersToUpdate = $options['ignore-update'] ? 0 : $this->userManager->countUsersToUpdate($users);
+
+            if ($total + count($users) - $countUsersToUpdate > $max) {
                 return ['form' => $form->createView(), 'error' => 'role_user unavailable'];
             }
 
@@ -367,8 +369,8 @@ class UsersController extends Controller
             foreach ($additionalRoles as $additionalRole) {
                 $max = $additionalRole->getMaxUsers();
                 $total = $this->userManager->countUsersByRoleIncludingGroup($additionalRole);
-
-                if ($total + count($users) > $max) {
+                //this is not completely true I thnk
+                if ($total + count($users) - $countUsersToUpdate > $max) {
                     return [
                         'form' => $form->createView(),
                         'error' => $additionalRole->getName().' unavailable',
