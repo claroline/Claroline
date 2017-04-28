@@ -35,14 +35,19 @@
 // -
 // Summary
 // ---
-@path-summary-width:                percentage((5 / @grid-columns)); // do not affect sm screens : in this case, summary is full screen
+// their is no sizing for xs because it's always 100% in this case
+@path-summary-width-sm:             percentage((6 / @grid-columns));
+@path-summary-width-md:             percentage((5 / @grid-columns));
+//@path-summary-width:                percentage((5 / @grid-columns)); // do not affect sm screens : in this case, summary is full screen
+@path-summary-fullscreen-width:     percentage((4 / @grid-columns)); // width of the summary in fullscreen mode (only for md & lg screens)
 @path-summary-collapsed-width:      50px;
 
 @path-summary-font:                 @summary-font;
 @path-summary-padding:              @summary-padding;
 @path-summary-bg:                   @summary-bg;
 @path-summary-color:                @summary-color;
-@path-summary-box-shadow:           @summary-box-shadow-v;
+@path-summary-box-shadow-h:         @summary-box-shadow-h;
+@path-summary-box-shadow-v:         @summary-box-shadow-v;
 @path-summary-lvl-indent:           20px; // indent children of a step in the summary
 
 // Header

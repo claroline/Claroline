@@ -4,36 +4,22 @@
 
 .summary-container {
     position: absolute;
-    left: 0;
-    // Take full height of the viewport / content (if taller than than viewport)
-    top: 0;
-    bottom: 0;
 
     color: @path-summary-color;
     background: @path-summary-bg;
     padding: @path-summary-padding;
-    box-shadow: @path-summary-box-shadow;
     border-radius: @summary-border-radius;
-    width: @path-summary-collapsed-width;
     overflow-x: hidden;
-
-    + .content-container {
-        margin-left: @path-summary-collapsed-width;
-        padding-left: floor(@path-grid-spacing-x / 2); // fake bootstrap grid
-    }
 
     .summary-header {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: @path-summary-header-margin-bottom;
     }
 
     // todo : those selectors are ugly
-    .summary-title,
-    .summary-controls .summary-control:first-child,
-    .step-name,
+    .summary-control-pin,
     .step-actions {
         display: none;
     }
@@ -43,15 +29,14 @@
     }
 
     &.opened {
-        width: @path-summary-width;
-        .summary-controls .summary-control:first-child {
+        .summary-control-pin,
+        .summary-title,
+        .step-actions {
             display: inline-block;
         }
 
-        .summary-title,
-        .step *,
-        .step-actions {
-            display: inline-block;
+        .step-name {
+            display: inline;
         }
 
         .step-children {
@@ -68,10 +53,8 @@
         }
     }
 
-    &.opened.pinned {
-        + .content-container {
-            margin-left: @path-summary-width;
-        }
+    .path-summary-tree {
+        margin-top: @path-summary-header-margin-bottom;
     }
 }
 
@@ -173,6 +156,7 @@
 
 // todo : rename it in step indicator
 .step-progression {
+    display: inline-block;
     line-height: inherit;
     width: @path-summary-collapsed-width - (@path-summary-padding * 2);
     text-align: center;
@@ -186,3 +170,126 @@
     &.done      { color: @step-status-done-color; }
     &.to_review { color: @step-status-to_review-color; }
 }
+
+// XS screens :
+//   - summary can not be pinned
+//   - closed summary is a bar at the top of the step content
+//   - summary is full width (12 bs cols)
+@media (max-width: @screen-xs-max) {
+    .summary-container {
+        box-shadow: @path-summary-box-shadow-h;
+        height: @path-summary-collapsed-width;
+
+        // Take full width of the viewport
+        top: 0;
+        left: 0;
+        right: 0;
+
+        // hide tree when closed
+        .path-summary-tree {
+            display: none;
+        }
+
+        .summary-control-pin {
+            display: none !important;
+        }
+
+        &.opened {
+            height: 100%; // todo : find better. it can be small if their is no content in the current step
+            bottom: 0;
+
+            .path-summary-tree {
+                display: block;
+            }
+        }
+
+        + .content-container {
+            margin-top: @path-summary-collapsed-width;
+            padding-top: floor(@path-grid-spacing-x / 2); // fake bootstrap grid
+        }
+    }
+}
+
+// SM screens :
+//   - summary can not be pinned
+//   - closed summary is a bar at the left of the step content
+//   - summary is 50% width (6 bs cols)
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+    .summary-container {
+        box-shadow: @path-summary-box-shadow-v;
+        width: @path-summary-collapsed-width;
+
+        // Take full height of the viewport / content (if taller than than viewport)
+        left: 0;
+        top: 0;
+        bottom: 0;
+
+        // hide title when closed
+        .summary-title {
+            display: none;
+        }
+
+        .summary-control-pin {
+            display: none !important;
+        }
+
+        &.opened {
+            width: @path-summary-width-sm;
+        }
+
+        + .content-container {
+            margin-left: @path-summary-collapsed-width;
+            padding-left: floor(@path-grid-spacing-x / 2); // fake bootstrap grid
+        }
+    }
+}
+
+// MD & LG screens :
+//   - summary can be pinned
+//   - closed summary is a bar at the left of the step content
+//   - summary is ~40% width (5 bs cols) by default
+//   - summary is ~33% width (4 bs cols) in fullscreen mode
+@media (min-width: @screen-sm-max) {
+    .summary-container {
+        box-shadow: @path-summary-box-shadow-v;
+        width: @path-summary-collapsed-width;
+
+        // Take full height of the viewport / content (if taller than than viewport)
+        left: 0;
+        top: 0;
+        bottom: 0;
+
+        // hide title when closed
+        .summary-title {
+            display: none;
+        }
+
+        &.opened {
+            width: @path-summary-width-md;
+        }
+
+        &.opened.pinned {
+            + .content-container {
+                margin-left: @path-summary-width-md;
+            }
+        }
+
+        + .content-container {
+            margin-left: @path-summary-collapsed-width;
+            padding-left: floor(@path-grid-spacing-x / 2); // fake bootstrap grid
+        }
+    }
+
+    .page.fullscreen {
+        .summary-container {
+            width: @path-summary-fullscreen-width;
+
+            &.opened.pinned {
+                + .content-container {
+                    margin-left: @path-summary-fullscreen-width;
+                }
+            }
+        }
+    }
+}
+
