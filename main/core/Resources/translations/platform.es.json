@@ -610,7 +610,7 @@
     "month.September": "Septiembre",
     "move": "Mover",
     "my_account": "Mi cuenta",
-    "my_agenda": "Mi agenda",
+    "my_agenda": "Mi calendario",
     "my_applications": "Mis aplicaciones",
     "my_contacts": "Mis contactos",
     "my_favourite_workspaces": "Mis espacios de actividades favoritos",
@@ -1238,5 +1238,6 @@
     "group_removed": "Grupo %group% suprimido.",
     "here": "aquí ",
     "hour": "hora",
-    "hours": "horas"
+    "hours": "horas",
+    "months": "meses"
 }
