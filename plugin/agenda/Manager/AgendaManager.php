@@ -23,6 +23,7 @@ use ICal\ICal;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -136,9 +137,21 @@ class AgendaManager
                 '%Start%' => $event->getStart(),
                 '%End%' => $event->getEnd(),
                 '%Description%' => $event->getDescription(),
-                '%JoinAction%' => $this->container->get('router')->generate('claro_agenda_invitation_action', ['event' => $event->getId(), 'action' => EventInvitation::JOIN]),
-                '%MaybeAction%' => $this->container->get('router')->generate('claro_agenda_invitation_action', ['event' => $event->getId(), 'action' => EventInvitation::MAYBE]),
-                '%ResignAction%' => $this->container->get('router')->generate('claro_agenda_invitation_action', ['event' => $event->getId(), 'action' => EventInvitation::RESIGN]),
+                '%JoinAction%' => $this->container->get('router')->generate(
+                    'claro_agenda_invitation_action',
+                    ['event' => $event->getId(), 'action' => EventInvitation::JOIN],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+                '%MaybeAction%' => $this->container->get('router')->generate(
+                    'claro_agenda_invitation_action',
+                    ['event' => $event->getId(), 'action' => EventInvitation::MAYBE],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+                '%ResignAction%' => $this->container->get('router')->generate(
+                    'claro_agenda_invitation_action',
+                    ['event' => $event->getId(), 'action' => EventInvitation::RESIGN],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
             ], 'agenda'),
             $this->translator->trans('send_message_object', ['%EventName%' => $event->getTitle()], 'agenda'),
             null,
