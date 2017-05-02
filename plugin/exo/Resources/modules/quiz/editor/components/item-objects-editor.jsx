@@ -72,7 +72,7 @@ class ObjectsEditor extends Component {
             className="btn btn-default"
             onClick={() =>
               this.props.showModal(MODAL_ADD_CONTENT, {
-                title: tex('add_content'),
+                title: tex('add_object'),
                 handleSelect: (type) => {
                   this.props.closeModal()
                   const itemObject = this.props.createItemObject(this.props.item.id, type)
