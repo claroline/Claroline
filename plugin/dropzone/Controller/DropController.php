@@ -123,16 +123,16 @@ class DropController extends DropzoneBaseController
             }
 
             if ($form->isValid()) {
-                // change the folder name to take the datetime of the drop event
-                $dropDate = new \DateTime();
-                $date_format = $this->get('translator')->trans('date_form_datepicker_php', [], 'platform');
-                $rm = $this->get('claroline.manager.resource_manager');
-                $node = $rm->getById($notFinishedDrop->getHiddenDirectory()->getId());
-                // set the date time of the drop.
-                $folderName = $node->getName();
-                $rm->rename($node, $folderName.' '.$dropDate->format($date_format.' '.'H:i:s')); //());
-
-                //end setting datetime.
+                if ($notFinishedDrop->getHiddenDirectory()) {
+                    // change the folder name to take the datetime of the drop event
+                    $dropDate = new \DateTime();
+                    $date_format = $this->get('translator')->trans('date_form_datepicker_php', [], 'platform');
+                    $rm = $this->get('claroline.manager.resource_manager');
+                    $node = $rm->getById($notFinishedDrop->getHiddenDirectory()->getId());
+                    // set the date time of the drop.
+                    $folderName = $node->getName();
+                    $rm->rename($node, $folderName.' '.$dropDate->format($date_format.' '.'H:i:s')); //());
+                }
 
                 $notFinishedDrop->setFinished(true);
 
