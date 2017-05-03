@@ -146,6 +146,7 @@ class WebsiteListener
     {
         if (
             $event instanceof LogResourceUpdateEvent
+            && $event->getResource()->getClass() === 'Icap\WebsiteBundle\Entity\Website'
             && $event->getAction() === 'resource-update_rename'
             && $event->getDetails()['resource']['changeSet']['name'][0] !== $event->getDetails()['resource']['changeSet']['name'][1]
         ) {
