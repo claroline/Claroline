@@ -184,7 +184,8 @@
             "Claroline\\ClacoFormBundle\\": "plugin/claco-form",
             "Claroline\\RemoteUserSynchronizationBundle\\": "plugin/remote-user-synchronization",
             "UJM\\LtiBundle\\": "plugin/lti",
-            "Claroline\\CasBundle\\": "plugin/cas"
+            "Claroline\\CasBundle\\": "plugin/cas",
+            "Icap\\BibliographyBundle\\": "plugin/bibliography"
         }
     },
     "extra": {
@@ -242,8 +243,8 @@
             "Claroline\\ClacoFormBundle\\ClarolineClacoFormBundle",
             "Claroline\\RemoteUserSynchronizationBundle\\ClarolineRemoteUserSynchronizationBundle",
             "UJM\\LtiBundle\\UJMLtiBundle",
-            "Claroline\\CasBundle\\ClarolineCasBundle"
-
+            "Claroline\\CasBundle\\ClarolineCasBundle",
+            "Icap\\BibliographyBundle\\IcapBibliographyBundle"
         ]
     }
 }
