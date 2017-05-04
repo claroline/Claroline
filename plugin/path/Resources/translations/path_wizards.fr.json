@@ -83,7 +83,7 @@
     "path_template_save_success": "Le modèle a correctement été sauvegardé.",
     "preview": "Fermer",
     "preview_with_pending_changes_button": "Prévisualiser la dernière versíon publiée",
-    "preview_with_pending_changes_message": "Le Parcours a des modifications non publiées.<br/><br/> Si vous le visualisez sans publication préalable, les changements effectués ne seront pas visíbles.<br/><br/> Voulez-vous continuer et voir la dernière versíon publiée du parcours ?",
+    "preview_with_pending_changes_message": "Le Parcours a des modifications non publiées.<br/><br/> Sí vous le visualisez sans publication préalable, les changements effectués ne seront pas visíbles.<br/><br/> Voulez-vous continuer et voir la dernière versíon publiée du parcours ?",
     "preview_with_pending_changes_title": "Modifications non publiées",
     "previous_step": "Étape précédente",
     "primary_resource": "Ressource principale",
