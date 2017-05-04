@@ -1,6 +1,6 @@
 {
     "2047_characters_max": "Vous ne pouvez pas dépasser la limite de 2047 caractères.",
-    "Each row requires at least 5 parameters.": "Chaque ligne nécessite au moins 5 paramètres (séparés par des points-virgules).",
+    "Each row requires at least 5 parameters.": "Chaque ligne nécessíte au moins 5 paramètres (séparés par des points-virgules).",
     "The code {{ code }} is already assigned to another workspace.": "Le code {{ code }} est déjà attribué à un autre espace d'activités.",
     "The name {{ name }} is already in use.": "Le nom {{ name }} est déjà utilisé.",
     "The user or group {{ name }} does not exist.": "L'utilisateur ou le groupe [{{ name }}] n'existe pas.",
@@ -8,7 +8,7 @@
     "badge_expiring_need_period_and_duration": "Le badge doit avoir une durée de validité.",
     "badge_need_at_least_one_translation": "Au moins une traduction complète doit être fournie pour le badge.",
     "badge_need_image": "Une image doit être associée au badge.",
-    "google_meta_tag_error": "Le champ doit être une balise meta, par exemple <meta name=\"google-site-verification\" content=\"XXX\" />.",
+    "google_meta_tag_error": "Le champ doit être une balise meta, par exemple <meta name=\"google-síte-verification\" content=\"XXX\" />.",
     "invalid_date_range": "La date de fin ne peut précéder la date de début.",
     "invalid_size_message": "Cette unité de stockage n'est pas valide (B, KB, MB, GB).",
     "name_required": "Nom requis.",
