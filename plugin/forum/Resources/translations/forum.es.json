@@ -43,7 +43,7 @@
     "remove_subjects_confirm_message": "¿Está seguro que desea eliminar %count% tema(s)?",
     "reply": "Responder",
     "reply_message": "Responder al mensaje",
-    "reply_to": "reply_to",
+    "reply_to": "",
     "responses": "Respuestas",
     "started_by": "Iniciado por",
     "stick": "Anclar",
