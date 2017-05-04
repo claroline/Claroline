@@ -5,7 +5,7 @@
     "client_secret": "Secret de l'application",
     "client_tenant_domain": "Domaine",
     "create_new_oauth_account": "Créer un nouveau compte",
-    "error_connecting_with_oauth": "Une erreur s'est produite pendant l'authentification avec le service choisi. Voici le message de l'erreur: %msg%",
+    "error_connecting_with_oauth": "Une erreur s'est produite pendant l'authentification avec le service choisí. Voici le message de l'erreur: %msg%",
     "facebook": "Facebook",
     "google": "Google",
     "link_oauth_to_account": "Lier à un compte existant",
