@@ -279,7 +279,7 @@
     "session_event_invitation": "Invitation à une séance",
     "session_event_location": "Lieu",
     "session_event_registration": "Inscription aux séances",
-    "session_event_registration_pending_msg": "Bonjour,<br><br>\nIl n'y a plus de place disponible pour la séance \"%event_name%\" du %event_start_date% que vous avez choisie.<br>\nVous êtes donc sur liste d'attente. Sí une place se libère vous serez prévenu(e).\n",
+    "session_event_registration_pending_msg": "Bonjour,<br><br>\nIl n'y a plus de place disponible pour la séance \"%event_name%\" du %event_start_date% que vous avez choisie.<br>\nVous êtes donc sur liste d'attente. Si une place se libère vous serez prévenu(e).\n",
     "session_event_registration_pending_to_registered_msg": "Bonjour,<br><br>\nVous étiez sur liste d'attente pour la séance \"%event_name%\" du %event_start_date%.<br>\nUne place s'étant libérée, vous êtes désormais inscrit(e).\n",
     "session_event_registration_request": "Demande d'inscription à la séance \"%event_name%\" du %event_start_date% [%status%]",
     "session_event_registration_success_msg": "Bonjour,<br><br>\nVous avez bien été inscrit(e) à la séance \"%event_name%\" du %event_start_date%.\n",
