@@ -32,7 +32,7 @@
     "info.no_competency_activities": "Aucune activité n'est associée à cette compétence.",
     "info.no_competency_association": "Il n'y a encore aucune compétence associée.",
     "info.no_frame": "Il n'y a pas encore de référentiels. Vous pouvez créer un nouveau référentiel ou gérer les échelles de difficultés à l'aide des boutons ci-dessous.",
-    "info.no_frame_no_scale": "Il n'y a pas encore de référentiels ni d'échelles. Si vous choisíssez de créer un référentiel maintenant, celui-ci se verra assígner une échelle par défaut d'un seul niveau. Alternativement, vous pouvez créer une échelle directement et l'associer ensuite à votre référentiel.",
+    "info.no_frame_no_scale": "Il n'y a pas encore de référentiels ni d'échelles. Sí vous choisíssez de créer un référentiel maintenant, celui-ci se verra assígner une échelle par défaut d'un seul niveau. Alternativement, vous pouvez créer une échelle directement et l'associer ensuite à votre référentiel.",
     "info.no_frame_to_select": "Aucun référentiel de compétences n'a encore été défini.",
     "info.no_group_objectives": "Aucun objectif n'a encore été assígné à un groupe. Vous pouvez assígner des objectifs à des groupes dans l'onglet \"Objectifs\".",
     "info.no_learning_objectives": "Il n'y a encore aucun objectif d'apprentissage.",
