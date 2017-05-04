@@ -1,5 +1,5 @@
 {
-    "choose_share_network": "Choisíssez le réseau sur lequel vous voulez partager cette ressource:",
+    "choose_share_network": "Choisissez le réseau sur lequel vous voulez partager cette ressource:",
     "commented": "A commenté :",
     "comments": "Commentaires",
     "comments_are_public": "Tous les commentaires sont publics",
@@ -20,11 +20,11 @@
     "people_who_like_this": "Les personnes qui aiment ca",
     "platform_share_message": "Nombre de partages sur la plateforme",
     "see_more": "Voir plus",
-    "share_published_also_in_wall": "Votre partage sera aussí publié sur votre mur personnel.",
+    "share_published_also_in_wall": "Votre partage sera aussi publié sur votre mur personnel.",
     "shared_on": "A partagé sur \"%network%\" :",
     "submit_comment": "Commenter",
     "submit_note": "Soumettre",
-    "twitter_share_message": "Nombre de partages sur Twitter indisponible à cause de la nouvelle politique du síte de Twitter.",
+    "twitter_share_message": "Nombre de partages sur Twitter indisponible à cause de la nouvelle politique du site de Twitter.",
     "unlike_action": "Je n'aime plus",
     "your_notes": "Vos pense-bêtes"
 }
