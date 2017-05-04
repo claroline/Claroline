@@ -88,6 +88,17 @@ export default class PostController {
     return this.blog.tags.filter(element => element.text.includes($query))
   }
 
+  getErrorMessage($errors) {
+    let errorMessage = ''
+    if ('required' in $errors) {
+      errorMessage = _transFilter.get(this)('required_field', {}, 'icap_blog')
+    }
+    if ('maxlength' in $errors) {
+      errorMessage = _transFilter.get(this)('maxlength_field', {}, 'icap_blog')
+    }
+    return errorMessage
+  }
+
   filterByTag(tag) {
     _$location.get(this).url(`/tag/${tag.slug}`)
   }
