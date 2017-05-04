@@ -13,7 +13,7 @@
     "open_desc": "Beantwoord een vraag met een tekst die middelen kan bevatten (bijv. tekst, afbeelding, audio, video). De open vraag vereist een manuele correctie.",
     "pair": "Koppeling",
     "pair_desc": "Plaats elementen (bijv. tekst, afbeelding, audio, video) in paren.",
-    "set": "Classificeren",
+    "set": "Classíficeren",
     "set_desc": "Verplaats elementen (bijv. tekst, afbeelding, audio, video) in sets.",
     "grid": "Tabel",
     "grid_desc": "Vul een tabel in. Deze kan ingevuld worden door een tekst te schrijven of door een item te kiezen in een vooraf gedefinieerde lijst.",
