@@ -10,7 +10,7 @@
     "Users and groups": "Users and groups",
     "Users and groups settings": "Users and groups settings",
     "append_dn": "Concat DN",
-    "auto_creation": "Create user if missíng.",
+    "auto_creation": "Create user if missing.",
     "distinguished_name": "DN",
     "groups_settings": "Groups settings",
     "host": "Host",
@@ -25,7 +25,7 @@
     "name": "Name",
     "password": "Password",
     "port": "Port",
-    "protocol_version": "Versíon",
+    "protocol_version": "Version",
     "username": "Username",
     "users_settings": "Users settings"
 }
