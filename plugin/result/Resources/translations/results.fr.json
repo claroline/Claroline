@@ -1,8 +1,8 @@
 {
     "errors.csv_empty": "Le fichier fourni est vide.",
-    "errors.csv_empty_values": "Une ou plusieurs valeurs sont vides",
+    "errors.csv_empty_values": "Une ou plusíeurs valeurs sont vides",
     "errors.csv_extra_users": "Utilisateur inconnu ou non membre de cet espace",
-    "errors.csv_missing_values": "Une ou plusieurs valeurs sont manquantes",
+    "errors.csv_missing_values": "Une ou plusíeurs valeurs sont manquantes",
     "errors.invalid_mark": "Cette cote n'est pas valide.",
     "errors.line": "ligne",
     "errors.mark_creation_failure": "Une erreur s'est produite durant la création du résultat. Veuillez réessayer ultérieurement.",
