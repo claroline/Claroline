@@ -16,7 +16,7 @@
     "host": "Host",
     "ldap_already_exists": "Deze server wordt al gebruikt.",
     "ldap_cant_connect": "Kan geen verbinding maken met de server.",
-    "ldap_check_connexion_info":"",
+    "ldap_check_connexion_info": "",
     "ldap_error_conexion": "Kan geen verbinding maken met LDAP-server.",
     "ldap_group_class": "Klasse van een groep",
     "ldap_save_groups_settings_error": "Om de instellingen op te slaan, moet u de naam en de code vermelden.",
@@ -25,8 +25,8 @@
     "name": "Naam",
     "password": "Wachtwoord",
     "port": "Poort",
-    "protocol_version": "Versie",
+    "protocol_version": "Versíe",
     "username": "Gebruikersnaam",
-    "users_settings": "Gebruikersinstellingen",
+    "users_settings": "Gebruikersínstellingen",
     "Allow account creation at the firs login": "Rekening laten maken bij de eerste login."
 }
