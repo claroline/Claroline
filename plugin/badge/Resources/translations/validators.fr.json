@@ -18,7 +18,7 @@
     "public_profile_url_not_valid": "L'URL de votre profil public n'est pas valide.",
     "role_already_exists": "Ce rôle existe déjà.",
     "special_char_not_allowed": "Les caractères spéciaux ne sont pas autorisés. Les caractères autorisés sont: a-z, A-Z, 0-9, @, _, - et .",
-    "username_doesnt_exist": "De gebruiker %username% bestaat niet.",
+    "username_doesnt_exist": "L'utilisateur %username% n'existe pas.",
     "valid_end_date_required": "Une date de fin valide est requise.",
     "valid_end_hour_required": "Une heure de fin valide est requise.",
     "valid_start_date_required": "Une date de début valide est requise.",
