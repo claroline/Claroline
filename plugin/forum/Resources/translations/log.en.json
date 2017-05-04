@@ -1,6 +1,6 @@
 {
-    "log_resource-claroline_forum-close_subject_filter": "Closing subject",
-    "log_resource-claroline_forum-close_subject_title": "Closing forum subject",
+    "log_resource-claroline_forum-close_subject_filter": "Closíng subject",
+    "log_resource-claroline_forum-close_subject_title": "Closíng forum subject",
     "log_resource-claroline_forum-create_category_filter": "Creating category",
     "log_resource-claroline_forum-create_category_sentence": "has created a category in the forum %resource%",
     "log_resource-claroline_forum-create_category_shortname": "Creating category",
