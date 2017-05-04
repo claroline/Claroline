@@ -6,19 +6,19 @@
     "announcement_form_announcer": "Éditeur",
     "announcement_form_content": "Message",
     "announcement_form_title": "Titre",
-    "announcement_form_visible": "Visible",
+    "announcement_form_visible": "Visíble",
     "announcement_form_visible_from": "Du",
     "announcement_form_visible_until": "Au",
     "announcement_sent": "Annonce envoyée",
     "announcements_list": "Liste des annonces",
-    "announcements_widget_configuration_info": "Vous pouvez spécifier la source des annonces en choisissant une ressource.",
+    "announcements_widget_configuration_info": "Vous pouvez spécifier la source des annonces en choisíssant une ressource.",
     "at": "à",
     "by": "par",
     "create_new_announcement": "Ajouter une annonce",
     "created_on": "Créée le",
-    "notification_option_info": "L'option de notification est désactivée si une date de début est définie.",
+    "notification_option_info": "L'option de notification est désactivée sí une date de début est définie.",
     "published_on": "Publiée le",
     "send_email_to_users": "Envoyer un courriel aux utilisateurs",
     "send_mail_user_picker_title": "Veuillez sélectionner les utilisateurs à qui vous voulez envoyer l'annonce.",
-    "visible_from_until_condition": "La date de fin doit se situer après la date de début."
+    "visible_from_until_condition": "La date de fin doit se sítuer après la date de début."
 }
