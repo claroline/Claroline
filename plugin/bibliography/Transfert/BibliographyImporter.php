@@ -5,6 +5,7 @@ namespace Icap\BibliographyBundle\Transfert;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Icap\BibliographyBundle\Manager\BookReferenceManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 
@@ -48,6 +49,8 @@ class BibliographyImporter extends Importer implements ConfigurationInterface
                 ->scalarNode('coverUrl')->end()
             ->end()
         ->end();
+
+        return $treeBuilder;
     }
 
     public function getName()

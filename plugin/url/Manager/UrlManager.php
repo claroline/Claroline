@@ -32,13 +32,18 @@ class UrlManager
     public function setUrl(Url $url)
     {
         $address = $url->getUrl();
-        $baseUrl = $this->request->getCurrentRequest()->getSchemeAndHttpHost().$this->request->getCurrentRequest()->getScriptName();
-        $baseUrlEscapeQuote = preg_quote($baseUrl);
+        $baseUrlEscapeQuote = null;
+        $baseUrl = null;
         $url->setInternalUrl(false);
 
-        if (preg_match("#$baseUrlEscapeQuote#", $address)) {
-            $url->setUrl(substr($address, strlen($baseUrl)));
-            $url->setInternalUrl(true);
+        if ($this->request->getCurrentRequest() !== null) {
+            $baseUrl = $this->request->getCurrentRequest()->getSchemeAndHttpHost().$this->request->getCurrentRequest()->getScriptName();
+            $baseUrlEscapeQuote = preg_quote($baseUrl);
+
+            if (preg_match("#$baseUrlEscapeQuote#", $address)) {
+                $url->setUrl(substr($address, strlen($baseUrl)));
+                $url->setInternalUrl(true);
+            }
         }
 
         return $url;

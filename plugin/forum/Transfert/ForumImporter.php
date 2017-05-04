@@ -72,6 +72,9 @@ class ForumImporter extends Importer implements ConfigurationInterface, RichText
                                             ->children()
                                                 ->scalarNode('name')->end()
                                                 ->scalarNode('creator')->end()
+                                                ->scalarNode('author')->end()
+                                                ->scalarNode('creation_date')->end()
+                                                ->booleanNode('sticked')->defaultFalse()->end()
                                                 ->arrayNode('messages')
                                                     ->prototype('array')
                                                         ->children()
@@ -126,8 +129,20 @@ class ForumImporter extends Importer implements ConfigurationInterface, RichText
                         $creator = $repo->findOneByUsername($subject['subject']['creator']);
                     }
 
+                    if (isset($subject['subject']['sticked'])) {
+                        $subjectEntity->setIsSticked($subject['subject']['sticked']);
+                    }
+
+                    if (isset($subject['subject']['creation_date'])) {
+                        $subjectEntity->setCreationDate(new \DateTime($subject['subject']['creation_date']));
+                    }
+
                     if ($creator === null) {
                         $creator = $this->container->get('security.context')->getToken()->getUser();
+                    }
+
+                    if (isset($subject['subject']['author'])) {
+                        $subjectEntity->setAuthor($subject['subject']['author']);
                     }
 
                     $subjectEntity->setCreator($creator);
@@ -149,6 +164,14 @@ class ForumImporter extends Importer implements ConfigurationInterface, RichText
 
                         if ($creator === null) {
                             $creator = $this->container->get('security.context')->getToken()->getUser();
+                        }
+
+                        if (isset($message['message']['creation_date'])) {
+                            $messageEntity->setCreationDate(new \DateTime($message['message']['creation_date']));
+                        }
+
+                        if (isset($message['message']['modification_date'])) {
+                            $messageEntity->setModificationDate(new \DateTime($message['message']['modification_date']));
                         }
 
                         $messageEntity->setCreator($creator);

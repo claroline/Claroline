@@ -89,18 +89,13 @@ class FileImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function import(array $array, $name, $created, $workspace)
     {
-        $ds = DIRECTORY_SEPARATOR;
-
         foreach ($array['data'] as $item) {
             $file = new File();
-            $tmpFile = new SfFile($this->getRootPath().$ds.$item['file']['path']);
-            $content = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$item['file']['path']);
+            $tmpFile = new SfFile($this->getRootPath().DIRECTORY_SEPARATOR.$item['file']['path']);
 
             $file = $this->container->get('claroline.listener.file_listener')->createFile(
                 $file, $tmpFile,  $name, $item['file']['mime_type'], $workspace
             );
-
-            file_put_contents(realpath($this->getRootPath()).$ds.$item['file']['path'], $content);
 
             return $file;
         }
