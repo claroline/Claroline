@@ -25,7 +25,7 @@
     "name": "Naam",
     "password": "Wachtwoord",
     "port": "Poort",
-    "protocol_version": "Versíe",
+    "protocol_version": "Versie",
     "username": "Gebruikersnaam",
     "users_settings": "Gebruikersínstellingen",
     "Allow account creation at the firs login": "Rekening laten maken bij de eerste login."
