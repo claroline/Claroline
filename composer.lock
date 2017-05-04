@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "a9c45ffcb14b0c202c368a6c3e82b8028f793d60"
+                "reference": "f2441fd4630314f3c46d35ad65f62e9a0ec25a02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a9c45ffcb14b0c202c368a6c3e82b8028f793d60",
-                "reference": "a9c45ffcb14b0c202c368a6c3e82b8028f793d60",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/f2441fd4630314f3c46d35ad65f62e9a0ec25a02",
+                "reference": "f2441fd4630314f3c46d35ad65f62e9a0ec25a02",
                 "shasum": ""
             },
             "require": {
@@ -305,7 +305,8 @@
                     "Claroline\\ClacoFormBundle\\ClarolineClacoFormBundle",
                     "Claroline\\RemoteUserSynchronizationBundle\\ClarolineRemoteUserSynchronizationBundle",
                     "UJM\\LtiBundle\\UJMLtiBundle",
-                    "Claroline\\CasBundle\\ClarolineCasBundle"
+                    "Claroline\\CasBundle\\ClarolineCasBundle",
+                    "Icap\\BibliographyBundle\\IcapBibliographyBundle"
                 ]
             },
             "autoload": {
@@ -365,7 +366,8 @@
                     "Claroline\\ClacoFormBundle\\": "plugin/claco-form",
                     "Claroline\\RemoteUserSynchronizationBundle\\": "plugin/remote-user-synchronization",
                     "UJM\\LtiBundle\\": "plugin/lti",
-                    "Claroline\\CasBundle\\": "plugin/cas"
+                    "Claroline\\CasBundle\\": "plugin/cas",
+                    "Icap\\BibliographyBundle\\": "plugin/bibliography"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -385,7 +387,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-05-02 14:36:17"
+            "time": "2017-05-03 14:55:26"
         },
         {
             "name": "claroline/front-end-bundle",
