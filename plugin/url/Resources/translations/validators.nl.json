@@ -4,5 +4,5 @@
     "method_not_allowed": "Deze methode is niet toegestaan.",
     "res_not_found": "Bron niet gevonden.",
     "server_error %errorCode%": "Er is een fout gedetecteerd aan de serverzijde. Code fout:%errorCode%.",
-    "website_doesnt_exist %url%": "De websíte %url% bestaat niet."
+    "website_doesnt_exist %url%": "De website %url% bestaat niet."
 }
