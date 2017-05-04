@@ -37,7 +37,7 @@
     "note_deletion": "Suppression de la note",
     "note_deletion_confirm_message": "Êtes-vous sûr de vouloir supprimer cette note ?",
     "note_edition": "Modification de la note",
-    "notification_ticket_title" : "Ticket (création, édition, suppression)",
+    "notification_ticket_title": "Ticket (création, édition, suppression)",
     "notifications_management": "Gestion des notifications",
     "ongoing_tickets": "Tickets en cours",
     "platform_mailbox": "Messagerie de la plateforme",

@@ -16,7 +16,7 @@
     "host": "",
     "ldap_already_exists": "Ya existe un servidor con este nombre.",
     "ldap_cant_connect": "No se puede conectar con el servidor.",
-    "ldap_check_connexion_info":"",
+    "ldap_check_connexion_info": "",
     "ldap_error_conexion": "Imposible de conectarse con el servidor LDAP.",
     "ldap_group_class": "Clase de grupo",
     "ldap_save_groups_settings_error": "Con el fin de guardar la configuración, debe proporcionar el nombre y el codigo.",

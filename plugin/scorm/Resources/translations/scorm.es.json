@@ -6,5 +6,6 @@
     "incomplete": "Incompleto",
     "not_attempted": "No intentado",
     "passed": "Logrado",
-    "unknown": "Desconocido"
+    "unknown": "Desconocido",
+    "details": "Detalles"
 }

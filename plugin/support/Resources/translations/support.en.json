@@ -37,7 +37,7 @@
     "note_deletion": "Removing note",
     "note_deletion_confirm_message": "Are you sure you want to remove this note?",
     "note_edition": "Note edition",
-    "notification_ticket_title" : "Ticket (creation, edition, deletion)",
+    "notification_ticket_title": "Ticket (creation, edition, deletion)",
     "notifications_management": "Notifications management",
     "ongoing_tickets": "Ongoing tickets",
     "platform_mailbox": "Platform mailbox",

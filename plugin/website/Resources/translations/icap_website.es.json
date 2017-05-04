@@ -4,8 +4,8 @@
     "apply": "Aplicar",
     "cancel": "Cancelar",
     "content": "Contenido",
-    "error": "",
-    "general": "",
+    "error": "Error",
+    "general": "General",
     "title": "Título",
     "description": "Descripción",
     "footer": "Pie de página",
@@ -14,5 +14,6 @@
     "reset": "Reinicializar",
     "resource": "Recurso",
     "save": "Guardar",
-    "width": "Ancho"
+    "width": "Ancho",
+    "disable": "Desactivar"
 }

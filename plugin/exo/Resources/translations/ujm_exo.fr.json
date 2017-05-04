@@ -153,7 +153,7 @@
     "error_no_step_found": "Une erreur est survenue lors de la récupération de l'étape courrante.",
     "evaluative": "Formatif",
     "exercise": "Questionnaire",
-    "exercise_alert_break": "Interuption non autorisée. Votre copie sera considérée comme terminée !",
+    "exercise_alert_break": "Interruption non autorisée. Votre copie sera considérée comme terminée !",
     "exercise_definition": "Vue d'ensemble",
     "exercise_finished_attempts": "[0, 1] %count% réalisée à ce stade|]1,Inf[ %count% réalisées à ce stade.",
     "exercise_restart": "Recommencer",
