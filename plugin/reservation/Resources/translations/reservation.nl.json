@@ -98,7 +98,7 @@
     "import.resources_info": "Gelieve een CSV-bestand te kiezen met een komma om de elementen te scheiden en aanhalingstekens rondom complexe tekstvelden. De eerste regel van het bestand moet 7 kolommen bevatten (Zie onderstaand voorbeeld):\n\n- de naam van het type van middel (min 2 en max 50 tekens)\n- de naam van de middel (min 2 en max 50 tekens)\n- de maximum reservatieduur in het formaat hh:mm ou hh:mm:ss (optioneel)\n- de beschrijving (optioneel)\n- de localisatie ((optioneel)\n- de hoeveelheid (minimum 1)\n- de kleur van de middel (optioneel).\n\nIndien het type van middel niet bestaat, wordt het automatisch gemaakt.\n",
     "import.resources_submit": "De middelen invoeren",
     "import.resources_title": "Middelen invoeren",
-    "import.tv": "Televisie",
+    "import.tv": "Televisíe",
     "import.tv_localisation": "Lerarenkamer",
     "import_": "Invoeren",
     "modify_resource": "Een middel bewerken.",
