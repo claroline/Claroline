@@ -1363,18 +1363,17 @@ class WorkspaceController extends Controller
                 $urlImport = true;
                 $url = $form->get('fileUrl')->getData();
                 $template = $this->importFromUrl($url);
-                if (!$template) {
+                if ($template === null) {
                     $msg = $this->translator->trans(
                         'invalid_host',
                         ['%url%' => $url],
                         'platform'
                     );
-                    $flashBag = $this->session->getFlashBag();
-                    $flashBag->add('error', $msg);
+                    $this->session->getFlashBag()->add('error', $msg);
                 }
             }
 
-            if ($template) {
+            if ($template !== null) {
                 $workspace = $form->getData();
                 $workspace->setCreator($this->tokenStorage->getToken()->getUser());
                 $this->workspaceManager->create($workspace, $template);
@@ -1391,7 +1390,7 @@ class WorkspaceController extends Controller
                     ['%name%' => $form->get('name')->getData()],
                     'platform'
                 );
-                $this->get('request')->getSession()->getFlashBag()->add('success', $msg);
+                $this->session->getFlashBag()->add('success', $msg);
 
                 return new RedirectResponse($route);
             }
@@ -1407,32 +1406,48 @@ class WorkspaceController extends Controller
 
     private function importFromUrl($url)
     {
-        //REST URI hash used as unique file identifier for temporary template
-        $filepath = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir').DIRECTORY_SEPARATOR.md5($url).'.zip';
-        //if already exists resume using it, no need to upload it again
-        if (file_exists($filepath)) {
-            return new File($filepath);
-        } else {
-            $fileWriter = fopen($filepath, 'w+');
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_FILE, $fileWriter);
-            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
-            curl_setopt($ch, CURLOPT_TIMEOUT, 900);
-            curl_exec($ch);
-            $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $template = null;
-            if (!curl_errno($ch)) {
-                if ($httpcode === 200 || $httpcode === 201) {
+        $template = null;
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+        curl_setopt($ch, CURLOPT_NOBODY, true);
+        curl_exec($ch);
+
+        //check if url is a valid provider
+        $retcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        if ($retcode === 200 || $retcode === 201) {
+            $import_sub_folder = 'import'.DIRECTORY_SEPARATOR;
+            $import_folder_path = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$import_sub_folder;
+            $fs = new FileSystem();
+            if (!$fs->exists($import_folder_path)) {
+                $fs->mkdir($import_folder_path);
+            }
+
+            //REST URI hash used as unique file identifier for temporary template
+            $filepath = $import_folder_path.md5($url).'.zip';
+
+            //if already exists resume using it, no need to upload it again
+            if (file_exists($filepath)) {
+                return new File($filepath);
+            } else {
+                $fileWriter = fopen($filepath, 'w+');
+                curl_setopt($ch, CURLOPT_NOBODY, false);
+                curl_setopt($ch, CURLOPT_FILE, $fileWriter);
+                curl_setopt($ch, CURLOPT_TIMEOUT, 900);
+                curl_exec($ch);
+
+                if (!curl_errno($ch)) {
                     $template = new File($filepath);
                 }
+                fclose($fileWriter);
             }
-            curl_close($ch);
-            fclose($fileWriter);
-
-            return $template;
         }
+        curl_close($ch);
+
+        return $template;
     }
 
     /**

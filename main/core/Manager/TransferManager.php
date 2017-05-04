@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
+use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
 use Claroline\CoreBundle\Library\Transfert\ToolRichTextInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -117,6 +118,31 @@ class TransferManager
         array $entityRoles,
         $importRoles = true
     ) {
+        return $this->populateWorkspaceFromTemplate($workspace, $data, $this->templateDirectory.$template->getBasename('.zip'), $root, $entityRoles, $importRoles);
+    }
+
+    /**
+     * Populates a workspace content with the content of an zip archive. In other words, it ignores the
+     * many properties of the configuration object and use an existing workspace as base.
+     *
+     * This will set the $this->data var
+     * This will set the $this->workspace var
+     *
+     * @param Workspace $workspace
+     * @param File      $template
+     * @param Directory $root
+     * @param array     $entityRoles
+     * @param bool      $isValidated
+     * @param bool      $importRoles
+     */
+    private function populateWorkspaceFromTemplate(
+        Workspace $workspace,
+        array $data,
+        $template,
+        Directory $root,
+        array $entityRoles,
+        $importRoles = true
+    ) {
         $this->om->startFlushSuite();
         $this->setWorkspaceForImporter($workspace);
         if ($importRoles) {
@@ -133,11 +159,11 @@ class TransferManager
         $this->om->endFlushSuite();
         //flush has to be forced unless it's a default template
         $defaults = [
-            realpath($this->container->getParameter('claroline.param.default_template')),
-            realpath($this->container->getParameter('claroline.param.personal_template')),
+            pathinfo(realpath($this->container->getParameter('claroline.param.default_template')), PATHINFO_DIRNAME),
+            pathinfo(realpath($this->container->getParameter('claroline.param.personal_template')), PATHINFO_DIRNAME),
         ];
 
-        if (!in_array(realpath($template->getPathname()), $defaults)) {
+        if (!in_array($template, $defaults)) {
             $this->om->forceFlush();
         }
 
@@ -174,6 +200,60 @@ class TransferManager
         $isValidated = false
     ) {
         $data = $this->container->get('claroline.manager.workspace_manager')->getTemplateData($template, true);
+        $workspace = $this->createWorkspaceFromData($workspace, $data, $this->templateDirectory.$template->getBasename('.zip'), $isValidated);
+        $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
+
+        return $workspace;
+    }
+
+    /**
+     * @param Workspace $workspace
+     * @param string    $templatePath
+     * @param bool      $isValidated
+     *
+     * @throws InvalidConfigurationException
+     *
+     * @return Workspace
+     *
+     * Create workspace from uncompressed template
+     * The template doesn't need to be validated anymore if
+     *  - it comes from the self::import() function
+     *  - we want to create a user from the default template (it should work no matter what)
+     */
+    public function createWorkspaceFromTemplate(
+        Workspace $workspace,
+        $templatePath,
+        $isValidated = false
+    ) {
+        $resolver = new Resolver($templatePath);
+        $this->importData = $resolver->resolve();
+        $data = $this->importData;
+        $workspace = $this->createWorkspaceFromData($workspace, $data, $templatePath, $isValidated);
+        $this->container->get('claroline.manager.workspace_manager')->removeTemplateDirectory($templatePath);
+
+        return $workspace;
+    }
+
+    /**
+     * @param Workspace $workspace
+     * @param array     $data
+     * @param string template
+     * @param bool $isValidated
+     *
+     * @throws InvalidConfigurationException
+     *
+     * @return Workspace
+     *
+     * The template doesn't need to be validated anymore if
+     *  - it comes from the self::import() function
+     *  - we want to create a user from the default template (it should work no matter what)
+     */
+    private function createWorkspaceFromData(
+        Workspace $workspace,
+        array $data,
+        $template,
+        $isValidated = false
+    ) {
         $data = $this->reorderData($data);
 
         if ($workspace->getCode() === null && isset($data['parameters'])) {
@@ -185,10 +265,9 @@ class TransferManager
         }
 
         //just to be sure doctrine is ok before doing all the workspace
-
         $this->om->startFlushSuite();
         $data = $this->reorderData($data);
-        $this->setImporters($template, $workspace->getCreator(), $data);
+        $this->setImportersForTemplate($template, $workspace->getCreator(), $data);
 
         if (!$isValidated) {
             $data = $this->validate($data, false);
@@ -213,8 +292,13 @@ class TransferManager
             true
         );
 
-        //batch import with default template shouldn't be flushed
-        if (strpos($template->getPathname(), 'default.zip') === false && strpos($template->getPathname(), 'personal.zip') === false) {
+        //flush has to be forced unless it's a default template
+        $defaults = [
+            pathinfo(realpath($this->container->getParameter('claroline.param.default_template')), PATHINFO_DIRNAME),
+            pathinfo(realpath($this->container->getParameter('claroline.param.personal_template')), PATHINFO_DIRNAME),
+        ];
+
+        if (!in_array($template, $defaults)) {
             $this->om->forceFlush();
         }
 
@@ -251,8 +335,7 @@ class TransferManager
         );
 
         $this->log('Populating the workspace...');
-        $this->populateWorkspace($workspace, $data, $template, $root, $entityRoles, false);
-        $this->container->get('claroline.manager.workspace_manager')->removeTemplate($template);
+        $this->populateWorkspaceFromTemplate($workspace, $data, $template, $root, $entityRoles, false);
         $this->container->get('claroline.manager.workspace_manager')->createWorkspace($workspace);
         $this->om->endFlushSuite();
 
@@ -419,8 +502,20 @@ class TransferManager
      */
     private function setImporters(File $template, User $owner, array $data)
     {
+        $this->setImportersForTemplate($this->templateDirectory.$template->getBasename('.zip'), $owner, $data);
+    }
+
+    /**
+     * Inject the rootPath.
+     *
+     * @param string $template
+     * @param User   $owner
+     * @param array  $data
+     */
+    private function setImportersForTemplate($template, User $owner, array $data)
+    {
         foreach ($this->listImporters as $importer) {
-            $importer->setRootPath($this->templateDirectory.$template->getBasename('.zip'));
+            $importer->setRootPath($template);
             $importer->setOwner($owner);
             $importer->setConfiguration($data);
             $importer->setListImporters($this->listImporters);

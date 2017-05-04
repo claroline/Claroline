@@ -170,7 +170,7 @@ class BlogManager
         $this->objectManager->forceFlush();
 
         //Copy banner bg image to web folder
-        if ($optionsData['banner_background_image'] !== null && !filter_var($optionsData['banner_background_image'], FILTER_VALIDATE_URL)) {
+        if (isset($optionsData['banner_background_image']) && $optionsData['banner_background_image'] !== null && !filter_var($optionsData['banner_background_image'], FILTER_VALIDATE_URL)) {
             $this->createUploadFolder(DIRECTORY_SEPARATOR.$this->uploadDir);
             $uniqid = uniqid();
             copy(
