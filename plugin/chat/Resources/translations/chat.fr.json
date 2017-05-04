@@ -17,7 +17,7 @@
     "chat_room_id": "Identifiant de la Chat room",
     "chat_room_open_msg": "La Chat room est ouverte",
     "chat_room_status": "Statut de la Chat room",
-    "chat_room_uninitialized_msg": "La Chat room n'est pas encore accessible",
+    "chat_room_uninitialized_msg": "La Chat room n'est pas encore accessíble",
     "chat_room_unknown_status_msg": "Le statut de la Chat room est inconnu",
     "chat_username": "Identifiant pour le Chat",
     "closed": "Fermé",
@@ -38,7 +38,7 @@
     "ice_servers": "Serveurs ICE",
     "init_room": "Initialiser la Chat room",
     "invalid_authentication": "Une erreur est survenue lors de la connexion. Vérifiez que les paramètres \"administrateur\" et \"mot de passe\" sont corrects.",
-    "invalid_bosh": "Connexion au serveur bosh impossible à l'url %url%.",
+    "invalid_bosh": "Connexion au serveur bosh impossíble à l'url %url%.",
     "invalid_host": "Une erreur est servenue lors de la connexion (%error%). Vérifiez que le paramètre hôte est valide.",
     "invalid_room_type": "Le type de la Chat room n'est pas valide",
     "kick": "Ejecter",
@@ -54,11 +54,11 @@
     "participant": "Participant",
     "port": "Port",
     "search_chat_users_infos": "Une recherche doit être effectuée pour afficher les utilisateurs ayant un compte pour le Chat.",
-    "select_users_for_chat_account_generation": "Sélectionnez les utilisateurs pour lesquels vous désirez créer un compte pour le Chat",
+    "select_users_for_chat_account_generation": "Sélectionnez les utilisateurs pour lesquels vous désírez créer un compte pour le Chat",
     "ssl": "SSL",
     "status": "État",
     "text_only": "Texte seulement",
     "type": "Type",
     "uninitialized": "Non initialisé",
-    "visitor": "Visiteur"
+    "visitor": "Visíteur"
 }
