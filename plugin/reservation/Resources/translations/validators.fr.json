@@ -1,5 +1,5 @@
 {
-    "bad_file_extension": "L'extensíon du fichier est invalide. Veuillez sélectionner un fichier au format csv.",
+    "bad_file_extension": "L'extension du fichier est invalide. Veuillez sélectionner un fichier au format csv.",
     "double_resource_for_one_resource_type": "La ligne %lineNb1% et la ligne %lineNb2% contiennent le même type de ressources pour la même ressource. Veuillez différencier les noms des ressources.",
     "invalid_color_format": "La valeur de la couleur de la colonne color doit être au format hex. Ligne %lineNb%.",
     "invalid_column_headers": "Le nom de la colonne %columnName% n'est pas présent dans le fichier.",
