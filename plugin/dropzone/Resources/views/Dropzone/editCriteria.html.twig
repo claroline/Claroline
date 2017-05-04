@@ -288,8 +288,8 @@
     </div>
 
     {{ form_rest(form) }}
-    <div class="row">
-        <div class="btn-group pull-right">
+    <div class="row container-fluid">
+        <div class="btn-group pull-right container-fluid">
             <a href="{{ path('icap_dropzone_edit_common', {'resourceId': dropzone.getId()}) }}"
                class="btn btn-default criteria-form-button back-button">{{ 'Return'|trans({}, 'icap_dropzone') }}</a>
             <button id="submit_global_form" type="submit"
