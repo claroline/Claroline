@@ -92,7 +92,7 @@
     "No copy was made": "Geen kopie is weergegeven",
     "You have not made ​​a copy. It is too late to take part in this evaluation.": "U hebt geen kopie weergegeven. Het is te laat om deel te nemen aan deze evaluatie.",
     "You have not yet made a copy": "U hebt nog geen kopie weergegeven.",
-    "expected_total_correction": "De lerende moet aan drie voorwaarden voldoen om zijn evaluatie te valideren: \n- Hij moet zijn exemplaar hebben gemaakt.\n- Hij moet N andere kopie(ën) gecorrigeerd hebben.\n- Zijn kopie moet N keer gecorrigeerd zijn.\nDe loting van een te corrigeren kopie wordt anoniemen en op een willekeurige basís gemaakt.",
+    "expected_total_correction": "De lerende moet aan drie voorwaarden voldoen om zijn evaluatie te valideren: \n- Hij moet zijn exemplaar hebben gemaakt.\n- Hij moet N andere kopie(ën) gecorrigeerd hebben.\n- Zijn kopie moet N keer gecorrigeerd zijn.\nDe loting van een te corrigeren kopie wordt anoniemen en op een willekeurige basis gemaakt.",
     "nbDocumentsInThisEvaluation": "one: U hebt één document voor deze evaluatie weergegeven. |some: U hebt %count% documenten voor deze evaluatie weergegeven.",
     "Evaluation Criteria": "Criteria voor peer review",
     "Evaluation criteria": "Evaluatie criteria",
