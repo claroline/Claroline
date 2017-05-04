@@ -14,7 +14,7 @@
     "oauth_app_ask_access": "Verzoek om toegang tot het platform",
     "oauth_application_acceptance": "Bevestiging van toegang",
     "password_grant_type": "Wachtwoord",
-    "refresh_token_grant_type": "Verfrissíng van het token",
+    "refresh_token_grant_type": "Verfrissing van het token",
     "revoke": "Intrekken",
     "revoke_access": "De toegang intrekken",
     "thrid_party_application_delete_confirm_message": "Bent u er zeker van dat u de toegang tot het pakket <strong>%application%</strong> wenst te verwijderen ?",
