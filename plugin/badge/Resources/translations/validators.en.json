@@ -18,7 +18,7 @@
     "public_profile_url_not_valid": "Your public profile URL is not valid.",
     "role_already_exists": "This role already exists.",
     "special_char_not_allowed": "Special characters are not allowed. The allowed characters are: a-z, A-Z, 0-9, @, _, - and .",
-    "username_doesnt_exist": "The userneame %username% doesn't exist.",
+    "username_doesnt_exist": "The username %username% doesn't exist.",
     "valid_end_date_required": "A valid end date is required.",
     "valid_end_hour_required": "A valid end hour is required.",
     "valid_start_date_required": "A valid start date is required.",
