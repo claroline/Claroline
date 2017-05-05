@@ -203,6 +203,11 @@ class LayoutController extends Controller
             }
         }
 
+        $translator = $this->translator;
+        usort($adminTools, function ($a, $b) use ($translator) {
+            return $translator->trans($a->getName(), [], 'tools') > $translator->trans($b->getName(), [], 'tools');
+        });
+
         return [
             'isLogged' => $isLogged,
             'register_target' => $registerTarget,
