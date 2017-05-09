@@ -31,6 +31,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Exception;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
@@ -44,7 +45,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
-class ResourceController
+class ResourceController extends Controller
 {
     private $tokenStorage;
     private $authorization;
@@ -515,6 +516,67 @@ class ResourceController
         $logs = $this->logManager->getResourceList($resource, $page);
 
         return $logs;
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/log/{node}/csv",
+     *     name="claro_resource_logs_csv",
+     *     requirements={"node" = "\d+"}
+     * )
+     *
+     * @param ResourceNode $node the resource
+     *
+     * @return Response
+     */
+    public function logCSVAction(ResourceNode $node)
+    {
+        $resource = $this->resourceManager->getResourceFromNode($node);
+        $collection = new ResourceCollection([$node]);
+        $this->checkAccess('ADMINISTRATE', $collection);
+
+        $response = new StreamedResponse(function () use ($resource) {
+            $resourceList = $this->logManager->getResourceList($resource);
+            $results = $resourceList['results'];
+            $date_format = $this->translator->trans('date_format', [], 'platform');
+            $handle = fopen('php://output', 'w+');
+            fputcsv($handle, [
+                $this->translator->trans('date', [], 'platform'),
+                $this->translator->trans('action', [], 'platform'),
+                $this->translator->trans('user', [], 'platform'),
+                $this->translator->trans('action', [], 'platform'),
+            ]);
+            foreach ($results as $result) {
+                fputcsv($handle, [
+                    $result->getDateLog()->format($date_format).' '.$result->getDateLog()->format('H:i'),
+                    $this->translator->trans('log_'.$result->getAction().'_shortname', [], 'log'),
+                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:Log:view_list_item_doer.html.twig', ['log' => $result])),
+                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:Log:view_list_item_sentence.html.twig', [
+                        'log' => $result,
+                        'listItemView' => array_key_exists($result->getId(), $resourceList['listItemViews']) ? $resourceList['listItemViews'][$result->getId()] : null,
+                    ])),
+                ]);
+            }
+
+            fclose($handle);
+        });
+        $dateStr = date('YmdHis');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename="actions_'.$dateStr.'.csv"');
+
+        return $response;
+    }
+
+    /**
+     * @param string $string
+     *
+     * @return string
+     *
+     * Sanitize a string by removing html tags, multiple spaces and new lines
+     */
+    private function str_to_csv($string)
+    {
+        return trim(preg_replace('/\s+/', ' ', strip_tags($string)));
     }
 
     /**

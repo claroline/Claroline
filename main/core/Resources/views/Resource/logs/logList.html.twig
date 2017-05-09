@@ -1,5 +1,5 @@
 {% extends "ClarolineCoreBundle:Resource/logs:layout.html.twig" %}
-
+{% set routeParams = filterForCSV|merge({'node': _resource.resourceNode.id}) %}
 {% block section_content %}
     {% set filterFormAction = path('claro_resource_logs', {'node': _resource.resourceNode.id}) %}
     {% set pagination %}

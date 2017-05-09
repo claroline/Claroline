@@ -46,6 +46,15 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="form-group col-md-12">
+                            {{ form_label(filterForm.group) }}
+                            {{ form_errors(filterForm.group) }}
+                            <div class="{{ filterForm.group.vars.theme_options.control_width }}">
+                                {{ form_widget(filterForm.group) }}
+                            </div>
+                        </div>
+                    </div>
                     <br/>
                     {{ form_rest(filterForm) }}
                     <input type="submit" value="{{ 'log_filter_actions'|trans({}, 'log') }}" class="btn btn-primary"/>

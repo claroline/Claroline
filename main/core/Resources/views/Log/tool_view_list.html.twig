@@ -9,8 +9,10 @@
 {% endif %}
 <div class="panel-body logs-container">
     {% if _resource is defined %}
+        {% set csv_path = 'claro_resource_logs_csv' %}
         {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'_resource':_resource, 'activeTab': 'global'} %}
     {% elseif workspace is defined %}
+        {% set csv_path = 'claro_workspace_logs_csv' %}
         {% include 'ClarolineCoreBundle:Log:workspace_resource_tabs.html.twig' with {'workspace':workspace, 'activeTab': 'global'} %}
     {% endif %}
     <div>
@@ -78,6 +80,9 @@
     {% if 0 < pager.nbResults %}
         <legend>
             {{ 'action_list'|trans({}, 'platform') }}
+            {% if csv_path is defined %}
+            <small class="logs-csv-link">[<a href="{{ path(csv_path, routeParams) }}" title="{{ 'download_csv_list'|trans({}, 'log') }}"><i class="fa fa-download"></i> CSV</a>]</small>
+            {% endif %}
         </legend>
 
         <div class="text-center">
