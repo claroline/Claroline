@@ -3,12 +3,16 @@ import classes from 'classnames'
 
 const ScoreGauge = props => {
   const userScore = Math.round(props.userScore * 100) / 100
+  const pClass = 'p' + (Math.round((props.userScore / props.maxScore) * 100))
+  const pObj = {}
+  pObj[pClass] = props.userScore && Math.round(props.userScore) > 0
+  
   return (
     <div className={classes(
       'score-gauge',
       'c100',
       props.size,
-      'p'+(props.userScore ? Math.round((props.userScore / props.maxScore) * 100) : 0)
+      pObj
     )}>
       <span>{ (userScore || 0 === userScore ? userScore+'' : '-') + '/' + props.maxScore }</span>
 
