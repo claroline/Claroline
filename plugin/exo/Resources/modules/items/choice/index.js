@@ -4,7 +4,9 @@ import {ChoicePlayer} from './player.jsx'
 import {ChoiceFeedback} from './feedback.jsx'
 
 function expectAnswer(item) {
-  return item.solutions
+  return item.multiple ?
+    item.solutions.filter(s => s.score > 0):
+    [item.solutions.reduce((prev, current) => prev.score > current.score ? prev : current)]
 }
 
 export default {
