@@ -1,5 +1,5 @@
 {% extends 'ClarolineCoreBundle:Tool/workspace/logs:layout.html.twig' %}
-
+{% set routeParams = filterForCSV|merge({'workspaceId': workspace.id}) %}
 {% block section_content %}
     {% set filterFormAction = path('claro_workspace_logs_show', {'workspaceId': workspace.id}) %}
     {% set pagination %}
