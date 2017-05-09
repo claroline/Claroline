@@ -263,7 +263,7 @@ class UserController extends FOSRestController
     /**
      * @View(serializerGroups={"api_user"})
      * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
-     * @Get("/user/{user}", name="get_user", options={ "method_prefix" = false })
+     * @Get("/user/{user}/get", name="get_user", options={ "method_prefix" = false })
      */
     public function getUserAction(User $user)
     {
