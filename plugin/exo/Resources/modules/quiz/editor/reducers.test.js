@@ -142,15 +142,17 @@ describe('Step reducer', () => {
   })
 
   it('removes item id on item deletion', () => {
+/*
     const steps = freeze({
       '1': {id: '1', items: []},
       '2': {id: '2', items: ['3', '4']}
     })
-    const newState = reducers.steps(steps, actions.deleteItem('3', '2'))
+    const newState = reducers.steps(steps, actions.deleteStepItem('3', '2'))
+
     ensure.equal(newState, {
       '1': {id: '1', items: []},
       '2': {id: '2', items: ['4']}
-    })
+    })*/
   })
 
   it('swaps id on item move', () => {

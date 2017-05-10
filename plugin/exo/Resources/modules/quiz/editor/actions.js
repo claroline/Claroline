@@ -7,6 +7,7 @@ import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {tex} from '#/main/core/translation'
 import {MODAL_MESSAGE} from '#/main/core/layout/modal'
 import {denormalize} from './../normalizer'
+import forOwn from 'lodash/forOwn'
 
 export const ITEM_CREATE = 'ITEM_CREATE'
 export const ITEM_UPDATE = 'ITEM_UPDATE'
@@ -14,7 +15,6 @@ export const ITEM_DELETE = 'ITEM_DELETE'
 export const ITEM_MOVE = 'ITEM_MOVE'
 export const ITEM_HINTS_UPDATE = 'ITEM_HINTS_UPDATE'
 export const ITEM_DETAIL_UPDATE = 'ITEM_DETAIL_UPDATE'
-export const ITEMS_DELETE = 'ITEMS_DELETE'
 export const ITEMS_IMPORT = 'ITEMS_IMPORT'
 export const OBJECT_NEXT = 'OBJECT_NEXT'
 export const OBJECT_SELECT = 'OBJECT_SELECT'
@@ -24,6 +24,7 @@ export const STEP_CREATE = 'STEP_CREATE'
 export const STEP_DELETE = 'STEP_DELETE'
 export const STEP_UPDATE = 'STEP_UPDATE'
 export const STEP_MOVE = 'STEP_MOVE'
+export const STEP_ITEM_DELETE = 'STEP_ITEM_DELETE'
 export const QUIZ_UPDATE = 'QUIZ_UPDATE'
 export const HINT_ADD = 'HINT_ADD'
 export const HINT_CHANGE = 'HINT_CHANGE'
@@ -55,6 +56,7 @@ export const quizChangeActions = [
   STEP_MOVE,
   STEP_DELETE,
   STEP_UPDATE,
+  STEP_ITEM_DELETE,
   QUIZ_UPDATE,
   HINT_ADD,
   HINT_CHANGE,
@@ -72,8 +74,7 @@ export const quizChangeActions = [
 export const actions = {}
 
 actions.deleteStep = makeActionCreator(STEP_DELETE, 'id')
-actions.deleteItem = makeActionCreator(ITEM_DELETE, 'id', 'stepId')
-actions.deleteItems = makeActionCreator(ITEMS_DELETE, 'ids')
+actions.deleteItem = makeActionCreator(ITEM_DELETE, 'id')
 actions.moveItem = makeActionCreator(ITEM_MOVE, 'id', 'swapId', 'stepId')
 actions.moveStep = makeActionCreator(STEP_MOVE, 'id', 'swapId')
 actions.nextObject = makeActionCreator(OBJECT_NEXT, 'object')
@@ -116,8 +117,39 @@ actions.deleteStepAndItems = id => {
   invariant(id, 'id is mandatory')
   return (dispatch, getState) => {
     dispatch(actions.nextObject(select.nextObject(getState())))
-    dispatch(actions.deleteItems(getState().steps[id].items.slice()))
+    //I'll gave to double check that
+    getState().steps[id].items.forEach(item => {
+      dispatch(actions.deleteStepItem(item, id))
+    })
+
     dispatch(actions.deleteStep(id))
+  }
+}
+
+actions.deleteStepItem = (id, stepId) => {
+  invariant(id, 'id is mandatory')
+  invariant(stepId, 'stepId is mandatory')
+
+  return (dispatch, getState) => {
+    const state = getState()
+    const steps = select.steps(state)
+    let countItems = 0
+
+    forOwn(steps, step => {
+      step.items.forEach(item => {
+        countItems += item === id ? 1: 0
+      })
+    })
+
+    dispatch({
+      type: STEP_ITEM_DELETE,
+      id,
+      stepId
+    })
+
+    if (countItems <= 1) {
+      dispatch(actions.deleteItem(id))
+    }
   }
 }
 
