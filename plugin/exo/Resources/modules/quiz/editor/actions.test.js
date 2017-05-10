@@ -4,7 +4,8 @@ import {ensure} from '#/main/core/tests'
 import configureMockStore from 'redux-mock-store'
 import {TYPE_STEP} from './../enums'
 import {
-  ITEMS_DELETE,
+  STEP_ITEM_DELETE,
+  ITEM_DELETE,
   OBJECT_NEXT,
   STEP_DELETE,
   actions
@@ -48,7 +49,10 @@ describe('#deleteStepAndItems', () => {
     })
     const expectedActions = [
       { type: OBJECT_NEXT, object: {id: '1', type: TYPE_STEP}},
-      { type: ITEMS_DELETE, ids: ['b', 'c']},
+      { type: STEP_ITEM_DELETE, id: 'b', stepId: '2' },
+      { type: ITEM_DELETE, id: 'b' },
+      { type: STEP_ITEM_DELETE, id: 'c', stepId: '2' },
+      { type: ITEM_DELETE, id: 'c' },
       { type: STEP_DELETE, id: '2' }
     ]
     store.dispatch(actions.deleteStepAndItems('2'))

@@ -136,5 +136,6 @@ export default {
   editor,
   valid,
   validating,
-  saved
+  saved,
+  steps
 }

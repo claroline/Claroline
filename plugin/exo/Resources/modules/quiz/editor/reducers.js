@@ -32,6 +32,7 @@ import {
   STEP_CREATE,
   STEP_MOVE,
   STEP_DELETE,
+  STEP_ITEM_DELETE,
   STEP_UPDATE,
   QUIZ_UPDATE,
   QUIZ_SAVED,
@@ -125,7 +126,7 @@ function reduceSteps(steps = {}, action = {}) {
     }
     case ITEM_CREATE:
       return update(steps, {[action.stepId]: {items: {$push: [action.id]}}})
-    case ITEM_DELETE: {
+    case STEP_ITEM_DELETE: {
       const index = getIndex(steps[action.stepId].items, action.id)
       return update(steps, {[action.stepId]: {items: {$splice: [[index, 1]]}}})
     }

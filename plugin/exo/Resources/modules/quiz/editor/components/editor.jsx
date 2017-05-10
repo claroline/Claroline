@@ -55,7 +55,7 @@ function selectSubEditor(props) {
           updateStep={props.updateStep}
           activePanelKey={props.activeStepPanel}
           handlePanelClick={props.selectStepPanel}
-          handleItemDeleteClick={props.deleteItem}
+          handleItemDeleteClick={props.deleteStepItem}
           handleItemMove={props.moveItem}
           handleItemCreate={props.createItem}
           handleItemUpdate={props.updateItem}
@@ -86,7 +86,7 @@ selectSubEditor.propTypes = {
   activeStepPanel: T.string.isRequired,
   selectStepPanel: T.func.isRequired,
   validating: T.bool.isRequired,
-  deleteItem: T.func.isRequired,
+  deleteStepItem: T.func.isRequired,
   moveItem: T.func.isRequired,
   createItem: T.func.isRequired,
   updateItem: T.func.isRequired,
