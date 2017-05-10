@@ -180,6 +180,20 @@ function reduceItems(items = {}, action = {}) {
         items[action.id],
         set({}, action.propertyPath, action.value)
       )
+
+      //feedback can't be empty
+      if (action.propertyPath === 'feedback') {
+        const tmp = document.createElement('div')
+        tmp.innerHTML = action.value
+        if (!(/\S/.test(tmp.textContent))) {
+          updatedItem = merge(
+            {},
+            items[action.id],
+            set({}, action.propertyPath, '')
+          )
+        }
+      }
+
       updatedItem._errors = validate.item(updatedItem)
 
       return update(items, {[action.id]: {$set: updatedItem}})

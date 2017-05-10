@@ -2,25 +2,32 @@ import React, {PropTypes as T} from 'react'
 
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
 
-const ItemFeedback = props =>
-  <div className="quiz-item quiz-item-feedback">
-    {props.item.title &&
-      <h3 className="item-title">{props.item.title}</h3>
-    }
+const ItemFeedback = props => {
+  const tmp = document.createElement('div')
+  tmp.innerHTML = props.item.feedback
+  const displayFeedback = (/\S/.test(tmp.textContent)) && props.item.feedback
 
-    <ItemMetadata item={props.item} />
+  return (
+    <div className="quiz-item quiz-item-feedback">
+      {props.item.title &&
+        <h3 className="item-title">{props.item.title}</h3>
+      }
 
-    <hr className="item-content-separator" />
+      <ItemMetadata item={props.item} />
 
-    {props.children}
+      <hr className="item-content-separator" />
 
-    {props.item.feedback &&
-      <div className="item-feedback">
-        <span className="fa fa-comment" />
-        <div dangerouslySetInnerHTML={{__html: props.item.feedback}} />
-      </div>
-    }
-  </div>
+      {props.children}
+
+      {displayFeedback &&
+        <div className="item-feedback">
+          <span className="fa fa-comment" />
+          <div dangerouslySetInnerHTML={{__html: props.item.feedback}} />
+        </div>
+      }
+    </div>
+  )
+}
 
 ItemFeedback.propTypes = {
   item: T.shape({
