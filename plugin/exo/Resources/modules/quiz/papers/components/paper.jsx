@@ -35,9 +35,14 @@ let Paper = props => {
             {step.title ? step.title : tex('step') + ' ' + (idx + 1)}
           </h3>
 
-          {step.items.map(item =>
-            isQuestionType(item.type) ?
-              <Panel key={item.id}>
+          {step.items.map(item => {
+            const tmp = document.createElement('div')
+            tmp.innerHTML = item.feedback
+            const displayFeedback = (/\S/.test(tmp.textContent)) && item.feedback
+
+            return isQuestionType(item.type) ?
+
+                <Panel key={item.id}>
                 {showScore && getAnswerScore(item.id, props.paper.answers) !== undefined && getAnswerScore(item.id, props.paper.answers) !== null &&
                   <ScoreBox className="pull-right" score={getAnswerScore(item.id, props.paper.answers)} scoreMax={paperSelect.itemScoreMax(item)}/>
                 }
@@ -56,15 +61,16 @@ let Paper = props => {
                   }
                 )}
 
-                {item.feedback &&
+                {displayFeedback &&
                   <div className="item-feedback">
                     <span className="fa fa-comment" />
                     <div dangerouslySetInnerHTML={{__html: item.feedback}} />
                   </div>
                 }
-              </Panel> :
+                </Panel>
+               :
               ''
-          )}
+          })}
         </div>
       )}
     </div>
