@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Form;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\RoleRepository;
+use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -26,6 +27,7 @@ class ProfileType extends AbstractType
     private $langs;
     private $authenticationDrivers;
     private $accesses;
+    private $currentUser;
 
     /**
      * Constructor.
@@ -40,7 +42,8 @@ class ProfileType extends AbstractType
         $isAdmin,
         $isGrantedUserAdministration,
         $accesses,
-        $authenticationDrivers = null
+        $authenticationDrivers = null,
+        $currentUser = null
     ) {
         $this->accesses = $accesses;
         $this->platformRoles = $platformRoles;
@@ -49,6 +52,7 @@ class ProfileType extends AbstractType
         $this->langs = $localeManager->retrieveAvailableLocales();
         $this->authenticationDrivers = $authenticationDrivers;
         $this->forApi = false;
+        $this->currentUser = $currentUser;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -110,6 +114,7 @@ class ProfileType extends AbstractType
 
         if ($this->isAdmin || $this->isGrantedUserAdministration) {
             $isAdmin = $this->isAdmin;
+            $currentUser = $this->currentUser;
             $builder
                 ->add('firstName', 'text', ['label' => 'first_name'])
                 ->add('lastName', 'text', ['label' => 'last_name'])
@@ -192,6 +197,17 @@ class ProfileType extends AbstractType
                         'expanded' => true,
                         'multiple' => true,
                         'property' => 'name',
+                        'query_builder' => function (EntityRepository $er) use ($currentUser, $isAdmin) {
+                            $query = $er->createQueryBuilder('o');
+                            if (!$isAdmin) {
+                                $query->leftJoin('o.administrators', 'oa')
+                                ->where('oa.id = :id')
+                                ->orWhere('o.default = true')
+                                ->setParameter('id', $currentUser->getId());
+                            }
+
+                            return $query;
+                        },
                     ]
                 )
                 ->add(

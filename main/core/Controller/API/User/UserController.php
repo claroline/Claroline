@@ -189,7 +189,7 @@ class UserController extends FOSRestController
         $profileType = new ProfileCreationType(
             $this->localeManager,
             [$roleUser],
-            true,
+            $this->container->get('security.token_storage')->getToken()->getUser(),
             $this->authenticationManager->getDrivers()
         );
         $profileType->enableApi();
@@ -232,7 +232,8 @@ class UserController extends FOSRestController
             true,
             true,
             $accesses,
-            $this->authenticationManager->getDrivers()
+            $this->authenticationManager->getDrivers(),
+            $this->container->get('security.token_storage')->getToken()->getUser()
         );
 
         // keep track of the previous username before submittingthe form
