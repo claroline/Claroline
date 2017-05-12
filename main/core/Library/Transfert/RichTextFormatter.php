@@ -117,7 +117,7 @@ class RichTextFormatter
 
         foreach ($matches as $match) {
             $options = $this->extractFormatOptions($match[1]);
-            $uid = (int) $options['uid'];
+            $uid = $options['uid'];
             // optional parameters
             $option_text = null;
             if (isset($options['text'])) {
@@ -359,7 +359,7 @@ class RichTextFormatter
                 $embed_option = ',embed=0';
             }
 
-            $tag = '[[uid='.$node->getId().$text_option.$embed_option.$css_style_option.$target_option.']]';
+            $tag = '[[uid='.$node->getGuid().$text_option.$embed_option.$css_style_option.$target_option.']]';
             $txt = str_replace($matchReplaced[0], $tag, $txt);
         } else {
             //match embeded media
@@ -375,7 +375,7 @@ class RichTextFormatter
                 if (isset($css_style)) {
                     $css_style_option = ",style='".addslashes($css_style)."'";
                 }
-                $tag = '[[uid='.$node->getId().$css_style_option.']]';
+                $tag = '[[uid='.$node->getGuid().$css_style_option.']]';
                 $txt = str_replace($matchReplaced[0], $tag, $txt);
             }
         }
