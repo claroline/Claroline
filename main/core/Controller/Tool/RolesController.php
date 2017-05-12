@@ -851,8 +851,9 @@ class RolesController extends Controller
     {
         $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(new WorkspaceUsersImportType($workspace));
+        $importByFullName = $this->get('claroline.config.platform_config_handler')->getParameter('workspace_users_csv_import_by_full_name');
 
-        return ['workspace' => $workspace, 'form' => $form->createView()];
+        return ['workspace' => $workspace, 'form' => $form->createView(), 'isImportByFullNameEnabled' => $importByFullName];
     }
 
     /**
@@ -866,8 +867,10 @@ class RolesController extends Controller
      */
     public function workspaceUsersToolImportAction(Workspace $workspace)
     {
+        $importByFullName = $this->get('claroline.config.platform_config_handler')->getParameter('workspace_users_csv_import_by_full_name');
+
         $this->checkEditionAccess($workspace);
-        $form = $this->formFactory->create(new WorkspaceUsersImportType($workspace));
+        $form = $this->formFactory->create(new WorkspaceUsersImportType($workspace), null, ['import_by_full_name' => $importByFullName]);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -880,7 +883,7 @@ class RolesController extends Controller
             foreach ($lines as $line) {
                 $datasLine = str_getcsv($line, ';');
 
-                if (count($datasLine) === 2) {
+                if (count($datasLine) >= 2) {
                     $datas[] = $datasLine;
                 }
             }
@@ -894,7 +897,7 @@ class RolesController extends Controller
                 )
             );
         } else {
-            return ['workspace' => $workspace, 'form' => $form->createView()];
+            return ['workspace' => $workspace, 'form' => $form->createView(), 'isImportByFullNameEnabled' => $importByFullName];
         }
     }
 

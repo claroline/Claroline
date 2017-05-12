@@ -40,7 +40,7 @@
                     {{ 'roles'|trans({}, 'platform') }}
                 </a> 
             </li>
-            <li> 
+            <li>
                 <a href="{{path('claro_users_pending',{'workspace':workspace.getId()})}}"> 
                     {{'pending'|trans({},'platform') }} 
                 </a> 
@@ -72,12 +72,16 @@
                 <p>{{ 'csv_users_import_infos_format'|trans({}, 'platform') }} :</p>
                 <ul>
                     <li>
-                        &lt;{{ 'username'|trans({}, 'platform') }}&gt;;&lt;{{ 'role'|trans({}, 'platform') }}&gt;
+                        &lt;{{ 'username'|trans({}, 'platform') }}&gt;;&lt;{{ 'role'|trans({}, 'platform') }}&gt;{% if isImportByFullNameEnabled %};&lt;{{ 'firstName'|trans({}, 'platform') }}&gt;;&lt;{{ 'lastName'|trans({}, 'platform') }}&gt;{% endif %}
                     </li>
                     <li>{{ 'csv_users_import_infos_ws_role_a'|trans({}, 'platform') }}</li>
                     <li>{{ 'csv_users_import_infos_ws_role_b'|trans({}, 'platform') }}</li>
                     <li>{{ 'csv_users_import_infos_format_a'|trans({}, 'platform') }}</li>
                     <li>{{ 'csv_users_import_infos_format_b'|trans({}, 'platform') }}</li>
+                    {% if isImportByFullNameEnabled %}
+                    <li>{{ 'csv_users_import_infos_by_full_name_a'|trans({}, 'platform') }}</li>
+                    <li>{{ 'csv_users_import_infos_by_full_name_b'|trans({}, 'platform') }}</li>
+                    {% endif %}
                 </ul>
             </div>
 

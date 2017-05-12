@@ -224,6 +224,8 @@
     "csv_group_import_infos": "Informaciones del archivo CSV",
     "csv_group_import_infos_format": "Formato: Lista de nombre de usuario separado por un salto de línea.",
     "csv_users_import_infos": "Informaciones del archivo CSV",
+    "csv_users_import_infos_by_full_name_a": "",
+    "csv_users_import_infos_by_full_name_b": "",
     "csv_users_import_infos_format": "Formato",
     "csv_users_import_infos_format_a": "Las informaciones del usuario deben estar definidas en una sola linea, separados por punto y coma.",
     "csv_users_import_infos_format_b": "Tenga en cuenta que no debe agregar un encabezado de archivo.",

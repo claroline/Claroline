@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -20,15 +21,16 @@ use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\ValidatorInterface;
 
 /**
- * @DI\Validator("csv_workspace_user_import_validator")
+ * @DI\Validator("csv_workspace_user_import_by_full_name_validator")
  */
-class CsvWorkspaceUserImportValidator extends ConstraintValidator
+class CsvWorkspaceUserImportByFullNameValidator extends ConstraintValidator
 {
     private $roleManager;
     private $translator;
     private $userManager;
     private $validator;
     private $ut;
+
     /**
      * @DI\InjectParams({
      *     "roleManager" = @DI\Inject("claroline.manager.role_manager"),
@@ -51,6 +53,7 @@ class CsvWorkspaceUserImportValidator extends ConstraintValidator
         $this->validator = $validator;
         $this->ut = $ut;
     }
+
     public function validate($value, Constraint $constraint)
     {
         $usernameErrors = [];
@@ -58,40 +61,69 @@ class CsvWorkspaceUserImportValidator extends ConstraintValidator
         $workspace = $constraint->getDefaultOption();
         $wsRoleNames = [];
         $workspaceRoles = $this->roleManager->getRolesByWorkspace($workspace);
+
         foreach ($workspaceRoles as $workspaceRole) {
             $wsRoleNames[] = $workspaceRole->getTranslationKey();
         }
+
         $data = $this->ut->formatCsvOutput(file_get_contents($value));
         $lines = str_getcsv($data, PHP_EOL);
+
         foreach ($lines as $line) {
             $linesTab = explode(';', $line);
             $nbElements = count($linesTab);
-            if (trim($line) !== '' && $nbElements !== 2) {
+
+            if (trim($line) !== '' && $nbElements < 2) {
                 $this->context->addViolation($constraint->message);
 
                 return;
             }
         }
+
         foreach ($lines as $i => $line) {
             if (trim($line) !== '') {
                 $datas = explode(';', $line);
                 $username = $datas[0];
                 $roleName = $datas[1];
-                $user = $this->userManager->getOneUserByUsername($username);
+                $firstName = isset($datas[2]) ? $datas[2] : null;
+                $lastName = isset($datas[3]) ? $datas[3] : null;
+
+                $user = null;
+                if (!empty($username)) {
+                    $user = $this->userManager->getOneUserByUsername($username);
+                } elseif (!empty($firstName) && !empty($lastName)) {
+                    $user = $this->userManager->getUsersByFirstNameAndLastName($firstName, $lastName);
+                }
+
                 if (is_null($user)) {
                     $msg = $this->translator->trans(
+                        'workspace_user_invalid',
+                        ['%username%' => $username, '%line%' => $i + 1],
+                        'platform'
+                    ).' ';
+                    $usernameErrors[] = $msg;
+                } elseif (is_array($user) && empty($user)) {
+                    $msg = $this->translator->trans(
                             'workspace_user_invalid',
-                            ['%username%' => $username, '%line%' => $i + 1],
+                            ['%username%' => $firstName.' '.$lastName, '%line%' => $i + 1],
+                            'platform'
+                        ).' ';
+                    $usernameErrors[] = $msg;
+                } elseif (is_array($user) && count($user) > 1) {
+                    $msg = $this->translator->trans(
+                            'workspace_user_not_unique',
+                            ['%name%' => $firstName.' '.$lastName, '%line%' => $i + 1],
                             'platform'
                         ).' ';
                     $usernameErrors[] = $msg;
                 }
+
                 if (!in_array($roleName, $wsRoleNames)) {
                     $msg = $this->translator->trans(
-                            'line_number',
-                            ['%line%' => $i + 1],
-                            'platform'
-                        ).' ';
+                        'line_number',
+                        ['%line%' => $i + 1],
+                        'platform'
+                    ).' ';
                     $msg .= $this->translator->trans(
                         'unavailable_role',
                         ['%translationKey%' => $roleName],
@@ -101,9 +133,11 @@ class CsvWorkspaceUserImportValidator extends ConstraintValidator
                 }
             }
         }
+
         foreach ($usernameErrors as $error) {
             $this->context->addViolation($error);
         }
+
         foreach ($roleNameErrors as $error) {
             $this->context->addViolation($error);
         }
