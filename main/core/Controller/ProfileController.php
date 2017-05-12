@@ -278,7 +278,8 @@ class ProfileController extends Controller
             $isAdmin,
             $isGrantedUserAdmin,
             $accesses,
-            $this->authenticationManager->getDrivers()
+            $this->authenticationManager->getDrivers(),
+            $user
         );
 
         // Keep the old username before submitting the form

@@ -43,6 +43,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -70,6 +71,7 @@ class UsersController extends Controller
     private $workspaceManager;
     private $authorization;
     private $groupManager;
+    private $tokenStorage;
 
     /**
      * @DI\InjectParams({
@@ -84,6 +86,7 @@ class UsersController extends Controller
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "router"                 = @DI\Inject("router"),
      *     "authorization"          = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"           = @DI\Inject("security.token_storage"),
      *     "session"                = @DI\Inject("session"),
      *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "toolMaskDecoderManager" = @DI\Inject("claroline.manager.tool_mask_decoder_manager"),
@@ -104,6 +107,7 @@ class UsersController extends Controller
         RoleManager $roleManager,
         RouterInterface $router,
         AuthorizationCheckerInterface $authorization,
+        TokenStorageInterface $tokenStorage,
         SessionInterface $session,
         StrictDispatcher $eventDispatcher,
         ToolManager $toolManager,
@@ -132,20 +136,21 @@ class UsersController extends Controller
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
         $this->groupManager = $groupManager;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
      * @EXT\Route("/new", name="claro_admin_user_creation_form")
      * @EXT\Template
+     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
      * Displays the user creation form.
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function userCreationFormAction()
+    public function userCreationFormAction(User $currentUser)
     {
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $isAdmin = ($this->authorization->isGranted('ROLE_ADMIN')) ? true : false;
         $roles = $this->roleManager->getAllPlatformRoles();
         $unavailableRoles = [];
 
@@ -159,7 +164,7 @@ class UsersController extends Controller
         $profileType = new ProfileCreationType(
             $this->localeManager,
             [$roleUser],
-            $isAdmin,
+            $currentUser,
             $this->authenticationManager->getDrivers()
         );
         $form = $this->formFactory->create($profileType);
@@ -209,12 +214,10 @@ class UsersController extends Controller
     {
         $sessionFlashBag = $this->session->getFlashBag();
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $isAdmin = ($this->authorization->isGranted('ROLE_ADMIN')) ? true : false;
-
         $profileType = new ProfileCreationType(
             $this->localeManager,
             [$roleUser],
-            $isAdmin,
+            $currentUser,
             $this->authenticationManager->getDrivers()
         );
         $form = $this->formFactory->create($profileType);

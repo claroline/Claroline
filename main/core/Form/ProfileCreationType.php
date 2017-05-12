@@ -24,6 +24,7 @@ class ProfileCreationType extends AbstractType
     private $isAdmin;
     private $authenticationDrivers;
     private $localeMnanager;
+    private $currentUser;
 
     /**
      * Constructor.
@@ -35,12 +36,13 @@ class ProfileCreationType extends AbstractType
     public function __construct(
         $localeManager,
         array $platformRoles,
-        $isAdmin = false,
+        $currentUser,
         $authenticationDrivers = null
     ) {
         $this->platformRoles = $platformRoles;
         $this->langs = $localeManager->retrieveAvailableLocales();
-        $this->isAdmin = $isAdmin;
+        $this->currentUser = $currentUser;
+        $this->isAdmin = in_array('ROLE_ADMIN', $currentUser->getRoles());
         $this->authenticationDrivers = $authenticationDrivers;
         $this->forApi = false;
     }
@@ -109,8 +111,11 @@ class ProfileCreationType extends AbstractType
                         return $query;
                     },
                 ]
-            )
-            ->add(
+            );
+
+        $currentUser = $this->currentUser;
+
+        $builder->add(
                 'organizations',
                 'entity',
                 [
@@ -119,6 +124,17 @@ class ProfileCreationType extends AbstractType
                     'expanded' => true,
                     'multiple' => true,
                     'property' => 'name',
+                    'query_builder' => function (EntityRepository $er) use ($currentUser, $isAdmin) {
+                        $query = $er->createQueryBuilder('o');
+                        if (!$isAdmin) {
+                            $query->leftJoin('o.administrators', 'oa')
+                            ->where('oa.id = :id')
+                            ->orWhere('o.default = true')
+                            ->setParameter('id', $currentUser->getId());
+                        }
+
+                        return $query;
+                    },
                 ]
             )
             ->add(
