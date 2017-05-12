@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:API:modal.html.twig" %}
 
 {% block header %}
-    {{ 'widget_configuration'|trans({}, 'platform') }}
+    {{ 'widget_configuration'|trans({}, 'platform') }} - ({{ instance.getWidget().getName() | trans({}, 'widget') }})
 {% endblock %}
 
 {% block form %}
