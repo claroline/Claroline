@@ -253,6 +253,8 @@
     "csv_format_user_list": "Format: username, administrative code or email list separated by a carriage return",
     "csv_select": "Select csv to upload:",
     "csv_users_import_infos": "CSV file information",
+    "csv_users_import_infos_by_full_name_a": "",
+    "csv_users_import_infos_by_full_name_b": "",
     "csv_users_import_infos_format": "Format",
     "csv_users_import_infos_format_a": "User information must be defined in one line and separated by semicolon",
     "csv_users_import_infos_format_b": "Note that you don't need to add a file header",

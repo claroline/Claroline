@@ -840,6 +840,20 @@ class UserManager
     }
 
     /**
+     * @param string $firstName
+     * @param string $lastName
+     *
+     * @return User[]
+     */
+    public function getUsersByFirstNameAndLastName($firstName, $lastName)
+    {
+        return $this->userRepo->findBy([
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+        ]);
+    }
+
+    /**
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param int                                $page
      * @param int                                $max

@@ -253,6 +253,8 @@
     "csv_format_user_list": "Formaat: lijst van de gebruikersnamen gescheiden door een regeleinde",
     "csv_select": "Kies een CSV-bestand:",
     "csv_users_import_infos": "Informatie over het formaat van het CSV-bestand",
+    "csv_users_import_infos_by_full_name_a": "",
+    "csv_users_import_infos_by_full_name_b": "",
     "csv_users_import_infos_format": "Formaat",
     "csv_users_import_infos_format_a": "De gegevens van een gebruiker moeten op één regel gedefinieerd worden en door een kommapunt gescheiden worden.",
     "csv_users_import_infos_format_b": "Noteer dat u geen header hoeft toe te voegen aan het bestand.",

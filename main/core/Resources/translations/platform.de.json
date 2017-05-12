@@ -222,6 +222,8 @@
     "csv_group_import_infos": "Informations sur le format du fichier CSV",
     "csv_group_import_infos_format": "Format: liste de nom d'utilisateurs séparés par un retour à la ligne.",
     "csv_users_import_infos": "",
+    "csv_users_import_infos_by_full_name_a": "",
+    "csv_users_import_infos_by_full_name_b": "",
     "csv_users_import_infos_format": "",
     "csv_users_import_infos_format_a": "",
     "csv_users_import_infos_format_b": "",

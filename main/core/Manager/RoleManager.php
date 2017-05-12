@@ -988,8 +988,19 @@ class RoleManager
         foreach ($datas as $data) {
             $username = $data[0];
             $roleName = $data[1];
+            $firstName = isset($data[2]) ? $data[2] : null;
+            $lastName = isset($data[3]) ? $data[3] : null;
 
-            $user = $this->userRepo->findOneUserByUsername($username);
+            $user = null;
+            if (!empty($username)) {
+                $user = $this->userRepo->findOneUserByUsername($username);
+            } elseif (!empty($firstName) && !empty($lastName)) {
+                $user = $this->userRepo->findOneBy([
+                    'firstName' => $firstName,
+                    'lastName' => $lastName,
+                ]);
+            }
+
             $roles = $this->roleRepo->findRolesByWorkspaceCodeAndTranslationKey(
                 $workspace->getCode(),
                 $roleName
