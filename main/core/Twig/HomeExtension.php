@@ -268,9 +268,13 @@ class HomeExtension extends \Twig_Extension
 
         if ($request instanceof Request && $router instanceof Router) {
             $index = $router->generate('claro_index');
-            $current = $router->generate($request->get('_route'), $request->get('_route_params'));
+            try {
+                $current = $router->generate($request->get('_route'), $request->get('_route_params'));
 
-            return str_replace($index, '', $current);
+                return str_replace($index, '', $current);
+            } catch (\Exception $e) {
+                return null;
+            }
         }
     }
 }
