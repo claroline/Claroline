@@ -47,7 +47,7 @@ function customActions(props) {
   // Overview
   actions.push({
     icon: 'fa fa-fw fa-home',
-    label: tex('overview'),
+    label: tex('pass_quiz'),
     action: '#overview'
   })
 
