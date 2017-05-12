@@ -253,7 +253,7 @@ const GridRow = props =>
         <input
           type="number"
           min="0"
-          disabled={!utils.atLeastOneSolutionInRow(props.cells, props.solutions)}
+          disabled={!utils.atLeastOneSolutionInRow(props.index, props.cells, props.solutions)}
           value={utils.getRowScore(props.cells, props.solutions)}
           className="form-control grid-score"
           onChange={e => props.updateScore(e.target.value)}

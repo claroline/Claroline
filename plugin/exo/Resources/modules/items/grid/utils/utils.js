@@ -58,9 +58,9 @@ export const utils = {
     return undefined !== cells.find(cell => cell.coordinates[0] === colIndex && undefined !== solutions.find(solution => solution.cellId === cell.id))
   },
 
-  atLeastOneSolutionInRow(rowCells, solutions) {
+  atLeastOneSolutionInRow(rowIndex, rowCells, solutions) {
     // in col score mode each item of the col MUST have the same score
-    return undefined !== rowCells.find(cell => undefined !== solutions.find(solution => solution.cellId === cell.id))
+    return undefined !== rowCells.find(cell => cell.coordinates[1] === rowIndex && undefined !== solutions.find(solution => solution.cellId === cell.id))
   },
 
   getSolutionByCellId(cellId, solutions) {
