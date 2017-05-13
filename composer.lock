@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "c5828f8374cbcefbd5ea900eb0fa77f541ac2fd8"
+                "reference": "ec7d6696ffb435131d5dc7d3d5a73a796a1ea360"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/c5828f8374cbcefbd5ea900eb0fa77f541ac2fd8",
-                "reference": "c5828f8374cbcefbd5ea900eb0fa77f541ac2fd8",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/ec7d6696ffb435131d5dc7d3d5a73a796a1ea360",
+                "reference": "ec7d6696ffb435131d5dc7d3d5a73a796a1ea360",
                 "shasum": ""
             },
             "require": {
@@ -387,7 +387,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-05-11 16:53:33"
+            "time": "2017-05-12 14:36:27"
         },
         {
             "name": "claroline/front-end-bundle",
