@@ -103,6 +103,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'google_geocoding_key' => null,
             'portal_enabled_resources' => null,
             'ssl_enabled' => false,
+            'ssl_version_value' => 3,
             'enable_rich_text_file_import' => false,
             'login_target_route' => 'claro_security_login',
             'enable_opengraph' => true,

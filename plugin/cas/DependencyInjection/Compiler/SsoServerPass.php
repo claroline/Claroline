@@ -16,6 +16,7 @@ namespace Claroline\CasBundle\DependencyInjection\Compiler;
 use BeSimple\SsoAuthBundle\DependencyInjection\Compiler\FactoryPass;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 
 class SsoServerPass extends FactoryPass implements CompilerPassInterface
 {
@@ -43,6 +44,14 @@ class SsoServerPass extends FactoryPass implements CompilerPassInterface
 
     private function setFactoryAndServerClasses(ContainerBuilder $container)
     {
+        if ($container->has('be_simple.sso_auth.client')) {
+            // Change dynamically the ssl version for BeSimpleSsoBundle
+            $container
+                ->getDefinition('be_simple.sso_auth.client')
+                ->setClass('Claroline\CasBundle\Library\Sso\CasAdaptiveClient')
+                ->addArgument($container->getParameter('be_simple.sso_auth.client.option.curlopt_sslversion.key'))
+                ->addArgument(new Reference('claroline.config.platform_config_handler'));
+        }
         if ($container->has('be_simple.sso_auth.server.cas')) {
             $container
                 ->getDefinition('be_simple.sso_auth.server.cas')
