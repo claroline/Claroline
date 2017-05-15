@@ -3,13 +3,12 @@
         <li gridster-item="widget"
             class="widget gridster-item-content"
             data-ng-repeat="widget in dhmc.widgets"
+            data-ng-style="{
+                'border-color': '{{ widget['color'] }}',
+                'background-color': '{{ widget['color'] }}'
+            }"
         >
-            <div class="widget-header"
-                data-ng-style="{
-                    'border-color': '{{ widget['color'] }}',
-                    'background-color': '{{ widget['color'] }}'
-                }"
-            >
+            <div class="widget-header">
                 <h3
                     class="widget-title"
                     data-ng-bind-html="widget['instanceName']"
