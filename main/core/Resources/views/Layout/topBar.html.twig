@@ -15,12 +15,14 @@
                     href="{{ path('claro_index') }}"
                     title="{{ 'home' | trans({}, "platform") }}"
                 >
-                    <img
-                        src="{{ getAssetPath() ~ '/uploads/logos/' ~ config.getParameter('logo') }}"
-                        {% if config.getParameter('name') is not empty %}
-                        alt="{{ config.getParameter('name') }}"
-                        {% endif %}
-                    />
+                    {% if config.getParameter('logo') %}
+                        <img
+                            src="{{ getAssetPath() ~ '/uploads/logos/' ~ config.getParameter('logo') }}"
+                            {% if config.getParameter('name') is not empty %}
+                            alt="{{ config.getParameter('name') }}"
+                            {% endif %}
+                        />
+                    {% endif %}
 
                     {% if config.getParameter('name') is not empty and config.getParameter('nameActive') %}
                         <span>{{ config.getParameter('name') }}</span>
