@@ -672,4 +672,28 @@ class WidgetManager
     {
         return $this->logger;
     }
+
+    /**
+     * @return int
+     */
+    public function getNbWidgetInstances()
+    {
+        return $this->widgetInstanceRepo->countWidgetInstances();
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbWorkspaceWidgetInstances()
+    {
+        return $this->widgetInstanceRepo->countWidgetInstances('workspace');
+    }
+
+    /**
+     * @return int
+     */
+    public function getNbDesktopWidgetInstances()
+    {
+        return $this->widgetInstanceRepo->countWidgetInstances('desktop');
+    }
 }
