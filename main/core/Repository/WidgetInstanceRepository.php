@@ -72,7 +72,9 @@ class WidgetInstanceRepository extends EntityRepository implements ContainerAwar
             ->get('claroline.manager.plugin_manager')
             ->getEnabled(true);
 
-        return $this->createQueryBuilder('wdc')
+        $qb = $this->createQueryBuilder('wdc');
+
+        return $qb
             ->select('wdc')
             ->join('wdc.widget', 'widget')
             ->leftJoin('widget.plugin', 'plugin')
@@ -85,5 +87,45 @@ class WidgetInstanceRepository extends EntityRepository implements ContainerAwar
                 'excludedWidgetInstances' => $excludedWidgetInstances,
                 'bundles' => $bundles,
             ]);
+    }
+
+    /**
+     * @param string $filter
+     *
+     * @return int
+     */
+    public function countWidgetInstances($filter = null)
+    {
+        $query = $this->createQueryBuilder('widget')
+            ->select('COUNT(widget)');
+
+        switch ($filter) {
+            case 'workspace':
+                $query->where('widget.isDesktop = FALSE');
+                break;
+            case 'desktop':
+                $query->where('widget.isDesktop = TRUE');
+                break;
+            default:
+                break;
+        }
+
+        return $query->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * Count widgets by type (with subtotal for windget in workspaces or on desktops).
+     *
+     * @return array
+     */
+    public function countByType()
+    {
+        return $this->createQueryBuilder('wi')
+            ->select('wi.id, w.name, COUNT(w.id) AS total, SUM(CASE WHEN wi.isDesktop = TRUE THEN 1 ELSE 0 END) AS totalByDesktop, SUM(CASE WHEN wi.isDesktop = FALSE THEN 1 ELSE 0 END) AS totalByWorkspace')
+            ->leftJoin('wi.widget', 'w')
+            ->groupBy('w.id')
+            ->orderBy('total', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 }

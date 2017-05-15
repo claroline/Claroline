@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Form\AdminAnalyticsConnectionsType;
 use Claroline\CoreBundle\Form\AdminAnalyticsTopType;
 use Claroline\CoreBundle\Manager\AnalyticsManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -32,6 +33,7 @@ class AnalyticsController extends Controller
 {
     private $userManager;
     private $workspaceManager;
+    private $widgetManager;
     private $formFactory;
     private $analyticsManager;
     private $request;
@@ -41,6 +43,7 @@ class AnalyticsController extends Controller
      * @DI\InjectParams({
      *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "widgetManager"       = @DI\Inject("claroline.manager.widget_manager"),
      *     "formFactory"         = @DI\Inject("form.factory"),
      *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
      *     "request"             = @DI\Inject("request")
@@ -49,12 +52,14 @@ class AnalyticsController extends Controller
     public function __construct(
         UserManager $userManager,
         WorkspaceManager $workspaceManager,
+        WidgetManager $widgetManager,
         FormFactory $formFactory,
         AnalyticsManager $analyticsManager,
         Request $request
     ) {
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
+        $this->widgetManager = $widgetManager;
         $this->formFactory = $formFactory;
         $this->analyticsManager = $analyticsManager;
         $this->request = $request;
@@ -174,6 +179,37 @@ class AnalyticsController extends Controller
             'wsCount' => $wsCount,
             'resourceCount' => $resourceCount,
             'otherItems' => $event->getItems(),
+        ];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/widgets",
+     *     name="claro_admin_analytics_widgets"
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Administration\Analytics:analytics_widgets.html.twig")
+     *
+     * Displays platform analytics widgets page
+     *
+     * @return Response
+     *
+     * @throws \Exception
+     */
+    public function analyticsWidgetsAction()
+    {
+        $manager = $this->get('doctrine.orm.entity_manager');
+        $wiCount = $this->widgetManager->getNbWidgetInstances();
+        $wiwCount = $this->widgetManager->getNbWorkspaceWidgetInstances();
+        $widCount = $this->widgetManager->getNbDesktopWidgetInstances();
+        $wList = $manager->getRepository('ClarolineCoreBundle:Widget\WidgetInstance')
+            ->countByType();
+
+        return [
+            'fullWidgetCount' => $wiCount,
+            'workspaceWidgetCount' => $wiwCount,
+            'desktopWidgetCount' => $widCount,
+            'widgetList' => $wList,
         ];
     }
 
