@@ -54,6 +54,6 @@
     {% stylesheets debug=false filter='less' output='bundles/clarolinecas/css/config.css'
     "@ClarolineCasBundle/Resources/views/less/config.less"
     %}
-    <link rel="stylesheet" type="text/css" href="{{ app.request.getSchemeAndHttpHost() ~ asset_url }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ asset_url }}"/>
     {% endstylesheets %}
 {% endblock %}
