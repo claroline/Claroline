@@ -1041,18 +1041,18 @@ class RoleManager
 
     public function isHomeLocked(User $user)
     {
-        $isLocked = false;
         $adminRole = $this->getRoleByUserAndRoleName($user, 'ROLE_ADMIN');
+        $isLocked = is_null($adminRole);
 
-        if (is_null($adminRole)) {
+        if ($isLocked) {
             $roles = $this->getPlatformRoles($user);
             $rolesOptions = $this->getRoleOptionsByRoles($roles);
 
             foreach ($rolesOptions as $options) {
                 $details = $options->getDetails();
 
-                if (isset($details['home_lock']) && $details['home_lock']) {
-                    $isLocked = true;
+                if (!isset($details['home_lock']) || !$details['home_lock']) {
+                    $isLocked = false;
                     break;
                 }
             }
