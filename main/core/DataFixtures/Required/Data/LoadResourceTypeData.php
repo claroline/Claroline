@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
-use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
-use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * Resource types data fixture.
@@ -36,15 +36,15 @@ class LoadResourceTypeData implements RequiredFixture
     public function load(ObjectManager $manager)
     {
         // resource type attributes : name, listable, navigable, class
-        $resourceTypes = array(
-            array('file', true),
-            array('directory', true),
-            array('text', true),
-            array('resource_shortcut', false),
-            array('activity', true),
-        );
+        $resourceTypes = [
+            ['file', true],
+            ['directory', true],
+            ['text', true],
+            ['resource_shortcut', false],
+            ['activity', true],
+        ];
 
-        $types[] = array();
+        $types[] = [];
 
         foreach ($resourceTypes as $attributes) {
             $type = new ResourceType();
@@ -99,5 +99,10 @@ class LoadResourceTypeData implements RequiredFixture
     public function setContainer($container)
     {
         $this->container = $container;
+    }
+
+    public function getOrder()
+    {
+        return 2;
     }
 }

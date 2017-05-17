@@ -9,8 +9,10 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\ProfileProperty;
+use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -93,6 +95,21 @@ class Persister
         $this->container->get('claroline.manager.workspace_manager')->create($workspace, $template);
 
         return $workspace;
+    }
+
+    public function directory($name, ResourceNode $parent, Workspace $workspace, User $creator)
+    {
+        $directory = new Directory();
+        $directory->setName($name);
+        $dirType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory');
+
+        return $this->container->get('claroline.manager.resource_manager')->create(
+          $directory,
+          $dirType,
+          $creator,
+          $workspace,
+          $parent
+      );
     }
 
     public function grantAdminRole(User $user)

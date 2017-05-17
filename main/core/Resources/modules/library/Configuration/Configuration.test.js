@@ -16,7 +16,7 @@ describe('Configuration', () => {
   it('Test the default properties of the actions', () => {
     Configuration.setConfig(partialAction)
     const buttons = Configuration.getUsersAdministrationActions()
-    assert.equal('#', buttons[0].href, 'Default href is #')
-    assert.equal('fa fa-cog', buttons[0].class, 'Default class is fa fa-cog')
+    assert.equal('#', buttons[0].url, 'Default href is #')
+    assert.equal('fa fa-fw fa-cog', buttons[0].icon, 'Default class is fa fa-cog')
   })
 })

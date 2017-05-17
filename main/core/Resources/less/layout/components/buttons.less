@@ -10,3 +10,11 @@
 .btn-link-default {
     .btn-link-variant(@gray, @gray-dark, @link-hover-decoration);
 }
+
+// remove push effect on dropdown links
+.btn-group.open .dropdown-toggle {
+    &.btn-link-default,
+    &.btn-link-danger {
+        box-shadow: none;
+    }
+}

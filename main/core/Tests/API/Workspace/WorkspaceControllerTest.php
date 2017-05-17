@@ -73,10 +73,44 @@ class WorkspaceControllerTest extends TransactionalTestCase
         ];
 
         $data['workspace_form'] = $values;
-        $this->client->request('PUT', "/api/workspace/{$workspace->getId()}}", $data);
+        $this->client->request('PUT', "/api/workspace/{$workspace->getId()}", $data);
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         $this->assertEquals($data['name'], 'new');
+    }
+
+    public function testGetCopy()
+    {
+        $admin = $this->createAdmin();
+        $workspace = $this->persister->workspace('workspace', $admin);
+        $parent = $this->client->getContainer()->get('claroline.manager.resource_manager')->getWorkspaceRoot($workspace);
+        $this->persister->directory('dir1', $parent, $workspace, $admin);
+        $this->persister->directory('dir2', $parent, $workspace, $admin);
+        $this->persister->directory('dir3', $parent, $workspace, $admin);
+        $this->persister->flush();
+        $this->logIn($admin);
+
+        $this->client->request('PATCH', '/api/workspaces/0/copy.json?ids[]=1');
+        $data = $this->client->getResponse()->getContent();
+        //at least it didn't crash
+        $data = json_decode($data, true);
+        $this->assertEquals($data[0]['name'], '[COPY] - default_workspace');
+    }
+
+    public function testSearchWorkspace()
+    {
+        $admin = $this->createAdmin();
+        $this->persister->workspace('abc', $admin);
+        $this->persister->workspace('def', $admin);
+
+        $this->logIn($admin);
+
+        $url = '/api/workspace/page/0/limit/10/search.json';
+        $this->client->request('GET', $url.'?filters[name]=abc');
+        $data = $this->client->getResponse()->getContent();
+        $data = json_decode($data, true);
+
+        $this->assertEquals(1, count($data['workspaces']));
     }
 
     private function createAdmin()

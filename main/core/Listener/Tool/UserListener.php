@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
+use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -47,18 +47,34 @@ class UserListener
             throw new NoHttpRequestException();
         }
 
-        $subRequest = $this->request->duplicate(
-            array(),
+        if ($event->getWorkspace()->isModel()) {
+            $subRequest = $this->request->duplicate(
+            [],
             null,
-            array(
-                '_controller' => 'ClarolineCoreBundle:Tool\Roles:usersList',
+            [
+                '_controller' => 'ClarolineCoreBundle:Tool\Roles:configureRolePage',
                 'workspace' => $event->getWorkspace(),
                 'page' => 1,
                 'search' => '',
                 'max' => 50,
                 'order' => 'id',
-            )
+            ]
         );
+        } else {
+            $subRequest = $this->request->duplicate(
+              [],
+              null,
+              [
+                  '_controller' => 'ClarolineCoreBundle:Tool\Roles:usersList',
+                  'workspace' => $event->getWorkspace(),
+                  'page' => 1,
+                  'search' => '',
+                  'max' => 50,
+                  'order' => 'id',
+              ]
+          );
+        }
+
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
     }

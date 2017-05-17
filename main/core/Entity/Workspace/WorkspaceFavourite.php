@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WorkspaceFavouriteRepository")
+ * @ORM\Entity
  * @ORM\Table(
  *     name="claro_workspace_favourite",
  *     uniqueConstraints={
@@ -32,6 +32,8 @@ class WorkspaceFavourite
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var int
      */
     protected $id;
 
@@ -40,6 +42,8 @@ class WorkspaceFavourite
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @var Workspace
      */
     protected $workspace;
 
@@ -48,34 +52,66 @@ class WorkspaceFavourite
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @var User
      */
     protected $user;
 
+    /**
+     * Get id.
+     *
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * Set id.
+     *
+     * @param int $id
+     */
     public function setId($id)
     {
         $this->id = $id;
     }
 
+    /**
+     * Get workspace.
+     *
+     * @return Workspace
+     */
     public function getWorkspace()
     {
         return $this->workspace;
     }
 
+    /**
+     * Set workspace.
+     *
+     * @param Workspace $workspace
+     */
     public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
     }
 
+    /**
+     * Get user.
+     *
+     * @return User
+     */
     public function getUser()
     {
         return $this->user;
     }
 
+    /**
+     * Set user.
+     *
+     * @param User $user
+     */
     public function setUser(User $user)
     {
         $this->user = $user;

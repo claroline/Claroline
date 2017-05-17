@@ -23,7 +23,7 @@ describe('<AddItemModal/>', () => {
     )
 
     ensure.missingProps('AddItemModal', ['handleSelect'])
-    ensure.missingProps('BaseModal', ['fadeModal', 'hideModal', 'show', 'title'])
+    ensure.missingProps('BaseModal', ['fadeModal', 'hideModal', 'show'])
   })
 
   it('has typed props', () => {

@@ -1,7 +1,8 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import { TooltipElement } from '#/main/core/layout/components/tooltip-element.jsx'
+import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 
 /**
  * Link element.
@@ -75,7 +76,7 @@ const TooltipLink = props =>
   <TooltipElement
     id={props.id}
     position={props.position}
-    title={props.title}
+    tip={props.title}
   >
     <Link {...props}>
       {props.children}
@@ -107,7 +108,7 @@ const TooltipButton = props =>
   <TooltipElement
     id={props.id}
     position={props.position}
-    title={props.title}
+    tip={props.title}
   >
     <Button {...props}>
       {props.children}

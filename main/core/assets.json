@@ -3,6 +3,7 @@
     "entry": {
       "user-management": "users/module",
       "facet-management": "facets/module",
+      "workspace-management": "administration/workspace",
       "private-profile": "profile/module",
       "organization-management": "organization/module",
       "plugin-management": "plugins/module",

@@ -223,11 +223,11 @@ class ResourceNodeRepositoryTest extends RepositoryTestCase
     public function testFindMimeTypesWithMostResources()
     {
         $mimeTypes = self::$repo->findMimeTypesWithMostResources(10);
-        $this->assertEquals(3, count($mimeTypes));
+        $this->assertEquals(4, count($mimeTypes));
         $this->assertEquals('directory/mime', $mimeTypes[0]['type']);
-        $this->assertEquals('file/mime', $mimeTypes[2]['type']);
+        $this->assertEquals('custom/directory', $mimeTypes[2]['type']);
         $this->assertEquals(5, $mimeTypes[0]['total']);
-        $this->assertEquals(1, $mimeTypes[2]['total']);
+        $this->assertEquals(2, $mimeTypes[2]['total']);
     }
 
     public function testFindByMimeTypeAndParent()

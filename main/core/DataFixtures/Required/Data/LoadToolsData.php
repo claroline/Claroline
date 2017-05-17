@@ -11,27 +11,27 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Tool\OrderedTool;
-use Claroline\CoreBundle\Entity\Tool\Tool;
-use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
-use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 use Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess;
+use Claroline\CoreBundle\Entity\Tool\OrderedTool;
+use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
+use Claroline\CoreBundle\Entity\Tool\Tool;
+use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 class LoadToolsData implements RequiredFixture
 {
     public function load(ObjectManager $manager)
     {
-        $tools = array(
-            array('home', 'home', false, false, true, true, true, false, false, false, false),
-            array('parameters', 'cogs', false, false, true, true, false, false, false, true, true),
-            array('resource_manager', 'folder-open', false, false, true, true, true, true, false, false, false),
-            array('logs', 'list', false, false, true, false, false, false, false, false, true),
-            array('analytics', 'bar-chart-o', false, false, true, false, false, false, false, false, true),
-            array('users', 'user', true, false, true, false, false, false, false, false, true),
-            array('my_contacts', 'users', false, false, false, true, false, false, false, false, true),
-        );
+        $tools = [
+            ['home', 'home', false, false, true, true, true, false, false, false, false],
+            ['parameters', 'cogs', false, false, true, true, false, false, false, true, true],
+            ['resource_manager', 'folder-open', false, false, true, true, true, true, false, false, false],
+            ['logs', 'list', false, false, true, false, false, false, false, false, true],
+            ['analytics', 'bar-chart-o', false, false, true, false, false, false, false, false, true],
+            ['users', 'user', true, false, true, false, false, false, false, false, true],
+            ['my_contacts', 'users', false, false, false, true, false, false, false, false, true],
+        ];
 
         foreach ($tools as $tool) {
             $entity = new Tool();
@@ -108,5 +108,10 @@ class LoadToolsData implements RequiredFixture
     public function setContainer($container)
     {
         $this->container = $container;
+    }
+
+    public function getOrder()
+    {
+        return 4;
     }
 }

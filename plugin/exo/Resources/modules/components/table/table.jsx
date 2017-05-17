@@ -71,9 +71,10 @@ const TableSortingCell = props =>
 
     <span className={
       classes(
-        'fa fa-fw',
+        'fa',
         0 === props.direction ? 'fa-sort' : (1 === props.direction ? 'fa-sort-asc' : 'fa-sort-desc')
-      )} aria-hidden="true" />
+      )} aria-hidden="true"
+    />
   </th>
 
 TableSortingCell.propTypes = {
@@ -95,7 +96,7 @@ const TableHeader = props =>
   </thead>
 
 TableHeader.propTypes = {
-  children: T.array.isRequired
+  children: T.node.isRequired
 }
 
 const TableRow = props =>

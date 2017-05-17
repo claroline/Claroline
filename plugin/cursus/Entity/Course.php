@@ -11,7 +11,6 @@
 
 namespace Claroline\CursusBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -83,7 +82,7 @@ class Course
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Model\WorkspaceModel"
+     *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(name="workspace_model_id", nullable=true, onDelete="SET NULL")
      * @Groups({"api_user_min"})
@@ -271,9 +270,9 @@ class Course
         return $this->workspaceModel;
     }
 
-    public function setWorkspaceModel(WorkspaceModel $workspaceModel = null)
+    public function setWorkspaceModel(Workspace $workspace = null)
     {
-        $this->workspaceModel = $workspaceModel;
+        $this->workspaceModel = $workspace;
     }
 
     public function getTutorRoleName()

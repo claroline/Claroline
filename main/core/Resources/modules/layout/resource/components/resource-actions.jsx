@@ -185,7 +185,6 @@ const ResourceActions = props =>
             action={props.save.action}
           />
         }
-
         {/*<PublishAction published={props.resourceNode.meta.published} togglePublication={props.togglePublication} />
         <ManageRightsAction rights="workspace" openRightsManagement={() => true} />*/}
       </PageGroupActions>
@@ -212,7 +211,6 @@ const ResourceActions = props =>
             [typeof customAction.action === 'function' ? 'onClick' : 'href']: customAction.action
           })
         )}
-
         {/*{getMoreActions(props.resourceNode)}*/}
       </MoreAction>
     </PageGroupActions>

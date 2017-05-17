@@ -14,7 +14,6 @@ namespace Claroline\TagBundle\Listener;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\GenericDatasEvent;
 use Claroline\CoreBundle\Menu\GroupAdditionalActionEvent;
-use Claroline\CoreBundle\Menu\UserAdditionalActionEvent;
 use Claroline\CoreBundle\Menu\WorkspaceAdditionalActionEvent;
 use Claroline\TagBundle\Manager\TagManager;
 use JMS\DiExtraBundle\Annotation as DI;

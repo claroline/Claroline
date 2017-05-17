@@ -73,7 +73,7 @@ class APISecurityTest extends TransactionalTestCase
         $this->client->request('GET', "/api/users?access_token={$token}");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals($data[0]['username'], 'admin');
+        $this->assertEquals($data[1]['username'], 'admin');
     }
 
     public function testMasterOauthAuthentication()
@@ -87,12 +87,12 @@ class APISecurityTest extends TransactionalTestCase
         $data = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertTrue(array_key_exists('access_token', $data));
         $token = $data['access_token'];
-        $user = $this->persister->user('user');
+        $this->persister->user('user');
         //try to access an admininistration protected url
         $this->client->request('GET', "/api/users?access_token={$token}");
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals($data[0]['username'], 'user');
+        $this->assertEquals($data[1]['username'], 'user');
     }
 
     public function testCookieAuthentication()

@@ -8,6 +8,9 @@ import {
 } from 'redux'
 import thunk from 'redux-thunk'
 import invariant from 'invariant'
+import {apiMiddleware} from '#/main/core/api/middleware'
+
+const middleware = [apiMiddleware, thunk]
 
 export {combineReducers}
 
@@ -33,11 +36,9 @@ export function makeReducer(initialState, handlers) {
   }
 }
 
-// Set some common used middleware
-const defaultStoreMiddleware = [thunk]
 if (process.env.NODE_ENV !== 'production') {
   const freeze = require('redux-freeze')
-  defaultStoreMiddleware.push(freeze)
+  middleware.push(freeze)
 }
 
 export function createStore(reducers, initialState, enhancers = []) {
@@ -53,7 +54,7 @@ export function createStore(reducers, initialState, enhancers = []) {
     reducers,
     initialState,
     compose(
-      applyMiddleware(...defaultStoreMiddleware),
+      applyMiddleware(...middleware),
       ...enhancers
     )
   )

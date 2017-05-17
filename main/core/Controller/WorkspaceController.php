@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -35,7 +34,6 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WidgetManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Manager\WorkspaceModelManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Manager\WorkspaceUserQueueManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -46,7 +44,6 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -89,7 +86,6 @@ class WorkspaceController extends Controller
     private $utils;
     private $widgetManager;
     private $workspaceManager;
-    private $workspaceModelManager;
     private $workspaceUserQueueManager;
 
     /**
@@ -114,7 +110,6 @@ class WorkspaceController extends Controller
      *     "utils"                     = @DI\Inject("claroline.security.utilities"),
      *     "widgetManager"             = @DI\Inject("claroline.manager.widget_manager"),
      *     "workspaceManager"          = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "workspaceModelManager"     = @DI\Inject("claroline.manager.workspace_model_manager"),
      *     "workspaceUserQueueManager" = @DI\Inject("claroline.manager.workspace_user_queue_manager")
      * })
      */
@@ -139,7 +134,6 @@ class WorkspaceController extends Controller
         Utilities $utils,
         WidgetManager $widgetManager,
         WorkspaceManager $workspaceManager,
-        WorkspaceModelManager $workspaceModelManager,
         WorkspaceUserQueueManager $workspaceUserQueueManager
     ) {
         $this->authorization = $authorization;
@@ -162,7 +156,6 @@ class WorkspaceController extends Controller
         $this->utils = $utils;
         $this->widgetManager = $widgetManager;
         $this->workspaceManager = $workspaceManager;
-        $this->workspaceModelManager = $workspaceModelManager;
         $this->workspaceUserQueueManager = $workspaceUserQueueManager;
     }
 
@@ -316,7 +309,8 @@ class WorkspaceController extends Controller
     /**
      * @EXT\Route(
      *     "/new/form",
-     *     name="claro_workspace_creation_form"
+     *     name="claro_workspace_creation_form",
+     *     options={"expose"=true}
      * )
      *
      * @EXT\Template()
@@ -361,16 +355,13 @@ class WorkspaceController extends Controller
 
         if ($form->isValid()) {
             $model = $form->get('model')->getData();
-
-            if (!is_null($model)) {
-                $this->createWorkspaceFromModel($model, $form);
-            } else {
-                $workspace = $form->getData();
-                $template = new File($this->templateArchive);
-                $user = $this->tokenStorage->getToken()->getUser();
-                $workspace->setCreator($user);
-                $workspace = $this->workspaceManager->create($workspace, $template);
+            $workspace = $form->getData();
+            $user = $this->tokenStorage->getToken()->getUser();
+            $workspace->setCreator($user);
+            if (!$model) {
+                $model = $this->workspaceManager->getDefaultModel();
             }
+            $workspace = $this->workspaceManager->copy($model, $workspace);
             $this->tokenUpdater->update($this->tokenStorage->getToken());
             $route = $this->router->generate('claro_workspace_by_user');
 
@@ -469,15 +460,23 @@ class WorkspaceController extends Controller
             $hasManagerAccess = true;
         }
 
-        //if manager or admin, show every tools
-        if ($hasManagerAccess) {
-            $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
+        if ($workspace->isModel()) {
+            $orderedTools = array_filter($this->toolManager->getOrderedToolsByWorkspace($workspace), function ($orderedTool) {
+                return in_array($orderedTool->getTool()->getName(), ['home', 'resource_manager', 'users', 'parameters']);
+            });
             $hideToolsMenu = false;
         } else {
-            //otherwise only shows the relevant tools
-            $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
-            $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
+            //if manager or admin, show every tools
+          if ($hasManagerAccess) {
+              $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
+              $hideToolsMenu = false;
+          } else {
+              //otherwise only shows the relevant tools
+              $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
+              $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
+          }
         }
+
         $roleHasAccess = [];
         $workspaceRolesWithAccess = $this->roleManager
             ->getWorkspaceRoleWithToolAccess($workspace);
@@ -704,6 +703,7 @@ class WorkspaceController extends Controller
                 }
             }
         }
+
         $tool = $this->workspaceManager->getFirstOpenableTool($workspace);
 
         if ($tool) {
@@ -1505,56 +1505,6 @@ class WorkspaceController extends Controller
             'workspaceRoles' => $workspaceRoles,
             'resource' => $resource,
         ];
-    }
-
-    private function createWorkspaceFromModel(WorkspaceModel $model, FormInterface $form)
-    {
-        $this->workspaceManager->createWorkspaceFromModel(
-            $model,
-            $this->tokenStorage->getToken()->getUser(),
-            $form->get('name')->getData(),
-            $form->get('code')->getData(),
-            $form->get('description')->getData(),
-            $form->get('displayable')->getData(),
-            $form->get('selfRegistration')->getData(),
-            $form->get('selfUnregistration')->getData(),
-            $errors
-        );
-
-        $flashBag = $this->session->getFlashBag();
-
-        foreach ($errors['widgetConfigErrors'] as $widgetConfigError) {
-            $widgetName = $widgetConfigError['widgetName'];
-            $widgetInstanceName = $widgetConfigError['widgetInstanceName'];
-            $msg = '['.
-                $this->translator->trans($widgetName, [], 'widget').
-                '] '.
-                $this->translator->trans(
-                    'widget_configuration_copy_warning',
-                    ['%widgetInstanceName%' => $widgetInstanceName],
-                    'widget'
-                );
-            $flashBag->add('error', $msg);
-        }
-
-        foreach ($errors['resourceErrors'] as $resourceError) {
-            $resourceName = $resourceError['resourceName'];
-            $resourceType = $resourceError['resourceType'];
-            $isCopy = $resourceError['type'] === 'copy';
-
-            $msg = '['.
-                $this->translator->trans($resourceType, [], 'resource').
-                '] ';
-
-            if ($isCopy) {
-                $msg .= $this->translator->trans(
-                    'resource_copy_warning',
-                    ['%resourceName%' => $resourceName],
-                    'resource'
-                );
-            }
-            $flashBag->add('error', $msg);
-        }
     }
 
     private function throwWorkspaceDeniedException(Workspace $workspace)

@@ -1,10 +1,25 @@
-import React, {PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
+import {transChoice} from '#/main/core/translation'
+
+import {LIST_DISPLAY_LIST} from '#/main/core/layout/list/default'
+import {Pagination} from '#/main/core/layout/pagination/components/pagination.jsx'
 import {ListHeader} from '#/main/core/layout/list/components/header.jsx'
-import {Pagination} from '#/main/core/layout/list/components/pagination.jsx'
+
+import {DataTable} from '#/main/core/layout/data/components/data-table.jsx'
+import {DataGrid} from '#/main/core/layout/data/components/data-grid.jsx'
+
+import {
+  getListDisplay,
+  getDisplayableProps,
+  getDisplayedProps,
+  getFilterableProps
+} from '#/main/core/layout/list/utils'
 
 const EmptyList = props =>
-  <div className="empty-list">
+  <div className="list-empty">
     {props.hasFilters ?
       'No results found. Try to change your filters' :
       'No results found.'
@@ -19,56 +34,205 @@ EmptyList.defaultProps = {
   hasFilters: false
 }
 
+const SelectedData = props =>
+  <div className="list-selected">
+    <div className="list-selected-label">
+      <span className="fa fa-fw fa-check-square" />
+      {transChoice('list_selected_count', props.count, {count: props.count}, 'platform')}
+    </div>
+
+    <div className="list-selected-actions">
+      {props.actions.map((action, actionIndex) => typeof action.action === 'function' ?
+        <button
+          key={`list-bulk-action-${actionIndex}`}
+          className={classes('btn', {
+            'btn-link-default': !action.isDangerous,
+            'btn-link-danger': action.isDangerous
+          })}
+          onClick={action.action}
+        >
+          <span className={action.icon} />
+          <span className="sr-only">{action.label}</span>
+        </button>
+        :
+        <a
+          key={`list-bulk-action-${actionIndex}`}
+          className={classes('btn', {
+            'btn-link-default': !action.isDangerous,
+            'btn-link-danger': action.isDangerous
+          })}
+          href={action.action}
+        >
+          <span className={action.icon} />
+          <span className="sr-only">{action.label}</span>
+        </a>
+      )}
+    </div>
+  </div>
+
+SelectedData.propTypes = {
+  count: T.number.isRequired,
+  actions: T.arrayOf(T.shape({
+    label: T.string,
+    icon: T.string,
+    action: T.oneOfType([T.string, T.func]).isRequired
+  })).isRequired
+}
+
 /**
  * Full data list with configured components (eg. search, pagination).
  *
  * @param props
  * @constructor
  */
-const DataList = props =>
-  <div className="data-list">
-    <ListHeader
-      format={props.format}
-      columns={props.columns}
-      filters={props.filters}
-    />
+class DataList extends Component {
+  constructor(props) {
+    super(props)
 
-    {0 === props.totalResults &&
-      <EmptyList hasFilters={props.filters && 0 < props.filters.active.length} />
+    this.state = {
+      currentColumns: getDisplayedProps(this.props.definition).map(prop => prop.name),
+      currentDisplay: this.props.display ? this.props.display.current : LIST_DISPLAY_LIST[0]
+    }
+  }
+
+  getDataRepresentation() {
+    if (LIST_DISPLAY_LIST === getListDisplay(this.props.display.available, this.state.currentDisplay)) {
+      return (
+        <DataTable
+          data={this.props.data}
+          count={this.props.totalResults}
+          columns={this.props.definition.filter(prop => -1 !== this.state.currentColumns.indexOf(prop.name))}
+          sorting={this.props.sorting}
+          selection={this.props.selection}
+          actions={this.props.actions}
+        />
+      )
+    } else {
+      return (
+        <DataGrid
+          data={this.props.data}
+          count={this.props.totalResults}
+          sorting={this.props.sorting}
+          selection={this.props.selection}
+          actions={this.props.actions}
+        />
+      )
+    }
+  }
+
+  toggleColumn(column) {
+    const newColumns = this.state.currentColumns.slice(0)
+    const pos = newColumns.indexOf(column)
+    if (-1 === pos) {
+      newColumns.push(column)
+    } else {
+      newColumns.splice(pos, 1)
     }
 
-    {0 < props.totalResults &&
-      props.children
-    }
+    this.setState({
+      currentColumns: newColumns
+    })
+  }
 
-    {(0 < props.totalResults && props.pagination) &&
-      <Pagination {...props.pagination} />
-    }
-  </div>
+  render() {
+    return (
+      <div className="data-list">
+        <ListHeader
+          display={Object.assign({}, this.props.display, {
+            current: this.state.currentDisplay,
+            onChange: (display) => this.setState({currentDisplay: display})
+          })}
+          columns={{
+            current: this.state.currentColumns,
+            available: getDisplayableProps(this.props.definition),
+            toggle: this.toggleColumn.bind(this)
+          }}
+          filters={Object.assign({
+            available: getFilterableProps(this.props.definition)
+          }, this.props.filters)}
+        />
+
+        {0 === this.props.totalResults &&
+          <EmptyList hasFilters={this.props.filters && 0 < this.props.filters.current.length} />
+        }
+
+        {this.props.selection && 0 < this.props.selection.current.length &&
+          <SelectedData
+            count={this.props.selection.current.length}
+            actions={this.props.selection.actions}
+          />
+        }
+
+        {0 < this.props.totalResults &&
+          this.getDataRepresentation()
+        }
+
+        {(0 < this.props.totalResults && this.props.pagination) &&
+          <Pagination
+            totalResults={this.props.totalResults}
+            {...this.props.pagination}
+          />
+        }
+      </div>
+    )
+  }
+}
 
 DataList.propTypes = {
   /**
-   * Display format of the list.
+   * The data list to display.
    */
-  format: T.oneOf(['list', 'tiles-sm', 'tiles-lg']),
+  data: T.array.isRequired,
 
   /**
-   * Total results available in the list.
+   * Total results available in the list (without pagination if any).
    */
   totalResults: T.number.isRequired,
 
   /**
-   * Data columns configuration.
+   * Definition of the data properties.
    */
-  columns: T.shape({
+  definition: T.arrayOf(T.shape({
     /**
-     * Available columns to display for data.
+     * Name of the property
      */
-    available: T.arrayOf(T.string).isRequired,
+    name: T.string.isRequired,
+
     /**
-     * Current displayed columns.
+     * Default data prop type (default: string).
      */
-    active: T.arrayOf(T.string).isRequired
+    type: T.string,
+
+    /**
+     * Label of the property
+     */
+    label: T.string.isRequired,
+
+    /**
+     * Configuration flags (default: LIST_PROP_DEFAULT).
+     * Permits to define if the prop is sortable, filterable, displayable, etc.
+     */
+    flags: T.number,
+
+    /**
+     * A custom renderer if the default one from `type` does not fit your needs.
+     */
+    renderer: T.func
+  })).isRequired,
+
+  /**
+   * Display formats of the list.
+   * Providing this object automatically display the display formats component.
+   */
+  display: T.shape({
+    /**
+     * Available formats.
+     */
+    available: T.array.isRequired,
+    /**
+     * Current format.
+     */
+    current: T.string.isRequired
   }),
 
   /**
@@ -76,9 +240,24 @@ DataList.propTypes = {
    * Providing this object automatically display the search box component.
    */
   filters: T.shape({
-    available: T.arrayOf(T.string).isRequired,
-    active: T.arrayOf(T.string).isRequired,
-    onChange: T.func.isRequired
+    current: T.arrayOf(T.shape({
+      property: T.string.isRequired,
+      value: T.any.isRequired
+    })).isRequired,
+    addFilter: T.func.isRequired,
+    removeFilter: T.func.isRequired
+  }),
+
+  /**
+   * Sorting configuration.
+   * Providing this object automatically display data sorting components.
+   */
+  sorting: T.shape({
+    current: T.shape({
+      property: T.string,
+      direction: T.number
+    }).isRequired,
+    updateSort: T.func.isRequired
   }),
 
   /**
@@ -86,20 +265,42 @@ DataList.propTypes = {
    * Providing this object automatically display pagination and results per page components.
    */
   pagination: T.shape({
-    current: T.number.isRequired,
+    current: T.number,
     pageSize: T.number.isRequired,
-    pages: T.number.isRequired,
-    handlePagePrevious: T.func.isRequired,
-    handlePageNext: T.func.isRequired,
     handlePageChange: T.func.isRequired,
     handlePageSizeUpdate: T.func.isRequired
   }),
 
-  children: T.node.isRequired
+  /**
+   * Selection configuration.
+   * Providing this object automatically display select checkboxes for each data results.
+   */
+  selection: T.shape({
+    current: T.array.isRequired,
+    toggle: T.func.isRequired,
+    toggleAll: T.func.isRequired,
+    actions: T.arrayOf(T.shape({
+      label: T.string,
+      icon: T.string,
+      action: T.oneOfType([T.string, T.func]).isRequired
+    })).isRequired
+  }),
+
+  /**
+   * Actions available for each data row.
+   */
+  actions: T.arrayOf(T.shape({
+    label: T.string,
+    icon: T.string,
+    action: T.oneOfType([T.string, T.func]).isRequired
+  }))
 }
 
 DataList.defaultProps = {
-  format: 'list'
+  display: {
+    available: [LIST_DISPLAY_LIST],
+    current: LIST_DISPLAY_LIST[0]
+  }
 }
 
 export {

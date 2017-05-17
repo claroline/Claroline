@@ -7,11 +7,28 @@
         padding: @dropdown-link-padding;
     }
 
+    .dropdown-checkbox {
+        label {
+            white-space: nowrap;
+            display: block;
+            padding: @dropdown-link-padding;
+            padding-left: 35px; // for the checkbox
+        }
+
+        &:hover,
+        &:focus {
+            label {
+                background: @dropdown-link-hover-bg;
+            }
+        }
+    }
+
     // creates contextual links
     .dropdown-link-danger a {
         color: @brand-danger;
 
-        &:hover {
+        &:hover,
+        &:focus {
             color: white;
             background: @brand-danger;
         }

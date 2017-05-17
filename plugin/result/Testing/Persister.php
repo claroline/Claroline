@@ -40,6 +40,7 @@ class Persister
         $user->setMail($username.'@mail.com');
         $user->setGuid($username);
         $user->setPublicUrl($username);
+        $user->setIsMailValidated(true);
         $this->om->persist($user);
 
         if (!$this->userRole) {
