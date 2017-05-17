@@ -99,7 +99,7 @@ class ExerciseController extends Controller
     {
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
 
-        return $this->get('security.authorization_checker')->isGranted('papers', $collection);
+        return $this->get('security.authorization_checker')->isGranted('MANAGE_PAPERS', $collection);
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

@@ -61,37 +61,39 @@ function customActions(props) {
   }
 
   // Results
-  actions.push({
-    icon: 'fa fa-fw fa-list',
-    label: tex('results_list'),
-    disabled: !props.hasPapers,
-    action: '#papers'
-  })
+  if (props.registeredUser) {
+    actions.push({
+      icon: 'fa fa-fw fa-list',
+      label: tex('results_list'),
+      disabled: !props.hasPapers,
+      action: '#papers'
+    })
+  }
 
-  // Export results
-  if (props.editable && props.papersAdmin) {
+  if (props.editable || props.papersAdmin) {
+    // Export results
     actions.push({
       icon: 'fa fa-fw fa-table',
       label: tex('export_csv_results'),
       disabled: !props.hasPapers,
       action: generateUrl('exercise_papers_export', {exerciseId: props.quiz.id})
     })
+
+    // not ready for now
+    /*actions.push({
+     icon: 'fa fa-fw fa-pie-chart',
+     label: tex('docimology'),
+     action: '#'
+     })*/
+
+    // Manual correction
+    actions.push({
+      icon: 'fa fa-fw fa-check-square-o',
+      label: tex('manual_correction'),
+      disabled: !props.hasPapers,
+      action: '#correction/questions'
+    })
   }
-
-  // not ready for now
-  /*actions.push({
-    icon: 'fa fa-fw fa-pie-chart',
-    label: tex('docimology'),
-    action: '#'
-  })*/
-
-  // Manual correction
-  actions.push({
-    icon: 'fa fa-fw fa-check-square-o',
-    label: tex('manual_correction'),
-    disabled: !props.hasPapers,
-    action: '#correction/questions'
-  })
 
   return actions
 }
