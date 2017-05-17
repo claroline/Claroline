@@ -8,9 +8,12 @@ const BaseModal = props =>
     onExited={props.hideModal}
     dialogClassName={props.className}
   >
-    <Modal.Header closeButton>
-      <Modal.Title>{props.title}</Modal.Title>
-    </Modal.Header>
+    {props.title &&
+      <Modal.Header closeButton>
+        <Modal.Title>{props.title}</Modal.Title>
+      </Modal.Header>
+    }
+
     {props.children}
   </Modal>
 
@@ -18,7 +21,7 @@ BaseModal.propTypes = {
   fadeModal: T.func.isRequired,
   hideModal: T.func.isRequired,
   show: T.bool.isRequired,
-  title: T.string.isRequired,
+  title: T.string,
   className: T.string,
   children: T.node.isRequired
 }

@@ -257,11 +257,11 @@ class CsvUserValidator extends ConstraintValidator
             }
 
             if ($modelName) {
-                $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')->findOneByName($modelName);
+                $model = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($modelName);
 
                 if (!$model) {
                     $msg = $this->translator->trans(
-                        'model_invalid',
+                        'workspace_invalid',
                         ['%model%' => $modelName, '%line%' => $i + 1],
                         'platform'
                     ).' ';

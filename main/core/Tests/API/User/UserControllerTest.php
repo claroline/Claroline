@@ -27,7 +27,7 @@ class UserControllerTest extends TransactionalTestCase
         $this->client->request('GET', '/api/users.json');
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $data = $this->client->getResponse()->getContent();
-        $this->assertEquals(1, count(json_decode($data, true)));
+        $this->assertEquals(2, count(json_decode($data, true)));
     }
 
     public function testGetUsersActionIsSecured()

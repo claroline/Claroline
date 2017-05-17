@@ -32,6 +32,7 @@ class WorkspaceType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $user = $this->user;
+
         if (php_sapi_name() === 'cli') {
             $this->forApi = true;
         }
@@ -67,29 +68,6 @@ class WorkspaceType extends AbstractType
                 ['required' => false, 'label' => 'description']
             );
 
-        if (!$this->forApi) {
-            $builder->add(
-                    'model',
-                    'entity',
-                    [
-                        'class' => 'ClarolineCoreBundle:Model\WorkspaceModel',
-                        'query_builder' => function (EntityRepository $er) use ($user) {
-                            return $er->createQueryBuilder('wm')
-                                ->leftJoin('wm.users', 'u')
-                                ->leftJoin('wm.groups', 'g')
-                                ->leftJoin('g.users', 'gu')
-                                ->where('u.id = :userId')
-                                ->orWhere('gu.id = :userId')
-                                ->setParameter('userId', $user->getId())
-                                ->orderBy('wm.name', 'ASC');
-                        },
-                        'property' => 'nameAndWorkspace',
-                        'required' => false,
-                        'label' => 'model',
-                        'mapped' => false,
-                    ]
-                );
-        }
         $builder
                 ->add('displayable', 'checkbox', ['required' => false, 'label' => 'displayable_in_workspace_list'])
                 ->add('selfRegistration', 'checkbox', ['required' => false, 'label' => 'public_registration'])
@@ -118,6 +96,40 @@ class WorkspaceType extends AbstractType
                         'property' => 'name',
                     ]
                 );
+
+        if (!$this->forApi) {
+            $options = [
+               'class' => 'ClarolineCoreBundle:Workspace\Workspace',
+               'property' => 'code',
+               'required' => false,
+               'label' => 'model',
+               'mapped' => false,
+            ];
+
+            if (!$user->hasRole('ROLE_ADMIN')) {
+                $options['query_builder'] = function (EntityRepository $er) use ($user) {
+                    return $er->createQueryBuilder('w')
+                     ->leftJoin('w.roles', 'r')
+                     ->leftJoin('r.users', 'u')
+                     ->where('u.id = :userId')
+                     ->andWhere('w.isModel = true')
+                     ->setParameter('userId', $user->getId())
+                     ->orderBy('w.name', 'ASC');
+                };
+            } else {
+                $options['query_builder'] = function (EntityRepository $er) {
+                    return $er->createQueryBuilder('w')
+                   ->where('w.isModel = true')
+                   ->orderBy('w.name', 'ASC');
+                };
+            }
+
+            $builder->add(
+               'model',
+               'entity',
+               $options
+            );
+        }
 
         if ($this->forApi) {
             $builder->add(

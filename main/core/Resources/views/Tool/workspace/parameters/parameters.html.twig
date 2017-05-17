@@ -31,9 +31,6 @@
                     <a class="list-group-item" href="{{ path('claro_workspace_tools_roles', {'workspace': workspace.getId()}) }}">
                         {{ 'tools'|trans({}, 'platform') }}
                     </a>
-                    <a class="list-group-item" href="{{ path('claro_workspace_model_index', {'workspace': workspace.getId()}) }}">
-                        {{ 'models'|trans({}, 'platform') }}
-                    </a>
                     {% for tool in tools %}
                         {% set displayTool = true %}
                         {% if tool.getName() == 'resource_manager' and canOpenResRights == false %}

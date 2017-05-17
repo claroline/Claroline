@@ -7,7 +7,7 @@ import {makeModal} from '#/main/core/layout/modal'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import { Page, PageHeader, PageContent} from '#/main/core/layout/page/components/page.jsx'
 import { PageActions, PageAction } from '#/main/core/layout/page/components/page-actions.jsx'
-import { Pagination } from '#/main/core/layout/list/components/pagination.jsx'
+import { Pagination } from '#/main/core/layout/pagination/components/pagination.jsx'
 
 import {select} from './../selectors'
 import {actions as paginationActions} from './../actions/pagination'
@@ -51,7 +51,7 @@ const Bank = props =>
 
     <PageContent>
       {0 === props.totalResults &&
-      <div className="empty-list">No results found.</div>
+      <div className="list-empty">No results found.</div>
       }
 
       {0 < props.totalResults &&

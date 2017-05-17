@@ -110,6 +110,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'tmp_dir' => sys_get_temp_dir(),
             'resource_icon_set' => 'claroline',
             'direct_third_party_authentication' => false,
+            'platform_log_enabled' => true,
             'workspace_users_csv_import_by_full_name' => false,
         ];
     }

@@ -13,7 +13,6 @@ namespace Claroline\CursusBundle\Manager;
 
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -341,7 +340,7 @@ class CursusManager
         $registrationValidation = false,
         $tutorRoleName = null,
         $learnerRoleName = null,
-        WorkspaceModel $workspaceModel = null,
+        Workspace $workspaceModel = null,
         Workspace $workspace = null,
         $icon = null,
         $userValidation = false,
@@ -1710,30 +1709,21 @@ class CursusManager
             $session->getName().
             ']';
         $code = $this->generateWorkspaceCode($course->getCode());
+        $workspace = new Workspace();
+        $workspace->setCreator($user);
+        $workspace->setName($name);
+        $workspace->setCode($code);
+        $workspace->setDisplayable($displayable);
+        $workspace->setSelfRegistration($selfRegistration);
+        $workspace->setSelfUnregistration($selfUnregistration);
+        $workspace->setRegistrationValidation($registrationValidation);
+        $workspace->setDescription($description);
 
         if (is_null($model)) {
             $template = new File($this->defaultTemplate);
-            $workspace = new Workspace();
-            $workspace->setCreator($user);
-            $workspace->setName($name);
-            $workspace->setCode($code);
-            $workspace->setDisplayable($displayable);
-            $workspace->setSelfRegistration($selfRegistration);
-            $workspace->setSelfUnregistration($selfUnregistration);
-            $workspace->setRegistrationValidation($registrationValidation);
-            $workspace->setDescription($description);
             $workspace = $this->workspaceManager->create($workspace, $template);
         } else {
-            $workspace = $this->workspaceManager->createWorkspaceFromModel(
-                $model,
-                $user,
-                $name,
-                $code,
-                $description,
-                $displayable,
-                $selfRegistration,
-                $selfUnregistration
-            );
+            $workspace = $this->workspaceManager->copy($model, $workspace);
         }
         $workspace->setWorkspaceType(0);
 

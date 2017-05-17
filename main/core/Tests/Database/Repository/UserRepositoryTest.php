@@ -23,18 +23,20 @@ class UserRepositoryTest extends RepositoryTestCase
         self::$repo = self::getRepository('ClarolineCoreBundle:User');
         self::createWorkspace('ws_1');
         self::createWorkspace('ws_2');
+        self::createWorkspace('ws_3');
         self::createRole('ROLE_1', self::get('ws_1'));
         self::createRole('ROLE_2', self::get('ws_2'));
+        self::createRole('ROLE_3', self::get('ws_3'));
         self::createUser('john', [self::get('ROLE_1')]);
         self::createUser('jane');
         self::createUser('bill');
-        self::createUser('bob', [self::get('ROLE_1'), self::get('ROLE_2')]);
+        self::createUser('bob', [self::get('ROLE_1'), self::get('ROLE_2'), self::get('ROLE_3')]);
         self::createGroup('group_1', [self::get('jane')], [self::get('ROLE_1')]);
         self::createGroup('group_2', [self::get('jane'), self::get('bill'), self::get('bob')]);
     }
 
     /**
-     * @expectedException Symfony\Component\Security\Core\Exception\UsernameNotFoundException
+     * @expectedException \Symfony\Component\Security\Core\Exception\UsernameNotFoundException
      */
     public function testLoadUserByUsernameOnUnknownUsername()
     {
@@ -48,7 +50,7 @@ class UserRepositoryTest extends RepositoryTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\Security\Core\Exception\UnsupportedUserException
+     * @expectedException \Symfony\Component\Security\Core\Exception\UnsupportedUserException
      */
     public function testRefreshUserThrowsAnExceptionOnUnsupportedUserClass()
     {
@@ -73,7 +75,7 @@ class UserRepositoryTest extends RepositoryTestCase
 
     public function testFindAll()
     {
-        $this->assertEquals(4, count(self::$repo->findAll()));
+        $this->assertEquals(5, count(self::$repo->findAll()));
         $this->assertInstanceOf('Doctrine\ORM\Query', self::$repo->findAll(false));
     }
 
@@ -118,12 +120,12 @@ class UserRepositoryTest extends RepositoryTestCase
     public function testFindUsersEnrolledInMostWorkspaces()
     {
         $users = self::$repo->findUsersEnrolledInMostWorkspaces(10);
-        $this->assertEquals(3, count($users));
+        $this->assertEquals(4, count($users));
         $this->assertEquals('bob', $users[0]['username']);
         $lastUsers = [$users[1]['username'], $users[2]['username']];
+        $this->assertContains('claroline-connect', $lastUsers);
         $this->assertContains('jane', $lastUsers);
-        $this->assertContains('john', $lastUsers);
-        $this->assertEquals(1, $users[1]['total']);
+        $this->assertEquals(2, $users[1]['total']);
         $this->assertEquals(1, $users[2]['total']);
     }
 
@@ -142,11 +144,11 @@ class UserRepositoryTest extends RepositoryTestCase
 
     public function testFindUsernames()
     {
-        $this->assertEquals(4, count(self::$repo->findUsernames()));
+        $this->assertEquals(5, count(self::$repo->findUsernames()));
     }
 
     public function testFindEmails()
     {
-        $this->assertEquals(4, count(self::$repo->findEmails()));
+        $this->assertEquals(5, count(self::$repo->findEmails()));
     }
 }

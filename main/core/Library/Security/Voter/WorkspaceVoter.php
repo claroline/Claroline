@@ -13,9 +13,9 @@ namespace Claroline\CoreBundle\Library\Security\Voter;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
@@ -40,7 +40,6 @@ class WorkspaceVoter implements VoterInterface
         if ($object instanceof Workspace) {
             //check the expiration date first
             $now = new \DateTime();
-
             if ($object->getEndDate()) {
                 if ($now->getTimeStamp() > $object->getEndDate()->getTimeStamp()) {
                     return VoterInterface::ACCESS_DENIED;
@@ -52,7 +51,7 @@ class WorkspaceVoter implements VoterInterface
                 $attributes[0] :
                 null;
             $action = isset($attributes[1]) ? strtolower($attributes[1]) : 'open';
-            $accesses = $this->wm->getAccesses($token, array($object), $toolName, $action);
+            $accesses = $this->wm->getAccesses($token, [$object], $toolName, $action);
 
             return isset($accesses[$object->getId()]) && $accesses[$object->getId()] === true ?
                 VoterInterface::ACCESS_GRANTED :

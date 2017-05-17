@@ -12,12 +12,17 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
-use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
+use Claroline\CoreBundle\Event\NotPopulatedEventException;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
@@ -31,6 +36,8 @@ use Claroline\CoreBundle\Repository\ResourceTypeRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
+use Doctrine\Common\Persistence\ObjectRepository;
+use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -70,7 +77,7 @@ class WorkspaceManager
     private $userRepo;
     /** @var WorkspaceRepository */
     private $workspaceRepo;
-    /** @var WorkspaceOptionsRepository */
+    /** @var ObjectRepository */
     private $workspaceOptionsRepo;
     /** @var StrictDispatcher */
     private $dispatcher;
@@ -81,6 +88,7 @@ class WorkspaceManager
     private $sut;
     /** @var PagerFactory */
     private $pagerFactory;
+    /** @var WorkspaceFavouriteRepository */
     private $workspaceFavouriteRepo;
     private $container;
     /** @var array */
@@ -88,7 +96,7 @@ class WorkspaceManager
     private $templateDirectory;
 
     /**
-     * Constructor.
+     * WorkspaceManager constructor.
      *
      * @DI\InjectParams({
      *     "homeTabManager"        = @DI\Inject("claroline.manager.home_tab_manager"),
@@ -102,6 +110,17 @@ class WorkspaceManager
      *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
      *     "container"             = @DI\Inject("service_container")
      * })
+     *
+     * @param HomeTabManager     $homeTabManager
+     * @param RoleManager        $roleManager
+     * @param MaskManager        $maskManager
+     * @param ResourceManager    $resourceManager
+     * @param StrictDispatcher   $dispatcher
+     * @param ObjectManager      $om
+     * @param ClaroUtilities     $ut
+     * @param Utilities          $sut
+     * @param PagerFactory       $pagerFactory
+     * @param ContainerInterface $container
      */
     public function __construct(
         HomeTabManager $homeTabManager,
@@ -142,16 +161,18 @@ class WorkspaceManager
     /**
      * Rename a workspace.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param string                                           $name
+     * @param Workspace $workspace
+     * @param string    $name
      */
     public function rename(Workspace $workspace, $name)
     {
         $workspace->setName($name);
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
         $root->setName($name);
+
         $this->om->persist($workspace);
         $this->om->persist($root);
+
         $this->om->flush();
     }
 
@@ -161,7 +182,7 @@ class WorkspaceManager
      * @param Workspace $workspace
      * @param File      $template
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\AbstractWorkspace
+     * @return Workspace
      */
     public function create(Workspace $workspace, File $template)
     {
@@ -197,9 +218,6 @@ class WorkspaceManager
         return $workspace;
     }
 
-    /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     */
     public function createWorkspace(Workspace $workspace)
     {
         if (count($workspace->getOrganizations()) === 0) {
@@ -213,6 +231,8 @@ class WorkspaceManager
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
         $workspace->setMaxUsers($ch->getParameter('max_workspace_users'));
         $this->editWorkspace($workspace);
+
+        return $workspace;
     }
 
     public function editWorkspace(Workspace $workspace)
@@ -221,48 +241,10 @@ class WorkspaceManager
         $this->om->flush();
     }
 
-    public function createWorkspaceFromModel(
-        WorkspaceModel $model,
-        User $user,
-        $name,
-        $code,
-        $description = null,
-        $displayable = false,
-        $selfRegistration = false,
-        $selfUnregistration = false,
-        &$errors = []
-    ) {
-        $this->om->startFlushSuite();
-        $this->log('Workspace from model beginning.');
-        $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
-
-        $workspace = new Workspace();
-        $workspace->setName($name);
-        $workspace->setCode($code);
-        $workspace->setDescription($description);
-        $workspace->setDisplayable($displayable);
-        $workspace->setSelfRegistration($selfRegistration);
-        $workspace->setSelfUnregistration($selfUnregistration);
-        $guid = $this->ut->generateGuid();
-        $workspace->setGuid($guid);
-        $date = new \Datetime(date('d-m-Y H:i'));
-        $workspace->setCreationDate($date->getTimestamp());
-        $workspace->setCreator($user);
-
-        $errors = [];
-
-        $this->createWorkspace($workspace);
-        $workspaceModelManager->addDataFromModel($model, $workspace, $user, $errors);
-        $this->log('Workspace from model end.');
-        $this->om->endFlushSuite();
-
-        return $workspace;
-    }
-
     /**
      * Delete a workspace.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param Workspace $workspace
      */
     public function deleteWorkspace(Workspace $workspace)
     {
@@ -313,8 +295,8 @@ class WorkspaceManager
     /**
      * Adds a favourite workspace.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\User                $user
+     * @param Workspace $workspace
+     * @param User      $user
      */
     public function addFavourite(Workspace $workspace, User $user)
     {
@@ -329,7 +311,7 @@ class WorkspaceManager
     /**
      * Removes a favourite workspace.
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite $favourite
+     * @param WorkspaceFavourite $favourite
      */
     public function removeFavourite(WorkspaceFavourite $favourite)
     {
@@ -338,9 +320,9 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param User $user
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @return Workspace[]
      */
     public function getWorkspacesByUser(User $user)
     {
@@ -373,7 +355,7 @@ class WorkspaceManager
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
+     * @return Workspace
      */
     public function getNonPersonalWorkspaces()
     {
@@ -381,7 +363,9 @@ class WorkspaceManager
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @param int $orderedToolType
+     *
+     * @return Workspace[]
      */
     public function getWorkspacesByAnonymous($orderedToolType = 0)
     {
@@ -420,7 +404,7 @@ class WorkspaceManager
     /**
      * @param string[] $roles
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @return Workspace[]
      */
     public function getOpenableWorkspacesByRoles(array $roles)
     {
@@ -431,7 +415,7 @@ class WorkspaceManager
      * @param string   $search
      * @param string[] $roles
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @return Workspace[]
      */
     public function getOpenableWorkspacesByRolesAndSearch($search, array $roles)
     {
@@ -449,11 +433,13 @@ class WorkspaceManager
      * keys are workspace ids and values are boolean indicating if the
      * workspace is open.
      *
-     * @param TokenInterface   $token
-     * @param array[Workspace] $workspaces
-     * @param string|null      $toolName
+     * @param TokenInterface $token
+     * @param Workspace[]    $workspaces
+     * @param string|null    $toolName
+     * @param string         $action
+     * @param int            $orderedToolType
      *
-     * @return array[boolean]
+     * @return bool[]
      */
     public function getAccesses(
         TokenInterface $token,
@@ -501,7 +487,7 @@ class WorkspaceManager
             }
         }
 
-        //remove accessess if workspace is personal and right was not given
+        //remove accesses if workspace is personal and right was not given
 
         foreach ($workspaces as $workspace) {
             if ($workspace->isPersonal() && $toolName) {
@@ -560,48 +546,8 @@ class WorkspaceManager
     }
 
     /**
+     * @param User     $user
      * @param string[] $roleNames
-     * @param int      $page
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getWorkspacesByRoleNamesPager(array $roleNames, $page)
-    {
-        if (count($roleNames) > 0) {
-            $workspaces = $this->workspaceRepo->findMyWorkspacesByRoleNames($roleNames);
-        } else {
-            $workspaces = [];
-        }
-
-        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
-    }
-
-    /**
-     * @param string[] $roleNames
-     * @param string   $search
-     * @param int      $page
-     *
-     * @return \PagerFanta\PagerFanta
-     */
-    public function getWorkspacesByRoleNamesBySearchPager(
-        array $roleNames,
-        $search,
-        $page,
-        $orderedToolType = 0
-    ) {
-        if (count($roleNames) > 0) {
-            $workspaces = $this->workspaceRepo
-                ->findByRoleNamesBySearch($roleNames, $search, $orderedToolType);
-        } else {
-            $workspaces = [];
-        }
-
-        return $this->pagerFactory->createPagerFromArray($workspaces, $page);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string[]                          $roleNames
      *
      * @return int[]
      */
@@ -611,10 +557,10 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string[]                          $roleNames
+     * @param User     $user
+     * @param string[] $roleNames
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @return Workspace[]
      */
     public function getWorkspacesByUserAndRoleNames(User $user, array $roleNames)
     {
@@ -622,11 +568,11 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param string[]                          $roleNames
-     * @param int[]                             $restrictionIds
+     * @param User     $user
+     * @param string[] $roleNames
+     * @param int[]    $restrictionIds
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @return Workspace[]
      */
     public function getWorkspacesByUserAndRoleNamesNotIn(
         User $user,
@@ -639,9 +585,9 @@ class WorkspaceManager
     /**
      * Returns an array containing.
      *
-     * @param \Claroline\CoreBundle\Entity\User $user
-     * @param array                             $roles
-     * @param int                               $max
+     * @param User  $user
+     * @param array $roles
+     * @param int   $max
      *
      * @return array
      */
@@ -655,7 +601,7 @@ class WorkspaceManager
     /**
      * @param int $max
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @return Workspace[]
      */
     public function getWorkspacesWithMostResources($max)
     {
@@ -665,7 +611,7 @@ class WorkspaceManager
     /**
      * @param int $workspaceId
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
+     * @return Workspace
      */
     public function getWorkspaceById($workspaceId)
     {
@@ -675,25 +621,29 @@ class WorkspaceManager
     /**
      * @param string $guid
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
+     * @return Workspace
      */
     public function getOneByGuid($guid)
     {
-        return $this->workspaceRepo->findOneByGuid($guid);
+        return $this->workspaceRepo->findOneBy([
+            'guid' => $guid,
+        ]);
     }
 
     /**
      * @param string $code
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
+     * @return Workspace
      */
     public function getOneByCode($code)
     {
-        return $this->workspaceRepo->findOneByCode($code);
+        return $this->workspaceRepo->findOneBy([
+            'code' => $code,
+        ]);
     }
 
     /**
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @return Workspace[]
      */
     public function getDisplayableWorkspaces()
     {
@@ -702,6 +652,7 @@ class WorkspaceManager
 
     /**
      * @param int $page
+     * @param int $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -715,7 +666,7 @@ class WorkspaceManager
     /**
      * @param string $search
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @return Workspace[]
      */
     public function getDisplayableWorkspacesBySearch($search)
     {
@@ -725,7 +676,7 @@ class WorkspaceManager
     /**
      * @param string $search
      * @param int    $page
-     * @param User   $user
+     * @param int    $max
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -737,8 +688,8 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Role[] $roles
-     * @param int                                 $page
+     * @param Role[] $roles
+     * @param int    $page
      *
      * @return \PagerFanta\PagerFanta
      */
@@ -751,10 +702,11 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\Role[]              $roles
+     * @param Workspace $workspace
+     * @param Role[]    $roles
+     * @param int       $orderedToolType
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @return Workspace[]
      */
     public function getWorkspaceByWorkspaceAndRoles(
         Workspace $workspace,
@@ -769,15 +721,20 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
+     * @param User $user
      *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace[]
+     * @return Workspace[]
      */
     public function getFavouriteWorkspacesByUser(User $user)
     {
         $workspaces = [];
-        $favourites = $this->workspaceFavouriteRepo
-            ->findFavouriteWorkspacesByUser($user);
+
+        /** @var WorkspaceFavourite[] $favourites */
+        $favourites = $this->om
+            ->getRepository('ClarolineCoreBundle:Workspace\WorkspaceFavourite')
+            ->findBy([
+                'user' => $user,
+            ]);
 
         foreach ($favourites as $favourite) {
             $workspace = $favourite->getWorkspace();
@@ -797,8 +754,10 @@ class WorkspaceManager
         Workspace $workspace,
         User $user
     ) {
-        return $this->workspaceFavouriteRepo
-            ->findOneBy(['workspace' => $workspace, 'user' => $user]);
+        return $this->workspaceFavouriteRepo->findOneBy([
+            'workspace' => $workspace,
+            'user' => $user,
+        ]);
     }
 
     /**
@@ -830,10 +789,10 @@ class WorkspaceManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     * @param \Claroline\CoreBundle\Entity\User                $user
+     * @param Workspace $workspace
+     * @param User      $user
      *
-     * @return \Claroline\CoreBundle\Entity\User
+     * @return User
      */
     public function addUserAction(Workspace $workspace, User $user)
     {
@@ -855,43 +814,9 @@ class WorkspaceManager
         return $user;
     }
 
-    /**
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function findAllWorkspaces($page, $max = 20, $orderedBy = 'id', $order = null)
+    public function countUsers(Workspace $workspace, $includeGroups = false)
     {
-        $result = $this->workspaceRepo->findBy([], [$orderedBy => $order]);
-
-        return $this->pagerFactory->createPagerFromArray($result, $page, $max);
-    }
-
-    /**
-     * @param string $search
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     *
-     * @return \Pagerfanta\Pagerfanta;
-     */
-    public function getWorkspaceByName(
-        $search,
-        $page,
-        $max = 20,
-        $orderedBy = 'id',
-        $order = 'ASC'
-    ) {
-        $query = $this->workspaceRepo->findByName($search, false, $orderedBy, $order);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    public function countUsers(Workspace $workspace, $includeGrps = false)
-    {
-        if ($includeGrps) {
+        if ($includeGroups) {
             $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
 
             return $this->container->get('claroline.manager.user_manager')->countByRoles($wsRoles, true);
@@ -903,13 +828,15 @@ class WorkspaceManager
     /**
      * Import a workspace list from a csv data.
      *
-     * @param array $workspaces
+     * @param array    $workspaces
+     * @param callable $logger
+     * @param bool     $update
      */
     public function importWorkspaces(array $workspaces, $logger = null, $update = false)
     {
         $i = 0;
-        $workspaceModelManager = $this->container->get('claroline.manager.workspace_model_manager');
         $this->om->startFlushSuite();
+
         foreach ($workspaces as $workspace) {
             ++$i;
             $endDate = null;
@@ -922,15 +849,19 @@ class WorkspaceManager
             $selfUnregistration = $workspace[5];
 
             if (isset($workspace[6]) && trim($workspace[6]) !== '') {
-                $user = $this->om->getRepository('ClarolineCoreBundle:User')
-                    ->findOneByUsername($workspace[6]);
+                $user = $this->om
+                    ->getRepository('ClarolineCoreBundle:User')
+                    ->findOneBy([
+                        'username' => $workspace[6],
+                    ]);
             } else {
                 $user = $this->container->get('security.context')->getToken()->getUser();
             }
 
             if (isset($workspace[7])) {
-                $model = $this->om->getRepository('ClarolineCoreBundle:Model\WorkspaceModel')
-                ->findOneByName($workspace[7]);
+                $model = $this->workspaceRepo->findOneBy([
+                    'code' => $workspace[7],
+                ]);
             }
 
             if (isset($workspace[8])) {
@@ -969,18 +900,17 @@ class WorkspaceManager
                 }
                 if ($model) {
                     $guid = $this->ut->generateGuid();
-                    $this->createWorkspace($workspace);
                     $workspace->setGuid($guid);
                     $date = new \Datetime(date('d-m-Y H:i'));
                     $workspace->setCreationDate($date->getTimestamp());
-                    $workspaceModelManager->addDataFromModel($model, $workspace, $user);
+                    $this->copy($model, $workspace, $user);
                 } else {
                     $template = new File($this->container->getParameter('claroline.param.default_template'));
                     $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template, true);
                 }
             } else {
                 if ($model) {
-                    $workspaceModelManager->updateDataFromModel($model, $workspace);
+                    $this->duplicateOrderedTools($model, $workspace);
                 }
             }
 
@@ -1025,31 +955,6 @@ class WorkspaceManager
         $workspaces = $search === '' ?
             $this->workspaceRepo->findDisplayablePersonalWorkspaces() :
             $this->workspaceRepo->findDisplayablePersonalWorkspacesBySearch($search);
-
-        return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
-    }
-
-    public function getAllPersonalWorkspaces(
-        $page = 1,
-        $max = 50,
-        $search = '',
-        $orderedBy = 'name',
-        $order = 'ASC'
-    ) {
-        $workspaces = $search === '' ?
-            $this->workspaceRepo
-                ->findAllPersonalWorkspaces(
-                    $orderedBy,
-                    $order,
-                    $this->container->get('security.context')->getToken()->getUser()
-                ) :
-            $this->workspaceRepo
-                ->findAllPersonalWorkspacesBySearch(
-                    $search,
-                    $orderedBy,
-                    $order,
-                    $this->container->get('security.context')->getToken()->getUser()
-                );
 
         return $this->pagerFactory->createPagerFromArray($workspaces, $page, $max);
     }
@@ -1213,12 +1118,7 @@ class WorkspaceManager
     public function setLogger(LoggerInterface $logger)
     {
         $rm = $this->container->get('claroline.manager.resource_manager');
-        $wmm = $this->container->get('claroline.manager.workspace_model_manager');
         $tm = $this->container->get('claroline.manager.transfer_manager');
-
-        if (!$wmm->getLogger()) {
-            $wmm->setLogger($logger);
-        }
 
         if (!$rm->getLogger()) {
             $rm->setLogger($logger);
@@ -1279,9 +1179,9 @@ class WorkspaceManager
         $fs->remove($extractPath);
     }
 
-    public function getPersonalWorkspaceExcudingRoles(array $roles, $includeOrphans, $empty = false, $offset = null, $limit = null)
+    public function getPersonalWorkspaceExcludingRoles(array $roles, $includeOrphans, $empty = false, $offset = null, $limit = null)
     {
-        return $this->workspaceRepo->findPersonalWorkspaceExcudingRoles($roles, $includeOrphans, $empty, $offset, $limit);
+        return $this->workspaceRepo->findPersonalWorkspaceExcludingRoles($roles, $includeOrphans, $empty, $offset, $limit);
     }
 
     public function getPersonalWorkspaceByRolesIncludingGroups(array $roles, $includeOrphans, $empty = false, $offset = null, $limit = null)
@@ -1332,5 +1232,369 @@ class WorkspaceManager
         }
 
         $this->om->endFlushSuite();
+    }
+
+    public function copy(Workspace $workspace, Workspace $newWorkspace, User $user = null)
+    {
+        $newWorkspace->setGuid(uniqid('', true));
+        $this->createWorkspace($newWorkspace);
+
+        $user = $this->container->get('security.token_storage')->getToken() && !$user ?
+          $this->container->get('security.token_storage')->getToken()->getUser() :
+          $this->container->get('claroline.manager.user_manager')->getDefaultUser();
+
+        $this->duplicateWorkspaceOptions($workspace, $newWorkspace);
+        $this->duplicateWorkspaceRoles($workspace, $newWorkspace, $user);
+        $this->duplicateOrderedTools($workspace, $newWorkspace);
+        $baseRoot = $this->duplicateRoot($workspace, $newWorkspace, $user);
+        $this->duplicateResources(
+          $this->resourceManager->getWorkspaceRoot($workspace)->getChildren()->toArray(),
+          $this->getArrayRolesByWorkspace($workspace),
+          $user,
+          $baseRoot
+        );
+
+        return $newWorkspace;
+    }
+
+    public function duplicateRoot(
+      Workspace $source,
+      Workspace $workspace,
+      User $user)
+    {
+        $this->log('Duplicating root directory...');
+        $rootDirectory = new Directory();
+        $rootDirectory->setName($workspace->getName());
+        $directoryType = $this->resourceManager->getResourceTypeByName('directory');
+        $rootCopy = $this->resourceManager->create(
+            $rootDirectory,
+            $directoryType,
+            $user,
+            $workspace,
+            null,
+            null,
+            []
+        );
+
+        $workspaceRoles = $this->getArrayRolesByWorkspace($source);
+        $baseRoot = $this->resourceManager->getWorkspaceRoot($source);
+
+        /*** Copies rights ***/
+
+        $this->duplicateRights(
+            $baseRoot,
+            $rootCopy->getResourceNode(),
+            $workspaceRoles
+        );
+
+        return $rootCopy->getResourceNode();
+    }
+
+    /**
+     * @param ResourceNode[] $resourceNodes
+     * @param Role[]         $workspaceRoles
+     * @param User           $user
+     * @param ResourceNode   $rootNode
+     */
+    public function duplicateResources(
+        array $resourceNodes,
+        array $workspaceRoles,
+        User $user,
+        ResourceNode $rootNode
+    ) {
+        $this->om->flush();
+        $this->om->startFlushSuite();
+        $copies = [];
+        $resourcesErrors = [];
+        $this->log('Duplicating '.count($resourceNodes).' children...');
+
+        foreach ($resourceNodes as $resourceNode) {
+            try {
+                $this->log('Duplicating '.$resourceNode->getName().' from type '.$resourceNode->getResourceType()->getName().' into '.$rootNode->getName());
+                $copy = $this->resourceManager->copy(
+                    $resourceNode,
+                    $rootNode,
+                    $user,
+                    false,
+                    false
+                );
+                $copy->getResourceNode()->setIndex($resourceNode->getIndex());
+                $this->om->persist($copy->getResourceNode());
+            } catch (NotPopulatedEventException $e) {
+                $resourcesErrors[] = [
+                    'resourceName' => $resourceNode->getName(),
+                    'resourceType' => $resourceNode->getResourceType()->getName(),
+                    'type' => 'copy',
+                    'error' => $e->getMessage(),
+                ];
+                continue;
+            }
+
+            /*** Copies rights ***/
+
+          $this->duplicateRights(
+                $resourceNode,
+                $copy->getResourceNode(),
+                $workspaceRoles
+            );
+        }
+
+        /*** Sets previous and next for each copied resource ***/
+        $this->linkResourcesArray($copies);
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * @param AbstractResource[] $resources
+     */
+    public function linkResourcesArray(array $resources)
+    {
+        for ($i = 1; $i < count($resources); ++$i) {
+            $node = $resources[$i]->getResourceNode();
+            $node->setIndex($i);
+            $this->om->persist($node);
+        }
+    }
+
+    /**
+     * @param ResourceNode $resourceNode
+     * @param ResourceNode $copy
+     * @param array        $workspaceRoles
+     */
+    public function duplicateRights(
+        ResourceNode $resourceNode,
+        ResourceNode $copy,
+        array $workspaceRoles
+    ) {
+        $rights = $resourceNode->getRights();
+        $workspace = $resourceNode->getWorkspace();
+
+        foreach ($rights as $right) {
+            $role = $right->getRole();
+            $this->log('Duplicating resource rights for '.$copy->getName().' - '.$role->getName().'...');
+            $key = $role->getTranslationKey();
+            $newRight = new ResourceRights();
+            $newRight->setResourceNode($copy);
+            $newRight->setMask($right->getMask());
+            $newRight->setCreatableResourceTypes(
+                $right->getCreatableResourceTypes()->toArray()
+            );
+            if ($role->getWorkspace() === $workspace &&
+                isset($workspaceRoles[$key]) &&
+                !empty($workspaceRoles[$key])) {
+                $newRight->setRole($workspaceRoles[$key]);
+                $this->om->persist($newRight);
+            } else {
+                $newRight->setRole($role);
+                //TODO MODEL persist here aswell later
+            }
+        }
+        $this->om->flush();
+    }
+
+    /**
+     * @param Workspace $source
+     * @param Workspace $workspace
+     */
+    public function duplicateOrderedTools(Workspace $source, Workspace $workspace)
+    {
+        $this->log('Duplicating tools...');
+        $orderedTools = $source->getOrderedTools();
+        $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
+
+        foreach ($orderedTools as $orderedTool) {
+            $workspaceOrderedTool = $this->container->get('claroline.manager.tool_manager')->setWorkspaceTool(
+                $orderedTool->getTool(),
+                $orderedTool->getOrder(),
+                $orderedTool->getName(),
+                $workspace
+            );
+            $rights = $orderedTool->getRights();
+            foreach ($rights as $right) {
+                $role = $right->getRole();
+                if ($role->getType() === 1) {
+                    $this->toolRightsManager->setToolRights(
+                        $workspaceOrderedTool,
+                        $role,
+                        $right->getMask()
+                    );
+                } else {
+                    $key = $role->getTranslationKey();
+                    if (isset($workspaceRoles[$key]) && !empty($workspaceRoles[$key])) {
+                        $this->container->get('claroline.manager.tool_rights_manager')->setToolRights(
+                            $workspaceOrderedTool,
+                            $workspaceRoles[$key],
+                            $right->getMask()
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param \Claroline\CoreBundle\Entity\User                $user
+     */
+    public function duplicateWorkspaceRoles(
+        Workspace $source,
+        Workspace $workspace,
+        User $user
+    ) {
+        $this->log('Duplicating roles...');
+        $guid = $workspace->getGuid();
+        $roles = $source->getRoles();
+        $unusedRolePartName = '_'.$source->getGuid();
+        foreach ($roles as $role) {
+            $roleName = str_replace($unusedRolePartName, '', $role->getName());
+            $createdRole = $this->roleManager->createWorkspaceRole(
+                $roleName.'_'.$guid,
+                $role->getTranslationKey(),
+                $workspace,
+                $role->isReadOnly()
+            );
+            if ($roleName === 'ROLE_WS_MANAGER') {
+                $user->addRole($createdRole);
+                $this->om->persist($user);
+            }
+        }
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     */
+    public function duplicateWorkspaceOptions(Workspace $source, Workspace $workspace)
+    {
+        $sourceOptions = $source->getOptions();
+        if (!is_null($sourceOptions)) {
+            $options = new WorkspaceOptions();
+            $options->setWorkspace($workspace);
+            $details = $sourceOptions->getDetails();
+            if (!is_null($details)) {
+                $details['use_workspace_opening_resource'] = false;
+                $details['workspace_opening_resource'] = null;
+            }
+            $options->setDetails($details);
+            $workspace->setOptions($options);
+            $this->om->persist($options);
+            $this->om->persist($workspace);
+            $this->om->flush();
+        }
+    }
+
+    /**
+     * @param Workspace $workspace
+     *
+     * @return array
+     */
+    public function getArrayRolesByWorkspace(Workspace $workspace)
+    {
+        $workspaceRoles = [];
+        $uow = $this->om->getUnitOfWork();
+        $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $scheduledForInsert = $uow->getScheduledEntityInsertions();
+        foreach ($scheduledForInsert as $entity) {
+            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Role') {
+                if ($entity->getWorkspace()) {
+                    if ($entity->getWorkspace()->getGuid() === $workspace->getGuid()) {
+                        $wRoles[] = $entity;
+                    }
+                }
+            }
+        }
+        //now we build the array
+        foreach ($wRoles as $wRole) {
+            $workspaceRoles[$wRole->getTranslationKey()] = $wRole;
+        }
+
+        return $workspaceRoles;
+    }
+
+    public function getDefaultModel($isPersonal = false)
+    {
+        $name = $isPersonal ? 'default_personal' : 'default_workspace';
+        $workspace = $this->workspaceRepo->findOneBy(['code' => $name, 'isPersonal' => $isPersonal, 'isModel' => true]);
+        if (!$workspace) {
+            //don't log this or it'll crash everything during the platform installation
+            //(some database tables aren't already created because they come from plugins)
+            $this->container->get('claroline.core_bundle.listener.log.log_listener')->disable();
+            $workspace = new Workspace();
+            $workspace->setName($name);
+            $workspace->setIsPersonal($isPersonal);
+            $workspace->setCode($name);
+            $workspace->setIsModel(true);
+            $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultUser());
+            $template = new File($this->container->getParameter('claroline.param.personal_template'));
+            $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template, true);
+            $this->container->get('claroline.core_bundle.listener.log.log_listener')->setDefaults();
+        }
+
+        return $workspace;
+    }
+
+    /*
+     * Big user search method ! hell yeah !
+     * todo : this should be in the WS repository
+     */
+    public function searchPartialList(array $searches, $page, $limit, $count = false)
+    {
+        // retrieves searchable text fields
+        $baseFieldsName = Workspace::getWorkspaceSearchableFields();
+
+        /** @var QueryBuilder $qb */
+        $qb = $this->om->createQueryBuilder();
+        $count ? $qb->select('count(w)') : $qb->select('w');
+        $qb->from('Claroline\CoreBundle\Entity\Workspace\Workspace', 'w');
+
+        //Admin can see everything, but the others... well they can only see their own organizations.
+        if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+            /** @var User $currentUser */
+            $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
+            $qb->leftJoin('w.organizations', 'uo');
+            $qb->leftJoin('uo.administrators', 'ua');
+            $qb->andWhere('ua.id = :userId');
+            $qb->setParameter('userId', $currentUser->getId());
+        }
+
+        if (!empty($searches['filters']) && is_array($searches['filters'])) {
+            foreach ($searches['filters'] as $filterName => $filterValue) {
+                // todo : add organization filter
+                if (in_array($filterName, $baseFieldsName)) {
+                    $qb->andWhere("UPPER(w.{$filterName}) LIKE :{$filterName}");
+                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                } else {
+                    // catch boolean
+                    if ('true' === $filterValue || 'false' === $filterValue) {
+                        $filterValue = 'true' === $filterValue;
+                    }
+
+                    $qb->andWhere("w.{$filterName} = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                }
+            }
+        }
+
+        if (!empty($searches['sortBy'])) {
+            // reverse order starts by a -
+            if ('-' === substr($searches['sortBy'], 0, 1)) {
+                $qb->orderBy('w.'.substr($searches['sortBy'], 1), 'ASC');
+            } else {
+                $qb->orderBy('w.'.$searches['sortBy'], 'DESC');
+            }
+        }
+
+        $query = $qb->getQuery();
+
+        if ($page !== null && $limit !== null && !$count) {
+            //react table all is -1
+            if ($limit > -1) {
+                $query->setMaxResults($limit);
+            }
+            $query->setFirstResult($page * $limit);
+        }
+
+        return $count ? (int) $query->getSingleScalarResult() : $query->getResult();
     }
 }

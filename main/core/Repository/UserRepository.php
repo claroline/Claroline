@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -508,7 +507,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             )
             AND u.isRemoved = false
             GROUP BY u.id
-            ORDER BY total DESC
+            ORDER BY total DESC, name ASC
         ";
 
         $query = $this->_em->createQuery($dql);
@@ -848,51 +847,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $query->setParameter('groupName', $group->getName());
 
         return $query->getSingleScalarResult();
-    }
-
-    /**
-     * @todo Make the correct sql request
-     *
-     * @param WorkspaceModel $model
-     * @param bool           $executeQuery
-     *
-     * @return array|Query
-     */
-    public function findUsersNotSharingModel(WorkspaceModel $model, $executeQuery = true)
-    {
-        $dql = '
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-        ';
-
-        $query = $this->_em->createQuery($dql);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
-     * @todo Make the correct sql request
-     *
-     * @param WorkspaceModel $model
-     * @param $search
-     * @param bool $executeQuery
-     *
-     * @return array|Query
-     */
-    public function findUsersNotSharingModelBySearch(WorkspaceModel $model, $search, $executeQuery = true)
-    {
-        $search = strtoupper($search);
-
-        $dql = '
-            SELECT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE UPPER(u.lastName) LIKE :search
-            OR UPPER(u.firstName) LIKE :search
-            OR UPPER(u.username) LIKE :search
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%$search%");
-
-        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function findAllEnabledUsers($executeQuery = true)

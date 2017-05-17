@@ -1,6 +1,6 @@
 .table {
     th {
-        // todo : this needs to be removed
+        // todo : this needs to be removed but I don't know where it's used
         a {
             color: @gray;
 
@@ -14,6 +14,12 @@
         }
     }
 
+    // header
+    > thead > tr > th {
+        position: relative; // for positioning sorting indicator
+        border-bottom: none !important;
+    }
+
     // Fixes vertical align in tables
     > thead > tr > th,
     > thead > tr > td,
@@ -23,8 +29,43 @@
     }
 
     > tbody {
+        background: @panel-bg;
+        box-shadow: @box-shadow-base;
+        border: 1px solid @table-border-color;
+
         > tr.selected {
             background-color: @state-info-bg;
         }
+    }
+}
+
+.sorting-cell {
+    padding-right: 24px !important; // arbitrary value to have the sorting indicator centered in the padding. FIXME
+    cursor: pointer;
+
+    .fa {
+        line-height: 1.42857;
+        position: absolute;
+        right: 8px; // same as horizontal padding of the cell
+    }
+}
+
+.actions-cell, // because this cell should only contain a dropdown to gain horizontal space (no buttons bar)
+.checkbox-cell {
+    width: 40px;
+}
+
+.table-cell-tooltip {
+    > * {
+        display: inline-block; // todo : but why ?
+        cursor: help;
+    }
+}
+
+.table-actions, // deprecated. for retro compatibility (questions bank)
+.actions-cell {
+    white-space: nowrap; // avoids buttons to break on multi lines
+    .btn {
+        padding: 2px;
     }
 }

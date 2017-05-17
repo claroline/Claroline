@@ -6,7 +6,7 @@ import {
   ERROR_AUTH_WINDOW_CLOSED,
   authenticate
 } from '#/main/core/authentication'
-import {tex} from '#/main/core/translation'
+import {t} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/fos-js-router'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_MESSAGE} from '#/main/core/layout/modal'
@@ -60,7 +60,7 @@ function handleResponseError(error, failure, request, next) {
           failure(authError, dispatch)
           switch (authError.message) {
             case ERROR_AUTH_WINDOW_BLOCKED:
-              return showErrorModal(dispatch, tex('request_error_auth_blocked'))
+              return showErrorModal(dispatch, t('request_error_auth_blocked'))
             case ERROR_AUTH_WINDOW_CLOSED:
               return showHttpErrorModal(dispatch, 401)
             default:
@@ -77,7 +77,7 @@ function handleResponseError(error, failure, request, next) {
 
 function showErrorModal(dispatch, message) {
   dispatch(modalActions.showModal(MODAL_MESSAGE, {
-    title: tex('request_error'),
+    title: t('request_error'),
     bsStyle: 'danger',
     message
   }))
@@ -85,8 +85,8 @@ function showErrorModal(dispatch, message) {
 
 function showHttpErrorModal(dispatch, status) {
   showErrorModal(dispatch, [401, 403, 422].indexOf(status) > -1 ?
-    tex(`request_error_desc_${status}`) :
-    tex('request_error_desc_default')
+    t(`request_error_desc_${status}`) :
+    t('request_error_desc_default')
   )
 }
 

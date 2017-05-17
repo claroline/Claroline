@@ -21,7 +21,6 @@ use Claroline\CoreBundle\Manager\Organization\LocationManager;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Manager\WorkspaceModelManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionGroup;
@@ -71,7 +70,6 @@ class AdminManagementController extends Controller
     private $translator;
     private $userManager;
     private $workspaceManager;
-    private $workspaceModelManager;
 
     /**
      * @DI\InjectParams({
@@ -87,8 +85,7 @@ class AdminManagementController extends Controller
      *     "tagManager"            = @DI\Inject("claroline.manager.tag_manager"),
      *     "translator"            = @DI\Inject("translator"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "workspaceModelManager" = @DI\Inject("claroline.manager.workspace_model_manager")
+     *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
@@ -104,8 +101,7 @@ class AdminManagementController extends Controller
         TagManager $tagManager,
         TranslatorInterface $translator,
         UserManager $userManager,
-        WorkspaceManager $workspaceManager,
-        WorkspaceModelManager $workspaceModelManager
+        WorkspaceManager $workspaceManager
     ) {
         $this->apiManager = $apiManager;
         $this->authorization = $authorization;
@@ -120,7 +116,6 @@ class AdminManagementController extends Controller
         $this->translator = $translator;
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
-        $this->workspaceModelManager = $workspaceModelManager;
     }
 
     /**
@@ -434,12 +429,6 @@ class AdminManagementController extends Controller
         $withSessionEvent = is_bool($courseDatas['withSessionEvent']) ?
             $courseDatas['withSessionEvent'] :
             $courseDatas['withSessionEvent'] === 'true';
-        if ($courseDatas['workspace']) {
-            $worskpace = $this->workspaceManager->getWorkspaceById($courseDatas['workspace']);
-        }
-        if ($courseDatas['workspaceModel']) {
-            $worskpaceModel = $this->workspaceModelManager->getModelById($courseDatas['workspaceModel']);
-        }
         if ($this->request->files->get('courseDatas')['icon']) {
             $icon = $this->cursusManager->saveIcon($this->request->files->get('courseDatas')['icon']);
         }
@@ -519,7 +508,7 @@ class AdminManagementController extends Controller
             $worskpace = $this->workspaceManager->getWorkspaceById($courseDatas['workspace']);
         }
         if ($courseDatas['workspaceModel']) {
-            $worskpaceModel = $this->workspaceModelManager->getModelById($courseDatas['workspaceModel']);
+            $worskpaceModel = $this->workspaceManager->getOneByName($courseDatas['workspaceModel']);
         }
         if ($this->request->files->get('courseDatas')['icon']) {
             $icon = $this->cursusManager->saveIcon($this->request->files->get('courseDatas')['icon']);
@@ -644,7 +633,7 @@ class AdminManagementController extends Controller
             $course->setWorkspace(null);
         }
         if ($courseDatas['workspaceModel']) {
-            $worskpaceModel = $this->workspaceModelManager->getModelById($courseDatas['workspaceModel']);
+            $worskpaceModel = $this->workspaceManager->getWorkspaceById($courseDatas['workspaceModel']);
             $course->setWorkspaceModel($worskpaceModel);
         } else {
             $course->setWorkspaceModel(null);

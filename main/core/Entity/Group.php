@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Model\WorkspaceModel;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -73,18 +72,6 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     protected $roles;
 
     /**
-     * @var WorkspaceModel[]|ArrayCollection
-     *
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Model\WorkspaceModel",
-     *     inversedBy="groups",
-     *     fetch="EXTRA_LAZY"
-     * )
-     * @ORM\JoinTable(name="claro_workspace_model_group")
-     */
-    protected $models;
-
-    /**
      * @var Organization[]|ArrayCollection
      *
      * @ORM\ManyToMany(
@@ -97,7 +84,6 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     {
         parent::__construct();
         $this->users = new ArrayCollection();
-        $this->models = new ArrayCollection();
         $this->organizations = new ArrayCollection();
     }
 
@@ -214,18 +200,6 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     public function getOrderableFields()
     {
         return ['name', 'id'];
-    }
-
-    public function addModel(WorkspaceModel $model)
-    {
-        if (!$this->models->contains($model)) {
-            $this->models->add($model);
-        }
-    }
-
-    public function removeModel(WorkspaceModel $model)
-    {
-        $this->models->removeElement($model);
     }
 
     public function setGuid($guid)

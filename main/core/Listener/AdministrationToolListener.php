@@ -2,8 +2,8 @@
 
 namespace Claroline\CoreBundle\Listener;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -34,20 +34,20 @@ class AdministrationToolListener
      */
     public function onOpenUserManagement(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Users:index';
         $this->redirect($params, $event);
     }
 
     /**
-     * @DI\Observe("administration_tool_platform_parameters")
+     * @DI\Observe("administration_tool_model_management")
      *
      * @param OpenAdministrationToolEvent $event
      */
-    public function onOpenPlatformParameters(OpenAdministrationToolEvent $event)
+    public function onOpenModelManagement(OpenAdministrationToolEvent $event)
     {
-        $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Parameters:index';
+        $params = [];
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Model:index';
         $this->redirect($params, $event);
     }
 
@@ -58,7 +58,7 @@ class AdministrationToolListener
      */
     public function onOpenWorkspaceManagement(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Workspaces:management';
         $params['page'] = 1;
         $params['search'] = '';
@@ -75,7 +75,7 @@ class AdministrationToolListener
      */
     public function onOpenRegistrationToWorkspace(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:Administration\WorkspaceRegistration:registrationManagement';
         $params['search'] = '';
         $this->redirect($params, $event);
@@ -88,7 +88,7 @@ class AdministrationToolListener
      */
     public function opDesktopAndHome(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:Administration\DesktopConfiguration:adminDesktopConfigMenu';
         $this->redirect($params, $event);
     }
@@ -100,7 +100,7 @@ class AdministrationToolListener
      */
     public function onOpenDesktopTools(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Tools:showTool';
         $this->redirect($params, $event);
     }
@@ -112,7 +112,7 @@ class AdministrationToolListener
      */
     public function onOpenPlatformLogs(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Logs:logList';
         $params['page'] = 1;
         $this->redirect($params, $event);
@@ -125,7 +125,7 @@ class AdministrationToolListener
      */
     public function onOpenPlatformAnalytics(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Analytics:analytics';
         $this->redirect($params, $event);
     }
@@ -137,7 +137,7 @@ class AdministrationToolListener
      */
     public function onOpenRolesManagement(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Roles:index';
         $this->redirect($params, $event);
     }
@@ -149,7 +149,7 @@ class AdministrationToolListener
      */
     public function onOpenWidgetsManagement(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Widget:widgetsManagement';
         $this->redirect($params, $event);
     }
@@ -161,14 +161,14 @@ class AdministrationToolListener
      */
     public function onOpenOrganizationManagement(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineCoreBundle:Administration\Organization:index';
         $this->redirect($params, $event);
     }
 
     protected function redirect($params, $event)
     {
-        $subRequest = $this->request->duplicate(array(), null, $params);
+        $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();

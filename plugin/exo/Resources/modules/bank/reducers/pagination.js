@@ -6,7 +6,7 @@ import {
   PAGE_PREVIOUS,
   PAGE_CHANGE,
   PAGE_SIZE_UPDATE
-} from './../actions/pagination'
+} from '#/main/core/layout/pagination/actions'
 
 function nextPage(paginationState) {
   return update(paginationState, {current: {$set: paginationState.current + 1}})

@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 
 class LoadAdminToolsData implements RequiredFixture
 {
@@ -26,18 +26,18 @@ class LoadAdminToolsData implements RequiredFixture
 
     public function load(ObjectManager $manager)
     {
-        $tools = array(
-            array('platform_parameters', 'cog'),
-            array('user_management', 'user'),
-            array('workspace_management', 'book'),
-            array('registration_to_workspace', 'book'),
-            array('desktop_and_home', 'home'),
-            array('platform_logs', 'bars'),
-            array('platform_analytics', 'bar-chart-o'),
-            array('roles_management', 'users'),
-            array('widgets_management', 'list-alt'),
-            array('organization_management', 'institution'),
-        );
+        $tools = [
+            ['platform_parameters', 'cog'],
+            ['user_management', 'user'],
+            ['workspace_management', 'book'],
+            ['registration_to_workspace', 'book'],
+            ['desktop_and_home', 'home'],
+            ['platform_logs', 'bars'],
+            ['platform_analytics', 'bar-chart-o'],
+            ['roles_management', 'users'],
+            ['widgets_management', 'list-alt'],
+            ['organization_management', 'institution'],
+        ];
 
         foreach ($tools as $tool) {
             $entity = new AdminTool();

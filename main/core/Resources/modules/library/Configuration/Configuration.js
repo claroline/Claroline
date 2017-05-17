@@ -28,6 +28,18 @@ class Configuration {
 
     return actions
   }
+
+  getWorkspacesAdministrationActions() {
+    let actions = []
+
+    for (var bundle in this.config) {
+      actions = union(actions, get(this.config[bundle], 'actions', []).filter(el => {
+        return el.type === 'administration_workspaces'
+      }))
+    }
+
+    return actions
+  }
 }
 
 // default actions. Maybe do something cleaner later
@@ -43,7 +55,11 @@ function getDefaultConfig(config) {
 function setDefaultBundle(bundle) {
   if (bundle.actions) {
     bundle.actions.forEach((action, key) => {
-      bundle.actions[key] = defaults(action, {href: '#', class: 'fa fa-cog'})
+      bundle.actions[key] = defaults(action, {
+        url: '#',
+        icon: 'fa fa-fw fa-cog',
+        options: {}
+      })
     })
   }
 }

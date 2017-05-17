@@ -12,10 +12,6 @@
                     'href': path('claro_workspace_open_tool', {'workspaceId': model.getWorkspace().getId(), 'toolName': 'parameters'})
                 },
                 {
-                    'name': 'models'|trans({}, 'platform'),
-                    'href': path('claro_workspace_model_index', {'workspace': model.getWorkspace().getId()})
-                },
-                {
                     'name': model.getName(),
                     'href': ''
                 }

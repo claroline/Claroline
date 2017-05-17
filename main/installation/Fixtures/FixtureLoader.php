@@ -11,9 +11,11 @@
 
 namespace Claroline\InstallationBundle\Fixtures;
 
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\Bundle\BundleInterface;
-use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 
 /**
  * Class responsible for loading the data fixtures of a bundle.
@@ -53,6 +55,12 @@ class FixtureLoader
         $loader->loadFromDirectory($directory);
         $fixtures = $loader->getFixtures();
 
+        foreach ($fixtures as $fixture) {
+            if (method_exists($fixture, 'setLogger')) {
+                $fixture->setLogger($this->logger);
+            }
+        }
+
         if ($fixtures) {
             $this->executor->execute($fixtures, true);
 
@@ -60,5 +68,12 @@ class FixtureLoader
         }
 
         return false;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+
+        return $this;
     }
 }

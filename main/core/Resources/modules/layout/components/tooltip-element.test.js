@@ -12,10 +12,12 @@ describe('<TooltipElement/>', () => {
 
   it('renders an element with a tooltip', () => {
     const element = mount(
-      <TooltipElement id="ID" tip="TIP">
-        <span>CONTENT</span>
-      </TooltipElement>
+      React.createElement(TooltipElement, {
+        id: 'ID',
+        tip: 'TIP'
+      }, React.createElement('span', {}, 'CONTENT'))
     )
+
     ensure.propTypesOk()
     ensure.equal(element.text(), 'CONTENT')
     // not sure if/how the tooltip itself should be tested

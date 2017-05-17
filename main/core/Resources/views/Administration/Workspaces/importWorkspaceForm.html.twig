@@ -1,31 +1,3 @@
-{% macro renderPager(search, pager, max, order) %}
-    {% if search == '' %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_admin_workspaces_management',
-                    'routeParams': {'max': max, 'order': order}
-                }
-            )
-        }}
-    {% else %}
-        {{
-            pagerfanta(
-                pager,
-                'twitter_bootstrap_translated',
-                {
-                    'proximity' : 1,
-                    'routeName': 'claro_admin_workspaces_management_search',
-                    'routeParams': {'search': search, 'max': max, 'order': order}
-                }
-            )
-        }}
-    {% endif %}
-{% endmacro %}
-
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'workspaces_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
@@ -37,10 +9,6 @@
                 'icon': 'icon-cog',
                 'name': 'administration'|trans({}, 'platform'),
                 'href': path('claro_admin_parameters_index')
-            },
-            {
-                'name': 'workspaces_management'|trans({}, 'platform'),
-                'href': path('claro_admin_workspaces_management', {})
             },
             {
             'name': 'workspace_import'|trans({}, 'platform'),
@@ -92,9 +60,6 @@
         </div>
         <div class="panel-footer">
             <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-            <a class="btn btn-default" href="{{ path('claro_admin_workspaces_management', {}) }}" role="button">
-                {{ 'cancel'|trans({}, 'platform') }}
-            </a>
         </div>
     </form>
 {% endblock %}
