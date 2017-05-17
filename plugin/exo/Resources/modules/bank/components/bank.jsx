@@ -114,7 +114,8 @@ function mapDispatchToProps(dispatch) {
         title: tex('search'),
         filters: searchFilters,
         handleSearch: (searchFilters) => dispatch(searchActions.search(searchFilters)),
-        clearFilters: () => dispatch(searchActions.clearFilters())
+        clearFilters: () => dispatch(searchActions.clearFilters()),
+        fadeModal: () => dispatch(modalActions.fadeModal())
       }))
     },
     openAddModal() {
