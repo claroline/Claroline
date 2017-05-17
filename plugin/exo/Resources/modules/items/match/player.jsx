@@ -67,16 +67,22 @@ class MatchPlayer extends Component {
   componentDidMount() {
     this.jsPlumbInstance.setContainer(this.container)
     window.addEventListener('resize', this.handleWindowResize)
+    const images =  document.images
+
+    // required to fix position of anchors after images are loaded
+    for (let i = 0; i < images.length; ++i) {
+      images[i].addEventListener('load', this.handleWindowResize)
+    }
 
     // we have to wait for elements to be at there right place before drawing... so... timeout
     window.setTimeout(() => {
-      drawAnswers(this.props.answer , this.jsPlumbInstance)
+      drawAnswers(this.props.answer, this.jsPlumbInstance)
     }, 500)
 
     // use this event to create new answers
     this.jsPlumbInstance.bind('beforeDrop', (connection) => {
       // check that the connection is not already in jsPlumbConnections before creating it
-      const list = this.jsPlumbInstance.getConnections().filter(el => el.sourceId === connection.sourceId && el.targetId === connection.targetId )
+      const list = this.jsPlumbInstance.getConnections().filter(el => el.sourceId === connection.sourceId && el.targetId === connection.targetId)
 
       if (list.length > 0) {
         return false
@@ -88,8 +94,8 @@ class MatchPlayer extends Component {
 
       // add answer
       this.props.onChange(
-          [{firstId: firstId, secondId: secondId}].concat(this.props.answer)
-       )
+        [{firstId: firstId, secondId: secondId}].concat(this.props.answer)
+      )
 
       return true
     })
@@ -106,7 +112,7 @@ class MatchPlayer extends Component {
       const secondId = connection.targetId.replace('target_', '')
       // remove answer
       this.props.onChange(
-         this.props.answer.filter(answer => answer.firstId !== firstId || answer.secondId !== secondId)
+        this.props.answer.filter(answer => answer.firstId !== firstId || answer.secondId !== secondId)
       )
       return true
     })
@@ -153,7 +159,7 @@ class MatchPlayer extends Component {
     return (
         <div id={`match-question-player-${this.props.item.id}`} className="match-player match-items row" ref={(el) => { this.container = el }}>
           <div className="item-col col-md-5 col-sm-5 col-xs-5">
-            <ul>
+            <ul className="match-items-list">
             {this.state.firstSet.map((item) =>
               <li key={'source_' + item.id}>
                 <MatchItem
@@ -170,7 +176,7 @@ class MatchPlayer extends Component {
           <div className="divide-col col-md-2 col-sm-2 col-xs-2" />
 
           <div className="item-col col-md-5 col-sm-5 col-xs-5">
-            <ul>
+            <ul className="match-items-list">
             {this.state.secondSet.map((item) =>
               <li key={'target_' + item.id}>
                 <MatchItem
