@@ -45,7 +45,7 @@ const mapDispatchToProps = (dispatch) => {
     onShare: (items) => {
       dispatch(modalActions.showModal(MODAL_SHARE, {
         title: transChoice('share_items', items.length, {count: items.length}, 'ujm_exo'),
-        fadeModal: modalActions.fadeModal,
+        fadeModal: () => dispatch(modalActions.fadeModal()),
         handleShare: (users, adminRights) => {
           dispatch(modalActions.fadeModal())
           dispatch(questionsActions.shareQuestions(items, users, adminRights))
@@ -57,7 +57,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(modalActions.showModal(MODAL_DELETE_CONFIRM, {
         title: transChoice('delete_items', items.length, {count: items.length}, 'ujm_exo'),
         question: tex('remove_question_confirm_message'),
-        handleConfirm: () => dispatch(questionsActions.deleteQuestions(items))
+        handleConfirm: () => dispatch(questionsActions.deleteQuestions(items)),
+        fadeModal: () => dispatch(modalActions.fadeModal())
       }))
     }
   }
