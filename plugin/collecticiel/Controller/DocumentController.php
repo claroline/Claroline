@@ -76,12 +76,12 @@ class DocumentController extends DropzoneBaseController
             $slugify = new Slugify();
 
             $user = $drop->getUser();
-            $str = $user->getFirstName().'-'.$user->getLastName();
-            $str = $slugify->slugify($str, ' ');
-
-            $name = $this->get('translator')->trans('Copy n°%number%', ['%number%' => $drop->getNumber()], 'innova_collecticiel');
-            $name .= ' - '.$str;
-            $hiddenDropDirectory->setName($name);
+            $username = $user->getUsername();
+            $directoryName = $user->getLastName().' '.$user->getFirstName();
+            $directoryName = $slugify->slugify($directoryName, ' ');
+            // Add username to ensure directory name is unique even if some users share the same name
+            $directoryName .= ' - '.$username;
+            $hiddenDropDirectory->setName($directoryName);
 
             $parent = $this->getDropZoneHiddenDirectory($dropzone);
             $role = $this
@@ -282,7 +282,7 @@ class DocumentController extends DropzoneBaseController
                 // Ici, on récupère le créateur du collecticiel = l'admin
                 $userCreator = $dropzone->getResourceNode()->getCreator()->getId();
                 // Ici, on récupère celui qui vient de déposer le nouveau document
-                //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+                //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId();
                 $userDropDocument = $drop->getUser()->getId();
                 $userSenderDocument = $newDocument->getSender()->getId();
 
@@ -469,7 +469,7 @@ class DocumentController extends DropzoneBaseController
     public function ajaxValidateDocumentAction(Document $document)
     {
 
-        // Appel pour accés base         
+        // Appel pour accès base
         $em = $this->getDoctrine()->getManager();
 
         // Recherche en base des données du document à mettre à jour
@@ -505,7 +505,7 @@ class DocumentController extends DropzoneBaseController
         }
 
         // Ici, on récupère celui qui vient de déposer le nouveau document
-        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId(); 
+        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId();
         $userDropDocument = $document->getDrop()->getUser()->getId();
         $userSenderDocument = $document->getSender()->getId();
 
