@@ -8,6 +8,8 @@ plugin:
           icon: res_exo.png
           actions:
             - name: MANAGE_PAPERS
+            - name: VIEW_DOCIMOLOGY            
+              menu_name: docimology
           activity_rules:
             - action: resource-ujm_exercise-exercise_evaluated
 

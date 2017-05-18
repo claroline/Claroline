@@ -25,10 +25,10 @@ class AnswerRepository extends EntityRepository
     {
         return $this->createQueryBuilder('a')
             ->join('a.paper', 'p', 'WITH', 'p.exercise = :exercise')
-            ->where('a.question = :question')
+            ->where('a.questionId = :question')
             ->setParameters([
                 'exercise' => $exercise,
-                'question' => $question,
+                'question' => $question->getUuid(),
             ])
             ->getQuery()
             ->getResult();

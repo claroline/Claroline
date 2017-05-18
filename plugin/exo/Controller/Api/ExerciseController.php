@@ -153,6 +153,27 @@ class ExerciseController extends AbstractController
         return new JsonResponse(null, 204);
     }
 
+    /**
+     * Get docimology data.
+     *
+     * @EXT\Route("/{id}/docimology", name="exercise_docimology")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
+     *
+     * @param Exercise $exercise
+     *
+     * @return array
+     */
+    public function docimologyAction(Exercise $exercise)
+    {
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
+
+        return new JsonResponse([
+                'exercise' => $this->exerciseManager->serialize($exercise, [Transfer::MINIMAL]),
+                'statistics' => $this->exerciseManager->getStatistics($exercise, 100),
+        ]);
+    }
+
     private function assertHasPermission($permission, Exercise $exercise)
     {
         $collection = new ResourceCollection([$exercise->getResourceNode()]);

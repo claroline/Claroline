@@ -55,6 +55,7 @@ class ExerciseController extends Controller
         $exerciseData->meta->userPaperCount = (int) $nbUserPapers;
         $exerciseData->meta->registered = $user instanceof User;
         $exerciseData->meta->canViewPapers = $this->canViewPapers($exercise);
+        $exerciseData->meta->canViewDocimology = $this->canViewDocimology($exercise);
 
         // Display the Summary of the Exercise
         return [
@@ -79,12 +80,15 @@ class ExerciseController extends Controller
      */
     public function docimologyAction(Exercise $exercise)
     {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
+        if (!$this->canViewDocimology($exercise)) {
+            throw new AccessDeniedException('not allowed to access this page');
+        }
 
         return [
             'workspace' => $exercise->getResourceNode()->getWorkspace(),
             '_resource' => $exercise,
-            'exercise' => $this->get('ujm_exo.manager.exercise')->serialize($exercise),
+            'exercise' => $this->get('ujm_exo.manager.exercise')->serialize($exercise, [Transfer::MINIMAL]),
+            'statistics' => $this->get('ujm_exo.manager.docimology')->getStatistics($exercise, 100),
         ];
     }
 
@@ -100,6 +104,14 @@ class ExerciseController extends Controller
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
 
         return $this->get('security.authorization_checker')->isGranted('MANAGE_PAPERS', $collection);
+    }
+
+    private function canViewDocimology(Exercise $exercise)
+    {
+        $collection = new ResourceCollection([$exercise->getResourceNode()]);
+        $isGranted = $this->get('security.authorization_checker')->isGranted('VIEW_DOCIMOLOGY', $collection) || $this->isAdmin($exercise);
+
+        return $isGranted;
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

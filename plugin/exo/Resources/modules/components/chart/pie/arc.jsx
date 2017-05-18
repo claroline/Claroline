@@ -1,7 +1,5 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes as T } from 'react'
 import {arc} from 'd3-shape'
-
-const T = React.PropTypes
 
 /**
  * Draws an Arc on a Pie chart.
@@ -25,7 +23,11 @@ export default class Arc extends Component {
       <path
         d={arcInstance()}
         fill={this.props.color}
-      />
+      >
+        {this.props.showValue &&
+          <title>{this.props.value}</title>
+        }
+      </path>
     )
   }
 }
@@ -35,7 +37,9 @@ Arc.propTypes = {
   innerRadius: T.number.isRequired,
   outerRadius: T.number.isRequired,
   startAngle: T.number.isRequired,
-  endAngle: T.number.isRequired
+  endAngle: T.number.isRequired,
+  showValue: T.bool.isRequired,
+  value: T.number
 }
 
 Arc.defaultProps = {

@@ -166,7 +166,7 @@ class PaperManager
     public function serializeExercisePapers(Exercise $exercise, User $user = null)
     {
         if (!empty($user)) {
-            // Load papers for of a singe user
+            // Load papers for of a single user
             $papers = $this->repository->findBy([
                 'exercise' => $exercise,
                 'user' => $user,
@@ -249,11 +249,99 @@ class PaperManager
      *
      * @param Exercise $exercise
      *
-     * @return array
+     * @return int
      */
     public function countExercisePapers(Exercise $exercise)
     {
         return $this->repository->countExercisePapers($exercise);
+    }
+
+    /**
+     * Returns the number of different registered users that have passed a given exercise.
+     *
+     * @param Exercise $exercise
+     *
+     * @return int
+     */
+    public function countPapersUsers(Exercise $exercise)
+    {
+        return $this->repository->countPapersUsers($exercise);
+    }
+
+    /**
+     * Returns the number of different anonymous users that have passed a given exercise.
+     *
+     * @param Exercise $exercise
+     *
+     * @return int
+     */
+    public function countAnonymousPapers(Exercise $exercise)
+    {
+        return $this->repository->countAnonymousPapers($exercise);
+    }
+
+    /**
+     * Returns the max min and average score for a given exercise.
+     *
+     * @param Exercise $exercise
+     * @param float    $scoreOn
+     *
+     * @return \stdClass
+     */
+    public function getMinMaxAverageScores(Exercise $exercise, $scoreOn)
+    {
+        $papers = $this->repository->findBy([
+            'exercise' => $exercise,
+        ]);
+
+        $scores = $this->getPapersScores($papers, $scoreOn);
+
+        $result = new \stdClass();
+        $result->min = count($scores) === 0 ? 0 : min($scores);
+        $result->max = count($scores) === 0 ? 0 : max($scores);
+        $average = count($scores) === 0 ? 0 : array_sum($scores) / count($scores);
+        $result->avg = $average !== floor($average) ? floatval(number_format($average, 2)) : $average;
+
+        return $result;
+    }
+
+    /**
+     * Returns the number of fully, partially successfull and missed papers for a given exercise.
+     *
+     * @param Exercise $exercise
+     * @param float    $scoreOn
+     *
+     * @return \stdClass
+     */
+    public function getPapersSuccessDistribution(Exercise $exercise, $scoreOn)
+    {
+        $papers = $this->repository->findBy([
+            'exercise' => $exercise,
+        ]);
+
+        $nbSuccess = 0;
+        $nbMissed = 0;
+        $nbPartialSuccess = 0;
+
+        $scores = $this->getPapersScores($papers, $scoreOn);
+
+        /* @var Paper $paper */
+        foreach ($scores as $score) {
+            if ($score === floatval(0)) {
+                ++$nbMissed;
+            } elseif ($score === floatval($scoreOn)) {
+                ++$nbSuccess;
+            } else {
+                ++$nbPartialSuccess;
+            }
+        }
+
+        $papersSuccessDistribution = new \stdClass();
+        $papersSuccessDistribution->nbSuccess = $nbSuccess;
+        $papersSuccessDistribution->nbMissed = $nbMissed;
+        $papersSuccessDistribution->nbPartialSuccess = $nbPartialSuccess;
+
+        return $papersSuccessDistribution;
     }
 
     /**

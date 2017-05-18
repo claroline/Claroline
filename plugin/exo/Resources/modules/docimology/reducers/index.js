@@ -1,11 +1,11 @@
 import { combineReducers } from 'redux'
 
 import exerciseReducer from './exercise'
-import currentObjectReducer from './current-object'
+import statisticsReducer from './statistics'
 
 const docimologyApp = combineReducers({
   exercise: exerciseReducer,
-  currentObject: currentObjectReducer
+  statistics: statisticsReducer
 })
 
 export default docimologyApp

@@ -11,9 +11,9 @@ export default class Bar extends Component {
       <rect
         fill={this.props.color}
         width={this.props.width}
-        height={this.props.height}
+        height={this.props.maxHeight - this.props.height}
         x={this.props.offset}
-        y={this.props.maxHeight - this.props.height}
+        y={this.props.height}
       />
     )
   }

@@ -46,14 +46,28 @@ class ExerciseRepository extends EntityRepository
     {
         return $this->getEntityManager()
             ->createQuery('
-                UPDATE UJM\ExoBundle\Entity\Attempt\Paper AS p 
-                SET p.invalidated = true 
-                WHERE p.exercise = :exercise 
+                UPDATE UJM\ExoBundle\Entity\Attempt\Paper AS p
+                SET p.invalidated = true
+                WHERE p.exercise = :exercise
                   AND p.invalidated = false
             ')
             ->setParameters([
                 'exercise' => $exercise,
             ])
             ->execute();
+    }
+
+    public function countExerciseQuestion(Exercise $exercise)
+    {
+        return (int) $this->getEntityManager()
+            ->createQuery('
+                SELECT COUNT(sq.question)
+                FROM UJM\ExoBundle\Entity\Exercise AS e
+                JOIN UJM\ExoBundle\Entity\Step AS s WITH s.exercise = e
+                JOIN UJM\ExoBundle\Entity\StepItem AS sq WITH sq.step = s
+                WHERE e = :exercise
+            ')
+            ->setParameter('exercise', $exercise)
+            ->getSingleScalarResult();
     }
 }
