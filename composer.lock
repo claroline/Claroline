@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "5479579b73dabf6adeb65d08ece52b86b00032a1"
+                "reference": "0c430901b2034e71f77458f04326f483ee950668"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/5479579b73dabf6adeb65d08ece52b86b00032a1",
-                "reference": "5479579b73dabf6adeb65d08ece52b86b00032a1",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/0c430901b2034e71f77458f04326f483ee950668",
+                "reference": "0c430901b2034e71f77458f04326f483ee950668",
                 "shasum": ""
             },
             "require": {
@@ -387,7 +387,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-05-16 08:51:03"
+            "time": "2017-05-17 13:36:38"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -7720,12 +7720,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "9706535602ce13c31aee49ccee5d6bfd895aadb5"
+                "reference": "8867141c8ef75c8b986780946f90a2ba58f53e21"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/9706535602ce13c31aee49ccee5d6bfd895aadb5",
-                "reference": "9706535602ce13c31aee49ccee5d6bfd895aadb5",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/8867141c8ef75c8b986780946f90a2ba58f53e21",
+                "reference": "8867141c8ef75c8b986780946f90a2ba58f53e21",
                 "shasum": ""
             },
             "require": {
@@ -7744,7 +7744,7 @@
             "type": "symfony-bridge",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.3-dev"
+                    "dev-master": "4.0-dev"
                 }
             },
             "autoload": {
@@ -7774,7 +7774,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-04-12 14:14:56"
+            "time": "2017-05-17 16:33:00"
         },
         {
             "name": "webmozart/assert",
