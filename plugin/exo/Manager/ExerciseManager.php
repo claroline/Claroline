@@ -284,7 +284,7 @@ class ExerciseManager
                 $paper->getNumber(),
                 $paper->getStart()->format('Y-m-d H:i:s'),
                 $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : '',
-                $paper->isInterrupted(),
+                $paper->isInterrupted() ? 'not finished' : 'finished',
                 $score !== floor($score) ? number_format($score, 2) : $score,
                 $totalScoreOn,
             ], ';');
