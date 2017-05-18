@@ -20,6 +20,8 @@ export default class DataSeries extends Component {
             outerRadius={this.props.outerRadius}
             startAngle={arc.startAngle}
             endAngle={arc.endAngle}
+            value={arc.value}
+            showValue={this.props.showValue}
           />
         ))}
       </g>
@@ -31,9 +33,9 @@ DataSeries.propTypes = {
   data: T.array.isRequired,
   colors: T.arrayOf(T.string).isRequired,
   innerRadius: T.number.isRequired,
-  outerRadius: T.number.isRequired
+  outerRadius: T.number.isRequired,
+  showValue: T.bool.isRequired
 }
 
 DataSeries.defaultProps = {
-
 }

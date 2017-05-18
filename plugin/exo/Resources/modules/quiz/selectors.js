@@ -16,6 +16,7 @@ const viewMode = state => state.viewMode
 const hasPapers = state => state.quiz.meta.paperCount > 0 || (state.papers.papers && state.papers.papers.length > 0)
 const hasUserPapers = state => state.quiz.meta.userPaperCount > 0
 const papersAdmin = state => state.quiz.meta.canViewPapers
+const docimologyAdmin = state => state.quiz.meta.canViewDocimology
 const registered = state => state.quiz.meta.registered
 const saveEnabled = state => !state.editor.saved && !state.editor.saving
 const editorOpened = state => state.editor.opened
@@ -34,6 +35,7 @@ export default {
   hasPapers,
   hasUserPapers,
   papersAdmin,
+  docimologyAdmin,
   registered,
   description,
   meta,

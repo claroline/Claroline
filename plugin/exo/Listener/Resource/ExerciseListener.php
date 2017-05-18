@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Listener\Resource;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
+use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\PublicationChangeEvent;
@@ -145,6 +146,29 @@ class ExerciseListener
             $event->enableSoftDelete();
         }
 
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("docimology_ujm_exercise")
+     **/
+    public function onDocimology(CustomActionResourceEvent $event)
+    {
+        /** @var Exercise $exercise */
+        $exercise = $event->getResource();
+
+        /** @var Request $currentRequest */
+        $currentRequest = $this->container->get('request_stack')->getCurrentRequest();
+
+        // Forward request to the Resource controller
+        $subRequest = $currentRequest->duplicate($currentRequest->query->all(), null, [
+            '_controller' => 'UJMExoBundle:Resource\Exercise:docimology',
+            'id' => $exercise->getUuid(),
+        ]);
+
+        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
+
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 

@@ -126,6 +126,50 @@ class PaperRepository extends EntityRepository
     }
 
     /**
+     * Returns the number of registered users associated to a given exercise.
+     *
+     * @param Exercise $exercise
+     *
+     * @return int the number of registered users
+     */
+    public function countPapersUsers(Exercise $exercise)
+    {
+        return (int) $this->getEntityManager()
+          ->createQuery('
+              SELECT COUNT(distinct p.user)
+              FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
+              WHERE p.exercise = :exercise
+                AND p.user IS NOT NULL
+          ')
+          ->setParameters([
+              'exercise' => $exercise,
+          ])
+          ->getSingleScalarResult();
+    }
+
+    /**
+     * Returns the number of annymous users associated to a given exercise.
+     *
+     * @param Exercise $exercise
+     *
+     * @return int the number of registered users
+     */
+    public function countAnonymousPapers(Exercise $exercise)
+    {
+        return (int) $this->getEntityManager()
+          ->createQuery('
+              SELECT COUNT(p.id)
+              FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
+              WHERE p.exercise = :exercise
+                AND p.user IS NULL
+          ')
+          ->setParameters([
+              'exercise' => $exercise,
+          ])
+          ->getSingleScalarResult();
+    }
+
+    /**
      * Finds papers of an exercise that needs correction (aka papers that have answers with `null` score).
      *
      * @param Exercise $exercise

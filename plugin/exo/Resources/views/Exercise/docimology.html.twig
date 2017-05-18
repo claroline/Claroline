@@ -3,16 +3,15 @@
 {% block stylesheets %}
     {{ parent() }}
 
-    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-exo-quiz-resource.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-exo-docimology.css') }}" />
 {% endblock %}
 
 {# Content of the Page #}
 {% block content %}
-    <div id="docimology" data-exercise="{{ exercise | json_encode | raw | escape }}"></div>
+    <div id="docimology" data-statistics="{{ statistics | json_encode | raw | escape }}" data-exercise="{{ exercise | json_encode | raw | escape }}"></div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-exo-docimology.js') }}"></script>
 {% endblock %}

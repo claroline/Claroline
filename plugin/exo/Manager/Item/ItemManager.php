@@ -267,6 +267,33 @@ class ItemManager
     }
 
     /**
+     * Get all scores for an Answerable Item.
+     *
+     * @param Item $question
+     *
+     * @return array
+     */
+    public function getItemScores(Exercise $exercise, Item $question)
+    {
+        $definition = $this->itemDefinitions->get($question->getMimeType());
+
+        if ($definition instanceof AnswerableItemDefinitionInterface) {
+            return array_map(function ($answer) use ($question, $definition) {
+                $score = $this->calculateScore($question, $answer);
+                  // get total available for the question
+                  $expected = $definition->expectAnswer($question->getInteraction());
+                $total = $this->scoreManager->calculateTotal(json_decode($question->getScoreRule()), $expected);
+                  // report the score on 100
+                  $score = (100 * $score) / $total;
+
+                return $score;
+            }, $this->answerRepository->findByQuestion($question, $exercise));
+        }
+
+        return [];
+    }
+
+    /**
      * Calculates the total score of a question.
      *
      * @param \stdClass $questionData
@@ -307,24 +334,43 @@ class ItemManager
         // it doesn't need to know the whole Answer object
         $answersData = [];
 
-        // Number of Users that have responded to the question (no blank answer)
+        // get corrected answers for the Item in order to compute question success percentage
+        $correctedAnswers = [];
+
+        // Number of Users that have answered the question (no blank answer)
         $questionStats->answered = 0;
         if (!empty($answers)) {
+            // Let the handler of the question type parse and compile the data
+            $definition = $this->itemDefinitions->get($question->getMimeType());
             for ($i = 0; $i < $questionStats->seen; ++$i) {
                 $answer = $answers[$i];
                 if (!empty($answer->getData())) {
                     ++$questionStats->answered;
-
                     $answersData[] = json_decode($answer->getData());
+                }
+
+                // for each answer get corresponding correction
+                if ($definition instanceof AnswerableItemDefinitionInterface) {
+                    $corrected = $definition->correctAnswer($question->getInteraction(), $answersData[$i]);
+                    $correctedAnswers[] = $corrected;
                 }
             }
 
             // Let the handler of the question type parse and compile the data
-            $definition = $this->itemDefinitions->get($question->getMimeType());
             if ($definition instanceof AnswerableItemDefinitionInterface) {
                 $questionStats->solutions = $definition->getStatistics($question->getInteraction(), $answersData);
             }
         }
+
+        // get the number of good answers among all
+        $nbGoodAnswers = 0;
+        foreach ($correctedAnswers as $corrected) {
+            if (count($corrected->getMissing()) === 0 && count($corrected->getUnexpected()) === 0) {
+                ++$nbGoodAnswers;
+            }
+        }
+        // compute question success percentage
+        $questionStats->successPercent = $questionStats->answered > 0 ? (100 * $nbGoodAnswers) / $questionStats->answered : 0;
 
         return $questionStats;
     }

@@ -78,22 +78,24 @@ function customActions(props) {
       disabled: !props.hasPapers,
       action: generateUrl('exercise_papers_export', {exerciseId: props.quiz.id})
     })
+  }
 
-    // not ready for now
-    /*actions.push({
-     icon: 'fa fa-fw fa-pie-chart',
-     label: tex('docimology'),
-     action: '#'
-     })*/
-
-    // Manual correction
+  // Docimology
+  if (props.editable || props.docimologyAdmin) {
     actions.push({
-      icon: 'fa fa-fw fa-check-square-o',
-      label: tex('manual_correction'),
-      disabled: !props.hasPapers,
-      action: '#correction/questions'
+      icon: 'fa fa-fw fa-pie-chart',
+      label: tex('docimology'),
+      action: generateUrl('ujm_exercise_docimology', {id: props.quiz.id})
     })
   }
+
+  // Manual correction
+  actions.push({
+    icon: 'fa fa-fw fa-check-square-o',
+    label: tex('manual_correction'),
+    disabled: !props.hasPapers,
+    action: '#correction/questions'
+  })
 
   return actions
 }
@@ -110,6 +112,7 @@ function mapStateToProps(state) {
     hasPapers: select.hasPapers(state),
     hasUserPapers: select.hasUserPapers(state),
     papersAdmin: select.papersAdmin(state),
+    docimologyAdmin: select.docimologyAdmin(state),
     registeredUser: select.registered(state),
     saveEnabled: select.saveEnabled(state),
     currentQuestionId: state.correction.currentQuestionId
