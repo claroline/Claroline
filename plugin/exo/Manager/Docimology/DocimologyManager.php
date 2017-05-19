@@ -304,7 +304,7 @@ class DocimologyManager
         };
         // avoid division by 0
         $nbData = count($array) > 1 ? count($array) - 1 : 1;
-        $fillNbData = count($array) > 1 ? count($array) : 1;
+        $fillNbData = count($array) > 0 ? count($array) : 1;
 
         return sqrt(
           array_sum(
