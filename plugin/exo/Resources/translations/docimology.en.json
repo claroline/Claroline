@@ -11,7 +11,7 @@
     "docimology_discrimination_coefficient_help_part_3": "When a question has a negative CD, it means that it penalizes the best. It is therefore best to avoid such questions.",
     "docimology_discrimination_coefficient_help_part_4": "It should be noted that if all students get the same score on a question, the coefficient will not be defined.",
     "docimology_note_gauges_help": "Because of the possibility of modifying the exercises while copies have already been made, the notes are calculated and then reported on 100.",
-    "docimology_papers_totally_successfull": "Number of fully successfull papers",
+    "docimology_papers_totally_successfull": "Number of successfull papers",
     "docimology_papers_partially_successfull": "Number of partially successfull papers",
     "docimology_papers_missed": "Number of missed papers",
     "docimology_score_distribution": "Scores distribution",
