@@ -40,7 +40,7 @@ class Updater090300 extends Updater
         $this->om = $this->container->get('claroline.persistence.object_manager');
     }
 
-    public function preUpdate()
+    public function postUpdate()
     {
         $this->createDefaultModel();
         $roleManager = $this->container->get('claroline.manager.role_manager');
