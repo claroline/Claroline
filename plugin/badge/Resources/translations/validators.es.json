@@ -20,5 +20,6 @@
     "valid_end_date_required": "Se requiere una fecha de finalización válida.",
     "valid_end_hour_required": "Se requiere una hora de finalización válida.",
     "valid_start_date_required": "Se requiere una fecha de inicio válida.",
-    "valid_start_hour_required": "Se requiere una hora de inicio válida."
+    "valid_start_hour_required": "Se requiere una hora de inicio válida.",
+    "2047_characters_max": "Máximum 2047 caracteres."
 }
