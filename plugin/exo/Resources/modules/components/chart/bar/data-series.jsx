@@ -26,9 +26,7 @@ export default class DataSeries extends Component {
               color={isNegativeValue ? this.props.altColor : this.props.color}
             />
           )
-        }
-
-        )}
+        })}
       </g>
     )
   }

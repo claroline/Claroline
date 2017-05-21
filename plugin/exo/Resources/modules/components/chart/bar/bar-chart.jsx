@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {max} from 'd3-array'
+import {max, min} from 'd3-array'
 import {scaleLinear, scaleBand} from 'd3-scale'
 import {axisLeft, axisBottom} from 'd3-axis'
 
@@ -33,8 +33,13 @@ export default class BarChart extends Component {
     const height = this.props.height - this.props.margin.top - this.props.margin.bottom
 
     const yScale = scaleLinear()
-      .domain([0, max(yValues)])
-      .range([height, 0])
+    if(this.props.minMaxAsYDomain) {
+      yScale.domain([min(yValues), max(yValues)])
+    } else {
+      yScale.domain([0, max(yValues)])
+    }
+
+    yScale.range([height, 0])
 
     const xScale = scaleBand()
       .domain(xValues)
@@ -42,7 +47,11 @@ export default class BarChart extends Component {
       .paddingInner([0.2])
 
     const yAxis = axisLeft(yScale)
-      .ticks(10)
+    if (this.props.ticksAsYValues) {
+      yAxis.tickValues(yValues)
+    } else {
+      yAxis.ticks(10)
+    }
 
     const xAxis = axisBottom(xScale)
       .tickValues(xValues)
@@ -85,12 +94,14 @@ BarChart.propTypes = {
   }).isRequired,
   xAxisLabel: T.shape({
     show: T.bool.isRequired,
-    text: T.string
+    text: T.string.isRequired
   }),
   yAxisLabel: T.shape({
     show: T.bool.isRequired,
-    text: T.string
-  })
+    text: T.string.isRequired
+  }),
+  ticksAsYValues: T.bool,
+  minMaxAsYDomain:T.bool
 }
 
 BarChart.defaultProps = {
@@ -101,5 +112,15 @@ BarChart.defaultProps = {
     right: 20,
     bottom: 20,
     left: 30
-  }
+  },
+  xAxisLabel: T.shape({
+    show: false,
+    text: 'X Axis DATA'
+  }),
+  yAxisLabel: T.shape({
+    show: false,
+    text: 'Y Axis DATA'
+  }),
+  ticksAsYValues: false,
+  minMaxAsYDomain: false
 }
