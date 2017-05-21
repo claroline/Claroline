@@ -233,6 +233,8 @@ class Docimology extends Component {
                       show:true,
                       text: tex('docimology_question_title', 'docimology')
                     }}
+                    minMaxAsYDomain={true}
+                    ticksAsYValues={true}
                   />
                   <div className="docimology-help">
                     <div className="icon">
