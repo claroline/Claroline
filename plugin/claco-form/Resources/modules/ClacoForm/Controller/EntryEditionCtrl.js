@@ -91,6 +91,7 @@ export default class EntryEditionCtrl {
         if (!f['hidden']) {
           const id = f['id']
           const name = f['name'].replace(/'/g, ' ')
+          const disabled = this.isFieldDisabled(f)
 
           if (this.template) {
             let choices = JSON.stringify(f['fieldFacet']['field_facet_choices'])
@@ -103,7 +104,8 @@ export default class EntryEditionCtrl {
                                      values: ${choices},
                                      choice_value: 'value',
                                      error: cfc.entryErrors[${id}],
-                                     noLabel: true
+                                     noLabel: true,
+                                     disabled: ${disabled}
                                  }]"
                           ng-model="cfc.entry[${id}]"
               >

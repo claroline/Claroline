@@ -50,6 +50,7 @@ export default class EntryCreationCtrl {
         const id = f['id']
         const name = f['name'].replace(/'/g, ' ')
         this.entry[id] = null
+        const disabled = this.isFieldDisabled(f)
 
         if (f['required']) {
           this.entryErrors[id] = null
@@ -65,7 +66,8 @@ export default class EntryCreationCtrl {
                                    values: ${choices},
                                    choice_value: 'value',
                                    error: cfc.entryErrors[${id}],
-                                   noLabel: true
+                                   noLabel: true,
+                                   disabled: ${disabled}
                                }]"
                         ng-model="cfc.entry[${id}]"
             >
