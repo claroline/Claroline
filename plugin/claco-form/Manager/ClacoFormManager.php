@@ -1020,7 +1020,7 @@ class ClacoFormManager
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageManager->send($message, true, false);
+                    $this->messageManager->send($message);
                 }
             }
         }
@@ -1040,7 +1040,7 @@ class ClacoFormManager
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageManager->send($message, true, false);
+                    $this->messageManager->send($message);
                 }
             }
         }
@@ -1060,7 +1060,7 @@ class ClacoFormManager
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
-                    $this->messageManager->send($message, true, false);
+                    $this->messageManager->send($message);
                 }
             }
         }
@@ -1098,7 +1098,7 @@ class ClacoFormManager
                     '</a><br><br>';
 
                 $message = $this->messageManager->create($content, $object, $receivers);
-                $this->messageManager->send($message, true, false);
+                $this->messageManager->send($message);
             }
         }
     }
