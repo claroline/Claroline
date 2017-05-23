@@ -1433,7 +1433,7 @@ class ClacoFormManager
         }
         if ($sendMessage && count($receivers) > 0) {
             $message = $this->messageManager->create($content, $subject, $receivers);
-            $this->messageManager->send($message, true, false);
+            $this->messageManager->send($message);
         }
     }
 
