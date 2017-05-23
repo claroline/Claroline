@@ -103,7 +103,6 @@ class ExerciseControllerTest extends TransactionalTestCase
     {
         // Try to open docimology with the creator
         $crawler = $this->request('GET', "/exercises/{$this->exercise->getUuid()}/docimology", $this->exerciseCreator);
-
         // The user must have access to the exercise
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
         $this->assertTrue($crawler->filter('html')->count() > 0);

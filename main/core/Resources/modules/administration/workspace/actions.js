@@ -9,10 +9,14 @@ import {select as paginationSelect} from '#/main/core/layout/pagination/selector
 import {REQUEST_SEND} from '#/main/core/api/actions'
 
 export const WORKSPACES_LOAD = 'WORKSPACES_LOAD'
+export const WORKSPACE_ADD_MANAGER = 'WORKSPACE_ADD_MANAGER'
+export const WORKSPACE_REMOVE_MANAGER = 'WORKSPACE_REMOVE_MANAGER'
 
 export const actions = {}
 
 actions.loadWorkspaces = makeActionCreator(WORKSPACES_LOAD, 'workspaces', 'total')
+actions.workspaceAddManager = makeActionCreator(WORKSPACE_ADD_MANAGER, 'workspace', 'user')
+actions.workspaceRemoveManager =  makeActionCreator(WORKSPACE_REMOVE_MANAGER, 'workspace', 'user')
 
 actions.removeWorkspaces = (workspaces) => ({
   [REQUEST_SEND]: {
@@ -37,6 +41,34 @@ actions.copyWorkspaces = (workspaces, isModel = 0) => ({
     success: (data, dispatch) => dispatch(actions.fetchWorkspaces())
   }
 })
+
+actions.addManager = (workspace, user) => {
+  const role = getManagerRole(workspace)
+
+  return {
+    [REQUEST_SEND]: {
+      url: generateUrl('api_add_user_role', {user: user.id, role: role.id}),
+      request: {
+        method: 'PATCH'
+      },
+      success: (data, dispatch) => dispatch(actions.workspaceAddManager(workspace, user))
+    }
+  }
+}
+
+actions.removeManager = (workspace, user) => {
+  const role = getManagerRole(workspace)
+
+  return {
+    [REQUEST_SEND]: {
+      url: generateUrl('api_remove_user_role', {user: user.id, role: role.id}),
+      request: {
+        method: 'GET'
+      },
+      success: (data, dispatch) => dispatch(actions.workspaceRemoveManager(workspace, user))
+    }
+  }
+}
 
 actions.fetchWorkspaces = () => (dispatch, getState) => {
   const state = getState()
@@ -68,10 +100,11 @@ actions.fetchWorkspaces = () => (dispatch, getState) => {
       },
       success: (data, dispatch) => {
         dispatch(listActions.resetSelect())
-        dispatch(actions.loadWorkspaces(data.workspaces, data.total))
+        dispatch(actions.loadWorkspaces(data.results, data.total))
       }
     }
   })
 }
 
 const workspaceQueryString = (workspaces) => '?' + workspaces.map(workspace => 'ids[]='+workspace.id).join('&')
+const getManagerRole = (workspace) => workspace.roles.find(role => role.name.includes('ROLE_WS_MANAGER'))

@@ -1,0 +1,101 @@
+<?php
+
+namespace Claroline\CoreBundle\Serializer\Workspace;
+
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Manager\RoleManager;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+
+/**
+ * @DI\Service("claroline.serializer.workspace")
+ * @DI\Tag("claroline.serializer")
+ */
+class WorskpaceSerializer
+{
+    private $om;
+
+    /**
+     * @var AuthorizationCheckerInterface
+     */
+    private $authorization;
+
+    /**
+     * @var StrictDispatcher
+     */
+    private $eventDispatcher;
+
+    /**
+     * ResourceNodeManager constructor.
+     *
+     * @DI\InjectParams({
+     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
+     *     "authorization"     = @DI\Inject("security.authorization_checker"),
+     *     "eventDispatcher"   = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "userManager"       = @DI\Inject("claroline.manager.user_manager"),
+     *     "roleManager"       = @DI\Inject("claroline.manager.role_manager")
+     * })
+     *
+     * @param ObjectManager                 $om
+     * @param AuthorizationCheckerInterface $authorization
+     * @param StrictDispatcher              $eventDispatcher
+     */
+    public function __construct(
+        ObjectManager $om,
+        AuthorizationCheckerInterface $authorization,
+        StrictDispatcher $eventDispatcher,
+        UserManager $userManager,
+        RoleManager $roleManager
+    ) {
+        $this->om = $om;
+        $this->authorization = $authorization;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->userManager = $userManager;
+        $this->roleManager = $roleManager;
+    }
+
+    /**
+     * Serializes a Workspace entity for the JSON api.
+     *
+     * @param Workspace $workspace - the workspace to serialize
+     *
+     * @return array - the serialized representation of the workspace
+     */
+    public function serialize(Workspace $workspace)
+    {
+        $roleManager = $this->roleManager->getManagerRole($workspace);
+        $managers = $this->userManager->getUsersByRolesIncludingGroups([$roleManager], 1, 1000, false)->getResult();
+
+        $serializedWorkspace = [
+          'id' => $workspace->getId(),
+          'uuid' => $workspace->getGuid(),
+          'name' => $workspace->getName(),
+          'code' => $workspace->getCode(),
+          'creator' => [
+            'id' => $workspace->getCreator()->getId(),
+            'uuid' => $workspace->getCreator()->getId(),
+            'username' => $workspace->getCreator()->getUsername(),
+          ],
+          'roles' => array_map(function ($role) {
+              return [
+                'id' => $role->getId(),
+                'name' => $role->getName(),
+              ];
+          }, $workspace->getRoles()->toArray()),
+          'managers' => array_map(function ($manager) {
+              return [
+              'id' => $manager->getId(),
+              'uuid' => $manager->getGuid(),
+              'username' => $manager->getUsername(),
+              'lastName' => $manager->getLastName(),
+              'firstName' => $manager->getFirstName(),
+            ];
+          }, $managers),
+        ];
+
+        return $serializedWorkspace;
+    }
+}

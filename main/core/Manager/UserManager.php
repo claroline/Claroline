@@ -1025,13 +1025,15 @@ class UserManager
      * @return \Pagerfanta\Pagerfanta
      */
     public function getUsersByRolesIncludingGroups(
-        array $roles,
-        $page = 1,
+        array $roles, $page = 1,
         $max = 20,
         $executeQuery = true
     ) {
-        $users = $this->userRepo
-            ->findUsersByRolesIncludingGroups($roles, $executeQuery);
+        $users = $this->userRepo->findUsersByRolesIncludingGroups($roles, $executeQuery);
+
+        if (!$executeQuery) {
+            return $users;
+        }
 
         return $this->pagerFactory->createPagerFromArray($users, $page, $max);
     }
@@ -1686,6 +1688,19 @@ class UserManager
                     $qb->join('u.organizations', "o{$id}");
                     $qb->andWhere('o{$id}.id = :id');
                     $qb->setParameter($key.$id, $el);
+                }
+                if ($key === 'name') {
+                    $qb->andWhere(
+                      $qb->expr()->orX(
+                          $qb->expr()->like('u.username', ":{$key}{$id}"),
+                          $qb->expr()->like('u.lastName', ":{$key}{$id}"),
+                          $qb->expr()->like('u.firstName', ":{$key}{$id}"),
+                          $qb->expr()->like('u.administrativeCode', ":{$key}{$id}"),
+                          $qb->expr()->like('u.mail', ":{$key}{$id}")
+                      )
+                    );
+
+                    $qb->setParameter($key.$id, "%$el%");
                 }
             }
         }
