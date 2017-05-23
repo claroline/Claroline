@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "fee0d7de6849c607b9e80b6a3434b5954cec0ed3"
+                "reference": "21b0c62f1b8b9dd43a6a451f7653c522a6c46422"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/fee0d7de6849c607b9e80b6a3434b5954cec0ed3",
-                "reference": "fee0d7de6849c607b9e80b6a3434b5954cec0ed3",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/21b0c62f1b8b9dd43a6a451f7653c522a6c46422",
+                "reference": "21b0c62f1b8b9dd43a6a451f7653c522a6c46422",
                 "shasum": ""
             },
             "require": {
@@ -387,7 +387,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-05-21 08:18:42"
+            "time": "2017-05-22 09:54:54"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -7365,16 +7365,16 @@
         },
         {
             "name": "sebastian/diff",
-            "version": "1.4.2",
+            "version": "1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "3c7d21999e815cdfac70c6c7d79d3a9cb1bc7bc2"
+                "reference": "7f066a26a962dbe58ddea9f72a4e82874a3975a4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/3c7d21999e815cdfac70c6c7d79d3a9cb1bc7bc2",
-                "reference": "3c7d21999e815cdfac70c6c7d79d3a9cb1bc7bc2",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/7f066a26a962dbe58ddea9f72a4e82874a3975a4",
+                "reference": "7f066a26a962dbe58ddea9f72a4e82874a3975a4",
                 "shasum": ""
             },
             "require": {
@@ -7413,7 +7413,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-05-18 13:44:30"
+            "time": "2017-05-22 07:24:03"
         },
         {
             "name": "sebastian/environment",
