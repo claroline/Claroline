@@ -37,7 +37,6 @@ use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Doctrine\Common\Persistence\ObjectRepository;
-use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -1532,69 +1531,5 @@ class WorkspaceManager
         }
 
         return $workspace;
-    }
-
-    /*
-     * Big user search method ! hell yeah !
-     * todo : this should be in the WS repository
-     */
-    public function searchPartialList(array $searches, $page, $limit, $count = false)
-    {
-        // retrieves searchable text fields
-        $baseFieldsName = Workspace::getWorkspaceSearchableFields();
-
-        /** @var QueryBuilder $qb */
-        $qb = $this->om->createQueryBuilder();
-        $count ? $qb->select('count(w)') : $qb->select('w');
-        $qb->from('Claroline\CoreBundle\Entity\Workspace\Workspace', 'w');
-
-        //Admin can see everything, but the others... well they can only see their own organizations.
-        if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            /** @var User $currentUser */
-            $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
-            $qb->leftJoin('w.organizations', 'uo');
-            $qb->leftJoin('uo.administrators', 'ua');
-            $qb->andWhere('ua.id = :userId');
-            $qb->setParameter('userId', $currentUser->getId());
-        }
-
-        if (!empty($searches['filters']) && is_array($searches['filters'])) {
-            foreach ($searches['filters'] as $filterName => $filterValue) {
-                // todo : add organization filter
-                if (in_array($filterName, $baseFieldsName)) {
-                    $qb->andWhere("UPPER(w.{$filterName}) LIKE :{$filterName}");
-                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
-                } else {
-                    // catch boolean
-                    if ('true' === $filterValue || 'false' === $filterValue) {
-                        $filterValue = 'true' === $filterValue;
-                    }
-
-                    $qb->andWhere("w.{$filterName} = :{$filterName}");
-                    $qb->setParameter($filterName, $filterValue);
-                }
-            }
-        }
-
-        if (!empty($searches['sortBy'])) {
-            // reverse order starts by a -
-            if ('-' === substr($searches['sortBy'], 0, 1)) {
-                $qb->orderBy('w.'.substr($searches['sortBy'], 1), 'ASC');
-            } else {
-                $qb->orderBy('w.'.$searches['sortBy'], 'DESC');
-            }
-        }
-
-        $query = $qb->getQuery();
-
-        if ($page !== null && $limit !== null && !$count) {
-            //react table all is -1
-            if ($limit > -1) {
-                $query->setMaxResults($limit);
-            }
-            $query->setFirstResult($page * $limit);
-        }
-
-        return $count ? (int) $query->getSingleScalarResult() : $query->getResult();
     }
 }

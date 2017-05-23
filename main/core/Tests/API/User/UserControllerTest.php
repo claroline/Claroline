@@ -222,10 +222,10 @@ class UserControllerTest extends TransactionalTestCase
 
         //tests
         $this->logIn($adminOrga);
-        $this->client->request('GET', "api/user/{$john->getId()}/get.json");
+        $this->client->request('GET', "api/user/{$john->getId()}.json");
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
+        $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
     }
 
     public function testDeleteUserAction()

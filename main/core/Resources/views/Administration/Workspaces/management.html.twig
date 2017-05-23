@@ -21,8 +21,12 @@
 {% block content %}
   <div
     class="page-container workspace-administration-container"
-    data-workspaces="{{ workspaces | json_serialize('api_workspace') | raw | escape }}"
-    data-count="{{ count }}"
+    data-workspaces="{{ results | json_encode | raw | escape }}"
+    data-count="{{ total }}"
+    data-filters="{{ filters | json_encode | raw | escape }}"
+    data-orderby="{{ orderBy | json_encode | raw | escape }}"
+    data-page="0"
+    data-pageSize="20"
   >
   </div>
 {% endblock %}

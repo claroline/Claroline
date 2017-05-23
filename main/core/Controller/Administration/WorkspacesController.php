@@ -11,10 +11,12 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
+use Claroline\CoreBundle\API\Finder;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\WorkspaceImportType;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Serializer\Workspace\WorkspaceSerializer;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -29,6 +31,7 @@ class WorkspacesController extends Controller
     private $om;
     private $eventDispatcher;
     private $workspaceManager;
+    private $workspaceSerializer;
 
     /**
      * WorkspacesController constructor.
@@ -36,38 +39,39 @@ class WorkspacesController extends Controller
      * @DI\InjectParams({
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
      *     "eventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "finder"           = @DI\Inject("claroline.API.finder")
      * })
      *
-     * @param WorkspaceManager $workspaceManager
-     * @param ObjectManager    $om
-     * @param StrictDispatcher $eventDispatcher
+     * @param WorkspaceManager    $workspaceManager
+     * @param ObjectManager       $om
+     * @param StrictDispatcher    $eventDispatcher
+     * @param WorkspaceSerializer $serializer
      */
     public function __construct(
         WorkspaceManager $workspaceManager,
         ObjectManager $om,
-        StrictDispatcher $eventDispatcher)
-    {
+        StrictDispatcher $eventDispatcher,
+        Finder $finder
+    ) {
         $this->workspaceManager = $workspaceManager;
         $this->om = $om;
         $this->eventDispatcher = $eventDispatcher;
+        $this->finder = $finder;
     }
 
     /**
-     * @EXT\ParamConverter("user", converter="current_user")
      * @EXT\Template
      *
      * @return array
      */
     public function managementAction()
     {
-        $workspaces = $this->workspaceManager->searchPartialList([], 0, 20);
-        $count = $this->workspaceManager->searchPartialList([], 0, 20, true);
-
-        return [
-            'workspaces' => $workspaces,
-            'count' => $count,
-        ];
+        return $this->finder->search(
+          'Claroline\CoreBundle\Entity\Workspace\Workspace',
+          0,
+          20
+        );
     }
 
     /**

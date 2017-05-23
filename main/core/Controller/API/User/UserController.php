@@ -263,12 +263,11 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @ParamConverter("user", class="ClarolineCoreBundle:User", options={"repository_method" = "findForApi"})
-     * @Get("/user/{user}/get", name="get_user", options={ "method_prefix" = false })
+     * @Get("/user/{search}", name="get_user", options={ "method_prefix" = false })
      */
-    public function getUserAction(User $user)
+    public function getUserAction($search)
     {
-        $this->throwsExceptionIfNotAdmin();
+        $user = $this->userRepo->loadUserByUsername($search);
 
         return $user;
     }

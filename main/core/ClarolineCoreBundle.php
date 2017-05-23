@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle;
 
 use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
+use Claroline\CoreBundle\DependencyInjection\Compiler\ApiConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
@@ -46,6 +47,7 @@ class ClarolineCoreBundle extends InstallableBundle implements AutoConfigurableI
         $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new RuleConstraintsConfigPass());
         $container->addCompilerPass(new RouterPass());
+        $container->addCompilerPass(new ApiConfigPass());
 
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new ApiFactory());
