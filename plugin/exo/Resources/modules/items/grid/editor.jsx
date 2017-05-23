@@ -253,6 +253,7 @@ const GridRow = props =>
         <input
           type="number"
           min="0"
+          step="0.5"
           disabled={!utils.atLeastOneSolutionInRow(props.index, props.cells, props.solutions)}
           value={utils.getRowScore(props.cells, props.solutions)}
           className="form-control grid-score"
@@ -351,6 +352,7 @@ const GridTable = props =>
               <input
                 type="number"
                 min="0"
+                step="0.5"
                 disabled={!utils.atLeastOneSolutionInCol(colIndex, props.item.cells, props.item.solutions)}
                 value={utils.getColScore(colIndex, props.item.cells, props.item.solutions)}
                 className="form-control grid-score"
@@ -443,6 +445,7 @@ const Grid = props =>
               id={`item-${props.item.id}-fixedSuccess`}
               type="number"
               min="0"
+              step="0.5"
               value={props.item.score.success}
               className="form-control"
               onChange={e => props.onChange(
