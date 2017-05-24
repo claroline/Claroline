@@ -140,8 +140,8 @@ class GridQuestionSerializer implements SerializerInterface
         $gridQuestion->setRows($data->rows);
         $gridQuestion->setColumns($data->cols);
         $gridQuestion->setSumMode($data->sumMode);
-        $gridQuestion->setBorderWidth($data->border->width);
-        $gridQuestion->setBorderColor($data->border->color);
+        $gridQuestion->setBorderWidth($data->border['width']);
+        $gridQuestion->setBorderColor($data->border['color']);
         // Deserialize cells and solutions
         $this->deserializeCells($gridQuestion, $data->cells, $data->solutions, $options);
 
