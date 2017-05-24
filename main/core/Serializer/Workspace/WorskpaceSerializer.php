@@ -68,6 +68,7 @@ class WorskpaceSerializer
     {
         $roleManager = $this->roleManager->getManagerRole($workspace);
         $managers = $this->userManager->getUsersByRolesIncludingGroups([$roleManager], 1, 1000, false)->getResult();
+        $creator = $workspace->getCreator();
 
         $serializedWorkspace = [
           'id' => $workspace->getId(),
@@ -75,10 +76,11 @@ class WorskpaceSerializer
           'name' => $workspace->getName(),
           'code' => $workspace->getCode(),
           'creator' => [
-            'id' => $workspace->getCreator()->getId(),
-            'uuid' => $workspace->getCreator()->getId(),
-            'username' => $workspace->getCreator()->getUsername(),
+            'id' => $creator ? $creator->getId() : 0,
+            'uuid' => $creator ? $creator->getId() : 0,
+            'username' => $creator ? $creator->getUsername() : 'undefined',
           ],
+          'isModel' => $workspace->isModel(),
           'roles' => array_map(function ($role) {
               return [
                 'id' => $role->getId(),

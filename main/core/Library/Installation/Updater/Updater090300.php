@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\InstallationBundle\Updater\Updater;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class Updater090300 extends Updater
 {
@@ -38,6 +39,11 @@ class Updater090300 extends Updater
         $this->iconSetsDir = $container->getParameter('claroline.param.icon_sets_directory');
         $this->connection = $this->container->get('doctrine.dbal.default_connection');
         $this->om = $this->container->get('claroline.persistence.object_manager');
+
+        //set the default claroline user
+        $defaultUser = $container->get('claroline.manager.user_manager')->getDefaultUser();
+        $token = new UsernamePasswordToken($defaultUser, '123', 'main', $defaultUser->getRoles());
+        $this->container->get('security.token_storage')->setToken($token);
     }
 
     public function postUpdate()

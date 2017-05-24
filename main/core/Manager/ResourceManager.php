@@ -802,7 +802,8 @@ class ResourceManager
                 if ($env === 'dev') {
                     $message = 'The resource '.$node->getName().' was not found (node id is '.$node->getId().')';
                     $this->container->get('logger')->error($message);
-                    throw new ResourceNotFoundException($message);
+
+                    return;
                 } else {
                     //if something is malformed in production, try to not break everything if we don't need to. Just retun null.
                     return;

@@ -226,6 +226,7 @@ class WorkspaceManager
         }
 
         $ch = $this->container->get('claroline.config.platform_config_handler');
+        $workspace->setGuid(uniqid('', true));
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
         $workspace->setMaxUsers($ch->getParameter('max_workspace_users'));
@@ -1412,7 +1413,7 @@ class WorkspaceManager
             foreach ($rights as $right) {
                 $role = $right->getRole();
                 if ($role->getType() === 1) {
-                    $this->toolRightsManager->setToolRights(
+                    $this->container->get('claroline.manager.tool_rights_manager')->setToolRights(
                         $workspaceOrderedTool,
                         $role,
                         $right->getMask()
