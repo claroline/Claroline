@@ -58,6 +58,7 @@ export default class FieldEditionModalCtrl {
     this.field['isMetadata'] = this.source['isMetadata']
     this.field['locked'] = this.source['locked']
     this.field['lockedEditionOnly'] = this.source['lockedEditionOnly']
+    this.field['hidden'] = this.source['hidden']
     const selectedType = this.types.find(t => t['value'] === this.source['type'])
     this.type = selectedType
   }
