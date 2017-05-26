@@ -733,10 +733,11 @@ class ClacoFormManager
                 $type = $field->getType();
 
                 if ($this->facetManager->isTypeWithChoices($type)) {
-                    $categories = $this->getCategoriesFromFieldAndValue($field, $value);
+                    $choiceCategories = $this->getCategoriesFromFieldAndValue($field, $value);
 
-                    foreach ($categories as $category) {
+                    foreach ($choiceCategories as $category) {
                         $entry->addCategory($category);
+                        $categories[$category->getId()] = $category;
                     }
                 }
             }
