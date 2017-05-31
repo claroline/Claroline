@@ -2,12 +2,14 @@ import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 import zipObject from 'lodash/zipObject'
 import set from 'lodash/set'
+
+import {makeActionCreator} from '#/main/core/utilities/redux'
+import {tex} from '#/main/core/translation'
+import {notBlank} from '#/main/core/validation'
+
 import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {SCORE_FIXED} from './../../quiz/enums'
-import {makeActionCreator} from '#/main/core/utilities/redux'
 import {makeId} from './../../utils/utils'
-import {tex} from '#/main/core/translation'
-import {notBlank} from './../../utils/validate'
 import {Choice as component} from './editor.jsx'
 
 const UPDATE_PROP = 'UPDATE_PROP'

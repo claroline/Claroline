@@ -1,6 +1,7 @@
-import React, {Component, PropTypes as T} from 'react'
-import Modal from 'react-bootstrap/lib/Modal'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import Modal from 'react-bootstrap/lib/Modal'
 
 import {trans} from '#/main/core/translation'
 import {listItemMimeTypes, getDefinition} from './../../../items/item-types'

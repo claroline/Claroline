@@ -1,16 +1,17 @@
-import {Cloze as component} from './editor.jsx'
-import {makeActionCreator} from '#/main/core/utilities/redux'
-import {makeId} from './../../utils/utils'
 import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
+import invariant from 'invariant'
 
+import {makeActionCreator} from '#/main/core/utilities/redux'
+import {notBlank} from '#/main/core/validation'
+import {tex} from '#/main/core/translation'
+
+import {Cloze as component} from './editor.jsx'
+import {makeId} from './../../utils/utils'
 import {ITEM_CREATE} from './../../quiz/editor/actions'
 import {utils} from './utils/utils'
 import {select} from './selectors'
-import {notBlank} from './../../utils/validate'
 import {keywords as keywordsUtils} from './../../utils/keywords'
-import invariant from 'invariant'
-import {tex} from '#/main/core/translation'
 
 const UPDATE_TEXT = 'UPDATE_TEXT'
 const ADD_HOLE = 'ADD_HOLE'

@@ -1,8 +1,7 @@
-import React  from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {asset} from '#/main/core/asset'
-
-const T = React.PropTypes
 
 const Icon = props =>
   <svg className={`item-icon item-icon-${props.size}`}>

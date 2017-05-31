@@ -1,14 +1,14 @@
 <?php
 
-namespace Claroline\CoreBundle\Controller\API;
+namespace Claroline\CoreBundle\Controller\API\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Manager\ResourceNodeManager;
+use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -45,31 +45,51 @@ class ResourceNodeController
     }
 
     /**
-     * Updates a resource node properties.
+     * Get a resourceNode properties.
      *
-     * @EXT\Route("", name="claro_resource_update")
-     * @EXT\Method("PUT")
-     * @EXT\ParamConverter("currentUser", converter="current_user", options={"allowAnonymous"=true})
+     * @EXT\Route("", name="claro_resource_node_get")
+     * @EXT\Method("GET")
      *
      * @param ResourceNode $resourceNode
-     * @param User         $currentUser
      *
      * @return JsonResponse
      */
-    public function updateAction(ResourceNode $resourceNode, User $currentUser)
+    public function getResourceNodeAction(ResourceNode $resourceNode)
     {
-        $this->assertHasPermission('EDIT', $resourceNode);
+        $this->assertHasPermission('OPEN', $resourceNode);
+
+        return new JsonResponse($this->resourceNodeManager->serialize($resourceNode));
+    }
+
+    /**
+     * Updates a resource node properties.
+     *
+     * @EXT\Route("", name="claro_resource_node_update")
+     * @EXT\Method("PUT")
+     *
+     * @param ResourceNode $resourceNode
+     * @param Request      $request
+     *
+     * @return JsonResponse
+     */
+    public function updateAction(ResourceNode $resourceNode, Request $request)
+    {
+        $this->assertHasPermission('ADMINISTRATE', $resourceNode);
+
+        $this->resourceNodeManager->update(json_decode($request->getContent(), true), $resourceNode);
 
         return new JsonResponse(
-            $this->resourceNodeManager->serialize($resourceNode, $currentUser)
+            $this->resourceNodeManager->serialize($resourceNode)
         );
     }
 
     /**
      * Publishes a resource node.
      *
-     * @EXT\Route("/publish", name="claro_resource_publish")
+     * @EXT\Route("/publish", name="claro_resource_node_publish")
      * @EXT\Method("PUT")
+     *
+     * @todo to be merge with ResourceController::publishAction (works with ids)
      *
      * @param ResourceNode $resourceNode
      *
@@ -77,7 +97,9 @@ class ResourceNodeController
      */
     public function publishAction(ResourceNode $resourceNode)
     {
-        $this->assertHasPermission('EDIT', $resourceNode);
+        $this->assertHasPermission('ADMINISTRATE', $resourceNode);
+
+        $this->resourceNodeManager->publish($resourceNode);
 
         return new JsonResponse(null, 204);
     }
@@ -85,8 +107,10 @@ class ResourceNodeController
     /**
      * Unpublishes a resource node.
      *
-     * @EXT\Route("/unpublish", name="claro_resource_unpublish")
+     * @EXT\Route("/unpublish", name="claro_resource_node_unpublish")
      * @EXT\Method("PUT")
+     *
+     * @todo to be merge with ResourceController::unpublishAction (works with ids)
      *
      * @param ResourceNode $resourceNode
      *
@@ -94,7 +118,9 @@ class ResourceNodeController
      */
     public function unpublishAction(ResourceNode $resourceNode)
     {
-        $this->assertHasPermission('EDIT', $resourceNode);
+        $this->assertHasPermission('ADMINISTRATE', $resourceNode);
+
+        $this->resourceNodeManager->unpublish($resourceNode);
 
         return new JsonResponse(null, 204);
     }
@@ -125,6 +151,8 @@ class ResourceNodeController
     public function deleteAction(ResourceNode $resourceNode)
     {
         $this->assertHasPermission('DELETE', $resourceNode);
+
+        $this->resourceNodeManager->delete($resourceNode);
 
         return new JsonResponse(null, 204);
     }

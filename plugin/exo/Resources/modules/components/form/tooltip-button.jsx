@@ -1,8 +1,10 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import classes from 'classnames'
 
+// TODO replace with the one from the core (not done for now because structure has slightly changed)
 // TODO inherit from TooltipElement
 
 export class TooltipButton extends Component {

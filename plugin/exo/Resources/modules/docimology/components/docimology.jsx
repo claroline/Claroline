@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {PropTypes as T} from 'prop-types'
 import { connect } from 'react-redux'
 
 import {PageHeader} from '#/main/core/layout/page/components/page.jsx'
@@ -11,8 +12,6 @@ import {t, tex} from '#/main/core/translation'
 import BarChart from './../../components/chart/bar/bar-chart.jsx'
 import PieChart from './../../components/chart/pie/pie-chart.jsx'
 import CircularGauge from './../../components/chart/gauge/circlular-gauge.jsx'
-
-const T = React.PropTypes
 
 const CountCard = props =>
   <div className="count-card panel panel-default">

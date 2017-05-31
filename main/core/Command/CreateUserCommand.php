@@ -40,7 +40,7 @@ class CreateUserCommand extends ContainerAwareCommand
         );
         $this->addOption(
             'ws_creator',
-            'wsc',
+            'w',
             InputOption::VALUE_NONE,
             'When set to true, created user will have the workspace creator role'
         );

@@ -1,4 +1,5 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import debounce from 'lodash/debounce'
 import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
 

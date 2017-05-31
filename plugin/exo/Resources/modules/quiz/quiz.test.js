@@ -1,7 +1,10 @@
 import assert from 'assert'
 import freeze from 'deep-freeze'
-import {resetTypes} from './../items/item-types'
+
 import {spyConsole, mockRouting, mockTranslator} from '#/main/core/tests'
+import {resourceNodeFixture} from '#/main/core/layout/resource/tests'
+
+import {resetTypes} from './../items/item-types'
 import {Quiz} from './quiz'
 
 describe('Quiz', () => {
@@ -65,13 +68,5 @@ function quizFixture() {
         ]
       }
     ]
-  })
-}
-
-function resourceNodeFixture() {
-  return freeze({
-    meta: {
-      editable: true
-    }
   })
 }

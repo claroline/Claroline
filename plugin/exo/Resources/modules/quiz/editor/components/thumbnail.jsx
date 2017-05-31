@@ -1,5 +1,7 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+
 import {t, tex} from '#/main/core/translation'
 import {makeSortable} from './../../../utils/sortable'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'

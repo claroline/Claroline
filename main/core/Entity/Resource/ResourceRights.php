@@ -49,6 +49,8 @@ class ResourceRights
      *     inversedBy="resourceRights"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @var Role
      */
     protected $role;
 
@@ -85,6 +87,11 @@ class ResourceRights
         return $this->id;
     }
 
+    /**
+     * Get Role.
+     *
+     * @return Role
+     */
     public function getRole()
     {
         return $this->role;

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import {PropTypes as T} from 'prop-types'
 import {max, min} from 'd3-array'
 import {scaleLinear, scaleBand} from 'd3-scale'
 import {axisLeft, axisBottom} from 'd3-axis'
@@ -12,8 +13,6 @@ import {
   AXIS_TYPE_LABEL_X,
   AXIS_TYPE_LABEL_Y
 } from './enums'
-
-const T = React.PropTypes
 
 /**
  * Draws a Bar chart

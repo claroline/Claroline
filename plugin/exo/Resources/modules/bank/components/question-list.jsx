@@ -1,4 +1,5 @@
-import React, { Component, PropTypes as T } from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 import {tex, trans, transChoice} from '#/main/core/translation'
 import {getDefinition} from './../../items/item-types'
@@ -12,7 +13,7 @@ import {
   TableHeader,
   TableHeaderCell,
   TableSortingCell
-} from './../../components/table/table.jsx'
+} from '#/main/core/layout/table/components/table.jsx'
 
 const SelectedRow = props =>
   <tr className="selected-rows active">

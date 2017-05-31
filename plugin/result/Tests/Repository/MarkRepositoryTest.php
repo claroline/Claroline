@@ -29,7 +29,7 @@ class MarkRepositoryTest extends TransactionalTestCase
         parent::setUp();
         $this->om = $this->client->getContainer()->get('claroline.persistence.object_manager');
         $this->repo = $this->om->getRepository('ClarolineResultBundle:Mark');
-        $this->persist = new Persister($this->om);
+        $this->persist = new Persister($this->om, $this->client->getContainer());
     }
 
     public function testFindByResult()

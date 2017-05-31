@@ -1,5 +1,7 @@
-import React, { Component, PropTypes as T } from 'react'
-import { DragLayer } from 'react-dnd'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
+import {DragLayer} from 'react-dnd'
+
 import {TYPE_AREA_RESIZER} from './../items/graphic/enums'
 
 function getItemStyles(props) {

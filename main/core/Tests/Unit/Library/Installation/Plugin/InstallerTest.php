@@ -59,7 +59,7 @@ class InstallerTest extends MockeryTestCase
             ->andReturn(['foo' => 'bar']);
         $this->baseInstaller->shouldReceive('install')
             ->once()
-            ->with($this->plugin);
+            ->with($this->plugin, false);
         $this->recorder->shouldReceive('register')
             ->with($this->plugin, ['foo' => 'bar'])
             ->andReturn($pluginEntity);

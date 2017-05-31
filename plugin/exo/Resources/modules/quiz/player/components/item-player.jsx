@@ -1,4 +1,5 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'
 // import {Hint} from './../../../items/components/hint.jsx'

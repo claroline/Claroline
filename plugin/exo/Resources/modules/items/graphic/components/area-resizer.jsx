@@ -1,4 +1,5 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import {makeDraggable} from './../../../utils/dragAndDrop'
 import {TYPE_AREA_RESIZER, DIRECTIONS} from './../enums'

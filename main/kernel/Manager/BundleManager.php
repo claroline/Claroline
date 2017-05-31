@@ -11,13 +11,16 @@
 
 namespace Claroline\KernelBundle\Manager;
 
-use Symfony\Component\HttpKernel\KernelInterface;
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
-use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
 
 class BundleManager
 {
+    use LoggableTrait;
     const BUNDLE_INSTANCE = 'instance';
     const BUNDLE_CONFIG = 'config';
 
@@ -44,27 +47,31 @@ class BundleManager
     public function getActiveBundles($fetchAll = false)
     {
         $entries = parse_ini_file($this->bundlesFile);
-        $activeBundles = array();
-        $configProviderBundles = array();
-        $nonAutoConfigurableBundles = array();
+        $activeBundles = [];
+        $configProviderBundles = [];
+        $nonAutoConfigurableBundles = [];
         $environment = $this->getEnvironment();
         $updateMode = file_exists($this->kernel->getRootDir().'/config/.update');
 
         foreach ($entries as $bundleClass => $isActive) {
             if (($isActive || $fetchAll || $updateMode) && $bundleClass !== 'Claroline\KernelBundle\ClarolineKernelBundle') {
-                $bundle = new $bundleClass($this->kernel);
+                if (class_exists($bundleClass)) {
+                    $bundle = new $bundleClass($this->kernel);
 
-                if ($bundle instanceof ConfigurationProviderInterface) {
-                    $configProviderBundles[] = $bundle;
-                }
+                    if ($bundle instanceof ConfigurationProviderInterface) {
+                        $configProviderBundles[] = $bundle;
+                    }
 
-                if (!$bundle instanceof AutoConfigurableInterface) {
-                    $nonAutoConfigurableBundles[] = $bundle;
-                } elseif ($bundle->supports($environment)) {
-                    $activeBundles[] = array(
-                        self::BUNDLE_INSTANCE => $bundle,
-                        self::BUNDLE_CONFIG => $bundle->getConfiguration($environment),
-                    );
+                    if (!$bundle instanceof AutoConfigurableInterface) {
+                        $nonAutoConfigurableBundles[] = $bundle;
+                    } elseif ($bundle->supports($environment)) {
+                        $activeBundles[] = [
+                          self::BUNDLE_INSTANCE => $bundle,
+                          self::BUNDLE_CONFIG => $bundle->getConfiguration($environment),
+                      ];
+                    }
+                } else {
+                    $this->log("Class {$bundleClass} was not loaded");
                 }
             }
         }
@@ -74,10 +81,10 @@ class BundleManager
                 $config = $provider->suggestConfigurationFor($bundle, $environment);
 
                 if ($config instanceof ConfigurationBuilder) {
-                    $activeBundles[] = array(
+                    $activeBundles[] = [
                         self::BUNDLE_INSTANCE => $bundle,
                         self::BUNDLE_CONFIG => $config,
-                    );
+                    ];
 
                     break;
                 }
@@ -102,5 +109,10 @@ class BundleManager
         $environment = $this->kernel->getEnvironment();
 
         return preg_match('#tmp\d+#', $environment) ? 'dev' : $environment;
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

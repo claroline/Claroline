@@ -1,4 +1,5 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import Modal from 'react-bootstrap/lib/Modal'
 import {trans} from '#/main/core/translation'
 import {listContentTypes, getContentDefinition} from './../../../contents/content-types'

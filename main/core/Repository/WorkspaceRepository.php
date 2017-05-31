@@ -108,7 +108,7 @@ class WorkspaceRepository extends EntityRepository
     {
         return $this->_em
             ->createQuery('
-                SELECT COUNT(w) 
+                SELECT COUNT(w)
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
             ')
             ->getSingleScalarResult();

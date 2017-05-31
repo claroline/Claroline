@@ -1,5 +1,6 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
 import classes from 'classnames'
+import {PropTypes as T} from 'prop-types'
 
 import {tex} from '#/main/core/translation'
 import {Highlight} from './utils/highlight.jsx'

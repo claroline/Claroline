@@ -1,9 +1,10 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Panel from 'react-bootstrap/lib/Panel'
+
 import {trans} from '#/main/core/translation'
 import {getContentDefinition} from './../../../contents/content-types'
-
 
 const ContentHeaderPreview = props =>
   <div className="item-header">

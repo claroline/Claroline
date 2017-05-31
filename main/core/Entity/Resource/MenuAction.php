@@ -52,6 +52,16 @@ class MenuAction
     protected $value;
 
     /**
+     * @ORM\Column(name="group_name", nullable=true)
+     */
+    protected $group;
+
+    /**
+     * @ORM\Column(name="icon", nullable=true)
+     */
+    protected $icon;
+
+    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceType",
      *     inversedBy="actions",
@@ -110,7 +120,7 @@ class MenuAction
      *
      * @return MenuAction
      */
-    public function setResourceType(ResourceType $resourceType)
+    public function setResourceType(ResourceType $resourceType = null)
     {
         $this->resourceType = $resourceType;
 
@@ -166,5 +176,25 @@ class MenuAction
     public function isForm()
     {
         return $this->isForm;
+    }
+
+    public function setGroup($group)
+    {
+        $this->group = $group;
+    }
+
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon = $icon;
+    }
+
+    public function getIcon()
+    {
+        return $this->icon;
     }
 }

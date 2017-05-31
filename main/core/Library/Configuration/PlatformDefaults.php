@@ -112,6 +112,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'direct_third_party_authentication' => false,
             'platform_log_enabled' => true,
             'workspace_users_csv_import_by_full_name' => false,
+            'platform_log_enabled' => true,
         ];
     }
 }

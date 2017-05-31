@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Library\PluginBundle;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
-use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 
 class Configuration implements ConfigurationInterface
 {
@@ -40,6 +40,7 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('config');
+        //maybe remove that line and edit plugins later
         $pluginSection = $rootNode->children('plugin');
         $this->addGeneralSection($pluginSection);
         $this->addWidgetSection($pluginSection);
@@ -70,7 +71,7 @@ class Configuration implements ConfigurationInterface
                         function ($v) use ($plugin) {
                             return !call_user_func_array(
                                 __CLASS__.'::isIconValid',
-                                array($v, $plugin)
+                                [$v, $plugin]
                             );
                         }
                     )
@@ -100,7 +101,7 @@ class Configuration implements ConfigurationInterface
                                         function ($v) use ($listNames, $updateMode) {
                                             return !$updateMode && !call_user_func_array(
                                                 __CLASS__.'::isNameAlreadyExist',
-                                                array($v, $listNames)
+                                                [$v, $listNames]
                                             );
                                         }
                                     )
@@ -114,7 +115,7 @@ class Configuration implements ConfigurationInterface
                                         function ($v) use ($plugin) {
                                             return !call_user_func_array(
                                                 __CLASS__.'::isResourceClassLoadable',
-                                                array($v, $plugin)
+                                                [$v, $plugin]
                                             );
                                         }
                                     )
@@ -125,7 +126,7 @@ class Configuration implements ConfigurationInterface
                                         function ($v) {
                                             return !call_user_func_array(
                                                 __CLASS__.'::isAbstractResourceExtended',
-                                                array($v)
+                                                [$v]
                                             );
                                         }
                                     )
@@ -144,7 +145,7 @@ class Configuration implements ConfigurationInterface
                                     function ($v) use ($plugin) {
                                         return !call_user_func_array(
                                             __CLASS__.'::isResourceIconValid',
-                                            array($v, $plugin)
+                                            [$v, $plugin]
                                         );
                                     }
                                 )
@@ -205,6 +206,12 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->booleanNode('is_form')->defaultFalse()->end()
+                        ->booleanNode('is_async')->defaultFalse()->end()
+                        ->booleanNode('is_custom')->defaultFalse()->end()
+                        ->scalarNode('class')->defaultNull()->end()
+                        ->scalarNode('group')->defaultNull()->end()
+                        ->scalarNode('value')->defaultValue('open')->end()
+                        ->scalarNode('resource_type')->defaultNull()->end()
                     ->end()
                 ->end()
             ->end()
@@ -231,7 +238,7 @@ class Configuration implements ConfigurationInterface
                                     function ($v) use ($pluginFqcn, $widgets, $updateMode) {
                                         return !$updateMode && !call_user_func_array(
                                             __CLASS__.'::isNameAlreadyExist',
-                                            array($pluginFqcn.'-'.$v, $widgets)
+                                            [$pluginFqcn.'-'.$v, $widgets]
                                         );
                                     }
                                 )
@@ -250,7 +257,7 @@ class Configuration implements ConfigurationInterface
                                 function ($v) use ($plugin) {
                                     return !call_user_func_array(
                                         __CLASS__.'::isIconValid',
-                                        array($v, $plugin)
+                                        [$v, $plugin]
                                     );
                                 }
                             )
@@ -280,7 +287,7 @@ class Configuration implements ConfigurationInterface
                                     function ($v) use ($pluginFqcn, $tools, $updateMode) {
                                         return !$updateMode && !call_user_func_array(
                                             __CLASS__.'::isNameAlreadyExist',
-                                            array($pluginFqcn.'-'.$v, $tools)
+                                            [$pluginFqcn.'-'.$v, $tools]
                                         );
                                     }
                                 )
@@ -293,6 +300,8 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('is_exportable')->defaultValue(false)->end()
                         //@todo remove the following line later
                         ->scalarNode('has_options')->defaultValue(false)->end()
+                        ->scalarNode('is_desktop_required')->defaultValue(false)->end()
+                        ->scalarNode('is_workspace_required')->defaultValue(false)->end()
                         ->scalarNode('is_configurable_in_workspace')->defaultValue(false)->end()
                         ->scalarNode('is_configurable_in_desktop')->defaultValue(false)->end()
                         ->scalarNode('is_locked_for_admin')->defaultValue(false)->end()

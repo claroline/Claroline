@@ -51,7 +51,6 @@ class UrlModal extends Component {
 
   onModalLoaded(content) {
     this.setState({isFetching: false, content: content})
-
     document.querySelector(`#${this.id} button[type="submit"]`).addEventListener('click', event => {
       event.preventDefault()
       this.submitForm()
@@ -67,7 +66,6 @@ class UrlModal extends Component {
     const array = []
     const nodes = document.querySelectorAll(`#${this.id} [data-dismiss="modal"]`)
 
-    //because it's an arrayNode collection or something, we can't use forEach directly
     array.forEach.call(nodes, node => node.addEventListener('click', () => this.props.hideModal()))
   }
 }

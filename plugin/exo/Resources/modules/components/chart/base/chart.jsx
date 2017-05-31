@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
-
-const T = React.PropTypes
+import {PropTypes as T} from 'prop-types'
 
 export default class Chart extends Component {
   render() {

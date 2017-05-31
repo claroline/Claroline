@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Serializer\Workspace;
 
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -42,6 +44,8 @@ class WorskpaceSerializer
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
      * @param StrictDispatcher              $eventDispatcher
+     * @param UserManager                   $userManager
+     * @param RoleManager                   $roleManager
      */
     public function __construct(
         ObjectManager $om,
@@ -81,13 +85,13 @@ class WorskpaceSerializer
             'username' => $creator ? $creator->getUsername() : 'undefined',
           ],
           'isModel' => $workspace->isModel(),
-          'roles' => array_map(function ($role) {
+          'roles' => array_map(function (Role $role) {
               return [
                 'id' => $role->getId(),
                 'name' => $role->getName(),
               ];
           }, $workspace->getRoles()->toArray()),
-          'managers' => array_map(function ($manager) {
+          'managers' => array_map(function (User $manager) {
               return [
               'id' => $manager->getId(),
               'uuid' => $manager->getGuid(),

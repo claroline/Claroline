@@ -1,4 +1,6 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+
 import {tex} from '#/main/core/translation'
 
 export const DefaultPreviewComponent = props =>

@@ -32,7 +32,7 @@ class ResultManagerTest extends TransactionalTestCase
         $container = $this->client->getContainer();
         $this->manager = $container->get('claroline.result.result_manager');
         $this->om = $container->get('claroline.persistence.object_manager');
-        $this->persist = new Persister($this->om);
+        $this->persist = new Persister($this->om, $container);
     }
 
     public function testCreateAndDelete()

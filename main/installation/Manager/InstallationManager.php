@@ -56,7 +56,7 @@ class InstallationManager
         $this->environment = $environment;
     }
 
-    public function install(InstallableInterface $bundle, $requiredOnly = true)
+    public function install(InstallableInterface $bundle, $insertPlugin = true)
     {
         $this->fixtureLoader->setLogger($this->logger);
         $this->log(sprintf('<comment>Installing %s %s... </comment>', $bundle->getName(), $bundle->getVersion()));
@@ -73,18 +73,28 @@ class InstallationManager
         }
 
         if ($fixturesDir = $bundle->getRequiredFixturesDirectory($this->environment)) {
-            $this->log('Loading required fixtures...');
-            $this->fixtureLoader->load($bundle, $fixturesDir);
-        }
-
-        if (!$requiredOnly && $fixturesDir = $bundle->getOptionalFixturesDirectory($this->environment)) {
-            $this->log('Loading optional fixtures...');
+            $this->log("Loading required fixtures ($fixturesDir)...");
             $this->fixtureLoader->load($bundle, $fixturesDir);
         }
 
         if ($additionalInstaller) {
             $this->log('Launching post-installation actions...');
             $additionalInstaller->postInstall();
+        }
+
+        if ($insertPlugin) {
+            $validator = $this->container->get('claroline.plugin.validator');
+            $installer = $this->container->get('claroline.plugin.installer');
+            $dbWriter = $this->container->get('claroline.plugin.recorder_database_writer');
+            $dbWriter->setLogger($this->logger);
+            $this->log('Parsing config.yml file for '.get_class($bundle).'...');
+            $installer->validatePlugin($bundle);
+            $dbWriter->insert($bundle, $validator->getPluginConfiguration());
+        }
+
+        if ($fixturesDir = $bundle->getPostInstallFixturesDirectory($this->environment)) {
+            $this->log("Loading post installation fixtures ($fixturesDir)...");
+            $this->fixtureLoader->load($bundle, $fixturesDir);
         }
     }
 

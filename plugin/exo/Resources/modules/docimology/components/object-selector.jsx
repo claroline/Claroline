@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
+import {PropTypes as T} from 'prop-types'
 import { DropdownButton, MenuItem } from 'react-bootstrap'
 import {Icon as ItemIcon} from './../../items/components/icon.jsx'
 import {getDefinition} from './../../items/item-types'
-
-const T = React.PropTypes
 
 export default class ObjectSelector extends Component {
   renderExerciseMenu(exercise) {

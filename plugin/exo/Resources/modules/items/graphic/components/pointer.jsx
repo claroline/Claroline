@@ -1,7 +1,9 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 import Overlay from 'react-bootstrap/lib/Overlay'
-import classes from 'classnames'
+
 import {POINTER_PLACED, POINTER_CORRECT, POINTER_WRONG} from './../enums'
 
 const POINTER_WIDTH = 32

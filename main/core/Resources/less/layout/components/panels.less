@@ -54,4 +54,14 @@
             margin-top: @panel-group-panel-margin; // use a var
         }
     }
+
+    .panel-title > a {
+        display: block; // make the click zone fill the parent block
+        cursor: pointer; // the <a> tag to toggle the panel has no href, so the cursor do not change properly
+    }
+
+    .panel-title.opened {
+        color: @brand-primary;
+        font-weight: bold;
+    }
 }

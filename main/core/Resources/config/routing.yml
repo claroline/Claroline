@@ -143,6 +143,13 @@ claro_admin_portal_config:
     prefix: admin/portal
     type: annotation
 
+claro_resources_node_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Resource/ResourceNodeController.php"
+    prefix: api
+    type: annotation
+    options:
+        expose: true
+
 claro_resource:
     resource: "@ClarolineCoreBundle/Controller/ResourceController.php"
     prefix: resource

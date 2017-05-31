@@ -12,7 +12,12 @@
 namespace Claroline\ScormBundle;
 
 use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\ScormBundle\Library\Installation\AdditionalInstaller;
 
 class ClarolineScormBundle extends PluginBundle
 {
+    public function getAdditionalInstaller()
+    {
+        return new AdditionalInstaller();
+    }
 }

@@ -1,4 +1,5 @@
-import React, { PropTypes as T } from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import DropdownButton from 'react-bootstrap/lib/DropdownButton'
 
@@ -105,7 +106,7 @@ const MoreAction = props =>
   <TooltipElement
     id="page-more-title"
     position="bottom"
-    tip="Show more actions"
+    tip={t('show_more_actions')}
   >
     <DropdownButton
       id="page-more"

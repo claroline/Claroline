@@ -1,6 +1,6 @@
 import {tex, transChoice} from '#/main/core/translation'
+import {notBlank, number, chain} from '#/main/core/validation'
 
-import {notBlank, number, chain} from './validate'
 import {makeId} from './utils'
 
 export const keywords = {}

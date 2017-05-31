@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
+import {PropTypes as T} from 'prop-types'
 import Bar from './bar.jsx'
-
-const T = React.PropTypes
 
 /**
  * Represents data on a Bar chart.

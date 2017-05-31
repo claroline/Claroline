@@ -1,4 +1,5 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 
@@ -6,7 +7,7 @@ import {tex} from '#/main/core/translation'
 import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
 import {ColorPicker} from './../../../components/form/color-picker.jsx'
 import {TooltipButton} from './../../../components/form/tooltip-button.jsx'
-import {Textarea} from './../../../components/form/textarea.jsx'
+import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
 
 export class AreaPopover extends Component {
   constructor(props) {

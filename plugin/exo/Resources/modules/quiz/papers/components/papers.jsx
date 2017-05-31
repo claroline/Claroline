@@ -1,4 +1,6 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+
 import {connect} from 'react-redux'
 
 import quizSelect from './../../selectors'

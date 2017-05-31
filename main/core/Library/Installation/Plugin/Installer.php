@@ -88,9 +88,9 @@ class Installer
     {
         $this->checkInstallationStatus($plugin, false);
         $this->validatePlugin($plugin);
-        $this->log('Saving plugin configuration...');
+        $this->log('Saving configuration...');
         $pluginEntity = $this->recorder->register($plugin, $this->validator->getPluginConfiguration());
-        $this->baseInstaller->install($plugin);
+        $this->baseInstaller->install($plugin, false);
 
         if (!$this->pluginManager->isReady($pluginEntity) || !$this->pluginManager->isActivatedByDefault($pluginEntity)) {
             $errors = $this->pluginManager->getMissingRequirements($pluginEntity);
@@ -143,7 +143,7 @@ class Installer
         $this->recorder->update($plugin, $this->validator->getPluginConfiguration());
     }
 
-    private function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)
+    public function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)
     {
         $this->log(sprintf('<fg=blue>Checking installation status for plugin %s</fg=blue>', $plugin->getName()));
 
@@ -156,9 +156,9 @@ class Installer
         }
     }
 
-    private function validatePlugin(PluginBundleInterface $plugin)
+    public function validatePlugin(PluginBundleInterface $plugin)
     {
-        $this->log('Validating plugin...');
+        $this->log('Validating configuration...');
         $errors = $this->validator->validate($plugin);
 
         if (0 !== count($errors)) {
@@ -170,6 +170,19 @@ class Installer
             }
 
             throw new \Exception($report);
+        }
+    }
+
+    public function updateAllConfigurations()
+    {
+        $bundles = $this->pluginManager->getInstalledBundles();
+
+        foreach ($bundles as $bundle) {
+            $this->log('Updating configuration for '.get_class($bundle['instance']));
+            $this->validator->activeUpdateMode();
+            $this->validatePlugin($bundle['instance']);
+            $this->validator->deactivateUpdateMode();
+            $this->recorder->update($bundle['instance'], $this->validator->getPluginConfiguration());
         }
     }
 }

@@ -488,6 +488,7 @@
     "questions_export": "Export selected questions",
     "questions_selected": "{1} <b>1</b> question selected|[2,Inf[ <b>%count%</b> questions selected",
     "questions_share": "Share selected questions",
+    "quiz_total_score": "Total score",
     "quiz_total_score_on": "Quiz score",
     "quiz_total_score_on_mode_default": "The quiz is recorded on the sum of the questions",
     "quiz_total_score_on_mode_custom": "The quiz is recorded on a custom value",

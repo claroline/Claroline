@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import Chart from './../base/chart.jsx'
 import DataSeries from './../pie/data-series.jsx'
-
-const T = React.PropTypes
 
 /**
  * Draws a Circular gauge

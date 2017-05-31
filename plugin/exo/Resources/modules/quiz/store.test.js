@@ -15,9 +15,6 @@ describe('createStore', () => {
     const store = createStore(state)
     ensure.equal(store.getState(), {
       resourceNode: {id: '1'},
-      page: {
-        fullscreen: false
-      },
       noServer: false,
       testMode: false,
       currentRequests: 0,
