@@ -1,8 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
+
+import {setIfError, notBlank, number, gteZero, chain} from '#/main/core/validation'
+import {makeActionCreator} from '#/main/core/utilities/redux'
+
 import {Open as component} from './editor.jsx'
 import {ITEM_CREATE} from './../../quiz/editor/actions'
-import {setIfError, notBlank, number, gteZero, chain} from './../../utils/validate'
-import {makeActionCreator} from '#/main/core/utilities/redux'
 import {SCORE_MANUAL} from './../../quiz/enums'
 
 const UPDATE = 'UPDATE'

@@ -7,9 +7,14 @@ const meta = createSelector(
   (resourceNode) => resourceNode.meta
 )
 
+const rights = createSelector(
+  [resourceNode],
+  (resourceNode) => resourceNode.rights
+)
+
 const editable = createSelector(
-  [meta],
-  (meta) => meta.editable
+  [rights],
+  (rights) => rights.current.edit
 )
 
 const published = createSelector(

@@ -4,6 +4,8 @@ import configureMockStore from 'redux-mock-store'
 import merge from 'lodash/merge'
 
 import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
+import {resourceNodeFixture} from '#/main/core/layout/resource/tests'
+
 import {registerItemType} from './../../../items/item-types'
 import {Paper} from './paper.jsx'
 import {SHOW_SCORE_AT_CORRECTION} from './../../enums'
@@ -21,11 +23,7 @@ describe('<Paper/>', () => {
     registerFixtureType({name: 'baz', type: 'baz/quz'})
 
     const store = configureMockStore()({
-      resourceNode: {
-        meta: {
-          editable: true
-        }
-      },
+      resourceNode: resourceNodeFixture(),
       quiz: {
         meta: {
           canViewPapers: true

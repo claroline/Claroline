@@ -1,4 +1,6 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+
 import {SelectionText} from './utils/selection-text.jsx'
 import {getReactAnswerSelections} from './utils/selection-answer.jsx'
 

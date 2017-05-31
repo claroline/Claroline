@@ -1,4 +1,5 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import {DragLayer} from 'react-dnd'
 import {TYPE_AREA_RESIZER} from './../enums'
 import {resizeArea} from './../resize'

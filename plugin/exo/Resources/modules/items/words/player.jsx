@@ -1,5 +1,7 @@
-import React, {PropTypes as T} from 'react'
-import {Textarea} from './../../components/form/textarea.jsx'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+
+import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
 
 export const WordsPlayer = (props) =>
   <Textarea

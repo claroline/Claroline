@@ -56,16 +56,6 @@ class ThemeManager
     }
 
     /**
-     * Returns the names of the non-custom themes.
-     *
-     * @return array
-     */
-    public static function listStockThemeNames()
-    {
-        return self::$stockThemes;
-    }
-
-    /**
      * Returns all the registered themes.
      *
      * @return Theme[]
@@ -89,6 +79,7 @@ class ThemeManager
         $themeNames = [];
 
         foreach ($themes as $theme) {
+            //fetch stock themes from database or config.yml later
             if ($customOnly && in_array($theme->getName(), self::$stockThemes)) {
                 continue;
             }

@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
+import {PropTypes as T} from 'prop-types'
 import {pie} from 'd3-shape'
 
 import Arc from './arc.jsx'
-
-const T = React.PropTypes
 
 export default class DataSeries extends Component {
   render() {

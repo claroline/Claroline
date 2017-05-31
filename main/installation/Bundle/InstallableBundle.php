@@ -25,6 +25,11 @@ abstract class InstallableBundle extends Bundle implements InstallableInterface
         return;
     }
 
+    public function getPostInstallFixturesDirectory($environment)
+    {
+        return;
+    }
+
     public function getOptionalFixturesDirectory($environment)
     {
         return;

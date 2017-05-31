@@ -15,18 +15,20 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Testing\Persister as ClarolinePersister;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Entity\Mark;
 use Claroline\ResultBundle\Entity\Result;
 
-class Persister
+class Persister extends ClarolinePersister
 {
     private $om;
     private $userRole;
     private $resultType;
 
-    public function __construct(ObjectManager $om)
+    public function __construct(ObjectManager $om, $container)
     {
+        parent::__construct($om, $container);
         $this->om = $om;
     }
 
@@ -54,7 +56,6 @@ class Persister
         $workspace->setCode($username);
         $workspace->setGuid($username);
         $this->om->persist($workspace);
-
         $user->setPersonalWorkspace($workspace);
 
         return $user;

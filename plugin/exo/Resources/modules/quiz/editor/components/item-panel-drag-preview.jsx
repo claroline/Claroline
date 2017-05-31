@@ -1,5 +1,7 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import Panel from 'react-bootstrap/lib/Panel'
+
 import {trans} from '#/main/core/translation'
 import {getDefinition} from './../../../items/item-types'
 import {Icon as ItemIcon} from './../../../items/components/icon.jsx'

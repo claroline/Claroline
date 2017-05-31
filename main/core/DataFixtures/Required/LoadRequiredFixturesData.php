@@ -30,12 +30,20 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
         $this->container = $container;
     }
 
+    private function getDir()
+    {
+        $reflector = new \ReflectionClass(get_class($this));
+        $filename = $reflector->getFileName();
+
+        return dirname($filename);
+    }
+
     /**
      * {@inheritdoc}
      */
     public function load(ObjectManager $manager)
     {
-        $fixturesDir = __DIR__.DIRECTORY_SEPARATOR.'Data';
+        $fixturesDir = $this->getDir().DIRECTORY_SEPARATOR.'Data';
         $om = $this->container->get('claroline.persistence.object_manager');
 
         $iterator = new \RecursiveIteratorIterator(

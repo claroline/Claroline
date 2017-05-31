@@ -493,6 +493,7 @@ class UserManager
             $isMailNotified = isset($user[13]) ? (bool) $user[13] : $enableEmailNotifaction;
 
             if ($modelName) {
+                //TODO MODEL TEST
                 $model = $this->objectManager
                     ->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace')
                     ->findOneByCode($modelName);
@@ -686,6 +687,7 @@ class UserManager
 
         //add "my public documents" folder
         $resourceManager = $this->container->get('claroline.manager.resource_manager');
+        //TODO MODEL
         $resourceManager->addPublicFileDirectory($workspace);
         $workspace->setIsPersonal(true);
         $user->setPersonalWorkspace($workspace);

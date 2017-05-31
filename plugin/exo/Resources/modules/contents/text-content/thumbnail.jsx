@@ -1,4 +1,5 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 
 export class TextContentThumbnail extends Component {
   render() {

@@ -1,4 +1,5 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 export const CheckGroup = ({checkId, label, checked, help, onChange}) =>
   <div className="form-group check-group">

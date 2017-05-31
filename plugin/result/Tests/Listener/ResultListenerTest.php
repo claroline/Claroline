@@ -36,7 +36,7 @@ class ResultListenerTest extends TransactionalTestCase
         $container = $this->client->getContainer();
         $this->listener = $container->get('claroline.result.result_listener');
         $this->om = $container->get('claroline.persistence.object_manager');
-        $this->persist = new Persister($this->om);
+        $this->persist = new Persister($this->om, $container);
     }
 
     public function testOnCreateForm()

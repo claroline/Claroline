@@ -1,4 +1,5 @@
-import React, { PropTypes as T } from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 
 import {DEFAULT_PAGE_SIZE} from '#/main/core/layout/pagination/selectors'
 import {countPages} from '#/main/core/layout/pagination/utils'

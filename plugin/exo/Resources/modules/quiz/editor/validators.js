@@ -1,4 +1,5 @@
-import {notBlank, number, gteZero, chain, setIfError} from './../../utils/validate'
+import {notBlank, number, gteZero, chain, setIfError} from '#/main/core/validation'
+
 import {getDefinition} from './../../items/item-types'
 import {getContentDefinition} from './../../contents/content-types'
 

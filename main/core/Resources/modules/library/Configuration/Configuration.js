@@ -20,10 +20,12 @@ class Configuration {
   getUsersAdministrationActions() {
     let actions = []
 
-    for (var bundle in this.config) {
-      actions = union(actions, get(this.config[bundle], 'actions', []).filter(el => {
-        return el.type === 'administration_users'
-      }))
+    for (let bundle in this.config) {
+      if (this.config.hasOwnProperty(bundle)) {
+        actions = union(actions, get(this.config[bundle], 'actions', []).filter(el => {
+          return el.type === 'administration_users'
+        }))
+      }
     }
 
     return actions
@@ -32,10 +34,12 @@ class Configuration {
   getWorkspacesAdministrationActions() {
     let actions = []
 
-    for (var bundle in this.config) {
-      actions = union(actions, get(this.config[bundle], 'actions', []).filter(el => {
-        return el.type === 'administration_workspaces'
-      }))
+    for (let bundle in this.config) {
+      if (this.config.hasOwnProperty(bundle)) {
+        actions = union(actions, get(this.config[bundle], 'actions', []).filter(el => {
+          return el.type === 'administration_workspaces'
+        }))
+      }
     }
 
     return actions
@@ -45,8 +49,10 @@ class Configuration {
 // default actions. Maybe do something cleaner later
 
 function getDefaultConfig(config) {
-  for (var bundle in config) {
-    setDefaultBundle(config[bundle])
+  for (let bundle in config) {
+    if (config.hasOwnProperty(bundle)) {
+      setDefaultBundle(config[bundle])
+    }
   }
 
   return config

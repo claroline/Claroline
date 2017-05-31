@@ -3,6 +3,8 @@ import {mount} from 'enzyme'
 import configureMockStore from 'redux-mock-store'
 
 import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
+import {resourceNodeFixture} from '#/main/core/layout/resource/tests'
+
 import {Papers} from './papers.jsx'
 import {SHOW_SCORE_AT_CORRECTION} from './../../enums'
 
@@ -16,11 +18,7 @@ describe('<Papers/>', () => {
 
   it('renders a list of papers', () => {
     const store = configureMockStore()({
-      resourceNode: {
-        meta: {
-          editable: true
-        }
-      },
+      resourceNode: resourceNodeFixture(),
       quiz: {
         meta: {
           canViewPapers: true

@@ -1,4 +1,5 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import tinycolor from 'tinycolor2'
 import {Pointer} from './pointer.jsx'
 import {SHAPE_RECT} from './../enums'

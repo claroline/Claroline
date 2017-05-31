@@ -1,4 +1,5 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import {asset} from '#/main/core/asset'
 
 export const AudioContentPlayer = (props) =>

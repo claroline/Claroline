@@ -1,6 +1,7 @@
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import React, {PropTypes as T} from 'react'
 import {utils} from './utils/utils'
 import {Feedback} from '../components/feedback-btn.jsx'
 import {WarningIcon} from './utils/warning-icon.jsx'

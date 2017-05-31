@@ -3,9 +3,9 @@ plugin:
 
   admin_tools:
     - name: claroline_cursus_tool
-      class: list-alt
+      class: institution
     - name: claroline_cursus_tool_registration
-      class: list-alt
+      class: institution
 
   widgets:
     - name: claroline_cursus_courses_registration_widget

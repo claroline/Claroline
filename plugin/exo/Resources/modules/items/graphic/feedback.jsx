@@ -1,4 +1,6 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+
 import {asset} from '#/main/core/asset'
 import {POINTER_CORRECT, POINTER_WRONG} from './enums'
 import {PointableImage} from './components/pointable-image.jsx'

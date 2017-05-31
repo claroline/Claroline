@@ -30,7 +30,7 @@ export class Quiz {
       [MODAL_CONTENT, ContentModal]
     ])
 
-    const quizData = decorate(normalize(rawQuizData), getDecorators(), rawResourceNodeData.meta.editable)
+    const quizData = decorate(normalize(rawQuizData), getDecorators(), rawResourceNodeData.rights.current.edit)
     this.store = createStore(Object.assign({noServer: noServer, resourceNode: rawResourceNodeData}, quizData))
     this.dndQuiz = DragDropContext(TouchBackend({ enableMouseEvents: true }))(QuizComponent)
     makeRouter(this.store.dispatch.bind(this.store))

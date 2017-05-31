@@ -1,4 +1,5 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import Popover from 'react-bootstrap/lib/Popover'
 import Overlay from 'react-bootstrap/lib/Overlay'
 

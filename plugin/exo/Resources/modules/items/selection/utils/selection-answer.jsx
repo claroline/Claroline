@@ -1,9 +1,11 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import cloneDeep from 'lodash/cloneDeep'
+
 import {utils} from './utils'
 import {Feedback} from '../../components/feedback-btn.jsx'
 import {SolutionScore} from '../../components/score.jsx'
-import cloneDeep from 'lodash/cloneDeep'
 import {SCORE_SUM} from './../../../quiz/enums'
 
 /**

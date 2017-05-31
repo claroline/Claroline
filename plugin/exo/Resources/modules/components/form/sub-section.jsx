@@ -1,4 +1,5 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import Collapse from 'react-bootstrap/lib/Collapse'
 
 export const SubSection = props =>

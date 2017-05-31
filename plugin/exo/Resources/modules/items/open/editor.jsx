@@ -1,4 +1,5 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import {actions} from './editor'
 import {tex} from '#/main/core/translation'

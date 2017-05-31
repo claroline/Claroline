@@ -10,8 +10,8 @@ const papers = state => state.papers.papers
 const currentPaper = createSelector(
   papers,
   currentPaperId,
-  (papers, currentId) => {
-    return papers[currentId]
+  (papers, currentPaperId) => {
+    return papers[currentPaperId]
   }
 )
 

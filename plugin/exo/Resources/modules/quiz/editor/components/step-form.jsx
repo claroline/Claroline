@@ -1,7 +1,9 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
+
 import {t} from '#/main/core/translation'
 import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
-import {Textarea} from './../../../components/form/textarea.jsx'
+import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
 
 export const StepForm = props => {
   return (

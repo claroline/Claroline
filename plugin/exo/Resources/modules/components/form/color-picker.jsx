@@ -1,4 +1,5 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import {TwitterPicker} from 'react-color'
 import Overlay from 'react-bootstrap/lib/Overlay'

@@ -546,6 +546,7 @@ class WorkspaceManager
     }
 
     /**
+
      * @param User     $user
      * @param string[] $roleNames
      *
@@ -1234,12 +1235,35 @@ class WorkspaceManager
         $this->om->endFlushSuite();
     }
 
-    public function copy(Workspace $workspace, Workspace $newWorkspace, User $user = null)
+    public function isManager(Workspace $workspace, TokenInterface $token)
+    {
+        $roles = array_map(
+          function ($role) {
+              return $role->getRole();
+          },
+          $token->getRoles()
+      );
+
+        $managerRole = $this->roleManager->getManagerRole($workspace);
+
+        if ($workspace->getCreator() === $token->getUser()) {
+            return true;
+        }
+
+        foreach ($roles as $role) {
+            if (is_object($role) && $role->getName() === $managerRole) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function copy(Workspace $workspace, Workspace $newWorkspace)
     {
         $newWorkspace->setGuid(uniqid('', true));
         $this->createWorkspace($newWorkspace);
-
-        $user = $this->container->get('security.token_storage')->getToken() && !$user ?
+        $user = $this->container->get('security.token_storage')->getToken() ?
           $this->container->get('security.token_storage')->getToken()->getUser() :
           $this->container->get('claroline.manager.user_manager')->getDefaultUser();
 
@@ -1257,10 +1281,7 @@ class WorkspaceManager
         return $newWorkspace;
     }
 
-    public function duplicateRoot(
-      Workspace $source,
-      Workspace $workspace,
-      User $user)
+    public function duplicateRoot(Workspace $source, Workspace $workspace, User $user)
     {
         $this->log('Duplicating root directory...');
         $rootDirectory = new Directory();

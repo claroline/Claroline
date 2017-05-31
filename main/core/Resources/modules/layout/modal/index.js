@@ -38,3 +38,21 @@ export function makeModal(type, props, fading, fadeCallback = () => true, hideCa
 
   return React.createElement(modals[type], Object.assign(baseProps, props))
 }
+
+export function makeModalFromUrl(fading, hideCallback = () => true, url) {
+  return fetch(url, {method: 'GET', credentials: 'include'}).then(response => {
+    return response.text()
+  }).then(text => {
+    const baseProps = {
+      show: !fading,
+      hideModal:() => hideCallback(),
+      content: text
+    }
+
+    return React.createElement(UrlModal, baseProps)
+  })
+
+
+
+
+}

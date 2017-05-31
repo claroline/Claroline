@@ -119,7 +119,7 @@ class OperationExecutor
             if (array_key_exists('bundles', $extra)) {
                 //this is only valid for installable bundles
                 $bundles = array_filter($extra['bundles'], function ($var) {
-                    return in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var)) ?  true : false;
+                    return in_array('Claroline\InstallationBundle\Bundle\InstallableInterface', class_implements($var)) ? true : false;
                 });
 
                 foreach ($bundles as $bundle) {
@@ -288,7 +288,7 @@ class OperationExecutor
 
     private function getBundlesByFqcn()
     {
-        $byFqcn = array();
+        $byFqcn = [];
 
         foreach ($this->kernel->getBundles() as $bundle) {
             $fqcn = $bundle->getNamespace() ?

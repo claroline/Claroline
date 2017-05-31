@@ -8,7 +8,6 @@ import {
 } from 'redux'
 import thunk from 'redux-thunk'
 
-import {reducer as pageReducer}     from '#/main/core/layout/page/reducer'
 import {reducer as modalReducer}    from '#/main/core/layout/modal/reducer'
 import {reducer as resourceReducer} from '#/main/core/layout/resource/reducer'
 
@@ -32,7 +31,6 @@ const identity = (state = null) => state
 export function makeReducer(editable) {
   return combineReducers({
     resourceNode: resourceReducer,
-    page: pageReducer, // page features like fullscreen
 
     noServer: identity,
     modal: modalReducer,

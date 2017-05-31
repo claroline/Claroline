@@ -19,11 +19,14 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MaskDecoder
 {
+    //this must be coherent with the MaskManager default array
+    //@todo: unify this with the MaskManager
     const OPEN = 1;
     const COPY = 2;
     const EXPORT = 4;
-    const EDIT = 8;
-    const DELETE = 16;
+    const DELETE = 8;
+    const EDIT = 16;
+    const ADMINISTRATE = 32;
 
     /**
      * @ORM\Id

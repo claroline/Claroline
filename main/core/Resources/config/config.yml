@@ -1,0 +1,232 @@
+plugin:
+    resource_actions:
+        # the value come from the MaskDecoder Entity
+        # specific menus for a resource
+        - name: compose
+          is_form: false
+          is_async: false
+          is_custom: true
+          group: activity
+          class: activity-class
+          resource_type: activity
+          value: edit
+
+        - name: update_file
+          is_form: false
+          is_async: true
+          is_custom: true
+          group: core
+          class: file-class
+          resource_type: file
+          value: edit
+
+        # generic actions
+        - name: export
+          is_form: false
+          is_async: true
+          is_custom: false
+          group: core
+          class: changeme
+          value: export
+
+        - name: delete
+          is_form: false
+          is_async: true
+          is_custom: false
+          group: core
+          class: changeme
+          value: delete
+
+        - name: edit-rights
+          is_form: true
+          is_async: true
+          is_custom: false
+          group: core
+          class: changeme
+          value: administrate
+
+        - name: open-tracking
+          is_form: false
+          is_async: true
+          is_custom: false
+          group: core
+          class: changeme
+          value: administrate
+
+        - name: rename
+          is_form: true
+          is_async: true
+          is_custom: false
+          group: core
+          class: changeme
+          value: administrate
+
+        - name: edit-properties
+          is_form: true
+          is_async: true
+          is_custom: false
+          group: core
+          class: changeme
+          value: administrate
+
+    resources:
+        - class: Claroline\CoreBundle\Entity\Resource\File
+          name: file
+          is_exportable: true
+          activity_rules:
+            - action: resource-read
+
+        - class: Claroline\CoreBundle\Entity\Resource\Directory
+          name: directory
+          is_exportable: true
+
+        - class: Claroline\CoreBundle\Entity\Resource\Text
+          name: text
+          is_exportable: true
+
+        - class: Claroline\CoreBundle\Entity\Resource\ResourceShortcut
+          name: resource_shortcut
+          is_exportable: false
+
+        - class: Claroline\CoreBundle\Entity\Resource\Activity
+          name: activity
+          is_exportable: false
+
+    admin_tools:
+        - name: platform_parameters
+          class: cog
+        - name: user_management
+          class: user
+        - name: workspace_management
+          class: book
+        - name: registration_to_workspace
+          class: book
+        - name: desktop_and_home
+          class: home
+        - name: platform_logs
+          class: bars
+        - name: platform_analytics
+          class: bar-chart-o
+        - name: roles_management
+          class: users
+        - name: widgets_management
+          class: list-alt
+        - name: organization_management
+          class: building
+
+    widgets:
+        - name: core_resource_logger
+          is_configurable: true
+          is_displayable_in_desktop: true
+          is_displayable_in_workspace: true
+        - name: simple_text
+          is_configurable: true
+          is_displayable_in_desktop: true
+          is_displayable_in_workspace: true
+        - name: my_workspaces
+          is_configurable: false
+          is_displayable_in_desktop: true
+          is_displayable_in_workspace: false
+        - name: my_profile
+          is_configurable: false
+          is_displayable_in_desktop: true
+          is_displayable_in_workspace: false
+        - name: resources_widget
+          is_configurable: true
+          is_displayable_in_desktop: true
+          is_displayable_in_workspace: true
+
+    tools:
+        - name: home
+          class: home
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: true
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: true
+          is_locked_for_admin: false
+          is_anonymous_excluded: false
+        - name: parameters
+          class: cog
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: true
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: false
+          is_locked_for_admin: true
+          is_anonymous_excluded: true
+        - name: resource_manager
+          class: folder-open
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: true
+          is_configurable_in_workspace: true
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: true
+          is_locked_for_admin: false
+          is_anonymous_excluded: false
+        - name: logs
+          class: list
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: false
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: false
+          is_locked_for_admin: false
+          is_anonymous_excluded: true
+        - name: analytics
+          class: bar-chart-o
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: false
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: false
+          is_locked_for_admin: false
+          is_anonymous_excluded: true
+        - name: users
+          class: user
+          is_displayable_in_workspace: true
+          is_displayable_in_desktop: false
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: true
+          is_exportable: false
+          is_locked_for_admin: false
+          is_anonymous_excluded: true
+        - name: my_contacts
+          class: users
+          is_displayable_in_workspace: false
+          is_displayable_in_desktop: true
+          is_configurable_in_workspace: false
+          is_configurable_in_desktop: false
+          is_desktop_required: false
+          is_workspace_required: false
+          is_exportable: false
+          is_locked_for_admin: false
+          is_anonymous_excluded: true
+
+    additional_action:
+        - action: edit
+          class: fa-pencil
+          displayed_name: edit
+          type: admin_user_action
+        - action: show_workspaces
+          class: fa-book
+          displayed_name: show_workspaces
+          type: admin_user_action
+
+    themes:
+        - name: Claroline
+        - name: Claroline Black
+        - name: Claroline Mint
+        - name: Claroline Ruby

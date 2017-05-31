@@ -1,7 +1,9 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import {utils} from './utils'
 import cloneDeep from 'lodash/cloneDeep'
+
+import {utils} from './utils'
 
 /**
  * utility method for building the selection array

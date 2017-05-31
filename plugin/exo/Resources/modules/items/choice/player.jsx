@@ -1,4 +1,6 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
+
 import shuffle from 'lodash/shuffle'
 import classes from 'classnames'
 
