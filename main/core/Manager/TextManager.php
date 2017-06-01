@@ -48,4 +48,11 @@ class TextManager
 
         return $text;
     }
+
+    public function getLastContentRevision(Text $text)
+    {
+        $revisionRepo = $this->om->getRepository('ClarolineCoreBundle:Resource\Revision');
+
+        return $revisionRepo->getLastRevision($text)->getContent();
+    }
 }

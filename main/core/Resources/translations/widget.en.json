@@ -3,6 +3,7 @@
     "my_profile": "My profile",
     "my_workspaces": "My workspaces",
     "resources_widget": "Resources list",
+    "resource_text": "Display a resource text",
     "simple_text": "Text",
     "type": "Type",
     "widget_configuration_copy_warning": "An error occured while copying configuration of widget <%widgetInstanceName%>",

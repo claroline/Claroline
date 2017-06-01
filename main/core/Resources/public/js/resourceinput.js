@@ -38,6 +38,7 @@
         var pickerName = 'formResourcePicker';
         var field = $('#' + id);
         var element = field.next('.input-group');
+        var customParameters = processCustomParameters(field.data());
 
         $('input.form-control', element)
             .on('focus', function () {
@@ -68,8 +69,6 @@
                         });
                 });
             });
-
-        var customParameters = processCustomParameters(field.data());
 
         var name = field.data('name');
 
