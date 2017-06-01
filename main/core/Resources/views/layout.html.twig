@@ -73,7 +73,7 @@
         {% endif %}
     {% endif %}
 
-    <div id="wrap" class="app-content container-fluid">
+    <div id="wrap"{% block wrap_default_classes %} class="app-content container-fluid"{% endblock %}>
         {% if (hideBreadcrumb is not defined or not hideBreadcrumb) and not isRenderedInIframe %}
             {% block breadcrumb %}{% endblock %}
         {% endif %}
