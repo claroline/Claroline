@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle\API\Finder;
 
 use Claroline\CoreBundle\API\FinderInterface;
-use Claroline\CoreBundle\Entity\Workspace\Workspace as WorkspaceEntity;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -38,11 +37,6 @@ class Workspace implements FinderInterface
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [])
     {
-        // retrieves searchable text fields
-        $baseFieldsName = WorkspaceEntity::getWorkspaceSearchableFields();
-        //Admin can see everything, but the others... well they can only see their own organizations.
-        $customFields = ['createdAfter', 'createdBefore'];
-
         if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
             /** @var User $currentUser */
             $currentUser = $this->tokenStorage->getToken()->getUser();
@@ -53,28 +47,23 @@ class Workspace implements FinderInterface
         }
 
         foreach ($searches as $filterName => $filterValue) {
-            // todo : add organization filter
-            if (in_array($filterName, $baseFieldsName)) {
-                $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
-            } else {
-                if (!in_array($filterName, $customFields)) {
-                    if ('true' === $filterValue || 'false' === $filterValue) {
-                        $filterValue = 'true' === $filterValue;
-                        $qb->andWhere("obj.{$filterName} = :{$filterName}");
-                        $qb->setParameter($filterName, $filterValue);
-                    }
+            switch ($filterName) {
+              case 'createdAfter':
+                  $qb->andWhere("obj.creationDate >= :{$filterName}");
+                  $qb->setParameter($filterName, date('Y-m-d', $filterValue));
+                  break;
+              case 'createdBefore':
+                  $qb->andWhere("obj.creationDate <= :{$filterName}");
+                  $qb->setParameter($filterName, date('Y-m-d', $filterValue));
+                  break;
+              default:
+                if ('true' === $filterValue || 'false' === $filterValue || true === $filterValue || false === $filterValue) {
+                    $filterValue = is_string($filterValue) ? 'true' === $filterValue : $filterValue;
+                    $qb->andWhere("obj.{$filterName} = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
                 } else {
-                    switch ($filterName) {
-                      case 'createdAfter':
-                          $qb->andWhere("obj.creationDate >= :{$filterName}");
-                          $qb->setParameter($filterName, date('Y-m-d', $filterValue));
-                          break;
-                      case 'createdBefore':
-                          $qb->andWhere("obj.creationDate <= :{$filterName}");
-                          $qb->setParameter($filterName, date('Y-m-d', $filterValue));
-                          break;
-                  }
+                    $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
+                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                 }
             }
         }
