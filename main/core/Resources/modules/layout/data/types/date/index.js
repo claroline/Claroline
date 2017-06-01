@@ -12,7 +12,6 @@ export const dateDefinition = {
    * @return {string}
    */
   parse: (display) => serverDate(display),
-  //parse: (display) => display,
 
   /**
    * Renders ISO date into locale date.

@@ -83,7 +83,10 @@ actions.fetchWorkspaces = () => (dispatch, getState) => {
   // add filters
   const filters = listSelect.filters(state)
   if (0 < filters.length) {
-    queryString += filters.map(filter => `filters[${filter.property}]=${filter.value}`).join('&')
+    queryString += filters.map(filter => {
+      let value = filter.value.constructor.name === 'Moment' ?  filter.value.unix(): filter.value
+      return `filters[${filter.property}]=${value}`
+    }).join('&')
   }
 
   // add sort by
