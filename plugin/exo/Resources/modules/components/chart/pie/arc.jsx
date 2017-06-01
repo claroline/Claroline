@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {PropTypes as T} from 'prop-types'
 import {arc} from 'd3-shape'
-
 /**
  * Draws an Arc on a Pie chart.
  */

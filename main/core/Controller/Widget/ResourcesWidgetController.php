@@ -12,10 +12,14 @@
 namespace Claroline\CoreBundle\Controller\Widget;
 
 use Claroline\CoreBundle\Entity\Widget\ResourcesWidgetConfig;
+use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Form\ResourcesWidgetConfigurationType;
+use Claroline\CoreBundle\Form\Widget\ResourcesTextConfigurationType;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\ResourcesWidgetManager;
+use Claroline\CoreBundle\Manager\TextManager;
+use Claroline\CoreBundle\Manager\WidgetManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -31,6 +35,8 @@ class ResourcesWidgetController extends Controller
     private $resourceManager;
     private $resourcesWidgetManager;
     private $translator;
+    private $textManager;
+    private $widgetManager;
 
     /**
      * @DI\InjectParams({
@@ -38,7 +44,9 @@ class ResourcesWidgetController extends Controller
      *     "requestStack"           = @DI\Inject("request_stack"),
      *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
      *     "resourcesWidgetManager" = @DI\Inject("claroline.manager.resources_widget_manager"),
-     *     "translator"             = @DI\Inject("translator")
+     *     "translator"             = @DI\Inject("translator"),
+     *     "textManager"            = @DI\Inject("claroline.manager.text_manager"),
+     *     "widgetManager"          = @DI\Inject("claroline.manager.widget_manager")
      * })
      */
     public function __construct(
@@ -46,14 +54,19 @@ class ResourcesWidgetController extends Controller
         RequestStack $requestStack,
         ResourceManager $resourceManager,
         ResourcesWidgetManager $resourcesWidgetManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        WidgetManager $widgetManager,
+        TextManager $textManager
     ) {
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
         $this->resourceManager = $resourceManager;
         $this->resourcesWidgetManager = $resourcesWidgetManager;
         $this->translator = $translator;
+        $this->widgetManager = $widgetManager;
+        $this->textManager = $textManager;
     }
+
     /**
      * @EXT\Route(
      *     "/resources/widget/{widgetInstance}",
@@ -174,5 +187,77 @@ class ResourcesWidgetController extends Controller
         } else {
             return ['form' => $form->createView(), 'config' => $config];
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/resources_text/widget/{widgetInstance}/configure/form",
+     *     name="claro_resources_text_widget_configure_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\Template("ClarolineCoreBundle:Widget:resourceTextConfigureForm.html.twig")
+     */
+    public function resourceTextConfigureFormAction(WidgetInstance $widgetInstance)
+    {
+        $config = $this->widgetManager->getConfiguration($widgetInstance);
+        $details = $config->getDetails();
+        $resourceNode = (isset($details) && isset($details['nodeId'])) ? $this->resourceManager->getById($details['nodeId']) : null;
+        $form = $this->formFactory->create(new ResourcesTextConfigurationType($resourceNode));
+
+        return ['form' => $form->createView(), 'config' => $config];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/resources_text/widget/{config}/configure/edit",
+     *     name="claro_resources_text_widget_configure",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\Template("ClarolineCoreBundle:Widget:resourceTextConfigureForm.html.twig")
+     */
+    public function resourceTextSubmitFormAction(WidgetDisplayConfig $config)
+    {
+        $form = $this->formFactory->create(new ResourcesTextConfigurationType());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $resource = $form->get('resource')->getData();
+            if ($resource) {
+                $config->addDetail('nodeId', $resource->getId());
+            } else {
+                $config->removeDetail('nodeId');
+            }
+
+            $this->widgetManager->persistConfiguration($config);
+
+            return new JsonResponse('success', 204);
+        }
+
+        return ['form' => $form->createView(), 'config' => $config];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/resources/widget/{widgetInstance}",
+     *     name="claro_resources_widget",
+     *     options={"expose"=true}
+     * )
+     *
+     * @EXT\Template("ClarolineCoreBundle:Widget:resourceTextDisplay.html.twig")
+     */
+    public function displayResourceTextWidgetAction(WidgetInstance $widgetInstance)
+    {
+        $config = $this->widgetManager->getConfiguration($widgetInstance);
+        $details = $config->getDetails();
+        if (isset($details) && isset($details['nodeId'])) {
+            $resourceNode = $this->resourceManager->getById($details['nodeId']);
+            $text = $this->resourceManager->getResourceFromNode($resourceNode);
+
+            return ['text' => $this->textManager->getLastContentRevision($text)];
+        }
+
+        return ['text' => ''];
     }
 }

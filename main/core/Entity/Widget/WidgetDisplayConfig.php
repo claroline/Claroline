@@ -211,4 +211,14 @@ class WidgetDisplayConfig
     {
         $this->details = $details;
     }
+
+    public function addDetail($key, $value)
+    {
+        $this->details[$key] = $value;
+    }
+
+    public function removeDetail($key)
+    {
+        unset($this->details[$key]);
+    }
 }

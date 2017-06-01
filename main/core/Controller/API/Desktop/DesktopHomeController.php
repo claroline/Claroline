@@ -699,7 +699,6 @@ class DesktopHomeController extends Controller
     public function getWidgetInstanceContentConfigurationFormAction(WidgetInstance $widgetInstance, $admin = '')
     {
         $widget = $widgetInstance->getWidget();
-
         if ($widget->isConfigurable()) {
             $event = $this->eventDispatcher->dispatch(
                 "widget_{$widgetInstance->getWidget()->getName()}_configuration",

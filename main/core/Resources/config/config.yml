@@ -135,6 +135,10 @@ plugin:
           is_configurable: true
           is_displayable_in_desktop: true
           is_displayable_in_workspace: true
+        - name: resource_text
+          is_configurable: true
+          is_displayable_in_desktop: true
+          is_displayable_in_workspace: true
 
     tools:
         - name: home

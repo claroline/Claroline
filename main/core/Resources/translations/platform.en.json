@@ -1386,5 +1386,6 @@
     "your_profile_is_n_complete": "Your profile is %n%% complete",
     "your_username": "Your username is",
     "your_workspace_activity_overview": "Overview of recent activities in your workspaces",
-    "geolocate": "Geolocate"
+    "geolocate": "Geolocate",
+    "widget_no_content": "This widget has no content for now."
 }

@@ -18,11 +18,12 @@ use Symfony\Component\EventDispatcher\Event;
 /**
  * Event dispatched when a widget is configured.
  */
-class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface
+class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface, MandatoryEventInterface
 {
-    private $isPopulated = false;
+    private $isPopulated;
     private $instance;
     private $admin;
+    private $content;
 
     /**
      * Constructor.
@@ -33,6 +34,8 @@ class ConfigureWidgetEvent extends Event implements DataConveyorEventInterface
     {
         $this->instance = $instance;
         $this->admin = $admin;
+        $this->isPopulated = false;
+        $this->content = null;
     }
 
     public function setContent($content)
