@@ -79,6 +79,8 @@ class WorskpaceSerializer
           'uuid' => $workspace->getGuid(),
           'name' => $workspace->getName(),
           'code' => $workspace->getCode(),
+          //moment timestamp
+          'dateCreation' => $workspace->getCreationDate()->format('Y-m-d\TH:i:s'),
           'creator' => [
             'id' => $creator ? $creator->getId() : 0,
             'uuid' => $creator ? $creator->getId() : 0,

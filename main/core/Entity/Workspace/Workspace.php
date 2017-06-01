@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -226,6 +227,7 @@ class Workspace
      * @Serializer\SerializedName("creationDate")
      * @Serializer\Accessor(getter="getCreationDate")
      * @Serializer\Type("DateTime<'Y-m-d\TH:i:s'>")
+     * @Gedmo\Timestampable(on="create")
      *
      * @var \DateTime
      */
@@ -574,11 +576,7 @@ class Workspace
 
     public function getCreationDate()
     {
-        if (is_null($this->creationDate)) {
-            return $this->creationDate;
-        }
-
-        $date = date('d-m-Y H:i', $this->creationDate);
+        $date = !is_null($this->creationDate) ? date('d-m-Y H:i', $this->creationDate) : null;
 
         return new \Datetime($date);
     }

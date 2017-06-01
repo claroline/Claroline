@@ -10,6 +10,7 @@ export const MODAL_MESSAGE = 'MODAL_MESSAGE'
 export const MODAL_CONFIRM = 'MODAL_CONFIRM'
 export const MODAL_DELETE_CONFIRM = 'MODAL_DELETE_CONFIRM'
 export const MODAL_URL = 'MODAL_URL'
+export const MODAL_USER_PICKER = 'MODAL_USER_PICKER'
 
 const modals = {
   [MODAL_MESSAGE]: MessageModal,

@@ -30,7 +30,7 @@ UserPickerModal.propTypes = {
 
 UserPickerModal.defaultProps = {
   bsStyle: 'info',
-  title: 'user_picker',
+  title: t('add_user'),
   selected: []
 }
 

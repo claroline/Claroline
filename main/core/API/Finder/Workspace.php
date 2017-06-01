@@ -41,6 +41,8 @@ class Workspace implements FinderInterface
         // retrieves searchable text fields
         $baseFieldsName = WorkspaceEntity::getWorkspaceSearchableFields();
         //Admin can see everything, but the others... well they can only see their own organizations.
+        $customFields = ['createdAfter', 'createdBefore'];
+
         if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
             /** @var User $currentUser */
             $currentUser = $this->tokenStorage->getToken()->getUser();
@@ -56,13 +58,24 @@ class Workspace implements FinderInterface
                 $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
                 $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
             } else {
-                // catch boolean
-                if ('true' === $filterValue || 'false' === $filterValue) {
-                    $filterValue = 'true' === $filterValue;
+                if (!in_array($filterName, $customFields)) {
+                    if ('true' === $filterValue || 'false' === $filterValue) {
+                        $filterValue = 'true' === $filterValue;
+                        $qb->andWhere("obj.{$filterName} = :{$filterName}");
+                        $qb->setParameter($filterName, $filterValue);
+                    }
+                } else {
+                    switch ($filterName) {
+                      case 'createdAfter':
+                          $qb->andWhere("obj.creationDate >= :{$filterName}");
+                          $qb->setParameter($filterName, date('Y-m-d', $filterValue));
+                          break;
+                      case 'createdBefore':
+                          $qb->andWhere("obj.creationDate <= :{$filterName}");
+                          $qb->setParameter($filterName, date('Y-m-d', $filterValue));
+                          break;
+                  }
                 }
-
-                $qb->andWhere("obj.{$filterName} = :{$filterName}");
-                $qb->setParameter($filterName, $filterValue);
             }
         }
 
