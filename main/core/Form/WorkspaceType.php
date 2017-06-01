@@ -102,7 +102,7 @@ class WorkspaceType extends AbstractType
                'class' => 'ClarolineCoreBundle:Workspace\Workspace',
                'property' => 'code',
                'required' => false,
-               'label' => 'model',
+               'label' => 'base_model',
                'mapped' => false,
             ];
 
@@ -129,6 +129,8 @@ class WorkspaceType extends AbstractType
                'entity',
                $options
             );
+
+            $builder->add('isModel', 'checkbox', ['required' => false, 'label' => 'model']);
         }
 
         if ($this->forApi) {

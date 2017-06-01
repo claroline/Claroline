@@ -70,7 +70,8 @@ class WorkspacesController extends Controller
         return $this->finder->search(
           'Claroline\CoreBundle\Entity\Workspace\Workspace',
           0,
-          20
+          20,
+          ['filters' => ['isModel' => false, 'isPersonal' => false]]
         );
     }
 

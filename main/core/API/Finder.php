@@ -62,13 +62,22 @@ class Finder
             return $serializer->serialize($el);
         }, $data);
 
+        $filterObjects = [];
+
+        foreach ($filters as $property => $value) {
+            $filterObject = new \stdClass();
+            $filterObject->value = $value;
+            $filterObject->property = $property;
+            $filterObjects[] = $filterObject;
+        }
+
         return [
           'results' => $data,
           'total' => $count,
           'page' => $page,
           'limit' => $limit,
           'class' => $class,
-          'filters' => $filters,
+          'filters' => $filterObjects,
           'orderBy' => $orderBy,
         ];
     }

@@ -1,28 +1,60 @@
-import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import React, {PropTypes as T, Component} from 'react'
 import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import 'react-datepicker/dist/react-datepicker.css'
 
-import {getLocale} from '#/main/core/locale'
+const locale = getLocale()
 
-const CustomDatePicker = ({id, name, value, onChange}) =>
-  <DatePicker
-    id={id || null}
-    name={name}
-    className="form-control"
-    selected={value ? moment.utc(value) : null}
-    minDate={moment.utc()}
-    locale={getLocale()}
-    onChange={date => onChange(moment.utc(date).format())}
-    onBlur={() => {}}
-  />
+class Date extends Component {
+  constructor(props) {
+    super(props)
+  }
 
-CustomDatePicker.propTypes = {
+  render() {
+    return (
+      <span>
+        {this.props.showCalendarButton &&
+          <button className="btn btn-sm btn-filter" onClick={() => this._calendar.setOpen(true)}>
+            <span className="fa fa-fw fa-calendar"/>
+          </button>
+        }
+        <DatePicker
+          selected={this.props.value ? moment.utc(this.props.value) : null}
+          onChange={date => this.props.onChange(moment.utc(date).format(locale))}
+          ref={(c) => this._calendar = c}
+          {...this.props}
+        >
+        </DatePicker>
+      </span>
+    )
+  }
+}
+
+Date.propTypes = {
   id: T.string,
   name: T.string.isRequired,
   onChange: T.func.isRequired,
-  value: T.string
+  value: T.string,
+  className: T.string,
+  minDate: T.object,
+  showCalendarButton: T.bool.isRequired
 }
 
-export {CustomDatePicker as DatePicker}
+Date.defaultProps = {
+  className: 'form-control',
+  minDate: moment.utc(),
+  showCalendarButton: false
+}
+
+// tmp: current way of retrieving locale...
+function getLocale() {
+  const locale = document.querySelector('#homeLocale')
+
+  if (locale) {
+    return locale.innerHTML.trim()
+  }
+
+  return 'en'
+}
+
+export {Date as DatePicker}
