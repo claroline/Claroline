@@ -50,11 +50,11 @@ class Workspace implements FinderInterface
             switch ($filterName) {
               case 'createdAfter':
                   $qb->andWhere("obj.creationDate >= :{$filterName}");
-                  $qb->setParameter($filterName, date('Y-m-d', $filterValue));
+                  $qb->setParameter($filterName, $filterValue);
                   break;
               case 'createdBefore':
                   $qb->andWhere("obj.creationDate <= :{$filterName}");
-                  $qb->setParameter($filterName, date('Y-m-d', $filterValue));
+                  $qb->setParameter($filterName, $filterValue);
                   break;
               default:
                 if ('true' === $filterValue || 'false' === $filterValue || true === $filterValue || false === $filterValue) {
