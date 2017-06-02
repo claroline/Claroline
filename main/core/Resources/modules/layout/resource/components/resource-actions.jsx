@@ -73,7 +73,7 @@ const ManageRightsAction = props => {
   return (
     <PageAction
       id="resource-rights"
-      title={title}
+      title={t_res(title)}
       icon={classes('fa', icon)}
       action={props.openRightsManagement}
     >
