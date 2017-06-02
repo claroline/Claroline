@@ -207,6 +207,7 @@ class BlogManager
                     ->setPublicationDate(new \DateTime($postsData['publication_date']))
                     ->setStatus($commentsData['status'])
                 ;
+                $this->objectManager->persist($comment);
                 $comments->add($comment);
             }
 
@@ -291,7 +292,7 @@ class BlogManager
 
         foreach ($scheduledForInsert as $entity) {
             if (get_class($entity) === 'Icap\BlogBundle\Entity\Tag') {
-                if ($entity->getName() === $name) {
+                if (strtoupper(iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $entity->getName())) === strtoupper(iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $name))) {
                     return $entity;
                 }
             }
@@ -310,7 +311,7 @@ class BlogManager
 
         //so it was in the identityMap hey !
         foreach ($map['Icap\BlogBundle\Entity\Tag'] as $tag) {
-            if ($tag->getName() === $name) {
+            if (strtoupper(iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $tag->getName())) === strtoupper(iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $name))) {
                 return $tag;
             }
         }
