@@ -736,6 +736,12 @@ class RightsManager
             return true;
         }
 
+        foreach ($token->getRoles() as $role) {
+            if ($role->getRole() === 'ROLE_ADMIN') {
+                return true;
+            }
+        }
+
         return false;
     }
 
