@@ -15,8 +15,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 /**
  * JSON API for resource node management.
  *
- * @EXT\Route("resources/{resourceNode}", options={"expose"=true})
- * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode")
+ * @EXT\Route("resources/{id}", options={"expose"=true})
+ * @EXT\ParamConverter("resourceNode", class="ClarolineCoreBundle:Resource\ResourceNode", options={"mapping": {"id": "guid"}})
  */
 class ResourceNodeController
 {
