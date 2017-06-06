@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+/*global Routing*/
+
 export default class SessionManagementCtrl {
   constructor($stateParams, NgTableParams, CourseService, SessionService, SessionEventService, DocumentModelService) {
     this.NgTableParams = NgTableParams
@@ -269,5 +271,13 @@ export default class SessionManagementCtrl {
 
   exportUsers() {
     this.SessionService.exportUsersForm(this.sessionId)
+  }
+
+  openWorkspace() {
+    this.SessionService.getWorkspaceFromSessionId(this.sessionId).then(d => {
+      if (d) {
+        window.location = Routing.generate('claro_workspace_open', {workspaceId: d})
+      }
+    })
   }
 }

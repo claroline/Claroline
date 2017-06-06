@@ -32,14 +32,14 @@ class Course
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("code")
      */
     protected $code;
@@ -47,35 +47,35 @@ class Course
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_bulletin", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("title")
      */
     protected $title;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("description")
      */
     protected $description;
 
     /**
      * @ORM\Column(name="public_registration", type="boolean")
-     * @Groups({"api", "api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api", "api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("publicRegistration")
      */
     protected $publicRegistration = false;
 
     /**
      * @ORM\Column(name="public_unregistration", type="boolean")
-     * @Groups({"api", "api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api", "api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("publicUnregistration")
      */
     protected $publicUnregistration = false;
 
     /**
      * @ORM\Column(name="registration_validation", type="boolean")
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("registrationValidation")
      */
     protected $registrationValidation = false;
@@ -92,14 +92,14 @@ class Course
 
     /**
      * @ORM\Column(name="tutor_role_name", nullable=true)
-     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min"})
      * @SerializedName("tutorRoleName")
      */
     protected $tutorRoleName;
 
     /**
      * @ORM\Column(name="learner_role_name", nullable=true)
-     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min"})
      * @SerializedName("learnerRoleName")
      */
     protected $learnerRoleName;
@@ -115,7 +115,7 @@ class Course
 
     /**
      * @ORM\Column(nullable=true)
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("icon")
      */
     protected $icon;
@@ -131,21 +131,21 @@ class Course
 
     /**
      * @ORM\Column(name="user_validation", type="boolean")
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("userValidation")
      */
     protected $userValidation = false;
 
     /**
      * @ORM\Column(name="organization_validation", type="boolean")
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("organizationValidation")
      */
     protected $organizationValidation = false;
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("maxUsers")
      */
     protected $maxUsers;
@@ -159,14 +159,14 @@ class Course
 
     /**
      * @ORM\Column(name="session_duration", nullable=false, type="integer", options={"default" = 1})
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("defaultSessionDuration")
      */
     protected $defaultSessionDuration = 1;
 
     /**
      * @ORM\Column(name="with_session_event", type="boolean", options={"default" = 1})
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("withSessionEvent")
      */
     private $withSessionEvent = true;
@@ -176,14 +176,14 @@ class Course
      *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
      * )
      * @ORM\JoinTable(name="claro_cursusbundle_course_organizations")
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("organizations")
      */
     protected $organizations;
 
     /**
      * @ORM\Column(name="display_order", type="integer", options={"default" = 500})
-     * @Groups({"api_cursus", "api_user_min", "api_group_min", "api_workspace_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min", "api_workspace_min"})
      * @SerializedName("displayOrder")
      */
     protected $displayOrder = 500;

@@ -129,7 +129,7 @@
                                 title="{{ 'create_session_event'|trans:{}:'cursus' }}"
                                 ng-click="cmc.createEvent(session)"
                         >
-                            <i class="fa fa-calendar"></i>
+                            <i class="fa fa-clock-o"></i>
                         </button>
                         <button class="btn btn-primary btn-sm"
                                 data-toggle="tooltip"
@@ -146,6 +146,14 @@
                                 ng-click="cmc.sendMessageToSessionLearners(session)"
                         >
                             <i class="fa fa-envelope"></i>
+                        </button>
+                        <button class="btn btn-primary btn-sm"
+                                data-toggle="tooltip"
+                                data-placement="top"
+                                title="{{ 'go_to_workspace'|trans:{}:'cursus' }}"
+                                ng-click="cmc.openWorkspace(session['id'])"
+                        >
+                            <i class="fa fa-book"></i>
                         </button>
                         <button class="btn btn-danger btn-sm"
                                 data-toggle="tooltip"

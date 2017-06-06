@@ -22,7 +22,7 @@ export default class CursusRegistrationSessionsModalCtrl {
     this.sourceId = sourceId
     this.sourceType = sourceType
     this.cursusIdsTxt = cursusIdsTxt
-    this.sessionsDatas = []
+    this.sessionsData = []
     this.selectedSessions = []
 
     this.initialize()
@@ -51,12 +51,12 @@ export default class CursusRegistrationSessionsModalCtrl {
           sessionsIdsTxt: sessionsIdsTxt
         }
       )
-      this.$http.post(route).then(datas => {
-        if (datas['status'] === 200) {
+      this.$http.post(route).then(data => {
+        if (data['status'] === 200) {
           this.closeModal()
-          const resultsDatas = datas['data']
+          const resultsData = data['data']
 
-          if (resultsDatas['status'] === 'success') {
+          if (resultsData['status'] === 'success') {
             this.$state.transitionTo(
               'registration_cursus_management',
               {cursusId: this.cursusId},
@@ -65,17 +65,17 @@ export default class CursusRegistrationSessionsModalCtrl {
           } else {
             const title = Translator.trans('registration_failed', {}, 'cursus')
             let content = ''
-            const errorDatas = resultsDatas['datas']
+            const errorData = resultsData['datas']
 
-            for (let i = 0; i < errorDatas.length; i++) {
+            for (let i = 0; i < errorData.length; i++) {
               content += '<div class="alert alert-danger">' +
                 Translator.trans(
                   'session_not_enough_place_msg',
                   {
-                    sessionName: errorDatas[i]['sessionName'],
-                    courseTitle: errorDatas[i]['courseTitle'],
-                    courseCode: errorDatas[i]['courseCode'],
-                    remainingPlaces: errorDatas[i]['remainingPlaces']
+                    sessionName: errorData[i]['sessionName'],
+                    courseTitle: errorData[i]['courseTitle'],
+                    courseCode: errorData[i]['courseCode'],
+                    remainingPlaces: errorData[i]['remainingPlaces']
                   },
                   'cursus'
                 ) +
@@ -103,12 +103,12 @@ export default class CursusRegistrationSessionsModalCtrl {
           sessionsIdsTxt: sessionsIdsTxt
         }
       )
-      this.$http.post(route).then(datas => {
-        if (datas['status'] === 200) {
+      this.$http.post(route).then(data => {
+        if (data['status'] === 200) {
           this.closeModal()
-          const resultsDatas = datas['data']
+          const resultsData = data['data']
 
-          if (resultsDatas['status'] === 'success') {
+          if (resultsData['status'] === 'success') {
             this.$state.transitionTo(
               'registration_cursus_management',
               {cursusId: this.cursusId},
@@ -117,17 +117,17 @@ export default class CursusRegistrationSessionsModalCtrl {
           } else {
             const title = Translator.trans('registration_failed', {}, 'cursus')
             let content = ''
-            const errorDatas = resultsDatas['datas']
+            const errorData = resultsData['datas']
 
-            for (let i = 0; i < errorDatas.length; i++) {
+            for (let i = 0; i < errorData.length; i++) {
               content += '<div class="alert alert-danger">' +
                 Translator.trans(
                   'session_not_enough_place_msg',
                   {
-                    sessionName: errorDatas[i]['sessionName'],
-                    courseTitle: errorDatas[i]['courseTitle'],
-                    courseCode: errorDatas[i]['courseCode'],
-                    remainingPlaces: errorDatas[i]['remainingPlaces']
+                    sessionName: errorData[i]['sessionName'],
+                    courseTitle: errorData[i]['courseTitle'],
+                    courseCode: errorData[i]['courseCode'],
+                    remainingPlaces: errorData[i]['remainingPlaces']
                   },
                   'cursus'
                 ) +
@@ -151,12 +151,17 @@ export default class CursusRegistrationSessionsModalCtrl {
 
   initialize() {
     const route = Routing.generate('api_get_sessions_for_cursus_list', {cursusIdsTxt: this.cursusIdsTxt})
-    this.$http.get(route).then(datas => {
-      if (datas['status'] === 200) {
-        this.sessionsDatas = datas['data']
+    this.$http.get(route).then(data => {
+      if (data['status'] === 200) {
+        this.sessionsData = data['data']
 
-        for (let courseId in this.sessionsDatas) {
+        for (let courseId in this.sessionsData) {
           this.selectedSessions[courseId] = 0
+          this.sessionsData[courseId]['sessions'].forEach(s => {
+            if (s['sessionDefault']) {
+              this.selectedSessions[courseId] = s['sessionId']
+            }
+          })
         }
       }
     })

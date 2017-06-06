@@ -34,7 +34,7 @@ class Organization
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_organization_tree", "api_organization_list"})
+     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
      */
     protected $id;
 
@@ -47,7 +47,7 @@ class Organization
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
-     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_organization_tree", "api_organization_list"})
+     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
      */
     protected $name;
 
@@ -168,7 +168,7 @@ class Organization
 
     /**
      * @ORM\Column(name="is_default", type="boolean")
-     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_organization_tree", "api_organization_list"})
+     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
      */
     protected $default = false;
 
