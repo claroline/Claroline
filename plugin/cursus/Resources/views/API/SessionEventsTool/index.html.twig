@@ -1,0 +1,59 @@
+{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'claroline_session_events_tool' | trans({}, "tools") | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.workspaceBreadcrumbs(
+            workspace,
+            [
+                {
+                    'name': 'claroline_session_events_tool'|trans({}, 'tools'),
+                    'href': ''
+                }
+            ]
+        )
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'claroline_session_events_tool'|trans({}, 'tools') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="page-container session-events-tool-container"
+             data-workspace="{{ workspace.getId() }}"
+             data-editable="{{ canEdit }}"
+             data-sessions="{{ sessions | json_serialize('api_cursus_min') | raw | escape }}"
+             data-events="{{ sessionEvents | json_serialize('api_cursus_min') | raw | escape }}"
+             data-events-total="{{ sessionEventsTotal }}"
+             data-events-users="{{ sessionEventUsers | json_serialize('api_cursus_min') | raw | escape }}"
+        >
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-exo-quiz-resource.css') }}" />
+    <style>
+        .session-events-tool-container > [data-reactroot] {
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false
+        'js/translations/cursus/*.js'
+        'js/translations/tools/*.js'
+    %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-cursus-session-events-tool.js') }}"></script>
+{% endblock javascripts %}

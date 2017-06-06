@@ -27,18 +27,21 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SessionEvent
 {
+    const TYPE_NONE = 0;
+    const TYPE_EVENT = 1;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      */
     protected $id;
 
     /**
      * @ORM\Column(name="event_name")
      * @Assert\NotBlank()
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      */
     protected $name;
 
@@ -54,21 +57,21 @@ class SessionEvent
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=false)
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      * @SerializedName("startDate")
      */
     protected $startDate;
 
     /**
      * @ORM\Column(name="end_date", type="datetime", nullable=false)
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      * @SerializedName("endDate")
      */
     protected $endDate;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      */
     protected $description;
 
@@ -98,7 +101,7 @@ class SessionEvent
     /**
      * @ORM\ManyToOne(targetEntity="FormaLibre\ReservationBundle\Entity\Resource")
      * @ORM\JoinColumn(name="location_resource_id", nullable=true, onDelete="SET NULL")
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_user_min"})
      * @SerializedName("locationResource")
      */
     protected $locationResource;
@@ -126,17 +129,34 @@ class SessionEvent
 
     /**
      * @ORM\Column(name="max_users", nullable=true, type="integer")
-     * @Groups({"api_cursus", "api_user_min", "api_group_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min", "api_group_min"})
      * @SerializedName("maxUsers")
      */
     protected $maxUsers;
 
     /**
      * @ORM\Column(name="registration_type", type="integer", nullable=false, options={"default" = 0})
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      * @SerializedName("registrationType")
      */
     protected $registrationType = CourseSession::REGISTRATION_AUTO;
+
+    /**
+     * @ORM\Column(name="event_type", type="integer", nullable=false, options={"default" = 0})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
+     * @SerializedName("type")
+     */
+    protected $type = self::TYPE_NONE;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CursusBundle\Entity\SessionEventSet",
+     *     inversedBy="events"
+     * )
+     * @ORM\JoinColumn(name="event_set", nullable=true, onDelete="SET NULL")
+     * @Groups({"api_user_min"})
+     */
+    protected $eventSet;
 
     public function __construct()
     {
@@ -301,5 +321,30 @@ class SessionEvent
     public function setRegistrationType($registrationType)
     {
         $this->registrationType = $registrationType;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getEventSet()
+    {
+        return $this->eventSet;
+    }
+
+    public function setEventSet(SessionEventSet $eventSet = null)
+    {
+        $this->eventSet = $eventSet;
+    }
+
+    public static function getSearchableFields()
+    {
+        return ['name'];
     }
 }

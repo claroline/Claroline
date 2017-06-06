@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Listener;
 
+use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\GenericDatasEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
@@ -76,8 +77,7 @@ class CursusListener
         $params = [];
         $params['_controller'] = 'ClarolineCursusBundle:API\AdminManagement:index';
         $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel
-            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -92,8 +92,7 @@ class CursusListener
         $params = [];
         $params['_controller'] = 'ClarolineCursusBundle:Cursus:pluginConfigureForm';
         $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel
-            ->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
     }
@@ -134,6 +133,22 @@ class CursusListener
             SerializationContext::create()->setGroups(['api_workspace_min'])
         );
         $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("open_tool_workspace_claroline_session_events_tool")
+     *
+     * @param DisplayToolEvent $event
+     */
+    public function onDisplayWorkspaceSessionEventTool(DisplayToolEvent $event)
+    {
+        $params = [];
+        $params['_controller'] = 'ClarolineCursusBundle:API\SessionEventsTool:index';
+        $params['workspace'] = $event->getWorkspace()->getId();
+        $subRequest = $this->request->duplicate([], null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setContent($response->getContent());
         $event->stopPropagation();
     }
 }

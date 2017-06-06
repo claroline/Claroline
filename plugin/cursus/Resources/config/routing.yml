@@ -25,3 +25,8 @@ claro_cursus_bundle_api_admin_management:
     resource: "@ClarolineCursusBundle/Controller/API/AdminManagementController.php"
     type:     annotation
     prefix:   /
+
+claro_cursus_bundle_api_session_events_tool:
+    resource: "@ClarolineCursusBundle/Controller/API/SessionEventsToolController.php"
+    type:     annotation
+    prefix:   /

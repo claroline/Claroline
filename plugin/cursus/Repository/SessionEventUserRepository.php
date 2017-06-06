@@ -18,6 +18,22 @@ use Doctrine\ORM\EntityRepository;
 
 class SessionEventUserRepository extends EntityRepository
 {
+    public function findSessionEventUsersBySessionEvent(SessionEvent $sessionEvent)
+    {
+        $dql = "
+            SELECT seu
+            FROM Claroline\CursusBundle\Entity\SessionEventUser seu
+            JOIN seu.sessionEvent se
+            JOIN seu.user u
+            WHERE se = :sessionEvent
+            ORDER BY seu.registrationStatus DESC, u.lastName, u.firstName
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('sessionEvent', $sessionEvent);
+
+        return $query->getResult();
+    }
+
     public function findUnregisteredUsersFromListBySessionEvent(SessionEvent $sessionEvent, array $users)
     {
         $dql = "

@@ -6,7 +6,8 @@
       "user-management": "User/userManagement",
       "user-registration-management": "User/userRegistrationManagement",
       "group-management": "Group/groupManagement",
-      "group-registration-management": "Group/groupRegistrationManagement"
+      "group-registration-management": "Group/groupRegistrationManagement",
+      "session-events-tool": "SessionEventsTool/index.jsx"
     }
   }
 }

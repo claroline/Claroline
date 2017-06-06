@@ -29,7 +29,7 @@ class SessionEventUser
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      */
     protected $id;
 
@@ -53,21 +53,21 @@ class SessionEventUser
 
     /**
      * @ORM\Column(name="registration_status", type="integer", nullable=false)
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      * @SerializedName("registrationStatus")
      */
     protected $registrationStatus = self::REGISTERED;
 
     /**
      * @ORM\Column(name="registration_date", type="datetime", nullable=true)
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      * @SerializedName("registrationDate")
      */
     protected $registrationDate;
 
     /**
      * @ORM\Column(name="application_date", type="datetime", nullable=true)
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus", "api_cursus_min", "api_user_min"})
      * @SerializedName("applicationDate")
      */
     protected $applicationDate;
@@ -75,7 +75,7 @@ class SessionEventUser
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CursusBundle\Entity\PresenceStatus")
      * @ORM\JoinColumn(name="presence_status_id", nullable=true, onDelete="SET NULL")
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_user_min"})
      * @SerializedName("presenceStatus")
      */
     protected $presenceStatus;

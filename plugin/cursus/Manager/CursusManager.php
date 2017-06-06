@@ -1572,6 +1572,31 @@ class CursusManager
         $this->eventDispatcher->dispatch('log', $event);
     }
 
+    public function deleteSessionEvents(array $sessionEvents)
+    {
+        $this->om->startFlushSuite();
+
+        foreach ($sessionEvents as $sessionEvent) {
+            $session = $sessionEvent->getSession();
+            $course = $session->getCourse();
+            $details = [];
+            $details['id'] = $sessionEvent->getId();
+            $details['name'] = $sessionEvent->getName();
+            $details['startDate'] = $sessionEvent->getStartDate();
+            $details['endDate'] = $sessionEvent->getEndDate();
+            $details['sessionId'] = $session->getId();
+            $details['sessionName'] = $session->getName();
+            $details['courseId'] = $course->getId();
+            $details['courseTitle'] = $course->getTitle();
+            $details['courseCode'] = $course->getCode();
+            $this->om->remove($sessionEvent);
+            $this->om->flush();
+            $event = new LogSessionEventDeleteEvent($details);
+            $this->eventDispatcher->dispatch('log', $event);
+        }
+        $this->om->endFlushSuite();
+    }
+
     public function createSessionEventComment(User $user, SessionEvent $sessionEvent, $content)
     {
         $comment = new SessionEventComment();
@@ -1607,6 +1632,8 @@ class CursusManager
         $name = $sessionEvent->getName();
         $eventStartDate = $sessionEvent->getStartDate();
         $endDate = $sessionEvent->getEndDate();
+        $maxUsers = $sessionEvent->getMaxUsers();
+        $registrationType = $sessionEvent->getRegistrationType();
         $tutors = $sessionEvent->getTutors();
         $index = 1;
         $year = intval($eventStartDate->format('Y'));
@@ -1649,6 +1676,8 @@ class CursusManager
                     $newSessionEvent->setLocationResource($locationResource);
                     $newSessionEvent->setStartDate($newStartDate);
                     $newSessionEvent->setEndDate($newEndDate);
+                    $newSessionEvent->setMaxUsers($maxUsers);
+                    $newSessionEvent->setRegistrationType($registrationType);
                     $newSessionEvent->setName($name." [$index]");
 
                     foreach ($tutors as $tutor) {
@@ -2810,6 +2839,7 @@ class CursusManager
                     'sessionId' => $session->getId(),
                     'sessionName' => $session->getName(),
                     'sessionStatus' => $session->getSessionStatus(),
+                    'sessionDefault' => $session->isDefaultSession(),
                 ];
             }
         }
@@ -4267,24 +4297,48 @@ class CursusManager
                             $eventDatas = $this->registerUsersToSessionEvent($sessionEvent, [$user]);
 
                             if ($eventDatas['status'] === 'failed') {
-                                $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
+                                $eventUser = $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
+                                $results['sessionEventUsers'] = $this->serializer->serialize(
+                                    [$eventUser],
+                                    'json',
+                                    SerializationContext::create()->setGroups(['api_user_min'])
+                                );
+                            } else {
+                                $results['sessionEventUsers'] = $eventDatas['sessionEventUsers'];
                             }
                             $this->sendEventRegistrationConfirmationMessage($user, $sessionEvent, 'success', $eventDatas['status']);
                         } elseif ($sessionRegistrationStatus === 'pending') {
-                            $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
+                            $eventUser = $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
                             $this->sendEventRegistrationConfirmationMessage($user, $sessionEvent, 'pending', 'failed');
+                            $results['sessionEventUsers'] = $this->serializer->serialize(
+                                [$eventUser],
+                                'json',
+                                SerializationContext::create()->setGroups(['api_user_min'])
+                            );
                         }
                     }
                 } elseif (!is_null($sessionUser)) {
                     $eventDatas = $this->registerUsersToSessionEvent($sessionEvent, [$user]);
 
                     if ($eventDatas['status'] === 'failed') {
-                        $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
+                        $eventUser = $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
+                        $results['sessionEventUsers'] = $this->serializer->serialize(
+                            [$eventUser],
+                            'json',
+                            SerializationContext::create()->setGroups(['api_user_min'])
+                        );
+                    } else {
+                        $results['sessionEventUsers'] = $eventDatas['sessionEventUsers'];
                     }
                     $this->sendEventRegistrationConfirmationMessage($user, $sessionEvent, 'none', $eventDatas['status']);
                 } else {
-                    $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
+                    $eventUser = $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
                     $this->sendEventRegistrationConfirmationMessage($user, $sessionEvent, 'none', 'failed');
+                    $results['sessionEventUsers'] = $this->serializer->serialize(
+                        [$eventUser],
+                        'json',
+                        SerializationContext::create()->setGroups(['api_user_min'])
+                    );
                 }
             }
         }
@@ -4685,6 +4739,61 @@ class CursusManager
         }
     }
 
+    public function searchSessionEventsPartialList(CourseSession $session, array $searches, $page, $limit)
+    {
+        $data = [];
+        // retrieves searchable text fields
+        $baseFieldsName = SessionEvent::getSearchableFields();
+
+        /** @var QueryBuilder $qb */
+        $qb = $this->om->createQueryBuilder();
+        $qb->select('se');
+        $qb->from('Claroline\CursusBundle\Entity\SessionEvent', 'se');
+        $qb->join('se.session', 's');
+        $qb->andWhere('s.id = :sessionId');
+        $qb->setParameter('sessionId', $session->getId());
+
+        if (!empty($searches['filters']) && is_array($searches['filters'])) {
+            foreach ($searches['filters'] as $filterName => $filterValue) {
+                if (in_array($filterName, $baseFieldsName)) {
+                    $qb->andWhere("UPPER(se.{$filterName}) LIKE :{$filterName}");
+                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                } else {
+                    // catch boolean
+                    if ('true' === $filterValue || 'false' === $filterValue) {
+                        $filterValue = 'true' === $filterValue;
+                    }
+
+                    $qb->andWhere("se.{$filterName} = :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                }
+            }
+        }
+
+        if (!empty($searches['sortBy'])) {
+            // reverse order starts by a -
+            if ('-' === substr($searches['sortBy'], 0, 1)) {
+                $qb->orderBy('se.'.substr($searches['sortBy'], 1), 'ASC');
+            } else {
+                $qb->orderBy('se.'.$searches['sortBy'], 'DESC');
+            }
+        }
+
+        $query = $qb->getQuery();
+        $data['count'] = count($query->getResult());
+
+        if (!is_null($page) && !is_null($limit)) {
+            //react table all is -1
+            if ($limit > -1) {
+                $query->setMaxResults($limit);
+            }
+            $query->setFirstResult($page * $limit);
+        }
+        $data['sessionEvents'] = $query->getResult();
+
+        return $data;
+    }
+
     /***************************************************
      * Access to CursusDisplayedWordRepository methods *
      ***************************************************/
@@ -5059,6 +5168,11 @@ class CursusManager
         return count($ids) > 0 ? $this->courseSessionRepo->findSessionsByIds($ids, $executeQuery) : [];
     }
 
+    public function getSessionsByWorkspace(Workspace $workspace)
+    {
+        return $this->courseSessionRepo->findBy(['workspace' => $workspace], ['name' => 'ASC']);
+    }
+
     /*********************************************
      * Access to SessionEventRepository methods *
      *********************************************/
@@ -5383,7 +5497,7 @@ class CursusManager
 
     public function getSessionEventUsersBySessionEvent(SessionEvent $sessionEvent)
     {
-        return $this->sessionEventUserRepo->findBy(['sessionEvent' => $sessionEvent], ['registrationStatus' => 'DESC']);
+        return $this->sessionEventUserRepo->findSessionEventUsersBySessionEvent($sessionEvent);
     }
 
     public function getSessionEventUsersByUser(User $user)

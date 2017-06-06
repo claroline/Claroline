@@ -7,6 +7,7 @@
  * file that was distributed with this source code.
  */
 
+/*global Routing*/
 import coursesListTemplate from '../Partial/session_creation_courses_list.html'
 
 export default class SessionsManagementCtrl {
@@ -126,5 +127,13 @@ export default class SessionsManagementCtrl {
 
   manageEventComments(sessionEvent) {
     this.SessionEventService.manageComments(sessionEvent)
+  }
+
+  openWorkspace(sessionId) {
+    this.SessionService.getWorkspaceFromSessionId(sessionId).then(d => {
+      if (d) {
+        window.location = Routing.generate('claro_workspace_open', {workspaceId: d})
+      }
+    })
   }
 }

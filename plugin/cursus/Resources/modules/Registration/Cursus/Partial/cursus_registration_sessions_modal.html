@@ -6,32 +6,32 @@
         </h4>
     </div>
     <div class="modal-body">
-        <div ng-repeat="datas in crsmc.sessionsDatas">
+        <div ng-repeat="data in crsmc.sessionsData">
             <span data-toggle="collapse"
-                  href="#sessions-collapse-{{ datas['courseId'] }}"
+                  href="#sessions-collapse-{{ data['courseId'] }}"
                   class="label label-primary pointer-hand"
             >
-                {{ datas['courseTitle'] }}
+                {{ data['courseTitle'] }}
                 <small>
-                    ({{ datas['courseCode'] }})
+                    ({{ data['courseCode'] }})
                 </small>
             </span>
             &nbsp;
             <i class="fa fa-caret-right pointer-hand"
                data-toggle="collapse"
-               href="#sessions-collapse-{{ datas['courseId'] }}"
+               href="#sessions-collapse-{{ data['courseId'] }}"
             >
             </i>
-            <div id="sessions-collapse-{{ datas['courseId'] }}"
-                 ng-class="datas['sessions'].length > 0 ? 'collapse in' : 'collapse'"
+            <div id="sessions-collapse-{{ data['courseId'] }}"
+                 ng-class="data['sessions'].length > 0 ? 'collapse in' : 'collapse'"
             >
-                <div class="radio col-md-offset-1" ng-repeat="session in datas['sessions']">
+                <div class="radio col-md-offset-1" ng-repeat="session in data['sessions']">
                     <small>
                         <label>
                             <input type="radio"
-                                   name="options-course-{{ datas['courseId'] }}"
+                                   name="options-course-{{ data['courseId'] }}"
                                    value="{{ session['sessionId'] }}"
-                                   ng-model="crsmc.selectedSessions[datas['courseId']]"
+                                   ng-model="crsmc.selectedSessions[data['courseId']]"
                             >
                             {{ session['sessionName'] }}
                             &nbsp;
@@ -59,9 +59,9 @@
                         <code>
                             <label>
                                 <input type="radio"
-                                       name="options-course-{{ datas['courseId'] }}"
+                                       name="options-course-{{ data['courseId'] }}"
                                        value="0"
-                                       ng-model="crsmc.selectedSessions[datas['courseId']]"
+                                       ng-model="crsmc.selectedSessions[data['courseId']]"
                                 >
                                 <i class="fa fa-plus"></i>
                                 {{ 'create_new_session'|trans:{}:'cursus' }}
@@ -71,7 +71,7 @@
                 </div>
             </div>
         </div>
-        <div class="alert alert-info" ng-if="crsmc.sessionsDatas.length === 0">
+        <div class="alert alert-info" ng-if="crsmc.sessionsData.length === 0">
             {{ 'no_course'|trans:{}:'cursus' }}
         </div>
     </div>

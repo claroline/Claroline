@@ -20,3 +20,9 @@ plugin:
       is_displayable_in_desktop: true
       default_width: 12
       default_height: 4
+
+  tools:
+    - name: claroline_session_events_tool
+      is_displayable_in_workspace: true
+      is_displayable_in_desktop: false
+      class: clock-o
