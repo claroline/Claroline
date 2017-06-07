@@ -245,6 +245,11 @@ export default class ClacoFormService {
     return str.replace(/'/g, ' ')
   }
 
+  exportEntries() {
+    const url = Routing.generate('claro_claco_form_entries_export', {clacoForm: this.resourceId})
+    window.location.href = url
+  }
+
   static _getGlobal(name) {
     if (typeof window[name] === 'undefined') {
       throw new Error(
