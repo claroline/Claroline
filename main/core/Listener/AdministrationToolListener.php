@@ -28,6 +28,18 @@ class AdministrationToolListener
     }
 
     /**
+     * @DI\Observe("administration_tool_platform_parameters")
+     *
+     * @param OpenAdministrationToolEvent $event
+     */
+    public function onOpenPlatformParameters(OpenAdministrationToolEvent $event)
+    {
+        $params = [];
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\Parameters:index';
+        $this->redirect($params, $event);
+    }
+
+    /**
      * @DI\Observe("administration_tool_user_management")
      *
      * @param OpenAdministrationToolEvent $event
