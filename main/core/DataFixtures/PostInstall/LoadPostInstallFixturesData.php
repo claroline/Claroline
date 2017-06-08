@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\DataFixtures\PostInstall;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\DataFixtures\Required\LoadRequiredFixturesData;
 
 /**
@@ -20,5 +19,4 @@ use Claroline\CoreBundle\DataFixtures\Required\LoadRequiredFixturesData;
  */
 class LoadPostInstallFixturesData extends LoadRequiredFixturesData
 {
-    use LoggableTrait;
 }
