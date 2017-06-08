@@ -558,7 +558,7 @@
     "import_user_file_file": "Vanuit een CSV-bestand invoeren",
     "import_users": "Gebruikers invoeren",
     "in_workspace": "in de werkruimte",
-    "in_workspaces": "",
+    "in_workspaces": "in wertkruimten",
     "incomplete": "Onvoltooid",
     "indexing": "Indexeren",
     "individual": "Individueel",
@@ -1387,5 +1387,11 @@
     "resource_icon_set_illustrator_help": "Optimale SVG uitvoer instellingen voor Adobe Illustrator",
     "resource_icon_set_illustrator_options": "<strong>Profiel:</strong> SVG 1.1 <br/> <strong>Fonts:</strong> Omzetten naar schetsen <br/> <strong>Locatie afbeelding:</strong> Embed <br/> <strong>CSS Eigenschappen:</strong> Stijlkenmerken",
     "resource_icon_set_info_text": "Geef de naam van de verpakking en ook een zip-bestand met uw icons ook. U kunt de lijst met onderstaande icons gebruiken om u te begeleiden.\nLET OP! Noem uw bestanden met dezelfde naam als degene die aangegeven wordt in deze lijst. De bestandsnaam wordt gebruikt opdat uw icon overeengaat met de paseende brontype.\nDe icon \"text.png\" bijvoorbeeld wordt geassocieerd met het brontype \"text\"'.\nHet is niet noodzakelijk de hele lijst te personaliseren: de standaardicon wordt gebruikt als er geen correspondentie is.\nU bent niet verplicht om een bepaalde afbeeldingsextensie te gebruiken. U wordt echter aangeraden om gebruiken .svg te gebruiken (of .png als de .svg optie niet mogelijk is) voor een optimale weergave van het resultaat.\nDe geadviseerde formaat is : 71px X 80px.",
-    "resource_icon_set_management": "De icon packs voor de bronnen beheren."
+    "resource_icon_set_management": "De icon packs voor de bronnen beheren.",
+    "available_languages": "Beschikbare talen",
+    "created_before": "Gemaakt voor",
+    "created_after": "Gemaakt na",
+    "exception_page_title": "Oops! Er is een fout opgetreden...",
+    "fullscreen_off": "",
+    "base_model": "Basismodel"
 }
