@@ -226,7 +226,9 @@ class WorkspaceManager
         }
 
         $ch = $this->container->get('claroline.config.platform_config_handler');
-        $workspace->setGuid(uniqid('', true));
+        if (!$workspace->getGuid()) {
+            $workspace->setGuid(uniqid('', true));
+        }
         $workspace->setMaxUploadResources($ch->getParameter('max_upload_resources'));
         $workspace->setMaxStorageSize($ch->getParameter('max_storage_size'));
         $workspace->setMaxUsers($ch->getParameter('max_workspace_users'));
