@@ -274,7 +274,10 @@ class TransferManager
             $isValidated = true;
         }
 
-        $workspace->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
+        if (!$workspace->getGuid()) {
+            $workspace->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
+        }
+
         $date = new \Datetime(date('d-m-Y H:i'));
         $workspace->setCreationDate($date->getTimestamp());
         $this->om->persist($workspace);
