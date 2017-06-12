@@ -5,12 +5,14 @@
             <span id="ongoing-tickets-tab-badge" class="badge">{{ nbOngoingTickets }}</span>
         </a>
     </li>
-    {#<li role="presentation" {% if supportType == 'forwarded_tickets' %}class="active"{% endif %}>#}
-        {#<a href="{{ path('formalibre_admin_support_forwarded_tickets') }}">#}
-            {#{{ 'forwarded_tickets'|trans({}, 'support') }}#}
-            {#<span id="forwarded-tickets-tab-badge" class="badge">{{ nbForwardedTickets }}</span>#}
-        {#</a>#}
-    {#</li>#}
+    {% if supportToken is defined and supportToken is not empty %}
+        <li role="presentation" {% if supportType == 'forwarded_tickets' %}class="active"{% endif %}>
+            <a href="{{ path('formalibre_admin_support_forwarded_tickets') }}">
+                {{ 'forwarded_tickets'|trans({}, 'support') }}
+                <span id="forwarded-tickets-tab-badge" class="badge">{{ nbForwardedTickets }}</span>
+            </a>
+        </li>
+    {% endif %}
     <li role="presentation" {% if supportType == 'my_tickets' %}class="active"{% endif %}>
         <a href="{{ path('formalibre_admin_support_my_tickets') }}">
             {{ 'my_tickets'|trans({}, 'support') }}
@@ -31,6 +33,9 @@
             id="ticket-tab-{{ ticket.getId() }}"
         >
             <a href="{{ path('formalibre_admin_ticket_open', {'ticket': ticket.getId()}) }}">
+                {% if ticket.isForwarded %}
+                    <i class="fa fa-share"></i>
+                {% endif %}
                 {{ ticket.getTitle() }}
                 &nbsp;
                 <i class="fa fa-times pointer-hand text-muted close-ticket-tab-btn"

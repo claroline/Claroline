@@ -44,4 +44,17 @@ class StatusRepository extends EntityRepository
 
         return $query->getSingleResult();
     }
+
+    public function findStatusByCodeInsensitive($code)
+    {
+        $dql = '
+            SELECT s
+            FROM FormaLibre\SupportBundle\Entity\Status s
+            WHERE UPPER(s.code) = :code
+        ';
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('code', strtoupper($code));
+
+        return $query->getOneOrNullResult();
+    }
 }

@@ -3,13 +3,14 @@
 namespace FormaLibre\SupportBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\UserManager;
 use FormaLibre\SupportBundle\Entity\Comment;
-use FormaLibre\SupportBundle\Entity\Intervention;
 use FormaLibre\SupportBundle\Entity\Status;
 use FormaLibre\SupportBundle\Entity\Ticket;
 use FormaLibre\SupportBundle\Entity\TicketUser;
 use FormaLibre\SupportBundle\Entity\Type;
+use FormaLibre\SupportBundle\Form\AdminTicketType;
 use FormaLibre\SupportBundle\Form\CommentEditType;
 use FormaLibre\SupportBundle\Form\CommentType;
 use FormaLibre\SupportBundle\Form\StatusType;
@@ -37,6 +38,7 @@ class AdminSupportController extends Controller
 {
     private $eventDispatcher;
     private $formFactory;
+    private $platformConfigHandler;
     private $request;
     private $router;
     private $supportManager;
@@ -45,18 +47,20 @@ class AdminSupportController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "requestStack"    = @DI\Inject("request_stack"),
-     *     "router"          = @DI\Inject("router"),
-     *     "supportManager"  = @DI\Inject("formalibre.manager.support_manager"),
-     *     "translator"      = @DI\Inject("translator"),
-     *     "userManager"     = @DI\Inject("claroline.manager.user_manager")
+     *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
+     *     "formFactory"           = @DI\Inject("form.factory"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "requestStack"          = @DI\Inject("request_stack"),
+     *     "router"                = @DI\Inject("router"),
+     *     "supportManager"        = @DI\Inject("formalibre.manager.support_manager"),
+     *     "translator"            = @DI\Inject("translator"),
+     *     "userManager"           = @DI\Inject("claroline.manager.user_manager")
      * })
      */
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         FormFactory $formFactory,
+        PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $requestStack,
         RouterInterface $router,
         SupportManager $supportManager,
@@ -65,6 +69,7 @@ class AdminSupportController extends Controller
     ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
+        $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
         $this->supportManager = $supportManager;
@@ -79,12 +84,15 @@ class AdminSupportController extends Controller
      *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="creationDate","order"="DESC"},
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
     public function adminSupportOngoingTicketsAction($search = '', $page = 1, $max = 50, $orderedBy = 'creationDate', $order = 'DESC')
     {
         $tickets = $this->supportManager->getOngoingTickets($search, $orderedBy, $order, true, $page, $max);
+        $supportToken = $this->platformConfigHandler->hasParameter('support_token') ?
+            $this->platformConfigHandler->getParameter('support_token') :
+            null;
 
         return [
             'tickets' => $tickets,
@@ -95,6 +103,7 @@ class AdminSupportController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
+            'supportToken' => $supportToken,
         ];
     }
 
@@ -112,8 +121,11 @@ class AdminSupportController extends Controller
         $ongoingTickets = $this->supportManager->getOngoingTickets('', 'id', 'ASC', false);
         $myTickets = $this->supportManager->getMyTickets($user, '', 'id', 'ASC', false);
         $closedTickets = $this->supportManager->getClosedTickets('', 'id', 'ASC', false);
-        $forwardedTickets = $this->supportManager->getForwardedTickets('', 'id', 'ASC', false);
+        $forwardedTickets = $this->supportManager->getOngoingForwardedTickets('', 'id', 'ASC', false);
         $activeTicketUsers = $this->supportManager->getActiveTicketUserByUser($user);
+        $supportToken = $this->platformConfigHandler->hasParameter('support_token') ?
+            $this->platformConfigHandler->getParameter('support_token') :
+            null;
 
         return [
             'supportType' => $type,
@@ -122,6 +134,7 @@ class AdminSupportController extends Controller
             'nbClosedTickets' => count($closedTickets),
             'nbForwardedTickets' => count($forwardedTickets),
             'activeTicketUsers' => $activeTicketUsers,
+            'supportToken' => $supportToken,
         ];
     }
 
@@ -144,6 +157,9 @@ class AdminSupportController extends Controller
         $order = 'DESC'
     ) {
         $tickets = $this->supportManager->getMyTickets($user, $search, $orderedBy, $order, true, $page, $max);
+        $supportToken = $this->platformConfigHandler->hasParameter('support_token') ?
+            $this->platformConfigHandler->getParameter('support_token') :
+            null;
 
         return [
             'tickets' => $tickets,
@@ -154,6 +170,7 @@ class AdminSupportController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
+            'supportToken' => $supportToken,
         ];
     }
 
@@ -164,6 +181,7 @@ class AdminSupportController extends Controller
      *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="creationDate","order"="DESC"},
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
     public function adminSupportArchivesAction(
@@ -174,6 +192,9 @@ class AdminSupportController extends Controller
         $order = 'DESC'
     ) {
         $tickets = $this->supportManager->getClosedTickets($search, $orderedBy, $order, true, $page, $max);
+        $supportToken = $this->platformConfigHandler->hasParameter('support_token') ?
+            $this->platformConfigHandler->getParameter('support_token') :
+            null;
 
         return [
             'tickets' => $tickets,
@@ -184,6 +205,7 @@ class AdminSupportController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
+            'supportToken' => $supportToken,
         ];
     }
 
@@ -194,6 +216,7 @@ class AdminSupportController extends Controller
      *     defaults={"page"=1, "search"="", "max"=50, "orderedBy"="creationDate","order"="DESC"},
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
     public function adminSupportForwardedTicketsAction(
@@ -203,7 +226,10 @@ class AdminSupportController extends Controller
         $orderedBy = 'creationDate',
         $order = 'DESC'
     ) {
-        $tickets = [];
+        $tickets = $this->supportManager->getOngoingForwardedTickets($search, $orderedBy, $order, true, $page, $max);
+        $supportToken = $this->platformConfigHandler->hasParameter('support_token') ?
+            $this->platformConfigHandler->getParameter('support_token') :
+            null;
 
         return [
             'tickets' => $tickets,
@@ -214,6 +240,7 @@ class AdminSupportController extends Controller
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
+            'supportToken' => $supportToken,
         ];
     }
 
@@ -223,7 +250,7 @@ class AdminSupportController extends Controller
      *     name="formalibre_admin_support_types_management",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
     public function adminSupportTypesManagementAction()
@@ -242,7 +269,7 @@ class AdminSupportController extends Controller
      *     name="formalibre_admin_support_status_management",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
     public function adminSupportStatusManagementAction()
@@ -261,7 +288,7 @@ class AdminSupportController extends Controller
      *     name="formalibre_admin_support_notifications_management",
      *     options={"expose"=true}
      * )
-     * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
     public function adminSupportNotificationsManagementAction()
@@ -315,10 +342,15 @@ class AdminSupportController extends Controller
      */
     public function adminTicketDisplayAction(Ticket $ticket)
     {
+        $supportToken = $this->platformConfigHandler->hasParameter('support_token') ?
+            $this->platformConfigHandler->getParameter('support_token') :
+            null;
+
         return [
             'ticket' => $ticket,
             'title' => $ticket->getTitle(),
             'supportType' => $ticket->getId(),
+            'supportToken' => $supportToken,
         ];
     }
 
@@ -483,48 +515,81 @@ class AdminSupportController extends Controller
      */
     public function adminTicketCommentCreateAction(User $user, Ticket $ticket, $type)
     {
+        $isForwarded = $ticket->isForwarded();
         $comment = new Comment();
         $form = $this->formFactory->create(new CommentType(intval($type)), $comment);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
-            $comment->setTicket($ticket);
-            $comment->setUser($user);
-            $comment->setIsAdmin(true);
-            $comment->setType($type);
-            $comment->setCreationDate(new \DateTime());
-            $this->supportManager->persistComment($comment);
+            if ($isForwarded) {
+                $supportToken = $this->checkOfficialSupportAccess();
+                $platformUrl = $this->platformConfigHandler->hasParameter('support_platform_url') ?
+                    $this->platformConfigHandler->getParameter('support_platform_url') :
+                    '';
+                $url = 'https://api.claroline.cloud/cc/support/'.$supportToken.'/tickets/'.$ticket->getOfficialUuid().'/comments';
+                $postDataString = '{
+                    "comment":"'.urlencode($comment->getContent()).'",
+                    "platformUrl":"'.$platformUrl.'"
+                }';
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postDataString);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                $returnedData = (array) json_decode(curl_exec($ch));
+                $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                curl_close($ch);
 
-            switch ($type) {
-                case Comment::PUBLIC_COMMENT:
-                    $this->supportManager->sendTicketMail(
-                        $user,
-                        $comment->getTicket(),
-                        'new_admin_comment',
-                        $comment
-                    );
-                    break;
-                case Comment::PRIVATE_COMMENT:
-                    $this->supportManager->sendTicketMail(
-                        $user,
-                        $comment->getTicket(),
-                        'new_internal_note',
-                        $comment
-                    );
-                    break;
+                if ($httpCode !== 201) {
+                    $data = is_array($returnedData) && count($returnedData) > 0 ?
+                        $returnedData[0] :
+                        $this->translator->trans('message_sending_has_failed', [], 'support');
+                }
+            } else {
+                $httpCode = 201;
             }
-            $data = [];
-            $data['comment'] = [];
-            $data['comment']['id'] = $comment->getId();
-            $data['comment']['content'] = $comment->getContent();
-            $data['comment']['type'] = $comment->getType();
-            $data['comment']['creationDate'] = $comment->getCreationDate()->format('d/m/Y H:i');
-            $data['user']['id'] = $user->getId();
-            $data['user']['firstName'] = $user->getFirstName();
-            $data['user']['lastName'] = $user->getLastName();
-            $data['user']['picture'] = $user->getPicture();
+            if ($httpCode === 201) {
+                $comment->setTicket($ticket);
+                $comment->setUser($user);
+                $comment->setIsAdmin(true);
+                $comment->setType($type);
+                $comment->setCreationDate(new \DateTime());
+                $this->supportManager->persistComment($comment);
 
-            return new JsonResponse($data, 201);
+                if (!$isForwarded) {
+                    switch ($type) {
+                        case Comment::PUBLIC_COMMENT:
+                            $this->supportManager->sendTicketMail(
+                                $user,
+                                $comment->getTicket(),
+                                'new_admin_comment',
+                                $comment
+                            );
+                            break;
+                        case Comment::PRIVATE_COMMENT:
+                            $this->supportManager->sendTicketMail(
+                                $user,
+                                $comment->getTicket(),
+                                'new_internal_note',
+                                $comment
+                            );
+                            break;
+                    }
+                }
+                $data = [];
+                $data['comment'] = [];
+                $data['comment']['id'] = $comment->getId();
+                $data['comment']['content'] = $comment->getContent();
+                $data['comment']['type'] = $comment->getType();
+                $data['comment']['creationDate'] = $comment->getCreationDate()->format('d/m/Y H:i');
+                $data['user']['id'] = $user->getId();
+                $data['user']['firstName'] = $user->getFirstName();
+                $data['user']['lastName'] = $user->getLastName();
+                $data['user']['picture'] = $user->getPicture();
+                $data['editable'] = !$isForwarded;
+            }
+
+            return new JsonResponse($data, $httpCode);
         } else {
             return [
                 'form' => $form->createView(),
@@ -916,7 +981,7 @@ class AdminSupportController extends Controller
                     $messageData['type'] = $type;
                 }
                 if ($status !== $oldStatus) {
-                    $intervention = $this->supportManager->createIntervention($ticket, $user, $status);
+                    $intervention = $this->supportManager->createIntervention($ticket, $status, $user);
                     $data['status'] = [];
                     $data['status']['name'] = $status->getName();
                     $data['status']['date'] = $intervention->getEndDate()->format('d/m/Y H:i');
@@ -960,5 +1025,293 @@ class AdminSupportController extends Controller
         } else {
             return ['form' => $form->createView(), 'ticket' => $ticket];
         }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/official/support/management",
+     *     name="formalibre_admin_support_official_support_management",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminSupportOfficialSupportManagementAction()
+    {
+        $supportToken = $this->platformConfigHandler->hasParameter('support_token') ?
+            $this->platformConfigHandler->getParameter('support_token') :
+            null;
+        $supportPlatformUrl = $this->platformConfigHandler->hasParameter('support_platform_url') ?
+            $this->platformConfigHandler->getParameter('support_platform_url') :
+            null;
+        $contactsData = null;
+        $supportData = null;
+        $platformUrl = !empty($this->platformConfigHandler->getParameter('domain_name')) ?
+            $this->platformConfigHandler->getParameter('domain_name') :
+            $this->request->getHost();
+
+        if (!empty($supportToken)) {
+            $contactsUrl = 'https://api.claroline.cloud/cc/platform/contacts/'.$supportToken;
+            $supportUrl = 'https://api.claroline.cloud/cc/support/'.$supportToken;
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $contactsUrl);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $contactsData = (array) json_decode(curl_exec($ch));
+            curl_setopt($ch, CURLOPT_URL, $supportUrl);
+            $supportData = (array) json_decode(curl_exec($ch));
+            curl_close($ch);
+        }
+
+        return [
+            'supportToken' => $supportToken,
+            'supportPlatformUrl' => $supportPlatformUrl,
+            'title' => 'official_support',
+            'noOfficialSupportInfo' => true,
+            'contactsData' => $contactsData,
+            'supportData' => $supportData,
+            'platformUrl' => $platformUrl,
+        ];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/token/register",
+     *     name="formalibre_admin_support_token_register",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function adminSupportTokenRegisterAction()
+    {
+        $token = $this->request->request->get('token', false);
+        $platformUrl = $this->request->request->get('platformUrl', false);
+
+        if ($token) {
+            $this->platformConfigHandler->setParameter('support_token', $token);
+        }
+        if ($platformUrl) {
+            $this->platformConfigHandler->setParameter('support_platform_url', $platformUrl);
+        }
+
+        return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/support/official/support/info",
+     *     name="formalibre_admin_support_official_support_info",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template()
+     */
+    public function adminSupportOfficialSupportInfoAction()
+    {
+        $supportToken = $this->platformConfigHandler->hasParameter('support_token') ?
+            $this->platformConfigHandler->getParameter('support_token') :
+            null;
+
+        return ['supportToken' => $supportToken];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/create/form",
+     *     name="formalibre_admin_ticket_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCreateModalForm.html.twig")
+     */
+    public function adminTicketCreateFormAction(User $user)
+    {
+        $this->checkOfficialSupportAccess();
+        $ticket = new Ticket();
+        $ticket->setContactMail($user->getMail());
+        $ticket->setContactPhone($user->getPhone());
+        $form = $this->formFactory->create(new AdminTicketType(), $ticket);
+
+        return ['form' => $form->createView(), 'user' => $user];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/ticket/create",
+     *     name="formalibre_admin_ticket_create",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCreateModalForm.html.twig")
+     */
+    public function adminTicketCreateAction(User $user)
+    {
+        $supportToken = $this->checkOfficialSupportAccess();
+        $platformUrl = $this->platformConfigHandler->hasParameter('support_platform_url') ?
+            $this->platformConfigHandler->getParameter('support_platform_url') :
+            '';
+        $ticket = new Ticket();
+        $ticket->setContactMail($user->getMail());
+        $ticket->setContactPhone($user->getPhone());
+        $form = $this->formFactory->create(new AdminTicketType(), $ticket);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $postDataString = '{
+                "type":"'.$ticket->getType()->getName().'",
+                "subject":"'.urlencode($ticket->getTitle()).'",
+                "platformUrl":"'.$platformUrl.'"
+            }';
+            $url = 'https://api.claroline.cloud/cc/support/'.$supportToken.'/tickets';
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postDataString);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $returnedData = (array) json_decode(curl_exec($ch));
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode === 201) {
+                $this->supportManager->initializeForwardedTicket($ticket, $user, null, $returnedData['id']);
+                $data = [];
+                $data['id'] = $ticket->getId();
+                $data['title'] = $ticket->getTitle();
+                $data['creationDate'] = $ticket->getCreationDate()->format('d/m/Y H:i');
+                $data['user'] = [];
+                $data['user']['firstName'] = $user->getFirstName();
+                $data['user']['lastName'] = $user->getLastName();
+                $type = $ticket->getType();
+                $status = $ticket->getStatus();
+
+                if (!empty($type)) {
+                    $data['typeName'] = $type->getName();
+                    $data['typeDescription'] = $type->getDescription();
+                }
+                if (!empty($status)) {
+                    $data['statusName'] = $status->getName();
+                    $data['statusDescription'] = $status->getDescription();
+                }
+            } else {
+                $data = is_array($returnedData) && count($returnedData) > 0 ?
+                    $returnedData[0] :
+                    $this->translator->trans('forwarding_has_failed', [], 'support');
+            }
+
+            return new JsonResponse($data, $httpCode);
+        } else {
+            return ['form' => $form->createView(), 'user' => $user];
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/forwarded/ticket/{ticket}/create/form",
+     *     name="formalibre_admin_forwarded_ticket_create_form",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminForwardedTicketCreateModalForm.html.twig")
+     */
+    public function adminForwardedTicketCreateFormAction(User $user, Ticket $ticket)
+    {
+        $this->checkOfficialSupportAccess();
+        $forwardedTicket = new Ticket();
+        $forwardedTicket->setTitle($ticket->getTitle());
+        $forwardedTicket->setContactMail($user->getMail());
+        $forwardedTicket->setContactPhone($user->getPhone());
+        $forwardedTicket->setDescription($ticket->getDescription());
+        $forwardedTicket->setType($ticket->getType());
+        $form = $this->formFactory->create(new AdminTicketType(), $forwardedTicket);
+
+        return ['form' => $form->createView(), 'ticket' => $ticket, 'user' => $user];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/forwarded/ticket/{ticket}/create",
+     *     name="formalibre_admin_forwarded_ticket_create",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminForwardedTicketCreateModalForm.html.twig")
+     */
+    public function adminForwardedTicketCreateAction(User $user, Ticket $ticket)
+    {
+        $supportToken = $this->checkOfficialSupportAccess();
+        $platformUrl = $this->platformConfigHandler->hasParameter('support_platform_url') ?
+            $this->platformConfigHandler->getParameter('support_platform_url') :
+            '';
+        $forwardedTicket = new Ticket();
+        $forwardedTicket->setTitle($ticket->getTitle());
+        $forwardedTicket->setContactMail($user->getMail());
+        $forwardedTicket->setContactPhone($user->getPhone());
+        $forwardedTicket->setDescription($ticket->getDescription());
+        $forwardedTicket->setType($ticket->getType());
+        $form = $this->formFactory->create(new AdminTicketType(), $forwardedTicket);
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $postDataString = '{
+                "type":"'.$forwardedTicket->getType()->getName().'",
+                "subject":"'.urlencode($forwardedTicket->getTitle()).'",
+                "platformUrl":"'.$platformUrl.'"
+            }';
+            $url = 'https://api.claroline.cloud/cc/support/'.$supportToken.'/tickets';
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $postDataString);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+            $returnedData = (array) json_decode(curl_exec($ch));
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            curl_close($ch);
+
+            if ($httpCode === 201) {
+                $this->supportManager->initializeForwardedTicket($forwardedTicket, $user, $ticket, $returnedData['id']);
+                $data = [
+                    'forwardedId' => $forwardedTicket->getId(),
+                    'id' => $ticket->getId(),
+                    'status_name' => $ticket->getStatus() ? $ticket->getStatus()->getName() : '',
+                    'status_description' => $ticket->getStatus() ? $ticket->getStatus()->getDescription() : '',
+                ];
+            } else {
+                $data = is_array($returnedData) && count($returnedData) > 0 ?
+                    $returnedData[0] :
+                    $this->translator->trans('forwarding_has_failed', [], 'support');
+            }
+
+            return new JsonResponse($data, $httpCode);
+        } else {
+            return ['form' => $form->createView(), 'ticket' => $ticket, 'user' => $user];
+        }
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/admin/forwarded/ticket/{ticket}/remove",
+     *     name="formalibre_admin_forwarded_ticket_remove",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
+     */
+    public function adminForwardedTicketRemoveAction(Ticket $ticket)
+    {
+        $ticketId = $ticket->getId();
+        $this->supportManager->deleteTicket($ticket);
+
+        return new JsonResponse($ticketId, 200);
+    }
+
+    private function checkOfficialSupportAccess()
+    {
+        $supportToken = $this->platformConfigHandler->hasParameter('support_token') ?
+            $this->platformConfigHandler->getParameter('support_token') :
+            null;
+
+        if (empty($supportToken)) {
+            throw new AccessDeniedException();
+        }
+
+        return $supportToken;
     }
 }

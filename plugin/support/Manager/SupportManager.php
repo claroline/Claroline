@@ -126,7 +126,7 @@ class SupportManager
         $status = $this->getStatusByCode('NEW');
 
         if (!empty($status)) {
-            $this->createIntervention($ticket, $user, $status);
+            $this->createIntervention($ticket, $status, $user);
         }
         $this->persistTicket($ticket);
         $this->om->endFlushSuite();
@@ -142,7 +142,7 @@ class SupportManager
             $messageData = [];
             $messageData['oldStatus'] = $ticket->getStatus();
             $messageData['status'] = $status;
-            $this->createIntervention($ticket, $user, $status);
+            $this->createIntervention($ticket, $status, $user);
             $this->createInterventionComment($user, $ticket, $messageData, Comment::PUBLIC_COMMENT);
             $this->persistTicket($ticket);
             $this->om->endFlushSuite();
@@ -191,7 +191,7 @@ class SupportManager
         $this->om->flush();
     }
 
-    public function createIntervention(Ticket $ticket, User $user, Status $status)
+    public function createIntervention(Ticket $ticket, Status $status, User $user = null)
     {
         $this->om->startFlushSuite();
         $intervention = new Intervention();
@@ -577,13 +577,45 @@ class SupportManager
         return $stakeholders;
     }
 
+    public function initializeForwardedTicket(Ticket $ticket, User $user, Ticket $sourceTicket = null, $officialUuid = null)
+    {
+        $this->om->startFlushSuite();
+        $ticket->setUser($user);
+        $ticket->setCreationDate(new \DateTime());
+        $ticket->setForwarded(true);
+        $ticket->setOfficialUuid($officialUuid);
+        $newStatus = $this->getStatusByCode('NEW');
+
+        if (!empty($newStatus)) {
+            $this->createIntervention($ticket, $newStatus, $user);
+        }
+        if (!empty($sourceTicket)) {
+            $ticket->setLinkedTicket($sourceTicket);
+            $sourceTicket->setLinkedTicket($ticket);
+            $forwardedStatus = $this->getStatusByCode('FW');
+
+            if (!empty($forwardedStatus)) {
+                $messageData = [];
+                $messageData['oldStatus'] = $ticket->getStatus();
+                $messageData['status'] = $forwardedStatus;
+                $this->createIntervention($sourceTicket, $forwardedStatus, $user);
+                $this->createInterventionComment($user, $sourceTicket, $messageData, Comment::PUBLIC_COMMENT);
+            }
+            $this->persistTicket($sourceTicket);
+        }
+        $this->persistTicket($ticket);
+        $this->om->endFlushSuite();
+
+        return $ticket;
+    }
+
     /**************************************
      * Access to TicketRepository methods *
      **************************************/
 
     public function getTicketsByUser(User $user)
     {
-        return $this->ticketRepo->findBy(['user' => $user, 'userActive' => true]);
+        return $this->ticketRepo->findBy(['user' => $user, 'userActive' => true, 'forwarded' => false]);
     }
 
     public function getOngoingTickets(
@@ -632,7 +664,7 @@ class SupportManager
         return $withPager ? $this->pagerFactory->createPagerFromArray($tickets, $page, $max) : $tickets;
     }
 
-    public function getForwardedTickets(
+    public function getOngoingForwardedTickets(
         $search = '',
         $orderedBy = 'creationDate',
         $order = 'DESC',
@@ -640,7 +672,9 @@ class SupportManager
         $page = 1,
         $max = 50
     ) {
-        $tickets = [];
+        $tickets = empty($search) ?
+            $this->ticketRepo->findOngoingForwardedTickets($orderedBy, $order) :
+            $this->ticketRepo->findSearchedOngoingForwardedTickets($search, $orderedBy, $order);
 
         return $withPager ? $this->pagerFactory->createPagerFromArray($tickets, $page, $max) : $tickets;
     }
@@ -675,6 +709,13 @@ class SupportManager
             $this->ticketRepo->findSearchedClosedTicketsByUser($user, $search, $orderedBy, $order);
 
         return $withPager ? $this->pagerFactory->createPagerFromArray($tickets, $page, $max) : $tickets;
+    }
+
+    public function getForwardedTicketByUuid($uuid)
+    {
+        $tickets = $this->ticketRepo->findBy(['forwarded' => true, 'officialUuid' => $uuid]);
+
+        return count($tickets) === 1 ? $tickets[0] : null;
     }
 
     /************************************
@@ -732,6 +773,11 @@ class SupportManager
     public function getOrderOfLastStatus()
     {
         return $this->statusRepo->findOrderOfLastStatus();
+    }
+
+    public function getStatusByCodeInsensitive($code)
+    {
+        return $this->statusRepo->findStatusByCodeInsensitive($code);
     }
 
     /******************************************
