@@ -40,8 +40,6 @@ const itemScoreMax = item => {
   let scoreMax
 
   if (item && item.score) {
-    let expectedAnswers = []
-
     switch (item.score.type) {
       case 'manual':
         scoreMax = item.score.max
@@ -50,16 +48,7 @@ const itemScoreMax = item => {
         scoreMax = item.score.success
         break
       case 'sum':
-        expectedAnswers = getDefinition(item.type).expectAnswer(item)
-
-        if (expectedAnswers.length > 0) {
-          scoreMax = 0
-          expectedAnswers.forEach(ca => {
-            if (ca.score && ca.score > 0) {
-              scoreMax += ca.score
-            }
-          })
-        }
+        scoreMax = getDefinition(item.type).getCorrectedAnswer(item).getMissing().reduce((sum, el) => sum += el.getScore(), 0)
         break
     }
   }

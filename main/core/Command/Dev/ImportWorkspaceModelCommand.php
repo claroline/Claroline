@@ -47,7 +47,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
         );
         $this->addOption(
             'uncompressed',
-            null,
+            'u',
             InputOption::VALUE_NONE,
             'When set to true, will try to import directory_path parameter as an uncompressed template'
         );

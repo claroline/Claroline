@@ -51,7 +51,7 @@ class ExerciseImporter extends Importer implements ResourceRichTextInterface
             ->validate(json_decode(json_encode($data['data']['quiz'])), [Validation::REQUIRE_SOLUTIONS]);
 
         if (!empty($errors)) {
-            throw new ValidationException('Exercise : import data are not valid.', $errors);
+            throw new ValidationException('Exercise : import data are not valid.', $errors, $data);
         }
     }
 
@@ -98,15 +98,15 @@ class ExerciseImporter extends Importer implements ResourceRichTextInterface
                         $object->setData($file->getUrl());
                         $om->persist($object);
                     }
-                }
 
-                if ($stepItem->getQuestion()->getInteraction() instanceof ContentItem && 1 !== preg_match('#^text\/[^/]+$#', $stepItem->getQuestion()->getMimeType())) {
-                    $contentItem = $stepItem->getQuestion()->getInteraction();
-                    $basename = basename($contentItem->getData());
-                    $file = new File($this->getRootPath().DIRECTORY_SEPARATOR.$basename);
-                    $file = $fileUtilities->createFile($file);
-                    $object->setData($file->getUrl());
-                    $om->persist($contentItem);
+                    if ($stepItem->getQuestion()->getInteraction() instanceof ContentItem && 1 !== preg_match('#^text\/[^/]+$#', $stepItem->getQuestion()->getMimeType())) {
+                        $contentItem = $stepItem->getQuestion()->getInteraction();
+                        $basename = basename($contentItem->getData());
+                        $file = new File($this->getRootPath().DIRECTORY_SEPARATOR.$basename);
+                        $file = $fileUtilities->createFile($file);
+                        $object->setData($file->getUrl());
+                        $om->persist($contentItem);
+                    }
                 }
             }
         }
