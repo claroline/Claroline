@@ -222,7 +222,7 @@ class UserControllerTest extends TransactionalTestCase
 
         //tests
         $this->logIn($adminOrga);
-        $this->client->request('GET', "api/user/{$john->getId()}.json");
+        $this->client->request('GET', "api/user/{$john->getId()}/get.json");
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         $this->assertEquals(401, $this->client->getResponse()->getStatusCode());
