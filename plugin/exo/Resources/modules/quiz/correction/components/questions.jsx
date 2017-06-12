@@ -4,16 +4,22 @@ import {connect} from 'react-redux'
 
 import {tex} from '#/main/core/translation'
 import {selectors as correctionSelectors} from './../selectors'
+import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 
 export const QuestionRow = props =>
   <tr>
     <td>{props.question.title || props.question.content}</td>
     <td>{props.answers.length}</td>
     <td className="table-actions text-right">
-      <a className="btn btn-link-default" href={`#correction/questions/${props.question.id}`}>
-        <span className="fa fa-fw fa-check-square-o" />
-        <span className="sr-only">{tex('to_correct')}</span>
-      </a>
+      <TooltipElement
+        id={props.question.id}
+        tip={tex('to_correct')}
+      >
+        <a className="btn btn-link-default" href={`#correction/questions/${props.question.id}`}>
+          <span className="fa fa-fw fa-check-square-o" />
+          <span className="sr-only">{tex('to_correct')}</span>
+        </a>
+      </TooltipElement>
     </td>
   </tr>
 

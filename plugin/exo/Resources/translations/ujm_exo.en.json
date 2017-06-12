@@ -162,6 +162,7 @@
     "editor_penalty_label": "Penalty for every non defined wrong answer.",
     "editor_validating_desc": "Some errors or missing information prevent saving data.",
     "end_date": "End date",
+    "end_message": "End message",
     "entry": "Entry",
     "error_no_step_found": "An error occured while retrieving the current step.",
     "evaluative": "Evaluative",

@@ -90,6 +90,17 @@ const Properties = props =>
       label={tex('show_end_page')}
       onChange={checked => props.onChange('parameters.showEndPage', checked)}
     />
+
+    {props.parameters.showEndPage &&
+      <FormGroup controlId="quiz-description" label={t('end_message')}>
+        <Textarea
+          id="quiz-end-message"
+          content={props.parameters.endMessage}
+          onChange={endMessage => props.onChange('parameters.endMessage', endMessage)}
+        />
+      </FormGroup>
+    }
+
   </fieldset>
 
 Properties.propTypes = {
@@ -99,7 +110,8 @@ Properties.propTypes = {
     type: T.string.isRequired,
     showOverview: T.bool.isRequired,
     showMetadata: T.bool.isRequired,
-    showEndPage: T.bool.isRequired
+    showEndPage: T.bool.isRequired,
+    endMessage: T.string
   }).isRequired,
   validating: T.bool.isRequired,
   onChange: T.func.isRequired
