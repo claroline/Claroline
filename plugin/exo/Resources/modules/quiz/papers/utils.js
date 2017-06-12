@@ -1,3 +1,4 @@
+import {getDefinition} from '#/plugin/exo/items/item-types'
 import {
   SHOW_CORRECTION_AT_VALIDATION,
   SHOW_CORRECTION_AT_LAST_ATTEMPT,
@@ -30,5 +31,42 @@ export const utils = {
     } else {
       return false
     }
+  },
+  computeScore(paper, answers) {
+    let total = 0
+
+    paper.structure.steps.forEach(step => {
+      step.items.forEach(item => {
+        const def = getDefinition(item.type)
+        const correctedAnswer = def.getCorrectedAnswer(item, answers.find(answer => answer.questionId === item.id))
+        total += calculate(item.score, correctedAnswer)
+      })
+    })
+    return total
   }
+}
+
+//these functions are ported from php
+function calculate(scoreRule, correctedAnswer) {
+  let score = null
+  switch (scoreRule.type) {
+    case 'fixed':
+      score = correctedAnswer.getMissing().length > 0 || correctedAnswer.getUnexpected().length > 0 ?
+        scoreRule.failure:
+        scoreRule.success
+      break
+    case 'sum':
+      score = 0
+      correctedAnswer.getExpected().forEach(el => score += el.getScore())
+      correctedAnswer.getUnexpected().forEach(el => score += el.getScore())
+      correctedAnswer.getPenalties().forEach(el => score -= el.getScore())
+      break
+    case 'manual':
+    case 'none':
+      break
+    default:
+      //console.error('Unknown score type ' + scoreRule.type)
+  }
+
+  return score
 }

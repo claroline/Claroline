@@ -25,7 +25,7 @@ const typeProperties = [
   'decorate',
   'validate',
   'paper',
-  'expectAnswer'
+  'getCorrectedAnswer'
 ]
 
 let registeredTypes = {}

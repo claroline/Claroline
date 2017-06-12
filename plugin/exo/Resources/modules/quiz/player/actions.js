@@ -25,7 +25,7 @@ export const actions = {}
 
 actions.setTestMode = makeActionCreator(TEST_MODE_SET, 'testMode')
 actions.startAttempt = makeActionCreator(ATTEMPT_START, 'paper', 'answers')
-actions.finishAttempt = makeActionCreator(ATTEMPT_FINISH, 'paper')
+actions.finishAttempt = makeActionCreator(ATTEMPT_FINISH, 'paper', 'answers')
 actions.openStep = makeActionCreator(STEP_OPEN, 'step')
 actions.updateAnswer = makeActionCreator(ANSWER_UPDATE, 'questionId', 'answerData')
 actions.submitAnswers = makeActionCreator(ANSWERS_SUBMIT, 'quizId', 'paperId', 'answers')
@@ -157,7 +157,7 @@ actions.finish = (quizId, paper, pendingAnswers = {}, showFeedback = false) => {
 actions.handleAttemptEnd = (paper) => {
   return (dispatch, getState) => {
     // Finish the current attempt
-    dispatch(actions.finishAttempt(paper))
+    dispatch(actions.finishAttempt(paper, playerSelectors.answers(getState())))
     dispatch(paperAction.addPaper(buildPaper(paper, playerSelectors.answers(getState()))))
 
     // We will decide here if we show the correction now or not and where we redirect the user

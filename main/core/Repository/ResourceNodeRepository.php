@@ -470,7 +470,10 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
     private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
     {
         if ($roles) {
-            $builder->whereHasRoleIn($roles);
+            if (!in_array('ROLE_ADMIN', $roles)) {
+                //this should handle the workspace manager filter
+                $builder->whereHasRoleIn($roles);
+            }
         }
 
         $filterMethodMap = [

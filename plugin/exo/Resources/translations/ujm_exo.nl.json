@@ -503,7 +503,7 @@
     "show_interact_fields": "Aanwijzingen en globale feedback",
     "show_metadata_fields": "Titel en andere velden",
     "show_overview": "Quiz overzicht aan de gebruikers tonen",
-    "solution_score": "{0} %score% punt|{1} %score% punt|[2,Inf] %score% punten",
+    "solution_score": "{-1, 0, 1} %score% punt|[2,+Inf[ %score% punten|]-Inf, -2] %score% punten",
     "solution_score_not_valid": "Een score moet een geldig cijfer zijn.",
     "sort": "De documenten sorteren",
     "square": "Vierkant",

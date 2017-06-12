@@ -23,14 +23,14 @@ function initPaper(state, action) {
   return action.paper
 }
 
-function finishPaper(state, action) {  
+function finishPaper(state, action) {
   return update(state, {
     ['finished']: {$set: true},
     ['endDate']: {
       $set: (action.paper.endDate ? action.paper.endDate : moment().format('YYYY-MM-DD\Thh:mm:ss'))
     },
     ['score']: {
-      $set: (action.paper.score || 0 === action.paper.score ? action.paper.score : null)
+      $set: action.paper.score
     }
   })
 }
