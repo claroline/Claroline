@@ -263,7 +263,7 @@ class UserController extends FOSRestController
 
     /**
      * @View(serializerGroups={"api_user"})
-     * @Get("/user/{search}", name="get_user", options={ "method_prefix" = false })
+     * @Get("/user/{search}/get", name="get_user", options={ "method_prefix" = false })
      */
     public function getUserAction($search)
     {
