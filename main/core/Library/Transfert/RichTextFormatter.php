@@ -568,7 +568,7 @@ class RichTextFormatter
             );
             //embed flash by default
             if (!isset($embed) || $embed) {
-                return '<object '.$cssStyle." type='".$node->getMimeType()."' src='".$url."'>".
+                return '<object '.$cssStyle." type='".$node->getMimeType()."' data='".$url."'>".
                             "<param name='allowFullScreen' value='true' />".
                             "<param name='src' value='".$url."' />".
                         '</object>';
