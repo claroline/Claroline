@@ -5,6 +5,7 @@ const paper = (state) => state.paper
 const currentStepId = (state) => state.currentStep.id
 const answers = (state) => state.answers
 const quizMaxAttempts = (state) => state.quiz.parameters.maxAttempts
+const quizEndMessage = (state) => state.quiz.parameters.endMessage
 const showFeedback = (state) => state.quiz.parameters.showFeedback
 const feedbackEnabled = state => state.currentStep.feedbackEnabled
 const showCorrectionAt = state => state.quiz.parameters.showCorrectionAt
@@ -127,5 +128,6 @@ export const select = {
   currentStepSend,
   showCorrectionAt,
   hasEndPage,
-  correctionDate
+  correctionDate,
+  quizEndMessage
 }

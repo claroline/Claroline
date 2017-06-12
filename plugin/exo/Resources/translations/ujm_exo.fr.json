@@ -149,6 +149,7 @@
     "editor_penalty_label": "Pénalité pour toute mauvaise réponse non définie.",
     "editor_validating_desc": "Des erreurs ou des informations manquantes empêchent la sauvegarde des données.",
     "end_date": "Date de fin",
+    "end_message": "Message de fin",
     "entry": "Entrée",
     "error_no_step_found": "Une erreur est survenue lors de la récupération de l'étape courrante.",
     "evaluative": "Formatif",

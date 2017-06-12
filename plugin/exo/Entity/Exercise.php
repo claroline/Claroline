@@ -84,6 +84,15 @@ class Exercise extends AbstractResource
     private $showEndPage = false;
 
     /**
+     * A message to display at the end of the quiz.
+     *
+     * @ORM\Column(name="end_message", type="text", nullable=true)
+     *
+     * @var string
+     */
+    private $endMessage;
+
+    /**
      * Show the Exercise meta in the overview of the Exercise.
      *
      * @var bool
@@ -316,6 +325,16 @@ class Exercise extends AbstractResource
     public function getShowEndPage()
     {
         return $this->showEndPage;
+    }
+
+    public function setEndMessage($endMessage)
+    {
+        $this->endMessage = $endMessage;
+    }
+
+    public function getEndMessage()
+    {
+        return $this->endMessage;
     }
 
     /**

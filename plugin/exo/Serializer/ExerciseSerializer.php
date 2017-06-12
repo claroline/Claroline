@@ -173,6 +173,7 @@ class ExerciseSerializer implements SerializerInterface
         // Visibility parameters
         $parameters->showOverview = $exercise->getShowOverview();
         $parameters->showEndPage = $exercise->getShowEndPage();
+        $parameters->endMessage = $exercise->getEndMessage();
         $parameters->showMetadata = $exercise->isMetadataVisible();
         $parameters->showStatistics = $exercise->hasStatistics();
         $parameters->showFullCorrection = !$exercise->isMinimalCorrection();
@@ -266,6 +267,10 @@ class ExerciseSerializer implements SerializerInterface
             $exercise->setShowEndPage($parameters->showEndPage);
         }
 
+        if (isset($parameters->endMessage)) {
+            $exercise->setEndMessage($parameters->endMessage);
+        }
+
         if (isset($parameters->showMetadata)) {
             $exercise->setMetadataVisible($parameters->showMetadata);
         }
@@ -305,6 +310,7 @@ class ExerciseSerializer implements SerializerInterface
                 case ShowCorrectionAt::AFTER_LAST_ATTEMPT:
                     $exercise->setCorrectionMode(CorrectionMode::AFTER_LAST_ATTEMPT);
                     break;
+                case ShowCorrectionAt::AFTER_DATE:
                 case ShowCorrectionAt::AFTER_DATE:
                     $exercise->setCorrectionMode(CorrectionMode::AFTER_DATE);
                     $correctionDate = \DateTime::createFromFormat('Y-m-d\TH:i:s', $parameters->correctionDate);

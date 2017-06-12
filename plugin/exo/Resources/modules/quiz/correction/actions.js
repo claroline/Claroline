@@ -80,7 +80,10 @@ actions.saveCorrection = (questionId) => {
       a.questionId === questionId && a.score !== undefined && a.score !== null && !isNaN(a.score) && a.score.trim() !== '' && a.score <= question.score.max
     )
     const answers = validAnswers.map(a => {
-      return Object.assign({}, a, {score: parseFloat(a.score)})
+      return Object.assign({}, a, {
+        score: parseFloat(a.score),
+        type: question.type
+      })
     })
     dispatch({
       [REQUEST_SEND]: {
