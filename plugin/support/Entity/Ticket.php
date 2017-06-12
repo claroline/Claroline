@@ -58,7 +58,7 @@ class Ticket
     protected $creationDate;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     protected $num;
 
@@ -108,6 +108,22 @@ class Ticket
      * @ORM\Column(name="admin_active", type="boolean", options={"default" = 1})
      */
     protected $adminActive = true;
+
+    /**
+     * @ORM\Column(name="forwarded", type="boolean", options={"default" = 0})
+     */
+    protected $forwarded = false;
+
+    /**
+     * @ORM\OneToOne(targetEntity="FormaLibre\SupportBundle\Entity\Ticket")
+     * @ORM\JoinColumn(name="linked_ticket_id", nullable=true, onDelete="SET NULL")
+     */
+    protected $linkedTicket;
+
+    /**
+     * @ORM\Column(name="official_uuid", nullable=true)
+     */
+    protected $officialUuid;
 
     public function __construct()
     {
@@ -294,5 +310,35 @@ class Ticket
             $this->details = [];
         }
         $this->details['isOpen'] = $open;
+    }
+
+    public function isForwarded()
+    {
+        return $this->forwarded;
+    }
+
+    public function setForwarded($forwarded)
+    {
+        $this->forwarded = $forwarded;
+    }
+
+    public function getLinkedTicket()
+    {
+        return $this->linkedTicket;
+    }
+
+    public function setLinkedTicket(Ticket $linkedTicket)
+    {
+        $this->linkedTicket = $linkedTicket;
+    }
+
+    public function getOfficialUuid()
+    {
+        return $this->officialUuid;
+    }
+
+    public function setOfficialUuid($officialUuid)
+    {
+        $this->officialUuid = $officialUuid;
     }
 }

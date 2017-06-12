@@ -15,11 +15,36 @@
                         {{ 'informations'|trans({}, 'platform') }}
                     </a>
                 </h4>
-                <span id="ticket-edition-btn"
-                      class="btn btn-default"
-                      data-ticket-id="{{ ticket.getId() }}"
-                >
-                    <i class="fa fa-edit"></i>
+                <span>
+                    {% if supportToken is defined and supportToken is not empty %}
+                        {% set linkedTicket = ticket.getLinkedTicket() %}
+
+                        {% if not ticket.isForwarded() and linkedTicket is empty %}
+                            <button class="btn btn-default forward-ticket-btn"
+                                    data-ticket-id="{{ ticket.getId() }}"
+                                    data-toggle="tooltip"
+                                    title="{{ 'to_forward'|trans({}, 'support') }}"
+                            >
+                                <i class="fa fa-share"></i>
+                            </button>
+                        {% elseif linkedTicket is not empty %}
+                            <a href="{{ path('formalibre_admin_ticket_open', {'ticket': linkedTicket.getId()}) }}"
+                               class="btn btn-default"
+                               data-toggle="tooltip"
+                               title="{% if ticket.isForwarded() %}{{ 'original_ticket'|trans({}, 'support') }}{% else %}{{ 'forwarded_ticket'|trans({}, 'support') }}{% endif %}"
+                            >
+                                <i class="fa fa-asterisk"></i>
+                            </a>
+                        {% endif %}
+                    {% endif %}
+                    {% if not ticket.isForwarded() %}
+                        <span id="ticket-edition-btn"
+                              class="btn btn-default"
+                              data-ticket-id="{{ ticket.getId() }}"
+                        >
+                            <i class="fa fa-edit"></i>
+                        </span>
+                    {% endif %}
                 </span>
             </div>
             <div id="informations-box"
@@ -37,7 +62,13 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th class="col-md-2">{{ 'creator'|trans({}, 'platform') }}</th>
+                                <th class="col-md-2">
+                                    {% if ticket.isForwarded() %}
+                                        {{ 'forwarded_by'|trans({}, 'support') }}
+                                    {% else %}
+                                        {{ 'creator'|trans({}, 'platform') }}
+                                    {% endif %}
+                                </th>
                                 <td class="col-md-10">
                                     {{ ticket.getUser().getFirstName() }}
                                     {{ ticket.getUser().getLastName() }}
@@ -54,7 +85,13 @@
                                 </td>
                             </tr>
                             <tr>
-                                <th class="col-md-2">{{ 'creation_date'|trans({}, 'platform') }}</th>
+                                <th class="col-md-2">
+                                    {% if ticket.isForwarded() %}
+                                        {{ 'forwarded_on'|trans({}, 'support') }}
+                                    {% else %}
+                                        {{ 'creation_date'|trans({}, 'platform') }}
+                                    {% endif %}
+                                </th>
                                 <td class="col-md-10">
                                     {{ ticket.getCreationDate()|intl_date_format }}
                                 </td>
@@ -111,91 +148,93 @@
                 </div>
             </div>
         </div>
-        <div class="panel panel-default">
-            <div class="panel-heading" role="tab" id="private-comments-heading">
-                <h4 class="panel-title">
-                    <a role="button"
-                       data-toggle="collapse"
-                       data-parent="#support-accordion"
-                       href="#private-comments-box"
-                       aria-expanded="true"
-                       aria-controls="private-comments-box"
-                    >
-                        {{ 'internal_notes'|trans({}, 'support') }}
-                    </a>
-                </h4>
-            </div>
-            <div id="private-comments-box"
-                 class="panel-collapse collapse"
-                 role="tabpanel"
-                 aria-labelledby="private-comments-heading"
-            >
-                <div class="panel-body">
-                    <div id="ticket-private-comment-form-box">
-                        {%
-                            render(controller(
-                                "FormaLibreSupportBundle:AdminSupport:adminTicketCommentCreateForm",
-                                {
-                                    'ticket': ticket.getId(),
-                                    'type': constant('FormaLibre\\SupportBundle\\Entity\\Comment::PRIVATE_COMMENT')
-                                }
-                            ))
-                        %}
-                    </div>
-                    <br>
-                    <br>
-                    <hr>
-                    <div id="private-comments-list">
-                        {% for comment in ticket.getPrivateComments() %}
-                            {% set commentUser = comment.getUser() %}
-                            <div class="media comment-row" id="row-comment-{{ comment.getId() }}">
-                                <div class="comment-contact col-md-2 col-sm-2 text-center comment-contact-left">
-                                    {% if commentUser.getPicture() != '' %}
-                                        <img src="{{ asset('uploads/pictures/') ~  commentUser.getPicture() }}"
-                                             class="media-object comment-picture"
-                                             alt="{{ commentUser.getLastName() ~ ' ' ~ commentUser.getFirstName() }}"
-                                        >
-                                        {{ commentUser.getFirstName() }}
-                                        {{ commentUser.getLastName() }}
-                                        <br>
-                                        {{ comment.getCreationDate()|intl_date_format }}
-                                        <br>
-                                        <button class="btn btn-default edit-comment-btn btn-sm"
-                                                data-comment-id="{{ comment.getId() }}"
-                                                data-comment-type="{{ comment.getType() }}"
-                                        >
-                                            <i class="fa fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-danger delete-comment-btn btn-sm"
-                                                data-comment-id="{{ comment.getId() }}"
-                                        >
-                                            <i class="fa fa-trash"></i>
-                                        </button>
-                                    {% else %}
-                                        <h1 class="profile_picture_placeholder">
-                                            <i class="fa fa-user"></i>
-                                        </h1>
-                                        {{ commentUser.getFirstName() }}
-                                        {{ commentUser.getLastName() }}
-                                        <br>
-                                        {{ comment.getCreationDate()|intl_date_format }}
-                                    {% endif %}
-                                </div>
-                                <div class="comment-content col-md-10 col-sm-10 comment-content-right">
-                                    <div id="comment-content-{{ comment.getId() }}">
-                                        {{ comment.getContent()|raw }}
+        {% if not ticket.isForwarded() %}
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="private-comments-heading">
+                    <h4 class="panel-title">
+                        <a role="button"
+                           data-toggle="collapse"
+                           data-parent="#support-accordion"
+                           href="#private-comments-box"
+                           aria-expanded="true"
+                           aria-controls="private-comments-box"
+                        >
+                            {{ 'internal_notes'|trans({}, 'support') }}
+                        </a>
+                    </h4>
+                </div>
+                <div id="private-comments-box"
+                     class="panel-collapse collapse"
+                     role="tabpanel"
+                     aria-labelledby="private-comments-heading"
+                >
+                    <div class="panel-body">
+                        <div id="ticket-private-comment-form-box">
+                            {%
+                                render(controller(
+                                    "FormaLibreSupportBundle:AdminSupport:adminTicketCommentCreateForm",
+                                    {
+                                        'ticket': ticket.getId(),
+                                        'type': constant('FormaLibre\\SupportBundle\\Entity\\Comment::PRIVATE_COMMENT')
+                                    }
+                                ))
+                            %}
+                        </div>
+                        <br>
+                        <br>
+                        <hr>
+                        <div id="private-comments-list">
+                            {% for comment in ticket.getPrivateComments() %}
+                                {% set commentUser = comment.getUser() %}
+                                <div class="media comment-row" id="row-comment-{{ comment.getId() }}">
+                                    <div class="comment-contact col-md-2 col-sm-2 text-center comment-contact-left">
+                                        {% if commentUser.getPicture() != '' %}
+                                            <img src="{{ asset('uploads/pictures/') ~  commentUser.getPicture() }}"
+                                                 class="media-object comment-picture"
+                                                 alt="{{ commentUser.getLastName() ~ ' ' ~ commentUser.getFirstName() }}"
+                                            >
+                                            {{ commentUser.getFirstName() }}
+                                            {{ commentUser.getLastName() }}
+                                            <br>
+                                            {{ comment.getCreationDate()|intl_date_format }}
+                                            <br>
+                                            <button class="btn btn-default edit-comment-btn btn-sm"
+                                                    data-comment-id="{{ comment.getId() }}"
+                                                    data-comment-type="{{ comment.getType() }}"
+                                            >
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger delete-comment-btn btn-sm"
+                                                    data-comment-id="{{ comment.getId() }}"
+                                            >
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        {% else %}
+                                            <h1 class="profile_picture_placeholder">
+                                                <i class="fa fa-user"></i>
+                                            </h1>
+                                            {{ commentUser.getFirstName() }}
+                                            {{ commentUser.getLastName() }}
+                                            <br>
+                                            {{ comment.getCreationDate()|intl_date_format }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="comment-content col-md-10 col-sm-10 comment-content-right">
+                                        <div id="comment-content-{{ comment.getId() }}">
+                                            {{ comment.getContent()|raw }}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            {% if not loop.last %}
-                                <hr>
-                            {% endif %}
-                        {% endfor %}
+                                {% if not loop.last %}
+                                    <hr>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {% endif %}
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="public-comments-heading">
                 <h4 class="panel-title">
@@ -256,38 +295,39 @@
                                         <br>
                                         {{ comment.getCreationDate()|intl_date_format }}
 
-                                        {% if comment.getEditionDate() is not empty %}
+                                        {% if not ticket.isForwarded() %}
+                                            {% if comment.getEditionDate() is not empty %}
+                                                <br>
+                                                ({{ comment.getEditionDate()|intl_date_format }})
+                                            {% endif %}
                                             <br>
-                                            ({{ comment.getEditionDate()|intl_date_format }})
+                                            <button class="btn btn-default edit-comment-btn btn-sm"
+                                                    data-comment-id="{{ comment.getId() }}"
+                                                    data-type="{{ comment.getType() }}"
+                                            >
+                                                <i class="fa fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-danger delete-comment-btn btn-sm"
+                                                    data-comment-id="{{ comment.getId() }}"
+                                            >
+                                                <i class="fa fa-trash"></i>
+                                            </button>
                                         {% endif %}
-                                        <br>
-                                        <button class="btn btn-default edit-comment-btn btn-sm"
-                                                data-comment-id="{{ comment.getId() }}"
-                                                data-type="{{ comment.getType() }}"
-                                        >
-                                            <i class="fa fa-edit"></i>
-                                        </button>
-                                        <button class="btn btn-danger delete-comment-btn btn-sm"
-                                                data-comment-id="{{ comment.getId() }}"
-                                        >
-                                            <i class="fa fa-trash"></i>
-                                        </button>
                                     </div>
                                 {% else %}
                                     <div class="comment-contact col-md-2 col-sm-2 text-center comment-contact-left">
-                                        {% if commentUser.getPicture() != '' %}
+                                        {% if commentUser is not empty and commentUser.getPicture() != '' %}
                                             <img src="{{ asset('uploads/pictures/') ~  commentUser.getPicture() }}"
                                                  class="media-object comment-picture"
                                                  alt="{{ commentUser.getLastName() ~ ' ' ~ commentUser.getFirstName() }}"
                                             >
-                                            {{ commentUser.getFirstName() }}
-                                            {{ commentUser.getLastName() }}
-                                            <br>
-                                            {{ comment.getCreationDate()|intl_date_format }}
                                         {% else %}
                                             <h1 class="profile_picture_placeholder">
                                                 <i class="fa fa-user"></i>
                                             </h1>
+                                        {% endif %}
+
+                                        {% if commentUser is not empty %}
                                             {{ commentUser.getFirstName() }}
                                             {{ commentUser.getLastName() }}
                                             <br>

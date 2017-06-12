@@ -50,6 +50,16 @@
         <div class="table-responsive" id="archives-tab">
             <table class="table">
                 <tr>
+                    {% if supportToken is not empty %}
+                        <th>
+                            <a href="{{ sortUrl(search, 'forwarded', order, max) }}"
+                               data-toggle="tooltip"
+                               title="{{ 'forwarded_ticket'|trans({}, 'support') }}"
+                            >
+                                <i class="fa fa-share"></i>
+                            </a>
+                        </th>
+                    {% endif %}
                     <th>
                         <a href="{{ sortUrl(search, 'title', order, max) }}">
                             {{ 'title'|trans({}, 'platform') }}
@@ -81,6 +91,13 @@
                     {% set ticketDescription = ticket.getDescription() %}
                     {% set comments = ticket.getComments() %}
                     <tr id="row-ticket-{{ ticketId }}">
+                        {% if supportToken is not empty %}
+                            <td>
+                                {% if ticket.isForwarded() %}
+                                    <i class="fa fa-share"></i>
+                                {% endif %}
+                            </td>
+                        {% endif %}
                         <td>
                             <a href="{{ path('formalibre_admin_ticket_open', {'ticket': ticketId}) }}">
                                 {{ ticket.getTitle() }}
@@ -129,6 +146,7 @@
                                     data-ticket-id="{{ ticketId }}"
                                     data-toggle="tooltip"
                                     title="{{ 'delete'|trans({}, 'platform') }}"
+                                    {% if ticket.isForwarded() %}disabled{% endif %}
                             >
                                 <i class="fa fa-trash"></i>
                             </button>

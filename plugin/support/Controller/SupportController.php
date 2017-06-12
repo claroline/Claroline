@@ -3,6 +3,7 @@
 namespace FormaLibre\SupportBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\ToolManager;
 use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Ticket;
@@ -30,6 +31,7 @@ class SupportController extends Controller
     private $authorization;
     private $eventDispatcher;
     private $formFactory;
+    private $platformConfigHandler;
     private $request;
     private $router;
     private $supportManager;
@@ -38,20 +40,22 @@ class SupportController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "requestStack"    = @DI\Inject("request_stack"),
-     *     "router"          = @DI\Inject("router"),
-     *     "supportManager"  = @DI\Inject("formalibre.manager.support_manager"),
-     *     "toolManager"     = @DI\Inject("claroline.manager.tool_manager"),
-     *     "translator"      = @DI\Inject("translator")
+     *     "authorization"         = @DI\Inject("security.authorization_checker"),
+     *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
+     *     "formFactory"           = @DI\Inject("form.factory"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "requestStack"          = @DI\Inject("request_stack"),
+     *     "router"                = @DI\Inject("router"),
+     *     "supportManager"        = @DI\Inject("formalibre.manager.support_manager"),
+     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
+     *     "translator"            = @DI\Inject("translator")
      * })
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher,
         FormFactory $formFactory,
+        PlatformConfigurationHandler $platformConfigHandler,
         RequestStack $requestStack,
         RouterInterface $router,
         SupportManager $supportManager,
@@ -61,6 +65,7 @@ class SupportController extends Controller
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->formFactory = $formFactory;
+        $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
         $this->supportManager = $supportManager;
@@ -522,6 +527,98 @@ class SupportController extends Controller
         return new JsonResponse('success', 200);
     }
 
+    /**
+     * @EXT\Route(
+     *     "support/forwarded/ticket/comment/create",
+     *     name="formalibre_support_forwarded_ticket_comment_create",
+     *     options={"expose"=true}
+     * )
+     */
+    public function forwardedTicketCommentCreateAction()
+    {
+        $token = $this->request->request->get('token', false);
+        $this->checkOfficialSupportAccess($token);
+        $uuid = $this->request->request->get('uuid', false);
+        $content = $this->request->request->get('content', false);
+        $ticket = !empty($uuid) ? $this->supportManager->getForwardedTicketByUuid($uuid) : null;
+        $isValid = true;
+        $httpCode = 201;
+        $data = [];
+
+        if (empty($ticket)) {
+            $isValid = false;
+            $httpCode = 400;
+            $data[] = $this->translator->trans('not_valid_msg', ['%param%' => 'uuid'], 'support');
+        }
+        if (empty($content)) {
+            $isValid = false;
+            $httpCode = 400;
+            $data[] = $this->translator->trans('not_valid_msg', ['%param%' => 'content'], 'support');
+        }
+        if ($isValid) {
+            $comment = new Comment();
+            $comment->setTicket($ticket);
+            $comment->setContent($content);
+            $comment->setCreationDate(new \DateTime());
+            $this->supportManager->persistComment($comment);
+            $data = [];
+            $data['ticket'] = [];
+            $data['ticket']['id'] = $ticket->getId();
+            $data['ticket']['title'] = $ticket->getTitle();
+            $data['ticket']['uuid'] = $ticket->getOfficialUuid();
+            $data['comment'] = [];
+            $data['comment']['id'] = $comment->getId();
+            $data['comment']['content'] = $comment->getContent();
+            $data['comment']['creationDate'] = $comment->getCreationDate()->format('d/m/Y H:i');
+        }
+
+        return new JsonResponse($data, $httpCode);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "support/forwarded/ticket/status/update",
+     *     name="formalibre_support_forwarded_ticket_status_update",
+     *     options={"expose"=true}
+     * )
+     */
+    public function forwardedTicketStatusUpdateAction()
+    {
+        $token = $this->request->request->get('token', false);
+        $this->checkOfficialSupportAccess($token);
+        $uuid = $this->request->request->get('uuid', false);
+        $statusCode = $this->request->request->get('status', false);
+        $ticket = empty($uuid) ? null : $this->supportManager->getForwardedTicketByUuid($uuid);
+        $status = empty($statusCode) ? null : $this->supportManager->getStatusByCodeInsensitive($statusCode);
+        $isValid = true;
+        $httpCode = 201;
+        $data = [];
+
+        if (empty($ticket)) {
+            $isValid = false;
+            $httpCode = 400;
+            $data[] = $this->translator->trans('not_valid_msg', ['%param%' => 'uuid'], 'support');
+        }
+        if (empty($status)) {
+            $isValid = false;
+            $httpCode = 400;
+            $data[] = $this->translator->trans('not_valid_msg', ['%param%' => 'status'], 'support');
+        }
+        if ($isValid) {
+            $this->supportManager->createIntervention($ticket, $status);
+            $data['ticket'] = [];
+            $data['ticket']['id'] = $ticket->getId();
+            $data['ticket']['title'] = $ticket->getTitle();
+            $data['ticket']['uuid'] = $ticket->getOfficialUuid();
+            $data['status'] = [];
+            $data['status']['name'] = $this->translator->trans($status->getName(), [], 'support');
+            $data['status']['code'] = $status->getCode();
+            $data['status']['description'] = $status->getDescription();
+        }
+
+        return new JsonResponse($data, $httpCode);
+    }
+
     private function checkTicketAccess(User $user, Ticket $ticket)
     {
         if ($user->getId() !== $ticket->getUser()->getId()) {
@@ -540,5 +637,18 @@ class SupportController extends Controller
         ) {
             throw new AccessDeniedException();
         }
+    }
+
+    private function checkOfficialSupportAccess($token)
+    {
+        $supportToken = $this->platformConfigHandler->hasParameter('support_token') ?
+            $this->platformConfigHandler->getParameter('support_token') :
+            null;
+
+        if (empty($supportToken) || $supportToken !== $token) {
+            throw new AccessDeniedException();
+        }
+
+        return $supportToken;
     }
 }

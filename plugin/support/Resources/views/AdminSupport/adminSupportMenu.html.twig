@@ -58,16 +58,20 @@
                             {{ 'notifications_management'|trans({}, 'support') }}
                         </a>
                     </li>
-                    {#<li role="menuitem">#}
-                        {#<a href="#">#}
-                            {#{{ 'external_support'|trans({}, 'support') }}#}
-                        {#</a>#}
-                    {#</li>#}
+                    <li role="menuitem">
+                        <a href="{{ path('formalibre_admin_support_official_support_management') }}">
+                            {{ 'official_support'|trans({}, 'support') }}
+                        </a>
+                    </li>
                 </ul>
             </div>
         </h3>
     </div>
     <div class="panel-body">
+        {% if noOfficialSupportInfo is not defined %}
+            {% render(controller('FormaLibreSupportBundle:AdminSupport:adminSupportOfficialSupportInfo', {})) %}
+        {% endif %}
+
         {% if supportType is defined %}
             {% render(controller('FormaLibreSupportBundle:AdminSupport:adminSupportTabs', {'type': supportType})) %}
             <br>

@@ -111,7 +111,7 @@
                                 </i>
                             {% endif %}
                         </td>
-                        <td>
+                        <td id="ticket-status-{{ ticketId }}">
                             {% if ticket.getStatus() is not empty %}
                                 {{ ticket.getStatus().getName()|trans({}, 'support') }}
                                 {% if ticket.getStatus().getDescription() is not empty %}
@@ -129,13 +129,27 @@
                             {% endif %}
                         </td>
                         <td class="text-center">
-                            {#<button class="btn btn-default forward-ticket-btn btn-sm"#}
-                                    {#data-ticket-id="{{ ticketId }}"#}
-                                    {#data-toggle="tooltip"#}
-                                    {#title="{{ 'to_forward'|trans({}, 'support') }}"#}
-                            {#>#}
-                                {#<i class="fa fa-share"></i>#}
-                            {#</button>#}
+                            {% if supportToken is defined and supportToken is not empty %}
+                                {% set linkedTicket = ticket.getLinkedTicket() %}
+
+                                {% if linkedTicket is empty %}
+                                    <button class="btn btn-default forward-ticket-btn btn-sm"
+                                            data-ticket-id="{{ ticketId }}"
+                                            data-toggle="tooltip"
+                                            title="{{ 'to_forward'|trans({}, 'support') }}"
+                                    >
+                                        <i class="fa fa-share"></i>
+                                    </button>
+                                {% else %}
+                                    <a href="{{ path('formalibre_admin_ticket_open', {'ticket': linkedTicket.getId()}) }}"
+                                       class="btn btn-default btn-sm"
+                                       data-toggle="tooltip"
+                                       title="{{ 'forwarded_ticket'|trans({}, 'support') }}"
+                                    >
+                                        <i class="fa fa-asterisk"></i>
+                                    </a>
+                                {% endif %}
+                            {% endif %}
                             <button class="btn btn-default archive-ticket-btn btn-sm"
                                     data-ticket-id="{{ ticketId }}"
                                     data-toggle="tooltip"

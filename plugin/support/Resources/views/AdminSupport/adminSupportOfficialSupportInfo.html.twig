@@ -1,0 +1,10 @@
+{% if supportToken is empty %}
+    <div class="alert alert-info">
+        <a data-dismiss="alert" class="close" href="#" aria-hidden="true">&times;</a>
+        {{ 'no_official_support_info'|trans({}, 'support') }}
+        <br>
+        <a href="{{ path('formalibre_admin_support_official_support_management') }}">
+            {{ 'official_support'|trans({}, 'support') }}
+        </a>
+    </div>
+{% endif %}
