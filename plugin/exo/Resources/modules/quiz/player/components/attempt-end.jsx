@@ -51,7 +51,7 @@ AttemptEnd.propTypes = {
     structure: T.object.isRequired,
     finished: T.bool.isRequired
   }).isRequired,
-  endMessage: T.String
+  endMessage: T.string
 }
 
 function mapStateToProps(state) {
