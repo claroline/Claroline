@@ -33,9 +33,12 @@ class KnpSnappyFactory
 
     public function getPdfCreator()
     {
-        return new Pdf(
+        $pdf = new Pdf(
             $this->configHandler->getParameter('knp_pdf_binary_path'),
-            array('encoding' => 'utf-8')
+            ['encoding' => 'utf-8']
         );
+        $pdf->setTimeout($this->configHandler->getParameter('knp_pdf_timeout'));
+
+        return $pdf;
     }
 }
