@@ -20,5 +20,6 @@
     "ordering": "Ordenen",
     "ordering_desc": "Verplaats items (tekst, beeld, geluid, video, enz.) om ze in orde te brengen.",
     "boolean": "Juist / Verkeerd",
-    "boolean_desc": "U kunt kiezen tussen twee antwoorden juist / verkeerd, ja / nee of nog een andere gepersonaliseerde paar."
+    "boolean_desc": "U kunt kiezen tussen twee antwoorden juist / verkeerd, ja / nee of nog een andere gepersonaliseerde paar.",
+    "selection": "Selectie"
 }
