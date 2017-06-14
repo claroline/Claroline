@@ -488,7 +488,8 @@ class UserManager
                 $organizationName = null;
             }
 
-            $hasPersonalWorkspace = isset($user[11]) ? (bool) $user[11] : false;
+            $hasPersonalWorkspace = (isset($user[11]) && !is_null($user[11]) && trim($user[11]) !== '') ?
+                (bool) $user[11] : null;
             $isMailValidated = isset($user[12]) ? (bool) $user[12] : false;
             $isMailNotified = isset($user[13]) ? (bool) $user[13] : $enableEmailNotifaction;
 
@@ -1323,6 +1324,11 @@ class UserManager
             $mail,
             $executeQuery
         );
+    }
+
+    public function getUsersByUsernamesOrMails($usernames, $mails, $executeQuery = true)
+    {
+        return $this->userRepo->findUsersByUsernamesOrMails($usernames, $mails, $executeQuery);
     }
 
     public function getUserByUsernameOrMailOrCode($username, $mail, $code)

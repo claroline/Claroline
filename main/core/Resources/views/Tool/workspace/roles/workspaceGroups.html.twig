@@ -114,6 +114,7 @@
                                 <i class="fa fa-plus"></i> 
                                 {{ 'add_groups' | trans({}, 'platform') }}
                             </a>
+                            {{ externalGroups|raw }}
                         </div>
                     </div>
                 {% endif %}
@@ -218,13 +219,17 @@
                 url: route,
                 type: 'DELETE',
                 success: function() {
-                    target.parent().parent().parent().remove();
+                    if(target.parents('td').children('span.label').length > 1) {
+                        target.parents('span.label').remove()
+                    } else {
+                        target.parents('tr.row-group').remove();
+                    }
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
                     window.Claroline.Modal.hide();
                     window.Claroline.Modal.simpleContainer(
-                            Translator.trans('error', {}, 'platform'),
-                            jqXHR.responseJSON.message
+                        Translator.trans('error', {}, 'platform'),
+                        jqXHR.responseJSON.message
                     );
                 }
             });

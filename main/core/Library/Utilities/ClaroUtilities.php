@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Utilities;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -249,10 +250,7 @@ class ClaroUtilities
     public function formatCsvOutput($data)
     {
         // If encoding not UTF-8 then convert it to UTF-8
-        $encoding = $this->detectEncoding($data);
-        if ($encoding && $encoding !== 'UTF-8') {
-            $data = iconv($encoding, 'UTF-8', $data);
-        }
+        $data = $this->stringToUtf8($data);
         $data = str_replace("\r\n", PHP_EOL, $data);
         $data = str_replace("\r", PHP_EOL, $data);
         $data = str_replace("\n", PHP_EOL, $data);
@@ -290,5 +288,16 @@ class ClaroUtilities
         }
 
         return $result;
+    }
+
+    public function stringToUtf8($string)
+    {
+        // If encoding not UTF-8 then convert it to UTF-8
+        $encoding = $this->detectEncoding($string);
+        if ($encoding && $encoding !== 'UTF-8') {
+            $string = iconv($encoding, 'UTF-8', $string);
+        }
+
+        return $string;
     }
 }

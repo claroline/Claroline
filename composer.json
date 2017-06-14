@@ -185,7 +185,8 @@
             "Claroline\\RemoteUserSynchronizationBundle\\": "plugin/remote-user-synchronization",
             "UJM\\LtiBundle\\": "plugin/lti",
             "Claroline\\CasBundle\\": "plugin/cas",
-            "Icap\\BibliographyBundle\\": "plugin/bibliography"
+            "Icap\\BibliographyBundle\\": "plugin/bibliography",
+            "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization"
         }
     },
     "extra": {
@@ -244,7 +245,8 @@
             "Claroline\\RemoteUserSynchronizationBundle\\ClarolineRemoteUserSynchronizationBundle",
             "UJM\\LtiBundle\\UJMLtiBundle",
             "Claroline\\CasBundle\\ClarolineCasBundle",
-            "Icap\\BibliographyBundle\\IcapBibliographyBundle"
+            "Icap\\BibliographyBundle\\IcapBibliographyBundle",
+            "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle"
         ]
     }
 }

@@ -1,0 +1,10 @@
+{
+  "webpack": {
+    "entry": {
+      "resource-list": "list/module",
+      "user-config": "userconfig/module",
+      "group-config": "groupconfig/module",
+      "synchronize": "synchronization/app"
+    }
+  }
+}
