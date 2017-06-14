@@ -37,9 +37,8 @@ function getCorrectAnswerForSumCellsMode(item, answer = {data: []}) {
             corrected.addExpected(new Answerable(userAnswer.score)):
             corrected.addUnexpected(new Answerable(userAnswer.score))
     } else {
-      userAnswer.score > 0 ?
-          corrected.addMissing(new Answerable(bestAnswer.score)):
-          corrected.addPenalty(new Answerable(item.penalty))
+      corrected.addMissing(new Answerable(bestAnswer.score))
+      corrected.addPenalty(new Answerable(item.penalty))
     }
   })
 
