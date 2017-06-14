@@ -450,16 +450,6 @@ export default class SessionService {
     }
   }
 
-  getWorkspaceFromSessionId(sessionId) {
-    const route = Routing.generate('api_get_workspace_id_from_session', {session: sessionId})
-
-    return this.$http.get(route).then(d => {
-      if (d['status'] === 200) {
-        return d['data']
-      }
-    })
-  }
-
   getSessionById(sessionId) {
     const index = this.sessions.findIndex(s => s['id'] === sessionId)
 

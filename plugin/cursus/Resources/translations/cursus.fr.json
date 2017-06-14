@@ -127,6 +127,7 @@
     "form_not_valid_error": "Cette valeur n'est pas valide.",
     "form_number_inferior_error": "Cette valeur doit être inférieure ou égale à %value%.",
     "form_number_superior_error": "Cette valeur doit être supérieure ou égale à %value%.",
+    "form_public_session_event_error": "L'inscription ne peut pas être publique car l'inscription à la session ne l'est pas.",
     "full_session_event_msg": "La limite de participants pour la séance est atteinte",
     "full_session_msg": "La limite d'utilisateurs pour la session de formation est atteinte",
     "general_parameters": "Paramètres généraux",

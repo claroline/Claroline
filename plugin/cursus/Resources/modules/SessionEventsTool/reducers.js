@@ -7,17 +7,22 @@ import {
   SESSION_EVENTS_LOAD,
   SESSION_EVENT_LOAD,
   SESSION_EVENT_ADD,
+  SESSION_EVENTS_ADD,
   SESSION_EVENT_UPDATE,
   CURRENT_EVENT_RESET,
   CURRENT_EVENT_ADD_PARTICIPANTS,
   CURRENT_EVENT_REMOVE_PARTICIPANTS,
-  EVENT_FORM_RESET,
-  EVENT_FORM_UPDATE,
-  EVENT_FORM_LOAD,
+  CURRENT_EVENT_UPDATE_PARTICIPANT,
   UPDATE_VIEW_MODE,
   CURRENT_ERROR_RESET,
   CURRENT_ERROR_UPDATE,
-  EVENTS_USERS_ADD
+  EVENTS_USERS_ADD,
+  EVENT_COMMENTS_RESET,
+  EVENT_COMMENTS_LOAD,
+  LOCATIONS_LOAD,
+  LOCATIONS_LOADED_UPDATE,
+  TEACHERS_LOAD,
+  TEACHERS_LOADED_UPDATE
 } from './actions'
 
 const initialState = {
@@ -39,9 +44,15 @@ const initialState = {
     startDate: null,
     endDate: null,
     registrationType: 0,
-    maxUsers: null
+    maxUsers: null,
+    locationExtra: null
   },
-  currentError: null
+  currentError: null,
+  eventComments: [],
+  locations: [],
+  locationsLoaded: false,
+  teachers: [],
+  teachersLoaded: false
 }
 
 const mainReducers = {}
@@ -73,6 +84,17 @@ const currentEventReducers = {
     })
 
     return Object.assign({}, state, {participants: participants})
+  },
+  [CURRENT_EVENT_UPDATE_PARTICIPANT]: (state, action) => {
+    const participants = state.participants.map(p => {
+      if (p.id === action.sessionEventUser.id) {
+        return action.sessionEventUser
+      } else {
+        return p
+      }
+    })
+
+    return Object.assign({}, state, {participants: participants})
   }
 }
 
@@ -92,6 +114,15 @@ const eventsReducers = {
       totalResults: state.totalResults + 1
     }
   },
+  [SESSION_EVENTS_ADD]: (state, action) => {
+    const events = cloneDeep(state.data)
+    action.sessionEvents.forEach(se => events.push(se))
+
+    return {
+      data: events,
+      totalResults: state.totalResults + action.sessionEvents.length
+    }
+  },
   [SESSION_EVENT_UPDATE]: (state, action) => {
     const events = state.data.map((event) => {
       if (event.id === action.sessionEvent.id) {
@@ -105,19 +136,6 @@ const eventsReducers = {
       data: events,
       totalResults: state.totalResults
     }
-  }
-}
-
-const eventFormReducers = {
-  [EVENT_FORM_RESET]: () => initialState['eventForm'],
-  [EVENT_FORM_UPDATE]: (event, action) => {
-    const newEvent = cloneDeep(event)
-    newEvent[action.property] = action.value
-
-    return newEvent
-  },
-  [EVENT_FORM_LOAD]: (state, action) => {
-    return action.event
   }
 }
 
@@ -143,6 +161,29 @@ const eventsUsersReducers = {
   }
 }
 
+const eventCommentsReducers = {
+  [EVENT_COMMENTS_RESET]: () => initialState['eventComments'],
+  [EVENT_COMMENTS_LOAD]: (state, action) => {
+    return action.eventComments
+  }
+}
+
+const locationsReducers = {
+  [LOCATIONS_LOAD]: (state, action) => action.locations
+}
+
+const locationsLoadedReducers = {
+  [LOCATIONS_LOADED_UPDATE]: (state, action) => action.loaded
+}
+
+const teachersReducers = {
+  [TEACHERS_LOAD]: (state, action) => action.teachers
+}
+
+const teachersLoadedReducers = {
+  [TEACHERS_LOADED_UPDATE]: (state, action) => action.loaded
+}
+
 export const reducers = combineReducers({
   workspaceId: makeReducer(initialState['workspaceId'], mainReducers),
   canEdit: makeReducer(initialState['canEdit'], mainReducers),
@@ -152,8 +193,12 @@ export const reducers = combineReducers({
   events: makeReducer(initialState['events'], eventsReducers),
   eventsUsers: makeReducer(initialState['eventsUsers'], eventsUsersReducers),
   viewMode: makeReducer(initialState['viewMode'], viewReducers),
-  eventForm: makeReducer(initialState['eventForm'], eventFormReducers),
   currentError: makeReducer(initialState['currentError'], currentErrorReducers),
+  eventComments: makeReducer(initialState['eventComments'], eventCommentsReducers),
+  locations: makeReducer(initialState['locations'], locationsReducers),
+  locationsLoaded: makeReducer(initialState['locationsLoaded'], locationsLoadedReducers),
+  teachers: makeReducer(initialState['teachers'], teachersReducers),
+  teachersLoaded: makeReducer(initialState['teachersLoaded'], teachersLoadedReducers),
   list: makeListReducer(),
   pagination: paginationReducer
 })

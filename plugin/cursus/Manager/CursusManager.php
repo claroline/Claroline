@@ -4508,6 +4508,39 @@ class CursusManager
         return $sessionEventUser;
     }
 
+    public function acceptSessionEventUser(SessionEventUser $sessionEventUser)
+    {
+        $results = [];
+        $sessionEvent = $sessionEventUser->getSessionEvent();
+        $remainingPlaces = $this->getSessionEventRemainingPlaces($sessionEvent);
+
+        if (is_null($remainingPlaces) || $remainingPlaces > 0) {
+            $sessionEventUser->setRegistrationStatus(SessionEventUser::REGISTERED);
+            $sessionEventUser->setRegistrationDate(new \DateTime());
+            $this->om->persist($sessionEventUser);
+            $this->om->flush();
+            $this->sendEventRegistrationConfirmationMessage(
+                $sessionEventUser->getUser(),
+                $sessionEvent,
+                'none',
+                'pending_to_registered'
+            );
+            $results['status'] = 'success';
+            $results['data'] = $sessionEventUser;
+        } else {
+            $results['status'] = 'failed';
+            $results['data'] = $this->translator->trans('registration_failed', [], 'cursus').
+                '. '.
+                $this->translator->trans(
+                    'required_places_msg',
+                    ['%remainingPlaces%' => $remainingPlaces, '%requiredPlaces%' => 1],
+                    'cursus'
+                );
+        }
+
+        return $results;
+    }
+
     public function sendSessionRegistrationConfirmationMessage(User $user, CourseSession $session, $sessionStatus)
     {
         $content = '';

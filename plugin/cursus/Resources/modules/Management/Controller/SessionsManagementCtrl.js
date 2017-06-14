@@ -129,11 +129,7 @@ export default class SessionsManagementCtrl {
     this.SessionEventService.manageComments(sessionEvent)
   }
 
-  openWorkspace(sessionId) {
-    this.SessionService.getWorkspaceFromSessionId(sessionId).then(d => {
-      if (d) {
-        window.location = Routing.generate('claro_workspace_open', {workspaceId: d})
-      }
-    })
+  openWorkspace(workspaceId) {
+    window.location = Routing.generate('claro_workspace_open', {workspaceId: workspaceId})
   }
 }

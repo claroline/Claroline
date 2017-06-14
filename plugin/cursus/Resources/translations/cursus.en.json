@@ -127,6 +127,7 @@
     "form_not_valid_error": "This value is not valid.",
     "form_number_inferior_error": "This value must be %value% or less.",
     "form_number_superior_error": "This value must be %value% or more.",
+    "form_public_session_event_error": "Registration cannot be public because registration to session is not public ei.",
     "full_session_event_msg": "The users limit of the session event has been reached",
     "full_session_msg": "The users limit of the training session has been reached",
     "general_parameters": "General parameters",

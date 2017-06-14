@@ -10,13 +10,15 @@ import {makeRouter} from './router'
 import {reducers} from './reducers'
 import {VIEW_MANAGER, VIEW_USER} from './enums'
 import {EventFormModal} from './components/event-form-modal.jsx'
+import {EventRepeatFormModal} from './components/event-repeat-form-modal.jsx'
 import {SessionEventsToolLayout} from './components/session-events-tool-layout.jsx'
 
 class SessionEventsTool {
   constructor(workspaceId, canEdit, sessions, events, eventsUsers) {
     registerModalTypes([
       ['DELETE_MODAL', DeleteConfirmModal],
-      ['MODAL_EVENT_FORM', EventFormModal]
+      ['MODAL_EVENT_FORM', EventFormModal],
+      ['MODAL_EVENT_REPEAT_FORM', EventRepeatFormModal]
     ])
     const sessionId = sessions.length === 1 ? sessions[0]['id'] : null
     this.viewMode = canEdit ? VIEW_MANAGER : VIEW_USER

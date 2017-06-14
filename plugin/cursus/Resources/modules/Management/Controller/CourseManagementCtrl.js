@@ -100,12 +100,8 @@ export default class CourseManagementCtrl {
     this.SessionService.deleteSession(sessionId, this._removeSessionCallback)
   }
 
-  openWorkspace(sessionId) {
-    this.SessionService.getWorkspaceFromSessionId(sessionId).then(d => {
-      if (d) {
-        window.location = Routing.generate('claro_workspace_open', {workspaceId: d})
-      }
-    })
+  openWorkspace(workspaceId) {
+    window.location = Routing.generate('claro_workspace_open', {workspaceId: workspaceId})
   }
 
   refreshSessionsTables() {

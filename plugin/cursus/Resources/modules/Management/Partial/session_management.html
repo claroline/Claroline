@@ -96,6 +96,7 @@
                 data-placement="top"
                 title="{{ 'go_to_workspace'|trans:{}:'cursus' }}"
                 ng-click="cmc.openWorkspace()"
+                ng-if="cmc.session['workspace']"
         >
             <i class="fa fa-book"></i>
         </button>

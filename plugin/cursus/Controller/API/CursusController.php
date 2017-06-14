@@ -324,17 +324,6 @@ class CursusController extends FOSRestController
     }
 
     /**
-     * @View(serializerGroups={"api_cursus"})
-     * @Get("/session/{session}/workspace/id")
-     */
-    public function getWorkspaceIdFromSessionAction(CourseSession $session)
-    {
-        $workspace = $session->getWorkspace();
-
-        return is_null($workspace) ? null : $workspace->getId();
-    }
-
-    /**
      * @View(serializerGroups={"api_user_min"})
      * @Get("/session/{session}/events")
      */

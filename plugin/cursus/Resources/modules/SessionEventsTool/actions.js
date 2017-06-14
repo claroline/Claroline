@@ -11,23 +11,30 @@ import {VIEW_MANAGER, VIEW_USER, VIEW_EVENT} from './enums'
 export const SESSION_EVENTS_LOAD = 'SESSION_EVENTS_LOAD'
 export const SESSION_EVENT_LOAD = 'SESSION_EVENT_LOAD'
 export const SESSION_EVENT_ADD = 'SESSION_EVENT_ADD'
+export const SESSION_EVENTS_ADD = 'SESSION_EVENTS_ADD'
 export const SESSION_EVENT_UPDATE = 'SESSION_EVENT_UPDATE'
 export const CURRENT_EVENT_RESET = 'CURRENT_EVENT_RESET'
 export const CURRENT_EVENT_ADD_PARTICIPANTS = 'CURRENT_EVENT_ADD_PARTICIPANTS'
 export const CURRENT_EVENT_REMOVE_PARTICIPANTS = 'CURRENT_EVENT_REMOVE_PARTICIPANTS'
-export const EVENT_FORM_RESET = 'EVENT_FORM_RESET'
-export const EVENT_FORM_UPDATE = 'EVENT_FORM_UPDATE'
-export const EVENT_FORM_LOAD = 'EVENT_FORM_LOAD'
+export const CURRENT_EVENT_UPDATE_PARTICIPANT = 'CURRENT_EVENT_UPDATE_PARTICIPANT'
 export const UPDATE_VIEW_MODE = 'UPDATE_VIEW_MODE'
 export const CURRENT_ERROR_RESET = 'CURRENT_ERROR_RESET'
 export const CURRENT_ERROR_UPDATE = 'CURRENT_ERROR_UPDATE'
 export const EVENTS_USERS_ADD = 'EVENTS_USERS_ADD'
+export const EVENT_COMMENTS_RESET = 'EVENT_COMMENTS_RESET'
+export const EVENT_COMMENTS_LOAD = 'EVENT_COMMENTS_LOAD'
+export const LOCATIONS_LOAD = 'LOCATIONS_LOAD'
+export const LOCATIONS_LOADED_UPDATE = 'LOCATIONS_LOADED_UPDATE'
+export const TEACHERS_LOAD = 'TEACHERS_LOAD'
+export const TEACHERS_LOADED_UPDATE = 'TEACHERS_LOADED_UPDATE'
 
 export const actions = {}
 
 actions.loadSessionEvents = makeActionCreator(SESSION_EVENTS_LOAD, 'sessionEvents', 'total')
 
 actions.addSessionEvent = makeActionCreator(SESSION_EVENT_ADD, 'sessionEvent')
+
+actions.addSessionEvents = makeActionCreator(SESSION_EVENTS_ADD, 'sessionEvents')
 
 actions.updateSessionEvent = makeActionCreator(SESSION_EVENT_UPDATE, 'sessionEvent')
 
@@ -79,6 +86,15 @@ actions.createSessionEvent = (sessionId, eventData) => {
     if (eventData['maxUsers'] !== undefined) {
       formData.append('maxUsers', eventData['maxUsers'])
     }
+    if (eventData['location'] !== undefined) {
+      formData.append('location', eventData['location'])
+    }
+    if (eventData['locationExtra'] !== undefined) {
+      formData.append('locationExtra', eventData['locationExtra'])
+    }
+    if (eventData['teachers'] !== undefined) {
+      formData.append('teachers', eventData['teachers'])
+    }
 
     dispatch({
       [REQUEST_SEND]: {
@@ -117,6 +133,15 @@ actions.editSessionEvent = (eventId, eventData) => {
     if (eventData['maxUsers'] !== undefined) {
       formData.append('maxUsers', eventData['maxUsers'])
     }
+    if (eventData['location'] !== undefined) {
+      formData.append('location', eventData['location'])
+    }
+    if (eventData['locationExtra'] !== undefined) {
+      formData.append('locationExtra', eventData['locationExtra'])
+    }
+    if (eventData['teachers'] !== undefined) {
+      formData.append('teachers', eventData['teachers'])
+    }
 
     dispatch({
       [REQUEST_SEND]: {
@@ -127,6 +152,52 @@ actions.editSessionEvent = (eventId, eventData) => {
         },
         success: (data, dispatch) => {
           dispatch(actions.updateSessionEvent(JSON.parse(data)))
+        }
+      }
+    })
+  }
+}
+
+actions.repeatSessionEvent = (sessionEventId, repeatEventData) => {
+  return (dispatch) => {
+    const formData = new FormData()
+
+    if (repeatEventData['monday'] !== undefined) {
+      formData.append('monday', repeatEventData['monday'] ? 1 : 0)
+    }
+    if (repeatEventData['tuesday'] !== undefined) {
+      formData.append('tuesday', repeatEventData['tuesday'] ? 1 : 0)
+    }
+    if (repeatEventData['wednesday'] !== undefined) {
+      formData.append('wednesday', repeatEventData['wednesday'] ? 1 : 0)
+    }
+    if (repeatEventData['thursday'] !== undefined) {
+      formData.append('thursday', repeatEventData['thursday'] ? 1 : 0)
+    }
+    if (repeatEventData['friday'] !== undefined) {
+      formData.append('friday', repeatEventData['friday'] ? 1 : 0)
+    }
+    if (repeatEventData['saturday'] !== undefined) {
+      formData.append('saturday', repeatEventData['saturday'] ? 1 : 0)
+    }
+    if (repeatEventData['sunday'] !== undefined) {
+      formData.append('sunday', repeatEventData['sunday'] ? 1 : 0)
+    }
+    if (repeatEventData['until'] !== undefined) {
+      formData.append('until', repeatEventData['until'])
+    }
+    if (repeatEventData['duration'] !== undefined) {
+      formData.append('duration', repeatEventData['duration'])
+    }
+    dispatch({
+      [REQUEST_SEND]: {
+        url: generateUrl('claro_cursus_session_event_repeat', {sessionEvent: sessionEventId}),
+        request: {
+          method: 'POST',
+          body: formData
+        },
+        success: (data, dispatch) => {
+          dispatch(actions.addSessionEvents(JSON.parse(data)))
         }
       }
     })
@@ -220,6 +291,22 @@ actions.deleteSessionEventUsers = (sessionEventUsersIds) => ({
   }
 })
 
+actions.acceptSessionEventUser = (sessionEventUserId) => ({
+  [REQUEST_SEND]: {
+    url: generateUrl('claro_cursus_session_event_user_accept', {sessionEventUser: sessionEventUserId}),
+    request: {
+      method: 'PUT'
+    },
+    success: (data, dispatch) => {
+      if (data['status'] === 'success') {
+        dispatch(actions.updateParticipant(JSON.parse(data['data'])))
+      } else {
+        dispatch(actions.updateCurrentError(data['data']))
+      }
+    }
+  }
+})
+
 actions.displayMainView = () => (dispatch, getState) => {
   const state = getState()
   const mode = state['canEdit'] ? VIEW_MANAGER : VIEW_USER
@@ -246,26 +333,80 @@ actions.selfRegisterToSessionEvent = (sessionEventId) => ({
   }
 })
 
+actions.getAllLocations = () => (dispatch, getState) => {
+  const state = getState()
+  const workspaceId = state.workspaceId
+  const loaded = state.locationsLoaded
+  const url = generateUrl('claro_cursus_locations_retrieve', {workspace: workspaceId})
+
+  if (!loaded) {
+    dispatch({
+      [REQUEST_SEND]: {
+        url: url,
+        request: {
+          method: 'GET'
+        },
+        success: (data, dispatch) => {
+          const locations = JSON.parse(data)
+          dispatch(actions.loadLocations(locations))
+          dispatch(actions.updateLocationsLoaded(true))
+        }
+      }
+    })
+  }
+}
+
+actions.getSessionTeachers = () => (dispatch, getState) => {
+  const state = getState()
+  const sessionId = state.sessionId
+  const loaded = state.teachersLoaded
+  const url = generateUrl('claro_cursus_session_teachers_retrieve', {session: sessionId})
+
+  if (sessionId && !loaded) {
+    dispatch({
+      [REQUEST_SEND]: {
+        url: url,
+        request: {
+          method: 'GET'
+        },
+        success: (data, dispatch) => {
+          const teachers = JSON.parse(data)
+          dispatch(actions.loadTeachers(teachers))
+          dispatch(actions.updateTeachersLoaded(true))
+        }
+      }
+    })
+  }
+}
+
 actions.resetCurrentSessionEvent = makeActionCreator(CURRENT_EVENT_RESET)
 
 actions.addParticipants = makeActionCreator(CURRENT_EVENT_ADD_PARTICIPANTS, 'sessionEventUsers')
 
 actions.removeParticipants = makeActionCreator(CURRENT_EVENT_REMOVE_PARTICIPANTS, 'sessionEventUsersIds')
 
+actions.updateParticipant = makeActionCreator(CURRENT_EVENT_UPDATE_PARTICIPANT, 'sessionEventUser')
+
 actions.loadSessionEvent = makeActionCreator(SESSION_EVENT_LOAD, 'sessionEvent')
 
 actions.updateViewMode = makeActionCreator(UPDATE_VIEW_MODE, 'mode')
-
-actions.resetEventForm = makeActionCreator(EVENT_FORM_RESET)
-
-actions.updateEventForm = makeActionCreator(EVENT_FORM_UPDATE, 'property', 'value')
-
-actions.loadEventForm = makeActionCreator(EVENT_FORM_LOAD, 'event')
 
 actions.resetCurrentError = makeActionCreator(CURRENT_ERROR_RESET)
 
 actions.updateCurrentError = makeActionCreator(CURRENT_ERROR_UPDATE, 'error')
 
 actions.addEventsUsers = makeActionCreator(EVENTS_USERS_ADD, 'sessionEventUsers')
+
+actions.resetEventComments = makeActionCreator(EVENT_COMMENTS_RESET)
+
+actions.loadEventComments = makeActionCreator(EVENT_COMMENTS_LOAD, 'eventComments')
+
+actions.loadLocations = makeActionCreator(LOCATIONS_LOAD, 'locations')
+
+actions.updateLocationsLoaded = makeActionCreator(LOCATIONS_LOADED_UPDATE, 'loaded')
+
+actions.loadTeachers = makeActionCreator(TEACHERS_LOAD, 'teachers')
+
+actions.updateTeachersLoaded = makeActionCreator(TEACHERS_LOADED_UPDATE, 'loaded')
 
 const getQueryString = (idsList) => '?' + idsList.map(id => 'ids[]='+id).join('&')
