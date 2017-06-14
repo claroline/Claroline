@@ -90,7 +90,7 @@ class Exercise extends AbstractResource
      *
      * @var string
      */
-    private $endMessage;
+    private $endMessage = '';
 
     /**
      * Show the Exercise meta in the overview of the Exercise.
