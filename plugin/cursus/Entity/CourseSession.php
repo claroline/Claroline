@@ -71,7 +71,7 @@ class CourseSession
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace"
      * )
      * @ORM\JoinColumn(name="workspace_id", nullable=true, onDelete="SET NULL")
-     * @Groups({"api_workspace_min"})
+     * @Groups({"api_workspace_min", "api_user_min"})
      */
     protected $workspace;
 

@@ -28,11 +28,9 @@ class EventView extends Component {
         props: {
           mode: 'edition',
           title: `${trans('session_event_edition', {}, 'cursus')}`,
-          updateEventForm: this.props.updateEventForm,
           event: sessionEvent,
-          confirmAction: this.props.editSessionEvent,
-          resetFormData: this.props.resetEventForm,
-          loadFormData: this.props.loadEventForm
+          session: this.props.session,
+          confirmAction: this.props.editSessionEvent
         },
         fading: false
       }
@@ -45,7 +43,6 @@ class EventView extends Component {
       picker_name: 'validators-picker',
       picker_title: trans('validators_selection', {}, 'cursus'),
       multiple: true,
-      //selected_users: this.getSelectedUsersIds(),
       forced_workspaces: [this.props.workspaceId],
       return_datas: true,
       blacklist: this.getParticipantsIds()
@@ -71,6 +68,10 @@ class EventView extends Component {
 
   removeParticipant(id) {
     this.props.deleteParticipants([id])
+  }
+
+  acceptParticipant(id) {
+    this.props.acceptParticipant(id)
   }
 
   hideModal() {
@@ -157,6 +158,53 @@ class EventView extends Component {
                     {trans('no_description', {}, 'cursus')}
                   </div>
                 }
+                <hr/>
+                {this.props.event['location'] || this.props.event['locationExtra'] ?
+                  <div>
+                    <h4>{t('location')}</h4>
+                    {this.props.event['location'] &&
+                      <div>
+                        {this.props.event['location']['name']}
+                        <br/>
+                        {this.props.event['location']['street'] }, {this.props.event['location']['street_number'] }
+                        {this.props.event['location']['box_number'] &&
+                          <span> / {this.props.event['location']['box_number']}</span>
+                        }
+                        <br/>
+                        {this.props.event['location']['pc']} {this.props.event['location']['town']}
+                        <br/>
+                        {this.props.event['location']['country']}
+                        {this.props.event['location']['phone'] &&
+                          <span>
+                            <br/>
+                            {this.props.event['location']['phone']}
+                          </span>
+                        }
+                      </div>
+                    }
+                    <div dangerouslySetInnerHTML={{__html: this.props.event['locationExtra']}}>
+                    </div>
+                  </div> :
+                  <div className="alert alert-warning">
+                    {trans('no_location', {}, 'cursus')}
+                  </div>
+                }
+                <hr/>
+                {this.props.event['tutors'] && this.props.event['tutors'].length > 0 ?
+                  <div>
+                    <h4>{trans('tutors', {}, 'cursus')}</h4>
+                    <ul>
+                      {this.props.event['tutors'].map((tutor, index) =>
+                        <li key={index}>
+                          {tutor['firstName']} {tutor['lastName']}
+                        </li>
+                      )}
+                    </ul>
+                  </div> :
+                  <div className="alert alert-warning">
+                    {trans('no_tutor', {}, 'cursus')}
+                  </div>
+                }
               </div>
             </div>
           </div>
@@ -210,6 +258,12 @@ class EventView extends Component {
                                 }
                               </td>
                               <td>
+                                {p.registrationStatus === 1 &&
+                                  <button className="btn btn-success btn-sm" onClick={() => this.acceptParticipant(p.id)}>
+                                    <i className="fa fa-check"></i>
+                                  </button>
+                                }
+                                &nbsp;
                                 <button className="btn btn-danger btn-sm" onClick={() => this.removeParticipant(p.id)}>
                                   <i className="fa fa-trash"></i>
                                 </button>
@@ -257,18 +311,20 @@ EventView.propTypes = {
     startDate: T.string,
     endDate: T.string,
     registrationType: T.number,
-    maxUsers: T.number
+    maxUsers: T.number,
+    location: T.object,
+    locationExtra: T.string,
+    tutors: T.array
   }).isRequired,
+  session: T.object,
   participants: T.array.isRequired,
   canEdit: T.number.isRequired,
   currentError: T.string,
   resetCurrentSessionEvent: T.func.isRequired,
   editSessionEvent: T.func,
-  resetEventForm: T.func,
-  updateEventForm: T.func,
-  loadEventForm: T.func,
   registerParticipants: T.func,
   deleteParticipants: T.func,
+  acceptParticipant: T.func,
   resetCurrentError: T.func,
   createModal: T.func
 }
@@ -277,6 +333,7 @@ function mapStateToProps(state) {
   return {
     workspaceId: state.workspaceId,
     event: selectors.currentEvent(state),
+    session: selectors.currentSession(state),
     participants: selectors.currentParticipants(state),
     canEdit: selectors.canEdit(state),
     currentError: selectors.currentError(state)
@@ -291,11 +348,9 @@ function mapDispatchToProps(dispatch) {
     editSessionEvent: (eventId, eventData) => {
       dispatch(actions.editSessionEvent(eventId, eventData))
     },
-    resetEventForm: () => dispatch(actions.resetEventForm()),
-    updateEventForm: (property, value) => dispatch(actions.updateEventForm(property, value)),
-    loadEventForm: (event) => dispatch(actions.loadEventForm(event)),
     registerParticipants: (eventId, usersIds) => dispatch(actions.registerUsersToSessionEvent(eventId, usersIds)),
     deleteParticipants: (sessionEventUsersIds) => dispatch(actions.deleteSessionEventUsers(sessionEventUsersIds)),
+    acceptParticipant: (sessionEventUserId) => dispatch(actions.acceptSessionEventUser(sessionEventUserId)),
     resetCurrentError: () => dispatch(actions.resetCurrentError()),
     createModal: (type, props, fading, hideModal) => makeModal(type, props, fading, hideModal, hideModal)
   }

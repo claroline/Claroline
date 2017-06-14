@@ -274,10 +274,6 @@ export default class SessionManagementCtrl {
   }
 
   openWorkspace() {
-    this.SessionService.getWorkspaceFromSessionId(this.sessionId).then(d => {
-      if (d) {
-        window.location = Routing.generate('claro_workspace_open', {workspaceId: d})
-      }
-    })
+    window.location = Routing.generate('claro_workspace_open', {workspaceId: this.session['workspace']['id']})
   }
 }

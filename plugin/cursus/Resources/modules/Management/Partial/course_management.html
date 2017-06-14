@@ -170,7 +170,8 @@
                                     data-toggle="tooltip"
                                     data-placement="top"
                                     title="{{ 'go_to_workspace'|trans:{}:'cursus' }}"
-                                    ng-click="cmc.openWorkspace(session['id'])"
+                                    ng-click="cmc.openWorkspace(session['workspace']['id'])"
+                                    ng-if="session['workspace']"
                             >
                                 <i class="fa fa-book"></i>
                             </button>
@@ -251,7 +252,8 @@
                                     data-toggle="tooltip"
                                     data-placement="top"
                                     title="{{ 'go_to_workspace'|trans:{}:'cursus' }}"
-                                    ng-click="cmc.openWorkspace(session['id'])"
+                                    ng-click="cmc.openWorkspace(session['workspace']['id'])"
+                                    ng-if="session['workspace']"
                             >
                                 <i class="fa fa-book"></i>
                             </button>

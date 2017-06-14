@@ -29,7 +29,7 @@
              data-workspace="{{ workspace.getId() }}"
              data-editable="{{ canEdit }}"
              data-sessions="{{ sessions | json_serialize('api_cursus_min') | raw | escape }}"
-             data-events="{{ sessionEvents | json_serialize('api_cursus_min') | raw | escape }}"
+             data-events="{{ sessionEvents | json_serialize('api_user_min') | raw | escape }}"
              data-events-total="{{ sessionEventsTotal }}"
              data-events-users="{{ sessionEventUsers | json_serialize('api_cursus_min') | raw | escape }}"
         >
