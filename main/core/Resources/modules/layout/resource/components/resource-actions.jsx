@@ -113,6 +113,7 @@ LikeAction.propTypes = {
 
 function getMoreActions(resourceNode, props) {
   return [
+    resourceNode.rights.current.administrate &&
     <MenuItem
       key="resource-group-management"
       header={true}
@@ -120,6 +121,7 @@ function getMoreActions(resourceNode, props) {
       {t_res('resource_management')}
     </MenuItem>,
 
+    resourceNode.rights.current.administrate &&
     <MenuItem
       key="resource-edit-props"
       eventKey="resource-edit-props"
