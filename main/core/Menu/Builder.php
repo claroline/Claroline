@@ -31,14 +31,14 @@ class Builder extends ContainerAware
             ->setChildrenAttribute('role', 'menu');
 
         $menu->addChild(
-            $translator->trans('my_profile', array(), 'platform'),
-            array('uri' => $router->generate('claro_public_profile_view', array('publicUrl' => $tokenStorage->getToken()->getUser()->getPublicUrl())))
+            $translator->trans('my_profile', [], 'platform'),
+            ['uri' => $router->generate('claro_public_profile_view', ['publicUrl' => $tokenStorage->getToken()->getUser()->getPublicUrl()])]
         )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-user');
         $menu->addChild(
-            $translator->trans('preferences', array(), 'platform'),
-            array('uri' => $router->generate('claro_desktop_open_tool', array('toolName' => 'parameters')))
+            $translator->trans('preferences', [], 'platform'),
+            ['uri' => $router->generate('claro_desktop_open_tool', ['toolName' => 'parameters'])]
         )->setAttribute('class', 'dropdown')
         ->setAttribute('role', 'presentation')
         ->setExtra('icon', 'fa fa-cogs');
@@ -53,8 +53,8 @@ class Builder extends ContainerAware
 
         $user = $tokenStorage->getToken()->getUser();
         $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin(1);
-        $adminTools = array();
-        $excludedTools = array();
+        $adminTools = [];
+        $excludedTools = [];
 
         foreach ($lockedOrderedTools as $lockedOrderedTool) {
             $lockedTool = $lockedOrderedTool->getTool();
@@ -103,15 +103,15 @@ class Builder extends ContainerAware
 
         //logout
         if ($hasRoleExtension->isImpersonated()) {
-            $route = array(
+            $route = [
                 'route' => 'claro_desktop_open',
-                'routeParameters' => array('_switch' => 'exit'),
-            );
+                'routeParameters' => ['_switch' => 'exit'],
+            ];
         } else {
-            $route = array('route' => 'claro_security_logout');
+            $route = ['route' => 'claro_security_logout'];
         }
 
-        $menu->addChild($translator->trans('logout', array(), 'platform'), $route)
+        $menu->addChild($translator->trans('logout', [], 'platform'), $route)
             ->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setAttribute('name', 'logout')
@@ -130,15 +130,15 @@ class Builder extends ContainerAware
         $menu = $factory->createItem('root')
             ->setChildrenAttribute('class', 'nav navbar-nav');
 
-        if ($configHandler->getParameter('name') == '' && $configHandler->getParameter('logo') == '') {
-            $menu->addChild($translator->trans('home', array(), 'platform'), array('route' => 'claro_index'))
+        if ($configHandler->getParameter('name') === '' && $configHandler->getParameter('logo') === '') {
+            $menu->addChild($translator->trans('home', [], 'platform'), ['route' => 'claro_index'])
                 ->setExtra('icon', 'fa fa-home');
         }
 
-        $menu->addChild($translator->trans('desktop', array(), 'platform'), array('route' => 'claro_desktop_open'))
+        $menu->addChild($translator->trans('desktop', [], 'platform'), ['route' => 'claro_desktop_open'])
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-home')
-            ->setExtra('title', $translator->trans('desktop', array(), 'platform'));
+            ->setExtra('title', $translator->trans('desktop', [], 'platform'));
 
         $token = $tokenStorage->getToken();
 
@@ -146,15 +146,15 @@ class Builder extends ContainerAware
             $user = $token->getUser();
             $roles = $this->container->get('claroline.security.utilities')->getRoles($token);
         } else {
-            $roles = array('ROLE_ANONYMOUS');
+            $roles = ['ROLE_ANONYMOUS'];
         }
 
         if (!in_array('ROLE_ANONYMOUS', $roles)) {
             $dispatcher = $this->container->get('event_dispatcher');
             $toolManager = $this->container->get('claroline.manager.tool_manager');
             $lockedOrderedTools = $toolManager->getOrderedToolsLockedByAdmin();
-            $adminTools = array();
-            $excludedTools = array();
+            $adminTools = [];
+            $excludedTools = [];
 
             foreach ($lockedOrderedTools as $lockedOrderedTool) {
                 $lockedTool = $lockedOrderedTool->getTool();
@@ -211,24 +211,24 @@ class Builder extends ContainerAware
             ->setChildrenAttribute('class', 'list-group menu desktop-parameters-menu');
 
         $menu->addChild(
-            $translator->trans('menu_bar', array(), 'platform'),
-            array(
+            $translator->trans('menu_bar', [], 'platform'),
+            [
                 'route' => 'claro_tool_properties',
-                'routeParameters' => array('type' => 0),
-            ));
+                'routeParameters' => ['type' => 0],
+            ]);
 
         $menu->addChild(
-            $translator->trans('user_menu', array(), 'platform'),
-            array(
+            $translator->trans('user_menu', [], 'platform'),
+            [
                 'route' => 'claro_tool_properties',
-                'routeParameters' => array('type' => 1),
-            ));
+                'routeParameters' => ['type' => 1],
+            ]);
 
         $menu->addChild(
-            $translator->trans('desktop_parameters', array(), 'platform'),
-            array(
+            $translator->trans('desktop_parameters', [], 'platform'),
+            [
                 'route' => 'claro_user_options_edit_form',
-            ));
+            ]);
 
         //allowing the menu to be extended
         $this->container->get('event_dispatcher')->dispatch(
@@ -247,6 +247,20 @@ class Builder extends ContainerAware
         //allowing the menu to be extended
         $this->container->get('event_dispatcher')->dispatch(
             'claroline_external_authentication_menu_configure',
+            new ConfigureMenuEvent($factory, $menu)
+        );
+
+        return $menu;
+    }
+
+    public function externalParametersMenu(FactoryInterface $factory, array $options)
+    {
+        $menu = $factory->createItem('root')
+            ->setChildrenAttribute('class', 'nav nav-pills');
+
+        //allowing the menu to be extended
+        $this->container->get('event_dispatcher')->dispatch(
+            'claroline_external_parameters_menu_configure',
             new ConfigureMenuEvent($factory, $menu)
         );
 

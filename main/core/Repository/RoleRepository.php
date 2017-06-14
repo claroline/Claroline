@@ -129,9 +129,12 @@ class RoleRepository extends EntityRepository
     /**
      * Returns all platform roles.
      *
-     * @return array[Role]
+     * @param bool $includeRoleUser
+     * @param bool $getBuilder
+     *
+     * @return array|\Doctrine\ORM\QueryBuilder
      */
-    public function findAllPlatformRoles($includeRoleUser = true)
+    public function findAllPlatformRoles($includeRoleUser = true, $getBuilder = false)
     {
         $queryBuilder = $this
             ->createQueryBuilder('role')
@@ -145,9 +148,21 @@ class RoleRepository extends EntityRepository
                 ->setParameter(2, 'ROLE_USER');
         }
 
+        if ($getBuilder) {
+            return $queryBuilder;
+        }
+
         $query = $queryBuilder->getQuery();
 
         return $query->getResult();
+    }
+
+    public function findAllPlatformRoleNamesAndKeys($includeRoleUser = true)
+    {
+        $qb = $this->findAllPlatformRoles($includeRoleUser, true);
+        $qb->select('role.name', 'role.translationKey');
+
+        return $qb->getQuery()->getResult();
     }
 
     public function findByUserAndWorkspace(User $user, Workspace $workspace)

@@ -65,5 +65,6 @@
         <a class="list-group-item" href="{{ path('claro_admin_plugins') }}">
             {{ 'plugins'|trans({}, 'platform') }}
         </a>
+        {{ knp_menu_render('ClarolineCoreBundle:Builder:externalParametersMenu', {}, 'external_authentication_renderer') }}
     </div>
 {% endblock %}

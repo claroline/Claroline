@@ -659,6 +659,11 @@ class RoleManager
         return $this->roleRepo->findAllPlatformRoles($includeRoleUser);
     }
 
+    public function getAllPlatformRoleNamesAndKeys($includeRoleUser = true)
+    {
+        return $this->roleRepo->findAllPlatformRoleNamesAndKeys($includeRoleUser);
+    }
+
     /**
      * @param string                                           $key       The translation key
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace

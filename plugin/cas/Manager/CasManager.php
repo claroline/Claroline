@@ -192,6 +192,31 @@ class CasManager
     }
 
     /**
+     * @param $casLogin
+     * @param User $user
+     *
+     * @return CasUser
+     */
+    public function createCasUser($casLogin, User $user)
+    {
+        $casUser = new CasUser($casLogin, $user);
+        $this->om->persist($casUser);
+        $this->om->flush();
+
+        return $casUser;
+    }
+
+    public function getCasUsersByCasIds($casIds)
+    {
+        return $this->om->getRepository('ClarolineCasBundle:CasUser')->findCasUsersByCasIds($casIds);
+    }
+
+    public function getCasUsersByCasIdsOrUserIds($casIds, $userIds)
+    {
+        return $this->om->getRepository('ClarolineCasBundle:CasUser')->findCasUsersByCasIdsOrUserIds($casIds, $userIds);
+    }
+
+    /**
      * @param $userId
      */
     public function unlinkAccount($userId)

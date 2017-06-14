@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
+use Claroline\CoreBundle\Event\RenderExternalGroupsButtonEvent;
 use Claroline\CoreBundle\Form\RoleTranslationType;
 use Claroline\CoreBundle\Form\WorkspaceRoleType;
 use Claroline\CoreBundle\Form\WorkspaceUsersImportType;
@@ -30,6 +31,7 @@ use Claroline\CoreBundle\Manager\workspaceUserQueueManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -56,6 +58,8 @@ class RolesController extends Controller
     private $request;
     private $translator;
     private $wksUqmanager;
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
@@ -71,7 +75,8 @@ class RolesController extends Controller
      *     "request"            = @DI\Inject("request"),
      *     "translator"         = @DI\Inject("translator"),
      *     "wksUqmanager"       = @DI\Inject("claroline.manager.workspace_user_queue_manager"),
-     *     "formFactory" = @DI\Inject("form.factory")
+     *     "formFactory"        = @DI\Inject("form.factory"),
+     *     "eventDispatcher"    = @DI\Inject("event_dispatcher")
      * })
      */
     public function __construct(
@@ -87,7 +92,8 @@ class RolesController extends Controller
         Request $request,
         TranslatorInterface $translator,
         workspaceUserQueueManager $wksUqmanager,
-        FormFactory $formFactory
+        FormFactory $formFactory,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->roleManager = $roleManager;
         $this->userManager = $userManager;
@@ -102,6 +108,7 @@ class RolesController extends Controller
         $this->request = $request;
         $this->translator = $translator;
         $this->wksUqmanager = $wksUqmanager;
+        $this->eventDispatcher = $eventDispatcher;
     }
     /**
      * @EXT\Route(
@@ -605,6 +612,12 @@ class RolesController extends Controller
         $pager = ($search === '') ?
             $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page, $max, $order, $direction) :
             $pager = $this->groupManager->getGroupsByRolesAndName($wsRoles, $search, $page, $max, $order, $direction);
+        $externalGroups = '';
+        if ($canEdit) {
+            $event = new RenderExternalGroupsButtonEvent($workspace);
+            $this->eventDispatcher->dispatch('claroline_external_sync_groups_button_render', $event);
+            $externalGroups = $event->getContent();
+        }
 
         return [
             'workspace' => $workspace,
@@ -615,6 +628,7 @@ class RolesController extends Controller
             'order' => $order,
             'direction' => $direction,
             'canEdit' => $canEdit,
+            'externalGroups' => $externalGroups,
         ];
     }
 
