@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "294bdafc5a738eae5a6f63e1378a2d4acc40b2df"
+                "reference": "f460826cf8a23ed3805c333df1af87153b691d30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/294bdafc5a738eae5a6f63e1378a2d4acc40b2df",
-                "reference": "294bdafc5a738eae5a6f63e1378a2d4acc40b2df",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/f460826cf8a23ed3805c333df1af87153b691d30",
+                "reference": "f460826cf8a23ed3805c333df1af87153b691d30",
                 "shasum": ""
             },
             "require": {
@@ -306,7 +306,8 @@
                     "Claroline\\RemoteUserSynchronizationBundle\\ClarolineRemoteUserSynchronizationBundle",
                     "UJM\\LtiBundle\\UJMLtiBundle",
                     "Claroline\\CasBundle\\ClarolineCasBundle",
-                    "Icap\\BibliographyBundle\\IcapBibliographyBundle"
+                    "Icap\\BibliographyBundle\\IcapBibliographyBundle",
+                    "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle"
                 ]
             },
             "autoload": {
@@ -367,7 +368,8 @@
                     "Claroline\\RemoteUserSynchronizationBundle\\": "plugin/remote-user-synchronization",
                     "UJM\\LtiBundle\\": "plugin/lti",
                     "Claroline\\CasBundle\\": "plugin/cas",
-                    "Icap\\BibliographyBundle\\": "plugin/bibliography"
+                    "Icap\\BibliographyBundle\\": "plugin/bibliography",
+                    "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -387,7 +389,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-06-09 19:08:13"
+            "time": "2017-06-14 16:35:12"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3569,17 +3571,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "da8a5c6c188474966d6c34dd2c5459847fe8c6e5"
+                "reference": "72e1a01fcf09dbd2033edd29ba8b3283f85b6eb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/da8a5c6c188474966d6c34dd2c5459847fe8c6e5",
-                "reference": "da8a5c6c188474966d6c34dd2c5459847fe8c6e5",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/72e1a01fcf09dbd2033edd29ba8b3283f85b6eb0",
+                "reference": "72e1a01fcf09dbd2033edd29ba8b3283f85b6eb0",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-04-24 14:43:03"
+            "time": "2017-06-12 05:45:05"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -7720,12 +7722,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "dbe1fbf314830b00a619649cd2ca9b27ba417eae"
+                "reference": "3c0efb8609a32890a767bbbd39198a0e92572694"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/dbe1fbf314830b00a619649cd2ca9b27ba417eae",
-                "reference": "dbe1fbf314830b00a619649cd2ca9b27ba417eae",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/3c0efb8609a32890a767bbbd39198a0e92572694",
+                "reference": "3c0efb8609a32890a767bbbd39198a0e92572694",
                 "shasum": ""
             },
             "require": {
@@ -7774,7 +7776,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-06-02 22:32:37"
+            "time": "2017-06-12 18:12:26"
         },
         {
             "name": "webmozart/assert",
