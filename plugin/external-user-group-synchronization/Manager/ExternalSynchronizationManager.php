@@ -456,6 +456,7 @@ class ExternalSynchronizationManager
                 }
             }
             $this->om->endFlushSuite();
+            $this->om->clear();
 
             $countUsers -= $curBatchSize;
             if (!is_null($batch)) {
