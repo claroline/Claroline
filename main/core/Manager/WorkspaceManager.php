@@ -1390,7 +1390,6 @@ class WorkspaceManager
         array $workspaceRoles
     ) {
         $rights = $resourceNode->getRights();
-        $workspace = $resourceNode->getWorkspace();
 
         foreach ($rights as $right) {
             $role = $right->getRole();
@@ -1402,13 +1401,14 @@ class WorkspaceManager
             $newRight->setCreatableResourceTypes(
                 $right->getCreatableResourceTypes()->toArray()
             );
-            if ($role->getWorkspace() === $workspace &&
+            if (
                 isset($workspaceRoles[$key]) &&
                 !empty($workspaceRoles[$key])) {
                 $newRight->setRole($workspaceRoles[$key]);
                 $this->om->persist($newRight);
             } else {
                 $newRight->setRole($role);
+                //$this->om->persist($newRight);
                 //TODO MODEL persist here aswell later
             }
         }
@@ -1468,9 +1468,10 @@ class WorkspaceManager
         $this->log('Duplicating roles...');
         $guid = $workspace->getGuid();
         $roles = $source->getRoles();
-        $unusedRolePartName = '_'.$source->getGuid();
         foreach ($roles as $role) {
+            $unusedRolePartName = '_'.$role->getWorkspace()->getGuid();
             $roleName = str_replace($unusedRolePartName, '', $role->getName());
+            $this->log('Duplicating '.$role->getName().' as '.$roleName.'_'.$guid);
             $createdRole = $this->roleManager->createWorkspaceRole(
                 $roleName.'_'.$guid,
                 $role->getTranslationKey(),
@@ -1518,6 +1519,7 @@ class WorkspaceManager
         $uow = $this->om->getUnitOfWork();
         $wRoles = $this->roleManager->getRolesByWorkspace($workspace);
         $scheduledForInsert = $uow->getScheduledEntityInsertions();
+
         foreach ($scheduledForInsert as $entity) {
             if (get_class($entity) === 'Claroline\CoreBundle\Entity\Role') {
                 if ($entity->getWorkspace()) {
