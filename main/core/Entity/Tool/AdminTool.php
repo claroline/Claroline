@@ -12,9 +12,9 @@
 namespace Claroline\CoreBundle\Entity\Tool;
 
 use Claroline\CoreBundle\Entity\Plugin;
+use Claroline\CoreBundle\Entity\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Claroline\CoreBundle\Entity\Role;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\AdministrationToolRepository")
@@ -81,7 +81,9 @@ class AdminTool
 
     public function addRole(Role $role)
     {
-        $this->roles->add($role);
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
     }
 
     public function removeRole(Role $role)

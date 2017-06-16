@@ -2,12 +2,12 @@
 
 namespace Icap\BadgeBundle\Manager;
 
-use Icap\BadgeBundle\Entity\BadgeRule;
 use Claroline\CoreBundle\Entity\User;
-use Icap\BadgeBundle\Entity\Badge;
-use Icap\BadgeBundle\Entity\UserBadge;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Doctrine\Common\Collections\ArrayCollection;
+use Icap\BadgeBundle\Entity\Badge;
+use Icap\BadgeBundle\Entity\BadgeRule;
+use Icap\BadgeBundle\Entity\UserBadge;
 
 class BadgeManagerTest extends MockeryTestCase
 {
@@ -86,19 +86,19 @@ class BadgeManagerTest extends MockeryTestCase
         $user = new User();
         $userBadge = new UserBadge();
 
-        return array(
-            array($badge, array(null, null, null), array($user, $user, $user), 3),
+        return [
+            [$badge, [null, null, null], [$user, $user, $user], 3],
 
-            array($badge, array($userBadge, null, null), array($user, $user, $user), 2),
-            array($badge, array(null, $userBadge, null), array($user, $user, $user), 2),
-            array($badge, array(null, null, $userBadge), array($user, $user, $user), 2),
+            [$badge, [$userBadge, null, null], [$user, $user, $user], 2],
+            [$badge, [null, $userBadge, null], [$user, $user, $user], 2],
+            [$badge, [null, null, $userBadge], [$user, $user, $user], 2],
 
-            array($badge, array(null, $userBadge, $userBadge), array($user, $user, $user), 1),
-            array($badge, array($userBadge, null, $userBadge), array($user, $user, $user), 1),
-            array($badge, array($userBadge, $userBadge, null), array($user, $user, $user), 1),
+            [$badge, [null, $userBadge, $userBadge], [$user, $user, $user], 1],
+            [$badge, [$userBadge, null, $userBadge], [$user, $user, $user], 1],
+            [$badge, [$userBadge, $userBadge, null], [$user, $user, $user], 1],
 
-            array($badge, array($userBadge, $userBadge, $userBadge), array($user, $user, $user), 0),
-        );
+            [$badge, [$userBadge, $userBadge, $userBadge], [$user, $user, $user], 0],
+        ];
     }
 
     /**
@@ -157,16 +157,16 @@ class BadgeManagerTest extends MockeryTestCase
             ->setExpireDuration(2)
             ->setExpirePeriod(Badge::EXPIRE_PERIOD_YEAR);
 
-        return array(
-            array($badge1, new \DateTime('2014-02-02'), new \DateTime('2014-02-03')),
-            array($badge2, new \DateTime('2014-02-02'), new \DateTime('2014-02-04')),
-            array($badge3, new \DateTime('2014-02-02'), new \DateTime('2014-02-09')),
-            array($badge4, new \DateTime('2014-02-02'), new \DateTime('2014-02-16')),
-            array($badge5, new \DateTime('2014-02-02'), new \DateTime('2014-03-02')),
-            array($badge6, new \DateTime('2014-02-02'), new \DateTime('2014-04-02')),
-            array($badge7, new \DateTime('2014-02-02'), new \DateTime('2015-02-02')),
-            array($badge8, new \DateTime('2014-02-02'), new \DateTime('2016-02-02')),
-        );
+        return [
+            [$badge1, new \DateTime('2014-02-02'), new \DateTime('2014-02-03')],
+            [$badge2, new \DateTime('2014-02-02'), new \DateTime('2014-02-04')],
+            [$badge3, new \DateTime('2014-02-02'), new \DateTime('2014-02-09')],
+            [$badge4, new \DateTime('2014-02-02'), new \DateTime('2014-02-16')],
+            [$badge5, new \DateTime('2014-02-02'), new \DateTime('2014-03-02')],
+            [$badge6, new \DateTime('2014-02-02'), new \DateTime('2014-04-02')],
+            [$badge7, new \DateTime('2014-02-02'), new \DateTime('2015-02-02')],
+            [$badge8, new \DateTime('2014-02-02'), new \DateTime('2016-02-02')],
+        ];
     }
 
     public function testIsRuleChangedWithOneRuleAndNoChange()
@@ -209,7 +209,7 @@ class BadgeManagerTest extends MockeryTestCase
         $unitOfWork
             ->shouldReceive('getEntityChangeSet')->once()
                 ->with($originalRule1)
-                ->andReturn(array());
+                ->andReturn([]);
         $entityManager = $this->entityManager;
         $entityManager
             ->shouldReceive('getUnitOfWork')
@@ -235,7 +235,7 @@ class BadgeManagerTest extends MockeryTestCase
         $unitOfWork
             ->shouldReceive('getEntityChangeSet')->once()
                 ->with($originalRule1)
-                ->andReturn(array('action' => array(uniqid(), uniqid())));
+                ->andReturn(['action' => [uniqid(), uniqid()]]);
         $entityManager = $this->entityManager;
         $entityManager
             ->shouldReceive('getUnitOfWork')

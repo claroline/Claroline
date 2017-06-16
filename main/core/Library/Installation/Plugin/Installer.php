@@ -73,6 +73,7 @@ class Installer
     {
         $this->logger = $logger;
         $this->baseInstaller->setLogger($logger);
+        $this->recorder->setLogger($logger);
     }
 
     /**
@@ -187,6 +188,8 @@ class Installer
             $this->validator->activeUpdateMode();
             $this->validatePlugin($bundle['instance']);
             $this->validator->deactivateUpdateMode();
+            $this->log('Plugin validated: proceed to database changes...');
+            $this->om->clear();
             $this->recorder->update($bundle['instance'], $this->validator->getPluginConfiguration());
         }
     }

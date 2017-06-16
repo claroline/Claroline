@@ -2,7 +2,7 @@ import uiFlexnavController from './flexnav.controller'
 import mainMenuTemplate from './flexnav.partial.html'
 
 export default class uiFlexnavDirective {
-  constructor () {
+  constructor() {
     this.restrict = 'E'
     this.scope = {
       menu: '=',

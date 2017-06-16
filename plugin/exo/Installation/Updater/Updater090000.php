@@ -70,6 +70,7 @@ class Updater090000
 
     public function postUpdate()
     {
+        return;
         $this->updateExerciseTypes();
         $this->updateAnswerData();
         $this->cleanOldPairQuestions();

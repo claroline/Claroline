@@ -98,4 +98,9 @@ class Recorder
     {
         return $this->dbWriter->isSaved($plugin);
     }
+
+    public function setLogger($logger)
+    {
+        $this->dbWriter->setLogger($logger);
+    }
 }

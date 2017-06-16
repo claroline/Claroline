@@ -5,7 +5,7 @@ let _contents = new WeakMap()
 let _compiledContents = new WeakMap()
 
 export default class uiFlexnavSubmenuDirective {
-  constructor ($compile) {
+  constructor($compile) {
     _$compile.set(this, $compile)
 
     this.scope = {
@@ -22,7 +22,7 @@ export default class uiFlexnavSubmenuDirective {
     this.compile = this._compile.bind(this)
   }
 
-  _compile (tElement) {
+  _compile(tElement) {
     _contents.set(this, tElement.contents().remove())
     _compiledContents.set(this, null)
 
@@ -31,7 +31,7 @@ export default class uiFlexnavSubmenuDirective {
     }
   }
 
-  _preLink ($scope, element, attr, ctrl) {
+  _preLink($scope, element, attr, ctrl) {
     ctrl[2].flexnav = ctrl[0]
     ctrl[2].parent = ctrl[1] || ctrl[0]
 

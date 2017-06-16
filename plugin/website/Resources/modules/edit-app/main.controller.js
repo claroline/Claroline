@@ -1,5 +1,5 @@
 export default class MainController {
-  constructor ($scope, websiteOptions, tinyMceConfig, websiteData) {
+  constructor($scope, websiteOptions, tinyMceConfig, websiteData) {
     this.options = websiteOptions
     this.website = websiteData
     this.tinymceConfig = tinyMceConfig
@@ -36,28 +36,28 @@ export default class MainController {
     }
   }
 
-  saveWebsitePage () {
+  saveWebsitePage() {
     this.tree.saveActiveNode()
   }
 
-  uploadImage ($files, imageStr) {
+  uploadImage($files, imageStr) {
     this.options.uploadImage($files, imageStr)
   }
 
-  setAsHomepage () {
+  setAsHomepage() {
     this.tree.setActiveNodeAsHomepage()
   }
 
-  createNewPage () {
+  createNewPage() {
     this.tree.createNewNode()
   }
 
-  onItemClick (event, item) {
+  onItemClick(event, item) {
     event.preventDefault()
     this.currentClickedItem = item
   }
 
-  updateImagePath (imageStr, isReset) {
+  updateImagePath(imageStr, isReset) {
     var newPath = null
     if (!isReset) {
       newPath = this.options[ imageStr + 'Path' ]
@@ -65,7 +65,7 @@ export default class MainController {
     this.options.updateImagePath(newPath, imageStr)
   }
 
-  menuVerticalStyle () {
+  menuVerticalStyle() {
     if (this.options.data.menuOrientation == 'vertical') {
       return {
         'min-height': this.contentHeight + 'px',
@@ -80,7 +80,7 @@ export default class MainController {
     }
   }
 
-  menuButtonStyle (node) {
+  menuButtonStyle(node) {
     var backgroundColor = this.options.data.menuBgColor
     var fontColor = this.options.data.menuFontColor
     if (node.isSection) {
@@ -90,7 +90,7 @@ export default class MainController {
     return {'background-color': backgroundColor, 'color': fontColor, 'border-color': this.options.data.menuBorderColor}
   }
 
-  menuResizerStyle () {
+  menuResizerStyle() {
     if (this.options.data.menuOrientation == 'vertical') {
       return {height: this.contentHeight + 'px'}
     } else {
@@ -98,7 +98,7 @@ export default class MainController {
     }
   }
 
-  websitePreviewStyle () {
+  websitePreviewStyle() {
     return {
       'background-color': this.options.data.bgColor,
       'background-image': this.options.getImageStyleText('bgImage'),
@@ -107,7 +107,7 @@ export default class MainController {
     }
   }
 
-  websitePreviewInnerStyle () {
+  websitePreviewInnerStyle() {
     var style = {}
     if (!this.options.isFullScreen) {
       style[ 'width' ] = this.options.data.totalWidth + 'px'
@@ -117,19 +117,19 @@ export default class MainController {
     return style
   }
 
-  get currentPageUrl () {
+  get currentPageUrl() {
     let url = ''
     if (this.currentClickedItem.resourceNode != null && this.currentClickedItem.resourceNodeType != null) {
       url = window.Routing.generate('claro_resource_open', {
         resourceType: this.currentClickedItem.resourceNodeType,
         node: this.currentClickedItem.resourceNode
-      });
+      })
 
     }
-    return url;
+    return url
   }
 
-  get footerStyle () {
+  get footerStyle() {
     return {
       height: this.options.data.footerHeight + 'px',
       'background-color': this.options.data.footerBgColor,
@@ -139,7 +139,7 @@ export default class MainController {
     }
   }
 
-  get bannerStyle () {
+  get bannerStyle() {
     return {
       height: this.options.data.bannerHeight + 'px',
       'background-color': this.options.data.bannerBgColor,

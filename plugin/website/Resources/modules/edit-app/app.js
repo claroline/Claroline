@@ -44,9 +44,9 @@ registerApp
   .filter('trustAsHtml', ['$sce', $sce => text => $sce.trustAsHtml(text)])
   .filter('trustAsResourceUrl', ['$sce', $sce => text => $sce.trustAsResourceUrl(text)])
   .service('websiteOptions', websiteOptions)
-  .controller('MainController', MainController);
+  .controller('MainController', MainController)
 
 //Bootstrap angular in body
 angular.element(document).ready(function () {
-  angular.bootstrap(document.getElementsByTagName('body')[ 0 ], [ 'app' ]);
+  angular.bootstrap(document.getElementsByTagName('body')[ 0 ], [ 'app' ])
 })
