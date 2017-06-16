@@ -131,6 +131,18 @@ class InstallationManager
         }
     }
 
+    //This function is fired at the end of a plugin installation/update.
+    //This is the stuff we do no matter what, at the very end.
+    //It allows us to override some stuff and it's just easier that way.
+    public function end(InstallableInterface $bundle)
+    {
+        $additionalInstaller = $this->getAdditionalInstaller($bundle);
+
+        if ($additionalInstaller) {
+            $additionalInstaller->end();
+        }
+    }
+
     public function uninstall(InstallableInterface $bundle)
     {
         $this->log(sprintf('<comment>Uninstalling %s...</comment>', $bundle->getName()));

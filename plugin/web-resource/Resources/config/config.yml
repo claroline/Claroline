@@ -6,6 +6,5 @@ plugin:
     - class: Claroline\CoreBundle\Entity\Resource\File
       name: claroline_web_resource
       is_exportable: false
-      icon: res_web.png
       activity_rules:
         - action: resource-read

@@ -159,7 +159,7 @@ class OperationExecutorTest extends \PHPUnit_Framework_TestCase
         file_put_contents($previous, '[]');
         $this->executor->setRepositoryFiles($previous, '/does/not/exist');
 
-        $this->kernel->expects($this->once())->method('getBundles')->willReturn([]);
+        $this->kernel->expects($this->exactly(2))->method('getBundles')->willReturn([]);
 
         $this->executor->execute([]);
 
