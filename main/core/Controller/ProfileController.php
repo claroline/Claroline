@@ -562,7 +562,7 @@ class ProfileController extends Controller
     {
         $event = $this->eventDispatcher->dispatch(
             'claroline_profile_courses_tab_options',
-            'GenericDatas'
+            'GenericData'
         );
         $data = $event->getResponse();
 
@@ -583,7 +583,7 @@ class ProfileController extends Controller
     {
         $event = $this->eventDispatcher->dispatch(
             'claroline_learner_closed_sessions',
-            'GenericDatas',
+            'GenericData',
             [$user]
         );
         $data = $event->getResponse();

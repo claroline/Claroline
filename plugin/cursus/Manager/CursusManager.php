@@ -1515,7 +1515,8 @@ class CursusManager
         Resource $reservationResource = null,
         array $tutors = [],
         $registrationType = CourseSession::REGISTRATION_AUTO,
-        $maxUsers = null
+        $maxUsers = null,
+        $type = SessionEvent::TYPE_NONE
     ) {
         $eventName = is_null($name) ? $session->getName() : $name;
         $eventStartDate = is_null($startDate) ? $session->getStartDate() : $startDate;
@@ -1532,6 +1533,7 @@ class CursusManager
         $sessionEvent->setLocationResource($reservationResource);
         $sessionEvent->setRegistrationType($registrationType);
         $sessionEvent->setMaxUsers($maxUsers);
+        $sessionEvent->setType($type);
 
         foreach ($tutors as $tutor) {
             $sessionEvent->addTutor($tutor);
@@ -5219,6 +5221,11 @@ class CursusManager
     public function getSessionEventsBySessionAndUserAndRegistrationStatus(CourseSession $session, User $user, $registrationStatus)
     {
         return $this->sessionEventRepo->findSessionEventsBySessionAndUserAndRegistrationStatus($session, $user, $registrationStatus);
+    }
+
+    public function getSessionEventsByWorkspace(Workspace $workspace)
+    {
+        return $this->sessionEventRepo->findSessionEventsByWorkspace($workspace);
     }
 
     /*************************************************

@@ -250,7 +250,7 @@ class ParametersController extends Controller
         }
         $event = $this->eventDispatcher->dispatch(
             'claroline_retrieve_tags',
-            'GenericDatas',
+            'GenericData',
             []
         );
         $response = $event->getResponse();

@@ -3,13 +3,13 @@
 namespace FormaLibre\ReservationBundle\Listener;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\GenericDatasEvent;
+use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Doctrine\ORM\EntityManager;
 use FormaLibre\ReservationBundle\Controller\ReservationController;
 use FormaLibre\ReservationBundle\Manager\ReservationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -59,14 +59,14 @@ class ReservationToolListener
      */
     public function onOpenEvent(OpenAdministrationToolEvent $event)
     {
-        $params = array();
+        $params = [];
         $params['_controller'] = 'FormaLibreReservationBundle:ReservationAdmin:index';
         $this->redirect($params, $event);
     }
 
     private function redirect($params, $event)
     {
-        $subRequest = $this->request->duplicate(array(), null, $params);
+        $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
@@ -81,8 +81,8 @@ class ReservationToolListener
     {
         $resourcesTypes = $this->em->getRepository('FormaLibreReservationBundle:ResourceType')->findAll();
 
-        foreach ($resourcesTypes as $resourcesTypeKey => $resourcesType) {
-            foreach ($resourcesType->getResources() as $resourceKey => $resource) {
+        foreach ($resourcesTypes as $resourcesType) {
+            foreach ($resourcesType->getResources() as $resource) {
                 if (!$this->reservationManager->hasAccess($this->tokenStorage->getToken()->getUser(), $resource, ReservationController::SEE)) {
                     $resourcesType->removeResource($resource);
                 }
@@ -95,9 +95,9 @@ class ReservationToolListener
     /**
      * @DI\Observe("formalibre_delete_event_from_resource")
      */
-    public function onResourceDeleted(GenericDatasEvent $event)
+    public function onResourceDeleted(GenericDataEvent $event)
     {
-        $resource = $event->getDatas()->getDatas();
+        $resource = $event->getData()->getDatas();
 
         foreach ($resource->getReservations() as $reservation) {
             $this->em->remove($reservation->getEvent());

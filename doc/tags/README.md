@@ -5,7 +5,7 @@
 # HOW TO TAG AN ENTITY #
 ########################
 
-To tag an Object, a "Claroline\CoreBundle\Event\GenericDatasEvent" event has to be dispatched.
+To tag an Object, a "Claroline\CoreBundle\Event\GenericDataEvent" event has to be dispatched.
 Event name must be "claroline_tag_object".
 Event "datas" field must be an array defined as followed :
 
@@ -18,21 +18,21 @@ array (
 Here is an example of a call from a controller function to tag a workspace with "My Tags" :
 
     *******************************************************************
-        $datas = array('tag' => 'My Tags', 'object' => $workspace);
+        $data = array('tag' => 'My Tags', 'object' => $workspace);
 
         $this->get('claroline.event.event_dispatcher')->dispatch(
             'claroline_tag_object',
-            'GenericDatas',
-            array($datas)
+            'GenericData',
+            array($data)
         );
     *******************************************************************
 
     OR
 
     *******************************************************************
-        $datas = array('tag' => 'My Tags', 'object' => $workspace);
-        $event = new GenericDatasEvent();
-        $event->setDatas($datas);
+        $data = array('tag' => 'My Tags', 'object' => $workspace);
+        $event = new GenericDataEvent();
+        $event->setData($data);
 
         $this->get('event_dispatcher')->dispatch(
             'claroline_tag_object',
@@ -45,7 +45,7 @@ Here is an example of a call from a controller function to tag a workspace with 
 # HOW TO FETCH TAGGED OBJECTS #
 ###############################
 
-To fetch tagged objects, a "Claroline\CoreBundle\Event\GenericDatasEvent" event has also to be dispatched.
+To fetch tagged objects, a "Claroline\CoreBundle\Event\GenericDataEvent" event has also to be dispatched.
 Event name must be "claroline_retrieve_tagged_objects".
 Event "datas" field must be an array defined as followed :
 
@@ -64,7 +64,7 @@ array (
 Here is an example to fetch all workspaces tagged as "My Tags", ordered by name :
 
     **************************************************************************
-        $datas = array(
+        $data = array(
             'tag' => 'My Tags',
             'strict' => true,
             'class' => 'Claroline\CoreBundle\Entity\Workspace\Workspace',
@@ -75,8 +75,8 @@ Here is an example to fetch all workspaces tagged as "My Tags", ordered by name 
 
         $event = $this->get('claroline.event.event_dispatcher')->dispatch(
             'claroline_retrieve_tagged_objects',
-            'GenericDatas',
-            array($datas)
+            'GenericData',
+            array($data)
         );
 
         $workspaces = $event->getResponse();

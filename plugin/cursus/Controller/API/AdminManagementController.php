@@ -14,7 +14,7 @@ namespace Claroline\CursusBundle\Controller\API;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\GenericDatasEvent;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
@@ -1879,7 +1879,7 @@ class AdminManagementController extends Controller
             'ordered_by' => 'name',
             'order' => 'ASC',
         ];
-        $event = $this->eventDispatcher->dispatch('claroline_retrieve_tagged_objects', new GenericDatasEvent($options));
+        $event = $this->eventDispatcher->dispatch('claroline_retrieve_tagged_objects', new GenericDataEvent($options));
         $resources = $event->getResponse();
         $serializedResources = $this->serializer->serialize(
             $resources,
@@ -1909,7 +1909,7 @@ class AdminManagementController extends Controller
     {
         $this->cursusManager->checkAccess($user);
         $options = ['tag' => ['cursus_location'], 'object' => $resource];
-        $this->eventDispatcher->dispatch('claroline_tag_object', new GenericDatasEvent($options));
+        $this->eventDispatcher->dispatch('claroline_tag_object', new GenericDataEvent($options));
 
         return new JsonResponse('success', 200);
     }

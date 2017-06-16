@@ -5,7 +5,7 @@ namespace FormaLibre\ReservationBundle\Manager;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\GenericDatasEvent;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
@@ -140,12 +140,12 @@ class ReservationManager
         $hasAccess = false;
         foreach ($userRoles as $userRole) {
             foreach ($resourceRights as $resourceRight) {
-                if ($userRole->getRole() == $resourceRight->getRole()->getName() && $resourceRight->getMask() >= ReservationController::ADMIN) {
+                if ($userRole->getRole() === $resourceRight->getRole()->getName() && $resourceRight->getMask() >= ReservationController::ADMIN) {
                     $hasAccess = true;
                     break;
                 }
 
-                if ($userRole->getRole() == $resourceRight->getRole()->getName() && $resourceRight->getMask() & $mask) {
+                if ($userRole->getRole() === $resourceRight->getRole()->getName() && $resourceRight->getMask() & $mask) {
                     if ((ReservationController::BOOK === $mask && $this->tokenStorage->getToken()->getUser() === $user) || ReservationController::BOOK !== $mask) {
                         $hasAccess = true;
                         break;
@@ -166,13 +166,13 @@ class ReservationManager
 
     public function deleteEventsBoundToResource(Resource $resource)
     {
-        $genericDatas = new GenericDatasEvent();
-        $genericDatas->setDatas($resource);
+        $genericData = new GenericDataEvent();
+        $genericData->setData($resource);
 
         $this->eventDispatcher->dispatch(
             'formalibre_delete_event_from_resource',
-            'GenericDatas',
-            ['datas' => $genericDatas]
+            'GenericData',
+            ['datas' => $genericData]
         );
     }
 

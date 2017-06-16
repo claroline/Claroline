@@ -154,7 +154,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         ) {
             $event = $this->eventDispatcher->dispatch(
                 'claroline_retrieve_user_workspaces_by_tag',
-                'GenericDatas',
+                'GenericData',
                 [
                     [
                         'tag' => $defaultWorkspaceTag,

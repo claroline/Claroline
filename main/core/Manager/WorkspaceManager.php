@@ -266,7 +266,7 @@ class WorkspaceManager
         }
         $this->dispatcher->dispatch(
             'claroline_workspaces_delete',
-            'GenericDatas',
+            'GenericData',
             [[$workspace]]
         );
         $this->om->remove($workspace);

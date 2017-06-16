@@ -1055,7 +1055,7 @@ class ResourceManager
                     //what is it ?
                     $this->dispatcher->dispatch(
                         'claroline_resources_delete',
-                        'GenericDatas',
+                        'GenericData',
                         [[$node]]
                     );
 

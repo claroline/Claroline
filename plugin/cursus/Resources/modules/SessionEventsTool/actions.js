@@ -98,6 +98,8 @@ actions.createSessionEvent = (sessionId, eventData) => {
     if (eventData['teachers'] !== undefined) {
       formData.append('teachers', eventData['teachers'])
     }
+    const type = eventData['isAgendaEvent'] ? 1 : 0
+    formData.append('type', type)
 
     dispatch({
       [REQUEST_SEND]: {
@@ -145,6 +147,8 @@ actions.editSessionEvent = (eventId, eventData) => {
     if (eventData['teachers'] !== undefined) {
       formData.append('teachers', eventData['teachers'])
     }
+    const type = eventData['isAgendaEvent'] ? 1 : 0
+    formData.append('type', type)
 
     dispatch({
       [REQUEST_SEND]: {

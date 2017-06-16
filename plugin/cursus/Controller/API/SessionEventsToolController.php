@@ -127,6 +127,7 @@ class SessionEventsToolController extends Controller
             CourseSession::REGISTRATION_AUTO;
         $maxUsers = $this->request->get('maxUsers', false);
         $maxUsers = $maxUsers !== false && $maxUsers !== '' ? intval($maxUsers) : null;
+        $type = $this->request->get('type', false) !== false ? $this->request->get('type') : SessionEvent::TYPE_NONE;
         $locationExtra = $this->request->get('locationExtra', false) ? $this->request->get('locationExtra') : null;
         $locationId = intval($this->request->get('location', false));
         $location = $locationId ? $this->locationManager->getLocationById($locationId) : null;
@@ -154,7 +155,8 @@ class SessionEventsToolController extends Controller
             null,
             $teachers,
             $registrationType,
-            $maxUsers
+            $maxUsers,
+            $type
         );
         $serializedSessionEvent = $this->serializer->serialize(
             $sessionEvent,
@@ -209,6 +211,7 @@ class SessionEventsToolController extends Controller
             CourseSession::REGISTRATION_AUTO;
         $maxUsers = $this->request->get('maxUsers', false);
         $maxUsers = $maxUsers !== false && $maxUsers !== '' ? intval($maxUsers) : null;
+        $type = $this->request->get('type', false) !== false ? $this->request->get('type') : SessionEvent::TYPE_NONE;
         $locationExtra = $this->request->get('locationExtra', false) ? $this->request->get('locationExtra') : null;
         $sessionEvent->emptyTutors();
         $teachersParams = $this->request->get('teachers', false);
@@ -233,6 +236,7 @@ class SessionEventsToolController extends Controller
         $sessionEvent->setEndDate($endDate);
         $sessionEvent->setRegistrationType($registrationType);
         $sessionEvent->setMaxUsers($maxUsers);
+        $sessionEvent->setType($type);
         $sessionEvent->setLocationExtra($locationExtra);
         $locationId = intval($this->request->get('location', false));
         $location = $locationId ? $this->locationManager->getLocationById($locationId) : null;

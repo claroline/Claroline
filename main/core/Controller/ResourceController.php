@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\GenericDatasEvent;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ImportResourcesType;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
@@ -1004,7 +1004,7 @@ class ResourceController extends Controller
                 'ordered_by' => 'name',
                 'ids' => $ids,
             ];
-            $event = $this->eventDispatcher->dispatch('claroline_retrieve_tagged_objects', new GenericDatasEvent($options));
+            $event = $this->eventDispatcher->dispatch('claroline_retrieve_tagged_objects', new GenericDataEvent($options));
             $taggedResources = $event->getResponse();
             $resources = $this->mergeSearchedResources($resources, $taggedResources);
         }

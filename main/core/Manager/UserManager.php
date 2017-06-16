@@ -360,7 +360,7 @@ class UserManager
         $this->objectManager->persist($user);
         $this->objectManager->flush();
 
-        $this->strictEventDispatcher->dispatch('claroline_users_delete', 'GenericDatas', [[$user]]);
+        $this->strictEventDispatcher->dispatch('claroline_users_delete', 'GenericData', [[$user]]);
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserDelete', [$user]);
         $this->strictEventDispatcher->dispatch('delete_user', 'DeleteUser', [$user]);
     }

@@ -29,7 +29,8 @@ class EventFormModal  extends Component {
       endDate: props.event.endDate ?  new Date(props.event.endDate) : new Date(props.session.endDate),
       location: props.event.location ? props.event.location.id : undefined,
       locationExtra: props.event.locationExtra ? props.event.locationExtra : undefined,
-      teachers: props.event.tutors ? props.event.tutors.map(t => t.id) : []
+      teachers: props.event.tutors ? props.event.tutors.map(t => t.id) : [],
+      isAgendaEvent: props.event.type === 1
     }
   }
 
@@ -68,6 +69,9 @@ class EventFormModal  extends Component {
           }
         }
         this.setState({teachers: data})
+        break
+      case 'isAgendaEvent':
+        this.setState({isAgendaEvent: value})
         break
     }
   }
@@ -289,6 +293,18 @@ class EventFormModal  extends Component {
               </select>
             </div>
           </div>
+
+          <div className="form-group row">
+            <label className="control-label col-md-3">
+              {trans('show_in_agenda', {}, 'cursus')}
+            </label>
+            <div className="col-md-9">
+              <input type="checkbox"
+                     checked={this.state.isAgendaEvent}
+                     onChange={e => this.updateEventProps('isAgendaEvent', e.target.checked)}
+              />
+            </div>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <button className="btn btn-default" onClick={this.props.fadeModal}>
@@ -314,7 +330,8 @@ EventFormModal.propTypes = {
     maxUsers: T.number,
     location: T.object,
     locationExtra: T.string,
-    tutors: T.array
+    tutors: T.array,
+    type: T.number
   }).isRequired,
   mode: T.string.isRequired,
   session: T.object,

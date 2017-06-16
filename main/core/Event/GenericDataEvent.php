@@ -13,25 +13,25 @@ namespace Claroline\CoreBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
 
-class GenericDatasEvent extends Event
+class GenericDataEvent extends Event
 {
-    private $datas;
+    private $data;
     private $response;
 
-    public function __construct($datas = null)
+    public function __construct($data = null)
     {
-        $this->datas = $datas;
+        $this->data = $data;
         $this->response = null;
     }
 
-    public function getDatas()
+    public function getData()
     {
-        return $this->datas;
+        return $this->data;
     }
 
-    public function setDatas($datas = null)
+    public function setData($data = null)
     {
-        $this->datas = $datas;
+        $this->data = $data;
     }
 
     public function getResponse()

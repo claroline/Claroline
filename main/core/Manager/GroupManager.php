@@ -91,7 +91,7 @@ class GroupManager
     {
         $this->eventDispatcher->dispatch(
             'claroline_groups_delete',
-            'GenericDatas',
+            'GenericData',
             [[$group]]
         );
 
