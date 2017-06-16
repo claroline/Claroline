@@ -219,6 +219,7 @@ class CursusManager
         $this->cursusWordRepo = $om->getRepository('ClarolineCursusBundle:CursusDisplayedWord');
         $this->documentModelRepo = $om->getRepository('ClarolineCursusBundle:DocumentModel');
         $this->reservationResourceRepo = $om->getRepository('FormaLibre\ReservationBundle\Entity\Resource');
+        $this->sessionEventCommentRepo = $om->getRepository('ClarolineCursusBundle:SessionEventComment');
         $this->sessionEventRepo = $om->getRepository('ClarolineCursusBundle:SessionEvent');
         $this->sessionEventUserRepo = $om->getRepository('ClarolineCursusBundle:SessionEventUser');
         $this->sessionGroupRepo = $om->getRepository('ClarolineCursusBundle:CourseSessionGroup');
@@ -5566,6 +5567,15 @@ class CursusManager
     public function getSessionEventUsersFromListBySessionEventAndStatus(SessionEvent $sessionEvent, array $users, $status)
     {
         return $this->sessionEventUserRepo->findSessionEventUsersFromListBySessionEventAndStatus($sessionEvent, $users, $status);
+    }
+
+    /***************************************************
+     * Access to SessionEventCommentRepository methods *
+     ***************************************************/
+
+    public function getSessionEventCommentsBySessionEvent(SessionEvent $sessionEvent)
+    {
+        return $this->sessionEventCommentRepo->findBy(['sessionEvent' => $sessionEvent]);
     }
 
     /******************

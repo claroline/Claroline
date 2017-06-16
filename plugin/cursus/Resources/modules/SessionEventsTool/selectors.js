@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-const canEdit = state => state.canEdit
+const canEdit = state => state.canEdit === 1
 const sessions = state => state.sessions
 const sessionId = state => state.sessionId
 const events = state => state.events

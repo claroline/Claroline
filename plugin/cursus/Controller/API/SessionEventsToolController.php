@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\CourseSessionUser;
 use Claroline\CursusBundle\Entity\SessionEvent;
+use Claroline\CursusBundle\Entity\SessionEventComment;
 use Claroline\CursusBundle\Entity\SessionEventUser;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -448,6 +449,90 @@ class SessionEventsToolController extends Controller
         );
 
         return new JsonResponse($serializedUsers, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/cursus/session/event/{sessionEvent}/comments/retrieve",
+     *     name="claro_cursus_session_event_comments_retrieve",
+     *     options = {"expose"=true}
+     * )
+     */
+    public function sessionEventCommentsRetrieveAction(SessionEvent $sessionEvent)
+    {
+        $this->checkToolAccess($sessionEvent->getSession()->getWorkspace());
+        $comments = $this->cursusManager->getSessionEventCommentsBySessionEvent($sessionEvent);
+        $serializedComments = $this->serializer->serialize(
+            $comments,
+            'json',
+            SerializationContext::create()->setGroups(['api_cursus'])
+        );
+
+        return new JsonResponse($serializedComments, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/cursus/session/event/{sessionEvent}/comment/create",
+     *     name="claro_cursus_session_event_comment_create",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     */
+    public function sessionEventCommentCreateAction(User $user, SessionEvent $sessionEvent)
+    {
+        $this->checkToolAccess($sessionEvent->getSession()->getWorkspace(), 'edit');
+        $content = $this->request->get('content', false);
+        $comment = $this->cursusManager->createSessionEventComment($user, $sessionEvent, $content);
+        $serializedComment = $this->serializer->serialize(
+            $comment,
+            'json',
+            SerializationContext::create()->setGroups(['api_cursus'])
+        );
+
+        return new JsonResponse($serializedComment, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/cursus/session/event/comment/{sessionEventComment}/edit",
+     *     name="claro_cursus_session_event_comment_edit",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     */
+    public function sessionEventCommentEditAction(SessionEventComment $sessionEventComment)
+    {
+        $this->checkToolAccess($sessionEventComment->getSessionEvent()->getSession()->getWorkspace(), 'edit');
+        $content = $this->request->get('content', false);
+
+        if ($content) {
+            $sessionEventComment->setContent($content);
+            $sessionEventComment->setEditionDate(new \DateTime());
+            $this->cursusManager->persistSessionEventComment($sessionEventComment);
+        }
+        $serializedComment = $this->serializer->serialize(
+            $sessionEventComment,
+            'json',
+            SerializationContext::create()->setGroups(['api_cursus'])
+        );
+
+        return new JsonResponse($serializedComment, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspace/cursus/session/event/comment/{sessionEventComment}/delete",
+     *     name="claro_cursus_session_event_comment_delete",
+     *     options = {"expose"=true}
+     * )
+     */
+    public function sessionEventCommentDeleteAction(SessionEventComment $sessionEventComment)
+    {
+        $this->checkToolAccess($sessionEventComment->getSessionEvent()->getSession()->getWorkspace(), 'edit');
+        $this->cursusManager->deleteSessionEventComment($sessionEventComment);
+
+        return new JsonResponse('success', 200);
     }
 
     private function checkToolAccess(Workspace $workspace = null, $right = 'open')
