@@ -12,13 +12,15 @@ import {VIEW_MANAGER, VIEW_USER} from './enums'
 import {EventFormModal} from './components/event-form-modal.jsx'
 import {EventRepeatFormModal} from './components/event-repeat-form-modal.jsx'
 import {SessionEventsToolLayout} from './components/session-events-tool-layout.jsx'
+import {EventCommentsModal} from './components/event-comments-modal.jsx'
 
 class SessionEventsTool {
   constructor(workspaceId, canEdit, sessions, events, eventsUsers) {
     registerModalTypes([
       ['DELETE_MODAL', DeleteConfirmModal],
       ['MODAL_EVENT_FORM', EventFormModal],
-      ['MODAL_EVENT_REPEAT_FORM', EventRepeatFormModal]
+      ['MODAL_EVENT_REPEAT_FORM', EventRepeatFormModal],
+      ['MODAL_EVENT_COMMENTS', EventCommentsModal]
     ])
     const sessionId = sessions.length === 1 ? sessions[0]['id'] : null
     this.viewMode = canEdit ? VIEW_MANAGER : VIEW_USER

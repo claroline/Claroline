@@ -95,7 +95,7 @@ class ManagerView extends Component {
         urlModal: null,
         props: {
           mode: 'edition',
-          title: `${trans('session_event_edition', {}, 'cursus')}`,
+          title: trans('session_event_edition', {}, 'cursus'),
           event: sessionEvent,
           session: this.props.session,
           confirmAction: this.props.editSessionEvent
@@ -111,9 +111,23 @@ class ManagerView extends Component {
         type: 'MODAL_EVENT_REPEAT_FORM',
         urlModal: null,
         props: {
-          title: `${trans('repeat_session_event', {}, 'cursus')}`,
+          title: trans('repeat_session_event', {}, 'cursus'),
           event: sessionEvent,
           repeatSessionEvent: this.props.repeatSessionEvent
+        },
+        fading: false
+      }
+    })
+  }
+
+  showEventCommentsManagement(sessionEvent) {
+    this.setState({
+      modal: {
+        type: 'MODAL_EVENT_COMMENTS',
+        urlModal: null,
+        props: {
+          title:trans('informations_management', {}, 'cursus'),
+          event: sessionEvent
         },
         fading: false
       }
@@ -153,6 +167,11 @@ class ManagerView extends Component {
                 icon: 'fa fa-fw fa-edit',
                 label: t('edit'),
                 action: (row) => this.showEventEditionForm(row)
+              },
+              {
+                icon: 'fa fa-fw fa-info',
+                label: trans('informations_management', {}, 'cursus'),
+                action: (row) => this.showEventCommentsManagement(row)
               },
               {
                 icon: 'fa fa-fw fa-files-o',

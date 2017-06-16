@@ -23,6 +23,9 @@ export const CURRENT_ERROR_UPDATE = 'CURRENT_ERROR_UPDATE'
 export const EVENTS_USERS_ADD = 'EVENTS_USERS_ADD'
 export const EVENT_COMMENTS_RESET = 'EVENT_COMMENTS_RESET'
 export const EVENT_COMMENTS_LOAD = 'EVENT_COMMENTS_LOAD'
+export const EVENT_COMMENT_ADD = 'EVENT_COMMENT_ADD'
+export const EVENT_COMMENT_UPDATE = 'EVENT_COMMENT_UPDATE'
+export const EVENT_COMMENT_REMOVE = 'EVENT_COMMENT_REMOVE'
 export const LOCATIONS_LOAD = 'LOCATIONS_LOAD'
 export const LOCATIONS_LOADED_UPDATE = 'LOCATIONS_LOADED_UPDATE'
 export const TEACHERS_LOAD = 'TEACHERS_LOAD'
@@ -379,6 +382,72 @@ actions.getSessionTeachers = () => (dispatch, getState) => {
   }
 }
 
+actions.getEventComments = (sessionEventId) => (dispatch) => {
+  dispatch({
+    [REQUEST_SEND]: {
+      url: generateUrl('claro_cursus_session_event_comments_retrieve', {sessionEvent: sessionEventId}),
+      request: {
+        method: 'GET'
+      },
+      success: (data, dispatch) => {
+        dispatch(actions.loadEventComments(JSON.parse(data)))
+      }
+    }
+  })
+}
+
+actions.createEventComment = (eventId, content) => (dispatch) => {
+  if (content) {
+    const formData = new FormData()
+    formData.append('content', content)
+
+    dispatch({
+      [REQUEST_SEND]: {
+        url: generateUrl('claro_cursus_session_event_comment_create', {sessionEvent: eventId}),
+        request: {
+          method: 'POST',
+          body: formData
+        },
+        success: (data, dispatch) => {
+          dispatch(actions.addEventComment(JSON.parse(data)))
+        }
+      }
+    })
+  }
+}
+
+actions.editEventComment = (eventCommentId, content) => (dispatch) => {
+  if (content) {
+    const formData = new FormData()
+    formData.append('content', content)
+
+    dispatch({
+      [REQUEST_SEND]: {
+        url: generateUrl('claro_cursus_session_event_comment_edit', {sessionEventComment: eventCommentId}),
+        request: {
+          method: 'POST',
+          body: formData
+        },
+        success: (data, dispatch) => {
+          dispatch(actions.updateEventComment(JSON.parse(data)))
+        }
+      }
+    })
+  }
+}
+
+actions.deleteEventComment = (eventCommentId) => ({
+  [REQUEST_SEND]: {
+    url: generateUrl('claro_cursus_session_event_comment_delete', {sessionEventComment: eventCommentId}),
+    request: {
+      method: 'DELETE'
+    },
+    success: (data, dispatch) => {
+      dispatch(actions.removeEventComment(eventCommentId))
+    }
+  }
+})
+
 actions.resetCurrentSessionEvent = makeActionCreator(CURRENT_EVENT_RESET)
 
 actions.addParticipants = makeActionCreator(CURRENT_EVENT_ADD_PARTICIPANTS, 'sessionEventUsers')
@@ -400,6 +469,12 @@ actions.addEventsUsers = makeActionCreator(EVENTS_USERS_ADD, 'sessionEventUsers'
 actions.resetEventComments = makeActionCreator(EVENT_COMMENTS_RESET)
 
 actions.loadEventComments = makeActionCreator(EVENT_COMMENTS_LOAD, 'eventComments')
+
+actions.addEventComment = makeActionCreator(EVENT_COMMENT_ADD, 'eventComment')
+
+actions.updateEventComment = makeActionCreator(EVENT_COMMENT_UPDATE, 'eventComment')
+
+actions.removeEventComment = makeActionCreator(EVENT_COMMENT_REMOVE, 'eventCommentId')
 
 actions.loadLocations = makeActionCreator(LOCATIONS_LOAD, 'locations')
 

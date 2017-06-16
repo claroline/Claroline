@@ -37,6 +37,20 @@ class EventView extends Component {
     })
   }
 
+  showEventCommentsManagement(sessionEvent) {
+    this.setState({
+      modal: {
+        type: 'MODAL_EVENT_COMMENTS',
+        urlModal: null,
+        props: {
+          title: this.props.canEdit ? trans('informations_management', {}, 'cursus') : t('informations'),
+          event: sessionEvent
+        },
+        fading: false
+      }
+    })
+  }
+
   showParticipantsSelection() {
     let userPicker = new UserPicker()
     const options = {
@@ -82,8 +96,8 @@ class EventView extends Component {
     return (
       <div>
         <h3>{this.props.event.name}</h3>
-        {this.props.canEdit ?
-          <span className="pull-right">
+        <span className="pull-right">
+          {this.props.canEdit &&
             <button className="btn btn-primary margin-right-sm"
                     data-toggle="tooltip"
                     data-placement="top"
@@ -92,17 +106,26 @@ class EventView extends Component {
             >
               <i className="fa fa-edit"></i>
             </button>
+          }
+          <button className="btn btn-primary margin-right-sm"
+                  data-toggle="tooltip"
+                  data-placement="top"
+                  title={this.props.canEdit ? trans('informations_management', {}, 'cursus') : t('informations')}
+                  onClick={() => this.showEventCommentsManagement(this.props.event)}
+          >
+            <i className="fa fa-info"></i>
+          </button>
+          {this.props.canEdit &&
             <button className="btn btn-primary margin-right-sm"
                     data-toggle="tooltip"
                     data-placement="top"
                     title={trans('register_participants', {}, 'cursus')}
                     onClick={() => this.showParticipantsSelection()}
             >
-                <i className="fa fa-user-plus"></i>
+              <i className="fa fa-user-plus"></i>
             </button>
-          </span> :
-          ''
-        }
+          }
+        </span>
         <br/>
         <br/>
         {this.props.currentError &&
@@ -318,7 +341,7 @@ EventView.propTypes = {
   }).isRequired,
   session: T.object,
   participants: T.array.isRequired,
-  canEdit: T.number.isRequired,
+  canEdit: T.bool.isRequired,
   currentError: T.string,
   resetCurrentSessionEvent: T.func.isRequired,
   editSessionEvent: T.func,

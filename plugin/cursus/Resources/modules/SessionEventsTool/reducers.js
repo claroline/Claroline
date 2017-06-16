@@ -19,6 +19,9 @@ import {
   EVENTS_USERS_ADD,
   EVENT_COMMENTS_RESET,
   EVENT_COMMENTS_LOAD,
+  EVENT_COMMENT_ADD,
+  EVENT_COMMENT_UPDATE,
+  EVENT_COMMENT_REMOVE,
   LOCATIONS_LOAD,
   LOCATIONS_LOADED_UPDATE,
   TEACHERS_LOAD,
@@ -165,6 +168,33 @@ const eventCommentsReducers = {
   [EVENT_COMMENTS_RESET]: () => initialState['eventComments'],
   [EVENT_COMMENTS_LOAD]: (state, action) => {
     return action.eventComments
+  },
+  [EVENT_COMMENT_ADD]: (state, action) => {
+    const eventComments = cloneDeep(state)
+    eventComments.push(action.eventComment)
+
+    return eventComments
+  },
+  [EVENT_COMMENT_UPDATE]: (state, action) => {
+    const eventComments = state.map((comment) => {
+      if (comment.id === action.eventComment.id) {
+        return action.eventComment
+      } else {
+        return comment
+      }
+    })
+
+    return eventComments
+  },
+  [EVENT_COMMENT_REMOVE]: (state, action) => {
+    const eventComments = cloneDeep(state)
+    const index = eventComments.findIndex(ec => ec.id === action.eventCommentId)
+
+    if (index > -1) {
+      eventComments.splice(index, 1)
+    }
+
+    return eventComments
   }
 }
 
