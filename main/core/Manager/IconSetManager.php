@@ -12,6 +12,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Icon\IconItem;
 use Claroline\CoreBundle\Entity\Icon\IconSet;
 use Claroline\CoreBundle\Entity\Icon\IconSetTypeEnum;
@@ -24,6 +25,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\Icon\IconItemRepository;
 use Claroline\CoreBundle\Repository\Icon\IconSetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -32,6 +34,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  */
 class IconSetManager
 {
+    use LoggableTrait;
+
     /** @var ObjectManager */
     private $om;
     /** @var IconSetRepository */
@@ -680,5 +684,53 @@ class IconSetManager
             $shortcutIcon->setRelativeUrl($this->getRelativePathForResourceIcon($shortcutFile));
             $this->om->persist($shortcutIcon);
         }
+    }
+
+    public function addDefaultIconSets()
+    {
+        $defaultDir = __DIR__.'/../Resources/public/images/resources/defaults';
+        $iterator = new \DirectoryIterator($defaultDir);
+
+        foreach ($iterator as $archive) {
+            if ($archive->isFile()) {
+                $name = pathinfo($archive->getFilename(), PATHINFO_FILENAME);
+
+                //_claroline always first item because they are the default icon set
+                if ($name === '_claroline') {
+                    $name = 'claroline';
+                }
+
+                if ($this->iconSetRepo->findOneByName($name)) {
+                    $iconSet = $this->iconSetRepo->findOneByName($name);
+                    $new = false;
+                } else {
+                    $iconSet = new IconSet();
+                    $iconSet->setType(IconSetTypeEnum::RESOURCE_ICON_SET);
+                    $iconSet->setName($name);
+                    $new = true;
+                }
+
+                if ($name === 'claroline') {
+                    $iconSet->setDefault(true);
+                }
+
+                $iconSet->setIconsZipfile($archive->getPathname());
+                $this->om->persist($iconSet);
+                $this->om->flush();
+                $iconNamesForTypes = $this->getIconSetIconsByType($iconSet);
+                if ($new) {
+                    $this->log('Adding new icon set: '.$name);
+                    $this->createNewResourceIconSet($iconSet, $iconNamesForTypes);
+                } else {
+                    $this->log('Updating icon set: '.$name);
+                    $this->updateResourceIconSet($iconSet, $iconNamesForTypes);
+                }
+            }
+        }
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
     }
 }

@@ -23,4 +23,5 @@ interface AdditionalInstallerInterface
     public function postUpdate($currentVersion, $targetVersion);
     public function preUninstall();
     public function postUninstall();
+    public function end();
 }

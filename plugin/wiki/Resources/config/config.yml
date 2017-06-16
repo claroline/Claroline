@@ -4,9 +4,8 @@ plugin:
 
     resources:
         - class: Icap\WikiBundle\Entity\Wiki
-          name: icap_wiki          
+          name: icap_wiki
           is_exportable: false
-          icon: icap_wiki_icon.png
           activity_rules:
             - action: resource-read
             - action: resource-icap_wiki-contribution_create

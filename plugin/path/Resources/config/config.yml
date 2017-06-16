@@ -6,7 +6,6 @@ plugin:
     - class: Innova\PathBundle\Entity\Path\Path
       name: innova_path
       is_exportable: true
-      icon: res_file.png
       actions:
         - name:      path_administrate
           menu_name: administrate

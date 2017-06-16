@@ -8,7 +8,6 @@ plugin:
           is_visible: true
           is_browsable: false
           is_exportable: true
-          icon: icap_eval_icon.png
           actions:
             - name: open
               menu_name: open_dropzone

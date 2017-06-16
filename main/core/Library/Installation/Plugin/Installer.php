@@ -143,6 +143,11 @@ class Installer
         $this->recorder->update($plugin, $this->validator->getPluginConfiguration());
     }
 
+    public function end(PluginBundleInterface $plugin)
+    {
+        $this->baseInstaller->end($plugin);
+    }
+
     public function checkInstallationStatus(PluginBundleInterface $plugin, $shouldBeInstalled = true)
     {
         $this->log(sprintf('<fg=blue>Checking installation status for plugin %s</fg=blue>', $plugin->getName()));

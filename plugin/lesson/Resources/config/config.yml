@@ -7,7 +7,6 @@ plugin:
         name: icap_lesson
         is_browsable: true
         is_exportable: false
-        icon: icap_lesson_icon.png
         activity_rules:
           - action: resource-read
           - action: resource-icap_lesson-chapter_read

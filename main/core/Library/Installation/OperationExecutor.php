@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Library\Installation;
 use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
+use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Composer\Json\JsonFile;
@@ -253,6 +254,19 @@ class OperationExecutor
         $this->log('Removing previous local repository snapshot...');
         $filesystem = new Filesystem();
         $filesystem->remove($this->previousRepoFile);
+        $this->end();
+    }
+
+    public function end()
+    {
+        $this->log('Ending operations...');
+        $bundles = $this->getBundlesByFqcn();
+
+        foreach ($bundles as $bundle) {
+            if ($bundle instanceof PluginBundleInterface) {
+                $this->pluginInstaller->end($bundle);
+            }
+        }
     }
 
     /**

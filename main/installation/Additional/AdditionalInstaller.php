@@ -51,4 +51,8 @@ abstract class AdditionalInstaller extends ContainerAware implements AdditionalI
     public function postUninstall()
     {
     }
+
+    public function end()
+    {
+    }
 }

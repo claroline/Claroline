@@ -21,6 +21,7 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 /**
@@ -118,7 +119,7 @@ class PlatformInstaller
             $this->log('Unable to connect to database: trying to create database...');
             $command = new CreateDatabaseDoctrineCommand();
             $command->setContainer($this->container);
-            $code = $command->run(new ArrayInput(array()), $this->output ?: new NullOutput());
+            $code = $command->run(new ArrayInput([]), $this->output ?: new NullOutput());
 
             if ($code !== 0) {
                 throw new \Exception(
@@ -132,18 +133,20 @@ class PlatformInstaller
     private function createPublicSubDirectories()
     {
         $this->log('Creating public sub-directories...');
-        $directories = array(
+        $directories = [
             $this->container->getParameter('claroline.param.thumbnails_directory'),
             $this->container->getParameter('claroline.param.uploads_directory'),
             $this->container->getParameter('claroline.param.uploads_directory').'/badges',
             $this->container->getParameter('claroline.param.uploads_directory').'/logos',
             $this->container->getParameter('claroline.param.uploads_directory').'/pictures',
-        );
+        ];
 
         foreach ($directories as $directory) {
             if (!is_dir($directory)) {
-                mkdir($directory);
+                $fs = new FileSystem();
+                $this->log('Creating '.$directory.'...');
+                $fs->mkdir($directory);
             }
-        };
+        }
     }
 }

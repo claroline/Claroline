@@ -6,7 +6,6 @@ plugin:
         - class: Icap\BlogBundle\Entity\Blog
           name: icap_blog
           is_exportable: false
-          icon: icap_blog_icon.png
           actions:
             - name: post
             - name: administrate
