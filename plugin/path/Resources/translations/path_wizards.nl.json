@@ -162,5 +162,10 @@
     "user_progression_step_to_review": "U hebt deze stap gemarkeerd als te herzien.",
     "user_progression_step_to_review_label": "Te herzien",
     "user_progression_step_unseen": "U hebt deze stap niet gezien.",
-    "user_progression_unlock_sent": "Stap ontgrendeld"
+    "user_progression_unlock_sent": "Stap ontgrendeld",
+    "saved": "Opgeslagen",
+    "properties_hide": "Eigenschappen verbergen",
+    "properties_show": "Eigenschappen tonen",
+    "user_progression": "Staat",
+    "user_progression_step_seen_label": "Gezien"
 }
