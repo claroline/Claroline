@@ -8,7 +8,8 @@ plugin:
   resource_actions:
     - name: tag_action
       is_form: true
-      
+      is_custom: true
+
   widgets:
     - name: claroline_tag_resources_widget
       is_configurable: true

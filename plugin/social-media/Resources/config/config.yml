@@ -4,9 +4,13 @@ plugin:
     resource_actions:
         - name: like_action
           is_form: true
+          is_custom: true
         - name: share_action
           is_form: true
+          is_custom: true
         - name: comment_action
           is_form: true
+          is_custom: true
         - name: note_action
           is_form: true
+          is_custom: true
