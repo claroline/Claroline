@@ -73,10 +73,6 @@ class Version20170220095034 extends AbstractMigration
             ADD CONSTRAINT FK_4ABE4F561E27F6BF FOREIGN KEY (question_id)
             REFERENCES ujm_question_grid (id)
         ');
-        $this->addSql('
-            ALTER TABLE ujm_interaction_hole
-            DROP originalText
-        ');
     }
 
     public function down(Schema $schema)
@@ -97,10 +93,6 @@ class Version20170220095034 extends AbstractMigration
         ');
         $this->addSql('
             DROP TABLE ujm_cell
-        ');
-        $this->addSql('
-            ALTER TABLE ujm_interaction_hole
-            ADD originalText TEXT DEFAULT NULL COLLATE utf8_unicode_ci
         ');
     }
 }

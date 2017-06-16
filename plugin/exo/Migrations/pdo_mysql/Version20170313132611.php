@@ -18,10 +18,6 @@ class Version20170313132611 extends AbstractMigration
             ALTER TABLE ujm_exercise 
             ADD show_end_page TINYINT(1) NOT NULL
         ');
-        $this->addSql('
-            ALTER TABLE ujm_hole 
-            DROP position
-        ');
     }
 
     public function down(Schema $schema)
@@ -29,10 +25,6 @@ class Version20170313132611 extends AbstractMigration
         $this->addSql('
             ALTER TABLE ujm_exercise 
             DROP show_end_page
-        ');
-        $this->addSql('
-            ALTER TABLE ujm_hole 
-            ADD position INT DEFAULT NULL
         ');
     }
 }

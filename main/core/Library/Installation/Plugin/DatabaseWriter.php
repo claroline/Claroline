@@ -137,6 +137,7 @@ class DatabaseWriter
 
         $plugin->setHasOptions($pluginConfiguration['has_options']);
         $this->em->persist($plugin);
+        $this->log('Configuration was retrieved: updating...');
         $this->updateConfiguration($pluginConfiguration, $plugin, $pluginBundle);
         $this->em->flush();
 

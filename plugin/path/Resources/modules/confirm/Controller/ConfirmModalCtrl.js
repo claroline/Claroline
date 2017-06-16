@@ -11,7 +11,7 @@ export default class ConfirmModalCtrl {
      * Confirm delete step
      * @returns void
      */
-    $scope.confirm = function() {
+    $scope.confirm = function () {
       $uibModalInstance.close()
     }
 
@@ -19,7 +19,7 @@ export default class ConfirmModalCtrl {
      * Abort delete step
      * @returns void
      */
-    $scope.cancel = function() {
+    $scope.cancel = function () {
       $uibModalInstance.dismiss('cancel')
     }
   }

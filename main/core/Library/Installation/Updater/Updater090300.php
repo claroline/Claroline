@@ -14,7 +14,9 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\InstallationBundle\Updater\Updater;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use Doctrine\DBAL\Exception\TableNotFoundException;
+use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
@@ -52,13 +54,17 @@ class Updater090300 extends Updater
         $roleManager = $this->container->get('claroline.manager.role_manager');
         $om = $this->container->get('claroline.persistence.object_manager');
         $models = $this->connection->query('SELECT * FROM claro_workspace_model')->fetchAll();
+        $toCheck = [];
+        $i = 0;
+        $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
 
         foreach ($models as $model) {
-            $code = '[MOD]'.$model['name'].uniqid();
+            $code = '[MOD]'.$model['name'];
             $workspace = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneByCode($code);
 
             if (!$workspace) {
-                $this->log('Creating workspace from model '.$model['name']);
+                ++$i;
+                $this->log('Creating workspace from model '.$model['name'].': '.$i.'/'.count($models));
 
                 try {
                     $modelUsers = $this->connection->query("SELECT * FROM claro_workspace_model_user u where u.workspacemodel_id = {$model['id']}")->fetchAll();
@@ -102,14 +108,26 @@ class Updater090300 extends Updater
                     $roleManager->associateRoleToMultipleSubjects($users, $managerRole);
                     $roleManager->associateRoleToMultipleSubjects($groups, $managerRole);
                     $this->om->persist($newWorkspace);
-                    $this->om->flush();
+                    $this->om->forceFlush();
+                    $this->om->clear();
+                    $defaultUser = $this->container->get('claroline.manager.user_manager')->getDefaultUser();
+                    $token = new UsernamePasswordToken($defaultUser, '123', 'main', $defaultUser->getRoles());
+                    $this->container->get('security.token_storage')->setToken($token);
+                    $this->om->merge($defaultUser);
 
                     $this->log("Updatig cursus for model {$model['name']}");
-                    $modelResources = $this->connection->query("
-                      UPDATE claro_cursusbundle_course r
-                      SET r.workspace_model_id = {$newWorkspace->getId()}
-                      WHERE r.workspace_model_id = {$model['id']}"
-                    )->execute();
+                    try {
+                        $modelResources = $this->connection->query("
+                          UPDATE claro_cursusbundle_course r
+                          SET r.workspace_model_id = {$newWorkspace->getId()}
+                          WHERE r.workspace_model_id = {$model['id']}"
+                        )->execute();
+                    } catch (ForeignKeyConstraintViolationException $e) {
+                        $this->log('Error when setting the model flag for cursuses', LogLevel::ERROR);
+                        $this->log($e->getMessage(), LogLevel::ERROR);
+                        $this->log('Continuing update...');
+                        $toCheck[] = [$newWorkspace, $model];
+                    }
                 } catch (TableNotFoundException $e) {
                     $this->log('Model table already removed');
                 }
@@ -118,6 +136,7 @@ class Updater090300 extends Updater
             }
         }
 
+        $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
         $this->dropModelTable();
     }
 

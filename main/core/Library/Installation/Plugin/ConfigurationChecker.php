@@ -57,7 +57,13 @@ class ConfigurationChecker implements CheckerInterface
 
         $config = $this->yamlParser->parse(file_get_contents($plugin->getConfigFile()));
         $names = [];
-        $listResource = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+
+        //required for update to claroline v10 because database not updated yet from older version
+        try {
+            $listResource = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+        } catch (\Exception $e) {
+            $listResource = [];
+        }
 
         foreach ($listResource as $resource) {
             $names[] = $resource->getName();
@@ -74,7 +80,13 @@ class ConfigurationChecker implements CheckerInterface
         }
 
         $resourceActions = [];
-        $listResourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findBy(['resourceType' => null, 'isCustom' => true]);
+
+        //required for update to claroline v10 because database not updated yet from older version
+        try {
+            $listResourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findBy(['resourceType' => null, 'isCustom' => true]);
+        } catch (\Exception $e) {
+            $listResourceActions = [];
+        }
 
         foreach ($listResourceActions as $resourceAction) {
             $resourceActions[] = $resourceAction->getName();

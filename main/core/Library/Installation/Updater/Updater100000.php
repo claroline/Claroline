@@ -27,6 +27,7 @@ class Updater100000 extends Updater
         $this->container = $container;
         $this->logger = $logger;
         $this->om = $container->get('claroline.persistence.object_manager');
+        $this->connection = $this->container->get('doctrine.dbal.default_connection');
     }
 
     public function postUpdate()
@@ -70,31 +71,23 @@ class Updater100000 extends Updater
         $i = 0;
         $this->log("Adding properties for {$totalObjects} resource nodes...");
 
-        foreach ($entities as $entity) {
-            if ($entity->isFullscreen() === null) {
-                $entity->setFullscreen(false);
-            }
-            if (!$entity->isClosable() === null) {
-                $entity->setClosable(false);
-            }
-            if (!$entity->getCloseTarget() === null) {
-                $entity->setCloseTarget(0);
-            }
+        $this->connection->query('
+            UPDATE claro_resource_node crn
+            SET crn.fullscreen = false
+            WHERE crn.fullscreen is NULL'
+        )->execute();
 
-            ++$i;
+        $this->connection->query('
+            UPDATE claro_resource_node crn
+            SET crn.closable = false
+            WHERE crn.closable is NULL'
+        )->execute();
 
-            $this->om->persist($entity);
-
-            if ($i % 300 === 0) {
-                $this->log("Flushing [{$i}/{$totalObjects}]");
-                $this->om->flush();
-            }
-        }
-
-        $this->om->flush();
-        $this->log('Clearing object manager...');
-        $this->om->clear();
-        $this->log('done !');
+        $this->connection->query('
+            UPDATE claro_resource_node crn
+            SET crn.closeTarget = 0
+            WHERE crn.closeTarget is NULL'
+        )->execute();
     }
 
     public function rebuildMaskAndMenus()
