@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Icon\IconSetTypeEnum;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\CoreBundle\Library\Icon\ResourceIconItemFilenameList;
 use Claroline\CoreBundle\Library\Icon\ResourceIconSetIconItemList;
+use Claroline\CoreBundle\Library\Utilities\ExtensionNotSupportedException;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -26,6 +27,7 @@ use Claroline\CoreBundle\Repository\Icon\IconItemRepository;
 use Claroline\CoreBundle\Repository\Icon\IconSetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
@@ -659,7 +661,16 @@ class IconSetManager
     private function regenerateShortcutForResourceIcons($icons, $stampRelativePath)
     {
         foreach ($icons as $icon) {
-            $this->regenerateShortcutForResourceIcon($icon, $stampRelativePath);
+            try {
+                $this->regenerateShortcutForResourceIcon($icon, $stampRelativePath);
+            } catch (ExtensionNotSupportedException $ense) {
+                $this->log(
+                    "Error: Extension '".$ense->getExtension().
+                    "' not found or not supported for file '".$icon->getRelativeUrl()."'"
+                );
+            } catch (FileNotFoundException $fnfe) {
+                $this->log("Error: File '".$icon->getRelativeUrl()."' not found!");
+            }
         }
     }
 
