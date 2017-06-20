@@ -265,7 +265,22 @@ class ThumbnailCreator
         }
         // Let php find about extension as sometimes files has no extension or have a fake extension
         $extension = str_replace('.', '', image_type_to_extension($imageType));
-        $image = imagecreatefromstring($imageContent);
+
+        if (!function_exists("image{$extension}")) {
+            $exception = new ExtensionNotSupportedException();
+            $exception->setExtension($extension);
+
+            throw $exception;
+        }
+
+        try {
+            $image = imagecreatefromstring($imageContent);
+        } catch (\Exception $e) {
+            $exception = new ExtensionNotSupportedException($e->getMessage());
+            $exception->setExtension($extension);
+
+            throw $exception;
+        }
 
         return [$image, $extension];
     }
