@@ -535,7 +535,6 @@ class RichTextFormatter
         $cssStyle = isset($style) ? "style='".stripslashes($style)."'" : '';
 
         if (strpos('_'.$node->getMimeType(), 'image') > 0) {
-            $cssStyle = $style ? $style : 'max-width:100%;';
             $url = $this->router->generate(
                 'claro_file_get_media',
                 ['node' => $node->getId()],
@@ -544,7 +543,11 @@ class RichTextFormatter
 
             //embed images by default
             if (!isset($embed) || $embed) {
-                return "<img style='".$cssStyle."' src='".$url."' alt='".$node->getName()."'>";
+                if (empty($cssStyle)) {
+                    $cssStyle = "style='max-width:100%;'";
+                }
+
+                return '<img '.$cssStyle." src='".$url."' alt='".$node->getName()."'>";
             }
         }
 

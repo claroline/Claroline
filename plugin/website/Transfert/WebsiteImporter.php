@@ -170,6 +170,31 @@ class WebsiteImporter extends Importer implements ConfigurationInterface, RichTe
             }
         }
 
+        //banner parsing
+        if (isset($data['options']) && isset($data['options']['banner_text_path'])) {
+            $bannerText = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$data['options']['banner_text_path']);
+            if (isset($bannerText) && !empty($bannerText)) {
+                $options = $this->om->getRepository('IcapWebsiteBundle:WebsiteOptions')->findByBannerText($bannerText);
+                foreach ($options as $entity) {
+                    $bannerText = $this->container->get('claroline.importer.rich_text_formatter')->format($bannerText);
+                    $entity->setBannerText($bannerText);
+                    $this->om->persist($entity);
+                }
+            }
+        }
+        //footer parsing
+        if (isset($data['options']) && isset($data['options']['footer_text_path'])) {
+            $footerText = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$data['options']['footer_text_path']);
+            if (isset($footerText) && !empty($footerText)) {
+                $options = $this->om->getRepository('IcapWebsiteBundle:WebsiteOptions')->findByFooterText($footerText);
+                foreach ($options as $entity) {
+                    $footerText = $this->container->get('claroline.importer.rich_text_formatter')->format($footerText);
+                    $entity->setFooterText($footerText);
+                    $this->om->persist($entity);
+                }
+            }
+        }
+
         //this could be bad, but the corebundle can use a transaction and force flush itself anyway
         $this->om->flush();
     }
