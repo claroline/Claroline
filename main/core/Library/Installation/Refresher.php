@@ -11,17 +11,17 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Composer\Script\CommandEvent;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
-use Symfony\Bundle\AsseticBundle\Command\DumpCommand;
-use JMS\DiExtraBundle\Annotation as DI;
 use Bazinga\Bundle\JsTranslationBundle\Command\DumpCommand as TranslationDumpCommand;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
+use Composer\Script\Event;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\AsseticBundle\Command\DumpCommand;
+use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
+use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.installation.refresher")
@@ -59,7 +59,7 @@ class Refresher
     public function installAssets()
     {
         $webDir = "{$this->container->get('kernel')->getRootDir()}/../web";
-        $args = array('target' => $webDir);
+        $args = ['target' => $webDir];
         $assetInstallCmd = new AssetsInstallCommand();
         $assetInstallCmd->setContainer($this->container);
         $assetInstallCmd->run(new ArrayInput($args), $this->output ?: new NullOutput());
@@ -72,7 +72,7 @@ class Refresher
         }
         $translationDumpCommand = new TranslationDumpCommand();
         $translationDumpCommand->setContainer($this->container);
-        $translationDumpCommand->run(new ArrayInput(array()), $this->output ?: new NullOutput());
+        $translationDumpCommand->run(new ArrayInput([]), $this->output ?: new NullOutput());
         if ($this->output) {
             $this->output->writeln('Compiling javascripts...');
         }
@@ -81,7 +81,7 @@ class Refresher
         $assetDumpCmd->getDefinition()->addOption(
             new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'Env', $environment)
         );
-        $assetDumpCmd->run(new ArrayInput(array()), $this->output ?: new NullOutput());
+        $assetDumpCmd->run(new ArrayInput([]), $this->output ?: new NullOutput());
     }
 
     public function clearCache($environment = null)
@@ -95,10 +95,10 @@ class Refresher
         static::removeContentFrom($cacheDir);
     }
 
-    public static function deleteCache(CommandEvent $event)
+    public static function deleteCache(Event $event)
     {
         $options = array_merge(
-            array('symfony-app-dir' => 'app'),
+            ['symfony-app-dir' => 'app'],
             $event->getComposer()->getPackage()->getExtra()
         );
 
