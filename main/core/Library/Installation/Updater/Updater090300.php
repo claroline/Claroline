@@ -72,19 +72,22 @@ class Updater090300 extends Updater
                     $modelResources = $this->connection->query("SELECT * FROM claro_workspace_model_resource r where r.model_id = {$model['id']}")->fetchAll();
                     $baseWorkspace = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->find($model['workspace_id']);
 
-                    $userIds = array_map(function ($data) {
+                    $userIds = array_unique(array_map(function ($data) {
                         return $data['user_id'];
-                    }, $modelUsers);
-                    $groupIds = array_map(function ($data) {
+                    }, $modelUsers));
+                    $groupIds = array_unique(array_map(function ($data) {
                         return $data['group_id'];
-                    }, $modelGroups);
-                    $nodeIds = array_map(function ($data) {
+                    }, $modelGroups));
+                    $nodeIds = array_unique(array_map(function ($data) {
                         return $data['resource_node_id'];
-                    }, $modelResources);
+                    }, $modelResources));
 
                     $users = $om->findByIds('Claroline\CoreBundle\Entity\User', $userIds);
                     $groups = $om->findByIds('Claroline\CoreBundle\Entity\User', $groupIds);
                     $nodes = $om->findByIds('Claroline\CoreBundle\Entity\Resource\ResourceNode', $nodeIds);
+                    if (count($users) === 0) {
+                        $users[0] = $this->connection->get('claroline.manager.user_manager')->getDefaultUser();
+                    }
                     $user = $users[0];
 
                     $newWorkspace = new Workspace();
