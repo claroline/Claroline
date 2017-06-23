@@ -60,34 +60,32 @@
                 panel-danger
             {% endif %}"
          >
-            <div class="pull-right">
-                {% if is_granted('EDIT', resourceCollection) %}
-                    <a href="{{ path('claro_announcement_edit_form', {'announcementId': announcement.getId()}) }}">
-                        <button type="button" class="btn btn-default">
-                            <i class="fa fa-pencil-square-o"></i>
-                        </button>
-                    </a>
-                    <button type="button"
-                            class="announcement-send-button btn btn-default"
-                            data-announcement-id="{{ announcement.getId() }}"
-                            data-workspace-id="{{ workspace.getId() }}"
-                    >
-                        <i class="fa fa-envelope"></i>
-                    </button>
-                    <button type="button"
-                            class="announcement-delete-button btn btn-default"
-                            btn-announcement-id="{{ announcement.getId() }}"
-                    >
-                        &times;
-                    </button>
-                {% endif %}
-            </div>
-
             {% set title = announcement.getTitle() %}
-
             {% if title is not null %}
             <div class="panel-heading">
-                <b>{{ title }}</b>
+              <div class="pull-right">
+                  {% if is_granted('EDIT', resourceCollection) %}
+                      <a href="{{ path('claro_announcement_edit_form', {'announcementId': announcement.getId()}) }}">
+                          <button type="button" class="btn btn-default btn-xs">
+                              <i class="fa fa-pencil-square-o"></i>
+                          </button>
+                      </a>
+                      <button type="button"
+                              class="announcement-send-button btn btn-default btn-xs"
+                              data-announcement-id="{{ announcement.getId() }}"
+                              data-workspace-id="{{ workspace.getId() }}"
+                      >
+                          <i class="fa fa-envelope"></i>
+                      </button>
+                      <button type="button"
+                              class="announcement-delete-button btn btn-default btn-xs"
+                              btn-announcement-id="{{ announcement.getId() }}"
+                      >
+                          &times;
+                      </button>
+                  {% endif %}
+              </div>
+              <b>{{ title }}</b>
             </div>
             {% endif %}
 
