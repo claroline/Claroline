@@ -155,6 +155,7 @@ class SessionEvent
      * )
      * @ORM\JoinColumn(name="event_set", nullable=true, onDelete="SET NULL")
      * @Groups({"api_user_min"})
+     * @SerializedName("eventSet")
      */
     protected $eventSet;
 

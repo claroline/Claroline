@@ -16,11 +16,13 @@ use Claroline\AgendaBundle\Entity\EventInvitation;
 use Claroline\AgendaBundle\Form\EventInvitationType;
 use Claroline\AgendaBundle\Form\ImportAgendaType;
 use Claroline\AgendaBundle\Manager\AgendaManager;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -40,15 +42,17 @@ class DesktopAgendaController extends Controller
     private $translator;
     private $agendaManager;
     private $router;
+    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
-     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "request"            = @DI\Inject("request"),
-     *     "translator"         = @DI\Inject("translator"),
-     *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager"),
-     *     "router"             = @DI\Inject("router")
+     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
+     *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "request"         = @DI\Inject("request"),
+     *     "translator"      = @DI\Inject("translator"),
+     *     "agendaManager"   = @DI\Inject("claroline.manager.agenda_manager"),
+     *     "router"          = @DI\Inject("router"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      */
     public function __construct(
@@ -57,7 +61,8 @@ class DesktopAgendaController extends Controller
         Request $request,
         TranslatorInterface $translator,
         AgendaManager $agendaManager,
-        RouterInterface $router
+        RouterInterface $router,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
@@ -65,6 +70,7 @@ class DesktopAgendaController extends Controller
         $this->translator = $translator;
         $this->agendaManager = $agendaManager;
         $this->router = $router;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -76,7 +82,15 @@ class DesktopAgendaController extends Controller
      */
     public function desktopShowAction()
     {
-        $data = $this->agendaManager->desktopEvents($this->tokenStorage->getToken()->getUser());
+        $user = $this->tokenStorage->getToken()->getUser();
+        $events = $this->agendaManager->desktopEvents($user);
+        $options = [
+            'type' => 'desktop',
+            'user' => $user,
+        ];
+        $genericEvent = $this->eventDispatcher->dispatch('claroline_external_agenda_events', new GenericDataEvent($options));
+        $externalEvents = $genericEvent->getResponse();
+        $data = array_merge($events, $externalEvents);
 
         return new JsonResponse($data);
     }
@@ -97,10 +111,10 @@ class DesktopAgendaController extends Controller
         $formType->setIsDesktop();
         $form = $this->createForm($formType, new Event());
 
-        return array(
+        return [
             'form' => $form->createView(),
             'action' => $this->router->generate('claro_desktop_agenda_add'),
-        );
+        ];
     }
 
     /**
@@ -119,13 +133,13 @@ class DesktopAgendaController extends Controller
             $users = $form->get('users')->getData();
             $data = $this->agendaManager->addEvent($event,  $event->getWorkspace(), $users);
 
-            return new JsonResponse(array($data), 200);
+            return new JsonResponse([$data], 200);
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
-            'action' => $this->router->generate('claro_desktop_agenda_add', array()),
-        );
+            'action' => $this->router->generate('claro_desktop_agenda_add', []),
+        ];
     }
 
     /**
@@ -144,13 +158,13 @@ class DesktopAgendaController extends Controller
         $formType->setIsDesktop();
         $form = $this->createForm($formType, $event);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'action' => $this->router->generate(
-                'claro_desktop_agenda_update', array('event' => $event->getId())
+                'claro_desktop_agenda_update', ['event' => $event->getId()]
             ),
             'event' => $event,
-        );
+        ];
     }
 
     /**
@@ -180,13 +194,13 @@ class DesktopAgendaController extends Controller
             return new JsonResponse($event, 200);
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'action' => $this->router->generate(
-                'claro_desktop_agenda_update', array('event' => $event->getId())
+                'claro_desktop_agenda_update', ['event' => $event->getId()]
             ),
             'event' => $event,
-        );
+        ];
     }
 
     /**
@@ -210,14 +224,14 @@ class DesktopAgendaController extends Controller
             return new JsonResponse($event->jsonSerialize($this->tokenStorage->getToken()->getUser()));
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'action' => $this->router->generate(
-                'claro_desktop_agenda_guest_update', array('event' => $event->getId())
+                'claro_desktop_agenda_guest_update', ['event' => $event->getId()]
             ),
             'event' => $event,
             'isGuest' => true,
-        );
+        ];
     }
 
     /**
@@ -252,7 +266,7 @@ class DesktopAgendaController extends Controller
         $listEventsDesktop = $em->getRepository('ClarolineAgendaBundle:Event')->findDesktop($usr, false);
         $listEvents = $em->getRepository('ClarolineAgendaBundle:Event')->findByUserWithoutAllDay($usr, 5, $order);
 
-        return array('listEvents' => array_merge($listEvents, $listEventsDesktop));
+        return ['listEvents' => array_merge($listEvents, $listEventsDesktop)];
     }
 
     /**
@@ -269,7 +283,7 @@ class DesktopAgendaController extends Controller
     {
         $form = $this->createForm(new ImportAgendaType());
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -289,7 +303,7 @@ class DesktopAgendaController extends Controller
             return new JsonResponse($events, 200);
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     public function checkGuestAccess(Event $event)

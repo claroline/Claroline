@@ -31,6 +31,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class CursusListener
 {
+    private $configHandler;
     private $cursusManager;
     private $facetManager;
     private $httpKernel;
@@ -42,6 +43,7 @@ class CursusListener
 
     /**
      * @DI\InjectParams({
+     *     "configHandler"         = @DI\Inject("claroline.config.platform_config_handler"),
      *     "cursusManager"         = @DI\Inject("claroline.manager.cursus_manager"),
      *     "facetManager"          = @DI\Inject("claroline.manager.facet_manager"),
      *     "httpKernel"            = @DI\Inject("http_kernel"),
@@ -53,6 +55,7 @@ class CursusListener
      * })
      */
     public function __construct(
+        PlatformConfigurationHandler $configHandler,
         CursusManager $cursusManager,
         FacetManager $facetManager,
         HttpKernelInterface $httpKernel,
@@ -62,6 +65,7 @@ class CursusListener
         Serializer $serializer,
         TranslatorInterface $translator
     ) {
+        $this->configHandler = $configHandler;
         $this->cursusManager = $cursusManager;
         $this->facetManager = $facetManager;
         $this->httpKernel = $httpKernel;
@@ -167,65 +171,71 @@ class CursusListener
         $events = [];
         $data = $event->getData();
         $type = $data['type'];
+        $sessionEvents = [];
 
         if ($type === 'workspace') {
             $workspace = $data['workspace'];
             $sessionEvents = $this->cursusManager->getSessionEventsByWorkspace($workspace);
+        } elseif ($type === 'desktop') {
+            $user = $data['user'];
+            $sessionEvents = $this->configHandler->getParameter('cursus_display_user_events_in_desktop_agenda') ?
+                $this->cursusManager->getSessionEventsByUser($user) :
+                [];
+        }
+        foreach ($sessionEvents as $sessionEvent) {
+            $sessionWorkspace = $sessionEvent->getSession()->getWorkspace();
+            $description = $sessionEvent->getDescription() ? $sessionEvent->getDescription() : '';
+            $location = $sessionEvent->getLocation();
+            $locationExtra = $sessionEvent->getLocationExtra();
+            $teachers = $sessionEvent->getTutors();
 
-            foreach ($sessionEvents as $sessionEvent) {
-                $description = $sessionEvent->getDescription() ? $sessionEvent->getDescription() : '';
-                $location = $sessionEvent->getLocation();
-                $locationExtra = $sessionEvent->getLocationExtra();
-                $teachers = $sessionEvent->getTutors();
-
-                if ($location || $locationExtra) {
-                    $description .= $description ?
-                        '<hr/><b>'.$this->translator->trans('location', [], 'platform').'</b><br/>' :
-                        '';
-                    if ($location) {
-                        $description .= '<div>'.
-                            $location->getName().
-                            '<br/>'.
-                            $location->getStreet().', '.$location->getStreetNumber();
-                        $description .= $location->getBoxNumber() ? '/'.$location->getBoxNumber() : '';
-                        $description .= '<br/>'.
-                            $location->getPc().' '.$location->getTown().
-                            '<br/>'.
-                            $location->getCountry();
-                        $description .= $location->getPhone() ? '<br/>'.$location->getPhone() : '';
-                        $description .= '</div>';
-                    }
-                    $description .= $locationExtra ? $locationExtra : '';
-                }
-                if (count($teachers) > 0) {
-                    $description .= $description ? '<hr/>' : '';
-                    $description .= '<b>'.$this->translator->trans('tutors', [], 'cursus').'</b>'.
+            if ($location || $locationExtra) {
+                $description .= $description ?
+                    '<hr/><b>'.$this->translator->trans('location', [], 'platform').'</b><br/>' :
+                    '';
+                if ($location) {
+                    $description .= '<div>'.
+                        $location->getName().
                         '<br/>'.
-                        '<ul>';
-
-                    foreach ($teachers as $teacher) {
-                        $description .= '<li>'.
-                            $teacher->getFirstName().' '.$teacher->getLastName().
-                            '</li>';
-                    }
-                    $description .= '</ul>';
+                        $location->getStreet().', '.$location->getStreetNumber();
+                    $description .= $location->getBoxNumber() ? '/'.$location->getBoxNumber() : '';
+                    $description .= '<br/>'.
+                        $location->getPc().' '.$location->getTown().
+                        '<br/>'.
+                        $location->getCountry();
+                    $description .= $location->getPhone() ? '<br/>'.$location->getPhone() : '';
+                    $description .= '</div>';
                 }
-                $events[] = [
-                    'title' => $sessionEvent->getName(),
-                    'start' => $sessionEvent->getStartDate()->format(\DateTime::ISO8601),
-                    'end' => $sessionEvent->getEndDate()->format(\DateTime::ISO8601),
-                    'description' => $description,
-                    'color' => '#578E48',
-                    'allDay' => false,
-                    'isTask' => false,
-                    'isTaskDone' => false,
-                    'isEditable' => false,
-                    'workspace_id' => $workspace->getId(),
-                    'workspace_name' => $workspace->getName(),
-                    'className' => 'pointer-hand session_event_'.$sessionEvent->getId(),
-                    'durationEditable' => false,
-                ];
+                $description .= $locationExtra ? $locationExtra : '';
             }
+            if (count($teachers) > 0) {
+                $description .= $description ? '<hr/>' : '';
+                $description .= '<b>'.$this->translator->trans('tutors', [], 'cursus').'</b>'.
+                    '<br/>'.
+                    '<ul>';
+
+                foreach ($teachers as $teacher) {
+                    $description .= '<li>'.
+                        $teacher->getFirstName().' '.$teacher->getLastName().
+                        '</li>';
+                }
+                $description .= '</ul>';
+            }
+            $events[] = [
+                'title' => $sessionEvent->getName(),
+                'start' => $sessionEvent->getStartDate()->format(\DateTime::ISO8601),
+                'end' => $sessionEvent->getEndDate()->format(\DateTime::ISO8601),
+                'description' => $description,
+                'color' => '#578E48',
+                'allDay' => false,
+                'isTask' => false,
+                'isTaskDone' => false,
+                'isEditable' => false,
+                'workspace_id' => $sessionWorkspace ? $sessionWorkspace->getId() : null,
+                'workspace_name' => $sessionWorkspace ? $sessionWorkspace->getName() : null,
+                'className' => 'pointer-hand session_event_'.$sessionEvent->getId(),
+                'durationEditable' => false,
+            ];
         }
         $event->setResponse($events);
         $event->stopPropagation();

@@ -19,7 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CursusBundle\Repository\SessionEventSetRepository")
  * @ORM\Table(
  *     name="claro_cursusbundle_session_event_set",
  *     uniqueConstraints={
@@ -51,7 +51,7 @@ class SessionEventSet
      *     inversedBy="events"
      * )
      * @ORM\JoinColumn(name="session_id", nullable=true, onDelete="CASCADE")
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus"})
      */
     protected $session;
 
@@ -68,7 +68,7 @@ class SessionEventSet
      *     mappedBy="eventSet"
      * )
      * @ORM\OrderBy({"startDate" = "ASC"})
-     * @Groups({"api_cursus", "api_user_min"})
+     * @Groups({"api_cursus"})
      */
     protected $events;
 

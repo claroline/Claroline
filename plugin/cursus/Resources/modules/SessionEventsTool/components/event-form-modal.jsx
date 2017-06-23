@@ -1,5 +1,6 @@
 import {connect} from 'react-redux'
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import Modal from 'react-bootstrap/lib/Modal'
 import classes from 'classnames'
 import moment from 'moment'
@@ -30,7 +31,8 @@ class EventFormModal  extends Component {
       location: props.event.location ? props.event.location.id : undefined,
       locationExtra: props.event.locationExtra ? props.event.locationExtra : undefined,
       teachers: props.event.tutors ? props.event.tutors.map(t => t.id) : [],
-      isAgendaEvent: props.event.type === 1
+      isAgendaEvent: props.event.type === 1,
+      eventSet: props.event.eventSet ? props.event.eventSet.name : undefined
     }
   }
 
@@ -45,7 +47,7 @@ class EventFormModal  extends Component {
         this.setState({description: value})
         break
       case 'registrationType':
-        this.setState({registrationType: value})
+        this.setState({registrationType: parseInt(value)})
         break
       case 'maxUsers':
         this.setState({maxUsers: value})
@@ -72,6 +74,9 @@ class EventFormModal  extends Component {
         break
       case 'isAgendaEvent':
         this.setState({isAgendaEvent: value})
+        break
+      case 'eventSet':
+        this.setState({eventSet: value})
         break
     }
   }
@@ -136,10 +141,11 @@ class EventFormModal  extends Component {
               {t('name')}
             </label>
             <div className="col-md-9">
-              <input type="text"
-                     className="form-control"
-                     value={this.state.name}
-                     onChange={e => this.updateEventProps('name', e.target.value)}
+              <input
+                type="text"
+                className="form-control"
+                value={this.state.name}
+                onChange={e => this.updateEventProps('name', e.target.value)}
               />
               {this.state.nameError &&
                 <div className="help-block field-error">
@@ -154,9 +160,10 @@ class EventFormModal  extends Component {
               <label>{t('description')}</label>
             </div>
             <div className="col-md-9">
-              <Textarea id="event-form-description"
-                        content={this.state.description}
-                        onChange={text => this.updateEventProps('description', text)}
+              <Textarea
+                id="event-form-description"
+                content={this.state.description}
+                onChange={text => this.updateEventProps('description', text)}
               >
               </Textarea>
             </div>
@@ -167,13 +174,14 @@ class EventFormModal  extends Component {
               <label>{t('start_date')}</label>
             </div>
             <div className="col-md-9">
-              <Datetime closeOnSelect={true}
-                        dateFormat={true}
-                        timeFormat={true}
-                        locale="fr"
-                        utc={true}
-                        defaultValue={this.state.startDate}
-                        onChange={date => this.updateEventProps('startDate', date)}
+              <Datetime
+                closeOnSelect={true}
+                dateFormat={true}
+                timeFormat={true}
+                locale="fr"
+                utc={true}
+                defaultValue={this.state.startDate}
+                onChange={date => this.updateEventProps('startDate', date)}
               />
               {this.state.startDateError &&
                 <div className="help-block field-error">
@@ -188,13 +196,14 @@ class EventFormModal  extends Component {
               <label>{t('end_date')}</label>
             </div>
             <div className="col-md-9">
-              <Datetime closeOnSelect={true}
-                        dateFormat={true}
-                        timeFormat={true}
-                        locale="fr"
-                        utc={true}
-                        defaultValue={this.state.endDate}
-                        onChange={date => this.updateEventProps('endDate', date)}
+              <Datetime
+                closeOnSelect={true}
+                dateFormat={true}
+                timeFormat={true}
+                locale="fr"
+                utc={true}
+                defaultValue={this.state.endDate}
+                onChange={date => this.updateEventProps('endDate', date)}
               />
               {this.state.endDateError &&
                 <div className="help-block field-error">
@@ -209,9 +218,10 @@ class EventFormModal  extends Component {
               <label>{trans('session_event_registration', {}, 'cursus')}</label>
             </div>
             <div className="col-md-9">
-              <select className="form-control"
-                      value={this.state.registrationType}
-                      onChange={e => this.updateEventProps('registrationType', e.target.value)}
+              <select
+                className="form-control"
+                value={this.state.registrationType}
+                onChange={e => this.updateEventProps('registrationType', e.target.value)}
               >
                 <option value="0">{trans('event_registration_automatic', {}, 'cursus')}</option>
                 <option value="1">{trans('event_registration_manual', {}, 'cursus')}</option>
@@ -232,11 +242,12 @@ class EventFormModal  extends Component {
               <label>{trans('max_users', {}, 'cursus')}</label>
             </div>
             <div className="col-md-9">
-              <input type="number"
-                     className="form-control"
-                     value={this.state.maxUsers}
-                     min="0"
-                     onChange={e => this.updateEventProps('maxUsers', e.target.value)}
+              <input
+                type="number"
+                className="form-control"
+                value={this.state.maxUsers}
+                min="0"
+                onChange={e => this.updateEventProps('maxUsers', e.target.value)}
               />
               {this.state.maxUsersError &&
                 <div className="help-block field-error">
@@ -251,9 +262,10 @@ class EventFormModal  extends Component {
               <label>{t('location')}</label>
             </div>
             <div className="col-md-9">
-              <select className="form-control"
-                      value={this.state.location}
-                      onChange={e => this.updateEventProps('location', e.target.value)}
+              <select
+                className="form-control"
+                value={this.state.location}
+                onChange={e => this.updateEventProps('location', e.target.value)}
               >
                 <option value="0"></option>
                 {this.props.locations.map((l, idx) =>
@@ -268,9 +280,10 @@ class EventFormModal  extends Component {
               <label>{trans('location_extra', {}, 'cursus')}</label>
             </div>
             <div className="col-md-9">
-              <Textarea id="event-form-location-extra"
-                        content={this.state.locationExtra}
-                        onChange={text => this.updateEventProps('locationExtra', text)}
+              <Textarea
+                id="event-form-location-extra"
+                content={this.state.locationExtra}
+                onChange={text => this.updateEventProps('locationExtra', text)}
               >
               </Textarea>
             </div>
@@ -281,10 +294,11 @@ class EventFormModal  extends Component {
               <label>{trans('tutors', {}, 'cursus')}</label>
             </div>
             <div className="col-md-9">
-              <select className="form-control"
-                      value={this.state.teachers}
-                      onChange={e => this.updateEventProps('teachers', e.target.options)}
-                      multiple
+              <select
+                className="form-control"
+                value={this.state.teachers}
+                onChange={e => this.updateEventProps('teachers', e.target.options)}
+                multiple
               >
                 <option value="0"></option>
                 {this.props.teachers.map((t, idx) =>
@@ -294,14 +308,30 @@ class EventFormModal  extends Component {
             </div>
           </div>
 
+          {this.state.registrationType === 2 &&
+            <div className="form-group row">
+              <label className="control-label col-md-3">
+                {t('group')}
+              </label>
+              <div className="col-md-9">
+                <input
+                  type="text"
+                  className="form-control"
+                  value={this.state.eventSet}
+                  onChange={e => this.updateEventProps('eventSet', e.target.value)}
+                />
+              </div>
+            </div>
+          }
           <div className="form-group row">
             <label className="control-label col-md-3">
               {trans('show_in_agenda', {}, 'cursus')}
             </label>
             <div className="col-md-9">
-              <input type="checkbox"
-                     checked={this.state.isAgendaEvent}
-                     onChange={e => this.updateEventProps('isAgendaEvent', e.target.checked)}
+              <input
+                type="checkbox"
+                checked={this.state.isAgendaEvent}
+                onChange={e => this.updateEventProps('isAgendaEvent', e.target.checked)}
               />
             </div>
           </div>
@@ -331,7 +361,8 @@ EventFormModal.propTypes = {
     location: T.object,
     locationExtra: T.string,
     tutors: T.array,
-    type: T.number
+    type: T.number,
+    eventSet: T.object
   }).isRequired,
   mode: T.string.isRequired,
   session: T.object,

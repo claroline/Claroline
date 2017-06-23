@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CursusBundle\Entity\CourseSession;
 use Claroline\CursusBundle\Entity\SessionEvent;
+use Claroline\CursusBundle\Entity\SessionEventUser;
 use Doctrine\ORM\EntityRepository;
 
 class SessionEventRepository extends EntityRepository
@@ -77,6 +78,28 @@ class SessionEventRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspace', $workspace);
         $query->setParameter('eventType', SessionEvent::TYPE_EVENT);
+
+        return $query->getResult();
+    }
+
+    public function findSessionEventsByUser(User $user)
+    {
+        $dql = "
+            SELECT se
+            FROM Claroline\CursusBundle\Entity\SessionEvent se
+            WHERE EXISTS (
+                SELECT seu
+                FROM Claroline\CursusBundle\Entity\SessionEventUser seu
+                JOIN seu.sessionEvent seuse
+                JOIN seu.user seuu
+                WHERE seuse = se
+                AND seuu = :user
+                AND seu.registrationStatus = :registered
+            )
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('user', $user);
+        $query->setParameter('registered', SessionEventUser::REGISTERED);
 
         return $query->getResult();
     }

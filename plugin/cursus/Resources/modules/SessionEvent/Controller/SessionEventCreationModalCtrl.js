@@ -30,7 +30,9 @@ export default class SessionEventCreationModalCtrl {
       locationResource: null,
       tutors: [],
       maxUsers: null,
-      registrationType: 0
+      registrationType: 0,
+      type: false,
+      eventSet: null
     }
     this.sessionEventErrors = {
       name: null,
@@ -156,7 +158,7 @@ export default class SessionEventCreationModalCtrl {
 
     if (this.isValid()) {
       const url = Routing.generate('api_post_session_event_creation', {session: this.session['id']})
-      this.$http.post(url, {sessionEventDatas: this.sessionEvent}).then(d => {
+      this.$http.post(url, {sessionEventData: this.sessionEvent}).then(d => {
         this.callback(d['data'])
         this.$uibModalInstance.close()
       })

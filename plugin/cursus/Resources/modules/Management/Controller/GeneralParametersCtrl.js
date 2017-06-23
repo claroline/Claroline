@@ -17,7 +17,8 @@ export default class GeneralParametersCtrl {
       disableSessionEventRegistration: false,
       enableCoursesProfileTab: false,
       enableWsInCoursesProfileTab: false,
-      sessionDefaultTotal: null
+      sessionDefaultTotal: null,
+      displayUserEventsInDesktopAgenda: false
     }
     this.initialize()
   }
@@ -31,6 +32,7 @@ export default class GeneralParametersCtrl {
       this.configs['enableWsInCoursesProfileTab'] = d['enableWsInCoursesProfileTab']
       this.configs['sessionDefaultTotal'] = parseInt(d['sessionDefaultTotal'])
       this.configs['sessionDefaultDuration'] = parseInt(d['sessionDefaultDuration'])
+      this.configs['displayUserEventsInDesktopAgenda'] = d['displayUserEventsInDesktopAgenda']
     })
   }
 

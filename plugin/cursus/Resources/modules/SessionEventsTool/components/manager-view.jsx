@@ -1,5 +1,7 @@
 import {connect} from 'react-redux'
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
+import moment from 'moment'
 import {trans, t} from '#/main/core/translation'
 import {makeModal} from '#/main/core/layout/modal'
 import {selectors} from '../selectors'
@@ -138,6 +140,20 @@ class ManagerView extends Component {
     this.setState({modal: {fading: true, urlModal: null}})
   }
 
+  showEventSetForm(eventSet) {
+    this.setState({
+      modal: {
+        type: 'MODAL_EVENT_SET_FORM',
+        urlModal: null,
+        props: {
+          title: trans('session_event_set_edition', {}, 'cursus'),
+          eventSet: eventSet
+        },
+        fading: false
+      }
+    })
+  }
+
   render() {
     if (this.props.session) {
       return (
@@ -152,14 +168,34 @@ class ManagerView extends Component {
                 label: t('name'),
                 renderer: (rowData) => <a href={`#event/${rowData.id}`}>{rowData.name}</a>
               },
-              {name: 'startDate', type: 'date', label: t('start_date')},
-              {name: 'endDate', type: 'date', label: t('end_date')},
+              {
+                name: 'startDate',
+                type: 'date',
+                label: t('start_date'),
+                renderer: (rowData) => moment(rowData.startDate).format('DD/MM/YYYY HH:mm')
+              },
+              {
+                name: 'endDate',
+                type: 'date',
+                label: t('end_date'),
+                renderer: (rowData) => moment(rowData.endDate).format('DD/MM/YYYY HH:mm')
+              },
               {name: 'maxUsers', type: 'number', label: trans('max_users', {}, 'cursus')},
               {
                 name: 'registrationType',
                 type: 'number',
                 label: t('registration'),
                 renderer: (rowData) => registrationTypes[rowData.registrationType]
+              },
+              {
+                name: 'eventSet',
+                type: 'string',
+                label: t('group'),
+                renderer: (rowData) => rowData.eventSet ?
+                  <a className="pointer-hand" onClick={() => this.showEventSetForm(rowData.eventSet)}>
+                    {rowData.eventSet['name']}
+                  </a> :
+                  ''
               }
             ]}
             actions={[
@@ -202,9 +238,12 @@ class ManagerView extends Component {
               current: this.props.selected,
               toggle: this.props.toggleSelect,
               toggleAll: this.props.toggleSelectAll,
-              actions: [
-                {label: t('delete'), icon: 'fa fa-fw fa-trash-o', action: () => this.deleteSessionEvents(this.props.selected), isDangerous: true}
-              ]
+              actions: [{
+                label: t('delete'),
+                icon: 'fa fa-fw fa-trash-o',
+                action: () => this.deleteSessionEvents(this.props.selected),
+                isDangerous: true
+              }]
             }}
           />
           <br/>

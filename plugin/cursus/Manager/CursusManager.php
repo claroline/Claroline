@@ -41,6 +41,7 @@ use Claroline\CursusBundle\Entity\CursusUser;
 use Claroline\CursusBundle\Entity\DocumentModel;
 use Claroline\CursusBundle\Entity\SessionEvent;
 use Claroline\CursusBundle\Entity\SessionEventComment;
+use Claroline\CursusBundle\Entity\SessionEventSet;
 use Claroline\CursusBundle\Entity\SessionEventUser;
 use Claroline\CursusBundle\Event\Log\LogCourseCreateEvent;
 use Claroline\CursusBundle\Event\Log\LogCourseDeleteEvent;
@@ -125,6 +126,7 @@ class CursusManager
     private $documentModelRepo;
     private $reservationResourceRepo;
     private $sessionEventRepo;
+    private $sessionEventSetRepo;
     private $sessionEventUserRepo;
     private $sessionGroupRepo;
     private $sessionQueueRepo;
@@ -221,6 +223,7 @@ class CursusManager
         $this->reservationResourceRepo = $om->getRepository('FormaLibre\ReservationBundle\Entity\Resource');
         $this->sessionEventCommentRepo = $om->getRepository('ClarolineCursusBundle:SessionEventComment');
         $this->sessionEventRepo = $om->getRepository('ClarolineCursusBundle:SessionEvent');
+        $this->sessionEventSetRepo = $om->getRepository('ClarolineCursusBundle:SessionEventSet');
         $this->sessionEventUserRepo = $om->getRepository('ClarolineCursusBundle:SessionEventUser');
         $this->sessionGroupRepo = $om->getRepository('ClarolineCursusBundle:CourseSessionGroup');
         $this->sessionQueueRepo = $om->getRepository('ClarolineCursusBundle:CourseSessionRegistrationQueue');
@@ -1516,7 +1519,8 @@ class CursusManager
         array $tutors = [],
         $registrationType = CourseSession::REGISTRATION_AUTO,
         $maxUsers = null,
-        $type = SessionEvent::TYPE_NONE
+        $type = SessionEvent::TYPE_NONE,
+        SessionEventSet $eventSet = null
     ) {
         $eventName = is_null($name) ? $session->getName() : $name;
         $eventStartDate = is_null($startDate) ? $session->getStartDate() : $startDate;
@@ -1534,6 +1538,7 @@ class CursusManager
         $sessionEvent->setRegistrationType($registrationType);
         $sessionEvent->setMaxUsers($maxUsers);
         $sessionEvent->setType($type);
+        $sessionEvent->setEventSet($eventSet);
 
         foreach ($tutors as $tutor) {
             $sessionEvent->addTutor($tutor);
@@ -4830,6 +4835,40 @@ class CursusManager
         return $data;
     }
 
+    public function persistSessionEventSet(SessionEventSet $sessionEventSet)
+    {
+        $this->om->persist($sessionEventSet);
+        $this->om->flush();
+    }
+
+    public function createSessionEventSet(CourseSession $session, $name, $limit = 1)
+    {
+        $set = new SessionEventSet();
+        $set->setSession($session);
+        $set->setName($name);
+        $set->setLimit($limit);
+        $this->persistSessionEventSet($set);
+
+        return $set;
+    }
+
+    public function deleteSessionEventSet(SessionEventSet $sessionEventSet)
+    {
+        $this->om->remove($sessionEventSet);
+        $this->om->flush();
+    }
+
+    public function getSessionEventSet(CourseSession $session, $name)
+    {
+        $set = $this->getSessionEventSetsBySessionAndName($session, $name);
+
+        if (empty($set)) {
+            $set = $this->createSessionEventSet($session, $name);
+        }
+
+        return $set;
+    }
+
     /***************************************************
      * Access to CursusDisplayedWordRepository methods *
      ***************************************************/
@@ -5228,6 +5267,11 @@ class CursusManager
         return $this->sessionEventRepo->findSessionEventsByWorkspace($workspace);
     }
 
+    public function getSessionEventsByUser(User $user)
+    {
+        return $this->sessionEventRepo->findSessionEventsByUser($user);
+    }
+
     /*************************************************
      * Access to CourseSessionUserRepository methods *
      *************************************************/
@@ -5576,6 +5620,11 @@ class CursusManager
         return $this->sessionEventUserRepo->findSessionEventUsersFromListBySessionEventAndStatus($sessionEvent, $users, $status);
     }
 
+    public function getSessionEventUsersByUserAndEventSet(User $user, SessionEventSet $eventSet)
+    {
+        return $this->sessionEventUserRepo->findSessionEventUsersByUserAndEventSet($user, $eventSet);
+    }
+
     /***************************************************
      * Access to SessionEventCommentRepository methods *
      ***************************************************/
@@ -5583,6 +5632,20 @@ class CursusManager
     public function getSessionEventCommentsBySessionEvent(SessionEvent $sessionEvent)
     {
         return $this->sessionEventCommentRepo->findBy(['sessionEvent' => $sessionEvent]);
+    }
+
+    /***********************************************
+     * Access to SessionEventSetRepository methods *
+     ***********************************************/
+
+    public function getSessionEventSetsBySession(CourseSession $session)
+    {
+        return $this->sessionEventSetRepo->findSessionEventSetsBySession($session);
+    }
+
+    public function getSessionEventSetsBySessionAndName(CourseSession $session, $name)
+    {
+        return $this->sessionEventSetRepo->findSessionEventSetsBySessionAndName($session, $name);
     }
 
     /******************

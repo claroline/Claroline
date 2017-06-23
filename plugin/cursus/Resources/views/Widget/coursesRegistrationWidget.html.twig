@@ -168,6 +168,15 @@
           )
         })
 
+        widgetElement.on('click', '.register-to-session-event-set-btn', function () {
+          const sessionEventSetId = $(this).data('session-event-set-id')
+          const url = Routing.generate(
+            'claro_courses_widget_session_event_set_registration',
+            {'widgetInstance': widgetInstanceId, sessionEventSet: sessionEventSetId}
+          )
+          window.Claroline.Modal.fromUrl(url)
+        })
+
         widgetElement.on('click', '#calendar-view-button', function () {
           const route = Routing.generate(
             'claro_cursus_courses_list_for_registration_widget_calendar',
@@ -351,16 +360,34 @@
                 `
               } else if (sessionEventUsersStatus[e['id']] === 1) {
                 eventsElement += `
-                  <span class="label label-info pull-right">${Translator.trans('pending', {}, 'platform')}</span>
+                  <span class="label label-warning pull-right">${Translator.trans('pending', {}, 'platform')}</span>
                 `
               } else if (e['registrationType'] === 2 && (event['publicRegistration'] || registeredSessions[event['id']])) {
-                eventsElement += `
-                  <span id="session-event-registration-btn-${event['id']}">
-                      <span class="btn btn-default btn-sm pull-right register-to-session-event-btn-${widgetInstanceId}" data-session-event-id="${e['id']}">
-                          ${Translator.trans('self_register_to_session_event', {}, 'cursus')}
+                if (!e.eventSet) {
+                  eventsElement += `
+                    <span id="session-event-registration-btn-${event['id']}">
+                      <span
+                        class="btn btn-default btn-sm pull-right register-to-session-event-btn-${widgetInstanceId}"
+                        data-session-event-id="${e.id}"
+                      >
+                        ${Translator.trans('self_register_to_session_event', {}, 'cursus')}
                       </span>
-                  </span>
-                `
+                    </span>
+                  `
+                } else {
+                  eventsElement += `
+                    <span
+                      class="btn btn-default btn-sm pull-right register-to-session-event-set-btn-calendar-${widgetInstanceId}"
+                      data-session-event-set-id="${e.eventSet.id}"
+                    >
+                      <span class="label label-info">
+                        ${e.eventSet.name}
+                      </span>
+                      &nbsp;
+                      ${Translator.trans('self_register_to_session_event_set', {}, 'cursus')}
+                    </span>
+                  `
+                }
               }
             }
             eventsElement += `
@@ -469,6 +496,15 @@
             Translator.trans('session_event_self_registration_message', {}, 'cursus'),
             Translator.trans('session_event_registration', {}, 'cursus')
           )
+        })
+
+        $('body').on('click', `.register-to-session-event-set-btn-calendar-${widgetInstanceId}`, function () {
+          const sessionEventSetId = $(this).data('session-event-set-id')
+          const url = Routing.generate(
+            'claro_courses_widget_session_event_set_registration',
+            {'widgetInstance': widgetInstanceId, sessionEventSet: sessionEventSetId}
+          )
+          window.Claroline.Modal.fromUrl(url)
         })
 
         initializeCalendar()

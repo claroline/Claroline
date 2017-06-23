@@ -29,7 +29,9 @@ export default class SessionEventEditionModalCtrl {
       locationResource: null,
       tutors: [],
       maxUsers: null,
-      registrationType: 0
+      registrationType: 0,
+      type: false,
+      eventSet: null
     }
     this.sessionEventErrors = {
       name: null,
@@ -84,6 +86,14 @@ export default class SessionEventEditionModalCtrl {
 
     if (this.source['locationResource']) {
       this.sessionEvent['internalLocation'] = true
+    }
+
+    if (this.source['type']) {
+      this.sessionEvent['type'] = true
+    }
+
+    if (this.source['eventSet']) {
+      this.sessionEvent['eventSet'] = this.source['eventSet']['name']
     }
     this.CourseService.getGeneralParameters().then(d => {
       this.isSessionEventRegistrationDisabled = d['disableSessionEventRegistration']
@@ -179,7 +189,7 @@ export default class SessionEventEditionModalCtrl {
 
     if (this.isValid()) {
       const url = Routing.generate('api_put_session_event_edition', {sessionEvent: this.source['id']})
-      this.$http.post(url, {sessionEventDatas: this.sessionEvent}).then(d => {
+      this.$http.post(url, {sessionEventData: this.sessionEvent}).then(d => {
         this.callback(d['data'])
         this.$uibModalInstance.close()
       })

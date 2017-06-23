@@ -30,6 +30,9 @@ export const LOCATIONS_LOAD = 'LOCATIONS_LOAD'
 export const LOCATIONS_LOADED_UPDATE = 'LOCATIONS_LOADED_UPDATE'
 export const TEACHERS_LOAD = 'TEACHERS_LOAD'
 export const TEACHERS_LOADED_UPDATE = 'TEACHERS_LOADED_UPDATE'
+export const SET_EVENTS_RESET = 'SET_EVENTS_RESET'
+export const SET_EVENTS_LOAD = 'SET_EVENTS_LOAD'
+export const SET_EVENTS_USERS_ADD = 'SET_EVENTS_USERS_ADD'
 
 export const actions = {}
 
@@ -98,6 +101,9 @@ actions.createSessionEvent = (sessionId, eventData) => {
     if (eventData['teachers'] !== undefined) {
       formData.append('teachers', eventData['teachers'])
     }
+    if (eventData['eventSet'] !== undefined) {
+      formData.append('eventSet', eventData['eventSet'])
+    }
     const type = eventData['isAgendaEvent'] ? 1 : 0
     formData.append('type', type)
 
@@ -146,6 +152,9 @@ actions.editSessionEvent = (eventId, eventData) => {
     }
     if (eventData['teachers'] !== undefined) {
       formData.append('teachers', eventData['teachers'])
+    }
+    if (eventData['eventSet'] !== undefined) {
+      formData.append('eventSet', eventData['eventSet'])
     }
     const type = eventData['isAgendaEvent'] ? 1 : 0
     formData.append('type', type)
@@ -327,7 +336,7 @@ actions.displaySessionEvent = (sessionEventId) => {
   }
 }
 
-actions.selfRegisterToSessionEvent = (sessionEventId) => ({
+actions.selfRegisterToSessionEvent = (sessionEventId, addInSet = false) => ({
   [REQUEST_SEND]: {
     url: generateUrl('claro_cursus_session_event_self_register', {sessionEvent: sessionEventId}),
     request: {
@@ -336,6 +345,10 @@ actions.selfRegisterToSessionEvent = (sessionEventId) => ({
     success: (data, dispatch) => {
       const sessionEventUsers = JSON.parse(data['sessionEventUsers'])
       dispatch(actions.addEventsUsers(sessionEventUsers))
+
+      if (addInSet) {
+        dispatch(actions.addSetEventsUsers(sessionEventUsers))
+      }
     }
   }
 })
@@ -452,6 +465,58 @@ actions.deleteEventComment = (eventCommentId) => ({
   }
 })
 
+actions.editEventSet = (eventSetId, eventSetData) => {
+  return (dispatch) => {
+    const formData = new FormData()
+
+    if (eventSetData['name'] !== undefined) {
+      formData.append('name', eventSetData['name'])
+    }
+    if (eventSetData['limit'] !== undefined) {
+      formData.append('limit', eventSetData['limit'])
+    }
+
+    dispatch({
+      [REQUEST_SEND]: {
+        url: generateUrl('claro_cursus_session_event_set_edit', {sessionEventSet: eventSetId}),
+        request: {
+          method: 'POST',
+          body: formData
+        },
+        success: (data, dispatch) => {
+          dispatch(actions.fetchSessionEvents())
+        }
+      }
+    })
+  }
+}
+
+actions.deleteEventSet = (eventSetId) => ({
+  [REQUEST_SEND]: {
+    url: generateUrl('claro_cursus_session_event_set_delete', {sessionEventSet: eventSetId}),
+    request: {
+      method: 'DELETE'
+    },
+    success: (data, dispatch) => {
+      dispatch(actions.fetchSessionEvents())
+    }
+  }
+})
+
+actions.getSetEvents = (sessionEventSetId) => (dispatch) => {
+  dispatch({
+    [REQUEST_SEND]: {
+      url: generateUrl('claro_cursus_session_event_set_events_retrieve', {sessionEventSet: sessionEventSetId}),
+      request: {
+        method: 'GET'
+      },
+      success: (data, dispatch) => {
+        dispatch(actions.loadSetEvents(JSON.parse(data.events), JSON.parse(data.registrations)))
+      }
+    }
+  })
+}
+
 actions.resetCurrentSessionEvent = makeActionCreator(CURRENT_EVENT_RESET)
 
 actions.addParticipants = makeActionCreator(CURRENT_EVENT_ADD_PARTICIPANTS, 'sessionEventUsers')
@@ -487,5 +552,11 @@ actions.updateLocationsLoaded = makeActionCreator(LOCATIONS_LOADED_UPDATE, 'load
 actions.loadTeachers = makeActionCreator(TEACHERS_LOAD, 'teachers')
 
 actions.updateTeachersLoaded = makeActionCreator(TEACHERS_LOADED_UPDATE, 'loaded')
+
+actions.resetSetEvents = makeActionCreator(SET_EVENTS_RESET)
+
+actions.loadSetEvents = makeActionCreator(SET_EVENTS_LOAD, 'events', 'registrations')
+
+actions.addSetEventsUsers = makeActionCreator(SET_EVENTS_USERS_ADD, 'sessionEventUsers')
 
 const getQueryString = (idsList) => '?' + idsList.map(id => 'ids[]='+id).join('&')

@@ -13,6 +13,8 @@ import {EventFormModal} from './components/event-form-modal.jsx'
 import {EventRepeatFormModal} from './components/event-repeat-form-modal.jsx'
 import {SessionEventsToolLayout} from './components/session-events-tool-layout.jsx'
 import {EventCommentsModal} from './components/event-comments-modal.jsx'
+import {EventSetFormModal} from './components/event-set-form-modal.jsx'
+import {EventSetRegistrationModal} from './components/event-set-registration-modal.jsx'
 
 class SessionEventsTool {
   constructor(workspaceId, canEdit, sessions, events, eventsUsers) {
@@ -20,7 +22,9 @@ class SessionEventsTool {
       ['DELETE_MODAL', DeleteConfirmModal],
       ['MODAL_EVENT_FORM', EventFormModal],
       ['MODAL_EVENT_REPEAT_FORM', EventRepeatFormModal],
-      ['MODAL_EVENT_COMMENTS', EventCommentsModal]
+      ['MODAL_EVENT_COMMENTS', EventCommentsModal],
+      ['MODAL_EVENT_SET_FORM', EventSetFormModal],
+      ['MODAL_EVENT_SET_REGISTRATION', EventSetRegistrationModal]
     ])
     const sessionId = sessions.length === 1 ? sessions[0]['id'] : null
     this.viewMode = canEdit ? VIEW_MANAGER : VIEW_USER
@@ -29,6 +33,7 @@ class SessionEventsTool {
       {
         workspaceId: workspaceId,
         canEdit: canEdit,
+        disableRegistration: disableRegistration,
         sessions: sessions,
         sessionId: sessionId,
         events: {
@@ -58,6 +63,7 @@ class SessionEventsTool {
 const container = document.querySelector('.session-events-tool-container')
 const workspaceId = parseInt(container.dataset.workspace)
 const canEdit = parseInt(container.dataset.editable)
+const disableRegistration = parseInt(container.dataset.disableRegistration)
 const sessions = JSON.parse(container.dataset.sessions)
 const events = JSON.parse(container.dataset.events)
 const eventsTotal = parseInt(container.dataset.eventsTotal)

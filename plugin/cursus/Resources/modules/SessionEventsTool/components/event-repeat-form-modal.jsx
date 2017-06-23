@@ -1,4 +1,5 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import Modal from 'react-bootstrap/lib/Modal'
 import classes from 'classnames'
 import moment from 'moment'
@@ -207,11 +208,12 @@ export class EventRepeatFormModal  extends Component {
               </label>
               <div className="col-md-9">
                 <span className="input-group">
-                  <input type="number"
-                         className="form-control"
-                         min="1"
-                         value={this.state.duration}
-                         onChange={e => this.updateFormState('duration', e.target.value)}
+                  <input
+                    type="number"
+                    className="form-control"
+                    min="1"
+                    value={this.state.duration}
+                    onChange={e => this.updateFormState('duration', e.target.value)}
                   />
                   <span className="input-group-addon">
                     {t('weeks')}

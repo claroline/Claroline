@@ -1,6 +1,8 @@
 /*global UserPicker*/
 import {connect} from 'react-redux'
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
+import moment from 'moment'
 import {trans, t} from '#/main/core/translation'
 import {makeModal} from '#/main/core/layout/modal'
 import {actions} from '../actions'
@@ -98,29 +100,32 @@ class EventView extends Component {
         <h3>{this.props.event.name}</h3>
         <span className="pull-right">
           {this.props.canEdit &&
-            <button className="btn btn-primary margin-right-sm"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title={trans('edit_session_event', {}, 'cursus')}
-                    onClick={() => this.showEventEditionForm(this.props.event)}
+            <button
+              className="btn btn-primary margin-right-sm"
+              data-toggle="tooltip"
+              data-placement="top"
+              title={trans('edit_session_event', {}, 'cursus')}
+              onClick={() => this.showEventEditionForm(this.props.event)}
             >
               <i className="fa fa-edit"></i>
             </button>
           }
-          <button className="btn btn-primary margin-right-sm"
-                  data-toggle="tooltip"
-                  data-placement="top"
-                  title={this.props.canEdit ? trans('informations_management', {}, 'cursus') : t('informations')}
-                  onClick={() => this.showEventCommentsManagement(this.props.event)}
+          <button
+            className="btn btn-primary margin-right-sm"
+            data-toggle="tooltip"
+            data-placement="top"
+            title={this.props.canEdit ? trans('informations_management', {}, 'cursus') : t('informations')}
+            onClick={() => this.showEventCommentsManagement(this.props.event)}
           >
             <i className="fa fa-info"></i>
           </button>
           {this.props.canEdit &&
-            <button className="btn btn-primary margin-right-sm"
-                    data-toggle="tooltip"
-                    data-placement="top"
-                    title={trans('register_participants', {}, 'cursus')}
-                    onClick={() => this.showParticipantsSelection()}
+            <button
+              className="btn btn-primary margin-right-sm"
+              data-toggle="tooltip"
+              data-placement="top"
+              title={trans('register_participants', {}, 'cursus')}
+              onClick={() => this.showParticipantsSelection()}
             >
               <i className="fa fa-user-plus"></i>
             </button>
@@ -138,30 +143,32 @@ class EventView extends Component {
           <div className="panel panel-default">
             <div className="panel-heading" role="tab" id="description-heading">
               <h4 className="panel-title">
-                <a role="button"
-                   data-toggle="collapse"
-                   data-parent="#accordion"
-                   href="#description-collapse"
-                   aria-expanded="true"
-                   aria-controls="description-collapse"
+                <a
+                  role="button"
+                  data-toggle="collapse"
+                  data-parent="#accordion"
+                  href="#description-collapse"
+                  aria-expanded="true"
+                  aria-controls="description-collapse"
                 >
                   {trans('session_event_description', {}, 'cursus')}
                 </a>
               </h4>
             </div>
-            <div id="description-collapse"
-                 className="panel-collapse collapse in"
-                 role="tabpanel"
-                 aria-labelledby="description-heading"
+            <div
+              id="description-collapse"
+              className="panel-collapse collapse in"
+              role="tabpanel"
+              aria-labelledby="description-heading"
             >
               <div className="panel-body">
                 <b>{t('duration')} :</b>
                 &nbsp;
-                {this.props.event['startDate']}
+                {moment(this.props.event['startDate']).format('DD/MM/YYYY HH:mm')}
                 &nbsp;
                 <i className="fa fa-long-arrow-right"></i>
                 &nbsp;
-                {this.props.event['endDate']}
+                {moment(this.props.event['endDate']).format('DD/MM/YYYY HH:mm')}
                 <br/>
                 <b>{trans('max_users', {} ,'cursus')} :</b>
                 &nbsp;
@@ -235,21 +242,23 @@ class EventView extends Component {
             <div className="panel panel-default">
               <div className="panel-heading" role="tab" id="participants-heading">
                 <h4 className="panel-title">
-                  <a role="button"
-                     data-toggle="collapse"
-                     data-parent="#accordion"
-                     href="#participants-collapse"
-                     aria-expanded="true"
-                     aria-controls="participants-collapse"
+                  <a
+                    role="button"
+                    data-toggle="collapse"
+                    data-parent="#accordion"
+                    href="#participants-collapse"
+                    aria-expanded="true"
+                    aria-controls="participants-collapse"
                   >
                     {trans('participants', {}, 'cursus')}
                   </a>
                 </h4>
               </div>
-              <div id="participants-collapse"
-                   className="panel-collapse collapse"
-                   role="tabpanel"
-                   aria-labelledby="participants-heading"
+              <div
+                id="participants-collapse"
+                className="panel-collapse collapse"
+                role="tabpanel"
+                aria-labelledby="participants-heading"
               >
                 <div className="panel-body">
                   {this.props.participants.length > 0 ?

@@ -1,6 +1,9 @@
 import {connect} from 'react-redux'
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
+import moment from 'moment'
 import {trans, t} from '#/main/core/translation'
+import {makeModal} from '#/main/core/layout/modal'
 import {actions} from '../actions'
 import {selectors} from '../selectors'
 import {registrationStatus} from '../enums'
@@ -11,6 +14,32 @@ import {select as paginationSelect} from '#/main/core/layout/pagination/selector
 import {DataList} from '#/main/core/layout/list/components/data-list.jsx'
 
 class UserView extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      modal: {}
+    }
+  }
+
+  showSessionEventSet(eventSet) {
+    this.setState({
+      modal: {
+        type: 'MODAL_EVENT_SET_REGISTRATION',
+        urlModal: null,
+        props: {
+          title:trans('session_event_set_registration', {}, 'cursus'),
+          eventSet: eventSet
+        },
+        fading: false
+      }
+    })
+  }
+
+  hideModal() {
+    this.setState({modal: {fading: true, urlModal: null}})
+  }
+
+
   render() {
     if (this.props.session) {
       return (
@@ -25,8 +54,18 @@ class UserView extends Component {
                 label: t('name'),
                 renderer: (rowData) => <a href={`#event/${rowData.id}`}>{rowData.name}</a>
               },
-              {name: 'startDate', type: 'date', label: t('start_date')},
-              {name: 'endDate', type: 'date', label: t('end_date')},
+              {
+                name: 'startDate',
+                type: 'date',
+                label: t('start_date'),
+                renderer: (rowData) => moment(rowData.startDate).format('DD/MM/YYYY HH:mm')
+              },
+              {
+                name: 'endDate',
+                type: 'date',
+                label: t('end_date'),
+                renderer: (rowData) => moment(rowData.endDate).format('DD/MM/YYYY HH:mm')
+              },
               {
                 name: 'registration',
                 type: 'none',
@@ -49,12 +88,24 @@ class UserView extends Component {
                       default :
                         return ('')
                     }
-                  } else if (rowData.registrationType === 2) {
-                    return (
-                      <button className="btn btn-default" onClick={() => this.props.selfRegisterToSessionEvent(rowData.id)}>
-                        {trans('self_register_to_session_event', {}, 'cursus')}
-                      </button>
-                    )
+                  } else if (!this.props.disableRegistration && rowData.registrationType === 2) {
+                    if (rowData.eventSet) {
+                      return (
+                        <button className="btn btn-default" onClick={() => this.showSessionEventSet(rowData.eventSet)}>
+                          <span className="label label-info">
+                            {rowData.eventSet['name']}
+                          </span>
+                          &nbsp;
+                          {trans('self_register_to_session_event_set', {}, 'cursus')}
+                        </button>
+                      )
+                    } else {
+                      return (
+                        <button className="btn btn-default" onClick={() => this.props.selfRegisterToSessionEvent(rowData.id)}>
+                          {trans('self_register_to_session_event', {}, 'cursus')}
+                        </button>
+                      )
+                    }
                   } else {
                     return ('')
                   }
@@ -75,6 +126,12 @@ class UserView extends Component {
               handlePageSizeUpdate: this.props.handlePageSizeUpdate
             })}
           />
+          {this.state.modal.type && this.props.createModal(
+            this.state.modal.type,
+            this.state.modal.props,
+            this.state.modal.fading,
+            this.hideModal.bind(this)
+          )}
         </div>
       )
     } else {
@@ -88,6 +145,7 @@ class UserView extends Component {
 }
 
 UserView.propTypes = {
+  disableRegistration: T.bool,
   events: T.arrayOf(T.shape({
     id: T.number.isRequired,
     name: T.string.isRequired,
@@ -99,6 +157,7 @@ UserView.propTypes = {
   total: T.number.isRequired,
   eventsUsers: T.object,
   selfRegisterToSessionEvent: T.func,
+  createModal: T.func.isRequired,
   filters: T.array.isRequired,
   addListFilter: T.func.isRequired,
   removeListFilter: T.func.isRequired,
@@ -114,6 +173,7 @@ UserView.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    disableRegistration: selectors.disableRegistration(state),
     events: selectors.sessionEvents(state),
     total: selectors.sessionEventsTotal(state),
     session: selectors.currentSession(state),
@@ -132,6 +192,7 @@ function mapDispatchToProps(dispatch) {
     selfRegisterToSessionEvent: (sessionEventId) => {
       dispatch(actions.selfRegisterToSessionEvent(sessionEventId))
     },
+    createModal: (type, props, fading, hideModal) => makeModal(type, props, fading, hideModal, hideModal),
     // search
     addListFilter: (property, value) => {
       dispatch(listActions.addFilter(property, value))

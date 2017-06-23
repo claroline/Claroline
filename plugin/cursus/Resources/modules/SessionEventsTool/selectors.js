@@ -1,6 +1,7 @@
 import {createSelector} from 'reselect'
 
 const canEdit = state => state.canEdit === 1
+const disableRegistration = state => state.disableRegistration === 1
 const sessions = state => state.sessions
 const sessionId = state => state.sessionId
 const events = state => state.events
@@ -29,6 +30,7 @@ const eventFormData = state => state.eventForm
 
 export const selectors = {
   canEdit,
+  disableRegistration,
   sessionEvents,
   sessionEventsTotal,
   eventFormData,

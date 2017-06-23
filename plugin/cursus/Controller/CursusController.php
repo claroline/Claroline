@@ -22,6 +22,7 @@ use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Claroline\CursusBundle\Entity\CursusDisplayedWord;
 use Claroline\CursusBundle\Entity\SessionEvent;
 use Claroline\CursusBundle\Entity\SessionEventComment;
+use Claroline\CursusBundle\Entity\SessionEventSet;
 use Claroline\CursusBundle\Entity\SessionEventUser;
 use Claroline\CursusBundle\Form\CoursesWidgetConfigurationType;
 use Claroline\CursusBundle\Form\MyCoursesWidgetConfigurationType;
@@ -478,8 +479,15 @@ class CursusController extends Controller
         $disableRegistration = $this->platformConfigHandler->hasParameter('cursus_disable_session_event_registration') ?
             $this->platformConfigHandler->getParameter('cursus_disable_session_event_registration') :
             true;
+        $isSetAvailable = true;
+        $eventSet = $sessionEvent->getEventSet();
 
-        if (!$disableRegistration && ($sessionEvent->getRegistrationType() === CourseSession::REGISTRATION_PUBLIC)) {
+        if (!empty($eventSet)) {
+            $limit = $eventSet->getLimit();
+            $setRegistrations = $this->cursusManager->getSessionEventUsersByUserAndEventSet($user, $eventSet);
+            $isSetAvailable = $limit > count($setRegistrations);
+        }
+        if (!$disableRegistration && ($sessionEvent->getRegistrationType() === CourseSession::REGISTRATION_PUBLIC) && $isSetAvailable) {
             $results = $this->cursusManager->selfRegisterUserToSessionEvent($sessionEvent, $user);
         }
 
@@ -1092,6 +1100,34 @@ class CursusController extends Controller
         $this->cursusManager->deleteSessionEventComment($sessionEventComment);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/courses/widget/{widgetInstance}/session/event/set/{sessionEventSet}/registration",
+     *     name="claro_courses_widget_session_event_set_registration",
+     *     options={"expose"=true}
+     * )
+     * @EXT\Template("ClarolineCursusBundle:Cursus:sessionEventSetRegistrationModal.html.twig")
+     */
+    public function coursesWidgetSessionEventSetRegistrationAction(WidgetInstance $widgetInstance, SessionEventSet $sessionEventSet)
+    {
+        $user = $this->tokenStorage->getToken()->getUser();
+        $eventUsers = $user !== 'anon.' ?
+            $this->cursusManager->getSessionEventUsersByUserAndEventSet($user, $sessionEventSet) :
+            [];
+        $registrations = [];
+
+        foreach ($eventUsers as $eventUser) {
+            $sessionEventId = $eventUser->getSessionEvent()->getId();
+            $registrations[$sessionEventId] = $eventUser;
+        }
+
+        return [
+            'widgetInstance' => $widgetInstance,
+            'eventSet' => $sessionEventSet,
+            'registrations' => $registrations,
+        ];
     }
 
     private function checkToolAccess()

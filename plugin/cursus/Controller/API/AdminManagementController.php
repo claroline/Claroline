@@ -1133,34 +1133,40 @@ class AdminManagementController extends Controller
     public function postSessionEventCreateAction(User $user, CourseSession $session)
     {
         $this->cursusManager->checkCourseAccess($user, $session->getCourse());
-        $sessionEventDatas = $this->request->request->get('sessionEventDatas', false);
-        $trimmedStartDate = trim($sessionEventDatas['startDate'], 'Zz');
-        $trimmedEndDate = trim($sessionEventDatas['endDate'], 'Zz');
+        $sessionEventData = $this->request->request->get('sessionEventData', false);
+        $trimmedStartDate = trim($sessionEventData['startDate'], 'Zz');
+        $trimmedEndDate = trim($sessionEventData['endDate'], 'Zz');
         $startDate = new \DateTime($trimmedStartDate);
         $endDate = new \DateTime($trimmedEndDate);
         $location = null;
         $locationResource = null;
-        $tutorsIds = $sessionEventDatas['tutors'] ? $sessionEventDatas['tutors'] : [];
+        $tutorsIds = $sessionEventData['tutors'] ? $sessionEventData['tutors'] : [];
         $tutors = $this->userManager->getUsersByIds($tutorsIds);
 
-        if ($sessionEventDatas['location']) {
-            $location = $this->locationManager->getLocationById($sessionEventDatas['location']);
+        if ($sessionEventData['location']) {
+            $location = $this->locationManager->getLocationById($sessionEventData['location']);
         }
-        if ($sessionEventDatas['locationResource']) {
-            $locationResource = $this->cursusManager->getReservationResourceById($sessionEventDatas['locationResource']);
+        if ($sessionEventData['locationResource']) {
+            $locationResource = $this->cursusManager->getReservationResourceById($sessionEventData['locationResource']);
         }
+        $type = $sessionEventData['type'] ? SessionEvent::TYPE_EVENT : SessionEvent::TYPE_NONE;
+        $eventSet = $sessionEventData['eventSet'] && $sessionEventData['registrationType'] === CourseSession::REGISTRATION_PUBLIC ?
+            $this->cursusManager->getSessionEventSet($session, $sessionEventData['eventSet']) :
+             null;
         $createdSessionEvent = $this->cursusManager->createSessionEvent(
             $session,
-            $sessionEventDatas['name'],
-            $sessionEventDatas['description'],
+            $sessionEventData['name'],
+            $sessionEventData['description'],
             $startDate,
             $endDate,
             $location,
-            $sessionEventDatas['locationExtra'],
+            $sessionEventData['locationExtra'],
             $locationResource,
             $tutors,
-            $sessionEventDatas['registrationType'],
-            $sessionEventDatas['maxUsers']
+            $sessionEventData['registrationType'],
+            $sessionEventData['maxUsers'],
+            $type,
+            $eventSet
         );
         $serializedSessionEvent = $this->serializer->serialize(
             $createdSessionEvent,
@@ -1189,42 +1195,48 @@ class AdminManagementController extends Controller
     public function putSessionEventEditionAction(User $user, SessionEvent $sessionEvent)
     {
         $this->cursusManager->checkCourseAccess($user, $sessionEvent->getSession()->getCourse());
-        $sessionEventDatas = $this->request->request->get('sessionEventDatas', false);
-        $trimmedStartDate = trim($sessionEventDatas['startDate'], 'Zz');
-        $trimmedEndDate = trim($sessionEventDatas['endDate'], 'Zz');
+        $sessionEventData = $this->request->request->get('sessionEventData', false);
+        $trimmedStartDate = trim($sessionEventData['startDate'], 'Zz');
+        $trimmedEndDate = trim($sessionEventData['endDate'], 'Zz');
         $startDate = new \DateTime($trimmedStartDate);
         $endDate = new \DateTime($trimmedEndDate);
-        $sessionEvent->setName($sessionEventDatas['name']);
+        $sessionEvent->setName($sessionEventData['name']);
         $sessionEvent->setStartDate($startDate);
         $sessionEvent->setEndDate($endDate);
-        $sessionEvent->setDescription($sessionEventDatas['description']);
-        $sessionEvent->setLocationExtra($sessionEventDatas['locationExtra']);
-        $sessionEvent->setRegistrationType($sessionEventDatas['registrationType']);
-        $sessionEvent->setMaxUsers($sessionEventDatas['maxUsers']);
+        $sessionEvent->setDescription($sessionEventData['description']);
+        $sessionEvent->setLocationExtra($sessionEventData['locationExtra']);
+        $sessionEvent->setRegistrationType($sessionEventData['registrationType']);
+        $sessionEvent->setMaxUsers($sessionEventData['maxUsers']);
         $sessionEvent->setLocationResource(null);
         $sessionEvent->setLocation(null);
 
-        if ($sessionEventDatas['location']) {
-            $location = $this->locationManager->getLocationById($sessionEventDatas['location']);
+        if ($sessionEventData['location']) {
+            $location = $this->locationManager->getLocationById($sessionEventData['location']);
 
             if (!is_null($location)) {
                 $sessionEvent->setLocation($location);
             }
         }
-        if ($sessionEventDatas['locationResource']) {
-            $locationResource = $this->cursusManager->getReservationResourceById($sessionEventDatas['locationResource']);
+        if ($sessionEventData['locationResource']) {
+            $locationResource = $this->cursusManager->getReservationResourceById($sessionEventData['locationResource']);
 
             if (!is_null($locationResource)) {
                 $sessionEvent->setLocationResource($locationResource);
             }
         }
         $sessionEvent->emptyTutors();
-        $tutorsIds = $sessionEventDatas['tutors'] ? $sessionEventDatas['tutors'] : [];
+        $tutorsIds = $sessionEventData['tutors'] ? $sessionEventData['tutors'] : [];
         $tutors = $this->userManager->getUsersByIds($tutorsIds);
 
         foreach ($tutors as $tutor) {
             $sessionEvent->addTutor($tutor);
         }
+        $type = $sessionEventData['type'] ? SessionEvent::TYPE_EVENT : SessionEvent::TYPE_NONE;
+        $sessionEvent->setType($type);
+        $eventSet = $sessionEventData['eventSet'] && $sessionEventData['registrationType'] === CourseSession::REGISTRATION_PUBLIC ?
+            $this->cursusManager->getSessionEventSet($sessionEvent->getSession(), $sessionEventData['eventSet']) :
+             null;
+        $sessionEvent->setEventSet($eventSet);
         $this->cursusManager->persistSessionEvent($sessionEvent);
         $event = new LogSessionEventEditEvent($sessionEvent);
         $this->eventDispatcher->dispatch('log', $event);
@@ -1980,6 +1992,9 @@ class AdminManagementController extends Controller
         $datas['sessionDefaultDuration'] = $this->configHandler->hasParameter('cursus_session_default_duration') ?
             $this->configHandler->getParameter('cursus_session_default_duration') :
             1;
+        $datas['displayUserEventsInDesktopAgenda'] = $this->configHandler->hasParameter('cursus_display_user_events_in_desktop_agenda') ?
+            $this->configHandler->getParameter('cursus_display_user_events_in_desktop_agenda') :
+            false;
 
         return new JsonResponse($datas, 200);
     }
@@ -2009,6 +2024,7 @@ class AdminManagementController extends Controller
         $this->configHandler->setParameter('cursus_enable_ws_in_courses_profile_tab', $parameters['enableWsInCoursesProfileTab']);
         $this->configHandler->setParameter('cursus_session_default_total', $parameters['sessionDefaultTotal']);
         $this->configHandler->setParameter('cursus_session_default_duration', $parameters['sessionDefaultDuration']);
+        $this->configHandler->setParameter('cursus_display_user_events_in_desktop_agenda', $parameters['displayUserEventsInDesktopAgenda']);
 
         return new JsonResponse($parameters, 200);
     }
