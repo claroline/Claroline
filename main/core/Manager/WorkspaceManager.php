@@ -1300,7 +1300,7 @@ class WorkspaceManager
             []
         );
 
-        $workspaceRoles = $this->getArrayRolesByWorkspace($source);
+        $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
         $baseRoot = $this->resourceManager->getWorkspaceRoot($source);
 
         /*** Copies rights ***/
@@ -1394,8 +1394,7 @@ class WorkspaceManager
 
         foreach ($rights as $right) {
             $role = $right->getRole();
-            $this->log('Duplicating resource rights for '.$copy->getName().' - '.$role->getName().
-                '...'.$copy->getId().' - '.$role->getId());
+            $this->log('Duplicating resource rights for '.$copy->getName().' - '.$role->getName().'...');
             $key = $role->getTranslationKey();
             $newRight = new ResourceRights();
             $newRight->setResourceNode($copy);
