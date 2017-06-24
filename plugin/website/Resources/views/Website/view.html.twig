@@ -66,7 +66,7 @@
                         {% if options.footerText is not empty %}
                             <div class="footerContent">{{ options.footerText|raw }}</div>
                         {% endif %}
-                        {% if options.copyrightEnabled is not empty %}
+                        {% if options.copyrightEnabled is not empty and options.copyrightText is not empty %}
                             <div class="copyright-text">© Copyright {{ options.copyrightText }}</div>
                         {% endif %}
                     </div>
