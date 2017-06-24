@@ -20,3 +20,4 @@ doctrine:
             string_functions:
                 if: Claroline\CoreBundle\Doctrine\Query\IfElse
                 regexp: Claroline\CoreBundle\Doctrine\Query\Regexp
+                replace: Claroline\CoreBundle\Doctrine\Query\Replace

@@ -21,6 +21,7 @@ class ExternalResourceSynchronizationRepository
     private $conn;
 
     private $config;
+
     public function __construct($config)
     {
         $this->config = $config;
@@ -95,12 +96,16 @@ class ExternalResourceSynchronizationRepository
         }
 
         if (!empty($search)) {
+            $replaceName = 'replace( replace( replace( replace( '.
+                $this->config['group_config']['fields']['group_name'].
+                ', \'"\', \'\'), \'.\', \'\'), \'-\', \'\'), \'\\\'\', \'\')';
+            $replaceSearch = preg_replace('/[\'"\.-]/', '', $search);
             $qb->andWhere(
                 $qb->expr()->orX(
-                    $qb->expr()->like($this->config['group_config']['fields']['group_name'], ':search'),
+                    $qb->expr()->like($replaceName, ':search'),
                     $qb->expr()->like($this->config['group_config']['fields']['code'], ':search')
                 ))
-                ->setParameter('search', '%'.$search.'%');
+                ->setParameter('search', '%'.$replaceSearch.'%');
         }
 
         if ($max > 0) {
