@@ -159,8 +159,24 @@ class BlogImporter extends Importer implements ConfigurationInterface, RichTextI
                 $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
                 $entity->setContent($text);
                 $this->om->persist($entity);
+
+                //format comments
+                if (isset($post['comments']) && !empty($post['comments'])) {
+                    foreach ($post['comments'] as $comment) {
+                        $textCom = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$comment['message']);
+                        if ($textCom !== '') {
+                            $commentEntities = $this->om->getRepository('Icap\BlogBundle\Entity\Comment')->findByMessage($textCom);
+                            foreach ($commentEntities as $commentEntity) {
+                                $textCom = $this->container->get('claroline.importer.rich_text_formatter')->format($textCom);
+                                $commentEntity->setMessage($textCom);
+                                $this->om->persist($commentEntity);
+                            }
+                        }
+                    }
+                }
             }
         }
+
         //format infobar
         if (isset($data['infos_path'])) {
             $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$data['infos_path']);
