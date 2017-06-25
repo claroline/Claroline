@@ -2,6 +2,8 @@
   "name": "claroline",
   "version": "1.0.0",
   "description": "Claroline dev dependencies and scripts",
+  "license": "GPL-3.0",
+  "repository": "https://github.com/claroline/Claroline",
   "scripts": {
     "bower": "node_modules/bower/bin/bower update --allow-root",
     "themes": "node vendor/claroline/distribution/main/core/Resources/server/themes/bin build",
