@@ -84,6 +84,32 @@ class BlogListener extends ContainerAware
         $blog = $event->getResource();
         $options = $blog->getOptions();
         @unlink($this->container->getParameter('icap.blog.banner_directory').DIRECTORY_SEPARATOR.$options->getBannerBackgroundImage());
+
+        $widgetInstanceRepo = $this->container->get('doctrine.orm.entity_manager')->getRepository('Claroline\CoreBundle\Entity\Widget\WidgetInstance');
+        $widgetBlogRepo = $this->container->get('icap.blog.widgetblog_repository');
+        $widgetTagListRepo = $this->container->get('icap.blog.widgettaglistblog_repository');
+
+        $blogWidgets = $widgetBlogRepo->findByResourceNode($blog->getResourceNode());
+        $tagListWidgets = $widgetTagListRepo->findByResourceNode($blog->getResourceNode());
+
+        $entityManager = $this->container->get('claroline.persistence.object_manager');
+
+        // Remove blog widgets
+        foreach ($blogWidgets as $blogWidget) {
+            $entityManager->remove($blogWidget);
+            $widgetBlogInstance = $widgetInstanceRepo->findOneById($blogWidget->getWidgetInstance()->getId());
+            $entityManager->remove($widgetBlogInstance);
+        }
+
+        // Remove tag list blog widgets
+        foreach ($tagListWidgets as $tagListWidget) {
+            $entityManager->remove($tagListWidget);
+            $widgetInstance = $widgetInstanceRepo->findOneById($tagListWidget->getWidgetInstance()->getId());
+            $entityManager->remove($widgetInstance);
+        }
+
+        $entityManager->flush();
+
         $event->stopPropagation();
     }
 

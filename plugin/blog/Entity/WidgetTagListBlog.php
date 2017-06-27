@@ -3,8 +3,8 @@
 namespace Icap\BlogBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Doctrine\ORM\Mapping as ORM;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Table(
@@ -13,7 +13,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
  *          @ORM\UniqueConstraint(name="unique_widget_tag_list_blog", columns={"resourceNode_id", "widgetInstance_id"})
  *      }
  * )
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Icap\BlogBundle\Repository\WidgetBlogRepository")
  */
 class WidgetTagListBlog
 {
