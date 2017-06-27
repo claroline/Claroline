@@ -284,6 +284,7 @@ class ExternalSynchronizationManager
         $existingCasUsers = [];
         $existingCasIds = [];
         $existingCasUsernames = [];
+        $existingCasUserIds = [];
         // List with already processed usernames and emails
         $alreadyProcessedUserUsernames = [];
         $alreadyProcessedUserEmails = [];
@@ -317,13 +318,13 @@ class ExternalSynchronizationManager
                 ->getUsersByUsernamesOrMails($externalSourceUserUsernames, $externalSourceUserEmails, true);
             $existingPlatformUserUsernames = array_map(
                 function (User $user) {
-                    return $user->getUsername();
+                    return strtoupper($user->getUsername());
                 },
                 $existingPlatformUsers
             );
             $existingPlatformUserMails = array_map(
                 function (User $user) {
-                    return $user->getMail();
+                    return strtoupper($user->getMail());
                 },
                 $existingPlatformUsers
             );
@@ -354,6 +355,12 @@ class ExternalSynchronizationManager
                 $existingCasUsernames = array_map(
                     function ($casUser) {
                         return strtoupper($casUser->getUser()->getUsername());
+                    },
+                    $existingCasUsers
+                );
+                $existingCasUserIds = array_map(
+                    function ($casUser) {
+                        return strtoupper($casUser->getUser()->getId());
                     },
                     $existingCasUsers
                 );
@@ -398,7 +405,7 @@ class ExternalSynchronizationManager
                 if (
                     is_null($alreadyImportedUser) &&
                     !empty($existingPlatformUserMails) &&
-                    ($key = array_search($externalSourceUser['email'], $existingPlatformUserMails)) !== false
+                    ($key = array_search(strtoupper($externalSourceUser['email']), $existingPlatformUserMails)) !== false
                 ) {
                     $platformUser = $existingPlatformUsers[$key];
                     $alreadyImportedUser = $this->externalUserManager->createExternalUser(
@@ -414,7 +421,7 @@ class ExternalSynchronizationManager
                     $user = new User();
                     // Search if username exists
                     $username = $externalSourceUser['username'];
-                    if (in_array($username, $existingPlatformUserUsernames)) {
+                    if (in_array(strtoupper($username), $existingPlatformUserUsernames)) {
                         $username .= uniqid();
                     }
                     $user->setUsername($username);
@@ -450,7 +457,8 @@ class ExternalSynchronizationManager
                     !is_null($this->casManager) &&
                     $synchronizeCas &&
                     !in_array(strtoupper($externalSourceUser[$casSynchronizedField]), $existingCasIds) &&
-                    !in_array(strtoupper($externalSourceUser['username']), $existingCasUsernames)
+                    !in_array(strtoupper($externalSourceUser['username']), $existingCasUsernames) &&
+                    (empty($user->getId()) || !in_array($user->getId(), $existingCasUserIds))
                 ) {
                     $this->casManager->createCasUser($externalSourceUser[$casSynchronizedField], $user);
                 }
