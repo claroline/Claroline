@@ -19,6 +19,10 @@ class Version20170620161356 extends AbstractMigration
             ADD uuid VARCHAR(36) NOT NULL
         ');
         $this->addSql('
+            UPDATE claro_resource_icon
+            SET uuid = (SELECT UUID())
+        ');
+        $this->addSql('
             CREATE UNIQUE INDEX UNIQ_478C5861D17F50A6 ON claro_resource_icon (uuid)
         ');
     }
