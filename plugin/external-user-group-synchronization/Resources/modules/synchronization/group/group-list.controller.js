@@ -25,7 +25,7 @@ export class GroupListController {
 
   synchronizeGroup(group) {
     this._GroupListService.synchronizeGroup(group.id, true).then(data => {
-      group['members'] = data.userCount
+      group['user_count'] = data.userCount
       this.onAlert({'$alert': {'type' : 'success', 'msg' : 'group_sync_success'}})
     }, () => {
       this.onAlert({'$alert': {'type' : 'danger', 'msg' : 'group_sync_error'}})
