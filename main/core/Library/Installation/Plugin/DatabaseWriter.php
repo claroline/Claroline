@@ -405,6 +405,7 @@ class DatabaseWriter
             $resourceIcon->setRelativeUrl($defaultIcon->getRelativeUrl());
         }
 
+        $resourceIcon->setUuid(uniqid('', true));
         $resourceIcon->setShortcut(false);
         $this->em->persist($resourceIcon);
         $this->im->createShortcutIcon($resourceIcon);
@@ -425,6 +426,7 @@ class DatabaseWriter
         $isNew = false;
         if (null === $resourceIcon) {
             $resourceIcon = new ResourceIcon();
+            $resourceIcon->setUuid(uniqid('', true));
             $resourceIcon->setMimeType('custom/'.$resourceType->getName());
             $isNew = true;
         }

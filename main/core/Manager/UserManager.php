@@ -22,6 +22,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
@@ -86,7 +87,8 @@ class UserManager
      *     "translator"             = @DI\Inject("translator"),
      *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
      *     "validator"              = @DI\Inject("validator"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "fu"                     = @DI\Inject("claroline.utilities.file")
      * })
      */
     public function __construct(
@@ -106,7 +108,8 @@ class UserManager
         TranslatorInterface $translator,
         $uploadsDirectory,
         ValidatorInterface $validator,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        FileUtilities $fu
     ) {
         $this->container = $container;
         $this->groupManager = $groupManager;
@@ -126,6 +129,7 @@ class UserManager
         $this->validator = $validator;
         $this->workspaceManager = $workspaceManager;
         $this->userRepo = $objectManager->getRepository('ClarolineCoreBundle:User');
+        $this->fu = $fu;
     }
 
     /**
@@ -1138,19 +1142,14 @@ class UserManager
      */
     public function uploadAvatar(User $user)
     {
-        if (null !== $user->getPictureFile()) {
-            if (!is_writable($pictureDir = $this->uploadsDirectory.'/pictures/')) {
-                throw new \Exception("{$pictureDir} is not writable");
-            }
-
-            $user->setPicture(
-                sha1(
-                    $user->getPictureFile()->getClientOriginalName()
-                    .$user->getId())
-                    .'.'
-                    .$user->getPictureFile()->guessExtension()
-            );
-            $user->getPictureFile()->move($pictureDir, $user->getPicture());
+        if ($user->getPictureFile()) {
+            $file = $user->getPictureFile();
+            $publicFile = $this->fu->createFile($file, $file->getBasename());
+            $this->fu->createFileUse($publicFile, get_class($user), $user->getGuid());
+            //../.. for legacy compatibility
+            $user->setPicture('../../'.$publicFile->getUrl());
+            $this->objectManager->persist($user);
+            $this->objectManager->flush();
         }
     }
 
@@ -1365,23 +1364,17 @@ class UserManager
         $archive->extractTo($tmpDir);
         $iterator = new \DirectoryIterator($tmpDir);
 
-        foreach ($iterator as $file) {
-            if (!$file->isDot()) {
-                $fileName = basename($file->getPathName());
+        foreach ($iterator as $element) {
+            if (!$element->isDot()) {
+                $fileName = basename($element->getPathName());
                 $username = preg_replace("/\.[^.]+$/", '', $fileName);
                 $user = $this->getUserByUsername($username);
+                $file = new File($element->getPathName());
 
-                if (!is_writable($pictureDir = $this->uploadsDirectory.'/pictures/')) {
-                    throw new \Exception("{$pictureDir} is not writable");
-                }
-
-                $hash = sha1($user->getUsername()
-                    .'.'
-                    .pathinfo($fileName, PATHINFO_EXTENSION)
-                );
-
-                $user->setPicture($hash);
-                rename($file->getPathName(), $pictureDir.$user->getPicture());
+                $publicFile = $this->fu->createFile($file, $file->getBasename());
+                $this->fu->createFileUse($publicFile, get_class($user), $user->getGuid());
+                //../.. for legacy compatibility
+                $user->setPicture('../../'.$publicFile->getUrl());
                 $this->objectManager->persist($user);
             }
         }

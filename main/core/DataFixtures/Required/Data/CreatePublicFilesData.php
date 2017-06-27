@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
+use Claroline\CoreBundle\Library\Installation\Updater\Updater100000;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 
 class CreatePublicFilesData implements RequiredFixture
@@ -33,8 +34,13 @@ class CreatePublicFilesData implements RequiredFixture
             $fileSystem->mkdir($publicFilesDir, 0775);
             $fileSystem->chmod($publicFilesDir, 0775, 0000, true);
         }
+
         if (!$fileSystem->exists($dataWebDir)) {
             $fileSystem->symlink($publicFilesDir, $dataWebDir);
         }
+
+        //when everything concerning files is done properly, these lines should be removed
+        $updater = new Updater100000($this->container);
+        $updater->moveUploadsDirectory();
     }
 }

@@ -33,6 +33,7 @@ class LoadResourceImagesData implements RequiredFixture
             $rimg->setRelativeUrl($coreIconWebDirRelativePath.$resourceImage[0]);
             $rimg->setMimeType($resourceImage[1]);
             $rimg->setShortcut(false);
+            $rimg->setUuid(uniqid('', true));
             $manager->persist($rimg);
 
             $this->container->get('claroline.manager.icon_manager')

@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -28,6 +29,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Course
 {
+    use UuidTrait;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id

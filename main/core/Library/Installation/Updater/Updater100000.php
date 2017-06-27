@@ -15,7 +15,11 @@ namespace Claroline\CoreBundle\Library\Installation\Updater;
 use Claroline\CoreBundle\DataFixtures\PostInstall\Data\PostLoadRolesData;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\InstallationBundle\Updater\Updater;
+use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
 
 class Updater100000 extends Updater
 {
@@ -23,7 +27,7 @@ class Updater100000 extends Updater
     protected $logger;
     private $om;
 
-    public function __construct(ContainerInterface $container, $logger)
+    public function __construct(ContainerInterface $container, $logger = null)
     {
         $this->container = $container;
         $this->logger = $logger;
@@ -37,6 +41,7 @@ class Updater100000 extends Updater
         $this->setResourceNodeProperties();
         $this->rebuildMaskAndMenus();
         $this->enableWorkspaceList();
+        $this->moveUploadsDirectory();
     }
 
     public function enableWorkspaceList()
@@ -108,5 +113,60 @@ class Updater100000 extends Updater
         $this->container->get('claroline.plugin.installer')->setLogger($this->logger);
         $this->container->get('claroline.plugin.installer')->updateAllConfigurations();
         $this->log('On older plateforms, resource permissions might have changed !');
+    }
+
+    public function moveUploadsDirectory()
+    {
+        $this->saveLogos();
+        $this->log('Moving file storage directories...');
+        $toMove = ['uploads', 'themes'];
+
+        $fs = new FileSystem();
+
+        foreach ($toMove as $directory) {
+            if ($this->logger) {
+                $this->log('Moving '.$directory.'...');
+            }
+
+            try {
+                $fs->rename(
+                  $this->container->getParameter('claroline.param.web_dir').DIRECTORY_SEPARATOR.$directory,
+                  $this->container->getParameter('claroline.param.data_web_dir').DIRECTORY_SEPARATOR.$directory
+              );
+            } catch (IOException $e) {
+                if ($this->logger) {
+                    $this->log('Directory '.$this->container->getParameter('claroline.param.data_web_dir').DIRECTORY_SEPARATOR.$directory.' already exists...', LogLevel::ERROR);
+                }
+            }
+
+            $this->log('Removing '.$this->container->getParameter('claroline.param.web_dir').DIRECTORY_SEPARATOR.$directory.'...');
+            $fs->remove($this->container->getParameter('claroline.param.web_dir').DIRECTORY_SEPARATOR.$directory);
+
+            try {
+                $fs->symlink(
+                  $this->container->getParameter('claroline.param.data_web_dir').DIRECTORY_SEPARATOR.$directory,
+                  $this->container->getParameter('claroline.param.web_dir').DIRECTORY_SEPARATOR.$directory
+              );
+            } catch (IOException $e) {
+                if ($this->logger) {
+                    $this->log('Cannot build new symlinks...', LogLevel::ERROR);
+                    $this->log($e->getMessage(), LogLevel::ERROR);
+                }
+            }
+        }
+    }
+
+    private function saveLogos()
+    {
+        $logos = new \DirectoryIterator($this->container->getParameter('claroline.param.logos_directory'));
+        $logoService = $this->container->get('claroline.common.logo_service');
+
+        foreach ($logos as $logo) {
+            if ($logo->isFile()) {
+                $this->log('Saving logo '.$logo->getBasename().'...');
+                $file = new File($logo->getPathname());
+                $logoService->createLogo($file);
+            }
+        }
     }
 }

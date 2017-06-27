@@ -2,9 +2,10 @@
 
 namespace Icap\BadgeBundle\Form\Handler;
 
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
+use Doctrine\ORM\EntityManager;
 use Icap\BadgeBundle\Entity\Badge;
 use Icap\BadgeBundle\Manager\BadgeManager;
-use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -33,13 +34,21 @@ class BadgeHandler
 
     protected $uploadDir;
 
-    public function __construct(FormInterface $form, Request $request, EntityManager $entityManager, BadgeManager $badgeManager, $webDir)
-    {
+    public function __construct(
+       FormInterface $form,
+       Request $request,
+       EntityManager $entityManager,
+       BadgeManager $badgeManager,
+       $webDir,
+       FileUtilities $fu
+     ) {
         $this->form = $form;
         $this->request = $request;
         $this->entityManager = $entityManager;
         $this->badgeManager = $badgeManager;
+        $this->webDir = $webDir;
         $this->uploadDir = $webDir.DIRECTORY_SEPARATOR.Badge::getUploadDir();
+        $this->fu = $fu;
     }
 
     /**
@@ -55,6 +64,7 @@ class BadgeHandler
             $this->form->submit($this->request);
 
             if ($this->form->isValid()) {
+                $badge->setUuid(uniqid('', true));
                 $this->handleUpload($this->form->get('file')->getData(), $badge);
                 $this->entityManager->persist($badge);
                 $this->entityManager->flush();
@@ -147,25 +157,10 @@ class BadgeHandler
 
     private function handleUpload(UploadedFile $file = null, Badge $badge)
     {
-        $ds = DIRECTORY_SEPARATOR;
-
-        if ($file !== null) {
-            if (file_exists($this->uploadDir.$ds.$badge->getImagePath())) {
-                @unlink($this->uploadDir.$ds.$badge->getImagePath());
-            }
-            $filename = sha1(uniqid(mt_rand(), true)).'.'.$file->guessExtension();
-            $badge->setImagePath($filename);
-            $realpathUploadRootDir = realpath($this->uploadDir);
-
-            if (false === $realpathUploadRootDir) {
-                throw new \Exception(
-                    sprintf(
-                        "Invalid upload root dir '%s'for uploading badge images.",
-                        $this->uploadDir
-                    )
-                );
-            }
-            $file->move($this->uploadDir, $filename);
+        if ($file) {
+            $publicFile = $this->fu->createFile($file, $file->getBasename());
+            $this->fu->createFileUse($publicFile, 'Icap\BadgeBundle\Entity\Badge', $badge->getUuid());
+            $badge->setImagePath($publicFile->getUrl());
         }
     }
 }

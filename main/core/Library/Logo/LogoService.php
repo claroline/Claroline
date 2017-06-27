@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Logo;
 
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation\Secure;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * @DI\Service("claroline.common.logo_service")
@@ -24,26 +25,37 @@ class LogoService
     private $path;
     private $fileTypes;
     private $finder;
+    private $fu;
+
+    const PUBLIC_FILE_TYPE = 'platform-logo';
 
     /**
      * @DI\InjectParams({
+     *     "fu"   = @DI\Inject("claroline.utilities.file"),
      *     "path" = @DI\Inject("%claroline.param.logos_directory%")
      * })
      */
-    public function __construct($path)
+    public function __construct($path, FileUtilities $fu)
     {
         $this->path = $path.'/';
         $this->fileTypes = '/\.jpg$|\.png$|\.gif$|\.jpeg$/';
         $this->finder = new Finder();
+        $this->fu = $fu;
     }
 
     public function listLogos()
     {
-        $logos = array();
+        $logos = [];
         $files = $this->finder->files()->in($this->path)->name($this->fileTypes);
 
         foreach ($files as $file) {
             $logos[] = $file->getRelativePathname();
+        }
+
+        $publicLogos = $this->fu->getPublicFileByType(self::PUBLIC_FILE_TYPE);
+
+        foreach ($publicLogos as $publicLogo) {
+            $logos[] = $publicLogo->getUrl();
         }
 
         return $logos;
@@ -52,11 +64,10 @@ class LogoService
     /**
      * @Secure(roles="ROLE_ADMIN")
      */
-    public function createLogo(UploadedFile $file)
+    public function createLogo(File $file)
     {
-        if ($file->getMimeType() && strpos($file->getMimeType(), 'image/') === 0) {
-            $file->move($this->path, uniqid().'.'.$file->guessExtension());
-        }
+        $publicFile = $this->fu->createFile($file, $file->getBasename(), null, null, null, self::PUBLIC_FILE_TYPE);
+        $this->fu->createFileUse($publicFile, 'none', 'none');
     }
 
     /**

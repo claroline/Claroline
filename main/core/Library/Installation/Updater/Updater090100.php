@@ -41,6 +41,7 @@ class Updater090100 extends Updater
             $this->fileSystem->mkdir($this->publicFilesDir, 0775);
             $this->fileSystem->chmod($this->publicFilesDir, 0775, 0000, true);
         }
+
         if (!$this->fileSystem->exists($this->dataWebDir)) {
             $this->log('Creating symlink to public directory of files directory in web directory...');
             $this->fileSystem->symlink($this->publicFilesDir, $this->dataWebDir);

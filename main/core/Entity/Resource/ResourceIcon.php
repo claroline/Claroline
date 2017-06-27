@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -20,6 +21,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class ResourceIcon
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -41,6 +44,7 @@ class ResourceIcon
      * @ORM\Column(name="relative_url", nullable=true)
      *
      * The url from the /web folder.
+     * This is a "legacy parameter". Now we use the PublicFileUse entity.
      */
     protected $relativeUrl;
 

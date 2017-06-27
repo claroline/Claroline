@@ -81,7 +81,6 @@ class FileUtilities
         $objectName = null,
         $sourceType = null
     ) {
-        $user = $this->tokenStorage->getToken()->getUser();
         $fileName = $name ? $name : $tmpFile->getFilename();
         $directoryName = $this->getActiveDirectoryName();
         $size = filesize($tmpFile);
@@ -101,9 +100,11 @@ class FileUtilities
         $publicFile->setUrl($url);
         $publicFile->setSourceType($sourceType);
 
-        if ($user !== 'anon.') {
+        if ($this->tokenStorage->getToken() && $user = $this->tokenStorage->getToken()->getUser() !== 'anon.') {
+            $user = $this->tokenStorage->getToken()->getUser();
             $publicFile->setCreator($user);
         }
+
         $tmpFile->move($this->filesDir.DIRECTORY_SEPARATOR.$prefix, $hashName);
         $this->om->persist($publicFile);
 
@@ -165,9 +166,11 @@ class FileUtilities
         $publicFile->setUrl($url);
         $publicFile->setSourceType($sourceType);
 
-        if ($user !== 'anon.') {
+        if ($this->tokenStorage->getToken() && $user = $this->tokenStorage->getToken()->getUser() !== 'anon.') {
+            $user = $this->tokenStorage->getToken()->getUser();
             $publicFile->setCreator($user);
         }
+
         $this->fileSystem->dumpFile($url, $dataBin);
         $mimeType = mime_content_type($url);
         $publicFile->setMimeType($mimeType);
@@ -233,6 +236,12 @@ class FileUtilities
             }
         }
 
+        $newDir = $this->publicFilesDir.DIRECTORY_SEPARATOR.$activeDirectoryName;
+
+        if (!$this->fileSystem->exists($newDir)) {
+            $this->fileSystem->mkdir($newDir);
+        }
+
         return $activeDirectoryName;
     }
 
@@ -252,5 +261,10 @@ class FileUtilities
         }
 
         return $next;
+    }
+
+    public function getPublicFileByType($type)
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:File\PublicFile')->findBySourceType($type);
     }
 }

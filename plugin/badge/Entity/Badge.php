@@ -2,6 +2,7 @@
 
 namespace Icap\BadgeBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Rule\Rulable;
@@ -33,6 +34,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Badge extends Rulable
 {
     use SoftDeleteableEntity;
+    use UuidTrait;
 
     const EXPIRE_PERIOD_DAY = 0;
     const EXPIRE_PERIOD_DAY_LABEL = 'day';
@@ -721,7 +723,15 @@ class Badge extends Rulable
      */
     public function getWebPath()
     {
-        return (null === $this->imagePath) ? null : self::getUploadDir().DIRECTORY_SEPARATOR.$this->imagePath;
+        if ($this->imagePath) {
+            //legacy
+          if (file_exists(self::getUploadDir().DIRECTORY_SEPARATOR.$this->imagePath)) {
+              return self::getUploadDir().DIRECTORY_SEPARATOR.$this->imagePath;
+            //new and much better (right ? :))
+          } else {
+              return $this->imagePath;
+          }
+        }
     }
 
     /**

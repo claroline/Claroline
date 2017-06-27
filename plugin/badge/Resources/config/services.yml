@@ -35,6 +35,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@icap_badge.manager.badge"
             - "%claroline.param.web_directory%"
+            - "@claroline.utilities.file"
     icap_badge.form_handler.badge.workspace:
         class: "%icap.form_handler.badge.class%"
         scope: request

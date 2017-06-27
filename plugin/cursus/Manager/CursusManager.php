@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -131,6 +132,7 @@ class CursusManager
     private $sessionGroupRepo;
     private $sessionQueueRepo;
     private $sessionUserRepo;
+    private $fu;
 
 /**
  * @DI\InjectParams({
@@ -156,7 +158,8 @@ class CursusManager
  *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
  *     "utils"                 = @DI\Inject("claroline.security.utilities"),
  *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager"),
- *     "pdfManager"            = @DI\Inject("claroline.manager.pdf_manager")
+ *     "pdfManager"            = @DI\Inject("claroline.manager.pdf_manager"),
+ *     "fu"                    = @DI\Inject("claroline.utilities.file")
  * })
  */
     // why no claroline dispatcher ?
@@ -183,6 +186,7 @@ class CursusManager
         Utilities $utils,
         WorkspaceManager $workspaceManager,
         PdfManager $pdfManager,
+        FileUtilities $fu,
         $clarolineDispatcher
     ) {
         $this->archiveDir = $container->getParameter('claroline.param.platform_generated_archive_path');
@@ -210,6 +214,7 @@ class CursusManager
         $this->workspaceManager = $workspaceManager;
         $this->clarolineDispatcher = $clarolineDispatcher;
         $this->pdfManager = $pdfManager;
+        $this->fu = $fu;
 
         $this->courseRepo = $om->getRepository('ClarolineCursusBundle:Course');
         $this->courseQueueRepo = $om->getRepository('ClarolineCursusBundle:CourseRegistrationQueue');
@@ -271,9 +276,13 @@ class CursusManager
         $cursus->setCourse($course);
         $cursus->setDescription($description);
         $cursus->setBlocking($blocking);
-        $cursus->setIcon($icon);
+        $course->refreshUuid();
         $cursus->setWorkspace($workspace);
         $cursus->setDetails(['color' => $color]);
+        if ($icon) {
+            $icon = $this->saveIcon($icon, $cursus);
+            $cursus->setIcon($icon);
+        }
         $orderMax = is_null($parent) ? $this->getLastRootCursusOrder() : $this->getLastCursusOrderByParent($parent);
         $order = is_null($orderMax) ? 1 : intval($orderMax) + 1;
         $cursus->setCursusOrder($order);
@@ -357,6 +366,7 @@ class CursusManager
         array $organizations = []
     ) {
         $course = new Course();
+        $course->refreshUuid();
         $course->setTitle($title);
         $course->setCode($code);
         $course->setPublicRegistration($publicRegistration);
@@ -364,7 +374,12 @@ class CursusManager
         $course->setRegistrationValidation($registrationValidation);
         $course->setWorkspaceModel($workspaceModel);
         $course->setWorkspace($workspace);
-        $course->setIcon($icon);
+
+        if ($icon) {
+            $icon = $this->saveIcon($icon, $course);
+            $course->setIcon($icon);
+        }
+
         $course->setUserValidation($userValidation);
         $course->setOrganizationValidation($organizationValidation);
         $course->setDefaultSessionDuration($defaultSessionDuration);
@@ -1858,15 +1873,16 @@ class CursusManager
         return $currentCode;
     }
 
-    public function saveIcon(UploadedFile $tmpFile)
+    public function saveIcon(UploadedFile $tmpFile, $object)
     {
-        $extension = $tmpFile->getClientOriginalExtension();
-        $hashName = $this->container->get('claroline.utilities.misc')->generateGuid().
-            '.'.
-            $extension;
-        $tmpFile->move($this->iconsDirectory, $hashName);
+        if (!method_exists($object, 'getUuid')) {
+            throw new \Exception('Object '.$object->__toString().' has no method getUuid');
+        }
 
-        return $hashName;
+        $publicFile = $this->fu->createFile($tmpFile, $tmpFile->getBasename());
+        $this->fu->createFileUse($publicFile, get_class($object), $object->getUuid());
+
+        return '../../'.$publicFile->getUrl();
     }
 
     public function changeIcon(Course $course, UploadedFile $tmpFile)
@@ -2277,9 +2293,11 @@ class CursusManager
             if (isset($data['icon'])) {
                 $course->setIcon($data['icon']);
             }
+
             foreach ($organizations as $organization) {
                 $course->addOrganization($organization);
             }
+
             $this->om->persist($course);
 
             if ($withIndex) {

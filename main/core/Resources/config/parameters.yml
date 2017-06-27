@@ -13,7 +13,7 @@ parameters:
     claroline.param.web_directory: "%claroline.param.root_directory%/web"
     claroline.param.web_js_directory: "%claroline.param.web_directory%/js"
     claroline.param.web_bundles_directory: "%claroline.param.web_directory%/bundles"
-    claroline.param.thumbnails_directory: "%claroline.param.uploads_directory%/thumbnails"
+    claroline.param.thumbnails_directory: "%claroline.param.uploads_directory%/thumbnails" #legacy parameter. Used for some update
     claroline.param.uploads_directory: "%claroline.param.web_dir%/uploads"
     claroline.param.logos_directory: "%claroline.param.uploads_directory%/logos"
     claroline.param.relative_thumbnail_base_path: "uploads/thumbnails"

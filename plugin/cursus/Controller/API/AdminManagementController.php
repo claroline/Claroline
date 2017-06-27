@@ -154,7 +154,6 @@ class AdminManagementController extends Controller
     {
         $cursusDatas = $this->request->request->get('cursusDatas', false);
         $worskpace = null;
-        $icon = null;
 
         if ($cursusDatas['workspace']) {
             $worskpace = $this->workspaceManager->getWorkspaceById($cursusDatas['workspace']);
@@ -162,9 +161,6 @@ class AdminManagementController extends Controller
         $organizations = isset($cursusDatas['organizations']) && count($cursusDatas['organizations']) > 0 ?
             $this->organizationManager->getOrganizationsByIds($cursusDatas['organizations']) :
             [];
-        if ($this->request->files->get('cursusDatas')['icon']) {
-            $icon = $this->cursusManager->saveIcon($this->request->files->get('cursusDatas')['icon']);
-        }
         $blocking = is_bool($cursusDatas['blocking']) ? $cursusDatas['blocking'] : $cursusDatas['blocking'] === 'true';
         $createdCursus = $this->cursusManager->createCursus(
             $cursusDatas['title'],
@@ -173,11 +169,12 @@ class AdminManagementController extends Controller
             null,
             $cursusDatas['description'],
             $blocking,
-            $icon,
+            $this->request->files->get('cursusDatas')['icon'],
             $cursusDatas['color'],
             $worskpace,
             $organizations
         );
+
         $serializedCursus = $this->serializer->serialize(
             $createdCursus,
             'json',
@@ -207,14 +204,11 @@ class AdminManagementController extends Controller
         $this->cursusManager->checkCursusAccess($user, $parent);
         $cursusDatas = $this->request->request->get('cursusDatas', false);
         $worskpace = null;
-        $icon = null;
 
         if ($cursusDatas['workspace']) {
             $worskpace = $this->workspaceManager->getWorkspaceById($cursusDatas['workspace']);
         }
-        if ($this->request->files->get('cursusDatas')['icon']) {
-            $icon = $this->cursusManager->saveIcon($this->request->files->get('cursusDatas')['icon']);
-        }
+
         $blocking = is_bool($cursusDatas['blocking']) ? $cursusDatas['blocking'] : $cursusDatas['blocking'] === 'true';
         $createdCursus = $this->cursusManager->createCursus(
             $cursusDatas['title'],
@@ -223,7 +217,7 @@ class AdminManagementController extends Controller
             null,
             $cursusDatas['description'],
             $blocking,
-            $icon,
+            $this->request->files->get('cursusDatas')['icon'],
             $cursusDatas['color'],
             $worskpace
         );
@@ -269,7 +263,7 @@ class AdminManagementController extends Controller
             $cursus->setWorkspace($worskpace);
         }
         if ($this->request->files->get('cursusDatas')['icon']) {
-            $icon = $this->cursusManager->saveIcon($this->request->files->get('cursusDatas')['icon']);
+            $icon = $this->cursusManager->saveIcon($this->request->files->get('cursusDatas')['icon'], $cursus);
             $cursus->setIcon($icon);
         }
         if (empty($cursus->getParent())) {
@@ -410,7 +404,6 @@ class AdminManagementController extends Controller
         $courseDatas = $this->request->request->get('courseDatas', false);
         $worskpace = null;
         $worskpaceModel = null;
-        $icon = null;
         $publicRegistration = is_bool($courseDatas['publicRegistration']) ?
             $courseDatas['publicRegistration'] :
             $courseDatas['publicRegistration'] === 'true';
@@ -430,7 +423,6 @@ class AdminManagementController extends Controller
             $courseDatas['withSessionEvent'] :
             $courseDatas['withSessionEvent'] === 'true';
         if ($this->request->files->get('courseDatas')['icon']) {
-            $icon = $this->cursusManager->saveIcon($this->request->files->get('courseDatas')['icon']);
         }
         $validators = isset($courseDatas['validators']) && count($courseDatas['validators']) > 0 ?
             $this->userManager->getUsersByIds($courseDatas['validators']) :
@@ -449,7 +441,7 @@ class AdminManagementController extends Controller
             $courseDatas['learnerRoleName'],
             $worskpaceModel,
             $worskpace,
-            $icon,
+            $this->request->files->get('courseDatas')['icon'],
             $userValidation,
             $organizationValidation,
             $courseDatas['maxUsers'],
@@ -484,7 +476,6 @@ class AdminManagementController extends Controller
         $courseDatas = $this->request->request->get('courseDatas', false);
         $worskpace = null;
         $worskpaceModel = null;
-        $icon = null;
         $publicRegistration = is_bool($courseDatas['publicRegistration']) ?
             $courseDatas['publicRegistration'] :
             $courseDatas['publicRegistration'] === 'true';
@@ -508,11 +499,9 @@ class AdminManagementController extends Controller
             $worskpace = $this->workspaceManager->getWorkspaceById($courseDatas['workspace']);
         }
         if ($courseDatas['workspaceModel']) {
-            $worskpaceModel = $this->workspaceManager->getOneByName($courseDatas['workspaceModel']);
+            $worskpaceModel = $this->workspaceManager->getOneByCode($courseDatas['workspaceModel']);
         }
-        if ($this->request->files->get('courseDatas')['icon']) {
-            $icon = $this->cursusManager->saveIcon($this->request->files->get('courseDatas')['icon']);
-        }
+
         $validators = isset($courseDatas['validators']) && count($courseDatas['validators']) > 0 ?
             $this->userManager->getUsersByIds($courseDatas['validators']) :
             [];
@@ -530,7 +519,7 @@ class AdminManagementController extends Controller
             $courseDatas['learnerRoleName'],
             $worskpaceModel,
             $worskpace,
-            $icon,
+            $this->request->files->get('courseDatas')['icon'],
             $userValidation,
             $organizationValidation,
             $courseDatas['maxUsers'],
@@ -639,7 +628,7 @@ class AdminManagementController extends Controller
             $course->setWorkspaceModel(null);
         }
         if ($this->request->files->get('courseDatas')['icon']) {
-            $icon = $this->cursusManager->saveIcon($this->request->files->get('courseDatas')['icon']);
+            $icon = $this->cursusManager->saveIcon($this->request->files->get('courseDatas')['icon'], $course);
             $course->setIcon($icon);
         }
         $course->setUserValidation($userValidation);
