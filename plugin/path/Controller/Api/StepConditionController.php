@@ -53,7 +53,7 @@ class StepConditionController extends Controller
      * StepConditionController constructor.
      *
      * @DI\InjectParams({
-     *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
+     *     "objectManager"          = @DI\Inject("claroline.persistence.object_manager"),
      *     "tokenStorage"           = @DI\Inject("security.token_storage"),
      *     "eventDispatcher"        = @DI\Inject("event_dispatcher"),
      *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),

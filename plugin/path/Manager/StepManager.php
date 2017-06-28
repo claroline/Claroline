@@ -269,7 +269,9 @@ class StepManager
         $duration = !empty($stepStructure->duration) ? $stepStructure->duration : null;
         $parameters->setMaxDuration($duration);
 
-        $withTutor = !empty($stepStructure->withTutor) ? $stepStructure->withTutor : false;
+        $withTutor = !empty($stepStructure->withTutor) ?
+            filter_var($stepStructure->withTutor, FILTER_VALIDATE_BOOLEAN) :
+            false;
         $parameters->setWithTutor($withTutor);
 
         $who = !empty($stepStructure->who) ? $stepStructure->who : null;

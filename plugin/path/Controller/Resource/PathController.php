@@ -2,7 +2,7 @@
 
 namespace Innova\PathBundle\Controller\Resource;
 
-use Blameable\Fixture\Document\User;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Innova\PathBundle\Entity\Path\Path;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
