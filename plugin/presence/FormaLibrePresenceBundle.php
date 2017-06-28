@@ -2,11 +2,11 @@
 
 namespace FormaLibre\PresenceBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use FormaLibre\PresenceBundle\Installation\AdditionalInstaller;
 
-class FormaLibrePresenceBundle extends PluginBundle
+class FormaLibrePresenceBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

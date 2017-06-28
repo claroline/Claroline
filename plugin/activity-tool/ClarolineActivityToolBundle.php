@@ -11,12 +11,12 @@
 
 namespace Claroline\ActivityToolBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
 /**
  * Bundle class.
  */
-class ClarolineActivityToolBundle extends PluginBundle
+class ClarolineActivityToolBundle extends DistributionPluginBundle
 {
     public function hasMigrations()
     {

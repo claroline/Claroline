@@ -25,7 +25,7 @@ use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\Widget\Widget;
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\CoreBundle\Manager\IconManager;
 use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\MaskManager;
@@ -96,10 +96,10 @@ class DatabaseWriter
     /**
      * Persists a plugin in the database.
      *
-     * @param PluginBundle $pluginBundle
-     * @param array        $pluginConfiguration
+     * @param DistributionPluginBundle $pluginBundle
+     * @param array                    $pluginConfiguration
      */
-    public function insert(PluginBundle $pluginBundle, array $pluginConfiguration)
+    public function insert(DistributionPluginBundle $pluginBundle, array $pluginConfiguration)
     {
         $pluginEntity = new Plugin();
         $pluginEntity->setVendorName($pluginBundle->getVendorName());
@@ -114,12 +114,12 @@ class DatabaseWriter
     }
 
     /**
-     * @param PluginBundle $pluginBundle
-     * @param array        $pluginConfiguration
+     * @param DistributionPluginBundle $pluginBundle
+     * @param array                    $pluginConfiguration
      *
      * @throws \Exception
      */
-    public function update(PluginBundle $pluginBundle, array $pluginConfiguration)
+    public function update(DistributionPluginBundle $pluginBundle, array $pluginConfiguration)
     {
         /** @var Plugin $plugin */
         $plugin = $this->em->getRepository('ClarolineCoreBundle:Plugin')->findOneBy(
@@ -172,11 +172,11 @@ class DatabaseWriter
     /**
      * Checks if a plugin is persisted in the database.
      *
-     * @param \Claroline\CoreBundle\Library\PluginBundle $plugin
+     * @param \Claroline\CoreBundle\Library\DistributionPluginBundle $plugin
      *
      * @return bool
      */
-    public function isSaved(PluginBundle $plugin)
+    public function isSaved(DistributionPluginBundle $plugin)
     {
         if ($this->getPluginByFqcn(get_class($plugin)) !== null) {
             return true;
@@ -200,11 +200,11 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $processedConfiguration
-     * @param Plugin       $plugin
-     * @param PluginBundle $pluginBundle
+     * @param array                    $processedConfiguration
+     * @param Plugin                   $plugin
+     * @param DistributionPluginBundle $pluginBundle
      */
-    private function persistConfiguration($processedConfiguration, Plugin $plugin, PluginBundle $pluginBundle)
+    private function persistConfiguration($processedConfiguration, Plugin $plugin, DistributionPluginBundle $pluginBundle)
     {
         foreach ($processedConfiguration['resources'] as $resource) {
             $this->persistResourceTypes($resource, $plugin, $pluginBundle);
@@ -239,11 +239,11 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $processedConfiguration
-     * @param Plugin       $plugin
-     * @param PluginBundle $pluginBundle
+     * @param array                    $processedConfiguration
+     * @param Plugin                   $plugin
+     * @param DistributionPluginBundle $pluginBundle
      */
-    private function updateConfiguration($processedConfiguration, Plugin $plugin, PluginBundle $pluginBundle)
+    private function updateConfiguration($processedConfiguration, Plugin $plugin, DistributionPluginBundle $pluginBundle)
     {
         foreach ($processedConfiguration['resources'] as $resourceConfiguration) {
             $this->updateResourceTypes($resourceConfiguration, $plugin, $pluginBundle);
@@ -278,13 +278,13 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $resourceConfiguration
-     * @param Plugin       $plugin
-     * @param PluginBundle $pluginBundle
+     * @param array                    $resourceConfiguration
+     * @param Plugin                   $plugin
+     * @param DistributionPluginBundle $pluginBundle
      *
      * @return ResourceType
      */
-    private function updateResourceTypes($resourceConfiguration, Plugin $plugin, PluginBundle $pluginBundle)
+    private function updateResourceTypes($resourceConfiguration, Plugin $plugin, DistributionPluginBundle $pluginBundle)
     {
         $this->log('Update resource type '.$resourceConfiguration['name']);
         $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')
@@ -328,13 +328,13 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $widgetConfiguration
-     * @param PluginBundle $pluginBundle
-     * @param Plugin       $plugin
+     * @param array                    $widgetConfiguration
+     * @param DistributionPluginBundle $pluginBundle
+     * @param Plugin                   $plugin
      */
     private function updateWidget(
         $widgetConfiguration,
-        PluginBundle $pluginBundle,
+        DistributionPluginBundle $pluginBundle,
         Plugin $plugin,
         array $roles = []
     ) {
@@ -375,11 +375,11 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $resource
-     * @param ResourceType $resourceType
-     * @param PluginBundle $pluginBundle
+     * @param array                    $resource
+     * @param ResourceType             $resourceType
+     * @param DistributionPluginBundle $pluginBundle
      */
-    private function persistIcons(array $resource, ResourceType $resourceType, PluginBundle $pluginBundle)
+    private function persistIcons(array $resource, ResourceType $resourceType, DistributionPluginBundle $pluginBundle)
     {
         $resourceIcon = new ResourceIcon();
         $resourceIcon->setMimeType('custom/'.$resourceType->getName());
@@ -414,11 +414,11 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $resource
-     * @param ResourceType $resourceType
-     * @param PluginBundle $pluginBundle
+     * @param array                    $resource
+     * @param ResourceType             $resourceType
+     * @param DistributionPluginBundle $pluginBundle
      */
-    private function updateIcons(array $resource, ResourceType $resourceType, PluginBundle $pluginBundle)
+    private function updateIcons(array $resource, ResourceType $resourceType, DistributionPluginBundle $pluginBundle)
     {
         $resourceIcon = $this->em
             ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
@@ -589,13 +589,13 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $resourceConfiguration
-     * @param Plugin       $plugin
-     * @param PluginBundle $pluginBundle
+     * @param array                    $resourceConfiguration
+     * @param Plugin                   $plugin
+     * @param DistributionPluginBundle $pluginBundle
      *
      * @return ResourceType
      */
-    private function persistResourceTypes($resourceConfiguration, Plugin $plugin, PluginBundle $pluginBundle)
+    private function persistResourceTypes($resourceConfiguration, Plugin $plugin, DistributionPluginBundle $pluginBundle)
     {
         $this->log('Adding resource type '.$resourceConfiguration['name']);
         $resourceType = new ResourceType();
@@ -634,11 +634,11 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $widgetConfiguration
-     * @param Plugin       $plugin
-     * @param PluginBundle $pluginBundle
+     * @param array                    $widgetConfiguration
+     * @param Plugin                   $plugin
+     * @param DistributionPluginBundle $pluginBundle
      */
-    private function createWidget($widgetConfiguration, Plugin $plugin, PluginBundle $pluginBundle, array $roles = [])
+    private function createWidget($widgetConfiguration, Plugin $plugin, DistributionPluginBundle $pluginBundle, array $roles = [])
     {
         $widget = new Widget();
 
@@ -649,12 +649,12 @@ class DatabaseWriter
     }
 
     /**
-     * @param array        $widgetConfiguration
-     * @param Plugin       $plugin
-     * @param PluginBundle $pluginBundle
-     * @param Widget       $widget
+     * @param array                    $widgetConfiguration
+     * @param Plugin                   $plugin
+     * @param DistributionPluginBundle $pluginBundle
+     * @param Widget                   $widget
      */
-    private function persistWidget($widgetConfiguration, Plugin $plugin, PluginBundle $pluginBundle, Widget $widget, $withDisplay = true)
+    private function persistWidget($widgetConfiguration, Plugin $plugin, DistributionPluginBundle $pluginBundle, Widget $widget, $withDisplay = true)
     {
         $widget->setName($widgetConfiguration['name']);
         $widget->setConfigurable($widgetConfiguration['is_configurable']);

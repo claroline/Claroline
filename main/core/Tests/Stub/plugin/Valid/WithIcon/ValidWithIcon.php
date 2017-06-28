@@ -11,8 +11,8 @@
 
 namespace Valid\WithIcon;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ValidWithIcon extends PluginBundle
+class ValidWithIcon extends DistributionPluginBundle
 {
 }

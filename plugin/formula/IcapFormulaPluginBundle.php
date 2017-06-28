@@ -2,7 +2,7 @@
 
 namespace Icap\FormulaPluginBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Icap\FormulaPluginBundle\Installation\AdditionalInstaller;
 
@@ -10,7 +10,7 @@ use Icap\FormulaPluginBundle\Installation\AdditionalInstaller;
  * Bundle class.
  * Uncomment if necessary.
  */
-class IcapFormulaPluginBundle extends PluginBundle
+class IcapFormulaPluginBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

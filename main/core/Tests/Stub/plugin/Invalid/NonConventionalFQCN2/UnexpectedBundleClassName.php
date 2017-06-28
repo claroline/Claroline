@@ -11,9 +11,9 @@
 
 namespace Invalid\NonConventionalFQCN2;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class UnexpectedBundleClassName extends PluginBundle
+class UnexpectedBundleClassName extends DistributionPluginBundle
 {
     /*
      * Invalid because the class name is not the concatenation of the vendor and bundle names

@@ -11,9 +11,9 @@
 
 namespace Invalid\UnloadableRoutingResource1;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidUnloadableRoutingResource1 extends PluginBundle
+class InvalidUnloadableRoutingResource1 extends DistributionPluginBundle
 {
     public function getRoutingResourcesPaths()
     {

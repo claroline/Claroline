@@ -11,8 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Composer\Package\PackageInterface;
-
 /**
  * Holds the details of an install/update operation, such as the type
  * of the operation, the original package, the target version, etc.
@@ -28,7 +26,7 @@ class Operation
     private $fromVersion;
     private $toVersion;
 
-    public function __construct($type, PackageInterface $package, $bundleFqcn)
+    public function __construct($type, $package, $bundleFqcn)
     {
         if (!in_array($type, [self::INSTALL, self::UPDATE])) {
             throw new \InvalidArgumentException(

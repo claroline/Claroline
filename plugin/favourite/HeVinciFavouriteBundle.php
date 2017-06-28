@@ -2,11 +2,11 @@
 
 namespace HeVinci\FavouriteBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use HeVinci\FavouriteBundle\Installation\AdditionalInstaller;
 
-class HeVinciFavouriteBundle extends PluginBundle
+class HeVinciFavouriteBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

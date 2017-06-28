@@ -11,8 +11,8 @@
 
 namespace Valid\WithWidgets;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ValidWithWidgets extends PluginBundle
+class ValidWithWidgets extends DistributionPluginBundle
 {
 }

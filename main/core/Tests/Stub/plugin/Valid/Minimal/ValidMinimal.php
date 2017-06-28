@@ -11,8 +11,8 @@
 
 namespace Valid\Minimal;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ValidMinimal extends PluginBundle
+class ValidMinimal extends DistributionPluginBundle
 {
 }

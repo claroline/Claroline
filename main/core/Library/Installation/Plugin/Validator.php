@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use InvalidArgumentException;
-use Claroline\CoreBundle\Library\PluginBundle;
 
 /**
  * This class is used to perform various validation checks upon a plugin,
@@ -52,13 +52,13 @@ class Validator
     /**
      * Validates a plugin.
      *
-     * @param PluginBundle $plugin
+     * @param DistributionPluginBundle $plugin
      *
      * @return array[ValidationError]
      */
-    public function validate(PluginBundle $plugin)
+    public function validate(DistributionPluginBundle $plugin)
     {
-        $validationErrors = array();
+        $validationErrors = [];
 
         foreach ($this->checkers as $checker) {
             if (null !== $errors = $checker->check($plugin, $this->isInUpdateMode())) {

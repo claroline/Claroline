@@ -11,8 +11,8 @@
 
 namespace Valid\WithTheme;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ValidWithTheme extends PluginBundle
+class ValidWithTheme extends DistributionPluginBundle
 {
 }

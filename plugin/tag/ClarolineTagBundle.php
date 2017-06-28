@@ -11,9 +11,9 @@
 
 namespace Claroline\TagBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ClarolineTagBundle extends PluginBundle
+class ClarolineTagBundle extends DistributionPluginBundle
 {
     public function hasMigrations()
     {

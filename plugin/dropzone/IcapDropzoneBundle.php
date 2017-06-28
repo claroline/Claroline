@@ -8,9 +8,9 @@
 
 namespace Icap\DropzoneBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class IcapDropzoneBundle extends PluginBundle
+class IcapDropzoneBundle extends DistributionPluginBundle
 {
     public function getRoutingPrefix()
     {

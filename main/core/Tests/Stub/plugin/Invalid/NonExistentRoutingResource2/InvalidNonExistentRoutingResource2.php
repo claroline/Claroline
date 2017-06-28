@@ -11,9 +11,9 @@
 
 namespace Invalid\NonExistentRoutingResource2;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidNonExistentRoutingResource2 extends PluginBundle
+class InvalidNonExistentRoutingResource2 extends DistributionPluginBundle
 {
     public function getRoutingResourcesPaths()
     {
@@ -21,6 +21,6 @@ class InvalidNonExistentRoutingResource2 extends PluginBundle
         $existent = __DIR__."{$ds}Resources{$ds}config{$ds}routing.yml";
         $nonExistent = __DIR__."{$ds}fake_routing.yml";
 
-        return array($existent, $nonExistent);
+        return [$existent, $nonExistent];
     }
 }

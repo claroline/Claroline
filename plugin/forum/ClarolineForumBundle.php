@@ -11,14 +11,14 @@
 
 namespace Claroline\ForumBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\ForumBundle\Installation\AdditionalInstaller;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
  * Bundle class.
  */
-class ClarolineForumBundle extends PluginBundle
+class ClarolineForumBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

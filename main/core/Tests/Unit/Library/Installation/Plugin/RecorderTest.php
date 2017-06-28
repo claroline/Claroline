@@ -21,15 +21,15 @@ class RecorderTest extends MockeryTestCase
 
     protected function setUp()
     {
-        $this->plugin = $this->mock('Claroline\CoreBundle\Library\PluginBundle');
+        $this->plugin = $this->mock('Claroline\CoreBundle\Library\DistributionPluginBundle');
         $this->dbWriter = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\DatabaseWriter');
         $this->recorder = new Recorder($this->dbWriter);
     }
 
     public function testRecorderProperlyDelegatesToWritersOnRegister()
     {
-        $this->dbWriter->shouldReceive('insert')->once()->with($this->plugin, array());
-        $this->recorder->register($this->plugin, array());
+        $this->dbWriter->shouldReceive('insert')->once()->with($this->plugin, []);
+        $this->recorder->register($this->plugin, []);
     }
 
     public function testRecorderProperlyDelegatesToWritersOnUnregister()

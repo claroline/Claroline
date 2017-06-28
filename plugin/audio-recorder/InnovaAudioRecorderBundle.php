@@ -2,15 +2,15 @@
 
 namespace Innova\AudioRecorderBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Innova\AudioRecorderBundle\Installation\AdditionalInstaller;
 
 /**
  * Bundle class.
  */
-class InnovaAudioRecorderBundle extends PluginBundle implements AutoConfigurableInterface
+class InnovaAudioRecorderBundle extends DistributionPluginBundle implements AutoConfigurableInterface
 {
     public function supports($environment)
     {
@@ -31,8 +31,8 @@ class InnovaAudioRecorderBundle extends PluginBundle implements AutoConfigurable
 
     public function getExtraRequirements()
     {
-        return array(
-            'libav-tools' => array(
+        return [
+            'libav-tools' => [
                 'test' => function () {
                     $cmd = 'avconv -h';
                     exec($cmd, $output, $return);
@@ -40,7 +40,7 @@ class InnovaAudioRecorderBundle extends PluginBundle implements AutoConfigurable
                     return count($output) > 0 && $return === 0;
                 },
                 'failure_msg' => 'libavtools_not_installed',
-            ),
-        );
+            ],
+        ];
     }
 }

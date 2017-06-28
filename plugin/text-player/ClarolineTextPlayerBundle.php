@@ -2,14 +2,14 @@
 
 namespace Claroline\TextPlayerBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
  * Bundle class.
  * Uncomment if necessary.
  */
-class ClarolineTextPlayerBundle extends PluginBundle
+class ClarolineTextPlayerBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

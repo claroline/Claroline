@@ -83,6 +83,8 @@ class InstallationManager
         }
 
         if ($insertPlugin) {
+            $this->container->get('claroline.manager.version_manager')->setLogger($this->logger);
+            $version = $this->container->get('claroline.manager.version_manager')->register($bundle);
             $validator = $this->container->get('claroline.plugin.validator');
             $installer = $this->container->get('claroline.plugin.installer');
             $dbWriter = $this->container->get('claroline.plugin.recorder_database_writer');
@@ -90,6 +92,7 @@ class InstallationManager
             $this->log('Parsing config.yml file for '.get_class($bundle).'...');
             $installer->validatePlugin($bundle);
             $dbWriter->insert($bundle, $validator->getPluginConfiguration());
+            $version = $this->container->get('claroline.manager.version_manager')->execute($version);
         }
 
         if ($fixturesDir = $bundle->getPostInstallFixturesDirectory($this->environment)) {

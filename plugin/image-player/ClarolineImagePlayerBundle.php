@@ -11,9 +11,9 @@
 
 namespace Claroline\ImagePlayerBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ClarolineImagePlayerBundle extends PluginBundle
+class ClarolineImagePlayerBundle extends DistributionPluginBundle
 {
     public function hasMigrations()
     {

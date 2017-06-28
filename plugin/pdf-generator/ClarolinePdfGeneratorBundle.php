@@ -2,7 +2,7 @@
 
 namespace Claroline\PdfGeneratorBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Claroline\PdfGeneratorBundle\DependencyInjection\Compiler\DynamicConfigPass;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * Bundle class.
  * Uncomment if necessary.
  */
-class ClarolinePdfGeneratorBundle extends PluginBundle implements ConfigurationProviderInterface
+class ClarolinePdfGeneratorBundle extends DistributionPluginBundle implements ConfigurationProviderInterface
 {
     public function build(ContainerBuilder $container)
     {

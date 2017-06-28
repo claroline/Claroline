@@ -11,8 +11,8 @@
 
 namespace Valid\WithCustomActions;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ValidWithCustomActions extends PluginBundle
+class ValidWithCustomActions extends DistributionPluginBundle
 {
 }

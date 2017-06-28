@@ -11,8 +11,8 @@
 
 namespace Valid\WithCustomResources;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ValidWithCustomResources extends PluginBundle
+class ValidWithCustomResources extends DistributionPluginBundle
 {
 }

@@ -11,12 +11,12 @@
 
 namespace Invalid\UnexpectedTranslationKey1;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidUnexpectedTranslationKey1 extends PluginBundle
+class InvalidUnexpectedTranslationKey1 extends DistributionPluginBundle
 {
     public function getNameTranslationKey()
     {
-        return array();
+        return [];
     }
 }

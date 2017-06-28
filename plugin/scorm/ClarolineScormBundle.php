@@ -11,10 +11,10 @@
 
 namespace Claroline\ScormBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\ScormBundle\Library\Installation\AdditionalInstaller;
 
-class ClarolineScormBundle extends PluginBundle
+class ClarolineScormBundle extends DistributionPluginBundle
 {
     public function getAdditionalInstaller()
     {

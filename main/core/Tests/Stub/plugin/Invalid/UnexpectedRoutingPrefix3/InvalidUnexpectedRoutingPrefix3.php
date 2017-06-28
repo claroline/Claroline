@@ -11,9 +11,9 @@
 
 namespace Invalid\UnexpectedRoutingPrefix3;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidUnexpectedRoutingPrefix3 extends PluginBundle
+class InvalidUnexpectedRoutingPrefix3 extends DistributionPluginBundle
 {
     public function getRoutingPrefix()
     {

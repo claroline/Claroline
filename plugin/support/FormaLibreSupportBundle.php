@@ -2,10 +2,10 @@
 
 namespace FormaLibre\SupportBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use FormaLibre\SupportBundle\Library\Installation\AdditionalInstaller;
 
-class FormaLibreSupportBundle extends PluginBundle
+class FormaLibreSupportBundle extends DistributionPluginBundle
 {
     public function hasMigrations()
     {

@@ -19,6 +19,14 @@ use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
  */
 abstract class PluginBundle extends InstallableBundle implements PluginBundleInterface
 {
+    public function getBundleFQCN()
+    {
+        $vendor = $this->getVendorName();
+        $bundle = $this->getBundleName();
+
+        return "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
+    }
+
     final public function getVendorName()
     {
         $namespaceParts = explode('\\', $this->getNamespace());
@@ -158,5 +166,15 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     public function isActiveByDefault()
     {
         return true;
+    }
+
+    /**
+     * Returns the version file path.
+     *
+     * @return bool
+     */
+    public function getVersionFilePath()
+    {
+        return null;
     }
 }

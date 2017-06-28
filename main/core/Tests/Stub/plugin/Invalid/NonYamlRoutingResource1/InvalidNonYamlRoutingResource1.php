@@ -11,9 +11,9 @@
 
 namespace Invalid\NonYamlRoutingResource1;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidNonYamlRoutingResource1 extends PluginBundle
+class InvalidNonYamlRoutingResource1 extends DistributionPluginBundle
 {
     public function getRoutingResourcesPaths()
     {

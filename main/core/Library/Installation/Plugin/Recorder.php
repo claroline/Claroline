@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -54,34 +54,31 @@ class Recorder
     /**
      * Registers a plugin.
      *
-     * @param PluginBundle $plugin
-     * @param array        $pluginConfiguration
+     * @param DistributionPluginBundle $plugin
+     * @param array                    $pluginConfiguration
      */
-    public function register(PluginBundle $plugin, array $pluginConfiguration)
+    public function register(DistributionPluginBundle $plugin, array $pluginConfiguration)
     {
-        $pluginFqcn = get_class($plugin);
-
         return $this->dbWriter->insert($plugin, $pluginConfiguration);
     }
 
     /**
      * Update configuration for a plugin.
      *
-     * @param PluginBundle $plugin
-     * @param array        $pluginConfiguration
+     * @param DistributionPluginBundle $plugin
+     * @param array                    $pluginConfiguration
      */
-    public function update(PluginBundle $plugin, array $pluginConfiguration)
+    public function update(DistributionPluginBundle $plugin, array $pluginConfiguration)
     {
-        $pluginFqcn = get_class($plugin);
         $this->dbWriter->update($plugin, $pluginConfiguration);
     }
 
     /**
      * Unregisters a plugin.
      *
-     * @param PluginBundle $plugin
+     * @param DistributionPluginBundle $plugin
      */
-    public function unregister(PluginBundle $plugin)
+    public function unregister(DistributionPluginBundle $plugin)
     {
         $pluginFqcn = get_class($plugin);
         $this->dbWriter->delete($pluginFqcn);
@@ -90,11 +87,11 @@ class Recorder
     /**
      * Checks if a plugin is registered.
      *
-     * @param \Claroline\CoreBundle\Library\PluginBundle $plugin
+     * @param \Claroline\CoreBundle\Library\DistributionPluginBundle $plugin
      *
      * @return bool
      */
-    public function isRegistered(PluginBundle $plugin)
+    public function isRegistered(DistributionPluginBundle $plugin)
     {
         return $this->dbWriter->isSaved($plugin);
     }

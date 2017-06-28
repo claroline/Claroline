@@ -11,8 +11,8 @@
 
 namespace Invalid\UnexpectedResourceIcon;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidUnexpectedResourceIcon extends PluginBundle
+class InvalidUnexpectedResourceIcon extends DistributionPluginBundle
 {
 }

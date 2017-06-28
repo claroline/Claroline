@@ -11,9 +11,9 @@
 
 namespace Invalid\UnexpectedTranslationKey4;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidUnexpectedTranslationKey4 extends PluginBundle
+class InvalidUnexpectedTranslationKey4 extends DistributionPluginBundle
 {
     public function getDescriptionTranslationKey()
     {

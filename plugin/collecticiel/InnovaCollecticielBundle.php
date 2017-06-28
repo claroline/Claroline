@@ -8,10 +8,10 @@
 
 namespace Innova\CollecticielBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Innova\CollecticielBundle\Installation\AdditionalInstaller;
 
-class InnovaCollecticielBundle extends PluginBundle
+class InnovaCollecticielBundle extends DistributionPluginBundle
 {
     public function getRoutingPrefix()
     {

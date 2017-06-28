@@ -11,15 +11,15 @@
 
 namespace Claroline\CoreBundle\Controller\Testing;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\DataFixtures\Required\LoadRequiredFixturesData;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\CoreBundle\Library\Workspace\TemplateBuilder;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Doctrine\Common\DataFixtures\ReferenceRepository;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Claroline\CoreBundle\DataFixtures\Required\LoadRequiredFixturesData;
 
 class RemoteTestingController extends Controller
 {
@@ -58,7 +58,7 @@ class RemoteTestingController extends Controller
         $installer = $this->container->get('claroline.plugin.installer');
 
         foreach ($bundles as $bundle) {
-            if ($bundle instanceof PluginBundle) {
+            if ($bundle instanceof DistributionPluginBundle) {
                 $installer->install($bundle);
             }
         }
@@ -91,7 +91,7 @@ class RemoteTestingController extends Controller
             return new Response('Invalid or missing FQCN parameter', 401);
         }
 
-        $args = $request->request->get('args', array());
+        $args = $request->request->get('args', []);
         $fixture = new $fqcn($args);
         $om = $this->get('claroline.persistence.object_manager');
 

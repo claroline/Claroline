@@ -11,15 +11,15 @@
 
 namespace Claroline\CoreBundle\Command;
 
+use Claroline\BundleRecorder\Detector\Detector;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\ArrayInput;
-use Claroline\BundleRecorder\Detector\Detector;
-use Claroline\CoreBundle\Library\PluginBundle;
 
 /**
  * This class contains common methods for the plugin install/uninstall commands.
@@ -68,8 +68,8 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
             if ($name === $bundleName) {
                 $bundle = new $bundleFqcn($kernel);
 
-                if (!$bundle instanceof PluginBundle) {
-                    throw new \Exception("Bundle {$bundle->getName()} must extend PluginBundle");
+                if (!$bundle instanceof DistributionPluginBundle) {
+                    throw new \Exception("Bundle {$bundle->getName()} must extend DistributionPluginBundle");
                 }
 
                 return $bundle;
@@ -83,11 +83,11 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
     {
         /** @var \Claroline\CoreBundle\Library\Installation\Plugin\Installer $installer */
         $installer = $this->getContainer()->get('claroline.plugin.installer');
-        $verbosityLevelMap = array(
+        $verbosityLevelMap = [
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
-        );
+        ];
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
         $installer->setLogger($consoleLogger);
 
@@ -98,7 +98,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
      * @todo Remove ?
      *
      * Clears the cache in production environment (mandatory after plugin
-     * installation/uninstallation).
+     * installation/uninstallation)
      *
      * @param OutputInterface $output
      */
@@ -108,10 +108,10 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
             $command = $this->getApplication()->find('cache:clear');
 
             $input = new ArrayInput(
-                array(
+                [
                     'command' => 'cache:clear',
                     '--no-warmup' => true,
-                )
+                ]
             );
 
             $command->run($input, $output);
@@ -130,11 +130,11 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
         $webDir = $this->getContainer()->getParameter('kernel.root_dir').'/../web';
         $command = $this->getApplication()->find('assets:install');
         $input = new ArrayInput(
-            array(
+            [
                 'command' => 'assets:install',
                 'target' => realpath($webDir),
                 '--symlink' => true,
-            )
+            ]
         );
         $command->run($input, $output);
     }

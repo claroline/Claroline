@@ -11,9 +11,9 @@
 
 namespace Claroline\PdfPlayerBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ClarolinePdfPlayerBundle extends PluginBundle
+class ClarolinePdfPlayerBundle extends DistributionPluginBundle
 {
     public function hasMigrations()
     {

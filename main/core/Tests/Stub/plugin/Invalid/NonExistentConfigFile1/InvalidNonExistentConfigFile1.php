@@ -11,8 +11,8 @@
 
 namespace Invalid\NonExistentConfigFile1;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidNonExistentConfigFile1 extends PluginBundle
+class InvalidNonExistentConfigFile1 extends DistributionPluginBundle
 {
 }

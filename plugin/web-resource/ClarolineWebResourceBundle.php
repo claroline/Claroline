@@ -11,9 +11,9 @@
 
 namespace Claroline\WebResourceBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ClarolineWebResourceBundle extends PluginBundle
+class ClarolineWebResourceBundle extends DistributionPluginBundle
 {
     public function hasMigrations()
     {

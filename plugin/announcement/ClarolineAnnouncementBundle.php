@@ -11,13 +11,13 @@
 
 namespace Claroline\AnnouncementBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
  * Bundle class.
  */
-class ClarolineAnnouncementBundle extends PluginBundle
+class ClarolineAnnouncementBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

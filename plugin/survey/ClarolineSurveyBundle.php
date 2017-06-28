@@ -11,10 +11,10 @@
 
 namespace Claroline\SurveyBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class ClarolineSurveyBundle extends PluginBundle
+class ClarolineSurveyBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

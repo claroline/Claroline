@@ -11,9 +11,9 @@
 
 namespace Claroline\ChatBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ClarolineChatBundle extends PluginBundle
+class ClarolineChatBundle extends DistributionPluginBundle
 {
     public function hasMigrations()
     {

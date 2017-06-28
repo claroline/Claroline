@@ -11,9 +11,9 @@
 
 namespace Invalid\NonExistentRoutingResource1;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidNonExistentRoutingResource1 extends PluginBundle
+class InvalidNonExistentRoutingResource1 extends DistributionPluginBundle
 {
     public function getRoutingResourcesPaths()
     {

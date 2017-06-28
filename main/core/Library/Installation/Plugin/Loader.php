@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use RuntimeException;
 use JMS\DiExtraBundle\Annotation as DI;
+use RuntimeException;
 
 /**
  * The plugin loader is used to instantiate a plugin bundle class (in order to
@@ -38,7 +38,7 @@ class Loader
      *
      * @throws RuntimeException if the plugin class cannot be found or instantiated
      *
-     * @return PluginBundle
+     * @return DistributionPluginBundle
      */
     public function load($pluginFqcn, $pluginPath = null)
     {
@@ -78,9 +78,9 @@ class Loader
             );
         }
 
-        if (!$reflectionClass->isSubclassOf('Claroline\CoreBundle\Library\PluginBundle')) {
+        if (!$reflectionClass->isSubclassOf('Claroline\CoreBundle\Library\DistributionPluginBundle')) {
             throw new RuntimeException(
-                "Class '{$pluginFqcn}' doesn't extend Claroline 'PluginBundle' class.",
+                "Class '{$pluginFqcn}' doesn't extend Claroline 'DistributionPluginBundle' class.",
                 self::UNEXPECTED_BUNDLE_TYPE
             );
         }

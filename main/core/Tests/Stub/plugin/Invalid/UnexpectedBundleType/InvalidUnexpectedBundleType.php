@@ -12,7 +12,7 @@
 namespace Invalid\UnexpectedBundleType;
 
 /**
- * Invalid because it doesn't extend the Claroline PluginBundle class.
+ * Invalid because it doesn't extend the Claroline DistributionPluginBundle class.
  */
 class InvalidUnexpectedBundleType
 {

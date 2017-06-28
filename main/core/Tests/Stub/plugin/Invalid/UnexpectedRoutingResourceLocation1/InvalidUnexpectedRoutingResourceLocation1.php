@@ -11,9 +11,9 @@
 
 namespace Invalid\UnexpectedRoutingResourceLocation1;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidUnexpectedRoutingResourceLocation1 extends PluginBundle
+class InvalidUnexpectedRoutingResourceLocation1 extends DistributionPluginBundle
 {
     public function getRoutingResourcesPaths()
     {

@@ -11,8 +11,8 @@
 
 namespace Valid\WithFileExtension;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ValidWithFileExtension extends PluginBundle
+class ValidWithFileExtension extends DistributionPluginBundle
 {
 }

@@ -2,7 +2,7 @@
 
 namespace [[Vendor]]\[[Bundle]]Bundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use [[Vendor]]\[[Bundle]]Bundle\Installation\AdditionalInstaller;
 
@@ -10,7 +10,7 @@ use [[Vendor]]\[[Bundle]]Bundle\Installation\AdditionalInstaller;
  * Bundle class.
  * Uncomment if necessary.
  */
-class [[Vendor]][[Bundle]]Bundle extends PluginBundle
+class [[Vendor]][[Bundle]]Bundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

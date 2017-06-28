@@ -11,9 +11,9 @@
 
 namespace Invalid\AlreadyRegisteredRoutingPrefix;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidAlreadyRegisteredRoutingPrefix extends PluginBundle
+class InvalidAlreadyRegisteredRoutingPrefix extends DistributionPluginBundle
 {
     public function getRoutingPrefix()
     {

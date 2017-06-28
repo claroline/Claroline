@@ -11,9 +11,9 @@
 
 namespace Invalid\UnloadableBundleClass5;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-abstract class InvalidUnloadableBundleClass5 extends PluginBundle
+abstract class InvalidUnloadableBundleClass5 extends DistributionPluginBundle
 {
     /*
      * Invalid because it cannot be instantiated

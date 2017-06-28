@@ -21,10 +21,10 @@ class ValidatorTest extends MockeryTestCase
     public function testValidatorAcceptsOnlyInstancesOfCheckerInterface()
     {
         $this->setExpectedException('InvalidArgumentException');
-        $checkers = array(
+        $checkers = [
             'regular' => $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface'),
             'wrong' => new \stdClass(),
-        );
+        ];
 
         new Validator($checkers);
     }
@@ -34,7 +34,7 @@ class ValidatorTest extends MockeryTestCase
         $firstChecker = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
         $secondChecker = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
         $thirdChecker = $this->mock('Claroline\CoreBundle\Library\Installation\Plugin\CheckerInterface');
-        $plugin = $this->mock('Claroline\CoreBundle\Library\PluginBundle');
+        $plugin = $this->mock('Claroline\CoreBundle\Library\DistributionPluginBundle');
 
         $firstError = new ValidationError('foo');
         $secondError = new ValidationError('bar');
@@ -43,19 +43,19 @@ class ValidatorTest extends MockeryTestCase
         $firstChecker->shouldReceive('check')
             ->once()
             ->with($plugin, false)
-            ->andReturn(array());
+            ->andReturn([]);
         $secondChecker->shouldReceive('check')
             ->once()
             ->with($plugin, false)
-            ->andReturn(array($firstError));
+            ->andReturn([$firstError]);
         $thirdChecker->shouldReceive('check')
             ->once()
             ->with($plugin, false)
-            ->andReturn(array($secondError, $thirdError));
+            ->andReturn([$secondError, $thirdError]);
 
-        $validator = new Validator(array($firstChecker, $secondChecker, $thirdChecker));
+        $validator = new Validator([$firstChecker, $secondChecker, $thirdChecker]);
 
         $errors = $validator->validate($plugin);
-        $this->assertEquals(array($firstError, $secondError, $thirdError), $errors);
+        $this->assertEquals([$firstError, $secondError, $thirdError], $errors);
     }
 }

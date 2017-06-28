@@ -380,7 +380,7 @@ class PluginManager
         return $errors;
     }
 
-    private function getPluginShortName($plugin)
+    public function getPluginShortName($plugin)
     {
         $name = $plugin instanceof Plugin ?
             $plugin->getVendorName().$plugin->getBundleName() :

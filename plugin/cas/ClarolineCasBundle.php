@@ -14,14 +14,14 @@
 namespace Claroline\CasBundle;
 
 use Claroline\CasBundle\DependencyInjection\Compiler\SsoServerPass;
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Bundle\ConfigurationProviderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ClarolineCasBundle extends PluginBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
+class ClarolineCasBundle extends DistributionPluginBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
 {
     public function build(ContainerBuilder $container)
     {

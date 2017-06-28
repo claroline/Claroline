@@ -11,10 +11,10 @@
 
 namespace Claroline\VideoPlayerBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class ClarolineVideoPlayerBundle extends PluginBundle
+class ClarolineVideoPlayerBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

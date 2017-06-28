@@ -33,6 +33,7 @@ class Installer
     private $recorder;
     private $baseInstaller;
     private $om;
+    private $versionManager;
 
     /**
      * Constructor.
@@ -47,7 +48,8 @@ class Installer
      *     "installer"     = @DI\Inject("claroline.installation.manager"),
      *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
      *     "pluginManager" = @DI\Inject("claroline.manager.plugin_manager"),
-     *     "translator"    = @DI\Inject("translator")
+     *     "translator"    = @DI\Inject("translator"),
+     *     "versionManager" = @DI\Inject("claroline.manager.version_manager")
      * })
      */
     public function __construct(
@@ -56,7 +58,8 @@ class Installer
         InstallationManager $installer,
         ObjectManager $om,
         PluginManager $pluginManager,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        $versionManager
     ) {
         $this->validator = $validator;
         $this->recorder = $recorder;
@@ -64,6 +67,7 @@ class Installer
         $this->om = $om;
         $this->pluginManager = $pluginManager;
         $this->translator = $translator;
+        $this->versionManager = $versionManager;
     }
 
     /**
@@ -87,6 +91,8 @@ class Installer
      */
     public function install(PluginBundleInterface $plugin)
     {
+        $this->versionManager->setLogger($this->logger);
+        $version = $this->versionManager->register($plugin);
         $this->checkInstallationStatus($plugin, false);
         $this->validatePlugin($plugin);
         $this->log('Saving configuration...');
@@ -111,6 +117,8 @@ class Installer
             $this->log(sprintf('<fg=red>Disabling %s...</fg=red>', $plugin->getName()));
             $this->pluginManager->disable($pluginEntity);
         }
+
+        $version = $this->versionManager->execute($version);
     }
 
     /**
@@ -135,6 +143,8 @@ class Installer
      */
     public function update(PluginBundleInterface $plugin, $currentVersion, $targetVersion)
     {
+        $this->versionManager->setLogger($this->logger);
+        $version = $this->versionManager->register($plugin);
         $this->checkInstallationStatus($plugin, true);
         $this->validator->activeUpdateMode();
         $this->validatePlugin($plugin);
@@ -142,6 +152,7 @@ class Installer
         $this->log('Updating plugin configuration...');
         $this->baseInstaller->update($plugin, $currentVersion, $targetVersion);
         $this->recorder->update($plugin, $this->validator->getPluginConfiguration());
+        $this->versionManager->execute($version);
     }
 
     public function end(PluginBundleInterface $plugin)

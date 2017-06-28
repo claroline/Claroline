@@ -11,9 +11,9 @@
 
 namespace Invalid\NonConventionalFQCN1\AdditionalNamespaceSegment;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidNonConventionalFQCN1 extends PluginBundle
+class InvalidNonConventionalFQCN1 extends DistributionPluginBundle
 {
     /*
      * Invalid because it adds an extra segment to the FQCN convention.

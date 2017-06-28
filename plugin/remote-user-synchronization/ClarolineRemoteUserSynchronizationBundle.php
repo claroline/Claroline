@@ -11,10 +11,10 @@
 
 namespace Claroline\RemoteUserSynchronizationBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class ClarolineRemoteUserSynchronizationBundle extends PluginBundle
+class ClarolineRemoteUserSynchronizationBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

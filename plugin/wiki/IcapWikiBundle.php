@@ -2,11 +2,11 @@
 
 namespace Icap\WikiBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Icap\WikiBundle\Installation\AdditionalInstaller;
 
-class IcapWikiBundle extends PluginBundle
+class IcapWikiBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

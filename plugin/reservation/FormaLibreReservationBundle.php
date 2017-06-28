@@ -2,10 +2,10 @@
 
 namespace FormaLibre\ReservationBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class FormaLibreReservationBundle extends PluginBundle
+class FormaLibreReservationBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

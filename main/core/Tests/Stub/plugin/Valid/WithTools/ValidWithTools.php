@@ -11,8 +11,8 @@
 
 namespace Valid\WithTools;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ValidWithTools extends PluginBundle
+class ValidWithTools extends DistributionPluginBundle
 {
 }

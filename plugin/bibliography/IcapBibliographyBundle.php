@@ -2,11 +2,11 @@
 
 namespace Icap\BibliographyBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class IcapBibliographyBundle extends PluginBundle implements AutoConfigurableInterface
+class IcapBibliographyBundle extends DistributionPluginBundle implements AutoConfigurableInterface
 {
     public function supports($environment)
     {

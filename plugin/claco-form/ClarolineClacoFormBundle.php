@@ -12,9 +12,9 @@
 namespace Claroline\ClacoFormBundle;
 
 use Claroline\ClacoFormBundle\Library\Installation\AdditionalInstaller;
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ClarolineClacoFormBundle extends PluginBundle
+class ClarolineClacoFormBundle extends DistributionPluginBundle
 {
     public function hasMigrations()
     {

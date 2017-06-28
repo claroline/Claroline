@@ -11,8 +11,8 @@
 
 namespace Invalid\UnexpectedIcon;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class InvalidUnexpectedIcon extends PluginBundle
+class InvalidUnexpectedIcon extends DistributionPluginBundle
 {
 }

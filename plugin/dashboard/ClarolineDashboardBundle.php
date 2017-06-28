@@ -2,13 +2,13 @@
 
 namespace Claroline\DashboardBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
  * Bundle class.
  */
-class ClarolineDashboardBundle extends PluginBundle
+class ClarolineDashboardBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

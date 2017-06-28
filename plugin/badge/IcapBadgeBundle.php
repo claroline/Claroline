@@ -2,11 +2,11 @@
 
 namespace Icap\BadgeBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Icap\BadgeBundle\Installation\AdditionalInstaller;
 
-class IcapBadgeBundle extends PluginBundle
+class IcapBadgeBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

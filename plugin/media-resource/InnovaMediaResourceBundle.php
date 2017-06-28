@@ -2,14 +2,14 @@
 
 namespace Innova\MediaResourceBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\AutoConfigurableInterface;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
  * Bundle class.
  */
-class InnovaMediaResourceBundle extends PluginBundle implements AutoConfigurableInterface
+class InnovaMediaResourceBundle extends DistributionPluginBundle implements AutoConfigurableInterface
 {
     public function supports($environment)
     {

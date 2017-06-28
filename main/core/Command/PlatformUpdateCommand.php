@@ -13,15 +13,16 @@ namespace Claroline\CoreBundle\Command;
 
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Doctrine\Bundle\DoctrineBundle\Command\CreateDatabaseDoctrineCommand;
+use JMS\DiExtraBundle\Annotation\Inject;
+use JMS\DiExtraBundle\Annotation\InjectParams;
+use JMS\DiExtraBundle\Annotation\Service;
 use Psr\Log\LogLevel;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -41,6 +42,12 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             ->setDescription(
                 'Updates, installs or uninstalls the platform packages brought by composer.'
             );
+        $this->setDefinition(
+            [
+                new InputArgument('from_version', InputArgument::OPTIONAL, 'from version'),
+                new InputArgument('to_version', InputArgument::OPTIONAL, 'to version'),
+            ]
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -49,20 +56,28 @@ class PlatformUpdateCommand extends ContainerAwareCommand
 
         $databaseCreator = new CreateDatabaseDoctrineCommand();
         $databaseCreator->setContainer($this->getContainer());
-        $databaseCreator->run(new ArrayInput(array()), $output);
+        $databaseCreator->run(new ArrayInput([]), $output);
 
-        $verbosityLevelMap = array(
+        $verbosityLevelMap = [
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
-        );
+        ];
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 
         /** @var \Claroline\CoreBundle\Library\Installation\PlatformInstaller $installer */
         $installer = $this->getContainer()->get('claroline.installation.platform_installer');
         $installer->setOutput($output);
         $installer->setLogger($consoleLogger);
-        $installer->updateFromComposerInfo();
+
+        $from = $input->getArgument('from_version');
+        $to = $input->getArgument('to_version');
+
+        if ($from && $to) {
+            $installer->updateAll($from, $to);
+        } else {
+            $installer->updateFromComposerInfo();
+        }
 
         /** @var \Claroline\CoreBundle\Library\Installation\Refresher $refresher */
         $refresher = $this->getContainer()->get('claroline.installation.refresher');

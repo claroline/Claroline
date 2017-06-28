@@ -2,8 +2,8 @@
 
 namespace HeVinci\UrlBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class HeVinciUrlBundle extends PluginBundle
+class HeVinciUrlBundle extends DistributionPluginBundle
 {
 }

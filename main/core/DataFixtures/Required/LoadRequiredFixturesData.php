@@ -102,7 +102,7 @@ class LoadRequiredFixturesData extends AbstractFixture implements ContainerAware
                 $order = $fixture->getOrder();
             }
 
-            $this->log('load '.$className.' positon: '.$order);
+            $this->log('load '.$className.' position: '.$order);
             $fixture->setContainer($this->container);
             $fixture->load($om);
             $om->flush();

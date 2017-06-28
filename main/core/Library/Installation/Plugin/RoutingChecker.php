@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
-use Symfony\Component\Yaml\Parser;
-use Symfony\Component\Yaml\Exception\ParseException;
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\FrameworkBundle\Routing\Router;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Parser;
 
 /**
  * Checker used to validate the routing of a plugin.
@@ -59,13 +59,13 @@ class RoutingChecker implements CheckerInterface
     /**
      * {@inheritdoc}
      *
-     * @param PluginBundle $plugin
+     * @param DistributionPluginBundle $plugin
      */
-    public function check(PluginBundle $plugin)
+    public function check(DistributionPluginBundle $plugin)
     {
         $this->plugin = $plugin;
         $this->pluginFqcn = get_class($plugin);
-        $this->errors = array();
+        $this->errors = [];
         $this->checkRoutingPrefixIsValid();
         count($this->errors) === 0 && $this->checkRoutingPrefixIsNotAlreadyRegistered();
         $this->checkRoutingResourcesAreLoadable();
@@ -105,38 +105,6 @@ class RoutingChecker implements CheckerInterface
         // the route collection. The following code relies on possible modifications of
         // the RouteCollection class in the Routing component. To be uncommented if those
         // changes are accepted.
-        /*
-        $registeredPrefixes = $this->router->getRouteCollection()->getPrefixes();
-        $pluginPrefix = $this->plugin->getRoutingPrefix();
-
-        if (in_array($pluginPrefix, $registeredPrefixes)) {
-            $resources = (array) $this->yamlParser->parse(file_get_contents($this->mainPluginRoutingFile));
-            $isConflictingWithPluginPrefix = false;
-
-            foreach ($resources as $bundleKey => $resource) {
-                if ('/' . $resource['prefix'] === $pluginPrefix) {
-                    $isConflictingWithPluginPrefix = true;
-
-                    if (0 !== strpos($bundleKey, $this->plugin->getName())) {
-                        $this->errors[] = new ValidationError(
-                            "{$this->pluginFqcn} : routing prefix '{$pluginPrefix}' "
-                            . "is already registered by another plugin.",
-                            self::ALREADY_REGISTERED_PREFIX
-                        );
-                        break;
-                    }
-                }
-            }
-
-            if (!$isConflictingWithPluginPrefix) {
-                $this->errors[] = new ValidationError(
-                    "{$this->pluginFqcn} : routing prefix '{$pluginPrefix}' is already "
-                    . "registered by the core routing.",
-                    self::ALREADY_REGISTERED_PREFIX
-                );
-            }
-        }
-        */
     }
 
     private function checkRoutingResourcesAreLoadable()
@@ -167,7 +135,7 @@ class RoutingChecker implements CheckerInterface
                 );
             }
 
-            if ('yml' != $ext = pathinfo($path, PATHINFO_EXTENSION)) {
+            if ('yml' !== $ext = pathinfo($path, PATHINFO_EXTENSION)) {
                 $this->errors[] = new ValidationError(
                     "{$this->pluginFqcn} : Unsupported '{$ext}' extension for "
                     ."routing file '{$path}'(use .yml).",

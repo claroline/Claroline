@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Processor;
@@ -42,11 +42,11 @@ class ConfigurationChecker implements CheckerInterface
     /**
      * {@inheritdoc}
      *
-     * @param PluginBundle $plugin
+     * @param DistributionPluginBundle $plugin
      *
      * @todo Create dedicated repository methods to retrieve tool/type names
      */
-    public function check(PluginBundle $plugin, $updateMode = false)
+    public function check(DistributionPluginBundle $plugin, $updateMode = false)
     {
         if (!is_file($plugin->getConfigFile())) {
             $error = new ValidationError('config.yml file missing');

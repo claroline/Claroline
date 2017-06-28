@@ -11,10 +11,10 @@
 
 namespace Claroline\ResultBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class ClarolineResultBundle extends PluginBundle
+class ClarolineResultBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

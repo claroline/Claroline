@@ -11,11 +11,11 @@
 
 namespace Claroline\MessageBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\MessageBundle\Installation\AdditionalInstaller;
 
-class ClarolineMessageBundle extends PluginBundle
+class ClarolineMessageBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

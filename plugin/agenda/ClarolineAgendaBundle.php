@@ -2,15 +2,15 @@
 
 namespace Claroline\AgendaBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\AgendaBundle\Installation\AdditionalInstaller;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
 /**
  * Bundle class.
  * Uncomment if necessary.
  */
-class ClarolineAgendaBundle extends PluginBundle
+class ClarolineAgendaBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

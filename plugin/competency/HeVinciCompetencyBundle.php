@@ -2,11 +2,11 @@
 
 namespace HeVinci\CompetencyBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use HeVinci\CompetencyBundle\Installation\AdditionalInstaller;
 
-class HeVinciCompetencyBundle extends PluginBundle
+class HeVinciCompetencyBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

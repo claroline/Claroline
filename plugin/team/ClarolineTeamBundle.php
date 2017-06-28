@@ -11,10 +11,10 @@
 
 namespace Claroline\TeamBundle;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 
-class ClarolineTeamBundle extends PluginBundle
+class ClarolineTeamBundle extends DistributionPluginBundle
 {
     public function getConfiguration($environment)
     {

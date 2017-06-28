@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Command\Dev;
 
 use Claroline\CoreBundle\Entity\Plugin;
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -76,7 +76,7 @@ class TestUpdateCommand extends ContainerAwareCommand
         $container = $this->getContainer();
         $bundleName = $input->getArgument('bundle');
         $bundle = $container->get('kernel')->getBundle($bundleName);
-        $installerType = $bundle instanceof PluginBundle ?
+        $installerType = $bundle instanceof DistributionPluginBundle ?
             'claroline.plugin.installer' :
             'claroline.installation.manager';
 

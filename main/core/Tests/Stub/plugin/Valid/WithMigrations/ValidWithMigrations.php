@@ -11,8 +11,8 @@
 
 namespace Valid\WithMigrations;
 
-use Claroline\CoreBundle\Library\PluginBundle;
+use Claroline\CoreBundle\Library\DistributionPluginBundle;
 
-class ValidWithMigrations extends PluginBundle
+class ValidWithMigrations extends DistributionPluginBundle
 {
 }
