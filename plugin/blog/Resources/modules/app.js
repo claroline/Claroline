@@ -93,7 +93,6 @@ angular
     })
   ])
   .filter('datetime', ['dateFilter', 'transFilter', (dateFilter, transFilter) => (text) => dateFilter(text, transFilter('angular_date_format', {}, 'icap_blog'))])
-  .filter('unescape', [() => text => decodeURI(text)])
 
   .controller('postController', postController)
   .controller('messagesController', messagesController)
