@@ -3,7 +3,37 @@
 {% block adminSupport %}
     <div id="official-support-management-body">
         <div id="official-support-info" class="well well-sm">
-            {{ 'official_support_info'|trans({}, 'support') }}
+            {% if supportToken is empty %}
+                {{ 'official_support_get_msg'|trans({}, 'support') }} :
+                {% if app.request.locale == 'fr' %}
+                    <a href="https://www.claroline.com/offre_support.html">
+                        https://www.claroline.com/offre_support.html
+                    </a>
+                {% elseif app.request.locale == 'en' %}
+                    <a href="https://www.claroline.com/EN/offre.html#support">
+                        https://www.claroline.com/EN/offre.html#support
+                    </a>
+                {% else %}
+                    <a href="https://www.claroline.com/offre_support.html">
+                        https://www.claroline.com/offre_support.html
+                    </a>
+                {% endif %}
+            {% else %}
+                {{ 'official_support_look_msg'|trans({}, 'support') }} :
+                {% if app.request.locale == 'fr' %}
+                    <a href="https://www.claroline.com/offre_support.html">
+                        https://www.claroline.com/offre_support.html
+                    </a>
+                {% elseif app.request.locale == 'en' %}
+                    <a href="https://www.claroline.com/EN/offre.html#support">
+                        https://www.claroline.com/EN/offre.html#support
+                    </a>
+                {% else %}
+                    <a href="https://www.claroline.com/offre_support.html">
+                        https://www.claroline.com/offre_support.html
+                    </a>
+                {% endif %}
+            {% endif %}
         </div>
 
         {% if supportToken is not empty %}
