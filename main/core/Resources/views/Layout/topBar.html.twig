@@ -17,7 +17,7 @@
                 >
                     {% if config.getParameter('logo') %}
                         <img
-                            src="{{ getAssetPath() ~ '/uploads/logos/' ~ config.getParameter('logo') }}"
+                            src="{{ getAssetPath() ~ '/' ~ config.getParameter('logo') }}"
                             {% if config.getParameter('name') is not empty %}
                             alt="{{ config.getParameter('name') }}"
                             {% endif %}
