@@ -424,6 +424,11 @@ class GroupManager
         return true;
     }
 
+    public function getGroupById($id)
+    {
+        return $this->groupRepo->findById($id);
+    }
+
     public function getGroupByName($name, $executeQuery = true)
     {
         return $this->groupRepo->findGroupByName($name, $executeQuery);

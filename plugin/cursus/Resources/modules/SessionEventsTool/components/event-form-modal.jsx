@@ -179,7 +179,7 @@ class EventFormModal  extends Component {
                 dateFormat={true}
                 timeFormat={true}
                 locale="fr"
-                utc={true}
+                utc={false}
                 defaultValue={this.state.startDate}
                 onChange={date => this.updateEventProps('startDate', date)}
               />
@@ -201,7 +201,7 @@ class EventFormModal  extends Component {
                 dateFormat={true}
                 timeFormat={true}
                 locale="fr"
-                utc={true}
+                utc={false}
                 defaultValue={this.state.endDate}
                 onChange={date => this.updateEventProps('endDate', date)}
               />

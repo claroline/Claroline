@@ -1,8 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
-import {DragDropContext} from 'react-dnd'
-import {default as TouchBackend} from 'react-dnd-touch-backend'
 import {createStore} from '#/main/core/utilities/redux'
 import {registerModalTypes} from '#/main/core/layout/modal'
 import {DeleteConfirmModal} from '#/main/core/layout/modal/components/delete-confirm.jsx'
@@ -44,7 +42,6 @@ class SessionEventsTool {
         viewMode: this.viewMode
       }
     )
-    this.dndSessionEventsTool = DragDropContext(TouchBackend({enableMouseEvents: true}))(SessionEventsToolLayout)
     makeRouter(this.store.dispatch.bind(this.store))
   }
 
@@ -53,7 +50,7 @@ class SessionEventsTool {
       React.createElement(
         Provider,
         {store: this.store},
-        React.createElement(this.dndSessionEventsTool)
+        React.createElement(SessionEventsToolLayout)
       ),
       element
     )

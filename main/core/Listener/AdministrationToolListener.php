@@ -178,6 +178,18 @@ class AdministrationToolListener
         $this->redirect($params, $event);
     }
 
+    /**
+     * @DI\Observe("administration_tool_tasks_scheduling")
+     *
+     * @param OpenAdministrationToolEvent $event
+     */
+    public function onOpenScheduledTasksManagement(OpenAdministrationToolEvent $event)
+    {
+        $params = [];
+        $params['_controller'] = 'ClarolineCoreBundle:Administration\ScheduledTask:scheduledTasksManagement';
+        $this->redirect($params, $event);
+    }
+
     protected function redirect($params, $event)
     {
         $subRequest = $this->request->duplicate([], null, $params);

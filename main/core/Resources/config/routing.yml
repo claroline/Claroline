@@ -470,3 +470,8 @@ claro_admin_resource_icons:
     resource: "@ClarolineCoreBundle/Controller/Administration/IconController.php"
     prefix: admin/parameters/appearance/icon
     type: annotation
+
+claro_admin_scheduled_task:
+    resource: "@ClarolineCoreBundle/Controller/Administration/ScheduledTaskController.php"
+    prefix: admin/scheduled/task
+    type: annotation
