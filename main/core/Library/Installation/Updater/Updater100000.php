@@ -117,7 +117,11 @@ class Updater100000 extends Updater
 
     public function moveUploadsDirectory()
     {
-        $this->saveLogos();
+        try {
+            $this->saveLogos();
+        } catch (\Exception $e) {
+            $this->log($e->getMessage(), LogLevel::ERROR);
+        }
         $this->log('Moving file storage directories...');
         $toMove = ['uploads', 'themes'];
 

@@ -688,7 +688,6 @@ class IconSetManager
         if (!empty($shortcutIcon) && $this->fs->exists($iconAbsoluteUrl)) {
             $shortcutFile = $this->thumbnailCreator->shortcutThumbnail(
                 $iconAbsoluteUrl,
-                null,
                 $this->getAbsolutePathForResourceIcon($stampRelativePath)
             );
             $shortcutIconRelativeUrl = trim($shortcutIcon->getRelativeUrl());

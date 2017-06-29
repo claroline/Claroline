@@ -25,7 +25,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\HttpFoundation\File\File;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @DI\Service("claroline.manager.icon_manager")
@@ -118,7 +117,7 @@ class IconManager
 
             if ($publicFile) {
                 $thumbnailPath = $this->webdir.$ds.$publicFile->getUrl();
-                $relativeUrl = str_replace($this->webdir, '', $thumbnailPath);
+                $relativeUrl = ltrim(str_replace($this->webdir, '', $thumbnailPath), "{$ds}");
                 $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
                 $icon->setMimeType('custom');
                 $icon->setRelativeUrl($relativeUrl);
@@ -187,7 +186,7 @@ class IconManager
     {
         $this->om->startFlushSuite();
 
-        $relativeUrl = $this->createShortcutFromRelativeUrl($icon->getRelativeUrl(), $workspace);
+        $relativeUrl = $this->createShortcutFromRelativeUrl($icon->getRelativeUrl());
         $shortcutIcon = new ResourceIcon();
         $shortcutIcon->setRelativeUrl($relativeUrl);
         $shortcutIcon->setMimeType($icon->getMimeType());
@@ -214,32 +213,30 @@ class IconManager
      */
     public function createCustomIcon(File $file, Workspace $workspace = null)
     {
-        $fileName = $file instanceof UploadedFile ? $file->getClientOriginalName() : $file->getFilename();
         $this->om->startFlushSuite();
-        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $mimeElements = explode('/', $file->getMimeType());
+        $ds = DIRECTORY_SEPARATOR;
 
-        if (is_null($workspace)) {
-            $dest = $this->thumbDir;
-            $hashName = $this->ut->generateGuid().'.'.$extension;
-        } else {
-            $dest = $this->thumbDir.DIRECTORY_SEPARATOR.$workspace->getCode();
-            $hashName = $workspace->getCode().
-                DIRECTORY_SEPARATOR.
-                $this->ut->generateGuid().
-                '.'.
-                $extension;
+        $publicFile = $this->createFromFile(
+            $file->getPathname(),
+            $mimeElements[0],
+            $workspace
+        );
+        if ($publicFile) {
+            $thumbnailPath = $this->webdir.$ds.$publicFile->getUrl();
+            $relativeUrl = ltrim(str_replace($this->webdir, '', $thumbnailPath), "{$ds}");
+            //entity creation
+            $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+            $icon->setRelativeUrl($relativeUrl);
+            $icon->setMimeType('custom');
+            $icon->setShortcut(false);
+            $icon->setUuid(uniqid('', true));
+            $this->om->persist($icon);
+            $this->createShortcutIcon($icon);
+            $this->om->endFlushSuite();
+
+            return $icon;
         }
-        $file->move($dest, $hashName);
-        //entity creation
-        $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
-        $icon->setRelativeUrl("$this->basepath/{$hashName}");
-        $icon->setMimeType('custom');
-        $icon->setShortcut(false);
-        $this->om->persist($icon);
-        $this->createShortcutIcon($icon, $workspace);
-        $this->om->endFlushSuite();
-
-        return $icon;
     }
 
     /**
@@ -469,7 +466,7 @@ class IconManager
         ];
     }
 
-    private function createShortcutFromRelativeUrl($url, $workspace = null)
+    private function createShortcutFromRelativeUrl($url)
     {
         $ds = DIRECTORY_SEPARATOR;
 
@@ -478,7 +475,7 @@ class IconManager
             $stampImg = $this->iconSetRepo->findActiveRepositoryResourceStampIcon();
             $stampImg = (empty($stampImg)) ? null : "{$this->rootDir}{$ds}..{$ds}web{$ds}{$stampImg}";
             $originalIconLocation = "{$this->rootDir}{$ds}..{$ds}web{$ds}{$url}";
-            $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation, $workspace, $stampImg);
+            $shortcutLocation = $this->creator->shortcutThumbnail($originalIconLocation, $stampImg);
         } catch (\Exception $e) {
             $this->log("Couldn't create the shortcut icon: using the default one...", LogLevel::ERROR);
             $this->log(get_class($e).": {$e->getMessage()}", LogLevel::ERROR);
