@@ -561,6 +561,7 @@ class WebsitePage
             }
         } elseif ($this->type === WebsitePageTypeEnum::URL_PAGE) {
             $this->url = $optionsArray['url'];
+            $this->target = 1;
         }
     }
 
