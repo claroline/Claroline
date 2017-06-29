@@ -160,12 +160,17 @@ class Updater100000 extends Updater
     {
         $logos = new \DirectoryIterator($this->container->getParameter('claroline.param.logos_directory'));
         $logoService = $this->container->get('claroline.common.logo_service');
+        $ch = $this->container->get('claroline.config.platform_config_handler');
 
         foreach ($logos as $logo) {
             if ($logo->isFile()) {
                 $this->log('Saving logo '.$logo->getBasename().'...');
                 $file = new File($logo->getPathname());
-                $logoService->createLogo($file);
+                $logoFile = $logoService->createLogo($file);
+
+                if ($logo->getBasename() === $ch->getParameter('logo')) {
+                    $ch->setParameter('logo', $logoFile->getPublicFile()->getUrl());
+                }
             }
         }
     }
