@@ -173,7 +173,7 @@
     "choose_resource_form_type": "Brontype",
     "claro_admin_personal_workspace_resource_rights": "De bronnen van de persoonlijke werkruimte beheren",
     "claroline_bundle_missing": "De bundle %bundle% is niet geïnstalleerd. Instaleer die alvorens verder te gaan.",
-    "claroline_oauth_apps": "",
+    "claroline_oauth_apps": "Klanten en OAuth Apps van het platform",
     "classify_my_workspaces": "Mijn ruimten sorteren",
     "classify_workspaces": "De ruimten sorteren",
     "classroom": "In klas",
@@ -205,7 +205,7 @@
     "copiable": "Kopieerbaar",
     "copies": "Kopieën",
     "copy": "Kopiëren",
-    "copy_permalink_to_clipboard": "",
+    "copy_permalink_to_clipboard": "Kopieer permalink naar clipboard",
     "copy_to_clipboard_error": "",
     "copy_to_clipboard_success": "",
     "count_connections_and_users_by_date_range": "",
@@ -1395,5 +1395,10 @@
     "created_after": "Gemaakt na",
     "exception_page_title": "Oops! Er is een fout opgetreden...",
     "fullscreen_off": "",
-    "base_model": "Basismodel"
+    "base_model": "Basismodel",
+    "cascade_select": "Trapsgewijze drop-down lijst",
+    "copy_model_workspace": "Als model dupliceren",
+    "copy_model_workspaces": "{1} Dupliceer werkruimte als model|[2,Inf[ Dupliceer %count% werkruimten als modellen",
+    "copy_model_workspaces_confirm": "Bent u er zeker van dat u de volgende werkruimten [ %workspace_list% ] wenst te dupliceren ?",
+    "copy_workspace": "Dupliceren"
 }
