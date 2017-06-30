@@ -656,11 +656,12 @@ class DatabaseWriter
     private function createWidget($widgetConfiguration, Plugin $plugin, DistributionPluginBundle $pluginBundle, array $roles = [])
     {
         $widget = new Widget();
+        $widget->setPlugin($plugin);
 
         foreach ($roles as $role) {
             $widget->addRole($role);
         }
-        $this->persistWidget($widgetConfiguration, $plugin, $pluginBundle, $widget);
+       $this->persistWidget($widgetConfiguration, $plugin, $pluginBundle, $widget);
     }
 
     /**
@@ -674,7 +675,7 @@ class DatabaseWriter
         $widget->setName($widgetConfiguration['name']);
         $widget->setConfigurable($widgetConfiguration['is_configurable']);
         $widget->setExportable($widgetConfiguration['is_exportable']);
-        $widget->setPlugin($plugin);
+        //$widget->setPlugin($plugin);
         $widget->setDefaultWidth($widgetConfiguration['default_width']);
         $widget->setDefaultHeight($widgetConfiguration['default_height']);
 
