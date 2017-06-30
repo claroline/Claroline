@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "9ffab147504423a1a24ffba5bd68bb8b",
-    "content-hash": "4739d7c0ea82a409eedda0aecb42b9dc",
+    "hash": "0e362d919319f0fca0b79a3713e94379",
+    "content-hash": "32829271c087d9b6c0843af1025c52f4",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -120,16 +120,16 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "dev-master",
+            "version": "10.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "fb5907eaa70b9ba61aee819b3453e6b45b6a5d68"
+                "reference": "bf7357ce11626975fbe687f87538d164ff780779"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/fb5907eaa70b9ba61aee819b3453e6b45b6a5d68",
-                "reference": "fb5907eaa70b9ba61aee819b3453e6b45b6a5d68",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/bf7357ce11626975fbe687f87538d164ff780779",
+                "reference": "bf7357ce11626975fbe687f87538d164ff780779",
                 "shasum": ""
             },
             "require": {
@@ -389,7 +389,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-06-29 15:59:57"
+            "time": "2017-06-30 14:41:59"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -7832,7 +7832,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "claroline/distribution": 20,
         "symfony/phpunit-bridge": 20,
         "phpmd/phpmd": 0,
         "stefk/md": 20
