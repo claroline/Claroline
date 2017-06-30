@@ -27,7 +27,7 @@ tinymce.claroline = {
 
 tinymce.claroline.init = tinymce.claroline.init || {}
 tinymce.claroline.plugins = tinymce.claroline.plugins || {}
-tinymce.claroline.css = tinymce.claroline.init || []
+tinymce.claroline.css = tinymce.claroline.css || []
 tinymce.claroline.addCss = css => tinymce.claroline.css.push(css)
 
 /**
