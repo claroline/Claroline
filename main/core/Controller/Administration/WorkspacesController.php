@@ -110,7 +110,7 @@ class WorkspacesController extends Controller
 
             $this->workspaceManager->importWorkspaces($workspaces);
 
-            return $this->redirect($this->generateUrl('claro_admin_workspaces_management'));
+            return $this->redirect($this->generateUrl('claro_admin_open_tool', ['toolName' => 'workspace_management']));
         }
 
         return ['form' => $form->createView()];

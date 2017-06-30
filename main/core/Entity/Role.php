@@ -381,7 +381,9 @@ class Role implements RoleInterface
 
     public function __toString()
     {
-        return $this->workspace ? '['.$this->workspace->getName().'] '.$this->name : $this->name;
+        $name = $this->workspace ? '['.$this->workspace->getName().'] '.$this->name : $this->name;
+
+        return "[{$this->getId()}]".$name;
     }
 
     public function addPanelFacetRole(PanelFacetRole $pfr)

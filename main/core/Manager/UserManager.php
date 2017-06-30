@@ -425,13 +425,16 @@ class UserManager
         //I need to do that to import roles from models. Please don't ask why, I have no fucking idea.
         $this->objectManager->clear();
 
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $this->objectManager->merge($roleUser);
+        $this->objectManager->persist($roleUser);
+
         foreach ($tmpRoles as $role) {
             if ($role) {
                 $additionalRoles[] = $this->objectManager->merge($role);
             }
         }
 
-        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $max = $roleUser->getMaxUsers();
         $total = $this->countUsersByRoleIncludingGroup($roleUser);
 
@@ -618,11 +621,13 @@ class UserManager
                 if ($logger) {
                     $logger(' [UOW size: '.$this->objectManager->getUnitOfWork()->size().']');
                 }
+
                 $this->objectManager->forceFlush();
 
                 if ($logger) {
                     $logger(' flushing users...');
                 }
+
                 $tmpRoles = $additionalRoles;
                 $this->objectManager->clear();
                 $additionalRoles = [];
@@ -680,12 +685,10 @@ class UserManager
         }
 
         $personalWorkspaceName = $this->translator->trans('personal_workspace', [], 'platform').' - '.$user->getUsername();
-
         $workspace = new Workspace();
         $workspace->setCode($code);
         $workspace->setName($personalWorkspaceName);
         $workspace->setCreator($user);
-
         $workspace = !$model ?
             $this->workspaceManager->copy($this->workspaceManager->getDefaultModel(true), $workspace) :
             $this->workspaceManager->copy($model, $workspace);
