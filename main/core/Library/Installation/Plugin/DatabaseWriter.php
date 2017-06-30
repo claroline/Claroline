@@ -458,6 +458,22 @@ class DatabaseWriter
      */
     public function persistResourceAction(array $action)
     {
+        //also remove duplicatas if some are found
+        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName($action['resource_type']);
+        $resourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+          ->findBy(['name' => $action['name'], 'resourceType' => $resourceType]);
+
+        if (count($resourceActions) > 1) {
+            //keep the first one, remove the rest and then flush
+            $this->log('Removing superfluous masks...', LogLevel::ERROR);
+
+            for ($i = 1; $i < count($resourceActions); ++$i) {
+                $this->em->remove($resourceActions[$i]);
+            }
+
+            $this->em->forceFlush();
+        }
+
         $this->log('Updating resource action '.$action['name']);
 
         $maskType = ($action['resource_type']) ?
@@ -468,7 +484,6 @@ class DatabaseWriter
 
         $value = $this->mm->encodeMask([$action['value'] => true], $maskType);
 
-        $resourceType = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName($action['resource_type']);
         $resourceAction = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
             ->findOneBy(['name' => $action['name'], 'resourceType' => $resourceType]);
 
