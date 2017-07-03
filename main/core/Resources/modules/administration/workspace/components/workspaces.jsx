@@ -124,7 +124,7 @@ class Workspaces extends Component {
               {name: 'isModel', type: 'boolean', label: t('model')},
               {name: 'isPersonal', type: 'boolean', label: t('personal_workspace'), flags: LIST_PROP_DEFAULT&~LIST_PROP_DISPLAYED},
               {name: 'displayable', type: 'boolean', label: t('displayable_in_workspace_list'), flags: LIST_PROP_DEFAULT&~LIST_PROP_DISPLAYED},
-              {name: 'dateCreation', type: 'date', label: t('creation_date'), flags:~LIST_PROP_FILTERABLE},
+              {name: 'creationDate', type: 'date', label: t('creation_date'), flags:~LIST_PROP_FILTERABLE},
               {name: 'createdAfter', type: 'date', label: t('created_after'), flags: LIST_PROP_FILTERABLE&~LIST_PROP_DISPLAYABLE&~LIST_PROP_DISPLAYED},
               {name: 'createdBefore', type: 'date', label: t('created_before'), flags: LIST_PROP_FILTERABLE&~LIST_PROP_DISPLAYABLE&~LIST_PROP_DISPLAYED},
               {name: 'maxStorageSize', type: 'string', label: t('max_storage_size'), flags: LIST_PROP_DEFAULT&~LIST_PROP_DISPLAYED},
