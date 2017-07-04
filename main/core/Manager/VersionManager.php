@@ -104,6 +104,11 @@ class VersionManager
         return explode("\n", $data);
     }
 
+    public function getDistributionVersion()
+    {
+        return $this->getVersionFile()[0];
+    }
+
     public function getDistributionVersionFilePAth()
     {
         return __DIR__.'/../../../VERSION.txt';
