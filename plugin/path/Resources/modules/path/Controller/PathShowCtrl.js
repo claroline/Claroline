@@ -31,7 +31,7 @@ export default class PathShowCtrl extends PathBaseCtrl {
     if (angular.isObject(this.userProgression)) {
       this.userProgressionService.set(this.userProgression)
     }
-    
+
     this.AuthorizationCheckerService.setEditEnabled(this.editEnabled)
     this.userProgressionService.setTotalProgression(this.totalProgression)
   }

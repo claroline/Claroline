@@ -3,12 +3,12 @@
     data-ng-class="{fullscreen: pathShowCtrl.fullscreen}"
 >
     <header class="page-header resource-header">
-        <h1 data-ng-init="progression = pathShowCtrl.getTotalProgression()">
+        <h1>
             <div class="c100 sm p{{ progression }} path-progression" data-ng-if="pathShowCtrl.userProgression">
-                <span data-ng-if="100 !== progression">{{ progression }}%</span>
+                <span data-ng-if="100 !== progression">{{ pathShowCtrl.getTotalProgression() }}%</span>
                 <span data-ng-if="100 === progression">
                     <span class="fa fa-fw fa-check"></span>
-                    <span class="sr-only">{{ progression }}%</span>
+                    <span class="sr-only">{{ pathShowCtrl.getTotalProgression() }}%</span>
                 </span>
 
                 <div class="slice" role="presentation">
