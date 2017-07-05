@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\Entity\Home\HomeTab;
+use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -1442,7 +1444,9 @@ class WorkspaceManager
                 $orderedTool->getName(),
                 $workspace
             );
+            $workspaceOrderedTool->setOrder($orderedTool->getOrder());
             $rights = $orderedTool->getRights();
+
             foreach ($rights as $right) {
                 $role = $right->getRole();
 
@@ -1464,6 +1468,127 @@ class WorkspaceManager
                 }
             }
         }
+
+        $homeTabs = $this->container->get('claroline.manager.home_tab_manager')->getHomeTabByWorkspace($source);
+        //get home tabs from source
+
+        $this->duplicateHomeTabs($source, $workspace, $homeTabs);
+    }
+
+    /**
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $source
+     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param array                                            $homeTabs
+     */
+    private function duplicateHomeTabs(
+        Workspace $source,
+        Workspace $workspace,
+        array $homeTabs
+    ) {
+        $this->log('Duplicating home tabs...');
+        $this->om->startFlushSuite();
+        $homeTabConfigs = $this->homeTabManager
+            ->getHomeTabConfigsByWorkspaceAndHomeTabs($source, $homeTabs);
+        $order = 1;
+        $widgetCongigErrors = [];
+        $widgetDisplayConfigs = [];
+        $widgets = [];
+        $widgetManager = $this->container->get('claroline.manager.widget_manager');
+
+        foreach ($homeTabConfigs as $homeTabConfig) {
+            $homeTab = $homeTabConfig->getHomeTab();
+            $widgetHomeTabConfigs = $homeTab->getWidgetHomeTabConfigs();
+            $wdcs = $widgetManager->getWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
+                $source,
+                $widgetHomeTabConfigs->toArray()
+            );
+            foreach ($wdcs as $wdc) {
+                $widgetInstanceId = $wdc->getWidgetInstance()->getId();
+                $widgetDisplayConfigs[$widgetInstanceId] = $wdc;
+            }
+            $newHomeTab = new HomeTab();
+            $newHomeTab->setType('workspace');
+            $newHomeTab->setWorkspace($workspace);
+            $newHomeTab->setName($homeTab->getName());
+            $this->om->persist($newHomeTab);
+            $tabsInfos[] = ['original' => $homeTab, 'copy' => $newHomeTab];
+            $newHomeTabConfig = new HomeTabConfig();
+            $newHomeTabConfig->setHomeTab($newHomeTab);
+            $newHomeTabConfig->setWorkspace($workspace);
+            $newHomeTabConfig->setType('workspace');
+            $newHomeTabConfig->setVisible($homeTabConfig->isVisible());
+            $newHomeTabConfig->setLocked($homeTabConfig->isLocked());
+            $newHomeTabConfig->setTabOrder($order);
+            $this->om->persist($newHomeTabConfig);
+            ++$order;
+            foreach ($widgetHomeTabConfigs as $widgetConfig) {
+                $widgetInstance = $widgetConfig->getWidgetInstance();
+                $widgetInstanceId = $widgetInstance->getId();
+                $widget = $widgetInstance->getWidget();
+                $newWidgetInstance = new WidgetInstance();
+                $newWidgetInstance->setIsAdmin(false);
+                $newWidgetInstance->setIsDesktop(false);
+                $newWidgetInstance->setWorkspace($workspace);
+                $newWidgetInstance->setWidget($widget);
+                $newWidgetInstance->setName($widgetInstance->getName());
+                $this->om->persist($newWidgetInstance);
+                $newWidgetConfig = new WidgetHomeTabConfig();
+                $newWidgetConfig->setType('workspace');
+                $newWidgetConfig->setWorkspace($workspace);
+                $newWidgetConfig->setHomeTab($newHomeTab);
+                $newWidgetConfig->setWidgetInstance($newWidgetInstance);
+                $newWidgetConfig->setVisible($widgetConfig->isVisible());
+                $newWidgetConfig->setLocked($widgetConfig->isLocked());
+                $newWidgetConfig->setWidgetOrder($widgetConfig->getWidgetOrder());
+                $this->om->persist($newWidgetConfig);
+                $newWidgetDisplayConfig = new WidgetDisplayConfig();
+                $newWidgetDisplayConfig->setWorkspace($workspace);
+                $newWidgetDisplayConfig->setWidgetInstance($newWidgetInstance);
+                if (isset($widgetDisplayConfigs[$widgetInstanceId])) {
+                    $newWidgetDisplayConfig->setColor(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getColor()
+                    );
+                    $newWidgetDisplayConfig->setRow(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getRow()
+                    );
+                    $newWidgetDisplayConfig->setColumn(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getColumn()
+                    );
+                    $newWidgetDisplayConfig->setWidth(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getWidth()
+                    );
+                    $newWidgetDisplayConfig->setHeight(
+                        $widgetDisplayConfigs[$widgetInstanceId]->getHeight()
+                    );
+                } else {
+                    $newWidgetDisplayConfig->setWidth($widget->getDefaultWidth());
+                    $newWidgetDisplayConfig->setHeight($widget->getDefaultHeight());
+                }
+                $widgets[] = ['widget' => $widget, 'original' => $widgetInstance, 'copy' => $newWidgetInstance];
+                $this->om->persist($newWidgetDisplayConfig);
+            }
+        }
+        $this->om->endFlushSuite();
+        $this->om->forceFlush();
+        foreach ($widgets as $widget) {
+            if ($widget['widget']->isConfigurable()) {
+                try {
+                    $this->dispatcher->dispatch(
+                        'copy_widget_config_'.$widget['widget']->getName(),
+                        'CopyWidgetConfiguration',
+                        [$widget['original'], $widget['copy'], [], $tabsInfos]
+                    );
+                } catch (NotPopulatedEventException $e) {
+                    $widgetCongigErrors[] = [
+                        'widgetName' => $widget['widget']->getName(),
+                        'widgetInstanceName' => $widget['original']->getName(),
+                        'error' => $e->getMessage(),
+                    ];
+                }
+            }
+        }
+
+        return $widgetCongigErrors;
     }
 
     /**
