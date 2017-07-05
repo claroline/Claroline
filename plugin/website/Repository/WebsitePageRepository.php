@@ -59,6 +59,7 @@ class WebsitePageRepository extends NestedTreeRepository
                 page.left,
                 page.level,
                 page.right,
+                IDENTITY(page.parent) AS parent,
                 page.root,
                 page.type
             ');
@@ -74,9 +75,8 @@ class WebsitePageRepository extends NestedTreeRepository
                 ->setParameter('visible', true);
         }
 
-        $options = ['decorate' => false];
         $nodes = $queryBuilder->getQuery()->getArrayResult();
-        $tree = $this->buildTreeArray($nodes, $options);
+        $tree = $this->buildTreeArray($nodes);
 
         return $tree;
     }
@@ -136,5 +136,19 @@ class WebsitePageRepository extends NestedTreeRepository
             ->setParameter('type', 'root')
             ->getQuery()
             ->getSingleResult();
+    }
+
+    public function buildTreeArray(array $nodes)
+    {
+        $nodeIds = [];
+        $newNodes = [];
+        foreach ($nodes as $node) {
+            if (empty($node['parent']) || in_array($node['parent'], $nodeIds)) {
+                $nodeIds[] = $node['id'];
+                $newNodes[] = $node;
+            }
+        }
+
+        return parent::buildTreeArray($newNodes);
     }
 }
