@@ -91,7 +91,7 @@ class Updater090300 extends Updater
                     $groups = $om->findByIds('Claroline\CoreBundle\Entity\User', $groupIds);
                     $nodes = $om->findByIds('Claroline\CoreBundle\Entity\Resource\ResourceNode', $nodeIds);
                     if (count($users) === 0) {
-                        $users[0] = $this->connection->get('claroline.manager.user_manager')->getDefaultUser();
+                        $users[0] = $this->container->get('claroline.manager.user_manager')->getDefaultUser();
                     }
                     $user = $users[0];
 
