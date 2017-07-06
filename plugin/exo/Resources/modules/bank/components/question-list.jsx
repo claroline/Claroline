@@ -53,42 +53,40 @@ SelectedRow.propTypes = {
 
 const QuestionTableHeader = props =>
   <TableHeader>
-    <tr>
-      <TableHeaderCell align="center">
-        <input type="checkbox" onChange={props.toggleSelectAll} />
-      </TableHeaderCell>
-      <TableSortingCell
-        direction={'type' === props.sortBy.property ? props.sortBy.direction : 0}
-        onSort={() => props.onSort('type')}
-      >
-        {tex('type')}
-      </TableSortingCell>
-      <TableSortingCell
-        direction={'content' === props.sortBy.property ? props.sortBy.direction : 0}
-        onSort={() => props.onSort('content')}
-      >
-        {tex('question')}
-      </TableSortingCell>
-      <TableSortingCell
-        direction={'category' === props.sortBy.property ? props.sortBy.direction : 0}
-        onSort={() => props.onSort('category')}
-      >
-        {tex('category')}
-      </TableSortingCell>
-      <TableSortingCell
-        direction={'updated' === props.sortBy.property ? props.sortBy.direction : 0}
-        onSort={() => props.onSort('updated')}
-      >
-        {tex('last_modified')}
-      </TableSortingCell>
-      <TableSortingCell
-        direction={'author' === props.sortBy.property ? props.sortBy.direction : 0}
-        onSort={() => props.onSort('author')}
-      >
-        {tex('creator')}
-      </TableSortingCell>
-      <TableHeaderCell align="right">&nbsp;</TableHeaderCell>
-    </tr>
+    <TableHeaderCell align="center">
+      <input type="checkbox" onChange={props.toggleSelectAll} />
+    </TableHeaderCell>
+    <TableSortingCell
+      direction={'type' === props.sortBy.property ? props.sortBy.direction : 0}
+      onSort={() => props.onSort('type')}
+    >
+      {tex('type')}
+    </TableSortingCell>
+    <TableSortingCell
+      direction={'content' === props.sortBy.property ? props.sortBy.direction : 0}
+      onSort={() => props.onSort('content')}
+    >
+      {tex('question')}
+    </TableSortingCell>
+    <TableSortingCell
+      direction={'category' === props.sortBy.property ? props.sortBy.direction : 0}
+      onSort={() => props.onSort('category')}
+    >
+      {tex('category')}
+    </TableSortingCell>
+    <TableSortingCell
+      direction={'updated' === props.sortBy.property ? props.sortBy.direction : 0}
+      onSort={() => props.onSort('updated')}
+    >
+      {tex('last_modified')}
+    </TableSortingCell>
+    <TableSortingCell
+      direction={'author' === props.sortBy.property ? props.sortBy.direction : 0}
+      onSort={() => props.onSort('author')}
+    >
+      {tex('creator')}
+    </TableSortingCell>
+    <TableHeaderCell align="right">&nbsp;</TableHeaderCell>
     {0 < props.selected.length &&
       <SelectedRow
         selected={props.selected}
