@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0e362d919319f0fca0b79a3713e94379",
-    "content-hash": "32829271c087d9b6c0843af1025c52f4",
+    "hash": "ab19c2b0564ff30b7ff1250e3dfa2f73",
+    "content-hash": "ca6840ca387bcb330c3fc24d2e2cba01",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -120,16 +120,16 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "10.0.1",
+            "version": "10.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "bf7357ce11626975fbe687f87538d164ff780779"
+                "reference": "d5ee3e926731206b1c93ba4ad10b8ece7b51909e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/bf7357ce11626975fbe687f87538d164ff780779",
-                "reference": "bf7357ce11626975fbe687f87538d164ff780779",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/d5ee3e926731206b1c93ba4ad10b8ece7b51909e",
+                "reference": "d5ee3e926731206b1c93ba4ad10b8ece7b51909e",
                 "shasum": ""
             },
             "require": {
@@ -389,7 +389,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-06-30 14:41:59"
+            "time": "2017-07-05 19:03:11"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3755,7 +3755,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "KnpLabs",
+                    "name": "Knplabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
@@ -7832,6 +7832,7 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
+        "claroline/distribution": 20,
         "symfony/phpunit-bridge": 20,
         "phpmd/phpmd": 0,
         "stefk/md": 20
