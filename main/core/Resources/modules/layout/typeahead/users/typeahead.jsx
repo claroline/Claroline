@@ -33,13 +33,15 @@ UsersList.propTypes = {
 const SelectedUser = props => {
 
   return (
-    <span className="selected-user label label-success">
-      {props.user.firstName} {props.user.lastName}
+    <span style={{display: 'inline-block'}}>
+      <span className="selected-user label label-success">
+        {props.user.firstName} {props.user.lastName}
 
-      <button type="button" className="btn btn-link" onClick={props.remove}>
-        <span className="fa fa-times" />
-        <span className="sr-only">{t('list_remove_filter')}</span>
-      </button>
+        <button type="button" className="btn btn-link" onClick={props.remove}>
+          <span className="fa fa-times" />
+          <span className="sr-only">{t('list_remove_filter')}</span>
+        </button>
+      </span>
     </span>
   )
 }
