@@ -177,6 +177,14 @@
 <script src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
 <script src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
 
+{% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
+    <script src="{{ asset("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") }}"></script>
+{% elseif asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ "_" ~ app.request.locale | upper ~ ".js") %}
+    <script src="{{ asset("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ "_" ~ app.request.locale | upper ~ ".js") }}"></script>
+{% else %}
+    <script src="{{ asset("bundles/stfalcontinymce/vendor/tinymce/langs/en.js") }}"></script>
+{% endif %}
+
 <script src="{{ hotAsset('dist/claroline-distribution-main-core-tinymce.js') }}"></script>
 {% javascripts debug=false filter='jsmin' output='vendor/claroline/js/tinymce.js'
     '@ClarolineCoreBundle/Resources/public/js/tinymce/resource_picker_button.js'
