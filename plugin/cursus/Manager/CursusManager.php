@@ -276,7 +276,7 @@ class CursusManager
         $cursus->setCourse($course);
         $cursus->setDescription($description);
         $cursus->setBlocking($blocking);
-        $course->refreshUuid();
+        $cursus->refreshUuid();
         $cursus->setWorkspace($workspace);
         $cursus->setDetails(['color' => $color]);
         if ($icon) {
