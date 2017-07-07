@@ -284,11 +284,11 @@ class IconSetManager
         return new IconItem($iconSet, $iconRelativeUrl, 'shortcut', 'shortcut');
     }
 
-    public function setActiveResourceIconSetByCname($cname)
+    public function setActiveResourceIconSetByCname($cname, $force = false)
     {
         // Get active Icon Set
         $activeSet = $this->getActiveResourceIconSet();
-        if ($activeSet->getCname() === $cname) {
+        if (!$force && $activeSet->getCname() === $cname) {
             return true;
         }
         $newActiveSet = $this->getIconSetByCName($cname);
