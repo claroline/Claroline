@@ -247,7 +247,11 @@ class ThumbnailCreator
         if (!file_exists($url)) {
             throw new FileNotFoundException("File not found: '${url}'");
         }
-        $imageType = exif_imagetype($url);
+        try {
+            $imageType = exif_imagetype($url);
+        } catch (\Exception $e) {
+            throw new ExtensionNotSupportedException();
+        }
         $imageContent = file_get_contents($url);
         // Check if imagetype is false or if image is svg
         if (!$imageType) {

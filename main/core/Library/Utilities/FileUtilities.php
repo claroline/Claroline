@@ -212,14 +212,13 @@ class FileUtilities
     public function getActiveDirectoryName()
     {
         $finder = new Finder();
+        $finder->depth('== 0');
         $finder->directories()->in($this->publicFilesDir)->name('/^[a-zA-Z]{20}$/');
         $finder->sortByName();
-
         if ($finder->count() === 0) {
             $activeDirectoryName = $this->generateNextDirectoryName();
         } else {
             $i = 0;
-
             foreach ($finder as $dir) {
                 ++$i;
                 if ($i === $finder->count()) {
