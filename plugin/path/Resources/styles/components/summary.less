@@ -282,8 +282,10 @@
 
     .page.fullscreen {
         .summary-container {
-            width: @path-summary-fullscreen-width;
-
+            &.opened {
+                width: @path-summary-fullscreen-width;
+            }
+            
             &.opened.pinned {
                 + .content-container {
                     margin-left: @path-summary-fullscreen-width;
