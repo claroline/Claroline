@@ -80,7 +80,7 @@ export default class CourseCreationModalCtrl {
     const workspaceModelsUrl = Routing.generate('api_get_workspace_models')
     this.$http.get(workspaceModelsUrl).then(d => {
       if (d['status'] === 200) {
-        const datas = JSON.parse(d['data'])
+        const datas = d['data']
         datas.forEach(wm => this.workspaceModels.push(wm))
       }
     })

@@ -1785,20 +1785,17 @@ class AdminManagementController extends Controller
      * Retrieves workspace models list for an user
      *
      * @param User $user
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function getWorkspaceModelsAction(User $user)
     {
-        $this->cursusManager->checkAccess($user);
-        $models = $this->workspaceModelManager->getModelsByUser($user);
-        $serializedModels = $this->serializer->serialize(
-            $models,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
+        $data = $this->get('claroline.API.finder')->search(
+          'Claroline\CoreBundle\Entity\Workspace\Workspace',
+          0,
+          100, //arbitrary
+          ['filters' => ['isModel' => true]]
         );
 
-        return new JsonResponse($serializedModels, 200);
+        return new JsonResponse($data['results'], 200);
     }
 
     /**
