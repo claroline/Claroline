@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Entity\Model;
 
+use Doctrine\ORM\Mapping as ORM;
 use Ramsey\Uuid\Uuid;
 
 /**
