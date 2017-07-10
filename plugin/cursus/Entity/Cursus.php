@@ -192,6 +192,7 @@ class Cursus
         $this->cursusUsers = new ArrayCollection();
         $this->cursusGroups = new ArrayCollection();
         $this->organizations = new ArrayCollection();
+        $this->refreshUuid();
     }
 
     public function getId()

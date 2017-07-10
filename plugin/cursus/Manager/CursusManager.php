@@ -276,7 +276,6 @@ class CursusManager
         $cursus->setCourse($course);
         $cursus->setDescription($description);
         $cursus->setBlocking($blocking);
-        $cursus->refreshUuid();
         $cursus->setWorkspace($workspace);
         $cursus->setDetails(['color' => $color]);
         if ($icon) {
@@ -366,7 +365,6 @@ class CursusManager
         array $organizations = []
     ) {
         $course = new Course();
-        $course->refreshUuid();
         $course->setTitle($title);
         $course->setCode($code);
         $course->setPublicRegistration($publicRegistration);

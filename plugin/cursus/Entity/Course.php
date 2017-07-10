@@ -193,6 +193,7 @@ class Course
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->sessions = new ArrayCollection();
         $this->validators = new ArrayCollection();
         $this->organizations = new ArrayCollection();
