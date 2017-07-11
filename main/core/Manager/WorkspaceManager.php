@@ -1433,8 +1433,7 @@ class WorkspaceManager
             if ($role->getWorkspace()) {
                 if (
                 isset($workspaceRoles[$key]) &&
-                !empty($workspaceRoles[$key]) &&
-                $workspaceRoles[$key]->getWorkspace()->getGuid() === $role->getWorkspace()->getGuid()
+                !empty($workspaceRoles[$key])
                 ) {
                     $newRight->setRole($workspaceRoles[$key]);
 
@@ -1442,8 +1441,6 @@ class WorkspaceManager
                     $this->om->persist($newRight);
                 } else {
                     $this->log('Dont do anything');
-             //   $newRight->setRole($role);
-                //TODO MODEL persist here aswell later
                 }
             }
         }
