@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
-use Composer\Package\PackageInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -115,7 +114,6 @@ class OperationExecutor
         $this->log('Building install/update operations list...');
         $current = $this->versionManager->openRepository($this->installedRepoFile);
 
-        /** @var PackageInterface $currentPackage */
         foreach ($current->getCanonicalPackages() as $currentPackage) {
             $extra = $currentPackage->getExtra();
             //this is a meta package if the bundles key exists
@@ -326,7 +324,8 @@ class OperationExecutor
         return;
     }
 
-    private function buildOperation($type, PackageInterface $package)
+    //Composer\Package\PackageInterface but the use causes some issue
+    private function buildOperation($type, $package)
     {
         $vendorDir = $this->kernel->getRootDir().'/../vendor';
         $targetDir = $package->getTargetDir() ?: '';
