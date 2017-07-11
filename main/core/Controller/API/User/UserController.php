@@ -277,38 +277,7 @@ class UserController extends FOSRestController
      */
     public function getPublicUserAction(User $user)
     {
-        $settingsProfile = $this->facetManager->getVisiblePublicPreference();
-        $publicUser = [];
-
-        foreach ($settingsProfile as $property => $isViewable) {
-            if ($isViewable || $user === $this->container->get('security.token_storage')->getToken()->getUser()) {
-                switch ($property) {
-                    case 'baseData':
-                        $publicUser['lastName'] = $user->getLastName();
-                        $publicUser['firstName'] = $user->getFirstName();
-                        $publicUser['username'] = $user->getUsername();
-                        $publicUser['picture'] = $user->getPicture();
-                        $publicUser['description'] = $user->getAdministrativeCode();
-                        break;
-                    case 'email':
-                        $publicUser['mail'] = $user->getMail();
-                        break;
-                    case 'phone':
-                        $publicUser['phone'] = $user->getPhone();
-                        break;
-                    case 'sendMail':
-                        $publicUser['mail'] = $user->getMail();
-                        $publicUser['allowSendMail'] = true;
-                        break;
-                    case 'sendMessage':
-                        $publicUser['allowSendMessage'] = true;
-                        $publicUser['id'] = $user->getId();
-                        break;
-                }
-            }
-        }
-
-        return $publicUser;
+        return $this->container->get('claroline.serializer.user')->serialize($user, true);
     }
 
     /**

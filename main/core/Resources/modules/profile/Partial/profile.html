@@ -72,6 +72,12 @@
                           <div class="description"> {{ pc.user.description }} </div>
                       </div>
                   </div>
+                  <div class="col-md-4" ng-if="pc.user.groups.length > 0">
+                      <h4>{{ 'groups'|trans:{}:'platform' }}</h4>
+                      <div class="groups">
+                          <p ng-repeat="(key, group) in pc.user.groups"> {{ group.name }}</p>
+                      </div>
+                  </div>
               </div>
               <div ng-if="facet.is_main" ng-repeat="(key, facet) in pc.facets">
                   <form class="facet-main" ng-include="'facet_renderer.html'"></form>

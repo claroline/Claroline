@@ -513,6 +513,7 @@ class UserControllerTest extends TransactionalTestCase
                 'allowSendMail' => true,
                 'allowSendMessage' => true,
                 'id' => $user->getId(),
+                'groups' => [],
             ],
             $data
         );
@@ -520,14 +521,14 @@ class UserControllerTest extends TransactionalTestCase
         //A use can see other people...
         $this->client->request('GET', "/api/user/{$admin->getId()}/public");
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals([], $data);
+        $this->assertEquals(['groups' => []], $data);
 
         //...unless some permissions were granted explicitely
         $this->persister->profileProperty('username', 'ROLE_USER');
         $this->persister->flush();
         $this->client->request('GET', "/api/user/{$admin->getId()}/public");
         $data = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertEquals([], $data);
+        $this->assertEquals(['groups' => []], $data);
 
         //and the admin can see everyone.
         $this->logIn($admin);
@@ -542,6 +543,7 @@ class UserControllerTest extends TransactionalTestCase
                 'allowSendMail' => true,
                 'allowSendMessage' => true,
                 'id' => $user->getId(),
+                'groups' => [],
             ],
             $data
         );
