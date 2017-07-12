@@ -240,7 +240,7 @@ class WorkspaceController extends FOSRestController
     {
         $workspaces = $this->container->get('claroline.manager.api_manager')->getParameters('ids', 'Claroline\CoreBundle\Entity\Workspace\Workspace');
         $newWorkspaces = [];
-        $isModel = intval($isModel);
+        $isModel = $isModel === 'true' ? 1 : 0;
         $this->om->startFlushSuite();
 
         foreach ($workspaces as $workspace) {
