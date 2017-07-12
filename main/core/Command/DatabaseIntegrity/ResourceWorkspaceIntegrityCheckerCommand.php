@@ -20,8 +20,8 @@ class ResourceWorkspaceIntegrityCheckerCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:resource_workspace:check')
-            ->setDescription('Checks the resource workspace integrity of the platform.');
+        $this->setName('claroline:resource:check')
+            ->setDescription('Checks the resource integrity of the platform.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

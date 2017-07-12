@@ -1935,18 +1935,23 @@ class ResourceManager
 
         /** @var ResourceNode $resource */
         foreach ($resources as $resource) {
-            if ($resource->getWorkspace() === null && $parent = $resource->getParent()) {
-                if ($workspace = $parent->getWorkspace()) {
-                    $resource->setWorkspace($workspace);
-                    $this->om->persist($workspace);
-                    $this->log('Set workspace '.$workspace->getName().' for '.$resource->getName());
-                    ++$i;
+            $absRes = $this->getResourceFromNode($resource);
 
-                    if ($batchSize % $i === 0) {
-                        $this->om->flush();
+            if (!$absRes) {
+                $this->log('Resource '.$resource->getName().' not found. Removing...');
+                $this->om->remove($resource);
+            } else {
+                if ($resource->getWorkspace() === null && $parent = $resource->getParent()) {
+                    if ($workspace = $parent->getWorkspace()) {
+                        $resource->setWorkspace($workspace);
+                        $this->om->persist($workspace);
+                        if ($batchSize % $i === 0) {
+                            $this->om->flush();
+                        }
                     }
                 }
             }
+            ++$i;
         }
 
         $this->om->flush();
