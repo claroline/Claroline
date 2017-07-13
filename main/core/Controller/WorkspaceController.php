@@ -363,7 +363,7 @@ class WorkspaceController extends Controller
             }
             $workspace = $this->workspaceManager->copy($model, $workspace);
             $this->tokenUpdater->update($this->tokenStorage->getToken());
-            $route = $this->router->generate('claro_workspace_by_user');
+            $route = $this->router->generate('claro_workspace_open', ['workspaceId' => $workspace->getId()]);
 
             $msg = $this->get('translator')->trans(
                 'successfull_workspace_creation',
