@@ -1364,23 +1364,26 @@ class WorkspaceManager
         foreach ($resourceNodes as $resourceNode) {
             try {
                 $this->log('Duplicating '.$resourceNode->getName().' - '.$resourceNode->getId().' - from type '.$resourceNode->getResourceType()->getName().' into '.$rootNode->getName());
-                $copy = $this->resourceManager->copy(
-                    $resourceNode,
-                    $rootNode,
-                    $user,
-                    false,
-                    false
-                );
-                if ($copy) {
-                    $copy->getResourceNode()->setIndex($resourceNode->getIndex());
-                    $this->om->persist($copy->getResourceNode());
-                    $resourceInfos['copies'][] = ['original' => $resourceNode, 'copy' => $copy->getResourceNode()];
-                    /*** Copies rights ***/
-                    $this->duplicateRights(
-                        $resourceNode,
-                        $copy->getResourceNode(),
-                        $workspaceRoles
-                    );
+                //activities will be removed anyway
+                if ($resourceNode->getResourceType()->getName() !== 'activity') {
+                    $copy = $this->resourceManager->copy(
+                      $resourceNode,
+                      $rootNode,
+                      $user,
+                      false,
+                      false
+                  );
+                    if ($copy) {
+                        $copy->getResourceNode()->setIndex($resourceNode->getIndex());
+                        $this->om->persist($copy->getResourceNode());
+                        $resourceInfos['copies'][] = ['original' => $resourceNode, 'copy' => $copy->getResourceNode()];
+                      /*** Copies rights ***/
+                      $this->duplicateRights(
+                          $resourceNode,
+                          $copy->getResourceNode(),
+                          $workspaceRoles
+                      );
+                    }
                 }
             } catch (NotPopulatedEventException $e) {
                 $resourcesErrors[] = [
