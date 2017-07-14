@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "615031036463a619ef1fa3bd8ef62a15ccfbb554"
+                "reference": "b315825d705dca8b1d565d78e30204196df672df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/615031036463a619ef1fa3bd8ef62a15ccfbb554",
-                "reference": "615031036463a619ef1fa3bd8ef62a15ccfbb554",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b315825d705dca8b1d565d78e30204196df672df",
+                "reference": "b315825d705dca8b1d565d78e30204196df672df",
                 "shasum": ""
             },
             "require": {
@@ -389,7 +389,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-07-01 08:30:51"
+            "time": "2017-07-13 05:46:56"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3571,17 +3571,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "72e1a01fcf09dbd2033edd29ba8b3283f85b6eb0"
+                "reference": "a190b9b367c463d049fa333f61dbe5648e68753f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/72e1a01fcf09dbd2033edd29ba8b3283f85b6eb0",
-                "reference": "72e1a01fcf09dbd2033edd29ba8b3283f85b6eb0",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/a190b9b367c463d049fa333f61dbe5648e68753f",
+                "reference": "a190b9b367c463d049fa333f61dbe5648e68753f",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-06-12 05:45:05"
+            "time": "2017-07-07 07:27:26"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -6065,16 +6065,16 @@
         },
         {
             "name": "zendframework/zend-eventmanager",
-            "version": "3.1.0",
+            "version": "3.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-eventmanager.git",
-                "reference": "c3bce7b7d47c54040b9ae51bc55491c72513b75d"
+                "reference": "9d72db10ceb6e42fb92350c0cb54460da61bd79c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-eventmanager/zipball/c3bce7b7d47c54040b9ae51bc55491c72513b75d",
-                "reference": "c3bce7b7d47c54040b9ae51bc55491c72513b75d",
+                "url": "https://api.github.com/repos/zendframework/zend-eventmanager/zipball/9d72db10ceb6e42fb92350c0cb54460da61bd79c",
+                "reference": "9d72db10ceb6e42fb92350c0cb54460da61bd79c",
                 "shasum": ""
             },
             "require": {
@@ -6083,7 +6083,7 @@
             "require-dev": {
                 "athletic/athletic": "^0.1",
                 "container-interop/container-interop": "^1.1.0",
-                "phpunit/phpunit": "^5.6",
+                "phpunit/phpunit": "^6.0.7 || ^5.7.14",
                 "zendframework/zend-coding-standard": "~1.0.0",
                 "zendframework/zend-stdlib": "^2.7.3 || ^3.0"
             },
@@ -6094,8 +6094,8 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.1-dev",
-                    "dev-develop": "3.2-dev"
+                    "dev-master": "3.2-dev",
+                    "dev-develop": "3.3-dev"
                 }
             },
             "autoload": {
@@ -6115,7 +6115,7 @@
                 "events",
                 "zf2"
             ],
-            "time": "2016-12-19 21:47:12"
+            "time": "2017-07-11 19:17:22"
         },
         {
             "name": "zendframework/zend-hydrator",
