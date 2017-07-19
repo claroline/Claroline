@@ -181,10 +181,11 @@ class WorkspaceController extends FOSRestController
      * @View(serializerGroups={"api_workspace"})
      * @Put("workspace/{workspace}", name="put_workspace", options={ "method_prefix" = false })
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
+     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      */
-    public function putWorkspaceAction(Workspace $workspace)
+    public function putWorkspaceAction(Workspace $workspace, User $user)
     {
-        $workspaceType = new WorkspaceType();
+        $workspaceType = new WorkspaceType($user);
         $workspaceType->enableApi();
         $form = $this->formFactory->create($workspaceType, $workspace);
         $form->submit($this->request);

@@ -148,8 +148,12 @@ class WorkspaceEditType extends AbstractType
                 'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
                 //define here the allowed organizations~
                 //what define wich organization I can bind to a workspace ?
-                /*
+
                 'query_builder' => function (EntityRepository $er) use ($user) {
+                    if ($user->hasRole('ROLE_ADMIN')) {
+                        return $er->createQueryBuilder('o');
+                    }
+
                     return $er->createQueryBuilder('o')
                         ->leftJoin('o.users', 'u')
                         ->leftJoin('o.groups', 'g')
@@ -157,7 +161,7 @@ class WorkspaceEditType extends AbstractType
                         ->where('u.id = :userId')
                         ->orWhere('gu.id = :userId')
                         ->setParameter('userId', $user->getId());
-                },*/
+                },
                 'expanded' => true,
                 'multiple' => true,
                 'property' => 'name',
