@@ -283,6 +283,11 @@ class LogListener
         $this->enabledLog = false;
     }
 
+    public function enable()
+    {
+        $this->enabledLog = true;
+    }
+
     public function setDefaults()
     {
         $this->enabledLog = $this->ch->getParameter('platform_log_enabled');

@@ -62,6 +62,7 @@ class Updater090300 extends Updater
         $toCheck = [];
         $i = 0;
         $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
+        $this->container->get('claroline.core_bundle.listener.log.log_listener')->disable();
 
         foreach ($models as $model) {
             $code = '[MOD]'.$model['name'];
@@ -149,6 +150,7 @@ class Updater090300 extends Updater
             }
         }
 
+        $this->container->get('claroline.core_bundle.listener.log.log_listener')->enable();
         $this->om->allowForceFlush(true);
 
         $this->connection->query('SET FOREIGN_KEY_CHECKS=1');

@@ -1289,8 +1289,31 @@ class WorkspaceManager
         $this->duplicateWorkspaceOptions($workspace, $newWorkspace);
         $this->duplicateWorkspaceRoles($workspace, $newWorkspace, $user);
         $baseRoot = $this->duplicateRoot($workspace, $newWorkspace, $user);
+        $resourceNodes = $this->resourceManager->getWorkspaceRoot($workspace)->getChildren()->toArray();
+        $toCopy = [];
+
+        foreach ($resourceNodes as $resourceNode) {
+            $toCopy[$resourceNode->getGuid()] = $resourceNode;
+        }
+
+        foreach ($resourceNodes as $resourceNode) {
+            if ($resourceNode->getResourceType()->getName() === 'activity' && $this->resourceManager->getResourceFromNode($resourceNode)) {
+                $primRes = $this->resourceManager->getResourceFromNode($resourceNode)->getPrimaryResource();
+                $parameters = $this->resourceManager->getResourceFromNode($resourceNode)->getParameters();
+                if ($primRes) {
+                    unset($toCopy[$primRes->getGuid()]);
+                }
+                if ($parameters) {
+                    foreach ($parameters->getSecondaryResources() as $secRes) {
+                        unset($toCopy[$secRes->getGuid()]);
+                    }
+                }
+                unset($toCopy[$resourceNode->getGuid()]);
+            }
+        }
+
         $this->duplicateResources(
-          $this->resourceManager->getWorkspaceRoot($workspace)->getChildren()->toArray(),
+          $toCopy,
           $this->getArrayRolesByWorkspace($newWorkspace),
           $user,
           $baseRoot,
@@ -1377,12 +1400,12 @@ class WorkspaceManager
                         $copy->getResourceNode()->setIndex($resourceNode->getIndex());
                         $this->om->persist($copy->getResourceNode());
                         $resourceInfos['copies'][] = ['original' => $resourceNode, 'copy' => $copy->getResourceNode()];
-                      /*** Copies rights ***/
-                      $this->duplicateRights(
-                          $resourceNode,
-                          $copy->getResourceNode(),
-                          $workspaceRoles
-                      );
+                        /*** Copies rights ***/
+                        $this->duplicateRights(
+                            $resourceNode,
+                            $copy->getResourceNode(),
+                            $workspaceRoles
+                        );
                     }
                 }
             } catch (NotPopulatedEventException $e) {
@@ -1440,8 +1463,11 @@ class WorkspaceManager
                 isset($workspaceRoles[$key]) &&
                 !empty($workspaceRoles[$key])
                 ) {
-                    $newRight->setRole($workspaceRoles[$key]);
-
+                    if (strpos($resourceNode->getWorkspace()->getGuid(), $role->getName())) {
+                        $newRight->setRole($workspaceRoles[$key]);
+                    } else {
+                        $newRight->setRole($role);
+                    }
                     $this->log('Duplicating resource rights for '.$copy->getName().' - '.$copy->getId().' - '.$role->getName().'...');
                     $this->om->persist($newRight);
                 } else {
