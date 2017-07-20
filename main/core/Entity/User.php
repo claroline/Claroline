@@ -34,7 +34,8 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  *     name="claro_user",
  *     indexes={
  *         @Index(name="code_idx", columns={"administrative_code"}),
- *         @Index(name="enabled_idx", columns={"is_enabled"})
+ *         @Index(name="enabled_idx", columns={"is_enabled"}),
+ *         @Index(name="is_removed", columns={"is_removed"})
  * }
  *
  * )

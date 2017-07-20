@@ -71,7 +71,7 @@ class WorskpaceSerializer
     public function serialize(Workspace $workspace)
     {
         $roleManager = $this->roleManager->getManagerRole($workspace);
-        $managers = $this->userManager->getUsersByRolesIncludingGroups([$roleManager], 1, 1000, false)->getResult();
+        $managers = $this->userManager->getUsersByRolesIncludingGroups([$roleManager], 1, 1000);
         $creator = $workspace->getCreator();
 
         $serializedWorkspace = [

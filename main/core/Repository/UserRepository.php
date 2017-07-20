@@ -575,25 +575,44 @@ class UserRepository extends EntityRepository implements UserProviderInterface
      * @return Query|User[]
      */
     public function findUsersByRolesIncludingGroups(
-        array $roles,
-        $executeQuery = true
+        array $roles
     ) {
+        //very slow otherwise. If we want to do it properly, the OR clause won't do it.
+        //we must use UNION wich is not supported by Doctrine
         $dql = "
-            SELECT u, r1, g, r2, ws
+            SELECT u, r1, ws
             From Claroline\CoreBundle\Entity\User u
             LEFT JOIN u.roles r1
             LEFT JOIN u.personalWorkspace ws
-            LEFT JOIN u.groups g
-            LEFT JOIN g.roles r2
-            WHERE (r1 in (:roles)
-            OR r2 in (:roles))
+            WHERE r1 in (:roles)
             AND u.isRemoved = false
             ORDER BY u.lastName, u.firstName ASC";
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
 
-        return ($executeQuery) ? $query->getResult() : $query;
+        $resA = $query->getResult();
+        $resA = $resA ? $resA : [];
+
+        $query = $this->_em->createQuery($dql);
+        $dql = "
+            SELECT u, g, r2, ws
+            From Claroline\CoreBundle\Entity\User u
+            LEFT JOIN u.personalWorkspace ws
+            LEFT JOIN u.groups g
+            LEFT JOIN g.roles r2
+            WHERE r2 in (:roles)
+            AND u.isRemoved = false
+            ORDER BY u.lastName, u.firstName ASC
+            ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('roles', $roles);
+
+        $resB = $query->getResult();
+        $resB = $resB ? $resB : [];
+
+        return array_merge($resA, $resB);
     }
 
     /**
