@@ -170,6 +170,11 @@ class TagManager
         return count($roles) > 0 ? $this->taggedObjectRepo->findTaggedWorkspacesByRoles($tag, $roles, $orderedBy, $order) : [];
     }
 
+    public function getTaggedWorkspaces($tag)
+    {
+        return $this->taggedObjectRepo->findTaggedWorkspaces($tag);
+    }
+
     public function removeTaggedObjectsByResourceAndTag(ResourceNode $resourceNode, Tag $tag)
     {
         $taggedObject = $this->getOneTaggedObjectByTagAndObject(

@@ -1,0 +1,19 @@
+{% if workspaces|length > 0 %}
+    <div>
+
+        {% for tag, workspaces in workspaces %}
+            <h3> {{ tag }} </h3>
+            {% for workspace in workspaces %}
+                <div>
+                  <a href="{{path('claro_workspace_open', {'workspaceId': workspace.getId()})}}"> {{ workspace.getName() }} </a>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <br>
+        <br>
+    </div>
+{% else %}
+    <div class="alert alert-warning">
+        {{ 'no_tag'|trans({}, 'tag') }}
+    </div>
+{% endif %}

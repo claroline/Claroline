@@ -334,6 +334,27 @@ class TaggedObjectRepository extends EntityRepository
         return $query->getResult();
     }
 
+    public function findTaggedWorkspaces($tag)
+    {
+        $dql = "
+          SELECT DISTINCT w
+          FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
+          WHERE w.id IN (
+              SELECT to.objectId
+              FROM Claroline\TagBundle\Entity\TaggedObject to
+              JOIN to.tag t
+              WHERE to.objectClass = :workspaceClass
+              AND t.name = :tag
+          )
+      ";
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('workspaceClass', 'Claroline\CoreBundle\Entity\Workspace\Workspace');
+        $query->setParameter('tag', $tag);
+
+        return $query->getResult();
+    }
+
     public function findTaggedWorkspacesByRoles($tag, array $roles, $orderedBy = 'id', $order = 'ASC', $type = 0)
     {
         $dql = "
