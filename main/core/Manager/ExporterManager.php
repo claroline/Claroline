@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.manager.exporter_manager")
@@ -45,7 +45,7 @@ class ExporterManager
      * @param $exporter the exporter object to use
      * @param $extra some extra parameters depending on the exporter
      */
-    public function export($class, $exporter, array $extra = array())
+    public function export($class, $exporter, array $extra = [])
     {
         if ($class === 'Claroline\CoreBundle\Entity\User') {
             return $this->exportUsers($exporter, $extra);
@@ -59,7 +59,7 @@ class ExporterManager
      */
     private function exportUsers($exporter, array $extra)
     {
-        $dontExport = array('password', 'description', 'salt', 'plainPassword');
+        $dontExport = ['password', 'description', 'salt', 'plainPassword'];
 
         if (isset($extra['workspace'])) {
             $users = $this->om->getRepository('ClarolineCoreBundle:User')
@@ -115,7 +115,7 @@ class ExporterManager
 
     private function getExportableFields($class)
     {
-        $usableVarType = array('string', 'integer', '\DateTime', 'boolean');
+        $usableVarType = ['string', 'integer', '\DateTime', 'boolean'];
         $refClass = new \ReflectionClass($class);
         $fields = [];
 
@@ -135,7 +135,7 @@ class ExporterManager
     {
         //the only object support is DateTime for now
         if (gettype($value) === 'object') {
-            return $value->format($this->trans->trans('date_range.format.with_hours', array(), 'platform'));
+            return $value->format($this->trans->trans('date_range.format.with_hours', [], 'platform'));
         }
 
         return $value;

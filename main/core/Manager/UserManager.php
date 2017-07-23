@@ -578,8 +578,11 @@ class UserManager
                 }
             }
 
-            if (!$isNew && $logger) {
-                $logger(" User $j ($username) being updated...");
+            if (!$isNew) {
+                if ($logger) {
+                    $logger(" User $j ($username) being updated...");
+                }
+                $userEntity->clearRoles();
                 $this->roleManager->associateRoles($userEntity, $additionalRoles);
             }
 
@@ -645,6 +648,7 @@ class UserManager
         }
 
         $this->objectManager->endFlushSuite();
+
         if ($logger) {
             $logger($countCreated.' users created.');
             $logger($countUpdated.' users updated.');

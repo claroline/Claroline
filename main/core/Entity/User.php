@@ -1271,4 +1271,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         $this->groups->remove($group);
     }
+
+    public function clearRoles()
+    {
+        foreach ($this->roles as $role) {
+            if ($role->getName() !== 'ROLE_USER') {
+                $this->removeRole($role);
+            }
+        }
+    }
 }

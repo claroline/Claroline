@@ -74,7 +74,7 @@ abstract class AbstractRoleSubject
     }
 
     /**
-     * Returns the subject roles as an array of sting values.
+     * Returns the subject roles as an array of string values.
      */
     public function getRoles()
     {

@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Library\View\Serializer;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\Translation\TranslatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.library.view.serializer.serializer")
@@ -71,7 +71,7 @@ class Serializer
         //set this var to false if facets somehow brake everything
         $exportFacets = true;
 
-        $dontExport = array('password', 'description', 'salt', 'plainPassword');
+        $dontExport = ['password', 'description', 'salt', 'plainPassword'];
         $fieldsFacets = $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
         $fields = $this->getExportableFields('Claroline\CoreBundle\Entity\User');
 
@@ -114,6 +114,15 @@ class Serializer
                     }
                 }
             }
+
+            $roles = $user->getRoles();
+            $roleStr = '';
+
+            foreach ($roles as $role) {
+                $roleStr .= $role.',';
+            }
+
+            $data[$user->getId()]['roles'] = $roleStr;
         }
 
         if ($exportFacets) {
@@ -122,6 +131,7 @@ class Serializer
             }
         }
 
+        $fields[] = 'roles';
         $exporter = $this->container->get('claroline.library.view.serializer.'.$format);
 
         return $exporter->export($fields, $data);
@@ -129,7 +139,7 @@ class Serializer
 
     private function getExportableFields($class)
     {
-        $usableVarType = array('string', 'integer', '\DateTime', 'boolean');
+        $usableVarType = ['string', 'integer', '\DateTime', 'boolean'];
         $refClass = new \ReflectionClass($class);
         $fields = [];
 
@@ -149,7 +159,7 @@ class Serializer
     {
         //the only object support is DateTime for now
         if (gettype($value) === 'object') {
-            return $value->format($this->trans->trans('date_range.format.with_hours', array(), 'platform'));
+            return $value->format($this->trans->trans('date_range.format.with_hours', [], 'platform'));
         }
 
         return $value;
