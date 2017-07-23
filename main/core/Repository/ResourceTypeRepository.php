@@ -58,6 +58,7 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
             ->select('type.id, type.name, COUNT(rs.id) AS total')
             ->leftJoin('Claroline\CoreBundle\Entity\Resource\ResourceNode', 'rs', 'WITH', 'type = rs.resourceType')
             ->andWhere('type.name != :directoryName')
+            ->andWhere('rs.active = 1')
             ->setParameter('directoryName', 'directory')
             ->groupBy('type.id')
             ->orderBy('total', 'DESC');
