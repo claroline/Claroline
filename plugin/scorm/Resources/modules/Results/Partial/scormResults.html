@@ -48,6 +48,15 @@
                                 <td class="text-center" data-title="'total_time'|trans:{}:'platform'" filter="{convertedTotalTime: 'text'}" sortable="'convertedTotalTime'">
                                     {{ tracking['convertedTotalTime'] }}
                                 </td>
+                                <td class="text-center" data-title="'suspend_data'|trans:{}:'scorm'" filter="{suspendData: 'text'}" sortable="'suspendData'">
+                                    <i class="fa fa-eye pointer-hand"
+                                       style="color: #286090"
+                                       uib-popover="{{ tracking['suspendData'] }}"
+                                       popover-placement="left"
+                                       ng-if="tracking['suspendData']"
+                                    >
+                                    </i>
+                                </td>
                             </tr>
                             <tr uib-collapse="!src.isCollapsed[tracking['id']]">
                                 <td></td>

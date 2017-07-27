@@ -1,3 +1,7 @@
 .results-details-cell-header {
     background-color: #7abaef;
 }
+
+.popover-content {
+    overflow-wrap: break-word;
+}

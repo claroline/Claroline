@@ -24,6 +24,7 @@
     "scorm_results": "SCORM results",
     "session_time": "Last session time",
     "success_status": "Success status",
+    "suspend_data": "Suspend data",
     "unknown": "Unknown",
     "workspace_opening": "Workspace opening"
 }
