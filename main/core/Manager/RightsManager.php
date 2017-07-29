@@ -171,10 +171,10 @@ class RightsManager
 
             //this is bad but for a huge datatree, logging everythings takes way too much time.
             //well, nowadays I think we can do this.
-            //if (!$isRecursive) {
+            if (!$isRecursive) {
                 $this->logChangeSet($toUpdate);
-            $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', [$node, $toUpdate]);
-            //}
+                $this->dispatcher->dispatch('resource_change_permissions', 'UpdateResourceRights', [$node, $toUpdate]);
+            }
         }
 
         //exception for activities
