@@ -26,6 +26,13 @@ export function makeActionCreator(type, ...argNames) {
   }
 }
 
+// syntax sugar to avoid writing reducers as big switches.
+// Example :
+//   makeReducer([], {
+//     [LIST_RESET_SELECT]: resetSelect,
+//     [LIST_TOGGLE_SELECT]: toggleSelect,
+//     [LIST_TOGGLE_SELECT_ALL]: toggleSelectAll
+//   })
 export function makeReducer(initialState, handlers) {
   return function reducer(state = initialState, action) {
     if (handlers.hasOwnProperty(action.type)) {
@@ -36,6 +43,7 @@ export function makeReducer(initialState, handlers) {
   }
 }
 
+// pre-configure store for all redux apps
 if (process.env.NODE_ENV !== 'production') {
   const freeze = require('redux-freeze')
   middleware.push(freeze)

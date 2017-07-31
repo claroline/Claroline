@@ -1,9 +1,6 @@
-import {makeReducer, combineReducers} from '#/main/core/utilities/redux'
-import {reducer as apiReducer} from '#/main/core/api/reducer'
-import {reducer as modalReducer} from '#/main/core/layout/modal/reducer'
-import {reducer as paginationReducer} from '#/main/core/layout/pagination/reducer'
-import {makeListReducer} from '#/main/core/layout/list/reducer'
 import cloneDeep from 'lodash/cloneDeep'
+
+import {makeReducer} from '#/main/core/utilities/redux'
 
 import {
   WORKSPACES_LOAD,
@@ -34,16 +31,10 @@ const handlers = {
   }
 }
 
-const reducer = combineReducers({
-  currentRequests: apiReducer,
-  workspaces: makeReducer({
-    data: [],
-    totalResults: 0
-  }, handlers),
-  pagination: paginationReducer,
-  list: makeListReducer(),
-  modal: modalReducer
-})
+const reducer = makeReducer({
+  data: [],
+  totalResults: 0
+}, handlers)
 
 export {
   reducer

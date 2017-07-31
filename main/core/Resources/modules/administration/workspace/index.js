@@ -1,56 +1,58 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import {Provider} from 'react-redux'
+import {bootstrap} from '#/main/core/utilities/app/bootstrap'
 
-import {createStore} from '#/main/core/utilities/redux'
+// modals
 import {registerModalType} from '#/main/core/layout/modal'
 import {ConfirmModal} from '#/main/core/layout/modal/components/confirm.jsx'
 import {UserPickerModal} from '#/main/core/layout/modal/components/user-picker.jsx'
 
-import {reducer} from '#/main/core/administration/workspace/reducer'
+// reducers
+import {reducer as apiReducer} from '#/main/core/api/reducer'
+import {reducer as modalReducer} from '#/main/core/layout/modal/reducer'
+import {reducer as paginationReducer} from '#/main/core/layout/pagination/reducer'
+import {makeListReducer} from '#/main/core/layout/list/reducer'
+import {reducer as workspacesReducer} from '#/main/core/administration/workspace/reducer'
+
 import {Workspaces} from '#/main/core/administration/workspace/components/workspaces.jsx'
 
-class WorkspaceAdministration {
-  constructor(initialData) {
-    registerModalType('CONFIRM_MODAL', ConfirmModal)
-    registerModalType('MODAL_USER_PICKER', UserPickerModal)
+// register custom modals for the app
+registerModalType('CONFIRM_MODAL', ConfirmModal)
+registerModalType('MODAL_USER_PICKER', UserPickerModal)
 
-    this.store = createStore(reducer, initialData)
-  }
+// mount the react application
+bootstrap(
+  // app DOM container (also holds initial app data as data attributes)
+  '.workspace-administration-container',
 
-  render(element) {
-    ReactDOM.render(
-      React.createElement(
-        Provider,
-        {store: this.store},
-        React.createElement(Workspaces)
-      ),
-      element
-    )
-  }
-}
+  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  Workspaces,
 
-const container = document.querySelector('.workspace-administration-container')
-const workspaces = JSON.parse(container.dataset.workspaces)
-const count = parseInt(container.dataset.count)
-const page = parseInt(container.dataset.page)
-const pageSize = parseInt(container.dataset.pagesize)
-const filters = JSON.parse(container.dataset.filters)
-const sortBy = JSON.parse(container.dataset.orderby)
+  // app store configuration
+  {
+    // app reducers
+    workspaces: workspacesReducer,
 
-const adminTool = new WorkspaceAdministration({
-  workspaces: {
-    data: workspaces,
-    totalResults: count
+    // generic reducers
+    currentRequests: apiReducer,
+    modal: modalReducer,
+    list: makeListReducer(),
+    pagination: paginationReducer
   },
-  pagination: {
-    pageSize,
-    current: page
-  },
-  list: {
-    filters,
-    sortBy
-  }
-})
 
-adminTool.render(container)
+  // remap data-attributes set on the app DOM container
+  (initialData) => {
+    return {
+      workspaces: {
+        data: initialData.workspaces,
+        totalResults: initialData.count
+      },
+      pagination: {
+        pageSize: initialData.pageSize,
+        current: initialData.page
+      },
+      list: {
+        filters: initialData.filters,
+        sortBy: initialData.sortBy ? initialData.sortBy : undefined
+      }
+    }
+  }
+)

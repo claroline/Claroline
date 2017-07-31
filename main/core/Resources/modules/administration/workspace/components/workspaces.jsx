@@ -18,8 +18,13 @@ import {select as paginationSelect} from '#/main/core/layout/pagination/selector
 import {select as listSelect} from '#/main/core/layout/list/selectors'
 import {select} from '#/main/core/administration/workspace/selectors'
 
-import {Page, PageHeader, PageContent} from '#/main/core/layout/page/components/page.jsx'
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
+import {
+  PageContainer as Page,
+  PageHeader,
+  PageContent,
+  PageActions,
+  PageAction
+} from '#/main/core/layout/page/index'
 
 import {LIST_PROP_DEFAULT, LIST_PROP_DISPLAYED, LIST_PROP_DISPLAYABLE, LIST_PROP_FILTERABLE} from '#/main/core/layout/list/utils'
 import {DataList} from '#/main/core/layout/list/components/data-list.jsx'
