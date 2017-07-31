@@ -13,7 +13,6 @@ import {actions as paginationActions} from '#/main/core/layout/pagination/action
 import {actions as listActions} from '#/main/core/layout/list/actions'
 import {actions} from '#/main/core/administration/workspace/actions'
 
-import {select as modalSelect} from '#/main/core/layout/modal/selectors'
 import {select as paginationSelect} from '#/main/core/layout/pagination/selectors'
 import {select as listSelect} from '#/main/core/layout/list/selectors'
 import {select} from '#/main/core/administration/workspace/selectors'
@@ -86,12 +85,7 @@ class Workspaces extends Component {
 
   render() {
     return (
-      <Page
-        id="workspace-management"
-        modal={this.props.modal}
-        fadeModal={this.props.fadeModal}
-        hideModal={this.props.hideModal}
-        >
+      <Page id="workspace-management">
         <PageHeader
           title={t('workspaces_management')}
         >
@@ -231,14 +225,7 @@ Workspaces.propTypes = {
   toggleSelect: T.func.isRequired,
   toggleSelectAll: T.func.isRequired,
 
-  modal: T.shape({
-    type: T.string,
-    fading: T.bool.isRequired,
-    props: T.object.isRequired
-  }),
-  showModal: T.func.isRequired,
-  fadeModal: T.func.isRequired,
-  hideModal: T.func.isRequired
+  showModal: T.func.isRequired
 }
 
 function mapStateToProps(state) {
@@ -251,8 +238,7 @@ function mapStateToProps(state) {
       current:  paginationSelect.current(state)
     },
     filters: listSelect.filters(state),
-    sortBy: listSelect.sortBy(state),
-    modal: modalSelect.modal(state)
+    sortBy: listSelect.sortBy(state)
   }
 }
 
@@ -309,12 +295,6 @@ function mapDispatchToProps(dispatch) {
     // modals
     showModal(modalType, modalProps) {
       dispatch(modalActions.showModal(modalType, modalProps))
-    },
-    fadeModal() {
-      dispatch(modalActions.fadeModal())
-    },
-    hideModal() {
-      dispatch(modalActions.hideModal())
     }
   }
 }

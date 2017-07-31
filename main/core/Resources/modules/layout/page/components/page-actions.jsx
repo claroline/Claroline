@@ -111,7 +111,6 @@ const MoreAction = props =>
     <DropdownButton
       id="page-more"
       title={<span className="page-action-icon fa fa-ellipsis-v" />}
-      bsStyle=""
       className="btn page-action-btn"
       noCaret={true}
       pullRight={true}
@@ -121,7 +120,16 @@ const MoreAction = props =>
   </TooltipElement>
 
 MoreAction.propTypes = {
-  children: T.node.isRequired
+  children: T.node.isRequired/*,
+  actionGroups: T.arrayOf(T.shape({
+    name: T.string.isRequired,
+    actions: T.arrayOf(T.shape({
+      icon: T.string,
+      label: T.string.isRequired,
+      action: T.oneOfType([T.string, T.func]).isRequired,
+      isDangerous: T.bool
+    })).isRequired
+  })).isRequired*/
 }
 
 /**
