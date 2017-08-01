@@ -1,13 +1,12 @@
 <?php
 
-namespace Claroline\CoreBundle\Serializer\User;
+namespace Claroline\CoreBundle\API\Serializer;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service("claroline.serializer.user")
@@ -16,33 +15,37 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UserSerializer
 {
     private $om;
+    private $facetManager;
+    private $tokenStorage;
 
     /**
      * ResourceNodeManager constructor.
      *
      * @DI\InjectParams({
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "facetManager"      = @DI\Inject("claroline.manager.facet_manager"),
-     *     "container"         = @DI\Inject("service_container")
+     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
+     *     "facetManager" = @DI\Inject("claroline.manager.facet_manager"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
-     * @param ObjectManager $om
-     * @param FacetManager  $facetManager
+     * @param ObjectManager         $om
+     * @param FacetManager          $facetManager
+     * @param TokenStorageInterface $tokenStorage
      */
     public function __construct(
         ObjectManager $om,
         FacetManager $facetManager,
-        ContainerInterface $container
-    ) {
+        TokenStorageInterface $tokenStorage)
+    {
         $this->om = $om;
         $this->facetManager = $facetManager;
-        $this->container = $container;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
      * Serializes a Workspace entity for the JSON api.
      *
-     * @param Workspace $workspace - the workspace to serialize
+     * @param User $user   - the user to serialize
+     * @param bool $public
      *
      * @return array - the serialized representation of the workspace
      */
@@ -51,6 +54,8 @@ class UserSerializer
         if ($public) {
             return $this->serializePublic($user);
         }
+
+        return [];
     }
 
     public function serializePublic(User $user)
@@ -59,7 +64,7 @@ class UserSerializer
         $publicUser = [];
 
         foreach ($settingsProfile as $property => $isViewable) {
-            if ($isViewable || $user === $this->container->get('security.token_storage')->getToken()->getUser()) {
+            if ($isViewable || $user === $this->tokenStorage->getToken()->getUser()) {
                 switch ($property) {
                   case 'baseData':
                       $publicUser['lastName'] = $user->getLastName();

@@ -579,14 +579,15 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     ) {
         //very slow otherwise. If we want to do it properly, the OR clause won't do it.
         //we must use UNION wich is not supported by Doctrine
-        $dql = "
+        $dql = '
             SELECT u, r1, ws
-            From Claroline\CoreBundle\Entity\User u
+            From Claroline\\CoreBundle\\Entity\\User u
             LEFT JOIN u.roles r1
             LEFT JOIN u.personalWorkspace ws
             WHERE r1 in (:roles)
             AND u.isRemoved = false
-            ORDER BY u.lastName, u.firstName ASC";
+            ORDER BY u.lastName, u.firstName ASC
+        ';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);
@@ -594,17 +595,16 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $resA = $query->getResult();
         $resA = $resA ? $resA : [];
 
-        $query = $this->_em->createQuery($dql);
-        $dql = "
+        $dql = '
             SELECT u, g, r2, ws
-            From Claroline\CoreBundle\Entity\User u
+            From Claroline\\CoreBundle\\Entity\\User u
             LEFT JOIN u.personalWorkspace ws
             LEFT JOIN u.groups g
             LEFT JOIN g.roles r2
             WHERE r2 in (:roles)
             AND u.isRemoved = false
             ORDER BY u.lastName, u.firstName ASC
-            ";
+        ';
 
         $query = $this->_em->createQuery($dql);
         $query->setParameter('roles', $roles);

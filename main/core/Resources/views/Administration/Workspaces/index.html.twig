@@ -1,0 +1,36 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'workspaces_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{ macros.breadcrumbs([
+        {
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_index')
+        },
+        {
+            'name': 'workspaces_management'|trans({}, 'platform'),
+            'href': ''
+        }
+    ]) }}
+{% endblock %}
+
+{% block content %}
+  <div
+    class="page-container workspace-administration-container"
+    data-workspaces="{{ results | json_encode | raw | escape }}"
+    data-count="{{ total }}"
+    data-filters="{{ filters | json_encode | raw | escape }}"
+    data-sort-by="{{ sortBy | json_encode | raw | escape }}"
+    data-page="{{ page }}"
+    data-page-size="{{ pageSize }}"
+  >
+  </div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Claroline JS #}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-workspace-management.js') }}"></script>
+{% endblock %}

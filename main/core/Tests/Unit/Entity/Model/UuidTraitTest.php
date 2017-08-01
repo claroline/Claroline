@@ -1,8 +1,8 @@
 <?php
 
-namespace UJM\ExoBundle\Tests\Library\Model;
+namespace Claroline\CoreBundle\Tests\Unit\Entity\Model;
 
-use UJM\ExoBundle\Library\Model\UuidTrait;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 
 class UuidTraitTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,11 +22,19 @@ class UuidTraitTest extends \PHPUnit_Framework_TestCase
     /**
      * The trait MUST adds a `uuid` with its getter and setter in the class using it.
      */
-    public function testInjectScore()
+    public function testInjectUuid()
     {
         // Test getter
         $this->assertTrue(method_exists($this->mock, 'getUuid'));
         // Test setter
         $this->assertTrue(method_exists($this->mock, 'setUuid'));
+    }
+
+    public function testRefreshUuid()
+    {
+        $oldUuid = $this->mock->getUuid();
+        $this->mock->refreshUuid();
+
+        $this->assertNotEquals($oldUuid, $this->mock->getUuid());
     }
 }

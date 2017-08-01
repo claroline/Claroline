@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Serializer\Resource;
+namespace Claroline\CoreBundle\API\Serializer\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -203,7 +203,7 @@ class ResourceNodeSerializer
         //ResourceManager::isResourceActionImplemented(ResourceType $resourceType = null, $actionName)
         $actions = $this->menuManager->getMenus($resourceNode);
         $data = [];
-        $currentPerms = $this->getCurrentPermissions($resourceNode);
+        $currentPerms = $this->getCurrentPermissions($resourceNode); // todo : avoid duplicate by reusing the result of l115
         $currentMask = $this->maskManager->encodeMask($currentPerms, $resourceNode->getResourceType());
 
         foreach ($actions as $action) {

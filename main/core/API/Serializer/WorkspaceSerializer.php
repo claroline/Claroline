@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Serializer\Workspace;
+namespace Claroline\CoreBundle\API\Serializer;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  * @DI\Service("claroline.serializer.workspace")
  * @DI\Tag("claroline.serializer")
  */
-class WorskpaceSerializer
+class WorkspaceSerializer
 {
     private $om;
 
@@ -71,7 +71,7 @@ class WorskpaceSerializer
     public function serialize(Workspace $workspace)
     {
         $roleManager = $this->roleManager->getManagerRole($workspace);
-        $managers = $this->userManager->getUsersByRolesIncludingGroups([$roleManager], 1, 1000);
+        $managers = $this->userManager->getUsersByRolesIncludingGroups([$roleManager]);
         $creator = $workspace->getCreator();
 
         $serializedWorkspace = [
@@ -80,7 +80,7 @@ class WorskpaceSerializer
           'name' => $workspace->getName(),
           'code' => $workspace->getCode(),
           //moment timestamp
-          'creationDate' => $workspace->getCreationDate()->format('Y-m-d\TH:i:s'),
+          'dateCreation' => $workspace->getCreationDate()->format('Y-m-d\TH:i:s'),
           'creator' => [
             'id' => $creator ? $creator->getId() : 0,
             'uuid' => $creator ? $creator->getId() : 0,

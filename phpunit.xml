@@ -52,6 +52,7 @@
 
             <!-- Unit tests: uncomment when ready -->
             <directory>main/core/Tests/Unit/Converter/</directory>
+            <directory>main/core/Tests/Unit/Entity/</directory>
             <directory>main/core/Tests/Unit/Event/</directory>
             <directory>main/core/Tests/Unit/Form/</directory>
             <directory>main/core/Tests/Unit/Library/Configuration/</directory>

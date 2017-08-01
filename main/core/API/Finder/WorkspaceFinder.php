@@ -12,27 +12,46 @@
 namespace Claroline\CoreBundle\API\Finder;
 
 use Claroline\CoreBundle\API\FinderInterface;
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
- * @DI\Service("claroline.API.finder.workspace")
+ * @DI\Service("claroline.api.finder.workspace")
  * @DI\Tag("claroline.finder")
  */
-class Workspace implements FinderInterface
+class WorkspaceFinder implements FinderInterface
 {
+    /** @var AuthorizationCheckerInterface */
+    private $authChecker;
+
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
+
     /**
+     * WorkspaceFinder constructor.
+     *
      * @DI\InjectParams({
-     *     "authChecker"      = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"     = @DI\Inject("security.token_storage")
+     *     "authChecker"  = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
+     *
+     * @param AuthorizationCheckerInterface $authChecker
+     * @param TokenStorageInterface         $tokenStorage
      */
-    public function __construct(AuthorizationCheckerInterface $authChecker, TokenStorageInterface $tokenStorage)
+    public function __construct(
+        AuthorizationCheckerInterface $authChecker,
+        TokenStorageInterface $tokenStorage)
     {
         $this->authChecker = $authChecker;
         $this->tokenStorage = $tokenStorage;
+    }
+
+    public function getClass()
+    {
+        return 'Claroline\CoreBundle\Entity\Workspace\Workspace';
     }
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [])
@@ -69,10 +88,5 @@ class Workspace implements FinderInterface
         }
 
         return $qb;
-    }
-
-    public function getClass()
-    {
-        return 'Claroline\CoreBundle\Entity\Workspace\Workspace';
     }
 }

@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -16,12 +17,19 @@ class AdministrationToolListener
     private $httpKernel;
 
     /**
+     * AdministrationToolListener constructor.
+     *
      * @DI\InjectParams({
      *     "requestStack"   = @DI\Inject("request_stack"),
      *     "httpKernel"     = @DI\Inject("http_kernel")
      * })
+     *
+     * @param RequestStack        $requestStack
+     * @param HttpKernelInterface $httpKernel
      */
-    public function __construct(RequestStack $requestStack, HttpKernelInterface $httpKernel)
+    public function __construct(
+        RequestStack $requestStack,
+        HttpKernelInterface $httpKernel)
     {
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
@@ -34,9 +42,9 @@ class AdministrationToolListener
      */
     public function onOpenPlatformParameters(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Parameters:index';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\Parameters:index',
+        ], $event);
     }
 
     /**
@@ -46,21 +54,9 @@ class AdministrationToolListener
      */
     public function onOpenUserManagement(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Users:index';
-        $this->redirect($params, $event);
-    }
-
-    /**
-     * @DI\Observe("administration_tool_model_management")
-     *
-     * @param OpenAdministrationToolEvent $event
-     */
-    public function onOpenModelManagement(OpenAdministrationToolEvent $event)
-    {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Model:index';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\Users:index',
+        ], $event);
     }
 
     /**
@@ -70,14 +66,9 @@ class AdministrationToolListener
      */
     public function onOpenWorkspaceManagement(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Workspaces:management';
-        $params['page'] = 1;
-        $params['search'] = '';
-        $params['max'] = 50;
-        $params['direction'] = 'ASC';
-        $params['order'] = 'id';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\Workspaces:index',
+        ], $event);
     }
 
     /**
@@ -87,10 +78,9 @@ class AdministrationToolListener
      */
     public function onOpenRegistrationToWorkspace(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\WorkspaceRegistration:registrationManagement';
-        $params['search'] = '';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\WorkspaceRegistration:registrationManagement',
+        ], $event);
     }
 
     /**
@@ -100,9 +90,9 @@ class AdministrationToolListener
      */
     public function opDesktopAndHome(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\DesktopConfiguration:adminDesktopConfigMenu';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\DesktopConfiguration:adminDesktopConfigMenu',
+        ], $event);
     }
 
     /**
@@ -112,9 +102,9 @@ class AdministrationToolListener
      */
     public function onOpenDesktopTools(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Tools:showTool';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\Tools:showTool',
+        ], $event);
     }
 
     /**
@@ -190,7 +180,7 @@ class AdministrationToolListener
         $this->redirect($params, $event);
     }
 
-    protected function redirect($params, $event)
+    protected function redirect($params, Event $event)
     {
         $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);

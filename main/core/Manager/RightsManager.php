@@ -447,7 +447,7 @@ class RightsManager
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
      *
-     * @return \Claroline\CoreBundle\Resource\ResourceRights[]ù
+     * @return \Claroline\CoreBundle\Resource\ResourceRights[]
      */
     public function getConfigurableRights(ResourceNode $node)
     {

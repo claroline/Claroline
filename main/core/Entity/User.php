@@ -618,7 +618,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @param bool $areGroupsIncluded
      *
-     * @return array[Role]
+     * @return Role[]
      */
     public function getEntityRoles($areGroupsIncluded = true)
     {
