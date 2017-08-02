@@ -43,14 +43,14 @@ class ExerciseController extends Controller
 
         // TODO : no need to count the $nbPapers for regular users as it's only for admins
         $nbPapers = $this->container->get('ujm_exo.manager.paper')->countExercisePapers($exercise);
-        $isAdmin = $this->isAdmin($exercise);
+        $canEdit = $this->canEdit($exercise);
         $exerciseData = $this->get('ujm_exo.manager.exercise')->serialize(
             $exercise,
-            $isAdmin ? [Transfer::INCLUDE_SOLUTIONS] : []
+            $canEdit ? [Transfer::INCLUDE_SOLUTIONS] : []
         );
 
         // TODO: the following data should be included directly by the manager/serializer
-        $exerciseData->meta->editable = $isAdmin;
+        $exerciseData->meta->editable = $canEdit;
         $exerciseData->meta->paperCount = (int) $nbPapers;
         $exerciseData->meta->userPaperCount = (int) $nbUserPapers;
         $exerciseData->meta->registered = $user instanceof User;
@@ -63,7 +63,7 @@ class ExerciseController extends Controller
             'workspace' => $exercise->getResourceNode()->getWorkspace(),
             '_resource' => $exercise,
             'exercise' => $exerciseData,
-            'editEnabled' => $isAdmin,
+            'editEnabled' => $canEdit,
         ];
     }
 
@@ -97,6 +97,13 @@ class ExerciseController extends Controller
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
 
         return $this->get('security.authorization_checker')->isGranted('ADMINISTRATE', $collection);
+    }
+
+    private function canEdit(Exercise $exercise)
+    {
+        $collection = new ResourceCollection([$exercise->getResourceNode()]);
+
+        return $this->get('security.authorization_checker')->isGranted('EDIT', $collection);
     }
 
     private function canViewPapers(Exercise $exercise)

@@ -9,6 +9,7 @@ import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
 import {SubSection} from './../../../components/form/sub-section.jsx'
 import {TooltipButton} from './../../../components/form/tooltip-button.jsx'
 import ObjectsEditor from './item-objects-editor.jsx'
+import {CheckGroup} from './../../../components/form/check-group.jsx'
 
 // TODO: add categories, objects, resources, define-as-model
 
@@ -36,6 +37,14 @@ const Metadata = props =>
         onChange={text => props.onChange('description', text)}
       />
     </FormGroup>
+    {props.item.rights.edit &&
+      <CheckGroup
+        checkId={`item-${props.item.id}-editable`}
+        label={tex('protect_update')}
+        checked={props.item.protectUpdate}
+        onChange={checked => props.onChange('protectUpdate', checked)}
+      />
+    }
     <FormGroup
       controlId={`item-${props.item.id}-objects`}
       label={tex('question_objects')}
@@ -53,7 +62,9 @@ Metadata.propTypes = {
   item: T.shape({
     id: T.string.isRequired,
     title: T.string.isRequired,
-    description: T.string.isRequired
+    description: T.string.isRequired,
+    rights: T.object.isRequired,
+    protectUpdate: T.bool.isRequired
   }).isRequired,
   showModal: T.func.isRequired,
   closeModal: T.func.isRequired,

@@ -84,7 +84,7 @@ class ExerciseController extends AbstractController
      */
     public function updateAction(Exercise $exercise, Request $request)
     {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
+        $this->assertHasPermission('EDIT', $exercise);
 
         $errors = [];
 

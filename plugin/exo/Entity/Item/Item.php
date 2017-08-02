@@ -150,6 +150,15 @@ class Item
     private $interaction = null;
 
     /**
+     * Allows other user to edit a question.
+     *
+     * @var string
+     *
+     * @ORM\Column(name="protect_update", type="boolean")
+     */
+    private $protectUpdate = false;
+
+    /**
      * Item constructor.
      */
     public function __construct()
@@ -463,5 +472,15 @@ class Item
         $this->scoreRule = $scoreRule;
 
         return $this->scoreRule;
+    }
+
+    public function setProtectUpdate($protectUpdate)
+    {
+        $this->protectUpdate = $protectUpdate;
+    }
+
+    public function getProtectUpdate()
+    {
+        return $this->protectUpdate;
     }
 }
