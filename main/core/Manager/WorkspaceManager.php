@@ -1266,6 +1266,16 @@ class WorkspaceManager
         return false;
     }
 
+    //used for cli copy
+    public function copyFromCode(Workspace $workspace, $code)
+    {
+        $newWorkspace = new Workspace();
+        $newWorkspace->setCode($code);
+        $newWorkspace->setName($code);
+
+        return $this->copy($workspace, $newWorkspace);
+    }
+
     public function copy(Workspace $workspace, Workspace $newWorkspace)
     {
         $newWorkspace->setGuid(uniqid('', true));
@@ -1463,12 +1473,10 @@ class WorkspaceManager
                 isset($workspaceRoles[$key]) &&
                 !empty($workspaceRoles[$key])
                 ) {
-                    if (strpos($resourceNode->getWorkspace()->getGuid(), $role->getName())) {
-                        $newRight->setRole($workspaceRoles[$key]);
-                    } else {
-                        $newRight->setRole($role);
-                    }
-                    $this->log('Duplicating resource rights for '.$copy->getName().' - '.$copy->getId().' - '.$role->getName().'...');
+                    $usedRole = $copy->getWorkspace()->getGuid() === $workspaceRoles[$key]->getWorkspace()->getGuid() ?
+                      $workspaceRoles[$key] : $role;
+                    $newRight->setRole($role);
+                    $this->log('Duplicating resource rights for '.$copy->getName().' - '.$copy->getId().' - '.$usedRole->getName().'...');
                     $this->om->persist($newRight);
                 } else {
                     $this->log('Dont do anything');
