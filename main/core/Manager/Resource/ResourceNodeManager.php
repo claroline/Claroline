@@ -78,7 +78,7 @@ class ResourceNodeManager
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
-        $this->serializer = $resourceNodeSerializer;
+        $this->serializer = $resourceNodeSerializer; // todo : load from the SerializerProvider
         $this->rightsManager = $rightsManager;
         $this->resourceManager = $resourceManager;
     }
