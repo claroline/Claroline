@@ -49,9 +49,7 @@ class Resource extends Component {
         >
           <ResourceActions
             resourceNode={this.props.resourceNode}
-            editMode={this.props.editMode}
-            edit={this.props.edit}
-            save={this.props.save}
+            editor={this.props.editor}
             customActions={this.props.customActions}
             fullscreen={this.state.fullscreen}
             toggleFullscreen={this.toggleFullscreen}
@@ -88,10 +86,18 @@ Resource.propTypes = {
   fadeModal: T.func.isRequired,
   hideModal: T.func.isRequired,
 
-  customActions: T.array.isRequired,
-  editMode: T.bool,
-  edit: T.oneOfType([T.func, T.string]).isRequired,
-  save: T.object.isRequired,
+  customActions: T.array,
+  /**
+   * If provided, this permits to manage the resource editor in the header (aka. open, save actions).
+   */
+  editor: T.shape({
+    opened: T.bool,
+    open: T.oneOfType([T.func, T.string]).isRequired,
+    save: T.shape({
+      disabled: T.bool.isRequired,
+      action: T.oneOfType([T.string, T.func]).isRequired
+    }).isRequired
+  }),
 
   togglePublication: T.func.isRequired,
   updateNode: T.func.isRequired

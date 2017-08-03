@@ -34,46 +34,8 @@ ResourceContainer.propTypes = {
    */
   children: T.node,
 
-  /**
-   * Current displayed modal if any.
-   */
-  modal: T.shape({
-    type: T.string,
-    fading: T.bool.isRequired,
-    props: T.object.isRequired
-  }),
-
-  /**
-   * Builds the current modal component.
-   */
-  createModal: T.func.isRequired,
-
-  /**
-   * Shows a modal.
-   */
-  showModal: T.func.isRequired,
-
-  /**
-   * Hides the current displayed modal.
-   */
-  fadeModal: T.func.isRequired,
-
-  customActions: T.array.isRequired,
-  editMode: T.bool,
-  edit: T.oneOfType([T.func, T.string]).isRequired,
-  save: T.object.isRequired,
-
-  /**
-   * Changes publication status of the resource.
-   */
-  togglePublication: T.func.isRequired,
-
-  /**
-   * Updates the resource node properties.
-   *
-   * @param {object} resourceNode - the new resourceNode properties
-   */
-  updateNode: T.func.isRequired
+  modal: T.object.isRequired,
+  resourceNode: T.object.isRequired
 }
 
 function mapStateToProps(state) {
