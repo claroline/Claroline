@@ -1,0 +1,16 @@
+{% if isDesktop() %}
+    {# Resource is displayed in Desktop #}
+    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+{% else %}
+    {# Resource is displayed in Workspace #}
+    {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% endif %}
+
+{% extends layout %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    {# Translations #}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}"></script>
+{% endblock %}
