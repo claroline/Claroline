@@ -1,4 +1,0 @@
-claro_image_player:
-    resource: "@ClarolineImagePlayerBundle/Controller/ImagePlayerController.php"
-    type:     annotation
-    prefix:   /

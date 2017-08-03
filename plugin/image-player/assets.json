@@ -1,0 +1,7 @@
+{
+  "webpack": {
+    "entry": {
+      "image-resource": "resources/image"
+    }
+  }
+}
