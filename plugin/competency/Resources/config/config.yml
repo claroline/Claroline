@@ -16,3 +16,9 @@ plugin:
     widgets:
          - name: my-learning-objectives
            is_configurable: false
+
+    resource_actions:
+        - name: manage_competencies
+          is_form: false
+          is_custom: true
+          value: edit

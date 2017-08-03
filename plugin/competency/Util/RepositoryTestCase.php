@@ -2,12 +2,10 @@
 
 namespace HeVinci\CompetencyBundle\Util;
 
-use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
-use Claroline\CoreBundle\Entity\Activity\Evaluation;
-use Claroline\CoreBundle\Entity\Activity\PastEvaluation;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
@@ -51,11 +49,11 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         return $competency;
     }
 
-    protected function persistAbility($name, $minActivityCount = 1)
+    protected function persistAbility($name, $minResourceCount = 1)
     {
         $ability = new Ability();
         $ability->setName($name);
-        $ability->setMinActivityCount($minActivityCount);
+        $ability->setMinResourceCount($minResourceCount);
         $this->om->persist($ability);
 
         return $ability;
@@ -117,7 +115,7 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         return $group;
     }
 
-    protected function persistActivity($name)
+    protected function persistResource($name)
     {
         if (!isset($this->defaults['user'])) {
             $this->defaults['user'] = $this->persistUser('default_user');
@@ -146,52 +144,31 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $node->setGuid($name);
         $node->setClass('foo');
 
-        $activity = new Activity();
-        $activity->setName($name);
-        $activity->setDescription('desc');
-        $activity->setResourceNode($node);
-
         $this->om->persist($node);
-        $this->om->persist($activity);
 
-        return $activity;
+        return $node;
     }
 
     protected function persistEvaluation(
-        Activity $activity,
+        ResourceNode $resource,
         User $user,
         $status,
-        Evaluation $previous = null,
-        ActivityParameters $parameters = null
+        ResourceEvaluation $previous = null
     ) {
-        $params = $parameters ?
-            $parameters :
-            (
-                $previous ?
-                    $previous->getActivityParameters() :
-                    new ActivityParameters()
-            );
-
-        $params->setActivity($activity);
-
-        if ($previous) {
-            $pastEval = new PastEvaluation();
-            $pastEval->setActivityParameters($params);
-            $pastEval->setUser($user);
-            $pastEval->setStatus($previous->getStatus());
-            $this->om->persist($pastEval);
-        }
-
-        $eval = $previous ?: new Evaluation();
-        $eval->setActivityParameters($params);
+        $eval = $previous ? $previous->getResourceUserEvaluation() : new ResourceUserEvaluation();
+        $eval->setResourceNode($resource);
         $eval->setUser($user);
+        $eval->setUserName($user->getUsername());
         $eval->setStatus($status);
         $eval->setDate(new \DateTime());
-
-        $this->om->persist($params);
         $this->om->persist($eval);
 
-        return $eval;
+        $pastEval = $previous ?: new ResourceEvaluation();
+        $pastEval->setResourceUserEvaluation($eval);
+        $pastEval->setStatus($status);
+        $this->om->persist($pastEval);
+
+        return $pastEval;
     }
 
     protected function persistObjective($name, array $competenciesData)

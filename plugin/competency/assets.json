@@ -1,0 +1,14 @@
+{
+  "webpack": {
+    "entry": {
+      "my-objectives": "my-objectives/index.jsx"
+    }
+  },
+
+  "styles": {
+    "entry": {
+      "my-objectives": "my-objectives.less",
+      "circle": "circle.css"
+    }
+  }
+}

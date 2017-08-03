@@ -18,7 +18,7 @@ class NotEmptyValidatorTest extends UnitTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testValidateExpectsAnArrayOrACountableInstance()
     {

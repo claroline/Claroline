@@ -20,7 +20,7 @@ class NoDuplicateValidatorTest extends UnitTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testValidateExpectsAnArrayOrATraversableInstance()
     {
@@ -36,7 +36,7 @@ class NoDuplicateValidatorTest extends UnitTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
      */
     public function testValidateWithPropertyExpectsElementsToBeObjects()
     {
@@ -46,7 +46,7 @@ class NoDuplicateValidatorTest extends UnitTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\PropertyAccess\Exception\AccessException
+     * @expectedException \Symfony\Component\PropertyAccess\Exception\AccessException
      */
     public function testValidateWithPropertyExpectsThePropertyToBeAccessibleOnEachElement()
     {

@@ -29,7 +29,7 @@ abstract class FormTestCase extends TransactionalTestCase
 
     protected function getExtensions()
     {
-        return array();
+        return [];
     }
 
     protected function assertViewIsValid(Form $form, array $formData)

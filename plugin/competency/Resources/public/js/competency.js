@@ -244,15 +244,15 @@
         );
     });
 
-    // activities linked to ability/competency display
-    $(document).on('click', 'table.framework-activities a.show-activities ', function (event) {
+    // resources linked to ability/competency display
+    $(document).on('click', 'table.framework-resources a.show-resources ', function (event) {
         event.preventDefault();
         var target = this.parentNode.parentNode;
         Claroline.Modal.fromUrl(
             Routing.generate(
                 target.dataset.type === 'ability' ?
-                    'hevinci_ability_activities' :
-                    'hevinci_competency_activities',
+                    'hevinci_ability_resources' :
+                    'hevinci_competency_resources',
                 { id: target.dataset.id }
             )
         );

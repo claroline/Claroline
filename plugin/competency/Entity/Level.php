@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\LevelRepository")
  * @ORM\Table(name="hevinci_level")
  */
-class Level
+class Level implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -92,5 +92,14 @@ class Level
     public function getScale()
     {
         return $this->scale;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'value' => $this->value,
+        ];
     }
 }

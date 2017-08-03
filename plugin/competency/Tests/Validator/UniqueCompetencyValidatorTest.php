@@ -26,7 +26,7 @@ class UniqueCompetencyValidatorTest extends UnitTestCase
     }
 
     /**
-     * @expectedException InvalidArgumentException
+     * @expectedException \InvalidArgumentException
      */
     public function testValidateExpectsUniqueCompetencyConstraint()
     {
@@ -34,7 +34,7 @@ class UniqueCompetencyValidatorTest extends UnitTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\Validator\Exception\UnexpectedTypeException
+     * @expectedException \Symfony\Component\Validator\Exception\UnexpectedTypeException
      */
     public function testValidateExpectsCompetencyInstance()
     {
@@ -42,7 +42,7 @@ class UniqueCompetencyValidatorTest extends UnitTestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testValidateExpectsAParentCompetency()
     {

@@ -481,7 +481,7 @@ class CompetencyControllerTest extends UnitTestCase
         );
     }
 
-    public function testActivitiesAction()
+    public function testResourcesAction()
     {
         $framework = new Competency();
         $this->manager->expects($this->once())
@@ -490,7 +490,7 @@ class CompetencyControllerTest extends UnitTestCase
             ->willReturn('FRAMEWORK');
         $this->assertEquals(
             ['framework' => 'FRAMEWORK'],
-            $this->controller->activitiesAction($framework)
+            $this->controller->resourcesAction($framework)
         );
     }
 }

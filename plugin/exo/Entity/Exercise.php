@@ -175,6 +175,15 @@ class Exercise extends AbstractResource
     private $totalScoreOn = 0;
 
     /**
+     * Score to obtain to pass the exercise.
+     *
+     * @ORM\Column(name="success_score", type="float", nullable=true)
+     *
+     * @var float
+     */
+    private $successScore;
+
+    /**
      * Exercise constructor.
      */
     public function __construct()
@@ -568,5 +577,25 @@ class Exercise extends AbstractResource
     public function getTotalScoreOn()
     {
         return $this->totalScoreOn;
+    }
+
+    /**
+     * Sets successScore.
+     *
+     * @param float $successScore
+     */
+    public function setSuccessScore($successScore)
+    {
+        $this->successScore = $successScore;
+    }
+
+    /**
+     * Gets successScore.
+     *
+     * @return float
+     */
+    public function getSuccessScore()
+    {
+        return $this->successScore;
     }
 }

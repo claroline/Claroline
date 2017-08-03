@@ -2,12 +2,12 @@
 
 namespace HeVinci\CompetencyBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 
-class ActivityManagerTest extends UnitTestCase
+class ResourceManagerTest extends UnitTestCase
 {
     private $om;
     private $competencyRepo;
@@ -29,26 +29,26 @@ class ActivityManagerTest extends UnitTestCase
                 $this->abilityRepo,
                 $this->competencyRepo
             );
-        $this->manager = new ActivityManager($this->om);
+        $this->manager = new ResourceManager($this->om);
     }
 
     public function testLoadLinkedCompetencies()
     {
-        $activity = new Activity();
+        $resource = new ResourceNode();
         $ability = new Ability();
         $competency = new Competency();
         $this->abilityRepo->expects($this->once())
-            ->method('findByActivity')
-            ->with($activity)
+            ->method('findByResource')
+            ->with($resource)
             ->willReturn([$ability]);
         $this->competencyRepo->expects($this->once())
-            ->method('findByActivity')
-            ->with($activity)
+            ->method('findByResource')
+            ->with($resource)
             ->willReturn([$competency]);
         $this->competencyRepo->expects($this->any())
             ->method('getPath')
             ->willReturn([]);
-        $this->manager->loadLinkedCompetencies($activity);
+        $this->manager->loadLinkedCompetencies($resource);
     }
 
     /**
@@ -56,15 +56,15 @@ class ActivityManagerTest extends UnitTestCase
      */
     public function testCreateLinkThrowsOnWrongTargetType()
     {
-        $this->manager->createLink(new Activity(), 'Bad type');
+        $this->manager->createLink(new ResourceNode(), 'Bad type');
     }
 
     public function testCreateLinkReturnsFalseIfLinkExists()
     {
-        $activity = new Activity();
+        $resource = new ResourceNode();
         $ability = new Ability();
-        $ability->linkActivity($activity);
-        $this->assertFalse($this->manager->createLink($activity, $ability));
+        $ability->linkResource($resource);
+        $this->assertFalse($this->manager->createLink($resource, $ability));
     }
 
     /**
@@ -72,7 +72,7 @@ class ActivityManagerTest extends UnitTestCase
      */
     public function testRemoveLinkThrowsOnWrongTargetType()
     {
-        $this->manager->removeLink(new Activity(), 'Bad type');
+        $this->manager->removeLink(new ResourceNode(), 'Bad type');
     }
 
     /**
@@ -80,7 +80,7 @@ class ActivityManagerTest extends UnitTestCase
      */
     public function testRemoveLinkThrowsIfNoLink()
     {
-        $this->manager->removeLink(new Activity(), new Ability());
+        $this->manager->removeLink(new ResourceNode(), new Ability());
     }
 
     /**
@@ -90,11 +90,11 @@ class ActivityManagerTest extends UnitTestCase
      */
     public function testRemoveLink($target)
     {
-        $activity = new Activity();
-        $target->linkActivity($activity);
+        $resource = new ResourceNode();
+        $target->linkResource($resource);
         $this->om->expects($this->once())->method('flush');
-        $this->manager->removeLink($activity, $target);
-        $this->assertFalse($target->isLinkedToActivity($activity));
+        $this->manager->removeLink($resource, $target);
+        $this->assertFalse($target->isLinkedToResource($resource));
     }
 
     public function targetProvider()

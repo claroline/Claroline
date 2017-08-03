@@ -2,16 +2,16 @@
 
 namespace HeVinci\CompetencyBundle\Listener;
 
-use Claroline\CoreBundle\Event\ActivityEvaluationEvent;
+use Claroline\CoreBundle\Event\ResourceEvaluationEvent;
 use HeVinci\CompetencyBundle\Manager\ProgressManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * Listens to activity evaluations produced by the core bundle.
+ * Listens to resource evaluations produced by the core bundle.
  *
- * @DI\Service("hevinci.competency.activity_listener")
+ * @DI\Service("hevinci.competency.resource_listener")
  */
-class ActivityListener
+class ResourceListener
 {
     private $manager;
 
@@ -28,11 +28,11 @@ class ActivityListener
     }
 
     /**
-     * @DI\Observe("activity_evaluation")
+     * @DI\Observe("resource_evaluation")
      *
-     * @param ActivityEvaluationEvent $event
+     * @param ResourceEvaluationEvent $event
      */
-    public function onActivityEvaluation(ActivityEvaluationEvent $event)
+    public function onResourceEvaluation(ResourceEvaluationEvent $event)
     {
         $this->manager->handleEvaluation($event->getEvaluation());
     }

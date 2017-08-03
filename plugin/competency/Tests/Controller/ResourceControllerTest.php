@@ -2,44 +2,49 @@
 
 namespace HeVinci\CompetencyBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Util\UnitTestCase;
 
-class ActivityControllerTest extends UnitTestCase
+class ResourceControllerTest extends UnitTestCase
 {
-    private $activityManager;
+    private $resourceManager;
     private $controller;
 
     protected function setUp()
     {
-        $this->activityManager = $this->mock('HeVinci\CompetencyBundle\Manager\ActivityManager');
-        $this->controller = new ActivityController($this->activityManager);
+        $this->resourceManager = $this->mock('HeVinci\CompetencyBundle\Manager\ResourceManager');
+        $this->controller = new ResourceController($this->resourceManager);
     }
 
     public function testCompetenciesAction()
     {
-        $activity = new Activity();
-        $this->activityManager->expects($this->once())
+        $resource = new ResourceNode();
+        $this->resourceManager->expects($this->once())
             ->method('loadLinkedCompetencies')
-            ->with($activity)
+            ->with($resource)
             ->willReturn('COMPETENCIES');
         $this->assertEquals(
-            ['_resource' => $activity, 'competencies' => 'COMPETENCIES'],
-            $this->controller->competenciesAction($activity)
+            [
+                '_resource' => $resource,
+                'resourceNode' => $resource,
+                'workspace' => $resource->getWorkspace(),
+                'competencies' => 'COMPETENCIES',
+            ],
+            $this->controller->competenciesAction($resource)
         );
     }
 
     public function testLinkAbilityActionForAlreadyLinkedAbilities()
     {
-        $activity = new Activity();
+        $resource = new ResourceNode();
         $ability = new Ability();
-        $this->activityManager->expects($this->once())
+        $this->resourceManager->expects($this->once())
             ->method('createLink')
-            ->with($activity, $ability)
+            ->with($resource, $ability)
             ->willReturn(false);
-        $response = $this->controller->linkAbilityAction($activity, $ability);
+        $response = $this->controller->linkAbilityAction($resource, $ability);
         $this->assertEquals(204, $response->getStatusCode());
     }
 
@@ -51,12 +56,12 @@ class ActivityControllerTest extends UnitTestCase
      */
     public function testLinkActionsForAlreadyLinkedTargets($method, $target)
     {
-        $activity = new Activity();
-        $this->activityManager->expects($this->once())
+        $resource = new ResourceNode();
+        $this->resourceManager->expects($this->once())
             ->method('createLink')
-            ->with($activity, $target)
+            ->with($resource, $target)
             ->willReturn(false);
-        $response = $this->controller->{$method}($activity, $target);
+        $response = $this->controller->{$method}($resource, $target);
         $this->assertEquals(204, $response->getStatusCode());
     }
 
@@ -68,12 +73,12 @@ class ActivityControllerTest extends UnitTestCase
      */
     public function testLinkActions($method, $target)
     {
-        $activity = new Activity();
-        $this->activityManager->expects($this->once())
+        $resource = new ResourceNode();
+        $this->resourceManager->expects($this->once())
             ->method('createLink')
-            ->with($activity, $target)
+            ->with($resource, $target)
             ->willReturn('TARGET');
-        $response = $this->controller->{$method}($activity, $target);
+        $response = $this->controller->{$method}($resource, $target);
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertEquals(json_encode('TARGET'), $response->getContent());
     }
@@ -86,32 +91,32 @@ class ActivityControllerTest extends UnitTestCase
      */
     public function testRemoveLinkActions($method, $target)
     {
-        $activity = new Activity();
-        $this->activityManager->expects($this->once())
+        $resource = new ResourceNode();
+        $this->resourceManager->expects($this->once())
             ->method('removeLink')
-            ->with($activity, $target)
+            ->with($resource, $target)
             ->willReturn('TARGET');
         $this->assertEquals(
             json_encode('TARGET'),
-            $this->controller->{$method}($activity, $target)->getContent()
+            $this->controller->{$method}($resource, $target)->getContent()
         );
     }
 
-    public function testCompetencyActivitiesAction()
+    public function testCompetencyResourcesAction()
     {
         $competency = new Competency();
         $this->assertEquals(
             ['competency' => $competency],
-            $this->controller->competencyActivitiesAction($competency)
+            $this->controller->competencyResourcesAction($competency)
         );
     }
 
-    public function testAbilityActivitiesAction()
+    public function testAbilityResourcesAction()
     {
         $ability = new Ability();
         $this->assertEquals(
             ['ability' => $ability],
-            $this->controller->abilityActivitiesAction($ability)
+            $this->controller->abilityResourcesAction($ability)
         );
     }
 

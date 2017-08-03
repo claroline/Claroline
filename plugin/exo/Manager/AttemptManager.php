@@ -63,12 +63,12 @@ class AttemptManager
      * AttemptManager constructor.
      *
      * @DI\InjectParams({
-     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "paperGenerator" = @DI\Inject("ujm_exo.generator.paper"),
-     *     "paperManager"   = @DI\Inject("ujm_exo.manager.paper"),
-     *     "answerManager"  = @DI\Inject("ujm_exo.manager.answer"),
-     *     "itemManager"    = @DI\Inject("ujm_exo.manager.item"),
-     *     "itemSerializer" = @DI\Inject("ujm_exo.serializer.item")
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "paperGenerator"      = @DI\Inject("ujm_exo.generator.paper"),
+     *     "paperManager"        = @DI\Inject("ujm_exo.manager.paper"),
+     *     "answerManager"       = @DI\Inject("ujm_exo.manager.answer"),
+     *     "itemManager"         = @DI\Inject("ujm_exo.manager.item"),
+     *     "itemSerializer"      = @DI\Inject("ujm_exo.serializer.item")
      * })
      *
      * @param ObjectManager  $om
@@ -246,15 +246,19 @@ class AttemptManager
      */
     public function end(Paper $paper, $finished = true)
     {
+        $this->om->startFlushSuite();
+
         if (!$paper->getEnd()) {
             $paper->setEnd(new \DateTime());
         }
 
         $paper->setInterrupted(!$finished);
-        $paper->setScore($this->paperManager->calculateScore($paper, $paper->getExercise()->getTotalScoreOn()));
-
+        $totalScoreOn = $paper->getExercise()->getTotalScoreOn();
+        $score = $this->paperManager->calculateScore($paper, $totalScoreOn);
+        $paper->setScore($score);
+        $this->paperManager->generateResourceEvaluation($paper, $finished);
         $this->om->persist($paper);
-        $this->om->flush();
+        $this->om->endFlushSuite();
 
         $this->paperManager->checkPaperEvaluated($paper);
     }

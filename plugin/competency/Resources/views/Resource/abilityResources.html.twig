@@ -1,11 +1,11 @@
 {% extends 'HeVinciCompetencyBundle::modal.html.twig' %}
 
-{% block title %}{{ 'competency.activities'|trans({}, 'competency') }}{% endblock %}
+{% block title %}{{ 'competency.resources'|trans({}, 'competency') }}{% endblock %}
 
 {% block body %}
     <ul>
-        {% for activity in ability.getActivities() %}
-            <li>{{ activity.getResourceNode().getPathForDisplay() }}</li>
+        {% for resource in ability.getResources() %}
+            <li>{{ resource.getPathForDisplay() }}</li>
         {% endfor %}
     </ul>
 {% endblock %}

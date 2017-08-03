@@ -2,8 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Tests\Repository;
 
-use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
-use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use HeVinci\CompetencyBundle\Util\RepositoryTestCase;
@@ -50,7 +49,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $l1 = $this->persistLevel('l1', $scale);
         $l2 = $this->persistLevel('l2', $scale);
         $c1 = $this->persistCompetency('c1', null, $scale);
-        $c2 = $this->persistCompetency('c2', $c1); // extra data
+        $this->persistCompetency('c2', $c1); // extra data
         $a1 = $this->persistAbility('a1');
         $a2 = $this->persistAbility('a2');
         $a3 = $this->persistAbility('a3');
@@ -118,7 +117,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->assertEquals([$a8, $a4], $this->repo->findFirstByName('FOO A', $f1));
     }
 
-    public function testFindByActivity()
+    public function testFindByResource()
     {
         $level = $this->persistLevel('l1', $this->persistScale('scale'));
 
@@ -134,23 +133,23 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->persistLink($f2, $a2, $level);
         $this->persistLink($f2, $a3, $level);
 
-        $activity = $this->createActivity('FOO');
-        $a1->linkActivity($activity);
-        $a3->linkActivity($activity);
+        $resource = $this->createResource('FOO');
+        $a1->linkResource($resource);
+        $a3->linkResource($resource);
 
         $this->om->flush();
 
-        $this->assertEquals([$a1, $a3], $this->repo->findByActivity($activity));
+        $this->assertEquals([$a1, $a3], $this->repo->findByResource($resource));
     }
 
     /**
-     * @expectedException Exception
+     * @expectedException \Exception
      */
     public function testFindEvaluationsByCompetencyThrowsAnExceptionIfNotLeafCompetency()
     {
         $u1 = $this->persistUser('u1');
         $c1 = $this->persistCompetency('c1');
-        $c2 = $this->persistCompetency('c2', $c1);
+        $this->persistCompetency('c2', $c1);
         $this->om->flush();
         $this->repo->findEvaluationsByCompetency($c1, $u1);
     }
@@ -158,12 +157,10 @@ class AbilityRepositoryTest extends RepositoryTestCase
     public function testFindEvaluationsByCompetency()
     {
         // Users:
-        //
         // u1
         // u2
-        //
+
         // Frameworks:
-        //
         // c1
         //   - a1 (l1)
         //     - ac1
@@ -180,7 +177,6 @@ class AbilityRepositoryTest extends RepositoryTestCase
         //   - a4 (l1)
         //     - ac3
         //       - e4 (u1, passed)
-        //
 
         $u1 = $this->persistUser('u1');
         $u2 = $this->persistUser('u2'); // extra data
@@ -203,20 +199,20 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->persistLink($c1, $a3, $l3);
         $this->persistLink($c2, $a4, $l1); // extra data
 
-        $ac1 = $this->persistActivity('ac1');
-        $ac2 = $this->persistActivity('ac2');
-        $ac3 = $this->persistActivity('ac3'); // extra data
+        $ac1 = $this->persistResource('ac1');
+        $ac2 = $this->persistResource('ac2');
+        $ac3 = $this->persistResource('ac3'); // extra data
 
-        $a1->linkActivity($ac1);
-        $a2->linkActivity($ac2);
-        $a3->linkActivity($ac2); // bound to 2 abilities
-        $a4->linkActivity($ac3); // extra data
+        $a1->linkResource($ac1);
+        $a2->linkResource($ac2);
+        $a3->linkResource($ac2); // bound to 2 abilities
+        $a4->linkResource($ac3); // extra data
 
-        $e1 = $this->persistEvaluation($ac1, $u1, AbstractEvaluation::STATUS_FAILED);
-        $e2 = $this->persistEvaluation($ac1, $u1, AbstractEvaluation::STATUS_PASSED, $e1);
-        $e3 = $this->persistEvaluation($ac2, $u1, AbstractEvaluation::STATUS_PASSED);
-        $e4 = $this->persistEvaluation($ac3, $u1, AbstractEvaluation::STATUS_PASSED); // extra data
-        $e5 = $this->persistEvaluation($ac1, $u2, AbstractEvaluation::STATUS_PASSED, null, $e1->getActivityParameters()); // extra data
+        $e1 = $this->persistEvaluation($ac1, $u1, AbstractResourceEvaluation::STATUS_FAILED);
+        $e2 = $this->persistEvaluation($ac1, $u1, AbstractResourceEvaluation::STATUS_PASSED, $e1);
+        $e3 = $this->persistEvaluation($ac2, $u1, AbstractResourceEvaluation::STATUS_PASSED);
+        $this->persistEvaluation($ac3, $u1, AbstractResourceEvaluation::STATUS_PASSED); // extra data
+        $this->persistEvaluation($ac1, $u2, AbstractResourceEvaluation::STATUS_PASSED, null); // extra data
 
         $this->om->flush();
 
@@ -226,25 +222,25 @@ class AbilityRepositoryTest extends RepositoryTestCase
 
         $this->assertEquals($e2->getId(), $result[0]['evaluationId']);
         $this->assertEquals('a1', $result[0]['abilityName']);
-        $this->assertEquals('ac1', $result[0]['activityName']);
+        $this->assertEquals('ac1', $result[0]['resourceName']);
         $this->assertEquals('l1', $result[0]['levelName']);
-        $this->assertEquals(AbstractEvaluation::STATUS_PASSED, $result[0]['status']);
+        $this->assertEquals(AbstractResourceEvaluation::STATUS_PASSED, $result[0]['status']);
 
         $this->assertEquals($e3->getId(), $result[1]['evaluationId']);
         $this->assertEquals('a2', $result[1]['abilityName']);
-        $this->assertEquals('ac2', $result[1]['activityName']);
+        $this->assertEquals('ac2', $result[1]['resourceName']);
         $this->assertEquals('l2', $result[1]['levelName']);
-        $this->assertEquals(AbstractEvaluation::STATUS_PASSED, $result[1]['status']);
+        $this->assertEquals(AbstractResourceEvaluation::STATUS_PASSED, $result[1]['status']);
 
-        // As an activity can be bound to multiple abilities, a same evaluation of
-        // an activity can be related to multiple abilities/levels as well. The repo
+        // As a resource can be bound to multiple abilities, a same evaluation of
+        // a resource can be related to multiple abilities/levels as well. The repo
         // builds evaluation data by joining actual "evaluation" records and framework
         // structure. That's why the "e3" id appears twice in the result set.
         $this->assertEquals($e3->getId(), $result[2]['evaluationId']);
         $this->assertEquals('a3', $result[2]['abilityName']);
-        $this->assertEquals('ac2', $result[2]['activityName']);
+        $this->assertEquals('ac2', $result[2]['resourceName']);
         $this->assertEquals('l3', $result[2]['levelName']);
-        $this->assertEquals(AbstractEvaluation::STATUS_PASSED, $result[2]['status']);
+        $this->assertEquals(AbstractResourceEvaluation::STATUS_PASSED, $result[2]['status']);
     }
 
     private function createLink($index)
@@ -256,7 +252,7 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $this->persistLink($competency, $ability, $level);
     }
 
-    private function createActivity($name)
+    private function createResource($name)
     {
         $user = $this->persistUser('jdoe');
 
@@ -277,16 +273,11 @@ class AbilityRepositoryTest extends RepositoryTestCase
         $node->setWorkspace($workspace);
         $node->setGuid($name);
 
-        $activity = new Activity();
-        $activity->setResourceNode($node);
-        $activity->setDescription('activity...');
-
         $this->om->persist($user);
         $this->om->persist($workspace);
         $this->om->persist($type);
         $this->om->persist($node);
-        $this->om->persist($activity);
 
-        return $activity;
+        return $node;
     }
 }

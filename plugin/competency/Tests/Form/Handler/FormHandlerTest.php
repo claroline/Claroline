@@ -17,7 +17,7 @@ class FormHandlerTest extends UnitTestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      * @dataProvider currentFormMethodProvider
      *
      * @param string $method

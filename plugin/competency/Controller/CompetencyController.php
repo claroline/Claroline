@@ -174,16 +174,16 @@ class CompetencyController
     }
 
     /**
-     * Displays information about the activities linked to a given framework.
+     * Displays information about the resources linked to a given framework.
      *
-     * @EXT\Route("/frameworks/{id}/activities", name="hevinci_framework_activities")
+     * @EXT\Route("/frameworks/{id}/resources", name="hevinci_framework_resources")
      * @EXT\Template
      *
      * @param Competency $framework
      *
      * @return array
      */
-    public function activitiesAction(Competency $framework)
+    public function resourcesAction(Competency $framework)
     {
         return ['framework' => $this->manager->loadCompetency($framework)];
     }

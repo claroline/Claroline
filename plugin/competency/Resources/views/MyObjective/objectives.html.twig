@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle::Desktop/layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
 
 {% trans_default_domain 'competency' %}
 
@@ -8,12 +8,7 @@
 
 {% block breadcrumb %}
     {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-cog',
-                'name': 'administration'|trans({}, 'platform'),
-                'href': path('claro_admin_index')
-            },
+        macros.desktopBreadcrumbs([
             {
                 'name': 'my-learning-objectives'|trans({}, 'tools'),
                 'href': ''
@@ -23,62 +18,23 @@
 {% endblock %}
 
 {% block section_content %}
-    <div class="panel-heading">
-        <div class="panel-title">{{ 'my-learning-objectives'|trans({}, 'tools') }}</div>
-    </div>
-    <div class="panel-body">
-        {% if objectives|length > 0 %}
-            <table class="user-objectives personal table table-condensed table-bordered">
-                <thead>
-                    <tr>
-                        <th>{{ 'objective_'|trans }}</th>
-                        <th>{{ 'progress'|trans }}</th>
-                        <th>{{ 'level.obtained'|trans }}</th>
-                        <th>{{ 'level.expected'|trans }}</th>
-                        <th colspan="2">{{ 'actions'|trans({}, 'platform') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for objective in objectives %}
-                        {%
-                            include 'HeVinciCompetencyBundle:MyObjective:row.html.twig'
-                            with {
-                                id: objective.id,
-                                name: objective.name,
-                                progress: objective.progress,
-                                competencyCount: objective.competencyCount,
-                                path: user.getId(),
-                            }
-                        %}
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <div class="alert alert-info" role="alert">
-                <i class="fa fa-info-circle"></i>
-                {{ 'info.no_my_objectives'|trans }}
-            </div>
-        {% endif %}
+    <div class="panel-body my-objectives-tool-panel-body">
+        <div class="page-container my-objectives-tool-container"
+             data-objectives="{{ objectives| json_serialize | raw | escape }}"
+             data-objectives-competencies="{{ objectivesCompetencies | json_serialize | raw | escape }}"
+             data-competencies="{{ competencies | json_serialize | raw | escape }}"
+        >
+        </div>
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
-        "@HeVinciCompetencyBundle/Resources/views/MyObjective/row.html.twig"
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/flasher.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objectiveUtils.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objectiveUsers.js') }}"></script>
-    <script type="text/javascript">
-        HeVinci.initUserObjectiveUtils('myObjectives');
-    </script>
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-competency-my-objectives.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/hevincicompetency/css/style.css') }}"/>
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-competency-my-objectives.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-competency-circle.css') }}" />
 {% endblock %}

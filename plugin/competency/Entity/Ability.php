@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as BR;
@@ -34,7 +34,7 @@ class Ability implements \JsonSerializable
      * @Assert\NotBlank
      * @Assert\Range(min="0", max="1000")
      */
-    private $minActivityCount = 1;
+    private $minResourceCount = 1;
 
     /**
      * @ORM\OneToMany(targetEntity="CompetencyAbility", mappedBy="ability")
@@ -42,31 +42,31 @@ class Ability implements \JsonSerializable
     private $competencyAbilities;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity")
-     * @ORM\JoinTable(name="hevinci_ability_activity")
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinTable(name="hevinci_ability_resource")
      */
-    private $activities;
+    private $resources;
 
     /**
      * @ORM\Column(type="integer")
      *
-     * Note: this field denormalizes $activities data
+     * Note: this field denormalizes $resources data
      *       in order to decrease query complexity.
      */
-    private $activityCount = 0;
+    private $resourceCount = 0;
 
     /**
      * @var Level
      *
      * NOTE: this attribute is not mapped; its only purpose is to temporarily
      *       hold data for forms and json responses. Real level must be set
-     *       on a associated CompetencyAbility instance.
+     *       on a associated CompetencyAbility instance
      */
     private $level;
 
     public function __construct()
     {
-        $this->activities = new ArrayCollection();
+        $this->resources = new ArrayCollection();
         $this->competencyAbilities = new ArrayCollection();
     }
 
@@ -97,17 +97,17 @@ class Ability implements \JsonSerializable
     /**
      * @param int $count
      */
-    public function setMinActivityCount($count)
+    public function setMinResourceCount($count)
     {
-        $this->minActivityCount = $count;
+        $this->minResourceCount = $count;
     }
 
     /**
      * @return int
      */
-    public function getMinActivityCount()
+    public function getMinResourceCount()
     {
-        return $this->minActivityCount;
+        return $this->minResourceCount;
     }
 
     /**
@@ -139,47 +139,47 @@ class Ability implements \JsonSerializable
     }
 
     /**
-     * @param Activity $activity
+     * @param ResourceNode $resource
      *
      * @return bool
      */
-    public function isLinkedToActivity(Activity $activity)
+    public function isLinkedToResource(ResourceNode $resource)
     {
-        return $this->activities->contains($activity);
+        return $this->resources->contains($resource);
     }
 
     /**
-     * Associates the ability with an activity.
+     * Associates the ability with a resource.
      *
-     * @param Activity $activity
+     * @param ResourceNode $resource
      */
-    public function linkActivity(Activity $activity)
+    public function linkResource(ResourceNode $resource)
     {
-        if (!$this->isLinkedToActivity($activity)) {
-            $this->activities->add($activity);
-            ++$this->activityCount;
+        if (!$this->isLinkedToResource($resource)) {
+            $this->resources->add($resource);
+            ++$this->resourceCount;
         }
     }
 
     /**
-     * Removes an association with an activity.
+     * Removes an association with a resource.
      *
-     * @param Activity $activity
+     * @param ResourceNode $resource
      */
-    public function removeActivity(Activity $activity)
+    public function removeResource(ResourceNode $resource)
     {
-        if ($this->isLinkedToActivity($activity)) {
-            $this->activities->removeElement($activity);
-            --$this->activityCount;
+        if ($this->isLinkedToResource($resource)) {
+            $this->resources->removeElement($resource);
+            --$this->resourceCount;
         }
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getActivities()
+    public function getResources()
     {
-        return $this->activities;
+        return $this->resources;
     }
 
     public function jsonSerialize()
@@ -187,8 +187,8 @@ class Ability implements \JsonSerializable
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'activityCount' => $this->activityCount,
-            'minActivityCount' => $this->minActivityCount,
+            'resourceCount' => $this->resourceCount,
+            'minResourceCount' => $this->minResourceCount,
             'levelName' => $this->level ? $this->level->getName() : null,
             'levelValue' => $this->level ? $this->level->getValue() : null,
         ];

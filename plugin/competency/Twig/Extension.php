@@ -12,9 +12,9 @@ class Extension extends \Twig_Extension
 {
     public function getFilters()
     {
-        return array(
-            new \Twig_SimpleFilter('em', array($this, 'emphasizeFilter')),
-        );
+        return [
+            new \Twig_SimpleFilter('em', [$this, 'emphasizeFilter']),
+        ];
     }
 
     public function emphasizeFilter($string)

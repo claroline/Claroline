@@ -83,15 +83,15 @@ ul.framework i.empty {
     cursor: default;
 }
 
-ul.framework table.abilities, table.framework-activities {
+ul.framework table.abilities, table.framework-resources {
     margin: 0.5em auto;
     color: rgba(0,0,0,.70);
 }
 
 ul.framework table.abilities th,
 ul.framework table.abilities td,
-table.framework-activities > thead > tr > th,
-table.framework-activities > tbody > tr > td {
+table.framework-resources > thead > tr > th,
+table.framework-resources > tbody > tr > td {
     padding: 2px 4px;
     font-weight: normal;
 }
@@ -107,7 +107,7 @@ table.user-objectives > tbody > tr > td.user-name {
     border-bottom-style: dashed;
 }
 
-table.framework-activities td.level-0,
+table.framework-resources td.level-0,
 table.objectives tr[data-type=objective] td:first-of-type,
 table.user-objectives td.user-name,
 table.user-objectives.personal td.objective-name,

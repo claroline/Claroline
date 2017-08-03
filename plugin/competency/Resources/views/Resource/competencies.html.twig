@@ -8,7 +8,7 @@
 
 {% trans_default_domain 'competency' %}
 
-{% set resourceName = _resource.getResourceNode().getName() %}
+{% set resourceName = resourceNode.getName() %}
 {% set isEditMode = is_granted('ROLE_COMPETENCY_MANAGER') %}
 
 {% block title %}
@@ -38,7 +38,7 @@
             <tbody>
                 {% for competency in competencies %}
                     {%
-                        include 'HeVinciCompetencyBundle:Activity:competencyRow.html.twig'
+                        include 'HeVinciCompetencyBundle:Resource:competencyRow.html.twig'
                         with {
                             target: competency,
                             isEditMode: isEditMode
@@ -63,17 +63,17 @@
             <button class="btn btn-primary associate-competency">{{ 'competency.associate'|trans }}</button>
         {% endif %}
     </div>
-    {# stores the activity id for script uses #}
-    <span id="activity-id"
+    {# stores the resource id for script uses #}
+    <span id="resource-id"
           class="hidden"
-          data-id="{{ _resource.getId() }}">
+          data-id="{{ resourceNode.getId() }}">
     </span>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
-        "@HeVinciCompetencyBundle/Resources/views/Activity/competencyRow.html.twig"
+        "@HeVinciCompetencyBundle/Resources/views/Resource/competencyRow.html.twig"
     %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
@@ -81,7 +81,7 @@
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/flasher.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/tree.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/competencyPicker.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/activity.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/resource.js') }}"></script>
 {% endblock %}
 
 {% block stylesheets %}

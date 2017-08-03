@@ -40,11 +40,11 @@ class AbilityType extends AbstractType
                     return $repo->getFindByCompetencyBuilder($options['competency']);
                 },
             ])
-            ->add('minActivityCount', 'integer', [
-                'label' => 'ability.min_activity_count',
+            ->add('minResourceCount', 'integer', [
+                'label' => 'ability.min_resource_count',
                 'translation_domain' => 'competency',
                 'attr' => ['min' => 0, 'max' => 1000],
-                'data' => $options['data']->getMinActivityCount(),
+                'data' => $options['data']->getMinResourceCount(),
             ]);
     }
 

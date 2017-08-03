@@ -47,7 +47,7 @@ class CompetencyAbilityRepositoryTest extends RepositoryTestCase
     }
 
     /**
-     * @expectedException RuntimeException
+     * @expectedException \RuntimeException
      */
     public function testFindOneByTermsExpectsAResult()
     {

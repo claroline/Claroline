@@ -2,19 +2,19 @@
 
 {% trans_default_domain 'competency' %}
 
-{% block title %}{{ 'competency.activities'|trans }}{% endblock %}
+{% block title %}{{ 'competency.resources'|trans }}{% endblock %}
 
 {% block body %}
-    {% set activities = competency.getActivities() %}
-    {% if activities|length == 0 %}
+    {% set resources = competency.getResources() %}
+    {% if resources|length == 0 %}
         <div class="alert alert-warning">
             <i class="fa fa-warning"></i>
-            {{ 'info.no_competency_activities'|trans }}
+            {{ 'info.no_competency_resources'|trans }}
         </div>
     {% else %}
         <ul>
-            {% for activity in activities %}
-                <li>{{ activity.getResourceNode().getPathForDisplay() }}</li>
+            {% for resource in resources %}
+                <li>{{ resource.getPathForDisplay() }}</li>
             {% endfor %}
         </ul>
     {% endif %}

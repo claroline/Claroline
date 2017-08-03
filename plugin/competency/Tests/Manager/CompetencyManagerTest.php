@@ -29,7 +29,7 @@ class CompetencyManagerTest extends UnitTestCase
         $this->scaleRepo = $this->mock('HeVinci\CompetencyBundle\Repository\ScaleRepository');
         $this->abilityRepo = $this->mock('HeVinci\CompetencyBundle\Repository\AbilityRepository');
         $this->competencyAbilityRepo = $this->mock('HeVinci\CompetencyBundle\Repository\CompetencyAbilityRepository');
-        $this->om->expects($this->exactly(4))
+        $this->om->expects($this->exactly(5))
             ->method('getRepository')
             ->withConsecutive(
                 ['HeVinciCompetencyBundle:Competency'],
@@ -94,7 +94,7 @@ class CompetencyManagerTest extends UnitTestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testUpdateScaleThrowsIfScaleIsBoundToAbilities()
     {
@@ -133,7 +133,7 @@ class CompetencyManagerTest extends UnitTestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testDeleteScaleThrowsIfScaleIsBoundToFramework()
     {
@@ -214,7 +214,7 @@ class CompetencyManagerTest extends UnitTestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testEnsureIsRootExpectsARootCompetency()
     {
@@ -242,7 +242,7 @@ class CompetencyManagerTest extends UnitTestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testCreateSubCompetencyExpectsParentHasNoAbilities()
     {
@@ -272,7 +272,7 @@ class CompetencyManagerTest extends UnitTestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testCreateAbilityExpectsCompetencyToBeALeafNode()
     {
@@ -390,7 +390,7 @@ class CompetencyManagerTest extends UnitTestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testLinkAbilityThrowsIfLinkAlreadyExists()
     {

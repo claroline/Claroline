@@ -9,7 +9,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="HeVinci\CompetencyBundle\Repository\CompetencyProgressRepository")
  * @ORM\Table(name="hevinci_competency_progress")
  */
-class CompetencyProgress extends AbstractCompetencyProgress
+class CompetencyProgress extends AbstractCompetencyProgress implements \JsonSerializable
 {
     /**
      * @ORM\Column(type="datetime")
@@ -18,11 +18,32 @@ class CompetencyProgress extends AbstractCompetencyProgress
     private $date;
 
     /**
+     * @ORM\Column(type="integer", name="resource_id", nullable=true)
+     */
+    protected $resourceId;
+
+    /**
      * @return \DateTime
      */
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * @return int
+     */
+    public function getResourceId()
+    {
+        return $this->resourceId;
+    }
+
+    /**
+     * @param int $resourceId
+     */
+    public function setResourceId($resourceId)
+    {
+        $this->resourceId = $resourceId;
     }
 
     /**
@@ -43,5 +64,19 @@ class CompetencyProgress extends AbstractCompetencyProgress
         }
 
         return $log;
+    }
+
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'percentage' => $this->percentage,
+            'competencyName' => $this->competencyName,
+            'userName' => $this->userName,
+            'levelName' => $this->levelName,
+            'date' => $this->date,
+            'level' => $this->level,
+            'resourceId' => $this->resourceId,
+        ];
     }
 }
