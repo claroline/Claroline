@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Form;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Repository\RoleRepository;
-use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -100,21 +99,14 @@ class ProfileType extends AbstractType
             )
             ->add(
                 'organizations',
-                'entity',
+                'organization_picker',
                 [
-                    'label' => 'organizations',
-                    'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
-                    'expanded' => true,
-                    'multiple' => true,
-                    'property' => 'name',
-                    'read_only' => true,
-                    'disabled' => true,
+                   'label' => 'organizations',
                 ]
             );
 
         if ($this->isAdmin || $this->isGrantedUserAdministration) {
             $isAdmin = $this->isAdmin;
-            $currentUser = $this->currentUser;
             $builder
                 ->add('firstName', 'text', ['label' => 'first_name'])
                 ->add('lastName', 'text', ['label' => 'last_name'])
@@ -190,24 +182,9 @@ class ProfileType extends AbstractType
                 )
                 ->add(
                     'organizations',
-                    'entity',
+                    'organization_picker',
                     [
-                        'label' => 'organizations',
-                        'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
-                        'expanded' => true,
-                        'multiple' => true,
-                        'property' => 'name',
-                        'query_builder' => function (EntityRepository $er) use ($currentUser, $isAdmin) {
-                            $query = $er->createQueryBuilder('o');
-                            if (!$isAdmin) {
-                                $query->leftJoin('o.administrators', 'oa')
-                                ->where('oa.id = :id')
-                                ->orWhere('o.default = true')
-                                ->setParameter('id', $currentUser->getId());
-                            }
-
-                            return $query;
-                        },
+                       'label' => 'organizations',
                     ]
                 )
                 ->add(

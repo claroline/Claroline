@@ -182,6 +182,7 @@ class Organization
         $this->administrators = new ArrayCollection();
         $this->timeSlots = new ArrayCollection();
         $this->years = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getId()
@@ -331,5 +332,10 @@ class Organization
     public function getDefault()
     {
         return $this->default;
+    }
+
+    public function getChildren()
+    {
+        return $this->children;
     }
 }

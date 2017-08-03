@@ -93,7 +93,13 @@ class OrganizationController extends FOSRestController
      */
     public function getOrganizationsAction()
     {
-        return $this->organizationManager->getRoots();
+        return $this->get('claroline.API.finder')->search(
+            'Claroline\CoreBundle\Entity\Organization\Organization',
+            0,
+            10,
+            ['filters' => ['parent' => null]],
+            ['recursive' => true]
+        )['results'];
     }
 
     /**

@@ -74,8 +74,8 @@ class SerializerProvider
      *
      * @return mixed - a json serializable structure
      */
-    public function serialize($object)
+    public function serialize($object, $options = [])
     {
-        return $this->get($object)->serialize($object);
+        return $this->get($object)->serialize($object, $options);
     }
 }

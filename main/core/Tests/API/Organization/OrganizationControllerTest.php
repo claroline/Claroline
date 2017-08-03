@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Tests\API\Organization;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 use Claroline\CoreBundle\Library\Testing\Persister;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 
 class OrganizationControllerTest extends TransactionalTestCase
 {
@@ -33,9 +33,9 @@ class OrganizationControllerTest extends TransactionalTestCase
     public function testPostOrganizationAction()
     {
         $this->logIn($this->admin);
-        $form = array('organization_form' => array(
+        $form = ['organization_form' => [
             'name' => 'orga',
-        ));
+        ]];
         $this->client->request('POST', '/api/organizations.json', $form);
         $data = $this->client->getResponse()->getContent();
         //let's check now
@@ -137,7 +137,6 @@ class OrganizationControllerTest extends TransactionalTestCase
         $this->persister->flush();
         $this->logIn($this->admin);
         $this->client->request('GET', "/api/organization/{$orga->getId()}/edit/form.json");
-        $data = $this->client->getResponse()->getContent();
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -160,16 +159,15 @@ class OrganizationControllerTest extends TransactionalTestCase
         $here = $this->persister->location('here');
         $this->persister->flush();
         $this->logIn($this->admin);
-        $fields = array(
+        $fields = [
             'name' => 'rename',
             'email' => 'toto@toto.net',
             'administrators' => $this->admin->getId(),
-            'locations' => array($here->getId()),
-        );
-        $form = array('organization_form' => $fields);
+            'locations' => [$here->getId()],
+        ];
+        $form = ['organization_form' => $fields];
 
         $this->client->request('PUT', "/api/organizations/{$orga->getId()}.json", $form);
-        $data = $this->client->getResponse()->getContent();
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
@@ -181,12 +179,12 @@ class OrganizationControllerTest extends TransactionalTestCase
         $this->persister->flush();
         $this->logIn($this->john);
 
-        $fields = array(
+        $fields = [
             'name' => 'rename',
             'email' => 'toto@toto.net',
             'administrators' => $this->admin->getId(),
-        );
-        $form = array('organization_form' => $fields);
+        ];
+        $form = ['organization_form' => $fields];
 
         $this->client->request('PUT', "/api/organizations/{$orga->getId()}.json", $form);
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());

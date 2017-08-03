@@ -277,7 +277,7 @@ class UserController extends FOSRestController
      */
     public function getPublicUserAction(User $user)
     {
-        return $this->container->get('claroline.serializer.user')->serialize($user, true);
+        return $this->container->get('claroline.serializer.user')->serialize($user, ['public' => true]);
     }
 
     /**

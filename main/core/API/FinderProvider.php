@@ -78,7 +78,7 @@ class FinderProvider
     public function get($class)
     {
         if (empty($this->finders[$class])) {
-            throw new \Exception(
+            throw new FinderException(
                 sprintf('No finder found for class "%s" Maybe you forgot to add the "claroline.finder" tag to your finder.', $class)
             );
         }
@@ -86,7 +86,7 @@ class FinderProvider
         return $this->finders[$class];
     }
 
-    public function search($class, $page = 0, $limit = -1, array $searches = [])
+    public function search($class, $page = 0, $limit = -1, array $searches = [], array $serializerOptions = [])
     {
         $filters = isset($searches['filters']) ? $searches['filters'] : [];
         $sortBy = $this->decodeSortBy(isset($searches['sortBy']) ? $searches['sortBy'] : null);
@@ -97,8 +97,8 @@ class FinderProvider
         return [
             'class' => $class,
             'total' => $count,
-            'results' => array_map(function ($el) {
-                return $this->serializer->serialize($el);
+            'results' => array_map(function ($el) use ($serializerOptions) {
+                return $this->serializer->serialize($el, $serializerOptions);
             }, $data),
             'page' => $page,
             'pageSize' => $limit,
@@ -109,29 +109,35 @@ class FinderProvider
 
     private function fetch($class, $page, $limit, array $filters, array $sortBy, $count = false)
     {
-        /** @var QueryBuilder $qb */
-        $qb = $this->om->createQueryBuilder();
+        try {
+            /** @var QueryBuilder $qb */
+            $qb = $this->om->createQueryBuilder();
 
-        $qb->select($count ? 'count(obj)' : 'obj')
-           ->from($class, 'obj');
+            $qb->select($count ? 'count(obj)' : 'obj')
+               ->from($class, 'obj');
 
-        // filter query - let's the finder implementation process the filters to configure query
-        $this->get($class)->configureQueryBuilder($qb, $filters);
+            // filter query - let's the finder implementation process the filters to configure query
+            $this->get($class)->configureQueryBuilder($qb, $filters);
 
-        // order query
-        if (!empty($sortBy['property']) && 0 !== $sortBy['direction']) {
-            $qb->orderBy('obj.'.$sortBy['property'], 1 === $sortBy['property'] ? 'ASC' : 'DESC');
+            // order query
+            if (!empty($sortBy['property']) && 0 !== $sortBy['direction']) {
+                $qb->orderBy('obj.'.$sortBy['property'], 1 === $sortBy['property'] ? 'ASC' : 'DESC');
+            }
+
+            // limit query
+            if (!$count && 0 < $limit) {
+                $qb->setFirstResult($page * $limit);
+                $qb->setMaxResults($limit);
+            }
+
+            $query = $qb->getQuery();
+
+            return $count ? (int) $query->getSingleScalarResult() : $query->getResult();
+        } catch (FinderException $e) {
+            $data = $this->om->getRepository($class)->findBy($filters, null, $limit, $page);
+
+            return $count ? count($data) : $data;
         }
-
-        // limit query
-        if (!$count && 0 < $limit) {
-            $qb->setFirstResult($page * $limit);
-            $qb->setMaxResults($limit);
-        }
-
-        $query = $qb->getQuery();
-
-        return $count ? (int) $query->getSingleScalarResult() : $query->getResult();
     }
 
     /**

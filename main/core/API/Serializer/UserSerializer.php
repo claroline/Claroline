@@ -49,9 +49,11 @@ class UserSerializer
      *
      * @return array - the serialized representation of the workspace
      */
-    public function serialize(User $user, $public = true)
+    public function serialize(User $user, $options = [])
     {
-        if ($public) {
+        $isPublic = isset($options['public']) ? $options['public'] : false;
+
+        if ($isPublic) {
             return $this->serializePublic($user);
         }
 

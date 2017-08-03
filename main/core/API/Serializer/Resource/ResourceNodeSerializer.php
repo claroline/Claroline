@@ -18,6 +18,7 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * @DI\Service("claroline.serializer.resource_node")
+ * @DI\Tag("claroline.serializer")
  */
 class ResourceNodeSerializer
 {

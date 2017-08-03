@@ -69,37 +69,11 @@ class WorkspaceType extends AbstractType
             );
 
         $builder
-                ->add('displayable', 'checkbox', ['required' => false, 'label' => 'displayable_in_workspace_list'])
-                ->add('selfRegistration', 'checkbox', ['required' => false, 'label' => 'public_registration'])
-                ->add('registrationValidation', 'checkbox', ['required' => false, 'label' => 'registration_validation'])
-                ->add('selfUnregistration', 'checkbox', ['required' => false, 'label' => 'public_unregistration'])
-                ->add(
-                    'organizations',
-                    'entity',
-                    [
-                        'label' => 'organizations',
-                        'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
-                        //define here the allowed organizations~
-                        //what define wich organization I can bind to a workspace ?
-
-                        'query_builder' => function (EntityRepository $er) use ($user) {
-                            if ($user->hasRole('ROLE_ADMIN')) {
-                                return $er->createQueryBuilder('o');
-                            }
-
-                            return $er->createQueryBuilder('o')
-                                ->leftJoin('o.users', 'u')
-                                ->leftJoin('o.groups', 'g')
-                                ->leftJoin('g.users', 'gu')
-                                ->where('u.id = :userId')
-                                ->orWhere('gu.id = :userId')
-                                ->setParameter('userId', $user->getId());
-                        },
-                        'expanded' => true,
-                        'multiple' => true,
-                        'property' => 'name',
-                    ]
-                );
+            ->add('displayable', 'checkbox', ['required' => false, 'label' => 'displayable_in_workspace_list'])
+            ->add('selfRegistration', 'checkbox', ['required' => false, 'label' => 'public_registration'])
+            ->add('registrationValidation', 'checkbox', ['required' => false, 'label' => 'registration_validation'])
+            ->add('selfUnregistration', 'checkbox', ['required' => false, 'label' => 'public_unregistration'])
+            ->add('organizations', 'organization_picker', ['label' => 'organizations']);
 
         if (!$this->forApi) {
             $options = [
