@@ -11,9 +11,7 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
-use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -29,39 +27,22 @@ class ResourceExtension extends \Twig_Extension
     private $resourceManager;
 
     /**
-     * @var ResourceNodeManager
-     */
-    private $resourceNodeManager;
-
-    /**
      * ResourceExtension constructor.
      *
      * @DI\InjectParams({
-     *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
-     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node")
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
      * })
      *
-     * @param ResourceManager     $resourceManager
-     * @param ResourceNodeManager $resourceNodeManager
+     * @param ResourceManager $resourceManager
      */
-    public function __construct(
-        ResourceManager $resourceManager,
-        ResourceNodeManager $resourceNodeManager)
+    public function __construct(ResourceManager $resourceManager)
     {
         $this->resourceManager = $resourceManager;
-        $this->resourceNodeManager = $resourceNodeManager;
     }
 
     public function getName()
     {
         return 'resource_extension';
-    }
-
-    public function getFilters()
-    {
-        return [
-            new \Twig_SimpleFilter('get_serialized_node', [$this, 'serializeNode']),
-        ];
     }
 
     public function getFunctions()
@@ -70,18 +51,6 @@ class ResourceExtension extends \Twig_Extension
             'isMenuActionImplemented' => new \Twig_Function_Method($this, 'isMenuActionImplemented'),
             'getCurrentUrl' => new \Twig_Function_Method($this, 'getCurrentUrl'),
         ];
-    }
-
-    /**
-     * Gets a serialized representation of the node of a resource.
-     *
-     * @param AbstractResource $resource
-     *
-     * @return array
-     */
-    public function serializeNode(AbstractResource $resource)
-    {
-        return $this->resourceNodeManager->serialize($resource->getResourceNode());
     }
 
     public function isMenuActionImplemented(ResourceType $resourceType = null, $menuName)
