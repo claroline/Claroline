@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "43e6d9a2e0241108633e4059cfe4808d8e473d13"
+                "reference": "0f659d03d33961fef973484f8f506166c35b4a30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/43e6d9a2e0241108633e4059cfe4808d8e473d13",
-                "reference": "43e6d9a2e0241108633e4059cfe4808d8e473d13",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/0f659d03d33961fef973484f8f506166c35b4a30",
+                "reference": "0f659d03d33961fef973484f8f506166c35b4a30",
                 "shasum": ""
             },
             "require": {
@@ -389,7 +389,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-07-23 16:31:29"
+            "time": "2017-08-03 16:56:06"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3571,17 +3571,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "a190b9b367c463d049fa333f61dbe5648e68753f"
+                "reference": "1a2ee4c579e0d31e468f1c1d858f354ae17ec55e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/a190b9b367c463d049fa333f61dbe5648e68753f",
-                "reference": "a190b9b367c463d049fa333f61dbe5648e68753f",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/1a2ee4c579e0d31e468f1c1d858f354ae17ec55e",
+                "reference": "1a2ee4c579e0d31e468f1c1d858f354ae17ec55e",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-07-07 07:27:26"
+            "time": "2017-08-03 13:27:59"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -6533,7 +6533,7 @@
             ],
             "authors": [
                 {
-                    "name": "Padraic Brady",
+                    "name": "Pádraic Brady",
                     "email": "padraic.brady@gmail.com",
                     "homepage": "http://blog.astrumfutura.com"
                 },
