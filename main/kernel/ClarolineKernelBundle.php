@@ -11,11 +11,11 @@
 
 namespace Claroline\KernelBundle;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Claroline\KernelBundle\Manager\BundleManager;
 use Claroline\KernelBundle\Bundle\ConfigurationBuilder;
 use Claroline\KernelBundle\Kernel\SwitchKernel;
+use Claroline\KernelBundle\Manager\BundleManager;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class ClarolineKernelBundle extends Bundle
 {
@@ -36,9 +36,9 @@ class ClarolineKernelBundle extends Bundle
 
     public function getBundles($includeSelf = true)
     {
-        $bundles = array();
+        $bundles = [];
 
-        foreach ($this->bundleManager->getActiveBundles() as $bundle) {
+        foreach ($this->bundleManager->getActiveBundles($this->bundleManager->getEnvironment() === 'test') as $bundle) {
             $bundles[] = $bundle[BundleManager::BUNDLE_INSTANCE];
         }
 

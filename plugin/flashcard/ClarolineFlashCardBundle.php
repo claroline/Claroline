@@ -31,4 +31,9 @@ class ClarolineFlashCardBundle extends DistributionPluginBundle
     {
         return 'DataFixtures';
     }
+
+    public function isActiveByDefault()
+    {
+        return false;
+    }
 }
