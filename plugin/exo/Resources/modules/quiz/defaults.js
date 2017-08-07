@@ -38,6 +38,12 @@ const step = {
 const item = {
   title: '',
   description: '',
+  meta: {
+    protectQuestion: false
+  },
+  rights: {
+    edit: true
+  },
   hints: [],
   feedback: '',
   objects: [],

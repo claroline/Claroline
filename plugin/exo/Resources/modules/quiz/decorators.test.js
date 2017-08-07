@@ -108,6 +108,12 @@ describe('Decorator', () => {
       items: {
         x: {
           id: 'x',
+          meta: {
+            protectQuestion: false
+          },
+          rights: {
+            edit: true
+          },
           title: '',
           description: '',
           type: 'application/x.test+json',
@@ -132,6 +138,12 @@ describe('Decorator', () => {
         y: {
           id: 'y',
           title: '',
+          meta: {
+            protectQuestion: false
+          },
+          rights: {
+            edit: true
+          },
           description: '',
           hints: [],
           feedback: '',
@@ -172,6 +184,12 @@ describe('Decorator', () => {
       },
       items: {
         x: {
+          meta: {
+            protectQuestion: false
+          },
+          rights: {
+            edit: true
+          },
           id: 'x',
           type: 'application/x.bar+json'
         }
@@ -220,6 +238,12 @@ describe('Decorator', () => {
       },
       items: {
         x: {
+          meta: {
+            protectQuestion: false
+          },
+          rights: {
+            edit: true
+          },
           id: 'x',
           type: 'application/x.bar+json',
           title: '',
