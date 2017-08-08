@@ -71,6 +71,7 @@ class UserSerializer
                   case 'baseData':
                       $publicUser['lastName'] = $user->getLastName();
                       $publicUser['firstName'] = $user->getFirstName();
+                      $publicUser['fullName'] = $user->getFirstName().' '.$user->getLastName();
                       $publicUser['username'] = $user->getUsername();
                       $publicUser['picture'] = $user->getPicture();
                       $publicUser['description'] = $user->getAdministrativeCode();

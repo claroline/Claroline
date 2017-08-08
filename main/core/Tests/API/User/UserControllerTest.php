@@ -508,6 +508,7 @@ class UserControllerTest extends TransactionalTestCase
             [
                 'firstName' => 'user',
                 'lastName' => 'user',
+                'fullName' => 'user user',
                 'username' => 'user',
                 'mail' => 'user@mail.com',
                 'allowSendMail' => true,
@@ -538,6 +539,7 @@ class UserControllerTest extends TransactionalTestCase
             [
                 'firstName' => 'user',
                 'lastName' => 'user',
+                'fullName' => 'user user',
                 'username' => 'user',
                 'mail' => 'user@mail.com',
                 'allowSendMail' => true,

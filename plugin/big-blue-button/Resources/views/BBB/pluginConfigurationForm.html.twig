@@ -1,0 +1,54 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'bbb_configuration' | trans({}, 'bbb') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'plugins'|trans({}, 'platform'),
+                'href': path('claro_admin_plugins')
+            },
+            {
+                'name': 'bbb_configuration'|trans({}, 'bbb'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">
+            {{ 'bbb_configuration'|trans({}, 'bbb') }}
+        </h3>
+    </div>
+    <div class="panel-body">
+        <div class="page-container bbb-config-container"
+             data-user="{{ user | api_serialize({'public': true}) | json_encode | raw | escape }}"
+             data-server-url="{{ serverUrl | json_encode | raw | escape }}"
+             data-security-salt="{{ securitySalt | json_encode | raw | escape }}"
+        >
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-big-blue-button-bbb.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-big-blue-button-configuration.js') }}"></script>
+{% endblock %}
