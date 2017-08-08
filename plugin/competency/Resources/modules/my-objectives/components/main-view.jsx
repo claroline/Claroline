@@ -1,6 +1,7 @@
-import {connect} from 'react-redux'
 import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import {withRouter} from 'react-router-dom'
 import {trans} from '#/main/core/translation'
 import {Objective} from './objective.jsx'
 
@@ -56,6 +57,6 @@ function mapDispatchToProps() {
   return {}
 }
 
-const ConnectedMainView = connect(mapStateToProps, mapDispatchToProps)(MainView)
+const ConnectedMainView = withRouter(connect(mapStateToProps, mapDispatchToProps)(MainView))
 
 export {ConnectedMainView as MainView}

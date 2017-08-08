@@ -88,6 +88,6 @@ class SerializerExtension extends \Twig_Extension
             $context->setGroups($group);
         }
 
-        return $this->container->get('serializer')->serialize($data, 'json', $context);
+        return $this->serializer->serialize($data, 'json', $context);
     }
 }

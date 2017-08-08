@@ -2,12 +2,7 @@ import {makeActionCreator} from '#/main/core/utilities/redux'
 import {generateUrl} from '#/main/core/fos-js-router'
 import {REQUEST_SEND} from '#/main/core/api/actions'
 import {trans} from '#/main/core/translation'
-import {
-  VIEW_MAIN,
-  VIEW_COMPETENCY
-} from './enums'
 
-export const UPDATE_VIEW_MODE = 'UPDATE_VIEW_MODE'
 export const COMPETENCIES_DATA_UPDATE = 'COMPETENCIES_DATA_UPDATE'
 export const COMPETENCY_DATA_RESET = 'COMPETENCY_DATA_RESET'
 export const COMPETENCY_DATA_LOAD = 'COMPETENCY_DATA_LOAD'
@@ -15,20 +10,12 @@ export const COMPETENCY_DATA_UPDATE = 'COMPETENCY_DATA_UPDATE'
 
 export const actions = {}
 
-actions.updateViewMode = makeActionCreator(UPDATE_VIEW_MODE, 'mode')
-
-actions.displayMainView = () => {
-  return (dispatch) => {
-    dispatch(actions.updateViewMode(VIEW_MAIN))
-  }
-}
-
-actions.displayCompetencyView = (objectiveId, competencyId) => {
-  return (dispatch) => {
-    dispatch(actions.fetchCompetencyData(objectiveId, competencyId))
-    dispatch(actions.updateViewMode(VIEW_COMPETENCY))
-  }
-}
+//actions.displayCompetencyView = (objectiveId, competencyId) => {
+//  return (dispatch) => {
+//    dispatch(actions.fetchCompetencyData(objectiveId, competencyId))
+//    dispatch(actions.updateViewMode(VIEW_COMPETENCY))
+//  }
+//}
 
 actions.updateCompetenciesData = makeActionCreator(COMPETENCIES_DATA_UPDATE, 'competencyId', 'property', 'value')
 

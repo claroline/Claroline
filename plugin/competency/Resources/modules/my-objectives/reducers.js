@@ -1,44 +1,15 @@
 import cloneDeep from 'lodash/cloneDeep'
-import {makeReducer, combineReducers} from '#/main/core/utilities/redux'
-import {VIEW_MAIN} from './enums'
-
+import {makeReducer} from '#/main/core/utilities/redux'
 import {
-  UPDATE_VIEW_MODE,
   COMPETENCIES_DATA_UPDATE,
   COMPETENCY_DATA_RESET,
   COMPETENCY_DATA_LOAD,
   COMPETENCY_DATA_UPDATE
 } from './actions'
 
-const initialState = {
-  viewMode: VIEW_MAIN,
-  objectives: [],
-  objectivesCompetencies: {},
-  competencies: {},
-  competenciesProgress: {},
-  competency: {
-    data: {},
-    objective: {},
-    progress: {},
-    nbLevels: 0,
-    currentLevel: 0,
-    challenge: {
-      nbPassed: 0,
-      nbToPass: 0
-    }
-  }
-}
+const objectivesReducers =  makeReducer({}, {})
 
-const viewReducers = {
-  [UPDATE_VIEW_MODE]: (state, action) => {
-    return action.mode
-  }
-}
-
-const objectivesReducers = {
-}
-
-const competenciesReducers = {
+const competenciesReducers = makeReducer({}, {
   [COMPETENCIES_DATA_UPDATE]: (state, action) => {
     const copy = {}
     Object.keys(state).forEach(key => {
@@ -56,10 +27,10 @@ const competenciesReducers = {
 
     return copy
   }
-}
+})
 
-const competencyReducers = {
-  [COMPETENCY_DATA_RESET]: () => initialState['competency'],
+const competencyReducers = makeReducer({}, {
+  [COMPETENCY_DATA_RESET]: () => {return {}},
   [COMPETENCY_DATA_LOAD]: (state, action) => {
     return {
       data: action.data.competency,
@@ -80,12 +51,10 @@ const competencyReducers = {
       challenge: action.data.challenge
     }
   }
-}
-
-export const reducers = combineReducers({
-  viewMode: makeReducer(initialState['viewMode'], viewReducers),
-  objectives: makeReducer(initialState['objectives'], objectivesReducers),
-  objectivesCompetencies: makeReducer(initialState['objectivesCompetencies'], objectivesReducers),
-  competencies: makeReducer(initialState['competencies'], competenciesReducers),
-  competency: makeReducer(initialState['competency'], competencyReducers)
 })
+
+export {
+  objectivesReducers,
+  competenciesReducers,
+  competencyReducers
+}
