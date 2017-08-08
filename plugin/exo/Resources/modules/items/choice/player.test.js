@@ -19,6 +19,7 @@ describe('<ChoicePlayer/>', () => {
           id: 'ID',
           multiple: true,
           random: false,
+          numbering: 'none',
           choices: [
             {id: '1', data: 'value1'},
             {id: '2', data: 'value2'}

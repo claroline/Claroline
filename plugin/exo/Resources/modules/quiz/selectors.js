@@ -1,5 +1,6 @@
 // TODO : use reselect
 // TODO : there is possible code refactoring with editor/selectors.js
+import {createSelector} from 'reselect'
 
 const isLoading = state => state.currentRequests > 0
 const alerts = state => state.alerts
@@ -26,6 +27,11 @@ const firstStepId = state => state.quiz.steps[0]
 const hasOverview = state => state.quiz.parameters.showOverview
 const testMode = state => state.quiz.testMode
 
+const quizNumbering = createSelector(
+  parameters,
+  (parameters) => parameters.numbering
+)
+
 export default {
   id,
   quiz,
@@ -49,5 +55,6 @@ export default {
   noItems,
   firstStepId,
   hasOverview,
-  testMode
+  testMode,
+  quizNumbering
 }

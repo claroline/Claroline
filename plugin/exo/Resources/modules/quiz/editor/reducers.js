@@ -22,6 +22,7 @@ import {
   ITEM_DELETE,
   ITEM_UPDATE,
   ITEM_MOVE,
+  QUESTION_MOVE,
   ITEM_HINTS_UPDATE,
   ITEM_DETAIL_UPDATE,
   ITEMS_IMPORT,
@@ -93,7 +94,9 @@ function reduceQuiz(quiz = initialQuizState(), action = {}) {
     case ATTEMPT_FINISH:
       return update(quiz, {
         meta: {
-          userPaperCount: {$set: quiz.meta.userPaperCount + 1}
+          userPaperCount: {$set: quiz.meta.userPaperCount + 1},
+          userPaperDayCount: {$set: quiz.meta.userPaperDayCount + 1},
+          paperCount: {$set: quiz.meta.paperCount + 1}
         }
       })
 
@@ -103,6 +106,24 @@ function reduceQuiz(quiz = initialQuizState(), action = {}) {
 
 function reduceSteps(steps = {}, action = {}) {
   switch (action.type) {
+    case QUESTION_MOVE: {
+      //remove the old one
+      Object.keys(steps).forEach(stepId => {
+        if (steps[stepId].items.find(item => item === action.itemId)) {
+          const updatedRemoveItems = update(
+            steps[stepId],
+            {['items']: {$set : steps[stepId].items.filter(item => item !== action.itemId)}}
+          )
+          steps = update(steps, {[stepId]: {$set: updatedRemoveItems}})
+        }
+      })
+
+      const items = steps[action.stepId].items.concat(action.itemId)
+      const updatedAddItems = update(steps[action.stepId], {['items']: {$set: items}})
+      steps = update(steps, {[action.stepId]: {$set: updatedAddItems}})
+
+      return steps
+    }
     case STEP_CREATE: {
       const newStep = {
         id: action.id,

@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\Misc\Choice;
 use UJM\ExoBundle\Library\Model\ShuffleTrait;
+use UJM\ExoBundle\Library\Options\ExerciseNumbering;
 
 /**
  * A choice question.
@@ -36,6 +37,13 @@ class ChoiceQuestion extends AbstractItem
      * @ORM\OrderBy({"order" = "ASC"})
      */
     private $choices;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $numbering = ExerciseNumbering::NONE;
 
     /**
      * Constructs a new instance of choices.
@@ -92,5 +100,15 @@ class ChoiceQuestion extends AbstractItem
         if ($this->choices->contains($choice)) {
             $this->choices->removeElement($choice);
         }
+    }
+
+    public function setNumbering($numbering)
+    {
+        $this->numbering = $numbering;
+    }
+
+    public function getNumbering()
+    {
+        return $this->numbering;
     }
 }

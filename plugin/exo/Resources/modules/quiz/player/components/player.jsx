@@ -15,8 +15,8 @@ import {ItemPlayer} from './item-player.jsx'
 import {ItemFeedback} from './item-feedback.jsx'
 import {ContentItemPlayer} from './content-item-player.jsx'
 import {PlayerNav} from './nav-bar.jsx'
-
 import {CustomDragLayer} from './../../../utils/custom-drag-layer.jsx'
+import {getNumbering} from './../../../utils/numbering'
 
 const Player = props =>
   <div className="quiz-player">
@@ -28,7 +28,7 @@ const Player = props =>
       <div className="step-description" dangerouslySetInnerHTML={{ __html: props.step.description }}></div>
     }
 
-    {props.items.map((item) => (
+    {props.items.map((item, index) => (
       <Panel
         key={item.id}
       >
@@ -41,6 +41,7 @@ const Player = props =>
             item={item}
             showHint={(questionId, hint) => props.showHint(props.quizId, props.paper.id, questionId, hint)}
             usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+            numbering={getNumbering(props.numbering, index)}
           >
             {React.createElement(getDefinition(item.type).player, {
               item: item,
@@ -98,6 +99,7 @@ Player.propTypes = {
   navigateTo: T.func.isRequired,
   showFeedback: T.bool.isRequired,
   feedbackEnabled: T.bool.isRequired,
+  numbering: T.string.isRequired,
   submit: T.func.isRequired,
   finish: T.func.isRequired,
   showHint: T.func.isRequired,
@@ -121,7 +123,8 @@ function mapStateToProps(state) {
     previous: select.previous(state),
     showFeedback: select.showFeedback(state),
     feedbackEnabled: select.feedbackEnabled(state),
-    currentStepSend: select.currentStepSend(state)
+    currentStepSend: select.currentStepSend(state),
+    numbering: selectQuiz.quizNumbering(state)
   }
 }
 

@@ -1,0 +1,49 @@
+.step-list-box {
+    display: inline-block;
+    flex-direction: column;
+    flex-shrink: 0;
+    align-items: center;
+    overflow: auto;
+    padding: @quiz-summary-padding;
+    border-radius: @summary-border-radius;
+    text-align: center;
+
+    .thumbnail {
+        display: inline-block;
+        flex-direction: column;
+        flex-shrink: 0;
+        width: 100px;
+        height: 100px;
+        text-align: center;
+        text-decoration: none;
+        font-size: @quiz-summary-font;
+        margin-bottom: floor(@grid-gutter-width / 2);
+        margin-right: floor(@grid-gutter-width / 2);
+        background: @quiz-summary-link-bg;
+        color: @quiz-summary-link-color;
+        border-color: @quiz-summary-link-color;
+        cursor: pointer;
+
+        &:hover {
+            .step-title {
+                color: @quiz-summary-link-hover-color;
+            }
+
+            color: @quiz-summary-link-hover-color;
+            background: @quiz-summary-link-hover-bg;
+            border-color: @quiz-summary-link-hover-color;
+        }
+    }
+
+    .step-title {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        outline: 0;
+        text-overflow: ellipsis;
+        font-weight: bold;
+        //for centering the title. Should find a proper way to do it
+        position: relative;
+        top: 38%;
+    }
+}

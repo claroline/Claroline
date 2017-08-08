@@ -61,6 +61,39 @@ class PaperRepository extends EntityRepository
     }
 
     /**
+     * Returns the unfinished papers of a user for a given exercise for the current day, if any.
+     *
+     * @param Exercise $exercise
+     * @param User     $user
+     *
+     * @return Paper[]
+     */
+    public function countUserFinishedDayPapers(Exercise $exercise, User $user)
+    {
+        $datetime = new \DateTime();
+        $timestamp = $datetime->getTimeStamp();
+        $today = strtotime('midnight', $timestamp);
+        $tomorrow = strtotime('tomorrow', $today) - 1;
+
+        return (int) $this->getEntityManager()
+          ->createQuery('
+              SELECT COUNT(p)
+              FROM UJM\ExoBundle\Entity\Attempt\Paper AS p
+              WHERE p.user = :user
+                AND p.exercise = :exercise
+                AND p.end >= :today
+                AND p.end <= :tomorrow
+          ')
+          ->setParameters([
+              'user' => $user,
+              'exercise' => $exercise,
+              'today' => $today,
+              'tomorrow' => $tomorrow,
+          ])
+          ->getSingleScalarResult();
+    }
+
+    /**
      * Finds the score of a paper by summing the score of each answer.
      *
      * @param Paper $paper

@@ -635,5 +635,16 @@
     "no_try_left": "Aucun essai restant",
     "correct_answer": "Réponse correcte",
     "try_used": "Essais utilisés",
-    "selection_missing_click": "Pénalité par erreur"
+    "selection_missing_click": "Pénalité par erreur",
+    "change_step": "Changer l'étape",
+    "quiz_numbering_none": "Aucune numérotation",
+    "quiz_numbering_litteral": "Numérotation littérale",
+    "quiz_numbering_numeric": "Numérotation numérique",
+    "number_max_attempts_per_day_help": "Entrez 0 pour un nombre d'essais illimité",
+    "maximum_attempts_per_day": "Nombre de tentatives maximum par jour",
+    "must_be_less_than_max_attempts": "Doit être plus petit que le nombre de d'essais maximum",
+    "maximum_papers": "Nombre maximum de copies",
+    "maximum_papers_attempts_help": "Entrez 0 pour un nombre de copie illimité",
+    "access": "Accès",
+    "must_be_more_than_max_attempts": "Doit être plus grand ou égal au nombre de d'essais maximum"
 }

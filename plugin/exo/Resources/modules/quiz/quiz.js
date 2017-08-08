@@ -16,6 +16,7 @@ import {MODAL_ADD_ITEM, AddItemModal} from './editor/components/add-item-modal.j
 import {MODAL_IMPORT_ITEMS, ImportItemsModal} from './editor/components/import-items-modal.jsx'
 import {MODAL_ADD_CONTENT, AddContentModal} from './editor/components/add-content-modal.jsx'
 import {MODAL_CONTENT, ContentModal} from './../contents/components/content-modal.jsx'
+import {MODAL_MOVE_QUESTION, MoveQuestionModal} from './editor/components/move-question-modal.jsx'
 
 export class Quiz {
   constructor(rawQuizData, rawResourceNodeData, noServer = false) {
@@ -27,7 +28,8 @@ export class Quiz {
       [MODAL_ADD_ITEM, AddItemModal],
       [MODAL_IMPORT_ITEMS, ImportItemsModal],
       [MODAL_ADD_CONTENT, AddContentModal],
-      [MODAL_CONTENT, ContentModal]
+      [MODAL_CONTENT, ContentModal],
+      [MODAL_MOVE_QUESTION, MoveQuestionModal]
     ])
 
     const quizData = decorate(normalize(rawQuizData), getDecorators(), rawResourceNodeData.rights.current.edit)

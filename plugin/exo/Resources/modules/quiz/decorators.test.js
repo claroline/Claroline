@@ -27,13 +27,17 @@ describe('Decorator', () => {
         a: {
           id: 'a',
           title: 'Step A',
-          items: ['x', 'y']
+          items: ['x', 'y'],
+          parameters: {
+            maxAttemptsPerDay: 0
+          }
         },
         b: {
           id: 'b',
           items: ['z'],
           parameters: {
-            maxAttempts: 4
+            maxAttempts: 4,
+            maxAttemptsPerDay: 0
           }
         }
       },
@@ -75,6 +79,8 @@ describe('Decorator', () => {
           pick: 0,
           duration: 0,
           maxAttempts: 0,
+          maxAttemptsPerDay: 0,
+          maxPapers: 0,
           interruptible: false,
           showCorrectionAt: SHOW_CORRECTION_AT_VALIDATION,
           correctionDate: '',
@@ -92,7 +98,8 @@ describe('Decorator', () => {
           title: 'Step A',
           description: '',
           parameters: {
-            maxAttempts: 0
+            maxAttempts: 0,
+            maxAttemptsPerDay: 0
           }
         },
         b: {
@@ -101,7 +108,8 @@ describe('Decorator', () => {
           title: '',
           description: '',
           parameters: {
-            maxAttempts: 4
+            maxAttempts: 4,
+            maxAttemptsPerDay: 0
           }
         }
       },
@@ -179,7 +187,10 @@ describe('Decorator', () => {
       steps: {
         a: {
           id: 'a',
-          items: ['x']
+          items: ['x'],
+          parameters: {
+            maxAttemptsPerDay: 0
+          }
         }
       },
       items: {
@@ -215,6 +226,8 @@ describe('Decorator', () => {
           pick: 0,
           duration: 0,
           maxAttempts: 0,
+          maxAttemptsPerDay: 0,
+          maxPapers: 0,
           interruptible: false,
           showCorrectionAt: SHOW_CORRECTION_AT_VALIDATION,
           correctionDate: '',
@@ -232,7 +245,8 @@ describe('Decorator', () => {
           description: '',
           items: ['x'],
           parameters: {
-            maxAttempts: 0
+            maxAttempts: 0,
+            maxAttemptsPerDay: 0
           }
         }
       },

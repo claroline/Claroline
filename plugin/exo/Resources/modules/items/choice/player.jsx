@@ -4,6 +4,8 @@ import {PropTypes as T} from 'prop-types'
 import shuffle from 'lodash/shuffle'
 import classes from 'classnames'
 
+import {getNumbering} from './../../utils/numbering'
+
 export class ChoicePlayer extends Component {
   constructor(props) {
     super(props)
@@ -34,7 +36,7 @@ export class ChoicePlayer extends Component {
   render() {
     return (
       <div className="choice-player">
-        {this.state.choices.map(choice =>
+        {this.state.choices.map((choice, idx) =>
           <label
             key={choice.id}
             className={classes(
@@ -42,6 +44,7 @@ export class ChoicePlayer extends Component {
               this.isChecked(choice.id, this.props.answer) ? 'selected-answer' : null
             )}
           >
+            {getNumbering(this.props.item.numbering, idx)}) {"\u00a0"} {/*non breaking whitespace */}
             <input
               checked={this.isChecked(choice.id, this.props.answer)}
               id={choice.id}
@@ -68,6 +71,7 @@ export class ChoicePlayer extends Component {
 
 ChoicePlayer.propTypes = {
   item: T.shape({
+    numbering: T.string.isRequired,
     id: T.string.isRequired,
     choices: T.arrayOf(T.shape({
       id: T.string.isRequired,

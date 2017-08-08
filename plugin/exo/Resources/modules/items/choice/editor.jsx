@@ -13,6 +13,13 @@ import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
 import {TooltipButton} from './../../components/form/tooltip-button.jsx'
 import {QCM_MULTIPLE, QCM_SINGLE, actions} from './editor'
 
+import {
+  NUMBERING_LITTERAL,
+  NUMBERING_NONE,
+  NUMBERING_NUMERIC
+} from './../../quiz/enums'
+
+
 class ChoiceItem extends Component {
   constructor(props) {
     super(props)
@@ -176,7 +183,16 @@ export const Choice = props =>
         actions.updateProperty('multiple', value === QCM_MULTIPLE)
       )}
     />
-
+    <Radios
+      groupName="quiz-numbering"
+      options={[
+        {value: NUMBERING_NONE, label: tex('quiz_numbering_none')},
+        {value: NUMBERING_NUMERIC, label: tex('quiz_numbering_numeric')},
+        {value: NUMBERING_LITTERAL, label: tex('quiz_numbering_litteral')}
+      ]}
+      checkedValue={props.item.numbering}
+      onChange={numbering => props.onChange(actions.updateProperty('numbering', numbering))}
+    />
     <CheckGroup
       checkId={`item-${props.item.id}-fixedScore`}
       checked={props.item.score.type === SCORE_FIXED}
@@ -241,6 +257,7 @@ Choice.propTypes = {
     id: T.string.isRequired,
     multiple: T.bool.isRequired,
     random: T.bool.isRequired,
+    numbering: T.string,
     score: T.shape({
       type: T.string.isRequired,
       success: T.number.isRequired,

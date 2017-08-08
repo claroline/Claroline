@@ -94,6 +94,10 @@ Hints.propTypes = {
 
 const ItemPlayer = props =>
   <div className="quiz-item item-player">
+    {props.numbering &&
+      <span className="quizz-numbering">{props.numbering + ')'}</span>
+    }
+
     {props.item.title &&
       <h3 className="item-title">{props.item.title}</h3>
     }
@@ -127,7 +131,8 @@ ItemPlayer.propTypes = {
   }).isRequired,
   showHint: T.func.isRequired,
   usedHints: T.array.isRequired,
-  children: T.node.isRequired
+  children: T.node.isRequired,
+  numbering: T.any
 }
 
 ItemPlayer.defaultProps = {

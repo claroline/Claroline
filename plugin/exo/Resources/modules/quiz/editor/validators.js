@@ -1,5 +1,5 @@
 import {notBlank, number, gteZero, chain, setIfError} from '#/main/core/validation'
-
+import {tex} from '#/main/core/translation'
 import {getDefinition} from './../../items/item-types'
 import {getContentDefinition} from './../../contents/content-types'
 
@@ -12,6 +12,12 @@ function validateQuiz(quiz) {
   setIfError(paramErrors, 'pick', chain(parameters.pick, [notBlank, number, gteZero]))
   setIfError(paramErrors, 'duration', chain(parameters.duration, [notBlank, number, gteZero]))
   setIfError(paramErrors, 'maxAttempts', chain(parameters.maxAttempts, [notBlank, number, gteZero]))
+  setIfError(paramErrors, 'maxAttemptsPerDay', chain(parameters.maxAttemptsPerDay, [notBlank, number, gteZero, (value) => {
+    if (value > parameters.maxAttempts) return tex('must_be_less_than_max_attempts')
+  }]))
+  setIfError(paramErrors, 'maxPapers', chain(parameters.maxPapers, [notBlank, number, gteZero, (value) => {
+    if (value < parameters.maxAttempts) return tex('must_be_more_than_max_attempts')
+  }]))
 
   if (Object.keys(paramErrors).length > 0) {
     errors.parameters = paramErrors

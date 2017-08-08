@@ -12,6 +12,10 @@ import {SCORE_FIXED} from './../../quiz/enums'
 import {makeId} from './../../utils/utils'
 import {Choice as component} from './editor.jsx'
 
+import {
+  NUMBERING_NONE
+} from './../../quiz/enums'
+
 const UPDATE_PROP = 'UPDATE_PROP'
 const UPDATE_CHOICE = 'UPDATE_CHOICE'
 const ADD_CHOICE = 'ADD_CHOICE'
@@ -42,7 +46,8 @@ function decorate(item) {
   )
 
   let decorated = Object.assign({}, item, {
-    choices: choicesWithSolutions
+    choices: choicesWithSolutions,
+    numbering: item.numbering || NUMBERING_NONE
   })
 
   return setChoiceTicks(decorated)

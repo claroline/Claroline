@@ -41,6 +41,7 @@ export const OBJECT_ADD = 'OBJECT_ADD'
 export const OBJECT_CHANGE = 'OBJECT_CHANGE'
 export const OBJECT_REMOVE = 'OBJECT_REMOVE'
 export const OBJECT_MOVE = 'OBJECT_MOVE'
+export const QUESTION_MOVE = 'QUESTION_MOVE'
 
 // the following action types lead to quiz data changes that need to be
 // properly saved (please maintain this list up-to-date)
@@ -68,7 +69,8 @@ export const quizChangeActions = [
   OBJECT_ADD,
   OBJECT_CHANGE,
   OBJECT_REMOVE,
-  OBJECT_MOVE
+  OBJECT_MOVE,
+  QUESTION_MOVE
 ]
 
 export const actions = {}
@@ -94,6 +96,7 @@ actions.quizSaveError = makeActionCreator(QUIZ_SAVE_ERROR)
 actions.updateContentItem = makeActionCreator(CONTENT_ITEM_UPDATE, 'id', 'propertyPath', 'value')
 actions.updateContentItemDetail = makeActionCreator(CONTENT_ITEM_DETAIL_UPDATE, 'id', 'subAction')
 actions.updateItemObjects = makeActionCreator(ITEM_OBJECTS_UPDATE, 'itemId', 'updateType', 'data')
+actions.moveQuestionStep = makeActionCreator(QUESTION_MOVE, 'itemId', 'stepId')
 
 actions.createItem = (stepId, type) => {
   invariant(stepId, 'stepId is mandatory')

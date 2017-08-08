@@ -256,6 +256,19 @@ class PaperManager
     }
 
     /**
+     * Returns the number of finished papers already done by the user for a given exercise for the current day.
+     *
+     * @param Exercise $exercise
+     * @param User     $user
+     *
+     * @return array
+     */
+    public function countUserFinishedDayPapers(Exercise $exercise, User $user)
+    {
+        return $this->repository->countUserFinishedDayPapers($exercise, $user);
+    }
+
+    /**
      * Returns the number of papers already done for a given exercise.
      *
      * @param Exercise $exercise

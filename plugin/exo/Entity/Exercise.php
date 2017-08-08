@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
 use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
+use UJM\ExoBundle\Library\Options\ExerciseNumbering;
 use UJM\ExoBundle\Library\Options\ExerciseType;
 
 /**
@@ -182,6 +183,23 @@ class Exercise extends AbstractResource
      * @var float
      */
     private $successScore;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $numbering = ExerciseNumbering::NONE;
+
+    /**
+     * Number of papers allowed.
+     * If 0, infinite amount of papers.
+     *
+     * @ORM\Column(name="max_papers", type="integer")
+     *
+     * @var int
+     */
+    private $maxPapers = 0;
 
     /**
      * Exercise constructor.
@@ -597,5 +615,25 @@ class Exercise extends AbstractResource
     public function getSuccessScore()
     {
         return $this->successScore;
+    }
+
+    public function setNumbering($numbering)
+    {
+        $this->numbering = $numbering;
+    }
+
+    public function getNumbering()
+    {
+        return $this->numbering;
+    }
+
+    public function setMaxPapers($maxPapers)
+    {
+        $this->maxPapers = $maxPapers;
+    }
+
+    public function getMaxPapers()
+    {
+        return $this->maxPapers;
     }
 }
