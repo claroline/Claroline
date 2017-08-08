@@ -34,7 +34,9 @@ class GridCell extends Component {
       <div className="grid-cell">
         <div className="cell-body">
           {!this.props.cell.input &&
-            <div>{this.props.cell.data}</div>
+            <div style={{color:this.props.cell.color}}>
+              {this.props.cell.data}
+            </div>
           }
           {this.props.cell.choices.length > 0 &&
             <div className="dropdown">
