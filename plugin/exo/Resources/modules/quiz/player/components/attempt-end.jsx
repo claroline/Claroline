@@ -23,10 +23,12 @@ const AttemptEnd = props => {
           </div>
         }
         <div className={showScore ? 'col-md-9':'col-md-12'}>
-          <h2 className="step-title">{tex('attempt_end_title')}</h2>
-          <p>{tex('attempt_end_info')}</p>
-          {props.endMessage &&
-            <p>{props.endMessage}</p>
+          {props.endMessage ?
+            <div dangerouslySetInnerHTML={{__html: props.endMessage}}></div> :
+            <div>
+              <h2 className="step-title">{tex('attempt_end_title')}</h2>
+              <p>{tex('attempt_end_info')}</p>
+            </div>
           }
 
           {showCorrection &&

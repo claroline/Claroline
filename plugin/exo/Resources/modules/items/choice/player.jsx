@@ -5,6 +5,7 @@ import shuffle from 'lodash/shuffle'
 import classes from 'classnames'
 
 import {getNumbering} from './../../utils/numbering'
+import {NUMBERING_NONE} from './../../quiz/enums'
 
 export class ChoicePlayer extends Component {
   constructor(props) {
@@ -44,7 +45,11 @@ export class ChoicePlayer extends Component {
               this.isChecked(choice.id, this.props.answer) ? 'selected-answer' : null
             )}
           >
-            {getNumbering(this.props.item.numbering, idx)}) {"\u00a0"} {/*non breaking whitespace */}
+            {this.props.item.numbering !== NUMBERING_NONE &&
+              <span>
+                {getNumbering(this.props.item.numbering, idx)}) {"\u00a0"} {/*non breaking whitespace */}
+              </span>
+            }
             <input
               checked={this.isChecked(choice.id, this.props.answer)}
               id={choice.id}
