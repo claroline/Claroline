@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "e9f3b95e5294d2efbd1d56ed621e0dc4a67bbcbc"
+                "reference": "2eb8786936d59181eefd0c10830f4e36acb92e78"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/e9f3b95e5294d2efbd1d56ed621e0dc4a67bbcbc",
-                "reference": "e9f3b95e5294d2efbd1d56ed621e0dc4a67bbcbc",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/2eb8786936d59181eefd0c10830f4e36acb92e78",
+                "reference": "2eb8786936d59181eefd0c10830f4e36acb92e78",
                 "shasum": ""
             },
             "require": {
@@ -389,7 +389,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-08-04 16:19:16"
+            "time": "2017-08-08 19:10:09"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3571,17 +3571,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "1a2ee4c579e0d31e468f1c1d858f354ae17ec55e"
+                "reference": "864a20b15ee5935f44402219c3830d57a0d9cc7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/1a2ee4c579e0d31e468f1c1d858f354ae17ec55e",
-                "reference": "1a2ee4c579e0d31e468f1c1d858f354ae17ec55e",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/864a20b15ee5935f44402219c3830d57a0d9cc7a",
+                "reference": "864a20b15ee5935f44402219c3830d57a0d9cc7a",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-08-03 13:27:59"
+            "time": "2017-08-08 11:50:08"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -6706,16 +6706,16 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "3.2.1",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "183824db76118b9dddffc7e522b91fa175f75119"
+                "reference": "4aada1f93c72c35e22fb1383b47fee43b8f1d157"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/183824db76118b9dddffc7e522b91fa175f75119",
-                "reference": "183824db76118b9dddffc7e522b91fa175f75119",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/4aada1f93c72c35e22fb1383b47fee43b8f1d157",
+                "reference": "4aada1f93c72c35e22fb1383b47fee43b8f1d157",
                 "shasum": ""
             },
             "require": {
@@ -6747,7 +6747,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-08-04 20:55:59"
+            "time": "2017-08-08 06:39:58"
         },
         {
             "name": "phpdocumentor/type-resolver",
