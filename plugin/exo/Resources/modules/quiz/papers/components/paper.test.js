@@ -27,6 +27,9 @@ describe('<Paper/>', () => {
       quiz: {
         meta: {
           canViewPapers: true
+        },
+        parameters: {
+          showFullCorrection: true
         }
       },
       papers: {

@@ -15,6 +15,7 @@ const OrderingPaper = props => {
   return (
     <PaperTabs
       id={props.item.id}
+      hideExpected={props.hideExpected}
       yours={
         <div className="ordering-paper">
           <div className="row">
@@ -194,7 +195,8 @@ OrderingPaper.propTypes = {
     solutions: T.arrayOf(T.object).isRequired
   }).isRequired,
   answer: T.array.isRequired,
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  hideExpected: T.bool.isRequired
 }
 
 OrderingPaper.defaultProps = {

@@ -49,6 +49,7 @@ export const WordsPaper = (props) => {
   return (
     <PaperTabs
       id={props.item.id}
+      hideExpected={props.hideExpected}
       yours={
         props.answer && 0 !== props.answer.length ?
           <Highlight
@@ -80,7 +81,8 @@ WordsPaper.propTypes = {
     solutions: T.arrayOf(T.object)
   }).isRequired,
   answer: T.string.isRequired,
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  hideExpected: T.bool.isRequired
 }
 
 WordsPaper.defaultProps = {

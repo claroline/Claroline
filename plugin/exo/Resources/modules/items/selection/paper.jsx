@@ -13,6 +13,7 @@ export const SelectionPaper = (props) => {
       item={props.item}
       answer={props.answer}
       id={props.item.id}
+      hideExpected={props.hideExpected}
       yours={
         (<div>
           {props.item.mode === 'find' &&
@@ -78,5 +79,6 @@ SelectionPaper.propTypes = {
       ),
       mode: T.string.isRequired
     })
-  ]).isRequired
+  ]).isRequired,
+  hideExpected: T.bool.isRequired
 }

@@ -26,6 +26,7 @@ const noItems = state =>
 const firstStepId = state => state.quiz.steps[0]
 const hasOverview = state => state.quiz.parameters.showOverview
 const testMode = state => state.quiz.testMode
+const papersShowExpectedAnswers = state => state.quiz.parameters.showFullCorrection
 
 const quizNumbering = createSelector(
   parameters,
@@ -56,5 +57,6 @@ export default {
   firstStepId,
   hasOverview,
   testMode,
-  quizNumbering
+  quizNumbering,
+  papersShowExpectedAnswers
 }

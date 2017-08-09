@@ -11,6 +11,7 @@ export const ClozePaper = (props) => {
       item={props.item}
       answer={props.answer}
       id={props.item.id}
+      hideExpected={props.hideExpected}
       yours={
         <ClozeText
           anchorPrefix="cloze-hole-user"
@@ -72,7 +73,8 @@ ClozePaper.propTypes = {
     solutions: T.arrayOf(T.object)
   }).isRequired,
   answer: T.array.isRequired,
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  hideExpected: T.bool.isRequired
 }
 
 ClozePaper.defaultProps = {

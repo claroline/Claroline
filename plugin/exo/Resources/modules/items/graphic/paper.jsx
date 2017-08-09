@@ -30,6 +30,7 @@ export const GraphicPaper = props => {
   return (
     <PaperTabs
       id={props.item.id}
+      hideExpected={props.hideExpected}
       yours={
         <div className="graphic-paper">
           <div className="img-zone" style={{position: 'relative'}}>
@@ -95,7 +96,8 @@ GraphicPaper.propTypes = {
     x: T.number.isRequired,
     y: T.number.isRequired
   })),
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  hideExpected: T.bool.isRequired
 }
 
 GraphicPaper.defaultProps = {

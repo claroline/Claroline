@@ -13,6 +13,7 @@ export const ChoicePaper = props => {
   return (
     <PaperTabs
       id={props.item.id}
+      hideExpected={props.hideExpected}
       yours={
         <div className="choice-paper">
           {props.item.solutions.map(solution =>
@@ -114,7 +115,8 @@ ChoicePaper.propTypes = {
     solutions: T.arrayOf(T.object)
   }).isRequired,
   answer: T.array,
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  hideExpected: T.bool.isRequired
 }
 
 ChoicePaper.defaultProps = {

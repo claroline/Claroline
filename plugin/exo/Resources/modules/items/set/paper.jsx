@@ -12,6 +12,7 @@ export const SetPaper = props => {
   return (
     <PaperTabs
       id={props.item.id}
+      hideExpected={props.hideExpected}
       yours={
         <div className="set-paper">
           <div className="items-col">
@@ -141,7 +142,8 @@ SetPaper.propTypes = {
     solutions: T.object
   }).isRequired,
   answer: T.array,
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  hideExpected: T.bool.isRequired
 }
 
 SetPaper.defaultProps = {

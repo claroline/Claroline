@@ -14,6 +14,7 @@ export const PairPaper = props => {
   return (
       <PaperTabs
         id={props.item.id}
+        hideExpected={props.hideExpected}
         yours={
           <div className="row pair-paper">
             <div className="col-md-5 items-col">
@@ -114,7 +115,8 @@ PairPaper.propTypes = {
     solutions: T.arrayOf(T.object).isRequired
   }).isRequired,
   answer: T.array,
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  hideExpected: T.bool.isRequired
 }
 
 PairPaper.defaultProps = {
