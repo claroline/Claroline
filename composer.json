@@ -186,7 +186,8 @@
             "UJM\\LtiBundle\\": "plugin/lti",
             "Claroline\\CasBundle\\": "plugin/cas",
             "Icap\\BibliographyBundle\\": "plugin/bibliography",
-            "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization"
+            "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization",
+            "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button"
         }
     },
     "extra": {
@@ -246,7 +247,8 @@
             "UJM\\LtiBundle\\UJMLtiBundle",
             "Claroline\\CasBundle\\ClarolineCasBundle",
             "Icap\\BibliographyBundle\\IcapBibliographyBundle",
-            "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle"
+            "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle",
+            "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle"
         ]
     }
 }
