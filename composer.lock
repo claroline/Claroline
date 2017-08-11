@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "044405ebd2eff020f5aba0b1d7da117b94a67937"
+                "reference": "4576bcd5ef7aa5a5b2697c3ff642585bf57065c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/044405ebd2eff020f5aba0b1d7da117b94a67937",
-                "reference": "044405ebd2eff020f5aba0b1d7da117b94a67937",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/4576bcd5ef7aa5a5b2697c3ff642585bf57065c6",
+                "reference": "4576bcd5ef7aa5a5b2697c3ff642585bf57065c6",
                 "shasum": ""
             },
             "require": {
@@ -307,7 +307,8 @@
                     "UJM\\LtiBundle\\UJMLtiBundle",
                     "Claroline\\CasBundle\\ClarolineCasBundle",
                     "Icap\\BibliographyBundle\\IcapBibliographyBundle",
-                    "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle"
+                    "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle",
+                    "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle"
                 ]
             },
             "autoload": {
@@ -369,7 +370,8 @@
                     "UJM\\LtiBundle\\": "plugin/lti",
                     "Claroline\\CasBundle\\": "plugin/cas",
                     "Icap\\BibliographyBundle\\": "plugin/bibliography",
-                    "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization"
+                    "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization",
+                    "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -389,7 +391,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-08-09 09:51:04"
+            "time": "2017-08-10 13:59:30"
         },
         {
             "name": "claroline/front-end-bundle",
