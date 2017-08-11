@@ -102,6 +102,7 @@ function fixture() {
       numbering: 'none',
       maxAttempts: 4,
       maxAttemptsPerDay: 4,
+      mandatoryQuestions: false,
       maxPapers: 4,
       interruptible: true,
       showEndPage: false,

@@ -202,6 +202,15 @@ class Exercise extends AbstractResource
     private $maxPapers = 0;
 
     /**
+     * Sets the mandatory question flag.
+     *
+     * @var string
+     *
+     * @ORM\Column(name="mandatory_questions", type="boolean")
+     */
+    private $mandatoryQuestions = false;
+
+    /**
      * Exercise constructor.
      */
     public function __construct()
@@ -635,5 +644,15 @@ class Exercise extends AbstractResource
     public function getMaxPapers()
     {
         return $this->maxPapers;
+    }
+
+    public function setMandatoryQuestions($mandatoryQuestions)
+    {
+        $this->mandatoryQuestions = $mandatoryQuestions;
+    }
+
+    public function getMandatoryQuestions()
+    {
+        return $this->mandatoryQuestions;
     }
 }

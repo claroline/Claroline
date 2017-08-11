@@ -646,5 +646,9 @@
     "maximum_papers": "Nombre maximum de copies",
     "maximum_papers_attempts_help": "Entrez 0 pour un nombre de copie illimité",
     "access": "Accès",
-    "must_be_more_than_max_attempts": "Doit être plus grand ou égal au nombre de d'essais maximum"
+    "must_be_more_than_max_attempts": "Doit être plus grand ou égal au nombre de d'essais maximum",
+    "make_mandatory_questions": "Rendre les questions obligatoires",
+    "mandatory_answer": "Réponse requise",
+    "make_optional": "Rendre optionnel",
+    "mandatory_questions": "Réponse aux questions obligatoires"
 }

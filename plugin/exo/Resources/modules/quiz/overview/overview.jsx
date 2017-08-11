@@ -71,6 +71,12 @@ const Parameters = props =>
             <Parameter name="maximum_papers">
               {props.parameters.maxPapers || '-'}
             </Parameter>
+            <Parameter name="maximum_papers">
+              {props.parameters.maxPapers || '-'}
+            </Parameter>
+            <Parameter name="mandatory_questions">
+              {props.parameters.mandatoryQuestions ? 'yes': 'no'}
+            </Parameter>
           </tbody>
         }
     </table>
@@ -99,6 +105,7 @@ Parameters.propTypes = {
     maxPapers: T.number.isRequired,
     maxAttempts: T.number.isRequired,
     maxAttemptsPerDay: T.number.isRequired,
+    mandatoryQuestions: T.bool.isRequired,
     interruptible: T.bool.isRequired,
     showCorrectionAt: T.string.isRequired,
     correctionDate: T.string,
@@ -131,7 +138,7 @@ const Layout = props =>
           props.meta.userPaperCount < props.parameters.maxAttempts &&
           ((props.meta.userPaperDayCount < props.parameters.maxAttemptsPerDay) || props.parameters.maxAttemptsPerDay === 0)
         )
-      ) && ((props.meta.paperCount < props.parameters.maxPapers) || props.meta.paperCount === 0) &&
+      ) && ((props.meta.paperCount < props.parameters.maxPapers) || props.parameters.maxPapers === 0) &&
 
       <a href="#play" className="btn btn-start btn-lg btn-primary btn-block">
         {tex('exercise_start')}

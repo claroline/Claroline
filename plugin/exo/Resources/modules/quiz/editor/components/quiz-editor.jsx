@@ -302,12 +302,19 @@ const Signing = props =>
       label={tex('allow_test_exit')}
       onChange={checked => props.onChange('parameters.interruptible', checked)}
     />
+    <CheckGroup
+      checkId="quiz-mandatoryQuestions"
+      checked={props.parameters.mandatoryQuestions}
+      label={tex('mandatory_questions')}
+      onChange={checked => props.onChange('parameters.mandatoryQuestions', checked)}
+    />
 </fieldset>
 
 Signing.propTypes = {
   parameters: T.shape({
     duration: T.number.isRequired,
     maxAttempts: T.number.isRequired,
+    mandatoryQuestions: T.bool.isRequired,
     maxAttemptsPerDay: T.number.isRequired,
     interruptible: T.bool.isRequired,
     showFeedback: T.bool.isRequired

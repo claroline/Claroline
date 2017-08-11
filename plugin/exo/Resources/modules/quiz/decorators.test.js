@@ -19,26 +19,19 @@ describe('Decorator', () => {
       quiz: {
         id: '1',
         steps: ['a', 'b'],
-        parameters: {
-          showMetadata: false
-        }
+        parameters: {}
       },
       steps: {
         a: {
           id: 'a',
           title: 'Step A',
           items: ['x', 'y'],
-          parameters: {
-            maxAttemptsPerDay: 0
-          }
+          parameters: {}
         },
         b: {
           id: 'b',
           items: ['z'],
-          parameters: {
-            maxAttempts: 4,
-            maxAttemptsPerDay: 0
-          }
+          parameters: {}
         }
       },
       items: {
@@ -73,13 +66,14 @@ describe('Decorator', () => {
         steps: ['a', 'b'],
         parameters: {
           type: QUIZ_SUMMATIVE,
-          showMetadata: false,
+          showMetadata: true,
           randomOrder: SHUFFLE_NEVER,
           randomPick: SHUFFLE_NEVER,
           pick: 0,
           duration: 0,
           maxAttempts: 0,
           maxAttemptsPerDay: 0,
+          mandatoryQuestions: false,
           maxPapers: 0,
           interruptible: false,
           showCorrectionAt: SHOW_CORRECTION_AT_VALIDATION,
@@ -108,7 +102,7 @@ describe('Decorator', () => {
           title: '',
           description: '',
           parameters: {
-            maxAttempts: 4,
+            maxAttempts: 0,
             maxAttemptsPerDay: 0
           }
         }
@@ -117,6 +111,8 @@ describe('Decorator', () => {
         x: {
           id: 'x',
           meta: {
+
+            mandatory: false,
             protectQuestion: false
           },
           rights: {
@@ -147,6 +143,7 @@ describe('Decorator', () => {
           id: 'y',
           title: '',
           meta: {
+            mandatory: false,
             protectQuestion: false
           },
           rights: {
@@ -188,9 +185,7 @@ describe('Decorator', () => {
         a: {
           id: 'a',
           items: ['x'],
-          parameters: {
-            maxAttemptsPerDay: 0
-          }
+          parameters: {}
         }
       },
       items: {
@@ -227,6 +222,7 @@ describe('Decorator', () => {
           duration: 0,
           maxAttempts: 0,
           maxAttemptsPerDay: 0,
+          mandatoryQuestions: false,
           maxPapers: 0,
           interruptible: false,
           showCorrectionAt: SHOW_CORRECTION_AT_VALIDATION,
@@ -253,7 +249,8 @@ describe('Decorator', () => {
       items: {
         x: {
           meta: {
-            protectQuestion: false
+            protectQuestion: false,
+            mandatory: false
           },
           rights: {
             edit: true

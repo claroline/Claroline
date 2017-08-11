@@ -206,6 +206,7 @@ class ItemPanel extends Component {
                 item={this.props.item}
                 validating={this.props.validating}
                 showModal={this.props.showModal}
+                mandatoryQuestions={this.props.mandatoryQuestions}
                 closeModal={this.props.closeModal}
                 onChange={(propertyPath, value) =>
                   this.props.handleItemUpdate(this.props.item.id, propertyPath, value)
@@ -238,6 +239,7 @@ ItemPanel.propTypes = {
   index: T.number.isRequired,
   item: T.object.isRequired,
   expanded: T.bool.isRequired,
+  mandatoryQuestions: T.bool.isRequired,
   handlePanelClick: T.func.isRequired,
   handleItemDeleteClick: T.func.isRequired,
   handleItemUpdate: T.func.isRequired,
@@ -519,6 +521,7 @@ export const StepEditor = props =>
           id={item.id}
           index={index}
           item={item}
+          mandatoryQuestions={props.mandatoryQuestions}
           stepId={props.step.id}
           key={item.type + item.id}
           eventKey={makeItemPanelKey(item.type, item.id)}
@@ -576,6 +579,7 @@ StepEditor.propTypes = {
     }).isRequired,
     items: T.arrayOf(T.object).isRequired
   }).isRequired,
+  mandatoryQuestions: T.bool.isRequired,
   activePanelKey: T.oneOfType([T.string, T.bool]).isRequired,
   validating: T.bool.isRequired,
   updateStep: T.func.isRequired,

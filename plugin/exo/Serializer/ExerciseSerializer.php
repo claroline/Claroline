@@ -172,6 +172,7 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->anonymizeAttempts = $exercise->getAnonymizeAttempts();
         $parameters->interruptible = $exercise->isInterruptible();
         $parameters->numbering = $exercise->getNumbering();
+        $parameters->mandatoryQuestions = $exercise->getMandatoryQuestions();
 
         // Visibility parameters
         $parameters->showOverview = $exercise->getShowOverview();
@@ -294,6 +295,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (isset($parameters->numbering)) {
             $exercise->setNumbering($parameters->numbering);
+        }
+
+        if (isset($parameters->mandatoryQuestions)) {
+            $exercise->setMandatoryQuestions($parameters->mandatoryQuestions);
         }
 
         if (isset($parameters->maxAttemptsPerDay)) {

@@ -66,6 +66,7 @@ describe('<Overview/>', () => {
             duration: 10,
             maxAttempts: 5,
             maxAttemptsPerDay: 0,
+            mandatoryQuestions: false,
             maxPapers: 0,
             interruptible: true,
             showCorrectionAt: SHOW_CORRECTION_AT_DATE,
@@ -89,6 +90,6 @@ describe('<Overview/>', () => {
 
     const toggle = overview.find('.toggle-exercise-info')
     toggle.simulate('click')
-    ensure.equal(overview.find('tr').length, 12)
+    ensure.equal(overview.find('tr').length, 14)
   })
 })

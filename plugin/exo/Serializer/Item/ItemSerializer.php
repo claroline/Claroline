@@ -314,6 +314,7 @@ class ItemSerializer extends AbstractSerializer
         $creator = $question->getCreator();
 
         $metadata->protectQuestion = $question->getProtectUpdate();
+        $metadata->mandatory = $question->isMandatory();
 
         if (!empty($creator)) {
             $metadata->authors = [
@@ -377,7 +378,13 @@ class ItemSerializer extends AbstractSerializer
             $question->setCategory($category);
         }
 
-        $question->setProtectUpdate($metadata->protectQuestion);
+        if (isset($metadata->protectQuestion)) {
+            $question->setProtectUpdate($metadata->protectQuestion);
+        }
+
+        if (isset($metadata->mandatory)) {
+            $question->setMandatory($metadata->mandatory);
+        }
     }
 
     /**

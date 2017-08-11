@@ -659,5 +659,9 @@
     "maximum_papers": "Maximum amount of papers",
     "maximum_papers_attempts_help": "Type 0 for unlimited papers",
     "access": "Access",
-    "must_be_more_than_max_attempts": "Must be more or equals than the maximum amount of attempts"
+    "must_be_more_than_max_attempts": "Must be more or equals than the maximum amount of attempts",
+    "make_mandatory_questions": "Make questions mandatory",
+    "mandatory_answer": "Mandatory answer",
+    "make_optional": "Make optional",
+    "mandatory_questions": "Mandatory answers to questions"
 }

@@ -53,6 +53,7 @@ function selectSubEditor(props) {
       return (
         <StepEditor
           step={props.currentObject}
+          mandatoryQuestions={props.quizProperties.parameters.mandatoryQuestions}
           validating={props.validating}
           updateStep={props.updateStep}
           activePanelKey={props.activeStepPanel}

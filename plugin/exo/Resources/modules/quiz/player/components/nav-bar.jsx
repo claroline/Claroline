@@ -53,26 +53,47 @@ FinishButton.propTypes = {
   onClick: T.func.isRequired
 }
 
+const canGoForward = (step, answers, mandatoryQuestions) => {
+  const items = step.items
+  let canGoForward = true
+
+  items.forEach(item => {
+    let hasAnswer = Boolean(answers[item.id] && answers[item.id].data)
+    let goForward = mandatoryQuestions ?
+      item.meta.mandatory ? true: hasAnswer:
+      item.meta.mandatory ? hasAnswer: true
+
+    if (!goForward) {
+      canGoForward = false
+    }
+  })
+
+  return canGoForward
+}
+
 const ForwardButton = props =>
-  (props.next) ?
-    <NotLastQuestionButton
-      openFeedbackAndValidate={props.openFeedbackAndValidate}
-      navigateToAndValidate={props.navigateToAndValidate}
-      step={props.step}
-      next={props.next}
-      currentStepSend={props.currentStepSend}
-      feedbackEnabled={props.feedbackEnabled}
-      showFeedback={props.showFeedback}
-    />:
-    //no next section
-    <LastQuestionButton
-      openFeedbackAndValidate={props.openFeedbackAndValidate}
-      finish={props.finish}
-      currentStepSend={props.currentStepSend}
-      feedbackEnabled={props.feedbackEnabled}
-      showFeedback={props.showFeedback}
-      step={props.step}
-    />
+(canGoForward(props.step, props.answers, props.mandatoryQuestions)) ?
+    (props.next) ?
+      <NotLastQuestionButton
+        openFeedbackAndValidate={props.openFeedbackAndValidate}
+        navigateToAndValidate={props.navigateToAndValidate}
+        step={props.step}
+        next={props.next}
+        currentStepSend={props.currentStepSend}
+        feedbackEnabled={props.feedbackEnabled}
+        showFeedback={props.showFeedback}
+      />:
+      //no next section
+      <LastQuestionButton
+        openFeedbackAndValidate={props.openFeedbackAndValidate}
+        finish={props.finish}
+        currentStepSend={props.currentStepSend}
+        feedbackEnabled={props.feedbackEnabled}
+        showFeedback={props.showFeedback}
+        step={props.step}
+      />
+    :
+  <span/>
 
 ForwardButton.propTypes = {
   next: T.object,
@@ -82,7 +103,9 @@ ForwardButton.propTypes = {
   openFeedbackAndValidate: T.func.isRequired,
   showFeedback: T.bool.isRequired,
   feedbackEnabled: T.bool.isRequired,
-  currentStepSend: T.bool.isRequired
+  currentStepSend: T.bool.isRequired,
+  mandatoryQuestions: T.bool.isRequired,
+  answers: T.array
 }
 
 const LastQuestionButton = props =>
@@ -134,12 +157,14 @@ const PlayerNav = props =>
       <ForwardButton
         openFeedbackAndValidate={props.openFeedbackAndValidate}
         navigateToAndValidate={props.navigateToAndValidate}
+        mandatoryQuestions={props.mandatoryQuestions}
         finish={props.finish}
         step={props.step}
         next={props.next}
         currentStepSend={props.currentStepSend}
         feedbackEnabled={props.feedbackEnabled}
         showFeedback={props.showFeedback}
+        answers={props.answers}
       />
     </div>
   </nav>
@@ -155,7 +180,9 @@ PlayerNav.propTypes = {
   submit: T.func.isRequired,
   showFeedback: T.bool.isRequired,
   feedbackEnabled: T.bool.isRequired,
-  currentStepSend: T.bool.isRequired
+  currentStepSend: T.bool.isRequired,
+  answers: T.array.isRequired,
+  mandatoryQuestions: T.bool.isRequired
 }
 
 PlayerNav.defaultProps = {

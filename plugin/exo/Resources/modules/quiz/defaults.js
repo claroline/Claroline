@@ -17,6 +17,7 @@ const quiz = {
     duration: 0,
     maxAttempts: 0,
     maxAttemptsPerDay: 0,
+    mandatoryQuestions: false,
     maxPapers: 0,
     interruptible: false,
     showCorrectionAt: SHOW_CORRECTION_AT_VALIDATION,
@@ -33,7 +34,8 @@ const step = {
   title: '',
   description: '',
   parameters: {
-    maxAttempts: 0
+    maxAttempts: 0,
+    maxAttemptsPerDay: 0
   }
 }
 
@@ -41,7 +43,8 @@ const item = {
   title: '',
   description: '',
   meta: {
-    protectQuestion: false
+    protectQuestion: false,
+    mandatory: false
   },
   rights: {
     edit: true

@@ -159,6 +159,15 @@ class Item
     private $protectUpdate = false;
 
     /**
+     * The is answer mandatory to continue the quizz.
+     *
+     * @var string
+     *
+     * @ORM\Column(name="mandatory", type="boolean")
+     */
+    private $mandatory = false;
+
+    /**
      * Item constructor.
      */
     public function __construct()
@@ -482,5 +491,20 @@ class Item
     public function getProtectUpdate()
     {
         return $this->protectUpdate;
+    }
+
+    public function setMandatory($mandatory)
+    {
+        $this->mandatory = $mandatory;
+    }
+
+    public function isMandatory()
+    {
+        return $this->mandatory;
+    }
+
+    public function getMandatory()
+    {
+        return $this->isMandatory();
     }
 }
