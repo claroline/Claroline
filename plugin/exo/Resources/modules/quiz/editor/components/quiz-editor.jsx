@@ -376,6 +376,21 @@ class Correction extends Component {
         }
 
         <FormGroup
+          controlId="quiz-success-score"
+          label={tex('quiz_success_score')}
+        >
+          <input
+            id="quiz-success-score"
+            onChange={e => this.props.onChange('parameters.successScore', e.target.value)}
+            type="number"
+            min="0"
+            max="100"
+            className="form-control"
+            value={this.props.parameters.successScore}
+          />
+        </FormGroup>
+
+        <FormGroup
           controlId="quiz-showCorrectionAt"
           label={tex('availability_of_correction')}
         >
@@ -458,7 +473,8 @@ Correction.propTypes = {
     showFeedback: T.bool.isRequired,
     anonymizeAttempts: T.bool.isRequired,
     correctionDate: T.string,
-    totalScoreOn: T.number
+    totalScoreOn: T.number,
+    successScore: T.number
   }).isRequired,
   onChange: T.func.isRequired
 }
