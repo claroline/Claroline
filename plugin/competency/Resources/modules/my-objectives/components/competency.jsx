@@ -7,7 +7,7 @@ import {actions} from '../actions'
 class Competency extends Component {
   getProgressPercentage() {
     return this.props.competency.userLevelValue !== undefined ?
-      ((this.props.competency.userLevelValue + 1) / (this.props.competency.requiredLevel + 1)) * 100 :
+      Math.round(((this.props.competency.userLevelValue + 1) / (this.props.competency.requiredLevel + 1)) * 100) :
       0
   }
 
