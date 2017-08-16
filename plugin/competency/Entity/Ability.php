@@ -179,7 +179,9 @@ class Ability implements \JsonSerializable
      */
     public function getResources()
     {
-        return $this->resources;
+        return array_filter($this->resources->toArray(), function (ResourceNode $node) {
+            return $node->isActive();
+        });
     }
 
     public function jsonSerialize()
