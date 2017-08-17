@@ -81,6 +81,32 @@ class AbilityRepository extends EntityRepository
     }
 
     /**
+     * Returns the abilities directly linked to a given competency and a particular level.
+     *
+     * @param Competency $competency
+     * @param Level      $level
+     *
+     * @return array
+     */
+    public function findByCompetencyAndLevel(Competency $competency, Level $level)
+    {
+        return $this->createQueryBuilder('a')
+            ->select('a')
+            ->join('a.competencyAbilities', 'ca')
+            ->join('ca.competency', 'c')
+            ->join('ca.level', 'l')
+            ->where('c = :competency')
+            ->andWhere('l = :level')
+            ->orderBy('l.value, a.id')
+            ->setParameters([
+                ':competency' => $competency,
+                ':level' => $level,
+            ])
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
      * Deletes abilities which are no longer associated with a competency.
      */
     public function deleteOrphans()

@@ -78,6 +78,7 @@ class ProgressManager
                 if ($progress->getStatus() !== AbilityProgress::STATUS_ACQUIRED) {
                     if ($progress->getPassedResourceCount() >= $ability->getMinResourceCount()) {
                         $progress->setStatus(AbilityProgress::STATUS_ACQUIRED);
+                        $this->om->forceFlush();
                     } else {
                         $progress->setStatus(AbilityProgress::STATUS_PENDING);
                     }
@@ -190,10 +191,9 @@ class ProgressManager
 
         foreach ($competencyLinks as $link) {
             // search abilities of same level connected the competency
-            $sameLevelAbilities = $this->abilityRepo->findOthersByCompetencyAndLevel(
+            $sameLevelAbilities = $this->abilityRepo->findByCompetencyAndLevel(
                 $link->getCompetency(),
-                $link->getLevel(),
-                $ability
+                $link->getLevel()
             );
             // search which ones have the status "acquired"
             $sameLevelAcquired = $this->abilityProgressRepo->findByAbilitiesAndStatus(
