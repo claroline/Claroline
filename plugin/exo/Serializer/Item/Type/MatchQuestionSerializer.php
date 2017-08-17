@@ -114,8 +114,10 @@ class MatchQuestionSerializer implements SerializerInterface
             $matchQuestion = new MatchQuestion();
         }
 
-        if (!empty($data->penalty) || 0 === $data->penalty) {
-            $matchQuestion->setPenalty($data->penalty);
+        if (isset($data->penaty)) {
+            if (!empty($data->penalty) || 0 === $data->penalty) {
+                $matchQuestion->setPenalty($data->penalty);
+            }
         }
 
         if (isset($data->random)) {

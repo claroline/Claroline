@@ -50,8 +50,8 @@ class FinderProvider
      */
     public function __construct(
         ObjectManager $om,
-        SerializerProvider $serializer)
-    {
+        SerializerProvider $serializer
+    ) {
         $this->om = $om;
         $this->serializer = $serializer;
     }
@@ -107,7 +107,7 @@ class FinderProvider
         ];
     }
 
-    private function fetch($class, $page, $limit, array $filters, array $sortBy, $count = false)
+    public function fetch($class, $page, $limit, array $filters, array $sortBy, $count = false)
     {
         try {
             /** @var QueryBuilder $qb */
