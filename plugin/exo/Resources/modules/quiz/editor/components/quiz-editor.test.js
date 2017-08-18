@@ -112,6 +112,7 @@ function fixture() {
       showOverview: true,
       showScoreAt: 'never',
       showStatistics: true,
+      allPapersStatistics: true,
       showFullCorrection: false,
       showFeedback: false
     }

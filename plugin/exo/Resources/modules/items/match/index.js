@@ -32,6 +32,47 @@ function findAnswer(solution, answers) {
   return answers.find(answer => (answer.firstId === solution.firstId) && (answer.secondId === solution.secondId))
 }
 
+function generateStats(item, papers, withAllParpers) {
+  const stats = {
+    matches: {},
+    unanswered: 0,
+    total: 0
+  }
+  Object.values(papers).forEach(p => {
+    if (withAllParpers || p.finished) {
+      let total = 0
+      let nbAnswered = 0
+      // compute the number of times the item is present in the structure of the paper
+      p.structure.steps.forEach(s => {
+        s.items.forEach(i => {
+          if (i.id === item.id) {
+            ++total
+            ++stats.total
+          }
+        })
+      })
+      // compute the number of times the item has been answered
+      p.answers.forEach(a => {
+        if (a.questionId === item.id && a.data) {
+          ++nbAnswered
+          a.data.forEach(d => {
+            if (!stats.matches[d.firstId]) {
+              stats.matches[d.firstId] = {}
+            }
+            if (!stats.matches[d.firstId][d.secondId]) {
+              stats.matches[d.firstId][d.secondId] = 0
+            }
+            ++stats.matches[d.firstId][d.secondId]
+          })
+        }
+      })
+      stats.unanswered += total - nbAnswered
+    }
+  })
+
+  return stats
+}
+
 export default {
   type: 'application/x.match+json',
   name: 'match',
@@ -39,5 +80,6 @@ export default {
   player: MatchPlayer,
   feedback: MatchFeedback,
   editor,
-  getCorrectedAnswer
+  getCorrectedAnswer,
+  generateStats
 }

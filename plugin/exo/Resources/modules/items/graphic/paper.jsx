@@ -7,6 +7,7 @@ import {findArea} from './player'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {PointableImage} from './components/pointable-image.jsx'
 import {AnswerTable} from './components/answer-table.jsx'
+import {AnswerStatsTable} from './components/answer-stats-table.jsx'
 import {tex} from '#/main/core/translation'
 
 export const GraphicPaper = props => {
@@ -31,6 +32,7 @@ export const GraphicPaper = props => {
     <PaperTabs
       id={props.item.id}
       hideExpected={props.hideExpected}
+      showStats={props.showStats}
       yours={
         <div className="graphic-paper">
           <div className="img-zone" style={{position: 'relative'}}>
@@ -67,6 +69,19 @@ export const GraphicPaper = props => {
           <AnswerTable title={tex('expected_answers')} areas={expectedAreas} showScore={props.showScore} highlightScore={false}/>
         </div>
       }
+      stats={
+        <div className="graphic-paper">
+          <div className="img-zone" style={{position: 'relative'}}>
+            <PointableImage
+              src={props.item.image.data || asset(props.item.image.url)}
+              absWidth={props.item.image.width}
+              pointers={[]}
+              areas={expectedAreas}
+            />
+          </div>
+          <AnswerStatsTable title={tex('stats')} areas={expectedAreas} stats={props.stats}/>
+        </div>
+      }
     />
   )
 }
@@ -97,7 +112,13 @@ GraphicPaper.propTypes = {
     y: T.number.isRequired
   })),
   showScore: T.bool.isRequired,
-  hideExpected: T.bool.isRequired
+  hideExpected: T.bool.isRequired,
+  showStats: T.bool.isRequired,
+  stats: T.shape({
+    areas: T.object,
+    unanswered: T.number,
+    total: T.number
+  })
 }
 
 GraphicPaper.defaultProps = {

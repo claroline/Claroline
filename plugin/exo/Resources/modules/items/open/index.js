@@ -9,6 +9,10 @@ function getCorrectedAnswer() {
   return new CorrectedAnswer()
 }
 
+function generateStats() {
+  return {}
+}
+
 export default {
   type: 'application/x.open+json',
   name: 'open',
@@ -16,5 +20,6 @@ export default {
   player: OpenPlayer,
   feedback: OpenFeedback,
   editor,
-  getCorrectedAnswer
+  getCorrectedAnswer,
+  generateStats
 }

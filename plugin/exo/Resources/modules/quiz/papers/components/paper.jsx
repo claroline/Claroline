@@ -59,7 +59,11 @@ let Paper = props => {
                     item, answer: getAnswer(item.id, props.paper.answers),
                     feedback: getAnswerFeedback(item.id, props.paper.answers),
                     showScore: showScore,
-                    hideExpected: !props.showExpectedAnswers
+                    hideExpected: !props.showExpectedAnswers,
+                    showStats: props.showStatistics,
+                    stats: props.showStatistics ?
+                      getDefinition(item.type).generateStats(item, props.papers, props.allPapersStatistics) :
+                      {}
                   }
                 )}
 
@@ -95,7 +99,10 @@ Paper.propTypes = {
       type: T.string.isRequired
     })).isRequired
   })).isRequired,
-  showExpectedAnswers: T.bool.isRequired
+  showExpectedAnswers: T.bool.isRequired,
+  showStatistics: T.bool.isRequired,
+  allPapersStatistics: T.bool.isRequired,
+  papers: T.object.isRequired
 }
 
 function getAnswer(itemId, answers) {
@@ -121,7 +128,10 @@ function mapStateToProps(state) {
     admin: resourceSelect.editable(state) || quizSelect.papersAdmin(state),
     paper: paperSelect.currentPaper(state),
     steps: paperSelect.paperSteps(state),
-    showExpectedAnswers: quizSelect.papersShowExpectedAnswers(state)
+    showExpectedAnswers: quizSelect.papersShowExpectedAnswers(state),
+    showStatistics: quizSelect.papersShowStatistics(state),
+    allPapersStatistics: quizSelect.allPapersStatistics(state),
+    papers: paperSelect.papers(state)
   }
 }
 

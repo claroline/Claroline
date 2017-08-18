@@ -28,7 +28,9 @@ import {
   TOTAL_SCORE_ON_DEFAULT,
   NUMBERING_LITTERAL,
   NUMBERING_NONE,
-  NUMBERING_NUMERIC
+  NUMBERING_NUMERIC,
+  STATICTICS_ALL_PAPERS,
+  statisticsModes
 } from './../../enums'
 
 const TOTAL_SCORE_ON_DEFAULT_VALUE = 100
@@ -459,6 +461,22 @@ class Correction extends Component {
           label={tex('statistics')}
           onChange={checked => this.props.onChange('parameters.showStatistics', checked)}
         />
+        {this.props.parameters.showStatistics &&
+          <FormGroup controlId="quiz-showScoreAt" label={tex('statistics_options')}>
+            <select
+              id="quiz-allPapersStatistics"
+              value={this.props.parameters.allPapersStatistics}
+              className="form-control"
+              onChange={e => this.props.onChange('parameters.allPapersStatistics', e.target.value === 'true')}
+            >
+              {statisticsModes.map(mode =>
+                <option key={mode[0]} value={mode[0] === STATICTICS_ALL_PAPERS}>
+                  {tex(mode[1])}
+                </option>
+              )}
+            </select>
+          </FormGroup>
+        }
       </fieldset>
     )
   }
@@ -470,6 +488,7 @@ Correction.propTypes = {
     showScoreAt: T.string.isRequired,
     showFullCorrection: T.bool.isRequired,
     showStatistics: T.bool.isRequired,
+    allPapersStatistics: T.bool.isRequired,
     showFeedback: T.bool.isRequired,
     anonymizeAttempts: T.bool.isRequired,
     correctionDate: T.string,

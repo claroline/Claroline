@@ -31,6 +31,11 @@ export class PaperTabs extends Component {
                 <span className="fa fa-fw fa-check"></span> {tex('expected_answer')}
               </NavItem>
             }
+            {this.props.showStats &&
+              <NavItem eventKey="third" onSelect={() => this.handleSelect('third')}>
+                <span className="fa fa-fw fa-bar-chart"></span> {tex('stats')}
+              </NavItem>
+            }
           </Nav>
 
           <Tab.Content animation>
@@ -40,6 +45,11 @@ export class PaperTabs extends Component {
             {!this.props.hideExpected &&
               <Tab.Pane eventKey="second">
                 {this.props.expected}
+              </Tab.Pane>
+            }
+            {this.props.showStats &&
+              <Tab.Pane eventKey="third">
+                {this.props.stats}
               </Tab.Pane>
             }
           </Tab.Content>
@@ -53,6 +63,8 @@ PaperTabs.propTypes = {
   id: T.string.isRequired,
   yours: T.object.isRequired,
   expected: T.object,
+  stats: T.object,
   onTabChange: T.func,
-  hideExpected: T.bool
+  hideExpected: T.bool,
+  showStats: T.bool
 }

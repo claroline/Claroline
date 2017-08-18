@@ -5,6 +5,7 @@ import {navigate} from './../router'
 import {actions as baseActions} from './../actions'
 import {VIEW_PAPERS, VIEW_PAPER} from './../enums'
 import {selectors} from './selectors'
+import quizSelectors from './../selectors'
 import {normalize} from './normalizer'
 import {REQUEST_SEND} from './../../api/actions'
 
@@ -37,7 +38,7 @@ actions.fetchPapers = quizId => ({
 actions.displayPaper = id => {
   invariant(id, 'Paper id is mandatory')
   return (dispatch, getState) => {
-    if (!selectors.papersFetched(getState()) && !selectors.papers(getState())[id]) {
+    if (!selectors.papersFetched(getState()) && (!selectors.papers(getState())[id] || quizSelectors.papersShowStatistics(getState()))) {
       dispatch(actions.fetchPapers(selectors.quizId(getState()))).then(() => {
         dispatch(actions.setCurrentPaper(id))
         dispatch(baseActions.updateViewMode(VIEW_PAPER))

@@ -227,3 +227,30 @@ utils.getExpectedAnswers = (item) => {
 
   return expectedAnswers
 }
+
+utils.isPresentInOdds = (itemId, odds) => {
+  let isPresent = false
+
+  odds.forEach(o => {
+    if (o.item.id === itemId) {
+      isPresent = true
+    }
+  })
+
+  return isPresent
+}
+
+utils.isPresentInSolutions = (firstId, secondId, solutions) => {
+  let isPresent = false
+
+  solutions.forEach(s => {
+    if (s.itemIds.length > 1 &&
+      ((s.ordered && s.itemIds[0] === firstId && s.itemIds[1] === secondId) ||
+        (!s.ordered && ((s.itemIds[0] === firstId && s.itemIds[1] === secondId) || (s.itemIds[1] === firstId && s.itemIds[0] === secondId))))
+    ) {
+      isPresent = true
+    }
+  })
+
+  return isPresent
+}

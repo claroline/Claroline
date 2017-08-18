@@ -184,6 +184,7 @@ class ExerciseSerializer implements SerializerInterface
 
         $parameters->showMetadata = $exercise->isMetadataVisible();
         $parameters->showStatistics = $exercise->hasStatistics();
+        $parameters->allPapersStatistics = $exercise->isAllPapersStatistics();
         $parameters->showFullCorrection = !$exercise->isMinimalCorrection();
 
         switch ($exercise->getMarkMode()) {
@@ -287,6 +288,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (isset($parameters->showStatistics)) {
             $exercise->setStatistics($parameters->showStatistics);
+        }
+
+        if (isset($parameters->allPapersStatistics)) {
+            $exercise->setAllPapersStatistics($parameters->allPapersStatistics);
         }
 
         if (isset($parameters->showFullCorrection)) {

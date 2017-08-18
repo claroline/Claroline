@@ -21,6 +21,10 @@ function getCorrectedAnswer(item, answer = {data: []}) {
   return corrected
 }
 
+function generateStats() {
+  return {}
+}
+
 export default {
   type: 'application/x.ordering+json',
   name: 'ordering',
@@ -28,5 +32,6 @@ export default {
   player: OrderingPlayer,
   feedback: OrderingFeedback,
   editor,
-  getCorrectedAnswer
+  getCorrectedAnswer,
+  generateStats
 }

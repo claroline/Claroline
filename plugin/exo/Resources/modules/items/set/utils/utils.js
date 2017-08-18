@@ -45,3 +45,31 @@ utils.getAnswerOddScore = (answer, odd) => {
   const solution = odd.find(odd => odd.itemId === answer.itemId)
   return undefined !== solution ? solution.score : ''
 }
+
+utils.isItemInOddList = (itemId, solutions) => {
+  let isPresent = false
+
+  if (solutions.odd) {
+    solutions.odd.forEach(o => {
+      if (o.itemId === itemId) {
+        isPresent = true
+      }
+    })
+  }
+
+  return isPresent
+}
+
+utils.isItemInSet = (itemId, setId, solutions) => {
+  let isPresent = false
+
+  if (solutions.associations) {
+    solutions.associations.forEach(ass => {
+      if (ass.itemId === itemId && ass.setId === setId) {
+        isPresent = true
+      }
+    })
+  }
+
+  return isPresent
+}

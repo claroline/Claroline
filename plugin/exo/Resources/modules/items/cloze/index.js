@@ -39,6 +39,10 @@ function findSolutionExpectedAnswer(solution) {
   return expected
 }
 
+function generateStats() {
+  return {}
+}
+
 export default {
   type: 'application/x.cloze+json',
   name: 'cloze',
@@ -46,5 +50,6 @@ export default {
   player: ClozePlayer,
   feedback: ClozeFeedback,
   editor,
-  getCorrectedAnswer
+  getCorrectedAnswer,
+  generateStats
 }

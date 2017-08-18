@@ -33,3 +33,7 @@ utils.resetJsPlumb = () => {
   // use reset instead of deleteEveryEndpoint because reset also remove event listeners
   jsPlumb.reset()
 }
+
+utils.isPresentInSolutions = (firstId, secondId, solutions) => {
+  return solutions.findIndex(s => s.firstId == firstId && s.secondId === secondId) !== -1
+}

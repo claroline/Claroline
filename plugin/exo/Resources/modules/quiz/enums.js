@@ -78,3 +78,11 @@ export const SCORE_MANUAL = 'manual'
 
 export const TOTAL_SCORE_ON_DEFAULT = 'default'
 export const TOTAL_SCORE_ON_CUSTOM = 'custom'
+
+export const STATICTICS_ALL_PAPERS = 'default'
+export const STATICTICS_FINISHED_PAPERS_ONLY = 'custom'
+
+export const statisticsModes = [
+  [STATICTICS_ALL_PAPERS, 'compute_from_all_papers'],
+  [STATICTICS_FINISHED_PAPERS_ONLY, 'compute_from_finished_papers_only']
+]

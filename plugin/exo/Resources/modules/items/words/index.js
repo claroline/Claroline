@@ -31,6 +31,10 @@ function containsKeyword(keyword, caseSensitive, text = '') {
   return regex.test(text)
 }
 
+function generateStats() {
+  return {}
+}
+
 export default {
   type: 'application/x.words+json',
   name: 'words',
@@ -38,5 +42,6 @@ export default {
   player: WordsPlayer,
   feedback: WordsFeedback,
   editor,
-  getCorrectedAnswer
+  getCorrectedAnswer,
+  generateStats
 }

@@ -79,6 +79,10 @@ function getCorrectedAnswerForFindMode(item, corrected, answer = {data:{position
   return corrected
 }
 
+function generateStats() {
+  return {}
+}
+
 export default {
   type: 'application/x.selection+json',
   name: 'selection',
@@ -86,5 +90,6 @@ export default {
   player: SelectionPlayer,
   feedback: SelectionFeedback,
   editor,
-  getCorrectedAnswer
+  getCorrectedAnswer,
+  generateStats
 }

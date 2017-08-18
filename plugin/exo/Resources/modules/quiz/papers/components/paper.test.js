@@ -29,7 +29,9 @@ describe('<Paper/>', () => {
           canViewPapers: true
         },
         parameters: {
-          showFullCorrection: true
+          showFullCorrection: true,
+          showStatistics: true,
+          allPapersStatistics: true
         }
       },
       papers: {
