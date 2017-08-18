@@ -3,6 +3,7 @@ import {WordsPaper} from './paper.jsx'
 import {WordsPlayer} from './player.jsx'
 import {WordsFeedback} from './feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {utils} from './utils/utils'
 
 function getCorrectedAnswer(item, answer = {data: ''}) {
   const corrected = new CorrectedAnswer()
@@ -31,8 +32,38 @@ function containsKeyword(keyword, caseSensitive, text = '') {
   return regex.test(text)
 }
 
-function generateStats() {
-  return {}
+function generateStats(item, papers, withAllParpers) {
+  const stats = {
+    words: {},
+    unanswered: 0,
+    total: 0
+  }
+  Object.values(papers).forEach(p => {
+    if (withAllParpers || p.finished) {
+      let total = 0
+      let nbAnswered = 0
+      // compute the number of times the item is present in the structure of the paper
+      p.structure.steps.forEach(s => {
+        s.items.forEach(i => {
+          if (i.id === item.id) {
+            ++total
+            ++stats.total
+          }
+        })
+      })
+      // compute the number of times the item has been answered
+      p.answers.forEach(a => {
+        if (a.questionId === item.id && a.data) {
+          ++nbAnswered
+          const key = utils.getKey(a.data, item.solutions)
+          stats.words[key] = stats.words[key] ? stats.words[key] + 1 : 1
+        }
+      })
+      stats.unanswered += total - nbAnswered
+    }
+  })
+
+  return stats
 }
 
 export default {

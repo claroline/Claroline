@@ -78,3 +78,18 @@ utils.getTextElements = (text, solutions) => {
 
   return data
 }
+
+utils.getKey = (word, solutions) => {
+  let key = '_others'
+
+  solutions.forEach(s => {
+    const expected = s.caseSensitive ? s.text : s.text.toUpperCase()
+    const provided = s.caseSensitive ? word : word.toUpperCase()
+
+    if (expected === provided) {
+      key = s.text
+    }
+  })
+
+  return key
+}

@@ -80,7 +80,7 @@ export const SetPaper = props => {
           <div className="items-col">
             <ul>
               { props.item.solutions.odd && props.item.solutions.odd.map((item) =>
-                <li key={`expected-${item.id}`}>
+                <li key={`expected-${item.itemId}`}>
                   <div className="item">
                     <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(item.itemId, props.item.items)}} />
                     <Feedback
@@ -137,7 +137,7 @@ export const SetPaper = props => {
             <div className="items-col">
               <ul>
                 {props.item.solutions.odd && props.item.solutions.odd.map((item) =>
-                  <li key={`expected-${item.itemId}`}>
+                  <li key={`stats-expected-${item.itemId}`}>
                     <div className="item selected-answer">
                       <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(item.itemId, props.item.items)}} />
 
@@ -150,7 +150,7 @@ export const SetPaper = props => {
                 )}
                 {props.item.items.map((item) =>
                   props.stats.unused[item.id] && !utils.isItemInOddList(item.id, props.item.solutions) ?
-                    <li key={`unexpected-${item.id}`}>
+                    <li key={`stats-unexpected-${item.id}`}>
                       <div className="item stats-answer">
                         <div className="item-content" dangerouslySetInnerHTML={{__html: item.data}} />
 
@@ -167,7 +167,7 @@ export const SetPaper = props => {
             <div className="sets-col">
               <ul>
                 {props.item.sets.map((set) =>
-                  <li key={`expected-set-id-${set.id}`}>
+                  <li key={`stats-expected-set-id-${set.id}`}>
                     <div className="set">
                       <div className="set-heading">
                         <div className="set-heading-content" dangerouslySetInnerHTML={{__html: set.data}} />
@@ -175,7 +175,7 @@ export const SetPaper = props => {
                       <div className="set-body">
                         <ul>
                           {utils.getSetItems(set.id, props.item.solutions.associations).map(ass =>
-                            <li key={`expected-association-${ass.itemId}-${ass.setId}`}>
+                            <li key={`stats-expected-association-${ass.itemId}-${ass.setId}`}>
                               <div className={classes(
                                   'association',
                                   {'selected-answer': ass.score > 0}
@@ -195,7 +195,7 @@ export const SetPaper = props => {
                             props.stats.sets[set.id] &&
                             props.stats.sets[set.id][item.id] &&
                             !utils.isItemInSet(item.id, set.id, props.item.solutions) ?
-                              <li key={`unexpected-association-${set.id}-${item.id}`}>
+                              <li key={`stats-unexpected-association-${set.id}-${item.id}`}>
                                 <div className="association stats-answer">
                                   <div className="association-data" dangerouslySetInnerHTML={{__html: item.data}} />
 
