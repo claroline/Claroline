@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {PaperTabs} from '../components/paper-tabs.jsx'
 import {ClozeText} from './utils/cloze-text.jsx'
 import {UserAnswerHole, ExpectedAnswerHole} from './utils/cloze-holes.jsx'
+import {AnswersStatsTable} from './components/answers-stats-table.jsx'
 
 export const ClozePaper = (props) => {
   return (
@@ -12,6 +13,7 @@ export const ClozePaper = (props) => {
       answer={props.answer}
       id={props.item.id}
       hideExpected={props.hideExpected}
+      showStats={props.showStats}
       yours={
         <ClozeText
           anchorPrefix="cloze-hole-user"
@@ -58,6 +60,27 @@ export const ClozePaper = (props) => {
           })}
         />
       }
+      stats={
+        <div className="cloze-stats">
+          <ClozeText
+            anchorPrefix="cloze-hole-stats"
+            className="cloze-paper"
+            text={props.item.text}
+            holes={props.item.solutions.map((solution, idx) => {
+              return {
+                id: solution.holeId,
+                component: (
+                  <span className="badge">
+                    {idx + 1}
+                  </span>
+                )
+              }
+            })}
+          />
+          <hr/>
+          <AnswersStatsTable solutions={props.item.solutions} stats={props.stats}/>
+        </div>
+      }
     />
   )
 }
@@ -74,7 +97,13 @@ ClozePaper.propTypes = {
   }).isRequired,
   answer: T.array.isRequired,
   showScore: T.bool.isRequired,
-  hideExpected: T.bool.isRequired
+  hideExpected: T.bool.isRequired,
+  showStats: T.bool.isRequired,
+  stats: T.shape({
+    holes: T.object,
+    unanswered: T.number,
+    total: T.number
+  })
 }
 
 ClozePaper.defaultProps = {

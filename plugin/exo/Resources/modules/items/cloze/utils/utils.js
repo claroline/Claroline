@@ -207,3 +207,22 @@ utils.getTextElements = (text, holes) => {
 
   return data.sort((a, b) => a.position - b.position)
 }
+
+utils.getKey = (holeId, answer, solutions) => {
+  let key = '_others'
+
+  solutions.forEach(s => {
+    if (s.holeId === holeId) {
+      s.answers.forEach(a => {
+        const expected = a.caseSensitive ? a.text : a.text.toUpperCase()
+        const provided = a.caseSensitive ? answer : answer.toUpperCase()
+
+        if (expected === provided) {
+          key = a.text
+        }
+      })
+    }
+  })
+
+  return key
+}
