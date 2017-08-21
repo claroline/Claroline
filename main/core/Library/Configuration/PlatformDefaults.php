@@ -52,6 +52,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'mailer_username' => null,
             'mailer_password' => null,
             'mailer_auth_mode' => null,
+            'mailer_api_key' => null,
             'terms_of_service' => true,
             'google_meta_tag' => null,
             'redirect_after_login_option' => self::DEFAULT_REDIRECT_OPTION,

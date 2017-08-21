@@ -24,12 +24,12 @@ abstract class AbstractValidator
     const INVALID_ENCRYPTION = 'invalid_encryption';
     const INVALID_AUTH_MODE = 'invalid_auth_mode';
 
-    protected $errors = array();
+    protected $errors = [];
     private $hadValidationCall = false;
 
     public function validate()
     {
-        $this->errors = array();
+        $this->errors = [];
         $this->doValidate();
         $this->hadValidationCall = true;
 
@@ -67,7 +67,7 @@ abstract class AbstractValidator
 
     protected function checkIsValidDriver($property, $value)
     {
-        if (!in_array($value, array('pdo_mysql', 'pdo_pgsql'))) {
+        if (!in_array($value, ['pdo_mysql', 'pdo_pgsql'])) {
             $this->errors[$property] = static::INVALID_DRIVER;
 
             return false;
@@ -122,7 +122,7 @@ abstract class AbstractValidator
 
     protected function checkIsValidMailTransport($property, $value)
     {
-        if (!in_array($value, array('smtp', 'sendmail', 'gmail'))) {
+        if (!in_array($value, ['smtp', 'sendmail', 'gmail', 'postal'])) {
             $this->errors[$property] = static::INVALID_TRANSPORT;
 
             return false;
@@ -133,7 +133,7 @@ abstract class AbstractValidator
 
     protected function checkIsValidMailEncryption($property, $value)
     {
-        if (!in_array($value, array('', 'ssl', 'tls'))) {
+        if (!in_array($value, ['', 'ssl', 'tls'])) {
             $this->errors[$property] = static::INVALID_ENCRYPTION;
 
             return false;
@@ -144,7 +144,7 @@ abstract class AbstractValidator
 
     protected function checkIsValidMailAuthMode($property, $value)
     {
-        if (!in_array($value, array('', 'plain', 'login', 'cram-md5'))) {
+        if (!in_array($value, ['', 'plain', 'login', 'cram-md5'])) {
             $this->errors[$property] = static::INVALID_AUTH_MODE;
 
             return false;

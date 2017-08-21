@@ -74,7 +74,8 @@
         "innova/angular-ui-tinymce-bundle": "5.1.1",
         "claroline/front-end-bundle": "dev-7.x-test",
         "ocramius/proxy-manager": "1.0.2",
-        "ramsey/uuid": "~3.5"
+        "ramsey/uuid": "~3.5",
+        "postal/postal": "*"
     },
     "replace": {
         "claroline/distribution-bundle": "*",

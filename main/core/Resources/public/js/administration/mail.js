@@ -17,7 +17,17 @@
             'password': false,
             'auth_mode': false,
             'encryption': false,
-            'port': false
+            'port': false,
+            'api_key': false
+        },
+        'postal': {
+            'host': true,
+            'username': false,
+            'password': false,
+            'auth_mode': false,
+            'encryption': false,
+            'port': false,
+            'api_key': true
         },
         'gmail': {
             'host': false,
@@ -25,7 +35,8 @@
             'password': true,
             'auth_mode': false,
             'encryption': false,
-            'port': false
+            'port': false,
+            'api_key': false
         },
         'smtp': {
             'host': true,
@@ -33,8 +44,9 @@
             'password': true,
             'auth_mode': true,
             'encryption': true,
-            'port': true
-        }
+            'port': true,
+            'api_key': false
+        },
     }
 
     function display() {
