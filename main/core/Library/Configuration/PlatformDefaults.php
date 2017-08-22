@@ -40,7 +40,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'support_email' => 'noreply@changeme.com',
             'footer' => null,
             'logo' => 'clarolineconnect.png',
-            'allow_self_registration' => true,
+            'allow_self_registration' => false,
             'locale_language' => 'fr',
             'theme' => 'claroline',
             'default_role' => 'ROLE_USER',
