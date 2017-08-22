@@ -69,7 +69,7 @@ class SwiftMailer implements MailClientInterface
               }
 
               if (!empty($data['port'])) {
-                  $error = $this->validator->checkIsPositiveNumber($data['port']);
+                  $error = $validator->checkIsPositiveNumber($data['port']);
                   if ($error) {
                       $errors['port'] = $error;
                   }
@@ -138,7 +138,7 @@ class SwiftMailer implements MailClientInterface
             ->setUsername($data['username'])
             ->setPassword($data['password'])
             ->setAuthMode($data['auth_mode'])
-            ->setEncryption($data['encyption'])
+            ->setEncryption($data['encryption'])
             ->setPort($port)
             ->start();
         } catch (Swift_TransportException $ex) {
