@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "86cb457940dbbc6df742f1e32eff222a33fcbe49"
+                "reference": "9fb0bf7e16236b49a976fc2642e54e44d53d4f39"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/86cb457940dbbc6df742f1e32eff222a33fcbe49",
-                "reference": "86cb457940dbbc6df742f1e32eff222a33fcbe49",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/9fb0bf7e16236b49a976fc2642e54e44d53d4f39",
+                "reference": "9fb0bf7e16236b49a976fc2642e54e44d53d4f39",
                 "shasum": ""
             },
             "require": {
@@ -177,6 +177,7 @@
                 "natxet/cssmin": "3.0.2",
                 "ocramius/proxy-manager": "1.0.2",
                 "php": ">=5.6",
+                "postal/postal": "*",
                 "psr/log": "1.0.2",
                 "ramsey/uuid": "~3.5",
                 "sensio/distribution-bundle": "2.3.22",
@@ -391,7 +392,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-08-17 13:37:23"
+            "time": "2017-08-21 10:56:22"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3972,31 +3973,31 @@
         },
         {
             "name": "kriswallsmith/buzz",
-            "version": "v0.15",
+            "version": "v0.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/Buzz.git",
-                "reference": "d4041666c3ffb379af02a92dabe81c904b35fab8"
+                "reference": "d59932b335c2f2f3ec9eee66a37db6bd50d39e13"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/d4041666c3ffb379af02a92dabe81c904b35fab8",
-                "reference": "d4041666c3ffb379af02a92dabe81c904b35fab8",
+                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/d59932b335c2f2f3ec9eee66a37db6bd50d39e13",
+                "reference": "d59932b335c2f2f3ec9eee66a37db6bd50d39e13",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": "^5.3.3 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "3.7.*"
+                "symfony/phpunit-bridge": "^3.3"
             },
             "suggest": {
                 "ext-curl": "*"
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Buzz": "lib/"
+                "psr-4": {
+                    "Buzz\\": "lib/Buzz"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -4016,7 +4017,7 @@
                 "curl",
                 "http client"
             ],
-            "time": "2015-06-25 17:26:56"
+            "time": "2017-08-19 09:43:47"
         },
         {
             "name": "monolog/monolog",
@@ -4462,6 +4463,48 @@
             "time": "2015-07-25 16:39:46"
         },
         {
+            "name": "postal/postal",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/atech/postal-php.git",
+                "reference": "cddd9c5f34ec5234ccfcd9ce9193f7327802c2a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/atech/postal-php/zipball/cddd9c5f34ec5234ccfcd9ce9193f7327802c2a6",
+                "reference": "cddd9c5f34ec5234ccfcd9ce9193f7327802c2a6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "rmccue/requests": ">=1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Postal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Cooke",
+                    "email": "me@adamcooke.io"
+                }
+            ],
+            "description": "Postal for PHP library.",
+            "homepage": "https://github.com/atech/postal",
+            "keywords": [
+                "mail",
+                "postal"
+            ],
+            "time": "2017-05-08 14:02:29"
+        },
+        {
             "name": "psr/container",
             "version": "1.0.0",
             "source": {
@@ -4638,6 +4681,55 @@
                 "uuid"
             ],
             "time": "2017-08-04 13:39:04"
+        },
+        {
+            "name": "rmccue/requests",
+            "version": "v1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rmccue/Requests.git",
+                "reference": "87932f52ffad70504d93f04f15690cf16a089546"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rmccue/Requests/zipball/87932f52ffad70504d93f04f15690cf16a089546",
+                "reference": "87932f52ffad70504d93f04f15690cf16a089546",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "require-dev": {
+                "requests/test-server": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Requests": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ISC"
+            ],
+            "authors": [
+                {
+                    "name": "Ryan McCue",
+                    "homepage": "http://ryanmccue.info"
+                }
+            ],
+            "description": "A HTTP library written in PHP, for human beings.",
+            "homepage": "http://github.com/rmccue/Requests",
+            "keywords": [
+                "curl",
+                "fsockopen",
+                "http",
+                "idna",
+                "ipv6",
+                "iri",
+                "sockets"
+            ],
+            "time": "2016-10-13 00:11:37"
         },
         {
             "name": "seld/cli-prompt",
