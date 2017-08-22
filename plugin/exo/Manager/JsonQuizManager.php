@@ -61,10 +61,9 @@ class JsonQuizManager
         return $filename;
     }
 
-    public function import($json, $workspace, $owner)
+    public function import(\stdClass $data, $workspace, $owner)
     {
         $exercise = new Exercise();
-        $data = json_decode($json);
         $exercise->setName($data->title);
         // Create entities from import data
         $exercise = $this->exerciseManager->createCopy($data, $exercise);

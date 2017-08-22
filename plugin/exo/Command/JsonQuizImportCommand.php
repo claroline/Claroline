@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use UJM\ExoBundle\Library\Options\Validation;
 
 /**
  * Changes the creator of questions.
@@ -45,10 +46,21 @@ class JsonQuizImportCommand extends ContainerAwareCommand
         $owner = $this->getContainer()
             ->get('claroline.manager.user_manager')
             ->getUserByUsername($owner);
-        $json = file_get_contents($file);
+        $data = json_decode(file_get_contents($file));
+
+        //validation
+        $validator = $this->getContainer()->get('ujm_exo.validator.exercise');
+        $errors = $validator->validate($data, [Validation::REQUIRE_SOLUTIONS]);
+
+        if ($errors) {
+            $output->writeln('<error>Errors were found in the json schema:</error>');
+            $output->writeln('<error>'.json_encode($errors).'</error>');
+
+            return;
+        }
 
         $this->getContainer()->get('ujm_exo.manager.json_quiz')->import(
-            $json,
+            $data,
             $workspace,
             $owner
         );
