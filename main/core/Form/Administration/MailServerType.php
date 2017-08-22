@@ -33,6 +33,7 @@ class MailServerType extends AbstractType
                 'encryption' => false,
                 'port' => false,
                 'api_key' => false,
+                'tag' => false,
             ],
             'gmail' => [
                 'host' => false,
@@ -42,6 +43,7 @@ class MailServerType extends AbstractType
                 'encryption' => false,
                 'port' => false,
                 'api_key' => false,
+                'tag' => false,
             ],
             'smtp' => [
                 'host' => true,
@@ -51,6 +53,7 @@ class MailServerType extends AbstractType
                 'encryption' => true,
                 'port' => true,
                 'api_key' => false,
+                'tag' => false,
             ],
             'postal' => [
                 'host' => true,
@@ -60,6 +63,7 @@ class MailServerType extends AbstractType
                 'encryption' => false,
                 'port' => false,
                 'api_key' => true,
+                'tag' => true,
             ],
         ];
         $this->lockedParams = $lockedParams;
@@ -152,6 +156,16 @@ class MailServerType extends AbstractType
                     'theme_options' => ['display_row' => $this->formDisplay[$this->transport]['mailer_api_key']],
                     'disabled' => isset($this->lockedParams['mailer_api_key']),
                     'label' => 'api_key',
+                ]
+            )
+            ->add(
+                'mailer_tag',
+                'text',
+                [
+                    'required' => false,
+                    'theme_options' => ['display_row' => $this->formDisplay[$this->transport]['mailer_tag']],
+                    'disabled' => isset($this->lockedParams['mailer_tag']),
+                    'label' => 'tag',
                 ]
             );
     }

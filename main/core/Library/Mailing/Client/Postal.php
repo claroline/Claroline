@@ -46,6 +46,11 @@ class Postal implements MailClientInterface
         $sendMessage->bcc($message->getAttribute('bcc'));
         $sendMessage->to($message->getAttribute('to'));
         $sendMessage->from($message->getAttribute('from'));
+
+        if ($tag = $this->ch->getParameter('mailer_tag')) {
+            $sendMessage->tag($tag);
+        }
+
         $sendMessage->subject($message->getAttribute('subject'));
         $sendMessage->htmlBody($message->getAttribute('body'));
 

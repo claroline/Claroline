@@ -393,6 +393,7 @@ class ParametersController extends Controller
             'encryption' => $form['mailer_encryption']->getData(),
             'port' => $form['mailer_port']->getData(),
             'api_key' => $form['mailer_api_key']->getData(),
+            'tag' => $form['mailer_tag']->getData(),
         ];
 
         $errors = $this->container->get('claroline.library.mailing.mailer')->test($data);
@@ -416,6 +417,7 @@ class ParametersController extends Controller
                 'mailer_encryption' => $data['encryption'],
                 'mailer_port' => $data['port'],
                 'mailer_api_key' => $data['api_key'],
+                'mailer_tag' => $data['tag'],
             ]
         );
 
@@ -442,6 +444,8 @@ class ParametersController extends Controller
             'mailer_auth_mode' => null,
             'mailer_encryption' => null,
             'mailer_port' => null,
+            'mailer_api_key' => null,
+            'mailer_tag' => null,
         ];
 
         $this->configHandler->setParameters($data);
