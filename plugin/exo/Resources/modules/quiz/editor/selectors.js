@@ -76,6 +76,18 @@ const currentObjectDeep = createSelector(
   }
 )
 
+const currentObjectIndex = createSelector(
+  currentObject,
+  steps,
+  (currentObject, steps) => {
+    if (currentObject.type === TYPE_QUIZ) {
+      return null
+    }
+
+    return Object.keys(steps).indexOf(currentObject.id) + 1
+  }
+)
+
 const stepOpenPanel = createSelector(
   currentObject,
   openStepPanels,
@@ -130,6 +142,7 @@ export default {
   quiz,
   thumbnails,
   currentObjectDeep,
+  currentObjectIndex,
   quizOpenPanel,
   stepOpenPanel,
   nextObject,

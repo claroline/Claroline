@@ -127,7 +127,7 @@ function reduceSteps(steps = {}, action = {}) {
     case STEP_CREATE: {
       const newStep = {
         id: action.id,
-        title: '',
+        title: action.title,
         description: '',
         items: [],
         parameters: {

@@ -94,15 +94,13 @@ Hints.propTypes = {
 
 const ItemPlayer = props =>
   <div className="quiz-item item-player">
-    {props.numbering &&
-      <span className="quizz-numbering">{props.numbering + ')'}</span>
-    }
+    <div>
+      {props.item.title &&
+        <h3 className="item-title">{props.item.title}</h3>
+      }
 
-    {props.item.title &&
-      <h3 className="item-title">{props.item.title}</h3>
-    }
-
-    <ItemMetadata item={props.item} />
+      <ItemMetadata item={props.item} numbering={props.numbering}/>
+    </div>
 
     <hr className="item-content-separator" />
 

@@ -26,6 +26,12 @@ const currentStep = createSelector(
   (steps, currentStepId) => steps.find(step => step.id === currentStepId)
 )
 
+const currentStepIndex = createSelector(
+  steps,
+  currentStep,
+  (steps, currentStep) => steps.indexOf(currentStep) + 1
+)
+
 /**
  * Retrieves the picked items for a step.
  */
@@ -121,6 +127,7 @@ export const select = {
   currentStepNumber,
   currentStepItems,
   currentStepAnswers,
+  currentStepIndex,
   previous,
   next,
   currentStepTries,

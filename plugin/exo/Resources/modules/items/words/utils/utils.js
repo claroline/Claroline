@@ -64,7 +64,6 @@ utils.getTextElements = (text, solutions) => {
     let regexFlag = 'g'
     if (!solution.caseSensitive) regexFlag += 'i'
     const regex = new RegExp('\\b' + word + '\\b', regexFlag)
-    //console.log(regex)
     const position = text.search(regex)
     data.push({
       caseSensitive: solution.caseSensitive,

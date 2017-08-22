@@ -55,7 +55,7 @@ export class ThumbnailBox extends Component {
           <button
             className="btn btn-primary new-step"
             onClick={() => {
-              this.props.onNewStepClick()
+              this.props.onNewStepClick(this.props.thumbnails.length)
               this.setState({addedThumbnail: true})
             }}
           >

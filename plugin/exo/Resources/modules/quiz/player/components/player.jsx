@@ -17,6 +17,7 @@ import {ContentItemPlayer} from './content-item-player.jsx'
 import {PlayerNav} from './nav-bar.jsx'
 import {CustomDragLayer} from './../../../utils/custom-drag-layer.jsx'
 import {getNumbering} from './../../../utils/numbering'
+import {NUMBERING_NONE} from './../../../quiz/enums'
 
 const Player = props =>
   <div className="quiz-player">
@@ -41,7 +42,7 @@ const Player = props =>
             item={item}
             showHint={(questionId, hint) => props.showHint(props.quizId, props.paper.id, questionId, hint)}
             usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
-            numbering={getNumbering(props.numbering, index)}
+            numbering={props.numbering !== NUMBERING_NONE ? props.stepIndex + '.' + getNumbering(props.numbering, index): null}
           >
             {React.createElement(getDefinition(item.type).player, {
               item: item,
@@ -53,6 +54,7 @@ const Player = props =>
           <ItemFeedback
             item={item}
             usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+            numbering={props.numbering !== NUMBERING_NONE ? props.stepIndex + '.' + getNumbering(props.numbering, index): null}
           >
             {React.createElement(getDefinition(item.type).feedback, {
               item: item,
@@ -128,7 +130,8 @@ function mapStateToProps(state) {
     showFeedback: select.showFeedback(state),
     feedbackEnabled: select.feedbackEnabled(state),
     currentStepSend: select.currentStepSend(state),
-    numbering: selectQuiz.quizNumbering(state)
+    numbering: selectQuiz.quizNumbering(state),
+    stepIndex: select.currentStepIndex(state)
   }
 }
 

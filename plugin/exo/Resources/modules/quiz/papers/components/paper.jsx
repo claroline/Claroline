@@ -12,6 +12,10 @@ import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx
 import {ScoreBox} from './../../../items/components/score-box.jsx'
 import {ScoreGauge} from './../../../components/score-gauge.jsx'
 import {utils} from './../utils'
+import {getNumbering} from './../../../utils/numbering'
+import {
+  NUMBERING_NONE
+} from './../../../quiz/enums'
 
 let Paper = props => {
   const showScore = utils.showScore(
@@ -36,7 +40,7 @@ let Paper = props => {
             {step.title ? step.title : tex('step') + ' ' + (idx + 1)}
           </h3>
 
-          {step.items.map(item => {
+          {step.items.map((item, idxItem) => {
             const tmp = document.createElement('div')
             tmp.innerHTML = item.feedback
             const displayFeedback = (/\S/.test(tmp.textContent)) && item.feedback
@@ -51,7 +55,7 @@ let Paper = props => {
                   <h4 className="item-title">{item.title}</h4>
                 }
 
-                <ItemMetadata item={item} />
+                <ItemMetadata item={item} numbering={props.numbering !== NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null} />
 
                 {React.createElement(
                   getDefinition(item.type).paper,
@@ -126,6 +130,7 @@ function getAnswerScore(itemId, answers) {
 function mapStateToProps(state) {
   return {
     admin: resourceSelect.editable(state) || quizSelect.papersAdmin(state),
+    numbering: quizSelect.quizNumbering(state),
     paper: paperSelect.currentPaper(state),
     steps: paperSelect.paperSteps(state),
     showExpectedAnswers: quizSelect.papersShowExpectedAnswers(state),

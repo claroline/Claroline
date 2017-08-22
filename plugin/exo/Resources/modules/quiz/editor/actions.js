@@ -109,10 +109,12 @@ actions.createItem = (stepId, type) => {
   }
 }
 
-actions.createStep = () => {
+actions.createStep = (position) => {
+  invariant(position, 'position is mandatory')
   return {
     type: STEP_CREATE,
-    id: makeId()
+    id: makeId(),
+    title: `${tex('step')} ${position}`
   }
 }
 

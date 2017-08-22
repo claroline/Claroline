@@ -23,8 +23,8 @@ describe('#createItem', () => {
 
 describe('#createStep', () => {
   it('generates a unique id for each step', () => {
-    const step1 = actions.createStep()
-    const step2 = actions.createStep()
+    const step1 = actions.createStep('step 1')
+    const step2 = actions.createStep('step 2')
     ensure.equal(typeof step1.id, 'string', 'Step id must a string')
     ensure.equal(typeof step2.id, 'string', 'Step id must be a string')
     assert.notEqual(step1.id, step2.id, 'Item ids must be unique')
