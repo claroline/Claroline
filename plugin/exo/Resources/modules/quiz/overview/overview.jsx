@@ -144,7 +144,6 @@ const Layout = props =>
         {tex('exercise_start')}
       </a>
     }
-
   </div>
 
 Layout.propTypes = {

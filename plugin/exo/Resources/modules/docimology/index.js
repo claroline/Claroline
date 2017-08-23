@@ -1,25 +1,19 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import {Provider} from 'react-redux'
-import {createStore} from './store'
-import {registerDefaultItemTypes} from './../items/item-types'
-import Docimology from './components/docimology.jsx'
+import {bootstrap} from '#/main/core/utilities/app/bootstrap'
 
-registerDefaultItemTypes()
+import {Docimology} from './components/docimology.jsx'
 
-const exerciseRaw = JSON.parse(document.getElementById('docimology').dataset.exercise)
-const statsRaw = JSON.parse(document.getElementById('docimology').dataset.statistics)
+// mount the react application
+bootstrap(
+  // app DOM container (also holds initial app data as data attributes)
+  '.docimology-container',
 
-const store = createStore({
-  exercise: exerciseRaw,
-  statistics: statsRaw
-})
+  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  Docimology,
 
-ReactDOM.render(
-  React.createElement(
-    Provider,
-    {store},
-    React.createElement(Docimology)
-  ),
-  document.getElementById('docimology')
+  // app store configuration
+  {
+    // app reducers
+    quiz: (state = {}) => state,
+    statistics: (state = {}) => state
+  }
 )

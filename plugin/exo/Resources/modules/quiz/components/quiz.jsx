@@ -92,13 +92,15 @@ function customActions(props) {
     })
   }
 
-  // Manual correction
-  actions.push({
-    icon: 'fa fa-fw fa-check-square-o',
-    label: tex('manual_correction'),
-    disabled: !props.hasPapers,
-    action: '#correction/questions'
-  })
+  if (props.papersAdmin) {
+    // Manual correction
+    actions.push({
+      icon: 'fa fa-fw fa-check-square-o',
+      label: tex('manual_correction'),
+      disabled: !props.hasPapers,
+      action: '#correction/questions'
+    })
+  }
 
   return actions
 }

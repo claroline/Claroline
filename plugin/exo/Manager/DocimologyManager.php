@@ -1,9 +1,10 @@
 <?php
 
-namespace UJM\ExoBundle\Manager\Docimology;
+namespace UJM\ExoBundle\Manager;
 
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\Item\ItemManager;
@@ -69,7 +70,7 @@ class DocimologyManager
      * Serializes an Exercise.
      *
      * @param Exercise $exercise
-     * @param array    $options
+     * @param float    $maxScore
      *
      * @return \stdClass
      */
@@ -77,7 +78,7 @@ class DocimologyManager
     {
         $statistics = new \stdClass();
         $statistics->maxScore = $maxScore;
-        $statistics->nbSteps = count($exercise->getSteps()->toArray());
+        $statistics->nbSteps = $exercise->getSteps()->count();
         $statistics->nbQuestions = $this->exerciseRepository->countExerciseQuestion($exercise);
         $statistics->nbPapers = $this->paperManager->countExercisePapers($exercise);
         $statistics->nbRegisteredUsers = $this->paperManager->countPapersUsers($exercise);
@@ -161,7 +162,7 @@ class DocimologyManager
      * @param Exercise $exercise
      * @param float    $scoreOn
      *
-     * @return array
+     * @return \stdClass
      */
     public function getPaperScoreDistribution(Exercise $exercise, $scoreOn)
     {
@@ -175,7 +176,7 @@ class DocimologyManager
         $uniqueScores = array_unique($scores, SORT_NUMERIC);
         sort($uniqueScores);
 
-        $paperScoreDistribution = [];
+        $paperScoreDistribution = new \stdClass();
         foreach ($uniqueScores as $key) {
             $matchingScores = array_filter($scores, function ($score) use ($key) {
                 return floatval($score) === floatval($key);
@@ -183,7 +184,8 @@ class DocimologyManager
             $statsData = new \stdClass();
             $statsData->yData = count($matchingScores);
             $statsData->xData = $key;
-            $paperScoreDistribution[$key] = $statsData;
+
+            $paperScoreDistribution->{$key} = $statsData;
         }
 
         return $paperScoreDistribution;
@@ -192,30 +194,30 @@ class DocimologyManager
     public function getQuestionsDifficultyIndex(Exercise $exercise)
     {
         $papers = $this->paperRepository->findBy([
-                'exercise' => $exercise,
+            'exercise' => $exercise,
         ]);
 
         $questionStatistics = [];
         $itemRepository = $this->om->getRepository('UJMExoBundle:Item\Item');
 
-            /** @var Paper $paper */
-            foreach ($papers as $paper) {
-                // base success compution on paper structure
-                $structure = json_decode($paper->getStructure());
-                foreach ($structure->steps as $step) {
-                    foreach ($step->items as $item) {
-                        // since the compution is based on the structure the same item can come several times
-                        if (!array_key_exists($item->id, $questionStatistics)) {
-                            $itemEntity = $itemRepository->findOneBy(['uuid' => $item->id]);
-                            $questionStats = $this->itemManager->getStatistics($itemEntity, $exercise);
-                            $questionData = new \stdClass();
-                            $questionData->yData = $questionStats->successPercent;
-                            $questionData->xData = $itemEntity->getTitle() ? strip_tags($itemEntity->getTitle()) : strip_tags($itemEntity->getContent());
-                            $questionStatistics[$item->id] = $questionData;
-                        }
+        /** @var Paper $paper */
+        foreach ($papers as $paper) {
+            // base success compution on paper structure
+            $structure = json_decode($paper->getStructure());
+            foreach ($structure->steps as $step) {
+                foreach ($step->items as $item) {
+                    // since the compution is based on the structure the same item can come several times
+                    if (!array_key_exists($item->id, $questionStatistics)) {
+                        $itemEntity = $itemRepository->findOneBy(['uuid' => $item->id]);
+                        $questionStats = $this->itemManager->getStatistics($itemEntity, $exercise);
+                        $questionData = new \stdClass();
+                        $questionData->yData = $questionStats->successPercent;
+                        $questionData->xData = $itemEntity->getTitle() ? strip_tags($itemEntity->getTitle()) : strip_tags($itemEntity->getContent());
+                        $questionStatistics[$item->id] = $questionData;
                     }
                 }
             }
+        }
 
         return $questionStatistics;
     }

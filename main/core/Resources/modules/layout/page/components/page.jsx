@@ -44,8 +44,8 @@ Page.propTypes = {
     fading: T.bool.isRequired,
     props: T.object.isRequired
   }),
-  fadeModal: T.func.isRequired,
-  hideModal: T.func.isRequired
+  fadeModal: T.func,
+  hideModal: T.func
 }
 
 Page.defaultTypes = {

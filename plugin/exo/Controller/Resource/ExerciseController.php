@@ -95,13 +95,6 @@ class ExerciseController extends Controller
         ];
     }
 
-    private function isAdmin(Exercise $exercise)
-    {
-        $collection = new ResourceCollection([$exercise->getResourceNode()]);
-
-        return $this->get('security.authorization_checker')->isGranted('ADMINISTRATE', $collection);
-    }
-
     private function canEdit(Exercise $exercise)
     {
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
@@ -119,7 +112,7 @@ class ExerciseController extends Controller
     private function canViewDocimology(Exercise $exercise)
     {
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
-        $isGranted = $this->get('security.authorization_checker')->isGranted('VIEW_DOCIMOLOGY', $collection) || $this->isAdmin($exercise);
+        $isGranted = $this->get('security.authorization_checker')->isGranted('VIEW_DOCIMOLOGY', $collection) || $this->canEdit($exercise);
 
         return $isGranted;
     }
