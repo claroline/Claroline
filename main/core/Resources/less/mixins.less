@@ -1,5 +1,23 @@
 @import "../../../../../../../web/packages/bootstrap/less/mixins";
 
+.font-size-modifier(@font-size) {
+    font-size: floor(@font-size * @font-size-modifier);
+}
+
+.box-shadow(@shadow) when (@enable-box-shadow = true) {
+    box-shadow: @shadow;
+}
+.box-shadow(@shadow) when (@enable-box-shadow = false) {
+    box-shadow: none;
+}
+
+.border-radius(@border-radius) when (@enable-border-radius = true) {
+    border-radius: @border-radius;
+}
+.border-radius(@border-radius) when (@enable-border-radius = false) {
+    border-radius: 0;
+}
+
 // Typography
 
 // rewrite bootstrap method to add `!important` in order to have the correct color on any element

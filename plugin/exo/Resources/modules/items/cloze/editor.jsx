@@ -131,19 +131,17 @@ export class Cloze extends Component {
           />
         </FormGroup>
 
-        <div className="footer">
-          <button
-            type="button"
-            className="btn btn-default"
-            disabled={!this.state.allowCloze}
-            onClick={() => this.props.onChange(
-              this.addHole()
-            )}
-          >
-            <span className="fa fa-fw fa-plus" />
-            {tex('create_cloze')}
-          </button>
-        </div>
+        <button
+          type="button"
+          className="btn btn-block btn-default"
+          disabled={!this.state.allowCloze}
+          onClick={() => this.props.onChange(
+            this.addHole()
+          )}
+        >
+          <span className="fa fa-fw fa-plus" />
+          {tex('create_cloze')}
+        </button>
 
         {(this.props.item._popover && this.props.item._holeId) &&
           <HolePopover

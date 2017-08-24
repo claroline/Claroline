@@ -25,7 +25,7 @@
 
   "styles": {
     "entry": {
-      "admin-task-tool": "task/admin-task-tool.less"
+      "admin-task-tool": "tools/admin-task-tool.less"
     }
   }
 }

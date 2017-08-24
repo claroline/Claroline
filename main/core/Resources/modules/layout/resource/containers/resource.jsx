@@ -6,7 +6,7 @@ import {select as modalSelect} from '#/main/core/layout/modal/selectors'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {select as resourceSelect} from './../selectors'
 import {actions as resourceActions} from './../actions'
-import {Resource} from '../components/resource.jsx'
+import {Resource as ResourceComponent} from '../components/resource.jsx'
 
 /**
  * Connected container for resources.
@@ -21,14 +21,14 @@ import {Resource} from '../components/resource.jsx'
  * @param props
  * @constructor
  */
-const ResourceContainer = props =>
-  <Resource
+const Resource = props =>
+  <ResourceComponent
     {...props}
   >
     {props.children}
-  </Resource>
+  </ResourceComponent>
 
-ResourceContainer.propTypes = {
+Resource.propTypes = {
   /**
    * Application of the resource.
    */
@@ -46,7 +46,7 @@ function mapStateToProps(state) {
 }
 
 // connects the container to redux
-const ConnectedResource = connect(
+const ResourceContainer = connect(
   mapStateToProps,
   Object.assign(
     {},
@@ -55,4 +55,6 @@ const ConnectedResource = connect(
   )
 )(Resource)
 
-export {ConnectedResource as Resource}
+export {
+  ResourceContainer
+}

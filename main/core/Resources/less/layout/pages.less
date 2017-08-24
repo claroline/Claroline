@@ -48,6 +48,11 @@
     }
 }
 
+.page-title {
+    font-size: @page-header-font-size;
+    font-weight: @page-header-weight;
+}
+
 .page-actions {
     margin-left: -0.25em; // absorb first btn margin
 
@@ -72,11 +77,12 @@
 
 // Current styles permit to have 7 buttons in one line on 360px screens (without btn groups)
 .page-action-btn {
-    color: #333;
-    background: #ebebeb;
+    color: #333333;
+    background: #EBEBEB;
     position: relative; // for buttons with labels
     border-radius: 50%;
     padding: .65em;
+    border: 1px solid transparent !important;
 
     &.page-action-primary {
         color: @btn-primary-color;
@@ -116,11 +122,13 @@
     &.disabled {
 
     }
-    &:hover {
-        color: #333; // body color
-    }
-    &:focus {
-
+    &:hover,
+    &:focus,
+    &:active,
+    &.active,
+    &.open > .dropdown-toggle {
+        color: #333333; // body color
+        background: #e6e6e6; // todo use a var (same value as btn-default for now)
     }
 }
 

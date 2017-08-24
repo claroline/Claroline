@@ -34,7 +34,7 @@
     {{ parent() }}
 
     {% stylesheets debug=false filter='less, cssmin' output='css/clarolinecore/hometabs.css'
-        "@ClarolineCoreBundle/Resources/less/home-tabs.less"
+        "@ClarolineCoreBundle/Resources/less/tools/home.less"
     %}
         <link rel="stylesheet" type="text/css" media="all" href="{{ asset_url }}" />
     {% endstylesheets %}

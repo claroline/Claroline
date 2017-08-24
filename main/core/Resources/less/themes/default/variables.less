@@ -11,6 +11,11 @@
 // ---
 @brand-secondary:         #C51162;
 
+@enable-box-shadow:       true;
+@enable-border-radius:    true;
+
+@font-size-modifier:      1;
+
 @box-shadow-base:         0 0 2px rgba(0, 0, 0, 0.10);
 @component-margin-bottom: @line-height-computed;
 
@@ -47,8 +52,8 @@
 @top-bar-logo-height:         35px;
 
 @top-bar-brand-font-size:     22px;
-@top-bar-brand-color:         #fff;
-@top-bar-brand-hover-color:   #fff;
+@top-bar-brand-color:         #FFFFFF;
+@top-bar-brand-hover-color:   #FFFFFF;
 @top-bar-brand-hover-bg:      transparent;
 
 @top-bar-link-color:          lighten(@top-bar-bg, 60%);
@@ -90,8 +95,8 @@
 // Sidebars
 // ---
 @sidebar-bg:           white;
-@sidebar-color:        #555;
-@sidebar-font-size:    16px;
+@sidebar-color:        #555555;
+@sidebar-font-size:    floor(16px * @font-size-modifier);
 
 @left-bar-box-shadow:  0 0 3px rgba(0, 0, 0, 0.5);
 @right-bar-box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
@@ -105,7 +110,6 @@
 @page-header-weight:           700;
 @page-header-link-color:       @gray; // todo : should be #666 for WCAG AA or #555 for AAA
 @page-header-link-hover-color: @gray-darker;
-@page-header-divider-color:    #CCCCCC;
 
 
 // -

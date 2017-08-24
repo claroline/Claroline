@@ -147,10 +147,11 @@ class DataList extends Component {
             available: getDisplayableProps(this.props.definition),
             toggle: this.toggleColumn.bind(this)
           }}
-          filters={Object.assign({
+          filters={this.props.filters ? Object.assign({
             available: getFilterableProps(this.props.definition)
-          }, this.props.filters)}
+          }, this.props.filters) : undefined}
         />
+
 
         {0 === this.props.totalResults &&
           <EmptyList hasFilters={this.props.filters && 0 < this.props.filters.current.length} />

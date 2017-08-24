@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {ErrorBlock} from './error-block.jsx'
+import {HelpBlock} from './help-block.jsx'
 
 export const FormGroup = props =>
   <div className={classes('form-group', props.className, {
@@ -24,10 +25,7 @@ export const FormGroup = props =>
     }
 
     {props.help &&
-      <span id={`help-${props.controlId}`} className="help-block">
-        <span className="fa fa-info-circle" />
-        {props.help}
-      </span>
+      <HelpBlock help={props.help} />
     }
   </div>
 
@@ -36,8 +34,8 @@ FormGroup.propTypes = {
   label: T.string.isRequired,
   hideLabel: T.bool,
   className: T.string,
-  children: T.element.isRequired,
-  warnOnly: T.bool.isRequired,
+  children: T.node.isRequired,
+  warnOnly: T.bool,
   help: T.string,
   error: T.string,
   last: T.bool

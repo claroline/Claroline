@@ -24,8 +24,8 @@ const ColumnsButton = props =>
           className={classes('fa fa-fw fa-columns')}
         />
       }
-      bsStyle=""
-      className="btn btn-link-default"
+      bsStyle="link"
+      className="btn-link-default"
       noCaret={true}
       pullRight={true}
       onSelect={(e) => e.stopPropagation()}
@@ -69,8 +69,8 @@ const ListDisplayButton = props => {
         title={currentFormat[2] ?
           <span className={currentFormat[2]} /> : currentFormat[1]
         }
-        bsStyle=""
-        className="btn btn-link-default"
+        bsStyle="link"
+        className="btn-link-default"
         noCaret={true}
         pullRight={true}
       >
@@ -105,7 +105,7 @@ ListDisplayButton.propTypes = {
  */
 const ListActions = props =>
   <div className="list-actions">
-    {(props.columns && LIST_DISPLAY_LIST_VALUE === props.display.current) &&
+    {(props.columns && 1 < props.columns.available.length && LIST_DISPLAY_LIST_VALUE === props.display.current) &&
       <ColumnsButton
         {...props.columns}
       />
@@ -139,9 +139,11 @@ ListActions.propTypes = {
  */
 const ListHeader = props =>
   <div className="list-header">
-    <ListSearch
-      {...props.filters}
-    />
+    {props.filters &&
+      <ListSearch
+        {...props.filters}
+      />
+    }
 
     <ListActions
       display={props.display}

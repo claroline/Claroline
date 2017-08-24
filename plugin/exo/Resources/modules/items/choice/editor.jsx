@@ -137,16 +137,14 @@ const ChoiceItems = props =>
       )}
     </ul>
 
-    <div className="footer">
-      <button
-        type="button"
-        className="btn btn-default"
-        onClick={() => props.onChange(actions.addChoice())}
-      >
-        <span className="fa fa-fw fa-plus"/>
-        {tex('add_choice')}
-      </button>
-    </div>
+    <button
+      type="button"
+      className="btn btn-block btn-default"
+      onClick={() => props.onChange(actions.addChoice())}
+    >
+      <span className="fa fa-fw fa-plus"/>
+      {tex('add_choice')}
+    </button>
   </div>
 
 ChoiceItems.propTypes = {

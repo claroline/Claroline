@@ -33,6 +33,30 @@
     }
 }
 
+// todo : we may need a more specific namespacing
+.sub-fields {
+    // this is used to conditionally display fields on radio/checkbox check
+    // we align the displayed fields with the label of the radio/checkbox
+    // but there is no var in bootstrap for this
+    margin-left: 20px;
+}
+
+.checkbox-with-input,
+.radio-with-input {
+    line-height: 34px;
+    min-height: 40px;
+
+    .radio,
+    .checkbox {
+        display: inline-block;
+        margin: 0;
+    }
+
+    input[type=radio] {
+        margin-top: 10px;
+    }
+}
+
 // Fixes bootstrap that do not remove label font-weight like `.radio` and `.checkbox`
 // And so do not work as expected
 .radio-inline,

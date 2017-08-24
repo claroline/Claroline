@@ -52,6 +52,10 @@
 
   .step-footer {
     text-align: center;
+
+    .btn {
+      padding: @padding-large-vertical @padding-large-horizontal; // todo : should be a special class to be reused (eg Login btn)
+    }
   }
 
   .hint-items  {
@@ -60,16 +64,17 @@
       list-style-type: none;
       margin: 0;
     }
-
-    .footer {
-      text-align: center;
-    }
   }
 
   .hint-item {
     display: flex;
     align-items: flex-start;
-    margin-bottom: @form-group-margin-bottom;
+    background: @answer-item-bg;
+    border: 1px solid @answer-item-border;
+    padding: @answer-item-padding;
+    margin-bottom: @answer-item-margin-bottom;
+    .border-radius(@answer-item-border-radius);
+    .box-shadow(@answer-item-box-shadow);
 
     .btn {
       padding-left: 4px;
@@ -86,8 +91,11 @@
     margin: 0 floor(@grid-gutter-width / 2);
   }
 
+  .no-item-info,
   .no-hint-info {
     margin-bottom: @form-group-margin-bottom;
+    font-style: italic;
+    text-align: center;
   }
 
   .sub-section a[role="button"] .fa { // ugly selector
@@ -99,15 +107,14 @@
     cursor: not-allowed;
   }
 
-  .sub-fields {
-    // this is used to conditionally display fields on radio/checkbox check
-    // we align the displayed fields with the label of the radio/checkbox
-    // but there is no var in bootstrap for this
-    margin-left: 20px;
-  }
-
   .editor-panel-title {
     cursor: pointer;
+  }
+
+  .panel-title[aria-expanded=true] .item-icon {
+    color: @brand-primary;
+    fill: @brand-primary;
+    stroke: @brand-primary;
   }
 }
 

@@ -47,11 +47,13 @@
     {% spaceless %}
     <ul class="breadcrumb">
         {% for element in elements %}
-            <li{% if loop.last %} class="active"{% endif %}>
-                {% if not loop.last %}
-                    <a href="{{ element['href'] }}">{% if element['icon'] is defined %}<i class="{{ element['icon'] }}"></i> {% endif %}{{ element['name'] }}</a>
-                {% else %}<span>{{ element['name'] }}</span>{% endif %}
-            </li>
+        <li{% if loop.last %} class="active"{% endif %}>
+            {% if not loop.last %}
+            <a href="{{ element['href'] }}">{{ element['name'] }}</a>
+            {% else %}
+            <span>{{ element['name'] }}</span>
+            {% endif %}
+        </li>
         {% endfor %}
     </ul>
     {% endspaceless %}

@@ -183,16 +183,14 @@ const KeywordItems = props =>
       )}
     </ul>
 
-    <div className="footer">
-      <button
-        type="button"
-        className="btn btn-default"
-        onClick={props.addKeyword}
-      >
-        <span className="fa fa-fw fa-plus" />
-        {tex('words_add_word')}
-      </button>
-    </div>
+    <button
+      type="button"
+      className="add-keyword btn btn-block btn-default"
+      onClick={props.addKeyword}
+    >
+      <span className="fa fa-fw fa-plus" />
+      {tex('words_add_word')}
+    </button>
   </div>
 
 KeywordItems.propTypes = {

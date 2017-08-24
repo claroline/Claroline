@@ -4,6 +4,7 @@ import {BOOLEAN_TYPE,  booleanDefinition}  from '#/main/core/layout/data/types/b
 import {COLOR_TYPE,    colorDefinition}    from '#/main/core/layout/data/types/color'
 import {DATE_TYPE,     dateDefinition}     from '#/main/core/layout/data/types/date/index'
 import {DATETIME_TYPE, datetimeDefinition} from '#/main/core/layout/data/types/datetime'
+import {FLAG_TYPE,     flagDefinition}     from '#/main/core/layout/data/types/flag/index'
 import {HTML_TYPE,     htmlDefinition}     from '#/main/core/layout/data/types/html'
 import {NUMBER_TYPE,   numberDefinition}   from '#/main/core/layout/data/types/number'
 import {STRING_TYPE,   stringDefinition}   from '#/main/core/layout/data/types/string'
@@ -16,6 +17,7 @@ registerType(BOOLEAN_TYPE,  booleanDefinition)
 registerType(COLOR_TYPE,    colorDefinition)
 registerType(DATE_TYPE,     dateDefinition)
 registerType(DATETIME_TYPE, datetimeDefinition)
+registerType(FLAG_TYPE,     flagDefinition)
 registerType(HTML_TYPE,     htmlDefinition)
 registerType(NUMBER_TYPE,   numberDefinition)
 registerType(STRING_TYPE,   stringDefinition)

@@ -145,16 +145,14 @@ const Hints = props =>
       </ul>
     }
 
-    <div className="footer">
-      <button
-        type="button"
-        className="btn btn-default"
-        onClick={() => props.onChange(HINT_ADD, {})}
-      >
-        <span className="fa fa-fw fa-plus"/>
-        {tex('add_hint')}
-      </button>
-    </div>
+    <button
+      type="button"
+      className="btn btn-block btn-default"
+      onClick={() => props.onChange(HINT_ADD, {})}
+    >
+      <span className="fa fa-fw fa-plus"/>
+      {tex('add_hint')}
+    </button>
   </div>
 
 Hints.propTypes = {

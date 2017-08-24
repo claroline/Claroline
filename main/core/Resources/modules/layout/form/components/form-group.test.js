@@ -12,7 +12,10 @@ describe('<FormGroup/>', () => {
   afterEach(spyConsole.restore)
 
   it('has required props', () => {
-    shallow(<FormGroup/>)
+    shallow(
+      React.createElement(FormGroup)
+    )
+
     ensure.missingProps('FormGroup', [
       'controlId',
       'label',
@@ -22,14 +25,13 @@ describe('<FormGroup/>', () => {
 
   it('has typed props', () => {
     shallow(
-      <FormGroup
-        controlId={true}
-        label={123}
-        warnOnly="456"
-      >
-        {[]}
-      </FormGroup>
+      React.createElement(FormGroup, {
+        controlId: true,
+        label: 123,
+        warnOnly: '456'
+      }, {toto: true})
     )
+
     ensure.invalidProps('FormGroup', [
       'controlId',
       'label',
@@ -40,8 +42,8 @@ describe('<FormGroup/>', () => {
 
   it('renders a label and a given field', () => {
     const group = shallow(
-      <FormGroup controlId="ID" label="LABEL" warnOnly={false}>
-        <input id="ID" name="NAME" type="text" value="VALUE"/>
+      <FormGroup controlId='ID' label='LABEL' warnOnly={false}>
+        <input id='ID' name='NAME' type='text' value='VALUE'/>
       </FormGroup>
     )
     ensure.propTypesOk()
@@ -60,21 +62,22 @@ describe('<FormGroup/>', () => {
   })
 
   it('displays an help text if any', () => {
-    const group = shallow(
-      <FormGroup controlId="ID" label="LABEL" help="HELP" warnOnly={false}>
-        <input id="ID" name="NAME" type="text" value="VALUE"/>
+    const group = mount(
+      <FormGroup controlId='ID' label='LABEL' help='HELP'>
+        <input id='ID' name='NAME' type='text' value='VALUE' />
       </FormGroup>
     )
     ensure.propTypesOk()
-    ensure.equal(group.find('span#help-ID.help-block').text(), 'HELP')
+    ensure.equal(group.find('.help-block').text(), 'HELP')
   })
 
   it('displays an error if any', () => {
     const group = mount(
-      <FormGroup controlId="ID" label="LABEL" error="ERROR" warnOnly={false}>
-        <input id="ID" name="NAME" type="text" value="VALUE"/>
+      <FormGroup controlId='ID' label='LABEL' error='ERROR' warnOnly={false}>
+        <input id='ID' name='NAME' type='text' value='VALUE'/>
       </FormGroup>
     )
+
     ensure.propTypesOk()
     ensure.equal(group.find('.help-block').text(), 'ERROR')
   })

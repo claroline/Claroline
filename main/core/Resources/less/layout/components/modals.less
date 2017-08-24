@@ -1,6 +1,6 @@
 .modal-content {
     border-radius: @modal-content-border-radius;
-    box-shadow: @modal-content-box-shadow;
+    .box-shadow(@modal-content-box-shadow);
 }
 
 // better alignment in header
@@ -37,7 +37,7 @@
     display: block;
     width: 100%;
     padding: 10px @modal-inner-padding;
-    font-size: 16px;
+    .font-size-modifier(16px);
 }
 
 // customize nav tabs

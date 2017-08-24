@@ -278,7 +278,7 @@ describe('<Words/>', () => {
     ensure.equal(updatedValue.property, 'score')
 
     // @TODO find a way to test that the click action result in a new form-row
-    const addBtn = form.find('.footer .btn')
+    const addBtn = form.find('.add-keyword')
     ensure.equal(addBtn.length, 1, 'has add button')
     addBtn.simulate('click')
   })
