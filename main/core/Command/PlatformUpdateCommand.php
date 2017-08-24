@@ -51,19 +51,19 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         );
         $this->addOption(
             'no_asset',
-            'na',
+            'a',
             InputOption::VALUE_NONE,
             'When set to true, assetic:dump and assets:install isn\'t execute'
         );
         $this->addOption(
             'create_database',
-            'cd',
+            'd',
             InputOption::VALUE_NONE,
             'When set to true, the create database is not executed'
         );
         $this->addOption(
             'clear_cache',
-            'cc',
+            'c',
             InputOption::VALUE_NONE,
             'When set to true, the cache is cleared at the end'
         );
@@ -90,10 +90,19 @@ class PlatformUpdateCommand extends ContainerAwareCommand
         $installer = $this->getContainer()->get('claroline.installation.platform_installer');
         $installer->setOutput($output);
         $installer->setLogger($consoleLogger);
+        $versionManager = $this->getContainer()->get('claroline.manager.version_manager');
 
-        $from = $input->getArgument('from_version');
-        $to = $input->getArgument('to_version');
-
+        if ($input->getArgument('from_version') && $input->getArgument('to_version')) {
+            $from = $input->getArgument('from_version');
+            $to = $input->getArgument('to_version');
+        } else {
+            try {
+                $from = $versionManager->getLatestUpgraded('ClarolineCoreBundle');
+                $to = $versionManager->getCurrent();
+            } catch (Exception $e) {
+                $from = null;
+            }
+        }
         if ($from && $to) {
             $installer->updateAll($from, $to);
         } else {
