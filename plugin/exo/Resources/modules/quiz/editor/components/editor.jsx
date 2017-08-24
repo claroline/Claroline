@@ -63,6 +63,7 @@ function selectSubEditor(props) {
           handleItemMove={props.moveItem}
           handleItemCreate={props.createItem}
           handleMoveQuestionStepClick={props.moveQuestionStep}
+          handleDuplicateQuestionSubmit={props.duplicateQuestion}
           handleItemUpdate={props.updateItem}
           handleItemHintsUpdate={props.updateItemHints}
           handleItemDetailUpdate={props.updateItemDetail}
@@ -104,6 +105,7 @@ selectSubEditor.propTypes = {
   updateContentItem: T.func.isRequired,
   updateContentItemDetail: T.func.isRequired,
   moveQuestionStep: T.func.isRequired,
+  duplicateQuestion: T.func.isRequired,
   saveContentItemFile: T.func,
   showModal: T.func.isRequired,
   fadeModal: T.func.isRequired

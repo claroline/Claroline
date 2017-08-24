@@ -1,5 +1,6 @@
 import invariant from 'invariant'
 import select from './selectors'
+import times from 'lodash/times'
 import {makeActionCreator} from '#/main/core/utilities/redux'
 import {makeId} from './../../utils/utils'
 import {REQUEST_SEND} from './../../api/actions'
@@ -16,6 +17,7 @@ export const ITEM_MOVE = 'ITEM_MOVE'
 export const ITEM_HINTS_UPDATE = 'ITEM_HINTS_UPDATE'
 export const ITEM_DETAIL_UPDATE = 'ITEM_DETAIL_UPDATE'
 export const ITEMS_IMPORT = 'ITEMS_IMPORT'
+export const ITEM_DUPLICATE = 'ITEM_DUPLICATE'
 export const OBJECT_NEXT = 'OBJECT_NEXT'
 export const OBJECT_SELECT = 'OBJECT_SELECT'
 export const PANEL_QUIZ_SELECT = 'PANEL_QUIZ_SELECT'
@@ -52,6 +54,7 @@ export const quizChangeActions = [
   ITEM_MOVE,
   ITEM_HINTS_UPDATE,
   ITEM_DETAIL_UPDATE,
+  ITEM_DUPLICATE,
   ITEMS_IMPORT,
   STEP_CREATE,
   STEP_MOVE,
@@ -106,6 +109,19 @@ actions.createItem = (stepId, type) => {
     id: makeId(),
     stepId,
     itemType: type
+  }
+}
+
+actions.duplicateQuestion = (amount, itemId, stepId) => {
+  const ids = []
+
+  times(amount, () => ids.push(makeId()))
+
+  return {
+    type: ITEM_DUPLICATE,
+    ids,
+    itemId,
+    stepId
   }
 }
 

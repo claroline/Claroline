@@ -485,7 +485,7 @@
     "question": "Question",
     "questions": "Questions",
     "question_delete": "Delete",
-    "question_duplicate": "Duplicate",
+    "ITEM_DUPLICATE": "Duplicate",
     "question_edit": "Edit",
     "question_export": "Export",
     "question_graphic_nb_pointers": "{0} There is no more pointer to place on the picture.|{1} There is still %count% pointer to place on the picture.|]1,Inf[ There are still %count% pointers to place on the picture.",
@@ -678,5 +678,7 @@
     "make_mandatory_questions": "Make questions mandatory",
     "mandatory_answer": "Mandatory answer",
     "make_optional": "Make optional",
-    "mandatory_questions": "Mandatory answers to questions"
+    "mandatory_questions": "Mandatory answers to questions",
+    "duplicate_question": "Duplicate a question",
+    "amount": "Quantity"
 }

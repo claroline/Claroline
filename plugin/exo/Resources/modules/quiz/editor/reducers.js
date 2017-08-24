@@ -3,6 +3,7 @@ import merge from 'lodash/merge'
 import set from 'lodash/set'
 import sanitize from './sanitizers'
 import validate from './validators'
+import cloneDeep from 'lodash/cloneDeep'
 import {decorateItem} from './../decorators'
 import {getIndex, makeId, makeItemPanelKey, update} from './../../utils/utils'
 import {getDefinition} from './../../items/item-types'
@@ -23,6 +24,7 @@ import {
   ITEM_UPDATE,
   ITEM_MOVE,
   QUESTION_MOVE,
+  ITEM_DUPLICATE,
   ITEM_HINTS_UPDATE,
   ITEM_DETAIL_UPDATE,
   ITEMS_IMPORT,
@@ -151,6 +153,13 @@ function reduceSteps(steps = {}, action = {}) {
       const index = getIndex(steps[action.stepId].items, action.id)
       return update(steps, {[action.stepId]: {items: {$splice: [[index, 1]]}}})
     }
+    case ITEM_DUPLICATE: {
+      action.ids.forEach(id => {
+        steps = update(steps, {[action.stepId]: {items: {$push: [id]}}})
+      })
+
+      return steps
+    }
     case ITEM_MOVE: {
       const index = getIndex(steps[action.stepId].items, action.id)
       const swapIndex = getIndex(steps[action.stepId].items, action.swapId)
@@ -193,6 +202,16 @@ function reduceItems(items = {}, action = {}) {
       newItem = Object.assign({}, newItem, {_errors: errors})
 
       return update(items, {[action.id]: {$set: newItem}})
+    }
+    case ITEM_DUPLICATE: {
+      action.ids.forEach(id => {
+        let newItem = cloneDeep(items[action.itemId])
+        newItem.id = id
+        newItem._errors = validate.item(newItem)
+        items = update(items, {[id]: {$set: newItem}})
+      })
+
+      return items
     }
     case ITEM_DELETE:
       return update(items, {$delete: action.id})

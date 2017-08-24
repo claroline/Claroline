@@ -484,7 +484,7 @@
     "question": "Question",
     "questions": "Questions",
     "question_delete": "Supprimer",
-    "question_duplicate": "Dupliquer",
+    "ITEM_DUPLICATE": "Dupliquer",
     "question_edit": "Modifier",
     "question_export": "Exporter",
     "question_graphic_nb_pointers": "{0} Il ne reste plus aucun pointeur à placer sur l'image.|{1} Il reste %count% pointeur à placer sur l'image.|]1,Inf[ Il reste %count% pointeurs à placer sur l'image.",
@@ -678,5 +678,7 @@
     "make_mandatory_questions": "Rendre les questions obligatoires",
     "mandatory_answer": "Réponse requise",
     "make_optional": "Rendre optionnel",
-    "mandatory_questions": "Réponse aux questions obligatoires"
+    "mandatory_questions": "Réponse aux questions obligatoires",
+    "duplicate_question": "Dupliquer une question",
+    "amount": "Quantité"
 }

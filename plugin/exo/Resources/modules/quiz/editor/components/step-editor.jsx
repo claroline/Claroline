@@ -17,6 +17,7 @@ import {MODAL_ADD_ITEM} from './../components/add-item-modal.jsx'
 import {MODAL_IMPORT_ITEMS} from './../components/import-items-modal.jsx'
 import {MODAL_ADD_CONTENT} from './../components/add-content-modal.jsx'
 import {MODAL_MOVE_QUESTION} from './../components/move-question-modal.jsx'
+import {MODAL_DUPLICATE_QUESTION} from './../components/duplicate-question-modal.jsx'
 import {Icon as ItemIcon} from './../../../items/components/icon.jsx'
 import {ValidationStatus} from './validation-status.jsx'
 import {StepForm} from './step-form.jsx'
@@ -102,6 +103,33 @@ const ItemActions = props =>
       </button>
     </OverlayTrigger>
 
+    <OverlayTrigger
+      placement="left"
+      overlay={
+        <Tooltip id={`item-panel-${props.itemId}-duplicate`}>
+          {tex('duplicate')}
+        </Tooltip>
+      }
+    >
+      <button
+        type="button"
+        className="btn btn-link-default"
+        onClick={e => {
+          e.stopPropagation()
+          props.showModal(MODAL_DUPLICATE_QUESTION, {
+            title: tex('duplicate_question'),
+            question: tex('blablabla'),
+            itemId: props.itemId,
+            stepId: props.stepId,
+            handleSubmit: props.handleDuplicateQuestionSubmit
+          })
+        }}
+      >
+        <span className="fa fa-fw fa-clone" />
+      </button>
+    </OverlayTrigger>
+
+
     {props.connectDragSource(
       <span>
         <OverlayTrigger
@@ -133,7 +161,8 @@ ItemActions.propTypes = {
   handleItemDeleteClick: T.func.isRequired,
   showModal: T.func.isRequired,
   connectDragSource: T.func.isRequired,
-  handleMoveQuestionStepClick: T.func.isRequired
+  handleMoveQuestionStepClick: T.func.isRequired,
+  handleDuplicateQuestionSubmit: T.func.isRequired
 }
 
 const ItemHeader = props =>
@@ -159,6 +188,7 @@ const ItemHeader = props =>
       validating={props.validating}
       handleMoveQuestionStepClick={props.handleMoveQuestionStepClick}
       handleItemDeleteClick={props.handleItemDeleteClick}
+      handleDuplicateQuestionSubmit={props.handleDuplicateQuestionSubmit}
       showModal={props.showModal}
       connectDragSource={props.connectDragSource}
     />
@@ -171,6 +201,7 @@ ItemHeader.propTypes = {
   handlePanelClick: T.func.isRequired,
   handleItemDeleteClick: T.func.isRequired,
   handleMoveQuestionStepClick: T.func.isRequired,
+  handleDuplicateQuestionSubmit: T.func.isRequired,
   showModal: T.func.isRequired,
   hasErrors: T.bool.isRequired,
   validating: T.bool.isRequired,
@@ -200,6 +231,7 @@ class ItemPanel extends Component {
                 handlePanelClick={this.props.handlePanelClick}
                 handleItemDeleteClick={this.props.handleItemDeleteClick}
                 handleMoveQuestionStepClick={this.props.handleMoveQuestionStepClick}
+                handleDuplicateQuestionSubmit={this.props.handleDuplicateQuestionSubmit}
                 showModal={this.props.showModal}
                 connectDragSource={this.props.connectDragSource}
                 hasErrors={!isEmpty(this.props.item._errors)}
@@ -256,6 +288,7 @@ ItemPanel.propTypes = {
   handleMoveQuestionStepClick: T.func.isRequired,
   handleItemDetailUpdate: T.func.isRequired,
   handleItemHintsUpdate: T.func.isRequired,
+  handleDuplicateQuestionSubmit: T.func.isRequired,
   showModal: T.func.isRequired,
   closeModal: T.func.isRequired,
   connectDragSource: T.func.isRequired,
@@ -607,6 +640,7 @@ StepEditor.propTypes = {
   handlePanelClick: T.func.isRequired,
   handleItemDeleteClick: T.func.isRequired,
   handleMoveQuestionStepClick: T.func.isRequired,
+  handleDuplicateQuestionSubmit: T.func.isRequired,
   handleItemMove: T.func.isRequired,
   handleItemCreate: T.func.isRequired,
   handleItemUpdate: T.func.isRequired,

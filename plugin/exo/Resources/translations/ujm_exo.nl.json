@@ -406,7 +406,7 @@
     "qti_xml_not_found": "XML-schema niet gevonden",
     "question": "Vraag",
     "question_delete": "Verwijderen",
-    "question_duplicate": "Dupliceren",
+    "ITEM_DUPLICATE": "Dupliceren",
     "question_edit": "Bewerken",
     "question_export": "Uitvoeren",
     "question_graphic_nb_pointers": "{0} Er is geen pointer meer op de foto te plaatsen.|{1} Er is nog %count% pointer op de foto te plaatsen.|]1,Inf[Er zijn nog steeds %count% pointers op de foto te plaatsen.",

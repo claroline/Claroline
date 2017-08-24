@@ -17,6 +17,7 @@ import {MODAL_IMPORT_ITEMS, ImportItemsModal} from './editor/components/import-i
 import {MODAL_ADD_CONTENT, AddContentModal} from './editor/components/add-content-modal.jsx'
 import {MODAL_CONTENT, ContentModal} from './../contents/components/content-modal.jsx'
 import {MODAL_MOVE_QUESTION, MoveQuestionModal} from './editor/components/move-question-modal.jsx'
+import {MODAL_DUPLICATE_QUESTION, DuplicateQuestionModal} from './editor/components/duplicate-question-modal.jsx'
 
 export class Quiz {
   constructor(rawQuizData, rawResourceNodeData, noServer = false) {
@@ -29,7 +30,8 @@ export class Quiz {
       [MODAL_IMPORT_ITEMS, ImportItemsModal],
       [MODAL_ADD_CONTENT, AddContentModal],
       [MODAL_CONTENT, ContentModal],
-      [MODAL_MOVE_QUESTION, MoveQuestionModal]
+      [MODAL_MOVE_QUESTION, MoveQuestionModal],
+      [MODAL_DUPLICATE_QUESTION, DuplicateQuestionModal]
     ])
 
     const quizData = decorate(normalize(rawQuizData), getDecorators(), rawResourceNodeData.rights.current.edit)
