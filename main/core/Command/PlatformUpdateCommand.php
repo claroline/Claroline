@@ -21,6 +21,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -48,15 +49,35 @@ class PlatformUpdateCommand extends ContainerAwareCommand
                 new InputArgument('to_version', InputArgument::OPTIONAL, 'to version'),
             ]
         );
+        $this->addOption(
+            'no_asset',
+            'na',
+            InputOption::VALUE_NONE,
+            'When set to true, assetic:dump and assets:install isn\'t execute'
+        );
+        $this->addOption(
+            'create_database',
+            'cd',
+            InputOption::VALUE_NONE,
+            'When set to true, the create database is not executed'
+        );
+        $this->addOption(
+            'clear_cache',
+            'cc',
+            InputOption::VALUE_NONE,
+            'When set to true, the cache is cleared at the end'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln(sprintf('<comment>%s - Updating the platform...</comment>', date('H:i:s')));
 
-        $databaseCreator = new CreateDatabaseDoctrineCommand();
-        $databaseCreator->setContainer($this->getContainer());
-        $databaseCreator->run(new ArrayInput([]), $output);
+        if (!$input->getOption('create_database')) {
+            $databaseCreator = new CreateDatabaseDoctrineCommand();
+            $databaseCreator->setContainer($this->getContainer());
+            $databaseCreator->run(new ArrayInput([]), $output);
+        }
 
         $verbosityLevelMap = [
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
@@ -79,10 +100,17 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             $installer->updateFromComposerInfo();
         }
 
-        /** @var \Claroline\CoreBundle\Library\Installation\Refresher $refresher */
-        $refresher = $this->getContainer()->get('claroline.installation.refresher');
+        if (!$input->getOption('no_asset')) {
+            /** @var \Claroline\CoreBundle\Library\Installation\Refresher $refresher */
+            $refresher = $this->getContainer()->get('claroline.installation.refresher');
+            $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
+        }
 
-        $refresher->dumpAssets($this->getContainer()->getParameter('kernel.environment'));
+        if ($input->getOption('clear_cache')) {
+            /** @var \Claroline\CoreBundle\Library\Installation\Refresher $refresher */
+            $refresher = $this->getContainer()->get('claroline.installation.refresher');
+            $refresher->clearCache($this->getContainer()->getParameter('kernel.environment'));
+        }
 
         MaintenanceHandler::disableMaintenance();
 
