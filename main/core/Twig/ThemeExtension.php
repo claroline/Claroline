@@ -89,12 +89,19 @@ class ThemeExtension extends \Twig_Extension
         $assets = $this->getThemeAssets();
 
         if (!isset($assets[$themeName]) || !isset($assets[$themeName][$path])) {
-            $assetNames = implode("\n", array_keys($assets));
+            // selected theme can not be found, fall back to default theme
+            $defaultTheme = $this->themeManager->getDefaultTheme();
+            $themeName = $defaultTheme->getNormalizedName();
 
-            throw new \Exception(
-                "Cannot find asset '{$path}' for theme '{$themeName}' ".
-                "in theme build. Found:\n{$assetNames})"
-            );
+            if (!isset($assets[$themeName]) || !isset($assets[$themeName][$path])) {
+                // default theme not found too, this time we can not do anything
+                $assetNames = implode("\n", array_keys($assets));
+
+                throw new \Exception(
+                    "Cannot find asset '{$path}' for theme '{$themeName}' ".
+                    "in theme build. Found:\n{$assetNames})"
+                );
+            }
         }
 
         return $this->assetExtension->getAssetUrl(

@@ -145,6 +145,18 @@ class ThemeManager
     }
 
     /**
+     * Returns the default platform theme
+     * (for now, the first stock theme defined).
+     *
+     * @return Theme
+     */
+    public function getDefaultTheme()
+    {
+        return $this->om->getRepository('ClarolineCoreBundle:Theme\Theme')
+            ->findOneBy(['name' => static::$stockThemes[0]]);
+    }
+
+    /**
      * Creates a custom theme based on a css file.
      *
      * @param string $name
@@ -191,6 +203,6 @@ class ThemeManager
 
     public static function listStockThemesName()
     {
-        return self::$stockThemes;
+        return static::$stockThemes;
     }
 }
