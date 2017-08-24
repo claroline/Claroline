@@ -1409,5 +1409,10 @@
     "your_username": "Your username is",
     "your_workspace_activity_overview": "Overview of recent activities in your workspaces",
     "geolocate": "Geolocate",
-    "widget_no_content": "This widget has no content for now."
+    "widget_no_content": "This widget has no content for now.",
+    "access_code": "Access code",
+    "allow_ip_filtering": "Allow IP filtering",
+    "add_filter": "Add filter",
+    "remove_all_filter": "Remove all filters",
+    "unlock_resource_explanation": "This resource is password protected. You must enter it to access the resource."
 }

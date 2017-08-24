@@ -92,7 +92,8 @@ class TreeNode extends Component {
                 />
               }
               {this.props.options.selectable &&
-                <input type='checkbox'
+                <input
+                  type='checkbox'
                   defaultChecked={this.isChecked(el)}
                   name={this.props.options.name + '[]'} value={el.id}
                   onChange={() => this.props.onChange(el)}

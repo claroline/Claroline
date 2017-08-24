@@ -11,7 +11,9 @@
 
 namespace Claroline\CoreBundle\Twig;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -25,19 +27,22 @@ class ResourceExtension extends \Twig_Extension
      * @var ResourceManager
      */
     private $resourceManager;
+    private $resourceNodeManager;
 
     /**
      * ResourceExtension constructor.
      *
      * @DI\InjectParams({
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager")
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
+     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node")
      * })
      *
      * @param ResourceManager $resourceManager
      */
-    public function __construct(ResourceManager $resourceManager)
+    public function __construct(ResourceNodeManager $resourceNodeManager, ResourceManager $resourceManager)
     {
         $this->resourceManager = $resourceManager;
+        $this->resourceNodeManager = $resourceNodeManager;
     }
 
     public function getName()
@@ -50,12 +55,24 @@ class ResourceExtension extends \Twig_Extension
         return [
             'isMenuActionImplemented' => new \Twig_Function_Method($this, 'isMenuActionImplemented'),
             'getCurrentUrl' => new \Twig_Function_Method($this, 'getCurrentUrl'),
+            'isCodeProtected' => new \Twig_Function_Method($this, 'isCodeProtected'),
+            'requiresUnlock' => new \Twig_Function_Method($this, 'requiresUnlock'),
         ];
     }
 
     public function isMenuActionImplemented(ResourceType $resourceType = null, $menuName)
     {
         return $this->resourceManager->isResourceActionImplemented($resourceType, $menuName);
+    }
+
+    public function isCodeProtected(ResourceNode $resourceNode)
+    {
+        return $this->resourceNodeManager->isCodeProtected($resourceNode);
+    }
+
+    public function requiresUnlock(ResourceNode $resourceNode)
+    {
+        return $this->resourceNodeManager->requiresUnlock($resourceNode);
     }
 
     public function getCurrentUrl()

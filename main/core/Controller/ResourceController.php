@@ -16,13 +16,16 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Form\ImportResourcesType;
+use Claroline\CoreBundle\Form\Resource\UnlockType;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
 use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundExcetion;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Manager\MaskManager;
+use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
@@ -36,6 +39,7 @@ use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -50,6 +54,7 @@ class ResourceController extends Controller
     private $tokenStorage;
     private $authorization;
     private $resourceManager;
+    private $resourceNodeManager;
     private $rightsManager;
     private $roleManager;
     private $translator;
@@ -66,22 +71,23 @@ class ResourceController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "maskManager"     = @DI\Inject("claroline.manager.mask_manager"),
-     *     "rightsManager"   = @DI\Inject("claroline.manager.rights_manager"),
-     *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
-     *     "translator"      = @DI\Inject("translator"),
-     *     "request"         = @DI\Inject("request"),
-     *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "templating"      = @DI\Inject("templating"),
-     *     "logManager"      = @DI\Inject("claroline.log.manager"),
-     *     "fileManager"     = @DI\Inject("claroline.manager.file_manager"),
-     *     "transferManager" = @DI\Inject("claroline.manager.transfer_manager"),
-     *     "formFactory"     = @DI\Inject("form.factory"),
-     *     "userManager"     = @DI\Inject("claroline.manager.user_manager"),
-     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
+     *     "authorization"       = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"        = @DI\Inject("security.token_storage"),
+     *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
+     *     "maskManager"         = @DI\Inject("claroline.manager.mask_manager"),
+     *     "rightsManager"       = @DI\Inject("claroline.manager.rights_manager"),
+     *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
+     *     "translator"          = @DI\Inject("translator"),
+     *     "request"             = @DI\Inject("request"),
+     *     "dispatcher"          = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "templating"          = @DI\Inject("templating"),
+     *     "logManager"          = @DI\Inject("claroline.log.manager"),
+     *     "fileManager"         = @DI\Inject("claroline.manager.file_manager"),
+     *     "transferManager"     = @DI\Inject("claroline.manager.transfer_manager"),
+     *     "formFactory"         = @DI\Inject("form.factory"),
+     *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
+     *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
+     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node")
      * })
      */
     public function __construct(
@@ -100,7 +106,8 @@ class ResourceController extends Controller
         TransferManager $transferManager,
         FormFactory $formFactory,
         UserManager $userManager,
-        EventDispatcherInterface $eventDispatcher
+        EventDispatcherInterface $eventDispatcher,
+        ResourceNodeManager $resourceNodeManager
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -118,6 +125,7 @@ class ResourceController extends Controller
         $this->formFactory = $formFactory;
         $this->userManager = $userManager;
         $this->eventDispatcher = $eventDispatcher;
+        $this->resourceNodeManager = $resourceNodeManager;
     }
 
     /**
@@ -213,11 +221,13 @@ class ResourceController extends Controller
                     );
 
                     $nodesArray[] = $this->resourceManager->toArray(
-                        $createdResource->getResourceNode(), $this->tokenStorage->getToken()
+                        $createdResource->getResourceNode(),
+                        $this->tokenStorage->getToken()
                     );
                 } else {
                     $nodesArray[] = $this->resourceManager->toArray(
-                        $resource->getResourceNode(), $this->tokenStorage->getToken()
+                        $resource->getResourceNode(),
+                        $this->tokenStorage->getToken()
                     );
                 }
             }
@@ -1140,7 +1150,7 @@ class ResourceController extends Controller
     public function checkAccess($permission, ResourceCollection $collection)
     {
         if (!$this->authorization->isGranted($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+            throw new ResourceAccessException($collection->getErrorsForDisplay(), $collection->getResources());
         }
     }
 
@@ -1318,6 +1328,39 @@ class ResourceController extends Controller
         }
 
         return new Response(200);
+    }
+
+    //this method is not routed and called from the Resource/layout.html.twig file
+    /**
+     * @EXT\Template("ClarolineCoreBundle:Resource:unlockCodeForm.html.twig")
+     */
+    public function unlockCodeFormAction(ResourceNode $node)
+    {
+        $form = $this->formFactory->create(new UnlockType());
+
+        return ['form' => $form->createView(), 'node' => $node];
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/resource/{node}/unlock",
+     *     name="claro_resource_form_unlock",
+     *     options={"expose"=true}
+     * )
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function unlockCodeAction(ResourceNode $node)
+    {
+        $form = $this->formFactory->create(new UnlockType());
+        $form->handleRequest($this->request);
+
+        if ($form->isValid()) {
+            $code = $form->get('code')->getData();
+            $this->resourceNodeManager->unlock($node, $code);
+        }
+
+        return new RedirectResponse($this->container->get('router')->generate('claro_resource_open_short', ['node' => $node->getId()]));
     }
 
     private function isUsurpatingWorkspaceRole(TokenInterface $token)

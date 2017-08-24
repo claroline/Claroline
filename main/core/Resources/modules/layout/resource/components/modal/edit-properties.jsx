@@ -15,6 +15,7 @@ import {FormSections} from '#/main/core/layout/form/components/form-sections.jsx
 import {FormGroup}    from '#/main/core/layout/form/components/form-group.jsx'
 import {Textarea}     from '#/main/core/layout/form/components/textarea.jsx'
 import {DatePicker}   from '#/main/core/layout/form/components/date-picker.jsx'
+import {IpSetter}     from '#/main/core/layout/form/components/ip-setter.jsx'
 import {validate}     from '#/main/core/layout/resource/validator'
 import {closeTargets} from '#/main/core/layout/resource/enums'
 
@@ -114,6 +115,52 @@ AccessibilityDatesPanel.propTypes = {
   updateParameter: T.func.isRequired,
   validating: T.bool.isRequired,
   errors: T.object
+}
+
+const AccessesPanel = (props) =>
+  <fieldset>
+    <FormGroup
+      controlId="access-code"
+      label={t('access_code')}
+    >
+      <input
+        id="access-code"
+        type="password"
+        className="form-control"
+        value={props.meta.accesses.code}
+        onChange={(e) => props.updateParameter('meta.accesses.code', e.target.value)}
+      />
+    </FormGroup>
+    <div className="checkbox">
+      <label htmlFor="allow-ip-filtering">
+        <input
+          id="allow-ip-filtering"
+          type="checkbox"
+          checked={props.meta.accesses.ip.activateFilters}
+          onChange={() => props.updateParameter('meta.accesses.ip.activateFilters', !props.meta.accesses.ip.activateFilters)}
+        />
+      {t('allow_ip_filtering')}
+      </label>
+    </div>
+    {props.meta.accesses.ip.activateFilters &&
+      <IpSetter
+        ips={props.meta.accesses.ip.ips}
+        onChange={(ips) => props.updateParameter('meta.accesses.ip.ips', ips)}
+      />
+    }
+  </fieldset>
+
+AccessesPanel.propTypes = {
+  meta: T.shape({
+    accesses: T.shape({
+      ip: T.shape({
+        ips: T.array,
+        activateFilters: T.bool
+      }),
+      code: T.string
+    })
+  }).isRequired,
+  updateParameter: T.func.isRequired
 }
 
 const DisplayPanel = props =>
@@ -236,6 +283,7 @@ class EditPropertiesModal extends Component {
     this.setState((prevState) => {
       const newNode = cloneDeep(prevState.resourceNode)
       set(newNode, parameter, value)
+      //newNode = prevState.resourceNode
 
       return {
         resourceNode: newNode,
@@ -287,7 +335,6 @@ class EditPropertiesModal extends Component {
             />
           </FormGroup>
         </Modal.Body>
-
         <FormSections
           sections={[
             {
@@ -330,10 +377,19 @@ class EditPropertiesModal extends Component {
                 validating={this.state.validating}
                 errors={this.state.errors}
               />
+            }, {
+              id: 'resource-ip-accesses',
+              icon: 'fa-laptop',
+              label: t('Accesses'),
+              children: <AccessesPanel
+                meta={this.state.resourceNode.meta}
+                updateParameter={this.updateProperty.bind(this)}
+                validating={this.state.validating}
+                errors={this.state.errors}
+              />
             }
           ]}
         />
-
         <button
           className="modal-btn btn btn-primary"
           disabled={!this.state.pendingChanges || (this.state.validating && !isEmpty(this.state.errors))}

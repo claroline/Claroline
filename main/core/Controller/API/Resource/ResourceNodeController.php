@@ -38,8 +38,8 @@ class ResourceNodeController
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ResourceNodeManager $resourceNodeManager)
-    {
+        ResourceNodeManager $resourceNodeManager
+    ) {
         $this->authorization = $authorization;
         $this->resourceNodeManager = $resourceNodeManager;
     }
@@ -155,6 +155,21 @@ class ResourceNodeController
         $this->resourceNodeManager->delete($resourceNode);
 
         return new JsonResponse(null, 204);
+    }
+
+    /**
+     * Deletes a resource node.
+     *
+     * @EXT\Route("/unlock/{code}", name="claro_resource_unlock")
+     * @EXT\Method("POST")
+     *
+     * @param ResourceNode $resourceNode
+     *
+     * @return JsonResponse
+     */
+    public function unlock(ResourceNode $resourceNode, $code)
+    {
+        return new JsonResponse($this->resourceNodeManager->unlock($resourceNode, $code));
     }
 
     private function assertHasPermission($permission, ResourceNode $resourceNode)

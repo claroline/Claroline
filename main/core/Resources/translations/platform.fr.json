@@ -1429,5 +1429,10 @@
     "ssl_enabled": "Activer SSL ?",
     "visible_facet_form_explanation": "Le champ \"Visible\" vous permet de rendre l'élément visible ou non pour l'utilisateur.",
     "geolocate": "Géolocaliser",
-    "widget_no_content": "Ce widget n'a aucun contenu pour l'instant."
+    "widget_no_content": "Ce widget n'a aucun contenu pour l'instant.",
+    "access_code": "Code d'accès",
+    "allow_ip_filtering": "Activer le filtrage par IP",
+    "add_filter": "Ajouter un filtre",
+    "remove_all_filter": "Retirer tous les filtres",
+    "unlock_resource_explanation": "Cette ressource est protégée par mot de passe. Veuillez entrer ce dernier pour la débloquer."
 }

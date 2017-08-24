@@ -1,12 +1,7 @@
 {% extends "ClarolineCoreBundle:Resource:layout.html.twig" %}
 
 {% block resource_content %}
-    <div
-        class="page-container image-container"
-        data-image="{{ _resource | api_serialize | json_encode | raw | escape }}"
-        data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
-    >
-    </div>
+      {% render(controller('ClarolineCoreBundle:Resource:unlockCodeFormAction', {'node': node.getId()})) %}
 {% endblock %}
 
 {% block javascripts %}

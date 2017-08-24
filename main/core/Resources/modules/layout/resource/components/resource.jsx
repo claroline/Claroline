@@ -15,7 +15,7 @@ class Resource extends Component {
     // register modals
     registerModalTypes([
       [MODAL_RESOURCE_PROPERTIES, EditPropertiesModal],
-      [MODAL_RESOURCE_RIGHTS,     EditRightsModal]
+      [MODAL_RESOURCE_RIGHTS, EditRightsModal]
     ])
 
     // open resource in fullscreen if configured

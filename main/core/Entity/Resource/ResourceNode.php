@@ -301,6 +301,11 @@ class ResourceNode
      */
     protected $closeTarget = 0;
 
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    protected $accesses = [];
+
     public function __construct()
     {
         $this->guid = Uuid::uuid4()->toString();
@@ -927,5 +932,57 @@ class ResourceNode
     public function setCloseTarget($closeTarget)
     {
         $this->closeTarget = $closeTarget;
+    }
+
+    public function setAllowedIps($ips)
+    {
+        $this->accesses['ips'] = $ips;
+    }
+
+    public function getAllowedIps()
+    {
+        return $this->accesses['ips'];
+    }
+
+    public function getAccesses()
+    {
+        //todo
+        //maybe remove the code from the front end
+        if (!$this->accesses) {
+            return $this->getDefaultAccesses();
+        }
+
+        return $this->accesses;
+    }
+
+    public function setAccesses($accesses)
+    {
+        $this->accesses = $accesses;
+    }
+
+    public function getDefaultAccesses()
+    {
+        return [
+            'ip' => [
+                'ips' => [],
+                'activateFilters' => false,
+            ],
+            'code' => null,
+        ];
+    }
+
+    public function getIPData()
+    {
+        return $this->getAccesses()['ip'];
+    }
+
+    public function getAccessCode()
+    {
+        if (
+          !empty($this->getAccesses()['code']) &&
+          trim($this->getAccesses()['code'], ' ') !== ''
+        ) {
+            return $this->getAccesses()['code'];
+        }
     }
 }
