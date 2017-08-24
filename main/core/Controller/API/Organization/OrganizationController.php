@@ -96,7 +96,7 @@ class OrganizationController extends FOSRestController
         return $this->get('claroline.API.finder')->search(
             'Claroline\CoreBundle\Entity\Organization\Organization',
             0,
-            10,
+            null,
             ['filters' => ['parent' => null]],
             ['recursive' => true]
         )['results'];

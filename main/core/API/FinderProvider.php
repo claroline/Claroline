@@ -86,7 +86,7 @@ class FinderProvider
         return $this->finders[$class];
     }
 
-    public function search($class, $page = 0, $limit = -1, array $searches = [], array $serializerOptions = [])
+    public function search($class, $page = 0, $limit = null, array $searches = [], array $serializerOptions = [])
     {
         $filters = isset($searches['filters']) ? $searches['filters'] : [];
         $sortBy = $this->decodeSortBy(isset($searches['sortBy']) ? $searches['sortBy'] : null);
@@ -124,7 +124,6 @@ class FinderProvider
                 $qb->orderBy('obj.'.$sortBy['property'], 1 === $sortBy['property'] ? 'ASC' : 'DESC');
             }
 
-            // limit query
             if (!$count && 0 < $limit) {
                 $qb->setFirstResult($page * $limit);
                 $qb->setMaxResults($limit);
