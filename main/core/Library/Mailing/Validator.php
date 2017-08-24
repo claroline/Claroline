@@ -24,6 +24,13 @@ class Validator
     const INVALID_ENCRYPTION = 'invalid_encryption';
     const INVALID_AUTH_MODE = 'invalid_auth_mode';
 
+    public function checkIsPositiveNumber($value)
+    {
+        if (!is_numeric($value) || (int) $value < 0) {
+            return static::NUMBER_EXPECTED;
+        }
+    }
+
     public function checkIsNotBlank($value)
     {
         if (empty($value)) {
