@@ -441,7 +441,11 @@ class ResourceVoter implements VoterInterface
 
     public function isAdmin($object)
     {
-        $nodes = $object instanceof AbstractResource ? [$object->getResourceNode()] : $object->getResources();
+	if ($object instanceof ResourceNode) {
+	    $nodes = [$object];
+	} else {
+            $nodes = $object instanceof AbstractResource ? [$object->getResourceNode()] : $object->getResources();
+	}
 
         foreach ($nodes as $node) {
             if (!$this->rightsManager->isManager($node)) {
