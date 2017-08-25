@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 import {copyToClipboard} from '#/main/core/copy-text-to-clipboard'
-import {Resource as ResourceContainer} from '#/main/core/layout/resource/containers/resource.jsx'
+import {ResourceContainer} from '#/main/core/layout/resource/containers/resource.jsx'
 
 import {select} from './../selectors'
 

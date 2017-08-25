@@ -44,60 +44,62 @@ export class IpSetter extends Component {
     return (
       <div>
         <form className="form-inline">
-          <input
-            min="0"
-            id="ip-block-1"
-            name="ip-block-1"
-            max="255"
-            className="form-control mb-2 mr-sm-2 mb-sm-0"
-            type="number"
-            value={this.state['ip-block-1']}
-            onChange={this.handleChange.bind(this)}
-          />{'\u00A0'}.{'\u00A0'}
-          <input
-            min="0"
-            id="ip-block-2"
-            name="ip-block-2"
-            max="255"
-            className="form-control mb-2 mr-sm-2 mb-sm-0"
-            type="number"
-            value={this.state['ip-block-2']}
-            onChange={this.handleChange.bind(this)}
-          />{'\u00A0'}.{'\u00A0'}
-          <input
-            min="0"
-            id="ip-block-3"
-            name="ip-block-3"
-            max="255"
-            className="form-control mb-2 mr-sm-2 mb-sm-0"
-            type="number"
-            value={this.state['ip-block-3']}
-            onChange={this.handleChange.bind(this)}
-          />{'\u00A0'}.{'\u00A0'}
-          <input
-            min="0"
-            id="ip-block-4"
-            name="ip-block-4"
-            max="255"
-            className="form-control mb-2 mr-sm-2 mb-sm-0"
-            type="number"
-            value={this.state['ip-block-4']}
-            onChange={this.handleChange.bind(this)}
-          />
-          {'\u00A0'}
-          <input
-            className="btn btn-primary"
-            type="button"
-            value={t('add_filter')}
-            onClick={() => this.addIpFilter()}
-          />
-          {'\u00A0'}
-          <input
-            className="btn btn-danger"
-            type="button"
-            value={t('remove_all_filter')}
-            onClick={() => this.removeAll()}
-          />
+          <div className="panel panel-body">
+            <input
+              min="0"
+              id="ip-block-1"
+              name="ip-block-1"
+              max="255"
+              className="form-control mb-2 mr-sm-2 mb-sm-0"
+              type="number"
+              value={this.state['ip-block-1']}
+              onChange={this.handleChange.bind(this)}
+            />{'\u00A0'}.{'\u00A0'}
+            <input
+              min="0"
+              id="ip-block-2"
+              name="ip-block-2"
+              max="255"
+              className="form-control mb-2 mr-sm-2 mb-sm-0"
+              type="number"
+              value={this.state['ip-block-2']}
+              onChange={this.handleChange.bind(this)}
+            />{'\u00A0'}.{'\u00A0'}
+            <input
+              min="0"
+              id="ip-block-3"
+              name="ip-block-3"
+              max="255"
+              className="form-control mb-2 mr-sm-2 mb-sm-0"
+              type="number"
+              value={this.state['ip-block-3']}
+              onChange={this.handleChange.bind(this)}
+            />{'\u00A0'}.{'\u00A0'}
+            <input
+              min="0"
+              id="ip-block-4"
+              name="ip-block-4"
+              max="255"
+              className="form-control mb-2 mr-sm-2 mb-sm-0"
+              type="number"
+              value={this.state['ip-block-4']}
+              onChange={this.handleChange.bind(this)}
+            />{'\u00A0'}
+            <input
+              className="btn btn-primary"
+              type="button"
+              value={t('add_filter')}
+              onClick={() => this.addIpFilter()}
+            />
+          </div>
+          <div className="panel panel-body">
+            <input
+              className="btn btn-danger"
+              type="button"
+              value={t('remove_all_filter')}
+              onClick={() => this.removeAll()}
+            />
+          </div>
         </form>
         <div>
           {this.props.ips.map(ip => <IPSpan ip={ip} onRemove={this.onRemove.bind(this)} />)}

@@ -22,7 +22,7 @@ export function decorate(state, itemDecorators = {}, applyOnItems = true) {
     newState.quiz.steps = [defaultStep.id]
   }
 
-  let stepIdx = 1
+  let stepIdx = 0
 
   return Object.assign(newState, {
     quiz: defaultsDeep(newState.quiz, defaults.quiz),

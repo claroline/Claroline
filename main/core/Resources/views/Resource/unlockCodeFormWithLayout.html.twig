@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:Resource:layout.html.twig" %}
 
-{% block resource_content %}
-      {% render(controller('ClarolineCoreBundle:Resource:unlockCodeFormAction', {'node': node.getId()})) %}
+{% block content %}
+      {% render(controller('ClarolineCoreBundle:Resource:unlockCodeForm', {'node': node.getId()})) %}
 {% endblock %}
 
 {% block javascripts %}

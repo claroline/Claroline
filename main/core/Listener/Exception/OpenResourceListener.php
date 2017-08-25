@@ -51,9 +51,9 @@ class OpenResourceListener
             $node = $toUnlock[0];
 
             $content = $this->container->get('templating')->render(
-              'ClarolineCoreBundle:Resource:unlockCodeFormWithLayout.html.twig',
-              ['node' => $node, '_resource' => $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($node)]
-            );
+                      'ClarolineCoreBundle:Resource:unlockCodeFormWithLayout.html.twig',
+                      ['node' => $node, '_resource' => $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($node)]
+                    );
 
             $event->setResponse(new Response($content));
         }

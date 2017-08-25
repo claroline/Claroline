@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Resource:layout.html.twig" %}
 
-{% block resource_content %}
+{% block content %}
     <div
         class="page-container image-container"
         data-image="{{ _resource | api_serialize | json_encode | raw | escape }}"

@@ -9,13 +9,7 @@
 {% extends layout %}
 
 {% block content %}
-      {% if requiresUnlock(_resource.resourceNode) %}
-          {% render(controller('ClarolineCoreBundle:Resource:unlockCodeForm', {'node': _resource.resourceNode.getId()})) %}
-      {% else %}
-          {% block resource_content %}
 
-          {% endblock %}
-      {% endif %}
 {% endblock %}
 
 {% block javascripts %}

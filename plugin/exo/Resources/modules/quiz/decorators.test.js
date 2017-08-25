@@ -99,7 +99,7 @@ describe('Decorator', () => {
         b: {
           id: 'b',
           items: ['z'],
-          title: 'step 2',
+          title: 'step 1',
           description: '',
           parameters: {
             maxAttempts: 0,
@@ -237,7 +237,7 @@ describe('Decorator', () => {
       steps: {
         a: {
           id: 'a',
-          title: 'step 2',
+          title: 'step 1',
           description: '',
           items: ['x'],
           parameters: {
