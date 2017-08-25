@@ -61,7 +61,7 @@ class OrganizationPickerTransformer implements DataTransformerInterface
     public function reverseTransform($ids)
     {
         return empty($ids) ?
-            [] :
-            $this->om->findByIds('Claroline\CoreBundle\Entity\Organization\Organization', $ids);
+            new ArrayCollection() :
+            new ArrayCollection($this->om->findByIds('Claroline\CoreBundle\Entity\Organization\Organization', $ids));
     }
 }
