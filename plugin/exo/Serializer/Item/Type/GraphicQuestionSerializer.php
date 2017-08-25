@@ -198,7 +198,10 @@ class GraphicQuestionSerializer implements SerializerInterface
             $area->setUuid($solutionData->area->id);
 
             $area->setScore($solutionData->score);
-            $area->setFeedback($solutionData->feedback);
+
+            if (!empty($solutionData->feedback)) {
+                $area->setFeedback($solutionData->feedback);
+            }
 
             // Deserializes area definition
             $this->deserializeArea($area, $solutionData->area);
@@ -271,7 +274,10 @@ class GraphicQuestionSerializer implements SerializerInterface
      */
     private function deserializeArea(Area $area, \stdClass $data)
     {
-        $area->setColor($data->color);
+        if (!empty($data->color)) {
+            $area->setColor($data->color);
+        }
+
         $area->setShape($data->shape);
 
         switch ($data->shape) {
@@ -283,7 +289,8 @@ class GraphicQuestionSerializer implements SerializerInterface
                 $area->setSize($data->radius * 2);
                 break;
             case 'rect':
-                $area->setValue(sprintf('%s,%s,%s,%s',
+                $area->setValue(sprintf(
+                    '%s,%s,%s,%s',
                     $data->coords[0]->x,
                     $data->coords[0]->y,
                     $data->coords[1]->x,

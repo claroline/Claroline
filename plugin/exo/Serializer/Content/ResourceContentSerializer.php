@@ -57,8 +57,8 @@ class ResourceContentSerializer implements SerializerInterface
         ObjectManager $om,
         $fileDir,
         RouterInterface $router,
-        ResourceManager $resourceManager)
-    {
+        ResourceManager $resourceManager
+    ) {
         $this->om = $om;
         $this->fileDir = $fileDir;
         $this->router = $router;
@@ -121,7 +121,8 @@ class ResourceContentSerializer implements SerializerInterface
     public function deserialize($data, $resourceNode = null, array $options = [])
     {
         if (empty($resourceNode)) {
-            $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find($data->id);
+            $id = method_exists($data, 'getId') ? $data->getId() : $data->id;
+            $resourceNode = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->find($id);
         }
 
         return $resourceNode;

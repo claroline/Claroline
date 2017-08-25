@@ -51,7 +51,7 @@ class Area implements AnswerPartInterface
      *
      * @ORM\Column
      */
-    private $color;
+    private $color = '000000';
 
     /**
      * @var float

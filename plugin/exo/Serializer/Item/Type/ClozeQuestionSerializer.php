@@ -134,7 +134,10 @@ class ClozeQuestionSerializer implements SerializerInterface
 
             $hole = $hole ?: new Hole();
             $hole->setUuid($holeData->id);
-            $hole->setSize($holeData->size);
+
+            if (!empty($holeData->size)) {
+                $hole->setSize($holeData->size);
+            }
 
             if (!empty($holeData->choices)) {
                 $hole->setSelector(true);
