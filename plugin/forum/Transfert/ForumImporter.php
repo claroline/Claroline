@@ -199,10 +199,40 @@ class ForumImporter extends Importer implements ConfigurationInterface, RichText
         $data = [];
 
         foreach ($categories as $category) {
+            $subjects = $category->getSubjects();
+            $subjectsData = [];
+            foreach ($subjects as $subject) {
+                $subjectData['subject']['name'] = $subject->getTitle();
+                $subjectData['subject']['author'] = $subject->getCreator()->getUsername();
+                $subjectData['subject']['sticked'] = $subject->isSticked();
+                $subjectData['subject']['creation_date'] = $subject->getCreationDate();
+
+                $messages = $subject->getMessages();
+                $messagesData = [];
+
+                foreach ($messages as $message) {
+                    $messageData['message']['author'] = $message->getCreator()->getUsername();
+                    $messageData['message']['creation_date'] = $message->getCreationDate();
+                    $messageData['message']['modification_date'] = $message->getModificationDate();
+
+                    $hash = uniqid('msg').'.txt';
+                    $tmpPath = sys_get_temp_dir().DIRECTORY_SEPARATOR.$hash;
+                    file_put_contents($tmpPath, $message->getContent());
+                    $files[$hash] = $tmpPath;
+                    $messageData['message']['path'] = $hash;
+
+                    $messagesData[] = $messageData;
+                }
+
+                $subjectData['subject']['messages'] = $messagesData;
+
+                $subjectsData[] = $subjectData;
+            }
+
             $data[] = [
                 'category' => [
                     'name' => $category->getName(),
-                    'subjects' => [],
+                    'subjects' => $subjectsData,
                 ],
             ];
         }
