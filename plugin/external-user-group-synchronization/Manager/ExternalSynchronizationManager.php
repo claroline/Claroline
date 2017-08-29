@@ -543,9 +543,9 @@ class ExternalSynchronizationManager
             $unsubscribeUserIds = array_diff($subscribedUserIds, $alreadySubscribedIds);
             $unsubscribedUsers = $this->userManager->getUsersByIds($unsubscribeUserIds);
             foreach ($unsubscribedUsers as $user) {
-                $user->removeGroup($group);
-                $this->om->persist($user);
+                $group->removeUser($user);
             }
+            $this->om->persist($group);
         }
         $this->externalGroupManager->updateExternalGroupDate($extGroup);
         $this->om->endFlushSuite();
