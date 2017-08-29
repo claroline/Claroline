@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Command\Removal;
 
 use Claroline\CoreBundle\Manager\RoleManager;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,7 +29,12 @@ class EmptyWorkspaceCommand extends ContainerAwareCommand
     {
         $this->setName('claroline:workspace:empty')
             ->setDescription('Empty workspaces');
-
+        $this->setDefinition(
+            [
+                new InputArgument('workspace_code', InputArgument::OPTIONAL, 'The workspace code'),
+                new InputArgument('role_key', InputArgument::OPTIONAL, 'The role key'),
+            ]
+        );
         $this->addOption(
             'user',
             'u',
@@ -50,15 +56,20 @@ class EmptyWorkspaceCommand extends ContainerAwareCommand
         $removeGroups = $input->getOption('group');
 
         $container = $this->getContainer();
+        $om = $container->get('claroline.persistence.object_manager');
         $helper = $this->getHelper('question');
         $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
         $roleManager = $this->getContainer()->get('claroline.manager.role_manager');
         $question = new Question('Filter on code (continue if no filter)', null);
         $code = $helper->ask($input, $output, $question);
+
+        if (!$code) {
+            $code = $input->getArgument('workspace_code');
+        }
+
         $question = new Question('Filter on name (continue if no filter)', null);
         $name = $helper->ask($input, $output, $question);
         $workspaces = $workspaceManager->getNonPersonalByCodeAndName($code, $name);
-        $om = $container->get('claroline.persistence.object_manager');
 
         foreach ($workspaces as $workspace) {
             $roles = $roleManager->getRolesByWorkspace($workspace);
@@ -72,6 +83,10 @@ class EmptyWorkspaceCommand extends ContainerAwareCommand
             $question = new ChoiceQuestion($questionString, $roleNames);
             $question->setMultiselect(true);
             $roleNames = $helper->ask($input, $output, $question);
+
+            if (!$roleNames) {
+                $roleNames = [$input->getArgument('role_key')];
+            }
 
             $pickedRoles = array_filter($roles, function ($role) use ($roleNames) {
                 return in_array($role->getTranslationKey(), $roleNames);
