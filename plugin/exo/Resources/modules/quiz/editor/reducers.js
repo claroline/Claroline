@@ -5,7 +5,7 @@ import sanitize from './sanitizers'
 import validate from './validators'
 import cloneDeep from 'lodash/cloneDeep'
 import {decorateItem} from './../decorators'
-import {getIndex, makeId, makeItemPanelKey, update} from './../../utils/utils'
+import {getIndex, makeId, makeItemPanelKey, update, refreshIds} from './../../utils/utils'
 import {getDefinition} from './../../items/item-types'
 import {getContentDefinition} from './../../contents/content-types'
 import {ATTEMPT_FINISH} from './../player/actions'
@@ -205,7 +205,9 @@ function reduceItems(items = {}, action = {}) {
     }
     case ITEM_DUPLICATE: {
       action.ids.forEach(id => {
+        //now we replace the other
         let newItem = cloneDeep(items[action.itemId])
+        newItem = refreshIds(newItem)
         newItem.id = id
         newItem._errors = validate.item(newItem)
         items = update(items, {[id]: {$set: newItem}})
