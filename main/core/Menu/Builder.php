@@ -105,7 +105,7 @@ class Builder extends ContainerAware
         if ($hasRoleExtension->isImpersonated()) {
             $route = [
                 'route' => 'claro_desktop_open',
-                'routeParameters' => ['_switch' => 'exit'],
+                'routeParameters' => ['_switch' => '_exit'],
             ];
         } else {
             $route = ['route' => 'claro_security_logout'];
