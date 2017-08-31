@@ -154,14 +154,16 @@ class MaskManager
     public function addDefaultPerms(ResourceType $type)
     {
         $createdPerms = [];
+        // Add only non-existent default actions
+        $defaultActions = array_diff(self::$defaultActions, $this->getMaskDecoderActionNamesForResourceType($type));
 
-        for ($i = 0, $size = count(self::$defaultActions); $i < $size; ++$i) {
+        foreach ($defaultActions as $i => $action) {
             $maskDecoder = new MaskDecoder();
             $maskDecoder->setValue(pow(2, $i));
-            $maskDecoder->setName(self::$defaultActions[$i]);
+            $maskDecoder->setName($action);
             $maskDecoder->setResourceType($type);
             $this->om->persist($maskDecoder);
-            $createdPerms[self::$defaultActions[$i]] = $maskDecoder;
+            $createdPerms[$action] = $maskDecoder;
         }
 
         $this->om->flush();
@@ -184,5 +186,18 @@ class MaskManager
     public function getDefaultActions()
     {
         return self::$defaultActions;
+    }
+
+    private function getMaskDecoderActionNamesForResourceType(ResourceType $type)
+    {
+        $decoders = $this->maskRepo->findBy(
+            ['resourceType' => $type]
+        );
+        $actionNames = [];
+        foreach ($decoders as $decoder) {
+            $actionNames[] = $decoder->getName();
+        }
+
+        return $actionNames;
     }
 }
