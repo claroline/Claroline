@@ -1050,6 +1050,8 @@ class ResourceManager
 
                 if ($softDelete || $eventSoftDelete) {
                     $node->setActive(false);
+                    // Rename node to allow future nodes have the same name
+                    $node->setName($node->getName().uniqid('_'));
                     $this->om->persist($node);
                 } else {
                     //what is it ?

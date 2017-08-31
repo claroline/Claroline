@@ -71,6 +71,7 @@ class ToolRightsManager
         Role $role,
         $action
     ) {
+        $rightsMask = null;
         $tool = $orderedTool->getTool();
         $maskDecoder = $this->maskManager
             ->getMaskDecoderByToolAndName($tool, $action);

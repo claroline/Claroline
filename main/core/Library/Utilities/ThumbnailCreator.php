@@ -105,18 +105,17 @@ class ThumbnailCreator
         }
 
         if (file_exists($originalPath)) {
-            /*
-            This function is deprecated.
-            I had to do this for the DnD upload (.jpg files have png mime for some reasons).
-            It would be nice to know why it works this way.
-            */
-            $mime = mime_content_type($originalPath);
-            $eMime = explode('/', $mime);
-            $extension = $eMime[1];
+            $extension = $this->getImageExtensionFromUrl($originalPath);
         } else {
             throw new \Exception("The file {$originalPath} doesn't exists.");
         }
+        // Replace png with new extension
+        $destinationPath = preg_replace('/.png$/', ".{$extension}", trim($destinationPath));
+        if ($extension === 'svg') {
+            $this->fs->copy($originalPath, $destinationPath);
 
+            return $destinationPath;
+        }
         if (function_exists($funcname = "imagecreatefrom{$extension}")) {
             $srcImg = $funcname($originalPath);
         } else {
@@ -247,27 +246,12 @@ class ThumbnailCreator
         if (!file_exists($url)) {
             throw new FileNotFoundException("File not found: '${url}'");
         }
-        try {
-            $imageType = exif_imagetype($url);
-        } catch (\Exception $e) {
-            throw new ExtensionNotSupportedException();
-        }
-        $imageContent = file_get_contents($url);
-        // Check if imagetype is false or if image is svg
-        if (!$imageType) {
-            $extension = pathinfo($url, PATHINFO_EXTENSION);
-            if ($extension === 'svg' || (preg_match('/^<\?xml/', $imageContent) && strpos($imageContent, '<svg') !== false)) {
-                $image = SVGImage::fromFile($url);
+        $extension = $this->getImageExtensionFromUrl($url);
+        if ($extension === 'svg') {
+            $image = SVGImage::fromFile($url);
 
-                return [$image, 'svg'];
-            }
-            $exception = new ExtensionNotSupportedException();
-            $exception->setExtension($extension);
-
-            throw $exception;
+            return [$image, $extension];
         }
-        // Let php find about extension as sometimes files has no extension or have a fake extension
-        $extension = str_replace('.', '', image_type_to_extension($imageType));
 
         if (!function_exists("image{$extension}")) {
             $exception = new ExtensionNotSupportedException();
@@ -277,6 +261,7 @@ class ThumbnailCreator
         }
 
         try {
+            $imageContent = file_get_contents($url);
             $image = imagecreatefromstring($imageContent);
         } catch (\Exception $e) {
             $exception = new ExtensionNotSupportedException($e->getMessage());
@@ -286,5 +271,31 @@ class ThumbnailCreator
         }
 
         return [$image, $extension];
+    }
+
+    private function getImageExtensionFromUrl($url)
+    {
+        $mimeType = mime_content_type($url);
+        $fileExtension = pathinfo($url, PATHINFO_EXTENSION);
+        // If mimetype is svg or fileExtension is svg then return svg
+        if ($mimeType === 'image/svg+xml' || $fileExtension === 'svg') {
+            return 'svg';
+        }
+        // Try to guess image type
+        try {
+            $imageType = exif_imagetype($url);
+        } catch (\Exception $e) {
+            throw new ExtensionNotSupportedException();
+        }
+        // If imageType is false throw exception
+        if (!$imageType) {
+            $exception = new ExtensionNotSupportedException();
+            $exception->setExtension($fileExtension);
+        }
+
+        // Let php find about extension as sometimes files has no extension or have a fake extension
+        $extension = str_replace('.', '', image_type_to_extension($imageType));
+
+        return $extension;
     }
 }

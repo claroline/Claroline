@@ -111,7 +111,7 @@ class Theme
     {
         // TODO: use a dedicated db field to store that information
 
-        return !in_array($this->name, ThemeManager::listStockThemeNames());
+        return !in_array($this->name, ThemeManager::listStockThemesName());
     }
 
     /**
