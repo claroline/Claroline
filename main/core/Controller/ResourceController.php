@@ -786,7 +786,9 @@ class ResourceController extends Controller
             $this->checkAccess('OPEN', $collection);
 
             if ($user !== 'anon.') {
-                if ($user === $node->getCreator() || $this->authorization->isGranted('ROLE_ADMIN')) {
+                if ($user === $node->getCreator() || $this->authorization->isGranted('ROLE_ADMIN')
+                    || $this->authorization->isGranted('ADMINISTRATE', $node)
+                ) {
                     $canChangePosition = true;
                 }
             }
@@ -1108,7 +1110,9 @@ class ResourceController extends Controller
      */
     public function insertAt(ResourceNode $node, User $user, $index)
     {
-        if ($user !== $node->getParent()->getCreator() && !$this->authorization->isGranted('ROLE_ADMIN')) {
+        if ($user !== $node->getParent()->getCreator() && !$this->authorization->isGranted('ROLE_ADMIN')
+            && !$this->authorization->isGranted('ADMINISTRATE', $node->getParent())
+        ) {
             throw new AccessDeniedException();
         }
 
