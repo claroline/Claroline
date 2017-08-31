@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Serializer\Item;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -544,9 +545,15 @@ class ItemSerializer extends AbstractSerializer
 
             // Link resource to item
             if (empty($existingResource)) {
-                $node = $this->resourceContentSerializer->deserialize($resourceData, $existingResource, $options);
-                if ($node) {
-                    $question->addResource($node);
+                $obj = $this->resourceContentSerializer->deserialize($resourceData, $existingResource, $options);
+                if ($obj) {
+                    if ($obj instanceof ResourceNode) {
+                        $itemResource = new ItemResource();
+                        $itemResource->setResourceNode($obj);
+                        $itemResource->setQuestion($question);
+                        $obj = $itemResource;
+                    }
+                    $question->addResource($obj);
                 }
             }
         }

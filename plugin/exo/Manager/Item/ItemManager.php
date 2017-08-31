@@ -280,11 +280,11 @@ class ItemManager
         if ($definition instanceof AnswerableItemDefinitionInterface) {
             return array_map(function ($answer) use ($question, $definition) {
                 $score = $this->calculateScore($question, $answer);
-                  // get total available for the question
-                  $expected = $definition->expectAnswer($question->getInteraction());
+                // get total available for the question
+                $expected = $definition->expectAnswer($question->getInteraction());
                 $total = $this->scoreManager->calculateTotal(json_decode($question->getScoreRule()), $expected);
-                  // report the score on 100
-                  $score = (100 * $score) / $total;
+                // report the score on 100
+                $score = (100 * $score) / $total;
 
                 return $score;
             }, $this->answerRepository->findByQuestion($question, $exercise));
@@ -388,11 +388,6 @@ class ItemManager
         // refresh objects ids
         foreach ($item->getObjects() as $object) {
             $object->refreshUuid();
-        }
-
-        // refresh resources ids
-        foreach ($item->getResources() as $resource) {
-            $resource->refreshUuid();
         }
 
         // refresh hints ids

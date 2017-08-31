@@ -51,7 +51,7 @@ class GridQuestion extends AbstractItem
      *
      * @var string
      */
-    private $sumMode;
+    private $sumMode = self::SUM_CELL;
 
     /**
      * Number of rows to draw.
