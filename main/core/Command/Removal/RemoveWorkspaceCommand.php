@@ -139,7 +139,6 @@ class RemoveWorkspaceCommand extends ContainerAwareCommand
 
         if (count($toDelete) > 0) {
             $this->confirmWorkspaceDelete($toDelete);
-            $this->deleteWorkspaceByCode($code, null, self::BATCH_SIZE);
         }
     }
 
