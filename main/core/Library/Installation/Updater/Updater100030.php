@@ -26,11 +26,14 @@ class Updater100030 extends Updater
         $this->container = $container;
         $this->logger = $logger;
         $this->maskManager = $this->container->get('claroline.manager.mask_manager');
+        $this->roleManager = $this->container->get('claroline.manager.role_manager');
     }
 
     public function postUpdate()
     {
         $this->maskManager->setLogger($this->logger);
+        $this->roleManager->setLogger($this->logger);
         $this->maskManager->checkIntegrity();
+        $this->roleManager->checkIntegrity();
     }
 }

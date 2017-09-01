@@ -1475,7 +1475,7 @@ class WorkspaceManager
                 ) {
                     $usedRole = $copy->getWorkspace()->getGuid() === $workspaceRoles[$key]->getWorkspace()->getGuid() ?
                       $workspaceRoles[$key] : $role;
-                    $newRight->setRole($role);
+                    $newRight->setRole($usedRole);
                     $this->log('Duplicating resource rights for '.$copy->getName().' - '.$copy->getId().' - '.$usedRole->getName().'...');
                     $this->om->persist($newRight);
                 } else {

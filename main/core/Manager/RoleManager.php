@@ -27,6 +27,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -1080,15 +1081,20 @@ class RoleManager
 
     public function checkIntegrity()
     {
-        $this->log('Checking workspace roles integrity.');
+        $this->log('Checking workspace roles integrity... This may take a while.');
         $workspaces = $this->workspaceRepo->findAll();
+        $totalWs = count($workspaces);
+        $this->log("All workspaces fetched {$totalWs}!");
         $i = 0;
+        $j = 1;
         $this->om->startFlushSuite();
 
         foreach ($workspaces as $workspace) {
-            $this->log('Checking roles role for workspace '.$workspace->getCode().'...');
+            ++$i;
+            $this->log('Checking roles integrity for workspace '.$workspace->getCode()." ($i/$totalWs)");
             $collaborator = $this->getCollaboratorRole($workspace);
             $manager = $this->getManagerRole($workspace);
+            $operationExecuted = false;
 
             if (!$collaborator) {
                 $this->log('Adding collaborator role for workspace '.$workspace->getCode().'...', LogLevel::DEBUG);
@@ -1098,7 +1104,36 @@ class RoleManager
                     $workspace,
                     true
                 );
-                ++$i;
+                $operationExecuted = true;
+            } else {
+                try {
+                    $root = $this->container->get('claroline.manager.resource_manager')->getWorkspaceRoot($workspace);
+                    $hasCollaboratorRole = false;
+
+                    if ($root) {
+                        foreach ($root->getRights() as $perm) {
+                            if ($perm->getRole() === $collaborator) {
+                                $hasCollaboratorRole = true;
+                            }
+                        }
+
+                        if (!$hasCollaboratorRole) {
+                            $operationExecuted = true;
+                            $this->log('Restoring collaborator role for root resource of '.$workspace->getCode(), LogLevel::ERROR);
+                            $this->container->get('claroline.manager.rights_manager')
+                              ->create(
+                                ['open' => true, 'export' => true],
+                                $collaborator,
+                                $root,
+                                true
+                              );
+                        }
+                    } else {
+                        $this->log('No directory root for '.$workspace->getCode());
+                    }
+                } catch (NonUniqueResultException $e) {
+                    $this->log('Multiple roots for '.$workspace->getCode(), LogLevel::ERROR);
+                }
             }
 
             if (!$manager) {
@@ -1109,21 +1144,35 @@ class RoleManager
                     $workspace,
                     true
                 );
-                ++$i;
+                $operationExecuted = true;
             }
 
-            if ($i % 300 === 0) {
+            if ($operationExecuted) {
+                ++$j;
+            }
+
+            if ($j % 300 === 0) {
+                $this->log('Flushing, this may be very long for large databases');
                 $this->om->forceFlush();
             }
         }
 
-        $this->om->endFlushSuite();
+        //if we changed something, flush
+        if ($j > 1) {
+            $this->log('Flushing, this may be very long for large databases');
+            $this->om->endFlushSuite();
+        }
+
         $this->log('Checking user role integrity.');
         $users = $this->container->get('claroline.manager.user_manager')->getAllEnabledUsers();
         $this->om->startFlushSuite();
+        $j = 0;
+        $totalUsers = count($users);
+        $i = 1;
 
         foreach ($users as $user) {
-            $this->log('Checking personal role for '.$user->getUsername());
+            ++$j;
+            $this->log('Checking personal role for '.$user->getUsername()." ($j/$totalUsers)");
             $roleName = 'ROLE_USER_'.strtoupper($user->getUsername());
             $role = $this->roleRepo->findOneByName($roleName);
 
@@ -1133,12 +1182,16 @@ class RoleManager
                 ++$i;
 
                 if ($i % 300 === 0) {
+                    $this->log('Flushing, this may be very long for large databases');
                     $this->om->forceFlush();
                 }
             }
         }
 
-        $this->om->endFlushSuite();
+        if ($i > 1) {
+            $this->log('Flushing, this may be very long for large databases');
+            $this->om->endFlushSuite();
+        }
     }
 
     public function getUserRole($username)

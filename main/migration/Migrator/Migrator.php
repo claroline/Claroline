@@ -178,4 +178,16 @@ class Migrator
         $config = $this->getConfiguration($bundle);
         $config->getVersion($version)->markNotMigrated();
     }
+
+    public function markAllMigrated(Bundle $bundle)
+    {
+        $config = $this->getConfiguration($bundle);
+
+        foreach ($config->getAvailableVersions() as $version) {
+            $version = $config->getVersion($version);
+            if (!$config->hasVersionMigrated($version)) {
+                $version->markMigrated();
+            }
+        }
+    }
 }

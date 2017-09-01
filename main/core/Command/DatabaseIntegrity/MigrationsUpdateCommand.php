@@ -35,7 +35,7 @@ class MigrationsUpdateCommand extends ContainerAwareCommand
                 $arguments = [
                   'command' => 'claroline:migration:version',
                   'bundle' => $bundle['instance']->getShortName(),
-                  '--latest' => true,
+                  '--all' => true,
               ];
                 $command->run(new ArrayInput($arguments), $output);
             } catch (\Exception $e) {

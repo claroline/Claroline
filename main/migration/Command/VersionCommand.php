@@ -53,6 +53,13 @@ EOT
             InputOption::VALUE_NONE,
             'Skip everything and set the bundle to the latest migration'
         );
+
+        $this->addOption(
+            'all',
+            'o',
+            InputOption::VALUE_NONE,
+            'Mark all migrations as migrated'
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -67,6 +74,10 @@ EOT
 
         if ($version = $input->getOption('add')) {
             $migrator->markMigrated($this->getTargetBundle($input), $version);
+        }
+
+        if ($version = $input->getOption('all')) {
+            $migrator->markAllMigrated($this->getTargetBundle($input));
         }
 
         if ($latest) {
