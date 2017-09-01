@@ -11,17 +11,21 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\MenuAction;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.mask_manager")
  */
 class MaskManager
 {
+    use LoggableTrait;
+
     private static $defaultActions = ['open', 'copy', 'export', 'delete', 'edit', 'administrate'];
 
     private $om;
@@ -186,6 +190,27 @@ class MaskManager
     public function getDefaultActions()
     {
         return self::$defaultActions;
+    }
+
+    public function checkIntegrity()
+    {
+        $this->log('Checking resource mask decoders integrity...');
+        $ids = $this->maskRepo->findDuplicateMasksIds();
+        $duplicates = count($ids);
+        if ($duplicates > 0) {
+            $this->log("Removing {$duplicates} mask decoder duplicates...");
+            $this->maskRepo->removeMasksByIds($ids);
+        }
+    }
+
+    public function setLogger(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
+
+    public function getLogger()
+    {
+        return $this->logger;
     }
 
     private function getMaskDecoderActionNamesForResourceType(ResourceType $type)

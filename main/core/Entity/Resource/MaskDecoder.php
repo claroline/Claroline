@@ -14,7 +14,7 @@ namespace Claroline\CoreBundle\Entity\Resource;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\ResourceMaskDecoderRepository")
  * @ORM\Table(name="claro_resource_mask_decoder")
  */
 class MaskDecoder
