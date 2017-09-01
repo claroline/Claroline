@@ -48,8 +48,6 @@
         "build": [
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
-            "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::installAssets",
-            "npm run themes",
             "npm run webpack"
         ],
         "disable-maintenance": [
@@ -86,7 +84,7 @@
         "symfony-assets-install": "symlink"
     },
     "repositories": [
-	    {
+        {
              "type": "vcs",
              "url": "https://github.com/jstuhli/twig.js"
         },
