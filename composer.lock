@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "47d9c0c267a2cd1555348fcf322eabb3",
-    "content-hash": "ca6840ca387bcb330c3fc24d2e2cba01",
+    "hash": "23bba5fb0d7556132d499f91183b88f9",
+    "content-hash": "9a567093c28642926d42a031bc422377",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -120,16 +120,16 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "10.x-dev",
+            "version": "dev-theme-management",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "a63d7a66000c57c70719aa0df45b11ee18b49a55"
+                "reference": "0342e5cfe7fa194d02886c96904a17c31e3cb4b1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a63d7a66000c57c70719aa0df45b11ee18b49a55",
-                "reference": "a63d7a66000c57c70719aa0df45b11ee18b49a55",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/0342e5cfe7fa194d02886c96904a17c31e3cb4b1",
+                "reference": "0342e5cfe7fa194d02886c96904a17c31e3cb4b1",
                 "shasum": ""
             },
             "require": {
@@ -392,7 +392,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-09-02 09:27:58"
+            "time": "2017-09-04 12:02:23"
         },
         {
             "name": "claroline/front-end-bundle",
