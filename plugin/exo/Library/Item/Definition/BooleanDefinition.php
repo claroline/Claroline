@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Library\Item\Definition;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\BooleanQuestion;
 use UJM\ExoBundle\Entity\Misc\BooleanChoice;
@@ -52,8 +53,8 @@ class BooleanDefinition extends AbstractDefinition
     public function __construct(
         BooleanQuestionValidator $validator,
         BooleanAnswerValidator $answerValidator,
-        BooleanQuestionSerializer $serializer)
-    {
+        BooleanQuestionSerializer $serializer
+    ) {
         $this->validator = $validator;
         $this->answerValidator = $answerValidator;
         $this->serializer = $serializer;
@@ -179,5 +180,22 @@ class BooleanDefinition extends AbstractDefinition
         array_walk($item->choices, function (\stdClass $choice) use ($contentParser) {
             $choice->data = $contentParser->parse($choice->data);
         });
+    }
+
+    public function getCsvTitles(AbstractItem $item)
+    {
+        return ['bool-'.$item->getQuestion()->getUuid()];
+    }
+
+    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    {
+        $data = json_decode($answer->getData());
+        $answer = null;
+
+        foreach ($item->getChoices() as $choice) {
+            if ($data === $choice->getUuid()) {
+                return [$choice->getData()];
+            }
+        }
     }
 }

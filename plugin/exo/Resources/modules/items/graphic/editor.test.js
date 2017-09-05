@@ -34,7 +34,8 @@ describe('Graphic reducer', () => {
       image: {
         id: lastId()
       },
-      _currentColor: '#0693e3'
+      _currentColor: '#0693e3',
+      pointerMode: 'pointer'
     }))
   })
 

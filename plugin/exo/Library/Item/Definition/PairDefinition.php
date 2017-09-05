@@ -3,12 +3,14 @@
 namespace UJM\ExoBundle\Library\Item\Definition;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\PairQuestion;
 use UJM\ExoBundle\Entity\Misc\GridItem;
 use UJM\ExoBundle\Entity\Misc\GridRow;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
+use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\PairQuestionSerializer;
 use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
@@ -54,8 +56,8 @@ class PairDefinition extends AbstractDefinition
     public function __construct(
         PairQuestionValidator $validator,
         PairAnswerValidator $answerValidator,
-        PairQuestionSerializer $serializer)
-    {
+        PairQuestionSerializer $serializer
+    ) {
         $this->validator = $validator;
         $this->answerValidator = $answerValidator;
         $this->serializer = $serializer;
@@ -243,5 +245,41 @@ class PairDefinition extends AbstractDefinition
         }
 
         return $found;
+    }
+
+    public function getCsvTitles(AbstractItem $item)
+    {
+        return ['pair-'.$item->getQuestion()->getUuid()];
+    }
+
+    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    {
+        $data = json_decode($answer->getData());
+        $items = $item->getItems();
+        $answers = [];
+
+        foreach ($data as $pair) {
+            $answerPair = '[';
+            foreach ($items as $el) {
+                if ($el->getUuid() === $pair[0]) {
+                    $answerPair .= $el->getData();
+                }
+            }
+
+            $answerPair .= ';';
+
+            foreach ($items as $el) {
+                if ($el->getUuid() === $pair[1]) {
+                    $answerPair .= $el->getData();
+                }
+            }
+
+            $answerPair .= ']';
+            $answers[] = $answerPair;
+        }
+
+        $compressor = new ArrayCompressor();
+
+        return [$compressor->compress($answers)];
     }
 }

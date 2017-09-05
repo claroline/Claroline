@@ -113,7 +113,8 @@ Player.propTypes = {
 
 Player.defaultProps = {
   next: null,
-  previous: null
+  previous: null,
+  answers: {}
 }
 
 function mapStateToProps(state) {

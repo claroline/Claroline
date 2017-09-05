@@ -9,11 +9,10 @@ import {AnswersStatsTable} from './components/answers-stats-table.jsx'
 export const ClozePaper = (props) => {
   return (
     <PaperTabs
-      item={props.item}
-      answer={props.answer}
       id={props.item.id}
-      hideExpected={props.hideExpected}
+      showExpected={props.showExpected}
       showStats={props.showStats}
+      showYours={props.showYours}
       yours={
         <ClozeText
           anchorPrefix="cloze-hole-user"
@@ -97,7 +96,8 @@ ClozePaper.propTypes = {
   }).isRequired,
   answer: T.array.isRequired,
   showScore: T.bool.isRequired,
-  hideExpected: T.bool.isRequired,
+  showYours: T.bool.isRequired,
+  showExpected: T.bool.isRequired,
   showStats: T.bool.isRequired,
   stats: T.shape({
     holes: T.object,

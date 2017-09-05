@@ -52,6 +52,7 @@ const itemScoreMax = item => {
         break
     }
   }
+
   return scoreMax || 0
 }
 

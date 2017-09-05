@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Library\Item\Definition;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\OpenQuestion;
 use UJM\ExoBundle\Entity\Misc\Keyword;
@@ -52,8 +53,8 @@ class WordsDefinition extends AbstractDefinition
     public function __construct(
         WordsQuestionValidator $validator,
         WordsAnswerValidator $answerValidator,
-        WordsQuestionSerializer $serializer)
-    {
+        WordsQuestionSerializer $serializer
+    ) {
         $this->validator = $validator;
         $this->answerValidator = $answerValidator;
         $this->serializer = $serializer;
@@ -205,5 +206,15 @@ class WordsDefinition extends AbstractDefinition
         }
 
         return $found;
+    }
+
+    public function getCsvTitles(AbstractItem $item)
+    {
+        return ['words-'.$item->getQuestion()->getUuid()];
+    }
+
+    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    {
+        return [json_decode($answer->getData())];
     }
 }

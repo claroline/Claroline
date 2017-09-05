@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Library\Utilities;
 
-use JangoBrick\SVG\Nodes\Embedded\SVGImageElement;
-use JangoBrick\SVG\SVGImage;
 use JMS\DiExtraBundle\Annotation as DI;
+use SVG\Nodes\Embedded\SVGImageElement;
+use SVG\SVGImage;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\HttpFoundation\File\File;
 

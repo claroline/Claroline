@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Library\Item\Definition;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\SelectionQuestion;
 use UJM\ExoBundle\Entity\Misc\Color;
@@ -53,8 +54,8 @@ class SelectionDefinition extends AbstractDefinition
     public function __construct(
         SelectionQuestionValidator $validator,
         SelectionAnswerValidator $answerValidator,
-        SelectionQuestionSerializer $serializer)
-    {
+        SelectionQuestionSerializer $serializer
+    ) {
         $this->validator = $validator;
         $this->answerValidator = $answerValidator;
         $this->serializer = $serializer;
@@ -293,5 +294,81 @@ class SelectionDefinition extends AbstractDefinition
     public function parseContents(ContentParserInterface $contentParser, \stdClass $item)
     {
         $item->text = $contentParser->parse($item->text);
+    }
+
+    public function getCsvTitles(AbstractItem $question)
+    {
+        return ['selection-'.$question->getQuestion()->getUuid()];
+    }
+
+    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    {
+        $data = json_decode($answer->getData());
+        $strcsv = '';
+        $answers = $this->correctAnswer($item, $data);
+
+        switch ($item->getMode()) {
+          case $item::MODE_FIND:
+
+            $expected = $answers->getExpected();
+
+            $strcsv = "[tries: {$data->tries}, answers: [";
+            $i = 0;
+
+            foreach ($expected as $expectedAnswer) {
+                if ($i !== 0) {
+                    $strcsv .= ',';
+                }
+                $strcsv .= $this->getSelectedText($item, $expectedAnswer);
+                ++$i;
+            }
+
+            $strcsv .= ']]';
+
+            break;
+          case $item::MODE_SELECT:
+            $expected = $answers->getExpected();
+
+            $strcsv = '[';
+            $i = 0;
+
+            foreach ($expected as $expectedAnswer) {
+                if ($i !== 0) {
+                    $strcsv .= ',';
+                }
+                $strcsv .= $this->getSelectedText($item, $expectedAnswer);
+                ++$i;
+            }
+
+            $strcsv .= ']';
+
+            break;
+          case $item::MODE_HIGHLIGHT:
+            $expected = $answers->getExpected();
+
+            $strcsv = '[';
+            $i = 0;
+
+            foreach ($expected as $expectedAnswer) {
+                if ($i !== 0) {
+                    $strcsv .= ',';
+                }
+                $strcsv .= '{';
+                $strcsv .= $this->getSelectedText($item, $expectedAnswer->getSelection()).': '.$expectedAnswer->getColor()->getColorCode();
+                ++$i;
+                $strcsv .= '}';
+            }
+
+            $strcsv .= ']';
+        }
+
+        return [$strcsv];
+    }
+
+    public function getSelectedText(AbstractItem $item, Selection $selection)
+    {
+        $text = $item->getText();
+
+        return substr($text, $selection->getBegin(), $selection->getEnd() - $selection->getBegin());
     }
 }

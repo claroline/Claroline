@@ -14,8 +14,9 @@ export const SetPaper = props => {
   return (
     <PaperTabs
       id={props.item.id}
-      hideExpected={props.hideExpected}
+      showExpected={props.showExpected}
       showStats={props.showStats}
+      showYours={props.showYours}
       yours={
         <div className="set-paper">
           <div className="items-col">
@@ -240,7 +241,8 @@ SetPaper.propTypes = {
   }).isRequired,
   answer: T.array,
   showScore: T.bool.isRequired,
-  hideExpected: T.bool.isRequired,
+  showExpected: T.bool.isRequired,
+  showYours: T.bool.isRequired,
   showStats: T.bool.isRequired,
   stats: T.shape({
     sets: T.object,

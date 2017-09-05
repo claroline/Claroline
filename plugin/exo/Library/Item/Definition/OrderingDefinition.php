@@ -3,11 +3,13 @@
 namespace UJM\ExoBundle\Library\Item\Definition;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\OrderingQuestion;
 use UJM\ExoBundle\Entity\Misc\OrderingItem;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
+use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\OrderingQuestionSerializer;
 use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
@@ -53,8 +55,8 @@ class OrderingDefinition extends AbstractDefinition
     public function __construct(
         OrderingQuestionValidator $validator,
         OrderingAnswerValidator $answerValidator,
-        OrderingQuestionSerializer $serializer)
-    {
+        OrderingQuestionSerializer $serializer
+    ) {
         $this->validator = $validator;
         $this->answerValidator = $answerValidator;
         $this->serializer = $serializer;
@@ -178,5 +180,29 @@ class OrderingDefinition extends AbstractDefinition
         array_walk($item->items, function (\stdClass $item) use ($contentParser) {
             $item->data = $contentParser->parse($item->data);
         });
+    }
+
+    public function getCsvTitles(AbstractItem $item)
+    {
+        return ['ordering-'.$item->getQuestion()->getUuid()];
+    }
+
+    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    {
+        $data = json_decode($answer->getData());
+        $items = $item->getItems();
+        $answers = [];
+
+        foreach ($data as $el) {
+            foreach ($items as $item) {
+                if ($item->getUuid() === $el->itemId) {
+                    $answers[] = $item->getData();
+                }
+            }
+        }
+
+        $compressor = new ArrayCompressor();
+
+        return [$compressor->compress($answers)];
     }
 }

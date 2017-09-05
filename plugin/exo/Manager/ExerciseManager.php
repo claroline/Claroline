@@ -5,6 +5,7 @@ namespace UJM\ExoBundle\Manager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Validator\ValidationException;
@@ -51,14 +52,20 @@ class ExerciseManager
     private $paperManager;
 
     /**
+     * @var ItemDefinitionsCollection
+     */
+    private $definitions;
+
+    /**
      * ExerciseManager constructor.
      *
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
      *     "validator"    = @DI\Inject("ujm_exo.validator.exercise"),
      *     "serializer"   = @DI\Inject("ujm_exo.serializer.exercise"),
-     *     "itemManager" = @DI\Inject("ujm_exo.manager.item"),
-     *     "paperManager" = @DI\Inject("ujm_exo.manager.paper")
+     *     "itemManager"  = @DI\Inject("ujm_exo.manager.item"),
+     *     "paperManager" = @DI\Inject("ujm_exo.manager.paper"),
+     *     "definitions"  = @DI\Inject("ujm_exo.collection.item_definitions")
      * })
      *
      * @param ObjectManager      $om
@@ -72,14 +79,16 @@ class ExerciseManager
         ExerciseValidator $validator,
         ExerciseSerializer $serializer,
         ItemManager $itemManager,
-        PaperManager $paperManager)
-    {
+        PaperManager $paperManager,
+        ItemDefinitionsCollection $definitions
+    ) {
         $this->om = $om;
         $this->repository = $this->om->getRepository('UJMExoBundle:Exercise');
         $this->validator = $validator;
         $this->serializer = $serializer;
         $this->itemManager = $itemManager;
         $this->paperManager = $paperManager;
+        $this->definitions = $definitions;
     }
 
     /**
@@ -294,5 +303,79 @@ class ExerciseManager
         fclose($handle);
 
         return $handle;
+    }
+
+    public function exportResultsToCsv(Exercise $exercise)
+    {
+        /** @var PaperRepository $repo */
+        $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
+
+        $dataPapers = [];
+        $titles = [['username'], ['firstname'], ['lastname']];
+        $items = [];
+
+        foreach ($exercise->getSteps() as $step) {
+            foreach ($step->getStepQuestions() as $stepQ) {
+                $item = $stepQ->getQuestion();
+                $items[$item->getUuid()] = $item;
+                $itemType = $item->getInteraction();
+                $definition = $this->definitions->get($item->getMimeType());
+                $titles[$item->getUuid()] = $definition->getCsvTitles($itemType);
+            }
+        }
+
+        $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
+        $papers = $repo->findBy([
+            'exercise' => $exercise,
+        ]);
+
+        foreach ($papers as $paper) {
+            $answers = $paper->getAnswers();
+            $csv = [];
+            $user = $paper->getUser();
+            $csv['username'] = [$user->getUsername()];
+            $csv['firstname'] = [$user->getFirstName()];
+            $csv['lastname'] = [$user->getLastName()];
+
+            foreach ($answers as $answer) {
+                $item = $items[$answer->getQuestionId()];
+                $definition = $this->definitions->get($item->getMimeType());
+                $csv[$answer->getQuestionId()] = $definition->getCsvAnswers($item->getInteraction(), $answer);
+            }
+
+            $dataPapers[] = $csv;
+        }
+
+        $flattenedTitles = [];
+        $flattenedData = [];
+
+        foreach ($titles as $title) {
+            foreach ($title as $subTitle) {
+                $flattenedTitles[] = $subTitle;
+            }
+        }
+
+        $flattenedData = [];
+
+        foreach ($dataPapers as $paper) {
+            $flattenedAnswers = [];
+            foreach ($paper as $paperItem) {
+                foreach ($paperItem as $paperEl) {
+                    $flattenedAnswers[] = $paperEl;
+                }
+            }
+            $flattenedData[] = $flattenedAnswers;
+        }
+
+        $fp = fopen('php://output', 'w+');
+        fputcsv($fp, $flattenedTitles);
+
+        foreach ($flattenedData as $item) {
+            fputcsv($fp, $item);
+        }
+
+        fclose($fp);
+
+        return $fp;
     }
 }

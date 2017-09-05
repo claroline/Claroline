@@ -29,6 +29,7 @@ export const VIEW_PAPER = 'paper'
 export const VIEW_CORRECTION_QUESTIONS = 'correction_questions'
 export const VIEW_CORRECTION_ANSWERS = 'correction_answers'
 export const VIEW_ATTEMPT_END = 'attempt_end'
+export const VIEW_STATISTICS = 'view_statistics'
 
 export const viewModes = [
   [VIEW_OVERVIEW, 'overview'],

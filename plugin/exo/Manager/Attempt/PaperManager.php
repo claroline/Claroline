@@ -71,8 +71,8 @@ class PaperManager
         EventDispatcherInterface $eventDispatcher,
         PaperSerializer $serializer,
         ItemManager $itemManager,
-        ResourceEvaluationManager $resourceEvalManager)
-    {
+        ResourceEvaluationManager $resourceEvalManager
+    ) {
         $this->om = $om;
         $this->repository = $om->getRepository('UJMExoBundle:Attempt\Paper');
         $this->eventDispatcher = $eventDispatcher;

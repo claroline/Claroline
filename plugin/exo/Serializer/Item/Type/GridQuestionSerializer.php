@@ -69,7 +69,9 @@ class GridQuestionSerializer implements SerializerInterface
         return array_map(function (Cell $cell) use ($options) {
             $cellData = new \stdClass();
             $cellData->id = $cell->getUuid();
-            $cellData->data = $cell->getData();
+            if ($cell->getData()) {
+                $cellData->data = $cell->getData();
+            }
             $cellData->background = $cell->getBackground();
             $cellData->color = $cell->getColor();
             $cellData->coordinates = $cell->getCoords();

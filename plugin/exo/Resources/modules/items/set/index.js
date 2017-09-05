@@ -9,7 +9,7 @@ function getCorrectedAnswer(item, answer = {data: []}) {
   const corrected = new CorrectedAnswer()
 
   item.solutions.associations.forEach(association => {
-    const userAnswer = answer ? answer.data.find(answer => (answer.itemId === association.itemId) && (answer.setId === association.setId)): null
+    const userAnswer = answer && answer.data ? answer.data.find(answer => (answer.itemId === association.itemId) && (answer.setId === association.setId)): null
 
     userAnswer ?
       corrected.addExpected(new Answerable(association.score)):
@@ -17,11 +17,11 @@ function getCorrectedAnswer(item, answer = {data: []}) {
   })
 
   item.solutions.odd.forEach(odd => {
-    const penalty = answer ? answer.data.find(answer => answer.itemId === odd.itemId): null
+    const penalty = answer && answer.data ? answer.data.find(answer => answer.itemId === odd.itemId): null
     if (penalty) corrected.addPenalty(new Answerable(-odd.score))
   })
 
-  const found = answer ? answer.data.length: 0
+  const found = answer && answer.data ? answer.data.length: 0
   times(item.solutions.associations.length - found, () => corrected.addPenalty(new Answerable(item.penalty)))
 
   return corrected

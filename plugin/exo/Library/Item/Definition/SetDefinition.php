@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Library\Item\Definition;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Entity\Misc\Association;
@@ -10,6 +11,7 @@ use UJM\ExoBundle\Entity\Misc\Label;
 use UJM\ExoBundle\Entity\Misc\Proposal;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
+use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\SetQuestionSerializer;
 use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
@@ -55,8 +57,8 @@ class SetDefinition extends AbstractDefinition
     public function __construct(
         SetQuestionValidator $validator,
         SetAnswerValidator $answerValidator,
-        SetQuestionSerializer $serializer)
-    {
+        SetQuestionSerializer $serializer
+    ) {
         $this->validator = $validator;
         $this->answerValidator = $answerValidator;
         $this->serializer = $serializer;
@@ -209,5 +211,24 @@ class SetDefinition extends AbstractDefinition
         array_walk($item->sets, function (\stdClass $set) use ($contentParser) {
             $set->data = $contentParser->parse($set->data);
         });
+    }
+
+    public function getCsvTitles(AbstractItem $question)
+    {
+        return ['set-'.$question->getQuestion()->getUuid()];
+    }
+
+    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    {
+        $data = json_decode($answer->getData());
+        $answers = [];
+
+        foreach ($data as $element) {
+            $answers[] = "{$element->itemId}: {$element->_itemData}";
+        }
+
+        $compressor = new ArrayCompressor();
+
+        return [$compressor->compress($answers)];
     }
 }

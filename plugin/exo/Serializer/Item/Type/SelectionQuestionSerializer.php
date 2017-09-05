@@ -141,11 +141,11 @@ class SelectionQuestionSerializer implements SerializerInterface
             // Searches for an existing color entity.
             foreach ($colorEntities as $entityIndex => $colorEntity) {
                 /* @var Color $colorEntity */
-              if ($colorEntity->getUuid() === $colorData->id) {
-                  $color = $colorEntity;
-                  unset($colorEntities[$entityIndex]);
-                  break;
-              }
+                if ($colorEntity->getUuid() === $colorData->id) {
+                    $color = $colorEntity;
+                    unset($colorEntities[$entityIndex]);
+                    break;
+                }
             }
 
             $color = $color ?: new Color();
@@ -216,10 +216,10 @@ class SelectionQuestionSerializer implements SerializerInterface
             $selectionQuestion->addSelection($selection);
         }
 
-      // Remaining color are no longer in the Question
-      foreach ($selectionEntities as $selectionToRemove) {
-          $selectionQuestion->removeSelection($selectionToRemove);
-      }
+        // Remaining color are no longer in the Question
+        foreach ($selectionEntities as $selectionToRemove) {
+            $selectionQuestion->removeSelection($selectionToRemove);
+        }
     }
 
     private function deserializeColorSelection(Selection $selection, array $answers, array $colors)
@@ -299,10 +299,10 @@ class SelectionQuestionSerializer implements SerializerInterface
             $selectionQuestion->addSelection($selection);
         }
 
-      // Remaining color are no longer in the Question
-      foreach ($selectionEntities as $selectionToRemove) {
-          $selectionQuestion->removeSelection($selectionToRemove);
-      }
+        // Remaining color are no longer in the Question
+        foreach ($selectionEntities as $selectionToRemove) {
+            $selectionQuestion->removeSelection($selectionToRemove);
+        }
     }
 
     private function serializeSolutions(SelectionQuestion $selectionQuestion)

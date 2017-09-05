@@ -11,7 +11,7 @@ function getCorrectedAnswer(item, answer = {data: []}) {
 
   //look for good answers
   item.solutions.forEach(solution => {
-    const userAnswer = findUserAnswer(solution, answer)
+    const userAnswer = answer && answer.data ? findUserAnswer(solution, answer): null
 
     if (userAnswer) {
       solution.score > 0 ?
@@ -23,13 +23,17 @@ function getCorrectedAnswer(item, answer = {data: []}) {
   })
 
   item.solutions.filter(solution => solution.itemIds.length === 1).forEach(oddity => {
-    const found = answer.data.find(answer => answer.indexOf(oddity.itemIds[0]) >= 0)
-    if (found) {
-      corrected.addPenalty(new Answerable(-oddity.score))
+    if (answer && answer.data) {
+      const found = answer.data.find(answer => answer.indexOf(oddity.itemIds[0]) >= 0)
+      if (found) {
+        corrected.addPenalty(new Answerable(-oddity.score))
+      }
     }
   })
 
-  times(item.solutions.filter(solution => solution.score > 0).length - answer.data.length, () => corrected.addPenalty(new Answerable(item.penalty)))
+  if (answer && answer.data) {
+    times(item.solutions.filter(solution => solution.score > 0).length - answer.data.length, () => corrected.addPenalty(new Answerable(item.penalty)))
+  }
 
   return corrected
 }

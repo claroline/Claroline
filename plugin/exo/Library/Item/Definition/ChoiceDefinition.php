@@ -3,10 +3,12 @@
 namespace UJM\ExoBundle\Library\Item\Definition;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
 use UJM\ExoBundle\Entity\Misc\Choice;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
+use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\ChoiceQuestionSerializer;
 use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
@@ -52,8 +54,8 @@ class ChoiceDefinition extends AbstractDefinition
     public function __construct(
         ChoiceQuestionValidator $validator,
         ChoiceAnswerValidator $answerValidator,
-        ChoiceQuestionSerializer $serializer)
-    {
+        ChoiceQuestionSerializer $serializer
+    ) {
         $this->validator = $validator;
         $this->answerValidator = $answerValidator;
         $this->serializer = $serializer;
@@ -192,5 +194,26 @@ class ChoiceDefinition extends AbstractDefinition
         array_walk($item->choices, function (\stdClass $choice) use ($contentParser) {
             $choice->data = $contentParser->parse($choice->data);
         });
+    }
+
+    public function getCsvTitles(AbstractItem $item)
+    {
+        return ['choice-'.$item->getQuestion()->getUuid()];
+    }
+
+    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    {
+        $data = json_decode($answer->getData());
+        $answers = [];
+
+        foreach ($item->getChoices() as $choice) {
+            if (in_array($choice->getUuid(), $data)) {
+                $answers[] = $choice->getData();
+            }
+        }
+
+        $compressor = new ArrayCompressor();
+
+        return [$compressor->compress($answers)];
     }
 }

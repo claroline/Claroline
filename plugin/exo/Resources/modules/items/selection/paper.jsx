@@ -11,9 +11,10 @@ export const SelectionPaper = (props) => {
   return (
     <PaperTabs
       item={props.item}
-      answer={props.answer}
+      showExpected={props.showExpected}
+      showStats={props.showStats}
+      showYours={props.showYours}
       id={props.item.id}
-      hideExpected={props.hideExpected}
       yours={
         (<div>
           {props.item.mode === 'find' &&
@@ -23,7 +24,7 @@ export const SelectionPaper = (props) => {
               </span>
               {'\u00a0'}
               <span className="btn btn-primary" style={{ cursor: 'default'}}>
-                {tex('try_used')} <span className="badge"> {props.answer.tries} </span>
+                {tex('try_used')} <span className="badge"> {props.answer ? props.answer.tries: 0} </span>
               </span>
             </div>
           }
@@ -40,6 +41,9 @@ export const SelectionPaper = (props) => {
           text={props.item.text}
           selections={getReactAnswerSelections(props.item, props.answer, true, true)}
         />
+      }
+      stats={
+        <div>No implementation</div>
       }
     />
   )
@@ -80,5 +84,7 @@ SelectionPaper.propTypes = {
       mode: T.string.isRequired
     })
   ]).isRequired,
-  hideExpected: T.bool.isRequired
+  showExpected: T.bool.isRequired,
+  showYours: T.bool.isRequired,
+  showStats: T.bool.isRequired
 }

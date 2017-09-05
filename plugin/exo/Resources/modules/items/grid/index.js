@@ -27,7 +27,9 @@ function getCorrectAnswerForSumCellsMode(item, answer = {data: []}) {
   const corrected = new CorrectedAnswer()
 
   item.solutions.forEach(solution => {
-    let userDataAnswer = answer.data.find(userSolution => userSolution.cellId === solution.cellId)
+    let userDataAnswer =
+     answer && answer.data ?
+      answer.data.find(userSolution => userSolution.cellId === solution.cellId): null
     let bestAnswer = findSolutionExpectedAnswer(solution)
     let userAnswer = userDataAnswer ?
         solution.answers.find(answer => (answer.text === userDataAnswer.text) && answer.caseSensitive || (answer.text.toLowerCase() === userDataAnswer.text.toLowerCase()) && ! answer.caseSensitive):
@@ -84,7 +86,7 @@ function getCorrectAnswerForFixMode(item, answer = {data: []}) {
 
 //check if the answers give by the users are all correct for an array of cellIds
 function validateCellsAnswer(corrected, item, answer, cellIds, mode) {
-  const answers = answer.data.filter(answer => cellIds.indexOf(answer.cellId) >= 0)
+  const answers = answer && answer.data ? answer.data.filter(answer => cellIds.indexOf(answer.cellId) >= 0): []
   const solutions = item.solutions.find(solution => cellIds.indexOf(solution.cellId) >= 0)
   const score = solutions.answers[0].score
   let valid = true

@@ -192,6 +192,62 @@ class PaperController extends AbstractController
     }
 
     /**
+     * Exports papers into a json file.
+     *
+     * @EXT\Route("/export/json", name="exercise_papers_export_json")
+     * @EXT\Method("GET")
+     *
+     * @param Exercise $exercise
+     *
+     * @return StreamedResponse
+     */
+    public function exportJsonAction(Exercise $exercise)
+    {
+        if (!$this->isAdmin($exercise)) {
+            // Only administrator or Paper Managers can export Papers
+            throw new AccessDeniedException();
+        }
+
+        $response = new StreamedResponse(function () use ($exercise) {
+            $data = $this->paperManager->serializeExercisePapers($exercise);
+            $handle = fopen('php://output', 'w+');
+            fwrite($handle, json_encode($data, JSON_PRETTY_PRINT));
+            fclose($handle);
+        });
+
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename="statistics.json"');
+
+        return $response;
+    }
+
+    /**
+     * Exports papers into a csv file.
+     *
+     * @EXT\Route("/export/papers/csv", name="exercise_papers_export_csv")
+     * @EXT\Method("GET")
+     *
+     * @param Exercise $exercise
+     *
+     * @return StreamedResponse
+     */
+    public function exportCsvAnswersAction(Exercise $exercise)
+    {
+        if (!$this->isAdmin($exercise)) {
+            // Only administrator or Paper Managers can export Papers
+            throw new AccessDeniedException();
+        }
+
+        $this->exerciseManager->exportResultsToCsv($exercise);
+
+        return new StreamedResponse(function () use ($exercise) {
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="export.csv"',
+        ]);
+    }
+
+    /**
      * Checks whether the current User has the administration rights on the Exercise.
      *
      * @param Exercise $exercise

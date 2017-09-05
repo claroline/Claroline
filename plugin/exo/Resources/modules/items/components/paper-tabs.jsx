@@ -10,6 +10,10 @@ export class PaperTabs extends Component {
   constructor(props) {
     super(props)
     this.handleSelect = this.handleSelect.bind(this)
+    this.defaultKey = 'first'
+    if (!props.showExpected && !props.showYours && props.showStats) {
+      this.defaultKey = 'third'
+    }
   }
 
   handleSelect(key) {
@@ -20,13 +24,15 @@ export class PaperTabs extends Component {
 
   render() {
     return (
-      <Tab.Container id={`${this.props.id}-paper`} defaultActiveKey="first">
+      <Tab.Container id={`${this.props.id}-paper`} defaultActiveKey={this.defaultKey}>
         <div>
           <Nav bsStyle="tabs">
-            <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
-              <span className="fa fa-fw fa-user"></span> {tex('your_answer')}
-            </NavItem>
-            {!this.props.hideExpected &&
+            {this.props.showYours &&
+              <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
+                <span className="fa fa-fw fa-user"></span> {tex('your_answer')}
+              </NavItem>
+            }
+            {this.props.showExpected &&
               <NavItem eventKey="second" onSelect={() => this.handleSelect('second')}>
                 <span className="fa fa-fw fa-check"></span> {tex('expected_answer')}
               </NavItem>
@@ -39,10 +45,12 @@ export class PaperTabs extends Component {
           </Nav>
 
           <Tab.Content animation>
-            <Tab.Pane eventKey="first">
-              {this.props.yours}
-            </Tab.Pane>
-            {!this.props.hideExpected &&
+            {this.props.showYours &&
+              <Tab.Pane eventKey="first">
+                {this.props.yours}
+              </Tab.Pane>
+            }
+            {this.props.showExpected &&
               <Tab.Pane eventKey="second">
                 {this.props.expected}
               </Tab.Pane>
@@ -65,6 +73,11 @@ PaperTabs.propTypes = {
   expected: T.object,
   stats: T.object,
   onTabChange: T.func,
-  hideExpected: T.bool,
-  showStats: T.bool
+  showExpected: T.bool,
+  showStats: T.bool,
+  showYours: T.bool
+}
+
+PaperTabs.defaultProps = {
+  showYours: false
 }

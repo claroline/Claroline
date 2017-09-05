@@ -8,7 +8,10 @@ function getCorrectedAnswer(item, answer = {data: []}) {
   const corrected = new CorrectedAnswer()
 
   item.solutions.forEach(solution => {
-    const userAnswer = answer.data.find(answer => (answer.itemId === solution.itemId) && (answer.position === solution.position))
+    const userAnswer =
+      answer && answer.data ?
+        answer.data.find(answer => (answer.itemId === solution.itemId) && (answer.position === solution.position)):
+        null
 
     if (userAnswer) {
       corrected.addExpected(new Answerable(solution.score))

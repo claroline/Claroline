@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Library\Item\Definition;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Entity\ItemType\MatchQuestion;
 use UJM\ExoBundle\Entity\Misc\Association;
@@ -10,6 +11,7 @@ use UJM\ExoBundle\Entity\Misc\Label;
 use UJM\ExoBundle\Entity\Misc\Proposal;
 use UJM\ExoBundle\Library\Attempt\CorrectedAnswer;
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
+use UJM\ExoBundle\Library\Csv\ArrayCompressor;
 use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Serializer\Item\Type\MatchQuestionSerializer;
 use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
@@ -55,8 +57,8 @@ class MatchDefinition extends AbstractDefinition
     public function __construct(
         MatchQuestionValidator $validator,
         MatchAnswerValidator $answerValidator,
-        MatchQuestionSerializer $serializer)
-    {
+        MatchQuestionSerializer $serializer
+    ) {
         $this->validator = $validator;
         $this->answerValidator = $answerValidator;
         $this->serializer = $serializer;
@@ -212,5 +214,42 @@ class MatchDefinition extends AbstractDefinition
         array_walk($item->secondSet, function (\stdClass $item) use ($contentParser) {
             $item->data = $contentParser->parse($item->data);
         });
+    }
+
+    public function getCsvTitles(AbstractItem $item)
+    {
+        return ['match-'.$item->getQuestion()->getUuid()];
+    }
+
+    public function getCsvAnswers(AbstractItem $item, Answer $answer)
+    {
+        $data = json_decode($answer->getData());
+        $proposals = $item->getProposals();
+        $labels = $item->getLabels();
+        $answers = [];
+
+        foreach ($data as $pair) {
+            $answerPair = '[';
+            foreach ($proposals as $proposal) {
+                if ($proposal->getUuid() === $pair->firstId) {
+                    $answerPair .= $proposal->getData();
+                }
+            }
+
+            $answerPair .= ';';
+
+            foreach ($labels as $label) {
+                if ($label->getUuid() === $pair->secondId) {
+                    $answerPair .= $label->getData();
+                }
+            }
+
+            $answerPair .= ']';
+            $answers[] = $answerPair;
+        }
+
+        $compressor = new ArrayCompressor();
+
+        return [$compressor->compress($answers)];
     }
 }

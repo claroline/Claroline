@@ -14,8 +14,9 @@ export const BooleanPaper = props => {
   return (
     <PaperTabs
       id={props.item.id}
-      hideExpected={props.hideExpected}
+      showExpected={props.showExpected}
       showStats={props.showStats}
+      showYours={props.showYours}
       yours={
         <div className="boolean-paper row">
           {props.item.solutions.map(solution =>
@@ -121,7 +122,8 @@ BooleanPaper.propTypes = {
   }).isRequired,
   answer: T.string.isRequired,
   showScore: T.bool.isRequired,
-  hideExpected: T.bool.isRequired,
+  showYours: T.bool.isRequired,
+  showExpected: T.bool.isRequired,
   showStats: T.bool.isRequired,
   stats: T.shape({
     choices: T.object,

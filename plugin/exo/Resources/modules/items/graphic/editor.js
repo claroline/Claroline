@@ -32,6 +32,8 @@ function reduce(item = {}, action = {}) {
       return decorate(Object.assign({}, item, {
         image: blankImage(),
         pointers: 0,
+        //required by the json schema altough not implemented
+        pointerMode: 'pointer',
         solutions: []
       }))
     case SELECT_MODE:

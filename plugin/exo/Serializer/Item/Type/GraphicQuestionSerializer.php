@@ -165,7 +165,10 @@ class GraphicQuestionSerializer implements SerializerInterface
             $solutionData = new \stdClass();
             $solutionData->area = $this->serializeArea($area);
             $solutionData->score = $area->getScore();
-            $solutionData->feedback = $area->getFeedback();
+
+            if ($area->getFeedback()) {
+                $solutionData->feedback = $area->getFeedback();
+            }
 
             return $solutionData;
         }, $graphicQuestion->getAreas()->toArray());

@@ -162,3 +162,10 @@ function makeError(message, definition) {
 
   return `${message} in '${name}' definition`
 }
+
+export const BasePaperDefaultProps = {
+  answer: '',
+  showExpected: false,
+  showStats: true,
+  showYours: true
+}

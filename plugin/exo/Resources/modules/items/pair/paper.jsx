@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-
+import has from 'lodash/has'
 import {tex} from '#/main/core/translation'
 import {Feedback} from './../components/feedback-btn.jsx'
 import {SolutionScore} from './../components/score.jsx'
@@ -16,8 +16,9 @@ export const PairPaper = props => {
   return (
     <PaperTabs
       id={props.item.id}
-      hideExpected={props.hideExpected}
+      showExpected={props.showExpected}
       showStats={props.showStats}
+      showYours={props.showYours}
       yours={
         <div className="row pair-paper">
           <div className="col-md-5 items-col">
@@ -121,8 +122,7 @@ export const PairPaper = props => {
                 </li>
               )}
               {props.item.items.map((i) =>
-                !utils.isPresentInOdds(i.id, expectedAnswers.odd) &&
-                props.stats.unpaired[i.id] &&
+                !utils.isPresentInOdds(i.id, expectedAnswers.odd) && has(props.stats, ['unpaired', i.id]) &&
                 <li key={`your-answer-orphean-${i.id}`}>
                   <div className="item stats-answer">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: i.data}} />
@@ -144,7 +144,7 @@ export const PairPaper = props => {
                     <div className="item-data" dangerouslySetInnerHTML={{__html: answer.rightItem.data}} />
 
                     <AnswerStats stats={{
-                      value: props.stats.paired[answer.leftItem.id] && props.stats.paired[answer.leftItem.id][answer.rightItem.id] ?
+                      value: has(props.stats, ['paired', answer.leftItem.id, answer.rightItem.id]) ?
                         props.stats.paired[answer.leftItem.id][answer.rightItem.id] :
                         0,
                       total: props.stats.total
@@ -154,8 +154,7 @@ export const PairPaper = props => {
               )}
               {props.item.items.map((i1) =>
                 props.item.items.map((i2) =>
-                  props.stats.paired[i1.id] &&
-                  props.stats.paired[i1.id][i2.id] &&
+                  has(props.stats, ['paired', i1.id, i2.id]) &&
                   !utils.isPresentInSolutions(i1.id, i2.id, props.item.solutions) &&
                   <li key={`expected-answer-id-${i1.id}-${i2.id}`}>
                     <div className="item stats-answer">
@@ -163,7 +162,7 @@ export const PairPaper = props => {
                       <div className="item-data" dangerouslySetInnerHTML={{__html: i2.data}} />
 
                       <AnswerStats stats={{
-                        value: props.stats.paired[i1.id] && props.stats.paired[i1.id][i2.id] ?
+                        value: has(props.stats, ['paired', i1.id, i2.id]) ?
                           props.stats.paired[i1.id][i2.id] :
                           0,
                         total: props.stats.total
@@ -200,7 +199,8 @@ PairPaper.propTypes = {
   }).isRequired,
   answer: T.array,
   showScore: T.bool.isRequired,
-  hideExpected: T.bool.isRequired,
+  showExpected: T.bool.isRequired,
+  showYours: T.bool.isRequired,
   showStats: T.bool.isRequired,
   stats: T.shape({
     unpaired: T.object,

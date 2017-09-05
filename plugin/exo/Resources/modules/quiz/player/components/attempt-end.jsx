@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {tex} from '#/main/core/translation'
 import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 import {select as playerSelectors} from './../selectors'
-import {selectors as quizSelectors} from './../../selectors'
+import quizSelectors from './../../selectors'
 import {selectors as paperSelectors} from './../../papers/selectors'
 import {utils as paperUtils} from './../../papers/utils'
 import {ScoreGauge} from './../../../components/score-gauge.jsx'
@@ -13,13 +13,13 @@ import {ScoreGauge} from './../../../components/score-gauge.jsx'
 const AttemptEnd = props => {
   const showScore = paperUtils.showScore(props.admin, props.paper.finished, paperSelectors.showScoreAt(props.paper), paperSelectors.showCorrectionAt(props.paper), paperSelectors.correctionDate(props.paper))
   const showCorrection = paperUtils.showCorrection(props.admin, props.paper.finished, paperSelectors.showCorrectionAt(props.paper), paperSelectors.correctionDate(props.paper))
-
+  const answers = Object.keys(props.answers).map(key => props.answers[key])
   return (
     <div className="quiz-player attempt-end">
       <div className="row">
         {showScore &&
           <div className="col-md-3 text-center">
-            <ScoreGauge userScore={props.paper.score} maxScore={paperSelectors.paperScoreMax(props.paper)} />
+            <ScoreGauge userScore={paperUtils.computeScore(props.paper, answers)} maxScore={paperSelectors.paperScoreMax(props.paper)} />
           </div>
         }
         <div className={showScore ? 'col-md-9':'col-md-12'}>
@@ -47,9 +47,9 @@ const AttemptEnd = props => {
 
 AttemptEnd.propTypes = {
   admin: T.bool.isRequired,
+  answers: T.object.isRequired,
   paper: T.shape({
     id: T.string.isRequired,
-    score: T.number,
     structure: T.object.isRequired,
     finished: T.bool.isRequired
   }).isRequired,
@@ -60,7 +60,8 @@ function mapStateToProps(state) {
   return {
     admin: resourceSelect.editable(state) || quizSelectors.papersAdmin(state),
     paper: playerSelectors.paper(state),
-    endMessage: playerSelectors.quizEndMessage(state)
+    endMessage: playerSelectors.quizEndMessage(state),
+    answers: playerSelectors.answers(state)
   }
 }
 

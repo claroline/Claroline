@@ -9,7 +9,6 @@ export const OpenPaper = props => {
   return (
     <PaperTabs
       id={props.item.id}
-      hideExpected={true}
       yours={
         <div className="open-paper">
           {props.feedback &&

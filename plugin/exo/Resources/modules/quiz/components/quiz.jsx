@@ -100,6 +100,12 @@ function customActions(props) {
       disabled: !props.hasPapers,
       action: '#correction/questions'
     })
+
+    actions.push({
+      icon: 'fa fa-fw fa-bar-chart',
+      label: tex('statistics'),
+      action: '#/statistics'
+    })
   }
 
   return actions

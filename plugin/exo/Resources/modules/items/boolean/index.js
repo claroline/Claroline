@@ -7,8 +7,8 @@ import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/componen
 function getCorrectedAnswer(item, answer = null) {
   const corrected = new CorrectedAnswer()
 
-  item.choices.forEach(choice => {
-    const score = choice._score
+  item.solutions.forEach(choice => {
+    const score = choice.score
     if (answer && answer.data === choice.id) {
       score > 0 ?
         corrected.addExpected(new Answerable(score)) :
