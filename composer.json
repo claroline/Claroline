@@ -38,7 +38,7 @@
         "hwi/oauth-bundle": "0.5.2",
         "icap/html-diff": "1.1.0",
         "idci/exporter-bundle": "1.0.0",
-        "jangobrick/php-svg": "dev-master",
+        "meyfa/php-svg": "0.6.0",
         "jdorn/sql-formatter": "1.2.17",
         "jms/di-extra-bundle": "1.5.0",
         "jms/security-extra-bundle": "1.5.1",
