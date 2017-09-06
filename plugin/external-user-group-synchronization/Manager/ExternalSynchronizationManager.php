@@ -425,8 +425,8 @@ class ExternalSynchronizationManager
                         $username .= uniqid();
                     }
                     $user->setUsername($username);
-                    $user->setPassword(random_bytes(10));
                     $user->setIsMailValidated(true);
+                    $user->setPlainPassword(bin2hex(random_bytes(10)));
                 }
                 // Update or set user values
                 $user->setFirstName($this->utilities->stringToUtf8($externalSourceUser['first_name']));
