@@ -1458,6 +1458,7 @@ class WorkspaceManager
     ) {
         $this->log('Start duplicate');
         $rights = $resourceNode->getRights();
+        $usedRoles = [];
 
         foreach ($rights as $right) {
             $role = $right->getRole();
@@ -1475,9 +1476,12 @@ class WorkspaceManager
                 ) {
                     $usedRole = $copy->getWorkspace()->getGuid() === $workspaceRoles[$key]->getWorkspace()->getGuid() ?
                       $workspaceRoles[$key] : $role;
-                    $newRight->setRole($usedRole);
-                    $this->log('Duplicating resource rights for '.$copy->getName().' - '.$copy->getId().' - '.$usedRole->getName().'...');
-                    $this->om->persist($newRight);
+                    if (!in_array($usedRole->getId(), $usedRoles)) {
+                        $usedRoles[] = $usedRole->getId();
+                        $newRight->setRole($usedRole);
+                        $this->log('Duplicating resource rights for '.$copy->getName().' - '.$copy->getId().' - '.$usedRole->getName().'...');
+                        $this->om->persist($newRight);
+                    }
                 } else {
                     $this->log('Dont do anything');
                 }
