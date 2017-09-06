@@ -16,6 +16,7 @@
  */
 
 $params = [
+    ['database_version', 'DB_VERSION', '5.6'],
     ['database_host', 'DB_HOST', 'localhost'],
     ['database_name', 'DB_NAME', 'claroline'],
     ['database_user', 'DB_USER', 'root'],
