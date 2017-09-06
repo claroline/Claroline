@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ab19c2b0564ff30b7ff1250e3dfa2f73",
-    "content-hash": "ca6840ca387bcb330c3fc24d2e2cba01",
+    "hash": "09c3dcfab3c0d60048e1bb882face945",
+    "content-hash": "9d7344855a170e951c53239f0fb73a21",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -120,16 +120,16 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "10.x-dev",
+            "version": "dev-theme-management",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "a63d7a66000c57c70719aa0df45b11ee18b49a55"
+                "reference": "f3f76fdbe079ae588dcf2c94921f39ad0223765c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a63d7a66000c57c70719aa0df45b11ee18b49a55",
-                "reference": "a63d7a66000c57c70719aa0df45b11ee18b49a55",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/f3f76fdbe079ae588dcf2c94921f39ad0223765c",
+                "reference": "f3f76fdbe079ae588dcf2c94921f39ad0223765c",
                 "shasum": ""
             },
             "require": {
@@ -163,7 +163,6 @@
                 "innova/angular-js-bundle": "5.1.0",
                 "innova/angular-ui-resource-picker-bundle": "6.0.0",
                 "innova/angular-ui-tinymce-bundle": "5.1.1",
-                "jangobrick/php-svg": "dev-master",
                 "jdorn/sql-formatter": "1.2.17",
                 "jms/di-extra-bundle": "1.5.0",
                 "jms/security-extra-bundle": "1.5.1",
@@ -173,6 +172,7 @@
                 "json-quiz/json-quiz": "dev-master",
                 "knplabs/knp-menu-bundle": "2.0.0",
                 "knplabs/knp-snappy-bundle": "1.3",
+                "meyfa/php-svg": "0.6.0",
                 "mrclay/minify": "2.3.0",
                 "natxet/cssmin": "3.0.2",
                 "ocramius/proxy-manager": "1.0.2",
@@ -392,7 +392,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-09-02 09:27:58"
+            "time": "2017-09-06 12:52:20"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -1426,33 +1426,33 @@
         },
         {
             "name": "doctrine/inflector",
-            "version": "v1.1.0",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/inflector.git",
-                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae"
+                "reference": "e11d84c6e018beedd929cff5220969a3c6d1d462"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
-                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/e11d84c6e018beedd929cff5220969a3c6d1d462",
+                "reference": "e11d84c6e018beedd929cff5220969a3c6d1d462",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.2"
+                "php": "^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.*"
+                "phpunit/phpunit": "^6.2"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.1.x-dev"
+                    "dev-master": "1.2.x-dev"
                 }
             },
             "autoload": {
-                "psr-0": {
-                    "Doctrine\\Common\\Inflector\\": "lib/"
+                "psr-4": {
+                    "Doctrine\\Common\\Inflector\\": "lib/Doctrine/Common/Inflector"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1489,7 +1489,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2015-11-06 14:35:42"
+            "time": "2017-07-22 12:18:28"
         },
         {
             "name": "doctrine/instantiator",
@@ -2927,47 +2927,6 @@
             "time": "2015-09-03 13:13:32"
         },
         {
-            "name": "jangobrick/php-svg",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ptsavdar/php-svg.git",
-                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ptsavdar/php-svg/zipball/0ca03406b57e29516ce04e02592d28b687b5531a",
-                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "JangoBrick\\SVG\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "JangoBrick"
-                }
-            ],
-            "description": "Read, edit, write, and render SVG files with PHP",
-            "homepage": "https://github.com/JangoBrick/php-svg",
-            "keywords": [
-                "svg"
-            ],
-            "support": {
-                "source": "https://github.com/ptsavdar/php-svg/tree/master"
-            },
-            "time": "2017-02-27 15:14:15"
-        },
-        {
             "name": "jdorn/sql-formatter",
             "version": "v1.2.17",
             "source": {
@@ -4018,6 +3977,49 @@
                 "http client"
             ],
             "time": "2017-08-19 09:43:47"
+        },
+        {
+            "name": "meyfa/php-svg",
+            "version": "v0.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/meyfa/php-svg.git",
+                "reference": "cde475bf2566d8414fb6d11f55653180203d4e01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/meyfa/php-svg/zipball/cde475bf2566d8414fb6d11f55653180203d4e01",
+                "reference": "cde475bf2566d8414fb6d11f55653180203d4e01",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SVG\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabian Meyer",
+                    "homepage": "http://meyfa.net"
+                }
+            ],
+            "description": "Read, edit, write, and render SVG files with PHP",
+            "homepage": "https://github.com/meyfa/php-svg",
+            "keywords": [
+                "svg"
+            ],
+            "time": "2017-07-29 11:10:57"
         },
         {
             "name": "monolog/monolog",
@@ -6800,22 +6802,22 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "3.2.2",
+            "version": "4.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "4aada1f93c72c35e22fb1383b47fee43b8f1d157"
+                "reference": "2d3d238c433cf69caeb4842e97a3223a116f94b2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/4aada1f93c72c35e22fb1383b47fee43b8f1d157",
-                "reference": "4aada1f93c72c35e22fb1383b47fee43b8f1d157",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/2d3d238c433cf69caeb4842e97a3223a116f94b2",
+                "reference": "2d3d238c433cf69caeb4842e97a3223a116f94b2",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5",
+                "php": "^7.0",
                 "phpdocumentor/reflection-common": "^1.0@dev",
-                "phpdocumentor/type-resolver": "^0.3.0",
+                "phpdocumentor/type-resolver": "^0.4.0",
                 "webmozart/assert": "^1.0"
             },
             "require-dev": {
@@ -6841,20 +6843,20 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-08-08 06:39:58"
+            "time": "2017-08-30 18:51:59"
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "0.3.0",
+            "version": "0.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "fb3933512008d8162b3cdf9e18dba9309b7c3773"
+                "reference": "9c977708995954784726e25d0cd1dddf4e65b0f7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/fb3933512008d8162b3cdf9e18dba9309b7c3773",
-                "reference": "fb3933512008d8162b3cdf9e18dba9309b7c3773",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/9c977708995954784726e25d0cd1dddf4e65b0f7",
+                "reference": "9c977708995954784726e25d0cd1dddf4e65b0f7",
                 "shasum": ""
             },
             "require": {
@@ -6888,7 +6890,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2017-06-03 08:32:36"
+            "time": "2017-07-14 14:27:02"
         },
         {
             "name": "phpmd/phpmd",
@@ -6958,22 +6960,22 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "v1.7.0",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073"
+                "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/93d39f1f7f9326d746203c7c056f300f7f126073",
-                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6",
+                "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
                 "php": "^5.3|^7.0",
-                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2",
+                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0",
                 "sebastian/comparator": "^1.1|^2.0",
                 "sebastian/recursion-context": "^1.0|^2.0|^3.0"
             },
@@ -6984,7 +6986,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6.x-dev"
+                    "dev-master": "1.7.x-dev"
                 }
             },
             "autoload": {
@@ -7017,7 +7019,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-03-02 20:05:34"
+            "time": "2017-09-04 11:05:03"
         },
         {
             "name": "phpunit/php-code-coverage",
