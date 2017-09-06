@@ -860,17 +860,17 @@ class ResourceManager
      * @param ResourceNode[] $nodes
      * @param bool           $arePublished
      */
-    public function setPublishedStatus(array $nodes, $arePublished)
+    public function setPublishedStatus(array $nodes, $arePublished, $isRecursive = false)
     {
+        $this->om->startFlushSuite();
         foreach ($nodes as $node) {
-            $children = $this->getAllChildren($node, true);
             $node->setPublished($arePublished);
             $this->om->persist($node);
 
             //do it on every children aswell
-            foreach ($children as $child) {
-                $child->setPublished($arePublished);
-                $this->om->persist($child);
+            if ($isRecursive) {
+                $descendants = $this->resourceNodeRepo->findDescendants($node, true);
+                $this->setPublishedStatus($descendants, $arePublished, false);
             }
 
             //only warn for the roots
@@ -885,7 +885,7 @@ class ResourceManager
             $this->dispatcher->dispatch('log', 'Log\LogResourcePublish', [$node, $usersToNotify]);
         }
 
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     /**

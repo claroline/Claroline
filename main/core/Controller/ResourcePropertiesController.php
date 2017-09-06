@@ -185,7 +185,6 @@ class ResourcePropertiesController extends Controller
         $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
         $creatorUsername = $node->getCreator()->getUsername();
-        $wasPublished = $node->isPublished();
         $wasPublishedToPortal = $node->isPublishedToPortal();
         $form = $this->formFactory->create(
             new ResourcePropertiesType($creatorUsername, $this->translator),
@@ -197,6 +196,7 @@ class ResourcePropertiesController extends Controller
             $name = $form->get('name')->getData();
             $file = $form->get('newIcon')->getData();
             $isRecursive = $this->request->get('isRecursive');
+            $publish = $form->get('published')->getData();
 
             if ($file) {
                 $this->resourceManager->changeIcon($node, $file);
@@ -212,9 +212,7 @@ class ResourcePropertiesController extends Controller
                     ->changeAccessibilityDate($node, $accessibleFrom, $accessibleUntil);
             }
 
-            if ($node->isPublished() !== $wasPublished) {
-                $this->resourceManager->setPublishedStatus([$node], $node->isPublished());
-            }
+            $this->resourceManager->setPublishedStatus([$node], $publish, $isRecursive);
 
             if (
                 $this->hasAccess('ADMINISTRATE', $collection) &&
