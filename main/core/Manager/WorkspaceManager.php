@@ -1572,6 +1572,25 @@ class WorkspaceManager
                 $widgetDisplayConfigs[$widgetInstanceId] = $wdc;
             }
             $newHomeTab = new HomeTab();
+            $workspaceRoles = $this->getArrayRolesByWorkspace($workspace);
+
+            //set the roles here. This may be buggy ?
+            foreach ($homeTab->getRoles() as $role) {
+                $key = $role->getTranslationKey();
+                if ($role->getWorkspace()) {
+                    if (
+                    isset($workspaceRoles[$key]) &&
+                    !empty($workspaceRoles[$key])
+                    ) {
+                        $usedRole = $workspace->getGuid() === $workspaceRoles[$key]->getWorkspace()->getGuid() ?
+                          $workspaceRoles[$key] : $role;
+                        $newHomeTab->addRole($usedRole);
+                    }
+                } else {
+                    $newHomeTab->addRole($role);
+                }
+            }
+
             $newHomeTab->setType('workspace');
             $newHomeTab->setWorkspace($workspace);
             $newHomeTab->setName($homeTab->getName());
