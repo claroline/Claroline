@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "35d66521c4ff4a86de0f127726a3e4c729216306"
+                "reference": "ca348b1d65ecae39e79383f53e92e556dd2c0bb7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/35d66521c4ff4a86de0f127726a3e4c729216306",
-                "reference": "35d66521c4ff4a86de0f127726a3e4c729216306",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/ca348b1d65ecae39e79383f53e92e556dd2c0bb7",
+                "reference": "ca348b1d65ecae39e79383f53e92e556dd2c0bb7",
                 "shasum": ""
             },
             "require": {
@@ -163,7 +163,6 @@
                 "innova/angular-js-bundle": "5.1.0",
                 "innova/angular-ui-resource-picker-bundle": "6.0.0",
                 "innova/angular-ui-tinymce-bundle": "5.1.1",
-                "jangobrick/php-svg": "dev-master",
                 "jdorn/sql-formatter": "1.2.17",
                 "jms/di-extra-bundle": "1.5.0",
                 "jms/security-extra-bundle": "1.5.1",
@@ -173,6 +172,7 @@
                 "json-quiz/json-quiz": "dev-master",
                 "knplabs/knp-menu-bundle": "2.0.0",
                 "knplabs/knp-snappy-bundle": "1.3",
+                "meyfa/php-svg": "0.6.0",
                 "mrclay/minify": "2.3.0",
                 "natxet/cssmin": "3.0.2",
                 "ocramius/proxy-manager": "1.0.2",
@@ -392,7 +392,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-09-06 10:50:25"
+            "time": "2017-09-06 11:37:57"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -2927,47 +2927,6 @@
             "time": "2015-09-03 13:13:32"
         },
         {
-            "name": "jangobrick/php-svg",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ptsavdar/php-svg.git",
-                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ptsavdar/php-svg/zipball/0ca03406b57e29516ce04e02592d28b687b5531a",
-                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "JangoBrick\\SVG\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "JangoBrick"
-                }
-            ],
-            "description": "Read, edit, write, and render SVG files with PHP",
-            "homepage": "https://github.com/JangoBrick/php-svg",
-            "keywords": [
-                "svg"
-            ],
-            "support": {
-                "source": "https://github.com/ptsavdar/php-svg/tree/master"
-            },
-            "time": "2017-02-27 15:14:15"
-        },
-        {
             "name": "jdorn/sql-formatter",
             "version": "v1.2.17",
             "source": {
@@ -4018,6 +3977,49 @@
                 "http client"
             ],
             "time": "2017-08-19 09:43:47"
+        },
+        {
+            "name": "meyfa/php-svg",
+            "version": "v0.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/meyfa/php-svg.git",
+                "reference": "cde475bf2566d8414fb6d11f55653180203d4e01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/meyfa/php-svg/zipball/cde475bf2566d8414fb6d11f55653180203d4e01",
+                "reference": "cde475bf2566d8414fb6d11f55653180203d4e01",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SVG\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabian Meyer",
+                    "homepage": "http://meyfa.net"
+                }
+            ],
+            "description": "Read, edit, write, and render SVG files with PHP",
+            "homepage": "https://github.com/meyfa/php-svg",
+            "keywords": [
+                "svg"
+            ],
+            "time": "2017-07-29 11:10:57"
         },
         {
             "name": "monolog/monolog",
