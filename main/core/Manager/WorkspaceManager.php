@@ -1487,6 +1487,15 @@ class WorkspaceManager
                 }
             }
         }
+
+        foreach ($copy->getChildren() as $child) {
+            foreach ($resourceNode->getChildren() as $sourceChild) {
+                if ($child->getName() === $sourceChild->getName()) {
+                    $this->duplicateRights($sourceChild, $child, $workspaceRoles);
+                }
+            }
+        }
+
         $this->om->flush();
     }
 
