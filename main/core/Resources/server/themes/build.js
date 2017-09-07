@@ -23,10 +23,6 @@ const registeredPackagesNames = Object.keys(registeredPackages)
 function build(theme, noCache) {
   const previousBuild = getBuildState()
 
-  if (!fs.existsSync(BUILD_DIR)) {
-    fs.mkdirSync(BUILD_DIR)
-  }
-
   if (!previousBuild[theme.name] || noCache) {
     previousBuild[theme.name] = {}
   }
