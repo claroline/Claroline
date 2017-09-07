@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "ab19c2b0564ff30b7ff1250e3dfa2f73",
+    "hash": "2a7e859daada88b4e7082682ee45fc3f",
     "content-hash": "ca6840ca387bcb330c3fc24d2e2cba01",
     "packages": [
         {
@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "a63d7a66000c57c70719aa0df45b11ee18b49a55"
+                "reference": "811de85cd6ad06cd0a9b96606e52d47587e82274"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a63d7a66000c57c70719aa0df45b11ee18b49a55",
-                "reference": "a63d7a66000c57c70719aa0df45b11ee18b49a55",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/811de85cd6ad06cd0a9b96606e52d47587e82274",
+                "reference": "811de85cd6ad06cd0a9b96606e52d47587e82274",
                 "shasum": ""
             },
             "require": {
@@ -163,7 +163,6 @@
                 "innova/angular-js-bundle": "5.1.0",
                 "innova/angular-ui-resource-picker-bundle": "6.0.0",
                 "innova/angular-ui-tinymce-bundle": "5.1.1",
-                "jangobrick/php-svg": "dev-master",
                 "jdorn/sql-formatter": "1.2.17",
                 "jms/di-extra-bundle": "1.5.0",
                 "jms/security-extra-bundle": "1.5.1",
@@ -173,6 +172,7 @@
                 "json-quiz/json-quiz": "dev-master",
                 "knplabs/knp-menu-bundle": "2.0.0",
                 "knplabs/knp-snappy-bundle": "1.3",
+                "meyfa/php-svg": "0.6.0",
                 "mrclay/minify": "2.3.0",
                 "natxet/cssmin": "3.0.2",
                 "ocramius/proxy-manager": "1.0.2",
@@ -392,7 +392,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-09-02 09:27:58"
+            "time": "2017-09-07 08:26:11"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -2927,47 +2927,6 @@
             "time": "2015-09-03 13:13:32"
         },
         {
-            "name": "jangobrick/php-svg",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ptsavdar/php-svg.git",
-                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ptsavdar/php-svg/zipball/0ca03406b57e29516ce04e02592d28b687b5531a",
-                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "JangoBrick\\SVG\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "JangoBrick"
-                }
-            ],
-            "description": "Read, edit, write, and render SVG files with PHP",
-            "homepage": "https://github.com/JangoBrick/php-svg",
-            "keywords": [
-                "svg"
-            ],
-            "support": {
-                "source": "https://github.com/ptsavdar/php-svg/tree/master"
-            },
-            "time": "2017-02-27 15:14:15"
-        },
-        {
             "name": "jdorn/sql-formatter",
             "version": "v1.2.17",
             "source": {
@@ -4018,6 +3977,49 @@
                 "http client"
             ],
             "time": "2017-08-19 09:43:47"
+        },
+        {
+            "name": "meyfa/php-svg",
+            "version": "v0.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/meyfa/php-svg.git",
+                "reference": "cde475bf2566d8414fb6d11f55653180203d4e01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/meyfa/php-svg/zipball/cde475bf2566d8414fb6d11f55653180203d4e01",
+                "reference": "cde475bf2566d8414fb6d11f55653180203d4e01",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SVG\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabian Meyer",
+                    "homepage": "http://meyfa.net"
+                }
+            ],
+            "description": "Read, edit, write, and render SVG files with PHP",
+            "homepage": "https://github.com/meyfa/php-svg",
+            "keywords": [
+                "svg"
+            ],
+            "time": "2017-07-29 11:10:57"
         },
         {
             "name": "monolog/monolog",
@@ -6958,22 +6960,22 @@
         },
         {
             "name": "phpspec/prophecy",
-            "version": "v1.7.0",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/prophecy.git",
-                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073"
+                "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/93d39f1f7f9326d746203c7c056f300f7f126073",
-                "reference": "93d39f1f7f9326d746203c7c056f300f7f126073",
+                "url": "https://api.github.com/repos/phpspec/prophecy/zipball/c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6",
+                "reference": "c9b8c6088acd19d769d4cc0ffa60a9fe34344bd6",
                 "shasum": ""
             },
             "require": {
                 "doctrine/instantiator": "^1.0.2",
                 "php": "^5.3|^7.0",
-                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2",
+                "phpdocumentor/reflection-docblock": "^2.0|^3.0.2|^4.0",
                 "sebastian/comparator": "^1.1|^2.0",
                 "sebastian/recursion-context": "^1.0|^2.0|^3.0"
             },
@@ -6984,7 +6986,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6.x-dev"
+                    "dev-master": "1.7.x-dev"
                 }
             },
             "autoload": {
@@ -7017,7 +7019,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-03-02 20:05:34"
+            "time": "2017-09-04 11:05:03"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -7816,12 +7818,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "5ab8e13372a9fafe393b3fb2703b32f06ff8f3e1"
+                "reference": "9c5da0f429b092ba65e3766880aba09d022500f6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/5ab8e13372a9fafe393b3fb2703b32f06ff8f3e1",
-                "reference": "5ab8e13372a9fafe393b3fb2703b32f06ff8f3e1",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/9c5da0f429b092ba65e3766880aba09d022500f6",
+                "reference": "9c5da0f429b092ba65e3766880aba09d022500f6",
                 "shasum": ""
             },
             "require": {
@@ -7870,7 +7872,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-08-29 23:06:25"
+            "time": "2017-09-06 19:16:37"
         },
         {
             "name": "webmozart/assert",
