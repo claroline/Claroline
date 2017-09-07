@@ -1303,7 +1303,7 @@ class WorkspaceManager
         $toCopy = [];
 
         foreach ($resourceNodes as $resourceNode) {
-            $toCopy[$resourceNode->getGuid()] = $resourceNode;
+            $toCopy[$resourceNode->getId()] = $resourceNode;
         }
 
         foreach ($resourceNodes as $resourceNode) {
@@ -1311,14 +1311,22 @@ class WorkspaceManager
                 $primRes = $this->resourceManager->getResourceFromNode($resourceNode)->getPrimaryResource();
                 $parameters = $this->resourceManager->getResourceFromNode($resourceNode)->getParameters();
                 if ($primRes) {
-                    unset($toCopy[$primRes->getGuid()]);
+                    unset($toCopy[$primRes->getId()]);
+                    $ancestors = $this->resourceManager->getAncestors($primRes);
+                    foreach ($ancestors as $ancestor) {
+                        unset($toCopy[$ancestor['id']]);
+                    }
                 }
                 if ($parameters) {
                     foreach ($parameters->getSecondaryResources() as $secRes) {
-                        unset($toCopy[$secRes->getGuid()]);
+                        unset($toCopy[$secRes->getId()]);
+                        $ancestors = $this->resourceManager->getAncestors($secRes);
+                        foreach ($ancestors as $ancestor) {
+                            unset($toCopy[$ancestor['id']]);
+                        }
                     }
                 }
-                unset($toCopy[$resourceNode->getGuid()]);
+                unset($toCopy[$resourceNode->getId()]);
             }
         }
 
@@ -1389,6 +1397,7 @@ class WorkspaceManager
 
             return false;
         });
+
         $this->om->flush();
         $this->om->startFlushSuite();
         $copies = [];
@@ -1398,7 +1407,10 @@ class WorkspaceManager
             try {
                 $this->log('Duplicating '.$resourceNode->getName().' - '.$resourceNode->getId().' - from type '.$resourceNode->getResourceType()->getName().' into '.$rootNode->getName());
                 //activities will be removed anyway
-                if ($resourceNode->getResourceType()->getName() !== 'activity') {
+                //$bypass = ['activity'];
+                $bypass = [];
+                if (!in_array($resourceNode->getResourceType()->getName(), $bypass)) {
+                    $this->log('Firing resourcemanager copy method for '.$resourceNode->getName());
                     $copy = $this->resourceManager->copy(
                       $resourceNode,
                       $rootNode,
