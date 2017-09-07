@@ -40,6 +40,7 @@ web/dist
 web/js/*
 web/packages
 web/themes/*
+!web/themes/.gitkeep
 web/thumbnails/*
 web/uploads/*
 web/vendor/*
