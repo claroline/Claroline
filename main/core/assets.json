@@ -5,6 +5,7 @@
       "user-management": "users/module",
       "facet-management": "facets/module",
       "workspace-management": "administration/workspace",
+      "theme-management": "administration/theme",
       "private-profile": "profile/module",
       "organization-management": "organization/module",
       "plugin-management": "plugins/module",
@@ -25,7 +26,8 @@
 
   "styles": {
     "entry": {
-      "admin-task-tool": "tools/admin-task-tool.less"
+      "admin-task-tool": "tools/admin-task-tool.less",
+      "theme-management": "tools/theme-management.less"
     }
   }
 }

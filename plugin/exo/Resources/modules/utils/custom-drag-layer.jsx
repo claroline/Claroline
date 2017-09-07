@@ -29,7 +29,7 @@ class CustomDragLayerComponent extends Component {
     return (
       <div className="custom-drag-layer">
         <div style={getItemStyles(this.props)}>
-          {item.previewComponnent(item.props)}
+          {item.previewComponent(item.props)}
         </div>
       </div>
     )

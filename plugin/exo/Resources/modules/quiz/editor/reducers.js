@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
+
 import sanitize from './sanitizers'
 import validate from './validators'
 import cloneDeep from 'lodash/cloneDeep'
@@ -23,7 +24,7 @@ import {
   ITEM_DELETE,
   ITEM_UPDATE,
   ITEM_MOVE,
-  QUESTION_MOVE,
+  ITEM_CHANGE_STEP,
   ITEM_DUPLICATE,
   ITEM_HINTS_UPDATE,
   ITEM_DETAIL_UPDATE,
@@ -74,8 +75,7 @@ function reduceQuiz(quiz = initialQuizState(), action = {}) {
         updatedQuiz.parameters.randomOrder = SHUFFLE_NEVER
       }
 
-      const errors = validate.quiz(updatedQuiz)
-      updatedQuiz._errors = errors
+      updatedQuiz._errors = validate.quiz(updatedQuiz)
 
       return updatedQuiz
     }
@@ -108,7 +108,7 @@ function reduceQuiz(quiz = initialQuizState(), action = {}) {
 
 function reduceSteps(steps = {}, action = {}) {
   switch (action.type) {
-    case QUESTION_MOVE: {
+    case ITEM_CHANGE_STEP: {
       //remove the old one
       Object.keys(steps).forEach(stepId => {
         if (steps[stepId].items.find(item => item === action.itemId)) {

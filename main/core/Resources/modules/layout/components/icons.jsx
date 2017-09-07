@@ -28,6 +28,15 @@ FontIcon.propTypes = {
 // declare semantic icons in order to avoid wrong icon use
 
 /**
+ * Copy icon.
+ *
+ * @param props
+ * @constructor
+ */
+const CopyIcon = props =>
+  <FontIcon {...props} name="copy" />
+
+/**
  * Delete icon.
  *
  * @param props
@@ -36,10 +45,14 @@ FontIcon.propTypes = {
 const DeleteIcon = props =>
   <FontIcon {...props} name="trash-o" />
 
-DeleteIcon.propTypes = {
-  fixedWidth: T.bool,
-  className: T.string
-}
+/**
+ * Drag icon.
+ *
+ * @param props
+ * @constructor
+ */
+const DragIcon = props =>
+  <FontIcon {...props} name="arrows" />
 
 /**
  * Edit icon.
@@ -50,11 +63,6 @@ DeleteIcon.propTypes = {
 const EditIcon = props =>
   <FontIcon {...props} name="pencil" />
 
-EditIcon.propTypes = {
-  fixedWidth: T.bool,
-  className: T.string
-}
-
 /**
  * Save icon.
  *
@@ -63,11 +71,6 @@ EditIcon.propTypes = {
  */
 const SaveIcon = props =>
   <FontIcon {...props} name="save" />
-
-SaveIcon.propTypes = {
-  fixedWidth: T.bool,
-  className: T.string
-}
 
 /**
  * Published icon.
@@ -78,11 +81,6 @@ SaveIcon.propTypes = {
 const PublishedIcon = props =>
   <FontIcon {...props} name="eye" />
 
-PublishedIcon.propTypes = {
-  fixedWidth: T.bool,
-  className: T.string
-}
-
 /**
  * Unpublished icon.
  *
@@ -92,14 +90,11 @@ PublishedIcon.propTypes = {
 const UnpublishedIcon = props =>
   <FontIcon {...props} name="eye-slash" />
 
-UnpublishedIcon.propTypes = {
-  fixedWidth: T.bool,
-  className: T.string
-}
-
 export {
   FontIcon,
+  CopyIcon,
   DeleteIcon,
+  DragIcon,
   EditIcon,
   SaveIcon,
   PublishedIcon,

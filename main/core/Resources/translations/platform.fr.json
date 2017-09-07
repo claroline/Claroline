@@ -752,6 +752,7 @@
     "month.October": "Octobre",
     "month.September": "Septembre",
     "months": "mois",
+    "more_actions": "Actions disponibles",
     "move": "Déplacer",
     "my_account": "Mon compte",
     "my_agenda": "Mon agenda",
@@ -1204,6 +1205,7 @@
     "the_following_users_were_not_imported": "Les utilisateurs suivants n'ont pas pu être importés:",
     "the_workspace": "L'espace d'activités",
     "theme": "Thème",
+    "themes_management": "Gestion des thèmes",
     "third_party_authentication": "Authentification tiers (CAS, LDAP, Office 365, Facebook etc.)",
     "this_page_requires_authentication": "Cette page requiert une authentification. Veuillez vous identifier.",
     "this_resource_is_not_published": "Cette ressource n'est pas publiée",
@@ -1412,7 +1414,7 @@
     "workspaces": "Espaces d'activités",
     "workspaces_count": "{1} 1 espace d'activités|[2,Inf[ %count% espaces d'activités",
     "workspaces_included_in_category": "Espaces d'activités enregistrés dans cette catégorie",
-    "workspaces_management": "Gestions des espaces d'activités",
+    "workspaces_management": "Gestion des espaces d'activités",
     "workspaces_per_page": "Espaces par page",
     "wrong_captcha": "Le code ne correspond pas avec l'image indiquée",
     "ws_creator": "Créateur d'espaces",
@@ -1432,7 +1434,9 @@
     "widget_no_content": "Ce widget n'a aucun contenu pour l'instant.",
     "access_code": "Code d'accès",
     "allow_ip_filtering": "Activer le filtrage par IP",
-    "add_filter": "Ajouter un filtre",
     "remove_all_filter": "Retirer tous les filtres",
-    "unlock_resource_explanation": "Cette ressource est protégée par mot de passe. Veuillez entrer ce dernier pour la débloquer."
+    "unlock_resource_explanation": "Cette ressource est protégée par mot de passe. Veuillez entrer ce dernier pour la débloquer.",
+    "delete_all": "tout supprimer",
+    "ip_input_help": "Chaque partie de l'adresse doit être un nombre entre 0 et 255 ou *.",
+    "duplicate": "Dupliquer"
 }

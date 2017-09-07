@@ -6,10 +6,10 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 
 import {tex, t} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {actions} from './editor'
 import {utils} from './utils/utils'
 import {PairItemDragPreview} from './pair-item-drag-preview.jsx'
@@ -69,8 +69,9 @@ class Pair extends Component {
                       'btn-link-default btn-pin-item',
                       {'btn-disabled': !utils.pairItemHasCoords(this.props.pair.itemIds[0], this.props.items, this.props.index)}
                     )}
-                    label={<span className="fa fa-fw fa-thumb-tack" />}
-                  />
+                  >
+                    <span className="fa fa-fw fa-thumb-tack" />
+                  </TooltipButton>
                 }
 
                 <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getPairItemData(this.props.pair.itemIds[0], this.props.items)}} />
@@ -93,8 +94,9 @@ class Pair extends Component {
                       'btn-link-default btn-pin-item',
                       {'btn-disabled': !utils.pairItemHasCoords(this.props.pair.itemIds[1], this.props.items, this.props.index)}
                     )}
-                    label={<span className="fa fa-fw fa-thumb-tack" />}
-                  />
+                  >
+                    <span className="fa fa-fw fa-thumb-tack" />
+                  </TooltipButton>
                 }
 
                 <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getPairItemData(this.props.pair.itemIds[1], this.props.items)}} />
@@ -143,20 +145,22 @@ class Pair extends Component {
             id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback-toggle`}
             className="btn-link-default"
             title={tex('feedback_association_created')}
-            label={<span className="fa fa-fw fa-comments-o" />}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
+          >
+            <span className="fa fa-fw fa-comments-o" />
+          </TooltipButton>
 
           <TooltipButton
             id={`ass-${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-delete`}
             className="btn-link-default"
-            enabled={this.props.pair._deletable}
+            disabled={!this.props.pair._deletable}
             title={t('delete')}
-            label={<span className="fa fa-fw fa-trash-o" />}
             onClick={() => this.props.onChange(
               actions.removePair(this.props.pair.itemIds[0], this.props.pair.itemIds[1]))
             }
-          />
+          >
+            <span className="fa fa-fw fa-trash-o" />
+          </TooltipButton>
         </div>
       </div>
     )
@@ -295,16 +299,18 @@ class Odd extends Component {
             id={`odd-${this.props.odd.id}-feedback-toggle`}
             className="btn-link-default"
             title={tex('feedback_answer_check')}
-            label={<span className="fa fa-fw fa-comments-o" />}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
+          >
+            <span className="fa fa-fw fa-comments-o" />
+          </TooltipButton>
           <TooltipButton
             id={`odd-${this.props.odd.id}-delete`}
             className="btn-link-default"
             title={t('delete')}
-            label={<span className="fa fa-fw fa-trash-o" />}
             onClick={() => this.props.onChange(actions.removeItem(this.props.odd.id, true))}
-          />
+          >
+            <span className="fa fa-fw fa-trash-o" />
+          </TooltipButton>
         </div>
       </div>
     )
@@ -361,12 +367,14 @@ let Item = props => {
           id={`set-item-${props.item.id}-delete`}
           className="btn-link-default"
           title={t('delete')}
-          label={<span className="fa fa-fw fa-trash-o" />}
-          enabled={props.item._deletable}
+          disabled={!props.item._deletable}
           onClick={() => props.onChange(
              actions.removeItem(props.item.id, false)
           )}
-        />
+        >
+          <span className="fa fa-fw fa-trash-o" />
+        </TooltipButton>
+
         {props.connectDragSource(
           <div>
             <OverlayTrigger

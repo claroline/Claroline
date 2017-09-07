@@ -5,7 +5,6 @@ import {ChoiceFeedback} from './feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
 
 function getCorrectedAnswer(item, answers = null) {
-
   const corrected = new CorrectedAnswer()
 
   item.solutions.forEach(choice => {
@@ -28,6 +27,7 @@ function generateStats(item, papers, withAllParpers) {
     unanswered: 0,
     total: 0
   }
+
   Object.values(papers).forEach(p => {
     if (withAllParpers || p.finished) {
       let total = 0

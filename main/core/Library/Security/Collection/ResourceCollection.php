@@ -18,27 +18,53 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
  */
 class ResourceCollection
 {
+    /**
+     * @var ResourceNode[]
+     */
     private $resources;
+
+    /**
+     * @var array
+     */
     private $errors;
+
+    /**
+     * @var array
+     */
     private $attributes;
 
-    public function __construct(array $resources = array(), $attributes = array())
+    /**
+     * ResourceCollection constructor.
+     *
+     * @param array $resources
+     * @param array $attributes
+     */
+    public function __construct(array $resources = [], $attributes = [])
     {
         $this->resources = $resources;
         $this->attributes = $attributes;
-        $this->errors = array();
+        $this->errors = [];
     }
 
+    /**
+     * @param ResourceNode $resource
+     */
     public function addResource(ResourceNode $resource)
     {
         $this->resources[] = $resource;
     }
 
-    public function setResources($resources)
+    /**
+     * @param ResourceNode[] $resources
+     */
+    public function setResources(array $resources)
     {
         $this->resources = $resources;
     }
 
+    /**
+     * @return ResourceNode[]
+     */
     public function getResources()
     {
         return $this->resources;
@@ -47,45 +73,67 @@ class ResourceCollection
     /**
      * Used by the ResourceVoter to set an array of errors.
      *
-     * @param string $errors
-     *
-     * @return array
+     * @param array $errors
      */
     public function setErrors($errors)
     {
         $this->errors = $errors;
     }
 
+    /**
+     * @return array
+     */
     public function getErrors()
     {
         return $this->errors;
     }
 
+    /**
+     * @param array $attributes
+     */
     public function setAttributes($attributes)
     {
         $this->attributes = $attributes;
     }
 
+    /**
+     * @return array
+     */
     public function getAttributes()
     {
         return $this->attributes;
     }
 
+    /**
+     * @param string $key
+     *
+     * @return mixed
+     */
     public function getAttribute($key)
     {
         return $this->attributes[$key];
     }
 
+    /**
+     * @param string $key
+     * @param mixed  $value
+     */
     public function addAttribute($key, $value)
     {
         $this->attributes[$key] = $value;
     }
 
+    /**
+     * @param string $key
+     */
     public function removeAttribute($key)
     {
         unset($this->attributes[$key]);
     }
 
+    /**
+     * @return string
+     */
     public function getErrorsForDisplay()
     {
         $content = '';

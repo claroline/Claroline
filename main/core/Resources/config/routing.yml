@@ -18,15 +18,12 @@ claro_locale:
     type: annotation
 
 claro_theme:
-    resource: "@ClarolineCoreBundle/Controller/ThemeController.php"
+    resource: "@ClarolineCoreBundle/Controller/Administration/ThemeController.php"
     type: annotation
 
-claro_theme_confirm:
-    pattern: /admin/theme/confirm
-    options: { expose: true }
-    defaults:
-        _controller: FrameworkBundle:Template:template
-        template: 'ClarolineCoreBundle:Theme:confirm.html.twig'
+claro_theme_api:
+    resource: "@ClarolineCoreBundle/Controller/API/ThemeController.php"
+    type: annotation
 
 claro_content_typeerror:
     pattern: /content/typeerror

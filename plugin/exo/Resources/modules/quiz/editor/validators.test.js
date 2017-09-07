@@ -8,7 +8,6 @@ describe('quiz validator', () => {
 
   it('returns no errors on valid quiz', () => {
     const quiz = {
-      title: 'foo',
       parameters: {
         pick: 1,
         duration: 2,
@@ -22,7 +21,6 @@ describe('quiz validator', () => {
 
   it('returns validation errors if invalid', () => {
     const quiz = {
-      title: null,
       parameters: {
         pick: null,
         duration: 'foo',
@@ -30,7 +28,6 @@ describe('quiz validator', () => {
       }
     }
     ensure.equal(validate.quiz(quiz), {
-      title: 'This value should not be blank.',
       parameters: {
         pick: 'This value should not be blank.',
         duration: 'This value should be a valid number.',

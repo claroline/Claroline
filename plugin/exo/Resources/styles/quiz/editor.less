@@ -5,7 +5,7 @@
 
   .edit-zone {
     flex: 1 100%;
-    padding-left: floor(@grid-gutter-width / 2); // fake bootstrap grid
+    //padding-left: floor(@grid-gutter-width / 2); // fake bootstrap grid
     .panel-body {
       & > * {
         max-width: @quiz-container-width;
@@ -98,10 +98,6 @@
     text-align: center;
   }
 
-  .sub-section a[role="button"] .fa { // ugly selector
-    margin-right: 7px;
-  }
-
   .fa.disabled { // todo : find why this is needed
     color: #aaa;
     cursor: not-allowed;
@@ -122,8 +118,8 @@
   .quiz-editor {
     flex-direction: column;
 
-    .edit-zone {
+    /*.edit-zone {
       padding-left: 0;
-    }
+    }*/
   }
 }

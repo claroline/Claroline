@@ -14,7 +14,7 @@ import {actions as quizActions} from './../actions'
 
 import {VIEW_EDITOR} from './../enums'
 
-let Quiz = props =>
+const Quiz = props =>
   <Resource
     editor={{
       opened: VIEW_EDITOR === props.viewMode,
@@ -73,7 +73,7 @@ function customActions(props) {
     })
   }
 
-  if (props.editable || props.papersAdmin) {
+  if (props.papersAdmin) {
     // Export results
     actions.push({
       icon: 'fa fa-fw fa-table',
@@ -84,7 +84,7 @@ function customActions(props) {
   }
 
   // Docimology
-  if (props.editable || props.docimologyAdmin) {
+  if (props.docimologyAdmin) {
     actions.push({
       icon: 'fa fa-fw fa-pie-chart',
       label: tex('docimology'),
@@ -139,6 +139,8 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-Quiz = connect(mapStateToProps, mapDispatchToProps)(Quiz)
+const ConnectedQuiz = connect(mapStateToProps, mapDispatchToProps)(Quiz)
 
-export {Quiz}
+export {
+  ConnectedQuiz as Quiz
+}

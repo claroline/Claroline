@@ -49,6 +49,7 @@ const SelectedData = props =>
             'btn-link-default': !action.isDangerous,
             'btn-link-danger': action.isDangerous
           })}
+          disabled={action.disabled}
           onClick={action.action}
         >
           <span className={action.icon} />
@@ -61,6 +62,7 @@ const SelectedData = props =>
             'btn-link-default': !action.isDangerous,
             'btn-link-danger': action.isDangerous
           })}
+          disabled={action.disabled}
           href={action.action}
         >
           <span className={action.icon} />

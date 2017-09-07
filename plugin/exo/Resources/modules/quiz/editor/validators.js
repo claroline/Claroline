@@ -8,7 +8,6 @@ function validateQuiz(quiz) {
   const errors = {}
   const paramErrors = {}
 
-  setIfError(errors, 'title', notBlank(quiz.title))
   setIfError(paramErrors, 'pick', chain(parameters.pick, [notBlank, number, gteZero]))
   setIfError(paramErrors, 'duration', chain(parameters.duration, [notBlank, number, gteZero]))
   setIfError(paramErrors, 'maxAttempts', chain(parameters.maxAttempts, [notBlank, number, gteZero]))

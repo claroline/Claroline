@@ -90,7 +90,6 @@ class ExerciseSerializer implements SerializerInterface
     {
         $exercise = $exercise ?: new Exercise();
         $exercise->setUuid($data->id);
-        $exercise->setTitle($data->title);
 
         if (isset($data->description)) {
             $exercise->setDescription($data->description);

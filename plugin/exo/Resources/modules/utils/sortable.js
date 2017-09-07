@@ -10,13 +10,13 @@ export const SORT_DETECT = 'SORT_DETECT'
 
 
 // see https://gaearon.github.io/react-dnd/examples-sortable-simple.html
-export function makeSortable(component, type, previewComponnent = null) {
+export function makeSortable(component, type, previewComponent = null) {
   const source = {
     beginDrag(props) {
       return {
         id: props.id,
         index: props.index,
-        previewComponnent: previewComponnent ? previewComponnent : DefaultPreviewComponent,
+        previewComponent: previewComponent ? previewComponent : DefaultPreviewComponent,
         props: props
 
       }

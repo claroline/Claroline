@@ -1,7 +1,7 @@
 /* eslint no-console: "off" */
 
 // spy on console.error and stores error messages
-export function watchConsole() {
+function watchConsole() {
   const originalError = console.error
   console._errors = []
   console.error = msg => console._errors.push(msg)
@@ -13,7 +13,7 @@ export function watchConsole() {
 }
 
 // restore a previously watched console
-export function restoreConsole() {
+function restoreConsole() {
   if (typeof console._restore !== 'function') {
     throw new Error(
       'Cannot restore console: console has not been watched or has already been restored'
@@ -21,4 +21,9 @@ export function restoreConsole() {
   }
 
   console._restore()
+}
+
+export {
+  watchConsole,
+  restoreConsole
 }

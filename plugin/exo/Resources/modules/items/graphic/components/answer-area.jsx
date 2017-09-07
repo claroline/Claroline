@@ -4,7 +4,7 @@ import classes from 'classnames'
 import tinycolor from 'tinycolor2'
 
 import {tex} from '#/main/core/translation'
-import {TooltipButton} from './../../../components/form/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {makeDraggable} from './../../../utils/dragAndDrop'
 import {AreaResizer, AreaResizerDraggable} from './area-resizer.jsx'
 import {AnswerAreaDragPreview} from './answer-area-drag-preview.jsx'
@@ -120,7 +120,6 @@ export class AnswerArea extends Component {
             <TooltipButton
               id="area-edit"
               className="btn-default btn-sm"
-              label={<span className="fa fa-fw fa-pencil" />}
               title={tex('graphic_area_edit')}
               onClick={e => {
                 const rect = e.target.classList.contains('btn') ?
@@ -132,14 +131,18 @@ export class AnswerArea extends Component {
                   rect.top + rect.height + window.pageYOffset - containerRect.top
                 )
               }}
-            />
+            >
+              <span className="fa fa-fw fa-pencil" />
+            </TooltipButton>
+
             <TooltipButton
               id="area-edit"
               className="btn-danger btn-sm"
-              label={<span className="fa fa-fw fa-trash-o" />}
               title={tex('delete')}
               onClick={() => props.onDelete(props.id)}
-            />
+            >
+              <span className="fa fa-fw fa-trash-o" />
+            </TooltipButton>
           </div>
         }
       </div>

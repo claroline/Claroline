@@ -20,6 +20,7 @@ use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -39,6 +40,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 class ResourceVoter implements VoterInterface
 {
     private $em;
+    /** @var ResourceRightsRepository */
     private $repository;
     private $translator;
     private $specialActions;
@@ -46,9 +48,12 @@ class ResourceVoter implements VoterInterface
     private $maskManager;
     private $resourceManager;
     private $workspaceManager;
+    private $rightsManager;
     private $session;
 
     /**
+     * ResourceVoter constructor.
+     *
      * @DI\InjectParams({
      *     "em"               = @DI\Inject("doctrine.orm.entity_manager"),
      *     "translator"       = @DI\Inject("translator"),
@@ -59,6 +64,15 @@ class ResourceVoter implements VoterInterface
      *     "rightsManager"    = @DI\Inject("claroline.manager.rights_manager"),
      *     "session"          = @DI\Inject("session")
      * })
+     *
+     * @param EntityManager       $em
+     * @param TranslatorInterface $translator
+     * @param Utilities           $ut
+     * @param MaskManager         $maskManager
+     * @param ResourceManager     $resourceManager
+     * @param WorkspaceManager    $workspaceManager
+     * @param RightsManager       $rightsManager
+     * @param SessionInterface    $session
      */
     public function __construct(
         EntityManager $em,
@@ -110,8 +124,8 @@ class ResourceVoter implements VoterInterface
         if ($object instanceof ResourceCollection) {
             $errors = [];
             if (strtolower($attributes[0]) === 'create') {
-                if ($targetWorkspace = $object->getResources()[0]) {
-                    //there should be one one resource every time
+                if ($object->getResources()[0]) {
+                    //there should be one resource every time
                     //(you only create resource one at a time in a single directory
                     $targetWorkspace = $object->getResources()[0]->getWorkspace();
 
@@ -199,8 +213,8 @@ class ResourceVoter implements VoterInterface
     }
 
     /**
-     * @param $action
-     * @param array          $nodes
+     * @param string         $action
+     * @param ResourceNode[] $nodes
      * @param TokenInterface $token
      *
      * @return array
@@ -233,7 +247,7 @@ class ResourceVoter implements VoterInterface
             }
         }
 
-        //but it only work if he's not usurpating a workspace role to see if everything is good
+        //but it only work if he's not usurping a workspace role to see if everything is good
         if ($timesCreator === count($nodes) && !$this->isUsurpatingWorkspaceRole($token)) {
             return [];
         }
@@ -278,9 +292,9 @@ class ResourceVoter implements VoterInterface
      * can be created in the directory $resource by the $token.
      *
      * @param $type
-     * @param ResourceNode                                     $node
-     * @param TokenInterface                                   $token
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
+     * @param ResourceNode   $node
+     * @param TokenInterface $token
+     * @param Workspace      $workspace
      *
      * @return array
      */
@@ -338,9 +352,9 @@ class ResourceVoter implements VoterInterface
      * Checks if the array of resources can be moved to the resource $parent
      * by the $token.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode                   $parent
-     * @param array                                                                $nodes
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param ResourceNode   $parent
+     * @param array          $nodes
+     * @param TokenInterface $token
      *
      * @return array
      */
@@ -367,9 +381,9 @@ class ResourceVoter implements VoterInterface
      * Checks if the array of resources can be copied to the resource $parent
      * by the $token.
      *
-     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode                   $parent
-     * @param array|\Claroline\CoreBundle\Library\Security\Voter\type              $nodes
-     * @param \Symfony\Component\Security\Core\Authentication\Token\TokenInterface $token
+     * @param ResourceNode   $parent
+     * @param ResourceNode[] $nodes
+     * @param TokenInterface $token
      *
      * @return array
      */
@@ -469,7 +483,7 @@ class ResourceVoter implements VoterInterface
             $allowBlock = [];
 
             foreach ($allowedParts as $key => $val) {
-                $allowBlock[] = ($val === $currentParts[$key] || $val === 'x');
+                $allowBlock[] = ($val === $currentParts[$key] || $val === '*');
             }
 
             if (!in_array(false, $allowBlock)) {

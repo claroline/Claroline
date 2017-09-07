@@ -6,7 +6,7 @@ import {select as modalSelect} from '#/main/core/layout/modal/selectors'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {select as resourceSelect} from './../selectors'
 import {actions as resourceActions} from './../actions'
-import {Resource as ResourceComponent} from '../components/resource.jsx'
+import {Resource as ResourceComponent} from './../components/resource.jsx'
 
 /**
  * Connected container for resources.

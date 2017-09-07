@@ -5,7 +5,7 @@ import moment from 'moment'
 import Modal from 'react-bootstrap/lib/Modal'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {t, trans} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {actions} from '../actions'
 
 export const MODAL_EVENT_COMMENTS = 'MODAL_EVENT_COMMENTS'

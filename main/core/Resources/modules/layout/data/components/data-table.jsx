@@ -81,9 +81,11 @@ const DataTableRow = props =>
               MenuItem,
               typeof action.action === 'function' ? {
                 key: `data-row-${props.index}-action-${actionIndex}`,
+                disabled: action.disabled ? action.disabled(props.row) : false,
                 onClick: () => action.action(props.row)
               } : {
                 key: `data-row-${props.index}-action-${actionIndex}`,
+                disabled: action.disabled ? action.disabled(props.row) : false,
                 href: action.action
               },
               ([
@@ -100,10 +102,12 @@ const DataTableRow = props =>
               MenuItem,
               typeof action.action === 'function' ? {
                 key: `data-row-${props.index}-action-dangerous-${actionIndex}`,
+                disabled: action.disabled ? action.disabled(props.row) : false,
                 className: 'dropdown-link-danger',
                 onClick: () => action.action(props.row)
               } : {
                 key: `data-row-${props.index}-action-${actionIndex}`,
+                disabled: action.disabled ? action.disabled(props.row) : false,
                 className: 'dropdown-link-danger',
                 href: action.action
               }, ([

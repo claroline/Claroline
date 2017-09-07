@@ -46,7 +46,8 @@
 @top-bar-color:               lighten(@top-bar-bg, 30%);
 @top-bar-bg:                  @navbar-inverse-bg;
 @top-bar-border-bottom-size:  3px;
-@top-bar-border-bottom:       @top-bar-border-bottom-size solid @brand-primary;
+@top-bar-border-bottom-color: @brand-primary;
+@top-bar-border-bottom:       @top-bar-border-bottom-size solid @top-bar-border-bottom-color;
 @top-bar-box-shadow:          0 0 3px rgba(0, 0, 0, 0.5);
 
 @top-bar-logo-height:         35px;
@@ -158,6 +159,7 @@
 // Forms
 // ---
 @help-block-color:          lighten(@text-color, 25%); // lighten the text some for contrast
+@help-block-font-size:      12px;
 
 // Labels
 @input-label-color:         @text-color;

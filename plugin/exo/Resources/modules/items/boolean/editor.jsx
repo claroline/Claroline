@@ -5,8 +5,8 @@ import classes from 'classnames'
 
 import {tex} from '#/main/core/translation'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {actions} from './editor'
 import {utils} from './utils/utils'
 
@@ -58,9 +58,10 @@ class Item extends Component {
             id={`choice-${this.props.choice.id}-feedback-toggle`}
             className="btn-link-default"
             title={tex('choice_feedback_info')}
-            label={<span className="fa fa-fw fa-comments-o" />}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
+          >
+            <span className="fa fa-fw fa-comments-o" />
+          </TooltipButton>
         </div>
       </div>
     )
@@ -77,14 +78,13 @@ Item.propTypes = {
   onChange: T.func.isRequired
 }
 
-
 const Boolean = props => {
   return (
     <div className="boolean-editor">
-      <div className="dropdown">
+      <div className="form-group dropdown">
         <button className="btn btn-default dropdown-toggle" type="button" id={`choice-drop-down-${props.item.id}`} data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
           {tex('boolean_pair_select_empty')}&nbsp;
-          <span className="caret"></span>
+          <span className="caret" />
         </button>
         <ul className="dropdown-menu" aria-labelledby={`choice-drop-down-${props.item.id}`}>
           {utils.getDefaultPairs().map((pair, index) =>
@@ -128,4 +128,6 @@ Boolean.propTypes = {
   validating: T.bool.isRequired
 }
 
-export {Boolean}
+export {
+  Boolean
+}

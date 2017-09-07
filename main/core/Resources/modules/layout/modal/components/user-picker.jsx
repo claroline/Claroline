@@ -1,8 +1,9 @@
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import Modal from 'react-bootstrap/lib/Modal'
 
 import {t} from '#/main/core/translation'
 import {BaseModal} from './base.jsx'
-import React, {PropTypes as T} from 'react'
 import {UserTypeahead} from '#/main/core/layout/typeahead/users/typeahead.jsx'
 
 const UserPickerModal = props =>

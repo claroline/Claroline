@@ -18,7 +18,7 @@ import {select as paginationSelect} from './../selectors/pagination'
 import VisibleQuestions from './../containers/visible-questions.jsx'
 
 import {MODAL_SEARCH} from './modal/search.jsx'
-import {MODAL_ADD_ITEM} from './../../quiz/editor/components/add-item-modal.jsx'
+import {MODAL_ADD_ITEM} from './../../quiz/editor/components/modal/add-item-modal.jsx'
 
 // TODO : do not load add item modal from editor
 // TODO : finish to refactor modals for using the ones embed in <Page> component

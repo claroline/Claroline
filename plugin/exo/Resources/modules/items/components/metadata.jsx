@@ -3,30 +3,26 @@ import {PropTypes as T} from 'prop-types'
 
 import {ObjectsPlayer} from './item-objects.jsx'
 
-export const Metadata = props => {
-  return(
-      <div className="item-metadata">
+export const Metadata = props =>
+  <div className="item-metadata">
+    <div>
+      {props.numbering &&
+        <span className="numbering">{props.numbering}. {'\u0020'}</span>
+      }
 
-        <div>
-          {props.numbering &&
-            <span className='numbering'>{props.numbering}. {'\u0020'}</span>
-          }
+      {props.item.content && !props.isContentItem &&
+        <span className="item-content" dangerouslySetInnerHTML={{__html: props.item.content}} />
+      }
+    </div>
 
-          {props.item.content && !props.isContentItem &&
-            <span className="item-content" dangerouslySetInnerHTML={{__html: props.item.content}}></span>
-          }
-        </div>
+    {props.item.description &&
+      <div className="item-description" dangerouslySetInnerHTML={{__html: props.item.description}}></div>
+    }
 
-        {props.item.description &&
-          <div className="item-description" dangerouslySetInnerHTML={{__html: props.item.description}}></div>
-        }
-
-        {props.item.objects && 0 !== props.item.objects.length &&
-          <ObjectsPlayer item={props.item} />
-        }
-      </div>
-  )
-}
+    {props.item.objects && 0 !== props.item.objects.length &&
+      <ObjectsPlayer item={props.item} />
+    }
+  </div>
 
 Metadata.propTypes = {
   item: T.shape({

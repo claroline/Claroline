@@ -7,7 +7,7 @@ import {t, tex} from '#/main/core/translation'
 import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL} from './editor'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {OrderingItemDragPreview} from './ordering-item-drag-preview.jsx'
 
 let DropBox = props => {
@@ -40,9 +40,10 @@ let SortableItem = props => {
             <TooltipButton
               id={`answer-${props.index}-delete`}
               title={t('delete')}
-              className="fa fa-trash"
               onClick={props.onDelete}
-            />
+            >
+              <span className="fa fa-fw fa-trash-o" />
+            </TooltipButton>
           }
           <span
             title={t('move')}

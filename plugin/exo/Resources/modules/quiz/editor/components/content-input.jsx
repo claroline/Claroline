@@ -31,7 +31,7 @@ export class ContentInput extends Component {
             }}
           />
         }
-        <span className={classes('item-icon item-icon-lg', getContentDefinition(this.props.type).icon)}></span>
+        <span className={classes('item-icon item-icon-lg', getContentDefinition(this.props.type).icon)} />
       </div>
     )
   }

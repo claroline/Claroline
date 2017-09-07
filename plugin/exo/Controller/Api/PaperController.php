@@ -51,7 +51,7 @@ class PaperController extends AbstractController
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param PaperManager                  $paperManager
-     * @param EntityManager                 $em
+     * @param ExerciseManager               $exerciseManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -125,10 +125,7 @@ class PaperController extends AbstractController
      */
     public function deleteAllAction(Exercise $exercise)
     {
-        if (!$this->isAdmin($exercise)) {
-            // Only administrator or Paper Managers can delete Papers
-            throw new AccessDeniedException();
-        }
+        $this->assertHasPermission('MANAGE_PAPERS', $exercise);
 
         try {
             $this->paperManager->deleteAll($exercise);
@@ -152,10 +149,7 @@ class PaperController extends AbstractController
      */
     public function deleteAction(Paper $paper)
     {
-        if (!$this->isAdmin($paper->getExercise())) {
-            // Only administrator or Paper Managers can delete a Paper
-            throw new AccessDeniedException();
-        }
+        $this->assertHasPermission('MANAGE_PAPERS', $paper->getExercise());
 
         try {
             $this->paperManager->delete($paper);
@@ -178,10 +172,7 @@ class PaperController extends AbstractController
      */
     public function exportCsvAction(Exercise $exercise)
     {
-        if (!$this->isAdmin($exercise)) {
-            // Only administrator or Paper Managers can export Papers
-            throw new AccessDeniedException();
-        }
+        $this->assertHasPermission('MANAGE_PAPERS', $exercise);
 
         return new StreamedResponse(function () use ($exercise) {
             $this->exerciseManager->exportPapersToCsv($exercise);

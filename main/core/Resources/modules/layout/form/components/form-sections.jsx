@@ -1,62 +1,63 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import omit from 'lodash/omit'
 
 import Panel      from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
-class FormSections extends Component {
-  constructor(props) {
-    super(props)
+/**
+ * Renders a form section.
+ *
+ * @param props
+ * @constructor
+ */
+const FormSection = props =>
+  <Panel
+    {...omit(props, ['level', 'title', 'icon', 'children', 'validating', 'errors'])}
 
-    this.state = {
-      openedPanel: null
+    header={
+      React.createElement('h'+props.level, {
+        className: classes({opened: props.expanded})
+      }, [
+        props.icon && <span key="panel-icon" className={props.icon} style={{marginRight: 10}} />,
+        props.title
+      ])
     }
-  }
+  >
+    {props.children}
+  </Panel>
 
-  makeSection(section) {
-    return (
-      <Panel
-        key={section.id}
-        eventKey={section.id}
-        header={
-          React.createElement('h'+this.props.level, {
-            className: classes('panel-title', {opened: section.id === this.state.openedPanel})
-          }, [
-            section.icon && <span key="panel-icon" className={section.icon} style={{marginRight: 10}} />,
-            section.label
-          ])
-        }
-      >
-        {section.children}
-      </Panel>
-    )
-  }
-
-  render() {
-    return (
-      <PanelGroup
-        accordion={this.props.accordion}
-        activeKey={this.state.openedPanel}
-        onSelect={(activeKey) => this.setState({openedPanel: activeKey !== this.state.openedPanel ? activeKey : null})}
-      >
-        {this.props.sections.map(
-          section => this.makeSection(section)
-        )}
-      </PanelGroup>
-    )
-  }
+FormSection.propTypes = {
+  id: T.string.isRequired,
+  level: T.number,
+  icon: T.string,
+  title: T.string.isRequired,
+  expanded: T.bool,
+  children: T.node.isRequired,
+  validating: T.bool,
+  errors: T.object
 }
+
+const FormSections = props =>
+  <PanelGroup
+    accordion={props.accordion}
+    defaultActiveKey={props.defaultOpened}
+  >
+    {React.Children.map(props.children, (child, index) =>
+      React.cloneElement(child, {
+        key: index,
+        eventKey: index,
+        level: props.level
+      })
+    )}
+  </PanelGroup>
 
 FormSections.propTypes = {
   accordion: T.bool,
   level: T.number, // level for panel headings
-  sections: T.arrayOf(T.shape({
-    id: T.string.isRequired,
-    icon: T.string,
-    label: T.string.isRequired,
-    children: T.node.isRequired
-  })).isRequired
+  defaultOpened: T.string,
+  children: T.node.isRequired
 }
 
 FormSections.defaultProps = {
@@ -65,5 +66,6 @@ FormSections.defaultProps = {
 }
 
 export {
+  FormSection,
   FormSections
 }

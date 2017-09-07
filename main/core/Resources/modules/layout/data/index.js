@@ -6,6 +6,7 @@ import {DATE_TYPE,     dateDefinition}     from '#/main/core/layout/data/types/d
 import {DATETIME_TYPE, datetimeDefinition} from '#/main/core/layout/data/types/datetime'
 import {FLAG_TYPE,     flagDefinition}     from '#/main/core/layout/data/types/flag/index'
 import {HTML_TYPE,     htmlDefinition}     from '#/main/core/layout/data/types/html'
+import {IP_TYPE,       ipDefinition}       from '#/main/core/layout/data/types/ip'
 import {NUMBER_TYPE,   numberDefinition}   from '#/main/core/layout/data/types/number'
 import {STRING_TYPE,   stringDefinition}   from '#/main/core/layout/data/types/string'
 
@@ -19,6 +20,7 @@ registerType(DATE_TYPE,     dateDefinition)
 registerType(DATETIME_TYPE, datetimeDefinition)
 registerType(FLAG_TYPE,     flagDefinition)
 registerType(HTML_TYPE,     htmlDefinition)
+registerType(IP_TYPE,       ipDefinition)
 registerType(NUMBER_TYPE,   numberDefinition)
 registerType(STRING_TYPE,   stringDefinition)
 

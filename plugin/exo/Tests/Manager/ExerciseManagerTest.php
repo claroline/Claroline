@@ -56,7 +56,7 @@ class ExerciseManagerTest extends JsonDataTestCase
         $this->manager->update($this->exercise, $validData);
 
         // Checks some props
-        $this->assertEquals($this->exercise->getTitle(), $validData->title);
+        $this->assertEquals($this->exercise->getType(), $validData->parameters->type);
         $this->assertCount($this->exercise->getSteps()->count(), $validData->steps);
     }
 

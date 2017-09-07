@@ -743,6 +743,7 @@
     "month.October": "October",
     "month.September": "September",
     "months": "months",
+    "more_actions": "Available actions",
     "move": "Move",
     "my_account": "My account",
     "my_agenda": "My agenda",
@@ -1188,6 +1189,7 @@
     "the_following_users_were_not_imported": "The following users were not imported.",
     "the_workspace": "Workspace",
     "theme": "Theme",
+    "themes_management": "Themes management",
     "third_party_authentication": "Third party authentication (CAS, LDAP, Office 365, Facebook etc.)",
     "this_page_requires_authentication": "This page requires authentication. Please login.",
     "this_resource_is_not_published": "This resource is not published",
@@ -1411,8 +1413,9 @@
     "geolocate": "Geolocate",
     "widget_no_content": "This widget has no content for now.",
     "access_code": "Access code",
-    "allow_ip_filtering": "Allow IP filtering",
-    "add_filter": "Add filter",
     "remove_all_filter": "Remove all filters",
-    "unlock_resource_explanation": "This resource is password protected. You must enter it to access the resource."
+    "unlock_resource_explanation": "This resource is password protected. You must enter it to access the resource.",
+    "delete_all": "delete all",
+    "ip_input_help": "Each address part must be a number between 0 and 255 or *.",
+    "duplicate": "Duplicate"
 }

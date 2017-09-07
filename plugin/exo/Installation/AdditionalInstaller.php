@@ -10,6 +10,7 @@ use UJM\ExoBundle\Installation\Updater\Updater070000;
 use UJM\ExoBundle\Installation\Updater\Updater090000;
 use UJM\ExoBundle\Installation\Updater\Updater090002;
 use UJM\ExoBundle\Installation\Updater\Updater090200;
+use UJM\ExoBundle\Installation\Updater\Updater110000;
 
 class AdditionalInstaller extends BaseInstaller
 {
@@ -80,6 +81,12 @@ class AdditionalInstaller extends BaseInstaller
             );
             $updater->setLogger($this->logger);
             $updater->postUpdate();
+        }
+
+        if (version_compare($currentVersion, '11.0.0', '<')) {
+            $updater080000 = new Updater110000($this->container);
+            $updater080000->setLogger($this->logger);
+            $updater080000->postUpdate();
         }
     }
 }

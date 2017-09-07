@@ -7,7 +7,7 @@ import moment from 'moment'
 import Datetime from 'react-datetime'
 import 'react-datetime/css/react-datetime.css'
 import {t} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {actions} from '../actions'
 import {navigate} from '../router'
 

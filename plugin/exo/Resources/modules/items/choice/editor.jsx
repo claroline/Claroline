@@ -6,11 +6,11 @@ import classes from 'classnames'
 import {t, tex} from '#/main/core/translation'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
-import {CheckGroup} from './../../components/form/check-group.jsx'
-import {Radios} from './../../components/form/radios.jsx'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {QCM_MULTIPLE, QCM_SINGLE, actions} from './editor'
 
 import {
@@ -18,7 +18,6 @@ import {
   NUMBERING_NONE,
   NUMBERING_NUMERIC
 } from './../../quiz/enums'
-
 
 class ChoiceItem extends Component {
   constructor(props) {
@@ -31,8 +30,8 @@ class ChoiceItem extends Component {
       <li
         className={classes(
           'answer-item choice-item',
-          {'expected-answer' : !this.props.fixedScore && this.props.score > 0},
-          {'unexpected-answer' : !this.props.fixedScore && this.props.score <= 0}
+          {'expected-answer' : this.props.checked},
+          {'unexpected-answer' : !this.props.checked}
         )}
       >
         <input
@@ -80,23 +79,27 @@ class ChoiceItem extends Component {
               )}
             />
           }
+
           <TooltipButton
             id={`choice-${this.props.id}-feedback-toggle`}
             className="btn-link-default"
             title={tex('choice_feedback_info')}
-            label={<span className="fa fa-fw fa-comments-o"></span>}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
+          >
+            <span className="fa fa-fw fa-comments-o" />
+          </TooltipButton>
+
           <TooltipButton
             id={`choice-${this.props.id}-delete`}
             className="btn-link-default"
-            enabled={this.props.deletable}
+            disabled={!this.props.deletable}
             title={t('delete')}
-            label={<span className="fa fa-fw fa-trash-o"></span>}
             onClick={() => this.props.deletable && this.props.onChange(
               actions.removeChoice(this.props.id)
             )}
-          />
+          >
+            <span className="fa fa-fw fa-trash-o" />
+          </TooltipButton>
         </div>
       </li>
     )
@@ -120,6 +123,7 @@ const ChoiceItems = props =>
     {get(props.item, '_errors.choices') &&
       <ErrorBlock text={props.item._errors.choices} warnOnly={!props.validating}/>
     }
+
     <ul>
       {props.item.choices.map(choice =>
         <ChoiceItem
@@ -167,10 +171,12 @@ ChoiceItems.propTypes = {
   onChange: T.func.isRequired
 }
 
-export const Choice = props =>
+const Choice = props =>
   <fieldset className="choice-editor">
-    <Radios
-      groupName="multiple"
+    <RadioGroup
+      controlId={`item-${props.item.id}-multiple`}
+      label={tex('choice_multiple')}
+      hideLabel={true}
       options={[
         {value: QCM_SINGLE, label: tex('qcm_single_answer')},
         {value: QCM_MULTIPLE, label: tex('qcm_multiple_answers')}
@@ -181,16 +187,7 @@ export const Choice = props =>
         actions.updateProperty('multiple', value === QCM_MULTIPLE)
       )}
     />
-    <Radios
-      groupName="quiz-numbering"
-      options={[
-        {value: NUMBERING_NONE, label: tex('quiz_numbering_none')},
-        {value: NUMBERING_NUMERIC, label: tex('quiz_numbering_numeric')},
-        {value: NUMBERING_LITTERAL, label: tex('quiz_numbering_litteral')}
-      ]}
-      checkedValue={props.item.numbering}
-      onChange={numbering => props.onChange(actions.updateProperty('numbering', numbering))}
-    />
+
     <CheckGroup
       checkId={`item-${props.item.id}-fixedScore`}
       checked={props.item.score.type === SCORE_FIXED}
@@ -240,6 +237,18 @@ export const Choice = props =>
 
     <hr className="item-content-separator" />
 
+    <RadioGroup
+      controlId={`item-${props.item.id}-numbering`}
+      label={tex('choice_numbering')}
+      options={[
+        {value: NUMBERING_NONE, label: tex('quiz_numbering_none')},
+        {value: NUMBERING_NUMERIC, label: tex('quiz_numbering_numeric')},
+        {value: NUMBERING_LITTERAL, label: tex('quiz_numbering_litteral')}
+      ]}
+      checkedValue={props.item.numbering ? props.item.numbering : NUMBERING_NONE}
+      onChange={numbering => props.onChange(actions.updateProperty('numbering', numbering))}
+    />
+
     <CheckGroup
       checkId={`item-${props.item.id}-random`}
       checked={props.item.random}
@@ -247,7 +256,7 @@ export const Choice = props =>
       onChange={checked => props.onChange(actions.updateProperty('random', checked))}
     />
 
-    <ChoiceItems {...props}/>
+    <ChoiceItems {...props} />
   </fieldset>
 
 Choice.propTypes = {
@@ -265,4 +274,8 @@ Choice.propTypes = {
   }).isRequired,
   validating: T.bool.isRequired,
   onChange: T.func.isRequired
+}
+
+export {
+  Choice
 }

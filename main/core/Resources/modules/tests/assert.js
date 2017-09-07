@@ -5,7 +5,7 @@ import diff from 'json-diff'
 import escapeRegExp from 'lodash/escapeRegExp'
 
 // deep equality test with a nice diff
-export function assertEqual(actual, expected, message) {
+function assertEqual(actual, expected, message) {
   try {
     assert.deepStrictEqual(actual, expected, message)
   } catch (e) {
@@ -16,7 +16,7 @@ export function assertEqual(actual, expected, message) {
 }
 
 // assert no prop types errors where issued
-export function assertPropTypesOk() {
+function assertPropTypesOk() {
   assertEqual(
     extractPropTypesWarnings(),
     [],
@@ -25,7 +25,7 @@ export function assertPropTypesOk() {
 }
 
 // assert prop types errors about missing props where issued
-export function assertMissingProps(componentName, propNames) {
+function assertMissingProps(componentName, propNames) {
   assertPropTypesErrors(
     propNames,
     'missing',
@@ -35,7 +35,7 @@ export function assertMissingProps(componentName, propNames) {
 }
 
 // assert prop types errors about invalid props where issued
-export function assertInvalidProps(componentName, propNames) {
+function assertInvalidProps(componentName, propNames) {
   assertPropTypesErrors(
     propNames,
     'invalid',
@@ -44,7 +44,7 @@ export function assertInvalidProps(componentName, propNames) {
   )
 }
 
-export function assertPropTypesErrors(propNames, criterion, componentRegex, makeErrorRegex) {
+function assertPropTypesErrors(propNames, criterion, componentRegex, makeErrorRegex) {
   const warnings = extractPropTypesWarnings()
   const componentPropsWarnings = warnings.filter(warning => {
     return warning.match(new RegExp(componentRegex))
@@ -69,4 +69,12 @@ function extractPropTypesWarnings() {
   }
 
   return console._errors.filter(error => /(Invalid prop|Failed prop)/.test(error))
+}
+
+export {
+  assertEqual,
+  assertPropTypesOk,
+  assertMissingProps,
+  assertInvalidProps,
+  assertPropTypesErrors
 }

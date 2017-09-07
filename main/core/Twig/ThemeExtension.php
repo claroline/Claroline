@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use Claroline\CoreBundle\Entity\Theme\Theme;
-use Claroline\CoreBundle\Manager\ThemeManager;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\Theme\ThemeManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bridge\Twig\Extension\AssetExtension;
 
@@ -22,44 +22,41 @@ use Symfony\Bridge\Twig\Extension\AssetExtension;
  */
 class ThemeExtension extends \Twig_Extension
 {
-    /**
-     * @var
-     */
+    /** @var AssetExtension */
     private $assetExtension;
-
-    /**
-     * @var ThemeManager
-     */
+    /** @var ThemeManager */
     private $themeManager;
-
-    /**
-     * @var Theme
-     */
-    private $currentTheme;
-
+    /** @var PlatformConfigurationHandler */
+    private $config;
+    /** @var string */
     private $rootDir;
+    /** @var array */
     private $assetCache;
 
     /**
      * ThemeExtension constructor.
      *
      * @DI\InjectParams({
-     *     "extension"    = @DI\Inject("twig.extension.assets"),
+     *     "extension" = @DI\Inject("twig.extension.assets"),
      *     "themeManager" = @DI\Inject("claroline.manager.theme_manager"),
-     *     "rootDir"      = @DI\Inject("%kernel.root_dir%")
+     *     "config"    = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "rootDir"   = @DI\Inject("%kernel.root_dir%")
      * })
      *
-     * @param AssetExtension $extension
-     * @param ThemeManager   $themeManager
-     * @param string         $rootDir
+     * @param AssetExtension               $extension
+     * @param ThemeManager                 $themeManager
+     * @param PlatformConfigurationHandler $config
+     * @param string                       $rootDir
      */
     public function __construct(
-        AssetExtension $extension,
-        ThemeManager $themeManager,
+        AssetExtension               $extension,
+        ThemeManager                 $themeManager,
+        PlatformConfigurationHandler $config,
         $rootDir)
     {
         $this->assetExtension = $extension;
         $this->themeManager = $themeManager;
+        $this->config = $config;
         $this->rootDir = $rootDir;
     }
 
@@ -78,16 +75,10 @@ class ThemeExtension extends \Twig_Extension
     public function themeAsset($path, $themeName = null)
     {
         if (empty($themeName)) {
-            if (!$this->currentTheme) {
-                // Retrieve current theme
-                $this->currentTheme = $this->themeManager->getCurrentTheme();
-            }
-
-            $themeName = $this->currentTheme->getNormalizedName();
+            $themeName = $this->config->getParameter('theme');
         }
 
         $assets = $this->getThemeAssets();
-
         if (!isset($assets[$themeName]) || !isset($assets[$themeName][$path])) {
             // selected theme can not be found, fall back to default theme
             $defaultTheme = $this->themeManager->getDefaultTheme();

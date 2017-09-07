@@ -1,4 +1,5 @@
-import React, {Component, PropTypes as T} from 'react'
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import {t} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/fos-js-router'

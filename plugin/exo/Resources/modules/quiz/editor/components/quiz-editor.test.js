@@ -23,7 +23,7 @@ describe('<QuizEditor/>', () => {
     ensure.missingProps(
       'QuizEditor',
       [
-        'quiz.title',
+        'quiz.description',
         'validating',
         'updateProperties',
         'activePanelKey',
@@ -74,12 +74,6 @@ describe('<QuizEditor/>', () => {
     ensure.propTypesOk()
     ensure.equal(form.find('form').length, 1, 'has form')
 
-    const title = form.find('input#quiz-title')
-    ensure.equal(title.length, 1, 'has title input')
-    title.simulate('change', {target: {value: 'FOO'}})
-    ensure.equal(updatedPath, 'title')
-    ensure.equal(updatedValue, 'FOO')
-
     const anonymizeAttempts = form.find('input#quiz-anonymizeAttempts')
     ensure.equal(anonymizeAttempts.length, 1, 'has anonymizeAttempts checkbox')
     anonymizeAttempts.simulate('change', {target: {checked: true}})
@@ -90,7 +84,6 @@ describe('<QuizEditor/>', () => {
 
 function fixture() {
   return {
-    title: 'TITLE',
     description: 'DESC',
     parameters: {
       type: 'type',

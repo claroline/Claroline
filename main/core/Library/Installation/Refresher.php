@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation;
 
 use Bazinga\Bundle\JsTranslationBundle\Command\DumpCommand as TranslationDumpCommand;
+use Claroline\CoreBundle\Command\Theme\BuildThemesCommand;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Composer\Script\Event;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -28,13 +29,19 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class Refresher
 {
+    /** @var ContainerInterface */
     private $container;
+    /** @var OutputInterface */
     private $output;
 
     /**
+     * Refresher constructor.
+     *
      * @DI\InjectParams({
      *     "container" = @DI\Inject("service_container")
      * })
+     *
+     * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
     {
@@ -82,6 +89,13 @@ class Refresher
             new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'Env', $environment)
         );
         $assetDumpCmd->run(new ArrayInput([]), $this->output ?: new NullOutput());
+    }
+
+    public function buildThemes()
+    {
+        $themeBuilder = new BuildThemesCommand();
+        $themeBuilder->setContainer($this->container);
+        $themeBuilder->run(new ArrayInput([]), $this->output);
     }
 
     public function clearCache($environment = null)

@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use JMS\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\PluginRepository")
@@ -77,6 +77,11 @@ class Plugin
     public function getShortName()
     {
         return strtolower($this->getVendorName().str_replace('Bundle', '', $this->getBundleName()));
+    }
+
+    public function getDisplayName()
+    {
+        return $this->getVendorName().'/'.str_replace('Bundle', '', $this->getBundleName());
     }
 
     public function getVendorName()

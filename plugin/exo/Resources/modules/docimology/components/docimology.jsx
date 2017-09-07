@@ -12,9 +12,9 @@ import {
   PageAction
 } from '#/main/core/layout/page/index'
 
-import BarChart from './../../components/chart/bar/bar-chart.jsx'
-import PieChart from './../../components/chart/pie/pie-chart.jsx'
-import CircularGauge from './../../components/chart/gauge/circlular-gauge.jsx'
+import {BarChart} from '#/main/core/layout/chart/bar/components/bar-chart.jsx'
+import {PieChart} from '#/main/core/layout/chart/pie/components/pie-chart.jsx'
+import {CircularGauge} from '#/main/core/layout/chart/gauge/components/circlular-gauge.jsx'
 
 import {select} from './../selectors'
 

@@ -246,7 +246,7 @@ class PathListener
     }
 
     /**
-     * @DI\Observe("manageresults_innova_path")
+     * @DI\Observe("manage_results_innova_path")
      *
      * @param CustomActionResourceEvent $event
      */

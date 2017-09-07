@@ -1,5 +1,7 @@
 import { makeActionCreator } from '#/main/core/utilities/redux'
 
+// TODO : add public file upload here (see quiz objects upload)
+
 export const REQUEST_SEND     = 'REQUEST_SEND'
 export const RESPONSE_RECEIVE = 'RECEIVE_RESPONSE'
 

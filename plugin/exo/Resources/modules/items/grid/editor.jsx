@@ -7,12 +7,12 @@ import Overlay from 'react-bootstrap/lib/Overlay'
 
 import {tex} from '#/main/core/translation'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
-import {Radios} from './../../components/form/radios.jsx'
+import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 import {SUM_CELL, SUM_COL, SUM_ROW, actions} from './editor'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
-import {ColorPicker} from './../../components/form/color-picker.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
 import {utils} from './utils/utils'
 import {KeywordsPopover} from './../components/keywords.jsx'
 
@@ -119,27 +119,27 @@ class GridCell extends Component {
               id={`cell-${this.props.cell.id}-solution`}
               title={undefined !== this.props.solution ? tex('grid_edit_solution') : tex('grid_create_solution')}
               className="btn-link-default"
-              label={
-                <span
-                  className={classes('fa fa-fw', {
-                    'fa-pencil': undefined !== this.props.solution,
-                    'fa-plus': undefined === this.props.solution
-                  })}
-                />
-              }
               onClick={
                 undefined !== this.props.solution ? this.props.openSolution : this.props.createSolution
               }
-            />
+            >
+              <span
+                className={classes('fa fa-fw', {
+                  'fa-pencil': undefined !== this.props.solution,
+                  'fa-plus': undefined === this.props.solution
+                })}
+              />
+            </TooltipButton>
 
             {undefined !== this.props.solution &&
               <TooltipButton
                 id={`cell-${this.props.cell.id}-delete-solution`}
                 className="btn-link-default"
                 title={tex('delete')}
-                label={<span className="fa fa-fw fa-trash-o" />}
                 onClick={this.props.removeSolution}
-              />
+              >
+                <span className="fa fa-fw fa-trash-o" />
+              </TooltipButton>
             }
           </div>
         </div>
@@ -266,10 +266,11 @@ const GridRow = props =>
         id={`grid-btn-delete-row-${props.index}`}
         className="btn-link-default"
         title={tex('delete')}
-        label={<span className="fa fa-fw fa-trash-o" />}
-        enabled={props.deletable}
+        disabled={!props.deletable}
         onClick={props.removeRow}
-      />
+      >
+        <span className="fa fa-fw fa-trash-o" />
+      </TooltipButton>
     </td>
   </tr>
 
@@ -367,10 +368,11 @@ const GridTable = props =>
               id={`grid-btn-delete-col-${colIndex}`}
               className="btn-link-default"
               title={tex('delete')}
-              label={<span className="fa fa-fw fa-trash-o" />}
-              enabled={props.item.cols > 1}
+              disabled={props.item.cols <= 1}
               onClick={() => props.removeColumn(colIndex)}
-            />
+            >
+              <span className="fa fa-fw fa-trash-o" />
+            </TooltipButton>
           </td>
         )}
         <td />

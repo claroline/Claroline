@@ -1,0 +1,226 @@
+/*
+ * Forms.
+ */
+
+@import "color-picker";
+
+@form-icon-spacer-h: 7px; // utility to fix font-awesome spacing with text (this is not supposed to be themed)
+
+// Fixes checkbox and radio button display issue on inline
+// Combine with change in form_theme.html.twig and form_theme_vertical.html.twig
+form {
+    // this is kept for the Twig form
+    // this is no longer needed in new UIs as all forms are vertical
+    &.form-horizontal {
+        label > input {
+            &[type=checkbox],
+            &[type=radio] {
+                position: relative;
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+
+// -
+// Errors & messages
+// ---
+
+form .global-error {
+    .alert;
+    .alert-danger;
+}
+
+.error-message {
+    .fa {
+        margin-right: @form-icon-spacer-h;
+    }
+}
+
+.help-block {
+    text-align: justify;
+
+    // Just expose some vars as bootstrap doesn't do it
+    color: @help-block-color;
+    font-size: @help-block-font-size;
+
+    .fa {
+        margin-right: @form-icon-spacer-h;
+    }
+}
+
+
+// -
+// Fieldset
+// ---
+
+.activable-set {
+    margin-bottom: @form-group-margin-bottom;
+
+    > .sub-fields {
+        margin-top: @form-group-margin-bottom;
+    }
+}
+
+.toggleable-set {
+    .toggleable-set-toggle .fa {
+        margin-right: @form-icon-spacer-h;
+    }
+}
+
+// todo : we may need a more specific namespacing
+.sub-fields {
+    // this is used to conditionally display fields on radio/checkbox check
+    // we align the displayed fields with the label of the radio/checkbox
+    // but there is no var in bootstrap for this
+    margin-left: 20px;
+}
+
+
+// -
+// Fields
+// ---
+
+.checkbox-with-input,
+.radio-with-input {
+    line-height: 34px;
+    min-height: 40px;
+
+    .radio,
+    .checkbox {
+        display: inline-block;
+        margin: 0;
+    }
+
+    input[type=radio] {
+        margin-top: 10px;
+    }
+}
+
+// Fixes bootstrap that do not remove label font-weight like `.radio` and `.checkbox`
+// And so do not work as expected
+.radio-inline,
+.checkbox-inline {
+    label {
+        font-weight: normal;
+    }
+}
+
+// increase margin
+.radio-inline + .radio-inline,
+.checkbox-inline + .checkbox-inline {
+    margin-left: @grid-gutter-width;
+}
+
+.two_level_select {
+    select {
+        .form-control;
+        .input-sm;
+        width:   auto;
+        display: inline-block;
+        &+ select {
+            margin-left: 5px;
+        }
+    }
+    &.has-error {
+        select {
+            border-color : #b94a48;
+        }
+    }
+}
+
+.ip-control {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .dot {
+        font-weight: 900;
+        display: block;
+        margin: 0 10px;
+    }
+
+    .form-control {
+        flex: 1;
+        text-align: right;
+    }
+}
+
+.ip-list-control {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .ip-add {
+        margin-bottom: 5px;
+    }
+
+    .no-ip-info {
+        font-style: italic;
+        text-align: center;
+    }
+
+    .ip-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        background: @gray-lighter;
+        padding: 5px;
+
+        + .ip-item {
+            margin-top: 5px;
+        }
+
+        .border-radius(@border-radius-base);
+
+        .ip-control {
+            flex: 1;
+        }
+
+        .btn {
+            margin-left: floor(@grid-gutter-width / 2);
+            padding: 4px;
+        }
+    }
+}
+
+
+// -
+// Labels
+// ---
+
+.control-label {
+    color: @input-label-color;
+}
+
+// Just permits to individually control the color of the label during validation
+.has-success .control-label {
+    color: @input-success-label-color;
+}
+.has-warning .control-label {
+    color: @input-warning-label-color;
+}
+.has-error .control-label {
+    color: @input-error-label-color;
+}
+
+
+// -
+// Utilities
+// ---
+
+// this shouldn't be used in new React UI.
+// inputs should be removed in JS, not hidden in CSS (accessibility issue).
+// this is used by our react DatePicker
+.input-hide {
+    display: none;
+}
+
+// Utility class to avoid extra space after a form.
+// meant to be used on a `.form-group`
+.form-last {
+    margin-bottom: 0 !important;
+}

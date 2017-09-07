@@ -1,6 +1,9 @@
+import {createSelector} from 'reselect'
+
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+
 // TODO : use reselect
 // TODO : there is possible code refactoring with editor/selectors.js
-import {createSelector} from 'reselect'
 
 const isLoading = state => state.currentRequests > 0
 const alerts = state => state.alerts
@@ -16,8 +19,7 @@ const meta = state => state.quiz.meta
 const viewMode = state => state.viewMode
 const hasPapers = state => state.quiz.meta.paperCount > 0 || (state.papers.papers && state.papers.papers.length > 0)
 const hasUserPapers = state => state.quiz.meta.userPaperCount > 0
-const papersAdmin = state => state.quiz.meta.canViewPapers
-const docimologyAdmin = state => state.quiz.meta.canViewDocimology
+
 const registered = state => state.quiz.meta.registered
 const saveEnabled = state => !state.editor.saved && !state.editor.saving
 const editorOpened = state => state.editor.opened
@@ -33,6 +35,16 @@ const allPapersStatistics = state => state.quiz.parameters.allPapersStatistics
 const quizNumbering = createSelector(
   parameters,
   (parameters) => parameters.numbering
+)
+
+const papersAdmin = createSelector(
+  [resourceSelect.currentRights],
+  (currentRights) => !!currentRights.manage_papers
+)
+
+const docimologyAdmin = createSelector(
+  [resourceSelect.currentRights],
+  (currentRights) => !!currentRights.view_docimology
 )
 
 export default {

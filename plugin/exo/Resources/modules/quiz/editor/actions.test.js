@@ -49,9 +49,9 @@ describe('#deleteStepAndItems', () => {
     })
     const expectedActions = [
       { type: OBJECT_NEXT, object: {id: '1', type: TYPE_STEP}},
-      { type: STEP_ITEM_DELETE, id: 'b', stepId: '2' },
+      { type: STEP_ITEM_DELETE, stepId: '2', id: 'b' },
       { type: ITEM_DELETE, id: 'b' },
-      { type: STEP_ITEM_DELETE, id: 'c', stepId: '2' },
+      { type: STEP_ITEM_DELETE, stepId: '2', id: 'c' },
       { type: ITEM_DELETE, id: 'c' },
       { type: STEP_DELETE, id: '2' }
     ]

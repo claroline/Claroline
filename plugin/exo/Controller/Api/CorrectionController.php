@@ -114,7 +114,7 @@ class CorrectionController extends AbstractController
     {
         $collection = new ResourceCollection([$exercise->getResourceNode()]);
 
-        if (!$this->authorization->isGranted('ADMINISTRATE', $collection) && !$this->authorization->isGranted('MANAGE_PAPERS', $collection)) {
+        if (!$this->authorization->isGranted('MANAGE_PAPERS', $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
 

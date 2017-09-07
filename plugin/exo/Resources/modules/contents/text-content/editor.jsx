@@ -3,24 +3,19 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {trans} from '#/main/core/translation'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
+import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
 import {actions} from './editor'
 
-export const TextContent = (props) =>
+const TextContent = (props) =>
   <fieldset>
-    <FormGroup
+    <HtmlGroup
       controlId={`item-${props.item.id}-data`}
       label={trans('text', {}, 'question_types')}
+      content={props.item.data || ''}
+      onChange={content => props.onChange(actions.updateItemContentText(content))}
       warnOnly={!props.validating}
       error={get(props.item, '_errors.data')}
-    >
-      <Textarea
-        id={`item-${props.item.id}-text`}
-        content={props.item.data || ''}
-        onChange={data => props.onChange(actions.updateItemContentText(data))}
-      />
-    </FormGroup>
+    />
   </fieldset>
 
 TextContent.propTypes = {
@@ -31,4 +26,8 @@ TextContent.propTypes = {
   }).isRequired,
   validating: T.bool.isRequired,
   onChange: T.func.isRequired
+}
+
+export {
+  TextContent
 }

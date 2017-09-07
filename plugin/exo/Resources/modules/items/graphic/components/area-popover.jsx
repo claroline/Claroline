@@ -4,10 +4,10 @@ import classes from 'classnames'
 import Popover from 'react-bootstrap/lib/Popover'
 
 import {tex} from '#/main/core/translation'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
-import {ColorPicker} from './../../../components/form/color-picker.jsx'
-import {TooltipButton} from './../../../components/form/tooltip-button.jsx'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 
 export class AreaPopover extends Component {
   constructor(props) {
@@ -34,17 +34,19 @@ export class AreaPopover extends Component {
                 id="area-popover-delete"
                 className="btn-link-default"
                 title={tex('delete')}
-                label={<span className="fa fa-fw fa-trash-o" />}
                 onClick={this.props.onDelete}
-              />
+              >
+                <span className="fa fa-fw fa-trash-o" />
+              </TooltipButton>
 
               <TooltipButton
                 id="area-popover-close"
                 title={tex('close')}
                 className="btn-link-default"
-                label={<span className="fa fa-fw fa-times" />}
                 onClick={this.props.onClose}
-              />
+              >
+                <span className="fa fa-fw fa-times" />
+              </TooltipButton>
             </div>
           </div>
         }
@@ -71,10 +73,11 @@ export class AreaPopover extends Component {
             <TooltipButton
               id="area-popover-feedback-tip"
               className="btn-link-default"
-              label={<span className="fa fa-fw fa-comments-o" />}
               title={tex('graphic_feedback_info')}
               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-            />
+            >
+              <span className="fa fa-fw fa-comments-o" />
+            </TooltipButton>
           </div>
         </div>
 

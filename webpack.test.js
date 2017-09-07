@@ -36,6 +36,7 @@ module.exports = {
     // https://github.com/airbnb/enzyme/blob/master/docs/guides/webpack.md#react-15-compatibility)
     'react/addons': true,
     'react/lib/ExecutionEnvironment': true,
-    'react/lib/ReactContext': true
+    'react/lib/ReactContext': true,
+    'react-addons-test-utils': 'react-dom'
   }
 }

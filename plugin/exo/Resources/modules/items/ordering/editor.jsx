@@ -7,11 +7,11 @@ import {t, tex} from '#/main/core/translation'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
-import {CheckGroup} from './../../components/form/check-group.jsx'
-import {Radios} from './../../components/form/radios.jsx'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
+import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, actions} from './editor'
 import {OrderingItemDragPreview} from './ordering-item-drag-preview.jsx'
 
@@ -64,20 +64,22 @@ class Item extends Component {
           <TooltipButton
             id={`item-${this.props.id}-feedback-toggle`}
             className="btn-link-default"
-            label={<span className="fa fa-fw fa-comments-o"></span>}
             title={tex('choice_feedback_info')}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
+          >
+            <span className="fa fa-fw fa-comments-o" />
+          </TooltipButton>
           <TooltipButton
             id={`item-${this.props.id}-delete`}
             className="btn-link-default"
-            label={<span className="fa fa-fw fa-trash-o"></span>}
-            enabled={this.props.deletable}
+            disabled={!this.props.deletable}
             title={t('delete')}
             onClick={() => this.props.onChange(
               actions.removeItem(this.props.id)
             )}
-          />
+          >
+            <span className="fa fa-fw fa-trash-o" />
+          </TooltipButton>
         </div>
         {this.props.item.direction === DIRECTION_HORIZONTAL && this.state.showFeedback &&
           <div className="feedback-container">

@@ -5,7 +5,7 @@ import classes from 'classnames'
 import moment from 'moment'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {t, trans} from '#/main/core/translation'
-import {DatePicker} from '#/main/core/layout/form/components/date-picker.jsx'
+import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
 import {formatDate} from '#/main/core/date'
 
 export const MODAL_EVENT_REPEAT_FORM = 'MODAL_EVENT_REPEAT_FORM'

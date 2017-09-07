@@ -5,17 +5,17 @@ import get from 'lodash/get'
 import Popover from 'react-bootstrap/lib/Popover'
 
 import {tex} from '#/main/core/translation'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
-import {Radios} from './../../components/form/radios.jsx'
-import {ColorPicker} from './../../components/form/color-picker.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
+import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
 import {actions} from './editor'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {utils} from './utils/utils'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
-import {CheckGroup} from './../../components/form/check-group.jsx'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 
 function updateAnswer(value, parameter, selectionId, mode) {
   switch(mode) {
@@ -100,14 +100,17 @@ class ChoiceItem extends Component {
               </span>
             </span>
           }
+
           <span>
             <TooltipButton
               id={`choice-${this.getSelectionId()}-feedback-toggle`}
-              className="fa fa-comments-o pull-right"
+              className="pull-right"
               title={tex('choice_feedback_info')}
               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-            />
-        </span>
+            >
+              <span className="fa fa-fw fa-comments-o" />
+            </TooltipButton>
+          </span>
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
             <Textarea
@@ -225,16 +228,18 @@ class SelectionForm extends Component {
                 id={`selection-${this.props.item._selectionId}-delete`}
                 title={tex('delete')}
                 className="btn-link-default"
-                label={<span className="fa fa-fw fa-trash-o" />}
                 onClick={this.removeAndClose.bind(this)}
-              />
+              >
+                <span className="fa fa-fw fa-trash-o" />
+              </TooltipButton>
               <TooltipButton
                 id={`selection-${this.props.item._selectionId}-close`}
                 title={tex('close')}
                 className="btn-link-default"
-                label={<span className="fa fa-fw fa-times" />}
                 onClick={this.closePopover.bind(this)}
-              />
+              >
+                <span className="fa fa-fw fa-times" />
+              </TooltipButton>
             </div>
           </div>
         }
@@ -389,10 +394,11 @@ class HighlightAnswer extends Component {
          <div className="col-xs-2">
            <TooltipButton
              id={`choice-${this.props.answer._answerId}-feedback-toggle`}
-             className="fa fa-comments-o"
              title={tex('choice_feedback_info')}
              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-           />
+           >
+             <span className="fa fa-fw fa-comments-o" />
+           </TooltipButton>
         </div>
         <div className="col-xs-3">
           <i onClick={() => this.props.onChange(actions.highlightRemoveAnswer(this.props.answer._answerId))} className="fa fa-trash-o pointer checkbox"></i>

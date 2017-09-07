@@ -1,5 +1,7 @@
+import React, {Component} from 'react'
+import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
-import React, {Component, PropTypes as T} from 'react'
+
 import {TreeView} from '#/main/core/layout/treeview/treeview.jsx'
 import {select} from './selectors'
 import {actions} from './actions'

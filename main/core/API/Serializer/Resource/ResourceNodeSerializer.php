@@ -167,7 +167,9 @@ class ResourceNodeSerializer
             'type' => $resourceNode->getResourceType()->getName(),
             'mimeType' => $resourceNode->getMimeType(),
             'description' => $resourceNode->getDescription(), // todo : migrate custom descriptions (Path, Quiz, etc.)
-            'created' => $resourceNode->getLicense(),
+            'created' => $resourceNode->getCreationDate()->format('Y-m-d\TH:i:s'),
+            'updated' => $resourceNode->getModificationDate()->format('Y-m-d\TH:i:s'),
+            'license' => $resourceNode->getLicense(),
             'authors' => $resourceNode->getAuthor(),
             'published' => $resourceNode->isPublished(),
             'portal' => $resourceNode->isPublishedToPortal(),

@@ -1,0 +1,75 @@
+
+@import "../../less/mixins";
+@import "../../less/themes/default/variables";
+
+.color-input {
+    position: relative;
+    z-index: 1;
+    padding: 10px 15px;
+    height: 100px;
+    //border: 1px solid transparent;
+
+    line-height: 1;
+    font-size: @font-size-h1;
+    font-family: @headings-font-family;
+
+    &:hover {
+        z-index: 2;
+        //border-color: rgba(0, 0, 0, .1);
+        .box-shadow(0 0 5px 0 rgba(0, 0, 0, .75));
+    }
+
+    .color-value {
+        opacity: .75;
+        position: absolute;
+        right: 15px;
+        bottom: 15px;
+        font-weight: bold;
+        font-size: @font-size-h4;
+        font-family: @font-family-monospace;
+        color: white;
+        text-shadow:
+             2px  0   1px rgba(0, 0, 0, 0.75),
+            -2px  0   1px rgba(0, 0, 0, 0.75),
+             0    2px 1px rgba(0, 0, 0, 0.75),
+             0   -2px 1px rgba(0, 0, 0, 0.75),
+
+             1px  1px 0 rgba(0, 0, 0, 0.75),
+            -1px -1px 0 rgba(0, 0, 0, 0.75),
+             1px -1px 0 rgba(0, 0, 0, 0.75),
+            -1px  1px 0 rgba(0, 0, 0, 0.75);
+    }
+}
+
+.primary-colors {
+    .color-input {
+        height: 200px;
+
+        .color-value {
+            font-size: @font-size-h2;
+        }
+    }
+}
+
+.gray-scale {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    .color-input {
+        flex: 1;
+    }
+}
+
+.semantic-colors {
+    .color-input {
+
+    }
+}
+
+.layout-colors {
+    .color-input {
+        height: 75px;
+    }
+}

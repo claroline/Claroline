@@ -6,10 +6,10 @@ import {PropTypes as T} from 'prop-types'
 import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import {tex, t} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {actions} from './editor'
 import {SetItemDragPreview} from './set-item-drag-preview.jsx'
 
@@ -69,22 +69,26 @@ class Association extends Component {
               actions.updateAssociation(this.props.association.setId, this.props.association.itemId, 'score', e.target.value)
             )}
           />
+
           <TooltipButton
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-feedback-toggle`}
             className="btn-link-default"
             title={tex('feedback_association_created')}
-            label={<span className="fa fa-fw fa-comments-o" />}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
+          >
+            <span className="fa fa-fw fa-comments-o" />
+          </TooltipButton>
+
           <TooltipButton
             id={`ass-${this.props.association.itemId}-${this.props.association.setId}-delete`}
             className="btn-link-default"
             title={t('delete')}
-            label={<span className="fa fa-fw fa-trash-o" />}
             onClick={() => this.props.onChange(
               actions.removeAssociation(this.props.association.setId, this.props.association.itemId))
             }
-          />
+          >
+            <span className="fa fa-fw fa-trash-o" />
+          </TooltipButton>
         </div>
       </div>
     )
@@ -121,21 +125,22 @@ class Set extends Component {
               id={`set-${this.props.set.id}-delete`}
               className="btn-link-default"
               title={t('delete')}
-              label={<span className="fa fa-fw fa-trash-o" />}
-              enabled={this.props.set._deletable}
+              disabled={!this.props.set._deletable}
               onClick={() => this.props.onChange(
                 actions.removeSet(this.props.set.id))
               }
-            />
+            >
+              <span className="fa fa-fw fa-trash-o" />
+            </TooltipButton>
           </div>
         </div>
 
         <ul>
-        {this.props.associations.map(ass =>
-          <li key={`${ass.itemId}-${ass.setId}`}>
-            <Association association={ass} onChange={this.props.onChange}/>
-          </li>
-        )}
+          {this.props.associations.map(ass =>
+            <li key={`${ass.itemId}-${ass.setId}`}>
+              <Association association={ass} onChange={this.props.onChange}/>
+            </li>
+          )}
         </ul>
 
         <DropBox object={this.props.set} onDrop={this.props.onDrop} />
@@ -229,12 +234,14 @@ let Item = props => {
           id={`set-item-${props.item.id}-delete`}
           className="btn-link-default"
           title={t('delete')}
-          label={<span className="fa fa-fw fa-trash-o"></span>}
-          enabled={props.item._deletable}
+          disabled={!props.item._deletable}
           onClick={() => props.onChange(
              actions.removeItem(props.item.id, false)
           )}
-        />
+        >
+          <span className="fa fa-fw fa-trash-o" />
+        </TooltipButton>
+
         {props.connectDragSource(
           <div>
             <OverlayTrigger
@@ -358,16 +365,18 @@ class Odd extends Component {
             id={`odd-${this.props.odd.id}-feedback-toggle`}
             className="btn-link-default"
             title={tex('feedback')}
-            label={<span className="fa fa-fw fa-comments-o" />}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
+          >
+            <span className="fa fa-fw fa-comments-o" />
+          </TooltipButton>
           <TooltipButton
             id={`odd-${this.props.odd.id}-delete`}
             className="btn-link-default"
             title={t('delete')}
-            label={<span className="fa fa-fw fa-trash-o" />}
             onClick={() => this.props.onChange(actions.removeItem(this.props.odd.id, true))}
-          />
+          >
+            <span className="fa fa-fw fa-trash-o" />
+          </TooltipButton>
         </div>
       </div>
     )
@@ -381,7 +390,6 @@ Odd.propTypes = {
 }
 
 class OddList extends Component {
-
   constructor(props){
     super(props)
   }
@@ -396,6 +404,7 @@ class OddList extends Component {
             </li>
           )}
         </ul>
+
         <div className="footer">
           <button
             type="button"
