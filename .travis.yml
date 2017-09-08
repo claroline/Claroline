@@ -9,8 +9,10 @@ env:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install 8
-  - node -v
+  # get node >=5.6 (manual upgrade of nvm is currently required, pre-installed version is buggy)
+  - git clone https://github.com/creationix/nvm.git /tmp/.nvm
+  - source /tmp/.nvm/nvm.sh
+  - nvm install 5
   # prepare execution of chromium in js tests
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
