@@ -9,7 +9,7 @@ env:
 
 before_install:
   - phpenv config-rm xdebug.ini
-  - nvm install 5
+  - nvm install 8
   - node -v
   # prepare execution of chromium in js tests
   - export CHROME_BIN=chromium-browser
