@@ -1625,9 +1625,9 @@
       "resolved": "https://registry.npmjs.org/faye-websocket/-/faye-websocket-0.10.0.tgz"
     },
     "fbjs": {
-      "version": "0.8.14",
+      "version": "0.8.15",
       "from": "fbjs@>=0.8.9 <0.9.0",
-      "resolved": "https://registry.npmjs.org/fbjs/-/fbjs-0.8.14.tgz",
+      "resolved": "https://registry.npmjs.org/fbjs/-/fbjs-0.8.15.tgz",
       "dependencies": {
         "core-js": {
           "version": "1.2.7",
@@ -3489,9 +3489,16 @@
       "resolved": "https://registry.npmjs.org/react-bootstrap/-/react-bootstrap-0.31.3.tgz"
     },
     "react-color": {
-      "version": "2.13.5",
+      "version": "2.13.7",
       "from": "react-color@>=2.13.5 <3.0.0",
-      "resolved": "https://registry.npmjs.org/react-color/-/react-color-2.13.5.tgz"
+      "resolved": "https://registry.npmjs.org/react-color/-/react-color-2.13.7.tgz",
+      "dependencies": {
+        "prop-types": {
+          "version": "15.5.10",
+          "from": "git+https://github.com/anti-gravity/prop-types.git",
+          "resolved": "git+https://github.com/anti-gravity/prop-types.git#8da97f48b68f3f0c30f19e6adee4448bcb2c8490"
+        }
+      }
     },
     "react-datepicker": {
       "version": "0.29.0",
@@ -3568,9 +3575,9 @@
       "resolved": "https://registry.npmjs.org/react-router-dom/-/react-router-dom-4.2.2.tgz"
     },
     "reactcss": {
-      "version": "1.2.2",
+      "version": "1.2.3",
       "from": "reactcss@>=1.2.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/reactcss/-/reactcss-1.2.2.tgz"
+      "resolved": "https://registry.npmjs.org/reactcss/-/reactcss-1.2.3.tgz"
     },
     "read-file-stdin": {
       "version": "0.2.1",
