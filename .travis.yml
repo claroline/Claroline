@@ -10,7 +10,6 @@ env:
 before_install:
   - phpenv config-rm xdebug.ini
   - nvm install 5
-  - node -v
   # prepare execution of chromium in js tests
   - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
