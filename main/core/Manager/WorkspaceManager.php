@@ -1488,11 +1488,13 @@ class WorkspaceManager
                 ) {
                     $usedRole = $copy->getWorkspace()->getGuid() === $workspaceRoles[$key]->getWorkspace()->getGuid() ?
                       $workspaceRoles[$key] : $role;
-                    if (!in_array($usedRole->getId(), $usedRoles)) {
-                        $usedRoles[] = $usedRole->getId();
+                    if (!in_array($usedRole->getTranslationKey(), $usedRoles)) {
+                        $usedRoles[] = $usedRole->getTranslationKey();
                         $newRight->setRole($usedRole);
                         $this->log('Duplicating resource rights for '.$copy->getName().' - '.$copy->getId().' - '.$usedRole->getName().'...');
                         $this->om->persist($newRight);
+                    } else {
+                        $this->log('Already in array resource rights for '.$copy->getName().' - '.$copy->getId().' - '.$usedRole->getName().'...');
                     }
                 } else {
                     $this->log('Dont do anything');
