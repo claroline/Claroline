@@ -5,9 +5,16 @@
         <div class="panel panel-default">
             <div class="panel-heading" role="tab" id="postheading{{ post.id }}">
                 <h4 class="panel-title">
-                    <a data-toggle="collapse" data-parent="#accordion" href="#post{{ post.id }}" aria-expanded="false" aria-controls="post{{ post.id }}" class="collapsed">
+                    <span
+                        data-toggle="collapse"
+                        data-parent="#accordion"
+                        href="#post{{ post.id }}"
+                        aria-expanded="false"
+                        aria-controls="post{{ post.id }}"
+                        class="pointer-hand collapsed"
+                    >
                         {{ post.title }}
-                    </a>
+                    </span>
                 </h4>
             </div>
             <div id="post{{ post.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="postheading{{ post.id }}" aria-expanded="false" style="height: 0px;">
