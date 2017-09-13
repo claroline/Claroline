@@ -1108,25 +1108,29 @@ class RoleManager
             } else {
                 try {
                     $root = $this->container->get('claroline.manager.resource_manager')->getWorkspaceRoot($workspace);
-                    $hasCollaboratorRole = false;
 
                     if ($root) {
-                        foreach ($root->getRights() as $perm) {
-                            if ($perm->getRole() === $collaborator) {
-                                $hasCollaboratorRole = true;
-                            }
-                        }
+                        $roles = $workspace->getRoles();
 
-                        if (!$hasCollaboratorRole) {
-                            $operationExecuted = true;
-                            $this->log('Restoring collaborator role for root resource of '.$workspace->getCode(), LogLevel::ERROR);
-                            $this->container->get('claroline.manager.rights_manager')
-                              ->create(
-                                ['open' => true, 'export' => true],
-                                $collaborator,
-                                $root,
-                                true
-                              );
+                        foreach ($roles as $role) {
+                            $hasRole = false;
+                            foreach ($root->getRights() as $perm) {
+                                if ($perm->getRole() === $role || $role->getTranslationKey() === 'manager') {
+                                    $hasRole = true;
+                                }
+                            }
+
+                            if (!$hasRole) {
+                                $operationExecuted = true;
+                                $this->log('Restoring '.$role->getTranslationKey().' role for root resource of '.$workspace->getCode(), LogLevel::ERROR);
+                                $this->container->get('claroline.manager.rights_manager')
+                                  ->create(
+                                    ['open' => true, 'export' => true],
+                                    $role,
+                                    $root,
+                                    true
+                                  );
+                            }
                         }
                     } else {
                         $this->log('No directory root for '.$workspace->getCode());
