@@ -126,7 +126,8 @@
         "innova/audio-recorder-bundle": "*",
         "innova/media-resource-bundle": "*",
         "ujm/exo-bundle": "*",
-        "icap/lesson-bundle": "*"
+        "icap/lesson-bundle": "*",
+        "icap/inwicast-plugin-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -188,7 +189,8 @@
             "Claroline\\CasBundle\\": "plugin/cas",
             "Icap\\BibliographyBundle\\": "plugin/bibliography",
             "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization",
-            "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button"
+            "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button",
+            "Icap\\InwicastBundle\\": "plugin/inwicast"
         }
     },
     "extra": {
@@ -249,7 +251,8 @@
             "Claroline\\CasBundle\\ClarolineCasBundle",
             "Icap\\BibliographyBundle\\IcapBibliographyBundle",
             "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle",
-            "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle"
+            "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle",
+            "Icap\\InwicastBundle\\IcapInwicastBundle"
         ]
     }
 }

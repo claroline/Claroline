@@ -1,0 +1,16 @@
+parameters:
+    inwicast.plugin.media.class:                      Icap\InwicastBundle\Entity\Media
+    inwicast.plugin.repository.media.class:           Icap\InwicastBundle\Repository\MediaRepository
+    inwicast.plugin.repository.mediacenteruser.class: Icap\InwicastBundle\Repository\MediaCenterUserRepository
+
+services:
+    inwicast.plugin.repository.media:
+            class:           "%inwicast.plugin.repository.media.class%"
+            factory_service: doctrine.orm.entity_manager
+            factory_method:  getRepository
+            arguments:
+                - "%inwicast.plugin.media.class%"
+
+    inwicast.plugin.repository.mediacenteruser:
+            class: "%inwicast.plugin.repository.mediacenteruser.class%"
+            arguments: ["@doctrine.dbal.connection_factory", "@claroline.config.platform_config_handler"]

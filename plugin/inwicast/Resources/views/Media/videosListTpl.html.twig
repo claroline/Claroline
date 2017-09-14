@@ -1,0 +1,68 @@
+<div class="row container-fluid">
+    {# Search bar #}
+    <div class="col-xs-6">
+        <div class="input-group">
+            <input type="search" id="search-inwicast" class="form-control"
+                   placeholder="{{ 'search' | trans({}, 'platform') }}&hellip;">
+                <span class="input-group-btn">
+                    <button class="btn btn-default btn-primary" onClick="searchForMedia(event)">
+                        <span class="fa fa-search"></span>
+                    </button>
+                </span>
+        </div>
+    </div>
+    {# Display tools #}
+    <div class="col-xs-6">
+        {{ 'display' | trans({}, 'widget') }}:
+        <div class="btn-group">
+            <button id="setGrid" class="btn btn-default btn-primary active" type="button" onClick="setDisplay('grid')"><span
+                        class="fa fa-th"></span> {{ 'grid' | trans({}, 'widget') }}</button>
+            <button id="setList" class="btn btn-default btn-primary" type="button" onClick="setDisplay('list')"><span
+                        class="fa fa-th-list"></span> {{ 'list' | trans({}, 'widget') }}</button>
+        </div>
+    </div>
+</div>
+<br/>
+<div id="inwicast-items" class="container-fluid">
+    <div class="row">
+        {% for media in medialist %}
+        {% if loop.index0 != 0 and loop.index0 % 4 == 0 %}
+    </div>
+    <br/>
+
+    <div class="row">
+        {% endif %}
+        <div class="col-xs-6 auto-new-line">
+            <div id="thumb-{{ media.mediaRef }}"class="thumbnail"
+                 onclick="select('{{ media.title | convert_encoding('UTF-8', 'ISO-8859-1') }}', '{{ loop.index0 }}', '{{ media.mediaRef }}')">
+                <label for="{{ media.mediaRef }}" class="thumbnail-radio">
+                    <input type="radio" name="media_ref" id="{{ media.mediaRef }}" value="{{ media.mediaRef }}"
+                           data-width="{{ media.width }}" data-height="{{ media.height }}" required>
+                </label>
+                <div class="thumbnail-content">
+                    <label for="{{ media.mediaRef }}" class="input-thumbnail">
+                        <div class="media">
+                            <div>
+                                <img class="media-object" src="{{ media.previewUrl }}"
+                                     alt="Aperçu de {{ media.title | convert_encoding('UTF-8', 'ISO-8859-1') }}"/>
+                            </div>
+                            <div class="caption">
+                                <div class="caption-title">{{ media.title | convert_encoding('UTF-8', 'ISO-8859-1') }}</div>
+                                <div class="caption-description">{{ media.description | convert_encoding('UTF-8', 'ISO-8859-1') }}</div>
+                                <div class="caption-info"><span class="fa fa-calendar"></span> {{ media.date | date("date_format"|trans({},"widget"))  }}</div>
+                            </div>
+                        </div>
+                        <div class="list-media" style="display: none;">
+                            {{ media.title | convert_encoding('UTF-8', 'ISO-8859-1') }}
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+<script type="text/javascript">
+    window.inwicastMediaViewPath = '{{ path('inwicast_mediacenter_media_view',{"mediaRef":"_mediaRef_"}) }}';
+</script>
+<script src="{{ hotAsset('dist/claroline-distribution-plugin-inwicast-list.js') }}"></script>

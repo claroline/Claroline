@@ -1,0 +1,36 @@
+inwicast_claroline_plugin: 'Inwicast vìdeo'
+inwicast_mediacenter_url: 'MediaCenter URL'
+login: 'Conexión'
+login_mediacenter: 'Conexión en MediaCenter'
+forgot_password: '¿Ha olvidado su contraseña?'
+password: 'Contraseña'
+username: 'Nombre de usuario'
+empty_mediacenter: 'Tu MediaCenter actualmente no tiene vídeo.'
+validate: 'Validar'
+success: 'Operación terminada!'
+warning: 'Atención!'
+error: 'Error!'
+not_linked_mediacenter: 'MediaCenter su cuenta no se ha relacionado con su cuenta de Claroline. Puede hacerlo ahora mediante el siguiente formulario.'
+error_get_medialist: 'Se ha producido un error durante el MediaCenter consulta.'
+error_empty_mediacenter: 'Ningún vídeo disponible en el MediaCenter.'
+error_loading_media: 'No se pudo cargar el vídeo seleccionado.'
+no_mediacenter: 'Mediacenter Plataforma no está establecida. Pregunte al administrador para configurarlo a través del panel de control de los plugins.'
+back_to_parameters: 'Volver a los parámetros'
+reconfigure: 'Reconfigurar'
+mediacenter_url_updated: 'El MediaCenter URL ha cambiado correctamente.'
+error_bad_url: 'La URL que has introducido no es válido'
+connected_as: 'Conectado como'
+logout_success: 'Se desconectará.'
+error_not_logged_in: 'No se le permite hacer esto, ya que no ha entrado en el MediaCenter.'
+display: 'Visualización'
+grid: 'Cuadrícula'
+list: 'Lista'
+date_format: 'd/m/Y H:i'
+no_media_defined: "You have yet to specify a video for this widget"
+choose_video_tinymce: "Choose the video you want to add (embed) to your content"
+inwicast_mediacenter_driver: Driver
+inwicast_mediacenter_host: Host
+inwicast_mediacenter_port: Port
+inwicast_mediacenter_dbname: Database name
+inwicast_mediacenter_user: User
+inwicast_mediacenter_password: Password

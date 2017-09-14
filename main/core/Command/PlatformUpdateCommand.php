@@ -58,7 +58,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
             )
             ->addOption(
                 'no_theme',
-                'nt',
+                't',
                 InputOption::VALUE_NONE,
                 'When set to true, themes won\'t be rebuild'
             )
@@ -77,7 +77,7 @@ class PlatformUpdateCommand extends ContainerAwareCommand
     }
 
     /**
-     * @param InputInterface $input
+     * @param InputInterface  $input
      * @param OutputInterface $output
      *
      * @return

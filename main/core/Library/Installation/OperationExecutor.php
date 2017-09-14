@@ -127,14 +127,7 @@ class OperationExecutor
 
                     //if the corebundle is already installed, we can do database checks to be sure a plugin is already installed
                     //and not simply set to false in bundles.ini in previous versions.
-                    $foundBundle = false;
-
-                    if ($this->findPreviousPackage('Claroline\CoreBundle\ClarolineCoreBundle')) {
-                        //do the bundle already exists ?
-                        $foundBundle = $bundle === 'Claroline\CoreBundle\ClarolineCoreBundle' ?
-                            true :
-                            $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundle);
-                    }
+                    $foundBundle = $this->isBundleAlreadyInstalled($bundle);
 
                     $previousPackage = $this->findPreviousPackage($bundle);
 
@@ -215,6 +208,24 @@ class OperationExecutor
         }
 
         return $sortedOperations;
+    }
+
+    public function buildOperationListForBundles(array $bundles, $fromVersion, $toVersion)
+    {
+        $operations = [];
+        foreach ($bundles as $bundle) {
+            $bundleFqcn = get_class($bundle['instance']);
+            // If plugin is installed, update it. Otherwise, install it.
+            if ($this->isBundleAlreadyInstalled($bundleFqcn, false)) {
+                $operations[$bundleFqcn] = new Operation(Operation::UPDATE, $bundle['instance'], $bundleFqcn);
+                $operations[$bundleFqcn]->setFromVersion($fromVersion);
+                $operations[$bundleFqcn]->setToVersion($toVersion);
+            } else {
+                $operations[$bundleFqcn] = new Operation(Operation::INSTALL, $bundle['instance'], $bundleFqcn);
+            }
+        }
+
+        return $operations;
     }
 
     /**
@@ -306,7 +317,12 @@ class OperationExecutor
                 //Otherwise convert the name in a dirty little way
                 //If it's a metapackage, check in the bundle list
                 foreach ($extra['bundles'] as $installedBundle) {
-                    if ($installedBundle === $bundle) {
+                    if ($installedBundle === $bundle ||
+                        (
+                            $bundle === 'Icap\InwicastBundle\IcapInwicastBundle' &&
+                            $installedBundle === 'Inwicast\ClarolinePluginBundle\InwicastClarolinePluginBundle'
+                        )
+                    ) {
                         return $package;
                     }
                 }
@@ -314,7 +330,14 @@ class OperationExecutor
                 $bundleParts = explode('\\', $bundle);
 
                 //magic !
-                if (preg_replace('/[^A-Za-z0-9]/', '', $package->getPrettyName()) === strtolower($bundleParts[2])) {
+                $packagePrettyName = preg_replace('/[^A-Za-z0-9]/', '', $package->getPrettyName());
+                $bundlePrettyName = strtolower($bundleParts[2]);
+                if ($packagePrettyName === $bundlePrettyName ||
+                    (
+                        $bundlePrettyName === 'icapinwicastbundle' &&
+                        $packagePrettyName === 'inwicastclarolinepluginbundle'
+                    )
+                ) {
                     return $package;
                 }
             }
@@ -335,5 +358,38 @@ class OperationExecutor
         $fqcn = $this->detector->detectBundle("{$vendorDir}/{$packageDir}");
 
         return new Operation($type, $package, $fqcn);
+    }
+
+    private function isBundleAlreadyInstalled($bundleFqcn, $checkCoreBundle = true)
+    {
+        //if the corebundle is already installed, we can do database checks to be sure a plugin is already installed
+        //and not simply set to false in bundles.ini in previous versions.
+        $foundBundle = false;
+
+        if (!$checkCoreBundle || $this->findPreviousPackage('Claroline\CoreBundle\ClarolineCoreBundle')) {
+            //do the bundle already exists ?
+            $foundBundle = $bundleFqcn === 'Claroline\CoreBundle\ClarolineCoreBundle' ?
+                true :
+                // Is Inwicast bundle? If so verify with previous Namespace
+                $bundleFqcn === 'Icap\InwicastBundle\IcapInwicastBundle' ?
+                    $this->verifyInwicastBundleInstallation() :
+                    $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundleFqcn)
+            ;
+        }
+
+        return $foundBundle;
+    }
+
+    private function verifyInwicastBundleInstallation()
+    {
+        $pluginRepo = $this->om->getRepository('ClarolineCoreBundle:Plugin');
+        $newInwicastBundle = $pluginRepo
+            ->findOneByBundleFQCN('Icap\InwicastBundle\IcapInwicastBundle');
+        if (is_null($newInwicastBundle)) {
+            return $pluginRepo
+                ->findOneByBundleFQCN('Inwicast\ClarolinePluginBundle\InwicastClarolinePluginBundle');
+        }
+
+        return $newInwicastBundle;
     }
 }

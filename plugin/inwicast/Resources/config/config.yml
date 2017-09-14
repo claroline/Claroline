@@ -1,0 +1,20 @@
+plugin:
+    has_options: false
+    icon: res_inwicast.png
+
+    # Widgets declared by your plugin.
+    widgets:
+    # Each widget requires a name.
+     - name: inwicast_claroline_plugin
+    # Set this to true if the widget is configurable
+       is_configurable: true
+    # You can set an icon for your widget. The icon must be in your public/images/icons folder.
+       icon: res_inwicast.png
+    tools:
+      - name: inwicast_portal
+        class: play-circle
+        is_displayable_in_workspace: false
+        is_displayable_in_desktop: true
+    admin_tools:
+      - name: inwicast_configuration
+        class: play-circle
