@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "605b586a742754e654e355b7e9cf40469406d7b4"
+                "reference": "65beb024b0e5019aadb71c11a4e60ba5fa5402ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/605b586a742754e654e355b7e9cf40469406d7b4",
-                "reference": "605b586a742754e654e355b7e9cf40469406d7b4",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/65beb024b0e5019aadb71c11a4e60ba5fa5402ad",
+                "reference": "65beb024b0e5019aadb71c11a4e60ba5fa5402ad",
                 "shasum": ""
             },
             "require": {
@@ -392,7 +392,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-09-08 05:49:40"
+            "time": "2017-09-13 08:02:52"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -489,16 +489,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.0.7",
+            "version": "1.0.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "b17e6153cb7f33c7e44eb59578dc12eee5dc8e12"
+                "reference": "9dd73a03951357922d8aee6cc084500de93e2343"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/b17e6153cb7f33c7e44eb59578dc12eee5dc8e12",
-                "reference": "b17e6153cb7f33c7e44eb59578dc12eee5dc8e12",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/9dd73a03951357922d8aee6cc084500de93e2343",
+                "reference": "9dd73a03951357922d8aee6cc084500de93e2343",
                 "shasum": ""
             },
             "require": {
@@ -544,7 +544,7 @@
                 "ssl",
                 "tls"
             ],
-            "time": "2017-03-06 11:59:08"
+            "time": "2017-09-11 07:24:36"
         },
         {
             "name": "composer/composer",
@@ -3533,17 +3533,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "864a20b15ee5935f44402219c3830d57a0d9cc7a"
+                "reference": "a4b2d356f69bf77b09422ae601de470558ec25bb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/864a20b15ee5935f44402219c3830d57a0d9cc7a",
-                "reference": "864a20b15ee5935f44402219c3830d57a0d9cc7a",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/a4b2d356f69bf77b09422ae601de470558ec25bb",
+                "reference": "a4b2d356f69bf77b09422ae601de470558ec25bb",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-08-08 11:50:08"
+            "time": "2017-09-13 11:48:39"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -6748,16 +6748,16 @@
         },
         {
             "name": "phpdocumentor/reflection-common",
-            "version": "1.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionCommon.git",
-                "reference": "144c307535e82c8fdcaacbcfc1d6d8eeb896687c"
+                "reference": "21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/144c307535e82c8fdcaacbcfc1d6d8eeb896687c",
-                "reference": "144c307535e82c8fdcaacbcfc1d6d8eeb896687c",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionCommon/zipball/21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6",
+                "reference": "21bdeb5f65d7ebf9f43b1b25d404f87deab5bfb6",
                 "shasum": ""
             },
             "require": {
@@ -6798,7 +6798,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27 11:43:31"
+            "time": "2017-09-11 18:02:19"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
