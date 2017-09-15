@@ -880,8 +880,8 @@ class WorkspaceManager
             if ($update) {
                 $workspace = $this->getOneByCode($code);
                 if (!$workspace) {
-                    //if the workspace doesn't exists, just keep going...
-                    continue;
+                    //if the workspace doesn't exists, create it...
+                    $workspace = new Workspace();
                 }
                 if ($logger) {
                     $logger('Updating '.$code.' ('.$i.'/'.count($workspaces).') ...');

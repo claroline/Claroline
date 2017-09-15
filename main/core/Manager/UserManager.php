@@ -171,8 +171,8 @@ class UserManager
         $model = null,
         $publicUrl = null,
         $organizations = [],
-        $forcePersonalWorkspace = null)
-    {
+        $forcePersonalWorkspace = null
+    ) {
         $additionalRoles = [];
 
         foreach ($rolesToAdd as $roleToAdd) {
@@ -604,7 +604,6 @@ class UserManager
                 if ($logger) {
                     $logger(" User $j ($username) being updated...");
                 }
-                $userEntity->clearRoles();
                 $this->roleManager->associateRoles($userEntity, $additionalRoles);
             }
 
