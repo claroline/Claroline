@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "c1c8384a2d81adeb30356a461cbeb2c0d3841747"
+                "reference": "fccf6f97f7f39e819a8d1036f68f6212774a69db"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/c1c8384a2d81adeb30356a461cbeb2c0d3841747",
-                "reference": "c1c8384a2d81adeb30356a461cbeb2c0d3841747",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/fccf6f97f7f39e819a8d1036f68f6212774a69db",
+                "reference": "fccf6f97f7f39e819a8d1036f68f6212774a69db",
                 "shasum": ""
             },
             "require": {
@@ -237,6 +237,7 @@
                 "icap/blog-bundle": "*",
                 "icap/dropzone-bundle": "*",
                 "icap/formula-plugin-bundle": "*",
+                "icap/inwicast-plugin-bundle": "*",
                 "icap/lesson-bundle": "*",
                 "icap/notification-bundle": "*",
                 "icap/oauth-bundle": "*",
@@ -309,7 +310,8 @@
                     "Claroline\\CasBundle\\ClarolineCasBundle",
                     "Icap\\BibliographyBundle\\IcapBibliographyBundle",
                     "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle",
-                    "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle"
+                    "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle",
+                    "Icap\\InwicastBundle\\IcapInwicastBundle"
                 ]
             },
             "autoload": {
@@ -372,7 +374,8 @@
                     "Claroline\\CasBundle\\": "plugin/cas",
                     "Icap\\BibliographyBundle\\": "plugin/bibliography",
                     "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization",
-                    "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button"
+                    "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button",
+                    "Icap\\InwicastBundle\\": "plugin/inwicast"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -392,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-09-14 06:37:46"
+            "time": "2017-09-14 13:40:05"
         },
         {
             "name": "claroline/front-end-bundle",
