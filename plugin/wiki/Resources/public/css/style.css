@@ -85,7 +85,7 @@ ol#wiki-contents-list li a:before { content: counters(item, ".") " - "; }
 div.subsection-header h3, div.subsection-header h4 { margin-bottom: 5px; padding-bottom: 3px;}
 div.subsection-header h3 {margin-top: 15px; border-bottom: 1px dashed #eeeeee;}
 div.subsection-header h4 {margin-top: 10px; border-bottom: 1px dotted #eeeeee;}
-div.wiki-sections div.page-header {padding-bottom: 0px; margin:25px 0 10px 0;}
+div.wiki-sections div.page-header {padding-bottom: 0px; margin:25px 0 10px 0; display: block !important;}
 div.wiki-sections div.page-header h2 {margin-bottom:2px; font-weight: bold !important;}
 div.wiki-sections li.invisible-wiki-section { color: #aaa; }
 div.wiki-sections div.wiki-section-text { overflow: auto;}
