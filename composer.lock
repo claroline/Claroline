@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "c1c8384a2d81adeb30356a461cbeb2c0d3841747"
+                "reference": "535b9258390e3b33301c2f7aa5ecc7798fcd1730"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/c1c8384a2d81adeb30356a461cbeb2c0d3841747",
-                "reference": "c1c8384a2d81adeb30356a461cbeb2c0d3841747",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/535b9258390e3b33301c2f7aa5ecc7798fcd1730",
+                "reference": "535b9258390e3b33301c2f7aa5ecc7798fcd1730",
                 "shasum": ""
             },
             "require": {
@@ -237,6 +237,7 @@
                 "icap/blog-bundle": "*",
                 "icap/dropzone-bundle": "*",
                 "icap/formula-plugin-bundle": "*",
+                "icap/inwicast-plugin-bundle": "*",
                 "icap/lesson-bundle": "*",
                 "icap/notification-bundle": "*",
                 "icap/oauth-bundle": "*",
@@ -309,7 +310,8 @@
                     "Claroline\\CasBundle\\ClarolineCasBundle",
                     "Icap\\BibliographyBundle\\IcapBibliographyBundle",
                     "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle",
-                    "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle"
+                    "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle",
+                    "Icap\\InwicastBundle\\IcapInwicastBundle"
                 ]
             },
             "autoload": {
@@ -372,7 +374,8 @@
                     "Claroline\\CasBundle\\": "plugin/cas",
                     "Icap\\BibliographyBundle\\": "plugin/bibliography",
                     "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization",
-                    "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button"
+                    "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button",
+                    "Icap\\InwicastBundle\\": "plugin/inwicast"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -392,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-09-14 06:37:46"
+            "time": "2017-09-16 17:27:38"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3533,17 +3536,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "a4b2d356f69bf77b09422ae601de470558ec25bb"
+                "reference": "f347cf3022321aa779e5d9d008a5f84244fd08f2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/a4b2d356f69bf77b09422ae601de470558ec25bb",
-                "reference": "a4b2d356f69bf77b09422ae601de470558ec25bb",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/f347cf3022321aa779e5d9d008a5f84244fd08f2",
+                "reference": "f347cf3022321aa779e5d9d008a5f84244fd08f2",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-09-13 11:48:39"
+            "time": "2017-09-15 06:49:09"
         },
         {
             "name": "justinrainbow/json-schema",
