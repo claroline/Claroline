@@ -727,9 +727,20 @@ class RightsManager
     {
         $token = $this->container->get('security.token_storage')->getToken();
 
+        // if user is anonymous return false
         if ($token === 'anon.') {
             return false;
         }
+
+        $roleNames = array_map(
+            function ($role) {
+                return $role->getRole();
+            },
+            $token->getRoles()
+        );
+
+        $isWorkspaceUsurp = in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roleNames);
+
         $workspace = $resourceNode->getWorkspace();
 
         //if we manage the workspace
@@ -737,14 +748,13 @@ class RightsManager
             return true;
         }
 
-        if ($token->getUser() === $resourceNode->getCreator()) {
+        // If not workspace usurper
+        if (!$isWorkspaceUsurp && $token->getUser() === $resourceNode->getCreator()) {
             return true;
         }
 
-        foreach ($token->getRoles() as $role) {
-            if ($role->getRole() === 'ROLE_ADMIN') {
-                return true;
-            }
+        if (in_array('ROLE_ADMIN', $roleNames)) {
+            return true;
         }
 
         return false;
@@ -758,6 +768,7 @@ class RightsManager
         $roleNames = array_map(function ($roleName) {
             return $roleName->getRole();
         }, $currentRoles);
+
         //si manager, retourne tout
 
         if ($this->isManager($resourceNode, $this->container->get('security.token_storage')->getToken())) {

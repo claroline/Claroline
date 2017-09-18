@@ -1253,7 +1253,7 @@ class WorkspaceManager
 
         $managerRole = $this->roleManager->getManagerRole($workspace);
 
-        if ($workspace->getCreator() === $token->getUser()) {
+        if (!in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roles) && $workspace->getCreator() === $token->getUser()) {
             return true;
         }
 

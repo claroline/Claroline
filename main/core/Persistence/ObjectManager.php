@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Persistence;
 
-use Doctrine\ORM\UnitOfWork;
-use Doctrine\Common\Persistence\ObjectManagerDecorator;
-use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\BundleRecorder\Log\LoggableTrait;
+use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
+use Doctrine\Common\Persistence\ObjectManagerDecorator;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\UnitOfWork;
+use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -234,19 +234,22 @@ class ObjectManager extends ObjectManagerDecorator
     /**
      * Finds a set of objects by their ids.
      *
-     * @param string $objectClass
-     * @param array  $ids
+     * @param $class
+     * @param array $ids
+     * @param bool  $orderStrict keep the same order as ids array
      *
-     * @return array[object]
+     * @return array [object]
      *
      * @throws MissingObjectException if any of the requested objects cannot be found
      *
+     * @internal param string $objectClass
+     *
      * @todo make this method compatible with odm implementations
      */
-    public function findByIds($class, array $ids)
+    public function findByIds($class, array $ids, $orderStrict = false)
     {
         if (count($ids) === 0) {
-            return array();
+            return [];
         }
 
         $dql = "SELECT object FROM {$class} object WHERE object.id IN (:ids)";
@@ -258,6 +261,14 @@ class ObjectManager extends ObjectManagerDecorator
             throw new MissingObjectException(
                 "{$entityCount} out of {$idCount} ids don't match any existing object"
             );
+        }
+
+        if ($orderStrict) {
+            // Sort objects to have tha same order as given $ids array
+            $sortIds = array_flip($ids);
+            usort($objects, function ($a, $b) use ($sortIds) {
+                return $sortIds[$a->getId()] - $sortIds[$b->getId()];
+            });
         }
 
         return $objects;

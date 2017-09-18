@@ -122,7 +122,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
      *
      * @return array[array] An array of resources represented as arrays
      */
-    public function findChildren(ResourceNode $parent, array $roles, $user, $withLastOpenDate = false)
+    public function findChildren(ResourceNode $parent, array $roles, $user, $withLastOpenDate = false, $canAdministrate = false)
     {
         //if we usurpate a role, then it's like we're anonymous.
         if (in_array('ROLE_USURPATE_WORKSPACE_ROLE', $roles)) {
@@ -156,8 +156,10 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             $this->builder->selectAsArray(true)
                 ->whereParentIs($parent)
                 ->whereActiveIs(true)
-                ->whereHasRoleIn($roles)
-                ->whereIsAccessible($user);
+                ->whereHasRoleIn($roles);
+            if (!$canAdministrate) {
+                $this->builder->whereIsAccessible($user);
+            }
 
             $query = $this->_em->createQuery($this->builder->getDql());
             $query->setParameters($this->builder->getParameters());
@@ -483,6 +485,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
             'dateTo' => 'whereDateTo',
             'name' => 'whereNameLike',
             'isExportable' => 'whereIsExportable',
+            'active' => 'whereActiveIs',
         ];
         $allowedFilters = array_keys($filterMethodMap);
 

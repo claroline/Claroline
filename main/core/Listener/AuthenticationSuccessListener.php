@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -124,13 +125,18 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-
+        $securityRoute = null;
         $securityUri = $request->getSession()->get('_security.main.target_path');
-        $securityRoute = $securityUri ?
-            $this->router->match(
-                preg_replace("/(app_dev.php\/|app_dev.php\/)/i", '', parse_url($securityUri, PHP_URL_PATH))
-            )['_route'] :
-            null;
+        // Get route name if security Uri present
+        if ($securityUri) {
+            $securityUriClean = preg_replace("/(app_dev.php\/|app_dev.php\/)/i", '', parse_url($securityUri, PHP_URL_PATH));
+            try {
+                $securityRoute = $this->router->match($securityUriClean)['_route'];
+            } catch (MethodNotAllowedException $e) {
+                $this->router->getContext()->setMethod('GET');
+                $securityRoute = $this->router->match($securityUriClean)['_route'];
+            }
+        }
         // If login route then check other conditions.
         if ($securityRoute && !$this->isRouteExcluded($securityRoute)) {
             return new RedirectResponse($securityUri);
