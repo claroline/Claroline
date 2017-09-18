@@ -866,8 +866,20 @@ class RolesController extends Controller
         $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(new WorkspaceUsersImportType($workspace));
         $importByFullName = $this->get('claroline.config.platform_config_handler')->getParameter('workspace_users_csv_import_by_full_name');
+        $defaultRoleNames = $workspace->getRoles()
+            ->filter(function ($role) {
+                return preg_match('/^ROLE_WS_(COLLABORATOR|MANAGER)(_|$)/', $role->getRole());
+            })
+            ->map(function ($role) {
+                return $role->getTranslationKey();
+            })->toArray();
 
-        return ['workspace' => $workspace, 'form' => $form->createView(), 'isImportByFullNameEnabled' => $importByFullName];
+        return [
+            'workspace' => $workspace,
+            'form' => $form->createView(),
+            'isImportByFullNameEnabled' => $importByFullName,
+            'defaultRoleNames' => $defaultRoleNames,
+        ];
     }
 
     /**
@@ -911,7 +923,20 @@ class RolesController extends Controller
                 )
             );
         } else {
-            return ['workspace' => $workspace, 'form' => $form->createView(), 'isImportByFullNameEnabled' => $importByFullName];
+            $defaultRoleNames = $workspace->getRoles()
+                ->filter(function ($role) {
+                    return preg_match('/^ROLE_WS_(COLLABORATOR|MANAGER)(_|$)/', $role->getRole());
+                })
+                ->map(function ($role) {
+                    return $role->getTranslationKey();
+                })->toArray();
+
+            return [
+                'workspace' => $workspace,
+                'form' => $form->createView(),
+                'isImportByFullNameEnabled' => $importByFullName,
+                'defaultRoleNames' => $defaultRoleNames,
+            ];
         }
     }
 

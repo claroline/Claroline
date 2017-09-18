@@ -71,13 +71,22 @@
                 </p>
                 <p>{{ 'csv_users_import_infos_format'|trans({}, 'platform') }} :</p>
                 <ul>
-                    <li>
-                        &lt;{{ 'username'|trans({}, 'platform') }}&gt;;&lt;{{ 'role'|trans({}, 'platform') }}&gt;{% if isImportByFullNameEnabled %};&lt;{{ 'firstName'|trans({}, 'platform') }}&gt;;&lt;{{ 'lastName'|trans({}, 'platform') }}&gt;{% endif %}
+                    <li> {% if isImportByFullNameEnabled %}{{ 'csv_users_import_infos_by_full_name_2_texts'|trans({}, 'platform') }} <br/>{% endif %}
+                        &lt;{{ 'username'|trans({}, 'platform') }}&gt;;&lt;{{ 'role'|trans({}, 'platform') }}&gt;
+                        {% if isImportByFullNameEnabled %} / <br/>;&lt;{{ 'role'|trans({}, 'platform') }}&gt;;&lt;{{ 'firstName'|trans({}, 'platform') }}&gt;;&lt;{{ 'lastName'|trans({}, 'platform') }}&gt;
+                            {{ 'csv_users_import_infos_by_full_name_semicolon'|trans({}, 'platform') }}<br/>
+                            {{ 'csv_users_import_infos_by_full_name_nb'|trans({}, 'platform')|raw }}
+                        {% endif %}
                     </li>
-                    <li>{{ 'csv_users_import_infos_ws_role_a'|trans({}, 'platform') }}</li>
-                    <li>{{ 'csv_users_import_infos_ws_role_b'|trans({}, 'platform') }}</li>
+                    {% if 'collaborator' in defaultRoleNames or 'manager' in defaultRoleNames %}
+                        <li>{{ 'csv_users_import_infos_ws_role_a'|trans({}, 'platform') }}</li>
+                        <li>{{ 'csv_users_import_infos_ws_role_b'|trans({}, 'platform') }}</li>
+                    {% else %}
+                        <li>{{ 'csv_users_import_infos_ws_role_alt'|trans({'%roleNames%': defaultRoleNames|join('", "')}, 'platform') }}</li>
+                    {% endif %}
                     <li>{{ 'csv_users_import_infos_format_a'|trans({}, 'platform') }}</li>
                     <li>{{ 'csv_users_import_infos_format_b'|trans({}, 'platform') }}</li>
+                    <li>{{ 'csv_users_import_infos_format_c'|trans({}, 'platform') }}</li>
                     {% if isImportByFullNameEnabled %}
                     <li>{{ 'csv_users_import_infos_by_full_name_a'|trans({}, 'platform') }}</li>
                     <li>{{ 'csv_users_import_infos_by_full_name_b'|trans({}, 'platform') }}</li>
