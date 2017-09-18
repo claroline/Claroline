@@ -534,8 +534,8 @@ export const StepEditor = props =>
 
           handlePanelClick={panelKey => props.handlePanelClick(props.step.id, panelKey)}
           handleItemDelete={itemId => props.handleItemDelete(props.step.id, itemId)}
-          handleItemDuplicate={props.handleItemDuplicate}
-          handleItemChangeStep={itemId => props.handleItemChangeStep(props.step.id, itemId)}
+          handleItemDuplicate={(itemId, amount) => props.handleItemDuplicate(props.step.id, itemId, amount)}
+          handleItemChangeStep={props.handleItemChangeStep}
 
           handleItemUpdate={props.handleItemUpdate}
           handleItemHintsUpdate={props.handleItemHintsUpdate}
@@ -558,8 +558,8 @@ export const StepEditor = props =>
 
           handlePanelClick={panelKey => props.handlePanelClick(props.step.id, panelKey)}
           handleItemDelete={itemId => props.handleItemDelete(props.step.id, itemId)}
-          handleItemDuplicate={props.handleItemDuplicate}
-          handleItemChangeStep={itemId => props.handleItemChangeStep(props.step.id, itemId)}
+          handleItemDuplicate={(itemId, amount) => props.handleItemDuplicate(props.step.id, itemId, amount)}
+          handleItemChangeStep={props.handleItemChangeStep}
 
           handleContentItemUpdate={props.handleContentItemUpdate}
           handleContentItemDetailUpdate={props.handleContentItemDetailUpdate}
