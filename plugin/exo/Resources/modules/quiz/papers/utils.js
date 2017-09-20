@@ -37,9 +37,14 @@ export const utils = {
 
     paper.structure.steps.forEach(step => {
       step.items.forEach(item => {
-        const def = getDefinition(item.type)
-        const correctedAnswer = def.getCorrectedAnswer(item, answers.find(answer => answer.questionId === item.id))
-        total += calculate(item.score, correctedAnswer)
+        //because some content object will thow some errors
+        try  {
+          const def = getDefinition(item.type)
+          const correctedAnswer = def.getCorrectedAnswer(item, answers.find(answer => answer.questionId === item.id))
+          total += calculate(item.score, correctedAnswer)
+        } catch (e) {
+          //console.error(e.message)
+        }
       })
     })
     return total

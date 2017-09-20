@@ -9,6 +9,7 @@ export const OpenPaper = props => {
   return (
     <PaperTabs
       id={props.item.id}
+      showYours={props.showYours}
       yours={
         <div className="open-paper">
           {props.feedback &&
@@ -19,7 +20,6 @@ export const OpenPaper = props => {
                 />
             </div>
           }
-
           {props.answer && 0 !== props.answer.length ?
             <div dangerouslySetInnerHTML={{__html: props.answer}} />
             : <div className="no-answer">{tex('no_answer')}</div>
@@ -29,6 +29,7 @@ export const OpenPaper = props => {
     />
   )
 }
+
 OpenPaper.propTypes = {
   item: T.shape({
     id: T.string.isRequired,
@@ -36,5 +37,6 @@ OpenPaper.propTypes = {
     description: T.string
   }).isRequired,
   answer: T.string,
-  feedback: T.string
+  feedback: T.string,
+  showYours: T.bool.isRequired
 }

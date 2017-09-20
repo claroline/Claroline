@@ -319,8 +319,11 @@ class ExerciseManager
                 $item = $stepQ->getQuestion();
                 $items[$item->getUuid()] = $item;
                 $itemType = $item->getInteraction();
-                $definition = $this->definitions->get($item->getMimeType());
-                $titles[$item->getUuid()] = $definition->getCsvTitles($itemType);
+
+                if ($this->definitions->has($item->getMimeType())) {
+                    $definition = $this->definitions->get($item->getMimeType());
+                    $titles[$item->getUuid()] = $definition->getCsvTitles($itemType);
+                }
             }
         }
 
@@ -333,14 +336,22 @@ class ExerciseManager
             $answers = $paper->getAnswers();
             $csv = [];
             $user = $paper->getUser();
-            $csv['username'] = [$user->getUsername()];
-            $csv['firstname'] = [$user->getFirstName()];
-            $csv['lastname'] = [$user->getLastName()];
+
+            if ($user) {
+                $csv['username'] = [$user->getUsername()];
+                $csv['firstname'] = [$user->getFirstName()];
+                $csv['lastname'] = [$user->getLastName()];
+            } else {
+                $csv['username'] = $csv['firstname'] = $csv['lastname'] = 'none';
+            }
 
             foreach ($answers as $answer) {
                 $item = $items[$answer->getQuestionId()];
-                $definition = $this->definitions->get($item->getMimeType());
-                $csv[$answer->getQuestionId()] = $definition->getCsvAnswers($item->getInteraction(), $answer);
+
+                if ($this->definitions->has($item->getMimeType())) {
+                    $definition = $this->definitions->get($item->getMimeType());
+                    $csv[$answer->getQuestionId()] = $definition->getCsvAnswers($item->getInteraction(), $answer);
+                }
             }
 
             $dataPapers[] = $csv;
@@ -360,8 +371,10 @@ class ExerciseManager
         foreach ($dataPapers as $paper) {
             $flattenedAnswers = [];
             foreach ($paper as $paperItem) {
-                foreach ($paperItem as $paperEl) {
-                    $flattenedAnswers[] = $paperEl;
+                if ($paperItem) {
+                    foreach ($paperItem as $paperEl) {
+                        $flattenedAnswers[] = $paperEl;
+                    }
                 }
             }
             $flattenedData[] = $flattenedAnswers;

@@ -7,7 +7,7 @@ use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Updater\Updater;
 
-class Updater110000 extends Updater
+class Updater100200 extends Updater
 {
     private $container;
 
@@ -39,5 +39,11 @@ class Updater110000 extends Updater
         $maskManager->renameMask($quizType, 'MANAGE_PAPERS', 'manage_papers');
 
         $om->flush();
+
+        $this->log('Set exo numbering...');
+
+        $sql = "UPDATE ujm_exercise SET numbering = 'none' WHERE numbering ='' OR numbering = NULL";
+        $sth = $this->container->get('doctrine.dbal.default_connection')->prepare($sql);
+        $sth->execute();
     }
 }
