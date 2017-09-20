@@ -879,18 +879,20 @@ class WorkspaceManager
 
             if ($update) {
                 $workspace = $this->getOneByCode($code);
+                $this->rename($workspace, $name);
                 if (!$workspace) {
                     //if the workspace doesn't exists, create it...
                     $workspace = new Workspace();
+                    $workspace->setName($name);
                 }
                 if ($logger) {
                     $logger('Updating '.$code.' ('.$i.'/'.count($workspaces).') ...');
                 }
             } else {
                 $workspace = new Workspace();
+                $workspace->setName($name);
             }
 
-            $workspace->setName($name);
             $workspace->setCode($code);
             $workspace->setDisplayable($isVisible);
             $workspace->setSelfRegistration($selfRegistration);
