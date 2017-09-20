@@ -37,3 +37,6 @@ windows_live_login:
 
 office_365_login:
     path: /login/check-o365
+
+oauth2_generic_login:
+    path: /login/check-generic

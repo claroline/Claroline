@@ -3,6 +3,12 @@
     "client_force_reauthenticate": "Forcer la ré-authentification",
     "client_id": "ID de l'application",
     "client_secret": "Secret de l'application",
+    "access_token_url": "URL de l'Access Token",
+    "authorization_url": "URL d'authorisation",
+    "infos_url": "URL infos",
+    "scope": "Scope",
+    "paths_login": "Nouvel utilisateur (champ identifiant)",
+    "paths_email": "Nouvel utilisateur (champ email)",
     "client_tenant_domain": "Domaine",
     "create_new_oauth_account": "Créer un nouveau compte",
     "error_connecting_with_oauth": "Une erreur s'est produite pendant l'authentification avec le service choisi. Voici le message de l'erreur: %msg%",
@@ -14,5 +20,6 @@
     "oauth_check_connexion_info": "Souhaitez-vous créer un nouveau compte sur la plateforme, ou lier à un compte déjà existant?",
     "office_365": "Office 365",
     "twitter": "Twitter",
-    "windows_live": "Windows Live"
+    "windows_live": "Windows Live",
+    "generic": "OAuth2 Générique"
 }

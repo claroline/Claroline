@@ -189,6 +189,36 @@ class ResourceOwnerFactory
         return $owner;
     }
 
+    public function getGenericResourceOwner()
+    {
+        $config = $this->oauthManager->getConfiguration('generic');
+        $options = [];
+
+        $paths = [
+            'email' => $config->getPathsEmail(),
+            'nickname' => $config->getPathsLogin(),
+        ];
+
+        $owner = new GenericResourceOwner(
+            $this->createClientHttp(),
+            $this->httpUtils,
+            [
+                'client_id' => $config->getClientId(),
+                'client_secret' => $config->getClientSecret(),
+                'authorization_url' => $config->getAuthorizationUrl(),
+                'access_token_url' => $config->getAccessTokenUrl(),
+                'infos_url' => $config->getInfosUrl(),
+                'scope' => $config->getScope(),
+                'paths' => $paths,
+                'options' => $options,
+            ],
+            'generic',
+            new SessionStorage($this->session)
+        );
+
+        return $owner;
+    }
+
     private function createClientHttp()
     {
         $httpClient = new Curl();

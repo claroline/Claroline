@@ -19,6 +19,12 @@ class Configuration
     private $clientTenantDomain = null;
     private $clientVersion = null;
     private $clientForceReauthenticate = false;
+    private $scope = null;
+    private $authorizationUrl = null;
+    private $accessTokenUrl = null;
+    private $infosUrl = null;
+    private $pathsLogin = null;
+    private $pathsEmail = null;
 
     public function __construct($id, $secret, $active, $forceReauthenticate = false, $domain = null, $version = null)
     {
@@ -135,9 +141,129 @@ class Configuration
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getScope()
+    {
+        return $this->scope;
+    }
+
+    /**
+     * @param string $scope
+     *
+     * @return $this
+     */
+    public function setScope($scope)
+    {
+        $this->scope = $scope;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAuthorizationUrl()
+    {
+        return $this->authorizationUrl;
+    }
+
+    /**
+     * @param string $authorizationUrl
+     *
+     * @return $this
+     */
+    public function setAuthorizationUrl($authorizationUrl)
+    {
+        $this->authorizationUrl = $authorizationUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getInfosUrl()
+    {
+        return $this->infosUrl;
+    }
+
+    /**
+     * @param string $infosUrl
+     *
+     * @return $this
+     */
+    public function setInfosUrl($infosUrl)
+    {
+        $this->infosUrl = $infosUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAccessTokenUrl()
+    {
+        return $this->accessTokenUrl;
+    }
+
+    /**
+     * @param string $accessTokenUrl
+     *
+     * @return $this
+     */
+    public function setAccessTokenUrl($accessTokenUrl)
+    {
+        $this->accessTokenUrl = $accessTokenUrl;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPathsLogin()
+    {
+        return $this->pathsLogin;
+    }
+
+    /**
+     * @param string $pathsLogin
+     *
+     * @return $this
+     */
+    public function setPathsLogin($pathsLogin)
+    {
+        $this->pathsLogin = $pathsLogin;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPathsEmail()
+    {
+        return $this->pathsEmail;
+    }
+
+    /**
+     * @param string $pathsEmail
+     *
+     * @return $this
+     */
+    public function setPathsEmail($pathsEmail)
+    {
+        $this->pathsEmail = $pathsEmail;
+
+        return $this;
+    }
+
     public static function resourceOwners()
     {
-        $resourceOwners = ['Facebook', 'Twitter', 'Google', 'Linkedin', 'Windows Live', 'Office 365'];
+        $resourceOwners = ['Facebook', 'Twitter', 'Google', 'Linkedin', 'Windows Live', 'Office 365', 'Generic'];
 
         return $resourceOwners;
     }

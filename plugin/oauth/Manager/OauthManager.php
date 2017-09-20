@@ -148,6 +148,7 @@ class OauthManager
             case 'linkedin':
             case 'windows_live':
             case 'office_365':
+            case 'generic':
                 return [];
         }
     }
@@ -170,13 +171,24 @@ class OauthManager
             }
         }
 
-        return new Configuration(
+        $config = new Configuration(
             $clientId,
             $clientSecret,
             $this->isServiceAvailable($service),
             $this->platformConfigHandler->getParameter($service.'_client_force_reauthenticate'),
             $clientTenantDomain
         );
+
+        if ($service === 'generic') {
+            $config->setAuthorizationUrl($this->platformConfigHandler->getParameter($service.'_authorization_url'));
+            $config->setAccessTokenUrl($this->platformConfigHandler->getParameter($service.'_access_token_url'));
+            $config->setInfosUrl($this->platformConfigHandler->getParameter($service.'_infos_url'));
+            $config->setScope($this->platformConfigHandler->getParameter($service.'_scope'));
+            $config->setPathsLogin($this->platformConfigHandler->getParameter($service.'_paths_login'));
+            $config->setPathsEmail($this->platformConfigHandler->getParameter($service.'_paths_email'));
+        }
+
+        return $config;
     }
 
     public function getActiveServices()

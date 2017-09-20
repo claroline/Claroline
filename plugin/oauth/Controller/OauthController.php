@@ -77,6 +77,15 @@ class OauthController extends Controller
                 $data[$service.'_client_domain'] = $clientTenandDomain === null ? '' : $clientTenandDomain;
             }
 
+            if ($service === 'generic') {
+                $data[$service.'_authorization_url'] = $form['authorization_url']->getData();
+                $data[$service.'_access_token_url'] = $form['access_token_url']->getData();
+                $data[$service.'_infos_url'] = $form['infos_url']->getData();
+                $data[$service.'_scope'] = $form['scope']->getData();
+                $data[$service.'_paths_login'] = $form['paths_login']->getData();
+                $data[$service.'_paths_email'] = $form['paths_email']->getData();
+            }
+
             $errors = $this->oauthManager->validateService(
                 $service,
                 $data[$service.'_client_id'],

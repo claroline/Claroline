@@ -63,6 +63,33 @@ class ConfigurationType extends AbstractType
                 ]
             );
         }
+        if ($options['resource_owner'] === 'generic') {
+            $builder->add('access_token_url', 'text', [
+                'required' => true,
+                'label' => 'access_token_url',
+            ])
+            ->add('authorization_url', 'text', [
+                'required' => true,
+                'label' => 'authorization_url',
+            ])
+            ->add('infos_url', 'text', [
+                'required' => true,
+                'label' => 'infos_url',
+            ])
+            ->add('scope', 'text', [
+                'required' => false,
+                'label' => 'scope',
+            ])
+            ->add('paths_login', 'text', [
+                'required' => false,
+                'label' => 'paths_login',
+            ])
+            ->add('paths_email', 'text', [
+                'required' => false,
+                'label' => 'paths_email',
+            ]);
+        }
+
         $builder->add('client_active', 'checkbox', ['label' => 'client_active', 'required' => false]);
     }
 
