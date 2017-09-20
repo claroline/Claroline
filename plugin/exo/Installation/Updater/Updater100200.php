@@ -45,5 +45,10 @@ class Updater100200 extends Updater
         $sql = "UPDATE ujm_exercise SET numbering = 'none' WHERE numbering ='' OR numbering = NULL";
         $sth = $this->container->get('doctrine.dbal.default_connection')->prepare($sql);
         $sth->execute();
+
+        $this->log('Clean old schema table...');
+        $drop = 'DROP TABLE IF EXISTS ujm_link_hint_paper;';
+        $dropSth = $this->container->get('doctrine.dbal.default_connection')->prepare($drop);
+        $dropSth->execute();
     }
 }
