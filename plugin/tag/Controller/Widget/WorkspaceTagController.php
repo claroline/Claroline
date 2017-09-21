@@ -26,24 +26,24 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 class WorkspaceTagController extends Controller
 {
     /**
-   * @DI\InjectParams({
-   *     "formFactory"   = @DI\Inject("form.factory"),
-   *     "widgetManager" = @DI\Inject("claroline.manager.widget_manager"),
-   *     "tokenStorage"  = @DI\Inject("security.token_storage"),
-   *     "tagManager"    = @DI\Inject("claroline.manager.tag_manager"),
-   * })
-   */
-  public function __construct(
+     * @DI\InjectParams({
+     *     "formFactory"   = @DI\Inject("form.factory"),
+     *     "widgetManager" = @DI\Inject("claroline.manager.widget_manager"),
+     *     "tokenStorage"  = @DI\Inject("security.token_storage"),
+     *     "tagManager"    = @DI\Inject("claroline.manager.tag_manager"),
+     * })
+     */
+    public function __construct(
       FormFactory $formFactory,
       WidgetManager $widgetManager,
       TokenStorageInterface $tokenStorage,
       TagManager $tagManager
   ) {
-      $this->formFactory = $formFactory;
-      $this->widgetManager = $widgetManager;
-      $this->tokenStorage = $tokenStorage;
-      $this->tagManager = $tagManager;
-  }
+        $this->formFactory = $formFactory;
+        $this->widgetManager = $widgetManager;
+        $this->tokenStorage = $tokenStorage;
+        $this->tagManager = $tagManager;
+    }
 
     /**
      * @EXT\Route(
@@ -83,7 +83,12 @@ class WorkspaceTagController extends Controller
      */
     public function widgetConfigureFormAction(WidgetInstance $widgetInstance, Request $request)
     {
-        $form = $this->formFactory->create(new WorkspaceTagType());
+        $displayConfigs = $this->widgetManager->getWidgetDisplayConfigsByUserAndWidgets(
+          $this->tokenStorage->getToken()->getUser(),
+          [$widgetInstance]
+        );
+        $tags = explode(',', $displayConfigs[0]->getDetails()['tags']);
+        $form = $this->formFactory->create(new WorkspaceTagType($tags));
 
         return ['form' => $form->createView(), 'widgetInstance' => $widgetInstance];
     }
