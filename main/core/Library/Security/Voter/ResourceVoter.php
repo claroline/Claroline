@@ -466,7 +466,7 @@ class ResourceVoter implements VoterInterface
         }
 
         foreach ($nodes as $node) {
-            if (!$this->rightsManager->isManager($node)) {
+            if ($node && !$this->rightsManager->isManager($node)) {
                 return false;
             }
         }

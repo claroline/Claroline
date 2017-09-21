@@ -85,8 +85,8 @@ class WidgetManager
         Utilities $utils,
         ResourceManager $resourceManager,
         PathManager $pathManager,
-        UserProgressionManager $userProgressionManager)
-    {
+        UserProgressionManager $userProgressionManager
+    ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
         $this->utils = $utils;
@@ -124,6 +124,7 @@ class WidgetManager
     {
         $workspace = $widgetInstance->getWorkspace();
         $roots = [];
+
         if (!empty($workspace)) {
             $root = $this->resourceManager->getWorkspaceRoot($workspace);
             $roots[] = $root->getPath();
