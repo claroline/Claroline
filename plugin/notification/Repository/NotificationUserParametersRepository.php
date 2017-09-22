@@ -11,17 +11,18 @@
 
 namespace Icap\NotificationBundle\Repository;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 
 class NotificationUserParametersRepository extends EntityRepository
 {
-    public function findParametersByUserId($userId)
+    public function findParametersByUser(User $user)
     {
         $qb = $this->createQueryBuilder('parameters');
         $qb
             ->select('parameters')
-            ->andWhere('parameters.userId = :userId')
-            ->setParameter('userId', $userId);
+            ->andWhere('parameters.user = :user')
+            ->setParameter('user', $user);
 
         return $qb->getQuery()->getSingleResult();
     }

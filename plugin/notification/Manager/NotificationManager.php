@@ -2,6 +2,7 @@
 
 namespace Icap\NotificationBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Doctrine\ORM\EntityManager;
@@ -380,18 +381,18 @@ class NotificationManager
         return $notification;
     }
 
-    public function getDropdownNotifications($userId)
+    public function getDropdownNotifications(User $user)
     {
         $config = $this->getConfigurationAndPurge();
 
-        return $this->getUserNotificationsList($userId, 1, $config->getDropdownItems());
+        return $this->getUserNotificationsList($user, 1, $config->getDropdownItems());
     }
 
-    public function getPaginatedNotifications($userId, $page = 1, $category = null)
+    public function getPaginatedNotifications(User $user, $page = 1, $category = null)
     {
         $config = $this->getConfigurationAndPurge();
 
-        return $this->getUserNotificationsList($userId, $page, $config->getMaxPerPage(), false, null, $category);
+        return $this->getUserNotificationsList($user, $page, $config->getMaxPerPage(), false, null, $category);
     }
 
     public function markAllNotificationsAsViewed($userId)
@@ -411,9 +412,9 @@ class NotificationManager
      *
      * @return mixed
      */
-    public function getUserNotificationsList($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $category = null)
+    public function getUserNotificationsList(User $user, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $category = null)
     {
-        $query = $this->getUserNotifications($userId, $page, $maxResult, $isRss, $notificationParameters, false, $category);
+        $query = $this->getUserNotifications($user, $page, $maxResult, $isRss, $notificationParameters, false, $category);
         $adapter = new DoctrineORMAdapter($query, false);
         $pager = new Pagerfanta($adapter);
         $pager->setMaxPerPage($maxResult);
@@ -432,12 +433,12 @@ class NotificationManager
         ];
     }
 
-    public function getUserNotifications($userId, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $executeQuery = true, $category = null)
+    public function getUserNotifications(User $user, $page = 1, $maxResult = -1, $isRss = false, $notificationParameters = null, $executeQuery = true, $category = null)
     {
         if (is_null($notificationParameters)) {
             $notificationParameters = $this
                 ->notificationParametersManager
-                ->getParametersByUserId($userId);
+                ->getParametersByUser($user);
         }
 
         if ($isRss) {
@@ -448,7 +449,7 @@ class NotificationManager
 
         $query = $this
             ->getNotificationViewerRepository()
-            ->findUserNotificationsQuery($userId, $visibleTypes, $category);
+            ->findUserNotificationsQuery($user->getId(), $visibleTypes, $category);
 
         return $executeQuery ? $query->getResult() : $query;
     }
@@ -464,7 +465,7 @@ class NotificationManager
         }
 
         return $this->getUserNotificationsList(
-            $notificationUserParameters->getUserId(),
+            $notificationUserParameters->getUser(),
             1,
             $config->getMaxPerPage(),
             true,
@@ -550,13 +551,13 @@ class NotificationManager
      *
      * @return int
      */
-    public function countUnviewedNotifications($viewerId = null)
+    public function countUnviewedNotifications(User $viewer = null)
     {
-        if (empty($viewerId)) {
-            $viewerId = $this->tokenStorage->getToken()->getUser()->getId();
+        if (empty($viewer)) {
+            $viewer = $this->tokenStorage->getToken()->getUser();
         }
-        $notificationParameters = $this->notificationParametersManager->getParametersByUserId($viewerId);
+        $notificationParameters = $this->notificationParametersManager->getParametersByUser($viewer);
 
-        return intval($this->getNotificationViewerRepository()->countUnviewedNotifications($viewerId, $notificationParameters->getDisplayEnabledTypes())['total']);
+        return intval($this->getNotificationViewerRepository()->countUnviewedNotifications($viewer->getId(), $notificationParameters->getDisplayEnabledTypes())['total']);
     }
 }

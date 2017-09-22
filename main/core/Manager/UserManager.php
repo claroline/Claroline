@@ -171,7 +171,8 @@ class UserManager
         $model = null,
         $publicUrl = null,
         $organizations = [],
-        $forcePersonalWorkspace = null
+        $forcePersonalWorkspace = null,
+        $addNotifications = true
     ) {
         $additionalRoles = [];
 
@@ -194,6 +195,12 @@ class UserManager
         $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
         $user->addRole($roleUser);
         $this->roleManager->createUserRole($user);
+        $notifications = $this->platformConfigHandler->getParameter('auto_enable_notifications');
+
+        if ($addNotifications) {
+            $nManager = $this->container->get('icap.notification.manager.notification_user_parameters');
+            $nManager->processUpdate($notifications, $user);
+        }
 
         foreach ($additionalRoles as $role) {
             if ($role) {
@@ -1964,9 +1971,47 @@ class UserManager
             $user->setPlainPassword(uniqid('', true));
             $user->disable();
             $user->remove();
-            $this->createUser($user, false, [], null, null, [], false, false);
+            $this->createUser($user, false, [], null, null, [], false, false, false);
         }
 
         return $user;
+    }
+
+    public function restoreUsersMailParameter()
+    {
+        $users = $this->getAll();
+        $i = 0;
+        $this->objectManager->startFlushSuite();
+        $count = (count($users));
+        $this->log("{$count} users to update...");
+
+        foreach ($users as $user) {
+            ++$i;
+
+            $this->restoreUserMailParameter($user);
+            $this->log("{$i}/{$count} user done...");
+
+            if ($i % 500 === 0) {
+                $this->objectManager->forceFlush();
+                $this->log('Flushing...');
+            }
+        }
+
+        $this->log('Flushing...');
+        $this->objectManager->endFlushSuite();
+    }
+
+    public function restoreUserMailParameter(User $user)
+    {
+        $emailValidted = $this->platformConfigHandler->getParameter('auto_validate_email');
+        $emailRedirect = $this->platformConfigHandler->getParameter('auto_enable_email_redirect');
+        $notifications = $this->platformConfigHandler->getParameter('auto_enable_notifications');
+
+        $user->setIsMailValidated($emailValidted);
+        $user->setIsMailNotified($emailRedirect);
+        $nManager = $this->container->get('icap.notification.manager.notification_user_parameters');
+        $nManager->processUpdate($notifications, $user);
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
     }
 }

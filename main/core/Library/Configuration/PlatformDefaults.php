@@ -115,6 +115,27 @@ class PlatformDefaults implements ParameterProviderInterface
             'platform_log_enabled' => true,
             'workspace_users_csv_import_by_full_name' => false,
             'platform_log_enabled' => true,
+            //not documented, for the cli tool claroline:user:mailing
+            'auto_validate_email' => false,
+            'auto_enable_email_redirect' => false,
+            'auto_enable_notifications' => [
+              'resource-create' => ['visible'],
+              'resource-publish' => ['visible'],
+              'role-change_right' => ['visible'],
+              'role-subscribe' => ['visible'],
+              'badge-award' => ['visible'],
+              'resource-text' => ['visible'],
+              'forum' => ['visible'],
+              'portfolio' => ['visible'],
+              'icap_blog' => ['visible'],
+              'icap_dropzone' => ['visible'],
+              'icap_socialmedia' => ['visible'],
+              'icap_wiki' => ['visible'],
+              'innova_path' => ['visible'],
+              'icap_lesson' => ['visible'],
+            ],
         ];
     }
 }
+
+//"portfolio";b:0;s:9:"icap_blog";b:0;s:13:"icap_dropzone";b:0;s:16:"icap_socialmedia";b:0;s:9:"icap_wiki";b:0;s:11:"innova_path";b:0;s:11:"icap_lesson";b:0;}

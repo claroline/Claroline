@@ -5,15 +5,15 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/8/15
  */
 
 namespace Icap\NotificationBundle\Manager;
 
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Notification\NotificationUserParametersEvent;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\NoResultException;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\NotificationBundle\Entity\NotificationUserParameters;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -42,11 +42,11 @@ class NotificationUserParametersManager
 
     /**
      * @DI\InjectParams({
-     *      "em"    = @DI\Inject("doctrine.orm.entity_manager"),
+     *      "em"    = @DI\Inject("claroline.persistence.object_manager"),
      *      "ed"    = @DI\Inject("event_dispatcher")
      * })
      */
-    public function __construct(EntityManager $em, EventDispatcherInterface $ed)
+    public function __construct(ObjectManager $em, EventDispatcherInterface $ed)
     {
         $this->em = $em;
         $this->ed = $ed;
@@ -54,13 +54,13 @@ class NotificationUserParametersManager
             ->getRepository('IcapNotificationBundle:NotificationUserParameters');
     }
 
-    public function getParametersByUserId($userId)
+    public function getParametersByUser(User $user)
     {
         $parameters = null;
         try {
-            $parameters = $this->notificationUserParametersRepository->findParametersByUserId($userId);
-        } catch (NoResultException $nre) {
-            $parameters = $this->createEmptyParameters($userId);
+            $parameters = $this->notificationUserParametersRepository->findParametersByUser($user);
+        } catch (\Exception $nre) {
+            $parameters = $this->createEmptyParameters($user);
         }
 
         return $parameters;
@@ -85,9 +85,7 @@ class NotificationUserParametersManager
 
     public function allTypesList(NotificationUserParameters $parameters)
     {
-        //$typesParams = array();
-
-        $allTypes = array();
+        $allTypes = [];
 
         $this->ed->dispatch(
             'icap_notification_user_parameters_event',
@@ -104,13 +102,13 @@ class NotificationUserParametersManager
         return $allTypes;
     }
 
-    public function processUpdate($newParameters, $userId)
+    public function processUpdate($newParameters, User $user)
     {
-        $userParameters = $this->getParametersByUserId($userId);
+        $userParameters = $this->getParametersByUser($user);
         $allParameterTypes = $this->allTypesList($userParameters);
 
-        $visibleTypes = array();
-        $rssVisibleTypes = array();
+        $visibleTypes = [];
+        $rssVisibleTypes = [];
         foreach ($allParameterTypes as $type) {
             if (isset($newParameters[$type['name']])) {
                 $options = $newParameters[$type['name']];
@@ -128,10 +126,10 @@ class NotificationUserParametersManager
         return $userParameters;
     }
 
-    private function createEmptyParameters($userId)
+    private function createEmptyParameters(User $user)
     {
         $parameters = new NotificationUserParameters();
-        $parameters->setUserId($userId);
+        $parameters->setUser($user);
         $parameters->setRssId($this->uniqueRssId());
         $parameters->setIsNew(true);
         $this->em->persist($parameters);
