@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Manager\VersionManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
+use Doctrine\DBAL\Exception\TableNotFoundException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -144,7 +145,7 @@ class OperationExecutor
                                 $operations[$bundle]->setFromVersion($fromVersionEntity->getVersion());
                                 $operations[$bundle]->setToVersion($toVersion);
                             }
-                        //old update <= v10
+                            //old update <= v10
                         } else {
                             $operations[$bundle] = new Operation(Operation::UPDATE, $currentPackage, $bundle);
                             $operations[$bundle]->setFromVersion($previousPackage->getVersion());
@@ -260,8 +261,8 @@ class OperationExecutor
                       $operation->getFromVersion(),
                       $operation->getToVersion()
                   );
-                  // there's no cleaner way to update the version of a package...
-                  $version = new \ReflectionProperty('Composer\Package\Package', 'version');
+                    // there's no cleaner way to update the version of a package...
+                    $version = new \ReflectionProperty('Composer\Package\Package', 'version');
                     $version->setAccessible(true);
                     $version->setValue($operation->getPackage(), $operation->getToVersion());
                 } else {
@@ -362,22 +363,18 @@ class OperationExecutor
 
     private function isBundleAlreadyInstalled($bundleFqcn, $checkCoreBundle = true)
     {
-        //if the corebundle is already installed, we can do database checks to be sure a plugin is already installed
-        //and not simply set to false in bundles.ini in previous versions.
-        $foundBundle = false;
-
-        if (!$checkCoreBundle || $this->findPreviousPackage('Claroline\CoreBundle\ClarolineCoreBundle')) {
-            //do the bundle already exists ?
-            $foundBundle = $bundleFqcn === 'Claroline\CoreBundle\ClarolineCoreBundle' ?
-                true :
-                // Is Inwicast bundle? If so verify with previous Namespace
-                $bundleFqcn === 'Icap\InwicastBundle\IcapInwicastBundle' ?
-                    $this->verifyInwicastBundleInstallation() :
-                    $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundleFqcn)
-            ;
+        if ($bundleFqcn === 'Claroline\CoreBundle\ClarolineCoreBundle' && !$checkCoreBundle) {
+            return true;
         }
 
-        return $foundBundle;
+        try {
+            return $bundleFqcn === 'Icap\InwicastBundle\IcapInwicastBundle' ?
+              $this->verifyInwicastBundleInstallation() :
+              $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundleFqcn);
+        } catch (TableNotFoundException $e) {
+            //we're probably installing the platform because the database isn't here yet do... return false
+            return false;
+        }
     }
 
     private function verifyInwicastBundleInstallation()
