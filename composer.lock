@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "535b9258390e3b33301c2f7aa5ecc7798fcd1730"
+                "reference": "52e92438e966aa7ab16023fd3daab1066efd8182"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/535b9258390e3b33301c2f7aa5ecc7798fcd1730",
-                "reference": "535b9258390e3b33301c2f7aa5ecc7798fcd1730",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/52e92438e966aa7ab16023fd3daab1066efd8182",
+                "reference": "52e92438e966aa7ab16023fd3daab1066efd8182",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-09-16 17:27:38"
+            "time": "2017-09-22 15:14:23"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3736,20 +3736,21 @@
         },
         {
             "name": "knplabs/knp-snappy",
-            "version": "v0.5.0",
+            "version": "v1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/snappy.git",
-                "reference": "370da31fa92a8e583e34558c589e630647617a38"
+                "reference": "f294d1c50d49fb116a5ecb78ecd53fc727a2ba30"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/370da31fa92a8e583e34558c589e630647617a38",
-                "reference": "370da31fa92a8e583e34558c589e630647617a38",
+                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/f294d1c50d49fb116a5ecb78ecd53fc727a2ba30",
+                "reference": "f294d1c50d49fb116a5ecb78ecd53fc727a2ba30",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6",
+                "psr/log": "^1.0",
                 "symfony/process": "~2.3|~3.0"
             },
             "require-dev": {
@@ -3765,7 +3766,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.5.x-dev"
+                    "dev-master": "0.6.x-dev"
                 }
             },
             "autoload": {
@@ -3797,7 +3798,7 @@
                 "thumbnail",
                 "wkhtmltopdf"
             ],
-            "time": "2017-06-16 07:50:40"
+            "time": "2017-09-21 11:34:49"
         },
         {
             "name": "knplabs/knp-snappy-bundle",
@@ -4607,16 +4608,16 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.7.0",
+            "version": "3.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "0ef23d1b10cf1bc576e9d865a7e9c47982c5715e"
+                "reference": "45cffe822057a09e05f7bd09ec5fb88eeecd2334"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/0ef23d1b10cf1bc576e9d865a7e9c47982c5715e",
-                "reference": "0ef23d1b10cf1bc576e9d865a7e9c47982c5715e",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/45cffe822057a09e05f7bd09ec5fb88eeecd2334",
+                "reference": "45cffe822057a09e05f7bd09ec5fb88eeecd2334",
                 "shasum": ""
             },
             "require": {
@@ -4685,7 +4686,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2017-08-04 13:39:04"
+            "time": "2017-09-22 20:46:04"
         },
         {
             "name": "rmccue/requests",
