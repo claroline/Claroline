@@ -2,11 +2,6 @@
   "name": "claroline",
   "version": "1.0.0",
   "dependencies": {
-    "@types/react": {
-      "version": "16.0.5",
-      "from": "@types/react@>=15.0.0",
-      "resolved": "https://registry.npmjs.org/@types/react/-/react-16.0.5.tgz"
-    },
     "abbrev": {
       "version": "1.0.9",
       "from": "abbrev@>=1.0.0 <1.1.0",
@@ -3503,9 +3498,9 @@
       "resolved": "https://registry.npmjs.org/react-datepicker/-/react-datepicker-0.29.0.tgz"
     },
     "react-datetime": {
-      "version": "2.10.1",
+      "version": "2.10.2",
       "from": "react-datetime@>=2.8.10 <3.0.0",
-      "resolved": "https://registry.npmjs.org/react-datetime/-/react-datetime-2.10.1.tgz",
+      "resolved": "https://registry.npmjs.org/react-datetime/-/react-datetime-2.10.2.tgz",
       "dependencies": {
         "object-assign": {
           "version": "3.0.0",
