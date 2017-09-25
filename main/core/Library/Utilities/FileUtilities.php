@@ -219,9 +219,10 @@ class FileUtilities
             $activeDirectoryName = $this->generateNextDirectoryName();
         } else {
             $i = 0;
+            $cnt = $finder->count();
             foreach ($finder as $dir) {
                 ++$i;
-                if ($i === $finder->count()) {
+                if ($i === $cnt) {
                     $subFinder = new Finder();
                     $subFinder->in($dir->getRealPath());
                     $dirName = $dir->getFilename();

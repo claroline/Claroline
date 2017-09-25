@@ -1079,4 +1079,17 @@ class WorkspaceRepository extends EntityRepository
 
         return $query->getResult();
     }
+
+    public function findAllPaginated($offset = null, $limit = null)
+    {
+        $qb = $this
+            ->createQueryBuilder('w')
+            ->orderBy('w.id')
+            ->setMaxResults($limit);
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
 }

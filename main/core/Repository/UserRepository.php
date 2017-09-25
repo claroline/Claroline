@@ -1657,4 +1657,60 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             ->setParameter('ids', $ids)
             ->getResult();
     }
+
+    public function countUsersNotManagersOfPersonalWorkspace()
+    {
+        $query = $this->getEntityManager()
+            ->createQuery('
+                SELECT COUNT(u.id) AS cnt FROM Claroline\CoreBundle\Entity\User u
+                INNER JOIN u.personalWorkspace ws
+                WHERE u.isRemoved = :notRemoved
+                AND ws.isPersonal = :personal
+                AND u.id NOT IN ('.$this->findUsersManagersOfPersonalWorkspace(false)->getDQL().')
+            ')
+            ->setParameter('notRemoved', false)
+            ->setParameter('personal', true);
+
+        return intval($query->getResult()[0]['cnt']);
+    }
+
+    public function findUsersNotManagersOfPersonalWorkspace($offset = null, $limit = null)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery('
+                SELECT u, ws FROM Claroline\CoreBundle\Entity\User u
+                INNER JOIN u.personalWorkspace ws
+                WHERE u.isRemoved = :notRemoved
+                AND ws.isPersonal = :personal
+                AND u.id NOT IN ('.$this->findUsersManagersOfPersonalWorkspace(false)->getDQL().')
+            ')
+            ->setParameter('notRemoved', false)
+            ->setParameter('personal', true)
+            ->setMaxResults($limit);
+
+        if ($offset) {
+            $query->setFirstResult($offset);
+        }
+
+        return $query->getResult();
+    }
+
+    public function findUsersManagersOfPersonalWorkspace($execute = true)
+    {
+        $query = $this->getEntityManager()
+            ->createQuery('
+                SELECT u1.id FROM Claroline\CoreBundle\Entity\User u1
+                INNER JOIN u1.personalWorkspace ws1
+                INNER JOIN ws1.roles r1
+                INNER JOIN r1.users us1
+                WHERE us1.id = u1.id
+                AND u1.isRemoved = :notRemoved
+                AND ws1.isPersonal = :personal
+                AND r1.name LIKE \'%ROLE_WS_MANAGER_%\'
+            ')
+            ->setParameter('notRemoved', false)
+            ->setParameter('personal', true);
+
+        return $execute ? $query->getResult() : $query;
+    }
 }
