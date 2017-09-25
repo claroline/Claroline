@@ -43,8 +43,8 @@ class WorkspaceFinder implements FinderInterface
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
-        TokenStorageInterface $tokenStorage)
-    {
+        TokenStorageInterface $tokenStorage
+    ) {
         $this->authChecker = $authChecker;
         $this->tokenStorage = $tokenStorage;
     }
@@ -56,7 +56,7 @@ class WorkspaceFinder implements FinderInterface
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [])
     {
-        if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
+        if (php_sapi_name() !== 'cli' && !$this->authChecker->isGranted('ROLE_ADMIN')) {
             /** @var User $currentUser */
             $currentUser = $this->tokenStorage->getToken()->getUser();
             $qb->leftJoin('obj.organizations', 'uo');

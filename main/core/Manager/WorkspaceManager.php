@@ -172,10 +172,13 @@ class WorkspaceManager
     {
         $workspace->setName($name);
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
-        $root->setName($name);
+        if ($root) {
+            $root = $this->resourceManager->getWorkspaceRoot($workspace);
+            $root->setName($name);
+            $this->om->persist($root);
+        }
 
         $this->om->persist($workspace);
-        $this->om->persist($root);
 
         $this->om->flush();
     }
@@ -846,6 +849,7 @@ class WorkspaceManager
         $this->om->startFlushSuite();
 
         foreach ($workspaces as $workspace) {
+            $create = false;
             ++$i;
             $endDate = null;
             $model = null;
@@ -872,25 +876,35 @@ class WorkspaceManager
                 ]);
             }
 
-            if (isset($workspace[8])) {
+            if (isset($workspace[8]) && is_int($workspace[8])) {
                 $endDate = new \DateTime();
                 $endDate->setTimestamp($workspace[8]);
             }
-
             if ($update) {
                 $workspace = $this->getOneByCode($code);
-                $this->rename($workspace, $name);
                 if (!$workspace) {
                     //if the workspace doesn't exists, create it...
                     $workspace = new Workspace();
                     $workspace->setName($name);
+                    $workspace->setGuid(uniqid('', true));
+                    $create = true;
                 }
+                $this->rename($workspace, $name);
                 if ($logger) {
                     $logger('Updating '.$code.' ('.$i.'/'.count($workspaces).') ...');
                 }
             } else {
                 $workspace = new Workspace();
                 $workspace->setName($name);
+                $created[] = $name;
+                $workspace->setGuid(uniqid('', true));
+                $create = true;
+            }
+
+            if ($create) {
+                $created[] = $code;
+            } else {
+                $updated[] = $code;
             }
 
             $workspace->setCode($code);
@@ -919,6 +933,11 @@ class WorkspaceManager
                     $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template, true);
                 }
             } else {
+                if ($create) {
+                    $template = new File($this->container->getParameter('claroline.param.default_template'));
+                    $this->container->get('claroline.manager.transfer_manager')->createWorkspace($workspace, $template, true);
+                }
+
                 if ($model) {
                     $this->duplicateOrderedTools($model, $workspace);
                 }
@@ -938,11 +957,12 @@ class WorkspaceManager
             }
         }
 
-        if ($logger) {
-            $logger('Final flush...');
-        }
-
         $this->om->endFlushSuite();
+
+        if ($logger) {
+            $logger(count($updated).' workspace updated ('.implode(',', $updated).')');
+            $logger(count($created).' workspace created ('.implode(',', $created).')');
+        }
     }
 
     public function getDisplayableNonPersonalWorkspaces(
