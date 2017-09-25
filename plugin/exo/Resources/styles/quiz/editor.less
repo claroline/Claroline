@@ -28,6 +28,30 @@
       margin-top: @form-group-margin-bottom;
       padding-left: @grid-gutter-width;
     }
+
+    .item-tags-list {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .item-tag {
+      margin: 5px;
+    }
+
+    .tags-dropdown-menu {
+      position: inherit;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      border-radius: 3px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+
+      .tags-fetching {
+        background-color: #DEE1E8;
+      }
+    }
   }
 
   .item-header {

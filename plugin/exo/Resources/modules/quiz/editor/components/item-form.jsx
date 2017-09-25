@@ -11,6 +11,7 @@ import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import ObjectsEditor from './item-objects-editor.jsx'
+import TagsEditor from '#/plugin/tag/item-tags-editor.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 
 // TODO: add categories, define-as-model
@@ -55,6 +56,14 @@ const Metadata = props =>
         showModal={props.showModal}
         closeModal={props.closeModal}
         validating={props.validating}
+        item={props.item}
+      />
+    </FormGroup>
+    <FormGroup
+      controlId={`item-${props.item.id}-tags`}
+      label={t('tags')}
+    >
+      <TagsEditor
         item={props.item}
       />
     </FormGroup>

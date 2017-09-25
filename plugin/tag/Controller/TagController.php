@@ -16,6 +16,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\TagBundle\Entity\ResourcesTagsWidgetConfig;
 use Claroline\TagBundle\Entity\Tag;
@@ -26,9 +27,11 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -41,6 +44,10 @@ class TagController extends Controller
     private $router;
     private $tagManager;
     private $tokenStorage;
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
 
     /**
      * @DI\InjectParams({
@@ -56,13 +63,15 @@ class TagController extends Controller
         RequestStack $requestStack,
         RouterInterface $router,
         TagManager $tagManager,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
         $this->router = $router;
         $this->tagManager = $tagManager;
         $this->tokenStorage = $tokenStorage;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -476,5 +485,29 @@ class TagController extends Controller
         $this->tagManager->removeTaggedObjectsByResourceAndTag($resourceNode, $tag);
 
         return new JsonResponse('success', 200);
+    }
+
+    /**
+     * Searches list of tags.
+     *
+     * @EXT\Route("/item/tags", name="item_tags_search", options={"expose"=true})
+     * @EXT\Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function itemTagsSearchAction(Request $request)
+    {
+        $tags = [];
+        $query = $request->query->all();
+        $search = $query['search'] ? $query['search'] : '';
+        if ($search) {
+            $event = new GenericDataEvent(['search' => $search]);
+            $this->eventDispatcher->dispatch('claroline_retrieve_tags', $event);
+            $tags = $event->getResponse();
+        }
+
+        return new JsonResponse($tags, 200);
     }
 }

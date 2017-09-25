@@ -227,6 +227,9 @@ class Exercise extends AbstractResource
         $this->refreshUuid();
         $this->dateCorrection = new \DateTime();
         $this->steps = new ArrayCollection();
+        $randomTag = new \stdClass();
+        $randomTag->pageSize = 0;
+        $this->randomTag = $randomTag;
     }
 
     /**

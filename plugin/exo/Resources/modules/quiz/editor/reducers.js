@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
+import unset from 'lodash/unset'
 
 import sanitize from './sanitizers'
 import validate from './validators'
@@ -57,6 +58,10 @@ import {
   OBJECT_MOVE
 } from './actions'
 
+import {
+  ITEM_UPDATE_TAGS
+} from '#/plugin/tag/actions.js'
+
 function initialQuizState() {
   return {
     id: makeId(),
@@ -67,8 +72,41 @@ function initialQuizState() {
 function reduceQuiz(quiz = initialQuizState(), action = {}) {
   switch (action.type) {
     case QUIZ_UPDATE: {
+      let updatedQuiz = quiz
+
+      if (action.propertyPath === 'parameters.pickByTag') {
+        if (action.value === true) {
+          updatedQuiz = merge({}, updatedQuiz, {parameters: {randomTags: {pick: [], pageSize: 1}}})
+          unset(updatedQuiz, 'props.parameters.randomPick')
+          unset(updatedQuiz, 'props.parameters.pick')
+          unset(updatedQuiz, 'props.parameters.randomOrder')
+        } else {
+          updatedQuiz = merge({}, updatedQuiz, sanitize.quiz('props.parameters.randomPick', SHUFFLE_NEVER))
+          updatedQuiz = merge({}, updatedQuiz, sanitize.quiz('props.parameters.pick', 0))
+          updatedQuiz = merge({}, updatedQuiz, sanitize.quiz('props.parameters.randomOrder', SHUFFLE_NEVER))
+          unset(updatedQuiz, 'props.parameters.randomTags')
+        }
+      }
+
+      if (action.propertyPath === 'parameters.randomTags.pick') {
+        if (action.value[0] === 'add') {
+          updatedQuiz = cloneDeep(updatedQuiz)
+          updatedQuiz.parameters.randomTags.pick.push(action.value[1])
+
+          return updatedQuiz
+        } else {
+          updatedQuiz = cloneDeep(updatedQuiz)
+          updatedQuiz.parameters.randomTags.pick.splice(
+            updatedQuiz.parameters.randomTags.pick.indexOf(action.value),
+            1
+          )
+
+          return updatedQuiz
+        }
+      }
+
       const sanitizedProps = sanitize.quiz(action.propertyPath, action.value)
-      const updatedQuiz = merge({}, quiz, sanitizedProps)
+      updatedQuiz = merge({}, updatedQuiz, sanitizedProps)
 
       if (updatedQuiz.parameters.randomPick === SHUFFLE_ALWAYS
         && updatedQuiz.parameters.randomOrder === SHUFFLE_ONCE) {
@@ -395,6 +433,15 @@ function reduceItems(items = {}, action = {}) {
         default:
           return items
       }
+    case ITEM_UPDATE_TAGS: {
+      const updatedItem = Object.assign(
+        {},
+        items[action.id],
+        {tags: action.tags}
+      )
+
+      return update(items, {[action.id]: {$set: updatedItem}})
+    }
   }
   return items
 }

@@ -74,6 +74,24 @@ class TagListener
     }
 
     /**
+     * @DI\Observe("claroline_tag_multiple_data")
+     *
+     * @param GenericDataEvent $event
+     */
+    public function onDataTag(GenericDataEvent $event)
+    {
+        $taggedObject = null;
+        $data = $event->getData();
+
+        if (is_array($data) && isset($data['tags']) && isset($data['data'])) {
+            $user = isset($data['user']) ? $data['user'] : null;
+            $replace = isset($data['replace']) && $data['replace'];
+            $taggedObject = $this->tagManager->tagData($data['tags'], $data['data'], $user, $replace);
+        }
+        $event->setResponse($taggedObject);
+    }
+
+    /**
      * @DI\Observe("claroline_retrieve_tagged_objects")
      *
      * @param GenericDataEvent $event
@@ -140,7 +158,6 @@ class TagListener
      */
     public function onRetrieveTags(GenericDataEvent $event)
     {
-        $tags = [];
         $tagsName = [];
         $data = $event->getData();
 
@@ -359,5 +376,37 @@ class TagListener
             'Claroline\CoreBundle\Entity\Resource\ResourceNode',
             $ids
         );
+    }
+
+    /**
+     * @DI\Observe("claroline_retrieve_used_tags_by_class_and_ids")
+     *
+     * @param GenericDataEvent $event
+     */
+    public function onRetrieveUsedTagsByClassAndIds(GenericDataEvent $event)
+    {
+        $tags = [];
+        $data = $event->getData();
+
+        if (is_array($data) && isset($data['class']) && !empty($data['ids'])) {
+            $taggedObjects = $this->tagManager->getTaggedObjects(
+                null,
+                false,
+                $data['class'],
+                '',
+                false,
+                'name',
+                'ASC',
+                false,
+                1,
+                50,
+                $data['ids']
+            );
+            foreach ($taggedObjects as $taggedObject) {
+                $tag = $taggedObject->getTag();
+                $tags[$tag->getId()] = $tag->getName();
+            }
+        }
+        $event->setResponse(array_values($tags));
     }
 }

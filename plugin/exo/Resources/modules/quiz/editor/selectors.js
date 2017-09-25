@@ -140,6 +140,7 @@ const valid = createSelector(
 
 export default {
   quiz,
+  items,
   thumbnails,
   currentObjectDeep,
   currentObjectIndex,

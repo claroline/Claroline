@@ -4,9 +4,11 @@ namespace UJM\ExoBundle\Serializer\Item;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Hint;
@@ -69,6 +71,11 @@ class ItemSerializer extends AbstractSerializer
     private $itemObjectSerializer;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    private $eventDispatcher;
+
+    /**
      * ItemSerializer constructor.
      *
      * @param ObjectManager             $om
@@ -80,6 +87,7 @@ class ItemSerializer extends AbstractSerializer
      * @param ResourceContentSerializer $resourceContentSerializer
      * @param ItemObjectSerializer      $itemObjectSerializer
      * @param ContainerInterface        $container
+     * @param EventDispatcherInterface  $eventDispatcher
      *
      * @DI\InjectParams({
      *     "om"                        = @DI\Inject("claroline.persistence.object_manager"),
@@ -90,7 +98,8 @@ class ItemSerializer extends AbstractSerializer
      *     "hintSerializer"            = @DI\Inject("ujm_exo.serializer.hint"),
      *     "resourceContentSerializer" = @DI\Inject("ujm_exo.serializer.resource_content"),
      *     "itemObjectSerializer"      = @DI\Inject("ujm_exo.serializer.item_object"),
-     *     "container"                 = @DI\Inject("service_container")
+     *     "container"                 = @DI\Inject("service_container"),
+     *     "eventDispatcher"           = @DI\Inject("event_dispatcher")
      * })
      */
     public function __construct(
@@ -102,7 +111,8 @@ class ItemSerializer extends AbstractSerializer
         HintSerializer $hintSerializer,
         ResourceContentSerializer $resourceContentSerializer,
         ItemObjectSerializer $itemObjectSerializer,
-        ContainerInterface $container
+        ContainerInterface $container,
+        EventDispatcherInterface $eventDispatcher
     ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
@@ -113,6 +123,7 @@ class ItemSerializer extends AbstractSerializer
         $this->resourceContentSerializer = $resourceContentSerializer;
         $this->itemObjectSerializer = $itemObjectSerializer;
         $this->container = $container;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -138,6 +149,7 @@ class ItemSerializer extends AbstractSerializer
             // Adds minimal information
             $this->mapEntityToObject([
                 'id' => 'uuid',
+                'autoId' => 'id',
                 'type' => 'mimeType',
                 'content' => 'content',
                 'title' => 'title',
@@ -164,6 +176,9 @@ class ItemSerializer extends AbstractSerializer
                     },
                     'resources' => function (Item $question) {
                         return $this->serializeResources($question);
+                    },
+                    'tags' => function (Item $question) {
+                        return $this->serializeTags($question);
                     },
                 ], $question, $questionData);
 
@@ -251,6 +266,10 @@ class ItemSerializer extends AbstractSerializer
                     $item->setScoreRule(json_encode($score));
                 },
             ], $data, $item);
+
+            if (isset($data->tags)) {
+                $this->deserializeTags($item, $data->tags, $options);
+            }
         } else {
             // content item
             $this->mapObjectToEntity([
@@ -590,5 +609,51 @@ class ItemSerializer extends AbstractSerializer
         }
 
         return $sanitized;
+    }
+
+    /**
+     * Serializes Item tags.
+     * Forwards the tag serialization to ItemTagSerializer.
+     *
+     * @param Item  $question
+     * @param array $options
+     *
+     * @return array
+     */
+    private function serializeTags(Item $question)
+    {
+        $data = ['class' => 'UJM\ExoBundle\Entity\Item\Item', 'ids' => [$question->getId()]];
+        $event = new GenericDataEvent($data);
+        $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
+
+        return $event->getResponse();
+    }
+
+    /**
+     * Deserializes Item tags.
+     *
+     * @param Item  $question
+     * @param array $tags
+     */
+    private function deserializeTags(Item $question, array $tags = [], array $options = [])
+    {
+        if ($this->hasOption(Transfer::PERSIST_TAG, $options)) {
+            $data = [
+              'tags' => $tags,
+              'data' => [
+                  [
+                      'class' => 'UJM\ExoBundle\Entity\Item\Item',
+                      'id' => $question->getId(),
+                      'name' => $question->getTitle(),
+                  ],
+              ],
+              'replace' => true,
+          ];
+            $event = new GenericDataEvent($data);
+
+            if ($question->getUuid()) {
+                $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
+            }
+        }
     }
 }

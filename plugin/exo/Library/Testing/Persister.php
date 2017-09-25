@@ -192,57 +192,58 @@ class Persister
         return $question;
     }
 
-     /**
-      * @param string $title
-      * @param array  $questionData - grouping questions in sub arrays will create 1 step for one sub array
-      * @param User   $user
-      *
-      * @return Exercise
-      */
-     public function exercise($title, array $questionData = [], User $user = null)
-     {
-         $exercise = new Exercise();
-         $exercise->setUuid(uniqid('', true));
-         $exercise->setDescription('This is the description of my exercise');
-         if ($user) {
-             if (!isset($this->exoType)) {
-                 $this->exoType = new ResourceType();
-                 $this->exoType->setName('exercise');
-                 $this->om->persist($this->exoType);
-             }
+    /**
+     * @param string $title
+     * @param array  $questionData - grouping questions in sub arrays will create 1 step for one sub array
+     * @param User   $user
+     *
+     * @return Exercise
+     */
+    public function exercise($title, array $questionData = [], User $user = null)
+    {
+        $exercise = new Exercise();
+        $exercise->setUuid(uniqid('', true));
 
-             $node = new ResourceNode();
-             $node->setName($title);
-             $node->setCreator($user);
-             $node->setResourceType($this->exoType);
-             $node->setWorkspace($user->getPersonalWorkspace());
-             $node->setClass('UJM\ExoBundle\Entity\Exercise');
-             $node->setGuid(time());
-             $exercise->setResourceNode($node);
-             $this->om->persist($node);
-         }
+        $exercise->setDescription('This is the description of my exercise');
+        if ($user) {
+            if (!isset($this->exoType)) {
+                $this->exoType = new ResourceType();
+                $this->exoType->setName('exercise');
+                $this->om->persist($this->exoType);
+            }
 
-         $this->om->persist($exercise);
+            $node = new ResourceNode();
+            $node->setName($title);
+            $node->setCreator($user);
+            $node->setResourceType($this->exoType);
+            $node->setWorkspace($user->getPersonalWorkspace());
+            $node->setClass('UJM\ExoBundle\Entity\Exercise');
+            $node->setGuid(time());
+            $exercise->setResourceNode($node);
+            $this->om->persist($node);
+        }
 
-         foreach ($questionData as $index => $data) {
-             $step = new Step();
-             $step->setUuid(uniqid($index));
-             $step->setDescription('step');
-             $step->setOrder($index);
+        $this->om->persist($exercise);
 
-             // Add step to the exercise
-             $exercise->addStep($step);
-             if (is_array($data)) {
-                 foreach ($data as $question) {
-                     $step->addQuestion($question);
-                 }
-             } else {
-                 $step->addQuestion($data);
-             }
-         }
+        foreach ($questionData as $index => $data) {
+            $step = new Step();
+            $step->setUuid(uniqid($index));
+            $step->setDescription('step');
+            $step->setOrder($index);
 
-         return $exercise;
-     }
+            // Add step to the exercise
+            $exercise->addStep($step);
+            if (is_array($data)) {
+                foreach ($data as $question) {
+                    $step->addQuestion($question);
+                }
+            } else {
+                $step->addQuestion($data);
+            }
+        }
+
+        return $exercise;
+    }
 
     /**
      * @param string $username

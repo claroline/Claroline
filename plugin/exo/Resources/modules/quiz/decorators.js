@@ -22,6 +22,8 @@ export function decorate(state, itemDecorators = {}, applyOnItems = true) {
     newState.quiz.steps = [defaultStep.id]
   }
 
+  newState.quiz.parameters.pickByTag = !!newState.quiz.parameters.randomTags.pageSize
+
   let stepIdx = 0
 
   return Object.assign(newState, {

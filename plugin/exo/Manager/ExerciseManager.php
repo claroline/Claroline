@@ -124,7 +124,7 @@ class ExerciseManager
         }
 
         // Update Exercise with new data
-        $this->serializer->deserialize($data, $exercise);
+        $this->serializer->deserialize($data, $exercise, [Transfer::PERSIST_TAG]);
 
         // Save to DB
         $this->om->persist($exercise);
@@ -336,7 +336,6 @@ class ExerciseManager
             $answers = $paper->getAnswers();
             $csv = [];
             $user = $paper->getUser();
-
             if ($user) {
                 $csv['username'] = [$user->getUsername()];
                 $csv['firstname'] = [$user->getFirstName()];

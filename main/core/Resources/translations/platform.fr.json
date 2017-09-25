@@ -1190,6 +1190,7 @@
     "tag": "Tag",
     "tag_children_list": "Liste des enfants",
     "tag_potential_children_list": "Liste des enfants potentiels",
+    "tags": "Tags",
     "tags_add_remove_children_to": "Ajouter/Retirer des enfants au Tag",
     "tags_hierarchy": "Hiérarchie des Tags",
     "tags_list": "Liste des Tags",

@@ -109,6 +109,7 @@ class TagManager
 
     public function tagObject(array $tags, $object, User $user = null)
     {
+        $taggedObjects = [];
         $uniqueTags = [];
 
         foreach ($tags as $tag) {
@@ -146,10 +147,68 @@ class TagManager
                         $taggedObject->setObjectName((string) $object);
                     }
                     $this->persistTaggedObject($taggedObject);
+                    $taggedObjects[] = $taggedObject;
                 }
             }
             $this->om->endFlushSuite();
         }
+
+        return $taggedObjects;
+    }
+
+    public function tagData(array $tags, $data, User $user = null, $replace = false)
+    {
+        $taggedObjects = [];
+        $uniqueTags = [];
+
+        foreach ($tags as $tag) {
+            $value = trim($tag);
+
+            if (!empty($value)) {
+                $uniqueTags[strtolower($value)] = $value;
+            }
+        }
+        $tagsList = [];
+
+        foreach ($uniqueTags as $tagName) {
+            $tag = is_null($user) ? $this->getOrCreatePlatformTag($tagName) : $this->getOrCreateUserTag($user, $tagName);
+            $tagsList[$tagName] = $tag;
+        }
+        $this->om->startFlushSuite();
+
+        foreach ($data as $objectData) {
+            $objectId = $objectData['id'];
+            $objectClass = $objectData['class'];
+            $objectName = isset($objectData['name']) ? $objectData['name'] : null;
+
+            if ($replace) {
+                $this->removeTaggedObjectsByClassAndIds($objectClass, [$objectId]);
+            }
+
+            foreach ($uniqueTags as $tagName) {
+                $tag = $tagsList[$tagName];
+
+                $taggedObject = $replace ?
+                    null :
+                    $this->getOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
+
+                if (is_null($taggedObject)) {
+                    $taggedObject = new TaggedObject();
+                    $taggedObject->setTag($tag);
+                    $taggedObject->setObjectId($objectId);
+                    $taggedObject->setObjectClass($objectClass);
+
+                    if ($objectName) {
+                        $taggedObject->setObjectName($objectName);
+                    }
+                    $this->persistTaggedObject($taggedObject);
+                    $taggedObjects[] = $taggedObject;
+                }
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return $taggedObjects;
     }
 
     public function getObjectsByClassAndIds($class, array $ids, $orderedBy = 'id', $order = 'ASC')

@@ -980,6 +980,7 @@
     "tag": "Etiqueta",
     "tag_children_list": "Lista de hijos de la etiqueta",
     "tag_potential_children_list": "Lista de hijos potenciales de la etiqueta",
+    "tags": "Etiquetas",
     "tags_add_remove_children_to": "Agregar/Suprimir hijos de",
     "tags_hierarchy": "Jerarquía de las etiquetas",
     "tags_list": "Lista de etiquetas",

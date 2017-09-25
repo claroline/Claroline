@@ -188,7 +188,7 @@ class ItemManager
         }
 
         // Update Item with new data
-        $this->serializer->deserialize($data, $question);
+        $this->serializer->deserialize($data, $question, [Transfer::PERSIST_TAG]);
 
         // Save to DB
         $this->om->persist($question);

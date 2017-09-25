@@ -44,8 +44,8 @@ class ExerciseSerializer implements SerializerInterface
      */
     public function __construct(
         StepSerializer $stepSerializer,
-        ItemManager $itemManager)
-    {
+        ItemManager $itemManager
+    ) {
         $this->stepSerializer = $stepSerializer;
         $this->itemManager = $itemManager;
     }
@@ -146,6 +146,7 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->interruptible = $exercise->isInterruptible();
         $parameters->numbering = $exercise->getNumbering();
         $parameters->mandatoryQuestions = $exercise->getMandatoryQuestions();
+        $parameters->randomTags = $exercise->getRandomTag();
 
         // Visibility parameters
         $parameters->showOverview = $exercise->getShowOverview();
@@ -285,6 +286,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (isset($parameters->maxPapers)) {
             $exercise->setMaxPapers($parameters->maxPapers);
+        }
+
+        if (isset($parameters->randomTags)) {
+            $exercise->setRandomTag($parameters->randomTags);
         }
 
         if (isset($parameters->showScoreAt)) {
