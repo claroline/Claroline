@@ -2,99 +2,147 @@
 
 {% block title %}{{ 'login' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
 
-{#
-This form doesn't include the usual form theme as we want it to always display the
-same message when authentication has failed (no precise validation errors).
-#}
+{# we override wrapper to remove max-width to make the background fill the page #}
+{% block wrap_attrs %}
+    class="app-login app-content app-content-full container-fluid"
+{% endblock %}
+
+{% set externalAuthentication        = render(controller('ClarolineCoreBundle:Authentication:renderExternalAuthenticationButton', {})) %}
+{% set primaryExternalAuthentication = render(controller('ClarolineCoreBundle:Authentication:renderPrimaryExternalAuthenticationButton', {})) %}
 
 {% block content %}
     {{ macros.flashBox() }}
-    {% set externalAuthentication = render(controller('ClarolineCoreBundle:Authentication:renderExternalAuthenticatonButton', {})) %}
-    {% set primaryExternalAuthentication = render(controller('ClarolineCoreBundle:Authentication:renderPrimaryExternalAuthenticatonButton', {})) %}
-    <div class="row login_form_container" style="background-color: whitesmoke">
-        {% if externalAuthentication is empty %}
-            {% set containerClass = 'col-lg-2 col-lg-offset-5 col-md-offset-4 col-md-4 col-sm-offset-2 col-sm-8' %}
-            {% set columnClass = '' %}
-        {% else %}
-            {% set containerClass = 'col-lg-6 col-lg-offset-3 col-md-offset-2 col-md-8 col-sm-offset-2 col-sm-8 login-flexbox' %}
-            {% set columnClass = 'col-sm-6 cos-xs-12 flex' %}
-        {% endif %}
-        <h2 class="text-center">{{ 'login' | trans({}, "platform")}}</h2>
-        <div class="{{ containerClass }}">
-            <div class="{{ columnClass }}">
-                {% if primaryExternalAuthentication is not empty %}
+
+    <div class="page-container">
+        <div class="page login-page">
+            {% if config.getParameter('logo') %}
+            <img
+                class="login-logo"
+                src="{{ getAssetPath() ~ '/' ~ config.getParameter('logo') }}"
+                {% if config.getParameter('name') is not empty %}
+                    alt="{{ config.getParameter('name') }}"
+                {% endif %}
+            />
+            {% else %}
+            <h1 class="login-title page-title text-center">
+                {% if config.getParameter('name') is not empty %}
+                {{ config.getParameter('name') }}
+                {% else %}
+                {{ 'login' | trans({}, "platform")}}
+                {% endif %}
+            </h1>
+            {% endif %}
+
+            {% if config.getParameter('login_info_text') is not empty %}
+            <div class="login-info">
+                {{ config.getParameter('login_info_text') | raw }}
+            </div>
+            {% endif %}
+
+            <div class="login-container{% if externalAuthentication is not empty %} login-with-sso{% endif %}">
+                <div class="authentication-column account-authentication-column">
+                    {# Primary authentication #}
+                    {% if primaryExternalAuthentication is not empty %}
                     <div class="primary-external-authentication-column">
                         {{ primaryExternalAuthentication|raw }}
                     </div>
-                {% endif %}
-                <form role="form" action="{{ path('claro_security_login_check') }}" method="post" id="login-form">
-                    {% if error %}
+                    {% endif %}
+
+                    <p class="login-help">{{ 'login_auth_claro_account'|trans({}, 'platform') }}</p>
+
+                    {# Claroline authentication #}
+                    <form role="form" action="{{ path('claro_security_login_check') }}" method="post" id="login-form">
+                        {% if error is defined and error %}
                         <div class="alert alert-danger">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             {{ 'login_failure'|trans({}, 'platform') }}
                         </div>
-                    {% endif %}
-                    {% if is_expired %}
+                        {% endif %}
+
+                        {% if is_expired is defined and is_expired %}
                         <div class="alert alert-danger">
                             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
                             {{ 'closed_account'|trans({}, 'platform') }}
                         </div>
-                    {% endif %}
-                    <div class="form-group">
-                        <label for="username">{{ 'username_or_email'|trans({}, 'platform') }}</label>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <i class="fa fa-user" title="{{ 'username_or_email'|trans({}, 'platform') }}"></i>
-                            </span>
-                            <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username_or_email' | trans({}, 'platform') }}" tabindex="1" autofocus>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">
-                            {{ 'password'|trans({}, 'platform') }}
-                        </label>
-                        <div class="input-group">
-                            <span class="input-group-addon">
-                                <i class="fa fa-lock" title="{{ 'password'|trans({}, 'platform') }}"></i>
-                            </span>
-                            <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2">
-                        </div>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                          <input type="checkbox" id="remember_me" name="_remember_me" /> {{ 'keep_me_logged_in'|trans({}, 'platform') }}
-                        </label>
-                    </div>
-                    <p>
-                        <a href ="{{ path('claro_security_forgot_password')}}" tabindex="4" title="{{ 'forgot_password'|trans({}, 'platform') }}">{{ 'forgot_password'|trans({}, 'platform') }}</a>
-                    </p>
+                        {% endif %}
 
-                    <button type="submit" class="btn btn-primary btn-block" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
+                        {# Username #}
+                        <div class="form-group">
+                            <label class="sr-only" for="username">{{ 'username_or_email'|trans({}, 'platform') }}</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-fw fa-user" role="presentation"></span>
+                                </span>
+                                <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username_or_email' | trans({}, 'platform') }}" tabindex="1" autofocus />
+                            </div>
+                        </div>
 
-                    {% if selfRegistrationAllowed and showRegisterButton %}
-                        <a class="btn btn-default btn-block" tabindex="3" href="{{ path('claro_registration_user_registration_form') }}" title="{{ 'register'|trans({}, 'platform') }}">
-                            {{ 'register'|trans({}, 'platform') }}
+                        {# Password #}
+                        <div class="form-group">
+                            <label class="sr-only" for="password">{{ 'password'|trans({}, 'platform') }}</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-fw fa-lock" role="presentation"></span>
+                                </span>
+                                <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2" />
+                            </div>
+                        </div>
+
+                        {# Remember me #}
+                        <div class="checkbox">
+                            <label for="remember_me">
+                                <input type="checkbox" id="remember_me" name="_remember_me" />
+                                {{ 'keep_me_logged_in'|trans({}, 'platform') }}
+                            </label>
+                        </div>
+
+                        <a href ="{{ path('claro_security_forgot_password')}}" tabindex="4" title="{{ 'forgot_password'|trans({}, 'platform') }}">
+                            {{ 'forgot_password'|trans({}, 'platform') }}
                         </a>
+
+                        <button type="submit" class="btn btn-primary btn-block" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
+                    </form>
+
+
+                    {% if externalAuthentication is not empty %}
+                    <div class="authentication-or">
+                        {{ 'login_auth_or'|trans({}, 'platform') }}
+                    </div>
                     {% endif %}
-                </form>
-            </div>
-            {% if externalAuthentication is not empty %}
-                <div class="{{ columnClass }} external-authentication-column">
+                </div>
+
+                {# SSO authentication #}
+                {% if externalAuthentication is not empty %}
+                <div class="authentication-column external-authentication-column">
+                    <p class="login-help">{{ 'login_auth_sso'|trans({}, 'platform') }}</p>
+
                     {{ externalAuthentication|raw }}
                 </div>
+                {% endif %}
+            </div>
+
+            {# Registration link #}
+            {% if selfRegistrationAllowed is defined and selfRegistrationAllowed
+                  and showRegisterButton is defined and showRegisterButton %}
+            <a class="btn btn-lg btn-default btn-block btn-registration" href="{{ path('claro_registration_user_registration_form') }}" title="{{ 'register'|trans({}, 'platform') }}">
+                {{ 'register'|trans({}, 'platform') }}
+            </a>
             {% endif %}
         </div>
-
     </div>
+{% endblock %}
+
+{% block javascript %}
+    {{ parent() }}
 
     <script type="text/javascript">
-        $( document ).ready(function() {
-            $('.claro-oauth').click(function(event) {
-                event.preventDefault();
-                var form = $('#login-form');
-                form.attr('action', $(event.target).attr('href'));
-                form.submit();
-            });
+      $( document ).ready(function() {
+        $('.claro-oauth').click(function(event) {
+          event.preventDefault();
+          var form = $('#login-form');
+          form.attr('action', $(event.target).attr('href'));
+          form.submit();
         });
+      });
     </script>
 {% endblock %}

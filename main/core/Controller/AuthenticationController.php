@@ -388,18 +388,18 @@ class AuthenticationController
     }
 
     //not routed...
-    public function renderExternalAuthenticatonButtonAction()
+    public function renderExternalAuthenticationButtonAction()
     {
-        return $this->renderExternalAuthencticationButton('external_authentication');
+        return $this->renderExternalAuthenticationButton('external_authentication');
     }
 
     //not routed...
-    public function renderPrimaryExternalAuthenticatonButtonAction()
+    public function renderPrimaryExternalAuthenticationButtonAction()
     {
-        return $this->renderExternalAuthencticationButton('primary_external_authentication');
+        return $this->renderExternalAuthenticationButton('primary_external_authentication');
     }
 
-    private function renderExternalAuthencticationButton($action)
+    private function renderExternalAuthenticationButton($action)
     {
         $event = $this->dispatcher->dispatch('render_'.$action.'_button', 'RenderAuthenticationButton');
 

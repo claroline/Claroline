@@ -56,6 +56,17 @@ function buildTheme(theme, themeState) {
       fs.mkdirSync(themeDir)
     }
 
+    // Copy static assets
+    if (theme.hasStaticAssets()) {
+      theme.getStaticAssets().map(assetDir =>
+        copyStatic(
+          // src
+          path.resolve(theme.location, theme.name, assetDir),
+          // destination
+          path.resolve(themeDir))
+      )
+    }
+
     return Promise.all([
       // 1. Build theme root file
       createAsset(
@@ -124,6 +135,18 @@ function createAsset(asset, outputFile, currentVersion, globalVars) {
       return Promise.resolve(newVersion)
     }
   })
+}
+
+/**
+ * Recursively copies static files directories (eg. images, fonts)
+ * @param {string} src
+ * @param {string} destination
+ */
+function copyStatic(src, destination) {
+  console.log(src)
+  console.log(destination)
+  shell.rm('-rf', destination)
+  shell.cp('-R', src, destination)
 }
 
 /**

@@ -19,6 +19,7 @@
 @box-shadow-base:         0 0 2px rgba(0, 0, 0, 0.10);
 @component-margin-bottom: @line-height-computed;
 
+@images-path: "images/";
 
 // -
 // Z-indexes
@@ -36,6 +37,12 @@
 // ---
 @app-max-width:           1200px; // max width for the app content
 
+
+// -
+// Login
+// ---
+@login-bg-image:  "@{images-path}login-bg.jpg"; // will fallback on @body-bg if theme has no image
+@login-max-width: 740px;
 
 // -
 // Header
@@ -146,7 +153,7 @@
 @footer-max-width:         none; // max width for the footer content (do not affect footer container)
 @footer-bg:                #F3F3F3;
 @footer-color:             @gray-light;
-@footer-border-color:      white;
+@footer-border-color:      transparent;
 @footer-box-shadow:        @box-shadow-base;
 
 // Links

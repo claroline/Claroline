@@ -10,7 +10,7 @@
 {% set hideBreadcrumb = true %}
 
 {# parent div#wrap classes must be kept only if website isn't displayed in fullscreen #}
-{% block wrap_default_classes %}
+{% block wrap_attrs %}
  {% if options.totalWidth > 0 %}
     {{ parent() }}
  {% endif %}

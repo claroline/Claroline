@@ -1,124 +1,224 @@
-.login_form_container {
-    h2 {
+/**
+ * Login page
+ */
+
+.app-login {
+    background-color: @body-bg; // fallback to body color if theme has no image
+
+    // styles for bg image
+    background-image: url(@login-bg-image);
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-attachment: fixed;
+}
+
+.login-page {
+    // vertically center the login form in the page
+    // if there is lots of space
+    justify-content: center;
+    margin: auto;
+    max-width: floor(@login-max-width / 2);
+
+    &.login-with-sso {
+        max-width: @login-max-width;
+    }
+}
+
+.login-logo {
+    align-self: center; // avoid image to be stretched
+    margin-bottom: @component-margin-bottom;
+    max-width: 100%;
+}
+
+.login-title {
+    margin-top: 0;
+    margin-bottom: @component-margin-bottom;
+}
+
+.login-info {
+    text-align: justify;
+    max-width: @login-max-width;
+    align-self: center;
+    margin-bottom: @component-margin-bottom;
+}
+
+.login_form_container, // for retro compatibility
+.login-container {
+    width: 100%;
+    max-width: @login-max-width; // for cases when the auth block is not displayed in the login page
+    margin: 0 auto @component-margin-bottom;
+
+    form {
+        .btn-primary {
+            margin-top: 30px;
+            padding: @padding-large-vertical @padding-large-horizontal;
+        }
+    }
+}
+
+// local vars for dev simplicity
+@auth-or-size: 70px;
+@auth-or-font-size: 20px;
+
+// In screen > SM, Claroline login form and SSO btns
+// are displayed horizontally
+.login_form_container, // for retro compatibility
+.login-container {
+    display: flex;
+    border: 1px solid @panel-default-border;
+    box-shadow: @panel-box-shadow;
+    background-color: @panel-bg;
+
+    .login-help {
+        font-style: italic;
+        color: #666;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .authentication-column {
+        position: relative;
+        flex: 1;
+        max-width: floor(@login-max-width / 2);
+        padding: 30px 45px;
+    }
+
+    .primary-external-authentication-column {
         margin-bottom: 30px;
     }
-    form {
-        padding-bottom: 20px;
-        .external_authentication {
-            hr {
-                border-top-color: #cccccc;
-            }
+
+    .account-authentication-column {
+        + .external-authentication-column {
+            border-left: 1px solid @panel-default-border;
         }
+    }
+
+    .authentication-or {
+        text-align: center;
+        position: absolute;
+        z-index: 2;
+        right: 0;
+        top: 50%;
+        transform: translate(50%, -50%);
+
+        font-size: @auth-or-font-size;
+        line-height: 1;
+        font-weight: 900;
+
+        background: white;
+        padding: floor((@auth-or-size - @auth-or-font-size) / 2) 0;
+        border-radius: floor(@auth-or-size / 2);
+
+        height: @auth-or-size;
+        width: @auth-or-size;
     }
 
     .external-authentication-column {
-        padding-top: 10px;
-        border-top: 1px solid #ccc;
+        &::before {
+            position: absolute;
+            content: " ";
+            left: 0;
+            top: 50%;
+            transform: translate(0, -50%);
+
+            height: @auth-or-size;
+            width: floor(@auth-or-size / 2);
+            border: 1px solid @panel-default-border;
+            border-radius: 0 floor(@auth-or-size / 2) floor(@auth-or-size / 2) 0;
+        }
+
+        background-color: @panel-footer-bg;
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+
         .external_authentication {
-            width: 100%;
+            flex: 1;
         }
     }
+}
 
-    .login-flexbox {
-        margin-bottom: 2em;
-    }
+@media (max-width: @screen-sm-min) {
+    // In screen < SM, Claroline login form and SSO btns
+    // are displayed vertically
+    .login_form_container, // for retro compatibility
+    .login-container {
+        flex-direction: column;
 
-    @media (min-width: @screen-sm-min) {
-        .login-flexbox {
-            display: -webkit-flex;
-            display: -ms-flexbox;
-            display: flex;
-            overflow: hidden;
+        .account-authentication-column {
+            padding-bottom: 45px;
 
-            .external-authentication-column {
-                padding-top: 0;
-                border-left: 1px solid #ccc;
-                border-top:none;
-                display: -webkit-flex;
-                display: -ms-flexbox;
-                display: flex;
-                overflow: hidden;
-                -ms-flex-align: center;
-                -webkit-align-items: center;
-                -webkit-box-align: center;
-                align-items: center;
+            + .external-authentication-column {
+                border-left: none;
+                border-top: 1px solid @panel-default-border;
             }
         }
-    }
 
-    .btn {
-        &.btn-third-party-login {
-            overflow: hidden;
-            color: #fff;
-            padding-left: 30px;
-            padding-top: 0;
-            padding-bottom: 0;
-            line-height: 34px;
-            position:relative;
+        .authentication-or {
+            right: 50%;
+            top: auto;
+            bottom: 0;
+            transform: translate(50%, 50%);
+        }
+
+        .external-authentication-column {
+            padding-top: 45px;
             &::before {
-                width: 30px;
-                font-size: 1.3em;
-                line-height: 34px;
                 position: absolute;
-                left: 0;
-                font-family: "FontAwesome";
-                border-right: 1px solid;
-            }
-            &:hover {
-                opacity: 0.8;
-                color: #fff;
-            }
-            &.facebook-connect {
-                background-color: #3b5998;
-            }
-            &.facebook-connect::before{
-                content: "\f09a";
-                border-right-color: #4A70BF;
-            }
-            &.twitter-connect {
-                background-color: #00aced;
-            }
-            &.twitter-connect::before {
-                content: "\f099";
-                border-right-color: #00D5ED;
-            }
-            &.google-connect {
-                background-color: #dd4b39;
-            }
-            &.google-connect::before {
-                content: "\f1a0";
-                border-right-color: #DD6239;
-            }
-            &.linkedin-connect {
-                background-color: #007bb6;
-            }
-            &.linkedin-connect::before {
-                content: "\f0e1";
-                border-right-color: #00A1B6;
-            }
-            &.windows_live-connect,
-            &.office_365-connect{
-                background-color: #0072C6;
-            }
-            &.windows_live-connect::before,
-            &.office_365-connect::before {
-                content: "\f17a";
-                border-right-color: #0085e5;
-            }
-            &.cas-connect {
-                background-color: #ec971f;
-            }
-            &.cas-connect::before {
-                content: "\f19c";
-                border-right-color: #d58512;
-            }
-            &.ldap-connect {
-                background-color: #00B3AC;
-            }
-            &.ldap-connect::before {
-                content: "\f1c0";
-                border-right-color: #18918B;
+                content: " ";
+                left: 50%;
+                top: 0;
+                width: @auth-or-size;
+                height: floor(@auth-or-size / 2);
+                transform: translate(-50%, 0);
+                border-radius: 0 0 floor(@auth-or-size / 2) floor(@auth-or-size / 2);
             }
         }
     }
+}
+
+.btn-registration {
+    max-width: @login-max-width;
+    align-self: center;
+}
+
+.btn-third-party-login {
+    width: 100%;
+    text-align: left;
+    padding: @padding-large-vertical @padding-large-horizontal;
+    border-radius: @sso-btn-border-radius;
+    color: @sso-btn-color;
+    font-size: @sso-btn-font-size;
+
+    + .btn-third-party-login {
+        margin-top: @sso-btn-spacer-v;
+    }
+
+    &:hover,
+    &:focus {
+        color: @sso-btn-color;
+    }
+
+    &::before {
+        width: @sso-btn-icon-width;
+        text-align: center;
+        display: inline-block;
+        font-family: @sso-btn-font-family, sans-serif;
+        font-size: @sso-btn-font-size;
+        margin-right: @padding-large-horizontal;
+        line-height: 1;
+    }
+
+    .sso-connect-btn(@sso-default-icon, @sso-default-primary, @sso-default-secondary);
+
+    &.cas-connect          { .sso-connect-btn(@sso-cas-icon,        @sso-cas-primary,        @sso-cas-secondary); }
+    &.facebook-connect     { .sso-connect-btn(@sso-facebook-icon,   @sso-facebook-primary,   @sso-facebook-secondary); }
+    &.google-connect       { .sso-connect-btn(@sso-google-icon,     @sso-google-primary,     @sso-google-secondary); }
+    &.ldap-connect         { .sso-connect-btn(@sso-ldap-icon,       @sso-ldap-primary,       @sso-ldap-secondary); }
+    &.linkedin-connect     { .sso-connect-btn(@sso-linkedin-icon,   @sso-linkedin-primary,   @sso-linkedin-secondary); }
+    &.office_365-connect   { .sso-connect-btn(@sso-office_365-icon, @sso-office_365-primary, @sso-office_365-secondary); }
+    &.twitter-connect      { .sso-connect-btn(@sso-twitter-icon,    @sso-twitter-primary,    @sso-twitter-secondary); }
+    &.windows_live-connect { .sso-connect-btn(@sso-office_365-icon, @sso-office_365-primary, @sso-office_365-secondary); }
 }

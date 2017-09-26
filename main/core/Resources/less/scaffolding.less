@@ -22,6 +22,7 @@ body.claroline-app {
     display: flex;
     flex-direction: column;
     min-height: 100%;
+    width: 100%;
     max-width: @app-max-width;
     margin: 0 auto;
     padding: floor(@grid-gutter-width / 2);
@@ -32,5 +33,9 @@ body.claroline-app {
 
     .page-container {
         flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
+    }
+
+    &.app-content-full {
+        max-width: 100% !important; // make sure it overrides default max-width
     }
 }

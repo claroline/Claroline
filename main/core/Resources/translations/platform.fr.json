@@ -675,6 +675,7 @@
     "login_failure": "La connexion a échoué. Vérifiez que votre nom d'utilisateur et votre mot de passe sont corrects.",
     "login_target_route_option": "Action par défaut pour le login sur la plateforme",
     "login_with_third_party": "Connexion %name%",
+    "login_with_third_party_btn": "%name%",
     "logout": "Déconnexion",
     "logs": "suivi",
     "logs_error_location": "En cas d'erreur, les logs se trouvent dans le dossier app/log/update-xxx.log.",
@@ -1444,5 +1445,8 @@
     "unlock_resource_explanation": "Cette ressource est protégée par mot de passe. Veuillez entrer ce dernier pour la débloquer.",
     "delete_all": "tout supprimer",
     "ip_input_help": "Chaque partie de l'adresse doit être un nombre entre 0 et 255 ou *.",
-    "duplicate": "Dupliquer"
+    "duplicate": "Dupliquer",
+    "login_auth_or": "OU",
+    "login_auth_claro_account": "Me connecter avec mon compte Claroline :",
+    "login_auth_sso": "Me connecter avec un de mes autres comptes :"
 }
