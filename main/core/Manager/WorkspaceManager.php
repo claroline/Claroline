@@ -26,6 +26,7 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
+use Claroline\CoreBundle\Entity\Workspace\WorkspaceRecent;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
 use Claroline\CoreBundle\Event\NotPopulatedEventException;
 use Claroline\CoreBundle\Event\StrictDispatcher;
@@ -1825,5 +1826,29 @@ class WorkspaceManager
         }
 
         return $workspace;
+    }
+
+    public function addRecentWorkspaceForUser(User $user, Workspace $workspace)
+    {
+        $recentWorkspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRecent');
+        //If workspace already in recent workspaces, update date
+        $recentWorkspace = $recentWorkspaceRepo->findOneBy(['user' => $user, 'workspace' => $workspace]);
+        //Otherwise create new entry
+        if (empty($recentWorkspace)) {
+            $recentWorkspace = new WorkspaceRecent();
+            $recentWorkspace->setUser($user);
+            $recentWorkspace->setWorkspace($workspace);
+        }
+        $recentWorkspace->setEntryDate(new \DateTime());
+        $this->om->persist($recentWorkspace);
+        $this->om->flush();
+    }
+
+    // Clean all recent workspaces that are more than 6 months old
+    public function cleanRecentWorkspaces()
+    {
+        $this->log('Cleaning recent workspaces entries that are older than six months');
+        $recentWorkspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRecent');
+        $recentWorkspaceRepo->removeAllEntriesBefore(new \DateTime('-6 months'));
     }
 }
