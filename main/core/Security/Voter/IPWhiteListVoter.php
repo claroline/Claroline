@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security\Voter;
+namespace Claroline\CoreBundle\Security\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Claroline\CoreBundle\Manager\IPWhiteListManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * This voter grants access to admin users, whenever the attribute or the

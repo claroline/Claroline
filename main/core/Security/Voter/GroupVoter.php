@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security\Voter;
+namespace Claroline\CoreBundle\Security\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
+use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * @DI\Service
@@ -50,7 +50,7 @@ class GroupVoter implements VoterInterface
         if (!$object instanceof Group && !$object instanceof GroupCollection) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
-        $groups = $object instanceof GroupCollection ? $object->getGroups() : array($object);
+        $groups = $object instanceof GroupCollection ? $object->getGroups() : [$object];
         $action = strtolower($attributes[0]);
 
         switch ($action) {

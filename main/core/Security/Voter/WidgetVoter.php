@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security\Voter;
+namespace Claroline\CoreBundle\Security\Voter;
 
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * This voter is involved in access decisions for WidgetInstances.
@@ -96,7 +96,7 @@ class WidgetVoter implements VoterInterface
                 }
 
                 //else we need to check the masks (c/c from WorkspaceVoter)
-                $accesses = $this->wm->getAccesses($token, array($workspace), 'home', 'edit');
+                $accesses = $this->wm->getAccesses($token, [$workspace], 'home', 'edit');
 
                 return isset($accesses[$workspace->getId()]) && $accesses[$workspace->getId()] === true ?
                     VoterInterface::ACCESS_GRANTED :

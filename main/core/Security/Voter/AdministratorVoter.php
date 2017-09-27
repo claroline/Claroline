@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security\Voter;
+namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;

@@ -9,16 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security\Voter;
+namespace Claroline\CoreBundle\Security\Voter;
 
+use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
+use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
 
 /**
  * @DI\Service
@@ -59,7 +59,7 @@ class UserVoter implements VoterInterface
         if (!$object instanceof User && !$object instanceof UserCollection) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
-        $users = $object instanceof UserCollection ? $object->getUsers() : array($object);
+        $users = $object instanceof UserCollection ? $object->getUsers() : [$object];
         $action = strtolower($attributes[0]);
 
         switch ($action) {

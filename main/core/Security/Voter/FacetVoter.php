@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security\Voter;
+namespace Claroline\CoreBundle\Security\Voter;
 
-use Claroline\CoreBundle\Entity\Facet\PanelFacet;
 use Claroline\CoreBundle\Entity\Facet\Facet;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
-use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
+use Claroline\CoreBundle\Entity\Facet\PanelFacet;
+use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
 use Doctrine\ORM\EntityManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 
 /**
  * This voter is involved in access decisions for facets.
@@ -80,7 +80,9 @@ class FacetVoter
 
     public function checkPanelView(TokenInterface $token, PanelFacet $panel)
     {
-        $userRoles = array_map(function ($el) { return $el->getRole(); }, $token->getRoles());
+        $userRoles = array_map(function ($el) {
+            return $el->getRole();
+        }, $token->getRoles());
         $panelRoles = $panel->getPanelFacetsRole();
 
         foreach ($panelRoles as $panelRole) {
@@ -96,7 +98,9 @@ class FacetVoter
 
     public function checkPanelEdit(TokenInterface $token, PanelFacet $panel)
     {
-        $userRoles = array_map(function ($el) { return $el->getRole(); }, $token->getRoles());
+        $userRoles = array_map(function ($el) {
+            return $el->getRole();
+        }, $token->getRoles());
         $panelRoles = $panel->getPanelFacetsRole();
 
         foreach ($panelRoles as $panelRole) {
