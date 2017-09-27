@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Session;
 
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeFileSessionHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NativeSessionHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler;
 
 /**
  * @DI\Service("claroline.session.handler_factory")
@@ -56,6 +57,10 @@ class SessionHandlerFactory
 
         if ($type === 'native') {
             return new NativeFileSessionHandler($this->sessionPath);
+        }
+
+        if ($type === 'native_php') {
+            return new NativeSessionHandler();
         }
 
         if ($type === 'claro_pdo' || $type === 'pdo') {
