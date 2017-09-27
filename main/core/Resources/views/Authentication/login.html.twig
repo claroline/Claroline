@@ -14,7 +14,7 @@
     {{ macros.flashBox() }}
 
     <div class="page-container">
-        <div class="page login-page">
+        <div class="page login-page{% if externalAuthentication is not empty %} login-with-sso{% endif %}">
             {% if config.getParameter('logo') %}
             <img
                 class="login-logo"

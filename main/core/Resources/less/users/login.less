@@ -18,6 +18,8 @@
     // if there is lots of space
     justify-content: center;
     margin: auto;
+    
+    // makes logo, title, info text the same width as login form
     max-width: floor(@login-max-width / 2);
 
     &.login-with-sso {
@@ -46,9 +48,14 @@
 .login_form_container, // for retro compatibility
 .login-container {
     width: 100%;
-    max-width: @login-max-width; // for cases when the auth block is not displayed in the login page
     margin: 0 auto @component-margin-bottom;
-
+    
+    // for cases when the auth block is not displayed in the login page
+    max-width: floor(@login-max-width / 2);
+    &.login-with-sso {
+        max-width: @login-max-width;
+    }
+    
     form {
         .btn-primary {
             margin-top: 30px;
