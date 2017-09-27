@@ -28,7 +28,7 @@ const DataCell = props => {
       }
     </TableCell>
     :
-    React.createElement(typeDef.components.table, {data: get(props.rowData, props.column.name)})
+    React.createElement(typeDef.components.table, {data: get(props.rowData, props.column.name), options: props.column.options})
 }
 
 DataCell.propTypes = {
@@ -36,7 +36,8 @@ DataCell.propTypes = {
   column: T.shape({
     name: T.string.isRequired,
     type: T.string.isRequired,
-    renderer: T.func
+    renderer: T.func,
+    options: T.object
   }).isRequired
 }
 

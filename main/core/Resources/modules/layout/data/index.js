@@ -9,6 +9,7 @@ import {HTML_TYPE,     htmlDefinition}     from '#/main/core/layout/data/types/h
 import {IP_TYPE,       ipDefinition}       from '#/main/core/layout/data/types/ip'
 import {NUMBER_TYPE,   numberDefinition}   from '#/main/core/layout/data/types/number'
 import {STRING_TYPE,   stringDefinition}   from '#/main/core/layout/data/types/string'
+import {ENUM_TYPE,     enumDefinition}   from '#/main/core/layout/data/types/enum'
 
 // the list of registered data types
 export const dataTypes = {}
@@ -23,6 +24,7 @@ registerType(HTML_TYPE,     htmlDefinition)
 registerType(IP_TYPE,       ipDefinition)
 registerType(NUMBER_TYPE,   numberDefinition)
 registerType(STRING_TYPE,   stringDefinition)
+registerType(ENUM_TYPE,     enumDefinition)
 
 /**
  * Validates & registers a data type.

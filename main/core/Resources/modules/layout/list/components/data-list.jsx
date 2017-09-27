@@ -220,7 +220,12 @@ DataList.propTypes = {
     /**
      * A custom renderer if the default one from `type` does not fit your needs.
      */
-    renderer: T.func
+    renderer: T.func,
+
+    /**
+     * An option object in case this is much more complex than anticipated
+     */
+    options: T.object
   })).isRequired,
 
   /**

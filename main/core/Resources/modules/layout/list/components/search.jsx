@@ -100,7 +100,8 @@ const AvailableFilter = props => {
               React.createElement(typeDef.components.search, {
                 search: props.currentSearch,
                 isValid: isValidSearch,
-                updateSearch: props.onSelect
+                updateSearch: props.onSelect,
+                options: props.options
               })
             }
           </span>
@@ -115,7 +116,8 @@ AvailableFilter.propTypes = {
   label: T.string.isRequired,
   type: T.string.isRequired,
   currentSearch: T.string,
-  onSelect: T.func.isRequired
+  onSelect: T.func.isRequired,
+  options: T.object
 }
 
 const FiltersList = props =>
@@ -126,6 +128,7 @@ const FiltersList = props =>
         name={filter.name}
         label={filter.label}
         type={filter.type}
+        options={filter.options}
         currentSearch={props.currentSearch}
         onSelect={(filterValue) => props.onSelect(filter.name, filterValue)}
       />
@@ -136,7 +139,8 @@ FiltersList.propTypes = {
   available: T.arrayOf(T.shape({
     name: T.string.isRequired,
     type: T.string.isRequired,
-    label: T.string.isRequired
+    label: T.string.isRequired,
+    options: T.object
   })).isRequired,
   currentSearch: T.string,
   onSelect: T.func.isRequired
@@ -225,7 +229,8 @@ class ListSearch extends Component {
 
 ListSearch.propTypes = {
   available: T.arrayOf(T.shape({
-    name: T.string.isRequired
+    name: T.string.isRequired,
+    options: T.object
   })).isRequired,
   current: T.arrayOf(T.shape({
     property: T.string.isRequired,
