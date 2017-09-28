@@ -87,6 +87,10 @@ class ConfigurationType extends AbstractType
             ->add('paths_email', 'text', [
                 'required' => false,
                 'label' => 'paths_email',
+            ])
+            ->add('display_name', 'text', [
+                'required' => false,
+                'label' => 'display_name',
             ]);
         }
 

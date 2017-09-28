@@ -9,6 +9,7 @@
     "scope": "Scope",
     "paths_login": "New user (login field)",
     "paths_email": "New user (email field)",
+    "display_name": "Login button label",
     "client_tenant_domain": "Domain",
     "create_new_oauth_account": "Create new account",
     "error_connecting_with_oauth": "An error occured during the authentication process with the selected service. Here's the error message : %msg%",

@@ -84,6 +84,7 @@ class OauthController extends Controller
                 $data[$service.'_scope'] = $form['scope']->getData();
                 $data[$service.'_paths_login'] = $form['paths_login']->getData();
                 $data[$service.'_paths_email'] = $form['paths_email']->getData();
+                $data[$service.'_display_name'] = $form['display_name']->getData();
             }
 
             $errors = $this->oauthManager->validateService(

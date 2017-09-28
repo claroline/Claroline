@@ -186,6 +186,7 @@ class OauthManager
             $config->setScope($this->platformConfigHandler->getParameter($service.'_scope'));
             $config->setPathsLogin($this->platformConfigHandler->getParameter($service.'_paths_login'));
             $config->setPathsEmail($this->platformConfigHandler->getParameter($service.'_paths_email'));
+            $config->setDisplayName($this->platformConfigHandler->getParameter($service.'_display_name'));
         }
 
         return $config;

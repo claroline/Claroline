@@ -9,6 +9,7 @@
     "scope": "Scope",
     "paths_login": "Nouvel utilisateur (champ identifiant)",
     "paths_email": "Nouvel utilisateur (champ email)",
+    "display_name": "Label du bouton de login",
     "client_tenant_domain": "Domaine",
     "create_new_oauth_account": "Créer un nouveau compte",
     "error_connecting_with_oauth": "Une erreur s'est produite pendant l'authentification avec le service choisi. Voici le message de l'erreur: %msg%",

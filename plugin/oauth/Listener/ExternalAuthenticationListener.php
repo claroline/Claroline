@@ -46,10 +46,17 @@ class ExternalAuthenticationListener
     public function onRenderButton(RenderAuthenticationButtonEvent $event)
     {
         $services = $this->oauthManager->getActiveServices();
+        $buttons = [];
+
+        foreach ($services as $service) {
+            $config = $this->oauthManager->getConfiguration($service);
+            $buttons[] = ['service' => $service, 'display_name' => $config->getDisplayName()];
+        }
+
         if (count($services) > 0) {
             $content = $this->templating->render(
                 'IcapOAuthBundle::buttons.html.twig',
-                ['services' => $services]
+                ['buttons' => $buttons]
             );
 
             $event->addContent($content);

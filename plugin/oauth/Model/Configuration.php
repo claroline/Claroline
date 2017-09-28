@@ -25,6 +25,7 @@ class Configuration
     private $infosUrl = null;
     private $pathsLogin = null;
     private $pathsEmail = null;
+    private $displayName = null;
 
     public function __construct($id, $secret, $active, $forceReauthenticate = false, $domain = null, $version = null)
     {
@@ -257,6 +258,26 @@ class Configuration
     public function setPathsEmail($pathsEmail)
     {
         $this->pathsEmail = $pathsEmail;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDisplayName()
+    {
+        return $this->displayName;
+    }
+
+    /**
+     * @param string $displayName
+     *
+     * @return $this
+     */
+    public function setDisplayName($displayName)
+    {
+        $this->displayName = $displayName;
 
         return $this;
     }
