@@ -255,15 +255,10 @@ class ResourceQueryBuilder
             "({$eol}".
             "    SELECT aw FROM Claroline\CoreBundle\Entity\Workspace\Workspace aw{$eol}".
             "    JOIN aw.roles r{$eol}".
-            "    WHERE r IN (SELECT r2 FROM Claroline\CoreBundle\Entity\Role r2 {$eol}".
-            "       LEFT JOIN r2.users u {$eol}".
-            "       LEFT JOIN r2.groups g {$eol}".
-            "       LEFT JOIN g.users u2 {$eol}".
-            "       WHERE u.id = :user_id OR u2.id = :user_id {$eol}".
-            "   ) {$eol}".
+            "    WHERE r.name IN (:user_roles) {$eol}".
             ") {$eol}";
         $this->addWhereClause($clause);
-        $this->parameters[':user_id'] = $user->getId();
+        $this->parameters[':user_roles'] = $user->getRoles();
 
         return $this;
     }
