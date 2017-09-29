@@ -257,6 +257,7 @@ class StepPicking extends Component
          </FormGroup>
        </div>
      }
+
      {!props.parameters.pickByTag &&
        <div>
         <RadioGroup
@@ -306,10 +307,9 @@ StepPicking.propTypes = {
     pick: T.number.isRequired,
     randomPick: T.string.isRequired,
     randomOrder: T.string.isRequired,
-    pickByTag: T.string.isRequired
+    pickByTag: T.bool.isRequired
   }).isRequired,
   items: T.object.isRequired,
-  quiz: T.object.isRequired,
   validating: T.bool.isRequired,
   onChange: T.func.isRequired
 }
@@ -593,6 +593,7 @@ function makePanel(Section, title, key, props, errorProps) {
       <Section
         onChange={props.updateProperties}
         errors={props.quiz._errors}
+        validating={props.validating}
         items={props.items}
         {...props.quiz}
       />
@@ -661,7 +662,7 @@ QuizEditor.propTypes = {
       showFeedback: T.bool.isRequired
     }).isRequired
   }).isRequired,
-  items: T.array.isRequired,
+  items: T.object.isRequired,
   validating: T.bool.isRequired,
   updateProperties: T.func.isRequired,
   activePanelKey: T.oneOfType([T.string, T.bool]).isRequired,

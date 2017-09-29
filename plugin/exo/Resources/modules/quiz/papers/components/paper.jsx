@@ -63,7 +63,7 @@ let Paper = props => {
                     item, answer: getAnswer(item.id, props.paper.answers),
                     feedback: getAnswerFeedback(item.id, props.paper.answers),
                     showScore: showScore,
-                    showExpected: !props.showExpectedAnswers,
+                    showExpected: props.showExpectedAnswers,
                     showStats: props.showStatistics,
                     showYours: true,
                     stats: props.showStatistics ?

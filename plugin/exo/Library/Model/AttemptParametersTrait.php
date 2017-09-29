@@ -61,9 +61,6 @@ trait AttemptParametersTrait
     private $maxAttemptsPerDay = 0;
 
     /**
-     * Number of attempts allowed.
-     * If 0, the user can retry as many times a he wishes.
-     *
      * @ORM\Column(name="random_tag", type="array")
      */
     private $randomTag;
@@ -171,7 +168,7 @@ trait AttemptParametersTrait
     /**
      * Sets max attempts.
      *
-     * @param int $maxAttempts
+     * @param int $maxAttemptsPerDay
      */
     public function setMaxAttemptsPerDay($maxAttemptsPerDay)
     {
