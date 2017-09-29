@@ -122,6 +122,7 @@ class ClarolinePluginListener extends ContainerAware
             $mediacenter = $this->getMediacenterManager()->getMediacenter();
             $mediaManager = $this->getMediaManager();
             $medialist = $mediaManager->getMediaListForUser($loggedUser, $mediacenter);
+            $media = $mediaManager->getByWidget($widgetInstance);
             // Return form
             $content = $this->templating->render(
                 'IcapInwicastBundle:Media:videosList.html.twig',
@@ -130,6 +131,7 @@ class ClarolinePluginListener extends ContainerAware
                     'widget' => $widgetInstance,
                     'username' => $loggedUser->getUsername(),
                     'mediacenter' => $mediacenter,
+                    'mediaRef' => (!empty($media)) ? $media->getMediaRef() : null,
                 ]
             );
         } catch (NoMediacenterException $nme) {

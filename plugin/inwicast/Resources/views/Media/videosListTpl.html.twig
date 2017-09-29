@@ -1,3 +1,6 @@
+{% if mediaRef is not defined %}
+    {% set mediaRef = null %}
+{% endif %}
 <div class="row container-fluid">
     {# Search bar #}
     <div class="col-xs-6">
@@ -33,11 +36,11 @@
     <div class="row">
         {% endif %}
         <div class="col-xs-6 auto-new-line">
-            <div id="thumb-{{ media.mediaRef }}"class="thumbnail"
+            <div id="thumb-{{ media.mediaRef }}"class="thumbnail {% if mediaRef == media.mediaRef %} item-selected {% endif %}"
                  onclick="select('{{ media.title | convert_encoding('UTF-8', 'ISO-8859-1') }}', '{{ loop.index0 }}', '{{ media.mediaRef }}')">
                 <label for="{{ media.mediaRef }}" class="thumbnail-radio">
                     <input type="radio" name="media_ref" id="{{ media.mediaRef }}" value="{{ media.mediaRef }}"
-                           data-width="{{ media.width }}" data-height="{{ media.height }}" required>
+                           data-width="{{ media.width }}" data-height="{{ media.height }}" required {% if mediaRef == media.mediaRef %} checked {% endif %}>
                 </label>
                 <div class="thumbnail-content">
                     <label for="{{ media.mediaRef }}" class="input-thumbnail">

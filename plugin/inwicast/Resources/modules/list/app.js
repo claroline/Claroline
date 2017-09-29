@@ -49,7 +49,7 @@ import $ from 'jquery'
     if (value !== '') {
       // AJAX request
       $.ajax({
-        url: '{{ path(\'inwicast_mediacenter_user_videos_search\') }}?keywords=' + value,
+        url: window.Routing.generate('inwicast_mediacenter_user_videos_search', {'keywords':value}),
         cache: false
       })
         .done(function (json) {

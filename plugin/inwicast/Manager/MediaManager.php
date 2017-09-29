@@ -91,11 +91,13 @@ class MediaManager
     public function processPost($mediaRef, WidgetInstance $widget, MediaCenter $mediacenter, User $user)
     {
         $media = $this->getByWidgetOrEmpty($widget);
-        $media->setMediaRef($mediaRef);
-        $media = $this->getMediaInfo($media, $mediacenter, $user);
+        if (!empty($mediaRef) && $mediaRef !== $media->getMediaRef()) {
+            $media->setMediaRef($mediaRef);
+            $media = $this->getMediaInfo($media, $mediacenter, $user);
 
-        $this->em->persist($media);
-        $this->em->flush();
+            $this->em->persist($media);
+            $this->em->flush();
+        }
 
         return $media;
     }
