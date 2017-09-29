@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
 import {createStore} from '#/main/core/utilities/redux'
 import {registerModalTypes} from '#/main/core/layout/modal'
-import {DeleteConfirmModal} from '#/main/core/layout/modal/components/delete-confirm.jsx'
 import {makeRouter} from './router'
 import {reducers} from './reducers'
 import {VIEW_MANAGER, VIEW_USER} from './enums'
@@ -17,7 +16,6 @@ import {EventSetRegistrationModal} from './components/event-set-registration-mod
 class SessionEventsTool {
   constructor(workspaceId, canEdit, sessions, events, eventsUsers) {
     registerModalTypes([
-      ['DELETE_MODAL', DeleteConfirmModal],
       ['MODAL_EVENT_FORM', EventFormModal],
       ['MODAL_EVENT_REPEAT_FORM', EventRepeatFormModal],
       ['MODAL_EVENT_COMMENTS', EventCommentsModal],

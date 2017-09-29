@@ -26,7 +26,7 @@ class BuildThemesCommand extends ContainerAwareCommand
             ->setName('claroline:theme:build')
             ->setDescription('Build themes which are installed in the platform')
             ->addOption('theme',    't',  InputOption::VALUE_OPTIONAL, 'Theme name. Rebuild only this theme.')
-            ->addOption('no-cache', 'nc', InputOption::VALUE_NONE,     'Rebuild themes without using cache.');
+            ->addOption('no-cache', 'c', InputOption::VALUE_NONE,     'Rebuild themes without using cache.');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -1,9 +1,12 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import cloneDeep from 'lodash/cloneDeep'
+
 import {t} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/fos-js-router'
-import cloneDeep from 'lodash/cloneDeep'
+
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
 const UsersList = props =>
   <ul className="dropdown-menu">
@@ -25,30 +28,36 @@ const UsersList = props =>
 
 UsersList.propTypes = {
   users: T.arrayOf(T.shape({
-    id: T.string.isRequired,
-    name: T.string.isRequired
+    id: T.number.isRequired,
+    firstName: T.string.isRequired,
+    lastName: T.string.isRequired
   })).isRequired,
   select: T.func.isRequired
 }
 
-const SelectedUser = props => {
+const SelectedUser = props =>
+  <li className="selected-user">
+    {props.user.name ? props.user.name : props.user.firstName+' '+props.user.lastName}
 
-  return (
-    <span style={{display: 'inline-block'}}>
-      <span className="selected-user label label-success">
-        {props.user.firstName} {props.user.lastName}
-
-        <button type="button" className="btn btn-link" onClick={props.remove}>
-          <span className="fa fa-times" />
-          <span className="sr-only">{t('list_remove_filter')}</span>
-        </button>
-      </span>
-    </span>
-  )
-}
+    <TooltipButton
+      id={`remove-${props.user.id}`}
+      title={t('delete')}
+      position="left"
+      onClick={props.remove}
+      className="btn-link btn-link-danger"
+    >
+      <span className="fa fa-fw fa-trash-o" />
+      <span className="sr-only">{t('delete')}</span>
+    </TooltipButton>
+  </li>
 
 SelectedUser.propTypes = {
-  user: T.array.isRequired,
+  user: T.shape({
+    id: T.number.isRequired,
+    name: T.string,
+    firstName: T.string,
+    lastName: T.string
+  }).isRequired,
   remove: T.func.isRequired
 }
 
@@ -87,7 +96,6 @@ export class UserTypeahead extends Component {
       results: [],
       selected: this.state.selected.concat([user])
     })
-
   }
 
   removeUser(user) {
@@ -100,17 +108,18 @@ export class UserTypeahead extends Component {
 
   render() {
     return (
-      <div>
+      <div className="user-typeahead">
         <div className={classes('dropdown', 0 < this.state.results.length ? 'open' : null)}>
           <div className="input-group">
             <span className="input-group-addon">
               <span
-                className={classes(
-                  'fa fa-fw',
-                  this.state.isFetching ? 'fa-circle-o-notch fa-spin' : 'fa-user'
-                )}
-              ></span>
+                className={classes('fa fa-fw', {
+                  'fa-user': !this.state.isFetching,
+                  'fa-circle-o-notch fa-spin': this.state.isFetching
+                })}
+              />
             </span>
+
             <input
               id="search-users"
               type="text"
@@ -118,21 +127,19 @@ export class UserTypeahead extends Component {
               value={this.state.searchString}
               onChange={e => this.search(e.target.value)}
             />
-
           </div>
+
           <UsersList
             users={this.state.results}
             select={this.selectUser.bind(this)}
           />
         </div>
-        <span className="typeahead-user-selected">
+
+        <ul className="selected-users">
           {this.state.selected.map(user =>
-            <SelectedUser
-              user={user}
-              remove={() => this.removeUser(user)}
-            />
+            <SelectedUser key={user.id} user={user} remove={() => this.removeUser(user)} />
           )}
-        </span>
+        </ul>
       </div>
     )
   }

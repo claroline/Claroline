@@ -219,7 +219,7 @@ claro_admin_parameters:
 
 claro_admin_workspaces:
     prefix: admin/workspaces
-    resource: "@ClarolineCoreBundle/Controller/Administration/WorkspacesController.php"
+    resource: "@ClarolineCoreBundle/Controller/Administration/WorkspaceController.php"
     type: annotation
 
 claro_admin_roles:
@@ -471,4 +471,8 @@ claro_admin_resource_icons:
 claro_admin_scheduled_task:
     resource: "@ClarolineCoreBundle/Controller/Administration/ScheduledTaskController.php"
     prefix: admin/scheduled/task
+    type: annotation
+
+claro_admin_scheduled_task_api:
+    resource: "@ClarolineCoreBundle/Controller/API/Admin/ScheduledTaskController.php"
     type: annotation

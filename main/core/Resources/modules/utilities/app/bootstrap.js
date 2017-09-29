@@ -4,6 +4,28 @@ import {Provider} from 'react-redux'
 
 import {combineReducers, createStore} from '#/main/core/utilities/redux'
 
+function getContainer(selector) {
+  const container = document.querySelector(selector)
+  if (!container) {
+    throw new Error(`Container "${selector}" for app can not be found.`)
+  }
+
+  return container
+}
+
+function getInitialData(container) {
+  const initialData = {}
+  if (container.dataset) {
+    for (let prop in container.dataset) {
+      if (container.dataset.hasOwnProperty(prop) && 0 < container.dataset[prop].length) {
+        initialData[prop] = JSON.parse(container.dataset[prop])
+      }
+    }
+  }
+
+  return initialData
+}
+
 /**
  * Bootstraps a new React/Redux app.
  *
@@ -14,27 +36,20 @@ import {combineReducers, createStore} from '#/main/core/utilities/redux'
  */
 export function bootstrap(containerSelector, rootComponent, reducers, transformData = (data) => data) {
   // Retrieve app container
-  const container = document.querySelector(containerSelector)
-  if (!container) {
-    throw new Error(`Container "${containerSelector}" for app can not be found.`)
-  }
+  const container = getContainer(containerSelector)
 
   // Get initial data from container data attributes
-  const initialData = {}
-  if (container.dataset) {
-    for (let prop in container.dataset) {
-      if (container.dataset.hasOwnProperty(prop) && 0 < container.dataset[prop].length) {
-        initialData[prop] = JSON.parse(container.dataset[prop])
-      }
-    }
-  }
+  const initialData = getInitialData(container)
+
+  // Create store
+  const store = createStore(combineReducers(reducers), transformData(initialData))
 
   // Render app
   ReactDOM.render(
     React.createElement(
       Provider,
       {
-        store: createStore(combineReducers(reducers), transformData(initialData))
+        store: store
       },
       React.createElement(rootComponent)
     ),

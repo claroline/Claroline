@@ -27,49 +27,36 @@ use UJM\ExoBundle\Serializer\UserSerializer;
  * Serializer for item data.
  *
  * @DI\Service("ujm_exo.serializer.item")
+ * @DI\Tag("claroline.serializer")
  */
 class ItemSerializer extends AbstractSerializer
 {
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
 
-    /**
-     * @var TokenStorageInterface
-     */
+    /** @var TokenStorageInterface */
     private $tokenStorage;
 
-    /**
-     * @var ItemDefinitionsCollection
-     */
+    /** @var ItemDefinitionsCollection */
     private $itemDefinitions;
 
-    /**
-     * @var UserSerializer
-     */
+    /** @var UserSerializer */
     private $userSerializer;
 
-    /**
-     * @var CategorySerializer
-     */
+    /** @var CategorySerializer */
     private $categorySerializer;
 
-    /**
-     * @var HintSerializer
-     */
+    /** @var HintSerializer */
     private $hintSerializer;
 
-    /**
-     * @var ResourceContentSerializer
-     */
+    /** @var ResourceContentSerializer */
     private $resourceContentSerializer;
 
-    /**
-     * @var ItemObjectSerializer
-     */
+    /** @var ItemObjectSerializer */
     private $itemObjectSerializer;
 
+    /** @var ContainerInterface */
+    private $container;
     /**
      * @var EventDispatcherInterface
      */
@@ -122,8 +109,13 @@ class ItemSerializer extends AbstractSerializer
         $this->hintSerializer = $hintSerializer;
         $this->resourceContentSerializer = $resourceContentSerializer;
         $this->itemObjectSerializer = $itemObjectSerializer;
-        $this->container = $container;
+        $this->container = $container; // FIXME : this is a cheat to avoid a circular reference with `ujm_exo.manager.item`
         $this->eventDispatcher = $eventDispatcher;
+    }
+
+    public function getClass()
+    {
+        return 'UJM\ExoBundle\Entity\Item\Item';
     }
 
     /**
@@ -159,7 +151,7 @@ class ItemSerializer extends AbstractSerializer
                 'score' => function (Item $question) {
                     return json_decode($question->getScoreRule());
                 },
-                'rights' => function (Item $question) use ($rights) {
+                'rights' => function () use ($rights) {
                     return $rights;
                 },
             ], $question, $questionData);

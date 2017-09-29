@@ -12,23 +12,23 @@
 namespace Claroline\CoreBundle\Twig;
 
 use Claroline\CoreBundle\API\FinderProvider;
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\Tag;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @Service
- * @Tag("twig.extension")
+ * @DI\Service
+ * @DI\Tag("twig.extension")
  */
 class FinderExtension extends \Twig_Extension
 {
-    protected $container;
+    /** @var FinderProvider */
+    private $finder;
 
     /**
-     * @InjectParams({
-     *     "finder" = @Inject("claroline.API.finder")
+     * @DI\InjectParams({
+     *     "finder" = @DI\Inject("claroline.API.finder")
      * })
+     *
+     * @param FinderProvider $finder
      */
     public function __construct(FinderProvider $finder)
     {
@@ -47,14 +47,12 @@ class FinderExtension extends \Twig_Extension
         return 'searcher_extension';
     }
 
-    public function search($class, $offset, $limit, $queryOptions, $serializerOptions)
+    public function search($class, $queryOptions, $serializerOptions)
     {
         return $this->finder->search(
             $class,
-            $offset,
-            $limit,
             $queryOptions,
             $serializerOptions
-        )['results'];
+        )['data'];
     }
 }

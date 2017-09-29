@@ -11,8 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\API\SerializerProvider;
-use Claroline\CoreBundle\Entity\Theme\Theme;
+use Claroline\CoreBundle\API\FinderProvider;
 use Claroline\CoreBundle\Manager\Theme\ThemeManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -27,8 +26,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
  */
 class ThemeController
 {
-    /** @var SerializerProvider */
-    private $serializer;
+    /** @var FinderProvider */
+    private $finder;
 
     /** @var ThemeManager */
     private $manager;
@@ -37,18 +36,18 @@ class ThemeController
      * ThemeController constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "manager"    = @DI\Inject("claroline.manager.theme_manager")
+     *     "finder"  = @DI\Inject("claroline.api.finder"),
+     *     "manager" = @DI\Inject("claroline.manager.theme_manager")
      * })
      *
-     * @param SerializerProvider $serializer
-     * @param ThemeManager       $manager
+     * @param FinderProvider $finder
+     * @param ThemeManager   $manager
      */
     public function __construct(
-        SerializerProvider $serializer,
-        ThemeManager $manager)
-    {
-        $this->serializer = $serializer;
+        FinderProvider $finder,
+        ThemeManager $manager
+    ) {
+        $this->finder = $finder;
         $this->manager = $manager;
     }
 
@@ -63,9 +62,12 @@ class ThemeController
     {
         return [
             'isReadOnly' => !$this->manager->isThemeDirWritable(),
-            'themes' => array_map(function (Theme $theme) {
-                return $this->serializer->serialize($theme);
-            }, $this->manager->all()),
+            'themes' => $this->finder->search(
+                'Claroline\CoreBundle\Entity\Theme\Theme', [
+                    'limit' => 20,
+                    'sortBy' => 'name',
+                ]
+            ),
         ];
     }
 }

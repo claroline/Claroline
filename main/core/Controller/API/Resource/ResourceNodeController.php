@@ -158,12 +158,15 @@ class ResourceNodeController
     }
 
     /**
-     * Deletes a resource node.
+     * Unlocks a resource node.
+     *
+     * @todo for security, code should not be passed in the URL
      *
      * @EXT\Route("/unlock/{code}", name="claro_resource_unlock")
      * @EXT\Method("POST")
      *
      * @param ResourceNode $resourceNode
+     * @param mixed        $code
      *
      * @return JsonResponse
      */

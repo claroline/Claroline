@@ -38,47 +38,6 @@ class WorkspaceControllerTest extends TransactionalTestCase
         $this->assertEquals('ws2', $data[1]['name']);
     }
 
-    public function testPostWorkspaceUserAction()
-    {
-        $admin = $this->createAdmin();
-        $this->logIn($admin);
-
-        $values = [
-            'name' => 'workspace',
-            'code' => 'workspace',
-            'maxStorageSize' => '10MB',
-            'maxUploadResources' => '50',
-            'maxUsers' => '50',
-        ];
-
-        $data['workspace_form'] = $values;
-        $this->client->request('POST', "/api/workspace/user/{$admin->getId()}", $data);
-        $data = $this->client->getResponse()->getContent();
-        $data = json_decode($data, true);
-        $this->assertEquals($data['name'], 'workspace');
-    }
-
-    public function testPutWorkspaceUserAction()
-    {
-        $admin = $this->createAdmin();
-        $workspace = $this->persister->workspace('workspace', $admin);
-        $this->logIn($admin);
-
-        $values = [
-            'name' => 'new',
-            'code' => 'workspace',
-            'maxStorageSize' => '10MB',
-            'maxUploadResources' => '50',
-            'maxUsers' => '50',
-        ];
-
-        $data['workspace_form'] = $values;
-        $this->client->request('PUT', "/api/workspace/{$workspace->getId()}", $data);
-        $data = $this->client->getResponse()->getContent();
-        $data = json_decode($data, true);
-        $this->assertEquals($data['name'], 'new');
-    }
-
     public function testGetCopy()
     {
         $admin = $this->createAdmin();
@@ -94,7 +53,7 @@ class WorkspaceControllerTest extends TransactionalTestCase
         $data = $this->client->getResponse()->getContent();
         //at least it didn't crash
         $data = json_decode($data, true);
-        $this->assertEquals($data[0]['name'], '[COPY] - default_workspace');
+        $this->assertEquals($data[0]['name'], '[COPY] default_workspace');
     }
 
     public function testSearchWorkspace()
@@ -105,12 +64,12 @@ class WorkspaceControllerTest extends TransactionalTestCase
 
         $this->logIn($admin);
 
-        $url = '/api/workspace/page/0/limit/10/search.json';
+        $url = '/api/workspace.json';
         $this->client->request('GET', $url.'?filters[name]=abc');
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
 
-        $this->assertEquals(1, count($data['results']));
+        $this->assertEquals(1, count($data['data']));
     }
 
     private function createAdmin()

@@ -2,10 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {t} from '#/main/core/translation'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
-
-// deprecated. use DataTable instead
 
 const TableCell = props =>
   <td className={classes(`text-${props.align}`, props.className)}>
@@ -27,7 +24,7 @@ const TableTooltipCell = props =>
   <TableCell {...props}>
     <TooltipElement
       id={props.id}
-      tip={t('list_search_invalid_filter')}
+      tip={props.tip}
       position={props.placement}
     >
       <span>
@@ -39,7 +36,7 @@ const TableTooltipCell = props =>
 TableTooltipCell.propTypes = {
   id: T.node.isRequired,
   placement: T.string,
-  tooltip: T.string.isRequired,
+  tip: T.string.isRequired,
   children: T.node
 }
 
@@ -78,7 +75,8 @@ const TableSortingCell = props =>
       classes(
         'fa',
         0 === props.direction ? 'fa-sort' : (1 === props.direction ? 'fa-sort-asc' : 'fa-sort-desc')
-      )} aria-hidden="true"
+      )}
+      aria-hidden="true"
     />
   </th>
 
@@ -116,13 +114,22 @@ TableRow.propTypes = {
 }
 
 const Table = props =>
-  <table className={classes('table table-striped table-hover', props.className)}>
+  <table
+    className={classes('table table-striped table-hover', {
+      'table-condensed': props.condensed
+    }, props.className)}
+  >
     {props.children}
   </table>
 
 Table.propTypes = {
   children: T.array.isRequired,
-  className: T.string
+  className: T.string,
+  condensed: T.bool
+}
+
+Table.defaultProps = {
+  condensed: false
 }
 
 export {

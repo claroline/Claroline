@@ -12,10 +12,11 @@ import {t} from '#/main/core/translation'
  *  - current locale yes/no, true/false
  *
  * @param {boolean|string} value
+ * @param {boolean}        silent - if true, does not throw on parse error.
  *
  * @returns {boolean}
  */
-export function parseBool(value) {
+function parseBool(value, silent = false) {
   if (isBoolean(value)) {
     return value
   } else if (typeof value === 'string') {
@@ -35,5 +36,25 @@ export function parseBool(value) {
     }
   }
 
-  throw new Error('Invalid boolean value.')
+  if (!silent) {
+    throw new Error('Invalid boolean value.')
+  }
+
+  return false
+}
+
+/**
+ * Translates a boolean value.
+ *
+ * @param value
+ *
+ * @returns {string}
+ */
+function translateBool(value) {
+  return value ? t('yes') : t('no')
+}
+
+export {
+  parseBool,
+  translateBool
 }

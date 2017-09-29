@@ -713,18 +713,20 @@ class UserManager
 
         $personalWorkspaceName = $this->translator->trans('personal_workspace', [], 'platform').' - '.$user->getUsername();
         $workspace = new Workspace();
-        $workspace->setCode($code);
-        $workspace->setName($personalWorkspaceName);
-        $workspace->setCreator($user);
         $workspace = !$model ?
             $this->workspaceManager->copy($this->workspaceManager->getDefaultModel(true), $workspace) :
             $this->workspaceManager->copy($model, $workspace);
+
+        $workspace->setCode($code);
+        $workspace->setName($personalWorkspaceName);
+        $workspace->setCreator($user);
+        $workspace->setPersonal(true);
 
         //add "my public documents" folder
         $resourceManager = $this->container->get('claroline.manager.resource_manager');
         //TODO MODEL
         $resourceManager->addPublicFileDirectory($workspace);
-        $workspace->setIsPersonal(true);
+
         $user->setPersonalWorkspace($workspace);
         $this->objectManager->persist($user);
         $this->objectManager->flush();

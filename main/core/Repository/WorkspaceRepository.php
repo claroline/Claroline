@@ -68,7 +68,7 @@ class WorkspaceRepository extends EntityRepository
             ->createQuery('
                 SELECT w
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE w.isPersonal = false
+                WHERE w.personal = false
                 ORDER BY w.id
             ')
             ->getResult();
@@ -125,7 +125,7 @@ class WorkspaceRepository extends EntityRepository
             ->createQuery('
                 SELECT COUNT(w)
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE w.isPersonal = true
+                WHERE w.personal = true
             ')
             ->getSingleScalarResult();
     }
@@ -141,7 +141,7 @@ class WorkspaceRepository extends EntityRepository
             ->createQuery('
                 SELECT COUNT(w)
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE w.isPersonal = false
+                WHERE w.personal = false
             ')
             ->getSingleScalarResult();
     }
@@ -974,7 +974,7 @@ class WorkspaceRepository extends EntityRepository
                 WHERE (gr IN (:roles) OR ur IN (:roles))
 
             )
-            AND w.isPersonal = true
+            AND w.personal = true
         ';
 
         if (!$includeOrphans) {
@@ -1019,7 +1019,7 @@ class WorkspaceRepository extends EntityRepository
             WHERE (uws.id = :wsId
             OR grws.id = :wsId)
             AND u.isRemoved = :isRemoved
-            AND w.isPersonal = true
+            AND w.personal = true
         ';
 
         if (!$includeOrphans) {
@@ -1046,7 +1046,7 @@ class WorkspaceRepository extends EntityRepository
     {
         $dql = '
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.isPersonal = false
+            WHERE w.personal = false
         ';
 
         if ($code) {

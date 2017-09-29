@@ -689,6 +689,6 @@
     "pick-tag": "Tag",
     "tag-amount": "Quantité",
     "tag-amount-help": "Nombre de question provenant devant être utilisé au total",
-    "add": "Ajouter",
-    "number_question_page": "Nombre de question par page"
+    "number_question_page": "Nombre de question par page",
+    "remove_questions_confirm": "Êtes-vous sûr de vouloir supprimer les questions suivantes [ %question_list% ]?"
 }

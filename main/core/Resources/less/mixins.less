@@ -1,4 +1,14 @@
+/*
+ * Application mixins
+ */
+
+// gets bootstrap mixins
 @import "../../../../../../../web/packages/bootstrap/less/mixins";
+
+
+// -
+// Modifiers
+// ---
 
 .font-size-modifier(@font-size) {
     font-size: floor(@font-size * @font-size-modifier);
@@ -18,7 +28,18 @@
     border-radius: 0;
 }
 
+.border(@border) when (@enable-border = true) {
+    border: @border;
+}
+
+.border(@border) when (@enable-border = false) {
+    border: none;
+}
+
+
+// -
 // Typography
+// ---
 
 // rewrite bootstrap method to add `!important` in order to have the correct color on any element
 // (even those who originally have a defined color)
@@ -30,7 +51,10 @@
     }
 }
 
+
+// -
 // Buttons
+// ---
 
 // expose a mixin to generate button links variant (this is not down by bootstrap)
 .btn-link-variant(@color, @hover-color, @hover-decoration: none) {
@@ -67,6 +91,11 @@
         }
     }
 }
+
+
+// -
+// Placeholders
+// ---
 
 .placeholder-variant(@font-size, @padding, @border-radius, @border, @border-hover) {
     font-size: @font-size;

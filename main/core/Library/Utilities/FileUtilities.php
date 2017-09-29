@@ -60,6 +60,11 @@ class FileUtilities
         $this->tokenStorage = $tokenStorage;
     }
 
+    public function getFilesDir()
+    {
+        return $this->filesDir;
+    }
+
     /**
      * Creates a file into public files directory.
      * Then creates a <PublicFileUse> for created public file if $objectClass and $objectUuid are specified.

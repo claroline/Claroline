@@ -1,5 +1,5 @@
 
-const themes = (state) => state.themes
+const themes = (state) => state.themes.data
 
 export const select = {
   themes

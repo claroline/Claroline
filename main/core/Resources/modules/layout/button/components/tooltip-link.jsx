@@ -1,8 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
-import {Link} from '#/main/core/layout/button/components/link.jsx'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
+// TODO : find why I can't use the custom Link component (tooltip is not triggered if used)
+/*import {Link} from '#/main/core/layout/button/components/link.jsx'*/
 
 /**
  * Link with tooltip.
@@ -16,9 +18,17 @@ const TooltipLink = props =>
     position={props.position}
     tip={props.title}
   >
-    <Link {...props}>
+    <a
+      href={!props.disabled ? props.target : ''}
+      disabled={props.disabled}
+      className={classes(
+        'btn',
+        props.className,
+        {disabled: props.disabled}
+      )}
+    >
       {props.children}
-    </Link>
+    </a>
   </TooltipElement>
 
 TooltipLink.propTypes = {

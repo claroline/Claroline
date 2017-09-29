@@ -90,14 +90,14 @@ class WorkspaceType extends AbstractType
                      ->leftJoin('w.roles', 'r')
                      ->leftJoin('r.users', 'u')
                      ->where('u.id = :userId')
-                     ->andWhere('w.isModel = true')
+                     ->andWhere('w.model = true')
                      ->setParameter('userId', $user->getId())
                      ->orderBy('w.name', 'ASC');
                 };
             } else {
                 $options['query_builder'] = function (EntityRepository $er) {
                     return $er->createQueryBuilder('w')
-                   ->where('w.isModel = true')
+                   ->where('w.model = true')
                    ->orderBy('w.name', 'ASC');
                 };
             }
@@ -108,7 +108,7 @@ class WorkspaceType extends AbstractType
                $options
             );
 
-            $builder->add('isModel', 'checkbox', ['required' => false, 'label' => 'model']);
+            $builder->add('model', 'checkbox', ['required' => false, 'label' => 'model']);
         }
 
         if ($this->forApi) {

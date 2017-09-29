@@ -3,8 +3,6 @@ import {generateUrl} from '#/main/core/fos-js-router'
 import {REQUEST_SEND} from '#/main/core/api/actions'
 import {actions as listActions} from '#/main/core/layout/list/actions'
 import {select as listSelect} from '#/main/core/layout/list/selectors'
-import {actions as paginationActions} from '#/main/core/layout/pagination/actions'
-import {select as paginationSelect} from '#/main/core/layout/pagination/selectors'
 import {trans} from '#/main/core/translation'
 import {VIEW_MANAGER, VIEW_USER, VIEW_EVENT} from './enums'
 
@@ -51,7 +49,7 @@ actions.deleteSessionEvent = (workspaceId, sessionEventId) => ({
       method: 'DELETE'
     },
     success: (data, dispatch) => {
-      dispatch(paginationActions.changePage(0))
+      dispatch(listActions.changePage(0))
       dispatch(actions.fetchSessionEvents())
     }
   }
@@ -64,7 +62,7 @@ actions.deleteSessionEvents = (workspaceId, sessionEvents) => ({
       method: 'DELETE'
     },
     success: (data, dispatch) => {
-      dispatch(paginationActions.changePage(0))
+      dispatch(listActions.changePage(0))
       dispatch(actions.fetchSessionEvents())
     }
   }
@@ -222,8 +220,8 @@ actions.repeatSessionEvent = (sessionEventId, repeatEventData) => {
 
 actions.fetchSessionEvents = () => (dispatch, getState) => {
   const state = getState()
-  const page = paginationSelect.current(state)
-  const pageSize = paginationSelect.pageSize(state)
+  const page = listSelect.currentPage(state)
+  const pageSize = listSelect.pageSize(state)
   const url = generateUrl('claro_cursus_session_events_search', {session: state.sessionId, page: page, limit: pageSize}) + '?'
 
   // build queryString

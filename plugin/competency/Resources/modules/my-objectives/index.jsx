@@ -1,5 +1,5 @@
 import {bootstrap} from '#/main/core/utilities/app/bootstrap'
-import {routedApp} from '#/main/core/utilities/app/router'
+import {routedApp} from '#/main/core/router'
 import {reducer as modalReducer}    from '#/main/core/layout/modal/reducer'
 import {
   objectivesReducers,

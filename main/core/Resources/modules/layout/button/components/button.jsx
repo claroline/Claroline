@@ -18,7 +18,12 @@ const Button = props =>
       props.className,
       {disabled: props.disabled}
     )}
-    onClick={(e) => !props.disabled && props.onClick(e)}
+    onClick={(e) => {
+      e.preventDefault()
+      if (!props.disabled) {
+        props.onClick(e)
+      }
+    }}
   >
     {props.children}
   </button>

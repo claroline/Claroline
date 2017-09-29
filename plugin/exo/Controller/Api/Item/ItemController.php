@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Controller\Api\Item;
 
+use Claroline\CoreBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -21,51 +22,56 @@ use UJM\ExoBundle\Manager\Item\ItemManager;
  */
 class ItemController extends AbstractController
 {
-    /**
-     * @var ItemManager
-     */
-    private $itemManager;
+    /** @var FinderProvider */
+    private $finder;
 
-    /**
-     * @var EventDispatcherInterface
-     */
+    /** @var ItemManager */
+    private $manager;
+
+    /** @var EventDispatcherInterface */
     private $eventDispatcher;
 
     /**
      * ItemController constructor.
      *
      * @DI\InjectParams({
-     *     "itemManager"     = @DI\Inject("ujm_exo.manager.item"),
+     *     "finder"  = @DI\Inject("claroline.api.finder"),
+     *     "manager" = @DI\Inject("ujm_exo.manager.item"),
      *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      *
-     * @param ItemManager              $itemManager
+     * @param FinderProvider           $finder
+     * @param ItemManager              $manager
      * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct(ItemManager $itemManager, EventDispatcherInterface $eventDispatcher)
-    {
-        $this->itemManager = $itemManager;
+    public function __construct(
+        FinderProvider $finder,
+        ItemManager $manager,
+        EventDispatcherInterface $eventDispatcher
+    ) {
+        $this->finder = $finder;
+        $this->manager = $manager;
         $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
      * Searches for questions.
      *
-     * @EXT\Route("/search", name="question_search")
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("user", converter="current_user")
+     * @EXT\Route("", name="question_list")
+     * @EXT\Method("GET")
      *
-     * @param User    $user
      * @param Request $request
      *
      * @return JsonResponse
      */
-    public function searchAction(User $user, Request $request)
+    public function listAction(Request $request)
     {
-        $searchParams = $this->decodeRequestData($request);
-
         return new JsonResponse(
-            $this->itemManager->search($user, $searchParams->filters)
+            $this->finder->search(
+                'UJM\ExoBundle\Entity\Item\Item',
+                $request->query->all(),
+                [Transfer::INCLUDE_ADMIN_META]
+            )
         );
     }
 
@@ -94,7 +100,7 @@ class ItemController extends AbstractController
         } else {
             // Try to update question with data
             try {
-                $question = $this->itemManager->create($data);
+                $question = $this->manager->create($data);
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
             }
@@ -103,7 +109,7 @@ class ItemController extends AbstractController
         if (empty($errors)) {
             // Item updated
             return new JsonResponse(
-                $this->itemManager->serialize($question, [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_ADMIN_META])
+                $this->manager->serialize($question, [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_ADMIN_META])
             );
         } else {
             // Invalid data received
@@ -137,7 +143,7 @@ class ItemController extends AbstractController
         } else {
             // Try to update question with data
             try {
-                $question = $this->itemManager->update($question, $data);
+                $question = $this->manager->update($question, $data);
             } catch (ValidationException $e) {
                 $errors = $e->getErrors();
             }
@@ -146,7 +152,7 @@ class ItemController extends AbstractController
         if (empty($errors)) {
             // Item updated
             return new JsonResponse(
-                $this->itemManager->serialize($question, [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_ADMIN_META])
+                $this->manager->serialize($question, [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_ADMIN_META])
             );
         } else {
             // Invalid data received
@@ -155,9 +161,21 @@ class ItemController extends AbstractController
     }
 
     /**
-     * Deletes a Item.
+     * Duplicates a list of items.
      *
-     * @EXT\Route("/{id}", name="question_delete")
+     * @EXT\Route("/{id}", name="questions_duplicate")
+     * @EXT\Method("POST")
+     *
+     * @param Request $request
+     */
+    public function duplicateBulkAction(Request $request)
+    {
+    }
+
+    /**
+     * Deletes a list of Items.
+     *
+     * @EXT\Route("/{id}", name="questions_delete")
      * @EXT\Method("DELETE")
      * @EXT\ParamConverter("user", converter="current_user")
      *
@@ -166,7 +184,7 @@ class ItemController extends AbstractController
      *
      * @return JsonResponse
      */
-    public function deleteAction(Request $request, User $user)
+    public function deleteBulkAction(Request $request, User $user)
     {
         $errors = [];
 
@@ -179,9 +197,9 @@ class ItemController extends AbstractController
             ];
         } else {
             try {
-                $this->itemManager->delete($data, $user);
-            } catch (ValidationException $e) {
-                $errors = $e->getErrors();
+                $this->manager->deleteBulk(json_decode($request->getContent()), $user);
+            } catch (\Exception $e) {
+                return new JsonResponse($e->getMessage(), 422);
             }
         }
 

@@ -75,11 +75,11 @@ class ExportWorkspaceModelCommand extends ContainerAwareCommand
         }
 
         if ($input->getOption('personal')) {
-            $workspaces = array_merge($workspaces, $workspaceRepo->findBy(['isPersonal' => true]));
+            $workspaces = array_merge($workspaces, $workspaceRepo->findBy(['personal' => true]));
         }
 
         if ($input->getOption('standard')) {
-            $workspaces = array_merge($workspaces, $workspaceRepo->findBy(['isPersonal' => false]));
+            $workspaces = array_merge($workspaces, $workspaceRepo->findBy(['personal' => false]));
         }
 
         $i = 0;

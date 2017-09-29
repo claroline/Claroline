@@ -13,6 +13,7 @@ use UJM\ExoBundle\Serializer\UserSerializer;
  * Serializer for paper data.
  *
  * @DI\Service("ujm_exo.serializer.paper")
+ * @DI\Tag("claroline.serializer")
  */
 class PaperSerializer extends AbstractSerializer
 {
@@ -43,6 +44,11 @@ class PaperSerializer extends AbstractSerializer
     {
         $this->userSerializer = $userSerializer;
         $this->answerSerializer = $answerSerializer;
+    }
+
+    public function getClass()
+    {
+        return 'UJM\ExoBundle\Entity\Attempt\Paper';
     }
 
     /**

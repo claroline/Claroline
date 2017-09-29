@@ -1,6 +1,4 @@
-import {t} from '#/main/core/translation'
-
-import {parseBool} from '#/main/core/layout/data/types/boolean/utils'
+import {parseBool, translateBool} from '#/main/core/layout/data/types/boolean/utils'
 import {BooleanSearch} from '#/main/core/layout/data/types/boolean/components/search.jsx'
 import {BooleanCell} from '#/main/core/layout/data/types/boolean/components/table.jsx'
 
@@ -8,7 +6,7 @@ export const BOOLEAN_TYPE = 'boolean'
 
 export const booleanDefinition = {
   parse: (display) => parseBool(display),
-  render: (raw) => raw ? t('yes') : t('no'),
+  render: (raw) => translateBool(raw),
 
   validate: (value) => {
     try {

@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource;
 
+use Claroline\CoreBundle\API\Serializer\UserSerializer;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
@@ -22,39 +23,28 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class ResourceNodeSerializer
 {
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
 
-    /**
-     * @var AuthorizationCheckerInterface
-     */
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /**
-     * @var StrictDispatcher
-     */
+    /** @var StrictDispatcher */
     private $eventDispatcher;
 
-    /**
-     * @var MaskManager
-     */
+    /** @var UserSerializer */
+    private $userSerializer;
+
+    /** @var MaskManager */
     private $maskManager;
 
-    /**
-     * @var BreadcrumbManager
-     */
+    /** @var BreadcrumbManager */
     private $breadcrumbManager;
 
-    /**
-     * @var ResourceMenuManager
-     */
+    /** @var ResourceMenuManager */
     private $menuManager;
 
-    /**
-     * @var RightsManager
-     */
+    /** @var RightsManager */
     private $rightsManager;
 
     /**
@@ -64,6 +54,7 @@ class ResourceNodeSerializer
      *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
      *     "authorization"     = @DI\Inject("security.authorization_checker"),
      *     "eventDispatcher"   = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "userSerializer"    = @DI\Inject("claroline.serializer.user"),
      *     "maskManager"       = @DI\Inject("claroline.manager.mask_manager"),
      *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager"),
      *     "breadcrumbManager" = @DI\Inject("claroline.manager.breadcrumb_manager"),
@@ -73,6 +64,7 @@ class ResourceNodeSerializer
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
      * @param StrictDispatcher              $eventDispatcher
+     * @param UserSerializer                $userSerializer
      * @param MaskManager                   $maskManager
      * @param BreadcrumbManager             $breadcrumbManager
      * @param ResourceMenuManager           $menuManager
@@ -82,6 +74,7 @@ class ResourceNodeSerializer
         ObjectManager $om,
         AuthorizationCheckerInterface $authorization,
         StrictDispatcher $eventDispatcher,
+        UserSerializer $userSerializer,
         MaskManager $maskManager,
         BreadcrumbManager $breadcrumbManager,
         ResourceMenuManager $menuManager,
@@ -90,6 +83,7 @@ class ResourceNodeSerializer
         $this->om = $om;
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
+        $this->userSerializer = $userSerializer;
         $this->maskManager = $maskManager;
         $this->breadcrumbManager = $breadcrumbManager;
         $this->rightsManager = $rightsManager;
@@ -163,7 +157,7 @@ class ResourceNodeSerializer
 
     private function getMeta(ResourceNode $resourceNode)
     {
-        $meta = [
+        return [
             'type' => $resourceNode->getResourceType()->getName(),
             'mimeType' => $resourceNode->getMimeType(),
             'description' => $resourceNode->getDescription(), // todo : migrate custom descriptions (Path, Quiz, etc.)
@@ -173,17 +167,11 @@ class ResourceNodeSerializer
             'authors' => $resourceNode->getAuthor(),
             'published' => $resourceNode->isPublished(),
             'portal' => $resourceNode->isPublishedToPortal(),
-            'isManager' => $this->rightsManager->isManager($resourceNode),
-            'creator' => [
-                'id' => $resourceNode->getCreator()->getGuid(),
-                'name' => $resourceNode->getCreator()->getFullName(),
-                'username' => $resourceNode->getCreator()->getUsername(),
-            ],
+            'isManager' => $this->rightsManager->isManager($resourceNode), // todo : data about current user should not be here (should be in `rights` section)
+            'creator' => $resourceNode->getCreator() ? $this->userSerializer->serialize($resourceNode->getCreator()) : null,
             'actions' => $this->getActions($resourceNode),
             'accesses' => $resourceNode->getAccesses(),
         ];
-
-        return $meta;
     }
 
     private function getCurrentPermissions($resourceNode)
@@ -194,6 +182,7 @@ class ResourceNodeSerializer
     private function getParameters(ResourceNode $resourceNode)
     {
         return [
+            // todo : move accessibility dates into `resourceNode.restrictions` with access code and ip
             'accessibleFrom' => $resourceNode->getAccessibleFrom() ? $resourceNode->getAccessibleFrom()->format('Y-m-d\TH:i:s') : null,
             'accessibleUntil' => $resourceNode->getAccessibleUntil() ? $resourceNode->getAccessibleUntil()->format('Y-m-d\TH:i:s') : null,
             'fullscreen' => $resourceNode->isFullscreen(),

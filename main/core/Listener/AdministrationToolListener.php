@@ -4,7 +4,6 @@ namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\EventDispatcher\Event;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
@@ -20,8 +19,8 @@ class AdministrationToolListener
      * AdministrationToolListener constructor.
      *
      * @DI\InjectParams({
-     *     "requestStack"   = @DI\Inject("request_stack"),
-     *     "httpKernel"     = @DI\Inject("http_kernel")
+     *     "requestStack" = @DI\Inject("request_stack"),
+     *     "httpKernel"   = @DI\Inject("http_kernel")
      * })
      *
      * @param RequestStack        $requestStack
@@ -67,7 +66,7 @@ class AdministrationToolListener
     public function onOpenWorkspaceManagement(OpenAdministrationToolEvent $event)
     {
         $this->redirect([
-            '_controller' => 'ClarolineCoreBundle:Administration\Workspaces:index',
+            '_controller' => 'ClarolineCoreBundle:Administration\Workspace:index',
         ], $event);
     }
 
@@ -114,10 +113,10 @@ class AdministrationToolListener
      */
     public function onOpenPlatformLogs(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Logs:logList';
-        $params['page'] = 1;
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\Logs:logList',
+            'page' => 1,
+        ], $event);
     }
 
     /**
@@ -127,9 +126,9 @@ class AdministrationToolListener
      */
     public function onOpenPlatformAnalytics(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Analytics:analytics';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\Analytics:analytics',
+        ], $event);
     }
 
     /**
@@ -139,9 +138,9 @@ class AdministrationToolListener
      */
     public function onOpenRolesManagement(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Roles:index';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\Roles:index',
+        ], $event);
     }
 
     /**
@@ -151,9 +150,9 @@ class AdministrationToolListener
      */
     public function onOpenWidgetsManagement(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Widget:widgetsManagement';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\Widget:widgetsManagement',
+        ], $event);
     }
 
     /**
@@ -163,9 +162,9 @@ class AdministrationToolListener
      */
     public function onOpenOrganizationManagement(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\Organization:index';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\Organization:index',
+        ], $event);
     }
 
     /**
@@ -175,16 +174,18 @@ class AdministrationToolListener
      */
     public function onOpenScheduledTasksManagement(OpenAdministrationToolEvent $event)
     {
-        $params = [];
-        $params['_controller'] = 'ClarolineCoreBundle:Administration\ScheduledTask:scheduledTasksManagement';
-        $this->redirect($params, $event);
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\ScheduledTask:index',
+        ], $event);
     }
 
-    protected function redirect($params, Event $event)
+    private function redirect($params, OpenAdministrationToolEvent $event)
     {
         $subRequest = $this->request->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
+
+        $event->setResponse(
+            $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST)
+        );
         $event->stopPropagation();
     }
 }

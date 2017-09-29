@@ -687,8 +687,7 @@
     "json_export": "Json export",
     "csv_export": "Csv export",
     "pick-tag": "Tag",
-    "tag-amount": "Quantity",
-    "add": "add",
     "number_question_page": "Number of question per page",
-    "tag-amount": "Number of question related to the tag that must be picked"
+    "tag-amount": "Number of question related to the tag that must be picked",
+    "remove_workspaces_confirm": "Are you sure you want to delete the following questions [ %question_list% ]?"
 }

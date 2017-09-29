@@ -1,21 +1,16 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {t, transChoice, ClarolineTranslator} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/fos-js-router'
+import {localeDate} from '#/main/core/layout/data/types/date/utils'
 import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM, MODAL_URL, MODAL_USER_PICKER} from '#/main/core/layout/modal'
 
 import Configuration from '#/main/core/library/Configuration/Configuration'
 
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {actions as paginationActions} from '#/main/core/layout/pagination/actions'
-import {actions as listActions} from '#/main/core/layout/list/actions'
 import {actions} from '#/main/core/administration/workspace/actions'
-
-import {select as paginationSelect} from '#/main/core/layout/pagination/selectors'
-import {select as listSelect} from '#/main/core/layout/list/selectors'
-import {select} from '#/main/core/administration/workspace/selectors'
 
 import {
   PageContainer as Page,
@@ -23,282 +18,221 @@ import {
   PageContent,
   PageActions,
   PageAction
-} from '#/main/core/layout/page/index'
+} from '#/main/core/layout/page'
 
-import {LIST_PROP_DEFAULT, LIST_PROP_DISPLAYED, LIST_PROP_DISPLAYABLE, LIST_PROP_FILTERABLE} from '#/main/core/layout/list/utils'
-import {DataList} from '#/main/core/layout/list/components/data-list.jsx'
+import {DataListContainer as DataList} from '#/main/core/layout/list/containers/data-list.jsx'
 
-class Workspaces extends Component {
-  constructor(props) {
-    super(props)
-  }
+const WorkspacesPage = props =>
+  <Page id="workspace-management">
+    <PageHeader title={t('workspaces_management')}>
+      <PageActions>
+        <PageAction
+          id="workspace-add"
+          title={t('create_workspace')}
+          icon="fa fa-plus"
+          primary={true}
+          action={generateUrl('claro_workspace_creation_form')}
+        />
 
-  getWorkspaces(workspaceIds) {
-    return workspaceIds.map(workspaceId => this.props.data.find(workspace => workspaceId === workspace.id))
-  }
+        <PageAction
+          id="workspaces-import"
+          title={t('import_csv')}
+          icon="fa fa-download"
+          action={generateUrl('claro_admin_workspace_import_form')}
+        />
+      </PageActions>
+    </PageHeader>
 
-  getWorkspace(workspaceId) {
-    return this.props.data.find(workspace => workspaceId === workspace.id)
-  }
+    <PageContent>
+      <DataList
+        name="workspaces"
+        definition={[
+          {
+            name: 'name',
+            label: t('name'),
+            renderer: (rowData) => {
+              // variables is used because React will use it has component display name (eslint requirement)
+              const wsLink = <a href={generateUrl('claro_workspace_open', {workspaceId: rowData.id})}>{rowData.name}</a>
 
-  removeWorkspaces(workspaceIds) {
-    const workspaces = this.getWorkspaces(workspaceIds)
+              return wsLink
+            },
+            displayed: true
+          }, {
+            name: 'code',
+            label: t('code'),
+            displayed: true
+          }, {
+            name: 'meta.model',
+            label: t('model'),
+            type: 'boolean',
+            alias: 'model',
+            displayed: true
+          }, {
+            name: 'meta.created',
+            label: t('creation_date'),
+            type: 'date',
+            alias: 'created',
+            displayed: true,
+            filterable: false
+          }, {
+            name: 'meta.personal',
+            label: t('personal_workspace'),
+            type: 'boolean',
+            alias: 'personal'
+          }, {
+            name: 'display.displayable',
+            label: t('displayable_in_workspace_list'),
+            type: 'boolean',
+            alias: 'displayable'
+          }, {
+            name: 'createdAfter',
+            label: t('created_after'),
+            type: 'date',
+            displayable: false
+          }, {
+            name: 'createdBefore',
+            label: t('created_before'),
+            type: 'date',
+            displayable: false
+          }, {
+            name: 'registration.selfRegistration',
+            label: t('public_registration'),
+            type: 'boolean',
+            alias: 'selfRegistration'
+          }, {
+            name: 'registration.selfUnregistration',
+            label: t('public_unregistration'),
+            type: 'boolean',
+            alias: 'selfUnregistration'
+          }, {
+            name: 'restrictions.maxStorage',
+            label: t('max_storage_size'),
+            alias: 'maxStorage'
+          }, {
+            name: 'restrictions.maxResources',
+            label: t('max_amount_resources'),
+            type: 'number',
+            alias: 'maxResources'
+          }, {
+            name: 'restrictions.maxUsers',
+            label: t('workspace_max_users'),
+            type: 'number',
+            alias: 'maxUsers'
+          }
+        ]}
 
-    this.props.showModal(MODAL_DELETE_CONFIRM, {
-      title: transChoice('remove_workspaces', workspaces.length, {count: workspaces.length}, 'platform'),
-      question: t('remove_workspaces_confirm', {
-        workspace_list: workspaces.map(workspace => workspace.name).join(', ')
-      }),
-      handleConfirm: () => this.props.removeWorkspaces(workspaces)
-    })
-  }
+        actions={[
+          ...Configuration.getWorkspacesAdministrationActions().map(action => action.options.modal ? {
+            icon: action.icon,
+            label: action.name(ClarolineTranslator),
+            action: (rows) => props.showModal(MODAL_URL, {
+              url: action.url(rows[0].id)
+            }),
+            context: 'row'
+          } : {
+            icon: action.icon,
+            label: action.name(ClarolineTranslator),
+            action: (rows) => action.url(rows[0].id),
+            context: 'row'
+          }), {
+            icon: 'fa fa-fw fa-copy',
+            label: t('duplicate'),
+            action: (rows) => props.copyWorkspaces(rows, false)
+          }, {
+            icon: 'fa fa-fw fa-clone',
+            label: t('duplicate_model'),
+            action: (rows) => props.copyWorkspaces(rows, true)
+          }, {
+            icon: 'fa fa-fw fa-user',
+            label: t('manage_ws_managers'),
+            action: (rows) => props.manageWorkspaceManagers(rows[0]),
+            context: 'row'
+          }, {
+            icon: 'fa fa-fw fa-trash-o',
+            label: t('delete'),
+            action: (rows) => props.removeWorkspaces(rows),
+            isDangerous: true
+          }
+        ]}
 
-  copyWorkspaces(workspaceIds, asModel = false) {
-    const workspaces = this.getWorkspaces(workspaceIds)
+        card={(row) => ({
+          poster: null,
+          icon: 'fa fa-book',
+          title: row.name,
+          subtitle: row.code,
+          contentText: row.meta.description,
+          flags: [
+            row.meta.personal                 && ['fa fa-user',         t('personal_workspace')],
+            row.meta.model                    && ['fa fa-object-group', t('model')],
+            row.display.displayable           && ['fa fa-eye',          t('displayable_in_workspace_list')],
+            row.registration.selfRegistration && ['fa fa-globe',        t('public_registration')]
+          ].filter(flag => !!flag),
+          footer:
+            <span>
+              created by <b>{row.meta.creator ? row.meta.creator.name : t('unknown')}</b>
+            </span>,
+          footerLong:
+            <span>
+              created at <b>{localeDate(row.meta.created)}</b>,
+              by <b>{row.meta.creator ? row.meta.creator.name: t('unknown')}</b>
+            </span>
+        })}
+      />
+    </PageContent>
+  </Page>
 
-    this.props.showModal(MODAL_CONFIRM, {
-      title: transChoice(asModel ? 'copy_model_workspaces' : 'copy_workspaces', workspaces.length, {count: workspaces.length}, 'platform'),
-      question: t(asModel ? 'copy_model_workspaces_confirm' : 'copy_workspaces_confirm', {
-        workspace_list: workspaces.map(workspace => workspace.name).join(', ')
-      }),
-      handleConfirm: () => this.props.copyWorkspaces(workspaces, asModel)
-    })
-  }
-
-  handleUserSelect(user, workspace) {
-    this.props.addManager(workspace, user)
-  }
-
-  handleUserRemove(user, workspace) {
-    this.props.removeManager(workspace, user)
-  }
-
-  managerUsers(workspaceId) {
-    const workspace = this.props.data.find(workspace => workspaceId === workspace.id)
-
-    this.props.showModal(MODAL_USER_PICKER, {
-      handleSelect: (user) => this.handleUserSelect(user, workspace),
-      handleRemove: (user) => this.handleUserRemove(user, workspace),
-      selected: workspace.managers
-    })
-  }
-
-  render() {
-    return (
-      <Page id="workspace-management">
-        <PageHeader
-          title={t('workspaces_management')}
-        >
-          <PageActions>
-            <PageAction
-              id="workspace-add"
-              title={t('create_workspace')}
-              icon="fa fa-plus"
-              primary={true}
-              action={generateUrl('claro_workspace_creation_form')}
-            />
-
-            <PageAction
-              id="workspaces-import"
-              title={t('import_csv')}
-              icon="fa fa-download"
-              action={generateUrl('claro_admin_workspace_import_form')}
-            />
-          </PageActions>
-        </PageHeader>
-
-        <PageContent>
-          <DataList
-            data={this.props.data}
-            totalResults={this.props.totalResults}
-
-            definition={[
-              {
-                name: 'name',
-                type: 'string',
-                label: t('name'),
-                renderer: (rowData) => <a href={generateUrl('claro_workspace_open', {workspaceId: rowData.id})} >{rowData.name}</a>
-              },
-              {name: 'code', type: 'string', label: t('code')},
-              {name: 'isModel', type: 'boolean', label: t('model')},
-              {name: 'isPersonal', type: 'boolean', label: t('personal_workspace'), flags: LIST_PROP_DEFAULT&~LIST_PROP_DISPLAYED},
-              {name: 'displayable', type: 'boolean', label: t('displayable_in_workspace_list'), flags: LIST_PROP_DEFAULT&~LIST_PROP_DISPLAYED},
-              {name: 'creationDate', type: 'date', label: t('creation_date'), flags:~LIST_PROP_FILTERABLE},
-              {name: 'createdAfter', type: 'date', label: t('created_after'), flags: LIST_PROP_FILTERABLE&~LIST_PROP_DISPLAYABLE&~LIST_PROP_DISPLAYED},
-              {name: 'createdBefore', type: 'date', label: t('created_before'), flags: LIST_PROP_FILTERABLE&~LIST_PROP_DISPLAYABLE&~LIST_PROP_DISPLAYED},
-              {name: 'maxStorageSize', type: 'string', label: t('max_storage_size'), flags: LIST_PROP_DEFAULT&~LIST_PROP_DISPLAYED},
-              {name: 'maxUploadResources', type: 'number', label: t('max_amount_resources'), flags: LIST_PROP_DEFAULT&~LIST_PROP_DISPLAYED},
-              {name: 'maxUsers', type: 'number', label: t('workspace_max_users'), flags: LIST_PROP_DEFAULT&~LIST_PROP_DISPLAYED}
-            ]}
-
-            actions={[
-              ...Configuration.getWorkspacesAdministrationActions().map(action => {
-                return action.options.modal ? {
-                  icon: action.icon,
-                  label: action.name(ClarolineTranslator),
-                  action: (row) => this.props.showModal(MODAL_URL, {
-                    url: action.url(row.id)
-                  })
-                } : {
-                  icon: action.icon,
-                  label: action.name(ClarolineTranslator),
-                  action: (row) => action.url(row.id)
-                }
-              }), {
-                icon: 'fa fa-fw fa-copy',
-                label: t('copy_workspace'),
-                action: (row) => this.copyWorkspaces([row.id], false)
-              }, {
-                icon: 'fa fa-fw fa-clone',
-                label: t('copy_model_workspace'),
-                action: (row) => this.copyWorkspaces([row.id], true)
-              }, {
-                icon: 'fa fa-fw fa-trash-o',
-                label: t('delete'),
-                action: (row) => this.removeWorkspaces([row.id]),
-                isDangerous: true
-              },
-              {
-                icon: 'fa fa-fw fa-user',
-                label: t('manager'),
-                action: (row) => this.managerUsers(row.id),
-                isDangerous: false
-              }
-            ]}
-
-            filters={{
-              current: this.props.filters,
-              addFilter: this.props.addListFilter,
-              removeFilter: this.props.removeListFilter
-            }}
-
-            sorting={{
-              current: this.props.sortBy,
-              updateSort: this.props.updateSort
-            }}
-
-            pagination={Object.assign({}, this.props.pagination, {
-              handlePageChange: this.props.handlePageChange,
-              handlePageSizeUpdate: this.props.handlePageSizeUpdate
-            })}
-
-            selection={{
-              current: this.props.selected,
-              toggle: this.props.toggleSelect,
-              toggleAll: this.props.toggleSelectAll,
-              actions: [
-                {label: t('duplicate'), icon: 'fa fa-fw fa-copy', action: () => this.copyWorkspaces(this.props.selected, false)},
-                {label: t('make_model'), icon: 'fa fa-fw fa-clone', action: () => this.copyWorkspaces(this.props.selected, true)},
-                {label: t('delete'), icon: 'fa fa-fw fa-trash-o', action: () => this.removeWorkspaces(this.props.selected), isDangerous: true}
-              ]
-            }}
-          />
-        </PageContent>
-      </Page>
-    )
-  }
-}
-
-Workspaces.propTypes = {
-  data: T.arrayOf(T.object),
-  totalResults: T.number.isRequired,
-
+WorkspacesPage.propTypes = {
   removeWorkspaces: T.func.isRequired,
   copyWorkspaces: T.func.isRequired,
-
-  sortBy: T.object.isRequired,
-  updateSort: T.func.isRequired,
-
-  pagination: T.shape({
-    pageSize: T.number.isRequired,
-    current: T.number.isRequired
-  }).isRequired,
-  handlePageChange: T.func.isRequired,
-  handlePageSizeUpdate: T.func.isRequired,
-
-  filters: T.array.isRequired,
-  addListFilter: T.func.isRequired,
-  removeListFilter: T.func.isRequired,
-  addManager: T.func.isRequired,
-  removeManager: T.func.isRequired,
-  selected: T.array.isRequired,
-  toggleSelect: T.func.isRequired,
-  toggleSelectAll: T.func.isRequired,
-
+  manageWorkspaceManagers: T.func.isRequired,
   showModal: T.func.isRequired
-}
-
-function mapStateToProps(state) {
-  return {
-    data: select.data(state),
-    totalResults: select.totalResults(state),
-    selected: listSelect.selected(state),
-    pagination: {
-      pageSize: paginationSelect.pageSize(state),
-      current:  paginationSelect.current(state)
-    },
-    filters: listSelect.filters(state),
-    sortBy: listSelect.sortBy(state)
-  }
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    // workspaces
-    removeWorkspaces: (workspaces) => {
-      dispatch(actions.removeWorkspaces(workspaces))
-    },
-    copyWorkspaces: (workspaces, isModel) => {
-      dispatch(actions.copyWorkspaces(workspaces, isModel))
-    },
-    addManager: (workspace, user) => {
-      dispatch(actions.addManager(workspace, user))
-    },
-    removeManager: (workspace, user) => {
-      dispatch(actions.removeManager(workspace, user))
-    },
-    // search
-    addListFilter: (property, value) => {
-      dispatch(listActions.addFilter(property, value))
-      // grab updated workspace list
-      dispatch(actions.fetchWorkspaces())
-    },
-    removeListFilter: (filter) => {
-      dispatch(listActions.removeFilter(filter))
-      // grab updated workspace list
-      dispatch(actions.fetchWorkspaces())
+    removeWorkspaces(workspaces) {
+      dispatch(
+        modalActions.showModal(MODAL_DELETE_CONFIRM, {
+          title: transChoice('remove_workspaces', workspaces.length, {count: workspaces.length}, 'platform'),
+          question: t('remove_workspaces_confirm', {
+            workspace_list: workspaces.map(workspace => workspace.name).join(', ')
+          }),
+          handleConfirm: () => dispatch(actions.removeWorkspaces(workspaces))
+        })
+      )
     },
 
-    // pagination
-    handlePageSizeUpdate: (pageSize) => {
-      dispatch(paginationActions.updatePageSize(pageSize))
-      // grab updated workspace list
-      dispatch(actions.fetchWorkspaces())
-    },
-    handlePageChange: (page) => {
-      dispatch(paginationActions.changePage(page))
-      // grab updated workspace list
-      dispatch(actions.fetchWorkspaces())
-    },
-
-    // sorting
-    updateSort: (property) => {
-      dispatch(listActions.updateSort(property))
-      // grab updated workspace list
-      dispatch(actions.fetchWorkspaces())
+    copyWorkspaces(workspaces, asModel = false) {
+      dispatch(
+        modalActions.showModal(MODAL_CONFIRM, {
+          title: transChoice(asModel ? 'copy_model_workspaces' : 'copy_workspaces', workspaces.length, {count: workspaces.length}, 'platform'),
+          question: t(asModel ? 'copy_model_workspaces_confirm' : 'copy_workspaces_confirm', {
+            workspace_list: workspaces.map(workspace => workspace.name).join(', ')
+          }),
+          handleConfirm: () => dispatch(actions.copyWorkspaces(workspaces, asModel))
+        })
+      )
     },
 
-    // selection
-    toggleSelect: (id) => dispatch(listActions.toggleSelect(id)),
-    toggleSelectAll: (items) => dispatch(listActions.toggleSelectAll(items)),
+    manageWorkspaceManagers(workspace) {
+      dispatch(
+        modalActions.showModal(MODAL_USER_PICKER, {
+          title: t('manage_ws_managers'),
+          selected: workspace.managers,
+          handleSelect: (user) => dispatch(actions.addManager(workspace, user)),
+          handleRemove: (user) => dispatch(actions.removeManager(workspace, user))
+        })
+      )
+    },
 
-    // modals
-    showModal(modalType, modalProps) {
-      dispatch(modalActions.showModal(modalType, modalProps))
+    showModal(type, props) {
+      dispatch(modalActions.showModal(type, props))
     }
   }
 }
 
-const ConnectedWorkspaces = connect(mapStateToProps, mapDispatchToProps)(Workspaces)
+const Workspaces = connect(null, mapDispatchToProps)(WorkspacesPage)
 
-export {ConnectedWorkspaces as Workspaces}
+export {
+  Workspaces
+}

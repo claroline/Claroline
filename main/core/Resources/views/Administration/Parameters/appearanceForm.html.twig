@@ -30,11 +30,11 @@
         <div class="panel-body">
             {% set resourceIconSetHtml = form_row(form_appearance.resource_icon_set) %}
             {{ form_widget(form_appearance) }}
-            {#<div class="form-group row">
+            <div class="form-group row">
                 <div class="col-md-9 col-md-offset-3">
                     <a href="{{ path("claro_admin_theme_list") }}"><i class="fa fa-pencil-square-o"></i> {{ 'themes_management' | trans({}, 'platform') }}</a>
                 </div>
-            </div>#}
+            </div>
             {{ resourceIconSetHtml|raw }}
             <div class="form-group row">
                 <div class="col-md-9 col-md-offset-3">

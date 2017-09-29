@@ -1,0 +1,262 @@
+.data-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    // Responsive table.
+    //
+    // I put it here to avoid possible side effects in other use of .table.
+    // The code can seem a little bit weird but it permits to have all rows the same height (1 line)
+    // and to add ellipsis on long texts.
+    //
+    // This is far from perfect but it's the best I can do for now.
+    //
+    // Drawbacks :
+    //  - all columns get the same width. So for some data it's too large (cf. boolean) or too small (long text / links).
+    /*.table td,*/ // it breaks dropdowns if uncommented
+    .table th {
+        max-width: 1px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
+
+    .pagination-container {
+        margin-top: auto; // force align to the bottom if content doesn't fill the screen
+    }
+}
+
+.list-header {
+    display: flex;
+    align-items: stretch;
+    background: @list-controls-bg;
+}
+
+.list-search {
+    flex: 1;
+    position: relative;
+    font-size: @font-size-large;
+
+    &.open {
+        .box-shadow(0 1px 2px rgba(0,0,0,.5)); // todo : use a var
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        padding: @padding-large-vertical;
+        color: @list-controls-color;
+        height: @input-height-large;
+        width: @input-height-large;
+        line-height: @line-height-large;
+        text-align: center;
+    }
+
+    .search-filters {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-left: @input-height-large; // because of the absolute search icon
+    }
+
+    .search-control {
+        width: auto;
+        flex: 1;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+
+        .input-size(@input-height-large; 0; @padding-large-horizontal; @font-size-large; @line-height-large; 0);
+
+        padding-left: 0; // ugly
+    }
+
+    .search-filter {
+        display: inline-block;
+        font-size: @font-size-small;
+        margin: @padding-large-vertical @padding-large-horizontal @padding-large-vertical 0;
+        line-height: @line-height-large;
+        white-space: nowrap;
+        background: @state-info-bg;
+        color: @state-info-text;
+        border: @label-border-radius;
+        border-radius: @border-radius-small;
+
+        .search-filter-prop {
+            display: inline-block;
+            background: @state-info-text;
+            color: @state-info-bg;
+            padding: 0.4em 0.6em;
+            font-weight: bold;
+            border-radius: @border-radius-small 0 0 @border-radius-small;
+        }
+
+        .search-filter-value {
+            display: inline-block;
+            padding: 0.4em 0.6em;
+
+            .btn {
+                font-size: @font-size-small;
+                line-height: 1;
+                border: none;
+                color: @state-info-text;
+                padding: 0;
+                margin-left: 0.6em;
+
+                &:hover,
+                &:focus {
+                    color: darken(@state-info-text, 10%)
+                }
+            }
+        }
+    }
+
+    .search-available-filters {
+        position: absolute;
+        z-index: @zindex-list-search;
+        top: 100%;
+        left: 0;
+        right: 0;
+        padding: 0;
+        margin: -1px 0 0;
+        font-size: @font-size-base;
+        background: @list-controls-bg;
+        .box-shadow(0 2px 2px rgba(0,0,0,.5)); // todo use a var
+
+
+        > li {
+            list-style-type: none;
+            border-top: 1px solid @list-controls-border;
+        }
+
+        .available-filter {
+            display: flex;
+            flex-wrap: wrap; // todo : enhance responsive. it's ugly on XS screen
+            justify-content: space-between;
+            padding: 0 @padding-large-horizontal;
+            color: @list-controls-color;
+
+            .btn + .btn {
+                margin-left: 5px;
+            }
+
+            .btn-filter {
+                background: #E4E4E4;
+
+                &:hover,
+                &:focus {
+                    background: #E0E0E0;
+                }
+            }
+        }
+
+        .available-filter-active {
+            &:hover,
+            &:focus {
+                background: @list-controls-active-bg;
+                color: @list-controls-active-color;
+            }
+        }
+
+        .available-filter-disabled {
+            background: @list-controls-disabled-bg;
+
+            .available-filter-prop {
+                color: @list-controls-disabled-color;
+                opacity: .5;
+            }
+        }
+
+        .available-filter-prop {
+            display: inline-block;
+            padding: 10px 0;
+            font-weight: bold;
+            color: @state-info-text;
+
+            small {
+                font-weight: normal;
+                color: @text-muted;
+            }
+
+            .fa-fw {
+                font-size: @font-size-small;
+                color: @gray;
+                margin-right: @padding-large-horizontal;
+            }
+        }
+
+        .available-filter-form {
+            display: flex;
+            align-items: center;
+
+            .available-filter-value {
+                font-style: italic;
+                padding: 10px 0;
+            }
+        }
+    }
+}
+
+.list-selected {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background: @list-controls-bg;
+
+    .list-selected-label {
+        .fa {
+            text-align: center;
+        }
+    }
+
+    .list-selected-actions {
+        white-space: nowrap; // avoids buttons to break on multi lines
+    }
+}
+
+.list-options {
+    display: flex;
+    align-items: flex-end;
+
+    .btn {
+        line-height: @line-height-large;
+        height: @input-height-large;
+        padding: @padding-large-vertical @padding-large-horizontal;
+    }
+
+    .open {
+        .btn {
+            box-shadow: none;
+            background: @list-controls-active-bg;
+            color: @list-controls-active-color;
+        }
+    }
+}
+
+.list-empty {
+    display: block;
+    font-size: @font-size-large;
+    padding: @panel-body-padding;
+    text-align: center;
+    font-style: italic;
+}
+
+.list-footer {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+
+    .count {
+        padding: @padding-base-vertical @padding-base-horizontal;
+        color: @list-controls-color;
+        background: @list-controls-bg;
+        border: 1px solid transparent;
+        font-weight: bold;
+        border-radius: @border-radius-base;
+    }
+}

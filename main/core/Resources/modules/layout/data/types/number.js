@@ -6,9 +6,5 @@ export const numberDefinition = {
   parse: (display) => parseFloat(display),
   // nothing special to do
   render: (raw) => raw,
-  validate: (value) => !isNaN(parseFloat(value)) && isFinite(value),
-  components: {
-    form: null,
-    table: null
-  }
+  validate: (value) => !isNaN(parseFloat(value)) && isFinite(value)
 }

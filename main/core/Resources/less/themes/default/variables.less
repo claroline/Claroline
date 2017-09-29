@@ -13,24 +13,26 @@
 
 @enable-box-shadow:       true;
 @enable-border-radius:    true;
+@enable-border:           true;
 
 @font-size-modifier:      1;
 
-@box-shadow-base:         0 0 2px rgba(0, 0, 0, 0.10);
+@box-shadow-base:         0 0 2px rgba(0, 0, 0, 0.15);
 @component-margin-bottom: @line-height-computed;
 
+// react strips whitespaces, so we need to move icons to avoid from text
+@icon-text-spacer: 7px;
 @images-path: "images/";
 
 // -
 // Z-indexes
 // ---
-
 @zindex-sidebar:    @zindex-navbar-fixed - 1;
 // z-index for full screen pages.
 // we want to pass over navbars but under tooltips, popovers and modals
 // modify with caution !
-@zindex-fullscreen: 1035;
-
+@zindex-fullscreen:  1035;
+@zindex-list-search: @zindex-popover;
 
 // -
 // Application
@@ -165,7 +167,7 @@
 // -
 // Forms
 // ---
-@help-block-color:          lighten(@text-color, 25%); // lighten the text some for contrast
+@help-block-color:          lighten(@text-color, 25%); // lighten the text to add some for contrast
 @help-block-font-size:      12px;
 
 // Labels
@@ -173,6 +175,18 @@
 @input-success-label-color: @text-color; // default bootstrap behavior : @state-success-text
 @input-warning-label-color: @text-color; // default bootstrap behavior : @state-warning-text
 @input-error-label-color:   @text-color; // default bootstrap behavior : @state-error-text
+
+
+// -
+// Lists
+// ---
+@list-controls-bg:             #EBEBEB;
+@list-controls-color:          #3A3A3A;
+@list-controls-border:         #E1E1E1;
+@list-controls-disabled-bg:    #F4F4F4;
+@list-controls-disabled-color: #666666;
+@list-controls-active-bg:      #E4E4E4;
+@list-controls-active-color:   #262626;
 
 
 // -

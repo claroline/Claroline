@@ -1,3 +1,7 @@
+/*
+ * Table component styles
+ */
+
 .table {
     th {
         // todo : this needs to be removed but I don't know where it's used
@@ -31,13 +35,72 @@
     > tbody {
         background: @panel-bg;
         .box-shadow(@box-shadow-base);
-        border: 1px solid @table-border-color;
+
+        th:first-child,
+        td:first-child {
+            border-left: 1px solid @table-border-color;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-right: 1px solid @table-border-color;
+        }
+
+        > tr:last-child th,
+        > tr:last-child td {
+            border-bottom: 1px solid @table-border-color;
+        }
 
         > tr.selected {
             background-color: @state-info-bg;
+            border-color: #abcfe0; // todo : use a var
+
+            > th,
+            > td {
+                border-color: #abcfe0; // todo : use a var
+            }
+
+            + tr > th,
+            + tr > td {
+                border-top-color: #abcfe0; // todo : use a var
+            }
+        }
+
+        > tr.selected:hover {
+            background-color: #b5d9ea !important; // important is required to override strips color
+        }
+    }
+
+    .selected-actions-row > td {
+        padding: 0;
+        border-top: none;
+    }
+
+    .list-selected {
+        .list-selected-label {
+            padding: @table-cell-padding 0;
+            .fa {
+                width: 30px; // same as .checkbox-cell. TODO : use a var
+                margin-right: @table-cell-padding;
+            }
+        }
+
+        .btn {
+            padding: @table-cell-padding;
         }
     }
 }
+
+.table-striped {
+    > tbody > tr.selected:nth-of-type(odd) {
+        background-color: #bfe3f4;
+    }
+}
+
+
+// -
+// Cells
+// ---
 
 .sorting-cell {
     padding-right: 24px !important; // arbitrary value to have the sorting indicator centered in the padding. FIXME
@@ -50,26 +113,52 @@
     }
 }
 
-.actions-cell, // because this cell should only contain a dropdown to gain horizontal space (no buttons bar)
-.checkbox-cell {
-    width: 40px;
-}
+/*.html-cell {
+    font-size: @font-size-small;
+    color: @text-muted;
+}*/
 
-.checkbox-cell {
-    text-align: center;
-}
-
-.table-cell-tooltip {
-    > * {
-        display: inline-block; // todo : but why ?
-        cursor: help;
+.boolean-cell {
+    .false {
+        opacity: 0.3;
     }
+}
+
+.checkbox-cell {
+    width: 30px;
+    text-align: center;
 }
 
 .table-actions, // deprecated. for retro compatibility (questions bank)
 .actions-cell {
+    width: 36px; // because this cell should only contain a dropdown to gain horizontal space (no buttons bar)
+    padding: 0 !important; // move padding on btns
     white-space: nowrap; // avoids buttons to break on multi lines
+
     .btn {
-        padding: 2px;
+        padding: @table-cell-padding;
+    }
+
+    .dropdown-menu {
+        margin-top: 0;
+    }
+}
+
+.table-condensed {
+    .list-selected {
+        .list-selected-label {
+            padding: @table-condensed-cell-padding 0;
+            .fa {
+                margin-right: @table-condensed-cell-padding;
+            }
+        }
+
+        .btn {
+            padding: @table-condensed-cell-padding;
+        }
+    }
+
+    .actions-cell .btn {
+        padding: @table-condensed-cell-padding;
     }
 }

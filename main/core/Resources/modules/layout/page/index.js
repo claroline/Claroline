@@ -1,3 +1,6 @@
+/**
+ * Page module.
+ */
 
 // presentational components
 export {

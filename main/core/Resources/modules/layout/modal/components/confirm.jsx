@@ -19,7 +19,7 @@ const ConfirmModal = props =>
         props.fadeModal()
       }}
     >
-      {props.confirmButtonText || t('Ok')}
+      {props.confirmButtonText || t('confirm')}
     </button>
   </BaseModal>
 
@@ -31,4 +31,6 @@ ConfirmModal.propTypes = {
   fadeModal: T.func.isRequired
 }
 
-export {ConfirmModal}
+export {
+  ConfirmModal
+}

@@ -9,16 +9,8 @@ import {UserTypeahead} from '#/main/core/layout/typeahead/users/typeahead.jsx'
 const UserPickerModal = props =>
   <BaseModal {...props}>
     <Modal.Body>
-      <UserTypeahead {...props}/>
+      <UserTypeahead {...props} />
     </Modal.Body>
-    <Modal.Footer>
-      <button
-        className="btn btn-primary"
-        onClick={() => props.fadeModal()}
-      >
-        {t('Ok')}
-      </button>
-    </Modal.Footer>
   </BaseModal>
 
 UserPickerModal.propTypes = {
@@ -35,4 +27,6 @@ UserPickerModal.defaultProps = {
   selected: []
 }
 
-export {UserPickerModal}
+export {
+  UserPickerModal
+}

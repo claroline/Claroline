@@ -93,7 +93,7 @@ class WorkspaceManager
     private $sut;
     /** @var PagerFactory */
     private $pagerFactory;
-    /** @var WorkspaceFavouriteRepository */
+    /** @var ObjectRepository */
     private $workspaceFavouriteRepo;
     private $container;
     /** @var array */
@@ -152,7 +152,6 @@ class WorkspaceManager
         $this->orderedToolRepo = $om->getRepository('ClarolineCoreBundle:Tool\OrderedTool');
         $this->resourceRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceNode');
         $this->resourceRightsRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceRights');
-        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
         $this->workspaceRepo = $om->getRepository('ClarolineCoreBundle:Workspace\Workspace');
         $this->workspaceOptionsRepo = $om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceOptions');
@@ -259,6 +258,9 @@ class WorkspaceManager
      */
     public function deleteWorkspace(Workspace $workspace)
     {
+        // Log action
+        $this->dispatcher->dispatch('log', 'Log\LogWorkspaceDelete', [$workspace]);
+
         $this->om->startFlushSuite();
         $root = $this->resourceManager->getWorkspaceRoot($workspace);
 
@@ -1223,7 +1225,7 @@ class WorkspaceManager
     public function getNonPersonalByCodeAndName($code, $name, $offset = null, $limit = null)
     {
         return !$code && !$name ?
-            $this->workspaceRepo->findBy(['isPersonal' => false]) :
+            $this->workspaceRepo->findBy(['personal' => false]) :
             $this->workspaceRepo->findNonPersonalByCodeAndName($code, $name, $offset, $limit);
     }
 
@@ -1292,24 +1294,43 @@ class WorkspaceManager
     //used for cli copy
     public function copyFromCode(Workspace $workspace, $code)
     {
-        $newWorkspace = new Workspace();
+        $newWorkspace = $this->copy($workspace, new Workspace());
+
+        // override code & name
         $newWorkspace->setCode($code);
         $newWorkspace->setName($code);
 
-        return $this->copy($workspace, $newWorkspace);
+        return $newWorkspace;
     }
 
-    public function copy(Workspace $workspace, Workspace $newWorkspace)
+    /**
+     * Copies a Workspace.
+     *
+     * @param Workspace $workspace    - the original workspace to copy
+     * @param Workspace $newWorkspace - the copy
+     * @param bool      $model        - if true, the new workspace will be a model
+     *
+     * @return Workspace
+     */
+    public function copy(Workspace $workspace, Workspace $newWorkspace, $model = false)
     {
         $newWorkspace->setGuid(uniqid('', true));
+
+        $newWorkspace->setModel($model);
+
+        // create new name and code
+        $prefix = $model ? '[MODEL]' : '[COPY]';
+        $newWorkspace->setName($prefix.' '.$workspace->getName());
+        $newWorkspace->setCode($prefix.' '.$workspace->getCode());
+
         $this->createWorkspace($newWorkspace);
         $token = $this->container->get('security.token_storage')->getToken();
         $user = null;
-        $resourceInfos = ['copies' => []];
+        $resourceInfo = ['copies' => []];
 
         if ($token && $token->getUser() !== 'anon.') {
             $user = $workspace->getCreator() ?
-            $newWorkspace->getCreator() :
+            $workspace->getCreator() :
             $this->container->get('security.token_storage')->getToken()->getUser();
         }
 
@@ -1358,9 +1379,9 @@ class WorkspaceManager
           $this->getArrayRolesByWorkspace($newWorkspace),
           $user,
           $baseRoot,
-          $resourceInfos
+            $resourceInfo
         );
-        $this->duplicateOrderedTools($workspace, $newWorkspace, $resourceInfos);
+        $this->duplicateOrderedTools($workspace, $newWorkspace, $resourceInfo);
         $this->om->endFlushSuite();
 
         return $newWorkspace;
@@ -1808,7 +1829,7 @@ class WorkspaceManager
     public function getDefaultModel($isPersonal = false)
     {
         $name = $isPersonal ? 'default_personal' : 'default_workspace';
-        $workspace = $this->workspaceRepo->findOneBy(['code' => $name, 'isPersonal' => $isPersonal, 'isModel' => true]);
+        $workspace = $this->workspaceRepo->findOneBy(['code' => $name, 'personal' => $isPersonal, 'model' => true]);
         if (!$workspace) {
             //don't log this or it'll crash everything during the platform installation
             //(some database tables aren't already created because they come from plugins)
@@ -1817,7 +1838,7 @@ class WorkspaceManager
             $workspace->setName($name);
             $workspace->setIsPersonal($isPersonal);
             $workspace->setCode($name);
-            $workspace->setIsModel(true);
+            $workspace->setModel(true);
             $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultUser());
             $templateName = $isPersonal ? 'claroline.param.personal_template' : 'claroline.param.default_template';
             $template = new File($this->container->getParameter($templateName));
@@ -1826,6 +1847,20 @@ class WorkspaceManager
         }
 
         return $workspace;
+    }
+
+    /**
+     * Retrieves the managers list for a workspace.
+     *
+     * @param Workspace $workspace
+     *
+     * @return User[]
+     */
+    public function getManagers(Workspace $workspace)
+    {
+        $roleManager = $this->roleManager->getManagerRole($workspace);
+
+        return $this->userRepo->findUsersByRolesIncludingGroups([$roleManager]);
     }
 
     public function addRecentWorkspaceForUser(User $user, Workspace $workspace)

@@ -1,4 +1,4 @@
-export function getOffsets(element, selection = null) {
+function getOffsets(element, selection = null) {
   //tinymce has his own selection object so we pass it if we must. It might work with the window one (untested)
   if (!selection) {
     selection = window.getSelection()
@@ -78,4 +78,8 @@ function getTillChar(html, index, marker) {
   }
 
   return length
+}
+
+export {
+  getOffsets
 }

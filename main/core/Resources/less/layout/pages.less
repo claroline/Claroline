@@ -77,21 +77,16 @@
 
 // Current styles permit to have 7 buttons in one line on 360px screens (without btn groups)
 .page-action-btn {
-    color: #333333;
-    background: #EBEBEB;
     position: relative; // for buttons with labels
     border-radius: 50%;
     padding: .65em;
-    border: 1px solid transparent !important;
+
+    &.page-action-default {
+        .button-variant(#333333; #EBEBEB; transparent);
+    }
 
     &.page-action-primary {
-        color: @btn-primary-color;
-        background: @btn-primary-bg;
-
-        &:hover {
-            color: @btn-primary-color;
-            background-color: darken(@btn-primary-bg, 10%);
-        }
+        .button-variant(@btn-primary-color; @btn-primary-bg; transparent);
     }
 
     // displays icon as a square
@@ -115,20 +110,6 @@
         position: absolute;
         bottom: -5px;
         right: 0;
-    }
-
-    // states
-    &[disabled],
-    &.disabled {
-
-    }
-    &:hover,
-    &:focus,
-    &:active,
-    &.active,
-    &.open > .dropdown-toggle {
-        color: #333333; // body color
-        background: #e6e6e6; // todo use a var (same value as btn-default for now)
     }
 }
 

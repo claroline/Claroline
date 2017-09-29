@@ -5,18 +5,23 @@ import {MessageModal} from './components/message.jsx'
 import {ConfirmModal} from './components/confirm.jsx'
 import {DeleteConfirmModal} from './components/delete-confirm.jsx'
 import {UrlModal} from './components/url.jsx'
+import {UserPickerModal} from './components/user-picker.jsx'
+import {GenericTypePicker} from './components/generic-type-picker.jsx'
 
 export const MODAL_MESSAGE = 'MODAL_MESSAGE'
 export const MODAL_CONFIRM = 'MODAL_CONFIRM'
 export const MODAL_DELETE_CONFIRM = 'MODAL_DELETE_CONFIRM'
 export const MODAL_URL = 'MODAL_URL'
 export const MODAL_USER_PICKER = 'MODAL_USER_PICKER'
+export const MODAL_GENERIC_TYPE_PICKER = 'MODAL_GENERIC_TYPE_PICKER'
 
 const modals = {
   [MODAL_MESSAGE]: MessageModal,
   [MODAL_CONFIRM]: ConfirmModal,
   [MODAL_DELETE_CONFIRM]: DeleteConfirmModal,
-  [MODAL_URL]: UrlModal
+  [MODAL_URL]: UrlModal,
+  [MODAL_USER_PICKER]: UserPickerModal, // todo : register it only in tools using it (users with no edit rights don't need it)
+  [MODAL_GENERIC_TYPE_PICKER]: GenericTypePicker // same here
 }
 
 export function registerModalType(type, component) {

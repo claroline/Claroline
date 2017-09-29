@@ -3,7 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer;
 
 use Claroline\CoreBundle\Entity\Theme\Theme;
-use Claroline\CoreBundle\Manager\Theme\ThemeManager;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -12,21 +12,26 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ThemeSerializer
 {
-    /** @var ThemeManager */
-    private $themeManager;
+    /** @var PlatformConfigurationHandler */
+    private $config;
 
     /**
      * ThemeSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "themeManager" = @DI\Inject("claroline.manager.theme_manager")
+     *     "config"         = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "userSerializer" = @DI\Inject("claroline.serializer.user")
      * })
      *
-     * @param ThemeManager $themeManager
+     * @param PlatformConfigurationHandler $config
+     * @param UserSerializer               $userSerializer
      */
-    public function __construct(ThemeManager $themeManager)
-    {
-        $this->themeManager = $themeManager;
+    public function __construct(
+        PlatformConfigurationHandler $config,
+        UserSerializer $userSerializer
+    ) {
+        $this->config = $config;
+        $this->userSerializer = $userSerializer;
     }
 
     /**
@@ -41,17 +46,37 @@ class ThemeSerializer
         return [
             'id' => $theme->getUuid(),
             'name' => $theme->getName(),
-            'current' => $this->themeManager->isCurrentTheme($theme),
+            'current' => $theme->getNormalizedName() === $this->config->getParameter('theme'),
             'meta' => [
                 'description' => $theme->getDescription(),
                 'default' => $theme->isDefault(),
                 'enabled' => $theme->isEnabled(),
                 'custom' => $theme->isCustom(),
                 'plugin' => $theme->getPlugin() ? $theme->getPlugin()->getDisplayName() : null,
+                'creator' => $theme->getUser() ? $this->userSerializer->serialize($theme->getUser()) : null,
             ],
             'parameters' => [
                 'extendDefault' => $theme->isExtendingDefault(),
             ],
         ];
+    }
+
+    /**
+     * Deserializes JSON api data into a Theme entity.
+     *
+     * @param array $data  - the data to deserialize
+     * @param Theme $theme - the theme entity to update
+     *
+     * @return Theme - the updated theme entity
+     */
+    public function deserialize(array $data, Theme $theme = null)
+    {
+        $theme = $theme ?: new Theme();
+
+        $theme->setName($data['name']);
+
+        // todo : update other themes props
+
+        return $theme;
     }
 }

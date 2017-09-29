@@ -19,7 +19,7 @@ class UserSerializer
     private $tokenStorage;
 
     /**
-     * ResourceNodeManager constructor.
+     * UserManager constructor.
      *
      * @DI\InjectParams({
      *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
@@ -44,20 +44,23 @@ class UserSerializer
     /**
      * Serializes a Workspace entity for the JSON api.
      *
-     * @param User $user   - the user to serialize
-     * @param bool $public
+     * @param User  $user    - the user to serialize
+     * @param array $options
      *
-     * @return array - the serialized representation of the workspace
+     * @return array - the serialized representation of the user
      */
-    public function serialize(User $user, $options = [])
+    public function serialize(User $user, array $options = [])
     {
-        $isPublic = isset($options['public']) ? $options['public'] : false;
-
-        if ($isPublic) {
+        if (isset($options['public']) && $options['public']) {
             return $this->serializePublic($user);
         }
 
-        return [];
+        return [
+            'id' => $user->getId(),
+            'uuid' => $user->getGuid(),
+            'name' => $user->getFirstName().' '.$user->getLastName(),
+            'username' => $user->getUsername(),
+        ];
     }
 
     public function serializePublic(User $user)

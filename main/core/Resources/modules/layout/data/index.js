@@ -4,7 +4,6 @@ import {BOOLEAN_TYPE,  booleanDefinition}  from '#/main/core/layout/data/types/b
 import {COLOR_TYPE,    colorDefinition}    from '#/main/core/layout/data/types/color'
 import {DATE_TYPE,     dateDefinition}     from '#/main/core/layout/data/types/date/index'
 import {DATETIME_TYPE, datetimeDefinition} from '#/main/core/layout/data/types/datetime'
-import {FLAG_TYPE,     flagDefinition}     from '#/main/core/layout/data/types/flag/index'
 import {HTML_TYPE,     htmlDefinition}     from '#/main/core/layout/data/types/html'
 import {IP_TYPE,       ipDefinition}       from '#/main/core/layout/data/types/ip'
 import {NUMBER_TYPE,   numberDefinition}   from '#/main/core/layout/data/types/number'
@@ -19,7 +18,6 @@ registerType(BOOLEAN_TYPE,  booleanDefinition)
 registerType(COLOR_TYPE,    colorDefinition)
 registerType(DATE_TYPE,     dateDefinition)
 registerType(DATETIME_TYPE, datetimeDefinition)
-registerType(FLAG_TYPE,     flagDefinition)
 registerType(HTML_TYPE,     htmlDefinition)
 registerType(IP_TYPE,       ipDefinition)
 registerType(NUMBER_TYPE,   numberDefinition)
@@ -41,6 +39,10 @@ export function registerType(typeName, typeDefinition) {
 
   // register the new type
   dataTypes[typeName] = definition
+}
+
+export function getTypes() {
+  return dataTypes
 }
 
 export function getType(typeName) {

@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\API;
 
-use Claroline\CoreBundle\API\SerializerProvider;
+use Claroline\CoreBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Theme\ThemeManager;
@@ -22,12 +22,14 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
+ * JSON API for theme management.
+ *
  * @EXT\Route("/themes", name="claro_theme", options={"expose" = true})
  */
 class ThemeController
 {
-    /** @var SerializerProvider */
-    private $serializer;
+    /** @var FinderProvider */
+    private $finder;
 
     /** @var ThemeManager */
     private $manager;
@@ -36,19 +38,61 @@ class ThemeController
      * ThemeController constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "finder"     = @DI\Inject("claroline.api.finder"),
      *     "manager"    = @DI\Inject("claroline.manager.theme_manager")
      * })
      *
-     * @param SerializerProvider $serializer
-     * @param ThemeManager       $manager
+     * @param FinderProvider $finder
+     * @param ThemeManager   $manager
      */
     public function __construct(
-        SerializerProvider $serializer,
-        ThemeManager $manager)
-    {
-        $this->serializer = $serializer;
+        FinderProvider $finder,
+        ThemeManager $manager
+    ) {
+        $this->finder = $finder;
         $this->manager = $manager;
+    }
+
+    /**
+     * @EXT\Route("", name="claro_theme_list")
+     * @EXT\Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function listAction(Request $request)
+    {
+        return new JsonResponse(
+            $this->finder->search(
+                'Claroline\CoreBundle\Entity\Theme\Theme',
+                $request->query->all()
+            )
+        );
+    }
+
+    /**
+     * Creates a new theme.
+     *
+     * @EXT\Route("", name="claro_theme_create")
+     * @EXT\Method("POST")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function createAction(Request $request)
+    {
+        try {
+            $theme = $this->manager->create(json_decode($request->getContent(), true));
+
+            return new JsonResponse(
+                $this->manager->serialize($theme),
+                201
+            );
+        } catch (\Exception $e) {
+            return new JsonResponse($e->getMessage(), 422);
+        }
     }
 
     /**
@@ -68,9 +112,11 @@ class ThemeController
         $this->assertCanEdit($theme, $user);
 
         try {
-            $updated = $this->manager->update($theme, json_decode($request->getContent(), true));
+            $this->manager->update($theme, json_decode($request->getContent(), true));
 
-            return new JsonResponse($updated, 200);
+            return new JsonResponse(
+                $this->manager->serialize($theme)
+            );
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }

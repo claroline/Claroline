@@ -82,12 +82,13 @@ export function tval(message, placeholders = {}) {
  * Shortcut to access simple translation without placeholders.
  *
  * @param {string} message
+ * @param {object} placeholders
  * @param {string} domain
  *
  * @returns {string}
  */
-export function tex(message, domain = 'ujm_exo') {
-  return trans(message, {}, domain)
+export function tex(message, placeholders = {}, domain = 'ujm_exo') {
+  return trans(message, placeholders, domain)
 }
 
 /**

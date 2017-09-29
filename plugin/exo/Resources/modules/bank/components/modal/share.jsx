@@ -3,12 +3,14 @@ import {PropTypes as T} from 'prop-types'
 import Modal from 'react-bootstrap/lib/Modal'
 
 import {update} from './../../../utils/utils'
-import {t, tex} from '#/main/core/translation'
+import {tex} from '#/main/core/translation'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {UserTypeahead} from './../../../users/components/typeahead.jsx'
 
 export const MODAL_SHARE = 'MODAL_SHARE'
+
+// TODO : use core UserTypeahead
 
 const SelectedUsers = props =>
   <ul className="list-group">
@@ -20,7 +22,7 @@ const SelectedUsers = props =>
           className="btn btn-link btn-sm"
           onClick={() => props.deselect(user)}
         >
-          <span className="fa fa-fw fa-times"></span>
+          <span className="fa fa-fw fa-times" />
         </button>
       </li>
     )}
@@ -34,7 +36,7 @@ SelectedUsers.propTypes = {
   deselect: T.func.isRequired
 }
 
-export class ShareModal extends Component {
+class ShareModal extends Component {
   constructor(props) {
     super(props)
 
@@ -92,24 +94,22 @@ export class ShareModal extends Component {
           }
         </Modal.Body>
 
-        <Modal.Footer>
-          <button className="btn btn-default" onClick={this.props.fadeModal}>
-            {t('cancel')}
-          </button>
-          <button
-            className="btn btn-primary"
-            disabled={0 === this.state.users.length}
-            onClick={() => this.props.handleShare(this.state.users, this.state.adminRights)}
-          >
-            {tex('share')}
-          </button>
-        </Modal.Footer>
+        <button
+          className="modal-btn btn btn-primary"
+          disabled={0 === this.state.users.length}
+          onClick={() => this.props.handleShare(this.state.users, this.state.adminRights)}
+        >
+          {tex('share')}
+        </button>
       </BaseModal>
     )
   }
 }
 
 ShareModal.propTypes = {
-  fadeModal: T.func.isRequired,
   handleShare: T.func.isRequired
+}
+
+export {
+  ShareModal
 }

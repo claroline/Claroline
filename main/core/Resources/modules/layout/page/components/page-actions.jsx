@@ -26,7 +26,8 @@ const PageAction = props =>
           'btn page-action-btn',
           {
             'disabled': props.disabled,
-            'page-action-primary': props.primary
+            'page-action-primary': props.primary,
+            'page-action-default': !props.primary
           },
           props.className
         )}
@@ -43,7 +44,8 @@ const PageAction = props =>
           'btn page-action-btn',
           {
             'disabled': props.disabled,
-            'page-action-primary': props.primary
+            'page-action-primary': props.primary,
+            'page-action-default': !props.primary
           },
           props.className
         )}
@@ -111,7 +113,7 @@ const MoreAction = props =>
     <DropdownButton
       id="page-more"
       title={<span className="page-action-icon fa fa-ellipsis-v" />}
-      className="btn page-action-btn"
+      className="btn page-action-btn page-action-default"
       noCaret={true}
       pullRight={true}
     >

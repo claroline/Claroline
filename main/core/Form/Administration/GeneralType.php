@@ -263,7 +263,7 @@ class GeneralType extends AbstractType
                 'integer',
                 [
                     'required' => false,
-                    'label' => 'workspace_max_users',
+                    'label' => 'workspaces_max_users',
                     'disabled' => isset($this->lockedParams['max_workspace_users']),
                 ]
             )

@@ -4,7 +4,6 @@
 
 @import "color-picker";
 
-@form-icon-spacer-h: 7px; // utility to fix font-awesome spacing with text (this is not supposed to be themed)
 
 // Fixes checkbox and radio button display issue on inline
 // Combine with change in form_theme.html.twig and form_theme_vertical.html.twig
@@ -34,7 +33,7 @@ form .global-error {
 
 .error-message {
     .fa {
-        margin-right: @form-icon-spacer-h;
+        margin-right: @icon-text-spacer;
     }
 }
 
@@ -46,7 +45,7 @@ form .global-error {
     font-size: @help-block-font-size;
 
     .fa {
-        margin-right: @form-icon-spacer-h;
+        margin-right: @icon-text-spacer;
     }
 }
 
@@ -65,7 +64,7 @@ form .global-error {
 
 .toggleable-set {
     .toggleable-set-toggle .fa {
-        margin-right: @form-icon-spacer-h;
+        margin-right: @icon-text-spacer;
     }
 }
 
@@ -81,6 +80,10 @@ form .global-error {
 // -
 // Fields
 // ---
+
+input[type=checkbox] {
+    cursor: pointer;
+}
 
 .checkbox-with-input,
 .radio-with-input {

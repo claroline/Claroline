@@ -1,18 +1,18 @@
 import {makeActionCreator} from '#/main/core/utilities/redux'
 import {generateUrl} from '#/main/core/fos-js-router'
-import {REQUEST_SEND} from '#/main/core/api/actions'
+
 import {actions as listActions} from '#/main/core/layout/list/actions'
-import {select as listSelect} from '#/main/core/layout/list/selectors'
-import {actions as paginationActions} from '#/main/core/layout/pagination/actions'
-import {select as paginationSelect} from '#/main/core/layout/pagination/selectors'
+import {utils as listUtils} from '#/main/core/layout/list/utils'
+
+import {REQUEST_SEND} from '#/main/core/api/actions'
 import {
   VIEW_MANAGEMENT,
   VIEW_MAIL_FORM,
   VIEW_MESSAGE_FORM
-} from './enums'
+} from './constants'
 
 export const UPDATE_VIEW_MODE = 'UPDATE_VIEW_MODE'
-export const TASKS_LOAD = 'TASKS_LOAD'
+/*export const TASKS_LOAD = 'TASKS_LOAD'*/
 export const TASK_ADD = 'TASK_ADD'
 export const TASK_FORM_RESET = 'TASK_FORM_RESET'
 export const TASK_FORM_LOAD = 'TASK_FORM_LOAD'
@@ -20,44 +20,13 @@ export const TASK_FORM_TYPE_UPDATE = 'TASK_FORM_TYPE_UPDATE'
 
 export const actions = {}
 
-actions.loadTasks = makeActionCreator(TASKS_LOAD, 'tasks', 'total')
-
-actions.fetchTasks = () => (dispatch, getState) => {
-  const state = getState()
-  const page = paginationSelect.current(state)
-  const pageSize = paginationSelect.pageSize(state)
-  const url = generateUrl('claro_admin_scheduled_tasks_search', {page: page, limit: pageSize}) + '?'
-
-  // build queryString
-  let queryString = ''
-
-  // add filters
-  const filters = listSelect.filters(state)
-  if (0 < filters.length) {
-    queryString += filters.map(filter => `filters[${filter.property}]=${filter.value}`).join('&')
-  }
-
-  // add sort by
-  const sortBy = listSelect.sortBy(state)
-  if (sortBy.property && 0 !== sortBy.direction) {
-    queryString += `${0 < queryString.length ? '&':''}sortBy=${-1 === sortBy.direction ? '-':''}${sortBy.property}`
-  }
-
-  dispatch({
-    [REQUEST_SEND]: {
-      url: url + queryString,
-      request: {
-        method: 'GET'
-      },
-      success: (data, dispatch) => {
-        dispatch(listActions.resetSelect())
-        dispatch(actions.loadTasks(JSON.parse(data.tasks), data.total))
-      }
-    }
-  })
-}
-
 actions.updateViewMode = makeActionCreator(UPDATE_VIEW_MODE, 'mode')
+actions.addTask = makeActionCreator(TASK_ADD, 'task')
+actions.resetTaskForm = makeActionCreator(TASK_FORM_RESET)
+actions.loadTaskForm = makeActionCreator(TASK_FORM_LOAD, 'task')
+actions.updateTaskFormType = makeActionCreator(TASK_FORM_TYPE_UPDATE, 'value')
+
+actions.editTask = makeActionCreator(UPDATE_VIEW_MODE, 'mode')
 
 actions.displayManagementView = () => {
   return (dispatch) => {
@@ -141,25 +110,15 @@ actions.editMessageTask = (taskId, data) => {
   }
 }
 
-actions.deleteTasks = (tasks) => ({
+actions.removeTasks = (tasks) => ({
   [REQUEST_SEND]: {
-    url: generateUrl('claro_admin_scheduled_tasks_delete') + getQueryString(tasks),
+    url: generateUrl('claro_admin_scheduled_tasks_delete') + listUtils.getDataQueryString(tasks),
     request: {
       method: 'DELETE'
     },
     success: (data, dispatch) => {
-      dispatch(paginationActions.changePage(0))
-      dispatch(actions.fetchTasks())
+      dispatch(listActions.changePage(0))
+      dispatch(listActions.fetchData('tasks'))
     }
   }
 })
-
-actions.addTask = makeActionCreator(TASK_ADD, 'task')
-
-actions.resetTaskForm = makeActionCreator(TASK_FORM_RESET)
-
-actions.loadTaskForm = makeActionCreator(TASK_FORM_LOAD, 'task')
-
-actions.updateTaskFormType = makeActionCreator(TASK_FORM_TYPE_UPDATE, 'value')
-
-const getQueryString = (idsList) => '?' + idsList.map(id => 'ids[]='+id).join('&')

@@ -126,14 +126,14 @@ class Workspace
     protected $displayable = false;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="isModel", type="boolean")
      *
      * @Serializer\Groups({"api_workspace", "api_workspace_min"})
      * @Serializer\SerializedName("isModel")
      *
      * @var bool
      */
-    protected $isModel = false;
+    protected $model = false;
 
     /**
      * @ORM\OneToMany(
@@ -231,7 +231,7 @@ class Workspace
      *
      * @var \DateTime
      */
-    protected $creationDate;
+    protected $created;
 
     /**
      * @ORM\Column(name="is_personal", type="boolean")
@@ -241,7 +241,7 @@ class Workspace
      *
      * @var bool
      */
-    protected $isPersonal = false;
+    protected $personal = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
@@ -335,6 +335,11 @@ class Workspace
         $this->orderedTools = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->organizations = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name.' ['.$this->code.']';
     }
 
     /**
@@ -569,14 +574,39 @@ class Workspace
         return $this->selfUnregistration;
     }
 
+    /**
+     * @param $creationDate
+     *
+     * @deprecated use `setCreated()` instead
+     */
     public function setCreationDate($creationDate)
     {
-        $this->creationDate = $creationDate;
+        $this->setCreated($creationDate);
     }
 
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \Datetime
+     *
+     * @deprecated use `getCreated()` instead
+     */
     public function getCreationDate()
     {
-        $date = !is_null($this->creationDate) ? date('d-m-Y H:i', $this->creationDate) : null;
+        return $this->getCreated();
+    }
+
+    /**
+     * @todo internal implementation should only return the prop. I don't know why it works like this
+     *
+     * @return \Datetime
+     */
+    public function getCreated()
+    {
+        $date = !is_null($this->created) ? date('d-m-Y H:i', $this->created) : null;
 
         return new \Datetime($date);
     }
@@ -611,14 +641,24 @@ class Workspace
         return $this->maxUploadResources;
     }
 
+    /**
+     * @param $isPersonal
+     *
+     * @deprecated use `setPersonal()` instead
+     */
     public function setIsPersonal($isPersonal)
     {
-        $this->isPersonal = $isPersonal;
+        $this->setPersonal($isPersonal);
+    }
+
+    public function setPersonal($personal)
+    {
+        $this->personal = $personal;
     }
 
     public function isPersonal()
     {
-        return $this->isPersonal;
+        return $this->personal;
     }
 
     public function serializeForWidgetPicker()
@@ -716,11 +756,6 @@ class Workspace
         return $backgroundColor;
     }
 
-    public function __toString()
-    {
-        return $this->name.' ['.$this->code.']';
-    }
-
     public function getManagerRole()
     {
         foreach ($this->roles as $role) {
@@ -737,14 +772,24 @@ class Workspace
         return $this->personalUser;
     }
 
+    /**
+     * @param $boolean
+     *
+     * @deprecated use `setModel()` instead
+     */
     public function setIsModel($boolean)
     {
-        $this->isModel = $boolean;
+        $this->setModel($boolean);
+    }
+
+    public function setModel($model)
+    {
+        $this->model = $model;
     }
 
     public function isModel()
     {
-        return $this->isModel;
+        return $this->model;
     }
 
     public function getOrganizations()
@@ -765,15 +810,5 @@ class Workspace
         $this->organizations = $organizations instanceof ArrayCollection ?
             $organizations :
             new ArrayCollection($organizations);
-    }
-
-    public static function getWorkspaceSearchableFields()
-    {
-        return ['name', 'code'];
-    }
-
-    public static function getSearchableFields()
-    {
-        return self::getWorkspaceSearchableFields();
     }
 }

@@ -67,23 +67,22 @@ class WorkspaceFinder implements FinderInterface
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
-              case 'createdAfter':
-                  $qb->andWhere("obj.creationDate >= :{$filterName}");
-                  $qb->setParameter($filterName, $filterValue);
-                  break;
-              case 'createdBefore':
-                  $qb->andWhere("obj.creationDate <= :{$filterName}");
-                  $qb->setParameter($filterName, $filterValue);
-                  break;
-              default:
-                if ('true' === $filterValue || 'false' === $filterValue || true === $filterValue || false === $filterValue) {
-                    $filterValue = is_string($filterValue) ? 'true' === $filterValue : $filterValue;
-                    $qb->andWhere("obj.{$filterName} = :{$filterName}");
+                case 'createdAfter':
+                    $qb->andWhere("obj.created >= :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
-                } else {
-                    $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
-                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
-                }
+                    break;
+                case 'createdBefore':
+                    $qb->andWhere("obj.created <= :{$filterName}");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
+                default:
+                    if (is_string($filterValue)) {
+                        $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");
+                        $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                    } else {
+                        $qb->andWhere("obj.{$filterName} = :{$filterName}");
+                        $qb->setParameter($filterName, $filterValue);
+                    }
             }
         }
 

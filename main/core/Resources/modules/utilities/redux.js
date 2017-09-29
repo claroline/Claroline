@@ -43,6 +43,17 @@ export function makeReducer(initialState, handlers) {
   }
 }
 
+// applies 2 or more reducers to the same store key.
+// NB. This is low level API to apply custom reducers to base app components.
+//     If you end up using it, you may are doing bad things !
+export function reduceReducers(...reducers) {
+  return (previous, current) =>
+    reducers.reduce(
+      (p, r) => r(p, current),
+      previous
+    )
+}
+
 // pre-configure store for all redux apps
 if (process.env.NODE_ENV !== 'production') {
   const freeze = require('redux-freeze')

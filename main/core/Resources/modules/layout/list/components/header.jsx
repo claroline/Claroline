@@ -8,29 +8,26 @@ import MenuItem from 'react-bootstrap/lib/MenuItem'
 
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 import {ListSearch} from '#/main/core/layout/list/components/search.jsx'
-import {getListDisplay} from '#/main/core/layout/list/utils'
-import {LIST_DISPLAY_LIST_VALUE} from '#/main/core/layout/list/default'
+import {constants} from '#/main/core/layout/list/constants'
+import {DataProperty} from '#/main/core/layout/list/prop-types'
 
 const ColumnsButton = props =>
   <TooltipElement
     id="list-columns"
-    position="top"
-    tip="Click to display or hide columns"
+    position="bottom"
+    tip={t('list_columns_title')}
   >
     <DropdownButton
       id="list-columns-toggle"
-      title={
-        <span
-          className={classes('fa fa-fw fa-columns')}
-        />
-      }
+      title={<span className={classes('fa fa-fw fa-columns')} />}
       bsStyle="link"
       className="btn-link-default"
       noCaret={true}
       pullRight={true}
       onSelect={(e) => e.stopPropagation()}
     >
-      <MenuItem header>Available columns</MenuItem>
+      <MenuItem header>{t('list_columns')}</MenuItem>
+
       {props.available.map(availableColumn =>
         <li key={availableColumn.name} className="dropdown-checkbox" role="presentation">
           <label className="checkbox-inline">
@@ -47,43 +44,41 @@ const ColumnsButton = props =>
   </TooltipElement>
 
 ColumnsButton.propTypes = {
-  available: T.arrayOf(T.shape({
-    name: T.string.isRequired,
-    label: T.string.isRequired
-  })).isRequired,
+  available: T.arrayOf(
+    T.shape(DataProperty.propTypes)
+  ).isRequired,
   current: T.arrayOf(T.string).isRequired,
   toggle: T.func.isRequired
 }
 
 const ListDisplayButton = props => {
-  const currentFormat = getListDisplay(props.available, props.current)
-
   return (
     <TooltipElement
       id="list-format"
-      position="top"
-      tip="List view. (click to change list format)"
+      position="bottom"
+      tip={t('list_display_modes_title', {current: constants.DISPLAY_MODES[props.current].label})}
     >
       <DropdownButton
         id="list-format-toggle"
-        title={currentFormat[2] ?
-          <span className={currentFormat[2]} /> : currentFormat[1]
-        }
+        title={<span className={constants.DISPLAY_MODES[props.current].icon} />}
         bsStyle="link"
         className="btn-link-default"
         noCaret={true}
         pullRight={true}
       >
-        <MenuItem header>{t('list_formats')}</MenuItem>
+        <MenuItem header>{t('list_display_modes')}</MenuItem>
         {props.available.map(format =>
           <MenuItem
-            key={format[0]}
-            eventKey={format[0]}
-            active={format[0] === props.current}
-            onClick={() => props.onChange(format[0])}
+            key={format}
+            eventKey={format}
+            active={format === props.current}
+            onClick={(e) => {
+              e.preventDefault()
+              props.onChange(format)
+            }}
           >
-            {format[2] && <span className={format[2]} />}
-            {format[1]}
+            <span className={constants.DISPLAY_MODES[format].icon} />
+            {constants.DISPLAY_MODES[format].label}
           </MenuItem>
         )}
       </DropdownButton>
@@ -92,8 +87,10 @@ const ListDisplayButton = props => {
 }
 
 ListDisplayButton.propTypes = {
-  available: T.array.isRequired,
-  current: T.string.isRequired,
+  current: T.oneOf(Object.keys(constants.DISPLAY_MODES)).isRequired,
+  available: T.arrayOf(
+    T.oneOf(Object.keys(constants.DISPLAY_MODES))
+  ).isRequired,
   onChange: T.func.isRequired
 }
 
@@ -104,29 +101,29 @@ ListDisplayButton.propTypes = {
  * @constructor
  */
 const ListActions = props =>
-  <div className="list-actions">
-    {(props.columns && 1 < props.columns.available.length && LIST_DISPLAY_LIST_VALUE === props.display.current) &&
-      <ColumnsButton
-        {...props.columns}
-      />
+  <div className="list-options">
+    {props.columns &&
+      <ColumnsButton {...props.columns} />
     }
 
-    {props.display && 1 < props.display.available.length &&
-      <ListDisplayButton
-        {...props.display}
-      />
+    {props.display &&
+      <ListDisplayButton {...props.display} />
     }
   </div>
 
 ListActions.propTypes = {
   display: T.shape({
-    current: T.string.isRequired,
-    available: T.array.isRequired,
+    current: T.oneOf(Object.keys(constants.DISPLAY_MODES)).isRequired,
+    available: T.arrayOf(
+      T.oneOf(Object.keys(constants.DISPLAY_MODES))
+    ).isRequired,
     onChange: T.func.isRequired
   }),
   columns: T.shape({
     current: T.arrayOf(T.string).isRequired,
-    available: T.arrayOf(T.object).isRequired,
+    available: T.arrayOf(
+      T.shape(DataProperty.propTypes)
+    ).isRequired,
     toggle: T.func.isRequired
   })
 }
@@ -142,35 +139,51 @@ const ListHeader = props =>
     {props.filters &&
       <ListSearch
         {...props.filters}
+        disabled={props.disabled}
       />
     }
 
-    <ListActions
-      display={props.display}
-      columns={props.columns}
-    />
+    {!props.disabled && (props.columns || props.display) &&
+      <ListActions
+        display={props.display}
+        columns={props.columns}
+      />
+    }
   </div>
 
 ListHeader.propTypes = {
+  disabled: T.bool,
   display: T.shape({
-    current: T.string.isRequired,
-    available: T.array.isRequired,
+    current: T.oneOf(Object.keys(constants.DISPLAY_MODES)).isRequired,
+    available: T.arrayOf(
+      T.oneOf(Object.keys(constants.DISPLAY_MODES))
+    ).isRequired,
     onChange: T.func.isRequired
   }),
+
   columns: T.shape({
     current: T.arrayOf(T.string).isRequired,
-    available: T.arrayOf(T.object).isRequired,
+    available: T.arrayOf(
+      T.shape(DataProperty.propTypes)
+    ).isRequired,
     toggle: T.func.isRequired
   }),
+
   filters: T.shape({
     current: T.arrayOf(T.shape({
       property: T.string.isRequired,
       value: T.any.isRequired
     })).isRequired,
-    available: T.arrayOf(T.object).isRequired,
+    available: T.arrayOf(
+      T.shape(DataProperty.propTypes)
+    ).isRequired,
     addFilter: T.func.isRequired,
     removeFilter: T.func.isRequired
   })
+}
+
+ListHeader.defaultProps = {
+  disabled: false
 }
 
 export {
