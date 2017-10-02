@@ -46,6 +46,11 @@ const DataGridItem = props =>
       }
     </div>
 
+    {React.createElement(
+      props.data.onClick ? 'a' : 'div', {
+
+      }
+    )}
     <div className="item-content">
       <h2 className="item-title">
         {props.data.title}

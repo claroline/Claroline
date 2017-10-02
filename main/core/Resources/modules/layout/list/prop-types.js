@@ -33,6 +33,12 @@ const DataAction = {
     disabled: T.func,
 
     /**
+     * A function to calculate if the action should be displayed.
+     * It receives the list of data objects as param.
+     */
+    displayed: T.func,
+
+    /**
      * Defines if the action is available as row action or bulk action.
      * If not set, action will be available in both context
      *
@@ -192,6 +198,7 @@ const DataListView = {
  */
 const DataCard = {
   propTypes: {
+    onClick: T.oneOfType([T.string, T.func]), // either a url or a custom func to execute
     className: T.string,
     poster: T.string,
     icon: T.oneOfType([T.string, T.element]).isRequired,

@@ -4,9 +4,12 @@ import classes from 'classnames'
 import {DropdownButton, MenuItem} from 'react-bootstrap'
 
 import {t, transChoice} from '#/main/core/translation'
+import {MenuItemAction} from '#/main/core/layout/components/dropdown.jsx'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link.jsx'
+
+import {DataAction as DataActionTypes} from '#/main/core/layout/list/prop-types'
 
 /**
  * Actions available for a single data item.
@@ -30,40 +33,33 @@ const DataActions = props =>
     >
       <MenuItem header>{t('actions')}</MenuItem>
 
-      {props.actions.filter(action => !action.isDangerous).map((action, actionIndex) => React.createElement(
-        MenuItem, typeof action.action === 'function' ? {
-          key: `${props.id}-action-${actionIndex}`,
-          disabled: action.disabled ? action.disabled([props.item]) : false,
-          onClick: () => action.action([props.item])
-        } : {
-          key: `${props.id}-action-${actionIndex}`,
-          disabled: action.disabled ? action.disabled([props.item]) : false,
-          href: action.action
-        }, ([
-          <span key={`${props.id}-action-${actionIndex}-icon`} className={action.icon} />,
-          action.label
-        ]))
+      {props.actions.filter(
+        action => !action.isDangerous && (!action.displayed || action.displayed([props.item]))
+      ).map((action, actionIndex) =>
+        <MenuItemAction
+          key={`${props.id}-action-${actionIndex}`}
+          icon={action.icon}
+          label={action.label}
+          disabled={action.disabled ? action.disabled([props.item]) : false}
+          action={typeof action.action === 'function' ? () => action.action([props.item]) : action.action}
+        />
       )}
 
-      {0 !== props.actions.filter(action => action.isDangerous).length &&
+      {0 !== props.actions.filter(action => action.isDangerous && (!action.displayed || action.displayed([props.item]))).length &&
         <MenuItem divider />
       }
 
-      {props.actions.filter(action => action.isDangerous).map((action, actionIndex) => React.createElement(
-        MenuItem, typeof action.action === 'function' ? {
-          key: `${props.id}-action-dangerous-${actionIndex}`,
-          disabled: action.disabled ? action.disabled([props.item]) : false,
-          className: 'dropdown-link-danger',
-          onClick: () => action.action([props.item])
-        } : {
-          key: `${props.id}-action-${actionIndex}`,
-          disabled: action.disabled ? action.disabled([props.item]) : false,
-          className: 'dropdown-link-danger',
-          href: action.action
-        }, ([
-          <span key={`${props.id}-action-${actionIndex}-dangerous-icon`} className={action.icon} />,
-          action.label
-        ]))
+      {props.actions.filter(
+        action => action.isDangerous && (!action.displayed || action.displayed([props.item]))
+      ).map((action, actionIndex) =>
+        <MenuItemAction
+          key={`${props.id}-action-dangerous-${actionIndex}`}
+          icon={action.icon}
+          label={action.label}
+          disabled={action.disabled ? action.disabled([props.item]) : false}
+          action={typeof action.action === 'function' ? () => action.action([props.item]) : action.action}
+          isDangerous={true}
+        />
       )}
     </DropdownButton>
   </TooltipElement>
@@ -71,11 +67,9 @@ const DataActions = props =>
 DataActions.propTypes = {
   id: T.string.isRequired,
   item: T.object.isRequired,
-  actions: T.arrayOf(T.shape({
-    label: T.string,
-    icon: T.string,
-    action: T.oneOfType([T.string, T.func]).isRequired
-  })).isRequired
+  actions: T.arrayOf(
+    T.shape(DataActionTypes.propTypes)
+  ).isRequired
 }
 
 /**
@@ -129,11 +123,9 @@ const DataBulkActions = props =>
 DataBulkActions.propTypes = {
   count: T.number.isRequired,
   selectedItems: T.arrayOf(T.object).isRequired,
-  actions: T.arrayOf(T.shape({
-    label: T.string,
-    icon: T.string,
-    action: T.oneOfType([T.string, T.func]).isRequired
-  })).isRequired
+  actions: T.arrayOf(
+    T.shape(DataActionTypes.propTypes)
+  ).isRequired
 }
 
 export {
