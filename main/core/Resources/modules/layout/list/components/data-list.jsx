@@ -115,7 +115,8 @@ class DataList extends Component {
     }
 
     let columnsTool
-    if (listConst.DISPLAY_MODES[this.state.currentDisplay].filterColumns) {
+    if (this.props.filterColumns && listConst.DISPLAY_MODES[this.state.currentDisplay].filterColumns) {
+      // Tools is enabled and the current display supports columns filtering
       const displayableColumns = getDisplayableProps(this.definition)
       if (1 < displayableColumns.length) {
         columnsTool = {
@@ -218,6 +219,12 @@ DataList.propTypes = {
   }),
 
   /**
+   * Filter displayed columns.
+   * Setting it to true automatically enable the filter columns tool for supported displays.
+   */
+  filterColumns: T.bool,
+
+  /**
    * Search filters configuration.
    * Providing this object automatically display the search box component.
    */
@@ -282,6 +289,7 @@ DataList.propTypes = {
 
 DataList.defaultProps = {
   actions: [],
+  filterColumns: true,
   display: {
     available: Object.keys(listConst.DISPLAY_MODES),
     current: listConst.DEFAULT_DISPLAY_MODE

@@ -11,7 +11,7 @@ import {ListSearch} from '#/main/core/layout/list/components/search.jsx'
 import {constants} from '#/main/core/layout/list/constants'
 import {DataProperty} from '#/main/core/layout/list/prop-types'
 
-const ColumnsButton = props =>
+const ListColumnsButton = props =>
   <TooltipElement
     id="list-columns"
     position="bottom"
@@ -43,7 +43,7 @@ const ColumnsButton = props =>
     </DropdownButton>
   </TooltipElement>
 
-ColumnsButton.propTypes = {
+ListColumnsButton.propTypes = {
   available: T.arrayOf(
     T.shape(DataProperty.propTypes)
   ).isRequired,
@@ -103,7 +103,7 @@ ListDisplayButton.propTypes = {
 const ListActions = props =>
   <div className="list-options">
     {props.columns &&
-      <ColumnsButton {...props.columns} />
+      <ListColumnsButton {...props.columns} />
     }
 
     {props.display &&

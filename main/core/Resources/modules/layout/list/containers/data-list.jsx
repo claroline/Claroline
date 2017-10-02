@@ -52,6 +52,11 @@ DataList.propTypes = {
    */
   card: T.func.isRequired,
 
+  /**
+   * Enables/Disables the feature to filter the displayed columns.
+   */
+  filterColumns: T.bool,
+
   // calculated from redux store
   data: T.array.isRequired,
   totalResults: T.number.isRequired,
@@ -178,13 +183,14 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   }
 
   const props = {
-    name: ownProps.name,
-    definition: ownProps.definition,
-    data: stateProps.data,
-    totalResults: stateProps.totalResults,
-    actions: ownProps.actions,
-    card: ownProps.card,
-    queryString: stateProps.queryString
+    name:          ownProps.name,
+    definition:    ownProps.definition,
+    data:          stateProps.data,
+    totalResults:  stateProps.totalResults,
+    actions:       ownProps.actions,
+    card:          ownProps.card,
+    queryString:   stateProps.queryString,
+    filterColumns: ownProps.filterColumns
   }
 
   if (stateProps.filterable) {
