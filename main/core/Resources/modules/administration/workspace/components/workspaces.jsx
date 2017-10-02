@@ -156,6 +156,7 @@ const WorkspacesPage = props =>
         ]}
 
         card={(row) => ({
+          onClick: generateUrl('claro_workspace_open', {workspaceId: row.id}),
           poster: null,
           icon: 'fa fa-book',
           title: row.name,

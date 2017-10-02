@@ -2,7 +2,7 @@ import {makeActionCreator} from '#/main/core/utilities/redux'
 import {generateUrl} from '#/main/core/fos-js-router'
 
 import {actions as listActions} from '#/main/core/layout/list/actions'
-import {utils as listUtils} from '#/main/core/layout/list/utils'
+import {getDataQueryString} from '#/main/core/layout/list/utils'
 
 import {REQUEST_SEND} from '#/main/core/api/actions'
 import {
@@ -112,7 +112,7 @@ actions.editMessageTask = (taskId, data) => {
 
 actions.removeTasks = (tasks) => ({
   [REQUEST_SEND]: {
-    url: generateUrl('claro_admin_scheduled_tasks_delete') + listUtils.getDataQueryString(tasks),
+    url: generateUrl('claro_admin_scheduled_tasks_delete') + getDataQueryString(tasks),
     request: {
       method: 'DELETE'
     },
