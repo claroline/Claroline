@@ -48,31 +48,32 @@ const DataGridItem = props =>
 
     {React.createElement(
       props.data.onClick ? 'a' : 'div', {
+        className: 'item-content',
+        [typeof props.data.onClick === 'function' ? 'onClick':'href']: props.data.onClick
+      }, [
+        // card title
+        <h2 key="item-title" className="item-title">
+          {props.data.title}
+          {props.data.subtitle &&
+            <small>{props.data.subtitle}</small>
+          }
+        </h2>,
 
-      }
-    )}
-    <div className="item-content">
-      <h2 className="item-title">
-        {props.data.title}
-        {props.data.subtitle &&
-          <small>{props.data.subtitle}</small>
-        }
-      </h2>
-
-      {'sm' !== props.size && props.data.contentText &&
-        <div className="item-description">
+        // card detail text
+        'sm' !== props.size && props.data.contentText &&
+        <div key="item-description" className="item-description">
           {getPlainText(props.data.contentText)}
-        </div>
-      }
+        </div>,
 
-      {props.data.footer &&
-        <div className="item-footer">
+        // card footer
+        props.data.footer &&
+        <div key="item-footer" className="item-footer">
           {'sm' !== props.size && props.data.footerLong ?
             props.data.footerLong : props.data.footer
           }
         </div>
-      }
-    </div>
+      ]
+    )}
 
     {props.actions &&
       <DataActions
