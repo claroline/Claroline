@@ -24,20 +24,17 @@ use UJM\ExoBundle\Serializer\StepSerializer;
  */
 class PaperGenerator
 {
-    /**
-     * @var ExerciseSerializer
-     */
+    /** @var ExerciseSerializer */
     private $exerciseSerializer;
 
-    /**
-     * @var StepSerializer
-     */
+    /** @var StepSerializer */
     private $stepSerializer;
 
-    /**
-     * @var ItemSerializer
-     */
+    /** @var ItemSerializer */
     private $itemSerializer;
+
+    /** @var EventDispatcherInterface */
+    private $eventDispatcher;
 
     /**
      * PaperGenerator constructor.
@@ -49,9 +46,10 @@ class PaperGenerator
      *     "eventDispatcher"    = @DI\Inject("event_dispatcher")
      * })
      *
-     * @param ExerciseSerializer $exerciseSerializer
-     * @param StepSerializer     $stepSerializer
-     * @param ItemSerializer     $itemSerializer
+     * @param ExerciseSerializer       $exerciseSerializer
+     * @param StepSerializer           $stepSerializer
+     * @param ItemSerializer           $itemSerializer
+     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(
         ExerciseSerializer $exerciseSerializer,
@@ -120,89 +118,8 @@ class PaperGenerator
 
     private function pickSteps(Exercise $exercise, \stdClass $previousExercise = null)
     {
-        if ($exercise->getRandomTag()->pageSize > 0) {
-            $pageSize = $exercise->getRandomTag()->pageSize;
-            $tags = $exercise->getRandomTag()->pick;
-            $total = array_reduce($tags, function ($sum, $tag) {
-                return $sum + (int) $tag[1];
-            }, 0);
-            $countSteps = ceil($total / (int) $pageSize);
-            $steps = $exercise->getSteps();
-            $questions = [];
-
-            foreach ($steps as $step) {
-                $questions = array_merge($questions, array_map(function ($stepItem) {
-                    return $stepItem->getQuestion();
-                }, $step->getStepQuestions()->toArray()));
-            }
-
-            $pickedSteps = [];
-            $pickedItems = [];
-            $availableItems = [];
-            $preShuffledPicked = [];
-
-            foreach ($questions as $question) {
-                $availableItems[$question->getUuid()] = $this->itemSerializer->serialize(
-                    $question,
-                    [
-                        Transfer::SHUFFLE_ANSWERS,
-                        Transfer::INCLUDE_SOLUTIONS,
-                    ]
-                );
-            }
-
-            foreach ($tags as $tag) {
-                $taggedItems = array_filter($availableItems, function ($item) use ($tag) {
-                    $itemTags = [];
-                    $data = ['class' => 'UJM\ExoBundle\Entity\Item\Item', 'ids' => [$item->autoId]];
-                    $event = new GenericDataEvent($data);
-                    $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
-                    $itemTags = $event->getResponse();
-
-                    return is_int(array_search($tag[0], $itemTags));
-                });
-
-                $tagged = static::pick($taggedItems, $tag[1], true);
-                $pickTagged = [];
-
-                foreach ($tagged as $taggedItem) {
-                    $pickTagged[$taggedItem->id] = $taggedItem;
-                }
-
-                $availableItems = array_diff_key($availableItems, $pickTagged);
-                $preShuffledPicked = array_merge($preShuffledPicked, $taggedItems);
-            }
-
-            shuffle($preShuffledPicked);
-
-            foreach ($preShuffledPicked as $picked) {
-                $pickedItems[$picked->id] = $picked;
-            }
-
-            for ($i = 0; $i < $countSteps; ++$i) {
-                $step = new Step();
-                $step->setExercise($exercise);
-                $step->setTitle('step '.($i + 1));
-                $pickedStep = $this->stepSerializer->serialize($step);
-
-                $stepItems = static::pick($pickedItems, $pageSize, true);
-                $indexedStepItems = [];
-
-                foreach ($stepItems as $stepItem) {
-                    $indexedStepItems[$stepItem->id] = $stepItem;
-                }
-
-                $pickedStep->items = $stepItems;
-                $pickedItems = array_diff_key($pickedItems, $indexedStepItems);
-
-                if (count($pickedStep->items) === 0) {
-                    break;
-                }
-
-                $pickedSteps[] = $pickedStep;
-            }
-
-            return $pickedSteps;
+        if (isset($exercise->getRandomTag()->pageSize) && $exercise->getRandomTag()->pageSize > 0) {
+            return $this->pickStepsByTags($exercise);
         } else {
             if (!empty($previousExercise) && Recurrence::ALWAYS !== $exercise->getRandomPick()) {
                 // Just get the list of steps from the previous paper
@@ -242,6 +159,99 @@ class PaperGenerator
 
             return $pickedSteps;
         }
+    }
+
+    /**
+     * Generates steps based on the quiz configuration and a list of items.
+     * In this kind of quiz all items are stored in a single step.
+     *
+     * @param Exercise $exercise
+     *
+     * @return array
+     */
+    private function pickStepsByTags(Exercise $exercise)
+    {
+        $pageSize = $exercise->getRandomTag()->pageSize;
+        $tags = $exercise->getRandomTag()->pick;
+        $total = array_reduce($tags, function ($sum, $tag) {
+            return $sum + (int) $tag[1];
+        }, 0);
+        $countSteps = ceil($total / (int) $pageSize);
+        $steps = $exercise->getSteps();
+        $questions = [];
+
+        foreach ($steps as $step) {
+            $questions = array_merge($questions, array_map(function ($stepItem) {
+                return $stepItem->getQuestion();
+            }, $step->getStepQuestions()->toArray()));
+        }
+
+        $pickedSteps = [];
+        $pickedItems = [];
+        $availableItems = [];
+        $preShuffledPicked = [];
+
+        foreach ($questions as $question) {
+            $availableItems[$question->getUuid()] = $this->itemSerializer->serialize(
+                $question,
+                [
+                    Transfer::SHUFFLE_ANSWERS,
+                    Transfer::INCLUDE_SOLUTIONS,
+                ]
+            );
+        }
+
+        foreach ($tags as $tag) {
+            $taggedItems = array_filter($availableItems, function ($item) use ($tag) {
+                $data = ['class' => 'UJM\ExoBundle\Entity\Item\Item', 'ids' => [$item->autoId]];
+                $event = new GenericDataEvent($data);
+                $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
+                $itemTags = $event->getResponse() ? $event->getResponse() : [];
+
+                return is_int(array_search($tag[0], $itemTags));
+            });
+
+            $tagged = static::pick($taggedItems, $tag[1], true);
+            $pickTagged = [];
+
+            foreach ($tagged as $taggedItem) {
+                $pickTagged[$taggedItem->id] = $taggedItem;
+            }
+
+            $availableItems = array_diff_key($availableItems, $pickTagged);
+            $preShuffledPicked = array_merge($preShuffledPicked, $taggedItems);
+        }
+
+        shuffle($preShuffledPicked);
+
+        foreach ($preShuffledPicked as $picked) {
+            $pickedItems[$picked->id] = $picked;
+        }
+
+        for ($i = 0; $i < $countSteps; ++$i) {
+            $step = new Step();
+            $step->setExercise($exercise);
+            $step->setTitle('step '.($i + 1));
+            $pickedStep = $this->stepSerializer->serialize($step);
+
+            $stepItems = static::pick($pickedItems, $pageSize, true);
+            $indexedStepItems = [];
+
+            foreach ($stepItems as $stepItem) {
+                $indexedStepItems[$stepItem->id] = $stepItem;
+            }
+
+            $pickedStep->items = $stepItems;
+            $pickedItems = array_diff_key($pickedItems, $indexedStepItems);
+
+            if (count($pickedStep->items) === 0) {
+                break;
+            }
+
+            $pickedSteps[] = $pickedStep;
+        }
+
+        return $pickedSteps;
     }
 
     /**
