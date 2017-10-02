@@ -60,6 +60,7 @@ class UserSerializer
             'uuid' => $user->getGuid(),
             'name' => $user->getFirstName().' '.$user->getLastName(),
             'username' => $user->getUsername(),
+            'picture' => $user->getPicture(),
         ];
     }
 
