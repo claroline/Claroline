@@ -1,3 +1,8 @@
+
+@import "../../less/mixins";
+@import "../../less/themes/default/variables";
+
+// todo : move in variables file
 @default-active-tab-bg-color: #337AB7;
 @tab-background-color: #F5F5F5;
 @tab-background-active-color: #FFFFFF;
@@ -73,5 +78,5 @@
 }
 
 .gridster {
-    margin: floor(@grid-gutter-width / 2) auto;
+    margin: floor(@grid-gutter-width / 2) auto !important;
 }

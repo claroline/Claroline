@@ -12,11 +12,8 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    {% stylesheets debug=false filter='less, cssmin' output='css/clarolinecore/hometabs.css'
-        "@ClarolineCoreBundle/Resources/less/tools/home.less"
-    %}
-    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
-    {% endstylesheets %}
+
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-main-core-home.css') }}" />
 
     <link rel="stylesheet" type="text/css" href="{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}" />
     <link rel="stylesheet" type="text/css" href="{{ asset('packages/angular-gridster/dist/angular-gridster.min.css')}}" />
