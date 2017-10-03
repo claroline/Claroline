@@ -190,7 +190,8 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
     actions:       ownProps.actions,
     card:          ownProps.card,
     queryString:   stateProps.queryString,
-    filterColumns: ownProps.filterColumns
+    filterColumns: ownProps.filterColumns,
+    display:       ownProps.display
   }
 
   if (stateProps.filterable) {

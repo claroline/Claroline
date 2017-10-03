@@ -34,6 +34,7 @@ use Claroline\ClacoFormBundle\Event\Log\LogEntryCreateEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryDeleteEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryEditEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryStatusChangeEvent;
+use Claroline\ClacoFormBundle\Event\Log\LogEntryUserChangeEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogFieldCreateEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogFieldDeleteEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogFieldEditEvent;
@@ -167,7 +168,6 @@ class ClacoFormManager
             'userString',
             'categoriesString',
             'keywordsString',
-            'actions',
         ]);
 
         $clacoForm->setDisplayMetadata('none');
@@ -195,6 +195,12 @@ class ClacoFormManager
         $clacoForm->setNewKeywordsEnabled(false);
         $clacoForm->setDisplayKeywords(false);
         $clacoForm->setOpenKeywords(false);
+
+        $clacoForm->setUseTemplate(false);
+        $clacoForm->setDefaultDisplayMode('table');
+        $clacoForm->setDisplayTitle('title');
+        $clacoForm->setDisplaySubtitle('title');
+        $clacoForm->setDisplayContent('title');
 
         return $clacoForm;
     }
@@ -224,10 +230,12 @@ class ClacoFormManager
         return $details;
     }
 
-    public function saveClacoFormTemplate(ClacoForm $clacoForm, $template)
+    public function saveClacoFormTemplate(ClacoForm $clacoForm, $template, $useTemplate)
     {
         $clacoFormTemplate = empty($template) ? null : $template;
+        $clacoFormUseTemplate = $clacoFormTemplate ? $useTemplate : false;
         $clacoForm->setTemplate($clacoFormTemplate);
+        $clacoForm->setUseTemplate($clacoFormUseTemplate);
         $this->persistClacoForm($clacoForm);
         $event = new LogClacoFormTemplateEditEvent($clacoForm, $clacoFormTemplate);
         $this->eventDispatcher->dispatch('log', $event);
@@ -371,7 +379,7 @@ class ClacoFormManager
 
         if ($this->facetManager->isTypeWithChoices($type)) {
             foreach ($choices as $choice) {
-                $fieldFacetChoice = $this->facetManager->addFacetFieldChoice($choice['value'], $fieldFacet);
+                $fieldFacetChoice = $this->facetManager->addFacetFieldChoice($choice['value'], $fieldFacet, null, $choice['index']);
 
                 if (!empty($choice['categoryId'])) {
                     $this->createFieldChoiceCategory($field, $choice['categoryId'], $choice['value'], $fieldFacetChoice);
@@ -433,7 +441,7 @@ class ClacoFormManager
 
             foreach ($choices as $choice) {
                 if ($choice['new']) {
-                    $fieldFacetChoice = $this->facetManager->addFacetFieldChoice($choice['value'], $fieldFacet);
+                    $fieldFacetChoice = $this->facetManager->addFacetFieldChoice($choice['value'], $fieldFacet, null, $choice['index']);
 
                     if (!empty($choice['categoryId'])) {
                         $this->createFieldChoiceCategory($field, $choice['categoryId'], $choice['value'], $fieldFacetChoice);
@@ -521,6 +529,7 @@ class ClacoFormManager
                 ++$index;
             }
             if (!$found) {
+                $fieldFacet->removeFieldChoice($choice);
                 $this->om->remove($choice);
             }
         }
@@ -546,7 +555,8 @@ class ClacoFormManager
                     $child = $this->facetManager->addFacetFieldChoice(
                         $childChoice['value'],
                         $parent->getFieldFacet(),
-                        $parent
+                        $parent,
+                        $childChoice['index']
                     );
 
                     if (!empty($childChoice['categoryId'])) {
@@ -727,7 +737,7 @@ class ClacoFormManager
         foreach ($entryData as $key => $value) {
             $field = $this->getFieldByClacoFormAndId($clacoForm, $key);
 
-            if (!is_null($field)) {
+            if (!is_null($field) && $value !== '') {
                 $fieldValue = $this->createFieldValue($entry, $field, $value, $user);
                 $entry->addFieldValue($fieldValue);
                 $type = $field->getType();
@@ -788,18 +798,20 @@ class ClacoFormManager
             $fieldValue = $this->getFieldValueByEntryAndFieldId($entry, $key);
 
             if (is_null($fieldValue)) {
-                $field = $this->getFieldByClacoFormAndId($clacoForm, $key);
+                if ($value !== '') {
+                    $field = $this->getFieldByClacoFormAndId($clacoForm, $key);
 
-                if (!is_null($field)) {
-                    $fieldValue = $this->createFieldValue($entry, $field, $value, $entry->getUser());
-                    $entry->addFieldValue($fieldValue);
-                    $type = $field->getType();
+                    if (!is_null($field)) {
+                        $fieldValue = $this->createFieldValue($entry, $field, $value, $entry->getUser());
+                        $entry->addFieldValue($fieldValue);
+                        $type = $field->getType();
 
-                    if ($this->facetManager->isTypeWithChoices($type)) {
-                        $categoriesToAdd = $this->getCategoriesFromFieldAndValue($field, $value);
+                        if ($this->facetManager->isTypeWithChoices($type)) {
+                            $categoriesToAdd = $this->getCategoriesFromFieldAndValue($field, $value);
 
-                        foreach ($categoriesToAdd as $catId => $cat) {
-                            $toAdd[$catId] = $cat;
+                            foreach ($categoriesToAdd as $catId => $cat) {
+                                $toAdd[$catId] = $cat;
+                            }
                         }
                     }
                 }
@@ -868,10 +880,13 @@ class ClacoFormManager
             foreach ($values as $val) {
                 $parent = $choice;
                 $choice = $this->facetManager->getChoiceByFieldFacetAndValueAndParent($fieldFacet, $val, $parent);
-                $fcc = $this->getFieldChoiceCategoryByFieldAndChoice($field, $choice);
 
-                if (!empty($fcc)) {
-                    $choiceCategories[] = $fcc;
+                if ($choice) {
+                    $fcc = $this->getFieldChoiceCategoryByFieldAndChoice($field, $choice);
+
+                    if (!empty($fcc)) {
+                        $choiceCategories[] = $fcc;
+                    }
                 }
             }
         } else {
@@ -980,6 +995,16 @@ class ClacoFormManager
         $this->eventDispatcher->dispatch('log', $event);
         $categories = $entry->getCategories();
         $this->notifyCategoriesManagers($entry, $categories, $categories);
+
+        return $entry;
+    }
+
+    public function changeEntryOwner(Entry $entry, User $user)
+    {
+        $entry->setUser($user);
+        $this->persistEntry($entry);
+        $event = new LogEntryUserChangeEvent($entry);
+        $this->eventDispatcher->dispatch('log', $event);
 
         return $entry;
     }
@@ -1131,7 +1156,7 @@ class ClacoFormManager
 
         switch ($fieldFacet->getType()) {
             case FieldFacet::DATE_TYPE:
-                $date = is_string($value) ? new \DateTime($value) : $value;
+                $date = $value ? new \DateTime($value) : null;
                 $fieldFacetValue->setDateValue($date);
                 break;
             case FieldFacet::FLOAT_TYPE:
@@ -1139,7 +1164,7 @@ class ClacoFormManager
                 break;
             case FieldFacet::CHECKBOXES_TYPE:
             case FieldFacet::CASCADE_SELECT_TYPE:
-                $fieldFacetValue->setArrayValue($value);
+                $fieldFacetValue->setArrayValue(is_array($value) ? $value : [$value]);
                 break;
             default:
                 $fieldFacetValue->setStringValue($value);
@@ -1156,15 +1181,20 @@ class ClacoFormManager
 
         switch ($fieldFacet->getType()) {
             case FieldFacet::DATE_TYPE:
-                $date = is_string($value) ? new \DateTime($value) : $value;
+                if (is_array($value)) {
+                    $date = new \DateTime($value['date']);
+                } else {
+                    $date = is_string($value) ? new \DateTime($value) : $value;
+                }
                 $fieldFacetValue->setDateValue($date);
                 break;
             case FieldFacet::FLOAT_TYPE:
-                $fieldFacetValue->setFloatValue($value);
+                $floatValue = $value === '' ? null : $value;
+                $fieldFacetValue->setFloatValue($floatValue);
                 break;
             case FieldFacet::CHECKBOXES_TYPE:
             case FieldFacet::CASCADE_SELECT_TYPE:
-                $fieldFacetValue->setArrayValue($value);
+                $fieldFacetValue->setArrayValue(is_array($value) ? $value : [$value]);
                 break;
             default:
                 $fieldFacetValue->setStringValue($value);
@@ -1504,16 +1534,17 @@ class ClacoFormManager
         }
         $canEdit = $this->hasRight($clacoForm, 'EDIT');
         $template = $clacoForm->getTemplate();
+        $useTemplate = $clacoForm->getUseTemplate();
         $displayMeta = $clacoForm->getDisplayMetadata();
         $isEntryManager = $user !== 'anon.' && $this->isEntryManager($entry, $user);
         $withMeta = $canEdit || $displayMeta === 'all' || ($displayMeta === 'manager' && $isEntryManager);
-        $countries = empty($template) ? $this->locationManager->getCountries() : [];
+        $countries = $this->locationManager->getCountries();
 
-        if (!empty($template)) {
+        if (!empty($template) && $useTemplate) {
             $template = str_replace('%clacoform_entry_title%', $entry->getTitle(), $template);
 
             foreach ($fields as $field) {
-                if ($withMeta || !$field->getIsMetadata()) {
+                if (($withMeta || !$field->getIsMetadata()) && isset($fieldValues[$field->getId()])) {
                     $fieldFacet = $field->getFieldFacet();
 
                     switch ($fieldFacet->getType()) {
@@ -1533,7 +1564,7 @@ class ClacoFormManager
                 } else {
                     $value = '';
                 }
-                $name = $this->removeAccent($this->removeQuote($field->getName()));
+                $name = 'field_'.$field->getId();
                 $template = str_replace("%$name%", $value, $template);
             }
         }
@@ -1542,6 +1573,7 @@ class ClacoFormManager
             [
                 'entry' => $entry,
                 'template' => $template,
+                'useTemplate' => $useTemplate,
                 'withMeta' => $withMeta,
                 'fields' => $fields,
                 'fieldValues' => $fieldValues,
@@ -1944,6 +1976,11 @@ class ClacoFormManager
         return $this->clacoFormRepo->findClacoFormByResourceNodeId($resourceNodeId);
     }
 
+    public function getClacoFormById($id)
+    {
+        return $this->clacoFormRepo->findOneById($id);
+    }
+
     /****************************************
      * Access to CategoryRepository methods *
      ****************************************/
@@ -2117,6 +2154,23 @@ class ClacoFormManager
         return $this->authorization->isGranted($right, $collection);
     }
 
+    public function isCategoryManager(ClacoForm $clacoForm, User $user)
+    {
+        $categories = $clacoForm->getCategories();
+
+        foreach ($categories as $category) {
+            $managers = $category->getManagers();
+
+            foreach ($managers as $manager) {
+                if ($manager->getId() === $user->getId()) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     public function isEntryManager(Entry $entry, User $user)
     {
         $categories = $entry->getCategories();
@@ -2138,14 +2192,16 @@ class ClacoFormManager
     {
         $clacoForm = $entry->getClacoForm();
         $user = $this->tokenStorage->getToken()->getUser();
+        $isAnon = $user === 'anon.';
         $canOpen = $this->hasRight($clacoForm, 'OPEN');
         $canEdit = $this->hasRight($clacoForm, 'EDIT');
 
         return $canEdit || (
             $canOpen && (
                ($entry->getUser() === $user) ||
-               (($user !== 'anon.') && $this->isEntryManager($entry, $user)) ||
-               (($entry->getStatus() === Entry::PUBLISHED) && $clacoForm->getSearchEnabled())
+               (!$isAnon && $this->isEntryManager($entry, $user)) ||
+               (($entry->getStatus() === Entry::PUBLISHED) && $clacoForm->getSearchEnabled()) ||
+               (!$isAnon && $this->isEntryShared($entry, $user))
             )
         );
     }

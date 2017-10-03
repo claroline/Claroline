@@ -115,7 +115,7 @@ class FinderProvider
             /** @var QueryBuilder $qb */
             $qb = $this->om->createQueryBuilder();
 
-            $qb->select($count ? 'count(obj)' : 'obj')
+            $qb->select($count ? 'count(distinct obj)' : 'distinct obj')
                ->from($class, 'obj');
 
             // filter query - let's the finder implementation process the filters to configure query

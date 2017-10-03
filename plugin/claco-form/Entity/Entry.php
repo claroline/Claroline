@@ -108,6 +108,7 @@ class Entry
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Comment",
      *     mappedBy="entry"
      * )
+     * @ORM\OrderBy({"creationDate" = "DESC"})
      * @Groups({"api_claco_form", "api_user_min"})
      * @SerializedName("comments")
      */

@@ -14,6 +14,7 @@ const Radios = props =>
             name={props.groupName}
             value={option.value}
             checked={option.value === props.checkedValue}
+            disabled={props.disabled}
             onChange={() => props.onChange(option.value)}
           />
 
@@ -31,6 +32,7 @@ Radios.propTypes = {
   })).isRequired,
   checkedValue: T.string.isRequired,
   inline: T.bool,
+  disabled: T.bool,
   onChange: T.func.isRequired
 }
 

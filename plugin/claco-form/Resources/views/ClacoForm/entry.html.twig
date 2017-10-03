@@ -26,7 +26,7 @@
                 </div>
             {% endif %}
             <div class="panel-body">
-                {% if template is empty %}
+                {% if template is empty or not useTemplate %}
                     {% for field in fields %}
                         {% if withMeta or not field.getIsMetadata() %}
                             <div class="row entry-row">

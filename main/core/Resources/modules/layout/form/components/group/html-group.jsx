@@ -12,6 +12,7 @@ const HtmlGroup = props =>
       id={props.controlId}
       content={props.content}
       minRows={props.minRows}
+      disabled={props.disabled}
       onChange={props.onChange}
       onClick={props.onClick}
       onSelect={props.onSelect}
@@ -23,6 +24,7 @@ HtmlGroup.propTypes = {
   controlId: T.string.isRequired,
   content: T.string,
   minRows: T.number,
+  disabled: T.bool.isRequired,
   onChange: T.func.isRequired,
   onSelect: T.func,
   onClick: T.func,
@@ -32,6 +34,7 @@ HtmlGroup.propTypes = {
 HtmlGroup.defaultProps = {
   content: '',
   minRows: 2,
+  disabled: false,
   onClick: () => {},
   onSelect: () => {},
   onChangeMode: () => {}

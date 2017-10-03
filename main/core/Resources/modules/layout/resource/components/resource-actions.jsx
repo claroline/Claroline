@@ -380,7 +380,7 @@ ResourceActions.propTypes = {
         export: T.bool,
         delete: T.bool
       }),
-      all: T.object.isRequired
+      all: T.object
     })
   }).isRequired,
 

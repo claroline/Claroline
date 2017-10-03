@@ -56,7 +56,7 @@ export class ContentEditable extends Component {
         onInput={this.emitChange}
         onBlur={this.emitChange}
         dangerouslySetInnerHTML={{__html: this.props.content}}
-        contentEditable={true}
+        contentEditable={!this.props.disabled}
         title={this.props.title}
         role="textbox"
         className="form-control"
@@ -110,14 +110,16 @@ ContentEditable.propTypes = {
   onChange: T.func.isRequired,
   onSelect: T.func,
   onClick: T.func,
-  title: T.string
+  title: T.string,
+  disabled: T.bool.isRequired
 }
 
 ContentEditable.defaultProps = {
   title: 'editable-content',
   onClick: () => {},
   onSelect: () => {},
-  minRows: 1
+  minRows: 1,
+  disabled: false
 }
 
 export class Tinymce extends Component {
@@ -200,7 +202,8 @@ Tinymce.propTypes = {
   onChange: T.func.isRequired,
   onSelect: T.func,
   onClick: T.func,
-  title: T.string
+  title: T.string,
+  disabled: T.bool
 }
 
 export class Textarea extends Component {
@@ -216,6 +219,7 @@ export class Textarea extends Component {
         title={this.props.title}
         minRows={this.props.minRows}
         content={this.props.content}
+        disabled={this.props.disabled}
         onChange={this.props.onChange}
         onSelect={this.props.onSelect}
         onClick={this.props.onClick}
@@ -229,6 +233,7 @@ export class Textarea extends Component {
         id={this.props.id}
         title={this.props.title}
         content={this.props.content}
+        disabled={this.props.disabled}
         onChange={this.props.onChange}
         onSelect={this.props.onSelect}
         onClick={this.props.onClick}
@@ -270,11 +275,13 @@ Textarea.propTypes = {
   onSelect: T.func,
   onClick: T.func,
   onChangeMode: T.func,
-  className: T.string
+  className: T.string,
+  disabled: T.bool.isRequired
 }
 
 Textarea.defaultProps = {
   minRows: 2,
+  disabled: false,
   onClick: () => {},
   onSelect: () => {},
   onChangeMode: () => {}

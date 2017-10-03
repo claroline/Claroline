@@ -37,13 +37,15 @@ Date.propTypes = {
   value: T.string,
   className: T.string,
   minDate: T.object,
-  showCalendarButton: T.bool.isRequired
+  showCalendarButton: T.bool.isRequired,
+  disabled: T.bool.isRequired
 }
 
 Date.defaultProps = {
   className: 'form-control',
   minDate: moment.utc(),
-  showCalendarButton: false
+  showCalendarButton: false,
+  disabled: false
 }
 
 // tmp: current way of retrieving locale...

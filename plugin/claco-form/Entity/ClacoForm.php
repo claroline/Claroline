@@ -571,4 +571,69 @@ class ClacoForm extends AbstractResource
         }
         $this->details['open_keywords'] = $openKeywords;
     }
+
+    public function getUseTemplate()
+    {
+        return !is_null($this->details) && isset($this->details['use_template']) ? $this->details['use_template'] : false;
+    }
+
+    public function setUseTemplate($useTemplate)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['use_template'] = $useTemplate;
+    }
+
+    public function getDefaultDisplayMode()
+    {
+        return !is_null($this->details) && isset($this->details['default_display_mode']) ? $this->details['default_display_mode'] : 'table';
+    }
+
+    public function setDefaultDisplayMode($defaultDisplayMode)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['default_display_mode'] = $defaultDisplayMode;
+    }
+
+    public function getDisplayTitle()
+    {
+        return !is_null($this->details) && isset($this->details['display_title']) ? $this->details['display_title'] : 'title';
+    }
+
+    public function setDisplayTitle($displayTitle)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['display_title'] = $displayTitle;
+    }
+
+    public function getDisplaySubtitle()
+    {
+        return !is_null($this->details) && isset($this->details['display_subtitle']) ? $this->details['display_subtitle'] : 'title';
+    }
+
+    public function setDisplaySubtitle($displaySubtitle)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['display_subtitle'] = $displaySubtitle;
+    }
+
+    public function getDisplayContent()
+    {
+        return !is_null($this->details) && isset($this->details['display_content']) ? $this->details['display_content'] : 'title';
+    }
+
+    public function setDisplayContent($displayContent)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['display_content'] = $displayContent;
+    }
 }
