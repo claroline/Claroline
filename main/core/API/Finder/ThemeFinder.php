@@ -26,7 +26,7 @@ class ThemeFinder implements FinderInterface
         return 'Claroline\CoreBundle\Entity\Theme\Theme';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
         foreach ($searches as $filterName => $filterValue) {
             if (is_string($filterValue)) {

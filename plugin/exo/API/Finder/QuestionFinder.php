@@ -47,7 +47,7 @@ class QuestionFinder implements FinderInterface
         return 'UJM\ExoBundle\Entity\Item\Item';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
         // only search in questions (not content items)
         // in any case exclude every mimeType that does not begin with [application] from results

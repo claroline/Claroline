@@ -54,7 +54,7 @@ class WorkspaceFinder implements FinderInterface
         return 'Claroline\CoreBundle\Entity\Workspace\Workspace';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
         if (php_sapi_name() !== 'cli' && !$this->authChecker->isGranted('ROLE_ADMIN')) {
             /** @var User $currentUser */

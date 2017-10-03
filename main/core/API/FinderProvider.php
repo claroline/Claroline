@@ -119,12 +119,10 @@ class FinderProvider
                ->from($class, 'obj');
 
             // filter query - let's the finder implementation process the filters to configure query
-            $this->get($class)->configureQueryBuilder($qb, $filters);
+            $this->get($class)->configureQueryBuilder($qb, $filters, $sortBy);
 
-            // order query
-            if (!empty($sortBy) && !empty($sortBy['property']) && 0 !== $sortBy['direction']) {
-                $qb->orderBy('obj.'.$sortBy['property'], 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
-            }
+            // order query if implementation has not done it
+            $this->sortResults($qb, $sortBy);
 
             if (!$count && 0 < $limit) {
                 $qb->setFirstResult($page * $limit);
@@ -138,6 +136,18 @@ class FinderProvider
             $data = $this->om->getRepository($class)->findBy($filters, null, 0 < $limit ? $limit : null, $page);
 
             return $count ? count($data) : $data;
+        }
+    }
+
+    private function sortResults(QueryBuilder $qb, array $sortBy = null)
+    {
+        if (!empty($sortBy) && !empty($sortBy['property']) && 0 !== $sortBy['direction']) {
+            // query needs to be sorted, check if the Finder implementation has a custom sort system
+            $queryOrder = $qb->getDQLPart('orderBy');
+            if (empty($queryOrder)) {
+                // no order by defined
+                $qb->orderBy('obj.'.$sortBy['property'], 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+            }
         }
     }
 

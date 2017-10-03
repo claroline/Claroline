@@ -28,7 +28,7 @@ class PaperFinder implements FinderInterface
         return 'UJM\ExoBundle\Entity\Attempt\Paper';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
         foreach ($searches as $filterName => $filterValue) {
             if (is_string($filterValue)) {
