@@ -47,7 +47,7 @@
                         <div class="horizontal-menu" ng-show="vm.options.data.menuOrientation=='horizontal'">
                             <ui-flexnav menu="vm.website.pages[0]" style-options="vm.options.data" options="vm.flexnavOptions"></ui-flexnav>
                         </div>
-                        <div class="container-content" ng-style="{height: vm.contentHeight}">
+                        <div class="container-content {{ '{{ vm.options.data.menuOrientation }}' }}-menu" ng-style="{'min-height': vm.contentHeight}">
                             <div class="vertical-menu resizeable-right float-left" ng-show="vm.options.data.menuOrientation=='vertical'" ng-style="vm.menuVerticalStyle()">
                                 <wxy-push-menu menu="vm.website.pages[0]" menu-style="vm.options.data" options="vm.pushMenuOptions" menu-width="vm.options.data.menuWidth"></wxy-push-menu>
                             </div>
@@ -56,7 +56,7 @@
                                 <div class="resizer-box-middle"></div>
                                 <div class="resizer-box-bottom"></div>
                             </div>
-                            <div class="content" change-height="vm.contentHeight" style="min-height: 200px;" ng-style="{'margin-left':((vm.options.data.menuOrientation=='vertical')?(vm.options.data.menuWidth+15):0)+'px', 'background-color': vm.options.data.bgContentColor}">
+                            <div class="content" change-height="vm.contentHeight" style="min-height: 200px;" ng-style="{'margin-left':((vm.options.data.menuOrientation=='vertical')?10:0)+'px', 'background-color': vm.options.data.bgContentColor}">
                                 <div>
                                     <div data-ng-if="vm.currentClickedItem.type=='{{ pageTypes.blank }}'" ng-bind-html="vm.currentClickedItem.richText|trustAsHtml"></div>
                                     <iframe width="100%" iframe-height-on-load data-ng-if="vm.currentClickedItem.type=='{{ pageTypes.url }}'" data-ng-src="{{ '{{ vm.currentClickedItem.url|trustAsResourceUrl }}' }}"></iframe>

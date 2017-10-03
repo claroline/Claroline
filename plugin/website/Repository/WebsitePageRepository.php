@@ -60,6 +60,8 @@ class WebsitePageRepository extends NestedTreeRepository
                 page.level,
                 page.right,
                 IDENTITY(page.parent) AS parent,
+                page.resourceNodeType,
+                IDENTITY(page.resourceNode) AS resourceNodeId,
                 page.root,
                 page.type
             ');

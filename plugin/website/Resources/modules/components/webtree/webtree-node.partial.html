@@ -1,6 +1,6 @@
 <div class="tree-node tree-node-content menu-item-container" data-ng-class="{'selected':vm.webtree.activeNode==vm.node}" ng-click="vm.setAsActive()"></span>
-    <span data-ng-style="{'margin-left': vm.marginLeft}" ui-tree-handle class="menu-dragndrop-icon"><a><span class="fa fa-arrows"></span></a></span>
-    <span class="menu-dropdown-icon"><a ng-if="vm.node.children && vm.node.children.length > 0" data-nodrag ng-click="vm.toggleCollapse()"><span class="fa" ng-class="{'fa-angle-right': vm.collapsed, 'fa-angle-down': !vm.collapsed}"></span></a></span>
+    <span ui-tree-handle class="menu-dragndrop-icon"><a><span class="fa fa-arrows"></span></a></span>
+    <span class="menu-dropdown-icon" ng-if="vm.node.children && vm.node.children.length > 0"><a data-nodrag ng-click="vm.toggleCollapse()"><span class="fa" ng-class="{'fa-angle-right': vm.collapsed, 'fa-angle-down': !vm.collapsed}"></span></a></span>
     <span class="menu-type-icon"><i class="fa" ng-class="{'fa-file-code-o':vm.node.type=='blank', 'fa-folder':vm.node.type=='resource', 'fa-globe':vm.node.type=='url'}"></i><i data-ng-if="vm.node.isHomepage" class="fa fa-home"></i></span>
     <span data-ng-class="{'tree-node-section':vm.node.isSection, 'tree-node-invisible':!vm.node.visible}">{{vm.node.title}}</span>
 </div>

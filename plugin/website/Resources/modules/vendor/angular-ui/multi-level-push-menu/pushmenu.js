@@ -1,5 +1,3 @@
-'use strict'
-
 import $ from 'jquery'
 import angular from 'angular/index'
 
@@ -18,7 +16,7 @@ import angular from 'angular/index'
     function ($templateCache) {
       $templateCache.put('pushmenu/main_menu.tpl',
         '<div id="menu">' +
-        '<nav ng-class="[options.wrapperClass, options.direction]" ng-style="{width: width + \'px\'}">' +
+        '<nav ng-class="[options.wrapperClass, options.direction]">' +
         '<wxy-submenu menu="menu" level="level" visible="visible" menu-style="menuStyle" menu-width="menuWidth"></wxy-submenu>' +
         '</nav>' +
         '</div>'
@@ -33,8 +31,8 @@ import angular from 'angular/index'
         '<div id="{{menu.id}}" ng-show="visible" ng-style="{width: width + \'px\', \'background-color\': menuStyle.menuBgColor}" ng-class="{visible: visible, multilevelpushmenu_inactive: inactive && !collapsed}" class="levelHolderClass">' +
         '<h2 title="{{menu.title}}">' +
         '<i class="floatRight cursorPointer fa fa-bars" ng-click="openMenu($event, menu)"></i>' +
-        '<a ng-click="goBack($event, menu)">' +
-        '<i ng-if="level != 0 && !inactive" ng-class="options.backItemIcon"></i>' +
+        '<a ng-if="!inactive" ng-click="goBack($event, menu)">' +
+        '<i ng-if="level != 0" ng-class="options.backItemIcon"></i>' +
         ' {{menu.title}}' +
         '</a>' +
         '</h2>' +
@@ -64,7 +62,7 @@ import angular from 'angular/index'
           menuWidth: '=',
           menuStyle: '='
         },
-        controller: function ($scope, $element) {
+        controller: function ($scope) {
           var options, width
           $scope.options = options = angular.extend(wxyOptions, $scope.options)
           $scope.level = 0
@@ -102,12 +100,12 @@ import angular from 'angular/index'
           menuWidth: '=',
           menuStyle: '='
         },
-        compile: function compile(tElement, tAttr) {
+        compile: function compile(tElement) {
           var compiledContents, contents
           contents = tElement.contents().remove()
           compiledContents = null
           return {
-            pre: function preLink(scope, iElement, iAttr) {
+            pre: function preLink(scope, iElement) {
               if (!compiledContents) {
                 compiledContents = $compile(contents)
               }
@@ -116,7 +114,7 @@ import angular from 'angular/index'
               })
             },
             post: function postLink(scope, element, attr, ctrl) {
-              var collapse, marginCollapsed, onOpen, options, _this = this
+              var collapse, marginCollapsed, onOpen, options = this
 
               scope.options = options = ctrl.GetOptions()
               scope.correctionWidth = 0
@@ -150,12 +148,12 @@ import angular from 'angular/index'
                   }
                   $animate.addClass(element, 'slide').then(function () {
                     element.removeClass('slide')
-                    if (parseInt(element.css('marginLeft')) != element.data('to')) {
+                    if (parseInt(element.css('marginLeft')) !== element.data('to')) {
                       element.animate({
                         marginLeft: element.data('to') + 'px'
                       })
                     }
-                    scope.$apply(function () {
+                    scope.$applyAsync(function () {
                       if (scope.collapsed) {
                         return options.onCollapseMenuEnd()
                       } else {
@@ -185,7 +183,7 @@ import angular from 'angular/index'
                 }
               }
               scope.goBack = function (event, menu) {
-                if (scope.level != 0) {
+                if (scope.level !== 0) {
                   options.onBackItemClick(event, menu)
                   scope.visible = false
                   return scope.$emit('submenuClosed', scope.level)
@@ -197,16 +195,16 @@ import angular from 'angular/index'
                     options.onExpandMenuStart()
                     var fromAnimation = 0
                     var toAnimation = 0
-                    if (options.direction == 'ltr') {
+                    if (options.direction === 'ltr') {
                       fromAnimation = -ctrl.GetBaseWidth()
-                    } else if (options.direction == 'rtl') {
+                    } else if (options.direction === 'rtl') {
                       fromAnimation = ctrl.GetBaseWidth()
                     }
                     element.data('from', fromAnimation)
                     element.data('to', toAnimation)
                     $animate.addClass(element, 'slide').then(function () {
                       element.removeClass('slide')
-                      scope.$apply(function () {
+                      scope.$applyAsync(function () {
                         options.onExpandMenuEnd()
                       })
                     })

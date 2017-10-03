@@ -37,7 +37,7 @@
                 </nav>
                 <ui-flexnav menu="vm.menu" style-options="vm.options" options="vm.flexnavOptions"></ui-flexnav>
             {% endif %}
-            <div class="website-content" ng-style="{'min-height': contentHeight+'px'}">
+            <div class="website-content {{ options.menuOrientation ~ '-menu' }}" ng-style="{'min-height': contentHeight+'px'}">
                 {% if options.menuOrientation == 'vertical' %}
                     <wxy-push-menu menu="vm.menu" menu-style="vm.options" options="vm.pushMenuOptions" menu-width="vm.options.menuWidth"></wxy-push-menu>
                 {% endif %}

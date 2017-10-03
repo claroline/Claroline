@@ -1,6 +1,5 @@
 .multilevelpushmenu_wrapper {
-  position: absolute;
-  z-index: 10;
+  position: relative;
   height: 100%;
   padding: 0;
   margin: 0;
@@ -8,21 +7,26 @@
 }
 
 .multilevelpushmenu_wrapper .levelHolderClass {
-  position: absolute;
+  position: relative;
   top: 0;
   width: auto;
   min-height: 100%;
   overflow: hidden;
   font-family: 'Open Sans Condensed', sans-serif;
-  font-size: 1em;
+  font-size: 1.5rem;
   zoom: 1;
 }
 
+.multilevelpushmenu_wrapper ul .levelHolderClass {
+  position:absolute;
+}
+
 .multilevelpushmenu_wrapper h2 {
-  padding: 0 .4em 0 .4em;
-  font-size: 1.5em;
+  padding: 0 .8rem 0 .4rem;
+  margin: 10px 0;
+  font-size: 2.2rem;
   font-weight: bold;
-  line-height: 1em;
+  line-height: 2.2rem;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
