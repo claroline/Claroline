@@ -88,7 +88,7 @@ class EntryFinder implements FinderInterface
         return 'Claroline\ClacoFormBundle\Entity\Entry';
     }
 
-    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = [])
+    public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
@@ -173,6 +173,8 @@ class EntryFinder implements FinderInterface
         }
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'clacoForm':
+                    break;
                 case 'title':
                     $qb->andWhere('UPPER(obj.title) LIKE :title');
                     $qb->setParameter('title', '%'.strtoupper($filterValue).'%');
@@ -221,11 +223,17 @@ class EntryFinder implements FinderInterface
             }
         }
 
-        if (isset($sortBy['property']) && isset($sortBy['direction'])) {
+        if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
             $sortByProperty = $sortBy['property'];
             $sortByDirection = $sortBy['direction'] === 1 ? 'ASC' : 'DESC';
 
             switch ($sortByProperty) {
+                case 'creationDate':
+                case 'title':
+                case 'user':
+                case 'status':
+                    $qb->orderBy("obj.{$sortByProperty}", $sortByDirection);
+                    break;
                 case 'categories':
                     if (!isset($this->usedJoin['categories'])) {
                         $qb->leftJoin('obj.categories', 'c');
