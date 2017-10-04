@@ -259,7 +259,6 @@ class Persister
         $user->setPublicUrl($username);
         $user->setPlainPassword($username);
         $user->setMail($username.'@mail.com');
-        $user->setGuid($username);
         $user->setIsMailValidated(true);
         $this->om->persist($user);
 

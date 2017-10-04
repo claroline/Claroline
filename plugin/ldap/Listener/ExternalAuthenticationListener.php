@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
 use Claroline\CoreBundle\Event\LoginTargetUrlEvent;
 use Claroline\CoreBundle\Event\RenderAuthenticationButtonEvent;
-use Claroline\CoreBundle\Router\ClaroRouter;
+use Claroline\CoreBundle\Routing\ClaroRouter;
 use Claroline\LdapBundle\Manager\LdapManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bridge\Twig\TwigEngine;

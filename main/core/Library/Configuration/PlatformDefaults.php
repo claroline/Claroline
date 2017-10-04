@@ -134,6 +134,7 @@ class PlatformDefaults implements ParameterProviderInterface
               'innova_path' => ['visible'],
               'icap_lesson' => ['visible'],
             ],
+            'default_root_anon_id' => null,
         ];
     }
 }

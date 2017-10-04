@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Claroline\CoreBundle\Entity\Calendar\Event;
+use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
@@ -31,6 +32,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Workspace
 {
+    use OrganizationsTrait;
+
     const DEFAULT_MAX_STORAGE_SIZE = '1 TB';
     const DEFAULT_MAX_FILE_COUNT = 10000;
     const DEFAULT_MAX_USERS = 10000;
@@ -790,25 +793,5 @@ class Workspace
     public function isModel()
     {
         return $this->model;
-    }
-
-    public function getOrganizations()
-    {
-        return $this->organizations;
-    }
-
-    public function addOrganization(Organization $organization)
-    {
-        if (!$this->organizations->contains($organization)) {
-            $this->organizations->add($organization);
-        }
-    }
-
-    // todo: remove this method
-    public function setOrganizations($organizations)
-    {
-        $this->organizations = $organizations instanceof ArrayCollection ?
-            $organizations :
-            new ArrayCollection($organizations);
     }
 }

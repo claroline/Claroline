@@ -13,8 +13,8 @@ namespace Claroline\CoreBundle\Command\User;
 
 use Claroline\CoreBundle\Entity\User as UserEntity;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -66,7 +66,8 @@ class CreateCommand extends ContainerAwareCommand
         foreach ($params as $argument => $argumentName) {
             if (!$input->getArgument($argument)) {
                 $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
+                    $argument,
+                    $this->askArgument($output, $argumentName)
                 );
             }
         }

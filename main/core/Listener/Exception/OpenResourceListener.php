@@ -47,9 +47,9 @@ class OpenResourceListener
                 }
             }
 
-	if (count($toUnlock) === 0) {
-		return;
-	}
+            if (count($toUnlock) === 0) {
+                return;
+            }
 
             //currently, only support one resource unlocking
             $node = $toUnlock[0];

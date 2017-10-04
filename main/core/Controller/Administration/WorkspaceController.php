@@ -71,9 +71,9 @@ class WorkspaceController extends Controller
                 'Claroline\CoreBundle\Entity\Workspace\Workspace', [
                     'limit' => 20,
                     'filters' => ['model' => false, 'personal' => false],
-                    'sortBy' => 'name'
+                    'sortBy' => 'name',
                 ]
-            )
+            ),
         ];
     }
 

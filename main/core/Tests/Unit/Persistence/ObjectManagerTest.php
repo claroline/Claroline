@@ -27,7 +27,7 @@ class ObjectManagerTest extends MockeryTestCase
 
     /**
      * @dataProvider        wrappedManagerDependentMethodProvider
-     * @expectedException   Claroline\CoreBundle\Persistence\UnsupportedMethodException
+     * @expectedException   \Claroline\CoreBundle\Persistence\UnsupportedMethodException
      */
     public function testWrappedManagerDependentMethodsThrowAnExceptionOnUnsupportedMethods($method)
     {
@@ -65,7 +65,7 @@ class ObjectManagerTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException Claroline\CoreBundle\Persistence\NoFlushSuiteStartedException
+     * @expectedException \Claroline\CoreBundle\Persistence\NoFlushSuiteStartedException
      */
     public function testEndFlushSuiteThrowsAnExceptionIfNoSuiteHasBeenStarted()
     {
@@ -113,7 +113,7 @@ class ObjectManagerTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException Claroline\CoreBundle\Persistence\MissingObjectException
+     * @expectedException \Claroline\CoreBundle\Persistence\MissingObjectException
      */
     public function testFindByIdsThrowsAnExceptionIfSomeEntitiesCannotBeRetreived()
     {
@@ -131,9 +131,9 @@ class ObjectManagerTest extends MockeryTestCase
         $query = $this->getQuery();
         $oom->shouldReceive('createQuery')
             ->once()
-            ->with('SELECT object FROM Foo\Bar object WHERE object.id IN (:ids)')
+            ->with('SELECT object FROM Foo\Bar object WHERE object.id IN (:list)')
             ->andReturn($query);
-        $query->shouldReceive('setParameter')->with('ids', [1, 2])->once();
+        $query->shouldReceive('setParameter')->with('list', [1, 2])->once();
         $query->shouldReceive('getResult')->once()->andReturn(['object 1', 'object 2']);
         $om = new ObjectManager($oom);
         $this->assertEquals(['object 1', 'object 2'], $om->findByIds('Foo\Bar', [1, 2]));

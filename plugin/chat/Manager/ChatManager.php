@@ -112,7 +112,7 @@ class ChatManager
         }
 
         $this->log("Adding chat user for {$user->getUsername()}");
-        $this->createChatUser($user, $user->getUsername(), $user->getGuid());
+        $this->createChatUser($user, $user->getUsername(), $user->getUuid());
         $register = new Register($this->configHandler->getParameter('chat_ssl'));
         $register->setUser($user);
         $client->send($register);

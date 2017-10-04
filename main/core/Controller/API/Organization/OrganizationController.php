@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\API\Organization;
 
+use Claroline\CoreBundle\API\Options;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Form\Organization\OrganizationParametersType;
 use Claroline\CoreBundle\Form\Organization\OrganizationType;
@@ -96,7 +97,7 @@ class OrganizationController extends FOSRestController
         return $this->get('claroline.API.finder')->search(
             'Claroline\CoreBundle\Entity\Organization\Organization',
             ['filters' => ['parent' => null]],
-            ['recursive' => true]
+            [Options::IS_RECURSIVE]
         )['data'];
     }
 

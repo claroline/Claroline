@@ -473,6 +473,13 @@ claro_admin_scheduled_task:
     prefix: admin/scheduled/task
     type: annotation
 
+claro_new_api:
+    resource: "@ClarolineCoreBundle/Controller/APINew"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true
+
 claro_admin_scheduled_task_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/ScheduledTaskController.php"
     type: annotation

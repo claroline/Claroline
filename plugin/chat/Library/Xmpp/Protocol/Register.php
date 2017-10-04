@@ -26,9 +26,10 @@ class Register implements ProtocolImplementationInterface
         $query = "<iq type='set' id='%s'><query xmlns='jabber:iq:register'><username>%s</username><password>%s</password><name>%s</name></query></iq>";
 
         return XML::quoteMessage(
-            $query, XML::generateId(),
+            $query,
+            XML::generateId(),
             $this->user->getUsername(),
-            $this->user->getGuid(),
+            $this->user->getUuid(),
             $this->user->getFirstName().' '.$this->user->getLastName()
         );
     }

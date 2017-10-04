@@ -98,7 +98,6 @@ abstract class RepositoryTestCase extends TransactionalTestCase
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPassword($username);
-        $user->setGuid($username);
         $user->setMail($username.'@mail.com');
         $this->om->persist($user);
 
@@ -109,7 +108,6 @@ abstract class RepositoryTestCase extends TransactionalTestCase
     {
         $group = new Group();
         $group->setName($name);
-        $group->setGuid($name);
         $this->om->persist($group);
 
         return $group;

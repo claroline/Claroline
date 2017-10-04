@@ -505,7 +505,7 @@ class UserController extends Controller
                 'phone' => $user->getPhone(),
                 'picture' => $user->getPicture(),
                 'administrative_code' => $user->getAdministrativeCode(),
-                'guid' => $user->getGuid(),
+                'guid' => $user->getUuid(),
                 'personal_workspace_id' => is_null($user->getPersonalWorkspace()) ?
                     null :
                     $user->getPersonalWorkspace()->getId(),

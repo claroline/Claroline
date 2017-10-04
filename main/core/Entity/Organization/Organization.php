@@ -13,6 +13,9 @@ namespace Claroline\CoreBundle\Entity\Organization;
 
 use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
 use Claroline\CoreBundle\Entity\Calendar\Year;
+use Claroline\CoreBundle\Entity\Model\CodeTrait;
+use Claroline\CoreBundle\Entity\Model\GroupsTrait;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,29 +33,39 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Organization
 {
+    use UuidTrait;
+    use CodeTrait;
+    use GroupsTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
+     *
+     * @var int
      */
     protected $id;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
      * @Groups({"api_organization_tree", "api_organization_list"})
+     *
+     * @var int
      */
     protected $position;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column(type="string")
      * @Assert\NotBlank()
      * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
+     *
+     * @var string
      */
     protected $name;
 
     /**
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(nullable=true, type="string")
      * @Assert\Email()
      * @Groups({"api_organization_tree", "api_organization_list"})
      */
@@ -183,6 +196,8 @@ class Organization
         $this->timeSlots = new ArrayCollection();
         $this->years = new ArrayCollection();
         $this->children = new ArrayCollection();
+        $this->refreshUuid();
+        $this->refreshCode();
     }
 
     public function getId()

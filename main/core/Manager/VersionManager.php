@@ -98,8 +98,6 @@ class VersionManager
 
     /**
      * @param string $bundle
-     *
-     * @return null
      */
     public function getLatestUpgraded($bundle)
     {

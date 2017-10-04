@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -30,11 +32,16 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Group extends AbstractRoleSubject implements OrderableInterface
 {
+    use UuidTrait;
+    use OrganizationsTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({"api_group", "api_group_min"})
+     *
+     * @var int
      */
     protected $id;
 
@@ -42,6 +49,8 @@ class Group extends AbstractRoleSubject implements OrderableInterface
      * @ORM\Column()
      * @Assert\NotBlank()
      * @Groups({"api_group", "api_group_min"})
+     *
+     * @var string
      */
     protected $name;
 
@@ -53,12 +62,6 @@ class Group extends AbstractRoleSubject implements OrderableInterface
      * )
      */
     protected $users;
-
-    /**
-     * @ORM\Column()
-     * @Groups({"api_group", "api_group_min"})
-     */
-    protected $guid;
 
     /**
      * @ORM\ManyToMany(
@@ -85,6 +88,7 @@ class Group extends AbstractRoleSubject implements OrderableInterface
         parent::__construct();
         $this->users = new ArrayCollection();
         $this->organizations = new ArrayCollection();
+        $this->refreshUuid();
     }
 
     public function getId()
@@ -202,16 +206,6 @@ class Group extends AbstractRoleSubject implements OrderableInterface
         return ['name', 'id'];
     }
 
-    public function setGuid($guid)
-    {
-        $this->guid = $guid;
-    }
-
-    public function getGuid()
-    {
-        return $this->guid;
-    }
-
     public static function getSearchableFields()
     {
         return ['name'];
@@ -220,20 +214,5 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     public function __toString()
     {
         return $this->name;
-    }
-
-    public function getOrganizations()
-    {
-        return $this->organizations;
-    }
-
-    public function setOrganizations(ArrayCollection $organizations)
-    {
-        $this->organizations = $organizations;
-    }
-
-    public function addOrganization(Organization $organization)
-    {
-        $this->organizations->add($organization);
     }
 }

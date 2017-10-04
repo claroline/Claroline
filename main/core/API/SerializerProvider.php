@@ -57,7 +57,7 @@ class SerializerProvider
                 $className = $p->getClass()->getName();
             }
 
-            if ($object instanceof $className) {
+            if ($object instanceof $className || $object === $className) {
                 return $serializer;
             }
         }
@@ -77,5 +77,17 @@ class SerializerProvider
     public function serialize($object, $options = [])
     {
         return $this->get($object)->serialize($object, $options);
+    }
+
+    /**
+     * Serializes an object.
+     *
+     * @param $object - the object to serialize
+     *
+     * @return mixed - a json serializable structure
+     */
+    public function deserialize($class, $data, $options = [])
+    {
+        return $this->get($class)->deserialize($class, $data, $options);
     }
 }

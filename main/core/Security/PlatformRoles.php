@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Library\Security;
+namespace Claroline\CoreBundle\Security;
 
 class PlatformRoles
 {

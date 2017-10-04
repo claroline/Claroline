@@ -50,6 +50,7 @@ class GroupVoter implements VoterInterface
         if (!$object instanceof Group && !$object instanceof GroupCollection) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
+
         $groups = $object instanceof GroupCollection ? $object->getGroups() : [$object];
         $action = strtolower($attributes[0]);
 

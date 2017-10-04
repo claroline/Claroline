@@ -67,11 +67,9 @@ class Persister
         $user->setUsername($username);
         $user->setPlainPassword($username);
         $user->setMail($username.'@mail.com');
-        $user->setGuid(uniqid());
         $user->addRole($roleUser);
         $user->setPublicUrl($username);
         $user->setCreationDate(new \DateTime());
-        $user->setEmailValidationHash('0123');
         $this->container->get('claroline.manager.role_manager')->createUserRole($user);
         $this->om->persist($user);
         $this->om->flush();
@@ -123,7 +121,6 @@ class Persister
     public function group($name)
     {
         $group = new Group();
-        $group->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $group->setName($name);
         $this->om->persist($group);
 

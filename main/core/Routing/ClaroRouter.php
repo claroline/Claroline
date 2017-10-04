@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\CoreBundle\Router;
+namespace Claroline\CoreBundle\Routing;
 
 /*
  * This file is part of the Claroline Connect package.
@@ -37,7 +37,7 @@ class ClaroRouter extends Router
         $this->scheme = $sslEnabled ? 'https' : 'http';
         $this->buildContext($context);
 
-        parent::__construct($container, $resource,  $options,  $context);
+        parent::__construct($container, $resource, $options, $context);
     }
 
     /**
