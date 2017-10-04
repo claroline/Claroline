@@ -215,7 +215,7 @@ class EntryView extends Component {
               ''
             break
           case 'date':
-            replacedField = fieldValue.date ?
+            replacedField = fieldValue && fieldValue.date ?
               moment(fieldValue.date).format('DD/MM/YYYY') :
               fieldValue ? moment(fieldValue).format('DD/MM/YYYY') : ''
             break

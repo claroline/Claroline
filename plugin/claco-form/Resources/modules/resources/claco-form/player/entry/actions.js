@@ -38,9 +38,8 @@ actions.createEntry = (entry, keywords) => (dispatch, getState) => {
         body: formData
       },
       success: (data, dispatch) => {
-        const parsedData = JSON.parse(data)
-        dispatch(actions.addEntry(parsedData))
-        dispatch(actions.loadCurrentEntry(parsedData))
+        dispatch(actions.addEntry(data))
+        dispatch(actions.loadCurrentEntry(data))
       }
     }
   })
@@ -60,9 +59,8 @@ actions.editEntry = (entryId, entry, keywords, categories) => (dispatch) => {
         body: formData
       },
       success: (data, dispatch) => {
-        const parsedData = JSON.parse(data)
-        dispatch(actions.updateEntry(parsedData))
-        dispatch(actions.loadCurrentEntry(parsedData))
+        dispatch(actions.updateEntry(data))
+        dispatch(actions.loadCurrentEntry(data))
       }
     }
   })
@@ -100,7 +98,7 @@ actions.loadEntry = (entryId) => (dispatch, getState) => {
             method: 'GET'
           },
           success: (data, dispatch) => {
-            dispatch(actions.loadCurrentEntry(JSON.parse(data)))
+            dispatch(actions.loadCurrentEntry(data))
           }
         }
       })
@@ -118,10 +116,10 @@ actions.switchEntryStatus = (entryId) => (dispatch, getState) => {
         method: 'PUT'
       },
       success: (data, dispatch) => {
-        dispatch(actions.updateEntry(JSON.parse(data)))
+        dispatch(actions.updateEntry(data))
 
         if (currentEntry && currentEntry.id === entryId) {
-          dispatch(actions.loadCurrentEntry(JSON.parse(data)))
+          dispatch(actions.loadCurrentEntry(data))
         }
       }
     }

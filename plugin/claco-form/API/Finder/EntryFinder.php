@@ -180,8 +180,8 @@ class EntryFinder implements FinderInterface
                     $qb->setParameter('title', '%'.strtoupper($filterValue).'%');
                     break;
                 case 'status':
-                    $qb->andWhere('obj.status = :status');
-                    $qb->setParameter('status', $filterValue ? 1 : 0);
+                    $qb->andWhere('obj.status IN (:status)');
+                    $qb->setParameter('status', $filterValue ? [1] : [0, 2]);
                     break;
                 case 'user':
                     if (!isset($this->usedJoin['user'])) {

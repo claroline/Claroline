@@ -1,4 +1,5 @@
 import React, {Component} from 'react'
+import ReactDOM from 'react-dom'
 import cloneDeep from 'lodash/cloneDeep'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
@@ -7,6 +8,7 @@ import {trans, t} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/fos-js-router'
 import {FormField} from '#/main/core/layout/form/components/form-field.jsx'
 import {SelectInput} from '#/main/core/layout/form/components/field/select-input.jsx'
+import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {getFieldType} from '../../../utils'
 import {selectors} from '../../../selectors'
 import {actions} from '../actions'
@@ -43,6 +45,7 @@ class EntryEditForm extends Component {
       errors[f.id] = ''
     })
     this.state = {
+      entry: {},
       categories: [],
       keywords: [],
       hasError: false,
@@ -80,11 +83,11 @@ class EntryEditForm extends Component {
   }
 
   initializeEntry(entry) {
-    const categories = entry.categories.map(c => c.name)
-    const keywords = entry.keywords.map(k => k.name)
+    const categories = entry.categories ? entry.categories.map(c => c.name) : []
+    const keywords = entry.keywords ? entry.keywords.map(k => k.name) : []
     const values = {entry_title: entry.title}
     this.props.fields.map(f => {
-      const fieldValue = entry.fieldValues.find(fv => fv.field.id === f.id)
+      const fieldValue = entry.fieldValues ? entry.fieldValues.find(fv => fv.field.id === f.id) : null
 
       if (fieldValue && fieldValue.fieldFacetValue) {
         values[f.id] = fieldValue.fieldFacetValue.value
@@ -93,8 +96,64 @@ class EntryEditForm extends Component {
       }
     })
 
-    this.setState({id: this.props.entryId, entry: values, keywords: keywords, categories: categories})
+    this.setState(
+      {id: this.props.entryId, entry: values, keywords: keywords, categories: categories},
+      //() => this.renderTemplateFields()
+      () => setTimeout(() => this.renderTemplateFields(), 1000)
+    )
     this.props.setCurrentEntry(entry)
+  }
+
+  generateTemplate() {
+    let template = this.props.template
+    template = template.replace('%clacoform_entry_title%', '<span id="clacoform-entry-title"></span>')
+    this.props.fields.forEach(f => {
+      template = template.replace(`%field_${f.id}%`, `<span id="clacoform-field-${f.id}"></span>`)
+    })
+
+    return template
+  }
+
+  renderTemplateFields() {
+    if (this.props.template && this.props.useTemplate) {
+      const title =
+        <FormField
+          controlId="field-title"
+          type="text"
+          label={t('title')}
+          value={this.state.entry.entry_title}
+          error={this.state.errors.entry_title}
+          onChange={value => this.updateEntryValue('entry_title', value)}
+        />
+      const element = document.getElementById('clacoform-entry-title')
+
+      if (element) {
+        ReactDOM.render(title, element)
+      }
+      this.props.fields.forEach(f => {
+        const fieldEl = document.getElementById(`clacoform-field-${f.id}`)
+
+        if (fieldEl) {
+          const fieldComponent =
+            <FormField
+              key={`field-${f.id}`}
+              controlId={`field-${f.id}`}
+              type={getFieldType(f.type).name}
+              label={f.name}
+              disabled={this.isFieldLocked(f)}
+              noLabel={true}
+              choices={f.fieldFacet ?
+                f.fieldFacet.field_facet_choices.map(ffc => Object.assign({}, ffc, {value: ffc.label})) :
+                []
+              }
+              value={this.state.entry[f.id]}
+              error={this.state.errors[f.id]}
+              onChange={value => this.updateEntryValue(f.id, value)}
+            />
+          ReactDOM.render(fieldComponent, fieldEl)
+        }
+      })
+    }
   }
 
   addCategory() {
@@ -163,7 +222,7 @@ class EntryEditForm extends Component {
   }
 
   updateEntryValue(property, value) {
-    this.setState({entry: Object.assign({}, this.state.entry, {[property]: value})})
+    this.setState({entry: Object.assign({}, this.state.entry, {[property]: value})}, this.renderTemplateFields)
   }
 
   registerEntry() {
@@ -175,6 +234,8 @@ class EntryEditForm extends Component {
         this.state.categories.map(categoryName => this.props.categories.find(c => c.name === categoryName).id)
       )
       this.props.history.push(`/entry/${this.state.id}/view`)
+    } else {
+      this.renderTemplateFields()
     }
   }
 
@@ -209,31 +270,38 @@ class EntryEditForm extends Component {
         <br/>
         {this.props.entry && this.props.entry.id > 0 && this.state.id > 0 && this.props.canEditEntry ?
           <div>
-            <FormField
-              controlId="field-title"
-              type="text"
-              label={t('title')}
-              value={this.state.entry.entry_title}
-              error={this.state.errors.entry_title}
-              onChange={value => this.updateEntryValue('entry_title', value)}
-            />
-            {this.props.fields.map(f =>
-              <FormField
-                key={`field-${f.id}`}
-                controlId={`field-${f.id}`}
-                type={getFieldType(f.type).name}
-                label={f.name}
-                disabled={this.isFieldLocked(f)}
-                noLabel={false}
-                choices={f.fieldFacet ?
-                  f.fieldFacet.field_facet_choices.map(ffc => Object.assign({}, ffc, {value: ffc.label})) :
-                  []
-                }
-                value={this.state.entry[f.id]}
-                error={this.state.errors[f.id]}
-                onChange={value => this.updateEntryValue(f.id, value)}
-              />
-            )}
+            {this.props.template && this.props.useTemplate ?
+              <HtmlText>
+                {this.generateTemplate()}
+              </HtmlText> :
+              <div>
+                <FormField
+                  controlId="field-title"
+                  type="text"
+                  label={t('title')}
+                  value={this.state.entry.entry_title}
+                  error={this.state.errors.entry_title}
+                  onChange={value => this.updateEntryValue('entry_title', value)}
+                />
+                {this.props.fields.map(f =>
+                  <FormField
+                    key={`field-${f.id}`}
+                    controlId={`field-${f.id}`}
+                    type={getFieldType(f.type).name}
+                    label={f.name}
+                    disabled={this.isFieldLocked(f)}
+                    noLabel={false}
+                    choices={f.fieldFacet ?
+                      f.fieldFacet.field_facet_choices.map(ffc => Object.assign({}, ffc, {value: ffc.label})) :
+                      []
+                    }
+                    value={this.state.entry[f.id]}
+                    error={this.state.errors[f.id]}
+                    onChange={value => this.updateEntryValue(f.id, value)}
+                  />
+                )}
+              </div>
+            }
             {this.props.isKeywordsEnabled &&
               <div>
                 <hr/>

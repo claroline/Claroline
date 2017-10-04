@@ -11,6 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Controller;
 
+use Claroline\ClacoFormBundle\API\Serializer\EntrySerializer;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
@@ -43,6 +44,7 @@ class ClacoFormController extends Controller
     private $serializer;
     private $tokenStorage;
     private $userManager;
+    private $entrySerializer;
 
     /**
      * @DI\InjectParams({
@@ -53,7 +55,8 @@ class ClacoFormController extends Controller
      *     "request"               = @DI\Inject("request"),
      *     "serializer"            = @DI\Inject("jms_serializer"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
-     *     "userManager"           = @DI\Inject("claroline.manager.user_manager")
+     *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
+     *     "entrySerializer"       = @DI\Inject("claroline.serializer.clacoform.entry")
      * })
      */
     public function __construct(
@@ -64,7 +67,8 @@ class ClacoFormController extends Controller
         Request $request,
         Serializer $serializer,
         TokenStorageInterface $tokenStorage,
-        UserManager $userManager
+        UserManager $userManager,
+        EntrySerializer $entrySerializer
     ) {
         $this->clacoFormManager = $clacoFormManager;
         $this->filesDir = $filesDir;
@@ -74,6 +78,7 @@ class ClacoFormController extends Controller
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
+        $this->entrySerializer = $entrySerializer;
     }
 
     /**
@@ -721,11 +726,7 @@ class ClacoFormController extends Controller
         } else {
             $entry = null;
         }
-        $serializedEntry = $this->serializer->serialize(
-            $entry,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedEntry = $this->entrySerializer->serialize($entry);
 
         return new JsonResponse($serializedEntry, 200);
     }
@@ -762,11 +763,7 @@ class ClacoFormController extends Controller
             $title = $entryData['entry_title'];
         }
         $updatedEntry = $this->clacoFormManager->editEntry($entry, $entryData, $title, $categoriesIds, $keywordsData);
-        $serializedEntry = $this->serializer->serialize(
-            $updatedEntry,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedEntry = $this->entrySerializer->serialize($updatedEntry);
 
         return new JsonResponse($serializedEntry, 200);
     }
@@ -785,11 +782,7 @@ class ClacoFormController extends Controller
     public function entryDeleteAction(Entry $entry)
     {
         $this->clacoFormManager->checkEntryEdition($entry);
-        $serializedEntry = $this->serializer->serialize(
-            $entry,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedEntry = $this->entrySerializer->serialize($entry);
         $this->clacoFormManager->deleteEntry($entry);
 
         return new JsonResponse($serializedEntry, 200);
@@ -809,11 +802,7 @@ class ClacoFormController extends Controller
     public function entryRetrieveAction(Entry $entry)
     {
         $this->clacoFormManager->checkEntryAccess($entry);
-        $serializedEntry = $this->serializer->serialize(
-            $entry,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedEntry = $this->entrySerializer->serialize($entry);
 
         return new JsonResponse($serializedEntry, 200);
     }
@@ -833,11 +822,7 @@ class ClacoFormController extends Controller
     {
         $this->clacoFormManager->checkEntryModeration($entry);
         $updatedEntry = $this->clacoFormManager->changeEntryStatus($entry);
-        $serializedEntry = $this->serializer->serialize(
-            $updatedEntry,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedEntry = $this->entrySerializer->serialize($updatedEntry);
 
         return new JsonResponse($serializedEntry, 200);
     }
