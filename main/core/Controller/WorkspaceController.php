@@ -407,7 +407,8 @@ class WorkspaceController extends Controller
 
         $sessionFlashBag = $this->session->getFlashBag();
         $sessionFlashBag->add(
-            'success', $this->translator->trans(
+            'success',
+            $this->translator->trans(
                 'workspace_delete_success_message',
                 ['%workspaceName%' => $workspace->getName()],
                 'platform'
@@ -468,14 +469,14 @@ class WorkspaceController extends Controller
             $hideToolsMenu = false;
         } else {
             //if manager or admin, show every tools
-          if ($hasManagerAccess) {
-              $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
-              $hideToolsMenu = false;
-          } else {
-              //otherwise only shows the relevant tools
-              $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
-              $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
-          }
+            if ($hasManagerAccess) {
+                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
+                $hideToolsMenu = false;
+            } else {
+                //otherwise only shows the relevant tools
+                $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
+                $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
+            }
         }
 
         $roleHasAccess = [];
@@ -522,7 +523,7 @@ class WorkspaceController extends Controller
         $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
         $this->eventDispatcher->dispatch('log', new LogWorkspaceEnterEvent($workspace));
         // Add workspace to recent workspaces if user is not Usurped
-        if (!$this->isUsurpator($this->tokenStorage->getToken())) {
+        if ($this->tokenStorage->getToken()->getUser() !== 'anon.' && !$this->isUsurpator($this->tokenStorage->getToken())) {
             $this->workspaceManager->addRecentWorkspaceForUser($this->tokenStorage->getToken()->getUser(), $workspace);
         }
 
