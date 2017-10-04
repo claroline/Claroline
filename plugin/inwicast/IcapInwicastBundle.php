@@ -22,4 +22,9 @@ class IcapInwicastBundle extends DistributionPluginBundle
 
         return $config->addRoutingResource(__DIR__.'/Resources/config/routing.yml', null, 'inwicast_claroline_plugin');
     }
+
+    public function isActiveByDefault()
+    {
+        return false;
+    }
 }
