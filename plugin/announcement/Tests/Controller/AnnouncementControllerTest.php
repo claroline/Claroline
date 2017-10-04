@@ -11,13 +11,13 @@
 
 namespace Claroline\AnnouncementBundle\Controller;
 
-use Symfony\Component\HttpFoundation\Response;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class AnnouncementControllerTest extends MockeryTestCase
 {
@@ -45,13 +45,13 @@ class AnnouncementControllerTest extends MockeryTestCase
 
     public function testAnnouncementsListActionWithEditPerm()
     {
-        $controller = $this->getController(array('checkAccess'));
+        $controller = $this->getController(['checkAccess']);
         $aggregate = $this->mock('Claroline\AnnouncementBundle\Entity\AnnouncementAggregate');
         $resourceNode = new ResourceNode();
-        $collection = new ResourceCollection(array($resourceNode));
+        $collection = new ResourceCollection([$resourceNode]);
         $announcementA = new Announcement();
         $announcementB = new Announcement();
-        $announcements = array($announcementA, $announcementB);
+        $announcements = [$announcementA, $announcementB];
 
         $aggregate->shouldReceive('getResourceNode')
             ->once()
@@ -73,24 +73,24 @@ class AnnouncementControllerTest extends MockeryTestCase
             ->andReturn('pager');
 
         $this->assertEquals(
-            array(
+            [
                 '_resource' => $aggregate,
                 'announcements' => 'pager',
                 'resourceCollection' => $collection,
-            ),
+            ],
             $controller->announcementsListAction($aggregate, 1)
         );
     }
 
     public function testAnnouncementsListActionWithOpenPerm()
     {
-        $controller = $this->getController(array('checkAccess'));
+        $controller = $this->getController(['checkAccess']);
         $aggregate = $this->mock('Claroline\AnnouncementBundle\Entity\AnnouncementAggregate');
         $resourceNode = new ResourceNode();
-        $collection = new ResourceCollection(array($resourceNode));
+        $collection = new ResourceCollection([$resourceNode]);
         $announcementA = new Announcement();
         $announcementB = new Announcement();
-        $announcements = array($announcementA, $announcementB);
+        $announcements = [$announcementA, $announcementB];
 
         $aggregate->shouldReceive('getResourceNode')
             ->once()
@@ -117,20 +117,19 @@ class AnnouncementControllerTest extends MockeryTestCase
             ->andReturn('pager');
 
         $this->assertEquals(
-            array(
+            [
                 '_resource' => $aggregate,
                 'announcements' => 'pager',
                 'resourceCollection' => $collection,
-            ),
+            ],
             $controller->announcementsListAction($aggregate, 1)
         );
     }
 
     public function testCreateFormAction()
     {
-        $controller = $this->getController(array('checkAccess'));
+        $controller = $this->getController(['checkAccess']);
         $aggregate = new AnnouncementAggregate();
-        $announcement = new Announcement();
         $form = $this->mock('Symfony\Component\Form\Form');
 
         $this->securityContext
@@ -151,11 +150,11 @@ class AnnouncementControllerTest extends MockeryTestCase
             ->andReturn('view');
 
         $this->assertEquals(
-            array(
+            [
                 'form' => 'view',
                 'type' => 'create',
                 '_resource' => $aggregate,
-            ),
+            ],
             $controller->createFormAction($aggregate)
         );
     }
@@ -167,7 +166,7 @@ class AnnouncementControllerTest extends MockeryTestCase
 
     public function testAnnouncementEditFormAction()
     {
-        $controller = $this->getController(array('checkAccess'));
+        $controller = $this->getController(['checkAccess']);
         $announcement = $this->mock('Claroline\AnnouncementBundle\Entity\Announcement');
         $aggregate = new AnnouncementAggregate();
         $form = $this->mock('Symfony\Component\Form\Form');
@@ -190,12 +189,12 @@ class AnnouncementControllerTest extends MockeryTestCase
             ->andReturn('view');
 
         $this->assertEquals(
-            array(
+            [
                 'form' => 'view',
                 'type' => 'edit',
                 'announcement' => $announcement,
                 '_resource' => $aggregate,
-            ),
+            ],
             $controller->announcementEditFormAction($announcement)
         );
     }
@@ -209,7 +208,7 @@ class AnnouncementControllerTest extends MockeryTestCase
     {
         $this->markTestSkipped('Event dispatching must be mocked');
 
-        $controller = $this->getController(array('checkAccess'));
+        $controller = $this->getController(['checkAccess']);
         $announcement = $this->mock('Claroline\AnnouncementBundle\Entity\Announcement');
         $aggregate = new AnnouncementAggregate();
 
@@ -234,18 +233,18 @@ class AnnouncementControllerTest extends MockeryTestCase
 
     public function testAnnouncementsWorkspaceWidgetPagerAction()
     {
-        $controller = $this->getController(array('checkAccess'));
+        $controller = $this->getController(['checkAccess']);
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $roleA = new Role();
         $roleB = new Role();
-        $roles = array($roleA, $roleB);
+        $roles = [$roleA, $roleB];
         $announcementA = new Announcement();
         $announcementB = new Announcement();
-        $datas = array(
-            array('announcement' => $announcementA),
-            array('announcement' => $announcementB),
-        );
+        $datas = [
+            ['announcement' => $announcementA],
+            ['announcement' => $announcementB],
+        ];
 
         $this->securityContext
             ->shouldReceive('getToken')
@@ -272,31 +271,31 @@ class AnnouncementControllerTest extends MockeryTestCase
             ->andReturn(1);
 
         $this->assertEquals(
-            array(
+            [
                 'datas' => 'pager',
                 'widgetType' => 'workspace',
                 'workspaceId' => 1,
-            ),
+            ],
             $controller->announcementsWorkspaceWidgetPagerAction($workspace, 1)
         );
     }
 
     public function testAnnouncementsDesktopWidgetPagerAction()
     {
-        $controller = $this->getController(array('checkAccess'));
+        $controller = $this->getController(['checkAccess']);
         $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $workspaces = array($workspaceA, $workspaceB);
+        $workspaces = [$workspaceA, $workspaceB];
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
         $roleA = new Role();
         $roleB = new Role();
-        $roles = array($roleA, $roleB);
+        $roles = [$roleA, $roleB];
         $announcementA = new Announcement();
         $announcementB = new Announcement();
-        $datas = array(
-            array('announcement' => $announcementA),
-            array('announcement' => $announcementB),
-        );
+        $datas = [
+            ['announcement' => $announcementA],
+            ['announcement' => $announcementB],
+        ];
 
         $this->securityContext
             ->shouldReceive('getToken')
@@ -324,15 +323,15 @@ class AnnouncementControllerTest extends MockeryTestCase
             ->andReturn('pager');
 
         $this->assertEquals(
-            array(
+            [
                 'datas' => 'pager',
                 'widgetType' => 'desktop',
-            ),
+            ],
             $controller->announcementsDesktopWidgetPagerAction(1)
         );
     }
 
-    private function getController(array $mockedMethods = array())
+    private function getController(array $mockedMethods = [])
     {
         if (count($mockedMethods) === 0) {
             return new AnnouncementController(
@@ -358,7 +357,7 @@ class AnnouncementControllerTest extends MockeryTestCase
 
         return $this->mock(
             'Claroline\AnnouncementBundle\Controller\AnnouncementController'.$stringMocked,
-            array(
+            [
                 $this->announcementManager,
                 $this->formFactory,
                 $this->pagerFactory,
@@ -367,7 +366,7 @@ class AnnouncementControllerTest extends MockeryTestCase
                 $this->translator,
                 $this->utils,
                 $this->workspaceManager,
-            )
+            ]
         );
     }
 }

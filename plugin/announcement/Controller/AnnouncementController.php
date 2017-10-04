@@ -230,7 +230,9 @@ class AnnouncementController extends Controller
             $this->announcementManager->insertAnnouncement($announcement);
 
             if ($form->get('notify_user')->getData()) {
-                $this->announcementManager->sendMessage($announcement);
+                is_null($visibleFrom) ?
+                    $this->announcementManager->sendMessage($announcement) :
+                    $this->announcementManager->createAnnouncementTask($announcement);
             }
 
             $this->eventDispatcher->dispatch(
@@ -339,8 +341,13 @@ class AnnouncementController extends Controller
             }
             $this->announcementManager->insertAnnouncement($announcement);
 
+            if (!$form->get('notify_user')->getData() || is_null($visibleFrom)) {
+                $this->announcementManager->deleteAnnouncementTask($announcement);
+            }
             if ($form->get('notify_user')->getData()) {
-                $this->announcementManager->sendMessage($announcement);
+                is_null($visibleFrom) ?
+                    $this->announcementManager->sendMessage($announcement) :
+                    $this->announcementManager->updateAnnouncementTask($announcement);
             }
 
             $this->eventDispatcher->dispatch(

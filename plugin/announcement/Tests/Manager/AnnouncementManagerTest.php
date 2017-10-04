@@ -58,8 +58,8 @@ class AnnouncementManagerTest extends MockeryTestCase
         $workspace = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $roleA = new Role();
         $roleB = new Role();
-        $roles = array($roleA, $roleB);
-        $announcements = array('announ_1', 'announ_2');
+        $roles = [$roleA, $roleB];
+        $announcements = ['announ_1', 'announ_2'];
 
         $this->announcementRepo
             ->shouldReceive('findVisibleAnnouncementsByWorkspace')
@@ -77,11 +77,11 @@ class AnnouncementManagerTest extends MockeryTestCase
     {
         $workspaceA = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
         $workspaceB = $this->mock('Claroline\CoreBundle\Entity\Workspace\Workspace');
-        $workspaces = array($workspaceA, $workspaceB);
+        $workspaces = [$workspaceA, $workspaceB];
         $roleA = new Role();
         $roleB = new Role();
-        $roles = array($roleA, $roleB);
-        $announcements = array('announ_1', 'announ_2');
+        $roles = [$roleA, $roleB];
+        $announcements = ['announ_1', 'announ_2'];
 
         $this->announcementRepo
             ->shouldReceive('findVisibleAnnouncementsByWorkspaces')
@@ -98,7 +98,7 @@ class AnnouncementManagerTest extends MockeryTestCase
     public function testGetAllAnnouncementsByAggregate()
     {
         $aggregate = $this->mock('Claroline\AnnouncementBundle\Entity\AnnouncementAggregate');
-        $announcements = array('announ_1', 'announ_2');
+        $announcements = ['announ_1', 'announ_2'];
 
         $this->announcementRepo
             ->shouldReceive('findAllAnnouncementsByAggregate')
@@ -115,7 +115,7 @@ class AnnouncementManagerTest extends MockeryTestCase
     public function testGetVisibleAnnouncementsByAggregate()
     {
         $aggregate = $this->mock('Claroline\AnnouncementBundle\Entity\AnnouncementAggregate');
-        $announcements = array('announ_1', 'announ_2');
+        $announcements = ['announ_1', 'announ_2'];
 
         $this->announcementRepo
             ->shouldReceive('findVisibleAnnouncementsByAggregate')
@@ -129,7 +129,7 @@ class AnnouncementManagerTest extends MockeryTestCase
         );
     }
 
-    private function getManager(array $mockedMethods = array())
+    private function getManager(array $mockedMethods = [])
     {
         $this->om->shouldReceive('getRepository')
             ->with('ClarolineAnnouncementBundle:Announcement')
@@ -151,7 +151,7 @@ class AnnouncementManagerTest extends MockeryTestCase
 
         return $this->mock(
             'Claroline\AnnouncementBundle\Manager\AnnouncementManager'.$stringMocked,
-            array($this->om)
+            [$this->om]
         );
     }
 }

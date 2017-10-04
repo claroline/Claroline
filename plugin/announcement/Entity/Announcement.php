@@ -11,6 +11,7 @@
 
 namespace Claroline\AnnouncementBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -84,6 +85,14 @@ class Announcement
      * @ORM\JoinColumn(name="aggregate_id", onDelete="CASCADE", nullable=false)
      */
     protected $aggregate;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Task\ScheduledTask"
+     * )
+     * @ORM\JoinColumn(name="task_id", nullable=true)
+     */
+    protected $task;
 
     public function getId()
     {
@@ -193,5 +202,15 @@ class Announcement
     public function setAggregate($aggregate)
     {
         $this->aggregate = $aggregate;
+    }
+
+    public function getTask()
+    {
+        return $this->task;
+    }
+
+    public function setTask(ScheduledTask $task = null)
+    {
+        $this->task = $task;
     }
 }

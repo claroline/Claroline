@@ -18,7 +18,9 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -30,6 +32,8 @@ class AnnouncementManager
     private $eventDispatcher;
     private $mailManager;
     private $om;
+    private $configHandler;
+    private $taskManager;
 
     private $announcementRepo;
     private $announcementsWidgetConfigRepo;
@@ -42,14 +46,23 @@ class AnnouncementManager
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
      *     "mailManager"     = @DI\Inject("claroline.manager.mail_manager"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "configHandler"   = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "taskManager"     = @DI\Inject("claroline.manager.scheduled_task_manager")
      * })
      */
-    public function __construct(ObjectManager $om, MailManager $mailManager, StrictDispatcher $eventDispatcher)
-    {
+    public function __construct(
+        ObjectManager $om,
+        MailManager $mailManager,
+        StrictDispatcher $eventDispatcher,
+        PlatformConfigurationHandler $configHandler,
+        ScheduledTaskManager $taskManager
+    ) {
         $this->eventDispatcher = $eventDispatcher;
         $this->mailManager = $mailManager;
         $this->om = $om;
+        $this->configHandler = $configHandler;
+        $this->taskManager = $taskManager;
         $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
         $this->announcementsWidgetConfigRepo = $om->getRepository('ClarolineAnnouncementBundle:AnnouncementsWidgetConfig');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
@@ -64,8 +77,14 @@ class AnnouncementManager
 
     public function deleteAnnouncement(Announcement $announcement)
     {
+        $this->om->startFlushSuite();
+        $task = $announcement->getTask();
+
+        if (!is_null($task)) {
+            $this->deleteAnnouncementTask($announcement);
+        }
         $this->om->remove($announcement);
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     public function getVisibleAnnouncementsByWorkspace(Workspace $workspace, array $roles)
@@ -172,5 +191,80 @@ class AnnouncementManager
     {
         $this->om->persist($config);
         $this->om->flush();
+    }
+
+    public function createAnnouncementTask(Announcement $announcement)
+    {
+        if (!is_null($announcement->getVisibleFrom()) &&
+            $this->configHandler->hasParameter('is_cron_configured') &&
+            $this->configHandler->getParameter('is_cron_configured')
+        ) {
+            $this->om->startFlushSuite();
+            $taskData = $this->generateAnnoucementTaskData($announcement);
+            $task = $this->taskManager->create($taskData);
+            $announcement->setTask($task);
+            $this->om->persist($announcement);
+            $this->om->endFlushSuite();
+        }
+    }
+
+    public function updateAnnouncementTask(Announcement $announcement)
+    {
+        $task = $announcement->getTask();
+        $visibleFromDate = $announcement->getVisibleFrom();
+
+        if (!is_null($task)) {
+            if (!is_null($visibleFromDate) &&
+                $this->configHandler->hasParameter('is_cron_configured') &&
+                $this->configHandler->getParameter('is_cron_configured')
+            ) {
+                $taskData = $this->generateAnnoucementTaskData($announcement);
+                $this->taskManager->update($taskData, $task);
+            } else {
+                $this->deleteAnnouncementTask($announcement);
+            }
+        } elseif (!is_null($visibleFromDate)) {
+            $this->createAnnouncementTask($announcement);
+        }
+    }
+
+    public function deleteAnnouncementTask(Announcement $announcement)
+    {
+        $task = $announcement->getTask();
+
+        if (!is_null($task)) {
+            $this->om->startFlushSuite();
+            $this->taskManager->delete($task);
+            $announcement->setTask(null);
+            $this->om->persist($announcement);
+            $this->om->endFlushSuite();
+        }
+    }
+
+    private function generateAnnoucementTaskData(Announcement $announcement)
+    {
+        $name = $announcement->getTitle() ?
+            $announcement->getTitle() :
+            $announcement->getAggregate()->getResourceNode()->getName().' ['.date('Y-m-d H:i').']';
+        $object = $announcement->getTitle() ?
+            $announcement->getTitle() :
+            $announcement->getAggregate()->getResourceNode()->getName().' ['.$announcement->getVisibleFrom()->format('Y-m-d H:i').']';
+        $users = [];
+        $targets = $this->getUsersByResource($announcement->getAggregate()->getResourceNode(), 1);
+
+        foreach ($targets as $target) {
+            $users[] = ['id' => $target->getId()];
+        }
+
+        return [
+            'name' => $name,
+            'type' => 'message',
+            'scheduledDate' => $announcement->getVisibleFrom()->format('Y-m-d\TH:i:s'),
+            'data' => [
+                'object' => $object,
+                'content' => $announcement->getContent(),
+                'users' => $users,
+            ],
+        ];
     }
 }

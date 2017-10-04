@@ -67,7 +67,7 @@ class ScheduledTaskSerializer
             ],
             'users' => array_map(function (User $user) {
                 return $this->userSerializer->serialize($user);
-            }, $scheduledTask->getUsers()->toArray()),
+            }, $scheduledTask->getUsers()),
             'workspace' => $scheduledTask->getWorkspace() ? $this->workspaceSerializer->serialize($scheduledTask->getWorkspace(), ['minimal']) : null,
             'group' => $scheduledTask->getGroup() ? [ // todo : use GroupSerializer when available
                 'id' => $scheduledTask->getGroup()->getId(),
