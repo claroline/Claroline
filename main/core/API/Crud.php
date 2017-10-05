@@ -4,16 +4,16 @@ namespace Claroline\CoreBundle\API;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Security\ObjectCollection;
+use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Service("claroline.api.crud")
  */
 class Crud
 {
+    use PermissionCheckerTrait;
+
     const ADD_ARRAY_ELEMENT = 'add';
     const REMOVE_ARRAY_ELEMENT = 'remove';
     /**
@@ -22,8 +22,7 @@ class Crud
      * @DI\InjectParams({
      *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "serializer" = @DI\Inject("claroline.api.serializer"),
-     *     "dispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "security"   = @DI\Inject("security.authorization_checker")
+     *     "dispatcher" = @DI\Inject("claroline.event.event_dispatcher")
      * })
      *
      * @param ObjectManager      $om
@@ -32,20 +31,18 @@ class Crud
     public function __construct(
       ObjectManager $om,
       SerializerProvider $serializer,
-      StrictDispatcher $dispatcher,
-      AuthorizationCheckerInterface $security
+      StrictDispatcher $dispatcher
     ) {
         $this->om = $om;
         $this->serializer = $serializer;
         $this->dispatcher = $dispatcher;
-        $this->security = $security;
     }
 
     public function create($class, $data, array $options = [])
     {
         $this->validate($class, $data);
         $object = $this->serializer->deserialize($class, $data);
-        $this->checkPermission('CREATE', $object);
+        $this->checkPermission('CREATE', $object, [], true);
         $this->dispatcher->dispatch('crud_pre_create_object', 'Crud', [$object]);
         $this->om->save($object);
         $this->dispatcher->dispatch('crud_post_create_object', 'Crud', [$object]);
@@ -57,7 +54,7 @@ class Crud
     {
         $this->validate($class, $data);
         $object = $this->serializer->deserialize($class, $data);
-        $this->checkPermission('EDIT', $object);
+        $this->checkPermission('EDIT', $object, [], true);
         $this->dispatcher->dispatch('crud_pre_update_object', 'Crud', [$object]);
         $this->om->save($object);
         $this->dispatcher->dispatch('crud_post_update_object', 'Crud', [$object]);
@@ -67,7 +64,7 @@ class Crud
 
     public function delete($object, $class, array $options = [])
     {
-        $this->checkPermission('DELETE', $object);
+        $this->checkPermission('DELETE', $object, [], true);
         $this->dispatcher->dispatch('crud_pre_delete_object', 'Crud', [$object]);
         $this->om->remove($object);
         $this->om->flush();
@@ -85,7 +82,7 @@ class Crud
     public function patch($object, $property, $action, $arrayElement)
     {
         //add the options to pass on here
-        $this->checkPermission('PATCH', $object);
+        $this->checkPermission('PATCH', $object, [], true);
         $this->dispatcher->dispatch('crud_pre_patch_object', 'Crud', [$object]);
         $methodName = $action.substr(ucfirst(strtolower($property)), 0, -1);
 
@@ -99,16 +96,5 @@ class Crud
 
     public function validate($class, $data)
     {
-    }
-
-    private function checkPermission($permission, $object, $options = [])
-    {
-        $collection = new ObjectCollection([$object]);
-
-        if (!$this->security->isGranted($permission, $collection)) {
-            throw new AccessDeniedException(
-              'operation '.$permission.' couldn\'t be done on object '.get_class($object)
-            );
-        }
     }
 }
