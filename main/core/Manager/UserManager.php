@@ -712,12 +712,13 @@ class UserManager
 
         $personalWorkspaceName = $this->translator->trans('personal_workspace', [], 'platform').' - '.$user->getUsername();
         $workspace = new Workspace();
+        $workspace->setCode($code);
+        $workspace->setName($personalWorkspaceName);
+
         $workspace = !$model ?
             $this->workspaceManager->copy($this->workspaceManager->getDefaultModel(true), $workspace) :
             $this->workspaceManager->copy($model, $workspace);
 
-        $workspace->setCode($code);
-        $workspace->setName($personalWorkspaceName);
         $workspace->setCreator($user);
         $workspace->setPersonal(true);
 

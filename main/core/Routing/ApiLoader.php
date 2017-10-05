@@ -47,7 +47,6 @@ class ApiLoader extends Loader
 
         $path = $this->locator->locate($resource);
         $routes = new RouteCollection();
-
         $imported = $this->import($resource, 'annotation');
         $routes->addCollection($imported);
 
@@ -75,7 +74,7 @@ class ApiLoader extends Loader
                     }
 
                     if ($found) {
-                        foreach ($this->makeRouteMap($controller) as $name => $options) {
+                        foreach ($this->makeRouteMap($controller, $routes) as $name => $options) {
                             $pattern = '/'.$options[0];
 
                             if ($prefix) {
@@ -103,7 +102,7 @@ class ApiLoader extends Loader
         return $routes;
     }
 
-    private function makeRouteMap($controller)
+    private function makeRouteMap($controller, RouteCollection $routes)
     {
         $defaults = [
           'create' => ['', 'POST'],

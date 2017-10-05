@@ -134,7 +134,11 @@ class WorkspaceController extends FOSRestController
 
         $this->om->startFlushSuite();
         $newWorkspaces = array_map(function (Workspace $workspace) use ($isModel) {
-            return $this->workspaceManager->copy($workspace, new Workspace(), $isModel);
+            $new = new Workspace();
+            $new->setName($workspace->getName());
+            $new->setCode($workspace->getCode());
+
+            return $this->workspaceManager->copy($workspace, $new, $isModel);
         }, $workspaces);
         $this->om->endFlushSuite();
 

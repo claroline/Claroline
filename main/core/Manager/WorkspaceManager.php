@@ -1317,11 +1317,20 @@ class WorkspaceManager
         $newWorkspace->setGuid(uniqid('', true));
 
         $newWorkspace->setModel($model);
-
         // create new name and code
         $prefix = $model ? '[MODEL]' : '[COPY]';
-        $newWorkspace->setName($prefix.' '.$workspace->getName());
-        $newWorkspace->setCode($prefix.' '.$workspace->getCode());
+        $ws = $this->getOneByCode($newWorkspace->getCode());
+
+        if ($ws) {
+            $name = $prefix.' '.$newWorkspace->getName();
+            $code = $prefix.' '.$newWorkspace->getCode();
+        } else {
+            $name = $newWorkspace->getName();
+            $code = $newWorkspace->getCode();
+        }
+
+        $newWorkspace->setName($name);
+        $newWorkspace->setCode($code);
 
         $this->createWorkspace($newWorkspace);
         $token = $this->container->get('security.token_storage')->getToken();
@@ -1393,7 +1402,6 @@ class WorkspaceManager
         $rootDirectory = new Directory();
         $rootDirectory->setName($workspace->getName());
         $directoryType = $this->resourceManager->getResourceTypeByName('directory');
-
         $rootCopy = $this->resourceManager->create(
             $rootDirectory,
             $directoryType,
