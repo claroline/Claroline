@@ -326,6 +326,7 @@ class UserManager
         if ($user->getUsername() !== $previousUsername) {
             // Rename user role
             $userRole = $this->roleManager->getUserRole($previousUsername);
+
             if ($userRole) {
                 $this->roleManager->renameUserRole($userRole, $user->getUsername());
             }

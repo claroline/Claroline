@@ -256,7 +256,8 @@ class ProfileController extends Controller
     {
         $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
         $isGrantedUserAdmin = $this->get('security.authorization_checker')->isGranted(
-            'OPEN', $this->toolManager->getAdminToolByName('user_management')
+            'OPEN',
+            $this->toolManager->getAdminToolByName('user_management')
         );
 
         if (null === $user) {
@@ -305,21 +306,7 @@ class ProfileController extends Controller
                 $unavailableRoles[] = $role;
             }
         }
-        $groupsData = [];
-        $groups = $this->groupManager->getAllGroupsWithoutPager();
 
-        foreach ($groups as $group) {
-            $organizations = $group->getOrganizations();
-
-            foreach ($organizations as $organization) {
-                $organizationId = $organization->getId();
-
-                if (!isset($groups[$organizationId])) {
-                    $groupsData[$organizationId] = [];
-                }
-                $groupsData[$organizationId][] = $group->getId();
-            }
-        }
         if ($form->isValid() && count($unavailableRoles) === 0) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
@@ -329,7 +316,6 @@ class ProfileController extends Controller
             $user = $form->getData();
 
             $this->userManager->rename($user, $previousUsername);
-
             $successMessage = $translator->trans('edit_profile_success', [], 'platform');
             $errorRight = $translator->trans('edit_profile_error_right', [], 'platform');
             $redirectUrl = $this->generateUrl('claro_admin_users_index');
@@ -393,7 +379,6 @@ class ProfileController extends Controller
             'user' => $user,
             'editYourself' => $editYourself,
             'unavailableRoles' => $unavailableRoles,
-            'groupsData' => $groupsData,
         ];
     }
 
@@ -414,7 +399,8 @@ class ProfileController extends Controller
     {
         $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
         $isGrantedUserAdmin = $this->get('security.authorization_checker')->isGranted(
-            'OPEN', $this->toolManager->getAdminToolByName('user_management')
+            'OPEN',
+            $this->toolManager->getAdminToolByName('user_management')
         );
         $selfEdit = $user->getId() === $loggedUser->getId() ? true : false;
 
