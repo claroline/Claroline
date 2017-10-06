@@ -103,7 +103,7 @@ class WorkspaceType extends AbstractType
             }
 
             $builder->add(
-               'model',
+               'modelFrom',
                'entity',
                $options
             );
