@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "fdaedc2c90ecc36082407d5021b8a65da69e10b4"
+                "reference": "a58e1bec5c316646001bd6735c96840a9c6a2e9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/fdaedc2c90ecc36082407d5021b8a65da69e10b4",
-                "reference": "fdaedc2c90ecc36082407d5021b8a65da69e10b4",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a58e1bec5c316646001bd6735c96840a9c6a2e9b",
+                "reference": "a58e1bec5c316646001bd6735c96840a9c6a2e9b",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-10-03 17:25:28"
+            "time": "2017-10-06 20:31:57"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3736,16 +3736,16 @@
         },
         {
             "name": "knplabs/knp-snappy",
-            "version": "v1.0.1",
+            "version": "v1.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/snappy.git",
-                "reference": "f294d1c50d49fb116a5ecb78ecd53fc727a2ba30"
+                "reference": "e6a29846ca759ea268a1bca4455b8a14815a3976"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/f294d1c50d49fb116a5ecb78ecd53fc727a2ba30",
-                "reference": "f294d1c50d49fb116a5ecb78ecd53fc727a2ba30",
+                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/e6a29846ca759ea268a1bca4455b8a14815a3976",
+                "reference": "e6a29846ca759ea268a1bca4455b8a14815a3976",
                 "shasum": ""
             },
             "require": {
@@ -3766,7 +3766,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "0.6.x-dev"
+                    "dev-master": "1.0.x-dev"
                 }
             },
             "autoload": {
@@ -3798,7 +3798,7 @@
                 "thumbnail",
                 "wkhtmltopdf"
             ],
-            "time": "2017-09-21 11:34:49"
+            "time": "2017-10-04 19:39:41"
         },
         {
             "name": "knplabs/knp-snappy-bundle",
