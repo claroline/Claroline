@@ -1,3 +1,8 @@
+icap_oauth_api:
+    resource: "@IcapOAuthBundle/Controller/API"
+    type: api
+    prefix: apiv2
+
 icap_oauth_controller:
     resource: "@IcapOAuthBundle/Controller/OauthController.php"
     type: annotation

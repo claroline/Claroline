@@ -88,7 +88,7 @@ class ApiLoader extends Loader
                     }
 
                     if ($found) {
-                        foreach ($this->makeRouteMap($controller, $routes) as $name => $options) {
+                        foreach ($this->makeRouteMap($controller, $routes, $prefix) as $name => $options) {
                             $pattern = '/'.$options[0];
 
                             if ($prefix) {
@@ -116,7 +116,7 @@ class ApiLoader extends Loader
         return $routes;
     }
 
-    private function makeRouteMap($controller, RouteCollection $routes)
+    private function makeRouteMap($controller, RouteCollection $routes, $prefix)
     {
         $defaults = [
           'create' => ['', 'POST'],
@@ -136,13 +136,17 @@ class ApiLoader extends Loader
                     $actionName = preg_replace('/Action/', '', $method->getName());
 
                     if ($annotation instanceof RouteConfig) {
-                        $defaults[$actionName] = [$annotation->getPath()];
+                        $defaults[$actionName][0] = $annotation->getPath();
+                        $toRemove = $prefix.'_'.strtolower($actionName);
+                        $autoName = 'claroline_core_apinew_';
+                        //todo remove route from plugins but it doesn't exists yet
+                        $routes->remove($autoName.$toRemove);
                     }
 
                     if ($annotation instanceof MethodConfig) {
-                        $defaults[$actionName][] = $annotation->getMethods();
+                        $defaults[$actionName][1] = $annotation->getMethods()[0];
                     } else {
-                        $defaults[$actionName][] = 'GET';
+                        $defaults[$actionName][1] = 'GET';
                     }
                 }
             }

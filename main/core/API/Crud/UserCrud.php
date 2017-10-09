@@ -48,7 +48,6 @@ class UserCrud
             $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
             $user->addRole($roleUser);
             $this->roleManager->createUserRole($user);
-
             if ($this->mailManager->isMailerAvailable()) {
                 //send a validation by hash
                 $mailValidation = $this->config->getParameter('registration_mail_validation');

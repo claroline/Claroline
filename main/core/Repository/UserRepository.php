@@ -58,7 +58,8 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $dql = '
             SELECT u FROM Claroline\CoreBundle\Entity\User u
             WHERE u.username LIKE :username
-            OR u.mail LIKE :username';
+            OR u.mail LIKE :username
+        ';
 
         if ($isUserAdminCodeUnique) {
             $dql .= '

@@ -110,7 +110,10 @@ class UserSerializer extends AbstractSerializer
      */
     public function deserialize($class, $data, array $options = [])
     {
-        return parent::deserialize($class, $data, $options);
+        $object = parent::deserialize($class, $data, $options);
+        $object->setPlainPassword($data->plainPassword);
+
+        return $object;
     }
 
     public function getClass()
