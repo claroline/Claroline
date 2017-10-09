@@ -38,6 +38,10 @@ class WorkspaceVoter implements VoterInterface
     public function vote(TokenInterface $token, $object, array $attributes)
     {
         if ($object instanceof Workspace) {
+            if ($object->getCreator() === $token->getUser()) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+
             //check the expiration date first
             $now = new \DateTime();
             if ($object->getEndDate()) {

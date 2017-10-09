@@ -1291,12 +1291,14 @@ class WorkspaceManager
         return false;
     }
 
-    //used for cli copy
+    //used for cli copy debug tool
     public function copyFromCode(Workspace $workspace, $code)
     {
-        $newWorkspace = $this->copy($workspace, new Workspace());
-
-        // override code & name
+        $newWorkspace = new Workspace();
+        $newWorkspace->setCode($code);
+        $newWorkspace->setName($code);
+        $newWorkspace = $this->copy($workspace, $newWorkspace);
+        //override code & name
         $newWorkspace->setCode($code);
         $newWorkspace->setName($code);
 
@@ -1337,16 +1339,9 @@ class WorkspaceManager
         $user = null;
         $resourceInfo = ['copies' => []];
 
-        if ($token && $token->getUser() !== 'anon.') {
-            $user = $workspace->getCreator() ?
-            $workspace->getCreator() :
-            $this->container->get('security.token_storage')->getToken()->getUser();
-        }
-
-        //last fool proof check in case something weird happens
-        if (!$user) {
-            $user = $this->container->get('claroline.manager.user_manager')->getDefaultUser();
-        }
+        $user = ($token && $token->getUser() !== 'anon.') ?
+            $this->container->get('security.token_storage')->getToken()->getUser() :
+            $this->container->get('claroline.manager.user_manager')->getDefaultUser();
 
         $this->om->startFlushSuite();
         $this->duplicateWorkspaceOptions($workspace, $newWorkspace);
@@ -1392,6 +1387,8 @@ class WorkspaceManager
         );
         $this->duplicateOrderedTools($workspace, $newWorkspace, $resourceInfo);
         $this->om->endFlushSuite();
+
+        $this->container->get('claroline.security.token_updater')->updateNormal($token);
 
         return $newWorkspace;
     }
@@ -1776,6 +1773,7 @@ class WorkspaceManager
 
             $this->om->persist($createdRole);
             if ($roleName === 'ROLE_WS_MANAGER') {
+                $this->log('Adding role manager to user '.$user->getUsername());
                 $user->addRole($createdRole);
                 $this->om->persist($user);
             }

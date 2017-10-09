@@ -455,7 +455,10 @@ class WorkspaceController extends Controller
         $managerRole = $this->roleManager->getManagerRole($workspace);
 
         foreach ($currentRoles as $role) {
-            if ($managerRole->getName() === $role) {
+            //We check if $managerRole exists as an error proof condition.
+            //If something went wrong and it doesn't exists anymore,
+            //restorations tools should be used at this point
+            if ($managerRole && $managerRole->getName() === $role) {
                 $hasManagerAccess = true;
             }
         }

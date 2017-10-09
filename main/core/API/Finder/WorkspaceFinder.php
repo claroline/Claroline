@@ -61,7 +61,13 @@ class WorkspaceFinder implements FinderInterface
             $currentUser = $this->tokenStorage->getToken()->getUser();
             $qb->leftJoin('obj.organizations', 'uo');
             $qb->leftJoin('uo.administrators', 'ua');
-            $qb->andWhere('ua.id = :userId');
+            $qb->leftJoin('obj.creator', 'creator');
+
+            $qb->andWhere($qb->expr()->orX(
+              $qb->expr()->eq('ua.id', ':userId'),
+              $qb->expr()->eq('creator.id', ':userId')
+            ));
+
             $qb->setParameter('userId', $currentUser->getId());
         }
 

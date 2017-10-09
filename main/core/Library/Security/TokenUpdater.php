@@ -12,8 +12,8 @@
 namespace Claroline\CoreBundle\Library\Security;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
 
@@ -74,7 +74,6 @@ class TokenUpdater
         foreach ($roles as $role) {
             if ($role instanceof SwitchUserRole) {
                 $user = $role->getSource()->getUser();
-                //$this->om->refresh($user);
                 $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
                 $this->tokenStorage->setToken($token);
 
@@ -91,7 +90,7 @@ class TokenUpdater
         $this->tokenStorage->setToken($token);
     }
 
-    private function updateNormal($token)
+    public function updateNormal($token)
     {
         $user = $token->getUser();
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
