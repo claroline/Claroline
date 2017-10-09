@@ -19,7 +19,7 @@ trait HasOrganizationsTrait
         try {
             $object = $this->find($class, $uuid);
             $organizations = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Organization\Organization');
-            $this->crud->patch($object, 'organizations', Crud::COLLECTION_ADD, $organizations);
+            $this->crud->patch($object, 'organization', Crud::COLLECTION_ADD, $organizations);
 
             return new JsonResponse(
               $this->serializer->serialize($object)
@@ -38,7 +38,7 @@ trait HasOrganizationsTrait
         try {
             $object = $this->find($class, $uuid);
             $organizations = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Organization\Organization');
-            $this->crud->patch($object, 'organizations', Crud::COLLECTION_REMOVE, $organizations);
+            $this->crud->patch($object, 'organization', Crud::COLLECTION_REMOVE, $organizations);
 
             return new JsonResponse(
             $this->serializer->serialize($object)

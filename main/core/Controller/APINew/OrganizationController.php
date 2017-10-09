@@ -12,6 +12,8 @@
 namespace Claroline\CoreBundle\Controller\APINew;
 
 use Claroline\CoreBundle\Annotations\ApiMeta;
+use Claroline\CoreBundle\API\Options;
+use Claroline\CoreBundle\Controller\APINew\Model\HasParent;
 use FOS\RestBundle\Controller\Annotations\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,8 +25,17 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class OrganizationController extends AbstractController
 {
-    public function listAction(Request $request, $class, $env)
+    use HasParent;
+
+    /**
+     * @Route("/list/recursive", name="apiv2_organization_list_recursive")
+     */
+    public function recursiveListAction(Request $request)
     {
-        return new JsonResponse($this->finder->search($class, $request->query->all(), []));
+        return new JsonResponse($this->finder->search(
+            'Claroline\CoreBundle\Entity\Organization\Organization',
+            ['filters' => ['parent' => null]],
+            [Options::IS_RECURSIVE]
+        ));
     }
 }

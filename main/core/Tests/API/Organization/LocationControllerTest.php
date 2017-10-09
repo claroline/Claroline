@@ -26,35 +26,6 @@ class LocationControllerTest extends TransactionalTestCase
         $this->persister = $this->client->getContainer()->get('claroline.library.testing.persister');
     }
 
-    //@route: api_get_locations
-    //@url: /api/locations.{_format}
-    public function testGetLocationsAction()
-    {
-        $admin = $this->createAdmin();
-        $this->persister->location('here');
-        $this->persister->location('nowhere');
-        $this->persister->flush();
-
-        $this->logIn($admin);
-        $this->client->request('GET', '/api/locations.json');
-        $data = $this->client->getResponse()->getContent();
-        $data = json_decode($data, true);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(2, count($data));
-    }
-
-    //@route: api_get_locations
-    //@url: /api/locations.{_format}
-    public function testGetLocationsActionIsProtected()
-    {
-        $john = $this->persister->user('john');
-        $this->persister->flush();
-
-        $this->logIn($john);
-        $this->client->request('GET', '/api/locations.json');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
     //@route: api_get_location_create_form
     //@url: /api/location/create/form.{_format}
     public function testGetCreateLocationFormAction()
@@ -126,13 +97,6 @@ class LocationControllerTest extends TransactionalTestCase
         ];
         $form = ['location_form' => $fields];
         $this->client->request('POST', 'api/locations.json', $form);
-
-        //let's check now
-        $this->client->request('GET', '/api/locations.json');
-        $data = $this->client->getResponse()->getContent();
-        $data = json_decode($data, true);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(1, count($data));
     }
 
     //@route: api_post_location
@@ -208,40 +172,6 @@ class LocationControllerTest extends TransactionalTestCase
         ];
         $form = ['location_form' => $fields];
         $this->client->request('PUT', "api/locations/{$here->getId()}.json", $form);
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    //@route: api_delete_location
-    //@url: /api/locations/{location}.{_format}
-    //@method: DELETE
-    public function testDeleteLocationAction()
-    {
-        $admin = $this->createAdmin();
-        $here = $this->persister->location('here');
-        $this->persister->flush();
-
-        $this->logIn($admin);
-        $this->client->request('DELETE', "/api/locations/{$here->getId()}.json");
-
-        //let's check now
-        $this->client->request('GET', '/api/locations.json');
-        $data = $this->client->getResponse()->getContent();
-        $data = json_decode($data, true);
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertEquals(0, count($data));
-    }
-
-    //@route: api_delete_location
-    //@url: /api/locations/{location}.{_format}
-    //@method: DELETE
-    public function testDeleteLocationActionIsProtected()
-    {
-        $john = $this->persister->user('john');
-        $here = $this->persister->location('here');
-        $this->persister->flush();
-
-        $this->logIn($john);
-        $this->client->request('DELETE', "/api/locations/{$here->getId()}.json");
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 

@@ -15,9 +15,13 @@ use Symfony\Component\EventDispatcher\Event;
 
 class CrudEvent extends Event
 {
+    private $object;
+    private $block;
+
     public function __construct($object)
     {
         $this->object = $object;
+        $this->block = false;
     }
 
     public function setObject($object)
@@ -28,5 +32,20 @@ class CrudEvent extends Event
     public function getObject()
     {
         return $this->object;
+    }
+
+    public function block()
+    {
+        $this->block = true;
+    }
+
+    public function allow()
+    {
+        $this->block = false;
+    }
+
+    public function isAllowed()
+    {
+        return !$this->block;
     }
 }

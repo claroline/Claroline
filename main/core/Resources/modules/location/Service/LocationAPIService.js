@@ -7,21 +7,21 @@ export default class LocationAPIService {
   }
 
   findAll() {
-    return this.$http.get(Routing.generate('api_get_locations'))
+    return this.$http.get(Routing.generate('apiv2_location_list') + '?filters[type]=1')
   }
 
   create(newLocation) {
     var data = this.ClarolineAPIService.formSerialize('location_form', newLocation)
 
     return this.$http.post(
-            Routing.generate('api_post_location', {'_format': 'html'}),
-            data,
-            {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
-        )
+        Routing.generate('api_post_location', {'_format': 'html'}),
+        data,
+        {headers: {'Content-Type': 'application/x-www-form-urlencoded'}}
+    )
   }
 
   delete(locationId) {
-    return this.$http.delete(Routing.generate('api_delete_location', {'location': locationId}))
+    return this.$http.delete(Routing.generate('apiv2_location_delete_bulk') + '?ids[]='+locationId)
   }
 
   update(locationId, updatedLocation) {

@@ -101,7 +101,7 @@ abstract class AbstractSerializer
 
         foreach ($mapping as $dataProperty => $map) {
             foreach ($refClass->getProperties() as $property) {
-                if ($property->getName() === $dataProperty) {
+                if ($property->getName() === $dataProperty && property_exists($data, $dataProperty)) {
                     foreach ($this->reader->getPropertyAnnotations($property) as $annotation) {
                         if ($annotation instanceof ManyToOne) {
                             //basic search by fields here... later create the object aswell

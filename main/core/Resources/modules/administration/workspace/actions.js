@@ -16,7 +16,7 @@ actions.workspaceRemoveManager =  makeActionCreator(WORKSPACE_REMOVE_MANAGER, 'w
 
 actions.removeWorkspaces = (workspaces) => ({
   [REQUEST_SEND]: {
-    url: generateUrl('api_delete_workspaces') + getDataQueryString(workspaces),
+    url: generateUrl('apiv2_workspace_delete_bulk') + getDataQueryString(workspaces),
     request: {
       method: 'DELETE'
     },

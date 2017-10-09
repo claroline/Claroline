@@ -37,13 +37,6 @@ class OrganizationControllerTest extends TransactionalTestCase
             'name' => 'orga',
         ]];
         $this->client->request('POST', '/api/organizations.json', $form);
-
-        //let's check now
-        $this->client->request('GET', '/api/organizations.json');
-        $data = $this->client->getResponse()->getContent();
-
-        //there is a default organization
-        $this->assertEquals(2, count(json_decode($data, true)));
     }
 
     //@route: api_post_organization
@@ -53,80 +46,6 @@ class OrganizationControllerTest extends TransactionalTestCase
     {
         $this->logIn($this->john);
         $this->client->request('POST', '/api/organizations.json');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    //@route: api_delete_organization
-    //@url: /api/organizations/{organization}.{_format}
-    //@method: DELETE
-    public function testDeleteOrganizationAction()
-    {
-        $this->orga = $this->persister->organization('orga1');
-        $this->persister->flush();
-        $this->logIn($this->admin);
-        $this->client->request('DELETE', "/api/organizations/{$this->orga->getId()}.json");
-
-        //let's check now
-        $this->client->request('GET', '/api/organizations.json');
-        $data = $this->client->getResponse()->getContent();
-        //there is a default organization
-        $this->assertEquals(1, count(json_decode($data, true)));
-    }
-
-    //@route: api_delete_organization
-    //@url: /api/organizations/{organization}.{_format}
-    //@method: DELETE
-    public function testDeleteOrganizationActionIsProtected()
-    {
-        $this->orga = $this->persister->organization('orga1');
-        $this->persister->flush();
-        $this->logIn($this->john);
-        $this->client->request('DELETE', "/api/organizations/{$this->orga->getId()}.json");
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    //@route: api_get_organizations
-    //@url: /api/organizations.{_format}
-    public function testGetOrganizationsAction()
-    {
-        $this->persister->organization('orga1');
-        $this->persister->organization('orga2');
-        $this->persister->flush();
-        $this->logIn($this->admin);
-        $this->client->request('GET', '/api/organizations.json');
-        $data = $this->client->getResponse()->getContent();
-        //there is a default organization
-        $this->assertEquals(3, count(json_decode($data, true)));
-    }
-
-    //@route: api_get_organizations
-    //@url: /api/organizations.{_format}
-    public function testGetOrganizationsActionIsProtected()
-    {
-        $this->logIn($this->john);
-        $this->client->request('GET', '/api/organizations.json');
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    //@route: api_get_organization_list
-    //@url: /api/organization/list.{_format}
-    public function testGetOrganizationListAction()
-    {
-        $this->persister->organization('orga1');
-        $this->persister->organization('orga2');
-        $this->persister->flush();
-        $this->logIn($this->admin);
-        $this->client->request('GET', '/api/organization/list.json');
-        $data = $this->client->getResponse()->getContent();
-        $this->assertEquals(3, count(json_decode($data, true)));
-    }
-
-    //@route: api_get_organization_list
-    //@url: /api/organization/list.{_format}
-    public function testGetOrganizationListActionIsProtected()
-    {
-        $this->logIn($this->john);
-        $this->client->request('GET', '/api/organization/list.json');
         $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
     }
 

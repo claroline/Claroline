@@ -108,14 +108,14 @@ class Organization
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Organization", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      * @Groups({"api_organization_tree"})
      */
     private $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="Organization", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", mappedBy="parent")
      * @ORM\OrderBy({"lft" = "ASC"})
      * @Groups({"api_organization_tree"})
      */

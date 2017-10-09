@@ -22,7 +22,6 @@ use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -54,14 +53,6 @@ class LocationController extends FOSRestController
         $this->om = $om;
         $this->request = $request;
         $this->apiManager = $apiManager;
-    }
-
-    /**
-     * @View(serializerGroups={"api_location"})
-     */
-    public function getLocationsAction()
-    {
-        return $this->locationManager->getByType(Location::TYPE_DEPARTMENT);
     }
 
     /**
@@ -140,16 +131,5 @@ class LocationController extends FOSRestController
         ];
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editLocationForm.html.twig', $form, $options);
-    }
-
-    /**
-     * @View()
-     * @EXT\ParamConverter("location", class="ClarolineCoreBundle:Organization\Location",)
-     */
-    public function deleteLocationAction(Location $location)
-    {
-        $this->locationManager->delete($location);
-
-        return ['success'];
     }
 }

@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\API\Organization;
 
-use Claroline\CoreBundle\API\Options;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Form\Organization\OrganizationParametersType;
 use Claroline\CoreBundle\Form\Organization\OrganizationType;
@@ -24,7 +23,6 @@ use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -79,37 +77,6 @@ class OrganizationController extends FOSRestController
     }
 
     /**
-     * @View()
-     * @EXT\ParamConverter("organization", class="ClarolineCoreBundle:Organization\Organization",)
-     */
-    public function deleteOrganizationAction(Organization $organization)
-    {
-        $this->organizationManager->delete($organization);
-
-        return ['success'];
-    }
-
-    /**
-     * @View(serializerGroups={"api_organization_tree"})
-     */
-    public function getOrganizationsAction()
-    {
-        return $this->get('claroline.API.finder')->search(
-            'Claroline\CoreBundle\Entity\Organization\Organization',
-            ['filters' => ['parent' => null]],
-            [Options::IS_RECURSIVE]
-        )['data'];
-    }
-
-    /**
-     * @View(serializerGroups={"api_organization_list"})
-     */
-    public function getOrganizationListAction()
-    {
-        return $this->organizationManager->getAll();
-    }
-
-    /**
      * @View(serializerGroups={"api_organization_list"})
      * @Get("/organization/{organization}/edit/form")
      */
@@ -149,16 +116,5 @@ class OrganizationController extends FOSRestController
         ];
 
         return $this->apiManager->handleFormView('ClarolineCoreBundle:API:Organization\editLocationForm.html.twig', $form, $options);
-    }
-
-    /**
-     * @View(serializerGroups={"api_organization_list"})
-     * @Get("/organization/{organization}/move/{parent}")
-     */
-    public function moveOrganizationAction(Organization $organization, $parent)
-    {
-        $parent = $this->om->getRepository('ClarolineCoreBundle:Organization\Organization')->find($parent);
-
-        return $this->organizationManager->setParent($organization, $parent);
     }
 }

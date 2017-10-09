@@ -72,7 +72,7 @@ class AbstractController extends ContainerAware
     public function deleteBulkAction(Request $request, $class, $env)
     {
         try {
-            $this->crud->deleteBulk($class, $this->decodeRequest($request));
+            $this->crud->deleteBulk($class, $this->decodeIdsString($request, $class));
 
             return new JsonResponse(null, 204);
         } catch (\Exception $e) {
@@ -102,12 +102,11 @@ class AbstractController extends ContainerAware
         return $this->om->findList($class, $property, $ids);
     }
 
+    //@todo: not as lazy implementation
     protected function find($class, $id)
     {
-        $object = new \stdClass();
-        $property = is_numeric($id) ? 'id' : 'uuid';
-        $object->{$property} = $property === 'uuid' ? $id : (int) $id;
-
-        return $this->serializer->deserialize($class, $object);
+        return !is_numeric($id) && property_exists($class, 'uuid') ?
+            $this->om->getRepository($class)->findOneByUuid($id) :
+            $this->om->getRepository($class)->findOneById($id);
     }
 }

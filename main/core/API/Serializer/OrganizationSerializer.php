@@ -15,7 +15,7 @@ class OrganizationSerializer extends AbstractSerializer
     /**
      * Serializes an Organization entity for the JSON api.
      *
-     * @param Organization $organization - the workspace to serialize
+     * @param Organization $organization - the organization to serialize
      *
      * @return array - the serialized representation of the workspace
      */

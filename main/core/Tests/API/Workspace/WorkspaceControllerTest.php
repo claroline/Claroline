@@ -56,22 +56,6 @@ class WorkspaceControllerTest extends TransactionalTestCase
         $this->assertEquals($data[0]['name'], '[COPY] default_workspace');
     }
 
-    public function testSearchWorkspace()
-    {
-        $admin = $this->createAdmin();
-        $this->persister->workspace('abc', $admin);
-        $this->persister->workspace('def', $admin);
-
-        $this->logIn($admin);
-
-        $url = '/api/workspace.json';
-        $this->client->request('GET', $url.'?filters[name]=abc');
-        $data = $this->client->getResponse()->getContent();
-        $data = json_decode($data, true);
-
-        $this->assertEquals(1, count($data['data']));
-    }
-
     private function createAdmin()
     {
         $admin = $this->persister->user('admin');

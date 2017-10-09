@@ -19,7 +19,7 @@ trait HasRolesTrait
         try {
             $object = $this->find($class, $uuid);
             $roles = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Role');
-            $this->crud->patch($object, 'roles', Crud::COLLECTION_ADD, $roles);
+            $this->crud->patch($object, 'role', Crud::COLLECTION_ADD, $roles);
 
             return new JsonResponse(
             $this->serializer->serialize($object)
@@ -38,7 +38,7 @@ trait HasRolesTrait
         try {
             $object = $this->find($class, $uuid);
             $roles = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Role');
-            $this->crud->patch($object, 'roles', Crud::COLLECTION_REMOVE, $roles);
+            $this->crud->patch($object, 'role', Crud::COLLECTION_REMOVE, $roles);
 
             return new JsonResponse(
           $this->serializer->serialize($object)

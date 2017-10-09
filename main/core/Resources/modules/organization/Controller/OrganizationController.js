@@ -15,7 +15,7 @@ export default class OrganizationController {
       }
     }
     this.ClarolineAPIService = ClarolineAPIService
-    OrganizationAPIService.findAll().then(d => this.organizations = d.data)
+    OrganizationAPIService.findAll().then(d => this.organizations = d.data.data)
   }
 
   deleteOrganization(organization) {

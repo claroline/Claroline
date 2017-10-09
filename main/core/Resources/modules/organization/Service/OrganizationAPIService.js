@@ -7,7 +7,7 @@ export default class OrganizationAPIService {
   }
 
   findAll() {
-    return this.$http.get(Routing.generate('api_get_organizations'))
+    return this.$http.get(Routing.generate('apiv2_organization_list_recursive'))
   }
 
   create(name, parent) {
@@ -28,11 +28,11 @@ export default class OrganizationAPIService {
   move(organization, parent) {
     const parentId = parent ? parent.id: 0
 
-    return this.$http.get(Routing.generate('api_move_organization', {organization: organization.id, parent: parentId}))
+    return this.$http.patch(Routing.generate('apiv2_organization_move', {child: organization.id, parent: parentId}))
   }
 
   delete(organizationId) {
-    return this.$http.delete(Routing.generate('api_delete_organization', {'organization': organizationId}))
+    return this.$http.delete(Routing.generate('apiv2_organization_delete_bulk') + '?ids[]=' +  organizationId)
   }
 
   update(organizationId, organization) {
