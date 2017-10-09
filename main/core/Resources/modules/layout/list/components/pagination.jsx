@@ -77,7 +77,7 @@ PaginationLink.defaultProps = {
 
 const PreviousLink = props =>
   <PaginationLink
-    className="previous-btn"
+    className="btn-previous"
     disabled={props.disabled}
     handleClick={props.previousPage}
   >
@@ -96,7 +96,7 @@ PreviousLink.defaultProps = {
 
 const NextLink = props =>
   <PaginationLink
-    className="next-btn"
+    className="btn-next"
     disabled={props.disabled}
     handleClick={props.nextPage}
   >

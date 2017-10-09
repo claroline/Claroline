@@ -12,7 +12,7 @@ import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.j
 import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'
 import {NumberGroup} from '#/main/core/layout/form/components/group/number-group.jsx'
 import {EmailGroup} from '#/main/core/layout/form/components/group/email-group.jsx'
-import {DatePickerGroup} from '#/main/core/layout/form/components/group/date-picker-group.jsx'
+import {DateGroup} from '#/main/core/layout/form/components/group/date-group.jsx'
 
 import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 import {Checkboxes} from '#/main/core/layout/form/components/field/checkboxes.jsx'
@@ -268,7 +268,7 @@ export const FormField = props => {
           <ErrorBlock text={props.error}/>
           }
         </div> :
-        <DatePickerGroup
+        <DateGroup
           controlId={props.controlId}
           label={props.label}
           dateFormat="DD/MM/YYYY"

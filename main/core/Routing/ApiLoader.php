@@ -22,17 +22,30 @@ class ApiLoader extends Loader
 {
     private $loaded = false;
 
+    /** @var FileLocatorInterface */
+    private $locator;
+    /** @var ContainerInterface */
+    private $container;
+    /** @var Reader */
+    private $reader;
+
     /**
+     * ApiLoader constructor.
+     *
      * @DI\InjectParams({
      *     "locator"   = @DI\Inject("file_locator"),
      *     "reader"    = @DI\Inject("annotation_reader"),
      *     "container" = @DI\Inject("service_container")
      * })
+     *
+     * @param FileLocatorInterface $locator
+     * @param Reader               $reader
+     * @param ContainerInterface   $container
      */
     public function __construct(
-      FileLocatorInterface $locator,
-      Reader $reader,
-      ContainerInterface $container
+        FileLocatorInterface $locator,
+        Reader $reader,
+        ContainerInterface $container
     ) {
         $this->locator = $locator;
         $this->container = $container;
@@ -51,7 +64,7 @@ class ApiLoader extends Loader
         $routes->addCollection($imported);
 
         foreach (new \DirectoryIterator($path) as $fileInfo) {
-            if (!$fileInfo->isDot()) {
+            if (!$fileInfo->isDot() && $fileInfo->isFile()) {
                 $file = $fileInfo->getPathname();
 
                 //find prefix from annotations
@@ -59,6 +72,7 @@ class ApiLoader extends Loader
 
                 if ($controller) {
                     $refClass = new \ReflectionClass($controller);
+                    $class = null;
                     $found = false;
                     $prefix = '';
 

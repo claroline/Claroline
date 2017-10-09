@@ -12,7 +12,6 @@ import {SelectGroup} from '#/main/core/layout/form/components/group/select-group
 import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'
 import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {formatDate} from '#/main/core/date'
 import {trans, t} from '#/main/core/translation'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
@@ -163,10 +162,7 @@ const Random = props =>
           minDate={moment.utc('1900-01-01T12:00:00')}
           locale="fr"
           value={props.params.random_start_date || ''}
-          onChange={date => {
-            const value = moment(date).isValid() ? formatDate(date) : null
-            props.updateParameters('random_start_date', value)
-          }}
+          onChange={date => props.updateParameters('random_start_date', date)}
         />
       </div>
       <div className="col-md-1 text-center">
@@ -179,10 +175,7 @@ const Random = props =>
           minDate={moment.utc('1900-01-01T12:00:00')}
           locale="fr"
           value={props.params.random_end_date || ''}
-          onChange={date => {
-            const value = moment(date).isValid() ? formatDate(date) : null
-            props.updateParameters('random_end_date', value)
-          }}
+          onChange={date => props.updateParameters('random_end_date', date)}
         />
       </div>
     </div>

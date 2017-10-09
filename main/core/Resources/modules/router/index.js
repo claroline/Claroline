@@ -1,6 +1,7 @@
 import React from 'react'
 
-import {RouterContainer} from '#/main/core/router/containers/router.jsx'
+import {Router} from '#/main/core/router/components/router.jsx'
+import {history} from '#/main/core/router/history'
 
 /**
  * Creates react router components based on config.
@@ -30,7 +31,7 @@ import {RouterContainer} from '#/main/core/router/containers/router.jsx'
  */
 function routedApp(routesConfig, basePath = '') {
   return () => {
-    const RoutedApp = React.createElement(RouterContainer, {
+    const RoutedApp = React.createElement(Router, {
       basePath: basePath,
       routes: routesConfig
     })
@@ -39,6 +40,14 @@ function routedApp(routesConfig, basePath = '') {
   }
 }
 
+/**
+ * Shortcut to navigate using the correct history.
+ */
+function navigate(url) {
+  history.push(url)
+}
+
 export {
-  routedApp
+  routedApp,
+  navigate
 }

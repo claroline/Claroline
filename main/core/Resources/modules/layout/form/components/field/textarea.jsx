@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {tex} from '#/main/core/translation'
+import {t} from '#/main/core/translation'
 import {getOffsets} from '#/main/core/utilities/text/selection'
 
 // see https://github.com/lovasoa/react-contenteditable
@@ -246,7 +246,7 @@ export class Textarea extends Component {
       <div className={classes('text-editor', this.props.className, {'minimal': this.state.minimal === true})}>
         <span
           role="button"
-          title={tex(this.state.minimal ? 'rich_text_tools' : 'minimize')}
+          title={t(this.state.minimal ? 'rich_text_tools' : 'minimize')}
           className={classes(
             'toolbar-toggle',
             'fa',

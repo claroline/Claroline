@@ -9,7 +9,6 @@ import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
 import {tex, t} from '#/main/core/translation'
-import {formatDate} from '#/main/core/date'
 import {ActivableSet} from '#/main/core/layout/form/components/fieldset/activable-set.jsx'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
@@ -486,7 +485,7 @@ class Correction extends Component {
                 id="quiz-correctionDate"
                 name="quiz-correctionDate"
                 value={this.props.parameters.correctionDate || ''}
-                onChange={date => this.props.onChange('parameters.correctionDate', formatDate(date))}
+                onChange={date => this.props.onChange('parameters.correctionDate', date)}
               />
             </FormGroup>
           </div>

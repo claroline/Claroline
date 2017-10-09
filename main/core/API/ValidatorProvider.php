@@ -48,13 +48,25 @@ class ValidatorProvider
     }
 
     /**
+     * Checks if the provider has a registered validator for `class`.
+     *
+     * @param string $class
+     *
+     * @return bool
+     */
+    public function has($class)
+    {
+        return !empty($this->validators[$class]);
+    }
+
+    /**
      * Validates `data` using the `class` validator.
      *
      * @param string $class          - the class of the validator to use
      * @param mixed  $data           - the data to validate
      * @param bool   $throwException - if true an InvalidDataException is thrown instead of returning the errors
      *
-     * @return array
+     * @return array - the list of validation errors
      *
      * @throws InvalidDataException
      */

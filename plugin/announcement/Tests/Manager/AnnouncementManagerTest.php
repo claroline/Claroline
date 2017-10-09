@@ -95,40 +95,6 @@ class AnnouncementManagerTest extends MockeryTestCase
         );
     }
 
-    public function testGetAllAnnouncementsByAggregate()
-    {
-        $aggregate = $this->mock('Claroline\AnnouncementBundle\Entity\AnnouncementAggregate');
-        $announcements = ['announ_1', 'announ_2'];
-
-        $this->announcementRepo
-            ->shouldReceive('findAllAnnouncementsByAggregate')
-            ->with($aggregate)
-            ->once()
-            ->andReturn($announcements);
-
-        $this->assertEquals(
-            $announcements,
-            $this->getManager()->getAllAnnouncementsByAggregate($aggregate)
-        );
-    }
-
-    public function testGetVisibleAnnouncementsByAggregate()
-    {
-        $aggregate = $this->mock('Claroline\AnnouncementBundle\Entity\AnnouncementAggregate');
-        $announcements = ['announ_1', 'announ_2'];
-
-        $this->announcementRepo
-            ->shouldReceive('findVisibleAnnouncementsByAggregate')
-            ->with($aggregate)
-            ->once()
-            ->andReturn($announcements);
-
-        $this->assertEquals(
-            $announcements,
-            $this->getManager()->getVisibleAnnouncementsByAggregate($aggregate)
-        );
-    }
-
     private function getManager(array $mockedMethods = [])
     {
         $this->om->shouldReceive('getRepository')

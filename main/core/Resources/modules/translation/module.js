@@ -1,10 +1,10 @@
 import angular from 'angular/index'
 
-import {ClarolineTranslator} from './index'
+import {Translator} from './index'
 
 /**
  * Expose WillDurand JS translator as an angular service
  */
 angular
   .module('translation', [])
-  .service('Translator', () => ClarolineTranslator)
+  .service('Translator', () => Translator)

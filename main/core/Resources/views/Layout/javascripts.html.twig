@@ -97,15 +97,25 @@
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
+{# We have replaced WillDurand by our own to be able to lazy load trans domains #}
+<script src="{{ hotAsset('dist/claroline-distribution-main-core-translator.js') }}"></script>
+
+{# Load some default translation domains #}
 {% javascripts debug=false
-    'bundles/bazingajstranslation/js/translator.min.js'
     'js/translations/resource/*.js'
     'js/translations/home/*.js'
     'js/translations/platform/*.js'
     'js/translations/error/*.js'
     'js/translations/validators/*.js'
-    %}<script src="{{ asset_url }}"></script>
+%}
+    <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
+
+{#<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}"></script>
+<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'home' }) }}"></script>
+<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>
+<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'error' }) }}"></script>
+<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'validators' }) }}"></script>#}
 
 <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>

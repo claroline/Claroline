@@ -19,7 +19,7 @@ trait HasGroupsTrait
         try {
             $object = $this->find($class, $uuid);
             $groups = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Group');
-            $this->crud->patch($object, 'groups', Crud::ADD_ARRAY_ELEMENT, $groups);
+            $this->crud->patch($object, 'groups', Crud::COLLECTION_ADD, $groups);
 
             return new JsonResponse(
                 $this->serializer->serialize($object)
@@ -38,7 +38,7 @@ trait HasGroupsTrait
         try {
             $object = $this->find($class, $uuid);
             $groups = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Group');
-            $this->crud->patch($object, 'groups', Crud::REMOVE_ARRAY_ELEMENT, $groups);
+            $this->crud->patch($object, 'groups', Crud::COLLECTION_REMOVE, $groups);
 
             return new JsonResponse(
               $this->serializer->serialize($object)

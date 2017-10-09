@@ -1471,5 +1471,11 @@
     "duplicate_model": "Dupliquer comme modèle",
     "login_auth_or": "OU",
     "login_auth_claro_account": "Me connecter avec mon compte Claroline :",
-    "login_auth_sso": "Me connecter avec un de mes autres comptes :"
+    "login_auth_sso": "Me connecter avec un de mes autres comptes :",
+    "published_at": "publié le %date%",
+    "not_published": "non publié",
+    "access_restrictions": "Restrictions d'accès",
+    "access_dates": "Restreindre par dates",
+    "rich_text_tools": "Outils de texte riche",
+    "minimize": "Réduire"
 }

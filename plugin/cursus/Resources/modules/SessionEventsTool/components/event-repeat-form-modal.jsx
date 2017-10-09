@@ -6,7 +6,6 @@ import moment from 'moment'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {t, trans} from '#/main/core/translation'
 import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
-import {formatDate} from '#/main/core/date'
 
 export const MODAL_EVENT_REPEAT_FORM = 'MODAL_EVENT_REPEAT_FORM'
 
@@ -191,7 +190,7 @@ export class EventRepeatFormModal  extends Component {
                   name="event-repeat-until"
                   value={this.state.until || ''}
                   minDate={moment.utc(this.props.event.startDate)}
-                  onChange={date => this.updateFormState('until', formatDate(date))}
+                  onChange={date => this.updateFormState('until', date)}
                 />
                 {this.state.untilError &&
                   <div className="help-block field-error">

@@ -26,7 +26,6 @@
     "open-tracking": "Voir le suivi de l'objet",
     "rename": "Renommer",
     "resource_access_code": "Restreindre par code",
-    "resource_access_dates": "Restreindre par dates",
     "resource_access_ips": "Restreindre par IPs",
     "resource_access_rights": "Qui peut voir cette resource ?",
     "resource_accesses": "Restrictions d'accès",

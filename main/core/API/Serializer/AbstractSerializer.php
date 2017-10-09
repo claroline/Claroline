@@ -18,6 +18,8 @@ abstract class AbstractSerializer
 
     /**
      * @DI\Inject("annotation_reader")
+     *
+     * @var Reader
      */
     public $reader;
 

@@ -62,9 +62,7 @@ abstract class AbstractResource
     }
 
     /**
-     * For forms (otherwise name won't exist).
-     *
-     * TODO: this should be removed
+     * Shortcut to access name from Resource.
      *
      * @return string
      */

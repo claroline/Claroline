@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t, transChoice, ClarolineTranslator} from '#/main/core/translation'
+import {t, transChoice, Translator} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/fos-js-router'
 import {localeDate} from '#/main/core/layout/data/types/date/utils'
 import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM, MODAL_URL, MODAL_USER_PICKER} from '#/main/core/layout/modal'
@@ -124,14 +124,14 @@ const WorkspacesPage = props =>
         actions={[
           ...Configuration.getWorkspacesAdministrationActions().map(action => action.options.modal ? {
             icon: action.icon,
-            label: action.name(ClarolineTranslator),
+            label: action.name(Translator),
             action: (rows) => props.showModal(MODAL_URL, {
               url: action.url(rows[0].id)
             }),
             context: 'row'
           } : {
             icon: action.icon,
-            label: action.name(ClarolineTranslator),
+            label: action.name(Translator),
             action: (rows) => action.url(rows[0].id),
             context: 'row'
           }), {

@@ -88,6 +88,8 @@ Resource.propTypes = {
    * If provided, this permits to manage the resource editor in the header (aka. open, save actions).
    */
   editor: T.shape({
+    icon: T.string,
+    label: T.string,
     opened: T.bool,
     open: T.oneOfType([T.func, T.string]).isRequired,
     save: T.shape({

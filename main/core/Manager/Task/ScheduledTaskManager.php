@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Manager\Task;
 
 use Claroline\CoreBundle\API\Serializer\Task\ScheduledTaskSerializer;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Validation\Exception\InvalidDataException;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\Task\ScheduledTaskRepository;
@@ -26,6 +27,9 @@ class ScheduledTaskManager
     /** @var ObjectManager */
     private $om;
 
+    /** @var PlatformConfigurationHandler */
+    private $configHandler;
+
     /** @var ScheduledTaskRepository */
     private $repository;
 
@@ -36,18 +40,22 @@ class ScheduledTaskManager
      * ScheduledTaskManager constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "serializer" = @DI\Inject("claroline.serializer.scheduled_task")
+     *     "om"            = @DI\Inject("claroline.persistence.object_manager"),
+     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "serializer"    = @DI\Inject("claroline.serializer.scheduled_task")
      * })
      *
-     * @param ObjectManager           $om
-     * @param ScheduledTaskSerializer $serializer
+     * @param ObjectManager                $om
+     * @param PlatformConfigurationHandler $configHandler
+     * @param ScheduledTaskSerializer      $serializer
      */
     public function __construct(
         ObjectManager $om,
+        PlatformConfigurationHandler $configHandler,
         ScheduledTaskSerializer $serializer)
     {
         $this->om = $om;
+        $this->configHandler = $configHandler;
         $this->repository = $om->getRepository('ClarolineCoreBundle:Task\ScheduledTask');
         $this->serializer = $serializer;
     }
@@ -73,7 +81,12 @@ class ScheduledTaskManager
      */
     public function create(array $data)
     {
-        return $this->update($data, new ScheduledTask());
+        if ($this->configHandler->hasParameter('is_cron_configured') &&
+            $this->configHandler->getParameter('is_cron_configured')) {
+            return $this->update($data, new ScheduledTask());
+        }
+
+        return null;
     }
 
     /**

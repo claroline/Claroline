@@ -1,7 +1,9 @@
+import {execute} from '#/main/core/file-loader'
+import {web} from '#/main/core/path'
+
 /**
  * This class was copied from BazingaJsTranslationBundle
  */
-
 
 var _messages     = {},
   _fallbackLocale = 'en',
@@ -10,7 +12,7 @@ var _messages     = {},
   _cPluralRegex = new RegExp(/^\s*((\{\s*(\-?\d+[\s*,\s*\-?\d+]*)\s*\})|([\[\]])\s*(-Inf|\-?\d+)\s*,\s*(\+?Inf|\-?\d+)\s*([\[\]]))\s?(.+?)$/),
   _iPluralRegex = new RegExp(/^\s*(\{\s*(\-?\d+[\s*,\s*\-?\d+]*)\s*\})|([\[\]])\s*(-Inf|\-?\d+)\s*,\s*(\+?Inf|\-?\d+)\s*([\[\]])/)
 
-export const Translator = {
+const Translator = {
 
     /**
      * The current locale.
@@ -71,8 +73,8 @@ export const Translator = {
      * @api public
      */
   add: function (id, message, domain, locale) {
-    var _locale = locale || this.locale || this.fallback,
-      _domain = domain || this.defaultDomain
+    let _locale = locale || this.locale || this.fallback
+    let _domain = domain || this.defaultDomain
 
     if (!_messages[_locale]) {
       _messages[_locale] = {}
@@ -103,13 +105,15 @@ export const Translator = {
      * @api public
      */
   trans: function (id, parameters, domain, locale) {
-    var _message = get_message(
-            id,
-            domain,
-            locale,
-            this.locale,
-            this.fallback
-        )
+    load_domain(locale || this.locale || this.fallback, domain)
+
+    let _message = get_message(
+      id,
+      domain,
+      locale,
+      this.locale,
+      this.fallback
+    )
 
     return replace_placeholders(_message, parameters || {})
   },
@@ -126,15 +130,17 @@ export const Translator = {
      * @api public
      */
   transChoice: function (id, number, parameters, domain, locale) {
-    var _message = get_message(
-            id,
-            domain,
-            locale,
-            this.locale,
-            this.fallback
-        )
+    load_domain(locale || this.locale || this.fallback, domain)
 
-    var _number  = parseInt(number, 10)
+    let _message = get_message(
+      id,
+      domain,
+      locale,
+      this.locale,
+      this.fallback
+    )
+
+    let _number  = parseInt(number, 10)
     parameters = parameters || {}
 
     if (parameters.count === undefined) {
@@ -143,10 +149,10 @@ export const Translator = {
 
     if (typeof _message !== 'undefined' && !isNaN(_number)) {
       _message = pluralize(
-                _message,
-                _number,
-                locale || this.locale || this.fallback
-            )
+        _message,
+        _number,
+        locale || this.locale || this.fallback
+      )
     }
 
     return replace_placeholders(_message, parameters)
@@ -177,9 +183,9 @@ export const Translator = {
     }
 
     if (data.translations) {
-      for (var locale in data.translations) {
-        for (var domain in data.translations[locale]) {
-          for (var id in data.translations[locale][domain]) {
+      for (let locale in data.translations) {
+        for (let domain in data.translations[locale]) {
+          for (let id in data.translations[locale][domain]) {
             this.add(id, data.translations[locale][domain][id], domain, locale)
           }
         }
@@ -198,10 +204,12 @@ export const Translator = {
     this.locale = get_current_locale()
   },
 
+  hasDomain: (_domain, _locale) => {
+    return has_domain(_locale, _domain)
+  },
+
   hasMessage: (id, _domain, _locale) => {
-    if (has_message(_locale, _domain, id)) {
-      return _messages[_locale][_domain][id]
-    }
+    return has_message(_locale, _domain, id)
   }
 }
 
@@ -244,10 +252,10 @@ function replace_placeholders(message, placeholders) {
  * @api private
  */
 function get_message(id, domain, locale, currentLocale, localeFallback) {
-  var _locale = locale || currentLocale || localeFallback,
-    _domain = domain
+  let _locale = locale || currentLocale || localeFallback
+  let _domain = domain
 
-  var nationalLocaleFallback = _locale.split('_')[0]
+  const nationalLocaleFallback = _locale.split('_')[0]
 
   if (!(_locale in _messages)) {
     if (!(nationalLocaleFallback in _messages)) {
@@ -261,10 +269,11 @@ function get_message(id, domain, locale, currentLocale, localeFallback) {
   }
 
   if (typeof _domain === 'undefined' || null === _domain) {
-    for (var i = 0; i < _domains.length; i++) {
-      if (has_message(_locale, _domains[i], id) ||
-                has_message(nationalLocaleFallback, _domains[i], id) ||
-                has_message(localeFallback, _domains[i], id)) {
+    for (let i = 0; i < _domains.length; i++) {
+      if (has_message(_locale, _domains[i], id)
+        || has_message(nationalLocaleFallback, _domains[i], id)
+        || has_message(localeFallback, _domains[i], id)
+      ) {
         _domain = _domains[i]
 
         break
@@ -276,7 +285,7 @@ function get_message(id, domain, locale, currentLocale, localeFallback) {
     return _messages[_locale][_domain][id]
   }
 
-  var _length, _parts, _last, _lastLength
+  let _length, _parts, _last, _lastLength
 
   while (_locale.length > 2) {
     _length     = _locale.length
@@ -306,27 +315,44 @@ function get_message(id, domain, locale, currentLocale, localeFallback) {
  * Just look for a specific locale / domain / id if the message is available,
  * helpful for message availability validation
  *
- * @param {String} locale           The locale
- * @param {String} domain           The domain for the message
- * @param {String} id               The message id
- * @return {Boolean}                Return `true` if message is available,
- *                      `               false` otherwise
+ * @param {String} locale The locale
+ * @param {String} domain The domain for the message
+ * @param {String} id     The message id
+ *
+ * @return {Boolean}      Return `true` if message is available, `false` otherwise
+ *
  * @api private
  */
 function has_message(locale, domain, id) {
-  if (!(locale in _messages)) {
-    return false
-  }
+  return has_domain(locale, domain)
+      && id in _messages[locale][domain]
+}
 
-  if (!(domain in _messages[locale])) {
-    return false
-  }
+/**
+ * Just look for a specific locale / domain.
+ *
+ * @param {String} locale The locale
+ * @param {String} domain The domain
+ *
+ * @return {Boolean}      Return `true` if domain is available, `false` otherwise
+ *
+ * @api private
+ */
+function has_domain(locale, domain) {
+  return locale in _messages
+      && domain in _messages[locale]
+}
 
-  if (!(id in _messages[locale][domain])) {
-    return false
+/**
+ * Try to load a non loaded domain in ASYNC.
+ *
+ * @param locale
+ * @param domain
+ */
+function load_domain(locale, domain) {
+  if (!has_domain(locale, domain)) {
+    execute(web(`js/translations/${domain}/${locale}.js`))
   }
-
-  return true
 }
 
 /**
@@ -584,7 +610,7 @@ function plural_position(number, locale) {
  * @api private
  */
 function exists(array, element) {
-  for (var i = 0; i < array.length; i++) {
+  for (let i = 0; i < array.length; i++) {
     if (element === array[i]) {
       return true
     }
@@ -607,4 +633,8 @@ function get_current_locale() {
   else {
     return _fallbackLocale
   }
+}
+
+export {
+  Translator
 }

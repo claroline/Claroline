@@ -4,8 +4,6 @@ import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import 'react-datepicker/dist/react-datepicker.css'
 
-const locale = getLocale()
-
 class Date extends Component {
   constructor(props) {
     super(props)
@@ -20,12 +18,11 @@ class Date extends Component {
           </button>
         }
         <DatePicker
-          selected={this.props.value ? moment.utc(this.props.value) : null}
-          onChange={date => this.props.onChange(moment.utc(date).format(locale))}
-          ref={(c) => this._calendar = c}
           {...this.props}
-        >
-        </DatePicker>
+          selected={this.props.value ? moment.utc(this.props.value) : null}
+          onChange={date => this.props.onChange(moment.utc(date).toISOString())}
+          ref={(c) => this._calendar = c}
+        />
       </span>
     )
   }
@@ -46,17 +43,6 @@ Date.defaultProps = {
   minDate: moment.utc(),
   showCalendarButton: false,
   disabled: false
-}
-
-// tmp: current way of retrieving locale...
-function getLocale() {
-  const locale = document.querySelector('#homeLocale')
-
-  if (locale) {
-    return locale.innerHTML.trim()
-  }
-
-  return 'en'
 }
 
 export {

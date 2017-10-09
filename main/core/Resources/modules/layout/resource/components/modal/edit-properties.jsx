@@ -8,7 +8,6 @@ import omit from 'lodash/omit'
 
 import Modal      from 'react-bootstrap/lib/Modal'
 
-import {formatDate}   from '#/main/core/date'
 import {t}            from '#/main/core/translation'
 import {t_res}        from '#/main/core/layout/resource/translation'
 import {BaseModal}    from '#/main/core/layout/modal/components/base.jsx'
@@ -123,12 +122,12 @@ const AccessesSection = (props) =>
   <FormSection
     id="resource-accesses"
     icon="fa fa-fw fa-key"
-    title={t_res('resource_accesses')}
+    title={t('access_restrictions')}
     {...omit(props, ['meta', 'parameters', 'updateParameter'])}
   >
     <ActivableSet
       id="access-dates"
-      label={t_res('resource_access_dates')}
+      label={t('access_dates')}
       activated={!isEmpty(props.parameters.accessibleFrom) || !isEmpty(props.parameters.accessibleUntil)}
       onChange={activated => {
         if (!activated) {
@@ -147,7 +146,7 @@ const AccessesSection = (props) =>
           <DatePicker
             id="resource-accessible-from"
             value={props.parameters.accessibleFrom || ''}
-            onChange={date => props.updateParameter('parameters.accessibleFrom', formatDate(date))}
+            onChange={date => props.updateParameter('parameters.accessibleFrom', date)}
           />
         </FormGroup>
 
@@ -160,7 +159,7 @@ const AccessesSection = (props) =>
           <DatePicker
             id="resource-accessible-until"
             value={props.parameters.accessibleUntil || ''}
-            onChange={date => props.updateParameter('parameters.accessibleUntil', formatDate(date))}
+            onChange={date => props.updateParameter('parameters.accessibleUntil', date)}
           />
         </FormGroup>
       </div>

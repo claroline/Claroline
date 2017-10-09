@@ -9,3 +9,20 @@
 @import "impersonation";
 @import "login";
 @import "profile";
+
+.user-micro {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    color: #777; // toto : use a var
+    vertical-align: middle;
+    font-size: @font-size-small;
+
+    .avatar {
+        margin-right: 10px;
+        max-height: 30px; // for picture
+        border-radius: 50%; // for picture
+        color: #ccc; // for .fa
+        font-size: 30px; // for .fa when no picture
+    }
+}

@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
 
-const DatePickerGroup = props =>
+const DateGroup = props =>
   <FormGroup
     {...props}
   >
@@ -19,7 +19,7 @@ const DatePickerGroup = props =>
     />
   </FormGroup>
 
-DatePickerGroup.propTypes = {
+DateGroup.propTypes = {
   controlId: T.string.isRequired,
   dateFormat: T.string,
   minDate: T.object,
@@ -30,5 +30,5 @@ DatePickerGroup.propTypes = {
 }
 
 export {
-  DatePickerGroup
+  DateGroup
 }

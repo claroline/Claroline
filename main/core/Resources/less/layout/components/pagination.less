@@ -26,7 +26,7 @@
     .btn {
         .pagination-btn-variant();
 
-        &.next-btn {
+        &.btn-next {
             font-weight: bold;
             .fa {
                 margin-left: @icon-text-spacer;
@@ -45,27 +45,5 @@
 
     ul {
         .pagination;
-    }
-}
-
-.pagination-btn-variant() {
-    background: @pagination-bg;
-    color: @pagination-color;
-    border-color: @pagination-border;
-    .border-radius(@border-radius-base);
-
-    &.hover, &:hover,
-    &.focus, &:focus,
-    &.active, &:active {
-        background: @pagination-hover-bg;
-        color: @pagination-hover-color;
-        border-color: @pagination-hover-border;
-    }
-
-    &:disabled,
-    &.disabled {
-        background: @pagination-disabled-bg;
-        color: @pagination-disabled-color;
-        border-color: @pagination-disabled-border;
     }
 }

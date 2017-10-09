@@ -25,13 +25,13 @@ class AnnouncementsWidgetConfig
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
-    protected $id;
+    private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Widget\WidgetInstance")
      * @ORM\JoinColumn(onDelete="CASCADE")
      */
-    protected $widgetInstance;
+    private $widgetInstance;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)

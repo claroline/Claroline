@@ -1,14 +1,14 @@
 {% macro renderPager(pager, widgetInstanceId) %}
     {{
-        pagerfanta(
-            pager,
-            'twitter_bootstrap_translated',
-            {
-                'proximity' : 1,
-                'routeName': 'claro_announcement_widget_pager',
-                'routeParams': {'widgetInstance': widgetInstanceId}
-            }
-        )
+    pagerfanta(
+    pager,
+    'twitter_bootstrap_translated',
+    {
+        'proximity' : 1,
+        'routeName': 'claro_announcement_widget_pager',
+        'routeParams': {'widgetInstance': widgetInstanceId}
+    }
+    )
     }}
 {% endmacro %}
 
@@ -39,11 +39,14 @@
                     <small>
                         {{ 'published_on'|trans({}, 'announcement') }}
                         {{ data['announcement'].getPublicationDate().format('d-m-Y') }}
+
+                        {% if isDesktop %}
                         {{ 'in_workspace'|trans({}, 'widget') }}
-                        <a href="{{ path('claro_resource_open_short', {'node': data['resourceNodeId']}) }}">
-                            {{ data['workspaceName'] }}
-                            <span class="workspace-code">({{ data['workspaceCode'] }})</span>
-                        </a>
+                            <a href="{{ path('claro_resource_open_short', {'node': data['resourceNodeId']}) }}">
+                                {{ data['workspaceName'] }}
+                                <span class="workspace-code">({{ data['workspaceCode'] }})</span>
+                            </a>
+                        {% endif %}
                         {% set announcer = data['announcement'].getAnnouncer() %}
 
                         {% if announcer is not null %}

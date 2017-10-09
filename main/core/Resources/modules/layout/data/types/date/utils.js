@@ -11,5 +11,5 @@ export function localeDate(date) {
 }
 
 export function serverDate(displayDate) {
-  return moment(displayDate, t('date_range.js_format')).format(moment.ISO_8601)
+  return moment(displayDate, t('date_range.js_format')).toISOString()
 }

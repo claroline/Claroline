@@ -19,5 +19,16 @@
     "published_on": "Published on",
     "send_email_to_users": "Send an email to users",
     "send_mail_user_picker_title": "Please select the users to who you to send the announcement",
-    "visible_from_until_condition": "\"To\" date must be after \"From\" date"
+    "visible_from_until_condition": "\"To\" date must be after \"From\" date",
+
+    "from_older_to_newer": "From older to newer",
+    "from_newer_to_older": "From newer to older",
+    "newer": "Newer",
+    "older": "Older",
+    "add_announce": "Create a new announce",
+    "announcement_visible_from": "From",
+    "announcement_visible_until": "Until",
+    "announcement_is_visible": "The announce is visible",
+    "announcement_is_not_visible": "The announce is not visible",
+    "announcement_notify_users": "Send by message to users"
 }

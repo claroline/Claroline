@@ -26,7 +26,6 @@
     "open-tracking": "View tracking",
     "rename": "Rename",
     "resource_access_code": "Restrict by code",
-    "resource_access_dates": "Restrict by dates",
     "resource_access_ips": "Restrict by IPs",
     "resource_access_rights": "Who can see this resource ?",
     "resource_accesses": "Access Restrictions",

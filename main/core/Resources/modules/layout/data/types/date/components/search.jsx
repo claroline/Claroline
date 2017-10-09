@@ -27,9 +27,7 @@ class DateSearch extends Component {
         <DatePicker
           className="input-hide"
           showCalendarButton={true}
-          onChange={(date) => {
-            return this.props.updateSearch(date)
-          }}
+          onChange={date => this.props.updateSearch(date)}
           minDate={moment.utc('1970')}
           name="filter-date"
           open={this.state.open}

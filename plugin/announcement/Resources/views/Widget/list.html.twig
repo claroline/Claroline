@@ -2,7 +2,7 @@
     <div id="announcements-list-{{ widgetInstance.getId() }}">
         {{
             render(controller(
-                'ClarolineAnnouncementBundle:Announcement:announcementsWidgetPager',
+                'ClarolineAnnouncementBundle:Widget\\AnnouncementWidget:announcementsWidgetPager',
                 {'widgetInstance': widgetInstance.getId()}
             ))
         }}

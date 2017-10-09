@@ -31,27 +31,26 @@ class ObjectManager extends ObjectManagerDecorator
     private $supportsTransactions = false;
     private $hasEventManager = false;
     private $hasUnitOfWork = false;
-    private $allowForceFlush;
-    private $showFlushLevel;
+    private $activateLog = false;
+    private $allowForceFlush = true;
+    private $showFlushLevel = false;
 
     /**
-     * Constructor.
+     * ObjectManager constructor.
      *
      * @DI\InjectParams({
      *     "om" = @DI\Inject("doctrine.orm.entity_manager")
      * })
+     *
+     * @param ObjectManagerInterface $om
      */
     public function __construct(ObjectManagerInterface $om)
     {
         $this->wrapped = $om;
-        $this->activateLog = false;
         $this->supportsTransactions
             = $this->hasEventManager
             = $this->hasUnitOfWork
             = $om instanceof EntityManagerInterface;
-
-        $this->allowForceFlush = true;
-        $this->showFlushLevel = false;
     }
 
     /**
@@ -381,6 +380,6 @@ class ObjectManager extends ObjectManagerDecorator
             //maybe log some stuff according to the options
         }
 
-        $this->flush($object);
+        $this->flush();
     }
 }
