@@ -13,6 +13,7 @@ import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx
 import {NumberGroup} from '#/main/core/layout/form/components/group/number-group.jsx'
 import {EmailGroup} from '#/main/core/layout/form/components/group/email-group.jsx'
 import {DateGroup} from '#/main/core/layout/form/components/group/date-group.jsx'
+import {FileGroup} from '#/main/core/layout/form/components/group/file-group.jsx'
 
 import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 import {Checkboxes} from '#/main/core/layout/form/components/field/checkboxes.jsx'
@@ -20,6 +21,7 @@ import {Select} from '#/main/core/layout/form/components/field/select.jsx'
 import {CascadeSelect} from '#/main/core/layout/form/components/field/cascade-select.jsx'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
+import {File} from '#/main/core/layout/form/components/field/file.jsx'
 
 import {constants} from '#/main/core/layout/form/constants'
 
@@ -282,6 +284,32 @@ export const FormField = props => {
           }}
         />
       )
+    case 'file':
+      return (props.noLabel ?
+        <div className={classes({'has-error': props.error})}>
+          <File
+            controlId={props.controlId}
+            value={props.value || []}
+            types={props.types || []}
+            max={props.max}
+            disabled={props.disabled}
+            onChange={value => props.onChange(value)}
+          />
+          {props.error &&
+            <ErrorBlock text={props.error}/>
+          }
+        </div> :
+        <FileGroup
+          controlId={props.controlId}
+          label={props.label}
+          value={props.value || []}
+          types={props.types || []}
+          max={props.max}
+          disabled={props.disabled}
+          error={props.error}
+          onChange={value => props.onChange(value)}
+        />
+      )
     default:
       return null
   }
@@ -296,7 +324,10 @@ FormField.propTypes = {
   noLabel: T.bool.isRequired,
   disabled: T.bool.isRequired,
   error: T.string,
-  onChange: T.func.isRequired
+  onChange: T.func.isRequired,
+  min: T.number,
+  max: T.number,
+  types: T.array
 }
 
 FormField.defaultProps = {

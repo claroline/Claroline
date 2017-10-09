@@ -674,6 +674,11 @@ class FacetManager
         return $withChoices;
     }
 
+    public function isFileType($type)
+    {
+        return $type === FieldFacet::FILE_TYPE;
+    }
+
     public function getFieldFacetChoiceById($id)
     {
         return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetChoice')->findOneById($id);

@@ -48,6 +48,7 @@ class EntryEditForm extends Component {
       entry: {},
       categories: [],
       keywords: [],
+      files: {},
       hasError: false,
       errors: errors,
       showCategoryForm: false,
@@ -107,7 +108,7 @@ class EntryEditForm extends Component {
   generateTemplate() {
     let template = this.props.template
     template = template.replace('%clacoform_entry_title%', '<span id="clacoform-entry-title"></span>')
-    this.props.fields.forEach(f => {
+    this.props.fields.filter(f => f.type !== 11).forEach(f => {
       template = template.replace(`%field_${f.id}%`, `<span id="clacoform-field-${f.id}"></span>`)
     })
 
@@ -130,7 +131,7 @@ class EntryEditForm extends Component {
       if (element) {
         ReactDOM.render(title, element)
       }
-      this.props.fields.forEach(f => {
+      this.props.fields.filter(f => f.type !== 11).forEach(f => {
         const fieldEl = document.getElementById(`clacoform-field-${f.id}`)
 
         if (fieldEl) {
@@ -231,7 +232,8 @@ class EntryEditForm extends Component {
         this.state.id,
         this.state.entry,
         this.state.keywords,
-        this.state.categories.map(categoryName => this.props.categories.find(c => c.name === categoryName).id)
+        this.state.categories.map(categoryName => this.props.categories.find(c => c.name === categoryName).id),
+        this.state.files
       )
       this.props.history.push(`/entry/${this.state.id}/view`)
     } else {
@@ -260,7 +262,24 @@ class EntryEditForm extends Component {
         hasError = true
       }
     })
-    this.setState({errors: errors, hasError: hasError}, this.registerEntry)
+    const files = {}
+
+    this.props.fields.forEach(f => {
+      if (getFieldType(f.type).name === 'file') {
+        if (this.state.entry[f.id]) {
+          if (!files[f.id]) {
+            files[f.id] = []
+          }
+
+          this.state.entry[f.id].forEach(file => {
+            if (!file.url) {
+              files[f.id].push(file)
+            }
+          })
+        }
+      }
+    })
+    this.setState({errors: errors, hasError: hasError, files: files}, this.registerEntry)
   }
 
   render() {
@@ -296,6 +315,8 @@ class EntryEditForm extends Component {
                       []
                     }
                     value={this.state.entry[f.id]}
+                    max={f.details && !isNaN(f.details.nb_files_max) ? parseInt(f.details.nb_files_max) : undefined}
+                    types={f.details && f.details.file_types ? f.details.file_types : []}
                     error={this.state.errors[f.id]}
                     onChange={value => this.updateEntryValue(f.id, value)}
                   />
@@ -466,7 +487,7 @@ function mapStateToProps(state, ownProps) {
 function mapDispatchToProps(dispatch) {
   return {
     setCurrentEntry: (entry) => dispatch(actions.loadCurrentEntry(entry)),
-    editEntry: (entryId, entry, keywords, categories) => dispatch(actions.editEntry(entryId, entry, keywords, categories))
+    editEntry: (entryId, entry, keywords, categories, files) => dispatch(actions.editEntry(entryId, entry, keywords, categories, files))
   }
 }
 

@@ -32,6 +32,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 class ClacoFormController extends Controller
@@ -232,6 +233,9 @@ class ClacoFormController extends Controller
             $fieldData['lockedEditionOnly'] :
             $fieldData['lockedEditionOnly'] === 'true';
         $hidden = is_bool($fieldData['hidden']) ? $fieldData['hidden'] : $fieldData['hidden'] === 'true';
+        $details = isset($fieldData['details']) && is_array($fieldData['details']) ?
+            $fieldData['details'] :
+            ['file_types' => [], 'nb_files_max' => 1];
 
         foreach ($choicesChildren as $parentId => $choicesList) {
             foreach ($choicesList as $key => $choice) {
@@ -249,7 +253,8 @@ class ClacoFormController extends Controller
             $lockedEditionOnly,
             $hidden,
             $choices,
-            $choicesChildren
+            $choicesChildren,
+            $details
         );
         $serializedField = $this->serializer->serialize(
             $field,
@@ -304,6 +309,9 @@ class ClacoFormController extends Controller
             $fieldData['lockedEditionOnly'] :
             $fieldData['lockedEditionOnly'] === 'true';
         $hidden = is_bool($fieldData['hidden']) ? $fieldData['hidden'] : $fieldData['hidden'] === 'true';
+        $details = isset($fieldData['details']) && is_array($fieldData['details']) ?
+            $fieldData['details'] :
+            ['file_types' => [], 'nb_files_max' => 1];
 
         foreach ($choicesChildren as $parentId => $choicesList) {
             foreach ($choicesList as $key => $choice) {
@@ -321,7 +329,8 @@ class ClacoFormController extends Controller
             $lockedEditionOnly,
             $hidden,
             $choices,
-            $choicesChildren
+            $choicesChildren,
+            $details
         );
         $serializedField = $this->serializer->serialize(
             $field,
@@ -710,6 +719,7 @@ class ClacoFormController extends Controller
         $entryData = $this->request->request->get('entryData', false);
         $title = $this->request->request->get('titleData', false);
         $keywordsData = $this->request->request->get('keywordsData', false);
+        $files = $this->request->files->all();
 
         if (!is_array($entryData)) {
             $entryData = json_decode($entryData, true);
@@ -722,7 +732,7 @@ class ClacoFormController extends Controller
         }
 
         if ($this->clacoFormManager->canCreateEntry($clacoForm, $entryUser)) {
-            $entry = $this->clacoFormManager->createEntry($clacoForm, $entryData, $title, $keywordsData, $entryUser);
+            $entry = $this->clacoFormManager->createEntry($clacoForm, $entryData, $title, $keywordsData, $entryUser, $files);
         } else {
             $entry = null;
         }
@@ -749,6 +759,7 @@ class ClacoFormController extends Controller
         $title = $this->request->request->get('titleData', false);
         $categoriesIds = $this->request->request->get('categoriesData', false);
         $keywordsData = $this->request->request->get('keywordsData', false);
+        $files = $this->request->files->all();
 
         if (!is_array($entryData)) {
             $entryData = json_decode($entryData, true);
@@ -762,7 +773,7 @@ class ClacoFormController extends Controller
         if (!$title) {
             $title = $entryData['entry_title'];
         }
-        $updatedEntry = $this->clacoFormManager->editEntry($entry, $entryData, $title, $categoriesIds, $keywordsData);
+        $updatedEntry = $this->clacoFormManager->editEntry($entry, $entryData, $title, $categoriesIds, $keywordsData, $files);
         $serializedEntry = $this->entrySerializer->serialize($updatedEntry);
 
         return new JsonResponse($serializedEntry, 200);
@@ -1182,13 +1193,33 @@ class ClacoFormController extends Controller
     {
         $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
         $content = $this->clacoFormManager->exportEntries($clacoForm);
-        $headers = [
-            'Content-Transfer-Encoding' => 'octet-stream',
-            'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
-            'Content-Disposition' => 'attachment; filename="'.$clacoForm->getResourceNode()->getName().'.xls"',
-        ];
 
-        return new Response($content, 200, $headers);
+        if ($this->clacoFormManager->hasFiles($clacoForm)) {
+            $file = $this->clacoFormManager->zipEntries($content, $clacoForm);
+
+            $response = new StreamedResponse();
+            $response->setCallBack(
+                function () use ($file) {
+                    readfile($file);
+                }
+            );
+            $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+            $response->headers->set('Content-Type', 'application/force-download');
+            $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($clacoForm->getResourceNode()->getName().'.zip'));
+            $response->headers->set('Content-Type', 'application/zip; charset=utf-8');
+            $response->headers->set('Connection', 'close');
+            $response->send();
+
+            return new Response();
+        } else {
+            $headers = [
+                'Content-Transfer-Encoding' => 'octet-stream',
+                'Content-Type' => 'application/vnd.ms-excel; charset=utf-8',
+                'Content-Disposition' => 'attachment; filename="'.$clacoForm->getResourceNode()->getName().'.xls"',
+            ];
+
+            return new Response($content, 200, $headers);
+        }
     }
 
     /**

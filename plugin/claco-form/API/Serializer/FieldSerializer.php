@@ -50,6 +50,7 @@ class FieldSerializer
             'locked' => $field->isLocked(),
             'lockedEditionOnly' => $field->getLockedEditionOnly(),
             'hidden' => $field->isHidden(),
+            'details' => $field->getDetails(),
         ];
 
         if (!in_array(static::OPTION_MINIMAL, $options)) {

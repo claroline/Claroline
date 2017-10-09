@@ -34,6 +34,7 @@ class FieldFacet
     const EMAIL_TYPE = 8;
     const RICH_TEXT_TYPE = 9;
     const CASCADE_SELECT_TYPE = 10;
+    const FILE_TYPE = 11;
 
     protected static $types = [
         self::STRING_TYPE,
@@ -46,6 +47,7 @@ class FieldFacet
         self::EMAIL_TYPE,
         self::RICH_TEXT_TYPE,
         self::CASCADE_SELECT_TYPE,
+        self::FILE_TYPE,
     ];
 
     /**
@@ -237,6 +239,7 @@ class FieldFacet
             case self::EMAIL_TYPE: return 'email';
             case self::RICH_TEXT_TYPE: return 'rich_text';
             case self::CASCADE_SELECT_TYPE: return 'cascade_select';
+            case self::FILE_TYPE: return 'file';
             default: return 'error';
         }
     }
@@ -254,6 +257,7 @@ class FieldFacet
             case self::EMAIL_TYPE: return 'email';
             case self::RICH_TEXT_TYPE: return 'rich_text';
             case self::CASCADE_SELECT_TYPE: return 'cascade_select';
+            case self::FILE_TYPE: return 'file';
             default: return 'error';
         }
     }

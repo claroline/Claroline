@@ -7,6 +7,7 @@
     <body>
         <table>
             <tr>
+                <th>{{ 'id'|trans({}, 'platform') }}</th>
                 <th>{{ 'entry_title'|trans({}, 'clacoform') }}</th>
                 <th>{{ 'author'|trans({}, 'platform') }}</th>
                 <th>{{ 'publication_date'|trans({}, 'clacoform') }}</th>
@@ -19,6 +20,7 @@
 
             {% for entry in entries %}
                 <tr>
+                    <td>{{ entry['id'] }}</td>
                     <td>{{ entry['title'] }}</td>
                     <td>{{ entry['author'] }}</td>
                     <td>{{ entry['publicationDate'] }}</td>

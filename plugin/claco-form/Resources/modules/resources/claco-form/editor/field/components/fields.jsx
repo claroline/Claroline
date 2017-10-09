@@ -22,7 +22,11 @@ class Fields extends Component {
           isMetadata: false,
           hidden: false,
           locked: false,
-          lockedEditionOnly: false
+          lockedEditionOnly: false,
+          details: {
+            file_types: [],
+            nb_files_max: 1
+          }
         },
         resourceId: this.props.resourceId
       }
@@ -44,7 +48,8 @@ class Fields extends Component {
           hidden: field.hidden,
           locked: field.locked,
           lockedEditionOnly: field.lockedEditionOnly,
-          fieldFacet: field.fieldFacet
+          fieldFacet: field.fieldFacet,
+          details: field.details
         },
         resourceId: this.props.resourceId
       }

@@ -8,6 +8,8 @@ import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {t, trans} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/fos-js-router'
+import {NumberGroup} from '#/main/core/layout/form/components/group/number-group.jsx'
+import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
 import {constants} from '../../../constants'
 import {getFieldType} from '../../../utils'
 import {ChoiceField} from './choice-field.jsx'
@@ -38,7 +40,11 @@ class FieldFormModal  extends Component {
         isMetadata: props.field.isMetadata,
         locked: props.field.locked,
         lockedEditionOnly: props.field.lockedEditionOnly,
-        hidden: props.field.hidden
+        hidden: props.field.hidden,
+        details: {
+          file_types: props.field.details && props.field.details.file_types ? props.field.details.file_types : [],
+          nb_files_max: props.field.details && props.field.details.nb_files_max ? props.field.details.nb_files_max : 1
+        }
       },
       choices: props.field.fieldFacet && props.field.fieldFacet.field_facet_choices.length > 0 ?
         props.field.fieldFacet.field_facet_choices.filter(ffc => !ffc.parent).map(ffc => {return {
@@ -168,6 +174,11 @@ class FieldFormModal  extends Component {
       {field: Object.assign({}, this.state.field, {[property]: value})},
       this.checkLocked
     )
+  }
+
+  updateFieldDetailsProps(property, value) {
+    const details = Object.assign({}, this.state.field.details, {[property]: value})
+    this.setState({field: Object.assign({}, this.state.field, {details: details})})
   }
 
   addNewChoice() {
@@ -380,6 +391,26 @@ class FieldFormModal  extends Component {
             </div>
           </div>
           <hr/>
+          {getFieldType(parseInt(this.state.field.type)).name === 'file' &&
+            <div>
+              <SelectGroup
+                controlId="file-field-types"
+                label={trans('allowed_file_types', {}, 'clacoform')}
+                options={constants.FILE_TYPES}
+                selectedValue={this.state.field.details.file_types}
+                multiple={true}
+                onChange={value => this.updateFieldDetailsProps('file_types', value)}
+              />
+              <NumberGroup
+                controlId="file-field-nb-max"
+                label={trans('max_number_of_files', {}, 'clacoform')}
+                value={this.state.field.details.nb_files_max}
+                min={0}
+                onChange={value => this.updateFieldDetailsProps('nb_files_max', value)}
+              />
+              <hr/>
+            </div>
+          }
           {this.state.choicesLoaded && getFieldType(parseInt(this.state.field.type)).hasChoice &&
             <div>
               <div className="form-group row">
@@ -487,6 +518,7 @@ FieldFormModal.propTypes = {
     locked: T.boolean,
     lockedEditionOnly: T.boolean,
     hidden: T.boolean,
+    details: T.oneOfType([T.object, T.array]),
     fieldFacet: T.shape({
       id: T.number.isRequired,
       name: T.string.isRequired,
@@ -514,7 +546,8 @@ FieldFormModal.propTypes = {
           label: T.string.isRequired
         })
       }))
-    })
+    }),
+    details: T.oneOfType([T.object, T.array])
   })),
   confirmAction: T.func.isRequired,
   fadeModal: T.func.isRequired

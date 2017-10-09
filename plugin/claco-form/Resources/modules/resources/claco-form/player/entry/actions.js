@@ -24,11 +24,15 @@ actions.updateEntryComment = makeActionCreator(ENTRY_COMMENT_UPDATE, 'entryId', 
 actions.removeEntryComment = makeActionCreator(ENTRY_COMMENT_REMOVE, 'entryId', 'commentId')
 actions.removeAllEntries = makeActionCreator(ALL_ENTRIES_REMOVE)
 
-actions.createEntry = (entry, keywords) => (dispatch, getState) => {
+actions.createEntry = (entry, keywords, files) => (dispatch, getState) => {
   const resourceId = getState().resource.id
   const formData = new FormData()
   formData.append('entryData', JSON.stringify(entry))
   formData.append('keywordsData', JSON.stringify(keywords))
+
+  Object.keys(files).forEach(fieldId => {
+    files[fieldId].forEach((f, idx) => formData.append(`${fieldId}-${idx}`, f))
+  })
 
   dispatch({
     [REQUEST_SEND]: {
@@ -45,11 +49,15 @@ actions.createEntry = (entry, keywords) => (dispatch, getState) => {
   })
 }
 
-actions.editEntry = (entryId, entry, keywords, categories) => (dispatch) => {
+actions.editEntry = (entryId, entry, keywords, categories, files) => (dispatch) => {
   const formData = new FormData()
   formData.append('entryData', JSON.stringify(entry))
   formData.append('keywordsData', JSON.stringify(keywords))
   formData.append('categoriesData', JSON.stringify(categories))
+
+  Object.keys(files).forEach(fieldId => {
+    files[fieldId].forEach((f, idx) => formData.append(`${fieldId}-${idx}`, f))
+  })
 
   dispatch({
     [REQUEST_SEND]: {

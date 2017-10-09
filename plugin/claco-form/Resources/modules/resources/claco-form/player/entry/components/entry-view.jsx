@@ -10,11 +10,34 @@ import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {generateUrl} from '#/main/core/fos-js-router'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {getFieldType, getCountry} from '../../../utils'
+import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail.jsx'
+import {getFieldType, getCountry, getFileType} from '../../../utils'
 import {selectors} from '../../../selectors'
 import {actions} from '../actions'
 import {EntryComments} from './entry-comments.jsx'
 import {EntryMenu} from './entry-menu.jsx'
+
+const FilesThumbnails = props =>
+  <div className="file-thumbnails">
+    {props.files.map((f, idx) =>
+      <FileThumbnail
+        key={`file-thumbnail-${idx}`}
+        type={!f.mimeType ? 'file' : getFileType(f.mimeType)}
+        data={f}
+        canEdit={false}
+        canExpand={false}
+        canDelete={false}
+      />
+    )}
+  </div>
+
+FilesThumbnails.propTypes = {
+  files: T.arrayOf(T.shape({
+    name: T.string,
+    mimeType: T.sting,
+    url: T.sting
+  }))
+}
 
 class EntryView extends Component {
   constructor(props) {
@@ -118,6 +141,8 @@ class EntryView extends Component {
             value ? moment(value).format('DD/MM/YYYY') : ''
         case 'rich_text':
           return (<div dangerouslySetInnerHTML={{ __html: value}}/>)
+        case 'file':
+          return (<FilesThumbnails files={value}/>)
         default:
           return value
       }
@@ -198,7 +223,7 @@ class EntryView extends Component {
   generateTemplate() {
     let template = this.props.template
     template = template.replace('%clacoform_entry_title%', this.props.entry.title)
-    this.props.fields.forEach(f => {
+    this.props.fields.filter(f => f.type !== 11).forEach(f => {
       let replacedField = ''
       const fieldValue = this.getFieldValue(f.id)
 
@@ -221,6 +246,11 @@ class EntryView extends Component {
             break
           case 'country':
             replacedField = fieldValue && getCountry(fieldValue) ? getCountry(fieldValue).label : ''
+            break
+          case 'file':
+            replacedField = fieldValue && Array.isArray(fieldValue) ?
+              React.createElement(FilesThumbnails, {files: fieldValue}) :
+              ''
             break
           default:
             replacedField = fieldValue

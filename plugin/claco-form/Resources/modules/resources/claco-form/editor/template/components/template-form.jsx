@@ -195,7 +195,7 @@ function mapStateToProps(state) {
   return {
     canEdit: state.canEdit,
     template: selectors.template(state),
-    fields: state.fields,
+    fields: state.fields.filter(f => f.type !== 11),
     useTemplate: selectors.useTemplate(state)
   }
 }
