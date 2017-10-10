@@ -178,58 +178,60 @@ ItemHeader.propTypes = {
 }
 
 const ItemPanel = props =>
-  <div
-    id={`panel-${props.item.id}`}
-    style={{opacity: props.isDragging ? 0 : 1}}
-  >
-    <fieldset
-      disabled={props.item.meta.protectQuestion && !props.item.rights.edit}
+  props.connectDropTarget(
+    <div
+      id={`panel-${props.item.id}`}
+      style={{opacity: props.isDragging ? 0 : 1}}
     >
-      <Panel
-        header={
-          <ItemHeader
-            item={props.item}
-            numbering={props.numbering !== NUMBERING_NONE ? props.stepIndex + '.' + getNumbering(props.numbering, props.index): null}
-            handlePanelClick={props.handlePanelClick}
-            handleItemDelete={props.handleItemDelete}
-            handleItemChangeStep={props.handleItemChangeStep}
-            handleItemDuplicate={props.handleItemDuplicate}
-            showModal={props.showModal}
-            connectDragSource={props.connectDragSource}
-            hasErrors={!isEmpty(props.item._errors)}
-            validating={props.validating}
-            expanded={props.expanded}
-          />
-        }
-        collapsible={true}
-        expanded={props.expanded}
+      <fieldset
+        disabled={props.item.meta.protectQuestion && !props.item.rights.edit}
       >
-        <ItemForm
-          item={props.item}
-          validating={props.validating}
-          showModal={props.showModal}
-          mandatoryQuestions={props.mandatoryQuestions}
-          closeModal={props.closeModal}
-          onChange={(propertyPath, value) =>
-            props.handleItemUpdate(props.item.id, propertyPath, value)
+        <Panel
+          header={
+            <ItemHeader
+              item={props.item}
+              numbering={props.numbering !== NUMBERING_NONE ? props.stepIndex + '.' + getNumbering(props.numbering, props.index): null}
+              handlePanelClick={props.handlePanelClick}
+              handleItemDelete={props.handleItemDelete}
+              handleItemChangeStep={props.handleItemChangeStep}
+              handleItemDuplicate={props.handleItemDuplicate}
+              showModal={props.showModal}
+              connectDragSource={props.connectDragSource}
+              hasErrors={!isEmpty(props.item._errors)}
+              validating={props.validating}
+              expanded={props.expanded}
+            />
           }
-          onHintsChange={(updateType, payload) =>
-            props.handleItemHintsUpdate(props.item.id, updateType, payload)
-          }
+          collapsible={true}
+          expanded={props.expanded}
         >
-          {React.createElement(
-            getDefinition(props.item.type).editor.component,
-            {
-              item: props.item,
-              validating: props.validating,
-              onChange: subAction =>
-                props.handleItemDetailUpdate(props.item.id, subAction)
+          <ItemForm
+            item={props.item}
+            validating={props.validating}
+            showModal={props.showModal}
+            mandatoryQuestions={props.mandatoryQuestions}
+            closeModal={props.closeModal}
+            onChange={(propertyPath, value) =>
+              props.handleItemUpdate(props.item.id, propertyPath, value)
             }
-          )}
-        </ItemForm>
-      </Panel>
-    </fieldset>
-  </div>
+            onHintsChange={(updateType, payload) =>
+              props.handleItemHintsUpdate(props.item.id, updateType, payload)
+            }
+          >
+            {React.createElement(
+              getDefinition(props.item.type).editor.component,
+              {
+                item: props.item,
+                validating: props.validating,
+                onChange: subAction =>
+                  props.handleItemDetailUpdate(props.item.id, subAction)
+              }
+            )}
+          </ItemForm>
+        </Panel>
+      </fieldset>
+    </div>
+  )
 
 ItemPanel.propTypes = {
   id: T.string.isRequired,
