@@ -247,7 +247,7 @@ const OrderingPaper = props => {
                 })
               }
               {props.item.mode === MODE_BESIDE &&
-                props.item.items.filter(i => props.stats.unused[i.id] && !utils.isInOddsSolutions(i.id, props.item.solutions)).map((i) =>
+                props.item.items.filter(i => has(props, ['props', 'stats', 'unused', i.id]) && !utils.isInOddsSolutions(i.id, props.item.solutions)).map((i) =>
                   <div key={`stats-unused-${i.id}`} className="item item-bg">
                     <div className="item-data" dangerouslySetInnerHTML={{__html: i.data}}/>
 

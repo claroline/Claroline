@@ -9,6 +9,7 @@ import {AnswerStats} from '../components/stats.jsx'
 import {PaperTabs} from './../components/paper-tabs.jsx'
 import {utils} from './utils/utils'
 import {WarningIcon} from './utils/warning-icon.jsx'
+import has from 'lodash/has'
 
 export const SetPaper = props => {
   return (
@@ -150,7 +151,7 @@ export const SetPaper = props => {
                   </li>
                 )}
                 {props.item.items.map((item) =>
-                  props.stats.unused[item.id] && !utils.isItemInOddList(item.id, props.item.solutions) ?
+                  has(props, ['stats', 'unused', item.id]) && !utils.isItemInOddList(item.id, props.item.solutions) ?
                     <li key={`stats-unexpected-${item.id}`}>
                       <div className="item stats-answer">
                         <div className="item-content" dangerouslySetInnerHTML={{__html: item.data}} />
@@ -184,7 +185,7 @@ export const SetPaper = props => {
                                 <div className="association-data" dangerouslySetInnerHTML={{__html: utils.getSolutionItemData(ass.itemId, props.item.items)}} />
 
                                 <AnswerStats stats={{
-                                  value: props.stats.sets[set.id] && props.stats.sets[set.id][ass.itemId] ?
+                                  value: has(props, ['stats', 'sets', set.id, ass.itemId]) ?
                                     props.stats.sets[set.id][ass.itemId] :
                                     0,
                                   total: props.stats.total
@@ -192,9 +193,7 @@ export const SetPaper = props => {
                               </div>
                             </li>
                           )}
-                          {props.item.items.map((item) =>
-                            props.stats.sets[set.id] &&
-                            props.stats.sets[set.id][item.id] &&
+                          {props.item.items.map((item) => has(props, ['stats', 'sets', set.id, item.id]) &&
                             !utils.isItemInSet(item.id, set.id, props.item.solutions) ?
                               <li key={`stats-unexpected-association-${set.id}-${item.id}`}>
                                 <div className="association stats-answer">
