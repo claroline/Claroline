@@ -15,7 +15,7 @@ function validateQuiz(quiz) {
     if (value > parameters.maxAttempts) return tex('must_be_less_than_max_attempts')
   }]))
   setIfError(paramErrors, 'maxPapers', chain(parameters.maxPapers, [notBlank, number, gteZero, (value) => {
-    if (value < parameters.maxAttempts) return tex('must_be_more_than_max_attempts')
+    if (value < parameters.maxAttempts && value !== 0) return tex('must_be_more_than_max_attempts')
   }]))
 
   if (Object.keys(paramErrors).length > 0) {
