@@ -139,8 +139,7 @@ ItemActions.propTypes = {
 
 const ItemHeader = props =>
   <div
-    id={'item-header-'+props.item.id}
-    className={classes('item-header')}
+    className="item-header"
     onClick={() => props.handlePanelClick(makeItemPanelKey(props.item.type, props.item.id))}
   >
     <span className="panel-title" aria-expanded={props.expanded}>
