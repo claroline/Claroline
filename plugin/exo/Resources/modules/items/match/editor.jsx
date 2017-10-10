@@ -219,11 +219,21 @@ class Match extends Component {
     this.jsPlumbInstance.repaintEverything()
   }
 
+  handlePanelClick() {
+    window.setTimeout(() => {
+      this.jsPlumbInstance.repaintEverything()
+    }, 300)
+  }
+
   componentDidMount() {
     this.jsPlumbInstance.setContainer(this.container)
     // events that need to call jsPlumb repaint method...
     this.container.addEventListener('click', this.handleTextEditorSwitch)
     window.addEventListener('resize', this.handleWindowResize)
+
+    //listener on the panel heading allowing to refresh jsplumb.
+    document.getElementById('item-header-'+this.props.item.id)
+      .addEventListener('click', this.handlePanelClick.bind(this))
 
     // we have to wait for elements to be at there right place before drawing... so... timeout
     window.setTimeout(() => {
