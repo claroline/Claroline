@@ -4,6 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
+    "hash": "05d372ff37850298f74c3fca03be980c",
     "content-hash": "4739d7c0ea82a409eedda0aecb42b9dc",
     "packages": [
         {
@@ -48,7 +49,7 @@
                 "slug",
                 "transliterator"
             ],
-            "time": "2017-04-04T11:38:05+00:00"
+            "time": "2017-04-04 11:38:05"
         },
         {
             "name": "besimple/sso-auth-bundle",
@@ -123,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "b315825d705dca8b1d565d78e30204196df672df"
+                "reference": "d3b8edccac222890ef082e4de4a9200b4c36ec0c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b315825d705dca8b1d565d78e30204196df672df",
-                "reference": "b315825d705dca8b1d565d78e30204196df672df",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/d3b8edccac222890ef082e4de4a9200b4c36ec0c",
+                "reference": "d3b8edccac222890ef082e4de4a9200b4c36ec0c",
                 "shasum": ""
             },
             "require": {
@@ -162,7 +163,6 @@
                 "innova/angular-js-bundle": "5.1.0",
                 "innova/angular-ui-resource-picker-bundle": "6.0.0",
                 "innova/angular-ui-tinymce-bundle": "5.1.1",
-                "jangobrick/php-svg": "dev-master",
                 "jdorn/sql-formatter": "1.2.17",
                 "jms/di-extra-bundle": "1.5.0",
                 "jms/security-extra-bundle": "1.5.1",
@@ -172,10 +172,12 @@
                 "json-quiz/json-quiz": "dev-master",
                 "knplabs/knp-menu-bundle": "2.0.0",
                 "knplabs/knp-snappy-bundle": "1.3",
+                "meyfa/php-svg": "0.6.0",
                 "mrclay/minify": "2.3.0",
                 "natxet/cssmin": "3.0.2",
                 "ocramius/proxy-manager": "1.0.2",
                 "php": ">=5.6",
+                "postal/postal": "*",
                 "psr/log": "1.0.2",
                 "ramsey/uuid": "~3.5",
                 "sensio/distribution-bundle": "2.3.22",
@@ -235,6 +237,7 @@
                 "icap/blog-bundle": "*",
                 "icap/dropzone-bundle": "*",
                 "icap/formula-plugin-bundle": "*",
+                "icap/inwicast-plugin-bundle": "*",
                 "icap/lesson-bundle": "*",
                 "icap/notification-bundle": "*",
                 "icap/oauth-bundle": "*",
@@ -306,7 +309,9 @@
                     "UJM\\LtiBundle\\UJMLtiBundle",
                     "Claroline\\CasBundle\\ClarolineCasBundle",
                     "Icap\\BibliographyBundle\\IcapBibliographyBundle",
-                    "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle"
+                    "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle",
+                    "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle",
+                    "Icap\\InwicastBundle\\IcapInwicastBundle"
                 ]
             },
             "autoload": {
@@ -368,7 +373,9 @@
                     "UJM\\LtiBundle\\": "plugin/lti",
                     "Claroline\\CasBundle\\": "plugin/cas",
                     "Icap\\BibliographyBundle\\": "plugin/bibliography",
-                    "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization"
+                    "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization",
+                    "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button",
+                    "Icap\\InwicastBundle\\": "plugin/inwicast"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -388,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-07-13 05:46:56"
+            "time": "2017-10-10 09:30:56"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -481,7 +488,7 @@
                 "slug",
                 "slugify"
             ],
-            "time": "2016-02-11T09:53:46+00:00"
+            "time": "2016-02-11 09:53:46"
         },
         {
             "name": "composer/ca-bundle",
@@ -540,7 +547,7 @@
                 "ssl",
                 "tls"
             ],
-            "time": "2017-09-11T07:24:36+00:00"
+            "time": "2017-09-11 07:24:36"
         },
         {
             "name": "composer/composer",
@@ -617,7 +624,7 @@
                 "dependency",
                 "package"
             ],
-            "time": "2016-05-10T14:21:19+00:00"
+            "time": "2016-05-10 14:21:19"
         },
         {
             "name": "composer/semver",
@@ -679,7 +686,7 @@
                 "validation",
                 "versioning"
             ],
-            "time": "2016-08-30T16:08:34+00:00"
+            "time": "2016-08-30 16:08:34"
         },
         {
             "name": "composer/spdx-licenses",
@@ -740,7 +747,7 @@
                 "spdx",
                 "validator"
             ],
-            "time": "2017-04-03T19:08:52+00:00"
+            "time": "2017-04-03 19:08:52"
         },
         {
             "name": "container-interop/container-interop",
@@ -771,7 +778,7 @@
             ],
             "description": "Promoting the interoperability of container objects (DIC, SL, etc.)",
             "homepage": "https://github.com/container-interop/container-interop",
-            "time": "2017-02-14T19:40:03+00:00"
+            "time": "2017-02-14 19:40:03"
         },
         {
             "name": "ddeboer/data-import",
@@ -843,7 +850,7 @@
                 "export",
                 "import"
             ],
-            "time": "2016-06-23T06:26:02+00:00"
+            "time": "2016-06-23 06:26:02"
         },
         {
             "name": "doctrine/annotations",
@@ -911,7 +918,7 @@
                 "docblock",
                 "parser"
             ],
-            "time": "2017-02-24T16:22:25+00:00"
+            "time": "2017-02-24 16:22:25"
         },
         {
             "name": "doctrine/cache",
@@ -981,7 +988,7 @@
                 "cache",
                 "caching"
             ],
-            "time": "2017-07-22T12:49:21+00:00"
+            "time": "2017-07-22 12:49:21"
         },
         {
             "name": "doctrine/collections",
@@ -1048,7 +1055,7 @@
                 "collections",
                 "iterator"
             ],
-            "time": "2017-01-03T10:49:41+00:00"
+            "time": "2017-01-03 10:49:41"
         },
         {
             "name": "doctrine/common",
@@ -1121,7 +1128,7 @@
                 "persistence",
                 "spl"
             ],
-            "time": "2016-11-30T16:50:46+00:00"
+            "time": "2016-11-30 16:50:46"
         },
         {
             "name": "doctrine/data-fixtures",
@@ -1178,7 +1185,7 @@
             "keywords": [
                 "database"
             ],
-            "time": "2015-03-30T12:14:13+00:00"
+            "time": "2015-03-30 12:14:13"
         },
         {
             "name": "doctrine/dbal",
@@ -1249,7 +1256,7 @@
                 "persistence",
                 "queryobject"
             ],
-            "time": "2016-09-09T19:13:33+00:00"
+            "time": "2016-09-09 19:13:33"
         },
         {
             "name": "doctrine/doctrine-bundle",
@@ -1330,7 +1337,7 @@
                 "orm",
                 "persistence"
             ],
-            "time": "2016-08-10T15:35:22+00:00"
+            "time": "2016-08-10 15:35:22"
         },
         {
             "name": "doctrine/doctrine-cache-bundle",
@@ -1418,37 +1425,37 @@
                 "cache",
                 "caching"
             ],
-            "time": "2017-09-29T14:39:10+00:00"
+            "time": "2017-09-29 14:39:10"
         },
         {
             "name": "doctrine/inflector",
-            "version": "v1.2.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/inflector.git",
-                "reference": "e11d84c6e018beedd929cff5220969a3c6d1d462"
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/inflector/zipball/e11d84c6e018beedd929cff5220969a3c6d1d462",
-                "reference": "e11d84c6e018beedd929cff5220969a3c6d1d462",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0"
+                "php": ">=5.3.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.2"
+                "phpunit/phpunit": "4.*"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Doctrine\\Common\\Inflector\\": "lib/Doctrine/Common/Inflector"
+                "psr-0": {
+                    "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1485,7 +1492,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2017-07-22T12:18:28+00:00"
+            "time": "2015-11-06 14:35:42"
         },
         {
             "name": "doctrine/instantiator",
@@ -1539,7 +1546,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14T21:17:01+00:00"
+            "time": "2015-06-14 21:17:01"
         },
         {
             "name": "doctrine/lexer",
@@ -1593,7 +1600,7 @@
                 "lexer",
                 "parser"
             ],
-            "time": "2014-09-09T13:34:57+00:00"
+            "time": "2014-09-09 13:34:57"
         },
         {
             "name": "doctrine/migrations",
@@ -1666,7 +1673,7 @@
                 "database",
                 "migrations"
             ],
-            "time": "2016-03-14T12:29:11+00:00"
+            "time": "2016-03-14 12:29:11"
         },
         {
             "name": "doctrine/orm",
@@ -1742,7 +1749,7 @@
                 "database",
                 "orm"
             ],
-            "time": "2016-09-10T18:51:13+00:00"
+            "time": "2016-09-10 18:51:13"
         },
         {
             "name": "egulias/email-validator",
@@ -1794,7 +1801,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2016-07-03T21:52:18+00:00"
+            "time": "2016-07-03 21:52:18"
         },
         {
             "name": "fabiang/xmpp",
@@ -1852,7 +1859,7 @@
                 "jabber",
                 "xmpp"
             ],
-            "time": "2014-11-20T08:59:24+00:00"
+            "time": "2014-11-20 08:59:24"
         },
         {
             "name": "friendsofsymfony/jsrouting-bundle",
@@ -1910,7 +1917,7 @@
                 "javascript",
                 "routing"
             ],
-            "time": "2015-10-28T15:08:39+00:00"
+            "time": "2015-10-28 15:08:39"
         },
         {
             "name": "friendsofsymfony/oauth-server-bundle",
@@ -1982,7 +1989,7 @@
                 "oauth2",
                 "server"
             ],
-            "time": "2016-02-22T13:57:55+00:00"
+            "time": "2016-02-22 13:57:55"
         },
         {
             "name": "friendsofsymfony/oauth2-php",
@@ -2036,7 +2043,7 @@
                 "oauth",
                 "oauth2"
             ],
-            "time": "2016-03-31T14:24:17+00:00"
+            "time": "2016-03-31 14:24:17"
         },
         {
             "name": "friendsofsymfony/rest-bundle",
@@ -2123,7 +2130,7 @@
             "keywords": [
                 "rest"
             ],
-            "time": "2016-05-15T23:18:24+00:00"
+            "time": "2016-05-15 23:18:24"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -2201,7 +2208,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2015-02-24T21:41:37+00:00"
+            "time": "2015-02-24 21:41:37"
         },
         {
             "name": "gregwar/captcha",
@@ -2249,7 +2256,7 @@
                 "captcha",
                 "spam"
             ],
-            "time": "2015-09-11T15:23:20+00:00"
+            "time": "2015-09-11 15:23:20"
         },
         {
             "name": "gregwar/captcha-bundle",
@@ -2304,7 +2311,7 @@
                 "spam",
                 "visual"
             ],
-            "time": "2015-01-27T16:12:52+00:00"
+            "time": "2015-01-27 16:12:52"
         },
         {
             "name": "guzzle/common",
@@ -2349,7 +2356,7 @@
                 "exception"
             ],
             "abandoned": "guzzle/guzzle",
-            "time": "2014-08-11T04:32:36+00:00"
+            "time": "2014-08-11 04:32:36"
         },
         {
             "name": "guzzle/http",
@@ -2407,7 +2414,7 @@
                 "http client"
             ],
             "abandoned": "guzzle/guzzle",
-            "time": "2014-08-11T04:32:36+00:00"
+            "time": "2014-08-11 04:32:36"
         },
         {
             "name": "guzzle/parser",
@@ -2452,7 +2459,7 @@
                 "url"
             ],
             "abandoned": "guzzle/guzzle",
-            "time": "2014-02-05T18:29:46+00:00"
+            "time": "2014-02-05 18:29:46"
         },
         {
             "name": "guzzle/stream",
@@ -2506,7 +2513,7 @@
                 "stream"
             ],
             "abandoned": "guzzle/guzzle",
-            "time": "2014-05-01T21:36:02+00:00"
+            "time": "2014-05-01 21:36:02"
         },
         {
             "name": "hwi/oauth-bundle",
@@ -2656,7 +2663,7 @@
                 "yandex",
                 "youtube"
             ],
-            "time": "2016-12-12T10:39:59+00:00"
+            "time": "2016-12-12 10:39:59"
         },
         {
             "name": "icap/html-diff",
@@ -2700,7 +2707,7 @@
                 "daisy diff",
                 "html diff"
             ],
-            "time": "2016-02-17T16:35:09+00:00"
+            "time": "2016-02-17 16:35:09"
         },
         {
             "name": "idci/exporter-bundle",
@@ -2749,7 +2756,7 @@
                 "twig",
                 "xml"
             ],
-            "time": "2013-08-29T17:06:25+00:00"
+            "time": "2013-08-29 17:06:25"
         },
         {
             "name": "innova/angular-js-bundle",
@@ -2804,7 +2811,7 @@
                 "Symfony2",
                 "angular"
             ],
-            "time": "2015-06-09T14:59:11+00:00"
+            "time": "2015-06-09 14:59:11"
         },
         {
             "name": "innova/angular-ui-resource-picker-bundle",
@@ -2863,7 +2870,7 @@
                 "picker",
                 "resource"
             ],
-            "time": "2015-05-22T14:02:35+00:00"
+            "time": "2015-05-22 14:02:35"
         },
         {
             "name": "innova/angular-ui-tinymce-bundle",
@@ -2920,48 +2927,7 @@
                 "angular",
                 "tinymce"
             ],
-            "time": "2015-09-03T13:13:32+00:00"
-        },
-        {
-            "name": "jangobrick/php-svg",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ptsavdar/php-svg.git",
-                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ptsavdar/php-svg/zipball/0ca03406b57e29516ce04e02592d28b687b5531a",
-                "reference": "0ca03406b57e29516ce04e02592d28b687b5531a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "JangoBrick\\SVG\\": "src/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "JangoBrick"
-                }
-            ],
-            "description": "Read, edit, write, and render SVG files with PHP",
-            "homepage": "https://github.com/JangoBrick/php-svg",
-            "keywords": [
-                "svg"
-            ],
-            "support": {
-                "source": "https://github.com/ptsavdar/php-svg/tree/master"
-            },
-            "time": "2017-02-27 15:14:15"
+            "time": "2015-09-03 13:13:32"
         },
         {
             "name": "jdorn/sql-formatter",
@@ -3011,7 +2977,7 @@
                 "highlight",
                 "sql"
             ],
-            "time": "2014-01-12T16:20:24+00:00"
+            "time": "2014-01-12 16:20:24"
         },
         {
             "name": "jms/aop-bundle",
@@ -3058,7 +3024,7 @@
                 "annotations",
                 "aop"
             ],
-            "time": "2015-09-13T09:02:33+00:00"
+            "time": "2015-09-13 09:02:33"
         },
         {
             "name": "jms/cg",
@@ -3105,7 +3071,7 @@
             "keywords": [
                 "code generation"
             ],
-            "time": "2016-04-07T10:21:44+00:00"
+            "time": "2016-04-07 10:21:44"
         },
         {
             "name": "jms/di-extra-bundle",
@@ -3170,7 +3136,7 @@
                 "annotations",
                 "dependency injection"
             ],
-            "time": "2014-11-24T08:56:26+00:00"
+            "time": "2014-11-24 08:56:26"
         },
         {
             "name": "jms/metadata",
@@ -3221,7 +3187,7 @@
                 "xml",
                 "yaml"
             ],
-            "time": "2016-12-05T10:18:33+00:00"
+            "time": "2016-12-05 10:18:33"
         },
         {
             "name": "jms/parser-lib",
@@ -3256,7 +3222,7 @@
                 "Apache2"
             ],
             "description": "A library for easily creating recursive-descent parsers.",
-            "time": "2012-11-18T18:08:43+00:00"
+            "time": "2012-11-18 18:08:43"
         },
         {
             "name": "jms/security-extra-bundle",
@@ -3327,7 +3293,7 @@
                 "secure",
                 "security"
             ],
-            "time": "2013-06-09T10:29:54+00:00"
+            "time": "2013-06-09 10:29:54"
         },
         {
             "name": "jms/serializer",
@@ -3397,7 +3363,7 @@
                 "serialization",
                 "xml"
             ],
-            "time": "2014-03-18T08:39:00+00:00"
+            "time": "2014-03-18 08:39:00"
         },
         {
             "name": "jms/serializer-bundle",
@@ -3467,7 +3433,7 @@
                 "serialization",
                 "xml"
             ],
-            "time": "2013-12-05T14:36:11+00:00"
+            "time": "2013-12-05 14:36:11"
         },
         {
             "name": "jms/twig-js",
@@ -3646,7 +3612,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2016-01-25T15:43:01+00:00"
+            "time": "2016-01-25 15:43:01"
         },
         {
             "name": "knplabs/knp-menu",
@@ -3712,7 +3678,7 @@
                 "menu",
                 "tree"
             ],
-            "time": "2016-09-22T07:36:19+00:00"
+            "time": "2016-09-22 07:36:19"
         },
         {
             "name": "knplabs/knp-menu-bundle",
@@ -3766,7 +3732,7 @@
             "keywords": [
                 "menu"
             ],
-            "time": "2014-08-01T09:57:23+00:00"
+            "time": "2014-08-01 09:57:23"
         },
         {
             "name": "knplabs/knp-snappy",
@@ -3832,7 +3798,7 @@
                 "thumbnail",
                 "wkhtmltopdf"
             ],
-            "time": "2017-10-04T19:39:41+00:00"
+            "time": "2017-10-04 19:39:41"
         },
         {
             "name": "knplabs/knp-snappy-bundle",
@@ -3889,7 +3855,7 @@
                 "pdf",
                 "snappy"
             ],
-            "time": "2015-08-24T21:40:00+00:00"
+            "time": "2015-08-24 21:40:00"
         },
         {
             "name": "kriswallsmith/assetic",
@@ -3966,7 +3932,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "2016-11-11T18:43:20+00:00"
+            "time": "2016-11-11 18:43:20"
         },
         {
             "name": "kriswallsmith/buzz",
@@ -4014,7 +3980,50 @@
                 "curl",
                 "http client"
             ],
-            "time": "2017-08-19T09:43:47+00:00"
+            "time": "2017-08-19 09:43:47"
+        },
+        {
+            "name": "meyfa/php-svg",
+            "version": "v0.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/meyfa/php-svg.git",
+                "reference": "cde475bf2566d8414fb6d11f55653180203d4e01"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/meyfa/php-svg/zipball/cde475bf2566d8414fb6d11f55653180203d4e01",
+                "reference": "cde475bf2566d8414fb6d11f55653180203d4e01",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "SVG\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabian Meyer",
+                    "homepage": "http://meyfa.net"
+                }
+            ],
+            "description": "Read, edit, write, and render SVG files with PHP",
+            "homepage": "https://github.com/meyfa/php-svg",
+            "keywords": [
+                "svg"
+            ],
+            "time": "2017-07-29 11:10:57"
         },
         {
             "name": "monolog/monolog",
@@ -4092,7 +4101,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2017-06-19T01:22:40+00:00"
+            "time": "2017-06-19 01:22:40"
         },
         {
             "name": "mrclay/minify",
@@ -4137,7 +4146,7 @@
             ],
             "description": "Minify is a PHP5 app that helps you follow several rules for client-side performance. It combines multiple CSS or Javascript files, removes unnecessary whitespace and comments, and serves them with gzip encoding and optimal client-side cache headers",
             "homepage": "http://code.google.com/p/minify/",
-            "time": "2016-03-08T11:49:57+00:00"
+            "time": "2016-03-08 11:49:57"
         },
         {
             "name": "natxet/CssMin",
@@ -4179,7 +4188,7 @@
                 "css",
                 "minify"
             ],
-            "time": "2013-07-02T20:53:35+00:00"
+            "time": "2013-07-02 20:53:35"
         },
         {
             "name": "ocramius/proxy-manager",
@@ -4242,7 +4251,7 @@
                 "proxy pattern",
                 "service proxies"
             ],
-            "time": "2015-08-09T04:28:19+00:00"
+            "time": "2015-08-09 04:28:19"
         },
         {
             "name": "pagerfanta/pagerfanta",
@@ -4311,7 +4320,7 @@
                 "paginator",
                 "paging"
             ],
-            "time": "2017-03-20T13:46:15+00:00"
+            "time": "2017-03-20 13:46:15"
         },
         {
             "name": "paragonie/random_compat",
@@ -4359,7 +4368,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-03-13T16:22:52+00:00"
+            "time": "2017-03-13 16:22:52"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -4407,7 +4416,7 @@
                 "sequence",
                 "set"
             ],
-            "time": "2015-05-17T12:39:23+00:00"
+            "time": "2015-05-17 12:39:23"
         },
         {
             "name": "phpoption/phpoption",
@@ -4457,7 +4466,49 @@
                 "php",
                 "type"
             ],
-            "time": "2015-07-25T16:39:46+00:00"
+            "time": "2015-07-25 16:39:46"
+        },
+        {
+            "name": "postal/postal",
+            "version": "v1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/atech/postal-php.git",
+                "reference": "cddd9c5f34ec5234ccfcd9ce9193f7327802c2a6"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/atech/postal-php/zipball/cddd9c5f34ec5234ccfcd9ce9193f7327802c2a6",
+                "reference": "cddd9c5f34ec5234ccfcd9ce9193f7327802c2a6",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "rmccue/requests": ">=1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Postal\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Adam Cooke",
+                    "email": "me@adamcooke.io"
+                }
+            ],
+            "description": "Postal for PHP library.",
+            "homepage": "https://github.com/atech/postal",
+            "keywords": [
+                "mail",
+                "postal"
+            ],
+            "time": "2017-05-08 14:02:29"
         },
         {
             "name": "psr/container",
@@ -4506,7 +4557,7 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-02-14T16:28:37+00:00"
+            "time": "2017-02-14 16:28:37"
         },
         {
             "name": "psr/log",
@@ -4553,7 +4604,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2016-10-10T12:19:37+00:00"
+            "time": "2016-10-10 12:19:37"
         },
         {
             "name": "ramsey/uuid",
@@ -4635,7 +4686,56 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2017-09-22T20:46:04+00:00"
+            "time": "2017-09-22 20:46:04"
+        },
+        {
+            "name": "rmccue/requests",
+            "version": "v1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/rmccue/Requests.git",
+                "reference": "87932f52ffad70504d93f04f15690cf16a089546"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/rmccue/Requests/zipball/87932f52ffad70504d93f04f15690cf16a089546",
+                "reference": "87932f52ffad70504d93f04f15690cf16a089546",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2"
+            },
+            "require-dev": {
+                "requests/test-server": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Requests": "library/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "ISC"
+            ],
+            "authors": [
+                {
+                    "name": "Ryan McCue",
+                    "homepage": "http://ryanmccue.info"
+                }
+            ],
+            "description": "A HTTP library written in PHP, for human beings.",
+            "homepage": "http://github.com/rmccue/Requests",
+            "keywords": [
+                "curl",
+                "fsockopen",
+                "http",
+                "idna",
+                "ipv6",
+                "iri",
+                "sockets"
+            ],
+            "time": "2016-10-13 00:11:37"
         },
         {
             "name": "seld/cli-prompt",
@@ -4683,7 +4783,7 @@
                 "input",
                 "prompt"
             ],
-            "time": "2017-03-18T11:32:45+00:00"
+            "time": "2017-03-18 11:32:45"
         },
         {
             "name": "seld/jsonlint",
@@ -4732,7 +4832,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2017-06-18T15:11:04+00:00"
+            "time": "2017-06-18 15:11:04"
         },
         {
             "name": "seld/phar-utils",
@@ -4776,7 +4876,7 @@
             "keywords": [
                 "phra"
             ],
-            "time": "2015-10-13T18:44:15+00:00"
+            "time": "2015-10-13 18:44:15"
         },
         {
             "name": "sensio/distribution-bundle",
@@ -4822,7 +4922,7 @@
                 "configuration",
                 "distribution"
             ],
-            "time": "2015-06-05T22:32:08+00:00"
+            "time": "2015-06-05 22:32:08"
         },
         {
             "name": "sensio/framework-extra-bundle",
@@ -4877,7 +4977,7 @@
                 "annotations",
                 "controllers"
             ],
-            "time": "2015-12-18T17:39:27+00:00"
+            "time": "2015-12-18 17:39:27"
         },
         {
             "name": "stefk/jval",
@@ -4987,7 +5087,7 @@
                 "tinymce",
                 "wysiwyg"
             ],
-            "time": "2014-09-08T12:54:20+00:00"
+            "time": "2014-09-08 12:54:20"
         },
         {
             "name": "stof/doctrine-extensions-bundle",
@@ -5049,7 +5149,7 @@
                 "translatable",
                 "tree"
             ],
-            "time": "2013-06-23T16:53:41+00:00"
+            "time": "2013-06-23 16:53:41"
         },
         {
             "name": "swiftmailer/swiftmailer",
@@ -5103,7 +5203,7 @@
                 "mail",
                 "mailer"
             ],
-            "time": "2017-05-01T15:54:03+00:00"
+            "time": "2017-05-01 15:54:03"
         },
         {
             "name": "symfony/assetic-bundle",
@@ -5173,7 +5273,7 @@
                 "compression",
                 "minification"
             ],
-            "time": "2015-12-28T13:12:39+00:00"
+            "time": "2015-12-28 13:12:39"
         },
         {
             "name": "symfony/monolog-bundle",
@@ -5233,7 +5333,7 @@
                 "log",
                 "logging"
             ],
-            "time": "2016-11-06T18:54:50+00:00"
+            "time": "2016-11-06 18:54:50"
         },
         {
             "name": "symfony/polyfill-apcu",
@@ -5286,7 +5386,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-07-05T15:09:33+00:00"
+            "time": "2017-07-05 15:09:33"
         },
         {
             "name": "symfony/polyfill-mbstring",
@@ -5345,7 +5445,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2017-06-14T15:44:48+00:00"
+            "time": "2017-06-14 15:44:48"
         },
         {
             "name": "symfony/swiftmailer-bundle",
@@ -5404,7 +5504,7 @@
             ],
             "description": "Symfony SwiftmailerBundle",
             "homepage": "http://symfony.com",
-            "time": "2016-10-27T17:59:30+00:00"
+            "time": "2016-10-27 17:59:30"
         },
         {
             "name": "symfony/symfony",
@@ -5532,7 +5632,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-12-13T10:53:44+00:00"
+            "time": "2016-12-13 10:53:44"
         },
         {
             "name": "twig/extensions",
@@ -5584,7 +5684,7 @@
                 "i18n",
                 "text"
             ],
-            "time": "2016-10-25T17:34:14+00:00"
+            "time": "2016-10-25 17:34:14"
         },
         {
             "name": "twig/twig",
@@ -5645,7 +5745,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-12-23T11:06:22+00:00"
+            "time": "2016-12-23 11:06:22"
         },
         {
             "name": "u01jmg3/ics-parser",
@@ -5700,7 +5800,7 @@
                 "ics"
             ],
             "abandoned": "johngrogg/ics-parser",
-            "time": "2016-08-20T21:27:46+00:00"
+            "time": "2016-08-20 21:27:46"
         },
         {
             "name": "werkint/jsmin",
@@ -5757,7 +5857,7 @@
             ],
             "description": "Library for minifying JavaScript files",
             "abandoned": true,
-            "time": "2013-11-10T11:34:43+00:00"
+            "time": "2013-11-10 11:34:43"
         },
         {
             "name": "white-october/pagerfanta-bundle",
@@ -5811,7 +5911,7 @@
                 "page",
                 "paging"
             ],
-            "time": "2014-01-07T13:33:53+00:00"
+            "time": "2014-01-07 13:33:53"
         },
         {
             "name": "willdurand/js-translation-bundle",
@@ -5870,7 +5970,7 @@
                 "symfony",
                 "translation"
             ],
-            "time": "2016-09-19T12:54:35+00:00"
+            "time": "2016-09-19 12:54:35"
         },
         {
             "name": "willdurand/jsonp-callback-validator",
@@ -5910,7 +6010,7 @@
                 }
             ],
             "description": "JSONP callback validator.",
-            "time": "2014-01-20T22:35:06+00:00"
+            "time": "2014-01-20 22:35:06"
         },
         {
             "name": "willdurand/negotiation",
@@ -5959,7 +6059,7 @@
                 "header",
                 "negotiation"
             ],
-            "time": "2015-10-01T07:42:40+00:00"
+            "time": "2015-10-01 07:42:40"
         },
         {
             "name": "zendframework/zend-code",
@@ -6011,7 +6111,7 @@
                 "code",
                 "zf2"
             ],
-            "time": "2016-04-20T17:26:42+00:00"
+            "time": "2016-04-20 17:26:42"
         },
         {
             "name": "zendframework/zend-crypt",
@@ -6061,7 +6161,7 @@
                 "crypt",
                 "zf2"
             ],
-            "time": "2016-02-03T23:46:30+00:00"
+            "time": "2016-02-03 23:46:30"
         },
         {
             "name": "zendframework/zend-eventmanager",
@@ -6115,7 +6215,7 @@
                 "events",
                 "zf2"
             ],
-            "time": "2017-07-11T19:17:22+00:00"
+            "time": "2017-07-11 19:17:22"
         },
         {
             "name": "zendframework/zend-hydrator",
@@ -6173,7 +6273,7 @@
                 "hydrator",
                 "zf2"
             ],
-            "time": "2016-02-18T22:38:26+00:00"
+            "time": "2016-02-18 22:38:26"
         },
         {
             "name": "zendframework/zend-math",
@@ -6223,7 +6323,7 @@
                 "math",
                 "zf2"
             ],
-            "time": "2016-04-07T16:29:53+00:00"
+            "time": "2016-04-07 16:29:53"
         },
         {
             "name": "zendframework/zend-stdlib",
@@ -6282,7 +6382,7 @@
                 "stdlib",
                 "zf2"
             ],
-            "time": "2016-04-12T21:17:31+00:00"
+            "time": "2016-04-12 21:17:31"
         },
         {
             "name": "zenstruck/form-bundle",
@@ -6340,7 +6440,7 @@
             "keywords": [
                 "form"
             ],
-            "time": "2014-04-18T13:15:29+00:00"
+            "time": "2014-04-18 13:15:29"
         }
     ],
     "packages-dev": [
@@ -6401,7 +6501,7 @@
             ],
             "description": "A tool to automatically fix PHP code style",
             "abandoned": "friendsofphp/php-cs-fixer",
-            "time": "2016-12-01T00:05:05+00:00"
+            "time": "2016-12-01 00:05:05"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -6446,7 +6546,7 @@
             "keywords": [
                 "test"
             ],
-            "time": "2015-05-11T14:41:42+00:00"
+            "time": "2015-05-11 14:41:42"
         },
         {
             "name": "mikey179/vfsStream",
@@ -6492,7 +6592,7 @@
             ],
             "description": "Virtual file system to mock the real file system in unit tests.",
             "homepage": "http://vfs.bovigo.org/",
-            "time": "2016-07-18T14:02:57+00:00"
+            "time": "2016-07-18 14:02:57"
         },
         {
             "name": "mockery/mockery",
@@ -6557,7 +6657,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2016-09-30T12:09:40+00:00"
+            "time": "2016-09-30 12:09:40"
         },
         {
             "name": "nikic/php-parser",
@@ -6608,7 +6708,7 @@
                 "parser",
                 "php"
             ],
-            "time": "2016-09-16T12:04:44+00:00"
+            "time": "2016-09-16 12:04:44"
         },
         {
             "name": "pdepend/pdepend",
@@ -6648,7 +6748,7 @@
                 "BSD-3-Clause"
             ],
             "description": "Official version of pdepend to be handled with Composer",
-            "time": "2017-01-19T14:23:36+00:00"
+            "time": "2017-01-19 14:23:36"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -6702,26 +6802,26 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2017-09-11T18:02:19+00:00"
+            "time": "2017-09-11 18:02:19"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.1.1",
+            "version": "3.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "2d3d238c433cf69caeb4842e97a3223a116f94b2"
+                "reference": "4aada1f93c72c35e22fb1383b47fee43b8f1d157"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/2d3d238c433cf69caeb4842e97a3223a116f94b2",
-                "reference": "2d3d238c433cf69caeb4842e97a3223a116f94b2",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/4aada1f93c72c35e22fb1383b47fee43b8f1d157",
+                "reference": "4aada1f93c72c35e22fb1383b47fee43b8f1d157",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
+                "php": ">=5.5",
                 "phpdocumentor/reflection-common": "^1.0@dev",
-                "phpdocumentor/type-resolver": "^0.4.0",
+                "phpdocumentor/type-resolver": "^0.3.0",
                 "webmozart/assert": "^1.0"
             },
             "require-dev": {
@@ -6747,20 +6847,20 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-08-30T18:51:59+00:00"
+            "time": "2017-08-08 06:39:58"
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "0.4.0",
+            "version": "0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "9c977708995954784726e25d0cd1dddf4e65b0f7"
+                "reference": "fb3933512008d8162b3cdf9e18dba9309b7c3773"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/9c977708995954784726e25d0cd1dddf4e65b0f7",
-                "reference": "9c977708995954784726e25d0cd1dddf4e65b0f7",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/fb3933512008d8162b3cdf9e18dba9309b7c3773",
+                "reference": "fb3933512008d8162b3cdf9e18dba9309b7c3773",
                 "shasum": ""
             },
             "require": {
@@ -6794,7 +6894,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2017-07-14T14:27:02+00:00"
+            "time": "2017-06-03 08:32:36"
         },
         {
             "name": "phpmd/phpmd",
@@ -6860,7 +6960,7 @@
                 "phpmd",
                 "pmd"
             ],
-            "time": "2017-01-20T14:41:10+00:00"
+            "time": "2017-01-20 14:41:10"
         },
         {
             "name": "phpspec/prophecy",
@@ -6923,7 +7023,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2017-09-04T11:05:03+00:00"
+            "time": "2017-09-04 11:05:03"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -6985,7 +7085,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2015-10-06T15:47:00+00:00"
+            "time": "2015-10-06 15:47:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -7032,7 +7132,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2016-10-03T07:40:28+00:00"
+            "time": "2016-10-03 07:40:28"
         },
         {
             "name": "phpunit/php-text-template",
@@ -7073,7 +7173,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21T13:50:34+00:00"
+            "time": "2015-06-21 13:50:34"
         },
         {
             "name": "phpunit/php-timer",
@@ -7122,7 +7222,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2017-02-26T11:10:40+00:00"
+            "time": "2017-02-26 11:10:40"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -7171,7 +7271,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2017-02-27T10:12:30+00:00"
+            "time": "2017-02-27 10:12:30"
         },
         {
             "name": "phpunit/phpunit",
@@ -7243,7 +7343,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2017-02-06T05:18:07+00:00"
+            "time": "2017-02-06 05:18:07"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -7299,7 +7399,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2015-10-02T06:51:40+00:00"
+            "time": "2015-10-02 06:51:40"
         },
         {
             "name": "sebastian/comparator",
@@ -7363,7 +7463,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2017-01-29T09:50:25+00:00"
+            "time": "2017-01-29 09:50:25"
         },
         {
             "name": "sebastian/diff",
@@ -7415,7 +7515,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2017-05-22T07:24:03+00:00"
+            "time": "2017-05-22 07:24:03"
         },
         {
             "name": "sebastian/environment",
@@ -7465,7 +7565,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-08-18T05:49:44+00:00"
+            "time": "2016-08-18 05:49:44"
         },
         {
             "name": "sebastian/exporter",
@@ -7532,7 +7632,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-06-17T09:04:28+00:00"
+            "time": "2016-06-17 09:04:28"
         },
         {
             "name": "sebastian/global-state",
@@ -7583,7 +7683,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12T03:26:01+00:00"
+            "time": "2015-10-12 03:26:01"
         },
         {
             "name": "sebastian/recursion-context",
@@ -7636,7 +7736,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2016-10-03T07:41:43+00:00"
+            "time": "2016-10-03 07:41:43"
         },
         {
             "name": "sebastian/version",
@@ -7671,7 +7771,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2015-06-21T13:59:46+00:00"
+            "time": "2015-06-21 13:59:46"
         },
         {
             "name": "stefk/md",
@@ -7714,7 +7814,7 @@
                     "email": "stephaneklein221@gmail.com"
                 }
             ],
-            "time": "2016-06-26T20:30:58+00:00"
+            "time": "2016-06-26 20:30:58"
         },
         {
             "name": "symfony/phpunit-bridge",
@@ -7776,7 +7876,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-10-09T15:28:48+00:00"
+            "time": "2017-10-09 15:28:48"
         },
         {
             "name": "webmozart/assert",
@@ -7826,7 +7926,7 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-11-23T20:04:58+00:00"
+            "time": "2016-11-23 20:04:58"
         }
     ],
     "aliases": [],
