@@ -29,5 +29,7 @@
         <script src="{{ hotAsset('dist/commons.js') }}"></script>
     {% endif %}
     <script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
+    {# We have replaced WillDurand by our own to be able to lazy load trans domains #}
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-translator.js') }}"></script>
     <script src="{{ hotAsset('dist/claroline-distribution-main-core-organization-field.js') }}"></script>
 {% endblock %}
