@@ -97,8 +97,12 @@ class RoleManager
      *
      * @return \Claroline\CoreBundle\Entity\Role
      */
-    public function createWorkspaceRole($name, $translationKey, Workspace $workspace, $isReadOnly = false)
-    {
+    public function createWorkspaceRole(
+        $name,
+        $translationKey,
+        Workspace $workspace,
+        $isReadOnly = false
+    ) {
         $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($translationKey);
