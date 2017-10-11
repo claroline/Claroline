@@ -273,7 +273,7 @@ class ItemManager
                 $expected = $definition->expectAnswer($question->getInteraction());
                 $total = $this->scoreManager->calculateTotal(json_decode($question->getScoreRule()), $expected);
                 // report the score on 100
-                $score = (100 * $score) / $total;
+                $score = $total > 0 ? (100 * $score) / $total : 0;
 
                 return $score;
             }, $this->answerRepository->findByQuestion($question, $exercise));
@@ -354,7 +354,7 @@ class ItemManager
         // get the number of good answers among all
         $nbGoodAnswers = 0;
         foreach ($correctedAnswers as $corrected) {
-            if (count($corrected->getMissing()) === 0 && count($corrected->getUnexpected()) === 0) {
+            if ($corrected instanceof CorrectedAnswer && count($corrected->getMissing()) === 0 && count($corrected->getUnexpected()) === 0) {
                 ++$nbGoodAnswers;
             }
         }

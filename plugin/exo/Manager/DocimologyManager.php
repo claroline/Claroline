@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
+use UJM\ExoBundle\Library\Item\ItemType;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\Item\ItemManager;
 use UJM\ExoBundle\Repository\ExerciseRepository;
@@ -57,8 +58,8 @@ class DocimologyManager
     public function __construct(
           ObjectManager $om,
           ItemManager $itemManager,
-          PaperManager $paperManager)
-    {
+          PaperManager $paperManager
+    ) {
         $this->om = $om;
         $this->exerciseRepository = $this->om->getRepository('UJMExoBundle:Exercise');
         $this->paperRepository = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
@@ -258,7 +259,9 @@ class DocimologyManager
             // base success compution on paper structure
             $structure = json_decode($paper->getStructure());
             foreach ($structure->steps as $step) {
-                foreach ($step->items as $item) {
+                foreach (array_filter($step->items, function ($item) {
+                    return ItemType::isSupported($item->type);
+                }) as $item) {
                     // since the compution is based on the structure the same item can come several times
                     if (!array_key_exists($item->id, $discriminationCoef)) {
                         $itemEntity = $itemRepository->findOneBy(['uuid' => $item->id]);
@@ -342,7 +345,7 @@ class DocimologyManager
 
             $score = $this->paperManager->calculateScore($paper, $totalScoreOn);
             // since totalScoreOn might have change through papers report all scores on a define value
-            if ($scoreOn) {
+            if ($scoreOn && $totalScoreOn > 0) {
                 $score = floatval(($scoreOn * $score) / $totalScoreOn);
             }
             $scores[] = $score !== floor($score) ? floatval(number_format($score, 2)) : $score;
