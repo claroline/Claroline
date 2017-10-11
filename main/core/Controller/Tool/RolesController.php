@@ -915,6 +915,10 @@ class RolesController extends Controller
             }
 
             $this->roleManager->associateWorkspaceRolesByImport($workspace, $datas);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('workspace_users_subscribe_success', [], 'platform')
+            );
 
             return new RedirectResponse(
                 $this->router->generate(

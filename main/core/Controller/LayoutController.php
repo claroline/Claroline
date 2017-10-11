@@ -184,7 +184,7 @@ class LayoutController extends Controller
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
         } else {
-            $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
+            $workspaces = [];
 
             if (true === $this->configHandler->getParameter('allow_self_registration') &&
                 $this->roleManager->validateRoleInsert(

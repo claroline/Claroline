@@ -1398,6 +1398,7 @@
     "workspace_tools": "Tools",
     "workspace_unregistration_confirm_title": "Are you sure you want to unregister from this workspace?",
     "workspace_user_invalid": "The username %username% doesn't exist (line %line%).",
+    "workspace_users_subscribe_success": "All users have been successfully subscribed.",
     "workspace_welcome": "Welcome",
     "workspaces": "Workspaces",
     "workspaces_count": "{1} 1 workspace|[2,Inf[ %count% workspaces",

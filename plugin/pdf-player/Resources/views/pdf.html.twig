@@ -40,6 +40,7 @@
                     data-id="{{ pdf.resourceNode.id }}"
                     data-name="'{{ pdf.resourceNode.name|ng_escape }}'"
                     data-url="'{{ path('claro_pdf', {node: pdf.resourceNode.id}) }}'"
+                    data-download="{{ canDownload }}"
             >
             </pdf-viewer>
         </main>

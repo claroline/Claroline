@@ -27,10 +27,16 @@ const published = createSelector(
   (meta) => meta.published
 )
 
+const exportable = createSelector(
+  [currentRights],
+  (currentRights) => currentRights.export
+)
+
 export const select = {
   resourceNode,
   meta,
   currentRights,
   editable,
-  published
+  published,
+  exportable
 }

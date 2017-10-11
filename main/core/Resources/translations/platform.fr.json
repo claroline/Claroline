@@ -1417,6 +1417,7 @@
     "workspace_unregistration_confirm_title": "Voulez-vous vous désinscrire de cet espace d'activités ?",
     "workspace_user_invalid": "L'utilisateur %username% n'existe pas à la ligne %line%.",
     "workspace_user_not_unique": "Utilisateur non unique (%name%) détecté à la ligne %line%.",
+    "workspace_users_subscribe_success": "Les utilisateurs ont été inscrits avec succès",
     "workspace_welcome": "Accueil",
     "workspaces": "Espaces d'activités",
     "workspaces_count": "{1} 1 espace d'activités|[2,Inf[ %count% espaces d'activités",

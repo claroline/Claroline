@@ -13,7 +13,8 @@ export default class ViewPdfDirective {
     this.scope = {
       id: '=',
       name: '=',
-      url: '='
+      url: '=',
+      download: '='
     }
   }
 }

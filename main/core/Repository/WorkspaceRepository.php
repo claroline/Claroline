@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 class WorkspaceRepository extends EntityRepository
 {
@@ -87,15 +88,16 @@ class WorkspaceRepository extends EntityRepository
             ->createQuery("
                 SELECT DISTINCT w
                 FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace w
-                JOIN w.orderedTools ot
-                JOIN ot.rights otr
-                JOIN otr.role r
+                INNER JOIN w.orderedTools ot
+                INNER JOIN ot.rights otr
+                INNER JOIN otr.role r
                 WHERE r.name = 'ROLE_ANONYMOUS'
                 AND ot.type = :type
                 AND BIT_AND(otr.mask, :openValue) = :openValue
             ")
             ->setParameter('openValue', ToolMaskDecoder::$defaultValues['open'])
             ->setParameter('type', $orderedToolType)
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 

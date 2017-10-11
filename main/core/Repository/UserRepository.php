@@ -666,6 +666,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             AND (
                 UPPER(u.lastName) LIKE :search
                 OR UPPER(u.firstName) LIKE :search
+                OR UPPER(u.username) LIKE :search
             )
             ORDER BY u.{$orderedBy} {$order}
         ";
