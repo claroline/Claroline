@@ -1,5 +1,5 @@
 <div class='panel-heading chapter_title'>
-    <h4>{{ 'Chapter Move'|trans: 'icap_lesson' }}</h4>
+    <h4>{{ 'Chapter Move'|trans:{}:'icap_lesson' }}</h4>
 </div>
 <form
     name="formMove"
@@ -13,7 +13,7 @@
             </div>
             <div class="control-group">
                 <label class="control-label" for="icap_lesson_movechaptertype_choiceChapter">
-                    {{ 'move_destination'|trans: 'icap_lesson' }}
+                    {{ 'move_destination'|trans:{}:'icap_lesson' }}
                 </label>
                 <div class="controls">
                     <select
@@ -29,7 +29,7 @@
             </div>
             <div class="control-group" data-ng-if="formMove.parent.$viewValue != 'root-' + vm.lessonData.lessonId">
                 <label class="control-label" for="icap_lesson_movechaptertype_brother">
-                    {{ 'same_level'|trans: 'icap_lesson' }}
+                    {{ 'same_level'|trans:{}:'icap_lesson' }}
                 </label>
                 <input
                     id="icap_lesson_movechaptertype_brother"
@@ -46,17 +46,17 @@
         <button
             type="submit"
             class="btn btn-primary"
-            value="{{ 'Ok'|trans: 'icap_lesson' }}"
+            value="{{ 'Ok'|trans:{}:'icap_lesson' }}"
             data-ng-click="vm._moveChapter(formMove)"
             data-ng-disabled="vm.buttonSubmit.disabled">
-            {{ 'Ok'|trans: 'icap_lesson' }}
+            {{ 'Ok'|trans:{}:'icap_lesson' }}
         </button>
 
         <button
             type="button"
             class="btn btn-default"
             data-ng-click="vm.cancelForm(vm.chapter.current.slug)">
-            {{ 'Cancel'|trans: 'icap_lesson' }}
+            {{ 'Cancel'|trans:{}:'icap_lesson' }}
         </button>
     </div>
 </form>

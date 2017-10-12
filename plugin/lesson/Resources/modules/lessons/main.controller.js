@@ -2,7 +2,7 @@ let _$rootScope = new WeakMap()
 let _restService = new WeakMap()
 
 export default class MainController {
-  constructor($rootScope, lessonData, restService, $q, Alerts) {
+  constructor($rootScope, lessonData, restService, Alerts) {
     _$rootScope.set(this, $rootScope)
     _restService.set(this, restService)
 
@@ -11,7 +11,7 @@ export default class MainController {
   }
 
   closeAlert(index) {
-    this.alerts.splice(index, 1);
+    this.alerts.splice(index, 1)
   }
 
 }
@@ -20,6 +20,5 @@ MainController.$inject = [
   '$rootScope',
   'lesson.data',
   'restService',
-  '$q',
   'Alerts'
 ]

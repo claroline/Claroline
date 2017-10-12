@@ -1,6 +1,6 @@
 <div class='panel-heading chapter_title'>
     <h4>
-        {{ 'Chapter Edition'|trans: 'icap_lesson' }}
+        {{ 'Chapter Edition'|trans:{}:'icap_lesson' }}
     </h4>
 </div>
 
@@ -14,7 +14,7 @@
             <label
                     class="control-label"
                     for="icap_lesson_chaptertype_title">
-                {{ 'Title'|trans: 'icap_lesson' }}
+                {{ 'Title'|trans:{}:'icap_lesson' }}
             </label>
             <div class="controls">
                 <input
@@ -24,7 +24,7 @@
                         required
                         class="form-control"
                         data-ng-model="vm.chapter.edited.title"
-                        data-uib-popover="{{ 'field_mandatory'|trans: 'icap_lesson' }}"
+                        data-uib-popover="{{ 'field_mandatory'|trans:{}:'icap_lesson' }}"
                         data-popover-trigger="none"
                         data-popover-is-open="updateForm.$submitted && updateForm.title.$invalid"
                 />
@@ -34,7 +34,7 @@
                 <label
                         class="control-label"
                         for="icap_lesson_chaptertype_text">
-                    {{ 'Text'|trans: 'icap_lesson' }}
+                    {{ 'Text'|trans:{}:'icap_lesson' }}
                 </label>
                 <div class="controls">
 
@@ -54,13 +54,13 @@
                     class="btn btn-primary"
                     data-ng-disabled="vm.buttonSubmit.disabled"
                     data-ng-click="vm.editChapter(updateForm)">
-                {{ 'Save'|trans: 'icap_lesson' }}
+                {{ 'Save'|trans:{}:'icap_lesson' }}
             </button>
             <button
                 type="button"
                 class="btn btn-default"
                 data-ng-click="vm.cancelForm(vm.chapter.current.slug)">
-                {{ 'Cancel'|trans: 'icap_lesson' }}
+                {{ 'Cancel'|trans:{}:'icap_lesson' }}
             </button>
         </div>
     </div>

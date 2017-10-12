@@ -9,7 +9,7 @@
                 data-ng-click="vm._cancelModal()">×
         </button>
         <h3>
-            {{ 'Chapter Suppression'|trans: 'icap_lesson' }}
+            {{ 'Chapter Suppression'|trans:{}:'icap_lesson' }}
         </h3>
     </div>
 
@@ -31,14 +31,14 @@
                             data-ng-model="vm.deleteChildren"
                     />
                     <label class="control-label" for="deleteChildren">
-                        {{ 'delete_also_children'|trans: 'icap_lesson' }}
+                        {{ 'delete_also_children'|trans:{}:'icap_lesson' }}
                     </label>
                     <br/>
-                    {{ 'delete_also_children_more'|trans: 'icap_lesson' }}
+                    {{ 'delete_also_children_more'|trans:{}:'icap_lesson' }}
                 </div>
 
                 <div class='delete_chapter_warning'>
-                    {{ 'delete_warning'|trans: 'icap_lesson' }}
+                    {{ 'delete_warning'|trans:{}:'icap_lesson' }}
                 </div>
 
             </div>
@@ -50,14 +50,14 @@
         <button
                 class="btn"
                 data-ng-click="vm.cancelModal()">
-            {{ 'Cancel'|trans: 'icap_lesson' }}
+            {{ 'Cancel'|trans:{}:'icap_lesson' }}
         </button>
         <button
                 type="submit"
                 class="btn btn-primary"
                 data-ng-disable="vm.buttonSubmit.disabled"
                 data-ng-click="vm.deleteChapter(deleteForm)">
-            {{ 'confirm'|trans: 'icap_lesson' }}
+            {{ 'confirm'|trans:{}:'icap_lesson' }}
         </button>
     </div>
 </form>

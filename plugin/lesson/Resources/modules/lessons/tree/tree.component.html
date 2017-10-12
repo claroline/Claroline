@@ -4,7 +4,7 @@
         class="panel panel-default menu_lesson">
     <div class='chapter_list_header'>
 
-        {{ 'chapter_list_header'|trans: 'icap_lesson' }}
+        {{ 'chapter_list_header'|trans:{}:'icap_lesson' }}
 
         <div class="icon_chapter_list_header">
             <button
@@ -18,14 +18,14 @@
             <button
                 data-ng-click="vm.collapseAll()"
                 class="btn-xs btn btn-default lesson_tooltip menu_lesson_button"
-                tooltip-placement="top" uib-tooltip="{{ 'collapse_all'|trans: 'icap_lesson' }}">
+                tooltip-placement="top" uib-tooltip="{{ 'collapse_all'|trans:{}:'icap_lesson' }}">
                 <i class="fa fa-long-arrow-up text-primary" ></i>
                 <i class="fa fa-minus text-primary"></i>
             </button>
             <button
                 data-ng-click="vm.expandAll()"
                 class="btn-xs btn btn-default lesson_tooltip menu_lesson_button"
-                tooltip-placement="top" uib-tooltip="{{ 'expand_all'|trans: 'icap_lesson' }}">
+                tooltip-placement="top" uib-tooltip="{{ 'expand_all'|trans:{}:'icap_lesson' }}">
                 <i class="fa fa-long-arrow-down text-primary"></i>
                 <i class="fa fa-reorder text-primary"></i>
             </button>

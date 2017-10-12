@@ -1,10 +1,11 @@
 import angular from 'angular/index'
-import {} from 'angular-bootstrap'
-import {} from 'angular-route'
-import {} from 'angular-ui-tinymce'
-import {} from "angular-ui-tree"
-import {} from 'angular-loading-bar'
-import {} from 'angular-animate'
+import 'angular-bootstrap'
+import 'angular-route'
+import 'angular-ui-tinymce'
+import 'angular-ui-tree'
+import 'angular-loading-bar'
+import 'angular-animate'
+import 'angular-ui-translation/angular-translation'
 
 import tinyMceConfig from './tinymce/tinymce.config'
 
@@ -34,7 +35,7 @@ import alertsTemplate from './alerts.partial.html'
 angular.element(document).ready(function () {
   angular.bootstrap(angular.element(document).find('body')[0], ['LessonModule'], {
     strictDi: true
-  });
+  })
 })
 
 angular
@@ -44,6 +45,7 @@ angular
     'ui.tinymce',
     'ui.tree',
     'angular-loading-bar',
+    'ui.translation'
   ])
 
   .service('tinyMceConfig', tinyMceConfig)
@@ -84,31 +86,30 @@ angular
     controller: 'treeController',
     template: treeTemplate
   }))
-  .directive('confirmDiscardChanges', () => ({
+  .directive('confirmDiscardChanges', ['transFilter', (transFilter) => ({
     restrict: 'A',
     require: 'form',
     link: ($scope, element, attrs, controller) => {
-      $scope.$on('$locationChangeStart', (event, next, current) => {
+      $scope.$on('$locationChangeStart', (event) => {
         if (controller.$dirty && !controller.$submitted) {
-          if(!window.confirm(Translator.trans('unsaved_changes', 'icap_lesson'))) {
+          if(!window.confirm(transFilter('unsaved_changes', {}, 'icap_lesson'))) {
             event.preventDefault()
           }
         }
       })
     }
-  }))
+  })])
   .directive('giveFocus', ['$timeout', ($timeout) => ({
     restrict: 'A',
-    link: ($scope, element, attrs, controller) => {
-      $timeout(function() {
-        element[0].focus();
-      });
+    link: ($scope, element) => {
+      $timeout(function () {
+        element[0].focus()
+      })
     }
   })])
 
-  .filter('trans', () => (string, domain = 'icap_lesson') => Translator.trans(string, domain))
   .filter('trustedHtml', ['$sce', $sce => text => $sce.trustAsHtml(text)])
-  .filter('prettyJSON', () => json => JSON.stringify(json, null, " "))
+  .filter('prettyJSON', () => json => JSON.stringify(json, null, ' '))
 
   .config([
     '$routeProvider',

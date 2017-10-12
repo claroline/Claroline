@@ -3,6 +3,7 @@
 namespace Icap\BibliographyBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
@@ -136,6 +137,37 @@ class BibliographyListener
         );
         $response = new Response($content);
         $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("copy_icap_bibliography")
+     *
+     * @param CopyResourceEvent $event
+     */
+    public function onCopy(CopyResourceEvent $event)
+    {
+        $em = $this->container->get('claroline.persistence.object_manager');
+
+        $old = $event->getResource();
+        $new = new BookReference();
+
+        $new->setAuthor($old->getAuthor());
+        $new->setDescription($old->getDescription());
+        $new->setAbstract($old->getAbstract());
+        $new->setIsbn($old->getIsbn());
+        $new->setPublisher($old->getPublisher());
+        $new->setPrinter($old->getPrinter());
+        $new->setPublicationYear($old->getPublicationYear());
+        $new->setLanguage($old->getLanguage());
+        $new->setPageCount($old->getPageCount());
+        $new->setUrl($old->getUrl());
+        $new->setCoverUrl($old->getCoverUrl());
+
+        $em->persist($new);
+        $em->flush();
+
+        $event->setCopy($new);
         $event->stopPropagation();
     }
 

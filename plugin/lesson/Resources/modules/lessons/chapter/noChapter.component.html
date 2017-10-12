@@ -1,12 +1,12 @@
 <div class='panel panel-default' id='chapter_content'>
     <div class='chapter_content_text'>
         <div class='welcome'>
-            <div>{{ 'lesson_welcome'|trans: 'icap_lesson' }}</div>
+            <div>{{ 'lesson_welcome'|trans:{}:'icap_lesson' }}</div>
             <div data-ng-if="cc.isGranted">
                 <button
                         class="createchapter btn btn-primary"
                         data-ng-click="cc.createFirstChapter()">
-                    {{ 'lesson_welcome_create'|trans: 'icap_lesson' }}
+                    {{ 'lesson_welcome_create'|trans:{}:'icap_lesson' }}
                 </button>
             </div>
         </div>
