@@ -34,7 +34,7 @@ const DataActions = props =>
       <MenuItem header>{t('actions')}</MenuItem>
 
       {props.actions.filter(
-        action => !action.isDangerous && (!action.displayed || action.displayed([props.item]))
+        action => !action.dangerous && (!action.displayed || action.displayed([props.item]))
       ).map((action, actionIndex) =>
         <MenuItemAction
           key={`${props.id}-action-${actionIndex}`}
@@ -45,12 +45,12 @@ const DataActions = props =>
         />
       )}
 
-      {0 !== props.actions.filter(action => action.isDangerous && (!action.displayed || action.displayed([props.item]))).length &&
+      {0 !== props.actions.filter(action => action.dangerous && (!action.displayed || action.displayed([props.item]))).length &&
         <MenuItem divider />
       }
 
       {props.actions.filter(
-        action => action.isDangerous && (!action.displayed || action.displayed([props.item]))
+        action => action.dangerous && (!action.displayed || action.displayed([props.item]))
       ).map((action, actionIndex) =>
         <MenuItemAction
           key={`${props.id}-action-dangerous-${actionIndex}`}
@@ -58,7 +58,7 @@ const DataActions = props =>
           label={action.label}
           disabled={action.disabled ? action.disabled([props.item]) : false}
           action={typeof action.action === 'function' ? () => action.action([props.item]) : action.action}
-          isDangerous={true}
+          dangerous={true}
         />
       )}
     </DropdownButton>
@@ -91,8 +91,8 @@ const DataBulkActions = props =>
           id={`list-bulk-action-${actionIndex}`}
           key={`list-bulk-action-${actionIndex}`}
           className={classes({
-            'btn-link-default': !action.isDangerous,
-            'btn-link-danger' :  action.isDangerous
+            'btn-link-default': !action.dangerous,
+            'btn-link-danger' :  action.dangerous
           })}
           title={action.label}
           disabled={action.disabled ? action.disabled(props.selectedItems) : false}
@@ -106,8 +106,8 @@ const DataBulkActions = props =>
           id={`list-bulk-action-${actionIndex}`}
           key={`list-bulk-action-${actionIndex}`}
           className={classes({
-            'btn-link-default': !action.isDangerous,
-            'btn-link-danger' :  action.isDangerous
+            'btn-link-default': !action.dangerous,
+            'btn-link-danger' :  action.dangerous
           })}
           title={action.label}
           disabled={action.disabled ? action.disabled(props.selectedItems) : false}

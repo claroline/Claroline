@@ -6,13 +6,16 @@ import moment from 'moment'
 import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
+import {trans, t} from '#/main/core/translation'
+
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
 import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'
 import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {trans, t} from '#/main/core/translation'
+
+
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {constants as listConstants} from '#/main/core/layout/list/constants'
@@ -166,7 +169,7 @@ const Random = props =>
         />
       </div>
       <div className="col-md-1 text-center">
-        <i className="fa fa-w fa-long-arrow-right"></i>
+        <span className="fa fa-w fa-long-arrow-right" />
       </div>
       <div className="col-md-2">
         <DatePicker
@@ -353,18 +356,11 @@ const Categories = props =>
       label={trans('label_display_categories', {}, 'clacoform')}
       onChange={checked => props.updateParameters('display_categories', checked)}
     />
-    <CheckGroup
-      checkId="params-open-categories"
-      checked={props.params.open_categories}
-      label={trans('label_open_panel_by_default', {}, 'clacoform')}
-      onChange={checked => props.updateParameters('open_categories', checked)}
-    />
   </fieldset>
 
 Categories.propTypes = {
   params: T.shape({
-    display_categories: T.boolean,
-    open_categories: T.boolean
+    display_categories: T.boolean
   }).isRequired,
   updateParameters: T.func.isRequired
 }
@@ -453,20 +449,13 @@ const Keywords = props =>
       label={trans('label_display_keywords', {}, 'clacoform')}
       onChange={checked => props.updateParameters('display_keywords', checked)}
     />
-    <CheckGroup
-      checkId="params-open-keywords"
-      checked={props.params.open_keywords}
-      label={trans('label_open_panel_by_default', {}, 'clacoform')}
-      onChange={checked => props.updateParameters('open_keywords', checked)}
-    />
   </fieldset>
 
 Keywords.propTypes = {
   params: T.shape({
     keywords_enabled: T.boolean,
     new_keywords_enabled: T.boolean,
-    display_keywords: T.boolean,
-    open_keywords: T.boolean
+    display_keywords: T.boolean
   }).isRequired,
   updateParameters: T.func.isRequired
 }
@@ -537,7 +526,6 @@ makePanel.propTypes = {
     display_metadata: T.string,
     locked_fields_for: T.string,
     display_categories: T.boolean,
-    open_categories: T.boolean,
     comments_enabled: T.boolean,
     anonymous_comments_enabled: T.boolean,
     moderate_comments: T.string,
@@ -551,7 +539,6 @@ makePanel.propTypes = {
     keywords_enabled: T.boolean,
     new_keywords_enabled: T.boolean,
     display_keywords: T.boolean,
-    open_keywords: T.boolean,
     activePanelKey: T.string
   }).isRequired,
   categories: T.arrayOf(T.shape({
@@ -584,24 +571,6 @@ class ClacoFormConfig extends Component {
       <div>
         <h2>
           {trans('general_configuration', {}, 'clacoform')}
-          <span className="pull-right">
-            <button
-              className="btn btn-danger btn-sm margin-right-sm"
-              onClick={() => this.showAllEntriesDeletion()}
-            >
-              <span className="fa fa-w fa-trash"></span>
-              &nbsp;
-              {trans('delete_all_entries', {}, 'clacoform')}
-            </button>
-            <TooltipButton
-              id="tooltip-button-export-all"
-              className="btn btn-default btn-sm"
-              title={trans('export_all_entries', {}, 'clacoform')}
-              onClick={() => this.props.exportAllEntries()}
-            >
-              <span className="fa fa-w fa-sign-out"></span>
-            </TooltipButton>
-          </span>
         </h2>
         <br/>
         {this.props.canEdit ?
@@ -609,7 +578,7 @@ class ClacoFormConfig extends Component {
             <Message/>
             <PanelGroup accordion>
               {makePanel(General, t('general'), 'general', this.props)}
-              {makePanel(Display, trans('display', {}, 'clacoform'), 'display', this.props)}
+              {makePanel(Display, t('display_parameters', {}, 'clacoform'), 'display', this.props)}
               {makePanel(Random, trans('random_entries', {}, 'clacoform'), 'random_entries', this.props, true)}
               {makePanel(List, trans('entries_list_search', {}, 'clacoform'), 'entries_list_search', this.props, false, true)}
               {makePanel(Metadata, trans('metadata', {}, 'clacoform'), 'metadata', this.props)}
@@ -648,7 +617,6 @@ ClacoFormConfig.propTypes = {
     display_metadata: T.string,
     locked_fields_for: T.string,
     display_categories: T.boolean,
-    open_categories: T.boolean,
     comments_enabled: T.boolean,
     anonymous_comments_enabled: T.boolean,
     moderate_comments: T.string,
@@ -662,7 +630,6 @@ ClacoFormConfig.propTypes = {
     keywords_enabled: T.boolean,
     new_keywords_enabled: T.boolean,
     display_keywords: T.boolean,
-    open_keywords: T.boolean,
     use_template: T.boolean,
     activePanelKey: T.string
   }),
@@ -677,14 +644,13 @@ ClacoFormConfig.propTypes = {
   })),
   initializeParameters: T.func.isRequired,
   updateParameters: T.func.isRequired,
-  exportAllEntries: T.func.isRequired,
   deleteAllEntries: T.func.isRequired,
   showModal: T.func.isRequired
 }
 
 function mapStateToProps(state) {
   return {
-    canEdit: state.canEdit,
+    canEdit: resourceSelect.editable(state),
     params: state.parameters,
     categories: state.categories,
     fields: state.fields
@@ -695,7 +661,6 @@ function mapDispatchToProps(dispatch) {
   return {
     initializeParameters: () => dispatch(actions.initializeParameters()),
     updateParameters: (property, value) => dispatch(actions.updateParameters(property, value)),
-    exportAllEntries: () => dispatch(actions.exportAllEntries()),
     deleteAllEntries: () => dispatch(actions.deleteAllEntries()),
     showModal: (type, props) => dispatch(modalActions.showModal(type, props))
   }

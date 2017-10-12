@@ -13,7 +13,7 @@ const ConfirmModal = props =>
     </Modal.Body>
 
     <button
-      className={classes('modal-btn btn', props.isDangerous ? 'btn-danger' : 'btn-primary')}
+      className={classes('modal-btn btn', props.dangerous ? 'btn-danger' : 'btn-primary')}
       onClick={() => {
         props.handleConfirm()
         props.fadeModal()
@@ -25,7 +25,7 @@ const ConfirmModal = props =>
 
 ConfirmModal.propTypes = {
   confirmButtonText: T.string,
-  isDangerous: T.bool,
+  dangerous: T.bool,
   question: T.string.isRequired,
   handleConfirm: T.func.isRequired,
   fadeModal: T.func.isRequired

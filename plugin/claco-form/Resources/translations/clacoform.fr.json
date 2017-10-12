@@ -1,7 +1,7 @@
 {
     "activate_notifications": "Activer les notifications",
     "add_choice": "Ajouter un choix",
-    "add_comment": "Ajouter un commentaire",
+    "add_comment": "Laisser un commentaire",
     "add_entry": "Ajouter une fiche",
     "addition": "Ajout",
     "all_entries": "Toutes les fiches",
@@ -34,7 +34,7 @@
     "deactivate_notifications": "Désactiver les notifications",
     "default_display_mode": "Mode d'affichage par défaut",
     "delete_all_entries": "Supprimer toutes les fiches",
-    "delete_all_entries_confirm_msg": "Êtes-vous sûr de vouloir supprimer toutes les fiches ?",
+    "delete_all_entries_confirm": "Êtes-vous sûr de vouloir supprimer toutes les fiches ?",
     "delete_category": "Supprimer la catégorie",
     "delete_category_confirm_message": "Êtes-vous sûr de vouloir supprimer cette catégorie [%name%] ?",
     "delete_comment": "Supprimer le commentaire",
@@ -134,7 +134,7 @@
     "nb_entries": "Nombre de fiches",
     "no_available_random_entry": "Aucune fiche aléatoire disponible",
     "no_category": "Aucune catégorie",
-    "no_comment": "Aucun commentaire",
+    "no_comment": "Aucun commentaire.",
     "no_data": "Aucune donnée",
     "no_entry": "Aucune fiche",
     "no_field": "Aucun champ",
@@ -172,5 +172,6 @@
     "video": "Video",
     "view_entry": "Voir la fiche",
     "votes": "Votes",
-    "votes_management": "Gestion des votes"
+    "votes_management": "Gestion des votes",
+    "all_comments": "Tous les commentaires"
 }

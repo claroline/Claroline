@@ -27,23 +27,14 @@ class EntryMenu extends Component {
         {this.props.canAddEntry &&
           <TooltipButton
             id="tooltip-button-add"
-            className="btn btn-default entry-menu-button"
+            className="btn btn-primary entry-menu-button"
             title={trans('add_entry', {}, 'clacoform')}
             onClick={() => this.props.history.push('/entry/create')}
           >
-            <span className="fa fa-w fa-pencil-square-o"></span>
+            <span className="fa fa-fw fa-plus" />
           </TooltipButton>
         }
-        {this.props.canSearchEntry &&
-          <TooltipButton
-            id="tooltip-button-list"
-            className="btn btn-default entry-menu-button"
-            title={trans('entries_list', {}, 'clacoform')}
-            onClick={() => this.props.history.push('/entries')}
-          >
-            <span className="fa fa-w fa-table"></span>
-          </TooltipButton>
-        }
+
         {this.props.randomEnabled &&
           <TooltipButton
             id="tooltip-button-random"
@@ -51,7 +42,18 @@ class EntryMenu extends Component {
             title={trans('random_entry', {}, 'clacoform')}
             onClick={() => this.goToRandomEntry()}
           >
-            <span className="fa fa-w fa-random"></span>
+            <span className="fa fa-fw fa-random" />
+          </TooltipButton>
+        }
+
+        {this.props.canSearchEntry &&
+          <TooltipButton
+            id="tooltip-button-list"
+            className="btn btn-default entry-menu-button"
+            title={trans('entries_list', {}, 'clacoform')}
+            onClick={() => this.props.history.push('/entries')}
+          >
+            <span className="fa fa-fw fa-list" />
           </TooltipButton>
         }
       </div>

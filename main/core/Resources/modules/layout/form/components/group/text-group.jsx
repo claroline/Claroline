@@ -14,7 +14,7 @@ const TextGroup = props =>
         value={props.value || ''}
         disabled={props.disabled}
         onChange={(e) => props.onChange(e.target.value)}
-        rows={3}
+        rows={props.minRows}
       />
     }
 
@@ -33,6 +33,7 @@ const TextGroup = props =>
 TextGroup.propTypes = {
   controlId: T.string.isRequired,
   long: T.bool,
+  minRows: T.number,
   value: T.string,
   disabled: T.bool.isRequired,
   onChange: T.func.isRequired
@@ -41,6 +42,7 @@ TextGroup.propTypes = {
 TextGroup.defaultProps = {
   value: '',
   long: false,
+  minRows: 2,
   disabled: false
 }
 

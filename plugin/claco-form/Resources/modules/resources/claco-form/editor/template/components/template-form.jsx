@@ -9,6 +9,7 @@ import {actions} from '../actions'
 import {actions as clacoFormActions} from '../../../actions'
 import {selectors} from '../../../selectors'
 import {generateFieldKey, getFieldType} from '../../../utils'
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 
 class TemplateForm extends Component {
   constructor(props) {
@@ -193,7 +194,7 @@ TemplateForm.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    canEdit: state.canEdit,
+    canEdit: resourceSelect.editable(state),
     template: selectors.template(state),
     fields: state.fields.filter(f => f.type !== 11),
     useTemplate: selectors.useTemplate(state)

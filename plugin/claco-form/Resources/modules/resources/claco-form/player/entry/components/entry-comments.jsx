@@ -2,23 +2,30 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import moment from 'moment'
-import {trans, t} from '#/main/core/translation'
-import {selectors} from '../../../selectors'
-import {actions} from '../actions'
+
+import {t, trans} from '#/main/core/translation'
+
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
-import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
+
+import {UserMessage} from '#/main/core/layout/user/components/user-message.jsx'
+import {UserMessageForm} from '#/main/core/layout/user/components/user-message-form.jsx'
+
+import {selectors} from '../../../selectors'
+import {actions} from '../actions'
 
 class EntryComments extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
-      showNewCommentForm: false,
-      newComment: ''
+      opened: props.opened,
+      showNewCommentForm: false
     }
+  }
+
+  toggleComments() {
+    this.setState({opened: !this.state.opened})
   }
 
   filterComment(comment) {
@@ -37,206 +44,139 @@ class EntryComments extends Component {
     })
   }
 
-  createNewComment() {
-    if (this.state.newComment) {
-      this.props.createComment(this.props.entry.id, this.state.newComment)
-    }
-    this.setState({showNewCommentForm: false, newComment: ''})
+  createNewComment(comment) {
+    this.props.createComment(this.props.entry.id, comment)
+    this.setState({showNewCommentForm: false})
   }
 
-  editComment(commentId) {
-    if (this.state[commentId] && this.state[commentId].comment) {
-      this.props.editComment(this.props.entry.id, commentId, this.state[commentId].comment)
-    }
-    this.setState({[commentId]: {showCommentForm: false, comment: ''}})
+  editComment(commentId, commentContent) {
+    this.props.editComment(this.props.entry.id, commentId, commentContent)
+
+    this.setState({[commentId]: {showCommentForm: false}})
   }
 
   showCommentForm(comment) {
-    this.setState({[comment.id]: {showCommentForm: true, comment: comment.content}})
-  }
-
-  updateComment(commentId, value) {
-    this.setState({[commentId]: {showCommentForm: true, comment: value}})
+    this.setState({[comment.id]: {showCommentForm: true}})
   }
 
   cancelCommentEdition(commentId) {
-    this.setState({[commentId]: {showCommentForm: false, comment: ''}})
+    this.setState({[commentId]: {showCommentForm: false}})
   }
 
   render() {
+    const comments = this.props.entry.comments ? this.props.entry.comments.filter(comment => this.filterComment(comment)) : []
+
     return (
-      <div>
-        {this.props.canComment &&
-          <div className="margin-bottom-sm">
-            {this.state.showNewCommentForm ?
-              <div>
-                <Textarea
-                  id="new-comment-form"
-                  content={this.state.newComment}
-                  minRows={2}
-                  onChange={value => this.setState({newComment: value})}
-                  onClick={() => {}}
-                  onSelect={() => {}}
-                  onChangeMode={() => {}}
-                />
-                <br/>
-                <div>
-                  <button
-                    className="btn btn-primary margin-right-sm"
-                    disabled={!this.state.newComment}
-                    onClick={() => this.createNewComment()}
-                  >
-                    {t('ok')}
-                  </button>
-                  <button
-                    className="btn btn-default margin-right-sm"
-                    onClick={() => this.setState({showNewCommentForm: false, newComment: ''})}
-                  >
-                    {t('cancel')}
-                  </button>
-                </div>
-              </div> :
+      <section className={classes('comments-container', {
+        opened: this.state.opened
+      })}>
+        <h3 className="comments-title">
+          <span className="comments-icon">
+            <span className="fa fa-fw fa-comments" />
+            <span className="comments-count">{comments.length || '0'}</span>
+          </span>
+
+          {trans('comments', {}, 'clacoform')}
+
+          <button
+            type="button"
+            className="btn btn-link btn-sm btn-toggle-comments"
+            onClick={() => this.toggleComments()}
+          >
+            {t(this.state.opened ? 'hide':'show')}
+          </button>
+        </h3>
+
+        {this.state.opened && this.props.canComment &&
+          <section className="comments-section">
+            {!this.state.showNewCommentForm &&
               <button
-                className="btn btn-default"
-                onClick={() => this.setState({showNewCommentForm: true, newComment: ''})}
+                className="btn btn-add-comment"
+                onClick={() => this.setState({showNewCommentForm: true})}
               >
-                <span className="fa fa-w fa-plus-circle margin-right-sm"></span>
+                <span className="fa fa-fw fa-edit" style={{marginRight: '7px'}} />
                 {trans('add_comment', {}, 'clacoform')}
               </button>
             }
-          </div>
-        }
-        {this.props.displayComments &&
-          <div>
-            {this.props.entry.comments && this.props.entry.comments.length > 0 ?
-              <table className="table">
-                <tbody>
-                  {this.props.entry.comments.filter(c => this.filterComment(c)).map(c =>
-                    <tr key={`comment-row-${c.id}`}>
-                      <td className={classes({'inactive-comment-row': c.status !== 1})}>
-                        {c.status === 0 &&
-                          <span className="close">
-                            {trans('comment_pending_info', {}, 'clacoform')}
-                          </span>
-                        }
-                        {c.status === 2 &&
-                          <span className="close">
-                            {trans('comment_blocked_info', {}, 'clacoform')}
-                          </span>
-                        }
-                        {(this.props.displayCommentAuthor || this.props.displayCommentDate) &&
-                          <div>
-                            <b>
-                              {this.props.displayCommentAuthor &&
-                                <span>
-                                  {c.user ? `${c.user.firstName} ${c.user.lastName}` : t('anonymous')}
-                                </span>
-                              }
-                              &nbsp;
-                              {this.props.displayCommentDate &&
-                                <span>
-                                  [{moment(c.creationDate).format('DD/MM/YYYY HH:mm')}]
-                                </span>
-                              }
-                            </b>
-                          </div>
-                        }
-                        {this.canEditComment(c) &&
-                          <TooltipButton
-                            id={`comment-edit-button-${c.id}`}
-                            className="btn btn-default btn-sm margin-right-sm"
-                            title={t('edit')}
-                            onClick={() => this.showCommentForm(c)}
-                          >
-                            <span className="fa fa-w fa-pencil"></span>
-                          </TooltipButton>
-                        }
-                        {this.props.canManage &&
-                          <span>
-                            {c.status === 0 &&
-                              <TooltipButton
-                                id={`comment-validate-button-${c.id}`}
-                                className="btn btn-success btn-sm margin-right-sm"
-                                title={trans('validate', {}, 'clacoform')}
-                                onClick={() => this.props.activateComment(this.props.entry.id, c.id)}
-                              >
-                                <span className="fa fa-w fa-check"></span>
-                              </TooltipButton>
-                            }
-                            {c.status === 2 ?
-                              <TooltipButton
-                                id={`comment-activate-button-${c.id}`}
-                                className="btn btn-default btn-sm margin-right-sm"
-                                title={t('activate')}
-                                onClick={() => this.props.activateComment(this.props.entry.id, c.id)}
-                              >
-                                <span className="fa fa-w fa-eye"></span>
-                              </TooltipButton> :
-                              <TooltipButton
-                                id={`comment-block-button-${c.id}`}
-                                className="btn btn-danger btn-sm margin-right-sm"
-                                title={trans('block', {}, 'clacoform')}
-                                onClick={() => this.props.blockComment(this.props.entry.id, c.id)}
-                              >
-                                <span className="fa fa-w fa-ban"></span>
-                              </TooltipButton>
-                            }
-                            <TooltipButton
-                              id={`comment-delete-button-${c.id}`}
-                              className="btn btn-danger btn-sm margin-right-sm"
-                              title={t('delete')}
-                              onClick={() => this.deleteComment(c.id)}
-                            >
-                              <span className="fa fa-w fa-trash"></span>
-                            </TooltipButton>
-                          </span>
-                        }
-                        <br/>
-                        <br/>
-                        {this.state[c.id] && this.state[c.id].showCommentForm ?
-                          <div>
-                            <Textarea
-                              id={`comment-form-${c.id}`}
-                              content={this.state[c.id].comment}
-                              minRows={2}
-                              onChange={value => this.updateComment(c.id, value)}
-                              onClick={() => {}}
-                              onSelect={() => {}}
-                              onChangeMode={() => {}}
-                            />
-                            <br/>
-                            <div>
-                              <button
-                                className="btn btn-primary margin-right-sm"
-                                disabled={!this.state[c.id].comment}
-                                onClick={() => this.editComment(c.id)}
-                              >
-                                {t('ok')}
-                              </button>
-                              <button
-                                className="btn btn-default margin-right-sm"
-                                onClick={() => this.cancelCommentEdition(c.id)}
-                              >
-                                {t('cancel')}
-                              </button>
-                            </div>
-                          </div> :
-                          <HtmlText>
-                            {c.content}
-                          </HtmlText>
-                        }
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table> :
-              <div className="alert alert-warning">
-                {trans('no_comment', {}, 'clacoform')}
-              </div>
+
+            {this.state.showNewCommentForm &&
+              <h4>{trans('add_comment', {}, 'clacoform')}</h4>
             }
-          </div>
+
+            {this.state.showNewCommentForm &&
+              <UserMessageForm
+                user={this.props.user}
+                allowHtml={true}
+                submitLabel={t('add_comment')}
+                submit={(comment) => this.createNewComment(comment)}
+                cancel={() => this.setState({showNewCommentForm: false})}
+              />
+            }
+
+            <hr/>
+          </section>
         }
-      </div>
+
+        {this.state.opened &&
+          <section className="comments-section">
+            <h4>{trans('all_comments', {}, 'clacoform')}</h4>
+
+            {0 === comments.length &&
+            <div className="list-empty">
+              {trans('no_comment', {}, 'clacoform')}
+            </div>
+            }
+
+            {comments.map((comment, commentIndex) =>
+              this.state[comment.id] && this.state[comment.id].showCommentForm ?
+                <UserMessageForm
+                  key={`comment-${commentIndex}`}
+                  user={this.props.user}
+                  content={comment.content}
+                  allowHtml={true}
+                  submitLabel={t('add_comment')}
+                  submit={(commentContent) => this.editComment(comment.id, commentContent)}
+                  cancel={() => this.cancelCommentEdition(comment.id)}
+                /> :
+                <UserMessage
+                  key={`comment-${commentIndex}`}
+                  className={classes({
+                    'user-message-inactive': 0 === comment.status,
+                    'user-message-blocked': 2 === comment.status
+                  })}
+                  user={this.props.displayCommentAuthor ? comment.user : undefined}
+                  date={this.props.displayCommentDate ? comment.creationDate : ''}
+                  content={comment.content}
+                  allowHtml={true}
+                  actions={[
+                    {
+                      icon: 'fa fa-fw fa-pencil',
+                      label: t('edit'),
+                      displayed: this.canEditComment(comment),
+                      action: () => this.showCommentForm(comment)
+                    }, {
+                      icon: 'fa fa-fw fa-check',
+                      label: t('activate'),
+                      displayed: this.props.canManage && (0 === comment.status || 2 === comment.status),
+                      action: () => this.props.activateComment(this.props.entry.id, comment.id)
+                    }, {
+                      icon: 'fa fa-fw fa-ban',
+                      label: trans('block', {}, 'clacoform'),
+                      displayed: this.props.canManage && 1 === comment.status,
+                      action: () => this.props.blockComment(this.props.entry.id, comment.id)
+                    }, {
+                      icon: 'fa fa-fw fa-trash-o',
+                      label: t('delete'),
+                      displayed: this.props.canManage,
+                      action: () => this.deleteComment(comment.id),
+                      dangerous: true
+                    }
+                  ]}
+                />
+            )}
+          </section>
+        }
+      </section>
     )
   }
 }
@@ -247,8 +187,8 @@ EntryComments.propTypes = {
     firstName: T.string,
     lastName: T.string
   }),
+  opened: T.bool.isRequired,
   entry: T.object.isRequired,
-  displayComments: T.bool.isRequired,
   canComment: T.bool.isRequired,
   canManage: T.bool.isRequired,
   displayCommentAuthor: T.bool.isRequired,
@@ -263,6 +203,7 @@ EntryComments.propTypes = {
 
 function mapStateToProps(state) {
   return {
+    entry: state.currentEntry,
     user: state.user,
     displayCommentAuthor: selectors.getParam(state, 'display_comment_author'),
     displayCommentDate: selectors.getParam(state, 'display_comment_date')

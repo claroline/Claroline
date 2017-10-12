@@ -1,8 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {asset} from '#/main/core/asset'
 import {t} from '#/main/core/translation'
+
+import {UserAvatar} from './user-avatar.jsx'
 
 /**
  * Micro representation of a User.
@@ -12,10 +13,7 @@ import {t} from '#/main/core/translation'
  */
 const UserMicro = props =>
   <div className="user-micro">
-    {props.picture ?
-      <img className="avatar" src={asset('uploads/pictures/'+props.picture)} /> :
-      <span className="avatar fa fa-user-circle-o" />
-    }
+    <UserAvatar picture={props.picture} />
 
     {props.name ?
       props.name : t('unknown')

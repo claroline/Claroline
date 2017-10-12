@@ -44,11 +44,6 @@ actions.saveParameters = () => (dispatch, getState) => {
   })
 }
 
-actions.exportAllEntries = () => (dispatch, getState) => {
-  const resourceId = getState().resource.id
-  window.location.href = generateUrl('claro_claco_form_entries_export', {clacoForm: resourceId})
-}
-
 actions.deleteAllEntries = () => (dispatch, getState) => {
   const resourceId = getState().resource.id
 

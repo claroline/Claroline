@@ -1,9 +1,10 @@
 import {createSelector} from 'reselect'
 
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+
 const resource = state => state.resource
 const isAnon = state => state.isAnon
 const user = state => state.user
-const canEdit = state => state.canEdit
 const params = state => state.resource.details
 const visibleFields = state => state.fields.filter(f => !f.hidden)
 const template = state => state.resource.template
@@ -15,10 +16,10 @@ const canAdministrate = state => state.resourceNode.rights.current.administrate
 const categories = state => state.categories
 
 const canSearchEntry = createSelector(
-  canEdit,
+  resourceSelect.editable,
   isAnon,
   params,
-  (canEdit, isAnon, params) => canEdit || !isAnon || params['search_enabled']
+  (editable, isAnon, params) => editable || !isAnon || params['search_enabled']
 )
 
 const isCurrentEntryOwner = createSelector(
@@ -56,10 +57,10 @@ const isCurrentEntryManager = createSelector(
 const canManageCurrentEntry = createSelector(
   isAnon,
   user,
-  canEdit,
+  resourceSelect.editable,
   currentEntry,
-  (isAnon, user, canEdit, currentEntry) => {
-    let canManage = canEdit
+  (isAnon, user, editable, currentEntry) => {
+    let canManage = editable
 
     if (!canManage && !isAnon && user && currentEntry && currentEntry.categories) {
       currentEntry.categories.forEach(category => {
@@ -78,22 +79,22 @@ const canManageCurrentEntry = createSelector(
 )
 
 const canEditCurrentEntry = createSelector(
-  canEdit,
+  resourceSelect.editable,
   params,
   isCurrentEntryOwner,
   canManageCurrentEntry,
-  (canEdit, params, isCurrentEntryOwner, canManageCurrentEntry) => {
-    return canEdit || (params['edition_enabled'] && isCurrentEntryOwner) || canManageCurrentEntry
+  (editable, params, isCurrentEntryOwner, canManageCurrentEntry) => {
+    return editable || (params['edition_enabled'] && isCurrentEntryOwner) || canManageCurrentEntry
   }
 )
 
 const canAddEntry = createSelector(
-  canEdit,
+  resourceSelect.editable,
   isAnon,
   params,
   myEntriesCount,
-  (canEdit, isAnon, params, myEntriesCount) => {
-    return canEdit || (
+  (editable, isAnon, params, myEntriesCount) => {
+    return editable || (
       params['creation_enabled'] &&
       !(isAnon && params['max_entries'] > 0) &&
       !(params['max_entries'] > 0 && myEntriesCount >= params['max_entries'])
@@ -102,13 +103,13 @@ const canAddEntry = createSelector(
 )
 
 const canOpenCurrentEntry = createSelector(
-  canEdit,
+  resourceSelect.editable,
   params,
   currentEntry,
   isCurrentEntryOwner,
   canManageCurrentEntry,
-  (canEdit, params, currentEntry, isCurrentEntryOwner, canManageCurrentEntry) => {
-    return canEdit || (
+  (editable, params, currentEntry, isCurrentEntryOwner, canManageCurrentEntry) => {
+    return editable || (
       currentEntry && (
         (params['search_enabled'] && currentEntry.status === 1) ||
         isCurrentEntryOwner ||
@@ -128,7 +129,6 @@ const isCategoryManager = createSelector(
 
 export const selectors = {
   resource,
-  canEdit,
   isAnon,
   params,
   canSearchEntry,

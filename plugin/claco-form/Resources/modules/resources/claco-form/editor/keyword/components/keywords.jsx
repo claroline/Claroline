@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans, t} from '#/main/core/translation'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 import {actions} from '../actions'
 
 class Keywords extends Component {
@@ -70,14 +71,14 @@ class Keywords extends Component {
                         className="btn btn-default btn-sm"
                         onClick={() => this.showKeywordEditionForm(keyword)}
                       >
-                        <span className="fa fa-w fa-pencil"></span>
+                        <span className="fa fa-w fa-pencil" />
                       </button>
                       &nbsp;
                       <button
                         className="btn btn-danger btn-sm"
                         onClick={() => this.showKeywordDeletion(keyword)}
                       >
-                        <span className="fa fa-w fa-trash"></span>
+                        <span className="fa fa-w fa-trash" />
                       </button>
                     </td>
                   </tr>
@@ -86,7 +87,7 @@ class Keywords extends Component {
             </table>
 
             <button className="btn btn-primary" onClick={() => this.showKeywordCreationForm()}>
-              <span className="fa fa-w fa-plus"></span>
+              <span className="fa fa-w fa-plus" />
               &nbsp;
               {trans('create_a_keyword', {}, 'clacoform')}
             </button>
@@ -115,7 +116,7 @@ Keywords.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    canEdit: state.canEdit,
+    canEdit: resourceSelect.editable(state),
     resourceId: state.resource.id,
     keywords: state.keywords
   }

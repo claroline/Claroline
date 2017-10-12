@@ -1,4 +1,17 @@
+import isEmpty from 'lodash/isEmpty'
+
 import {setIfError, notBlank} from '#/main/core/validation'
+
+/**
+ * Checks if an Announce data are valid.
+ *
+ * @param   {Object} theme
+ *
+ * @returns {boolean}
+ */
+function isValid(theme) {
+  return isEmpty(validate(theme))
+}
 
 /**
  * Gets validation errors for an Announce.
@@ -16,5 +29,6 @@ function validate(announce) {
 }
 
 export {
+  isValid,
   validate
 }

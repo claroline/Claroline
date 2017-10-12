@@ -72,7 +72,7 @@ Page.defaultTypes = {
  */
 const PageHeader = props =>
   <header className={classes('page-header', props.className)}>
-    <h1>
+    <h1 className="page-title">
       {props.title}
       &nbsp;
       {props.subtitle && <small>{props.subtitle}</small>}

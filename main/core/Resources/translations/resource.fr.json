@@ -37,7 +37,6 @@
     "resource_close_target": "Redirection après la fermeture ou la suppression",
     "resource_copy_warning": "Une erreur est survenue lors de la copie de la ressource <%resourceName%>.",
     "resource_description": "Description",
-    "resource_display_parameters": "Paramètres d'affichage",
     "resource_fullscreen": "Afficher en plein écran à l'ouverture",
     "resource_license": "License",
     "resource_management": "Gestion",

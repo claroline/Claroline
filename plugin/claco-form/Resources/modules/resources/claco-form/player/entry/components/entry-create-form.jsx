@@ -10,6 +10,7 @@ import {SelectInput} from '#/main/core/layout/form/components/field/select-input
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {getFieldType} from '../../../utils'
 import {selectors} from '../../../selectors'
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 import {actions} from '../actions'
 
 const InfosList = props =>
@@ -338,7 +339,7 @@ EntryCreateForm.propTypes = {
 
 function mapStateToProps(state) {
   return {
-    canEdit: state.canEdit,
+    canEdit: resourceSelect.editable(state),
     fields: selectors.visibleFields(state),
     isKeywordsEnabled: selectors.getParam(state, 'keywords_enabled'),
     isNewKeywordsEnabled: selectors.getParam(state, 'new_keywords_enabled'),

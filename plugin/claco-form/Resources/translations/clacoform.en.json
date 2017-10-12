@@ -1,7 +1,7 @@
 {
     "activate_notifications": "Activate notifications",
     "add_choice": "Add a choice",
-    "add_comment": "Add a comment",
+    "add_comment": "Leave a comment",
     "add_entry": "Add an entry",
     "addition": "Addition",
     "all_entries": "All entries",
@@ -34,7 +34,7 @@
     "deactivate_notifications": "Deactivate notifications",
     "default_display_mode": "Default display mode",
     "delete_all_entries": "Delete all entries",
-    "delete_all_entries_confirm_msg": "Are you sure you want to delete all entries ?",
+    "delete_all_entries_confirm": "Are you sure you want to delete all entries ?",
     "delete_category": "Delete category",
     "delete_category_confirm_message": "Are you sure you want to delete this category [%name%] ?",
     "delete_comment": "Delete comment",
@@ -134,7 +134,7 @@
     "nb_entries": "Number of entries",
     "no_available_random_entry": "No available random entry",
     "no_category": "No category",
-    "no_comment": "No comment",
+    "no_comment": "No comment.",
     "no_data": "No data",
     "no_entry": "No entry",
     "no_field": "No field",
@@ -172,5 +172,6 @@
     "video": "Video",
     "view_entry": "View entry",
     "votes": "Votes",
-    "votes_management": "Manage votes"
+    "votes_management": "Manage votes",
+    "all_comments": "All comments"
 }

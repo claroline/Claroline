@@ -1,10 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
 import omit from 'lodash/omit'
 
-import Panel      from 'react-bootstrap/lib/Panel'
-import PanelGroup from 'react-bootstrap/lib/PanelGroup'
+import {Section, Sections} from '#/main/core/layout/components/sections.jsx'
 
 /**
  * Renders a form section.
@@ -13,45 +11,26 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
  * @constructor
  */
 const FormSection = props =>
-  <Panel
-    {...omit(props, ['level', 'title', 'icon', 'children', 'validating', 'errors'])}
-
-    header={
-      React.createElement('h'+props.level, {
-        className: classes({opened: props.expanded})
-      }, [
-        props.icon && <span key="panel-icon" className={props.icon} style={{marginRight: 10}} />,
-        props.title
-      ])
-    }
+  <Section
+    {...omit(props, ['validating', 'errors'])}
   >
     {props.children}
-  </Panel>
+  </Section>
 
 FormSection.propTypes = {
-  id: T.string.isRequired,
-  level: T.number,
-  icon: T.string,
-  title: T.string.isRequired,
-  expanded: T.bool,
   children: T.node.isRequired,
   validating: T.bool,
   errors: T.object
 }
 
 const FormSections = props =>
-  <PanelGroup
+  <Sections
     accordion={props.accordion}
+    defaultOpened={props.defaultOpened}
     defaultActiveKey={props.defaultOpened}
   >
-    {React.Children.map(props.children, (child, index) =>
-      React.cloneElement(child, {
-        key: index,
-        eventKey: index,
-        level: props.level
-      })
-    )}
-  </PanelGroup>
+    {props.children}
+  </Sections>
 
 FormSections.propTypes = {
   accordion: T.bool,

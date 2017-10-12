@@ -1,7 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import MenuItem from 'react-bootstrap/lib/MenuItem'
 
 /*import {generateUrl} from '#/main/core/fos-js-router'*/
 import {t_res} from '#/main/core/layout/resource/translation'
@@ -113,119 +112,110 @@ LikeAction.propTypes = {
 
 function getMoreActions(resourceNode, props) {
   return [
-    resourceNode.rights.current.administrate &&
-    <MenuItem
-      key="resource-group-management"
-      header={true}
-    >
-      {t_res('resource_management')}
-    </MenuItem>,
-
-    resourceNode.rights.current.administrate &&
-    <MenuItem
-      key="resource-edit-props"
-      eventKey="resource-edit-props"
-      onClick={() => props.showModal(MODAL_RESOURCE_PROPERTIES, {
+    // edit resource properties
+    {
+      icon: 'fa fa-fw fa-pencil',
+      label: t_res('edit-properties'),
+      group: t_res('resource_management'),
+      displayed: resourceNode.rights.current.administrate,
+      action: () => props.showModal(MODAL_RESOURCE_PROPERTIES, {
         resourceNode: resourceNode,
         save: props.updateNode
-      })}
-    >
-      <span className="fa fa-fw fa-pencil" />
-      {t_res('edit-properties')}
-    </MenuItem>/*,*/
-
-    // TODO : grab custom actions from plugins
-    /*<MenuItem
-      key="resource-manage-tags"
-      eventKey="resource-manage-tags"
-    >
-      <span className="fa fa-fw fa-tags" />
-      Manage tags
-    </MenuItem>,*/
-
-    // TODO : enable tracking. It can't be enabled because for now resource actions wants the ID of the node
-    // and we only have its UUID
-    /*<MenuItem
-      key="resource-log"
-      eventKey="resource-log"
-    >
-      <span className="fa fa-fw fa-line-chart" />
-      {t_res('open-tracking')}
-    </MenuItem>,*/
-
-    // TODO : create new action
-    /*<MenuItem
-      key="resource-show-as"
-      eventKey="resource-show-as"
-    >
-      <span className="fa fa-fw fa-user-secret" />
-      Show as...
-    </MenuItem>,*/
-
-    // TODO : grab custom actions from plugins
-    /*<MenuItem
-      key="resource-group-plugins"
-      header={true}
-    >
-      Other
-    </MenuItem>,*/
-
-    /*<MenuItem
-      key="resource-comments"
-      eventKey="resource-comments"
-    >
-      <span className="fa fa-fw fa-comment" />
-      Add a comment
-    </MenuItem>,*/
-
-    /*<MenuItem
-      key="resource-notes"
-      eventKey="resource-notes"
-    >
-      <span className="fa fa-fw fa-sticky-note" />
-      Add a note
-    </MenuItem>,*/
-
-    // TODO : enable delete and export. It can't be enabled because for now resource actions wants the ID of the node
-    // and we only have its UUID
-    /*resourceNode.rights.current.export &&
-    <MenuItem key="resource-export-divider" divider={true} />,
-
-    resourceNode.rights.current.export &&
-    <MenuItem
-      key="resource-export"
-      eventKey="resource-export"
-      href={generateUrl('claro_resource_action', {
-        resourceType: resourceNode.meta.type,
-        action: 'export',
-        node: resourceNode.id
-      })}
-    >
-      <span className="fa fa-fw fa-upload" />
-      {t_res('export')}
-    </MenuItem>,
-
-    resourceNode.rights.current.delete &&
-    <MenuItem key="resource-delete-divider" divider={true} />,
-
-    resourceNode.rights.current.delete &&
-    <MenuItem
-      key="resource-delete"
-      eventKey="resource-delete"
-      className="dropdown-link-danger"
-      onClick={e => {
-        e.stopPropagation()
-        props.showModal(MODAL_DELETE_CONFIRM, {
-          title: t_res('delete'),
-          question: t_res('delete_confirm_question'),
-          handleConfirm: () => true
-        })
-      }}
-    >
-      <span className="fa fa-fw fa-trash" />
-      {t_res('delete')}
-    </MenuItem>*/
+      })
+    }
   ]
+
+  // TODO : grab custom actions from plugins
+  /*<MenuItem
+    key="resource-manage-tags"
+    eventKey="resource-manage-tags"
+  >
+    <span className="fa fa-fw fa-tags" />
+    Manage tags
+  </MenuItem>,*/
+
+  // TODO : enable tracking. It can't be enabled because for now resource actions wants the ID of the node
+  // and we only have its UUID
+  /*<MenuItem
+    key="resource-log"
+    eventKey="resource-log"
+  >
+    <span className="fa fa-fw fa-line-chart" />
+    {t_res('open-tracking')}
+  </MenuItem>,*/
+
+  // TODO : create new action
+  /*<MenuItem
+    key="resource-show-as"
+    eventKey="resource-show-as"
+  >
+    <span className="fa fa-fw fa-user-secret" />
+    Show as...
+  </MenuItem>,*/
+
+  // TODO : grab custom actions from plugins
+  /*<MenuItem
+    key="resource-group-plugins"
+    header={true}
+  >
+    Other
+  </MenuItem>,*/
+
+  /*<MenuItem
+    key="resource-comments"
+    eventKey="resource-comments"
+  >
+    <span className="fa fa-fw fa-comment" />
+    Add a comment
+  </MenuItem>,*/
+
+  /*<MenuItem
+    key="resource-notes"
+    eventKey="resource-notes"
+  >
+    <span className="fa fa-fw fa-sticky-note" />
+    Add a note
+  </MenuItem>,*/
+
+  // TODO : enable delete and export. It can't be enabled because for now resource actions wants the ID of the node
+  // and we only have its UUID
+  /*resourceNode.rights.current.export &&
+  <MenuItem key="resource-export-divider" divider={true} />,
+
+  resourceNode.rights.current.export &&
+  <MenuItem
+    key="resource-export"
+    eventKey="resource-export"
+    href={generateUrl('claro_resource_action', {
+      resourceType: resourceNode.meta.type,
+      action: 'export',
+      node: resourceNode.id
+    })}
+  >
+    <span className="fa fa-fw fa-upload" />
+    {t_res('export')}
+  </MenuItem>,
+
+  resourceNode.rights.current.delete &&
+  <MenuItem key="resource-delete-divider" divider={true} />,
+
+  resourceNode.rights.current.delete &&
+  <MenuItem
+    key="resource-delete"
+    eventKey="resource-delete"
+    className="dropdown-link-danger"
+    onClick={e => {
+      e.stopPropagation()
+      props.showModal(MODAL_DELETE_CONFIRM, {
+        title: t_res('delete'),
+        question: t_res('delete_confirm_question'),
+        handleConfirm: () => true
+      })
+    }}
+  >
+    <span className="fa fa-fw fa-trash" />
+    {t_res('delete')}
+  </MenuItem>*/
 }
 
 const ManagementGroupActions = props =>
@@ -320,53 +310,38 @@ CustomGroupActions.propTypes = {
 /**
  * @param props
  * @constructor
- *
- * @todo hide more menu if empty
  */
-const ResourceActions = props =>
-  <PageActions className="resource-actions">
-    {(props.resourceNode.rights.current.edit || props.resourceNode.rights.current.administrate) &&
-      <ManagementGroupActions
-        resourceNode={props.resourceNode}
-        editor={props.editor}
-        togglePublication={props.togglePublication}
-        updateNode={props.updateNode}
-        showModal={props.showModal}
-      />
-    }
+const ResourceActions = props => {
+  const moreActions = [].concat(props.customActions, getMoreActions(props.resourceNode, props))
 
-    {/*<CustomGroupActions />*/}
+  return(
+    <PageActions className="resource-actions">
+      {(props.resourceNode.rights.current.edit || props.resourceNode.rights.current.administrate) &&
+        <ManagementGroupActions
+          resourceNode={props.resourceNode}
+          editor={props.editor}
+          togglePublication={props.togglePublication}
+          updateNode={props.updateNode}
+          showModal={props.showModal}
+        />
+      }
 
-    <PageGroupActions>
-      <FullScreenAction fullscreen={props.fullscreen} toggleFullscreen={props.toggleFullscreen} />
-      <MoreAction id="resource-more">
-        {props.customActions && 0 !== props.customActions.length &&
-          <MenuItem
-            key="resource-group-type"
-            header={true}
-          >
-            {t_res(props.resourceNode.meta.type)}
-          </MenuItem>
+      {/*<CustomGroupActions />*/}
+
+      <PageGroupActions>
+        <FullScreenAction fullscreen={props.fullscreen} toggleFullscreen={props.toggleFullscreen} />
+
+        {0 !== moreActions.length &&
+          <MoreAction
+            id="resource-more"
+            actions={moreActions}
+            label={t_res(props.resourceNode.meta.type)}
+          />
         }
-
-        {props.customActions && 0 !== props.customActions.length &&
-          props.customActions.map((customAction, index) =>
-            React.createElement(MenuItem, {
-              key: `resource-more-action-${index}`,
-              eventKey: `resource-action-${index}`,
-              children: [
-                <span className={customAction.icon} />,
-                customAction.label
-              ],
-              [typeof customAction.action === 'function' ? 'onClick' : 'href']: customAction.action
-            })
-          )
-        }
-
-        {getMoreActions(props.resourceNode, props)}
-      </MoreAction>
-    </PageGroupActions>
-  </PageActions>
+      </PageGroupActions>
+    </PageActions>
+  )
+}
 
 ResourceActions.propTypes = {
   resourceNode: T.shape({
@@ -416,8 +391,15 @@ ResourceActions.propTypes = {
     icon: T.string.isRequired,
     label: T.string.isRequired,
     disabled: T.bool,
-    action: T.oneOfType([T.string, T.func]).isRequired
+    displayed: T.bool,
+    action: T.oneOfType([T.string, T.func]).isRequired,
+    dangerous: T.bool,
+    group: T.string
   }))
+}
+
+ResourceActions.defaultProps = {
+  customActions: []
 }
 
 export {

@@ -71,7 +71,7 @@ const DisplaySection = props =>
   <FormSection
     id="resource-display"
     icon="fa fa-fw fa-desktop"
-    title={t_res('resource_display_parameters')}
+    title={t('display_parameters')}
     {...omit(props, ['parameters', 'updateParameter'])}
   >
     <CheckGroup

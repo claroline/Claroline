@@ -27,7 +27,7 @@ class ManagerView extends Component {
         urlModal: null,
         props: {
           url: null,
-          isDangerous: true,
+          dangerous: true,
           question: trans('delete_session_event_confirm_message', {}, 'cursus'),
           handleConfirm: () =>  {
             this.setState({modal: {fading: true}})
@@ -48,7 +48,7 @@ class ManagerView extends Component {
         urlModal: null,
         props: {
           url: null,
-          isDangerous: true,
+          dangerous: true,
           question: trans('delete_selected_session_events_confirm_message', {}, 'cursus'),
           handleConfirm: () =>  {
             this.setState({modal: {fading: true}})
@@ -216,7 +216,7 @@ class ManagerView extends Component {
                 icon: 'fa fa-fw fa-trash-o',
                 label: t('delete'),
                 action: (row) => this.deleteSessionEvent(row),
-                isDangerous: true
+                dangerous: true
               }
             ]}
             filters={{
@@ -240,7 +240,7 @@ class ManagerView extends Component {
                 label: t('delete'),
                 icon: 'fa fa-fw fa-trash-o',
                 action: () => this.deleteSessionEvents(this.props.selected),
-                isDangerous: true
+                dangerous: true
               }]
             }}
           />

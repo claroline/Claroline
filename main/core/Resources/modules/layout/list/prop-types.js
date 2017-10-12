@@ -1,6 +1,8 @@
 import {PropTypes as T} from 'prop-types'
+import merge from 'lodash/merge'
 
 import {getTypes} from '#/main/core/layout/data'
+import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
 
 /**
  * Action available for data in the list.
@@ -9,23 +11,7 @@ import {getTypes} from '#/main/core/layout/data'
  * @type {object}
  */
 const DataAction = {
-  propTypes: {
-    /**
-     * The label associated to the action.
-     *
-     * @type {string}
-     */
-    label: T.string.isRequired,
-
-    /**
-     * The action itself (an URL or a function to call).
-     * If action is a function it will receive an array of data objects as param.
-     *
-     * @type {string|function}
-     */
-    action: T.oneOfType([T.string, T.func]).isRequired,
-    icon: T.string,
-
+  propTypes: merge({}, ActionTypes.propTypes, {
     /**
      * A function to calculate if the action should be disabled.
      * It receives the list of data objects as param.
@@ -44,9 +30,8 @@ const DataAction = {
      *
      * @type {string}
      */
-    context: T.oneOf(['row', 'selection']),
-    isDangerous: T.bool
-  }
+    context: T.oneOf(['row', 'selection'])
+  })
 }
 
 /**

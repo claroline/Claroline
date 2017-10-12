@@ -59,7 +59,7 @@ const AnnounceForm = props =>
       </fieldset>
     </div>
 
-    <FormSections>
+    <FormSections level={2}>
       <FormSection
         id="announcement-restrictions"
         icon="fa fa-fw fa-key"

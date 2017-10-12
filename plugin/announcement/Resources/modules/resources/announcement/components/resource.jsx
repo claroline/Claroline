@@ -15,7 +15,7 @@ import {Announcement as AnnouncementTypes} from './../prop-types'
 import {select} from './../selectors.js'
 import {actions} from './../actions.js'
 
-const AnnouncementResource = props =>
+const Resource = props =>
   <ResourceContainer
     editor={{
       opened: props.formOpened,
@@ -62,7 +62,7 @@ const AnnouncementResource = props =>
     />
   </ResourceContainer>
 
-AnnouncementResource.propTypes = {
+Resource.propTypes = {
   aggregateId: T.string.isRequired,
   posts: T.arrayOf(
     T.shape(AnnouncementTypes.propTypes)
@@ -116,7 +116,7 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-const ConnectedAnnouncementResource = connect(mapStateToProps, mapDispatchToProps)(AnnouncementResource)
+const ConnectedAnnouncementResource = connect(mapStateToProps, mapDispatchToProps)(Resource)
 
 export {
   ConnectedAnnouncementResource as AnnouncementResource

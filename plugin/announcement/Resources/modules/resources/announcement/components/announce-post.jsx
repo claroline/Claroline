@@ -17,7 +17,7 @@ const AnnouncePost = props =>
   })}>
     <div className="announce-content panel-body">
       {props.title &&
-      <h2>{props.title}</h2>
+      <h2 className="announce-title">{props.title}</h2>
       }
 
       <div className="announce-meta">

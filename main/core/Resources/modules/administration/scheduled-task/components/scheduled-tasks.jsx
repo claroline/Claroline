@@ -96,7 +96,7 @@ const ScheduledTasksPage = props =>
             icon: 'fa fa-fw fa-trash-o',
             label: t('delete'),
             action: (rows) => props.removeTasks(rows),
-            isDangerous: true
+            dangerous: true
           }
         ]}
 

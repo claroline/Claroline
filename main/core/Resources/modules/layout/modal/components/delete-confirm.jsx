@@ -7,7 +7,7 @@ const DeleteConfirmModal = props =>
   <ConfirmModal
     icon="fa fa-fw fa-trash"
     confirmButtonText={t('delete')}
-    isDangerous={true}
+    dangerous={true}
     {...props}
   />
 

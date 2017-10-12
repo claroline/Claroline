@@ -50,7 +50,7 @@ const ThemesPage = props =>
             label: t('delete'),
             disabled: (rows) => !rows.find(row => row.meta.custom), // at least one theme should be deletable
             action: (rows) => props.removeThemes(rows),
-            isDangerous: true
+            dangerous: true
           }
         ]}
 

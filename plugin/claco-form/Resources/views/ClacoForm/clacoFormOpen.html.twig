@@ -4,7 +4,7 @@
     <div
       class="page-container claco-form-container"
       {% if not isAnon %}
-        data-user="{{ user | api_serialize({'public': true}) | json_encode | raw | escape }}"
+        data-user="{{ user | api_serialize  | json_encode | raw | escape }}"
       {% endif %}
       data-resource="{{ _resource | api_serialize | json_encode | raw | escape }}"
       data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
@@ -19,10 +19,10 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-claco-form-clacoform.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-claco-form-claco-form-resource.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ hotAsset('dist/claroline-distribution-plugin-claco-form-resource.js') }}"></script>
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-claco-form-claco-form-resource.js') }}"></script>
 {% endblock %}

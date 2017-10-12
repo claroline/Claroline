@@ -37,7 +37,6 @@
     "resource_close_target": "Close and delete redirect",
     "resource_copy_warning": "An error occurred while copying resource <%resourceName%>",
     "resource_description": "Description",
-    "resource_display_parameters": "Display parameters",
     "resource_fullscreen": "Display in fullscreen on open",
     "resource_license": "License",
     "resource_management": "Management",

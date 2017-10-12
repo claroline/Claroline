@@ -27,12 +27,13 @@ class Version20170930084321 extends AbstractMigration
             ALTER TABLE claro_announcement_aggregate 
             ADD uuid VARCHAR(36) NOT NULL
         ');
-        $this->addSql('
-            CREATE UNIQUE INDEX UNIQ_79BF2C8CD17F50A6 ON claro_announcement_aggregate (uuid)
-        ');
 
         $this->addSql('
             UPDATE claro_announcement_aggregate SET uuid = (SELECT UUID())
+        ');
+
+        $this->addSql('
+            CREATE UNIQUE INDEX UNIQ_79BF2C8CD17F50A6 ON claro_announcement_aggregate (uuid)
         ');
 
         $this->addSql('

@@ -151,7 +151,7 @@ const WorkspacesPage = props =>
             icon: 'fa fa-fw fa-trash-o',
             label: t('delete'),
             action: (rows) => props.removeWorkspaces(rows),
-            isDangerous: true
+            dangerous: true
           }
         ]}
 

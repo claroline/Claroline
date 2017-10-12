@@ -32,6 +32,7 @@
 .data-grid-sort {
     display: flex; // correct vertical align
     flex-direction: row;
+    margin-left: auto;
     .btn-link {
         padding: 0 @data-grid-gutter;
         border: none;
@@ -126,14 +127,27 @@
     }
 
     .item-icon-container {
-        display: inline-block;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
         font-size: 48px;
         margin: 30px;
-        padding: 20px;
-        background: white;
+        background: rgba(255, 255, 255, .5);
         border-radius: 50%;
-        opacity: 0.5;
         line-height: 0;
+
+        // for FA icons
+        color: rgba(0, 0, 0, 0.5);
+
+        // for SVG icons
+        fill: rgba(0, 0, 0, 0.5);
+        stroke: rgba(0, 0, 0, 0.5);
+
+        img {
+            border-radius: 50%;
+            max-width: 100%;
+            max-height: 100%;
+        }
     }
 
     .item-header {
@@ -156,7 +170,6 @@
         color: @text-color; // reset color when card is clickable (uses a <a> tag)
         display: flex;
         flex-direction: column;
-        flex: 1; // fill remaining space
     }
 
     .item-title {
@@ -230,6 +243,11 @@
         max-width: 100% / @data-grid-cols-sm;
     }
 
+    .item-icon-container {
+        width: 60px;
+        height: 60px;
+    }
+
     .data-grid-item {
         .grid-item-vertical-variant();
     }
@@ -239,6 +257,11 @@
     .data-grid-item-container {
         flex: 0 0 (100% / @data-grid-cols-md);
         max-width: 100% / @data-grid-cols-md;
+    }
+
+    .item-icon-container {
+        width: 100px;
+        height: 100px;
     }
 
     .data-grid-item {
@@ -252,6 +275,11 @@
 
 // in this case we will put header and content on the same line
 .data-grid-lg {
+    .item-icon-container {
+        width: 100px;
+        height: 100px;
+    }
+
     .data-grid-item-container {
         flex: 0 0 (100% / @data-grid-cols-lg);
         max-width: 100% / @data-grid-cols-lg;

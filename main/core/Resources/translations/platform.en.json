@@ -1452,9 +1452,13 @@
     "login_auth_claro_account": "Connect with your Claroline account:",
     "login_auth_sso": "Connect with one of your other account:",
     "published_at": "published on %date%",
+    "last_modified_at": "modified on %date%",
     "not_published": "not published",
     "access_restrictions": "Access Restrictions",
     "access_dates": "Restrict by dates",
     "rich_text_tools": "Rich text tools",
-    "minimize": "Minimize"
+    "minimize": "Minimize",
+    "display_parameters": "Display parameters",
+    "add_comment": "Comment",
+    "keywords": "Keywords"
 }

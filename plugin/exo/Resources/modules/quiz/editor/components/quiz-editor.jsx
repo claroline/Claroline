@@ -629,7 +629,7 @@ export const QuizEditor = props => {
         accordion
         activeKey={props.activePanelKey}
       >
-        {makePanel(Display, tex('display_mode'), 'display_mode', props)}
+        {makePanel(Display, t('display_parameters'), 'display_mode', props)}
         {makePanel(StepPicking, tex('step_picking'), 'step-picking', props, ['pick'])}
         {makePanel(Signing, tex('signing'), 'signing', props, ['duration', 'maxAttempts'])}
         {makePanel(Correction, tex('correction'), 'correction', props)}

@@ -11,6 +11,7 @@ import {SelectInput} from '#/main/core/layout/form/components/field/select-input
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {getFieldType} from '../../../utils'
 import {selectors} from '../../../selectors'
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 import {actions} from '../actions'
 
 const InfosList = props =>
@@ -387,7 +388,7 @@ class EntryEditForm extends Component {
                     className="btn btn-default margin-bottom-sm"
                     onClick={() => this.setState({showCategoryForm: true, currentCategory: ''})}
                   >
-                      <span className="fa fa-w fa-plus"></span>
+                      <span className="fa fa-w fa-plus" />
                   </button>
                 }
               </div>
@@ -467,7 +468,7 @@ EntryEditForm.propTypes = {
 function mapStateToProps(state, ownProps) {
   return {
     entryId: ownProps.match.params.id ? parseInt(ownProps.match.params.id) : null,
-    canEdit: state.canEdit,
+    canEdit: resourceSelect.editable(state),
     entry: state.currentEntry,
     fields: selectors.visibleFields(state),
     entries: state.entries.data,
@@ -475,7 +476,7 @@ function mapStateToProps(state, ownProps) {
     isNewKeywordsEnabled: selectors.getParam(state, 'new_keywords_enabled'),
     lockedFieldsFor: selectors.getParam(state, 'locked_fields_for'),
     keywords: selectors.getParam(state, 'keywords_enabled') ? state.keywords : [],
-    categories: state.canEdit ? state.categories : [],
+    categories: resourceSelect.editable(state) ? state.categories : [],
     canEditEntry: selectors.canEditCurrentEntry(state),
     isManager: selectors.isCurrentEntryManager(state),
     isOwner: selectors.isCurrentEntryOwner(state),

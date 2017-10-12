@@ -24,10 +24,17 @@ import {
   myEntriesCountReducers,
   currentEntryReducers
 } from './player/entry/reducers'
-import {ClacoFormResource} from './components/claco-form-resource.jsx'
+import {ClacoFormResource} from './components/resource.jsx'
 import {CategoryFormModal} from './editor/category/components/category-form-modal.jsx'
 import {KeywordFormModal} from './editor/keyword/components/keyword-form-modal.jsx'
 import {FieldFormModal} from './editor/field/components/field-form-modal.jsx'
+
+// register custom modals
+registerModalTypes([
+  ['MODAL_CATEGORY_FORM', CategoryFormModal],
+  ['MODAL_KEYWORD_FORM', KeywordFormModal],
+  ['MODAL_FIELD_FORM', FieldFormModal]
+])
 
 // mount the react application
 bootstrap(
@@ -65,14 +72,12 @@ bootstrap(
 
   // transform data attributes for redux store
   (initialData) => {
-    const resourceNode = initialData.resourceNode
     const resource = initialData.resource
 
     return {
       user: initialData.user,
       resource: resource,
-      resourceNode: resourceNode,
-      canEdit: resourceNode.rights.current.edit,
+      resourceNode: initialData.resourceNode,
       isAnon: !initialData.user,
       canGeneratePdf: initialData.canGeneratePdf === 1,
       parameters: Object.assign({}, resource.details, {'activePanelKey': ''}),
@@ -87,9 +92,3 @@ bootstrap(
     }
   }
 )
-
-registerModalTypes([
-  ['MODAL_CATEGORY_FORM', CategoryFormModal],
-  ['MODAL_KEYWORD_FORM', KeywordFormModal],
-  ['MODAL_FIELD_FORM', FieldFormModal]
-])

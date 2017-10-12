@@ -99,7 +99,7 @@ const QuestionsPage = props =>
             icon: 'fa fa-fw fa-trash-o',
             label: t('delete'),
             action: (rows) => props.removeQuestions(rows),
-            isDangerous: true
+            dangerous: true
           }
         ]}
 

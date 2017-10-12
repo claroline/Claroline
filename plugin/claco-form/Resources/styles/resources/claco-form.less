@@ -1,0 +1,167 @@
+/**
+ * ClacoForm resource
+ */
+
+@import "./../variables.less";
+
+.claco-form-container {
+  .comments-container {
+    margin-top: @component-margin-bottom;
+  }
+}
+
+.entry {
+  .entry-title {
+    margin-top: 0;
+    // same style as current step in path
+    //border-left: 3px solid #ccc;
+    //padding-left: 12px;
+  }
+  margin-bottom: 10px;
+
+}
+
+.entry-menu + .entry, // top menu
+.panel + .entry-menu { // bottom menu
+  margin-top: 10px;
+}
+
+  // same as announce
+.entry-meta {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  color: #777;
+  background: #f5f5f5; // panel heading
+  padding: 5px 10px;
+  margin-bottom: @component-margin-bottom;
+
+  .entry-info {
+    flex: 1 0 auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+
+    .date {
+      padding: 0 10px;
+      font-size: @font-size-small;
+      font-style: italic;
+    }
+  }
+
+  .entry-actions {
+    padding-left: 10px;
+    border-left: 1px solid #ccc;
+
+    .btn {
+      padding: 0;
+      + .btn {
+        margin-left: 5px;
+      }
+    }
+  }
+}
+
+.entry-footer {
+  .title {
+    display: inline-block;
+    color: #777;
+    font-size: @font-size-small;
+    min-width: 80px; // todo: find better
+  }
+
+  hr {
+    border-color: #ccc;
+    margin-top: 10px; // same as .panel-footer v-padding (no var)
+    margin-bottom: 10px; // same as .panel-footer v-padding (no var)
+  }
+
+  // todo : do not use .label (too many overrides)
+  .label {
+    display: inline-block;
+    font-size: 100%;
+    font-weight: normal;
+
+    + .label {
+      margin-left: 5px;
+    }
+  }
+}
+
+.claco-form-main-menu,
+.entry-menu {
+  /*display: flex;
+  justify-content: center;*/
+
+  .btn + .btn {
+    margin-left: 5px;
+  }
+}
+
+/*.claco-form-menu-btn, .entry-menu-button {
+  margin: 5px;
+}*/
+
+.form-group-align {
+  display: flex;
+  align-items: center;
+}
+
+.clacoform-field-group {
+  .check-group {
+    display: inline-block;
+    height: 20px;
+  }
+  .field-tooltip {
+    margin-left: 5px;
+  }
+}
+
+.clacoform-field-choice {
+  margin-bottom: 10px;
+
+  select {
+    border-color: #CCC !important;
+  }
+}
+
+.template-buttons, .entry-form-buttons {
+  margin-top: 20px;
+
+  .btn {
+    margin-right: 5px;
+  }
+}
+
+.choices-children-box {
+  margin-top: 10px;
+}
+
+.choices-management-buttons {
+  width: 100%;
+}
+
+.choices-management-btn {
+  width: 50%;
+}
+
+.inactive-comment-row {
+  background-color: #F2B36F;
+}
+
+/*.entry-view-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}*/
+
+.notifications-buttons {
+  padding: 10px;
+
+  .form-group {
+    margin: 0px
+  }
+}

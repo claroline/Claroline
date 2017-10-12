@@ -16,7 +16,7 @@ const MenuItemAction = props => {
     <MenuItem
       eventKey={props.eventKey}
       className={classes({
-        'dropdown-link-danger': props.isDangerous
+        'dropdown-link-danger': props.dangerous
       })}
       disabled={props.disabled}
       onSelect={props.onSelect}
@@ -48,7 +48,7 @@ MenuItemAction.propTypes = {
   action: T.oneOfType([T.string, T.func]),
 
   disabled: T.bool,
-  isDangerous: T.bool,
+  dangerous: T.bool,
 
   // From MenuItem
   eventKey: T.any,
@@ -57,7 +57,7 @@ MenuItemAction.propTypes = {
 
 MenuItemAction.defaultProps = {
   disabled: false,
-  isDangerous: false
+  dangerous: false
 }
 
 export {

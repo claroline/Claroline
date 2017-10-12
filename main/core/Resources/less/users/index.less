@@ -6,9 +6,18 @@
 @import "mixins";
 
 // Components styles
+@import "comments";
 @import "impersonation";
 @import "login";
+@import "message";
 @import "profile";
+
+.user-avatar {
+    border-radius: 50%;
+
+    // for .fa when no picture
+    color: #ccc;
+}
 
 .user-micro {
     display: inline-flex;
@@ -17,12 +26,15 @@
     color: #777; // toto : use a var
     vertical-align: middle;
     font-size: @font-size-small;
+    font-weight: bold;
 
-    .avatar {
+    .user-avatar {
         margin-right: 10px;
-        max-height: 30px; // for picture
-        border-radius: 50%; // for picture
-        color: #ccc; // for .fa
-        font-size: 30px; // for .fa when no picture
+
+        // for picture
+        max-height: 30px;
+
+        // for .fa when no picture
+        font-size: 30px;
     }
 }
