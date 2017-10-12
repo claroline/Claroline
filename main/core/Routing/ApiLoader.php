@@ -89,7 +89,11 @@ class ApiLoader extends Loader
 
                     if ($found) {
                         foreach ($this->makeRouteMap($controller, $routes, $prefix) as $name => $options) {
-                            $pattern = '/'.$options[0];
+                            $pattern = '';
+
+                            if ($options[0] !== '') {
+                                $pattern = '/'.$options[0];
+                            }
 
                             if ($prefix) {
                                 $pattern = '/'.$prefix.$pattern;
@@ -123,6 +127,7 @@ class ApiLoader extends Loader
           'update' => ['{uuid}', 'PUT'],
           'deleteBulk' => ['', 'DELETE'],
           'list' => ['', 'GET'],
+          'get' => ['get', 'GET'],
         ];
 
         $traits = class_uses($controller);

@@ -37,6 +37,15 @@ class AbstractController extends ContainerAware
         $this->om = $container->get('claroline.persistence.object_manager');
     }
 
+    public function getAction(Request $request, $class, $env)
+    {
+        $object = $this->om->getRepository($class)->findOneBy($request->query->get('filters'));
+
+        return $object ?
+            new JsonResponse($this->serializer->serialize($object)) :
+            new JsonResponse('', 404);
+    }
+
     public function listAction(Request $request, $class, $env)
     {
         return new JsonResponse($this->finder->search($class, $request->query->all()));
