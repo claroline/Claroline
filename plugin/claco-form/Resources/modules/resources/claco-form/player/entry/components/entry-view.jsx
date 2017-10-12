@@ -68,7 +68,7 @@ const EntryActions = props =>
       </TooltipButton>
 
       {props.displayComments &&
-        <button type="button" className="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">
+        <button type="button" className="btn btn-link-default dropdown-toggle" data-toggle="dropdown">
           <span className="fa fa-caret-down" />
         </button>
       }
@@ -102,7 +102,7 @@ const EntryActions = props =>
         title={trans('change_entry_owner', {}, 'clacoform')}
         onClick={props.changeOwner}
       >
-        <span className="fa fa-w fa-user" />
+        <span className="fa fa-fw fa-user" />
       </TooltipButton>
     }
 
@@ -113,7 +113,7 @@ const EntryActions = props =>
         title={trans('print_entry', {}, 'clacoform')}
         onClick={props.downloadPdf}
       >
-        <span className="fa fa-w fa-print" />
+        <span className="fa fa-fw fa-print" />
       </TooltipButton>
     }
 
@@ -124,7 +124,7 @@ const EntryActions = props =>
         title={trans('share_entry', {}, 'clacoform')}
         onClick={props.share}
       >
-        <span className="fa fa-w fa-share-alt" />
+        <span className="fa fa-fw fa-share-alt" />
       </TooltipButton>
     }
 
@@ -135,7 +135,7 @@ const EntryActions = props =>
         title={t('edit')}
         target={`#/entry/${props.entryId}/edit`}
       >
-        <span className="fa fa-w fa-pencil" />
+        <span className="fa fa-fw fa-pencil" />
       </TooltipLink>
     }
 
@@ -146,7 +146,7 @@ const EntryActions = props =>
         title={props.status === 1 ? t('unpublish') : t('publish')}
         onClick={props.toggleStatus}
       >
-        <span className={`fa fa-w fa-${props.status === 1 ? 'eye-slash' : 'eye'}`} />
+        <span className={`fa fa-fw fa-${props.status === 1 ? 'eye-slash' : 'eye'}`} />
       </TooltipButton>
     }
 
@@ -157,7 +157,7 @@ const EntryActions = props =>
         title={t('delete')}
         onClick={props.delete}
       >
-        <span className="fa fa-w fa-trash-o" />
+        <span className="fa fa-fw fa-trash-o" />
       </TooltipButton>
     }
   </div>

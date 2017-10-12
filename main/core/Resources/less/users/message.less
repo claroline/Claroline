@@ -32,7 +32,7 @@
     .btn-save {
         font-size: 16px;
         padding: 10px 15px;
-        border-radius: 0 0 @border-radius-large @border-radius-large;
+        border-radius: 0 0 @user-message-border-radius @user-message-border-radius;
     }
 }
 
@@ -45,7 +45,7 @@
     font-size: @font-size-small;
     padding: 10px 0;
     margin: 0 15px;
-    border-bottom: 1px solid @panel-default-border;
+    border-bottom: 1px solid @user-message-inner-border;
 
     .user-message-info {
         flex: 1 0 auto;
@@ -64,7 +64,7 @@
 
     .user-message-actions {
         padding-left: 10px;
-        border-left: 1px solid #ccc;
+        border-left: 1px solid @user-message-inner-border;
         .btn {
             padding: 0;
             + .btn {
@@ -78,9 +78,9 @@
     position: relative;
     flex: 1;
     align-self: stretch;
-    background: @panel-bg;
-    border: 1px solid @panel-default-border;
-    border-radius: @border-radius-large;
+    background: @user-message-bg;
+    border: 1px solid @user-message-border;
+    border-radius: @user-message-border-radius;
 
     // black magic 1 : create a triangle the same color than .user-message to create a bubble
     // black magic 2 : create another triangle 1px larger the same color than .user-message border to simulate border
@@ -95,7 +95,7 @@
         height: 0;
         border-style: solid;
         border-width: 16px 16px 16px 0;
-        border-color: transparent @panel-default-border transparent transparent;
+        border-color: transparent @user-message-border transparent transparent;
     }
     &:after {
         position: absolute;
@@ -107,7 +107,7 @@
         height: 0;
         border-style: solid;
         border-width: 15px 15px 15px 0;
-        border-color: transparent @panel-bg transparent transparent;
+        border-color: transparent @user-message-bg transparent transparent;
     }
 }
 
