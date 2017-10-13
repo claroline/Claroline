@@ -46,7 +46,7 @@ class ResourceEvaluationManager
         $this->resourceEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceEvaluation');
     }
 
-    public function getResourceUserEvaluation(ResourceNode $node, User $user)
+    public function getResourceUserEvaluation(ResourceNode $node, User $user = null)
     {
         $evaluation = $this->resourceUserEvaluationRepo->findOneBy(['resourceNode' => $node, 'user' => $user]);
 
@@ -63,7 +63,7 @@ class ResourceEvaluationManager
         $this->om->flush();
     }
 
-    public function createResourceUserEvaluation(ResourceNode $node, User $user)
+    public function createResourceUserEvaluation(ResourceNode $node, User $user = null)
     {
         $evaluation = new ResourceUserEvaluation();
         $evaluation->setResourceNode($node);
@@ -81,7 +81,7 @@ class ResourceEvaluationManager
 
     public function createResourceEvaluation(
         ResourceNode $node,
-        User $user,
+        User $user = null,
         \DateTime $date = null,
         $status = null,
         $score = null,

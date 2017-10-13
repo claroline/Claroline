@@ -76,10 +76,14 @@ class ResourceUserEvaluation extends AbstractResourceEvaluation
         return $this->user;
     }
 
-    public function setUser(User $user)
+    public function setUser(User $user = null)
     {
         $this->user = $user;
-        $this->setUserName($user->getFirstName().' '.$user->getLastName());
+        if ($user) {
+            $this->setUserName($user->getFirstName().' '.$user->getLastName());
+        } else {
+            $this->setUsername('anonymous');
+        }
     }
 
     public function getUserName()

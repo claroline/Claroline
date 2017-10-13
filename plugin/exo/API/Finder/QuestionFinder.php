@@ -64,7 +64,7 @@ class QuestionFinder implements FinderInterface
         }
 
         // get questions visible by the current user
-        if ($searches['selfOnly']) {
+        if (isset($searches['selfOnly'])) {
             // only get questions created by the User
             $qb->andWhere('obj.creator = :user');
 
@@ -82,10 +82,11 @@ class QuestionFinder implements FinderInterface
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'content':
+                    $searchString = addcslashes($filterValue, '%_');
                     // search in title and content column
                     $qb
-                        ->andWhere('(q.content LIKE :text OR q.title LIKE :contentText)')
-                        ->setParameter('contentText', '%'.addcslashes($filterValue, '%_').'%');
+                        ->andWhere('obj.content LIKE :content OR obj.title LIKE :content')
+                        ->setParameter($filterName, '%'.$searchString.'%');
 
                     break;
                 default:
