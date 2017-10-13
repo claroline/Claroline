@@ -1086,6 +1086,7 @@ class ClacoFormManager
         $removedCategories = [];
         $editedCategories = [];
         $addedCategories = [];
+        $clacoFormName = $entry->getClacoForm()->getResourceNode()->getName();
         $clacoFormId = $entry->getClacoForm()->getId();
         $url = $this->router->generate('claro_claco_form_open', ['clacoForm' => $clacoFormId], true).
             '#/entries/'.$entry->getId().'/view';
@@ -1109,12 +1110,12 @@ class ClacoFormManager
                 if (count($managers) > 0) {
                     $object = $this->translator->trans(
                         'entry_removal_from_category',
-                        ['%name%' => $category->getName()],
+                        ['%name%' => $category->getName(), '%clacoform%' => $clacoFormName],
                         'clacoform'
                     );
                     $content = $this->translator->trans(
                         'entry_removal_from_category_msg',
-                        ['%title%' => $entry->getTitle(), '%category%' => $category->getName()],
+                        ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%clacoform%' => $clacoFormName],
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
@@ -1129,12 +1130,12 @@ class ClacoFormManager
                 if (count($managers) > 0) {
                     $object = $this->translator->trans(
                         'entry_edition_in_category',
-                        ['%name%' => $category->getName()],
+                        ['%name%' => $category->getName(), '%clacoform%' => $clacoFormName],
                         'clacoform'
                     );
                     $content = $this->translator->trans(
                         'entry_edition_in_category_msg',
-                        ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%url%' => $url],
+                        ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%clacoform%' => $clacoFormName, '%url%' => $url],
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
@@ -1149,12 +1150,12 @@ class ClacoFormManager
                 if (count($managers) > 0) {
                     $object = $this->translator->trans(
                         'entry_addition_in_category',
-                        ['%name%' => $category->getName()],
+                        ['%name%' => $category->getName(), '%clacoform%' => $clacoFormName],
                         'clacoform'
                     );
                     $content = $this->translator->trans(
                         'entry_addition_in_category_msg',
-                        ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%url%' => $url],
+                        ['%title%' => $entry->getTitle(), '%category%' => $category->getName(), '%clacoform%' => $clacoFormName, '%url%' => $url],
                         'clacoform'
                     );
                     $message = $this->messageManager->create($content, $object, $managers);
@@ -1187,7 +1188,9 @@ class ClacoFormManager
                 $object = '['.
                     $this->translator->trans('entry_pending_comment', [], 'clacoform').
                     '] '.
-                    $entry->getTitle();
+                    $entry->getTitle().
+                    ' - '.
+                    $clacoForm->getResourceNode()->getName();
                 $content = $comment->getContent().
                     '<br><br>'.
                     $this->translator->trans('link_to_entry', [], 'clacoform').
@@ -1494,7 +1497,9 @@ class ClacoFormManager
                     $subject = '['.
                         $this->translator->trans('entry_edition', [], 'clacoform').
                         '] '.
-                        $entry->getTitle();
+                        $entry->getTitle().
+                        ' - '.
+                        $clacoForm->getResourceNode()->getName();
                     $content = $this->translator->trans('link_to_entry', [], 'clacoform').
                         ' : <a href="'.$url.'">'.
                         $this->translator->trans('here', [], 'platform').
@@ -1512,7 +1517,9 @@ class ClacoFormManager
                     $subject = '['.
                         $this->translator->trans('entry_deletion', [], 'clacoform').
                         '] '.
-                        $entry->getTitle();
+                        $entry->getTitle().
+                        ' - '.
+                        $clacoForm->getResourceNode()->getName();
                     $content = $this->translator->trans('entry_deletion_msg', ['%title%' => $entry->getTitle()], 'clacoform');
                 }
                 break;
@@ -1529,7 +1536,9 @@ class ClacoFormManager
                         $subject = '['.
                             $this->translator->trans('entry_comment', [], 'clacoform').
                             '] '.
-                            $entry->getTitle();
+                            $entry->getTitle().
+                            ' - '.
+                            $clacoForm->getResourceNode()->getName();
                         $content = $data.
                             '<br><br>'.
                             $this->translator->trans('link_to_entry', [], 'clacoform').
