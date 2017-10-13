@@ -1,4 +1,6 @@
 {
+    "decline_registration": "Refuser l'inscription",
+    "decline_registration_confirm_message": "Êtes-vous sûr de vouloir refuser cette demande d'inscription ?",
     "next_session_registration_request": "Demander d'être inscrit à la prochaine session de formation",
     "next_session_registration_request_cancel": "Annuler la demande d'inscription à la prochaine session de formation",
     "next_session_registration_request_cancel_message": "Êtes-vous sûr de vouloir annuler votre demande d'inscription à la prochaine session de formation ?",
@@ -6,6 +8,6 @@
     "request_done": "Demande effectuée",
     "session_registration": "Inscription à une session de formation",
     "session_self_registration_message": "Êtes-vous sûr de vouloir vous inscrire à cette session de formation ?",
-    "decline_registration": "Refuser l'inscription",
-    "decline_registration_confirm_message": "Êtes-vous sûr de vouloir refuser cette demande d'inscription ?"
+    "session_self_unregistration_message": "Êtes-vous sûr de vouloir vous désinscrire à cette session de formation ?",
+    "session_unregistration": "Désinscription d'une session de formation"
 }

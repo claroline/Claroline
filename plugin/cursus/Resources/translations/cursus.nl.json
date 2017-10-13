@@ -214,6 +214,7 @@
     "placeholder_session_event_end_message": "Deze placeholder wordt vervangen door de begindatum van de sessie.",
     "placeholder_session_event_location_extra_message": "Deze placeholder wordt vervangen door extra informatie over de locatie van de sessie.",
     "placeholder_session_event_location_message": "Deze placeholder wordt vervangen door de locatie van de sessie.",
+    "placeholder_session_event_location_name_message": "Deze placeholder wordt vervangen door de naam van de locatie van de sessie.",
     "placeholder_session_event_name_message": "Deze placeholder wordt vervangen door de naam van de sessie.",
     "placeholder_session_event_start_message": "Deze placeholder wordt vervangen door de begindatum van de sessie.",
     "placeholder_session_event_trainers_message": "Deze placeholder wordt vervangen door de lijst van de opleiders van de sessie.",

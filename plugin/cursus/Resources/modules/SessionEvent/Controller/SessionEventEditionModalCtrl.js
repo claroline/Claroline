@@ -185,7 +185,11 @@ export default class SessionEventEditionModalCtrl {
       this.sessionEvent['locationResource'] = null
     }
     this.sessionEvent['tutors'] = []
-    this.tutors.forEach(t => this.sessionEvent['tutors'].push(t['userId']))
+    this.tutors.forEach(t => {
+      if (t && t['userId']) {
+        this.sessionEvent['tutors'].push(t['userId'])
+      }
+    })
 
     if (this.isValid()) {
       const url = Routing.generate('api_put_session_event_edition', {sessionEvent: this.source['id']})

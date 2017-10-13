@@ -3951,8 +3951,10 @@ class CursusManager
         $sessionTrainersHtml = '';
         $locationHtml = '';
         $eventTrainersHtml = '';
+        $locationName = '';
 
         if (!is_null($location)) {
+            $locationName = $location->getName();
             $locationHtml = $location->getStreet().', '.$location->getStreetNumber();
             $locationHtml .= $location->getBoxNumber() ? ' / '.$location->getBoxNumber() : '';
             $locationHtml .= '<br>'.$location->getPc().' '.$location->getTown().'<br>'.$location->getCountry();
@@ -3992,6 +3994,8 @@ class CursusManager
             '%event_start%',
             '%event_end%',
             '%event_location%',
+            '%event_location_address%',
+            '%event_location_name%',
             '%event_location_extra%',
             '%event_trainers%',
         ];
@@ -4010,6 +4014,8 @@ class CursusManager
             $event->getStartDate()->format('d/m/Y H:i'),
             $event->getEndDate()->format('d/m/Y H:i'),
             $locationHtml,
+            $locationHtml,
+            $locationName,
             $event->getLocationExtra(),
             $eventTrainersHtml,
         ];
