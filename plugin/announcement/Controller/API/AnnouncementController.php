@@ -133,7 +133,7 @@ class AnnouncementController
     /**
      * Sends an announce (in current implementation, it's sent by email).
      *
-     * @EXT\Route("/", name="claro_announcement_send")
+     * @EXT\Route("/{id}/send", name="claro_announcement_send")
      * @EXT\Method("POST")
      * @EXT\ParamConverter(
      *      "announcement",
