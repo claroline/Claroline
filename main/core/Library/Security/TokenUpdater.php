@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Security;
 
+use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\AbstractToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -92,8 +93,12 @@ class TokenUpdater
 
     public function updateNormal($token)
     {
-        $user = $token->getUser();
-        $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->tokenStorage->setToken($token);
+        if ($token) {
+            $user = $token->getUser();
+            if ($user instanceof User) {
+                $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
+                $this->tokenStorage->setToken($token);
+            }
+        }
     }
 }

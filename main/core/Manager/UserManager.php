@@ -715,12 +715,12 @@ class UserManager
         $workspace = new Workspace();
         $workspace->setCode($code);
         $workspace->setName($personalWorkspaceName);
+        $workspace->setCreator($user);
 
         $workspace = !$model ?
             $this->workspaceManager->copy($this->workspaceManager->getDefaultModel(true), $workspace) :
             $this->workspaceManager->copy($model, $workspace);
 
-        $workspace->setCreator($user);
         $workspace->setPersonal(true);
 
         //add "my public documents" folder

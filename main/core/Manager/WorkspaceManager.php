@@ -1338,10 +1338,13 @@ class WorkspaceManager
         $token = $this->container->get('security.token_storage')->getToken();
         $user = null;
         $resourceInfo = ['copies' => []];
+        $user = $newWorkspace->getCreator();
 
-        $user = ($token && $token->getUser() !== 'anon.') ?
-            $this->container->get('security.token_storage')->getToken()->getUser() :
-            $this->container->get('claroline.manager.user_manager')->getDefaultUser();
+        if (!$user) {
+            $user = (!$user && $token && $token->getUser() !== 'anon.') ?
+              $this->container->get('security.token_storage')->getToken()->getUser() :
+              $this->container->get('claroline.manager.user_manager')->getDefaultUser();
+        }
 
         $this->om->startFlushSuite();
         $this->duplicateWorkspaceOptions($workspace, $newWorkspace);
