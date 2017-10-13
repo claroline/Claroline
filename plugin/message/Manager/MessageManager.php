@@ -11,7 +11,6 @@
 
 namespace Claroline\MessageBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
@@ -19,6 +18,7 @@ use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\MessageBundle\Entity\Message;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.message_manager")
@@ -108,12 +108,12 @@ class MessageManager
         }
 
         $receiversNames = explode(';', $receiversString);
-        $usernames = array();
-        $groupNames = array();
-        $workspaceCodes = array();
-        $userReceivers = array();
-        $groupReceivers = array();
-        $workspaceReceivers = array();
+        $usernames = [];
+        $groupNames = [];
+        $workspaceCodes = [];
+        $userReceivers = [];
+        $groupReceivers = [];
+        $workspaceReceivers = [];
 
         //split the string of target into different array.
         foreach ($receiversNames as $receiverName) {
@@ -155,7 +155,7 @@ class MessageManager
             $this->om->persist($userMessage);
         }
 
-        $mailNotifiedUsers = array();
+        $mailNotifiedUsers = [];
 
         //get every users which are going to be notified
         foreach ($groupReceivers as $groupReceiver) {
@@ -201,7 +201,10 @@ class MessageManager
                 $message->getObject(),
                 $message->getContent(),
                 $mailNotifiedUsers,
-                $message->getSender()
+                $message->getSender(),
+                [],
+                false,
+                $message->getSender()->getMail()
             );
         }
 
@@ -358,7 +361,7 @@ class MessageManager
      */
     public function generateStringTo(array $receivers, array $groups, array $workspaces)
     {
-        $usernames = array();
+        $usernames = [];
 
         foreach ($receivers as $receiver) {
             $usernames[] = $receiver->getUsername();
@@ -407,7 +410,7 @@ class MessageManager
         $sender = null,
         $withMail = true)
     {
-        $users = array();
+        $users = [];
 
         if ($subject instanceof User) {
             $users[] = $subject;

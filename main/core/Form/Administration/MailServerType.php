@@ -153,7 +153,7 @@ class MailServerType extends AbstractType
                 'text',
                 [
                     'required' => false,
-                    'theme_options' => ['display_row' => $this->formDisplay[$this->transport]['mailer_api_key']],
+                    'theme_options' => ['display_row' => $this->formDisplay[$this->transport]['api_key']],
                     'disabled' => isset($this->lockedParams['mailer_api_key']),
                     'label' => 'api_key',
                 ]
@@ -163,7 +163,7 @@ class MailServerType extends AbstractType
                 'text',
                 [
                     'required' => false,
-                    'theme_options' => ['display_row' => $this->formDisplay[$this->transport]['mailer_tag']],
+                    'theme_options' => ['display_row' => $this->formDisplay[$this->transport]['tag']],
                     'disabled' => isset($this->lockedParams['mailer_tag']),
                     'label' => 'tag',
                 ]

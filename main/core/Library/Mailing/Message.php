@@ -83,4 +83,9 @@ class Message
     {
         return $this->attributes[$attr];
     }
+
+    public function hasAttribute($attr)
+    {
+        return isset($this->attributes[$attr]) && !empty($this->attributes[$attr]);
+    }
 }

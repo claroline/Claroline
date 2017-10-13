@@ -54,6 +54,10 @@ class Postal implements MailClientInterface
         $sendMessage->subject($message->getAttribute('subject'));
         $sendMessage->htmlBody($message->getAttribute('body'));
 
+        if ($message->hasAttribute('reply_to')) {
+            $sendMessage->replyTo($message->getAttribute('reply_to'));
+        }
+
         return $sendMessage->send();
     }
 }

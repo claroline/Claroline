@@ -186,7 +186,9 @@ class MailManager
             $to = [];
 
             $layout = $this->contentManager->getTranslatedContent(['type' => 'claro_mail_layout']);
-            $fromEmail = $this->getMailerFrom();
+            $fromEmail = $this->ch->hasParameter('mailer_sender_from') && $this->ch->getParameter('mailer_sender_from') && !is_null($from) && !is_null($replyToMail) ?
+                $from->getMail() :
+                $this->getMailerFrom();
             $locale = count($users) === 1 ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
 
             if (!$locale) {
