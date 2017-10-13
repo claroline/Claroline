@@ -48,7 +48,7 @@ class Answer
      *
      * @ORM\Column(type="text", nullable=true)
      */
-    private $feedback;
+    private $feedback = '';
 
     /**
      * @var int
@@ -158,6 +158,10 @@ class Answer
      */
     public function getFeedback()
     {
+        if (!$this->feedback) {
+            return '';
+        }
+
         return $this->feedback;
     }
 
