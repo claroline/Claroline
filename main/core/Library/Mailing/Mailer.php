@@ -45,7 +45,7 @@ class Mailer
         $rightsLog = $this->rootDir.'/logs/email.log';
         $logger = FileLogger::get($rightsLog);
 
-        if (empty($message->getAttribute('to'))) {
+        if (empty($message->getAttribute('to')) && empty($message->getAttribute('bcc'))) {
             $logger->error('To field is either empty or invalid');
 
             return;
