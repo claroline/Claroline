@@ -1,9 +1,11 @@
 {% set formAction = path('icap_oauth_link_account') %}
 
+
 {% extends 'ClarolineCoreBundle:Authentication:thirdPartyLogin.html.twig' %}
 
 {% block title %}{{ 'login' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
 
+{% set hideTopBarRightSide = true %}
 {% block topBarRender %}
-    {% include 'IcapOAuthBundle:Connect:top_bar_render.html.twig' %}
+    {% include 'ClarolineCoreBundle:Layout:topBar.html.twig' %}
 {% endblock %}

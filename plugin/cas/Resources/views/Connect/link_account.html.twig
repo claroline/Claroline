@@ -4,6 +4,7 @@
 
 {% block title %}{{ 'login' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
 
+{% set hideTopBarRightSide = true %}
 {% block topBarRender %}
-    {% include 'ClarolineCasBundle:Connect:top_bar_render.html.twig' %}
+    {% include 'ClarolineCoreBundle:Layout:topBar.html.twig' %}
 {% endblock %}

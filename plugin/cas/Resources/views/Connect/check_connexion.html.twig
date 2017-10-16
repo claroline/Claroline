@@ -2,8 +2,9 @@
 
 {% block title %}{{ 'login_with_third_party'|trans({'%name%':serviceName}, 'platform') }}{% endblock %}
 
+{% set hideTopBarRightSide = true %}
 {% block topBarRender %}
-{% include 'ClarolineCasBundle:Connect:top_bar_render.html.twig' %}
+    {% include 'ClarolineCoreBundle:Layout:topBar.html.twig' %}
 {% endblock %}
 
 {% block content %}
