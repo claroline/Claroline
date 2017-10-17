@@ -55,7 +55,7 @@ class AnnouncementController
      */
     public function createAction(AnnouncementAggregate $aggregate, Request $request)
     {
-        $this->checkPermission('CREATE', $aggregate, [], true);
+        $this->checkPermission('CREATE', $aggregate->getResourceNode(), [], true);
 
         try {
             $announcement = $this->manager->create($aggregate, json_decode($request->getContent(), true));
@@ -88,7 +88,7 @@ class AnnouncementController
      */
     public function updateAction(AnnouncementAggregate $aggregate, Announcement $announcement, Request $request)
     {
-        $this->checkPermission('EDIT', $aggregate, [], true);
+        $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
         try {
             $this->manager->update($announcement, json_decode($request->getContent(), true));
@@ -119,7 +119,7 @@ class AnnouncementController
      */
     public function deleteAction(AnnouncementAggregate $aggregate, Announcement $announcement)
     {
-        $this->checkPermission('DELETE', $aggregate, [], true);
+        $this->checkPermission('DELETE', $aggregate->getResourceNode(), [], true);
 
         try {
             $this->manager->delete($announcement);
@@ -148,7 +148,7 @@ class AnnouncementController
      */
     public function sendAction(AnnouncementAggregate $aggregate, Announcement $announcement)
     {
-        $this->checkPermission('EDIT', $aggregate, [], true);
+        $this->checkPermission('EDIT', $aggregate->getResourceNode(), [], true);
 
         try {
             $this->manager->sendMail($announcement);
