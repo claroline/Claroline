@@ -11,6 +11,8 @@
     "calendar_view": "Calendar view",
     "calendar_view_options": "Calendar view options",
     "certificate": "Certificate",
+    "certificate_mail_edition": "Certificate mail edition",
+    "certificate_email_message": "The link to the certificate must be defined between tags %pdf_link_start% and %pdf_link_end%.",
     "chronologic_view": "Chronologic view",
     "chronological_view_options": "Chronological view options",
     "click_on_link_below_to_confirm_request": "Please click on the link below to confirm your request",

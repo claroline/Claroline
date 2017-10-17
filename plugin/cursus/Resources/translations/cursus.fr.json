@@ -11,6 +11,8 @@
     "calendar_view": "Vue calendrier",
     "calendar_view_options": "Options de la vue calendrier",
     "certificate": "Certificat",
+    "certificate_mail_edition": "Modification de l'email d'envoi d'un certificat",
+    "certificate_email_message": "Le lien vers le certificat doit être défini entre les balises %pdf_link_start% et %pdf_link_end%.",
     "chronologic_view": "Vue chronologique",
     "chronological_view_options": "Options de la vue chronologique",
     "click_on_link_below_to_confirm_request": "Veuillez cliquer sur le lien ci-dessous pour confirmer la demande",

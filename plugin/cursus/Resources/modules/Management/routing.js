@@ -12,6 +12,7 @@ import parametersTemplate from './Partial/general_parameters.html'
 import locationsManagementTemplate from './Partial/locations_management.html'
 import documentModelsManagementTemplate from './Partial/document_models_management.html'
 import documentModelFormTemplate from './Partial/document_model_form.html'
+import certificateMailEditionTemplate from './Partial/certificate_mail_form.html'
 
 export default function ($stateProvider, $urlRouterProvider) {
   $stateProvider
@@ -137,6 +138,16 @@ export default function ($stateProvider, $urlRouterProvider) {
       ncyBreadcrumb: {
         label: Translator.trans('document_model_edition', {}, 'cursus'),
         parent: 'document_models_management'
+      }
+    })
+    .state ('certificate_mail_edition', {
+      url: '/configuration/certificate/mail',
+      template: certificateMailEditionTemplate,
+      controller: 'CertificateMailEditionCtrl',
+      controllerAs: 'cmc',
+      ncyBreadcrumb: {
+        label: Translator.trans('certificate_mail_edition', {}, 'cursus'),
+        parent: 'configuration'
       }
     })
 

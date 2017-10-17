@@ -1,0 +1,77 @@
+<div class="panel-heading clearfix">
+    <h3 class="panel-title">
+        {{ cmc.title }}
+        <span class="pull-right">
+            <a class="btn btn-default btn-sm"
+               ui-sref="courses_management"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="{{ 'courses_management'|trans:{}:'cursus' }}"
+            >
+                <i class="fa fa-tasks"></i>
+            </a>
+            <a class="btn btn-default btn-sm"
+               ui-sref="sessions_management"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="{{ 'sessions_management'|trans:{}:'cursus' }}"
+            >
+                <i class="fa fa-cubes"></i>
+            </a>
+            <a class="btn btn-default btn-sm"
+               ui-sref="root_cursus_management"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="{{ 'cursus_management'|trans:{}:'cursus' }}"
+            >
+                <i class="fa fa-database"></i>
+            </a>
+            <a class="btn btn-success btn-sm"
+               ui-sref="configuration"
+               data-toggle="tooltip"
+               data-placement="top"
+               title="{{ 'configuration'|trans:{}:'platform' }}"
+            >
+                <i class="fa fa-cogs"></i>
+            </a>
+        </span>
+    </h3>
+</div>
+<div class="panel-body certificate-email-form-panel">
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">
+            &times;
+        </button>
+        {{ 'certificate_email_message'|trans:{}:'cursus' }}
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-md-2">
+            {{ 'object'|trans:{}:'platform' }}
+        </label>
+        <div class="col-md-10">
+            <input type="text" class="form-control" ng-model="cmc.documentModel['name']">
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="control-label col-md-2">
+            {{ 'content'|trans:{}:'platform' }}
+        </label>
+        <div class="col-md-10">
+            <textarea data-ui-tinymce="cmc.tinymceOptions"
+                      data-before-unload="off"
+                      id="certificate-email-content"
+                      class="form-control"
+                      ng-model="cmc.documentModel['content']"
+            >
+            </textarea>
+        </div>
+    </div>
+</div>
+<div class="panel-footer">
+    <button type="submit" class="btn btn-primary" ng-click="cmc.submit()">
+        {{ 'ok'|trans:{}:'platform' }}
+    </button>
+    <a class="btn btn-default" ui-sref="configuration">
+        {{ 'cancel'|trans:{}:'platform' }}
+    </a>
+</div>

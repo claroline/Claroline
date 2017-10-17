@@ -103,4 +103,14 @@ export default class DocumentModelService {
       }
     })
   }
+
+  getCertificateMailDocumentModel() {
+    const url = Routing.generate('api_get_cursus_certificate_mail_document_model')
+
+    return this.$http.get(url).then(d => {
+      if (d['status'] === 200) {
+        return JSON.parse(d['data'])
+      }
+    })
+  }
 }
