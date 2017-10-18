@@ -229,11 +229,20 @@ class EntryEditForm extends Component {
 
   registerEntry() {
     if (!this.state['hasError']) {
+      const catIds = []
+      this.state.categories.forEach(categoryName => {
+        const cat = this.props.categories.find(c => c.name === categoryName)
+
+        if (cat) {
+          catIds.push(cat.id)
+        }
+      })
+
       this.props.editEntry(
         this.state.id,
         this.state.entry,
         this.state.keywords,
-        this.state.categories.map(categoryName => this.props.categories.find(c => c.name === categoryName).id),
+        catIds,
         this.state.files
       )
       this.props.history.push(`/entry/${this.state.id}/view`)
