@@ -1119,7 +1119,7 @@ class RoleManager
             }
             $this->om->clear();
         }
-
+        $this->om->endFlushSuite();
         // Check users' roles
         $this->log('Checking user role integrity.');
         $userManager = $this->container->get('claroline.manager.user_manager');
@@ -1157,6 +1157,7 @@ class RoleManager
             }
             $this->om->clear();
         }
+        $this->om->endFlushSuite();
     }
 
     public function checkUserIntegrity(User $user, $i = 1, $totalUsers = 1)

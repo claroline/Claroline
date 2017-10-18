@@ -452,6 +452,52 @@ class IconSetManager
     }
 
     /**
+     * Re-calibrates icons for icon sets for the case where these icons have been de-calibrated.
+     */
+    public function calibrateIconSets()
+    {
+        $this->log('Calibrating icon sets...');
+        // Get decalibrated icon types
+        $mimeTypes = $this->iconItemRepo->findMimeTypesForCalibration();
+        if (!empty($mimeTypes)) {
+            $this->log('Calibrating icons for mime types: \''.implode('\', \'', $mimeTypes).'\'');
+            $activeSet = $this->getActiveResourceIconSet();
+            $activeSetIcons = $this->getIconSetIconsByType($activeSet, true);
+            $resourceIcons = $this
+                ->om
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
+                ->findByMimeTypes($mimeTypes);
+            // Fix paths for resourceIcons
+            foreach ($resourceIcons as $resourceIcon) {
+                $curMimeType = $resourceIcon->getMimeType();
+                $activeSetIcon = $activeSetIcons->getByMimeType($curMimeType);
+                if (!is_null($activeSetIcon) && $activeSetIcon->getResourceIcon()->getId() !== $resourceIcon->getId()) {
+                    $resourceIcon->setRelativeUrl($activeSetIcon->getRelativeUrl());
+                    $resourceIconShortcut = $resourceIcon->getShortcutIcon();
+                    $resourceIconShortcut->setRelativeUrl(
+                        $activeSetIcon->getResourceIcon()->getShortcutIcon()->getRelativeUrl()
+                    );
+                    $this->om->persist($resourceIcon);
+                    $this->om->persist($resourceIconShortcut);
+                }
+            }
+            $this->om->flush();
+            // Recalibrate IconItems
+            $this->iconItemRepo->recalibrateIconItemsForMimeTypes($mimeTypes);
+            // Update resource icons reference after calibration
+            $this->iconItemRepo->updateResourceIconsReferenceAfterCalibration($mimeTypes);
+            // Delete redundant resource icons (the one's duplicated)
+            $this->iconItemRepo->deleteRedundantResourceIconsAfterCalibration($mimeTypes);
+            $this->log('Icon sets calibrated with success.');
+
+            return;
+        }
+        $this->log('No mime types found for calibration. Everything works fine.');
+
+        return;
+    }
+
+    /**
      * @param $cname
      */
     private function createIconSetDirForCname($cname)
