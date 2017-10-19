@@ -100,7 +100,7 @@ class AnnouncementSerializer
         if (!empty($data['restrictions']['visibleUntil'])) {
             $visibleUntil = \DateTime::createFromFormat('Y-m-d\TH:i:s', $data['restrictions']['visibleUntil']);
         }
-        $announce->setVisibleFrom($visibleUntil);
+        $announce->setVisibleUntil($visibleUntil);
 
         // calculate publication date
         if (!$announce->isVisible()) {

@@ -20,7 +20,7 @@ class Date extends Component {
         <DatePicker
           {...this.props}
           selected={this.props.value ? moment.utc(this.props.value) : null}
-          onChange={date => this.props.onChange(moment.utc(date).toISOString())}
+          onChange={date => this.props.onChange(moment.utc(date).format('YYYY-MM-DD\THH:mm:ss'))}
           ref={(c) => this._calendar = c}
         />
       </span>
