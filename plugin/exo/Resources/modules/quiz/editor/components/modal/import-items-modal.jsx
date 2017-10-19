@@ -8,19 +8,26 @@ import {Icon} from './../../../../items/components/icon.jsx'
 import {t, tex, trans} from '#/main/core/translation'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {REQUEST_SEND} from './../../../../api/actions'
+import {generateUrl} from '#/main/core/fos-js-router'
 
 
 export const MODAL_IMPORT_ITEMS = 'MODAL_IMPORT_ITEMS'
 const actions = {}
 
 actions.getQuestions = (filter, onSuccess) => {
+  let queryString = '?filters[selfOnly]=true'
+
+  if (filter['filters'] && filter['filters']['title']) {
+    const content = filter['filters']['title']
+    queryString += `&filters[content]=${encodeURIComponent(content)}`
+  }
+
   return (dispatch) => {
     dispatch({
       [REQUEST_SEND]: {
-        route: ['question_search'],
+        url: generateUrl('question_list') + queryString,
         request: {
-          method: 'POST' ,
-          body: JSON.stringify(filter)
+          method: 'GET'
         },
         success: (response) => onSuccess(response)
       }
@@ -60,7 +67,7 @@ class ImportItems extends Component {
   }
 
   onQuestionsRetrieved(response) {
-    this.setState({questions: response.questions, total: response.total})
+    this.setState({questions: response.data, total: response.totalResults})
   }
 
   getQuestions(value){

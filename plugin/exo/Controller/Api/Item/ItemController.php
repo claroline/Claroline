@@ -70,7 +70,7 @@ class ItemController extends AbstractController
             $this->finder->search(
                 'UJM\ExoBundle\Entity\Item\Item',
                 $request->query->all(),
-                [Transfer::INCLUDE_ADMIN_META]
+                [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_ADMIN_META]
             )
         );
     }
