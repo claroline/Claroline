@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import moment from 'moment'
+import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 import {trans, t} from '#/main/core/translation'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
@@ -110,7 +111,15 @@ class Entries extends Component {
       name: 'status',
       label: t('published'),
       displayed: true,
-      type: 'boolean'
+      type: 'boolean',
+      renderer: (rowData) => {
+        const publishedCell = <span className={classes('fa fa-fw', {
+          'fa-check true': rowData.status === 1,
+          'fa-times false': rowData.status !== 1
+        })}/>
+
+        return publishedCell
+      }
     })
     columns.push({
       name: 'title',
@@ -367,7 +376,7 @@ class Entries extends Component {
               card={(row) => ({
                 onClick: `#/entry/${row.id}/view`,
                 poster: null,
-                icon: row.user.id > 0 && row.user.picture ?
+                icon: row.user && row.user.id > 0 && row.user.picture ?
                   <img src={asset('uploads/pictures/' + row.user.picture)} /> :
                   'fa fa-user',
                 title: this.getCardValue(row, 'title'),
