@@ -204,6 +204,7 @@ class ForumImporter extends Importer implements ConfigurationInterface, RichText
             foreach ($subjects as $subject) {
                 $subjectData['subject']['name'] = $subject->getTitle();
                 $subjectData['subject']['author'] = $subject->getCreator()->getUsername();
+                $subjectData['subject']['creator'] = $subject->getCreator()->getMail();
                 $subjectData['subject']['sticked'] = $subject->isSticked();
                 $subjectData['subject']['creation_date'] = $subject->getCreationDate();
 
@@ -212,6 +213,7 @@ class ForumImporter extends Importer implements ConfigurationInterface, RichText
 
                 foreach ($messages as $message) {
                     $messageData['message']['author'] = $message->getCreator()->getUsername();
+                    $messageData['message']['creator'] = $message->getCreator()->getMail();
                     $messageData['message']['creation_date'] = $message->getCreationDate();
                     $messageData['message']['modification_date'] = $message->getModificationDate();
 
