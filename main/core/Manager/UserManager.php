@@ -1529,7 +1529,7 @@ class UserManager
         $withOrgas = !$user->hasRole('ROLE_ADMIN') && !$withAllUsers && $withAdminOrgas;
         $forcedOrganizations = $withOrgas ? $user->getAdministratedOrganizations()->toArray() : [];
 
-        $users = $this->userRepo->findUsersForUserPicker(
+        $userQuery = $this->userRepo->findUsersForUserPicker(
             $search,
             $withUsername,
             $withMail,
@@ -1545,10 +1545,11 @@ class UserManager
             $forcedRoles,
             $forcedWorkspaces,
             $withOrgas,
-            $forcedOrganizations
+            $forcedOrganizations,
+            false
         );
 
-        return $this->pagerFactory->createPagerFromArray($users, $page, $max);
+        return $this->pagerFactory->createPager($userQuery, $page, $max);
     }
 
     public function getAllVisibleUsersIdsForUserPicker(User $user)
