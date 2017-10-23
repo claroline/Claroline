@@ -386,6 +386,7 @@ class WorkspaceRepository extends EntityRepository
             ->setMaxResults($max)
             ->setParameter('usr', $user)
             ->setParameter('roles', $roles)
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
