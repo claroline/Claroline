@@ -240,7 +240,7 @@
 
                                             {% if canEdit %}
                                                 <i class="fa fa-times-circle pointer-hand remove-role-button"
-                                                   href="{{ path('claro_workspace_remove_role_from_user', {'workspace': workspace.getId(), 'user': userId, 'role': role.getId() } ) }}"
+                                                   href="{{ path('apiv2_role_remove_users', {uuid: role.getUuid()} ) }}?ids[]={{ user.getId() }}"
                                                 >
                                                 </i>
                                             {% endif %}
@@ -296,7 +296,7 @@
             var route = target.attr('href');
             $.ajax({
                 url: route,
-                type: 'DELETE',
+                method: 'DELETE',
                 success: function() {
                     if (target.parents('td').first().find('span').length === 1) {
                         target.parents('tr').first().remove();

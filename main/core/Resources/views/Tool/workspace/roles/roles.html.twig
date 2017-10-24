@@ -51,7 +51,7 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a class="role-delete-btn btn btn-default {% if role.isReadOnly %} disabled {% endif %}" href="{{ path('claro_workspace_role_remove', {'workspace': workspace.getId(), 'role': role.getId()} ) }}">
+                                    <a class="role-delete-btn btn btn-default {% if role.isReadOnly %} disabled {% endif %}" href="{{ path('apiv2_role_delete_bulk') }}?ids[]={{ role.getId() }}">
                                         <i class="fa fa-trash-o"></i> {{ 'delete'|trans({}, 'platform') }}
                                     </a>
                                 </td>

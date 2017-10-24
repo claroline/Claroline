@@ -175,7 +175,7 @@ class Crud
         }
 
         //add the options to pass on here
-        $this->checkPermission('PATCH', $object, [], true);
+        $this->checkPermission('PATCH', $object, ['data' => $elements], true);
         //we'll need to pass the $action and $data here aswell later
         $this->dispatcher->dispatch('crud_pre_patch_object', 'Crud', [$object]);
 

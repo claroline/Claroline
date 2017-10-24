@@ -29,8 +29,8 @@ class RoleVoter extends AbstractVoter
             VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
         }
 
-        //not used in workspaces yet so no implementation
-        return VoterInterface::ACCESS_ABSTAIN;
+        //if it's a workspace role, we must be able be granted the edit perm on the workspace users tool
+        return $this->vote($token, $object->getWorkspace(), ['users', 'edit']);
     }
 
     public function getClass()
@@ -40,6 +40,6 @@ class RoleVoter extends AbstractVoter
 
     public function getSupportedActions()
     {
-        return[self::CREATE, self::EDIT, self::DELETE];
+        return[self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }

@@ -27,4 +27,13 @@ class RoleCrud
             }
         }
     }
+
+    /**
+     * @DI\Observe("crud_pre_patch_object")
+     *
+     * @param \Claroline\CoreBundle\Event\CrudEvent $event
+     */
+    public function prePatch(CrudEvent $event)
+    {
+    }
 }

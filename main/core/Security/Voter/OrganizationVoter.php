@@ -35,7 +35,7 @@ class OrganizationVoter extends AbstractVoter
 
     public function getClass()
     {
-        return 'Claroline\CoreBundle\Organization\Organization';
+        return 'Claroline\CoreBundle\Entity\Organization\Organization';
     }
 
     public function getSupportedActions()

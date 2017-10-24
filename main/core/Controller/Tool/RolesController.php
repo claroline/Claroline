@@ -222,21 +222,6 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/role/{role}/remove",
-     *     name="claro_workspace_role_remove",
-     *     options={"expose"=true}
-     * )
-     */
-    public function removeRoleAction(Workspace $workspace, Role $role)
-    {
-        $this->checkEditionAccess($workspace);
-        $this->roleManager->remove($role);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/{workspace}/role/{role}/edit/form",
      *     name="claro_workspace_role_edit_form"
      * )

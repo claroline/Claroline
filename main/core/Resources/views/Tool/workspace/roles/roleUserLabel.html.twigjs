@@ -3,7 +3,7 @@
 <span class="label label-success" id="label-{{ roleId }}-{{ userId}}">
 {{ roleName }}
 <i class="fa fa-times-circle pointer-hand remove-role-button"
-   href="{{ path('claro_workspace_remove_role_from_user', {'workspace': workspaceId, 'user': userId, 'role': roleId } ) }}"
+   href="{{ path('apiv2_role_remove_users', {'uuid': roleId } ) }}?ids[]={{ userId }}"
 >
 </i>
 </span>

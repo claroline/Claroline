@@ -24,6 +24,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     const DELETE = 'DELETE';
     const VIEW = 'VIEW';
     const OPEN = 'OPEN';
+    const PATCH = 'PATCH';
 
     /**
      * @DI\InjectParams({
@@ -40,7 +41,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
         //attributes[0] contains the permission (ie create, edit, open, ...)
         $attributes[0] = strtoupper($attributes[0]);
 
-        if (!$this->supports($object) || !in_array($attributes[0], $this->getSupportedActions())) {
+        if (!$this->supports($object) || !$this->supportsAction($attributes[0])) {
             return VoterInterface::ACCESS_ABSTAIN;
         }
 
@@ -81,9 +82,24 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
 
     private function supports($object)
     {
-        return $object instanceof ObjectCollection ?
-            $object->getClass() === $this->getClass() :
-            get_class($object) === $this->getClass();
+        if ($object instanceof ObjectCollection) {
+            return $object->getClass() === $this->getClass();
+        } else {
+            //doctrine sends proxy so we have to do the check with the instanceof operator
+            $rc = new \ReflectionClass($this->getClass());
+            $toCheck = $rc->newInstanceWithoutConstructor();
+
+            return $object instanceof $toCheck;
+        }
+    }
+
+    private function supportsAction($action)
+    {
+        if (!$this->getSupportedActions()) {
+            return true;
+        }
+
+        return in_array($action, $this->getSupportedActions());
     }
 
     /**********************************************/
