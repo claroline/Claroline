@@ -173,14 +173,6 @@ class Role implements RoleInterface
     protected $pwsToolConfig;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess",
-     *     mappedBy="role"
-     * )
-     */
-    protected $pwsRightsManagementAccess;
-
-    /**
      * @ORM\Column(name="personal_workspace_creation_enabled", type="boolean")
      *
      * @var bool

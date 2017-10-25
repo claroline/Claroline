@@ -470,26 +470,6 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace/personal/resources/config",
-     *     name="claro_admin_personal_workspace_resource_rights"
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\Users:personalWorkspaceResourceRightsConfig.html.twig")
-     *
-     * @return array
-     */
-    public function personalWorkspaceResourceRightsConfigAction()
-    {
-        $roles = $this->roleManager->getAllPlatformRoles();
-        $rights = $this->rightsManager->getAllPersonalWorkspaceRightsConfig();
-
-        return [
-            'roles' => $roles,
-            'rights' => $rights,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
      *     "/pws/tool/activate/{perm}/{role}/{tool}",
      *     name="claro_admin_pws_activate_tool",
      *     options={"expose"=true}
@@ -512,34 +492,6 @@ class UsersController extends Controller
     public function removePersonalWorkspaceToolPermAction($perm, Role $role, Tool $tool)
     {
         $this->toolManager->removePersonalWorkspaceToolPerm($perm, $tool, $role);
-
-        return new JsonResponse([], 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/pws/rights/activate/{role}",
-     *     name="claro_admin_pws_activate_rights_change",
-     *     options={"expose"=true}
-     * )
-     */
-    public function activatePersonalWorkspaceRightsAction(Role $role)
-    {
-        $this->rightsManager->activatePersonalWorkspaceRightsPerm($role);
-
-        return new JsonResponse([], 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/pws/rights/deactivate/{role}",
-     *     name="claro_admin_pws_deactivate_rights_change",
-     *     options={"expose"=true}
-     * )
-     */
-    public function deactivatePersonalWorkspaceRightsAction(Role $role)
-    {
-        $this->rightsManager->deactivatePersonalWorkspaceRightsPerm($role);
 
         return new JsonResponse([], 200);
     }

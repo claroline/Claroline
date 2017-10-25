@@ -780,7 +780,6 @@ class ResourceController extends Controller
         } else {
             $isRoot = false;
             $workspaceId = $node->getWorkspace()->getId();
-            $isPws = $node->getWorkspace()->isPersonal();
             $node = $this->getRealTarget($node);
             $collection = new ResourceCollection([$node]);
             $this->checkAccess('OPEN', $collection);
@@ -812,10 +811,6 @@ class ResourceController extends Controller
             }
 
             $enableRightsEdition = true;
-
-            if ($isPws && !$this->rightsManager->canEditPwsPerm($this->tokenStorage->getToken())) {
-                $enableRightsEdition = false;
-            }
 
             //get the file list in that directory to know their size.
             $files = $this->fileManager->getDirectoryChildren($node);

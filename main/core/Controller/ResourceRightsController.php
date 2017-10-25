@@ -11,27 +11,27 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Library\Logger\FileLogger;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\UserManager;
+use Claroline\CoreBundle\Manager\WorkspaceTagManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
-use Claroline\CoreBundle\Library\Logger\FileLogger;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ResourceRightsController extends Controller
 {
@@ -101,7 +101,7 @@ class ResourceRightsController extends Controller
      */
     public function rightFormAction(ResourceNode $node, Role $role = null)
     {
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
         $isDir = $node->getResourceType()->getName() === 'directory';
 
@@ -109,7 +109,8 @@ class ResourceRightsController extends Controller
             $data = $this->wsTagManager->getDatasForWorkspaceList(true);
             $rolesRights = $this->rightsManager->getConfigurableRights($node);
             $mask = $this->maskManager->decodeMask(
-                $node->getResourceType()->getDefaultMask(), $node->getResourceType()
+                $node->getResourceType()->getDefaultMask(),
+                $node->getResourceType()
             );
 
             $data['resourceRights'] = $rolesRights;
@@ -129,12 +130,12 @@ class ResourceRightsController extends Controller
 
             return $this->templating->renderResponse(
                 'ClarolineCoreBundle:Resource:singleRightsForm.html.twig',
-                array(
+                [
                     'resourceRights' => $resourceRights,
                     'isDir' => $isDir,
                     'role' => $role,
                     'node' => $node,
-                )
+                ]
             );
         }
     }
@@ -161,11 +162,11 @@ class ResourceRightsController extends Controller
         $rightsLog = $this->container->getParameter('kernel.root_dir').'/logs/rights.log';
         $logger = FileLogger::get($rightsLog);
         $this->rightsManager->setLogger($logger);
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
         $datas = $this->getPermissionsFromRequest($node->getResourceType());
         $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
-        $perms = array();
+        $perms = [];
 
         foreach ($datas as $data) {
             $perms[] = $this->rightsManager->editPerms($data['permissions'], $data['role'], $node, $isRecursive);
@@ -185,12 +186,12 @@ class ResourceRightsController extends Controller
      */
     public function openPermsAction(ResourceNode $node)
     {
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
         $this->rightsManager->editPerms(1, $this->roleManager->getRoleByName('ROLE_USER'), $node, false);
         $this->rightsManager->editPerms(1, $this->roleManager->getRoleByName('ROLE_ANONYMOUS'), $node, false);
 
-        return new Response('', 204, array('Content-Type' => 'application/json'));
+        return new Response('', 204, ['Content-Type' => 'application/json']);
     }
 
     /**
@@ -214,15 +215,15 @@ class ResourceRightsController extends Controller
      */
     public function rightCreationFormAction(ResourceNode $node, Role $role)
     {
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
 
-        return array(
-            'configs' => array($this->rightsManager->getOneByRoleAndResource($role, $node)),
+        return [
+            'configs' => [$this->rightsManager->getOneByRoleAndResource($role, $node)],
             'resourceTypes' => $this->rightsManager->getResourceTypes(),
             'nodeId' => $node->getId(),
             'roleId' => $role->getId(),
-        );
+        ];
     }
 
     /**
@@ -245,16 +246,16 @@ class ResourceRightsController extends Controller
      */
     public function editPermsCreationAction(ResourceNode $node, Role $role)
     {
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
         $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
         $ids = $this->request->getCurrentRequest()->request->get('resourceTypes');
         $resourceTypes = $ids === null ?
-            array() :
+            [] :
             $this->om->findByIds('ClarolineCoreBundle:Resource\ResourceType', array_keys($ids));
         $this->rightsManager->editCreationRights($resourceTypes, $role, $node, $isRecursive);
 
-        return new Response('', 204, array('Content-Type' => 'application/json'));
+        return new Response('', 204, ['Content-Type' => 'application/json']);
     }
 
     /**
@@ -285,7 +286,7 @@ class ResourceRightsController extends Controller
         $page = 1,
         $max = 50
     ) {
-        $collection = new ResourceCollection(array($node));
+        $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
         $isDir = $node->getResourceType()->getName() === 'directory';
         $resourceType = $node->getResourceType();
@@ -303,9 +304,9 @@ class ResourceRightsController extends Controller
                 $page,
                 $max
             );
-        $roleKeys = array();
-        $usersRoles = array();
-        $usersRights = array();
+        $roleKeys = [];
+        $usersRoles = [];
+        $usersRights = [];
 
         foreach ($users as $user) {
             $roleKeys[] = $user->getUsername();
@@ -323,7 +324,7 @@ class ResourceRightsController extends Controller
             $usersRights[$right->getRole()->getTranslationKey()] = $right;
         }
 
-        return array(
+        return [
             'resource' => $node,
             'isDir' => $isDir,
             'mask' => $mask,
@@ -334,7 +335,7 @@ class ResourceRightsController extends Controller
             'order' => $order,
             'max' => $max,
             'search' => $search,
-        );
+        ];
     }
 
     public function getPermissionsFromRequest(ResourceType $type)
@@ -342,10 +343,10 @@ class ResourceRightsController extends Controller
         $permsMap = $this->maskManager->getPermissionMap($type);
         $roles = $this->request->getCurrentRequest()->request->get('roles');
         $rows = $this->request->getCurrentRequest()->request->get('role_row');
-        $data = array();
+        $data = [];
 
         if (is_null($roles)) {
-            $roles = array();
+            $roles = [];
         }
 
         foreach (array_keys($rows) as $roleId) {
@@ -354,11 +355,11 @@ class ResourceRightsController extends Controller
                     $changedPerms[$perm] = false;
                 }
 
-                $data[] = array(
+                $data[] = [
                     'role' => $this->roleManager->getRole($roleId),
                     'role_name' => $this->roleManager->getRole($roleId)->getName(),
                     'permissions' => $changedPerms,
-                );
+                ];
             }
         }
 
@@ -367,11 +368,11 @@ class ResourceRightsController extends Controller
                 $changedPerms[$perm] = (array_key_exists(trim($perm), $perms)) ? true : false;
             }
 
-            $data[] = array(
+            $data[] = [
                 'role' => $this->roleManager->getRole($roleId),
                 'role_name' => $this->roleManager->getRole($roleId)->getName(),
                 'permissions' => $changedPerms,
-            );
+            ];
         }
 
         return $data;
@@ -395,10 +396,7 @@ class ResourceRightsController extends Controller
     {
         //Here, we not only check is Administrate, but if it's a personal workspace and the feature was disabled
         //we can't either.
-
-        $isPwsRightEnabled = $this->rightsManager->canEditPwsPerm($this->tokenStorage->getToken());
-
-        if (!$this->authorization->isGranted($permission, $collection) || !$isPwsRightEnabled) {
+        if (!$this->authorization->isGranted($permission, $collection)) {
             throw new AccessDeniedException($collection->getErrorsForDisplay());
         }
     }
