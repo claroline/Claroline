@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {t, transChoice, Translator} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/fos-js-router'
 import {localeDate} from '#/main/core/layout/data/types/date/utils'
-import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM, MODAL_URL, MODAL_USER_PICKER} from '#/main/core/layout/modal'
+import {MODAL_CONFIRM, MODAL_URL, MODAL_USER_PICKER} from '#/main/core/layout/modal'
 
 import Configuration from '#/main/core/library/Configuration/Configuration'
 
@@ -147,11 +147,6 @@ const WorkspacesPage = props =>
             label: t('manage_ws_managers'),
             action: (rows) => props.manageWorkspaceManagers(rows[0]),
             context: 'row'
-          }, {
-            icon: 'fa fa-fw fa-trash-o',
-            label: t('delete'),
-            action: (rows) => props.removeWorkspaces(rows),
-            dangerous: true
           }
         ]}
 
@@ -183,7 +178,6 @@ const WorkspacesPage = props =>
   </Page>
 
 WorkspacesPage.propTypes = {
-  removeWorkspaces: T.func.isRequired,
   copyWorkspaces: T.func.isRequired,
   manageWorkspaceManagers: T.func.isRequired,
   showModal: T.func.isRequired
@@ -191,18 +185,6 @@ WorkspacesPage.propTypes = {
 
 function mapDispatchToProps(dispatch) {
   return {
-    removeWorkspaces(workspaces) {
-      dispatch(
-        modalActions.showModal(MODAL_DELETE_CONFIRM, {
-          title: transChoice('remove_workspaces', workspaces.length, {count: workspaces.length}, 'platform'),
-          question: t('remove_workspaces_confirm', {
-            workspace_list: workspaces.map(workspace => workspace.name).join(', ')
-          }),
-          handleConfirm: () => dispatch(actions.removeWorkspaces(workspaces))
-        })
-      )
-    },
-
     copyWorkspaces(workspaces, asModel = false) {
       dispatch(
         modalActions.showModal(MODAL_CONFIRM, {

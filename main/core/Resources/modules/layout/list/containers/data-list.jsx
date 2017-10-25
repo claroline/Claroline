@@ -2,11 +2,17 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import {t} from '#/main/core/translation'
+
 import {actions as listActions} from '#/main/core/layout/list/actions'
 import {select as listSelect} from '#/main/core/layout/list/selectors'
 
 import {DataAction, DataProperty} from '#/main/core/layout/list/prop-types'
 import {DataList as DataListComponent} from '#/main/core/layout/list/components/data-list.jsx'
+import cloneDeep from 'lodash/cloneDeep'
+
+import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {actions as modalActions} from '#/main/core/layout/modal/actions'
 
 /**
  * Connected DataList.
@@ -17,8 +23,7 @@ import {DataList as DataListComponent} from '#/main/core/layout/list/components/
  * @param props
  * @constructor
  */
-const DataList = props =>
-  <DataListComponent {...props} />
+const DataList = props =>  <DataListComponent {...props} />
 
 DataList.propTypes = {
   /**
@@ -84,7 +89,14 @@ function mapStateToProps(state, ownProps) {
     data: listSelect.data(listState),
     totalResults: listSelect.totalResults(listState),
     async: listSelect.isAsync(listState),
+    deletable: listSelect.isDeletable(listState),
     queryString: listSelect.queryString(listState)
+  }
+
+  if (newProps.deletable) {
+    newProps.modalDeleteTitle = listSelect.modalDeleteTitle(listState)
+    newProps.modalDeleteQuestion = listSelect.modalDeleteQuestion(listState)
+    newProps.displayDelete = listSelect.displayDelete(listState)
   }
 
   // grab data for optional features
@@ -153,6 +165,19 @@ function mapDispatchToProps(dispatch, ownProps) {
     },
     changePage(page) {
       dispatch(listActions.changePage(page))
+    },
+    deleteItems(items, title, question, asyncr) {
+      dispatch(
+        modalActions.showModal(MODAL_DELETE_CONFIRM, {
+          title,
+          question,
+          handleConfirm: () => {
+            asyncr ?
+              dispatch(listActions.asyncDeleteItems(items, ownProps.name)):
+              dispatch(listActions.syncDeleteItems(items, ownProps.name))
+          }
+        })
+      )
     }
   }
 }
@@ -224,6 +249,24 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
       changePage: asyncDecorator(dispatchProps.changePage),
       updatePageSize: asyncDecorator(dispatchProps.updatePageSize)
     }
+  }
+
+  if (stateProps.deletable) {
+    const actions = cloneDeep(props.actions)
+
+    actions.push({
+      icon: 'fa fa-fw fa-trash-o',
+      label: t('delete'),
+      action: (rows) => dispatchProps.deleteItems(
+        rows,
+        stateProps.modalDeleteTitle(rows),
+        stateProps.modalDeleteQuestion(rows),
+        stateProps.async
+      ),
+      dangerous: true,
+      displayed: (rows) => stateProps.displayDelete(rows)
+    })
+    props.actions = actions
   }
 
   return props

@@ -1460,5 +1460,7 @@
     "minimize": "Minimize",
     "display_parameters": "Display parameters",
     "add_comment": "Comment",
-    "keywords": "Keywords"
+    "keywords": "Keywords",
+    "objects_delete_title": "Delete objects",
+    "object_delete_question": "{1} Do you really want to remove the selected object ?|[2,Inf[ Do you really want to remove the %count% selected objects ?"
 }

@@ -2,6 +2,7 @@ import {makeActionCreator} from '#/main/core/utilities/redux'
 
 import {REQUEST_SEND} from '#/main/core/api/actions'
 import {select as listSelect} from '#/main/core/layout/list/selectors'
+import {getDataQueryString} from '#/main/core/layout/list/utils'
 
 export const actions = {}
 
@@ -32,7 +33,30 @@ actions.toggleSelectAll = makeActionCreator(LIST_TOGGLE_SELECT_ALL, 'rows')
 // data loading
 export const LIST_DATA_LOAD = 'LIST_DATA_LOAD'
 
+//data delete
+export const LIST_DATA_DELETE = 'LIST_DATA_DELETE'
+
 actions.loadData = makeActionCreator(LIST_DATA_LOAD, 'data', 'total')
+
+actions.asyncDeleteItems = (items, name) => (dispatch, getState) => {
+  const listState = getState()[name]
+
+  dispatch({
+    [REQUEST_SEND]: {
+      url: listSelect.deleteUrl(listState) + getDataQueryString(items),
+      request: {
+        method: 'DELETE'
+      },
+      success: (data, dispatch) => {
+        dispatch(actions.changePage(0))
+        dispatch(actions.fetchData(name))
+      }
+    }
+  })
+}
+
+actions.syncDeleteItems = makeActionCreator(LIST_DATA_DELETE, 'items')
+
 actions.fetchData = (name) => (dispatch, getState) => {
   const listState = getState()[name]
 
@@ -55,5 +79,6 @@ actions.fetchData = (name) => (dispatch, getState) => {
 export const LIST_PAGE_SIZE_UPDATE = 'LIST_PAGE_SIZE_UPDATE'
 export const LIST_PAGE_CHANGE      = 'LIST_PAGE_CHANGE'
 
+actions.deleteItems    = makeActionCreator(LIST_DATA_DELETE, 'items')
 actions.changePage     = makeActionCreator(LIST_PAGE_CHANGE, 'page')
 actions.updatePageSize = makeActionCreator(LIST_PAGE_SIZE_UPDATE, 'pageSize')

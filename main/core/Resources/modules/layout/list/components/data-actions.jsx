@@ -86,7 +86,7 @@ const DataBulkActions = props =>
     </div>
 
     <div className="list-selected-actions">
-      {props.actions.map((action, actionIndex) => typeof action.action === 'function' ?
+      {props.actions.filter(action => action.displayed ? action.displayed(props.selectedItems): true).map((action, actionIndex) => typeof action.action === 'function' ?
         <TooltipButton
           id={`list-bulk-action-${actionIndex}`}
           key={`list-bulk-action-${actionIndex}`}

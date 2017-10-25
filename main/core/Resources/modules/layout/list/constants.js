@@ -14,7 +14,8 @@ const DEFAULT_FEATURES = {
   filterable: true,
   sortable  : true,
   selectable: true,
-  paginated : true
+  paginated : true,
+  deletable : true
 }
 
 const DISPLAY_TABLE    = 'table'

@@ -14,20 +14,6 @@ export const actions = {}
 actions.workspaceAddManager = makeActionCreator(WORKSPACE_ADD_MANAGER, 'workspace', 'user')
 actions.workspaceRemoveManager =  makeActionCreator(WORKSPACE_REMOVE_MANAGER, 'workspace', 'user')
 
-actions.removeWorkspaces = (workspaces) => ({
-  [REQUEST_SEND]: {
-    url: generateUrl('apiv2_workspace_delete_bulk') + getDataQueryString(workspaces),
-    request: {
-      method: 'DELETE'
-    },
-    success: (data, dispatch) => {
-      //do something better
-      dispatch(listActions.changePage(0))
-      dispatch(listActions.fetchData('workspaces'))
-    }
-  }
-})
-
 actions.copyWorkspaces = (workspaces, isModel = 0) => ({
   [REQUEST_SEND]: {
     url: generateUrl('api_copy_workspaces', {isModel: isModel}) + getDataQueryString(workspaces),
