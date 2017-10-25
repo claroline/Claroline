@@ -693,20 +693,20 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $sql = 'SELECT DISTINCT u.id AS id FROM (
                   SELECT u1.id AS id FROM claro_user u1
                   INNER JOIN claro_user_role ur1 ON u1.id = ur1.user_id
-                  WHERE ur1.role_id IN (:roles) 
-                  AND u1.is_removed = :removed 
+                  WHERE ur1.role_id IN (:roles)
+                  AND u1.is_removed = :removed
                   AND (
                     UPPER(u1.last_name) LIKE :search
                     OR UPPER(u1.first_name) LIKE :search
                     OR UPPER(u1.username) LIKE :search
                     OR UPPER (u1.mail) LIKE :search
-                  ) 
+                  )
                   UNION
                   SELECT u2.id AS id FROM claro_user u2
                   INNER JOIN claro_user_group ug2 ON u2.id = ug2.user_id
                   INNER JOIN claro_group g2 ON g2.id = ug2.group_id
                   INNER JOIN claro_group_role gr2 ON g2.id = gr2.group_id
-                  WHERE gr2.role_id IN (:roles) 
+                  WHERE gr2.role_id IN (:roles)
                   AND u2.is_removed = :removed
                   AND (
                     UPPER(u2.last_name) LIKE :search
@@ -1741,7 +1741,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 SELECT COUNT(u.id) AS cnt FROM Claroline\CoreBundle\Entity\User u
                 INNER JOIN u.personalWorkspace ws
                 WHERE u.isRemoved = :notRemoved
-                AND ws.isPersonal = :personal
+                AND ws.personal = :personal
                 AND u.id NOT IN ('.$this->findUsersManagersOfPersonalWorkspace(false)->getDQL().')
             ')
             ->setParameter('notRemoved', false)
@@ -1757,7 +1757,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 SELECT u, ws FROM Claroline\CoreBundle\Entity\User u
                 INNER JOIN u.personalWorkspace ws
                 WHERE u.isRemoved = :notRemoved
-                AND ws.isPersonal = :personal
+                AND ws.personal = :personal
                 AND u.id NOT IN ('.$this->findUsersManagersOfPersonalWorkspace(false)->getDQL().')
             ')
             ->setParameter('notRemoved', false)
@@ -1781,7 +1781,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 INNER JOIN r1.users us1
                 WHERE us1.id = u1.id
                 AND u1.isRemoved = :notRemoved
-                AND ws1.isPersonal = :personal
+                AND ws1.personal = :personal
                 AND r1.name LIKE \'%ROLE_WS_MANAGER_%\'
             ')
             ->setParameter('notRemoved', false)
