@@ -23,8 +23,8 @@ use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormFactory;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -59,11 +59,11 @@ class AnnouncementListener
      *     "manager"      = @DI\Inject("claroline.manager.announcement_manager")
      * })
      *
-     * @param FormFactory $formFactory
+     * @param FormFactory         $formFactory
      * @param HttpKernelInterface $httpKernel
-     * @param ObjectManager $om
-     * @param RequestStack $requestStack
-     * @param TwigEngine $templating
+     * @param ObjectManager       $om
+     * @param RequestStack        $requestStack
+     * @param TwigEngine          $templating
      * @param AnnouncementManager $manager
      */
     public function __construct(
@@ -147,7 +147,7 @@ class AnnouncementListener
 
         if ($announcements) {
             foreach ($announcements as $announcement) {
-                $this->manager->delete($announcement);
+                $this->manager->delete($announcement, false);
             }
         }
         $event->stopPropagation();
@@ -187,7 +187,7 @@ class AnnouncementListener
         $announcements = $aggregate->getAnnouncements();
         foreach ($announcements as $announcement) {
             $newAnnouncement = $this->manager->serialize($announcement);
-            $this->manager->create($copy, $newAnnouncement);
+            $this->manager->create($copy, $newAnnouncement, false);
         }
         $this->om->endFlushSuite();
 

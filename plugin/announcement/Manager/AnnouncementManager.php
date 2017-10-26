@@ -110,17 +110,18 @@ class AnnouncementManager
      *
      * @param AnnouncementAggregate $aggregate
      * @param array                 $data
+     * @param bool                  $withLog
      *
      * @return Announcement
      */
-    public function create(AnnouncementAggregate $aggregate, array $data)
+    public function create(AnnouncementAggregate $aggregate, array $data, $withLog = true)
     {
         $this->om->startFlushSuite();
 
         $announce = new Announcement();
         $announce->setAggregate($aggregate);
 
-        $this->update($announce, $data, 'LogAnnouncementCreate');
+        $this->update($announce, $data, 'LogAnnouncementCreate', $withLog);
 
         $this->om->endFlushSuite();
 
@@ -133,10 +134,11 @@ class AnnouncementManager
      * @param Announcement $announcement
      * @param array        $data
      * @param string       $logEvent
+     * @param bool         $withLog
      *
      * @return Announcement
      */
-    public function update(Announcement $announcement, array $data, $logEvent = 'LogAnnouncementEdit')
+    public function update(Announcement $announcement, array $data, $logEvent = 'LogAnnouncementEdit', $withLog = true)
     {
         $this->om->startFlushSuite();
 
@@ -163,7 +165,13 @@ class AnnouncementManager
         $this->om->endFlushSuite();
 
         // log
-        $this->eventDispatcher->dispatch('log', 'Claroline\\AnnouncementBundle\\Event\\Log\\'.$logEvent.'Event', [$announcement->getAggregate(), $announcement]);
+        if ($withLog) {
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Claroline\\AnnouncementBundle\\Event\\Log\\'.$logEvent.'Event',
+                [$announcement->getAggregate(), $announcement]
+            );
+        }
 
         return $announcement;
     }
@@ -172,8 +180,9 @@ class AnnouncementManager
      * Deletes an Announcement.
      *
      * @param Announcement $announcement
+     * @param bool         $withLog
      */
-    public function delete(Announcement $announcement)
+    public function delete(Announcement $announcement, $withLog = true)
     {
         $this->om->startFlushSuite();
 
@@ -181,8 +190,13 @@ class AnnouncementManager
         $this->unscheduleMessage($announcement);
 
         // log deletion
-        $this->eventDispatcher->dispatch('log', 'Claroline\\AnnouncementBundle\\Event\\Log\\LogAnnouncementDeleteEvent', [$announcement->getAggregate(), $announcement]);
-
+        if ($withLog) {
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Claroline\\AnnouncementBundle\\Event\\Log\\LogAnnouncementDeleteEvent',
+                [$announcement->getAggregate(), $announcement]
+            );
+        }
         // do remove
         $this->om->remove($announcement);
         $this->om->endFlushSuite();
