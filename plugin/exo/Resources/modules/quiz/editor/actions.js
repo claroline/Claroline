@@ -9,6 +9,7 @@ import {tex} from '#/main/core/translation'
 import {MODAL_MESSAGE} from '#/main/core/layout/modal'
 import {denormalize} from './../normalizer'
 import forOwn from 'lodash/forOwn'
+import {ITEM_UPDATE_TAGS} from '#/plugin/tag/actions'
 
 export const ITEM_CREATE = 'ITEM_CREATE'
 export const ITEM_UPDATE = 'ITEM_UPDATE'
@@ -73,7 +74,8 @@ export const quizChangeActions = [
   OBJECT_ADD,
   OBJECT_CHANGE,
   OBJECT_REMOVE,
-  OBJECT_MOVE
+  OBJECT_MOVE,
+  ITEM_UPDATE_TAGS
 ]
 
 export const actions = {}

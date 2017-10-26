@@ -110,6 +110,7 @@ class TagsEditor extends Component {
       this.props.updateItemTags(this.props.item.id, tags)
     }
     this.updateCurrentTag('')
+    this.props.updateCallback()
   }
 
   selectTag(tag) {
@@ -119,6 +120,7 @@ class TagsEditor extends Component {
       this.props.updateItemTags(this.props.item.id, tags)
     }
     this.updateCurrentTag('')
+    this.props.updateCallback()
   }
 
   removeTag(tag) {
@@ -129,6 +131,8 @@ class TagsEditor extends Component {
       tags.splice(index, 1)
       this.props.updateItemTags(this.props.item.id, tags)
     }
+
+    this.props.updateCallback()
   }
 
   isTagPresent(tag) {
@@ -176,7 +180,12 @@ TagsEditor.propTypes = {
     id: T.string.isRequired,
     tags: T.arrayOf(T.string)
   }).isRequired,
-  updateItemTags: T.func.isRequired
+  updateItemTags: T.func.isRequired,
+  updateCallback: T.func.isRequired
+}
+
+TagsEditor.defaultProps = {
+  updateCallback: () => {}
 }
 
 function mapStateToProps() {
