@@ -127,7 +127,7 @@ class RoleManager
      */
     public function createBaseRole($name, $translationKey, $isReadOnly = true)
     {
-        $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
+        $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($translationKey);
         $role->setReadOnly($isReadOnly);
@@ -150,7 +150,7 @@ class RoleManager
      */
     public function createCustomRole($name, $translationKey, $isReadOnly = false)
     {
-        $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
+        $role = new Role();
         $role->setName($name);
         $role->setTranslationKey($translationKey);
         $role->setReadOnly($isReadOnly);
@@ -176,7 +176,7 @@ class RoleManager
         $this->om->startFlushSuite();
 
         if (is_null($role)) {
-            $role = $this->om->factory('Claroline\CoreBundle\Entity\Role');
+            $role = new Role();
             $role->setName($roleName);
             $role->setTranslationKey($username);
             $role->setReadOnly(true);

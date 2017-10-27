@@ -10,8 +10,10 @@ use JMS\DiExtraBundle\Annotation as DI;
  * @DI\Service("claroline.serializer.organization")
  * @DI\Tag("claroline.serializer")
  */
-class OrganizationSerializer extends AbstractSerializer
+class OrganizationSerializer
 {
+    use SerializerTrait;
+
     /**
      * Serializes an Organization entity for the JSON api.
      *
@@ -19,7 +21,7 @@ class OrganizationSerializer extends AbstractSerializer
      *
      * @return array - the serialized representation of the workspace
      */
-    public function serialize($organization, array $options = [])
+    public function serialize(Organization $organization, array $options = [])
     {
         $data = [
           'id' => $organization->getId(),
@@ -50,18 +52,5 @@ class OrganizationSerializer extends AbstractSerializer
         }
 
         return $data;
-    }
-
-    /**
-     * Default deserialize method.
-     */
-    public function deserialize($class, $data, array $options = [])
-    {
-        return parent::deserialize($class, $data, $options);
-    }
-
-    public function getClass()
-    {
-        return 'Claroline\CoreBundle\Entity\Organization\Organization';
     }
 }

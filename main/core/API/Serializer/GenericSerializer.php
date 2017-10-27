@@ -8,9 +8,9 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.abstract_serializer", abstract=true)
+ * @DI\Service("claroline.generic_serializer")
  */
-abstract class AbstractSerializer
+class GenericSerializer
 {
     const INCLUDE_MANY_TO_ONE = 'many_to_one';
     //maybe later include many to many
@@ -42,35 +42,13 @@ abstract class AbstractSerializer
     /**
      * Default deserialize method.
      */
-    public function deserialize($class, $data, array $options = [])
+    public function deserialize($data, $object, array $options = [])
     {
-        $object = null;
-
-        if (isset($data->id) || isset($data->uuid)) {
-            if (isset($data->uuid)) {
-                $object = $this->om->getRepository($class)->findOneByUuid($data->uuid);
-            } else {
-                $object = !is_numeric($data->id) && property_exists($class, 'uuid') ?
-                  $this->om->getRepository($class)->findOneByUuid($data->id) :
-                  $this->om->getRepository($class)->findOneById($data->id);
-            }
-        }
-
-        $this->resolveData(
-            $this->getSerializableProperties($class, [self::INCLUDE_MANY_TO_ONE]),
-            $data,
-            $class
-        );
-
-        if (!$object) {
-            $rc = new \ReflectionClass($class);
-            $object = $rc->newInstanceWithoutConstructor();
-            call_user_func_array([$object, '__construct'], $this->toArray($data));
-        }
+        $properties = $this->getSerializableProperties($object, [self::INCLUDE_MANY_TO_ONE]);
 
         return $this->mapObjectToEntity(
-            $this->getSerializableProperties($class, [self::INCLUDE_MANY_TO_ONE]),
-            $data,
+            $properties,
+            $this->resolveData($properties, $data, get_class($object)),
             $object
         );
     }
@@ -97,22 +75,33 @@ abstract class AbstractSerializer
 
     protected function resolveData($mapping, \stdClass $data, $class)
     {
+        $resolved = new \stdClass();
         $refClass = new \ReflectionClass($class);
 
         foreach ($mapping as $dataProperty => $map) {
             foreach ($refClass->getProperties() as $property) {
                 if ($property->getName() === $dataProperty && property_exists($data, $dataProperty)) {
+                    $resolved->{$dataProperty} = $data->{$map};
+
                     foreach ($this->reader->getPropertyAnnotations($property) as $annotation) {
                         if ($annotation instanceof ManyToOne) {
                             //basic search by fields here... later create the object aswell
-                            $data->{$dataProperty} = $this->om
-                              ->getRepository($annotation->targetEntity)
-                              ->findOneBy($this->toArray($data->{$map}));
+                            if (get_class($data->{$map}) !== $annotation->targetEntity) {
+                                try {
+                                    $resolved->{$dataProperty} = $this->om
+                                        ->getRepository($annotation->targetEntity)
+                                        ->findOneBy($this->toArray($data->{$map}));
+                                } catch (\Exception $e) {
+                                    $resolved->{$dataProperty} = null;
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+
+        return $resolved;
     }
 
     /**

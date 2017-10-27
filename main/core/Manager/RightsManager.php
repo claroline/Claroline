@@ -230,7 +230,7 @@ class RightsManager
         $this->om->startFlushSuite();
 
         foreach ($originalRights as $originalRight) {
-            $new = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+            $new = new ResourceRights();
             $new->setRole($originalRight->getRole());
             $new->setResourceNode($node);
             $new->setMask($originalRight->getMask());
@@ -271,7 +271,7 @@ class RightsManager
             }
 
             if (!$found) {
-                $rights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+                $rights = new ResourceRights();
                 $rights->setRole($role);
                 $rights->setResourceNode($descendant);
                 $this->om->persist($rights);
@@ -345,7 +345,7 @@ class RightsManager
             return $resourceRights;
         }
 
-        $resourceRights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+        $resourceRights = new ResourceRights();
         $resourceRights->setResourceNode($node);
         $resourceRights->setRole($role);
 
@@ -411,7 +411,7 @@ class RightsManager
         ResourceNode $node,
         array $creations = []
     ) {
-        $rights = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceRights');
+        $rights = new ResourceRights();
         $rights->setRole($role);
         $rights->setResourceNode($node);
         $rights->setCreatableResourceTypes($creations);

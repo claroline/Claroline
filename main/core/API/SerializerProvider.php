@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API;
 
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -15,6 +16,25 @@ class SerializerProvider
      * @var array
      */
     private $serializers = [];
+
+    /**
+     * @var ObjectManager
+     */
+    private $om;
+
+    /**
+     * Injects Serializer service.
+     *
+     * @DI\InjectParams({
+     *      "om" = @DI\Inject("claroline.persistence.object_manager")
+     * })
+     *
+     * @param ObjectManager $om
+     */
+    public function setObjectManager(ObjectManager $om)
+    {
+        $this->om = $om;
+    }
 
     /**
      * Registers a new serializer.
@@ -88,6 +108,16 @@ class SerializerProvider
      */
     public function deserialize($class, $data, $options = [])
     {
-        return $this->get($class)->deserialize($class, $data, $options);
+        $object = null;
+
+        if (!in_array(Options::NO_FETCH, $options)) {
+            $object = $this->om->getObject($data, $class);
+        }
+
+        if (!$object) {
+            $object = new $class();
+        }
+
+        return $this->get($class)->deserialize($data, $object, $options);
     }
 }

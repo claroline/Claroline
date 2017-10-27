@@ -106,12 +106,6 @@ class ObjectManagerTest extends MockeryTestCase
         $om->endFlushSuite();
     }
 
-    public function testFactory()
-    {
-        $om = new ObjectManager($this->mock('Doctrine\Common\Persistence\ObjectManager'));
-        $this->assertInstanceOf('stdClass', $om->factory('stdClass'));
-    }
-
     /**
      * @expectedException \Claroline\CoreBundle\Persistence\MissingObjectException
      */

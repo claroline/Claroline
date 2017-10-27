@@ -12,8 +12,10 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  * @DI\Service("claroline.serializer.user")
  * @DI\Tag("claroline.serializer")
  */
-class UserSerializer extends AbstractSerializer
+class UserSerializer
 {
+    use SerializerTrait;
+
     private $facetManager;
     private $tokenStorage;
 
@@ -38,14 +40,14 @@ class UserSerializer extends AbstractSerializer
     }
 
     /**
-     * Serializes a Workspace entity for the JSON api.
+     * Serializes a User entity for the JSON api.
      *
      * @param User  $user    - the user to serialize
      * @param array $options
      *
      * @return array - the serialized representation of the user
      */
-    public function serialize($user, array $options = [])
+    public function serialize(User $user, array $options = [])
     {
         if (isset($options['public']) && $options['public']) {
             return $this->serializePublic($user);
@@ -108,18 +110,14 @@ class UserSerializer extends AbstractSerializer
     }
 
     /**
-     * Default deserialize method.
+     * Deserialize method.
+     * This is only a partial implementation.
      */
-    public function deserialize($class, $data, array $options = [])
+    public function deserialize($data, User $user = null, array $options = [])
     {
-        $object = parent::deserialize($class, $data, $options);
+        $object = $this->serializer->deserialize($data, $user, $options);
         $object->setPlainPassword($data->plainPassword);
 
         return $object;
-    }
-
-    public function getClass()
-    {
-        return 'Claroline\CoreBundle\Entity\User';
     }
 }

@@ -213,24 +213,6 @@ class ObjectManager extends ObjectManagerDecorator
     }
 
     /**
-     * Returns an instance of a class.
-     *
-     * Note: this is a convenience method intended to ease unit testing, as objects
-     * returned by this factory are mockable.
-     *
-     * @param string $class
-     *
-     * @return object
-     *
-     * @todo find a way to ensure that the class is a valid data class (e.g. by
-     * using the getClassMetatadata method)
-     */
-    public function factory($class)
-    {
-        return new $class();
-    }
-
-    /**
      * Finds a set of objects by their ids.
      *
      * @param $class
@@ -381,5 +363,23 @@ class ObjectManager extends ObjectManagerDecorator
         }
 
         $this->flush();
+    }
+
+    /**
+     * Fetch an object from database according to the class and the id/uuid of the data.
+     */
+    public function getObject(\stdClass $data, $class)
+    {
+        if (isset($data->id) || isset($data->uuid)) {
+            if (isset($data->uuid)) {
+                $object = $this->getRepository($class)->findOneByUuid($data->uuid);
+            } else {
+                $object = !is_numeric($data->id) && property_exists($class, 'uuid') ?
+                $this->getRepository($class)->findOneByUuid($data->id) :
+                $this->getRepository($class)->findOneById($data->id);
+            }
+
+            return $object;
+        }
     }
 }

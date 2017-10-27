@@ -118,7 +118,7 @@ class IconManager
             if ($publicFile) {
                 $thumbnailPath = $this->webdir.$ds.$publicFile->getUrl();
                 $relativeUrl = ltrim(str_replace($this->webdir, '', $thumbnailPath), "{$ds}");
-                $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+                $icon = new ResourceIcon();
                 $icon->setMimeType('custom');
                 $icon->setRelativeUrl($relativeUrl);
                 $icon->setShortcut(false);
@@ -226,7 +226,7 @@ class IconManager
             $thumbnailPath = $this->webdir.$ds.$publicFile->getUrl();
             $relativeUrl = ltrim(str_replace($this->webdir, '', $thumbnailPath), "{$ds}");
             //entity creation
-            $icon = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceIcon');
+            new ResourceIcon();
             $icon->setRelativeUrl($relativeUrl);
             $icon->setMimeType('custom');
             $icon->setShortcut(false);
