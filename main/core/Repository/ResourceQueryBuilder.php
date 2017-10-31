@@ -26,6 +26,7 @@ class ResourceQueryBuilder
     private $resultAsArray;
     private $leftJoinRights;
     private $leftJoinLogs;
+    private $leftJoinPlugins;
     private $selectClause;
     private $whereClause;
     private $orderClause;
@@ -45,6 +46,7 @@ class ResourceQueryBuilder
         $this->resultAsArray = false;
         $this->leftJoinRights = false;
         $this->leftJoinLogs = false;
+        $this->leftJoinPlugins = false;
         $this->selectClause = null;
         $this->whereClause = null;
         $this->orderClause = null;
@@ -56,13 +58,13 @@ class ResourceQueryBuilder
 
         $this->joinRelativesClause = "JOIN node.creator creator{$eol}".
             "JOIN node.resourceType resourceType{$eol}".
-            "LEFT JOIN node.parent parent{$eol}".
             "LEFT JOIN node.icon icon{$eol}";
     }
 
     public function setBundles(array $bundles)
     {
         $this->bundles = $bundles;
+        $this->leftJoinPlugins = true;
         //look at the getDql() method to see where it come from
         $this->addWhereClause('(CONCAT(p.vendorName, p.bundleName) IN (:bundles) OR rtp.plugin is NULL)');
         $this->parameters[':bundles'] = $bundles;
@@ -112,7 +114,7 @@ class ResourceQueryBuilder
             "    node.id as id,{$eol}".
             "    node.name as name,{$eol}".
             "    node.path as path,{$eol}".
-            "    parent.id as parent_id,{$eol}".
+            "    IDENTITY(node.parent) as parent_id,{$eol}".
             "    creator.username as creator_username,{$eol}".
             "    creator.id as creator_id,{$eol}".
             "    resourceType.name as type,{$eol}".
@@ -474,7 +476,7 @@ class ResourceQueryBuilder
     {
         $this->groupByClause = '
             GROUP BY node.id,
-                     parent.id,
+                     node.parent,
                      previous.id,
                      next.id,
                      creator.username,
@@ -500,8 +502,10 @@ class ResourceQueryBuilder
 
         $eol = PHP_EOL;
         $joinRelatives = $this->joinSingleRelatives ? $this->joinRelativesClause : '';
-        $joinRelatives .= " LEFT JOIN node.resourceType rtp{$eol}
+        if ($this->leftJoinPlugins) {
+            $joinRelatives .= " LEFT JOIN node.resourceType rtp{$eol}
             LEFT JOIN rtp.plugin p{$eol}";
+        }
         $joinRoles = $this->leftJoinRoles ?
             "LEFT JOIN node.workspace workspace{$eol}".
             "LEFT JOIN workspace.roles role{$eol}" :
