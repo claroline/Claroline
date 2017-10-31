@@ -16,10 +16,12 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
 use Claroline\CoreBundle\Event\Log\LogResourceDeleteEvent;
+use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -35,6 +37,7 @@ class LogListener
     private $container;
     private $roleManager;
     private $ch;
+    private $resourceNodeManager;
 
     /**
      * @DI\InjectParams({
@@ -42,7 +45,8 @@ class LogListener
      *     "tokenStorage"        = @DI\Inject("security.token_storage"),
      *     "container"           = @DI\Inject("service_container"),
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
-     *     "ch"                  = @DI\Inject("claroline.config.platform_config_handler")
+     *     "ch"                  = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node")
      * })
      */
     public function __construct(
@@ -50,7 +54,8 @@ class LogListener
         TokenStorageInterface $tokenStorage,
         $container,
         RoleManager $roleManager,
-        PlatformConfigurationHandler $ch
+        PlatformConfigurationHandler $ch,
+        ResourceNodeManager $resourceNodeManager
     ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
@@ -58,6 +63,7 @@ class LogListener
         $this->roleManager = $roleManager;
         $this->ch = $ch;
         $this->enabledLog = $this->ch->getParameter('platform_log_enabled');
+        $this->resourceNodeManager = $resourceNodeManager;
     }
 
     private function createLog(LogGenericEvent $event)
@@ -275,6 +281,19 @@ class LogListener
     {
         if (!($event instanceof LogNotRepeatableInterface) || !$this->isARepeat($event)) {
             $this->createLog($event);
+        }
+
+        // Increment view count
+        if ($event instanceof LogResourceReadEvent) {
+            // Get connected user
+            $tokenStorage = $this->container->get('security.token_storage');
+            $token = $tokenStorage->getToken();
+            $user = $token ? $token->getUser() : null;
+
+            // Increment view count if viewer is not creator of the resource
+            if (is_null($user) || is_string($user) || $user !== $event->getResource()->getCreator()) {
+                $this->resourceNodeManager->addView($event->getResource());
+            }
         }
     }
 

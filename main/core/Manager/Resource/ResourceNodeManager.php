@@ -299,4 +299,13 @@ class ResourceNodeManager
 
         return true;
     }
+
+    public function addView(ResourceNode $node)
+    {
+        $node->addView();
+        $this->om->persist($node);
+        $this->om->flush();
+
+        return $node;
+    }
 }

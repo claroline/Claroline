@@ -306,6 +306,13 @@ class ResourceNode
      */
     protected $accesses = [];
 
+    /**
+     * @var int
+     *
+     * @ORM\Column(nullable=false, type="integer", name="views_count", options={"default": 0})
+     */
+    protected $viewsCount = 0;
+
     public function __construct()
     {
         $this->guid = Uuid::uuid4()->toString();
@@ -984,5 +991,27 @@ class ResourceNode
         ) {
             return $this->getAccesses()['code'];
         }
+    }
+
+    /**
+     * Gets how many times a resource has been viewed.
+     *
+     * @return int
+     */
+    public function getViewsCount()
+    {
+        return $this->viewsCount;
+    }
+
+    /**
+     * Adds one unit to the resource view count.
+     *
+     * @return ResourceNode
+     */
+    public function addView()
+    {
+        ++$this->viewsCount;
+
+        return $this;
     }
 }

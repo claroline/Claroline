@@ -171,6 +171,7 @@ class ResourceNodeSerializer
             'creator' => $resourceNode->getCreator() ? $this->userSerializer->serialize($resourceNode->getCreator()) : null,
             'actions' => $this->getActions($resourceNode),
             'accesses' => $resourceNode->getAccesses(),
+            'views' => $resourceNode->getViewsCount(),
         ];
     }
 
