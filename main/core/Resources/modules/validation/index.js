@@ -43,6 +43,12 @@ export function gteZero(value) {
   }
 }
 
+export function notEmptyArray(value) {
+  if (value.length === 0) {
+    return tval('This value should not be blank.')
+  }
+}
+
 export function chain(value, validators) {
   return validators.reduce((result, validate) => {
     return result || validate(value)

@@ -72,6 +72,8 @@ const detail = createSelector(
   (posts, announcementDetail) => posts.find(post => post.id === announcementDetail)
 )
 
+const workspaceRoles = state => state.workspaceRoles
+
 export const select = {
   aggregateId,
   posts,
@@ -82,6 +84,7 @@ export const select = {
   announcement,
   visibleSortedPosts,
   detail,
+  workspaceRoles,
 
   // form (should be generic)
   formHasPendingChanges,

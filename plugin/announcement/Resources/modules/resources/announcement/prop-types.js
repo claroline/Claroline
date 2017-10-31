@@ -6,26 +6,30 @@ const Announcement = {
     content: T.string.isRequired,
     meta: T.shape({
       author: T.string,
-      notifyUsers: T.bool.isRequired
+      notifyUsers: T.number.isRequired,
+      notificationDate: T.string
     }).isRequired,
     restrictions: T.shape({
       visible: T.bool.isRequired,
       visibleFrom: T.string,
       visibleUntil: T.string
-    }).isRequired
+    }).isRequired,
+    roles: T.array
   },
   defaultProps: {
     title: null,
     content: '',
     meta: {
       author: null,
-      notifyUsers: false
+      notifyUsers: 0,
+      notificationDate: null
     },
     restrictions: {
       visible: true,
       visibleFrom: null,
       visibleUntil: null
-    }
+    },
+    roles: []
   }
 }
 

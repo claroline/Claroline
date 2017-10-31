@@ -12,8 +12,10 @@
 namespace Claroline\AnnouncementBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -124,12 +126,19 @@ class Announcement
      * )
      * @ORM\JoinColumn(name="task_id", nullable=true)
      */
-    protected $task;
+    private $task;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Role")
+     * @ORM\JoinTable(name="claro_announcement_roles")
+     */
+    private $roles;
 
     public function __construct()
     {
         $this->refreshUuid();
         $this->creationDate = new \DateTime();
+        $this->roles = new ArrayCollection();
     }
 
     public function getId()
@@ -355,5 +364,29 @@ class Announcement
     public function setTask(ScheduledTask $task = null)
     {
         $this->task = $task;
+    }
+
+    public function getRoles()
+    {
+        return $this->roles->toArray();
+    }
+
+    public function addRole(Role $role)
+    {
+        if (!$this->roles->contains($role)) {
+            $this->roles->add($role);
+        }
+    }
+
+    public function removeRole(Role $role)
+    {
+        if ($this->roles->contains($role)) {
+            $this->roles->removeElement($role);
+        }
+    }
+
+    public function emptyRoles()
+    {
+        $this->roles->clear();
     }
 }

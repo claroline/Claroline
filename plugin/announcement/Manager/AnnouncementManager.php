@@ -146,20 +146,26 @@ class AnnouncementManager
         $this->serializer->deserialize($data, $announcement);
         $this->om->persist($announcement);
 
+        $roles = isset($data['roles']) && count($data['roles']) > 0 ? $this->roleRepo->findRolesByIds($data['roles']) : [];
+
         // send message if needed
-        if ($data['meta']['notifyUsers']) {
-            // announcement should be sent to users
-            if (!empty($announcement->getVisibleFrom())) {
-                // schedule sending
-                $this->scheduleMessage($announcement);
-            } else {
+        switch ($data['meta']['notifyUsers']) {
+            case 0:
+                $this->unscheduleMessage($announcement);
+                break;
+            case 1:
                 // directly send message
                 $this->unscheduleMessage($announcement);
-                $this->sendMessage($announcement);
-            }
-        } else {
-            // announcement should not be sent
-            $this->unscheduleMessage($announcement);
+                $this->sendMessage($announcement, $roles);
+                break;
+            case 2:
+                // schedule sending
+                $this->scheduleMessage(
+                    $announcement,
+                    \DateTime::createFromFormat('Y-m-d\TH:i:s', $data['meta']['notificationDate']),
+                    $roles
+                );
+                break;
         }
 
         $this->om->endFlushSuite();
@@ -236,10 +242,11 @@ class AnnouncementManager
      * Sends an Announcement by mail to Users that can access it.
      *
      * @param Announcement $announcement
+     * @param array        $roles
      */
-    public function sendMail(Announcement $announcement)
+    public function sendMail(Announcement $announcement, array $roles = [])
     {
-        $message = $this->getMessage($announcement);
+        $message = $this->getMessage($announcement, $roles);
         $this->mailManager->send(
             $message['object'],
             $message['content'],
@@ -252,10 +259,11 @@ class AnnouncementManager
      * Sends an Announcement by message to Users that can access it.
      *
      * @param Announcement $announcement
+     * @param array        $roles
      */
-    public function sendMessage(Announcement $announcement)
+    public function sendMessage(Announcement $announcement, array $roles = [])
     {
-        $message = $this->getMessage($announcement);
+        $message = $this->getMessage($announcement, $roles);
 
         $this->eventDispatcher->dispatch(
             'claroline_message_sending_to_users',
@@ -270,15 +278,15 @@ class AnnouncementManager
         );
     }
 
-    public function scheduleMessage(Announcement $announcement)
+    public function scheduleMessage(Announcement $announcement, \DateTime $scheduledDate, array $roles = [])
     {
         $this->om->startFlushSuite();
 
-        $message = $this->getMessage($announcement);
+        $message = $this->getMessage($announcement, $roles);
         $taskData = [
             'name' => $message['object'],
             'type' => 'message',
-            'scheduledDate' => $announcement->getVisibleFrom()->format('Y-m-d\TH:i:s'),
+            'scheduledDate' => $scheduledDate->format('Y-m-d\TH:i:s'),
             'data' => [
                 'object' => $message['object'],
                 'content' => $announcement->getContent(),
@@ -320,22 +328,24 @@ class AnnouncementManager
      * Gets the data which will be sent by message (internal &email) to Users.
      *
      * @param Announcement $announce
+     * @param array        $roles
      *
      * @return array
      */
-    private function getMessage(Announcement $announce)
+    private function getMessage(Announcement $announce, array $roles = [])
     {
         $resourceNode = $announce->getAggregate()->getResourceNode();
 
-        $object = !empty($announce->getTitle()) ?
-            $announce->getTitle() :
-            $announce->getAggregate()->getName().' ['.$announce->getVisibleFrom()->format('Y-m-d H:i').']';
+        $object = !empty($announce->getTitle()) ? $announce->getTitle() : $announce->getAggregate()->getName();
 
+        if (empty($announce->getTitle()) && !empty($announce->getVisibleFrom())) {
+            $object .= ' ['.$announce->getVisibleFrom()->format('Y-m-d H:i').']';
+        }
         $content = $announce->getContent().'<br>['.$resourceNode->getWorkspace()->getCode().'] '.$resourceNode->getWorkspace()->getName();
 
         return [
             'sender' => $announce->getCreator(),
-            'receivers' => $this->getVisibleBy($announce),
+            'receivers' => $this->getVisibleBy($announce, $roles),
             'object' => $object,
             'content' => $content,
         ];
@@ -347,25 +357,28 @@ class AnnouncementManager
      * @todo make a dql request to retrieve the users (it may be a difficult one to do)
      *
      * @param Announcement $announce
+     * @param array        $roles
      *
      * @return User[]
      */
-    private function getVisibleBy(Announcement $announce)
+    private function getVisibleBy(Announcement $announce, array $roles = [])
     {
         $node = $announce->getAggregate()->getResourceNode();
 
         $rights = $node->getRights();
-        $roles = [];
-        foreach ($rights as $right) {
-            //1 is the default "open" mask
-            if ($right->getMask() & 1) {
-                $roles[] = $right->getRole();
-            }
-        }
 
-        $roles[] = $this->roleRepo->findOneBy([
-            'name' => 'ROLE_WS_MANAGER_'.$node->getWorkspace()->getGuid(),
-        ]);
+        if (count($roles) === 0) {
+            foreach ($rights as $right) {
+                //1 is the default "open" mask
+                if ($right->getMask() & 1) {
+                    $roles[] = $right->getRole();
+                }
+            }
+
+            $roles[] = $this->roleRepo->findOneBy([
+                'name' => 'ROLE_WS_MANAGER_'.$node->getWorkspace()->getGuid(),
+            ]);
+        }
 
         return $this->userRepo->findByRolesIncludingGroups($roles, false, 'id', 'ASC');
     }

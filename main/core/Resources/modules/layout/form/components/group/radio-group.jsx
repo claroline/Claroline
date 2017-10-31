@@ -27,7 +27,7 @@ const RadioGroup = props =>
 RadioGroup.propTypes = {
   controlId: T.string.isRequired,
   options: T.array.isRequired,
-  checkedValue: T.string,
+  checkedValue: T.oneOfType([T.string, T.number]),
   inline: T.bool.isRequired,
   disabled: T.bool.isRequired,
   onChange: T.func.isRequired

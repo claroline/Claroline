@@ -626,4 +626,18 @@ class RoleRepository extends EntityRepository
 
         return $query->getOneOrNullResult();
     }
+
+    public function findRolesByIds(array $ids, $executeQuery = true)
+    {
+        $dql = '
+            SELECT r
+            FROM Claroline\CoreBundle\Entity\Role r
+            WHERE r.id IN (:ids)
+        ';
+
+        $query = $this->_em->createQuery($dql);
+        $query->setParameter('ids', $ids);
+
+        return $executeQuery ? $query->getResult() : $query;
+    }
 }

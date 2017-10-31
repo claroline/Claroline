@@ -12,6 +12,8 @@ import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.j
 import {DateGroup}  from '#/main/core/layout/form/components/group/date-group.jsx'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group.jsx'
+import {RadioGroup}  from '#/main/core/layout/form/components/group/radio-group.jsx'
+import {CheckboxesGroup}  from '#/main/core/layout/form/components/group/checkboxes-group.jsx'
 
 import {Announcement as AnnouncementTypes} from './../prop-types'
 import {select} from './../selectors'
@@ -46,14 +48,6 @@ const AnnounceForm = props =>
           label={t('author')}
           value={props.announcement.meta.author || ''}
           onChange={value => props.updateProperty('meta.author', value)}
-          warnOnly={!props.validating}
-        />
-
-        <CheckGroup
-          checkId="announcement-notifyUsers"
-          label={trans('announcement_notify_users', {}, 'announcement')}
-          checked={props.announcement.meta.notifyUsers}
-          onChange={() => props.updateProperty('meta.notifyUsers', !props.announcement.meta.notifyUsers)}
           warnOnly={!props.validating}
         />
       </fieldset>
@@ -106,6 +100,58 @@ const AnnounceForm = props =>
           </div>
         </ActivableSet>
       </FormSection>
+      <FormSection
+        id="announcement-sending"
+        icon="fa fa-fw fa-envelope"
+        title={trans('announcement_sending', {}, 'announcement')}
+      >
+        <RadioGroup
+          controlId="announcement-notify-users"
+          label={trans('announcement_notify_users', {}, 'announcement')}
+          hideLabel={true}
+          options={[
+            {value: 0, label: trans('do_not_send', {}, 'announcement')},
+            {value: 1, label: trans('send_directly', {}, 'announcement')},
+            {value: 2, label: trans('send_at_predefined_date', {}, 'announcement')}
+          ]}
+          checkedValue={props.announcement.meta.notifyUsers}
+          inline={true}
+          onChange={value => {
+            props.updateProperty('meta.notifyUsers', value)
+
+            if (value === 2 && !props.announcement.meta.notificationDate && props.announcement.restrictions.visibleFrom) {
+              props.updateProperty('meta.notificationDate', props.announcement.restrictions.visibleFrom)
+            }
+          }}
+        />
+        {props.announcement.meta.notifyUsers === 2 &&
+          <DateGroup
+            controlId="announcement-sending-date"
+            label={trans('announcement_sending_date', {}, 'announcement')}
+            value={props.announcement.meta.notificationDate || null}
+            onChange={(date) => props.updateProperty('meta.notificationDate', date)}
+            warnOnly={!props.validating}
+            error={get(props.errors, 'meta.notificationDate')}
+          />
+        }
+        <CheckboxesGroup
+          controlId="announcement-sending-roles"
+          label={trans('roles_to_send_to', {}, 'announcement')}
+          options={props.workspaceRoles.map(r => {
+            return {
+              value: r.id,
+              label: t(r.translationKey)
+            }
+          })}
+          inline={false}
+          checkedValues={props.announcement.roles.map(r => parseInt(r))}
+          onChange={values => {
+            props.updateProperty('roles', values)
+          }}
+          warnOnly={!props.validating}
+          error={get(props.errors, 'roles')}
+        />
+      </FormSection>
     </FormSections>
   </form>
 
@@ -115,6 +161,10 @@ AnnounceForm.propTypes = {
   announcement: T.shape(
     AnnouncementTypes.propTypes
   ).isRequired,
+  workspaceRoles: T.arrayOf(T.shape({
+    id: T.number.isRequired,
+    translationKey: T.string.isRequired
+  })).isRequired,
   updateProperty: T.func.isRequired
 }
 
@@ -126,7 +176,8 @@ function mapStateToProps(state) {
   return {
     announcement: select.formData(state),
     errors: select.formErrors(state),
-    validating: select.formValidating(state)
+    validating: select.formValidating(state),
+    workspaceRoles: select.workspaceRoles(state)
   }
 }
 

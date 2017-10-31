@@ -27,10 +27,10 @@ const Radios = props =>
 Radios.propTypes = {
   groupName: T.string.isRequired,
   options: T.arrayOf(T.shape({
-    value: T.string.isRequired,
+    value: T.oneOfType([T.string, T.number]).isRequired,
     label: T.string.isRequired
   })).isRequired,
-  checkedValue: T.string.isRequired,
+  checkedValue: T.oneOfType([T.string, T.number]).isRequired,
   inline: T.bool,
   disabled: T.bool,
   onChange: T.func.isRequired

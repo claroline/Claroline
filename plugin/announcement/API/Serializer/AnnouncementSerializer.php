@@ -4,7 +4,10 @@ namespace Claroline\AnnouncementBundle\API\Serializer;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\CoreBundle\API\Serializer\UserSerializer;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Repository\RoleRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -20,23 +23,35 @@ class AnnouncementSerializer
     /** @var UserSerializer */
     private $userSerializer;
 
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var RoleRepository */
+    private $roleRepo;
+
     /**
      * AnnouncementSerializer constructor.
      *
      * @DI\InjectParams({
      *     "tokenStorage"   = @DI\Inject("security.token_storage"),
-     *     "userSerializer" = @DI\Inject("claroline.serializer.user")
+     *     "userSerializer" = @DI\Inject("claroline.serializer.user"),
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param TokenStorageInterface $tokenStorage
      * @param UserSerializer        $userSerializer
+     * @param ObjectManager         $om
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        UserSerializer $userSerializer
+        UserSerializer $userSerializer,
+        ObjectManager $om
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->userSerializer = $userSerializer;
+        $this->om = $om;
+
+        $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
     }
 
     /**
@@ -55,13 +70,17 @@ class AnnouncementSerializer
                 'creator' => $announce->getCreator() ? $this->userSerializer->serialize($announce->getCreator()) : null,
                 'publishedAt' => $announce->getPublicationDate() ? $announce->getPublicationDate()->format('Y-m-d\TH:i:s') : null,
                 'author' => $announce->getAnnouncer(),
-                'notifyUsers' => !empty($announce->getTask()),
+                'notifyUsers' => !empty($announce->getTask()) ? 2 : 0,
+                'notificationDate' => !empty($announce->getTask()) ? $announce->getTask()->getScheduledDate()->format('Y-m-d\TH:i:s') : null,
             ],
             'restrictions' => [
                 'visible' => $announce->isVisible(),
                 'visibleFrom' => $announce->getVisibleFrom() ? $announce->getVisibleFrom()->format('Y-m-d\TH:i:s') : null,
                 'visibleUntil' => $announce->getVisibleUntil() ? $announce->getVisibleUntil()->format('Y-m-d\TH:i:s') : null,
             ],
+            'roles' => array_map(function (Role $role) {
+                return $role->getId();
+            }, $announce->getRoles()),
         ];
     }
 
@@ -111,6 +130,19 @@ class AnnouncementSerializer
                 $announce->setPublicationDate($now);
             } else {
                 $announce->setPublicationDate($announce->getVisibleFrom());
+            }
+        }
+
+        // set roles
+        $announce->emptyRoles();
+
+        if (isset($data['roles']) && count($data['roles'] > 0)) {
+            foreach ($data['roles'] as $roleId) {
+                $role = $this->roleRepo->findOneById($roleId);
+
+                if (!empty($role)) {
+                    $announce->addRole($role);
+                }
             }
         }
 

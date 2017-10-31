@@ -55,7 +55,10 @@ const announcementReducer = makeReducer({posts: []}, {
 
     // update announce in the list
     const announcePos = newState.posts.findIndex(post => post.id === action.announce.id)
-    newState[announcePos] = action.announce
+
+    if (announcePos > -1) {
+      newState.posts[announcePos] = action.announce
+    }
 
     return newState
   },
@@ -121,6 +124,8 @@ const reducer = {
 
   announcementForm: announcementFormReducer,
   announcementDetail: announcementDetailReducer,
+
+  workspaceRoles: makeReducer({}, {}),
 
   // generic reducers
   currentRequests: apiReducer,
