@@ -259,6 +259,35 @@ class ScormManager
      * Access to LogRepository methods *
      ***********************************/
 
+    public function getScoLastSessionDate(User $user, ResourceNode $resourceNode, $type, $scoId)
+    {
+        $lastSessionDate = null;
+
+        switch ($type) {
+            case 'scorm12':
+                $action = 'resource-scorm_12-sco_result';
+                break;
+            case 'scorm2004':
+                $action = 'resource-scorm_2004-sco_result';
+                break;
+            default:
+                $action = null;
+        }
+
+        $logs = $this->logRepo->findBy(['action' => $action, 'receiver' => $user, 'resourceNode' => $resourceNode], ['dateLog' => 'desc']);
+
+        foreach ($logs as $log) {
+            $details = $log->getDetails();
+
+            if (!isset($details['scoId']) || intval($details['scoId']) === intval($scoId)) {
+                $lastSessionDate = $log->getDateLog();
+                break;
+            }
+        }
+
+        return $lastSessionDate;
+    }
+
     public function getScormTrackingDetails(User $user, ResourceNode $resourceNode, $type = 'scorm12')
     {
         switch ($type) {
