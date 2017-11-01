@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "4c174215d0a4fe1975e0ccb665d3d9a4a6dff469"
+                "reference": "b3695aafbe1119a45bc2e4e9d58b844666342ae5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/4c174215d0a4fe1975e0ccb665d3d9a4a6dff469",
-                "reference": "4c174215d0a4fe1975e0ccb665d3d9a4a6dff469",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b3695aafbe1119a45bc2e4e9d58b844666342ae5",
+                "reference": "b3695aafbe1119a45bc2e4e9d58b844666342ae5",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-10-27 08:26:06"
+            "time": "2017-10-31 14:59:45"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -7825,12 +7825,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "2e948d4116d141f4a338ab1b54b6baacd51539a5"
+                "reference": "52d54873c4cb3bcac9895943192d3cbe979aeffc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/2e948d4116d141f4a338ab1b54b6baacd51539a5",
-                "reference": "2e948d4116d141f4a338ab1b54b6baacd51539a5",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/52d54873c4cb3bcac9895943192d3cbe979aeffc",
+                "reference": "52d54873c4cb3bcac9895943192d3cbe979aeffc",
                 "shasum": ""
             },
             "require": {
@@ -7879,7 +7879,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-10-25 16:54:58"
+            "time": "2017-10-28 16:54:10"
         },
         {
             "name": "webmozart/assert",
