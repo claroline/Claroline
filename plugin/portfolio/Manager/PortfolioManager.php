@@ -8,8 +8,8 @@ use Claroline\TeamBundle\Manager\TeamManager;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManager;
 use Icap\PortfolioBundle\Entity\Portfolio;
-use Icap\PortfolioBundle\Entity\PortfolioUser;
 use Icap\PortfolioBundle\Entity\PortfolioGuide;
+use Icap\PortfolioBundle\Entity\PortfolioUser;
 use Icap\PortfolioBundle\Event\Log\PortfolioAddGuideEvent;
 use Icap\PortfolioBundle\Event\Log\PortfolioAddViewerEvent;
 use Icap\PortfolioBundle\Event\Log\PortfolioRemoveGuideEvent;
@@ -103,7 +103,7 @@ class PortfolioManager
         Collection $originalPortfolioGroups, Collection $originalPortfolioTeams)
     {
         $portfolioUsers = $portfolio->getPortfolioUsers();
-        $addedPortfolioViewersToNotify = array();
+        $addedPortfolioViewersToNotify = [];
 
         foreach ($portfolioUsers as $portfolioUser) {
             if ($originalPortfolioUsers->contains($portfolioUser)) {
@@ -157,9 +157,9 @@ class PortfolioManager
     {
         $portfolioGuides = $portfolio->getPortfolioGuides();
         /** @var PortfolioGuide[] $addedPortfolioGuidesToNotify */
-        $addedPortfolioGuidesToNotify = array();
+        $addedPortfolioGuidesToNotify = [];
         /** @var PortfolioGuide[] $removedPortfolioGuidesToNotify */
-        $removedPortfolioGuidesToNotify = array();
+        $removedPortfolioGuidesToNotify = [];
 
         foreach ($portfolioGuides as $portfolioGuide) {
             if ($originalPortfolioGuides->contains($portfolioGuide)) {
@@ -224,17 +224,17 @@ class PortfolioManager
         /** @var \Icap\PortfolioBundle\Entity\PortfolioComment[] $comments */
         $comments = $this->entityManager->getRepository('IcapPortfolioBundle:PortfolioComment')->findSome($portfolio);
 
-        $data = array(
+        $data = [
             'id' => $portfolio->getId(),
             'title' => $portfolio->getTitle(),
             'portfolioWidgets' => [],
-        );
+        ];
 
         foreach ($portfolioWidgets as $portfolioWidget) {
             $data['portfolioWidgets'][] = $this->widgetsManager->getPortfolioWidgetData($portfolioWidget);
         }
 
-        $commentsDatas = array();
+        $commentsDatas = [];
 
         foreach ($comments as $comment) {
             $commentsDatas[] = $comment->getData();
@@ -256,7 +256,7 @@ class PortfolioManager
         /** @var \Icap\PortfolioBundle\Entity\Portfolio[] $portfolios */
         $portfolios = $this->entityManager->getRepository('IcapPortfolioBundle:Portfolio')->findAvailableToGuideByUser($user);
 
-        $data = array();
+        $data = [];
 
         foreach ($portfolios as $portfolio) {
             $data[] = $this->getUserGuidedPortfolioData($portfolio, $user);
@@ -273,13 +273,13 @@ class PortfolioManager
      */
     public function getUserGuidedPortfolioData(Portfolio $portfolio, User $user)
     {
-        return array(
+        return [
             'type' => ($user === $portfolio->getUser()) ? 'owned' : 'guided',
             'id' => $portfolio->getId(),
             'title' => $portfolio->getTitle(),
             'unreadComments' => $portfolio->getCountUnreadComments(),
             'commentsViewAt' => $portfolio->getCommentsViewAt()->format(DATE_W3C),
-        );
+        ];
     }
 
     /**
@@ -302,7 +302,7 @@ class PortfolioManager
      */
     public function handle(Portfolio $portfolio, array $parameters, $env = 'prod')
     {
-        $data = array();
+        $data = [];
 
         $form = $this->getForm($portfolio);
         $form->submit($parameters);

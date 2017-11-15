@@ -10,7 +10,9 @@
         {% include 'IcapPortfolioBundle:Notification:notification_portfolio-guide.html.twig' %}
     {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddGuideEvent::ACTION') == notification.actionKey %}
         {% include 'IcapPortfolioBundle:Notification:notification_portfolio-guide.html.twig' %}
-    {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddViewerEvent::ACTION') == notification.actionKey %}
+    {% elseif constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioAddViewerEvent::ACTION') == notification.actionKey or
+                constant('Icap\\PortfolioBundle\\Event\\Log\\PortfolioEditEvent::ACTION') == notification.actionKey
+    %}
         {% include 'IcapPortfolioBundle:Notification:notification_portfolio-viewer.html.twig' %}
     {% endif %}
 {% endblock %}

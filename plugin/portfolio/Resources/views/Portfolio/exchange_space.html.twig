@@ -50,7 +50,7 @@
                     </small>
                     <small class="pull-right loading" data-ng-show="!comment.date"></small>
                     <h5 class="media-heading">{{ comment.sender.firstName }} {{ comment.sender.lastName }}</h5>
-                    <p class="col-lg-10" data-ng-bind-html="comment.message"></p>
+                    <p class="col-lg-10" ng-bind-html="comment.message"></p>
                 </div>
                 {% endverbatim %}
             </div>

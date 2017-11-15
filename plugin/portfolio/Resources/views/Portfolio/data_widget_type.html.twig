@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="panel-collapse" role="tabpanel" uib-collapse="widget.isCollapsed">
-                <div class="panel-body" data-ng-if="!widget.isEditing" data-ng-bind-html="widget.views.view">
+                <div class="panel-body" data-ng-if="!widget.isEditing" ng-bind-html="widget.views.view | trust_html">
                 </div>
                 <form name="form" class="edit-container form-horizontal" data-loading-form="save(widget)" data-ng-show="widget.views.form && widget.isEditing">
                     <div class="panel-body" data-bind-html="widget.views.form"></div>

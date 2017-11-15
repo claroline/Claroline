@@ -4,9 +4,9 @@
         {% verbatim %}{{ portfolioWidget.widget.label }}{% endverbatim %}
         {% if editMode %}
         <div class="widget-actions" data-ng-show="!portfolioWidget.isNew && !portfolioWidget.isUpdating">
-            <button class="widget-action btn btn-xs btn-default draggable-handle">
+            <a class="widget-action btn btn-xs btn-default draggable-handle">
                 <span class="fa fa-arrows"></span>
-            </button>
+            </a>
             <button class="widget-action btn btn-xs btn-primary" data-ng-click="edit();">
                 <span class="fa fa-pencil"></span>
             </button>
@@ -19,7 +19,7 @@
         {% endif %}
     </div>
     <div class="panel-body" data-ng-show="!portfolioWidget.isEditing && !portfolioWidget.widget.views.form">
-        <div data-ng-bind-html="portfolioWidget.widget.views.view"></div>
+        <div ng-bind-html="portfolioWidget.widget.views.view | trust_html"></div>
     </div>
     {% if editMode %}
     <div class="panel-heading" data-ng-show="portfolioWidget.isEditing && portfolioWidget.widget.views.form">
