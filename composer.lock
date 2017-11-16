@@ -58,12 +58,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/BeSimple/BeSimpleSsoAuthBundle.git",
-                "reference": "0cd7932bdcb6cc080ae1de456a808c7627963edf"
+                "reference": "a6dfea89c0159c1879c76a0ee99f03d7db5fd74d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/BeSimple/BeSimpleSsoAuthBundle/zipball/0cd7932bdcb6cc080ae1de456a808c7627963edf",
-                "reference": "0cd7932bdcb6cc080ae1de456a808c7627963edf",
+                "url": "https://api.github.com/repos/BeSimple/BeSimpleSsoAuthBundle/zipball/a6dfea89c0159c1879c76a0ee99f03d7db5fd74d",
+                "reference": "a6dfea89c0159c1879c76a0ee99f03d7db5fd74d",
                 "shasum": ""
             },
             "require": {
@@ -116,7 +116,7 @@
                 "Symfony2",
                 "cas"
             ],
-            "time": "2017-03-17 22:32:17"
+            "time": "2017-11-02 10:20:37"
         },
         {
             "name": "claroline/distribution",
@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "4c174215d0a4fe1975e0ccb665d3d9a4a6dff469"
+                "reference": "d9ef125bc1a554a6c15325b959cfa9b03deb95f9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/4c174215d0a4fe1975e0ccb665d3d9a4a6dff469",
-                "reference": "4c174215d0a4fe1975e0ccb665d3d9a4a6dff469",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/d9ef125bc1a554a6c15325b959cfa9b03deb95f9",
+                "reference": "d9ef125bc1a554a6c15325b959cfa9b03deb95f9",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2017-10-27 08:26:06"
+            "time": "2017-11-15 12:00:43"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -492,16 +492,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.0.8",
+            "version": "1.0.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "9dd73a03951357922d8aee6cc084500de93e2343"
+                "reference": "36344aeffdc37711335563e6108cda86566432a6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/9dd73a03951357922d8aee6cc084500de93e2343",
-                "reference": "9dd73a03951357922d8aee6cc084500de93e2343",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/36344aeffdc37711335563e6108cda86566432a6",
+                "reference": "36344aeffdc37711335563e6108cda86566432a6",
                 "shasum": ""
             },
             "require": {
@@ -547,7 +547,7 @@
                 "ssl",
                 "tls"
             ],
-            "time": "2017-09-11 07:24:36"
+            "time": "2017-11-13 15:51:25"
         },
         {
             "name": "composer/composer",
@@ -7825,12 +7825,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "2e948d4116d141f4a338ab1b54b6baacd51539a5"
+                "reference": "1efe53cf3b705d33e60dda6d430e2abfba31c1e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/2e948d4116d141f4a338ab1b54b6baacd51539a5",
-                "reference": "2e948d4116d141f4a338ab1b54b6baacd51539a5",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/1efe53cf3b705d33e60dda6d430e2abfba31c1e5",
+                "reference": "1efe53cf3b705d33e60dda6d430e2abfba31c1e5",
                 "shasum": ""
             },
             "require": {
@@ -7879,7 +7879,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2017-10-25 16:54:58"
+            "time": "2017-11-12 19:43:00"
         },
         {
             "name": "webmozart/assert",
