@@ -364,7 +364,7 @@ class WorkspaceController extends Controller
                 $modelFrom = $this->workspaceManager->getDefaultModel();
             }
 
-            $workspace = $this->workspaceManager->copy($modelFrom, $workspace);
+            $workspace = $this->workspaceManager->copy($modelFrom, $workspace, $workspace->isModel());
             $this->tokenUpdater->update($this->tokenStorage->getToken());
             $route = $this->router->generate('claro_workspace_open', ['workspaceId' => $workspace->getId()]);
 
