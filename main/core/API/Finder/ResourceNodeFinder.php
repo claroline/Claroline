@@ -60,7 +60,11 @@ class ResourceNodeFinder implements FinderInterface
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'resourceType':
-                    $qb->andWhere("ort.name LIKE :{$filterName}");
+                    if (is_array($filterValue)) {
+                        $qb->andWhere("ort.name IN (:{$filterName})");
+                    } else {
+                        $qb->andWhere("ort.name LIKE :{$filterName}");
+                    }
                     $qb->setParameter($filterName, $filterValue);
                     break;
                 default:
