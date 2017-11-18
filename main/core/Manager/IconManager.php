@@ -226,7 +226,7 @@ class IconManager
             $thumbnailPath = $this->webdir.$ds.$publicFile->getUrl();
             $relativeUrl = ltrim(str_replace($this->webdir, '', $thumbnailPath), "{$ds}");
             //entity creation
-            new ResourceIcon();
+            $icon = new ResourceIcon();
             $icon->setRelativeUrl($relativeUrl);
             $icon->setMimeType('custom');
             $icon->setShortcut(false);
