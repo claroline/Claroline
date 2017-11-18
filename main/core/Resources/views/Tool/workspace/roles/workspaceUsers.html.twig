@@ -240,7 +240,7 @@
 
                                             {% if canEdit %}
                                                 <i class="fa fa-times-circle pointer-hand remove-role-button"
-                                                   href="{{ path('apiv2_role_remove_users', {uuid: role.getUuid()} ) }}?ids[]={{ user.getId() }}"
+                                                   href="{{ path('apiv2_user_remove_roles', {uuid: user.getUuid()} ) }}?ids[]={{ role.getId() }}"
                                                 >
                                                 </i>
                                             {% endif %}
