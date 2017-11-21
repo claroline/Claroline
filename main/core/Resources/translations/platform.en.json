@@ -1198,6 +1198,7 @@
     "third_party_authentication": "Third party authentication (CAS, LDAP, Office 365, Facebook etc.)",
     "this_page_requires_authentication": "This page requires authentication. Please login.",
     "this_resource_is_not_published": "This resource is not published",
+    "thumbnail": "Thumbnail",
     "time_ago": "%count% %unit% ago",
     "time_col": "Database time column",
     "tinymce_all_buttons": "All tools",

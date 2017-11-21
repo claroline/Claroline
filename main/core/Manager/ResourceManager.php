@@ -78,6 +78,8 @@ class ResourceManager
     private $maskManager;
     /** @var IconManager */
     private $iconManager;
+    /** @var ThumbnailManager */
+    private $thumbnailManager;
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var ObjectManager */
@@ -100,6 +102,7 @@ class ResourceManager
      * @DI\InjectParams({
      *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
      *     "iconManager"           = @DI\Inject("claroline.manager.icon_manager"),
+     *     "thumbnailManager"      = @DI\Inject("claroline.manager.thumbnail_manager"),
      *     "maskManager"           = @DI\Inject("claroline.manager.mask_manager"),
      *     "container"             = @DI\Inject("service_container"),
      *     "rightsManager"         = @DI\Inject("claroline.manager.rights_manager"),
@@ -113,6 +116,7 @@ class ResourceManager
      *
      * @param RoleManager                  $roleManager
      * @param IconManager                  $iconManager
+     * @param ThumbnailManager             $thumbnailManager
      * @param ContainerInterface           $container
      * @param RightsManager                $rightsManager
      * @param StrictDispatcher             $dispatcher
@@ -126,6 +130,7 @@ class ResourceManager
     public function __construct(
         RoleManager $roleManager,
         IconManager $iconManager,
+        ThumbnailManager $thumbnailManager,
         ContainerInterface $container,
         RightsManager $rightsManager,
         StrictDispatcher $dispatcher,
@@ -144,6 +149,7 @@ class ResourceManager
         $this->directoryRepo = $om->getRepository('ClarolineCoreBundle:Resource\Directory');
         $this->roleManager = $roleManager;
         $this->iconManager = $iconManager;
+        $this->thumbnailManager = $thumbnailManager;
         $this->rightsManager = $rightsManager;
         $this->maskManager = $maskManager;
         $this->dispatcher = $dispatcher;
@@ -936,7 +942,16 @@ class ResourceManager
 
         //the following line is required because we wanted to disable the right edition in personal worksspaces...
         //this is not required for everything to work properly.
-        $resourceArray['enableRightsEdition'] = true;
+
+        if (!$node->getWorkspace()) {
+            $resourceArray['enableRightsEdition'] = false;
+        } else {
+            if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+                $resourceArray['enableRightsEdition'] = false;
+            } else {
+                $resourceArray['enableRightsEdition'] = true;
+            }
+        }
 
         if ($node->getResourceType()->getName() === 'file') {
             if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
@@ -1102,7 +1117,7 @@ class ResourceManager
 
         $archive = new \ZipArchive();
         $pathArch = $this->container->get('claroline.config.platform_config_handler')
-            ->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$this->ut->generateGuid().'.zip';
+                ->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$this->ut->generateGuid().'.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
         $nodes = $this->expandResources($elements);
 
@@ -1280,6 +1295,25 @@ class ResourceManager
         $this->om->endFlushSuite();
 
         return $icon;
+    }
+
+    /**
+     * Changes a node thumbnail.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param \Symfony\Component\HttpFoundation\File\File        $file
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceThumbnail
+     */
+    public function changeThumbnail(ResourceNode $node, File $file)
+    {
+        $this->om->startFlushSuite();
+        $thumbnail = $this->thumbnailManager->createCustomThumbnail($file, $node->getWorkspace());
+        $this->thumbnailManager->replace($node, $thumbnail);
+        $this->logChangeSet($node);
+        $this->om->endFlushSuite();
+
+        return $thumbnail;
     }
 
     /**

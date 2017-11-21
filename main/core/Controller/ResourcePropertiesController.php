@@ -195,11 +195,15 @@ class ResourcePropertiesController extends Controller
         if ($form->isValid()) {
             $name = $form->get('name')->getData();
             $file = $form->get('newIcon')->getData();
+            $thumbnail = $form->get('newThumbnail')->getData();
             $isRecursive = $this->request->get('isRecursive');
             $publish = $form->get('published')->getData();
 
             if ($file) {
                 $this->resourceManager->changeIcon($node, $file);
+            }
+            if ($thumbnail) {
+                $this->resourceManager->changeThumbnail($node, $thumbnail);
             }
 
             $this->resourceManager->rename($node, $name);
@@ -336,8 +340,8 @@ class ResourcePropertiesController extends Controller
     {
         if (!$this->hasAccess($permission, $collection)) {
             throw new ResourceAccessException(
-              $collection->getErrorsForDisplay(),
-              $collection->getResources()
+                $collection->getErrorsForDisplay(),
+                $collection->getResources()
             );
         }
     }

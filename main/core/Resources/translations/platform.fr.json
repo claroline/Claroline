@@ -1215,6 +1215,7 @@
     "third_party_authentication": "Authentification tiers (CAS, LDAP, Office 365, Facebook etc.)",
     "this_page_requires_authentication": "Cette page requiert une authentification. Veuillez vous identifier.",
     "this_resource_is_not_published": "Cette ressource n'est pas publiée",
+    "thumbnail": "Miniature",
     "time_ago": "Il y a %count% %unit%",
     "time_col": "Colonne des durées",
     "tinymce_all_buttons": "Tous les outils",

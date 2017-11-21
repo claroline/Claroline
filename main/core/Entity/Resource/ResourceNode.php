@@ -111,6 +111,17 @@ class ResourceNode
     protected $icon;
 
     /**
+     * @var ResourceThumbnail
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceThumbnail",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $thumbnail;
+
+    /**
      * @var string
      *
      * @Gedmo\TreePathSource
@@ -512,6 +523,26 @@ class ResourceNode
     public function setIcon(ResourceIcon $icon)
     {
         $this->icon = $icon;
+    }
+
+    /**
+     * Returns the resource thumbnail.
+     *
+     * @return ResourceThumbnail
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+
+    /**
+     * Sets the resource thumbnail.
+     *
+     * @param ResourceThumbnail $thumbnail
+     */
+    public function setThumbnail(ResourceThumbnail $thumbnail)
+    {
+        $this->thumbnail = $thumbnail;
     }
 
     /**
@@ -986,8 +1017,8 @@ class ResourceNode
     public function getAccessCode()
     {
         if (
-          !empty($this->getAccesses()['code']) &&
-          trim($this->getAccesses()['code'], ' ') !== ''
+            !empty($this->getAccesses()['code']) &&
+            trim($this->getAccesses()['code'], ' ') !== ''
         ) {
             return $this->getAccesses()['code'];
         }
