@@ -310,7 +310,7 @@ class Entries extends Component {
   }
 
   isDisplayedField(key) {
-    return this.props.searchColumns.indexOf(key) > -1
+    return this.props.searchColumns ? this.props.searchColumns.indexOf(key) > -1 : false
   }
 
   formatFieldValue(entry, field, value) {
