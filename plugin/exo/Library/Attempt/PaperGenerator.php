@@ -203,7 +203,7 @@ class PaperGenerator
 
         foreach ($tags as $tag) {
             $taggedItems = array_filter($availableItems, function ($item) use ($tag) {
-                $data = ['class' => 'UJM\ExoBundle\Entity\Item\Item', 'ids' => [$item->autoId]];
+                $data = ['class' => 'UJM\ExoBundle\Entity\Item\Item', 'ids' => [$item->id]];
                 $event = new GenericDataEvent($data);
                 $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
                 $itemTags = $event->getResponse() ? $event->getResponse() : [];

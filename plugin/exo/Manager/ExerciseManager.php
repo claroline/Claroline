@@ -312,13 +312,15 @@ class ExerciseManager
         $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
 
         $dataPapers = [];
-        $titles = [['username'], ['firstname'], ['lastname']];
+        $titles = [['username'], ['lastname'], ['firstname']];
         $items = [];
+        $questions = [];
 
         foreach ($exercise->getSteps() as $step) {
             foreach ($step->getStepQuestions() as $stepQ) {
                 $item = $stepQ->getQuestion();
                 $items[$item->getUuid()] = $item;
+                $questions[$stepQ->getQuestion()->getUuid()] = $stepQ->getQuestion();
                 $itemType = $item->getInteraction();
 
                 if ($this->definitions->has($item->getMimeType())) {
@@ -329,9 +331,7 @@ class ExerciseManager
         }
 
         $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
-        $papers = $repo->findBy([
-            'exercise' => $exercise,
-        ]);
+        $papers = $repo->findBy(['exercise' => $exercise]);
 
         foreach ($papers as $paper) {
             $answers = $paper->getAnswers();
@@ -342,10 +342,26 @@ class ExerciseManager
                 $csv['firstname'] = [$user->getFirstName()];
                 $csv['lastname'] = [$user->getLastName()];
             } else {
-                $csv['username'] = $csv['firstname'] = $csv['lastname'] = 'none';
+                $csv['username'] = ['none'];
+                $csv['lastname'] = ['none'];
+                $csv['firstname'] = ['none'];
             }
 
+            $orderedIds = array_keys($questions);
+            $indexedAnswers = [];
+            $orderedAnswers = [];
+
             foreach ($answers as $answer) {
+                $indexedAnswers[$answer->getQuestionId()] = $answer;
+            }
+
+            foreach ($orderedIds as $id) {
+                if (isset($indexedAnswers[$id])) {
+                    $orderedAnswers[] = $indexedAnswers[$id];
+                }
+            }
+
+            foreach ($orderedAnswers as $answer) {
                 $item = $items[$answer->getQuestionId()];
 
                 if ($this->definitions->has($item->getMimeType())) {
@@ -371,7 +387,7 @@ class ExerciseManager
         foreach ($dataPapers as $paper) {
             $flattenedAnswers = [];
             foreach ($paper as $paperItem) {
-                if ($paperItem) {
+                if (is_array($paperItem)) {
                     foreach ($paperItem as $paperEl) {
                         $flattenedAnswers[] = $paperEl;
                     }
