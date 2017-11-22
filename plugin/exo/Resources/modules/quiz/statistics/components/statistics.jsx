@@ -10,15 +10,9 @@ import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx
 import {NUMBERING_NONE} from './../../../quiz/enums'
 import {getNumbering} from './../../../utils/numbering'
 import {tex} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/fos-js-router'
 
 const Statistics = props =>
   <div>
-    <div className="panel panel-heading">
-      <a className="btn btn-primary" href={generateUrl('exercise_papers_export_json', {'exerciseId': props.quiz.id})}> {tex('json_export')} </a>
-      {' '}
-      <a className="btn btn-primary" href={generateUrl('exercise_papers_export_csv', {'exerciseId': props.quiz.id})}> {tex('csv_export')} </a>
-    </div>
     <div>
       {Object.keys(props.steps).map((key, idx) =>
         <div key={idx} className="quiz-item item-statistics">
