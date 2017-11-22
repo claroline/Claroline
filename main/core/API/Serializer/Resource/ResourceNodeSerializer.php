@@ -139,13 +139,20 @@ class ResourceNodeSerializer
      */
     private function decorate(ResourceNode $resourceNode, array $serializedNode)
     {
+        $unauthorizedKeys = array_keys($serializedNode);
+
+        // 'poster' is a key that can be overridden by another plugin. For example: UrlBundle
+        if (($key = array_search('poster', $unauthorizedKeys)) !== false) {
+            unset($unauthorizedKeys[$key]);
+        }
+
         /** @var DecorateResourceNodeEvent $event */
         $event = $this->eventDispatcher->dispatch(
             'serialize_resource_node',
             'Resource\DecorateResourceNode',
             [
                 $resourceNode,
-                array_keys($serializedNode),
+                $unauthorizedKeys,
             ]
         );
 
