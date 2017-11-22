@@ -122,6 +122,20 @@ class Entries extends Component {
       }
     })
     columns.push({
+      name: 'locked',
+      label: t('locked'),
+      displayed: false,
+      type: 'boolean',
+      renderer: (rowData) => {
+        const lockCell = <span className={classes('fa fa-fw', {
+          'fa-lock true': rowData.locked,
+          'fa-unlock false': !rowData.locked
+        })}/>
+
+        return lockCell
+      }
+    })
+    columns.push({
       name: 'title',
       label: t('title'),
       displayed: this.isDisplayedField('title'),
@@ -232,28 +246,44 @@ class Entries extends Component {
       icon: 'fa fa-w fa-pencil',
       label: t('edit'),
       action: (rows) => this.navigateTo(`/entry/${rows[0].id}/edit`),
-      displayed: (rows) => this.canEditEntry(rows[0]),
+      displayed: (rows) => !rows[0].locked && this.canEditEntry(rows[0]),
       context: 'row'
     })
     dataListActions.push({
       icon: 'fa fa-w fa-eye',
       label: t('publish'),
       action: (rows) => this.props.switchEntryStatus(rows[0].id),
-      displayed: (rows) => this.canManageEntry(rows[0]) && rows[0].status !== 1,
+      displayed: (rows) => !rows[0].locked && this.canManageEntry(rows[0]) && rows[0].status !== 1,
       context: 'row'
     })
     dataListActions.push({
       icon: 'fa fa-w fa-eye-slash',
       label: t('unpublish'),
       action: (rows) => this.props.switchEntryStatus(rows[0].id),
-      displayed: (rows) => this.canManageEntry(rows[0]) && rows[0].status === 1,
+      displayed: (rows) => !rows[0].locked && this.canManageEntry(rows[0]) && rows[0].status === 1,
       context: 'row'
     })
+    if (this.props.canAdministrate) {
+      dataListActions.push({
+        icon: 'fa fa-w fa-lock',
+        label: trans('lock_entry', {}, 'clacoform'),
+        action: (rows) => this.props.switchEntryLock(rows[0].id),
+        displayed: (rows) => !rows[0].locked,
+        context: 'row'
+      })
+      dataListActions.push({
+        icon: 'fa fa-w fa-unlock',
+        label: trans('unlock_entry', {}, 'clacoform'),
+        action: (rows) => this.props.switchEntryLock(rows[0].id),
+        displayed: (rows) => rows[0].locked,
+        context: 'row'
+      })
+    }
     dataListActions.push({
       icon: 'fa fa-w fa-trash',
       label: t('delete'),
       action: (rows) => this.deleteEntry(rows[0]),
-      displayed: (rows) => this.canManageEntry(rows[0]),
+      displayed: (rows) => !rows[0].locked && this.canManageEntry(rows[0]),
       dangerous: true,
       context: 'row'
     })
@@ -401,6 +431,7 @@ class Entries extends Component {
 
 Entries.propTypes = {
   canEdit: T.bool.isRequired,
+  canAdministrate: T.bool.isRequired,
   isAnon: T.bool.isRequired,
   user: T.object,
   fields: T.arrayOf(T.shape({
@@ -427,6 +458,7 @@ Entries.propTypes = {
   isCategoryManager: T.bool.isRequired,
   downloadEntryPdf: T.func.isRequired,
   switchEntryStatus: T.func.isRequired,
+  switchEntryLock: T.func.isRequired,
   deleteEntry: T.func.isRequired,
   showModal: T.func.isRequired,
   entries: T.shape({
@@ -446,6 +478,7 @@ Entries.propTypes = {
 function mapStateToProps(state) {
   return {
     canEdit: resourceSelect.editable(state),
+    canAdministrate: resourceSelect.administrable(state),
     isAnon: state.isAnon,
     user: state.user,
     fields: state.fields,
@@ -472,6 +505,7 @@ function mapDispatchToProps(dispatch) {
   return {
     downloadEntryPdf: entryId => dispatch(actions.downloadEntryPdf(entryId)),
     switchEntryStatus: entryId => dispatch(actions.switchEntryStatus(entryId)),
+    switchEntryLock: entryId => dispatch(actions.switchEntryLock(entryId)),
     deleteEntry: entryId => dispatch(actions.deleteEntry(entryId)),
     showModal: (type, props) => dispatch(modalActions.showModal(type, props))
   }

@@ -33,6 +33,7 @@ use Claroline\ClacoFormBundle\Event\Log\LogCommentStatusChangeEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryCreateEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryDeleteEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryEditEvent;
+use Claroline\ClacoFormBundle\Event\Log\LogEntryLockSwitchEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryStatusChangeEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryUserChangeEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogFieldCreateEvent;
@@ -1071,6 +1072,19 @@ class ClacoFormManager
         return $entry;
     }
 
+    public function switchEntryLock(Entry $entry)
+    {
+        $locked = $entry->isLocked();
+        $entry->setLocked(!$locked);
+        $this->persistEntry($entry);
+        $event = new LogEntryLockSwitchEvent($entry);
+        $this->eventDispatcher->dispatch('log', $event);
+        $categories = $entry->getCategories();
+        $this->notifyCategoriesManagers($entry, $categories, $categories);
+
+        return $entry;
+    }
+
     public function changeEntryOwner(Entry $entry, User $user)
     {
         $entry->setUser($user);
@@ -1880,14 +1894,16 @@ class ClacoFormManager
         $this->om->startFlushSuite();
 
         foreach ($entries as $entry) {
-            $fieldValues = $entry->getFieldValues();
+            if (!$entry->isLocked()) {
+                $fieldValues = $entry->getFieldValues();
 
-            foreach ($fieldValues as $fieldValue) {
-                $fieldFacetValue = $fieldValue->getFieldFacetValue();
-                $this->om->remove($fieldFacetValue);
-                $this->om->remove($fieldValue);
+                foreach ($fieldValues as $fieldValue) {
+                    $fieldFacetValue = $fieldValue->getFieldFacetValue();
+                    $this->om->remove($fieldFacetValue);
+                    $this->om->remove($fieldValue);
+                }
+                $this->om->remove($entry);
             }
-            $this->om->remove($entry);
         }
         $this->om->endFlushSuite();
     }
@@ -2398,7 +2414,7 @@ class ClacoFormManager
 
     public function checkEntryEdition(Entry $entry)
     {
-        if (!$this->hasEntryEditionRight($entry)) {
+        if ($entry->isLocked() || !$this->hasEntryEditionRight($entry)) {
             throw new AccessDeniedException();
         }
     }

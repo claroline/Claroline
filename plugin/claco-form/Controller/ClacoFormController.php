@@ -831,9 +831,13 @@ class ClacoFormController extends Controller
      */
     public function entryStatusChangeAction(Entry $entry)
     {
-        $this->clacoFormManager->checkEntryModeration($entry);
-        $updatedEntry = $this->clacoFormManager->changeEntryStatus($entry);
-        $serializedEntry = $this->entrySerializer->serialize($updatedEntry);
+        if ($entry->isLocked()) {
+            $serializedEntry = $this->entrySerializer->serialize($entry);
+        } else {
+            $this->clacoFormManager->checkEntryModeration($entry);
+            $updatedEntry = $this->clacoFormManager->changeEntryStatus($entry);
+            $serializedEntry = $this->entrySerializer->serialize($updatedEntry);
+        }
 
         return new JsonResponse($serializedEntry, 200);
     }
@@ -1248,7 +1252,7 @@ class ClacoFormController extends Controller
      *     options = {"expose"=true}
      * )
      *
-     * Changes status of an entry
+     * Changes owner of an entry
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
@@ -1261,6 +1265,26 @@ class ClacoFormController extends Controller
             'json',
             SerializationContext::create()->setGroups(['api_user_min'])
         );
+
+        return new JsonResponse($serializedEntry, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/claco/form/entry/{entry}/lock/switch",
+     *     name="claro_claco_form_entry_lock_switch",
+     *     options = {"expose"=true}
+     * )
+     *
+     * Switches lock of an entry
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function entryLockSwitchAction(Entry $entry)
+    {
+        $this->clacoFormManager->checkRight($entry->getClacoForm(), 'ADMINISTRATE');
+        $updatedEntry = $this->clacoFormManager->switchEntryLock($entry);
+        $serializedEntry = $this->entrySerializer->serialize($updatedEntry);
 
         return new JsonResponse($serializedEntry, 200);
     }

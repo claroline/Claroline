@@ -32,11 +32,17 @@ const exportable = createSelector(
   (currentRights) => currentRights.export
 )
 
+const administrable = createSelector(
+  [currentRights],
+  (currentRights) => currentRights.administrate
+)
+
 export const select = {
   resourceNode,
   meta,
   currentRights,
   editable,
   published,
-  exportable
+  exportable,
+  administrable
 }

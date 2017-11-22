@@ -14,9 +14,9 @@ namespace Claroline\ClacoFormBundle\Event\Log;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 
-class LogEntryCreateEvent extends LogGenericEvent
+class LogEntryLockSwitchEvent extends LogGenericEvent
 {
-    const ACTION = 'clacoformbundle-entry-create';
+    const ACTION = 'clacoformbundle-entry-lock-switch';
 
     public function __construct(Entry $entry)
     {
@@ -48,12 +48,6 @@ class LogEntryCreateEvent extends LogGenericEvent
                 'type' => $fieldFacet->getType(),
                 'typeName' => $fieldFacet->getInputType(),
             ];
-        }
-        $keywords = $entry->getKeywords();
-        $details['keywords'] = [];
-
-        foreach ($keywords as $keyword) {
-            $details['keywords'][] = ['id' => $keyword->getId(), 'name' => $keyword->getName()];
         }
         $clacoForm = $entry->getClacoForm();
         $resourceNode = $clacoForm->getResourceNode();

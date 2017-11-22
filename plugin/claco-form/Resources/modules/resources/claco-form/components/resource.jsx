@@ -12,7 +12,6 @@ import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 
-import {actions} from '../actions'
 import {actions as editorActions} from '../editor/actions'
 import {selectors} from '../selectors'
 
@@ -151,7 +150,7 @@ function mapDispatchToProps(dispatch) {
         modalActions.showModal(MODAL_DELETE_CONFIRM, {
           title: trans('delete_all_entries', {}, 'clacoform'),
           question: trans('delete_all_entries_confirm', {}, 'clacoform'),
-          handleConfirm: () => dispatch(actions.deleteAllEntries())
+          handleConfirm: () => dispatch(editorActions.deleteAllEntries())
         })
       )
 

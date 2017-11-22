@@ -80,6 +80,7 @@ class EntrySerializer
             'id' => $entry->getId(),
             'title' => $entry->getTitle(),
             'status' => $entry->getStatus(),
+            'locked' => $entry->isLocked(),
             'creationDate' => $entry->getCreationDate() ? $entry->getCreationDate()->format('Y-m-d H:i:s') : null,
             'editionDate' => $entry->getEditionDate() ? $entry->getEditionDate()->format('Y-m-d H:i:s') : null,
             'publicationDate' => $entry->getPublicationDate() ? $entry->getPublicationDate()->format('Y-m-d H:i:s') : null,

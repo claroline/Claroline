@@ -3,7 +3,7 @@ import {t, transChoice} from '#/main/core/translation'
 
 // check enabled list features
 const isAsync      = (listState) => typeof listState.fetchUrl !== 'undefined'
-const isDeletable  = (listState) => typeof listState.delete !== 'undefined'
+const isDeletable  = (listState) => typeof listState.delete !== 'undefined' && null !== listState.delete
 const isFilterable = (listState) => typeof listState.filters !== 'undefined'
 const isSortable   = (listState) => typeof listState.sortBy !== 'undefined'
 const isSelectable = (listState) => typeof listState.selected !== 'undefined'

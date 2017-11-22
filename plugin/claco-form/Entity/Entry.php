@@ -53,6 +53,13 @@ class Entry
     protected $status;
 
     /**
+     * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
+     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
+     * @SerializedName("locked")
+     */
+    protected $locked = false;
+
+    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\ClacoFormBundle\Entity\ClacoForm",
      *     inversedBy="categories"
@@ -175,6 +182,16 @@ class Entry
     public function setStatus($status)
     {
         $this->status = $status;
+    }
+
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
     }
 
     public function getClacoForm()

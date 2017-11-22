@@ -24,6 +24,7 @@ class LogEntryUserChangeEvent extends LogGenericEvent
         $details['id'] = $entry->getId();
         $details['title'] = $entry->getTitle();
         $details['status'] = $entry->getStatus();
+        $details['locked'] = $entry->isLocked();
         $details['creationDate'] = $entry->getCreationDate();
         $details['publicationDate'] = $entry->getPublicationDate();
         $user = $entry->getUser();

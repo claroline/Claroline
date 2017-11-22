@@ -183,6 +183,10 @@ class EntryFinder implements FinderInterface
                     $qb->andWhere('obj.status IN (:status)');
                     $qb->setParameter('status', $filterValue ? [1] : [0, 2]);
                     break;
+                case 'locked':
+                    $qb->andWhere('obj.locked = :locked');
+                    $qb->setParameter('locked', $filterValue);
+                    break;
                 case 'user':
                     if (!isset($this->usedJoin['user'])) {
                         $qb->join('obj.user', 'u');

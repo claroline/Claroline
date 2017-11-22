@@ -40,8 +40,8 @@ const entriesReducers = makeReducer({}, {
 
     return entries
   },
-  [ALL_ENTRIES_REMOVE]: () => {
-    return []
+  [ALL_ENTRIES_REMOVE]: (state) => {
+    return state.filter(e => e.locked)
   },
   [ENTRY_COMMENT_ADD]: (state, action) => {
     const entries = cloneDeep(state)
