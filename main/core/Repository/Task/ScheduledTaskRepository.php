@@ -20,7 +20,7 @@ class ScheduledTaskRepository extends EntityRepository
         $dql = '
             SELECT t
             FROM Claroline\CoreBundle\Entity\Task\ScheduledTask t
-            WHERE t.executed = false
+            WHERE t.executionDate IS NULL
             AND t.scheduledDate < :now
         ';
         $query = $this->_em->createQuery($dql);
