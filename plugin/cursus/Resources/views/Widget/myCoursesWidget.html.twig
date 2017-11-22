@@ -510,7 +510,7 @@
 
                   const workspaceLinkElement = workspaces[event['sessionId']] ?
                     `
-                      <a href="${Routing.generate('claro_workspace_open_tool', {workspaceId: workspaces[event['sessionId']]['id'], toolName: 'home'})}">
+                      <a href="${Routing.generate('claro_workspace_open', {workspaceId: workspaces[event['sessionId']]['id']})}">
                           <i class="fa fa-book"></i>
                           ${workspaces[event['sessionId']]['name']}
                       </a>

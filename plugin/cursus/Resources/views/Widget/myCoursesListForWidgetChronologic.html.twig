@@ -150,7 +150,7 @@
                                         </td>
                                         <td>
                                             {% if workspace is not empty %}
-                                                <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                                <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
                                                    class="standard-link"
                                                 >
                                                     <i class="fa fa-book"></i>
@@ -213,7 +213,7 @@
                                         </td>
                                         {% if not disableUnstartedSessionsWs and workspace is not empty %}
                                             <td>
-                                                <a href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'home'}) }}"
+                                                <a href="{{ path('claro_workspace_open', {'workspaceId': workspace.getId()}) }}"
                                                    class="standard-link"
                                                 >
                                                     <i class="fa fa-book"></i>
