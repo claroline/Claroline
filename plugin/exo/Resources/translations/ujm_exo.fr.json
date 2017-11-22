@@ -687,5 +687,7 @@
     "tag-amount": "Quantité",
     "tag-amount-help": "Nombre de question provenant devant être utilisé au total",
     "number_question_page": "Nombre de question par page",
-    "remove_questions_confirm": "Êtes-vous sûr de vouloir supprimer les questions suivantes [ %question_list% ]?"
+    "remove_questions_confirm": "Êtes-vous sûr de vouloir supprimer les questions suivantes [ %question_list% ]?",
+    "exercise_attempt_limit": "Votre nombre maximum de tentatives de l'exercice a été atteint.",
+    "exercise_paper_limit": "Le nombre maximum de réponses à l'exercice a été atteint."
 }

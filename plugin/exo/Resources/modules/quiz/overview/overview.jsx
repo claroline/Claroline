@@ -2,13 +2,17 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import Alert from 'react-bootstrap/lib/Alert'
 import {tex} from '#/main/core/translation'
+
 import {
   correctionModes,
   markModes,
   quizTypes,
   SHOW_CORRECTION_AT_DATE
 } from './../enums'
+
+
 
 const Parameter = props =>
   <tr>
@@ -138,11 +142,22 @@ const Layout = props =>
           props.meta.userPaperCount < props.parameters.maxAttempts &&
           ((props.meta.userPaperDayCount < props.parameters.maxAttemptsPerDay) || props.parameters.maxAttemptsPerDay === 0)
         )
-      ) && ((props.meta.paperCount < props.parameters.maxPapers) || props.parameters.maxPapers === 0) &&
+      ) && ((props.meta.paperCount < props.parameters.maxPapers) || props.parameters.maxPapers === 0) ?
+        <a href="#play" className="btn btn-start btn-lg btn-primary btn-block">
+          {tex('exercise_start')}
+        </a>:
 
-      <a href="#play" className="btn btn-start btn-lg btn-primary btn-block">
-        {tex('exercise_start')}
-      </a>
+        <Alert bsStyle="danger overview-warning">
+          <span className="fa fa-fw fa-warning">{"\u00A0"}</span>
+          {(props.meta.userPaperCount < props.parameters.maxAttempts &&
+            ((props.meta.userPaperDayCount < props.parameters.maxAttemptsPerDay) || props.parameters.maxAttemptsPerDay === 0)
+          ) ?
+            <span>{tex('exercise_attempt_limit')}</span>:
+          ((props.meta.paperCount < props.parameters.maxPapers) || props.parameters.maxPapers === 0) ?
+            <span>{tex('exercise_paper_limit')}</span>:
+            <span></span>
+          }
+        </Alert>
     }
   </div>
 
