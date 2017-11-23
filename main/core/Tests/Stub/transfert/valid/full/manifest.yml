@@ -4,6 +4,7 @@ properties:
     visible: true
     self_registration: true
     self_unregistration: false
+    disabled_notifications: false
     owner: 'ezs'
 
 members:

@@ -287,6 +287,16 @@ class Workspace
     protected $workspaceType;
 
     /**
+     * @ORM\Column(name="disabled_notifications", type="boolean")
+     *
+     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
+     * @Serializer\SerializedName("disabledNotifications")
+     *
+     * @var bool
+     */
+    protected $disabledNotifications = false;
+
+    /**
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions",
      *     inversedBy="workspace"
@@ -793,5 +803,21 @@ class Workspace
     public function isModel()
     {
         return $this->model;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDisabledNotifications()
+    {
+        return $this->disabledNotifications;
+    }
+
+    /**
+     * @param bool $disabledNotifications
+     */
+    public function setDisabledNotifications($disabledNotifications)
+    {
+        $this->disabledNotifications = $disabledNotifications;
     }
 }

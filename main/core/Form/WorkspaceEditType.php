@@ -113,6 +113,7 @@ class WorkspaceEditType extends AbstractType
         $builder->add('selfRegistration', 'checkbox', ['required' => false, 'label' => 'public_registration']);
         $builder->add('registrationValidation', 'checkbox', ['required' => false, 'label' => 'registration_validation']);
         $builder->add('selfUnregistration', 'checkbox', ['required' => false, 'label' => 'public_unregistration']);
+        $builder->add('disabledNotifications', 'checkbox', ['required' => false, 'label' => 'disable_workspace_notifications']);
 
         if (!$this->isAdmin) {
             $builder->add('maxStorageSize', 'text', ['disabled' => 'disabled', 'label' => 'max_storage_size']);

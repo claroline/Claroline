@@ -358,6 +358,7 @@ class WorkspaceManager
           'selfRegistration' => $workspace->getSelfRegistration(),
           'registrationValidation' => $workspace->getRegistrationValidation(),
           'selfUnregistration' => $workspace->getSelfUnregistration(),
+          'disabledNotifications' => $workspace->isDisabledNotifications(),
           'creationDate' => $workspace->getCreationDate(),
           'isPersonal' => $workspace->isPersonal(),
           'startDate' => $workspace->getStartDate(),
