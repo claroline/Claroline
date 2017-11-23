@@ -82,9 +82,12 @@ class TagManager
 
     public function getOrCreatePlatformTag($name)
     {
-        $tag = $this->getOnePlatformTagByName($name);
+        $tag = $this->getUowScheduledTag($name);
+        if (empty($tag)) {
+            $tag = $this->getOnePlatformTagByName($name);
+        }
 
-        if (is_null($tag)) {
+        if (empty($tag)) {
             $tag = new Tag();
             $tag->setName($name);
             $this->persistTag($tag);
@@ -95,9 +98,12 @@ class TagManager
 
     public function getOrCreateUserTag(User $user, $name)
     {
-        $tag = $this->getOneUserTagByName($user, $name);
+        $tag = $this->getUowScheduledTag($name, $user);
+        if (empty($tag)) {
+            $tag = $this->getOneUserTagByName($user, $name);
+        }
 
-        if (is_null($tag)) {
+        if (empty($tag)) {
             $tag = new Tag();
             $tag->setUser($user);
             $tag->setName($name);
@@ -105,6 +111,31 @@ class TagManager
         }
 
         return $tag;
+    }
+
+    /**
+     * Avoids duplicate creation of a tag when inside a flushSuite.
+     * The only way to do that is to search in the current UOW if a tag with the same name
+     * is already scheduled for insertion.
+     *
+     * @param string $name
+     * @param User   $user
+     *
+     * @return Tag|null
+     */
+    private function getUowScheduledTag($name, User $user = null)
+    {
+        $scheduledForInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
+        foreach ($scheduledForInsert as $entity) {
+            /** @var Tag $entity */
+            if ($entity instanceof Tag
+                && $name === $entity->getName()
+                && $user === $entity->getUser()) {
+                return $entity;
+            }
+        }
+
+        return null;
     }
 
     public function tagObject(array $tags, $object, User $user = null)
@@ -130,7 +161,6 @@ class TagManager
                 $tag = is_null($user) ? $this->getOrCreatePlatformTag($tagName) : $this->getOrCreateUserTag($user, $tagName);
                 $tagsList[$tagName] = $tag;
             }
-            $this->om->forceFlush();
 
             foreach ($uniqueTags as $tagName) {
                 $tag = $tagsList[$tagName];

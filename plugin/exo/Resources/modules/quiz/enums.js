@@ -1,3 +1,7 @@
+import {tex} from '#/main/core/translation'
+
+// TODO : migrate select options formats
+
 export const TYPE_QUIZ = 'quiz'
 export const TYPE_STEP = 'step'
 
@@ -5,15 +9,23 @@ export const QUIZ_SUMMATIVE = 'summative'
 export const QUIZ_EVALUATIVE = 'evaluative'
 export const QUIZ_FORMATIVE = 'formative'
 
-export const NUMBERING_NONE = 'none'
-export const NUMBERING_LITTERAL = 'litteral'
-export const NUMBERING_NUMERIC = 'numeric'
-
 export const quizTypes = [
   [QUIZ_SUMMATIVE, 'summative'],
   [QUIZ_EVALUATIVE, 'evaluative'],
   [QUIZ_FORMATIVE, 'formative']
 ]
+
+export const QUIZ_PICKING_DEFAULT = 'standard'
+export const QUIZ_PICKING_TAGS = 'tags'
+
+export const quizPicking = [
+  {value: QUIZ_PICKING_DEFAULT, label: tex('quiz_picking_steps')},
+  {value: QUIZ_PICKING_TAGS, label: tex('quiz_picking_tags')}
+]
+
+export const NUMBERING_NONE = 'none'
+export const NUMBERING_LITTERAL = 'litteral'
+export const NUMBERING_NUMERIC = 'numeric'
 
 export const quizNumbering = [
   [NUMBERING_NONE, 'none'],
@@ -46,9 +58,9 @@ export const SHUFFLE_ALWAYS = 'always'
 export const SHUFFLE_ONCE = 'once'
 
 export const shuffleModes = [
-  [SHUFFLE_NEVER, 'never'],
-  [SHUFFLE_ALWAYS, 'at_each_attempt'],
-  [SHUFFLE_ONCE, 'at_first_attempt']
+  {value: SHUFFLE_NEVER,  label: tex('never')},
+  {value: SHUFFLE_ALWAYS, label: tex('at_each_attempt')},
+  {value: SHUFFLE_ONCE,   label: tex('at_first_attempt')}
 ]
 
 export const SHOW_CORRECTION_AT_VALIDATION = 'validation'

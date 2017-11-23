@@ -607,15 +607,16 @@ class ItemSerializer extends AbstractSerializer
      * Serializes Item tags.
      * Forwards the tag serialization to ItemTagSerializer.
      *
-     * @param Item  $question
-     * @param array $options
+     * @param Item $question
      *
      * @return array
      */
     private function serializeTags(Item $question)
     {
-        $data = ['class' => 'UJM\ExoBundle\Entity\Item\Item', 'ids' => [$question->getUuid()]];
-        $event = new GenericDataEvent($data);
+        $event = new GenericDataEvent([
+            'class' => 'UJM\ExoBundle\Entity\Item\Item',
+            'ids' => [$question->getUuid()],
+        ]);
         $this->eventDispatcher->dispatch('claroline_retrieve_used_tags_by_class_and_ids', $event);
 
         return $event->getResponse();
@@ -626,26 +627,24 @@ class ItemSerializer extends AbstractSerializer
      *
      * @param Item  $question
      * @param array $tags
+     * @param array $options
      */
     private function deserializeTags(Item $question, array $tags = [], array $options = [])
     {
         if ($this->hasOption(Transfer::PERSIST_TAG, $options)) {
-            $data = [
-              'tags' => $tags,
-              'data' => [
-                  [
-                      'class' => 'UJM\ExoBundle\Entity\Item\Item',
-                      'id' => $question->getUuid(),
-                      'name' => $question->getTitle(),
-                  ],
-              ],
-              'replace' => true,
-          ];
-            $event = new GenericDataEvent($data);
+            $event = new GenericDataEvent([
+                'tags' => $tags,
+                'data' => [
+                    [
+                        'class' => 'UJM\ExoBundle\Entity\Item\Item',
+                        'id' => $question->getUuid(),
+                        'name' => $question->getTitle(),
+                    ],
+                ],
+                'replace' => true,
+            ]);
 
-            if ($question->getUuid()) {
-                $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
-            }
+            $this->eventDispatcher->dispatch('claroline_tag_multiple_data', $event);
         }
     }
 }

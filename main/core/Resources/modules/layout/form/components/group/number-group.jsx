@@ -1,19 +1,18 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {Numeric} from '#/main/core/layout/form/components/field/numeric.jsx'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 
 const NumberGroup = props =>
   <FormGroup {...props}>
-    <input
+    <Numeric
       id={props.controlId}
-      type="number"
-      className="form-control"
-      value={isNaN(props.value) ? undefined : props.value}
+      value={props.value}
       disabled={props.disabled}
       min={props.min}
       max={props.max}
-      onChange={(e) => props.onChange(e.target.value)}
+      onChange={props.onChange}
     />
   </FormGroup>
 

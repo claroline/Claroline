@@ -3,7 +3,7 @@
 namespace UJM\ExoBundle\Library\Options;
 
 /**
- * Defines the different types of Exercises.
+ * Defines the different numberings of Exercises.
  */
 final class ExerciseNumbering
 {

@@ -7,6 +7,7 @@ use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
+use UJM\ExoBundle\Library\Options\Picking;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
 use UJM\ExoBundle\Library\Options\ShowScoreAt;
@@ -71,6 +72,7 @@ class ExerciseSerializer implements SerializerInterface
             }
 
             $exerciseData->parameters = $this->serializeParameters($exercise);
+            $exerciseData->picking = $this->serializePicking($exercise);
             $exerciseData->steps = $this->serializeSteps($exercise, $options);
         }
 
@@ -97,6 +99,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (!empty($data->parameters)) {
             $this->deserializeParameters($exercise, $data->parameters);
+        }
+
+        if (!empty($data->picking)) {
+            $this->deserializePicking($exercise, $data->picking);
         }
 
         if (!empty($data->steps)) {
@@ -134,9 +140,6 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->type = $exercise->getType();
 
         // Attempt parameters
-        $parameters->randomOrder = $exercise->getRandomOrder();
-        $parameters->randomPick = $exercise->getRandomPick();
-        $parameters->pick = $exercise->getPick();
         $parameters->maxAttempts = $exercise->getMaxAttempts();
         $parameters->maxAttemptsPerDay = $exercise->getMaxAttemptsPerDay();
         $parameters->maxPapers = $exercise->getMaxPapers();
@@ -146,7 +149,6 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->interruptible = $exercise->isInterruptible();
         $parameters->numbering = $exercise->getNumbering();
         $parameters->mandatoryQuestions = $exercise->getMandatoryQuestions();
-        $parameters->randomTags = $exercise->getRandomTag();
 
         // Visibility parameters
         $parameters->showOverview = $exercise->getShowOverview();
@@ -209,19 +211,6 @@ class ExerciseSerializer implements SerializerInterface
     {
         if (isset($parameters->type)) {
             $exercise->setType($parameters->type);
-        }
-
-        if (isset($parameters->randomOrder)) {
-            $exercise->setRandomOrder($parameters->randomOrder);
-        }
-
-        if (isset($parameters->randomPick)) {
-            $exercise->setRandomPick($parameters->randomPick);
-            if (Recurrence::ONCE === $parameters->randomPick || Recurrence::ALWAYS === $parameters->randomPick) {
-                $exercise->setPick($parameters->pick);
-            } else {
-                $exercise->setPick(0);
-            }
         }
 
         if (isset($parameters->maxAttempts)) {
@@ -288,10 +277,6 @@ class ExerciseSerializer implements SerializerInterface
             $exercise->setMaxPapers($parameters->maxPapers);
         }
 
-        if (isset($parameters->randomTags)) {
-            $exercise->setRandomTag($parameters->randomTags);
-        }
-
         if (isset($parameters->showScoreAt)) {
             switch ($parameters->showScoreAt) {
                 case ShowScoreAt::AFTER_END:
@@ -336,6 +321,70 @@ class ExerciseSerializer implements SerializerInterface
             }
 
             $exercise->setDateCorrection($correctionDate);
+        }
+    }
+
+    private function serializePicking(Exercise $exercise)
+    {
+        $picking = new \stdClass();
+
+        $picking->type = $exercise->getPicking();
+        $picking->randomOrder = $exercise->getRandomOrder();
+        $picking->randomPick = $exercise->getRandomPick();
+
+        switch ($picking->type) {
+            case Picking::TAGS:
+                $tagPicking = $exercise->getPick();
+
+                $picking->pick = $tagPicking['tags'];
+                $picking->pageSize = $tagPicking['pageSize'];
+
+                break;
+            case Picking::STANDARD:
+            default:
+                $picking->pick = $exercise->getPick();
+
+                break;
+        }
+
+        return $picking;
+    }
+
+    private function deserializePicking(Exercise $exercise, \stdClass $picking)
+    {
+        $exercise->setPicking($picking->type);
+
+        if (isset($picking->randomOrder)) {
+            $exercise->setRandomOrder($picking->randomOrder);
+        }
+
+        if (isset($picking->randomPick)) {
+            $exercise->setRandomPick($picking->randomPick);
+        }
+
+        switch ($picking->type) {
+            case Picking::TAGS:
+                // updates tags picking params
+                $exercise->setPick([
+                    'tags' => $picking->pick,
+                    'pageSize' => $picking->pageSize,
+                ]);
+
+                break;
+            case Picking::STANDARD:
+            default:
+                // updates steps picking params
+                if (isset($picking->randomPick)) {
+                    if (Recurrence::ONCE === $picking->randomPick || Recurrence::ALWAYS === $picking->randomPick) {
+                        $exercise->setPick($picking->pick);
+                    } else {
+                        $exercise->setPick(0);
+                    }
+                } else {
+                    $exercise->setPick(0);
+                }
+
+                break;
         }
     }
 

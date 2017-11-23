@@ -683,11 +683,17 @@
     "amount": "Quantité",
     "json_export": "Export json",
     "csv_export": "Export csv",
-    "pick-tag": "Tag",
-    "tag-amount": "Quantité",
-    "tag-amount-help": "Nombre de question provenant devant être utilisé au total",
-    "number_question_page": "Nombre de question par page",
+    "number_question_page": "Nombre de questions par étape",
     "remove_questions_confirm": "Êtes-vous sûr de vouloir supprimer les questions suivantes [ %question_list% ]?",
-    "exercise_attempt_limit": "Votre nombre maximum de tentatives de l'exercice a été atteint.",
-    "exercise_paper_limit": "Le nombre maximum de réponses à l'exercice a été atteint."
+    "quiz_picking_type": "Type de tirage",
+    "quiz_picking_steps": "Choisir parmis les étapes et les questions définies dans le quiz",
+    "quiz_picking_tags": "Choisir parmis les tags associées aux questions du quiz",
+    "quiz_select_picking_tags": "Sélectionner dans la liste des tags disponibles",
+    "no_picked_tag": "Aucun tag sélectionné pour le tirage.",
+    "picking_tag_input_help": "Choisissez le nombre de questions à utiliser pour chaque tag.",
+    "quiz_no_tag": "Il n'y a aucun tag dans ce quiz.",
+    "quiz_no_tag_help": "Ajoutez des tags à vos questions afin de pouvoir configurer et utiliser le tirage par tag.",
+    "tags_to_pick": "Tags à tirer",
+    "exercise_attempt_limit": "Votre nombre maximum de tentatives pour le questionnaire a été atteint.",
+    "exercise_paper_limit": "Le nombre maximum de réponses à au questionnaire a été atteint."
 }

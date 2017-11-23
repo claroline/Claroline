@@ -33,7 +33,7 @@ form .global-error {
     .alert-danger;
 }
 
-.error-message {
+.error-message { // todo : should be removed
     .fa {
         margin-right: @icon-text-spacer;
     }
@@ -42,6 +42,8 @@ form .global-error {
 .help-block {
     text-align: justify;
 
+    padding-left: @padding-base-horizontal + 1px; // keep alignment with error blocks
+
     // Just expose some vars as bootstrap doesn't do it
     color: @help-block-color;
     font-size: @help-block-font-size;
@@ -49,6 +51,24 @@ form .global-error {
     .fa {
         margin-right: @icon-text-spacer;
     }
+}
+
+.error-block {
+    padding: @padding-small-vertical @padding-base-horizontal;
+    border: 1px solid transparent;
+    border-radius: @border-radius-small;
+}
+
+.error-block-warning,
+.has-warning .error-block {
+    background: @state-warning-bg;
+    border-color: @state-warning-border;
+}
+
+.error-block-danger,
+.has-error .error-block {
+    background: @state-danger-bg;
+    border-color: @state-danger-border;
 }
 
 
@@ -74,8 +94,10 @@ form .global-error {
 .sub-fields {
     // this is used to conditionally display fields on radio/checkbox check
     // we align the displayed fields with the label of the radio/checkbox
-    // but there is no var in bootstrap for this
-    margin-left: 20px;
+    // but there is no var in bootstrap for this (=20px)
+    margin-left: 4px; // cheat to have the border in the center of the checkbox/radio of the parent field if any
+    padding-left: 14px; // fill remaining space to be 20px
+    border-left: 2px solid #ccc;
 }
 
 
@@ -167,6 +189,13 @@ input[type=checkbox] {
     .no-ip-info {
         font-style: italic;
         text-align: center;
+
+        // todo use vars
+        line-height: 30px;
+        border: 1px dashed #999;
+        border-radius: 4px;
+        padding: 5px;
+        color: #999;
     }
 
     .ip-item {

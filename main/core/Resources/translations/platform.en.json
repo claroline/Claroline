@@ -1463,5 +1463,6 @@
     "add_comment": "Comment",
     "keywords": "Keywords",
     "objects_delete_title": "Delete objects",
-    "object_delete_question": "{1} Do you really want to remove the selected object ?|[2,Inf[ Do you really want to remove the %count% selected objects ?"
+    "object_delete_question": "{1} Do you really want to remove the selected object ?|[2,Inf[ Do you really want to remove the %count% selected objects ?",
+    "no_item": "No item."
 }

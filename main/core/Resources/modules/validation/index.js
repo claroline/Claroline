@@ -33,6 +33,16 @@ export function number(value) {
   }
 }
 
+export function gtZero(value) {
+  if (value <= 0) {
+    return trans(
+      'This value should be greater than {{ limit }}.',
+      {},
+      'validators'
+    ).replace('{{ limit }}', 0)
+  }
+}
+
 export function gteZero(value) {
   if (value < 0) {
     return trans(

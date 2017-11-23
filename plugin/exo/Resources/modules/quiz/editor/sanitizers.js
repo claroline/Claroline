@@ -1,19 +1,16 @@
-import set from 'lodash/set'
-
+// todo : could be removed when we will use semantic form group
 function sanitizeQuiz(propertyPath, value) {
-  if (propertyPath === 'parameters.pick'
-    || propertyPath === 'parameters.duration'
+  if (propertyPath === 'parameters.duration'
     || propertyPath === 'parameters.maxAttempts'
     || propertyPath === 'parameters.maxAttemptsPerDay'
     || propertyPath === 'parameters.maxPapers') {
     value = parseInt(value)
   }
 
-  let properties = {}
-
-  return set(properties, propertyPath, value)
+  return value
 }
 
+// todo : could be removed when we will use semantic form group
 function sanitizeStep(step) {
   if (step.parameters) {
     if (step.parameters.maxAttempts) {

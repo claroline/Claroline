@@ -1,11 +1,10 @@
 import {combineReducers} from 'redux'
+import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
-import unset from 'lodash/unset'
 
 import sanitize from './sanitizers'
 import validate from './validators'
-import cloneDeep from 'lodash/cloneDeep'
 import {decorateItem} from './../decorators'
 import {getIndex, makeId, makeItemPanelKey, update, refreshIds} from './../../utils/utils'
 import {getDefinition} from './../../items/item-types'
@@ -15,6 +14,8 @@ import {VIEW_MODE_UPDATE, OPEN_FIRST_STEP} from './../actions'
 import {
   TYPE_QUIZ,
   TYPE_STEP,
+  QUIZ_PICKING_DEFAULT,
+  QUIZ_PICKING_TAGS,
   SHUFFLE_NEVER,
   SHUFFLE_ONCE,
   SHUFFLE_ALWAYS,
@@ -72,47 +73,44 @@ function initialQuizState() {
 function reduceQuiz(quiz = initialQuizState(), action = {}) {
   switch (action.type) {
     case QUIZ_UPDATE: {
-      let updatedQuiz = quiz
+      // updates quiz
+      const updatedQuiz = cloneDeep(quiz)
 
-      if (action.propertyPath === 'parameters.pickByTag') {
-        if (action.value === true) {
-          updatedQuiz = merge({}, updatedQuiz, {parameters: {randomTags: {pick: [], pageSize: 1}}})
-          unset(updatedQuiz, 'props.parameters.randomPick')
-          unset(updatedQuiz, 'props.parameters.pick')
-          unset(updatedQuiz, 'props.parameters.randomOrder')
-        } else {
-          updatedQuiz = merge({}, updatedQuiz, sanitize.quiz('props.parameters.randomPick', SHUFFLE_NEVER))
-          updatedQuiz = merge({}, updatedQuiz, sanitize.quiz('props.parameters.pick', 0))
-          updatedQuiz = merge({}, updatedQuiz, sanitize.quiz('props.parameters.randomOrder', SHUFFLE_NEVER))
-          unset(updatedQuiz, 'props.parameters.randomTags')
+      // append new prop value
+      set(updatedQuiz, action.propertyPath, sanitize.quiz(action.propertyPath, action.value))
+
+      // handles custom cases
+      if ('picking.type' === action.propertyPath) {
+        // reset picking configuration
+        switch (action.value) {
+          case QUIZ_PICKING_TAGS:
+            updatedQuiz.picking = {
+              type: action.value,
+              pick: [],
+              randomPick: SHUFFLE_ALWAYS,
+              randomOrder: SHUFFLE_NEVER,
+              pageSize: 1
+            }
+            break
+
+          case QUIZ_PICKING_DEFAULT:
+          default:
+            updatedQuiz.picking = {
+              type: action.value,
+              pick: 0,
+              randomPick: SHUFFLE_NEVER,
+              randomOrder: SHUFFLE_NEVER
+            }
+            break
         }
       }
 
-      if (action.propertyPath === 'parameters.randomTags.pick') {
-        if (action.value[0] === 'add') {
-          updatedQuiz = cloneDeep(updatedQuiz)
-          updatedQuiz.parameters.randomTags.pick.push(action.value[1])
-
-          return updatedQuiz
-        } else {
-          updatedQuiz = cloneDeep(updatedQuiz)
-          updatedQuiz.parameters.randomTags.pick.splice(
-            updatedQuiz.parameters.randomTags.pick.indexOf(action.value),
-            1
-          )
-
-          return updatedQuiz
-        }
+      if (updatedQuiz.picking.randomPick === SHUFFLE_ALWAYS
+        && updatedQuiz.picking.randomOrder === SHUFFLE_ONCE) {
+        updatedQuiz.picking.randomOrder = SHUFFLE_NEVER
       }
 
-      const sanitizedProps = sanitize.quiz(action.propertyPath, action.value)
-      updatedQuiz = merge({}, updatedQuiz, sanitizedProps)
-
-      if (updatedQuiz.parameters.randomPick === SHUFFLE_ALWAYS
-        && updatedQuiz.parameters.randomOrder === SHUFFLE_ONCE) {
-        updatedQuiz.parameters.randomOrder = SHUFFLE_NEVER
-      }
-
+      // validates new quiz data
       updatedQuiz._errors = validate.quiz(updatedQuiz)
 
       return updatedQuiz
@@ -181,8 +179,8 @@ function reduceSteps(steps = {}, action = {}) {
     case STEP_UPDATE: {
       const sanitizedProps = sanitize.step(action.newProperties)
       const updatedStep = merge({}, steps[action.id], sanitizedProps)
-      const errors = validate.step(updatedStep)
-      updatedStep._errors = errors
+
+      updatedStep._errors = validate.step(updatedStep)
       return update(steps, {[action.id]: {$set: updatedStep}})
     }
     case ITEM_CREATE:

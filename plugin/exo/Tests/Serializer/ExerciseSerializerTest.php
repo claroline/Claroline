@@ -87,9 +87,9 @@ class ExerciseSerializerTest extends JsonDataTestCase
         $this->assertTrue(!empty($data->steps));
 
         // Checks parameters that need transformation
-        $this->assertEquals('never', $data->parameters->randomOrder);
-        $this->assertEquals('never', $data->parameters->randomPick);
-        $this->assertEquals(0, $data->parameters->pick);
+        $this->assertEquals('never', $data->picking->randomOrder);
+        $this->assertEquals('never', $data->picking->randomPick);
+        $this->assertEquals(0, $data->picking->pick);
     }
 
     /**
@@ -118,9 +118,9 @@ class ExerciseSerializerTest extends JsonDataTestCase
         $this->assertEquals($exerciseData->id, $exercise->getUuid());
 
         // Checks some parameters
-        $this->assertEquals($exerciseData->parameters->randomOrder, $exercise->getRandomOrder());
-        $this->assertEquals($exerciseData->parameters->randomPick, $exercise->getRandomPick());
-        $this->assertEquals($exerciseData->parameters->pick, $exercise->getPick());
+        $this->assertEquals($exerciseData->picking->randomOrder, $exercise->getRandomOrder());
+        $this->assertEquals($exerciseData->picking->randomPick, $exercise->getRandomPick());
+        $this->assertEquals($exerciseData->picking->pick, $exercise->getPick());
 
         // Checks there is the correct number of steps
         $this->assertCount(count($exerciseData->steps), $exercise->getSteps());
@@ -136,9 +136,9 @@ class ExerciseSerializerTest extends JsonDataTestCase
         $updatedExercise = $this->serializer->deserialize($exerciseData, $this->exercise);
 
         // Checks some parameters
-        $this->assertEquals($exerciseData->parameters->randomOrder, $updatedExercise->getRandomOrder());
-        $this->assertEquals($exerciseData->parameters->randomPick, $updatedExercise->getRandomPick());
-        $this->assertEquals($exerciseData->parameters->pick, $updatedExercise->getPick());
+        $this->assertEquals($exerciseData->picking->randomOrder, $updatedExercise->getRandomOrder());
+        $this->assertEquals($exerciseData->picking->randomPick, $updatedExercise->getRandomPick());
+        $this->assertEquals($exerciseData->picking->pick, $updatedExercise->getPick());
 
         // Checks there is the correct number of steps
         $this->assertCount(count($exerciseData->steps), $this->exercise->getSteps());

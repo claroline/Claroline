@@ -6,6 +6,7 @@ use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
 use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
@@ -20,14 +21,14 @@ class Exercise extends AbstractResource
 {
     use UuidTrait;
 
+    use AttemptParametersTrait;
+
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description = '';
-
-    use AttemptParametersTrait;
 
     /**
      * When corrections are available to the Users ?
@@ -148,10 +149,10 @@ class Exercise extends AbstractResource
     private $type = ExerciseType::SUMMATIVE;
 
     /**
-     * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"}, orphanRemoval=true)
      * @ORM\OrderBy({"order" = "ASC"})
+     *
+     * @var ArrayCollection|Step[]
      */
     private $steps;
 
@@ -227,19 +228,6 @@ class Exercise extends AbstractResource
         $this->refreshUuid();
         $this->dateCorrection = new \DateTime();
         $this->steps = new ArrayCollection();
-        $randomTag = new \stdClass();
-        $randomTag->pageSize = 0;
-        $this->randomTag = $randomTag;
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function getTitle()
@@ -527,21 +515,40 @@ class Exercise extends AbstractResource
     /**
      * Gets a step by its UUID.
      *
-     * @param $uuid
+     * @param string $uuid
      *
      * @return Step|null
      */
     public function getStep($uuid)
     {
-        $foundStep = null;
         foreach ($this->steps as $step) {
             if ($step->getUuid() === $uuid) {
-                $foundStep = $step;
-                break;
+                return $step;
             }
         }
 
-        return $foundStep;
+        return null;
+    }
+
+    /**
+     * Gets a question by its UUID.
+     *
+     * @param string $uuid
+     *
+     * @return Item|null
+     */
+    public function getQuestion($uuid)
+    {
+        foreach ($this->steps as $step) {
+            $questions = $step->getQuestions();
+            foreach ($questions as $question) {
+                if ($question->getUuid() === $uuid) {
+                    return $question;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -646,6 +653,16 @@ class Exercise extends AbstractResource
     public function getNumbering()
     {
         return $this->numbering;
+    }
+
+    public function setPicking($picking)
+    {
+        $this->picking = $picking;
+    }
+
+    public function getPicking()
+    {
+        return $this->picking;
     }
 
     public function setMaxPapers($maxPapers)

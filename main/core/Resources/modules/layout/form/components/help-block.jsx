@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 const HelpBlock = props =>
   <span className="help-block">
-    <span className="fa fa-info-circle" />
+    <span className="fa fa-fw fa-info-circle" />
     {props.help}
   </span>
 

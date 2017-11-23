@@ -1485,5 +1485,6 @@
     "add_comment": "Commenter",
     "keywords": "Mots clés",
     "objects_delete_title": "Supprimer des objets",
-    "object_delete_question": "{1} Êtes-vous sûr de vouloir supprimer l'objet sélectionné ?|[2,Inf[ Êtes-vous sur de vouloir supprimer les %count% objets sélectionnés ?"
+    "object_delete_question": "{1} Êtes-vous sûr de vouloir supprimer l'objet sélectionné ?|[2,Inf[ Êtes-vous sur de vouloir supprimer les %count% objets sélectionnés ?",
+    "no_item": "Aucun élément."
 }

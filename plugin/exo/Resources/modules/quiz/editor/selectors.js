@@ -1,7 +1,10 @@
 import {createSelector} from 'reselect'
 import isEmpty from 'lodash/isEmpty'
-import {TYPE_QUIZ, TYPE_STEP} from './../enums'
+import uniq from 'lodash/uniq'
+
 import {tex, t} from '#/main/core/translation'
+
+import {TYPE_QUIZ, TYPE_STEP} from './../enums'
 
 const quiz = state => state.quiz
 const steps = state => state.steps
@@ -19,6 +22,12 @@ const stepList = createSelector(
   quiz,
   steps,
   (quiz, steps) => quiz.steps.map(id => steps[id])
+)
+
+// retrieves the list of used tags and the number of questions using it
+const tags = createSelector(
+  items,
+  (items) => uniq(Object.keys(items).map(key => items[key]).reduce((tags, item) => [...tags.concat(item.tags)], []))
 )
 
 const quizThumbnail = createSelector(
@@ -151,5 +160,6 @@ export default {
   valid,
   validating,
   saved,
-  steps
+  steps,
+  tags
 }

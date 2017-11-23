@@ -24,12 +24,16 @@ abstract class AbstractResource
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({"api_resource"})
+     *
+     * @var int
      */
     protected $id;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     *
+     * @var ResourceNode
      */
     protected $resourceNode;
 

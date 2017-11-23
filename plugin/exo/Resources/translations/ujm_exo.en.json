@@ -684,7 +684,7 @@
     "json_export": "Json export",
     "csv_export": "Csv export",
     "pick-tag": "Tag",
-    "number_question_page": "Number of question per page",
+    "number_question_page": "Number of question per step",
     "tag-amount": "Number of question related to the tag that must be picked",
     "remove_workspaces_confirm": "Are you sure you want to delete the following questions [ %question_list% ]?",
     "exercise_attempt_limit": "Your limit of attempts as been reached.",

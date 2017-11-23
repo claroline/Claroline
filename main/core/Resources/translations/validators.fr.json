@@ -8,6 +8,7 @@
     "The code {{ code }} is already assigned to another workspace.": "Le code {{ code }} est déjà attribué à un autre espace d'activités.",
     "The name {{ name }} is already in use.": "Le nom {{ name }} est déjà utilisé.",
     "The user or group {{ name }} does not exist.": "L'utilisateur ou le groupe [{{ name }}] n'existe pas.",
+    "This value should be greater than {{ limit }}.": "Cette valeur doit être plus grande que {{ limit }}.",
     "email_not_valid": "Cette adresse email n'est pas valide.",
     "google_meta_tag_error": "Le champ doit être une balise meta. Exemple: <meta name=\"google-site-verification\" content=\"XXX\" />.",
     "invalid_date_range": "La date de fin ne peut précéder la date de début.",

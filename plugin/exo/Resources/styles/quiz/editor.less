@@ -138,12 +138,88 @@
   }
 }
 
+
+// todo : huge c/c from IP list control. Find a way to merge in a generic "item-control/item-list-control" or something like that
+.tag-control {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+  .form-control {
+    flex: 1;
+    min-width: 0; // hack to avoid overflow in FF
+
+    +.form-control {
+      margin-left: 10px;
+    }
+  }
+
+  // todo find better selector
+  input[type=number] {
+    text-align: right;
+    max-width: 80px;
+  }
+}
+
+.tag-list-control {
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  .tag-add {
+    margin-bottom: 5px;
+  }
+
+  .no-tag-info {
+    font-style: italic;
+    text-align: center;
+
+    // todo use vars
+    line-height: 30px;
+    border: 1px dashed #999;
+    border-radius: 4px;
+    padding: 5px;
+    color: #999;
+  }
+
+  .tag-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background: @gray-lighter;
+    padding: 5px;
+
+    + .tag-item {
+      margin-top: 5px;
+    }
+
+    .border-radius(@border-radius-base);
+
+    .tag-control {
+      flex: 1;
+    }
+
+    .btn {
+      margin-left: floor(@grid-gutter-width / 2);
+      padding: 4px;
+    }
+  }
+}
+
+.has-warning .no-tag-info {
+  color: @state-warning-text;
+  border-color: @state-warning-text;
+}
+
+.has-error .no-tag-info {
+  color: @state-danger-text;
+  border-color: @state-danger-text;
+}
+
 @media (max-width: @screen-sm-min) {
   .quiz-editor {
     flex-direction: column;
-
-    /*.edit-zone {
-      padding-left: 0;
-    }*/
   }
 }

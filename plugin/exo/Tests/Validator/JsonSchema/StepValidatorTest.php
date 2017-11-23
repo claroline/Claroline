@@ -54,7 +54,7 @@ class StepValidatorTest extends JsonSchemaTestCase
 
         $this->assertGreaterThan(0, count($errors));
         $this->assertTrue(in_array([
-            'path' => '/parameters/randomPick',
+            'path' => '/picking/randomPick',
             'message' => 'The property `pick` is required when `randomPick` is not "never"',
         ], $errors));
     }
@@ -70,7 +70,7 @@ class StepValidatorTest extends JsonSchemaTestCase
 
         $this->assertGreaterThan(0, count($errors));
         $this->assertTrue(in_array([
-            'path' => '/parameters/pick',
+            'path' => '/picking/pick',
             'message' => 'the property `pick` cannot be greater than the number of items of the step',
         ], $errors));
     }
@@ -89,7 +89,7 @@ class StepValidatorTest extends JsonSchemaTestCase
 
         $this->assertGreaterThan(0, count($errors));
         $this->assertTrue(in_array([
-            'path' => '/parameters/randomOrder',
+            'path' => '/picking/randomOrder',
             'message' => 'The property `randomOrder` cannot be "once" when `randomPick` is "always"',
         ], $errors));
     }

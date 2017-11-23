@@ -19,12 +19,12 @@ const FormGroup = props =>
 
     {props.children}
 
-    {props.error &&
-      <ErrorBlock text={props.error} inGroup={true} warnOnly={props.warnOnly}/>
-    }
-
     {props.help &&
       <HelpBlock help={props.help} />
+    }
+
+    {props.error &&
+      <ErrorBlock text={props.error} inGroup={true} warnOnly={props.warnOnly}/>
     }
   </div>
 

@@ -1,5 +1,6 @@
 import {
   QUIZ_SUMMATIVE,
+  QUIZ_PICKING_DEFAULT,
   SHUFFLE_NEVER,
   SHOW_CORRECTION_AT_VALIDATION,
   SHOW_SCORE_AT_CORRECTION,
@@ -11,9 +12,6 @@ const quiz = {
   parameters: {
     type: QUIZ_SUMMATIVE,
     showMetadata: true,
-    randomOrder: SHUFFLE_NEVER,
-    randomPick: SHUFFLE_NEVER,
-    pick: 0,
     duration: 0,
     maxAttempts: 0,
     maxAttemptsPerDay: 0,
@@ -27,6 +25,12 @@ const quiz = {
     showStatistics: false,
     showFullCorrection: true,
     endMessage: ''
+  },
+  picking: {
+    type: QUIZ_PICKING_DEFAULT,
+    pick: 0,
+    randomOrder: SHUFFLE_NEVER,
+    randomPick: SHUFFLE_NEVER
   }
 }
 
@@ -36,6 +40,11 @@ const step = {
   parameters: {
     maxAttempts: 0,
     maxAttemptsPerDay: 0
+  },
+  picking: {
+    randomOrder: SHUFFLE_NEVER,
+    randomPick: SHUFFLE_NEVER,
+    pick: 0
   },
   items: []
 }

@@ -4,6 +4,7 @@ import {decorate} from './decorators'
 import {
   TYPE_QUIZ,
   QUIZ_SUMMATIVE,
+  QUIZ_PICKING_DEFAULT,
   SHUFFLE_NEVER,
   SHOW_CORRECTION_AT_VALIDATION,
   SHOW_SCORE_AT_CORRECTION,
@@ -67,9 +68,6 @@ describe('Decorator', () => {
         parameters: {
           type: QUIZ_SUMMATIVE,
           showMetadata: true,
-          randomOrder: SHUFFLE_NEVER,
-          randomPick: SHUFFLE_NEVER,
-          pick: 0,
           duration: 0,
           maxAttempts: 0,
           maxAttemptsPerDay: 0,
@@ -83,6 +81,12 @@ describe('Decorator', () => {
           showStatistics: false,
           showFullCorrection: true,
           endMessage: ''
+        },
+        picking: {
+          type: QUIZ_PICKING_DEFAULT,
+          randomOrder: SHUFFLE_NEVER,
+          randomPick: SHUFFLE_NEVER,
+          pick: 0
         }
       },
       steps: {
@@ -94,6 +98,11 @@ describe('Decorator', () => {
           parameters: {
             maxAttempts: 0,
             maxAttemptsPerDay: 0
+          },
+          picking: {
+            randomOrder: SHUFFLE_NEVER,
+            randomPick: SHUFFLE_NEVER,
+            pick: 0
           }
         },
         b: {
@@ -104,6 +113,11 @@ describe('Decorator', () => {
           parameters: {
             maxAttempts: 0,
             maxAttemptsPerDay: 0
+          },
+          picking: {
+            randomOrder: SHUFFLE_NEVER,
+            randomPick: SHUFFLE_NEVER,
+            pick: 0
           }
         }
       },
@@ -111,7 +125,6 @@ describe('Decorator', () => {
         x: {
           id: 'x',
           meta: {
-
             mandatory: false,
             protectQuestion: false
           },
@@ -232,6 +245,12 @@ describe('Decorator', () => {
           showStatistics: false,
           showFullCorrection: true,
           endMessage: ''
+        },
+        picking: {
+          type: QUIZ_PICKING_DEFAULT,
+          randomOrder: SHUFFLE_NEVER,
+          randomPick: SHUFFLE_NEVER,
+          pick: 0
         }
       },
       steps: {
@@ -243,6 +262,11 @@ describe('Decorator', () => {
           parameters: {
             maxAttempts: 0,
             maxAttemptsPerDay: 0
+          },
+          picking: {
+            randomOrder: SHUFFLE_NEVER,
+            randomPick: SHUFFLE_NEVER,
+            pick: 0
           }
         }
       },

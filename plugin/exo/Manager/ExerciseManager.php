@@ -122,7 +122,7 @@ class ExerciseManager
         if (count($errors) > 0) {
             throw new ValidationException('Exercise is not valid', $errors);
         }
-        // Start flush suite to avoid persisting and flushing tags before quizz
+        // Start flush suite to avoid persisting and flushing tags before quiz
         $this->om->startFlushSuite();
         // Update Exercise with new data
         $this->serializer->deserialize($data, $exercise, [Transfer::PERSIST_TAG]);

@@ -22,6 +22,7 @@ export function normalize(rawQuiz) {
       description: rawQuiz.description,
       meta: rawQuiz.meta,
       parameters: rawQuiz.parameters,
+      picking: rawQuiz.picking,
       steps: rawQuiz.steps.map(step => step.id)
     },
     steps,
@@ -50,6 +51,7 @@ export function denormalize(quiz, steps, items) {
     description: quiz.description,
     meta: quiz.meta,
     parameters: quiz.parameters,
+    picking: quiz.picking,
     steps: rawQuizSteps
   }
 }

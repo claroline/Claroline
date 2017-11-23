@@ -7,14 +7,17 @@
     "interruptible": true,
     "duration": 0,
     "maxAttempts": 5,
-    "randomOrder": "once",
-    "randomPick": "once",
-    "pick": 2,
     "showMetadata": true,
     "showStatistics": false,
     "showFullCorrection": true,
     "showCorrectionAt": "validation",
     "showScoreAt": "correction"
+  },
+  "picking": {
+    "type": "standard",
+    "randomOrder": "once",
+    "randomPick": "once",
+    "pick": 2
   },
   "steps": [
     {
