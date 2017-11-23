@@ -63,6 +63,8 @@ bootstrap(
     currentEntry: currentEntryReducers,
     cascadeLevelMax: mainReducers,
     message: messageReducers,
+    roles: mainReducers,
+    myRoles: mainReducers,
 
     // generic reducers
     resourceNode: resourceNodeReducer,
@@ -88,7 +90,9 @@ bootstrap(
         fetchUrl: generateUrl('claro_claco_form_entries_search', {clacoForm: resource.id})
       }),
       myEntriesCount: initialData.myEntriesCount,
-      cascadeLevelMax: initialData.cascadeLevelMax
+      cascadeLevelMax: initialData.cascadeLevelMax,
+      roles: initialData.roles,
+      myRoles: initialData.myRoles
     }
   }
 )

@@ -123,6 +123,7 @@ class EntryEditForm extends Component {
           controlId="field-title"
           type="text"
           label={t('title')}
+          noLabel={true}
           value={this.state.entry.entry_title}
           error={this.state.errors.entry_title}
           onChange={value => this.updateEntryValue('entry_title', value)}

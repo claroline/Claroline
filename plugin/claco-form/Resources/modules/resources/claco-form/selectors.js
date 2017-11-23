@@ -14,6 +14,7 @@ const currentEntry = state => state.currentEntry
 const myEntriesCount = state => state.myEntriesCount
 const canAdministrate = state => state.resourceNode.rights.current.administrate
 const categories = state => state.categories
+const myRoles = state => state.myRoles
 
 const canSearchEntry = createSelector(
   resourceSelect.editable,
@@ -127,6 +128,36 @@ const isCategoryManager = createSelector(
   }
 )
 
+const canComment = createSelector(
+  params,
+  myRoles,
+  (params, myRoles) => {
+    if (params.comments_enabled) {
+      const commentsRoles = params.comments_roles || []
+      const intersection = commentsRoles.filter(cr => myRoles.indexOf(cr) > -1)
+
+      return intersection.length > 0
+    }
+
+    return false
+  }
+)
+
+const canViewComments = createSelector(
+  params,
+  myRoles,
+  (params, myRoles) => {
+    if (params.display_comments) {
+      const commentsDisplayRoles = params.comments_display_roles || []
+      const intersection = commentsDisplayRoles.filter(cr => myRoles.indexOf(cr) > -1)
+
+      return intersection.length > 0
+    }
+
+    return false
+  }
+)
+
 export const selectors = {
   resource,
   isAnon,
@@ -143,5 +174,7 @@ export const selectors = {
   canAddEntry,
   canOpenCurrentEntry,
   canAdministrate,
-  isCategoryManager
+  isCategoryManager,
+  canComment,
+  canViewComments
 }

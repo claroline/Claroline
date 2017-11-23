@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import ReactDOM from 'react-dom'
 import cloneDeep from 'lodash/cloneDeep'
+import moment from 'moment'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {PropTypes as T} from 'prop-types'
@@ -45,7 +46,13 @@ class EntryCreateForm extends Component {
       entry_title: ''
     }
     props.fields.map(f => {
-      fieldsValues[f.id] = getFieldType(f.type).answerType === 'array' ? [] : ''
+      if (getFieldType(f.type).answerType === 'array') {
+        fieldsValues[f.id] = []
+      } else if (getFieldType(f.type).answerType === 'date') {
+        fieldsValues[f.id] = moment().format('YYYY-MM-DD')
+      } else {
+        fieldsValues[f.id] = ''
+      }
       errors[f.id] = ''
     })
     this.state = {

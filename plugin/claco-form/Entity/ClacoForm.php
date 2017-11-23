@@ -636,4 +636,34 @@ class ClacoForm extends AbstractResource
         }
         $this->details['display_content'] = $displayContent;
     }
+
+    public function getCommentsRoles()
+    {
+        return !is_null($this->details) && isset($this->details['comments_roles']) ?
+            $this->details['comments_roles'] :
+            [];
+    }
+
+    public function setCommentsRoles(array $commentsRoles)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['comments_roles'] = $commentsRoles;
+    }
+
+    public function getCommentsDisplayRoles()
+    {
+        return !is_null($this->details) && isset($this->details['comments_display_roles']) ?
+            $this->details['comments_display_roles'] :
+            [];
+    }
+
+    public function setCommentsDisplayRoles(array $commentsDisplayRoles)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['comments_display_roles'] = $commentsDisplayRoles;
+    }
 }

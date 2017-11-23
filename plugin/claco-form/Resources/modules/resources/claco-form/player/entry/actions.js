@@ -170,7 +170,7 @@ actions.createComment = (entryId, content) => (dispatch) => {
         body: formData
       },
       success: (data, dispatch) => {
-        dispatch(actions.addEntryComment(entryId, JSON.parse(data)))
+        dispatch(actions.addEntryComment(entryId, data))
       }
     }
   })
@@ -188,7 +188,7 @@ actions.editComment = (entryId, commentId, content) => (dispatch) => {
         body: formData
       },
       success: (data, dispatch) => {
-        dispatch(actions.updateEntryComment(entryId, JSON.parse(data)))
+        dispatch(actions.updateEntryComment(entryId, data))
       }
     }
   })

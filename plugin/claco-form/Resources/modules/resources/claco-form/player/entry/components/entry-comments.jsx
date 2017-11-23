@@ -117,7 +117,7 @@ class EntryComments extends Component {
           </section>
         }
 
-        {this.state.opened &&
+        {this.state.opened && this.props.canViewComments &&
           <section className="comments-section">
             <h4>{trans('all_comments', {}, 'clacoform')}</h4>
 
@@ -144,7 +144,7 @@ class EntryComments extends Component {
                     'user-message-inactive': 0 === comment.status,
                     'user-message-blocked': 2 === comment.status
                   })}
-                  user={this.props.displayCommentAuthor ? comment.user : undefined}
+                  user={this.props.displayCommentAuthor && comment.user ? comment.user : undefined}
                   date={this.props.displayCommentDate ? comment.creationDate : ''}
                   content={comment.content}
                   allowHtml={true}
@@ -190,6 +190,7 @@ EntryComments.propTypes = {
   opened: T.bool.isRequired,
   entry: T.object.isRequired,
   canComment: T.bool.isRequired,
+  canViewComments: T.bool.isRequired,
   canManage: T.bool.isRequired,
   displayCommentAuthor: T.bool.isRequired,
   displayCommentDate: T.bool.isRequired,

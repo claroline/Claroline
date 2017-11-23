@@ -11,6 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Controller;
 
+use Claroline\ClacoFormBundle\API\Serializer\CommentSerializer;
 use Claroline\ClacoFormBundle\API\Serializer\EntrySerializer;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
@@ -20,9 +21,11 @@ use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\API\FinderProvider;
+use Claroline\CoreBundle\API\Serializer\RoleSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
@@ -42,10 +45,13 @@ class ClacoFormController extends Controller
     private $finder;
     private $platformConfigHandler;
     private $request;
+    private $roleManager;
+    private $roleSerializer;
     private $serializer;
     private $tokenStorage;
     private $userManager;
     private $entrySerializer;
+    private $commentSerializer;
 
     /**
      * @DI\InjectParams({
@@ -54,10 +60,13 @@ class ClacoFormController extends Controller
      *     "finder"                = @DI\Inject("claroline.api.finder"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "request"               = @DI\Inject("request"),
+     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "roleSerializer"        = @DI\Inject("claroline.serializer.role"),
      *     "serializer"            = @DI\Inject("jms_serializer"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
-     *     "entrySerializer"       = @DI\Inject("claroline.serializer.clacoform.entry")
+     *     "entrySerializer"       = @DI\Inject("claroline.serializer.clacoform.entry"),
+     *     "commentSerializer"     = @DI\Inject("claroline.serializer.clacoform.comment")
      * })
      */
     public function __construct(
@@ -66,20 +75,26 @@ class ClacoFormController extends Controller
         FinderProvider $finder,
         PlatformConfigurationHandler $platformConfigHandler,
         Request $request,
+        RoleManager $roleManager,
+        RoleSerializer $roleSerializer,
         Serializer $serializer,
         TokenStorageInterface $tokenStorage,
         UserManager $userManager,
-        EntrySerializer $entrySerializer
+        EntrySerializer $entrySerializer,
+        CommentSerializer $commentSerializer
     ) {
         $this->clacoFormManager = $clacoFormManager;
         $this->filesDir = $filesDir;
         $this->finder = $finder;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->request = $request;
+        $this->roleManager = $roleManager;
+        $this->roleSerializer = $roleSerializer;
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
         $this->entrySerializer = $entrySerializer;
+        $this->commentSerializer = $commentSerializer;
     }
 
     /**
@@ -111,6 +126,18 @@ class ClacoFormController extends Controller
                 'sortBy' => 'creationDate',
             ]
         );
+        $roles = [];
+        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
+        $roleAnonymous = $this->roleManager->getRoleByName('ROLE_ANONYMOUS');
+        $workspaceRoles = $this->roleManager->getWorkspaceRoles($clacoForm->getResourceNode()->getWorkspace());
+        $roles[] = $this->roleSerializer->serialize($roleUser);
+        $roles[] = $this->roleSerializer->serialize($roleAnonymous);
+
+        foreach ($workspaceRoles as $workspaceRole) {
+            $roles[] = $this->roleSerializer->serialize($workspaceRole);
+        }
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $myRoles = $currentUser === 'anon.' ? [$roleAnonymous->getName()] : $currentUser->getRoles();
 
         return [
             'user' => $user,
@@ -122,6 +149,8 @@ class ClacoFormController extends Controller
             'cascadeLevelMax' => $cascadeLevelMax,
             'entries' => $entries,
             'myEntriesCount' => count($myEntries),
+            'roles' => $roles,
+            'myRoles' => $myRoles,
         ];
     }
 
@@ -892,11 +921,7 @@ class ClacoFormController extends Controller
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
         $user = $authenticatedUser !== 'anon.' ? $authenticatedUser : null;
         $comment = $this->clacoFormManager->createComment($entry, $content, $user);
-        $serializedComment = $this->serializer->serialize(
-            $comment,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedComment = $this->commentSerializer->serialize($comment);
 
         return new JsonResponse($serializedComment, 200);
     }
@@ -918,11 +943,7 @@ class ClacoFormController extends Controller
         $this->clacoFormManager->checkCommentEditionRight($comment);
         $content = $this->request->request->get('commentData', false);
         $comment = $this->clacoFormManager->editComment($comment, $content);
-        $serializedComment = $this->serializer->serialize(
-            $comment,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedComment = $this->commentSerializer->serialize($comment);
 
         return new JsonResponse($serializedComment, 200);
     }
@@ -942,11 +963,7 @@ class ClacoFormController extends Controller
     public function commentDeleteAction(Comment $comment)
     {
         $this->clacoFormManager->checkCommentEditionRight($comment);
-        $serializedComment = $this->serializer->serialize(
-            $comment,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedComment = $this->commentSerializer->serialize($comment);
         $this->clacoFormManager->deleteComment($comment);
 
         return new JsonResponse($serializedComment, 200);

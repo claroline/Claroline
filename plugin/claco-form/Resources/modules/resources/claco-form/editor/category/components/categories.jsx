@@ -162,7 +162,7 @@ Categories.propTypes = {
       lastName: T.string.isRequired,
       username: T.string.isRequired,
       mail: T.string.isRequired,
-      guid: T.string.isRequired
+      guid: T.string
     })),
     details: T.shape({
       color: T.string,
