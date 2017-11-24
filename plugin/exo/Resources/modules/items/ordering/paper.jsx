@@ -269,14 +269,14 @@ const OrderingPaper = props => {
                   )}
                   <div className="item stats-item stats-success">
                     <AnswerStats stats={{
-                      value: props.stats.orders[utils.getKey(props.item.solutions.filter(solution => solution.score > 0))] ?
+                      value: has(props.stats, ['orders', utils.getKey(props.item.solutions.filter(solution => solution.score > 0))]) ?
                         props.stats.orders[utils.getKey(props.item.solutions.filter(solution => solution.score > 0))].count :
                         0,
                       total: props.stats.total
                     }}/>
                   </div>
                 </div>
-                {props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE &&
+                {props.item.direction === DIRECTION_VERTICAL && props.item.mode === MODE_BESIDE && props.stats.orders &&
                   Object.values(props.stats.orders).map((o) => {
                     const data = o.data.slice()
                     const key = utils.getKey(data)
@@ -314,7 +314,7 @@ const OrderingPaper = props => {
                 )}
                 <div className="item stats-item stats-success">
                   <AnswerStats stats={{
-                    value: props.stats.orders[utils.getKey(props.item.solutions.filter(solution => solution.score > 0))] ?
+                    value: has(props.stats, ['orders', utils.getKey(props.item.solutions.filter(solution => solution.score > 0))]) ?
                       props.stats.orders[utils.getKey(props.item.solutions.filter(solution => solution.score > 0))].count :
                       0,
                     total: props.stats.total
