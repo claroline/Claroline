@@ -64,8 +64,6 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
         $file = $input->getArgument('csv_workspace_registration_path');
         $lines = str_getcsv(file_get_contents($file), PHP_EOL);
 
-        $om->startFlushSuite();
-
         $clean = $input->getOption('clean');
         $ignore = $input->getOption('ignore');
 
