@@ -11,15 +11,18 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\TermsOfServiceType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
+use Claroline\CoreBundle\Library\Logger\FileLogger;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Psr\Log\LogLevel;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -44,6 +47,7 @@ use Symfony\Component\Templating\EngineInterface;
  */
 class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
 {
+    use LoggableTrait;
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
@@ -106,6 +110,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->router = $router;
         $this->userManager = $userManager;
         $this->requestStack = $requestStack;
+        $this->logger = FileLogger::get('login',  'claroline.login.logger');
     }
 
     /**
@@ -133,8 +138,14 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             try {
                 $securityRoute = $this->router->match($securityUriClean)['_route'];
             } catch (MethodNotAllowedException $e) {
+                $this->log($e->getMessage(), LogLevel::ERROR);
                 $this->router->getContext()->setMethod('GET');
                 $securityRoute = $this->router->match($securityUriClean)['_route'];
+            } catch (\Exception $e) {
+                // In case of any exception matching the securityUri, redirect to desktop
+                $this->log($e->getMessage(), LogLevel::ERROR);
+
+                return new RedirectResponse($this->router->generate('claro_desktop_open'));
             }
         }
         // If login route then check other conditions.
