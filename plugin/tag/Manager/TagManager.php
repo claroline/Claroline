@@ -165,7 +165,11 @@ class TagManager
             foreach ($uniqueTags as $tagName) {
                 $tag = $tagsList[$tagName];
 
-                $taggedObject = $this->getOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
+                $taggedObject = null;
+                //if tag is scheduled for insertion it's new so no need to search for it
+                if (!$this->getUowScheduledTag($tagName)) {
+                    $taggedObject = $this->getOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
+                }
 
                 if (is_null($taggedObject)) {
                     $taggedObject = new TaggedObject();
