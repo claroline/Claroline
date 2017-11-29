@@ -35,6 +35,7 @@ class ApiListener
         $resourceNode = $event->getResourceNode();
         if ($resourceNode->getResourceType()->getName() === 'hevinci_url') {
             $isYoutube = false;
+            $embedYoutubeUrl = null;
 
             $resource = $this->om->getRepository('HeVinciUrlBundle:Url')->findOneByResourceNode($resourceNode);
 
@@ -45,6 +46,7 @@ class ApiListener
 
                 // Only add remote youTube thumbnail if no local resource node thumbnail is defined
                 if ($resourceNode->getThumbnail() === null) {
+                    $embedYoutubeUrl = 'https://www.youtube.com/embed/'.$youtubeId;
                     $thumbnailUrl = 'http://img.youtube.com/vi/'.$youtubeId.'/hqdefault.jpg';
                     $event->add('poster', $thumbnailUrl);
                 }
@@ -52,25 +54,39 @@ class ApiListener
 
             $event->add('url', [
                 'isYoutube' => $isYoutube,
+                'embedYoutubeUrl' => $embedYoutubeUrl,
+                'isExternal' => $this->isExternal($resource->getUrl()),
             ]);
         }
     }
 
     private function getYoutubeId($url)
     {
+        $return = false;
+
         $parsedUrl = parse_url($url);
 
-        switch ($parsedUrl['host']) {
-            case 'www.youtube.com':
-                parse_str($parsedUrl['query'], $parsedQuery);
-
-                return $parsedQuery['v'];
-            case 'youtu.be':
-                return substr($parsedUrl['path'], 1);
-            default:
-                break;
+        if (array_key_exists('host', $parsedUrl)) {
+            switch ($parsedUrl['host']) {
+                case 'www.youtube.com':
+                    parse_str($parsedUrl['query'], $parsedQuery);
+                    $return = $parsedQuery['v'];
+                    break;
+                case 'youtu.be':
+                    $return = substr($parsedUrl['path'], 1);
+                    break;
+                default:
+                    break;
+            }
         }
 
-        return false;
+        return $return;
+    }
+
+    private function isExternal($url)
+    {
+        $components = parse_url($url);
+
+        return !empty($components['host']) && strcasecmp($components['host'], $_SERVER['HTTP_HOST']);
     }
 }

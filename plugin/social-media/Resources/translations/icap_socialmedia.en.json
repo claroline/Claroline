@@ -12,6 +12,7 @@
     "load_next_notes": "View more reminders",
     "load_next_wall_items": "View more items",
     "load_previous_comments": "View previous comments",
+    "nb_likes": "%count% like|%count% likes",
     "no_comment": "Be the first to write a comment",
     "no_like": "Be the first to like this resource",
     "no_note": "Write your first note for this resource",

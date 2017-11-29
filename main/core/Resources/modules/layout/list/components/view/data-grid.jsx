@@ -22,7 +22,11 @@ const DataGridItem = props =>
       />
     }
 
-    <div className="item-header">
+    <div className="item-header" style={{
+      backgroundImage: 'url(' + props.data.poster + ')',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center'
+    }}>
       <span className="item-icon-container">
         {typeof props.data.icon === 'string' ?
           <span className={props.data.icon} />
