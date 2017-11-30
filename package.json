@@ -18,7 +18,8 @@
     "istanbul": "npm run karma -- --single-run --reporters=coverage"
   },
   "dependencies": {
-    "claroline-distribution": "file:./vendor/claroline/distribution"
+    "claroline-distribution": "file:./vendor/claroline/distribution",
+    "npm": "^3.10.9"
   },
   "devDependencies": {
     "assets-webpack-plugin": "^3.4.0",
