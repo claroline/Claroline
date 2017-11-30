@@ -184,7 +184,7 @@ class BooleanDefinition extends AbstractDefinition
 
     public function getCsvTitles(AbstractItem $item)
     {
-        return ['bool-'.$item->getQuestion()->getUuid()];
+        return [$item->getQuestion()->getContentText()];
     }
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)

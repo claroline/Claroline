@@ -198,7 +198,7 @@ class ChoiceDefinition extends AbstractDefinition
 
     public function getCsvTitles(AbstractItem $item)
     {
-        return ['choice-'.$item->getQuestion()->getUuid()];
+        return [$item->getQuestion()->getContentText()];
     }
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
@@ -207,7 +207,7 @@ class ChoiceDefinition extends AbstractDefinition
         $answers = [];
 
         foreach ($item->getChoices() as $choice) {
-            if (in_array($choice->getUuid(), $data)) {
+            if (is_array($data) && in_array($choice->getUuid(), $data)) {
                 $answers[] = $choice->getData();
             }
         }

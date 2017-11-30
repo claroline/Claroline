@@ -316,10 +316,13 @@ class ExerciseManager
         $items = [];
         $questions = [];
 
+        //get the list of titles for the csv (the headers)
+        //this is an array of array because some question types will return...
+        //more than 1 title (ie clozes)
         foreach ($exercise->getSteps() as $step) {
             foreach ($step->getStepQuestions() as $stepQ) {
                 $item = $stepQ->getQuestion();
-                $items[$item->getUuid()] = $item;
+                $items[$item->getId()] = $item;
                 $questions[$stepQ->getQuestion()->getUuid()] = $stepQ->getQuestion();
                 $itemType = $item->getInteraction();
 
@@ -330,6 +333,7 @@ class ExerciseManager
             }
         }
 
+        //this is the same reason why we use an array of array here
         $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
         $papers = $repo->findBy(['exercise' => $exercise]);
 
@@ -337,6 +341,7 @@ class ExerciseManager
             $answers = $paper->getAnswers();
             $csv = [];
             $user = $paper->getUser();
+
             if ($user) {
                 $csv['username'] = [$user->getUsername()];
                 $csv['firstname'] = [$user->getFirstName()];
@@ -347,26 +352,38 @@ class ExerciseManager
                 $csv['firstname'] = ['none'];
             }
 
-            $orderedIds = array_keys($questions);
-            $indexedAnswers = [];
-            $orderedAnswers = [];
+            $notFound = [];
+            foreach ($questions as $question) {
+                $item = $items[$question->getId()];
+                $found = false;
 
-            foreach ($answers as $answer) {
-                $indexedAnswers[$answer->getQuestionId()] = $answer;
-            }
-
-            foreach ($orderedIds as $id) {
-                if (isset($indexedAnswers[$id])) {
-                    $orderedAnswers[] = $indexedAnswers[$id];
+                foreach ($answers as $answer) {
+                    if ($answer->getQuestionId() === $question->getUuid()) {
+                        if ($this->definitions->has($item->getMimeType())) {
+                            $found = true;
+                            $definition = $this->definitions->get($item->getMimeType());
+                            $csv[$answer->getQuestionId()] = $definition->getCsvAnswers($item->getInteraction(), $answer);
+                        }
+                    }
                 }
-            }
 
-            foreach ($orderedAnswers as $answer) {
-                $item = $items[$answer->getQuestionId()];
+                if (!$found) {
+                    $notFound[] = $question->getUuid();
+                    $items[$question->getId()];
+                    $itemType = $item->getInteraction();
+                    $countBlank = 0;
 
-                if ($this->definitions->has($item->getMimeType())) {
-                    $definition = $this->definitions->get($item->getMimeType());
-                    $csv[$answer->getQuestionId()] = $definition->getCsvAnswers($item->getInteraction(), $answer);
+                    if ($this->definitions->has($item->getMimeType())) {
+                        $definition = $this->definitions->get($item->getMimeType());
+                        $countBlank = count($definition->getCsvTitles($itemType));
+                    }
+
+                    $blankData = [];
+                    for ($i = 0; $i < $countBlank; ++$i) {
+                        $blankData[] = '';
+                    }
+
+                    $csv[$item->getUuid()] = $blankData;
                 }
             }
 

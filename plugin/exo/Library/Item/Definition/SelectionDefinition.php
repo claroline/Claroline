@@ -298,7 +298,7 @@ class SelectionDefinition extends AbstractDefinition
 
     public function getCsvTitles(AbstractItem $question)
     {
-        return ['selection-'.$question->getQuestion()->getUuid()];
+        return [$question->getQuestion()->getContentText()];
     }
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)

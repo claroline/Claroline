@@ -245,6 +245,16 @@ class Item
     }
 
     /**
+     * Gets content without html.
+     *
+     * @return string
+     */
+    public function getContentText()
+    {
+        return strip_tags($this->content);
+    }
+
+    /**
      * @return ArrayCollection
      */
     public function getObjects()

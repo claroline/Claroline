@@ -229,8 +229,10 @@ class PaperController extends AbstractController
             throw new AccessDeniedException();
         }
 
-        return new StreamedResponse(function () use ($exercise) {
-            $this->exerciseManager->exportResultsToCsv($exercise);
+        $data = $this->exerciseManager->exportResultsToCsv($exercise);
+
+        return new StreamedResponse(function () use ($data) {
+            return $data;
         }, 200, [
             'Content-Type' => 'application/force-download',
             'Content-Disposition' => 'attachment; filename="export.csv"',

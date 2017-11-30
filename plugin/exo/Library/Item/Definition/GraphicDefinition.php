@@ -225,7 +225,7 @@ class GraphicDefinition extends AbstractDefinition
 
     public function getCsvTitles(AbstractItem $item)
     {
-        return ['graphic-'.$item->getQuestion()->getUuid()];
+        return [$item->getQuestion()->getContentText()];
     }
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)

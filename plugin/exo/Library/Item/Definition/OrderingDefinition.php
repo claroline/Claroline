@@ -184,7 +184,7 @@ class OrderingDefinition extends AbstractDefinition
 
     public function getCsvTitles(AbstractItem $item)
     {
-        return ['ordering-'.$item->getQuestion()->getUuid()];
+        return [$item->getQuestion()->getContentText()];
     }
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)

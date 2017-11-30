@@ -218,7 +218,7 @@ class MatchDefinition extends AbstractDefinition
 
     public function getCsvTitles(AbstractItem $item)
     {
-        return ['match-'.$item->getQuestion()->getUuid()];
+        return [$item->getQuestion()->getContentText()];
     }
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)

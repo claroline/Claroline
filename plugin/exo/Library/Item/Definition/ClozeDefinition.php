@@ -281,8 +281,10 @@ class ClozeDefinition extends AbstractDefinition
         $answers = [];
         $answeredHoles = [];
 
-        foreach ($data as $answer) {
-            $answeredHoles[$answer->holeId] = $answer->answerText;
+        if (is_array($data)) {
+            foreach ($data as $answer) {
+                $answeredHoles[$answer->holeId] = $answer->answerText;
+            }
         }
 
         foreach ($item->getHoles() as $hole) {

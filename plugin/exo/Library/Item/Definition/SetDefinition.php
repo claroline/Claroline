@@ -215,7 +215,7 @@ class SetDefinition extends AbstractDefinition
 
     public function getCsvTitles(AbstractItem $question)
     {
-        return ['set-'.$question->getQuestion()->getUuid()];
+        return [$question->getQuestion()->getContentText()];
     }
 
     public function getCsvAnswers(AbstractItem $item, Answer $answer)
