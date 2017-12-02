@@ -179,6 +179,7 @@ class ResourceNodeSerializer
             'actions' => $this->getActions($resourceNode),
             'accesses' => $resourceNode->getAccesses(),
             'views' => $resourceNode->getViewsCount(),
+            'icon' => $resourceNode->getIcon() ? '/'.$resourceNode->getIcon()->getRelativeUrl() : null,
         ];
     }
 

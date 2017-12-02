@@ -19,6 +19,8 @@ class ResourceNodeController extends AbstractController
     {
         $options = $request->query->all();
 
+        $options['filters']['published'] = true;
+
         // Limit the search to resource nodes published to portal
         $options['filters']['publishedToPortal'] = true;
 
@@ -32,11 +34,17 @@ class ResourceNodeController extends AbstractController
 
         // unset filters
         //TODO: this workaround will be avoidable after the merge of #2901 by using the hiddenFilters key in $options to to hide the filters in the client.
+        $filtersToRemove = [
+            'published',
+            'publishedToPortal',
+            'resourceType',
+        ];
         foreach ($result['filters'] as $key => $value) {
-            if ($value['property'] === 'publishedToPortal' || $value['property'] === 'resourceType') {
+            if (in_array($value['property'], $filtersToRemove)) {
                 unset($result['filters'][$key]);
             }
         }
+        $result['filters'] = array_values($result['filters']);
 
         return new JsonResponse($result);
     }
