@@ -73,8 +73,6 @@ export default class BlogController {
                 this._setMessage('info', 'post_filtered_by_search', {searchTerms: decodeURI(_$routeParams.get(this).terms)}, true, 'icap_blog', true)
               }
             )
-
-          this.blog.search(this.searchTerms)
           break
         
         case 'author':
