@@ -84,6 +84,9 @@ class ExerciseImporter extends Importer implements ResourceRichTextInterface
         // Create entities from import data
         $exercise = $this->container->get('ujm_exo.manager.exercise')->createCopy($quizData, $exercise);
 
+        // need to init publishedOnce according to current publication state
+        $exercise->setPublishedOnce($exercise->getResourceNode()->isPublished());
+
         $fileUtilities = $this->container->get('claroline.utilities.file');
         $om = $this->container->get('claroline.persistence.object_manager');
 

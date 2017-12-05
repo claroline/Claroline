@@ -165,6 +165,9 @@ class ExerciseManager
         // Populate new entities with original data
         $newExercise = $this->createCopy($exerciseData, null);
 
+        // need to init publishedOnce according to current publication state
+        $newExercise->setPublishedOnce($exercise->getResourceNode()->isPublished());
+
         // Save copy to db
         $this->om->flush();
 
@@ -292,7 +295,8 @@ class ExerciseManager
             $user = $paper->getUser();
             $score = $this->paperManager->calculateScore($paper, $totalScoreOn);
             fputcsv($handle, [
-                $user && !$paper->isAnonymized() ? $user->getFirstName().' - '.$user->getLastName() : '',
+                $user && !$paper->isAnonymized() ? $user->getLastName() : '',
+                $user && !$paper->isAnonymized() ? $user->getFirstName() : '',
                 $paper->getNumber(),
                 $paper->getStart()->format('Y-m-d H:i:s'),
                 $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : '',
