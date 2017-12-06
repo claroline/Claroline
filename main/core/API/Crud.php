@@ -4,6 +4,7 @@ namespace Claroline\CoreBundle\API;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -16,7 +17,9 @@ class Crud
 {
     use PermissionCheckerTrait;
 
+    /** @var string */
     const COLLECTION_ADD = 'add';
+    /** @var string */
     const COLLECTION_REMOVE = 'remove';
 
     /** @var ObjectManager */
@@ -162,7 +165,7 @@ class Crud
      * @param object $object   - the entity to update
      * @param string $property - the name of the property which holds the collection
      * @param string $action   - the action to execute on the collection (aka. add/remove/set)
-     * @param mixed  $elements - the collection to patch
+     * @param array  $elements - the collection to patch
      */
     public function patch($object, $property, $action, array $elements)
     {
@@ -175,7 +178,7 @@ class Crud
         }
 
         //add the options to pass on here
-        $this->checkPermission('PATCH', $object, ['data' => $elements], true);
+        $this->checkPermission('PATCH', $object, ['collection' => new ObjectCollection($elements)], true);
         //we'll need to pass the $action and $data here aswell later
         $this->dispatcher->dispatch('crud_pre_patch_object', 'Crud', [$object]);
 

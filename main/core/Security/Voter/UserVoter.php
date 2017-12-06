@@ -12,10 +12,8 @@
 namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
-use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Security\AbstractVoter;
+use Claroline\CoreBundle\Security\ObjectCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -24,125 +22,114 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  * @DI\Service
  * @DI\Tag("security.voter")
  */
-class UserVoter implements VoterInterface
+class UserVoter extends AbstractVoter
 {
-    const CREATE = 'create';
-    const EDIT = 'edit';
-    const DELETE = 'delete';
-    const VIEW = 'view';
-
-    private $ch;
-    private $om;
-    private $userAdminTool;
-    private $userManager;
-
     /**
-     * @DI\InjectParams({
-     *     "om"          = @DI\Inject("claroline.persistence.object_manager"),
-     *     "ch"          = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "userManager" = @DI\Inject("claroline.manager.user_manager")
-     * })
+     * @param TokenInterface $token
+     * @param mixed          $object
+     * @param array          $attributes
+     * @param array          $options
+     *
+     * @return int
      */
-    public function __construct(
-        ObjectManager $om,
-        PlatformConfigurationHandler $ch,
-        UserManager $userManager
-    ) {
-        $this->om = $om;
-        $this->ch = $ch;
-        $this->userManager = $userManager;
-    }
-
-    //ROLE_ADMIN can always do anything, so we don't have to check that.
-    public function vote(TokenInterface $token, $object, array $attributes)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        if (!$object instanceof User && !$object instanceof UserCollection) {
-            return VoterInterface::ACCESS_ABSTAIN;
-        }
-        $users = $object instanceof UserCollection ? $object->getUsers() : [$object];
-        $action = strtolower($attributes[0]);
-
-        switch ($action) {
-            case self::VIEW:   return $this->checkView($users);
-            case self::CREATE: return $this->checkCreation($users);
-            case self::EDIT:   return $this->checkEdit($token, $users);
-            case self::DELETE: return $this->checkDelete($token, $users);
+        switch ($attributes[0]) {
+            case self::VIEW:   return $this->checkView($token, $object);
+            case self::CREATE: return $this->checkCreation();
+            case self::EDIT:   return $this->checkEdit($token, $object);
+            case self::DELETE: return $this->checkDelete($token, $object);
+            case self::PATCH:  return $this->checkPatch($token, $object, $options['collection']);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
     }
 
-    private function checkCreation($users)
+    /**
+     * @return int
+     */
+    private function checkCreation()
     {
-        //the we can create user. Case closed
-        if ($this->ch->getParameter('allow_self_registration')) {
+        /** @var \Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler */
+        $handler = $this->getContainer()->get('claroline.config.platform_config_handler');
+
+        return $handler->getParameter('allow_self_registration') ?
+             VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_ABSTAIN;
+    }
+
+    /**
+     * We currently check this manually inside the Controller. This should change and be checked here.
+     *
+     * @param TokenInterface $token
+     * @param User           $user
+     *
+     * @return int
+     */
+    private function checkEdit(TokenInterface $token, User $user)
+    {
+        return $this->isOrganizationManager($token, $user) ?
+            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+    }
+
+    /**
+     * We currently check this manually inside the Controller. This should change and be checked here.
+     *
+     * @param TokenInterface $token
+     * @param User           $user
+     *
+     * @return int
+     */
+    private function checkView(TokenInterface $token, User $user)
+    {
+        return $this->isOrganizationManager($token, $user) ?
+              VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+    }
+
+    /**
+     * @param TokenInterface $token
+     * @param User           $user
+     *
+     * @return int
+     */
+    private function checkDelete(TokenInterface $token, User $user)
+    {
+        return $this->isOrganizationManager($token, $user) ?
+              VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+    }
+
+    /**
+     * This is not done yet but later a user might be able to edit its roles/groups himself
+     * and it should be checked here.
+     *
+     * @param TokenInterface   $token
+     * @param User             $user
+     * @param ObjectCollection $collection
+     *
+     * @return int
+     */
+    private function checkPatch(TokenInterface $token, User $user, ObjectCollection $collection)
+    {
+        if ($this->isOrganizationManager($token, $user)) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
-        //maybe more tests
+        //maybe do something more complicated later
+        return $this->isGranted(self::EDIT, $collection);
     }
 
-    private function checkEdit($token, $users)
+    /**
+     * @return string
+     */
+    public function getClass()
     {
-        foreach ($users as $user) {
-            if (!$this->isOrganizationManager($token, $user)) {
-                return VoterInterface::ACCESS_DENIED;
-            }
-        }
-
-        return VoterInterface::ACCESS_GRANTED;
+        return 'Claroline\CoreBundle\Entity\User';
     }
 
-    private function checkView($token, $users)
+    /**
+     * @return array
+     */
+    public function getSupportedActions()
     {
-        foreach ($users as $user) {
-            if (!$this->isOrganizationManager($token, $user)) {
-                return VoterInterface::ACCESS_DENIED;
-            }
-        }
-
-        return VoterInterface::ACCESS_GRANTED;
-    }
-
-    private function checkDelete($token, $users)
-    {
-        foreach ($users as $user) {
-            if (!$this->isOrganizationManager($token, $user)) {
-                return VoterInterface::ACCESS_DENIED;
-            }
-        }
-
-        return VoterInterface::ACCESS_GRANTED;
-    }
-
-    //I should find a way to speed that up
-    private function isOrganizationManager(TokenInterface $token, User $user)
-    {
-        $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
-        $userOrganizations = $user->getOrganizations();
-
-        foreach ($adminOrganizations as $adminOrganization) {
-            foreach ($userOrganizations as $userOrganization) {
-                if ($userOrganization === $adminOrganization) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    public function supportsClass($class)
-    {
-        return true;
-        //as a reminder for the 3.0 voter
-        //return array('Claroline\CoreBundle\Entity\User');
-    }
-
-    public function supportsAttribute($attribute)
-    {
-        return true;
-        //as a reminder for the 3.0 voter
-        //return array(self::CREATE, self::EDIT, self::DELETE);
+        return[self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }

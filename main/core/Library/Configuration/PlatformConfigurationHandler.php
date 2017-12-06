@@ -50,6 +50,11 @@ class PlatformConfigurationHandler
         return false;
     }
 
+    /**
+     * @param string $parameter
+     *
+     * @return string
+     */
     public function getParameter($parameter)
     {
         if ($this->hasParameter($parameter)) {

@@ -40,17 +40,30 @@ trait PermissionCheckerTrait
         $this->authorization = $authorization;
     }
 
+    /**
+     * @param mixed $permission
+     * @param mixed $object
+     * @param array $options
+     * @param bool  $throwException
+     *
+     * @return bool
+     */
     private function checkPermission($permission, $object, $options = [], $throwException = false)
     {
         switch ($object) {
+            //@todo Remove that line once we can
             case $object instanceof ResourceNode:
               $collection = new ResourceCollection([$object]);
+              break;
+            case is_array($object):
+              $collection = new ObjectCollection($object, $options);
               break;
             default:
               $collection = new ObjectCollection([$object], $options);
         }
 
         $granted = $this->authorization->isGranted($permission, $collection);
+
         if (!$granted && $throwException) {
             throw new AccessDeniedException(
                 sprintf('Operation "%s" cannot be done on object %s', $permission, get_class($object))

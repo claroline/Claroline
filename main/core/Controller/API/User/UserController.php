@@ -17,7 +17,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileCreationType;
 use Claroline\CoreBundle\Form\ProfileType;
-use Claroline\CoreBundle\Library\Security\Collection\UserCollection;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\FacetManager;
@@ -29,6 +28,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Security\ObjectCollection;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\Post;
@@ -44,6 +44,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @NamePrefix("api_")
+ *
+ * Don't bother too much with this controller. It's going to be replaced very soon by the new API one (where it's already removed)
  */
 class UserController extends FOSRestController
 {
@@ -455,16 +457,16 @@ class UserController extends FOSRestController
         return $this->userManager->enable($user);
     }
 
-     /**
-      * @View(serializerGroups={"api_user"})
-      * @Post("/users/csv/facets")
-      */
-     public function csvImportFacetsAction()
-     {
-         $this->throwsExceptionIfNotAdmin();
+    /**
+     * @View(serializerGroups={"api_user"})
+     * @Post("/users/csv/facets")
+     */
+    public function csvImportFacetsAction()
+    {
+        $this->throwsExceptionIfNotAdmin();
 
-         $this->userManager->csvFacets($this->request->files->get('csv'));
-     }
+        $this->userManager->csvFacets($this->request->files->get('csv'));
+    }
 
     private function isAdmin()
     {
@@ -513,13 +515,17 @@ class UserController extends FOSRestController
 
     private function throwExceptionIfNotGranted($action, $users)
     {
-        $collection = is_array($users) ? new UserCollection($users) : new UserCollection([$users]);
+        if (!is_array($users)) {
+            $users = [$users];
+        }
+
+        $collection = new ObjectCollection($users);
         $isGranted = $this->isUserGranted($action, $collection);
 
         if (!$isGranted) {
             $userlist = '';
 
-            foreach ($collection->getUsers() as $user) {
+            foreach ($users as $user) {
                 $userlist .= "[{$user->getUsername()}]";
             }
             throw new AccessDeniedException("You can't do the action [{$action}] on the user list {$userlist}");
