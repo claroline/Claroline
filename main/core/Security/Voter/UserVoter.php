@@ -114,7 +114,8 @@ class UserVoter extends AbstractVoter
         }
 
         //maybe do something more complicated later
-        return $this->isGranted(self::EDIT, $collection);
+        return $this->isGranted(self::EDIT, $collection) ?
+            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
     }
 
     /**

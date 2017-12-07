@@ -226,6 +226,17 @@ class MaskManager
         return self::$defaultActions;
     }
 
+    public function getDefaultResourceActionsMask()
+    {
+        $actions = [];
+        foreach (self::$defaultActions as $action) {
+            $actionName = strtoupper($action);
+            $actions[$action] = constant(MaskDecoder::class.'::'.$actionName);
+        }
+
+        return $actions;
+    }
+
     public function checkIntegrity()
     {
         $this->log('Checking resource mask decoders integrity...');

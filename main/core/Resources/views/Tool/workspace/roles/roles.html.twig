@@ -30,21 +30,26 @@
     {% endif %}
     <div class="list-group">
         <div class="list-group-item">
+            {% if isManager %}
             <div class="margin-md">
                 <a class="btn btn-default" href="{{ path('claro_workspace_role_create_form', {'workspace': workspace.getId() }) }}" role="button">
                     <i class="fa fa-plus"></i> {{ 'add_role'|trans({}, 'platform') }}
                 </a>
             </div>
+            {% endif %}
             <div class="table-responsive">
                 <table class="table-striped table-bordered table-condensed" width="100%">
                     <thead>
                         <th> {{ 'name'|trans({}, 'platform') }} </th>
+                        {% if isManager %}
                         <th colspan="2"> {{ 'Actions'|trans({}, 'platform') }} </th>
+                        {% endif %}
                     </thead>
                     <tbody>
                         {% for role in roles %}
                             <tr>
                                 <td> {{ role.getTranslationKey|trans({}, 'platform') }} </td>
+                                {% if isManager %}
                                 <td>
                                     <a class="btn btn-default" href="{{ path('claro_workspace_role_edit_form', {'workspace': workspace.getId(), 'role': role.getId()}) }}" role="button">
                                         <i class="fa fa-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
@@ -55,6 +60,7 @@
                                         <i class="fa fa-trash-o"></i> {{ 'delete'|trans({}, 'platform') }}
                                     </a>
                                 </td>
+                                {% endif %}
                             </tr>
                         {% endfor %}
                     </tbody>

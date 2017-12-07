@@ -30,7 +30,22 @@ class RoleVoter extends AbstractVoter
         }
 
         //if it's a workspace role, we must be able be granted the edit perm on the workspace users tool
-        return $this->vote($token, $object->getWorkspace(), ['users', 'edit']);
+        // and our right level to be less than the role we're trying to remove that way, a user cannot remove admins
+        if ($this->isGranted(['users', 'edit'], $object->getWorkspace())) {
+            $workspaceManager = $this->getContainer()->get('claroline.manager.workspace_manager');
+            // If user is workspace manager then grant access
+            if ($workspaceManager->isManager($object->getWorkspace(), $token)) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+            // If role to be removed is not an administrate role then grant access
+            $roleManager = $this->getContainer()->get('claroline.manager.role_manager');
+            $wsRoles = $roleManager->getWorkspaceNonAdministrateRoles($object->getWorkspace());
+            if (in_array($object, $wsRoles)) {
+                return VoterInterface::ACCESS_GRANTED;
+            }
+        }
+
+        return VoterInterface::ACCESS_DENIED;
     }
 
     public function getClass()

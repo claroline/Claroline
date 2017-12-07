@@ -1170,7 +1170,10 @@ class ResourceController extends Controller
         if ($this->authorization->isGranted('ROLE_USER')) {
             $json = $this->templating->render(
                 'ClarolineCoreBundle:Resource:managerParameters.json.twig',
-                ['resourceTypes' => $this->resourceManager->getAllResourceTypes()]
+                [
+                    'resourceTypes' => $this->resourceManager->getAllResourceTypes(),
+                    'defaultResourceActionsMask' => $this->maskManager->getDefaultResourceActionsMask(),
+                ]
             );
             $response
                 ->setContent($json)

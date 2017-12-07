@@ -164,6 +164,7 @@ class ResourceManagerListener
             ->findAll();
         $resourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
             ->findByResourceType(null);
+        $defaultResourceActionsMask = $this->maskManager->getDefaultResourceActionsMask();
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig', [
@@ -175,6 +176,7 @@ class ResourceManagerListener
                 'maxPostSize' => ini_get('post_max_size'),
                 'resourceZoom' => $this->getZoom(),
                 'displayMode' => $this->getDisplayMode($workspaceId),
+                'defaultResourceActionsMask' => $defaultResourceActionsMask,
              ]
         );
     }
@@ -189,6 +191,7 @@ class ResourceManagerListener
         $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
         $resourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
             ->findByResourceType(null);
+        $defaultResourceActionsMask = $this->maskManager->getDefaultResourceActionsMask();
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
@@ -198,6 +201,7 @@ class ResourceManagerListener
                 'maxPostSize' => ini_get('post_max_size'),
                 'resourceZoom' => $this->getZoom(),
                 'displayMode' => $this->getDisplayMode('desktop'),
+                'defaultResourceActionsMask' => $defaultResourceActionsMask,
             ]
         );
     }

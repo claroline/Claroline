@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Repository;
 
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
@@ -639,5 +640,25 @@ class RoleRepository extends EntityRepository
         $query->setParameter('ids', $ids);
 
         return $executeQuery ? $query->getResult() : $query;
+    }
+
+    public function findByWorkspaceNonAdministrate(Workspace $workspace)
+    {
+        $administrateMask = MaskDecoder::ADMINISTRATE;
+        $dql = "
+            SELECT r FROM Claroline\CoreBundle\Entity\Role r
+            JOIN r.resourceRights rr
+            JOIN rr.resourceNode rn
+            WHERE r.workspace = :workspaceId
+            AND rn.parent IS NULL
+            AND BIT_AND(rr.mask , {$administrateMask}) = 0
+            AND r.name <> :managerRoleName
+        ";
+        $query = $this->_em->createQuery($dql);
+        $query
+            ->setParameter('workspaceId', $workspace->getId())
+            ->setParameter('managerRoleName', 'ROLE_WS_MANAGER_'.$workspace->getGuid());
+
+        return $query->getResult();
     }
 }

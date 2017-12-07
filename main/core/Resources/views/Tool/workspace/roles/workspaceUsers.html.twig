@@ -112,12 +112,14 @@
                                 <i class="fa fa-plus"></i>
                                 {{ 'add_users'|trans({}, 'platform') }}
                             </a>
+                            {% if isManager %}
                             <a href="{{ path('claro_workspace_users_tool_import_form', {'workspace': workspace.getId()}) }}"
                                class="btn btn-default dropdown-toggle"
                             >
                                 <i class="fa fa-sign-in"></i>
                                 {{ 'import_users'|trans({}, 'platform') }}
                             </a>
+                            {% endif %}
                         </div>
                     </div>
                 {% endif %}
@@ -238,7 +240,7 @@
                                         >
                                             {{ role.getTranslationKey()|trans({}, 'platform') }}
 
-                                            {% if canEdit %}
+                                            {% if isManager or (canEdit and role in wsNonAdminRoles) %}
                                                 <i class="fa fa-times-circle pointer-hand remove-role-button"
                                                    href="{{ path('apiv2_user_remove_roles', {uuid: user.getUuid()} ) }}?ids[]={{ role.getId() }}"
                                                 >

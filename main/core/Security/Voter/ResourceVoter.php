@@ -260,22 +260,30 @@ class ResourceVoter implements VoterInterface
             $accessibleUntil = $node->getAccessibleUntil();
             $currentDate = new \DateTime();
 
-            if ((is_null($accessibleFrom) || $currentDate >= $accessibleFrom) &&
-                (is_null($accessibleUntil) || $currentDate <= $accessibleUntil) &&
-                $node->isPublished() &&
-                $node->isActive()) {
+            if ($node->isActive()) {
                 $mask = $this->repository->findMaximumRights($this->ut->getRoles($token), $node);
                 $type = $node->getResourceType();
                 $decoder = $this->maskManager->getDecoder($type, $action);
+                // Test if user can administrate
+                $adminDecoder = $this->maskManager->getDecoder($type, 'administrate');
+                $canAdministrate = $adminDecoder ? (($mask & $adminDecoder->getValue()) !== 0) : false;
 
-                //gotta check
-                if (!$decoder) {
-                    return ['The permission '.$action.' does not exists for the type '.$type->getName()];
-                }
+                // If user can administrate OR resource is open then check action
+                if ($canAdministrate ||
+                    ((is_null($accessibleFrom) || $currentDate >= $accessibleFrom) &&
+                    (is_null($accessibleUntil) || $currentDate <= $accessibleUntil) &&
+                    $node->isPublished())) {
+                    //gotta check
+                    if (!$decoder) {
+                        return ['The permission '.$action.' does not exists for the type '.$type->getName()];
+                    }
 
-                $grant = $decoder ? $mask & $decoder->getValue() : 0;
+                    $grant = $decoder ? $mask & $decoder->getValue() : 0;
 
-                if ($decoder && $grant === 0) {
+                    if ($decoder && $grant === 0) {
+                        $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
+                    }
+                } else {
                     $errors[] = $this->getRoleActionDeniedMessage($action, $node->getPathForDisplay());
                 }
             } else {
