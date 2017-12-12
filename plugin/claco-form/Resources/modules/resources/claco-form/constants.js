@@ -20,7 +20,14 @@ const FILE_TYPES = [
   {value: 'application/pdf', label: 'PDF'}
 ]
 
+const ENTRY_STATUS_PENDING = 0
+const ENTRY_STATUS_PUBLISHED = 1
+const ENTRY_STATUS_UNPUBLISHED = 2
+
 export const constants = {
   FIELD_TYPES,
-  FILE_TYPES
+  FILE_TYPES,
+  ENTRY_STATUS_PENDING,
+  ENTRY_STATUS_PUBLISHED,
+  ENTRY_STATUS_UNPUBLISHED
 }

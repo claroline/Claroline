@@ -149,7 +149,7 @@ const currentEntryReducers = makeReducer({}, {
   }
 })
 
-const reducer = makeListReducer({data: entriesReducers}, {selectable: false})
+const reducer = makeListReducer({data: entriesReducers})
 
 export {
   reducer,

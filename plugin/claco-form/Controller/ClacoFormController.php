@@ -25,6 +25,7 @@ use Claroline\CoreBundle\API\Serializer\RoleSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -40,6 +41,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 
 class ClacoFormController extends Controller
 {
+    private $apiManager;
     private $clacoFormManager;
     private $filesDir;
     private $finder;
@@ -55,6 +57,7 @@ class ClacoFormController extends Controller
 
     /**
      * @DI\InjectParams({
+     *     "apiManager"            = @DI\Inject("claroline.manager.api_manager"),
      *     "clacoFormManager"      = @DI\Inject("claroline.manager.claco_form_manager"),
      *     "filesDir"              = @DI\Inject("%claroline.param.files_directory%"),
      *     "finder"                = @DI\Inject("claroline.api.finder"),
@@ -70,6 +73,7 @@ class ClacoFormController extends Controller
      * })
      */
     public function __construct(
+        ApiManager $apiManager,
         ClacoFormManager $clacoFormManager,
         $filesDir,
         FinderProvider $finder,
@@ -83,6 +87,7 @@ class ClacoFormController extends Controller
         EntrySerializer $entrySerializer,
         CommentSerializer $commentSerializer
     ) {
+        $this->apiManager = $apiManager;
         $this->clacoFormManager = $clacoFormManager;
         $this->filesDir = $filesDir;
         $this->finder = $finder;
@@ -830,6 +835,37 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/claco/form/entries/delete",
+     *     name="claro_claco_form_entries_delete",
+     *     options = {"expose"=true}
+     * )
+     *
+     * Deletes entries
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function entriesDeleteAction()
+    {
+        $entries = [];
+        $serializedEntries = [];
+        $entriesParams = $this->apiManager->getParameters('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+
+        foreach ($entriesParams as $entryParam) {
+            if (!$entryParam->isLocked()) {
+                $entries[] = $entryParam;
+            }
+        }
+        foreach ($entries as $entry) {
+            $this->clacoFormManager->checkEntryEdition($entry);
+            $serializedEntries[] = $this->entrySerializer->serialize($entry);
+        }
+        $this->clacoFormManager->deleteEntries($entries);
+
+        return new JsonResponse($serializedEntries, 200);
+    }
+
+    /**
+     * @EXT\Route(
      *     "/claco/form/entry/{entry}/retrieve",
      *     name="claro_claco_form_entry_retrieve",
      *     options = {"expose"=true}
@@ -869,6 +905,42 @@ class ClacoFormController extends Controller
         }
 
         return new JsonResponse($serializedEntry, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/claco/form/entries/status/{status}/change",
+     *     name="claro_claco_form_entries_status_change",
+     *     options = {"expose"=true}
+     * )
+     *
+     * Changes status of entries
+     *
+     * @param int $status
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function entriesStatusChangeAction($status)
+    {
+        $entries = [];
+        $serializedEntries = [];
+        $entriesParams = $this->apiManager->getParameters('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+
+        foreach ($entriesParams as $entryParam) {
+            if (!$entryParam->isLocked()) {
+                $entries[] = $entryParam;
+            }
+        }
+        foreach ($entries as $entry) {
+            $this->clacoFormManager->checkEntryModeration($entry);
+        }
+        $updatedEntries = $this->clacoFormManager->changeEntriesStatus($entries, intval($status));
+
+        foreach ($updatedEntries as $entry) {
+            $serializedEntries[] = $this->entrySerializer->serialize($entry);
+        }
+
+        return new JsonResponse($serializedEntries, 200);
     }
 
     /**
@@ -1114,6 +1186,47 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
+     *     "/claco/form/entries/pdf/download",
+     *     name="claro_claco_form_entries_pdf_download",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * Downloads pdf version of entries into a ZIP archive
+     *
+     * @param User $user
+     *
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function entriesPdfDownloadAction(User $user)
+    {
+        $entries = $this->apiManager->getParameters('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+        $fileName = count($entries) > 0 ? $entries[0]->getClacoForm()->getResourceNode()->getName() : 'clacoForm';
+
+        foreach ($entries as $entry) {
+            $this->clacoFormManager->checkEntryAccess($entry);
+        }
+
+        $archive = $this->clacoFormManager->generateArchiveForEntries($entries, $user);
+
+        $response = new StreamedResponse();
+        $response->setCallBack(
+            function () use ($archive) {
+                readfile($archive);
+            }
+        );
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName.'.zip'));
+        $response->headers->set('Content-Type', 'application/zip; charset=utf-8');
+        $response->headers->set('Connection', 'close');
+        $response->send();
+
+        return new Response();
+    }
+
+    /**
+     * @EXT\Route(
      *     "/claco/form/entry/{entry}/shared/users/list",
      *     name="claro_claco_form_entry_shared_users_list",
      *     options = {"expose"=true}
@@ -1304,5 +1417,45 @@ class ClacoFormController extends Controller
         $serializedEntry = $this->entrySerializer->serialize($updatedEntry);
 
         return new JsonResponse($serializedEntry, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/claco/form/entries/lock/{locked}/switch",
+     *     name="claro_claco_form_entries_lock_switch",
+     *     options = {"expose"=true}
+     * )
+     *
+     * Switches lock of entries
+     *
+     * @param int $locked
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function entriesLockSwitchAction($locked)
+    {
+        $entries = $this->apiManager->getParameters('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+        $clacoForms = [];
+
+        foreach ($entries as $entry) {
+            $clacoForm = $entry->getClacoForm();
+            $clacoFormId = $clacoForm->getId();
+
+            if (!isset($clacoForms[$clacoFormId])) {
+                $clacoForms[$clacoFormId] = $clacoForm;
+            }
+        }
+        foreach ($clacoForms as $clacoForm) {
+            $this->clacoFormManager->checkRight($clacoForm, 'ADMINISTRATE');
+        }
+
+        $updatedEntries = $this->clacoFormManager->switchEntriesLock($entries, intval($locked) === 1);
+        $serializedEntries = [];
+
+        foreach ($updatedEntries as $entry) {
+            $serializedEntries[] = $this->entrySerializer->serialize($entry);
+        }
+
+        return new JsonResponse($serializedEntries, 200);
     }
 }
