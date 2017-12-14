@@ -627,9 +627,9 @@
       "resolved": "https://registry.npmjs.org/caniuse-api/-/caniuse-api-1.6.1.tgz"
     },
     "caniuse-db": {
-      "version": "1.0.30000782",
+      "version": "1.0.30000783",
       "from": "caniuse-db@>=1.0.30000634 <2.0.0",
-      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000782.tgz"
+      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000783.tgz"
     },
     "caseless": {
       "version": "0.12.0",
@@ -2180,9 +2180,9 @@
       "resolved": "https://registry.npmjs.org/is-regex/-/is-regex-1.0.4.tgz"
     },
     "is-resolvable": {
-      "version": "1.0.0",
+      "version": "1.0.1",
       "from": "is-resolvable@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/is-resolvable/-/is-resolvable-1.0.0.tgz"
+      "resolved": "https://registry.npmjs.org/is-resolvable/-/is-resolvable-1.0.1.tgz"
     },
     "is-stream": {
       "version": "1.1.0",
@@ -3544,9 +3544,9 @@
       "resolved": "https://registry.npmjs.org/react-dnd/-/react-dnd-2.5.4.tgz"
     },
     "react-dnd-touch-backend": {
-      "version": "0.3.17",
+      "version": "0.3.18",
       "from": "react-dnd-touch-backend@>=0.3.6 <0.4.0",
-      "resolved": "https://registry.npmjs.org/react-dnd-touch-backend/-/react-dnd-touch-backend-0.3.17.tgz"
+      "resolved": "https://registry.npmjs.org/react-dnd-touch-backend/-/react-dnd-touch-backend-0.3.18.tgz"
     },
     "react-dom": {
       "version": "15.6.2",
@@ -4265,11 +4265,6 @@
       "version": "1.0.1",
       "from": "trim-right@>=1.0.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/trim-right/-/trim-right-1.0.1.tgz"
-    },
-    "tryit": {
-      "version": "1.0.3",
-      "from": "tryit@>=1.0.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/tryit/-/tryit-1.0.3.tgz"
     },
     "tty-browserify": {
       "version": "0.0.0",
