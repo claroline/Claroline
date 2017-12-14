@@ -499,7 +499,7 @@ class AdminManagementController extends Controller
             $worskpace = $this->workspaceManager->getWorkspaceById($courseDatas['workspace']);
         }
         if ($courseDatas['workspaceModel']) {
-            $worskpaceModel = $this->workspaceManager->getOneByCode($courseDatas['workspaceModel']);
+            $worskpaceModel = $this->workspaceManager->getWorkspaceById($courseDatas['workspaceModel']);
         }
 
         $validators = isset($courseDatas['validators']) && count($courseDatas['validators']) > 0 ?
@@ -1795,7 +1795,7 @@ class AdminManagementController extends Controller
             ]
         );
 
-        return new JsonResponse($data['results'], 200);
+        return new JsonResponse($data['data'], 200);
     }
 
     /**

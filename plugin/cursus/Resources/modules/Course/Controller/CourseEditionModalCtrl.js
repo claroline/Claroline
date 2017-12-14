@@ -84,8 +84,8 @@ export default class CourseEditionModalCtrl {
     const workspacesUrl = Routing.generate('api_get_workspaces')
     this.$http.get(workspacesUrl).then(d => {
       if (d['status'] === 200) {
-        const datas = JSON.parse(d['data'])
-        datas.forEach(w => this.workspaces.push(w))
+        const data = JSON.parse(d['data'])
+        data.forEach(w => this.workspaces.push(w))
 
         if (this.source['workspace']) {
           const selectedWorkspace = this.workspaces.find(w => w['id'] === this.source['workspace']['id'])
@@ -97,8 +97,8 @@ export default class CourseEditionModalCtrl {
     const workspaceModelsUrl = Routing.generate('api_get_workspace_models')
     this.$http.get(workspaceModelsUrl).then(d => {
       if (d['status'] === 200) {
-        const datas = d['data']
-        datas.forEach(wm => this.workspaceModels.push(wm))
+        const data = d['data']
+        data.forEach(wm => this.workspaceModels.push(wm))
 
         if (this.source['workspaceModel']) {
           const selectedModel = this.workspaceModels.find(wm => wm['id'] === this.source['workspaceModel']['id'])
@@ -110,15 +110,15 @@ export default class CourseEditionModalCtrl {
     const validatorsRolesUrl = Routing.generate('api_get_validators_roles')
     this.$http.get(validatorsRolesUrl).then(d => {
       if (d['status'] === 200) {
-        const datas = JSON.parse(d['data'])
-        datas.forEach(r => this.validatorsRoles.push(r['id']))
+        const data = JSON.parse(d['data'])
+        data.forEach(r => this.validatorsRoles.push(r['id']))
       }
     })
     const organizationsUrl = Routing.generate('claro_cursus_organizations_retrieve')
     this.$http.get(organizationsUrl).then(d => {
       if (d['status'] === 200) {
-        const datas = JSON.parse(d['data'])
-        datas.forEach(o => this.organizationsList.push(o))
+        const data = JSON.parse(d['data'])
+        data.forEach(o => this.organizationsList.push(o))
 
         if (this.source['organizations']) {
           this.source['organizations'].forEach(o => {
@@ -330,7 +330,7 @@ export default class CourseEditionModalCtrl {
 
   getModelRoles() {
     if (this.model) {
-      const url = Routing.generate('ws_model_roles_translation_keys_retrieve', {model: this.model['id']})
+      const url = Routing.generate('course_workspace_roles_translation_keys_retrieve', {workspace: this.model['id']})
       this.$http.get(url).then(d => {
         if (d['status'] === 200) {
           this.rolesChoices = []

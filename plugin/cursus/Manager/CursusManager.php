@@ -3812,9 +3812,16 @@ class CursusManager
 
     public function getWorkspacesListForCurrentUser()
     {
+        $workspaces = [];
         $token = $this->tokenStorage->getToken();
         $roles = $this->utils->getRoles($token);
-        $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
+        $openableWorkspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
+
+        foreach ($openableWorkspaces as $workspace) {
+            if (!$workspace->isModel()) {
+                $workspaces[] = $workspace;
+            }
+        }
 
         return $workspaces;
     }
