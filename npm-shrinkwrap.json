@@ -2000,9 +2000,9 @@
       "resolved": "https://registry.npmjs.org/image-size/-/image-size-0.5.5.tgz"
     },
     "immutability-helper": {
-      "version": "2.6.0",
+      "version": "2.6.2",
       "from": "immutability-helper@>=2.0.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/immutability-helper/-/immutability-helper-2.6.0.tgz"
+      "resolved": "https://registry.npmjs.org/immutability-helper/-/immutability-helper-2.6.2.tgz"
     },
     "imurmurhash": {
       "version": "0.1.4",
