@@ -946,7 +946,7 @@ class ResourceManager
         if (!$node->getWorkspace()) {
             $resourceArray['enableRightsEdition'] = false;
         } else {
-            if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+            if ($node->getWorkspace()->isPersonal()) {
                 $resourceArray['enableRightsEdition'] = false;
             } else {
                 $resourceArray['enableRightsEdition'] = true;
