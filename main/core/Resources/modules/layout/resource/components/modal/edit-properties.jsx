@@ -20,37 +20,36 @@ import {TextGroup}    from '#/main/core/layout/form/components/group/text-group.
 import {DatePicker}   from '#/main/core/layout/form/components/field/date-picker.jsx'
 import {IpList}       from '#/main/core/layout/form/components/field/ip-list.jsx'
 import {validate}     from '#/main/core/layout/resource/validator'
-import {closeTargets} from '#/main/core/layout/resource/enums'
+import {closeTargets} from '#/main/core/layout/resource/constants'
 
-export const MODAL_RESOURCE_PROPERTIES = 'MODAL_RESOURCE_PROPERTIES'
+const MODAL_RESOURCE_PROPERTIES = 'MODAL_RESOURCE_PROPERTIES'
 
 const MetaSection = props =>
   <FormSection
-    id="resource-meta"
     icon="fa fa-fw fa-info"
     title={t_res('resource_meta')}
     {...omit(props, ['meta', 'updateParameter'])}
   >
     <HtmlGroup
-      controlId="resource-description"
+      id="resource-description"
       label={t_res('resource_description')}
-      content={props.meta.description || ''}
+      value={props.meta.description}
       onChange={description => props.updateParameter('meta.description', description)}
     />
 
     <CheckGroup
-      checkId="resource-published"
+      id="resource-published"
       label={t_res('resource_not_published')}
       labelChecked={t_res('resource_published')}
-      checked={props.meta.published}
+      value={props.meta.published}
       onChange={checked => props.updateParameter('meta.published', checked)}
     />
 
     <CheckGroup
-      checkId="resource-portal"
+      id="resource-portal"
       label={t_res('resource_portal_not_published')}
       labelChecked={t_res('resource_portal_published')}
-      checked={props.meta.portal}
+      value={props.meta.portal}
       onChange={checked => props.updateParameter('meta.portal', checked)}
       help={t_res('resource_portal_help')}
     />
@@ -69,27 +68,26 @@ MetaSection.propTypes = {
 
 const DisplaySection = props =>
   <FormSection
-    id="resource-display"
     icon="fa fa-fw fa-desktop"
     title={t('display_parameters')}
     {...omit(props, ['parameters', 'updateParameter'])}
   >
     <CheckGroup
-      checkId="resource-fullscreen"
+      id="resource-fullscreen"
       label={t_res('resource_fullscreen')}
-      checked={props.parameters.fullscreen}
+      value={props.parameters.fullscreen}
       onChange={checked => props.updateParameter('parameters.fullscreen', checked)}
     />
 
     <CheckGroup
-      checkId="resource-closable"
+      id="resource-closable"
       label={t_res('resource_closable')}
-      checked={props.parameters.closable}
+      value={props.parameters.closable}
       onChange={checked => props.updateParameter('parameters.closable', checked)}
     />
 
     <FormGroup
-      controlId="resource-close-target"
+      id="resource-close-target"
       label={t_res('resource_close_target')}
       warnOnly={!props.validating}
       error={get(props, 'errors.parameters.closeTarget')}
@@ -120,7 +118,6 @@ DisplaySection.propTypes = {
 
 const AccessesSection = (props) =>
   <FormSection
-    id="resource-accesses"
     icon="fa fa-fw fa-key"
     title={t('access_restrictions')}
     {...omit(props, ['meta', 'parameters', 'updateParameter'])}
@@ -139,7 +136,7 @@ const AccessesSection = (props) =>
       <div className="row">
         <FormGroup
           className="col-md-6 col-xs-6 form-last"
-          controlId="resource-accessible-from"
+          id="resource-accessible-from"
           label={t_res('resource_accessible_from')}
           validating={props.validating}
         >
@@ -152,7 +149,7 @@ const AccessesSection = (props) =>
 
         <FormGroup
           className="col-md-6 col-xs-6 form-last"
-          controlId="resource-accessible-until"
+          id="resource-accessible-until"
           label={t_res('resource_accessible_until')}
           validating={props.validating}
         >
@@ -176,7 +173,7 @@ const AccessesSection = (props) =>
       }}
     >
       <FormGroup
-        controlId="resource-access-code"
+        id="resource-access-code"
         label={t('access_code')}
         validating={props.validating}
       >
@@ -203,9 +200,9 @@ const AccessesSection = (props) =>
     >
       <IpList
         id="resource-access-ips"
-        ips={props.meta.accesses.ip.ips}
+        value={props.meta.accesses.ip.ips}
         onChange={ips => props.updateParameter('meta.accesses.ip.ips', ips)}
-        emptyText={t_res('resource_no_allowed_ip')}
+        placeholder={t_res('resource_no_allowed_ip')}
       />
     </ActivableSet>
   </FormSection>
@@ -231,20 +228,19 @@ AccessesSection.propTypes = {
 
 const LicenseSection = props =>
   <FormSection
-    id="resource-license"
     icon="fa fa-fw fa-copyright"
     title={t_res('resource_authors_license')}
     {...omit(props, ['meta', 'updateParameter'])}
   >
     <TextGroup
-      controlId="resource-authors"
+      id="resource-authors"
       label={t_res('resource_authors')}
       value={props.meta.authors}
       onChange={text => props.updateParameter('meta.authors', text)}
     />
 
     <TextGroup
-      controlId="resource-license"
+      id="resource-license"
       label={t_res('resource_license')}
       value={props.meta.license}
       onChange={text => props.updateParameter('meta.license', text)}
@@ -324,7 +320,7 @@ class EditPropertiesModal extends Component {
       >
         <Modal.Body>
           <TextGroup
-            controlId="resource-name"
+            id="resource-name"
             label={t_res('resource_name')}
             value={this.state.resourceNode.name}
             onChange={text => this.updateProperty('name', text)}
@@ -333,8 +329,11 @@ class EditPropertiesModal extends Component {
           />
         </Modal.Body>
 
-        <FormSections>
+        <FormSections
+          level={5}
+        >
           <MetaSection
+            id="resource-meta"
             meta={this.state.resourceNode.meta}
             updateParameter={this.updateProperty}
             validating={this.state.validating}
@@ -342,6 +341,7 @@ class EditPropertiesModal extends Component {
           />
 
           <DisplaySection
+            id="resource-display"
             parameters={this.state.resourceNode.parameters}
             updateParameter={this.updateProperty}
             validating={this.state.validating}
@@ -349,6 +349,7 @@ class EditPropertiesModal extends Component {
           />
 
           <AccessesSection
+            id="resource-restrictions"
             meta={this.state.resourceNode.meta}
             parameters={this.state.resourceNode.parameters}
             updateParameter={this.updateProperty}
@@ -357,6 +358,7 @@ class EditPropertiesModal extends Component {
           />
 
           <LicenseSection
+            id="resource-license"
             meta={this.state.resourceNode.meta}
             updateParameter={this.updateProperty}
             validating={this.state.validating}
@@ -387,5 +389,6 @@ EditPropertiesModal.propTypes = {
 }
 
 export {
+  MODAL_RESOURCE_PROPERTIES,
   EditPropertiesModal
 }

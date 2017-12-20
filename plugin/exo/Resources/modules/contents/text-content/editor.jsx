@@ -9,9 +9,9 @@ import {actions} from './editor'
 const TextContent = (props) =>
   <fieldset>
     <HtmlGroup
-      controlId={`item-${props.item.id}-data`}
+      id={`item-${props.item.id}-data`}
       label={trans('text', {}, 'question_types')}
-      content={props.item.data || ''}
+      value={props.item.data}
       onChange={content => props.onChange(actions.updateItemContentText(content))}
       warnOnly={!props.validating}
       error={get(props.item, '_errors.data')}

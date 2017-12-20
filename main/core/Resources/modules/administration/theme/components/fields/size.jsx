@@ -9,7 +9,7 @@ import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx
 
 const Size = props =>
   <FormGroup
-    controlId={props.controlId}
+    id={props.controlId}
     label={props.label}
   >
     <div style={{maxWidth: '159px'}}>

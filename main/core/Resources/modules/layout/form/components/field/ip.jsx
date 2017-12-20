@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {ipDefinition} from '#/main/core/layout/data/types/ip'
+import {ipDefinition} from '#/main/core/data/types/ip'
 
 // TODO : implement IP v6 input
 
@@ -17,6 +17,7 @@ const IpPartInput = props =>
   <input
     id={props.id}
     type="text"
+    disabled={props.disabled}
     className={classes('form-control', props.className, {[`input-${props.size}`]: !!props.size})}
     placeholder={props.placeholder}
     value={props.value}
@@ -42,6 +43,7 @@ IpPartInput.propTypes = {
   className: T.string,
   size: T.oneOf(['sm', 'lg']),
   placeholder: T.oneOfType([T.string, T.number]),
+  disabled: T.bool.isRequired,
   value: T.oneOfType([T.string, T.number]),
   onChange: T.func.isRequired
 }
@@ -73,6 +75,7 @@ class Ip extends Component {
           size={this.props.size}
           placeholder={placeholderParts[0]}
           value={valueParts[0]}
+          disabled={this.props.disabled}
           onChange={value => this.updatePart(0, value)}
         />
 
@@ -83,6 +86,7 @@ class Ip extends Component {
           size={this.props.size}
           placeholder={placeholderParts[1]}
           value={valueParts[1]}
+          disabled={this.props.disabled}
           onChange={value => this.updatePart(1, value)}
         />
 
@@ -93,6 +97,7 @@ class Ip extends Component {
           size={this.props.size}
           placeholder={placeholderParts[2]}
           value={valueParts[2]}
+          disabled={this.props.disabled}
           onChange={value => this.updatePart(2, value)}
         />
 
@@ -103,6 +108,7 @@ class Ip extends Component {
           size={this.props.size}
           placeholder={placeholderParts[3]}
           value={valueParts[3]}
+          disabled={this.props.disabled}
           onChange={value => this.updatePart(3, value)}
         />
       </div>
@@ -114,11 +120,13 @@ Ip.propTypes = {
   id: T.string.isRequired,
   placeholder: T.string,
   value: T.string,
+  disabled: T.bool,
   onChange: T.func.isRequired,
   size: T.string
 }
 
 Ip.defaultProps = {
+  disabled: false,
   placeholder: '127.0.0.1',
   value: ''
 }

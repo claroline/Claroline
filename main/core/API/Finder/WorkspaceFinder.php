@@ -81,6 +81,20 @@ class WorkspaceFinder implements FinderInterface
                     $qb->andWhere("obj.created <= :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                case 'organization':
+                    $qb->leftJoin('obj.organizations', 'o');
+                    $qb->andWhere('o.uuid IN (:organizationIds)');
+                    $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
+                case 'user':
+                    $qb->leftJoin('obj.roles', 'r');
+                    $qb->leftJoin('r.users', 'ru');
+                    $qb->andWhere($qb->expr()->orX(
+                      $qb->expr()->eq('ru.id', ':currentUserId'),
+                      $qb->expr()->eq('ru.uuid', ':currentUserId')
+                    ));
+                    $qb->setParameter('currentUserId', $filterValue);
+                    break;
                 default:
                     if (is_string($filterValue)) {
                         $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");

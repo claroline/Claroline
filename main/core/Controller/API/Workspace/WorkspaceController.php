@@ -12,18 +12,15 @@
 namespace Claroline\CoreBundle\Controller\API\Workspace;
 
 use Claroline\CoreBundle\API\FinderProvider;
-use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 /**
  * @NamePrefix("api_")
@@ -67,44 +64,10 @@ class WorkspaceController extends FOSRestController
     }
 
     /**
-     * Gets the list of workspaces of a User.
-     * (used by user admin tool).
-     *
-     * @View(serializerGroups={"api_workspace"})
-     * @Get("/user/{user}/workspaces", name="get_user_workspaces", options={ "method_prefix" = false })
-     * @SEC\PreAuthorize("hasRole('ROLE_ADMIN')")
-     *
-     * @param User $user
-     *
-     * @return array
-     */
-    public function getUserWorkspacesAction(User $user)
-    {
-        return $this->workspaceManager->getWorkspacesByUser($user);
-    }
-
-    /**
-     * Gets the list of online users in workspaces of a User.
-     * (used by dashboard tool).
-     *
-     * @View(serializerGroups={"api_workspace"})
-     * @Get("/workspaces", name="get_connected_user_workspaces", options={ "method_prefix" = false })
-     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
-     *
-     * @param User $user
-     *
-     * @return array
-     */
-    public function getConnectedUserWorkspacesAction(User $user)
-    {
-        return array_map(function ($workspace) {
-            return $this->workspaceManager->exportWorkspace($workspace);
-        }, $this->workspaceManager->getWorkspacesByUser($user));
-    }
-
-    /**
      * @View(serializerGroups={"api_workspace"})
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
+     *
+     * @todo move into api
      *
      * @param bool $isModel
      *

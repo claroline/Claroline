@@ -19,37 +19,37 @@ import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.j
 const Metadata = props =>
   <div>
     <TextGroup
-      controlId={`item-${props.item.id}-title`}
+      id={`item-${props.item.id}-title`}
       label={t('title')}
-      value={props.item.title || ''}
+      value={props.item.title}
       onChange={text => props.onChange('title', text)}
     />
 
     <HtmlGroup
-      controlId={`item-${props.item.id}-description`}
+      id={`item-${props.item.id}-description`}
       label={t('description')}
-      content={props.item.description || ''}
+      value={props.item.description}
       onChange={text => props.onChange('description', text)}
     />
 
     {props.item.rights.edit &&
       <CheckGroup
-        checkId={`item-${props.item.id}-editable`}
+        id={`item-${props.item.id}-editable`}
         label={tex('protect_update')}
-        checked={props.item.meta.protectQuestion}
+        value={props.item.meta.protectQuestion}
         onChange={checked => props.onChange('meta.protectQuestion', checked)}
       />
     }
 
     <CheckGroup
-      checkId={`item-${props.item.id}-mandatory`}
+      id={`item-${props.item.id}-mandatory`}
       label={props.mandatoryQuestions ? tex('make_optional'): tex('mandatory_answer')}
-      checked={props.item.meta.mandatory}
+      value={props.item.meta.mandatory}
       onChange={checked => props.onChange('meta.mandatory', checked)}
     />
 
     <FormGroup
-      controlId={`item-${props.item.id}-objects`}
+      id={`item-${props.item.id}-objects`}
       label={tex('question_objects')}
     >
       <ObjectsEditor
@@ -60,7 +60,7 @@ const Metadata = props =>
       />
     </FormGroup>
     <FormGroup
-      controlId={`item-${props.item.id}-tags`}
+      id={`item-${props.item.id}-tags`}
       label={t('tags')}
     >
       <TagsEditor
@@ -92,8 +92,7 @@ const Hint = props =>
     <div className="hint-value">
       <Textarea
         id={`hint-${props.id}`}
-        title={tex('hint')}
-        content={props.value}
+        value={props.value}
         onChange={value => props.onChange(HINT_CHANGE, {id: props.id, value})}
       />
     </div>
@@ -174,9 +173,9 @@ Hints.propTypes = {
 const ItemForm = props =>
   <form>
     <HtmlGroup
-      controlId={`item-${props.item.id}-content`}
+      id={`item-${props.item.id}-content`}
       label={tex('question')}
-      content={props.item.content}
+      value={props.item.content}
       onChange={content => props.onChange('content', content)}
       warnOnly={!props.validating}
       error={get(props.item, '_errors.content')}
@@ -214,12 +213,12 @@ const ItemForm = props =>
       <hr className="item-content-separator" />
 
       <FormGroup
-        controlId={`item-${props.item.id}-feedback`}
+        id={`item-${props.item.id}-feedback`}
         label={tex('feedback')}
       >
         <Textarea
           id={`item-${props.item.id}-feedback`}
-          content={props.item.feedback}
+          value={props.item.feedback}
           onChange={text => props.onChange('feedback', text)}
         />
       </FormGroup>

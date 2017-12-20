@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import moment from 'moment'
-import {formatDate} from '#/main/core/date'
+
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {CheckboxesGroup} from '#/main/core/layout/form/components/group/checkboxes-group.jsx'
 import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
@@ -17,7 +17,6 @@ import {FileGroup} from '#/main/core/layout/form/components/group/file-group.jsx
 
 import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 import {Checkboxes} from '#/main/core/layout/form/components/field/checkboxes.jsx'
-import {Select} from '#/main/core/layout/form/components/field/select.jsx'
 import {CascadeSelect} from '#/main/core/layout/form/components/field/cascade-select.jsx'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
@@ -29,6 +28,9 @@ const isCascadeSelect = choices => {
   return choices.filter(c => c.parent).length > 0
 }
 
+// deprecated
+// only used by claco-form
+// todo : rewrite claco-form to use form.jsx
 export const FormField = props => {
   switch (props.type) {
     case 'checkboxes':
@@ -73,7 +75,7 @@ export const FormField = props => {
           }
         </div> :
         <RadioGroup
-          controlId={props.controlId}
+          id={props.controlId}
           label={props.label}
           options={props.choices || []}
           checkedValue={props.value || ''}
@@ -90,7 +92,7 @@ export const FormField = props => {
               options={props.choices || []}
               selectedValue={props.value || []}
               disabled={props.disabled}
-              onChange={value => props.onChange(value)}
+              onChange={props.onChange}
             />
             {props.error &&
               <ErrorBlock text={props.error}/>
@@ -107,23 +109,13 @@ export const FormField = props => {
           />
         )
       } else {
-        return (props.noLabel ?
-          <div className={classes({'has-error': props.error})}>
-            <Select
-              options={props.choices || []}
-              selectedValue={props.value || ''}
-              disabled={props.disabled}
-              onChange={value => props.onChange(value)}
-            />
-            {props.error &&
-              <ErrorBlock text={props.error}/>
-            }
-          </div> :
+        return (
           <SelectGroup
-            controlId={props.controlId}
+            id={props.controlId}
             label={props.label}
-            options={props.choices || []}
-            selectedValue={props.value || ''}
+            hideLabel={props.noLabel}
+            choices={props.choices || {}}
+            value={props.value || ''}
             disabled={props.disabled}
             error={props.error}
             multiple={false}
@@ -132,46 +124,24 @@ export const FormField = props => {
         )
       }
     case 'country':
-      return (props.noLabel ?
-        <div className={classes({'has-error': props.error})}>
-          <Select
-            options={constants.COUNTRIES}
-            selectedValue={props.value || ''}
-            disabled={props.disabled}
-            onChange={value => props.onChange(value)}
-          />
-          {props.error &&
-            <ErrorBlock text={props.error}/>
-          }
-        </div> :
+      return (
         <SelectGroup
-          controlId={props.controlId}
+          id={props.controlId}
           label={props.label}
-          options={constants.COUNTRIES}
-          selectedValue={props.value || ''}
+          hideLabel={props.noLabel}
+          choices={constants.COUNTRIES}
+          value={props.value || ''}
           disabled={props.disabled}
           error={props.error}
           onChange={value => props.onChange(value)}
         />
       )
     case 'text':
-      return (props.noLabel ?
-        <div className={classes({'has-error': props.error})}>
-          <input
-            id={props.controlId}
-            type="text"
-            className="form-control"
-            value={props.value || ''}
-            disabled={props.disabled}
-            onChange={(e) => props.onChange(e.target.value)}
-          />
-          {props.error &&
-            <ErrorBlock text={props.error}/>
-          }
-        </div> :
+      return (
         <TextGroup
-          controlId={props.controlId}
+          id={props.controlId}
           label={props.label}
+          hideLabel={props.noLabel}
           value={props.value || ''}
           disabled={props.disabled}
           error={props.error}
@@ -194,12 +164,12 @@ export const FormField = props => {
           }
         </div> :
         <NumberGroup
-          controlId={props.controlId}
+          id={props.controlId}
           label={props.label}
-          value={props.value === null || isNaN(props.value) ? undefined : props.value}
+          value={props.value === null ? undefined : props.value}
           disabled={props.disabled}
           error={props.error}
-          onChange={value => props.onChange(value)}
+          onChange={props.onChange}
         />
       )
     case 'email':
@@ -223,7 +193,7 @@ export const FormField = props => {
           value={props.value || undefined}
           disabled={props.disabled}
           error={props.error}
-          onChange={value => props.onChange(value)}
+          onChange={props.onChange}
         />
       )
     case 'rich_text':
@@ -231,25 +201,22 @@ export const FormField = props => {
         <div className={classes({'has-error': props.error})}>
           <Textarea
             id={props.controlId}
-            content={props.value || ''}
+            value={props.value || ''}
             minRows={2}
             disabled={props.disabled}
-            onChange={value => props.onChange(value)}
-            onClick={() => {}}
-            onSelect={() => {}}
-            onChangeMode={() => {}}
+            onChange={props.onChange}
           />
           {props.error &&
             <ErrorBlock text={props.error}/>
           }
         </div> :
         <HtmlGroup
-          controlId={props.controlId}
+          id={props.controlId}
           label={props.label}
-          content={props.value || ''}
+          value={props.value}
           disabled={props.disabled}
           error={props.error}
-          onChange={value => props.onChange(value)}
+          onChange={props.onChange}
         />
       )
     case 'date':
@@ -261,27 +228,21 @@ export const FormField = props => {
             minDate={moment.utc('1900-01-01T12:00:00')}
             value={props.value !== undefined && props.value !== null ? props.value.date || props.value || '' : ''}
             disabled={props.disabled}
-            onChange={date => {
-              const value = moment(date).isValid() ? formatDate(date) : null
-              props.onChange(value)
-            }}
+            onChange={props.onChange}
           />
           {props.error &&
           <ErrorBlock text={props.error}/>
           }
         </div> :
         <DateGroup
-          controlId={props.controlId}
+          id={props.controlId}
           label={props.label}
           dateFormat="DD/MM/YYYY"
           minDate={moment.utc('1900-01-01T12:00:00')}
           value={props.value !== undefined && props.value !== null ? props.value.date || props.value || '' : ''}
           disabled={props.disabled}
           error={props.error}
-          onChange={date => {
-            const value = moment(date).isValid() ? formatDate(date) : null
-            props.onChange(value)
-          }}
+          onChange={props.onChange}
         />
       )
     case 'file':

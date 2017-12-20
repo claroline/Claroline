@@ -8,7 +8,7 @@
             {% for user in userPager %}
                 <tr>
                     <td>
-                        <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}">{{ user.lastName ~ ' ' ~ user.firstName }}</a>
+                        <a href="{{ path('claro_user_profile', {'publicUrl': user.getPublicUrl()}) }}">{{ user.lastName ~ ' ' ~ user.firstName }}</a>
                     </td>
                     <td>
                        <ul class="list-inline user_badge">

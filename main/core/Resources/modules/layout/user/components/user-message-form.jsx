@@ -62,11 +62,10 @@ class UserMessageForm extends Component {
           {React.createElement(
             this.props.allowHtml ? HtmlGroup : TextGroup,
             {
-              controlId: 'user-message-content',
+              id: 'user-message-content',
               label: t('message'),
               hideLabel: true,
-              value: this.state.content, // for TextGroup
-              content: this.state.content, // for HtmlGroup. todo merge with standard `value`
+              value: this.state.content,
               long: true,
               onChange: value => this.updateContent(value)
             }

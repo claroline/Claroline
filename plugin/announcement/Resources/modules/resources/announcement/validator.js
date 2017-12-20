@@ -1,6 +1,6 @@
 import isEmpty from 'lodash/isEmpty'
 
-import {setIfError, notBlank, notEmptyArray} from '#/main/core/validation'
+import {setIfError, notBlank, notEmpty} from '#/main/core/validation'
 
 /**
  * Checks if an Announce data are valid.
@@ -29,7 +29,7 @@ function validate(announce) {
     setIfError(errors, 'meta.notificationDate', notBlank(announce.meta.notificationDate))
   }
   if (announce.meta.notifyUsers !== 0) {
-    setIfError(errors, 'roles', notEmptyArray(announce.roles))
+    setIfError(errors, 'roles', notEmpty(announce.roles))
   }
 
   return errors

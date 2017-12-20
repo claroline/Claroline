@@ -1,0 +1,76 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The user id"
+    },
+    "email": {
+      "type": "string",
+      "description": "The user email adress",
+      "minLength": 1
+    },
+    "firstName": {
+      "type": "string",
+      "description": "The user first name",
+      "minLength": 1
+    },
+    "lastName": {
+      "type": "string",
+      "description": "The user last name",
+      "minLength": 1
+    },
+    "username": {
+      "type": "string",
+      "description": "The user username",
+      "minLength": 1
+    },
+    "plainPassword": {
+      "type": "string",
+      "description": "The plain login password",
+      "minLength": 1
+    },
+    "groups": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": ["name"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": ["id", "name"],
+            "transferable": false
+          }
+        ]
+      }
+    }
+  },
+  "required": ["email", "firstName", "lastName", "username"],
+  "claroIds": ["id", "email", "username"]
+}

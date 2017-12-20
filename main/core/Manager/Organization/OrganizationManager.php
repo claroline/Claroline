@@ -15,7 +15,6 @@ use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Psr\Log\LoggerInterface;
 
 /**
  * @DI\Service("claroline.manager.organization.organization_manager")
@@ -35,50 +34,6 @@ class OrganizationManager
     {
         $this->om = $om;
         $this->repo = $om->getRepository('ClarolineCoreBundle:Organization\Organization');
-    }
-
-    public function create(Organization $organization)
-    {
-        $this->om->persist($organization);
-        $this->om->flush();
-
-        return $organization;
-    }
-
-    public function edit(Organization $organization)
-    {
-        //if I inverse the mappedBy and inversedBy doctrine mapping, I don't need to do this.
-        //but it it's done, the search request will break.
-        //no idea why
-        foreach ($organization->getAdministrators() as $administrator) {
-            $administrator->addOrganization($organization);
-            $this->om->persist($administrator);
-        }
-
-        $this->om->persist($organization);
-        $this->om->flush();
-
-        return $organization;
-    }
-
-    public function delete(Organization $organization)
-    {
-        if ($organization->isDefault()) {
-            throw new \Exception('Default organization can not be removed');
-        }
-
-        $this->om->remove($organization);
-        $this->om->flush();
-    }
-
-    public function getAll()
-    {
-        return $this->repo->findAll();
-    }
-
-    public function getRoots()
-    {
-        return $this->repo->findBy(['parent' => null]);
     }
 
     public function getDefault($createIfEmpty = false)
@@ -106,25 +61,6 @@ class OrganizationManager
         $this->om->flush();
 
         return $orga;
-    }
-
-    public function setParent(Organization $organization, Organization $parent = null)
-    {
-        $organization->setParent($parent);
-        $this->om->persist($organization);
-        $this->om->flush();
-
-        return $organization;
-    }
-
-    public function setLogger(LoggerInterface $logger)
-    {
-        $this->logger = $logger;
-    }
-
-    public function getLogger()
-    {
-        return $this->logger;
     }
 
     public function getOrganizationsByIds(array $ids)

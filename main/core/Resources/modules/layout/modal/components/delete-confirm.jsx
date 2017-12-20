@@ -11,4 +11,6 @@ const DeleteConfirmModal = props =>
     {...props}
   />
 
-export {DeleteConfirmModal}
+export {
+  DeleteConfirmModal
+}

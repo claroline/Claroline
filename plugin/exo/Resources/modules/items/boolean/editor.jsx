@@ -27,7 +27,7 @@ class Item extends Component {
         <div className="text-fields">
           <Textarea
             id={`choice-${this.props.choice.id}-data`}
-            content={this.props.choice.data}
+            value={this.props.choice.data}
             onChange={data => this.props.onChange(
               actions.updateChoice(this.props.choice.id, 'data', data)
             )}
@@ -36,7 +36,7 @@ class Item extends Component {
             <div className="feedback-container">
               <Textarea
                 id={`choice-${this.props.choice.id}-feedback`}
-                content={this.props.choice._feedback}
+                value={this.props.choice._feedback}
                 onChange={text => this.props.onChange(
                   actions.updateChoice(this.props.choice.id, 'feedback', text)
                 )}

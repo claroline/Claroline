@@ -43,7 +43,7 @@ const HolePopover = props => {
       updateKeyword={props.updateKeyword}
     >
       <FormGroup
-        controlId={`item-${props.hole.id}-size`}
+        id={`item-${props.hole.id}-size`}
         label={tex('size')}
         warnOnly={!props.validating}
         error={get(props, '_errors.size')}
@@ -115,18 +115,18 @@ export class Cloze extends Component {
     return(
       <fieldset className="cloze-editor">
         <FormGroup
-          controlId="cloze-text"
+          id="cloze-text"
+          className="cloze-text"
           label={t('text')}
           warnOnly={!this.props.validating}
           error={get(this.props.item, '_errors.text')}
         >
           <Textarea
             id="cloze-text"
-            className="cloze-text"
+            value={this.props.item._text}
             onChange={(value) => this.props.onChange(actions.updateText(value))}
             onSelect={this.onSelect.bind(this)}
             onClick={this.onHoleClick.bind(this)}
-            content={this.props.item._text}
             onChangeMode={this.changeEditorMode}
           />
         </FormGroup>

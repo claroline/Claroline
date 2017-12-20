@@ -31,7 +31,7 @@ class DuplicateItemModal extends Component {
       >
         <Modal.Body>
           <FormGroup
-            controlId="item-duplicate-amount"
+            id="item-duplicate-amount"
             label={tex('amount')}
           >
             <input

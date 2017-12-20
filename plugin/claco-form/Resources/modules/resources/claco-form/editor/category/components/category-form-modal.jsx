@@ -148,26 +148,26 @@ export class CategoryFormModal  extends Component {
           </div>
           <br/>
           <CheckGroup
-            checkId="notify-addition"
-            checked={this.state.notifyAddition}
+            id="notify-addition"
+            value={this.state.notifyAddition}
             label={trans('addition', {}, 'clacoform')}
             onChange={checked => this.updateCategoryProps('notifyAddition', checked)}
           />
           <CheckGroup
-            checkId="notify-edition"
-            checked={this.state.notifyEdition}
+            id="notify-edition"
+            value={this.state.notifyEdition}
             label={trans('edition', {}, 'clacoform')}
             onChange={checked => this.updateCategoryProps('notifyEdition', checked)}
           />
           <CheckGroup
-            checkId="notify-removal"
-            checked={this.state.notifyRemoval}
+            id="notify-removal"
+            value={this.state.notifyRemoval}
             label={trans('removal', {}, 'clacoform')}
             onChange={checked => this.updateCategoryProps('notifyRemoval', checked)}
           />
           <CheckGroup
-            checkId="notify-pending-comment"
-            checked={this.state.notifyPendingComment}
+            id="notify-pending-comment"
+            value={this.state.notifyPendingComment}
             label={trans('comment_to_moderate', {}, 'clacoform')}
             onChange={checked => this.updateCategoryProps('notifyPendingComment', checked)}
           />

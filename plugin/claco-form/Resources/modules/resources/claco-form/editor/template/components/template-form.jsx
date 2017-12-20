@@ -149,14 +149,13 @@ class TemplateForm extends Component {
             <Message/>
             <Textarea
               id="clacoform-template"
-              title="clacoform-template"
-              content={this.state.template}
+              value={this.state.template}
               onChange={value => this.updateTemplate(value)}
             />
             <CheckGroup
-              checkId="use-template"
+              id="use-template"
               disabled={!this.state.template}
-              checked={this.state.useTemplate}
+              value={this.state.useTemplate}
               label={trans('use_template', {}, 'clacoform')}
               onChange={checked => this.updateUseTemplate(checked)}
             />

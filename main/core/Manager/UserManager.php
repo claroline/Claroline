@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\API\Options;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
@@ -20,14 +21,12 @@ use Claroline\CoreBundle\Entity\UserOptions;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\UserRepository;
-use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Pagerfanta;
@@ -155,6 +154,9 @@ class UserManager
      * Create a user.
      * Its basic properties (name, username,... ) must already be set.
      *
+     * @todo use crud instead
+     * @todo REMOVE ME (caution: this is used to create users in Command\User\CreateCommand)
+     *
      * @param User      $user
      * @param bool      $sendMail               do we need to mail the new user ?
      * @param array     $rolesToAdd
@@ -175,7 +177,28 @@ class UserManager
         $forcePersonalWorkspace = null,
         $addNotifications = true
     ) {
+        $this->objectManager->startFlushSuite();
         $additionalRoles = [];
+
+        $options = [];
+
+        if ($sendMail) {
+            $options[] = Options::SEND_EMAIL;
+        }
+
+        if ($addNotifications) {
+            $options[] = Options::ADD_NOTIFICATIONS;
+        }
+
+        if ($forcePersonalWorkspace) {
+            $options[] = Options::ADD_PERSONAL_WORKSPACE;
+        }
+
+        $this->container->get('claroline.crud.user')->create(
+            $user,
+            $options,
+            ['model' => $model]
+        );
 
         foreach ($rolesToAdd as $roleToAdd) {
             $additionalRoles[] = is_string($roleToAdd) ? $this->roleManager->getRoleByName($roleToAdd) : $roleToAdd;
@@ -186,21 +209,7 @@ class UserManager
             $user->setOrganizations($organizations);
         }
 
-        $this->objectManager->startFlushSuite();
-
         $user->setOrganizations($organizations);
-        $publicUrl ? $user->setPublicUrl($publicUrl) : $user->setPublicUrl($this->generatePublicUrl($user));
-        $this->toolManager->addRequiredToolsToUser($user, 0);
-        $this->toolManager->addRequiredToolsToUser($user, 1);
-        $roleUser = $this->roleManager->getRoleByName(PlatformRoles::USER);
-        $user->addRole($roleUser);
-        $this->roleManager->createUserRole($user);
-        $notifications = $this->platformConfigHandler->getParameter('auto_enable_notifications');
-
-        if ($addNotifications) {
-            $nManager = $this->container->get('icap.notification.manager.notification_user_parameters');
-            $nManager->processUpdate($notifications, $user);
-        }
 
         foreach ($additionalRoles as $role) {
             if ($role) {
@@ -208,33 +217,6 @@ class UserManager
             }
         }
 
-        if ($this->mailManager->isMailerAvailable() && $sendMail) {
-            //send a validation by hash
-            $mailValidation = $this->platformConfigHandler->getParameter('registration_mail_validation');
-            if ($mailValidation === PlatformDefaults::REGISTRATION_MAIL_VALIDATION_FULL) {
-                $password = sha1(rand(1000, 10000).$user->getUsername().$user->getSalt());
-                $user->setResetPasswordHash($password);
-                $user->setIsEnabled(false);
-                $this->mailManager->sendEnableAccountMessage($user);
-            } elseif ($mailValidation === PlatformDefaults::REGISTRATION_MAIL_VALIDATION_PARTIAL) {
-                //don't change anything
-                $this->mailManager->sendCreationMessage($user);
-            }
-        }
-
-        if ($forcePersonalWorkspace !== null) {
-            if ($forcePersonalWorkspace) {
-                $this->setPersonalWorkspace($user, $model);
-            }
-        } else {
-            if ($this->personalWorkspaceAllowed($additionalRoles)) {
-                $this->setPersonalWorkspace($user, $model);
-            }
-        }
-
-        $this->objectManager->persist($user);
-        $this->strictEventDispatcher->dispatch('user_created_event', 'UserCreated', ['user' => $user]);
-        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserCreate', [$user]);
         $this->objectManager->endFlushSuite();
 
         return $user;
@@ -257,6 +239,9 @@ class UserManager
 
     /**
      * Removes users from a csv file.
+     *
+     * @todo use the csv from the api transfer
+     * @todo REMOVE ME
      */
     public function csvRemove($file)
     {
@@ -316,7 +301,10 @@ class UserManager
 
     /**
      * Rename a user.
-     * It renames the user role and its personal WS if needed.
+     *
+     * @todo use crud instead
+     * @todo REMOVE ME
+     * It renames the user role and its personal WS if needed
      *
      * @param User   $user
      * @param string $previousUsername
@@ -343,6 +331,10 @@ class UserManager
         $this->objectManager->flush();
     }
 
+    /**
+     * @todo use crud instead
+     * @todo REMOVE ME
+     */
     public function setIsMailNotified(User $user, $isNotified)
     {
         $user->setIsMailNotified($isNotified);
@@ -354,47 +346,13 @@ class UserManager
      * Removes a user.
      *
      * @param \Claroline\CoreBundle\Entity\User $user
+     *
+     * @todo use crud instead
+     * @todo REMOVE ME
      */
     public function deleteUser(User $user)
     {
         $this->log('Removing '.$user->getUsername().'...');
-        /* When the api will identify a user, please uncomment this
-        if ($this->container->get('security.token_storage')->getToken()->getUser()->getId() === $user->getId()) {
-            throw new \Exception('A user cannot delete himself');
-        }*/
-        $userRole = $this->roleManager->getUserRole($user->getUsername());
-
-        //soft delete~
-        $user->setIsRemoved(true);
-        $user->setMail('mail#'.$user->getId());
-        $user->setFirstName('firstname#'.$user->getId());
-        $user->setLastName('lastname#'.$user->getId());
-        $user->setPlainPassword(uniqid());
-        $user->setUsername('username#'.$user->getId());
-        $user->setPublicUrl('removed#'.$user->getId());
-        $user->setAdministrativeCode('code#'.$user->getId());
-        $user->setIsEnabled(false);
-
-        // keeping the user's workspace with its original code
-        // would prevent creating a user with the same username
-        // todo: workspace deletion should be an option
-        $ws = $user->getPersonalWorkspace();
-
-        if ($ws) {
-            $ws->setCode($ws->getCode().'#deleted_user#'.$user->getId());
-            $ws->setDisplayable(false);
-            $this->objectManager->persist($ws);
-        }
-
-        if ($userRole) {
-            $this->objectManager->remove($userRole);
-        }
-        $this->objectManager->persist($user);
-        $this->objectManager->flush();
-
-        $this->strictEventDispatcher->dispatch('claroline_users_delete', 'GenericData', [[$user]]);
-        $this->strictEventDispatcher->dispatch('log', 'Log\LogUserDelete', [$user]);
-        $this->strictEventDispatcher->dispatch('delete_user', 'DeleteUser', [$user]);
     }
 
     /**
@@ -423,6 +381,10 @@ class UserManager
      *
      * @internal param string $authentication an authentication source
      * @internal param bool $mail do the users need to be mailed
+
+     *
+     * @todo use api transfer instead
+     * @todo REMOVE ME
      */
     public function importUsers(
         array $users,
@@ -678,7 +640,7 @@ class UserManager
         $this->objectManager->endFlushSuite();
 
         if ($logger) {
-            $logger($countCreated.' users updated ('.implode(',', $updated).')');
+            $logger($countUpdated.' users updated ('.implode(',', $updated).')');
             $logger($countCreated.' users created ('.implode(',', $created).')');
         }
 
@@ -756,6 +718,9 @@ class UserManager
     /**
      * Sets an array of platform role to a user.
      *
+     * @todo use crud instead
+     * @todo REMOVE ME
+     *
      * @param User            $user
      * @param ArrayCollection $roles
      */
@@ -767,6 +732,9 @@ class UserManager
 
     /**
      * Serialize a user. Use JMS serializer from entities instead.
+     *
+     * @todo use serializer instead
+     * @todo REMOVE ME
      *
      * @param User[] $users
      *
@@ -809,6 +777,9 @@ class UserManager
     /**
      * @param string $username
      *
+     * @todo use finder instead
+     * @todo REMOVE ME
+     *
      * @return User
      */
     public function getUserByUsername($username)
@@ -838,6 +809,9 @@ class UserManager
      * @param string $orderedBy
      * @param string $order
      *
+     * @todo use finder instead
+     * @todo REMOVE ME
+     *
      * @return Pagerfanta
      */
     public function getAllUsers($page, $max = 20, $orderedBy = 'id', $order = null)
@@ -847,6 +821,10 @@ class UserManager
         return $this->pagerFactory->createPager($query, $page, $max);
     }
 
+    /**
+     * @todo use finder instead
+     * @todo REMOVE ME
+     */
     public function getAll()
     {
         return $this->userRepo->findAll();
@@ -857,6 +835,9 @@ class UserManager
      * @param int    $page
      * @param int    $max
      * @param string $orderedBy
+     *
+     * @todo use finder instead
+     * @todo REMOVE ME
      *
      * @return Pagerfanta
      */
@@ -870,6 +851,9 @@ class UserManager
     /**
      * @param string $firstName
      * @param string $lastName
+     *
+     * @todo use finder instead
+     * @todo REMOVE ME
      *
      * @return User[]
      */
@@ -887,6 +871,9 @@ class UserManager
      * @param int    $max
      * @param string $orderedBy
      * @param string $order
+     *
+     * @todo use finder instead
+     * @todo REMOVE ME
      *
      * @return Pagerfanta
      */
@@ -909,6 +896,9 @@ class UserManager
      * @param int    $max
      * @param string $orderedBy
      * @param string $order
+     *
+     * @todo use finder instead
+     * @todo REMOVE ME
      *
      * @return Pagerfanta
      */
@@ -937,6 +927,9 @@ class UserManager
      * @param int         $max
      * @param bool        $withPager
      *
+     * @todo use finder instead
+     * @todo REMOVE ME
+     *
      * @return User[]|Pagerfanta
      */
     public function getUsersByWorkspaces(array $workspaces, $page = 1, $max = 20, $withPager = true)
@@ -955,6 +948,9 @@ class UserManager
      * @param string    $search
      * @param int       $page
      * @param int       $max
+     *
+     * @todo use finder instead
+     * @todo REMOVE ME
      *
      * @return Pagerfanta
      */
@@ -1007,6 +1003,9 @@ class UserManager
     /**
      * @param string $guid
      *
+     * @todo use finder instead
+     * @todo REMOVE ME
+     *
      * @return Workspace
      */
     public function getOneByGuid($guid)
@@ -1037,6 +1036,9 @@ class UserManager
     /**
      * @param int $userId
      *
+     * @todo use finder instead
+     * @todo REMOVE ME
+     *
      * @return User
      */
     public function getUserById($userId)
@@ -1051,6 +1053,9 @@ class UserManager
      * @param string $orderedBy
      * @param null   $order
      *
+     * @todo use finder instead
+     * @todo REMOVE ME
+     *
      * @return \Pagerfanta\Pagerfanta
      */
     public function getByRolesIncludingGroups(array $roles, $page = 1, $max = 20, $orderedBy = 'id', $order = null)
@@ -1062,6 +1067,9 @@ class UserManager
 
     /**
      * @param Role[] $roles
+     *
+     * @todo use finder instead
+     * @todo REMOVE ME
      *
      * @return array
      */
@@ -1091,6 +1099,9 @@ class UserManager
      * @param int    $max
      * @param string $orderedBy
      *
+     * @todo use finder instead
+     * @todo REMOVE ME
+     *
      * @return \Pagerfanta\Pagerfanta
      */
     public function getByRolesAndNameIncludingGroups(array $roles, $search, $page = 1, $max = 20, $orderedBy = 'id', $direction = null)
@@ -1105,6 +1116,9 @@ class UserManager
      * @param int    $page
      * @param int    $max
      *
+     * @todo use finder instead
+     * @todo REMOVE ME
+     *
      * @return \Pagerfanta\Pagerfanta
      */
     public function getUsersByRoles(array $roles, $page = 1, $max = 20)
@@ -1116,6 +1130,9 @@ class UserManager
 
     /**
      * @param string $email
+     *
+     * @todo use finder instead
+     * @todo REMOVE ME
      *
      * @return User
      */
@@ -1129,6 +1146,9 @@ class UserManager
      *
      * @param string $resetPassword
      *
+     * @todo use finder instead
+     * @todo REMOVE ME
+     *
      * @return User
      */
     public function getByResetPasswordHash($resetPassword)
@@ -1138,6 +1158,9 @@ class UserManager
 
     /**
      * @param string $validationHash
+     *
+     * @todo use finder instead
+     * @todo REMOVE ME
      *
      * @return User
      */
@@ -1157,6 +1180,9 @@ class UserManager
 
     /**
      * @return User[]
+     *
+     * @todo use finder instead
+     * @todo REMOVE ME
      */
     public function getAllEnabledUsers($executeQuery = true)
     {
@@ -1181,6 +1207,9 @@ class UserManager
 
     /**
      * Set the user locale.
+     *
+     * @todo use crud instead
+     * @todo REMOVE ME
      *
      * @param \Claroline\CoreBundle\Entity\User $user
      * @param string                            $locale Language with format en, fr, es, etc
@@ -1449,6 +1478,9 @@ class UserManager
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', [$user]);
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->tokenStorage->setToken($token);
+        $user->setLastLogin(new \DateTime());
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
     }
 
     public function persistUserOptions(UserOptions $options)
@@ -1645,129 +1677,6 @@ class UserManager
         $user->setHideMailWarning(true);
         $this->objectManager->persist($user);
         $this->objectManager->flush();
-    }
-
-    /**
-     * Big user search method ! hell yeah !
-     */
-    public function searchPartialList($searches, $page, $limit, $count = false)
-    {
-        $baseFieldsName = User::getUserSearchableFields();
-        $facetFields = $this->objectManager->getRepository('ClarolineCoreBundle:Facet\FieldFacet')->findAll();
-        $facetFieldsName = [];
-
-        foreach ($facetFields as $facetField) {
-            $facetFieldsName[] = $facetField->getName();
-        }
-
-        $qb = $this->objectManager->createQueryBuilder();
-        $count ? $qb->select('count(u)') : $qb->select('u');
-        $qb->from('Claroline\CoreBundle\Entity\User', 'u')
-            ->where('u.isRemoved = false');
-
-        //Admin can see everything, but the others... well they can only see their own organizations.
-        if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
-            $currentUser = $this->tokenStorage->getToken()->getUser();
-            $qb->leftJoin('u.organizations', 'uo');
-            $qb->leftJoin('uo.administrators', 'ua');
-            $qb->leftJoin('u.groups', 'ug');
-            $qb->leftJoin('ug.organizations', 'go');
-            $qb->leftJoin('go.administrators', 'ga');
-            $qb->andWhere(
-              $qb->expr()->orX(
-                $qb->expr()->eq('ua.id', ':userId'),
-                $qb->expr()->eq('ga.id', ':userId')
-              )
-            );
-
-            $qb->setParameter('userId', $currentUser->getId());
-        }
-
-        foreach ($searches as $key => $search) {
-            foreach ($search as $id => $el) {
-                if (in_array($key, $baseFieldsName)) {
-                    $qb->andWhere("UPPER (u.{$key}) LIKE :{$key}{$id}");
-                    $qb->setParameter($key.$id, '%'.strtoupper($el).'%');
-                } elseif (in_array($key, $facetFieldsName)) {
-                    $qb->join('u.fieldsFacetValue', "ffv{$id}");
-                    $qb->join("ffv{$id}.fieldFacet", "f{$id}");
-                    $qb->andWhere("UPPER (ffv{$id}.stringValue) LIKE :{$key}{$id}");
-                    $qb->orWhere("ffv{$id}.floatValue = :{$key}{$id}");
-                    $qb->andWhere("f{$id}.name LIKE :facet{$id}");
-                    $qb->setParameter($key.$id, '%'.strtoupper($el).'%');
-                    $qb->setParameter("facet{$id}", $key);
-                } elseif ($key === 'group_name') {
-                    $qb->join('u.groups', "g{$id}");
-                    $qb->andWhere("UPPER (g{$id}.name) LIKE :{$key}{$id}");
-                    $qb->setParameter($key.$id, '%'.strtoupper($el).'%');
-                }
-                if ($key === 'group_id') {
-                    $qb->join('u.groups', "g{$id}");
-                    $qb->andWhere("g{$id}.id = :{$key}{$id}");
-                    $qb->setParameter($key.$id, $el);
-                }
-                if ($key === 'organization_name') {
-                    $qb->join('u.organizations', "o{$id}");
-                    $qb->andWhere("UPPER (o{$id}.name) LIKE :{$key}{$id}");
-                    $qb->setParameter($key.$id, '%'.strtoupper($el).'%');
-                }
-                if ($key === 'organization_id') {
-                    $qb->join('u.organizations', "o{$id}");
-                    $qb->andWhere('o{$id}.id = :id');
-                    $qb->setParameter($key.$id, $el);
-                }
-                if ($key === 'name') {
-                    $qb->andWhere(
-                      $qb->expr()->orX(
-                          $qb->expr()->like('u.username', ":{$key}{$id}"),
-                          $qb->expr()->like('u.lastName', ":{$key}{$id}"),
-                          $qb->expr()->like('u.firstName', ":{$key}{$id}"),
-                          $qb->expr()->like('u.administrativeCode', ":{$key}{$id}"),
-                          $qb->expr()->like('u.mail', ":{$key}{$id}")
-                      )
-                    );
-
-                    $qb->setParameter($key.$id, "%$el%");
-                }
-            }
-        }
-
-        $this->strictEventDispatcher->dispatch(
-            'user_edit_search_event',
-            'UserEditSearch',
-            [$qb]
-        );
-
-        $query = $qb->getQuery();
-
-        if ($page !== null && $limit !== null && !$count) {
-            $query->setMaxResults($limit);
-            $query->setFirstResult($page * $limit);
-        }
-
-        return $count ? $query->getSingleScalarResult() : $query->getResult();
-    }
-
-    public function getUserSearchableFields()
-    {
-        $fields = $this->container->get('claroline.manager.facet_manager')->getFieldFacets();
-
-        $baseFields = User::getSearchableFields();
-
-        foreach ($fields as $field) {
-            $baseFields[] = $field->getName();
-        }
-
-        $baseFields[] = 'group_name';
-        $baseFields[] = 'organization_name';
-
-        $event = $this->strictEventDispatcher->dispatch(
-            'user_add_filter_event',
-            'UserAddFilter',
-            [$baseFields]
-        );
-
-        return $event->getFilters();
     }
 
     /**

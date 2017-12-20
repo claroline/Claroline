@@ -11,7 +11,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route as RouteConfig;
 use Symfony\Component\Config\FileLocatorInterface;
 use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
@@ -20,8 +19,8 @@ use Symfony\Component\Routing\RouteCollection;
  */
 class ApiLoader extends Loader
 {
+    /** @var bool */
     private $loaded = false;
-
     /** @var FileLocatorInterface */
     private $locator;
     /** @var ContainerInterface */
@@ -59,54 +58,84 @@ class ApiLoader extends Loader
         }
 
         $path = $this->locator->locate($resource);
-        $routes = new RouteCollection();
+        //this is the default
         $imported = $this->import($resource, 'annotation');
+        $routes = new RouteCollection();
         $routes->addCollection($imported);
 
-        foreach (new \DirectoryIterator($path) as $fileInfo) {
-            if (!$fileInfo->isDot() && $fileInfo->isFile()) {
-                $file = $fileInfo->getPathname();
+        $this->loadFromPath($path, $routes);
 
+        return $routes;
+    }
+
+    private function loadFromPath($path, RouteCollection $routes)
+    {
+        foreach (new \DirectoryIterator($path) as $fileInfo) {
+            if ($fileInfo->isDot()) {
+                continue;
+            }
+
+            $file = $fileInfo->getPathname();
+            if ($fileInfo->isDir()) {
+                $this->loadFromPath($file, $routes);
+            } else {
                 //find prefix from annotations
                 $controller = $this->findClass($file);
 
+                //ok so this is a controller
                 if ($controller) {
                     $refClass = new \ReflectionClass($controller);
                     $class = null;
                     $found = false;
                     $prefix = '';
+                    $ignore = [];
 
                     foreach ($this->reader->getClassAnnotations($refClass) as $annotation) {
+
+                        //If we defined api meta, we get all the free stuff fro the api
                         if ($annotation instanceof ApiMeta) {
                             $found = true;
                             $class = $annotation->class;
+                            $ignore = $annotation->ignore;
                         }
 
+                        //The route prefix is defined with the sf2 annotations
                         if ($annotation instanceof RouteConfig) {
                             $prefix = $annotation->getPath();
+
+                            if (strpos($prefix, '/') === 0) {
+                                $prefix = substr($prefix, 1);
+                            }
                         }
                     }
 
                     if ($found) {
-                        foreach ($this->makeRouteMap($controller, $routes, $prefix) as $name => $options) {
+                        //makeRouteMap is an array of generic routes we want to use
+                        //when ApiMeta is defined
+                        foreach ($this->makeRouteMap($controller, $routes, $prefix, $ignore) as $name => $options) {
                             $pattern = '';
 
                             if ($options[0] !== '') {
-                                $pattern = '/'.$options[0];
+                                $pattern = $options[0];
                             }
 
                             if ($prefix) {
-                                $pattern = '/'.$prefix.$pattern;
+                                $pattern = $prefix.$pattern;
                             }
 
                             $routeDefaults = [
-                              '_controller' => $controller.'::'.$name.'Action',
-                              'class' => $class,
-                              'env' => $this->container->getParameter('kernel.environment'),
+                                '_controller' => $controller.'::'.$name.'Action',
+                                'class' => $class,
                             ];
 
-                            $route = new Route($pattern, $routeDefaults, []);
+                            $route = new ApiRoute($pattern, $routeDefaults, []);
+
                             $route->setMethods([$options[1]]);
+                            $requirements = $refClass->newInstanceWithoutConstructor()->mergeRequirements();
+
+                            if (isset($requirements[$name])) {
+                                $route->setRequirements($requirements[$name]);
+                            }
 
                             // add the new route to the route collection:
                             $routeName = 'apiv2_'.$prefix.'_'.$this->toUnderscore($name);
@@ -116,19 +145,30 @@ class ApiLoader extends Loader
                 }
             }
         }
-
-        return $routes;
+        //remove duplicatas autogenrated by sf2 router
+        foreach ($routes->getIterator() as $key => $route) {
+            if (strpos($key, 'claroline_core_apinew') === 0) {
+                $routes->remove($key);
+            }
+        }
     }
 
-    private function makeRouteMap($controller, RouteCollection $routes, $prefix)
+    private function makeRouteMap($controller, RouteCollection $routes, $prefix, array $ignore)
     {
         $defaults = [
+          'schema' => ['/schema', 'GET'],
           'create' => ['', 'POST'],
-          'update' => ['{uuid}', 'PUT'],
+          'update' => ['/{id}', 'PUT'],
           'deleteBulk' => ['', 'DELETE'],
+          'copyBulk' => ['/copy', 'GET'],
           'list' => ['', 'GET'],
-          'get' => ['get', 'GET'],
+          'get' => ['/{id}', 'GET'],
+          'exist' => ['/exist/{field}/{value}', 'GET'],
         ];
+
+        foreach ($ignore as $ignored) {
+            unset($defaults[$ignored]);
+        }
 
         $traits = class_uses($controller);
 
@@ -142,10 +182,6 @@ class ApiLoader extends Loader
 
                     if ($annotation instanceof RouteConfig) {
                         $defaults[$actionName][0] = $annotation->getPath();
-                        $toRemove = $prefix.'_'.strtolower($actionName);
-                        $autoName = 'claroline_core_apinew_';
-                        //todo remove route from plugins but it doesn't exists yet
-                        $routes->remove($autoName.$toRemove);
                     }
 
                     if ($annotation instanceof MethodConfig) {

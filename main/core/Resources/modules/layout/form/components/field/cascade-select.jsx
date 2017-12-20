@@ -128,8 +128,8 @@ class CascadeSelect  extends Component {
       <fieldset className="cascade-select">
         {this.state.choices[0] &&
           <Select
-            options={this.state.choices[0]}
-            selectedValue={this.state.selected[0] || ''}
+            choices={this.state.choices[0]}
+            value={this.state.selected[0] || ''}
             disabled={this.props.disabled}
             onChange={(value) => this.onChange(0, value)}
           />
@@ -138,8 +138,8 @@ class CascadeSelect  extends Component {
           this.state.choices[idx + 1] && this.state.choices[idx + 1][v] ?
             <Select
               key={`select-level-${idx}`}
-              options={this.state.choices[idx + 1][v]}
-              selectedValue={this.state.selected[idx + 1] || ''}
+              choices={this.state.choices[idx + 1][v]}
+              value={this.state.selected[idx + 1] || ''}
               disabled={this.props.disabled}
               onChange={(value) => this.onChange(idx + 1, value)}
             /> :

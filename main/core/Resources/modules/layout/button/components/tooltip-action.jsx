@@ -1,11 +1,12 @@
 import React from 'react'
-//import {PropTypes as T} from 'prop-types'
+import {implementPropTypes} from '#/main/core/prop-types'
 
 import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link.jsx'
 
+// TODO : move in layout/action/components
 // TODO : merge TooltipButton/TooltipLink with ActionTypes to avoid remap
 
 const TooltipAction = props => React.createElement(
@@ -17,8 +18,7 @@ const TooltipAction = props => React.createElement(
   <span className={props.icon} />
 )
 
-TooltipAction.propTypes = ActionTypes.propTypes
-TooltipAction.defaultProps = ActionTypes.defaultProps
+implementPropTypes(TooltipAction, ActionTypes)
 
 export {
   TooltipAction

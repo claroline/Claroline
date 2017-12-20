@@ -28,8 +28,8 @@ class AdministrationToolListener
      */
     public function __construct(
         RequestStack $requestStack,
-        HttpKernelInterface $httpKernel)
-    {
+        HttpKernelInterface $httpKernel
+    ) {
         $this->request = $requestStack->getCurrentRequest();
         $this->httpKernel = $httpKernel;
     }
@@ -176,6 +176,18 @@ class AdministrationToolListener
     {
         $this->redirect([
             '_controller' => 'ClarolineCoreBundle:Administration\ScheduledTask:index',
+        ], $event);
+    }
+
+    /**
+     * @DI\Observe("administration_tool_data_transfer")
+     *
+     * @param OpenAdministrationToolEvent $event
+     */
+    public function onOpenImportManagement(OpenAdministrationToolEvent $event)
+    {
+        $this->redirect([
+            '_controller' => 'ClarolineCoreBundle:Administration\Transfer:index',
         ], $event);
     }
 

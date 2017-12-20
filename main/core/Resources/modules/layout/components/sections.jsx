@@ -6,6 +6,9 @@ import omit from 'lodash/omit'
 import Panel      from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
+import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
+import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
+
 /**
  * Renders a section.
  *
@@ -14,45 +17,84 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
  */
 const Section = props =>
   <Panel
-    {...omit(props, ['level', 'title', 'icon', 'children'])}
-
+    {...omit(props, ['level', 'title', 'icon', 'actions', 'children'])}
     collapsible={true}
+    expanded={props.disabled ? false : props.expanded}
+    className={classes(props.className, {
+      'panel-disabled': props.disabled
+    })}
     header={
       React.createElement('h'+props.level, {
-        className: classes({opened: props.expanded})
+        className: classes({
+          opened: !props.disabled && props.expanded
+        })
       }, [
-        props.icon && <span key="panel-icon" className={props.icon} style={{marginRight: 10}} />,
-        props.title
+        <span
+          key="panel-icon"
+          className={classes(props.icon, {
+            'fa fa-fw fa-caret-down': !props.icon && !props.disabled && props.expanded,
+            'fa fa-fw fa-caret-right': !props.icon && (props.disabled || !props.expanded)
+          })}
+          style={{marginRight: 10}}
+        />,
+        props.title,
+        0 !== props.actions.length &&
+        <div key="panel-actions" className="panel-actions">
+          {props.actions.map((action, actionIndex) =>
+            <TooltipAction
+              {...action}
+              key={`${props.id}-action-${actionIndex}`}
+              id={`${props.id}-action-${actionIndex}`}
+              disabled={!!action.disabled || props.disabled}
+              className={classes({
+                'btn-link-default': !action.primary && !action.dangerous,
+                'btn-link-danger': action.dangerous,
+                'btn-link-primary': action.primary
+              })}
+            />
+          )}
+        </div>
       ])
     }
   >
     {props.children}
   </Panel>
-
 Section.propTypes = {
+  className: T.string,
   id: T.string.isRequired,
-  level: T.number,
+  level: T.number.isRequired,
   icon: T.string,
-  title: T.string.isRequired,
+  title: T.node.isRequired,
   expanded: T.bool,
+  disabled: T.bool,
+  actions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  )),
   children: T.node.isRequired
+}
+
+Section.defaultProps = {
+  actions: [],
+  disabled: false
 }
 
 const Sections = props =>
   <PanelGroup
+    className={props.className}
     accordion={props.accordion}
     defaultActiveKey={props.defaultOpened}
   >
-    {React.Children.map(props.children, (child, index) =>
+    {React.Children.map(props.children, (child) => !child || 'hr' === child.type ? child :
       React.cloneElement(child, {
-        key: index,
-        eventKey: index,
+        key: child.props.id,
+        eventKey: child.props.id,
         level: props.level
       })
     )}
   </PanelGroup>
 
 Sections.propTypes = {
+  className: T.string,
   accordion: T.bool,
   level: T.number, // level for panel headings
   defaultOpened: T.string,

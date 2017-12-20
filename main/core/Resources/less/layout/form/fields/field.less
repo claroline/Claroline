@@ -1,0 +1,69 @@
+.field-list-control {
+    ul {
+        margin: 0;
+        padding: 0;
+        list-style-type: none;
+    }
+
+    .no-field-info {
+        font-style: italic;
+        text-align: center;
+
+        // todo use vars
+        margin-bottom: 10px;
+        line-height: 30px;
+        border: 1px dashed #999;
+        border-radius: 4px;
+        padding: 5px;
+        color: #999;
+    }
+
+    .field-item {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        background: @gray-lighter;
+        padding: 10px;
+        margin-bottom: @component-margin-bottom-small;
+
+        .border-radius(@border-radius-base);
+
+        .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .help-block {
+            margin-bottom: 0; // todo ugly. will break when there is error message
+        }
+
+        .field-item-icon {
+            margin-right: floor(@grid-gutter-width / 2);
+            align-self: center;
+            font-size: 32px;
+            color: #999;
+        }
+
+        .field-item-actions {
+            margin-left: floor(@grid-gutter-width / 2);
+
+            .btn {
+                padding: 4px;
+            }
+        }
+    }
+}
+
+.form-group {
+    .field-list-control {
+        position: relative; // constrains remove all btn
+
+        // moves remove all btn on the same line than the label
+        // code is not really aesthetic
+        .btn-remove-all {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+        }
+    }
+}

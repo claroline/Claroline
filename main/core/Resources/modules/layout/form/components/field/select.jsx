@@ -1,5 +1,6 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 const getSelectedValues = (e) => {
   const values = []
@@ -14,36 +15,34 @@ const getSelectedValues = (e) => {
 }
 
 const Select = props =>
-  <fieldset>
-    <select
-      className="form-control"
-      value={props.selectedValue}
-      disabled={props.disabled}
-      onChange={e => props.multiple ? props.onChange(getSelectedValues(e)) : props.onChange(e.target.value)}
-      multiple={props.multiple}
-    >
-      {!props.multiple && !props.noEmpty &&
-        <option value=""/>
-      }
-      {props.options.map(option =>
-        <option key={option.value} value={option.value}>
-          {option.label}
-        </option>
-      )}
-    </select>
-  </fieldset>
+  <select
+    id={props.id}
+    className="form-control"
+    value={props.value}
+    disabled={props.disabled}
+    onChange={e => props.multiple ? props.onChange(getSelectedValues(e)) : props.onChange(e.target.value)}
+    multiple={props.multiple}
+  >
+    {!props.multiple && !props.noEmpty &&
+      <option value=""/>
+    }
+    {Object.keys(props.choices).map(option =>
+      <option key={option} value={option}>
+        {props.choices[option]}
+      </option>
+    )}
+  </select>
 
-Select.propTypes = {
-  options: T.arrayOf(T.shape({
-    value: T.oneOfType([T.string, T.number]).isRequired,
-    label: T.string.isRequired
-  })).isRequired,
-  selectedValue: T.oneOfType([T.string, T.number, T.array]).isRequired,
-  disabled: T.bool,
+implementPropTypes(Select, FormFieldTypes, {
+  choices: T.object.isRequired,
+  value: T.oneOfType([T.string, T.number, T.array]),
   multiple: T.bool,
-  noEmpty: T.bool,
-  onChange: T.func.isRequired
-}
+  noEmpty: T.bool
+}, {
+  value: '',
+  multiple: false,
+  noEmpty: false
+})
 
 export {
   Select

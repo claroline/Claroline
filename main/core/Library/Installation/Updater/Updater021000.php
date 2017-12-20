@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Updater\Updater;
 
 class Updater021000 extends Updater
@@ -37,16 +37,16 @@ class Updater021000 extends Updater
 
     public function updateDefaultPerms()
     {
-        $tools = array(
-            array('home', false, true),
-            array('parameters', true, true),
-            array('resource_manager', false, true),
-            array('agenda', false, true),
-            array('logs', false, true),
-            array('analytics', false, true),
-            array('users', false, true),
-            array('badges', false, true),
-        );
+        $tools = [
+            ['home', false, true],
+            ['parameters', true, true],
+            ['resource_manager', false, true],
+            ['agenda', false, true],
+            ['logs', false, true],
+            ['analytics', false, true],
+            ['users', false, true],
+            ['badges', false, true],
+        ];
 
         $this->log('updating tools...');
 
@@ -71,7 +71,7 @@ class Updater021000 extends Updater
         $this->om->flush();
         $this->log('updating manager roles...');
         $this->log('this may take a while...');
-        $managerRoles = $this->om->getRepository('ClarolineCoreBundle:Role')->searchByName('ROLE_WS_MANAGER');
+        $managerRoles = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_WS_MANAGER');
 
         foreach ($managerRoles as $role) {
             $this->conn->query(
@@ -87,7 +87,7 @@ class Updater021000 extends Updater
         $roleAdmin = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN');
 
         $adminRights = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceRights')->findBy(
-            array('role' => $roleAdmin)
+            ['role' => $roleAdmin]
         );
 
         foreach ($adminRights as $adminRight) {
@@ -123,14 +123,14 @@ class Updater021000 extends Updater
     {
         $this->log('updating icons...');
         $coreIconWebDirRelativePath = 'bundles/clarolinecore/images/resources/icons/';
-        $resourceImages = array(
-            array('res_vector.png', 'application/postscript'),
-            array('res_vector.png', 'image/svg+xml'),
-            array('res_zip.png', 'application/zip'),
-            array('res_zip.png', 'application/x-rar-compressed'),
-            array('res_archive.png', 'application/x-gtar'),
-            array('res_archive.png', 'application/x-7z-compressed'),
-        );
+        $resourceImages = [
+            ['res_vector.png', 'application/postscript'],
+            ['res_vector.png', 'image/svg+xml'],
+            ['res_zip.png', 'application/zip'],
+            ['res_zip.png', 'application/x-rar-compressed'],
+            ['res_archive.png', 'application/x-gtar'],
+            ['res_archive.png', 'application/x-7z-compressed'],
+        ];
 
         foreach ($resourceImages as $resourceImage) {
             $icon = new ResourceIcon();

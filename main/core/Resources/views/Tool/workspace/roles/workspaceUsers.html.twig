@@ -221,7 +221,7 @@
                         >
                             <td>
                                 {% if user.getPublicUrl() != '' %}
-                                    <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
+                                    <a href="{{ path('claro_user_profile', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
                                 {% else %}
                                     {{ user.getUsername() }}
                                 {% endif %}
@@ -242,7 +242,7 @@
 
                                             {% if isManager or (canEdit and role in wsNonAdminRoles) %}
                                                 <i class="fa fa-times-circle pointer-hand remove-role-button"
-                                                   href="{{ path('apiv2_user_remove_roles', {uuid: user.getUuid()} ) }}?ids[]={{ role.getId() }}"
+                                                   href="{{ path('apiv2_user_remove_roles', {id: user.getUuid()} ) }}?ids[]={{ role.getId() }}"
                                                 >
                                                 </i>
                                             {% endif %}

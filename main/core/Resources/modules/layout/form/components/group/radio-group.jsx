@@ -15,7 +15,7 @@ const RadioGroup = props =>
     {...props}
   >
     <Radios
-      groupName={props.controlId}
+      groupName={props.id}
       inline={props.inline}
       options={props.options}
       checkedValue={props.checkedValue}
@@ -25,7 +25,7 @@ const RadioGroup = props =>
   </FormGroup>
 
 RadioGroup.propTypes = {
-  controlId: T.string.isRequired,
+  id: T.string.isRequired,
   options: T.array.isRequired,
   checkedValue: T.oneOfType([T.string, T.number]),
   inline: T.bool.isRequired,

@@ -1,7 +1,10 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
 import classes from 'classnames'
 
+import {t} from '#/main/core/translation'
+
+import {FormGroup as FormGroupTypes} from '#/main/core/layout/form/prop-types'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
 
@@ -12,9 +15,11 @@ const FormGroup = props =>
   })}>
     <label
       className={classes('control-label', {'sr-only': props.hideLabel})}
-      htmlFor={props.controlId}
+      htmlFor={props.id}
     >
       {props.label}
+
+      {props.optional && <small>({t('optional')})</small>}
     </label>
 
     {props.children}
@@ -28,21 +33,9 @@ const FormGroup = props =>
     }
   </div>
 
-FormGroup.propTypes = {
-  controlId: T.string.isRequired,
-  label: T.string.isRequired,
-  hideLabel: T.bool,
-  className: T.string,
-  children: T.node.isRequired,
-  warnOnly: T.bool,
-  help: T.string,
-  error: T.string
-}
-
-FormGroup.defaultProps = {
-  warnOnly: false,
-  hideLabel: false
-}
+implementPropTypes(FormGroup, FormGroupTypes, {
+  children: T.node.isRequired
+})
 
 export {
   FormGroup

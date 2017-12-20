@@ -111,10 +111,10 @@ plugin:
           class: users
         - name: widgets_management
           class: list-alt
-        - name: organization_management
-          class: building
         - name: tasks_scheduling
           class: tasks
+        - name: data_transfer
+          class: file
 
     widgets:
         - name: core_resource_logger

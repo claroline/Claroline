@@ -1,6 +1,5 @@
-import {generateUrl} from '#/main/core/fos-js-router'
 import {makeActionCreator} from '#/main/core/utilities/redux'
-import {REQUEST_SEND} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/core/api/actions'
 
 export const CATEGORY_ADD = 'CATEGORY_ADD'
 export const CATEGORY_UPDATE = 'CATEGORY_UPDATE'
@@ -21,8 +20,8 @@ actions.createCategory = (category) => (dispatch, getState) => {
   formData.append('categoryData', JSON.stringify(category))
 
   dispatch({
-    [REQUEST_SEND]: {
-      url: generateUrl('claro_claco_form_category_create', {clacoForm: resourceId}),
+    [API_REQUEST]: {
+      url: ['claro_claco_form_category_create', {clacoForm: resourceId}],
       request: {
         method: 'POST',
         body: formData
@@ -42,8 +41,8 @@ actions.editCategory = (category) => (dispatch) => {
   formData.append('categoryData', JSON.stringify(category))
 
   dispatch({
-    [REQUEST_SEND]: {
-      url: generateUrl('claro_claco_form_category_edit', {category: category.id}),
+    [API_REQUEST]: {
+      url: ['claro_claco_form_category_edit', {category: category.id}],
       request: {
         method: 'POST',
         body: formData
@@ -57,8 +56,8 @@ actions.editCategory = (category) => (dispatch) => {
 
 actions.deleteCategory = (categoryId) => (dispatch) => {
   dispatch({
-    [REQUEST_SEND]: {
-      url: generateUrl('claro_claco_form_category_delete', {category: categoryId}),
+    [API_REQUEST]: {
+      url: ['claro_claco_form_category_delete', {category: categoryId}],
       request: {
         method: 'DELETE'
       },

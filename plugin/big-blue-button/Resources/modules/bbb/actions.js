@@ -1,10 +1,11 @@
 import cloneDeep from 'lodash/cloneDeep'
-import moment from 'moment'
 import shajs from 'sha.js'
+
 import {generateUrl} from '#/main/core/fos-js-router'
 import {trans, t} from '#/main/core/translation'
+import {isValidDate} from '#/main/core/date'
 import {makeActionCreator} from '#/main/core/utilities/redux'
-import {REQUEST_SEND} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/core/api/actions'
 
 export const BBB_URL_UPDATE = 'BBB_URL_UPDATE'
 export const RESOURCE_FORM_INITIALIZE = 'RESOURCE_FORM_INITIALIZE'
@@ -24,7 +25,7 @@ actions.connectToBBB = () => (dispatch, getState) => {
 
   if (serverUrl && securitySalt) {
     dispatch({
-      [REQUEST_SEND]: {
+      [API_REQUEST]: {
         url: generateUrl('claro_bbb_create', {bbb: resourceId}),
         request: {
           method: 'GET'
@@ -78,11 +79,11 @@ actions.validateResourceForm = () => (dispatch, getState) => {
     endDateError: null
   }
 
-  if (form['startDate'] && !moment(form['startDate']).isValid()) {
+  if (form['startDate'] && !isValidDate(form['startDate'])) {
     validation['startDateError'] = t('form_not_valid_error')
     validation['hasError'] = true
   }
-  if (form['endDate'] && !moment(form['endDate']).isValid()) {
+  if (form['endDate'] && !isValidDate(form['endDate'])) {
     validation['endDateError'] = t('form_not_valid_error')
     validation['hasError'] = true
   }
@@ -121,7 +122,7 @@ actions.saveConfig = () => (dispatch, getState) => {
   }
 
   dispatch({
-    [REQUEST_SEND]: {
+    [API_REQUEST]: {
       url: generateUrl('claro_bbb_configuration_save', {bbb: form.id}),
       request: {
         method: 'POST',
@@ -143,7 +144,7 @@ actions.endBBB = () => (dispatch, getState) => {
   const resourceId = getState().resource.id
 
   dispatch({
-    [REQUEST_SEND]: {
+    [API_REQUEST]: {
       url: generateUrl('claro_bbb_end', {bbb: resourceId}),
       request: {
         method: 'POST'
@@ -156,7 +157,7 @@ actions.checkForModerators = () => (dispatch, getState) => {
   const resourceId = getState().resource.id
 
   dispatch({
-    [REQUEST_SEND]: {
+    [API_REQUEST]: {
       url: generateUrl('claro_bbb_moderators_check', {bbb: resourceId}),
       request: {
         method: 'GET'

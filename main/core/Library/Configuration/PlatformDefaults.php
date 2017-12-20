@@ -138,5 +138,3 @@ class PlatformDefaults implements ParameterProviderInterface
         ];
     }
 }
-
-//"portfolio";b:0;s:9:"icap_blog";b:0;s:13:"icap_dropzone";b:0;s:16:"icap_socialmedia";b:0;s:9:"icap_wiki";b:0;s:11:"innova_path";b:0;s:11:"icap_lesson";b:0;}

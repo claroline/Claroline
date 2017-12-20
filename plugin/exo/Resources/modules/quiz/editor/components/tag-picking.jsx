@@ -179,7 +179,7 @@ TagList.propTypes = {
 const TagPicking = props =>
   <div className="sub-fields">
     <RadioGroup
-      controlId="quiz-random-pick"
+      id="quiz-random-pick"
       label={tex('random_picking')}
       options={shuffleModes.filter(m => SHUFFLE_NEVER !== m.value)}
       checkedValue={props.randomPick}
@@ -190,7 +190,7 @@ const TagPicking = props =>
 
     <div className="sub-fields">
       <NumberGroup
-        controlId="quiz-pageSize"
+        id="quiz-pageSize"
         label={tex('number_question_page')}
         min={1}
         value={props.pageSize}
@@ -200,7 +200,7 @@ const TagPicking = props =>
       />
 
       <FormGroup
-        controlId="tag-picking"
+        id="tag-picking"
         label={tex('tags_to_pick')}
         warnOnly={!props.validating}
         error={get(props, 'errors.pick')}
@@ -215,7 +215,7 @@ const TagPicking = props =>
     </div>
 
     <RadioGroup
-      controlId="quiz-random-order"
+      id="quiz-random-order"
       label={tex('random_order')}
       options={SHUFFLE_ALWAYS !== props.randomPick ? shuffleModes : shuffleModes.filter(m => SHUFFLE_ONCE !== m.value)}
       checkedValue={props.randomOrder}

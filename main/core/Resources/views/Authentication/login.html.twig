@@ -124,7 +124,7 @@
             {# Registration link #}
             {% if selfRegistrationAllowed is defined and selfRegistrationAllowed
                   and showRegisterButton is defined and showRegisterButton %}
-            <a class="btn btn-lg btn-default btn-block btn-registration" href="{{ path('claro_registration_user_registration_form') }}" title="{{ 'register'|trans({}, 'platform') }}">
+            <a class="btn btn-lg btn-default btn-block btn-registration" href="{{ path('claro_user_registration') }}" title="{{ 'register'|trans({}, 'platform') }}">
                 {{ 'register'|trans({}, 'platform') }}
             </a>
             {% endif %}

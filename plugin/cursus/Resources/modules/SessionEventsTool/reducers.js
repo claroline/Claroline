@@ -1,7 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import {makeReducer, combineReducers} from '#/main/core/utilities/redux'
 import {VIEW_USER} from './enums'
-import {makeListReducer} from '#/main/core/layout/list/reducer'
 
 import {
   SESSION_EVENTS_LOAD,
@@ -262,6 +261,5 @@ export const reducers = combineReducers({
   locationsLoaded: makeReducer(initialState['locationsLoaded'], locationsLoadedReducers),
   teachers: makeReducer(initialState['teachers'], teachersReducers),
   teachersLoaded: makeReducer(initialState['teachersLoaded'], teachersLoadedReducers),
-  setEvents: makeReducer(initialState['setEvents'], setEventsReducers),
-  list: makeListReducer()
+  setEvents: makeReducer(initialState['setEvents'], setEventsReducers)
 })

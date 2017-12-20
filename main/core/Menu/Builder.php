@@ -32,7 +32,7 @@ class Builder extends ContainerAware
 
         $menu->addChild(
             $translator->trans('my_profile', [], 'platform'),
-            ['uri' => $router->generate('claro_public_profile_view', ['publicUrl' => $tokenStorage->getToken()->getUser()->getPublicUrl()])]
+            ['uri' => $router->generate('claro_user_profile', ['publicUrl' => $tokenStorage->getToken()->getUser()->getPublicUrl()])]
         )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-user');

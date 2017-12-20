@@ -1,5 +1,5 @@
 import {makeReducer} from '#/main/core/utilities/redux'
-import {makeListReducer} from '#/main/core/layout/list/reducer'
+import {makeListReducer} from '#/main/core/data/list/reducer'
 
 import {update} from '#/plugin/exo/utils/utils'
 
@@ -52,7 +52,7 @@ const questionReducer = makeReducer([], {
   }
 })
 
-const reducer = makeListReducer({
+const reducer = makeListReducer('questions', {}, {
   data: questionReducer
 })
 

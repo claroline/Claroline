@@ -29,7 +29,7 @@ class Item extends Component {
         <div className="text-fields">
           <Textarea
             id={`item-${this.props.id}-data`}
-            content={this.props.data}
+            value={this.props.data}
             onChange={data => this.props.onChange(
               actions.updateItem(this.props.id, 'data', data)
             )}
@@ -38,8 +38,7 @@ class Item extends Component {
             <div className="feedback-container">
               <Textarea
                 id={`item-${this.props.id}-feedback`}
-                title={tex('ordering_feedback')}
-                content={this.props.feedback}
+                value={this.props.feedback}
                 onChange={text => this.props.onChange(
                   actions.updateItem(this.props.id, 'feedback', text)
                 )}
@@ -85,8 +84,7 @@ class Item extends Component {
           <div className="feedback-container">
             <Textarea
               id={`item-${this.props.id}-feedback`}
-              title={tex('ordering_feedback')}
-              content={this.props.feedback}
+              value={this.props.feedback}
               onChange={text => this.props.onChange(
                 actions.updateItem(this.props.id, 'feedback', text)
               )}
@@ -293,8 +291,8 @@ export const Ordering = props => {
   return (
     <fieldset className="ordering-editor">
       <CheckGroup
-        checkId={`item-${props.item.id}-fixedScore`}
-        checked={props.item.score.type === SCORE_FIXED}
+        id={`item-${props.item.id}-fixedScore`}
+        value={props.item.score.type === SCORE_FIXED}
         label={tex('fixed_score')}
         onChange={checked => props.onChange(
           actions.updateProperty('score.type', checked ? SCORE_FIXED : SCORE_SUM)
@@ -318,7 +316,7 @@ export const Ordering = props => {
       {props.item.score.type === SCORE_FIXED &&
         <div className="sub-fields">
           <FormGroup
-            controlId={`item-${props.item.id}-fixedSuccess`}
+            id={`item-${props.item.id}-fixedSuccess`}
             label={tex('fixed_score_on_success')}
             error={get(props.item, '_errors.score.success')}
             warnOnly={!props.validating}
@@ -335,7 +333,7 @@ export const Ordering = props => {
             />
           </FormGroup>
           <FormGroup
-            controlId={`item-${props.item.id}-fixedFailure`}
+            id={`item-${props.item.id}-fixedFailure`}
             label={tex('fixed_score_on_failure')}
             error={get(props.item, '_errors.score.failure')}
             warnOnly={!props.validating}

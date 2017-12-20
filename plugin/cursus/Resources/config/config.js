@@ -5,10 +5,10 @@ var coursesManagement = function (userId) {
 module.exports = {
   actions: [
     {
-      name: 'courses_management',
+      icon: 'fa fa-fw fa-list-alt',
+      name: (Translator) => Translator.trans('open_courses_management', {}, 'cursus'),
       url: coursesManagement,
-      type: 'administration_users',
-      class: 'fa fa-list-alt'
+      type: 'administration_users'
     }
   ]
 }

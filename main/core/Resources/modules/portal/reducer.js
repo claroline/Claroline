@@ -1,15 +1,11 @@
-import {makeReducer} from '#/main/core/utilities/redux'
-import {makeListReducer} from '#/main/core/layout/list/reducer'
+import {makePageReducer} from '#/main/core/layout/page/reducer'
+import {makeListReducer} from '#/main/core/data/list/reducer'
 
-const portalReducer = makeReducer([], {})
-
-const reducer = makeListReducer(
-  {
-    data: portalReducer
-  }, {
-    selectable: false,
-    deletable: false
+const reducer = makePageReducer({}, {
+  portal: makeListReducer('portal', {}, {}, {
+    selectable: false
   })
+})
 
 export {
   reducer

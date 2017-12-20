@@ -313,7 +313,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             'bazinga_exposetranslation_js',
             'login_check',
             'login',
-            'claro_registration_user_registration_form',
+            'claro_user_registration',
             'claro_o365_login',
             'claro_cas_login',
             'claro_ldap_login',

@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer;
 
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -114,5 +115,10 @@ class WorkspaceSerializer
             'selfRegistration' => $workspace->getSelfRegistration(),
             'selfUnregistration' => $workspace->getSelfUnregistration(),
         ];
+    }
+
+    public function getSchema()
+    {
+        return '#/main/core/workspace.json';
     }
 }

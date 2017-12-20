@@ -97,10 +97,10 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             JOIN u.roles ur
             LEFT JOIN u.groups g
             LEFT JOIN g.roles gr
-            WHERE u.id = :userId
+            WHERE u.id = :id
         ';
         $query = $this->_em->createQuery($dql);
-        $query->setParameter('userId', $user->getId());
+        $query->setParameter('id', $user->getId());
         $user = $query->getSingleResult();
 
         return $user;

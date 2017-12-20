@@ -130,18 +130,17 @@
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        font-size: 48px;
         margin: 30px;
         background: rgba(255, 255, 255, .5);
         border-radius: 50%;
         line-height: 0;
 
         // for FA icons
-        color: rgba(0, 0, 0, 0.5);
+        color: rgba(0, 0, 0, 0.5) !important;
 
         // for SVG icons
-        fill: rgba(0, 0, 0, 0.5);
-        stroke: rgba(0, 0, 0, 0.5);
+        fill: rgba(0, 0, 0, 0.5) !important;
+        stroke: rgba(0, 0, 0, 0.5) !important;
 
         img {
             border-radius: 50%;
@@ -157,6 +156,7 @@
     }
 
     .item-flags {
+        cursor: help;
         position: absolute;
         bottom: @data-grid-gutter;
         right: @data-grid-gutter;
@@ -173,10 +173,12 @@
     }
 
     .item-title {
-        margin: 0;
-        padding: @panel-body-padding;
+        margin: @panel-body-padding;
+        padding: 0;
         font-size: @font-size-base;
         font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         > small {
             margin-top: 5px;
@@ -244,6 +246,7 @@
     }
 
     .item-icon-container {
+        font-size: 36px; // for FA icons
         width: 60px;
         height: 60px;
     }
@@ -260,6 +263,7 @@
     }
 
     .item-icon-container {
+        font-size: 48px; // for FA icons
         width: 100px;
         height: 100px;
     }
@@ -276,6 +280,7 @@
 // in this case we will put header and content on the same line
 .data-grid-lg {
     .item-icon-container {
+        font-size: 48px; // for FA icons
         width: 100px;
         height: 100px;
     }

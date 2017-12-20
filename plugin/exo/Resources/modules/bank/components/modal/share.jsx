@@ -78,7 +78,7 @@ class ShareModal extends Component {
           </div>
 
           <FormGroup
-            controlId="share-users"
+            id="share-users"
             label={tex('share_with')}
           >
             <UserTypeahead

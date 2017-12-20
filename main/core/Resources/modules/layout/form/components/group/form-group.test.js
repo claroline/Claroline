@@ -17,7 +17,7 @@ describe('<FormGroup/>', () => {
     )
 
     ensure.missingProps('FormGroup', [
-      'controlId',
+      'id',
       'label',
       'children'
     ])
@@ -26,14 +26,14 @@ describe('<FormGroup/>', () => {
   it('has typed props', () => {
     shallow(
       React.createElement(FormGroup, {
-        controlId: true,
+        id: true,
         label: 123,
         warnOnly: '456'
       }, {toto: true})
     )
 
     ensure.invalidProps('FormGroup', [
-      'controlId',
+      'id',
       'label',
       'warnOnly',
       'children'
@@ -42,7 +42,7 @@ describe('<FormGroup/>', () => {
 
   it('renders a label and a given field', () => {
     const group = shallow(
-      <FormGroup controlId='ID' label='LABEL' warnOnly={false}>
+      <FormGroup id='ID' label='LABEL' warnOnly={false}>
         <input id='ID' name='NAME' type='text' value='VALUE'/>
       </FormGroup>
     )
@@ -63,7 +63,7 @@ describe('<FormGroup/>', () => {
 
   it('displays an help text if any', () => {
     const group = mount(
-      <FormGroup controlId='ID' label='LABEL' help='HELP'>
+      <FormGroup id='ID' label='LABEL' help='HELP'>
         <input id='ID' name='NAME' type='text' value='VALUE' />
       </FormGroup>
     )
@@ -73,7 +73,7 @@ describe('<FormGroup/>', () => {
 
   it('displays an error if any', () => {
     const group = mount(
-      <FormGroup controlId='ID' label='LABEL' error='ERROR' warnOnly={false}>
+      <FormGroup id='ID' label='LABEL' error='ERROR' warnOnly={false}>
         <input id='ID' name='NAME' type='text' value='VALUE'/>
       </FormGroup>
     )

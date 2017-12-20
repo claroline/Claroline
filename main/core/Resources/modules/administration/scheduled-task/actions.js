@@ -1,10 +1,10 @@
 import {makeActionCreator} from '#/main/core/utilities/redux'
 import {generateUrl} from '#/main/core/fos-js-router'
 
-import {actions as listActions} from '#/main/core/layout/list/actions'
-import {getDataQueryString} from '#/main/core/layout/list/utils'
+import {actions as listActions} from '#/main/core/data/list/actions'
+import {getDataQueryString} from '#/main/core/data/list/utils'
 
-import {REQUEST_SEND} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/core/api/actions'
 import {
   VIEW_MANAGEMENT,
   VIEW_MAIL_FORM,
@@ -66,8 +66,8 @@ actions.createMessageTask = (data) => {
     }
 
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('claro_admin_scheduled_task_create'),
+      [API_REQUEST]: {
+        url: ['claro_admin_scheduled_task_create'],
         request: {
           method: 'POST',
           body: formData
@@ -96,8 +96,8 @@ actions.editMessageTask = (taskId, data) => {
     }
 
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('claro_admin_scheduled_task_edit', {task: taskId}),
+      [API_REQUEST]: {
+        url: ['claro_admin_scheduled_task_edit', {task: taskId}],
         request: {
           method: 'POST',
           body: formData
@@ -111,7 +111,7 @@ actions.editMessageTask = (taskId, data) => {
 }
 
 actions.removeTasks = (tasks) => ({
-  [REQUEST_SEND]: {
+  [API_REQUEST]: {
     url: generateUrl('claro_admin_scheduled_tasks_delete') + getDataQueryString(tasks),
     request: {
       method: 'DELETE'

@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import moment from 'moment'
 import Modal from 'react-bootstrap/lib/Modal'
 
 import {t} from '#/main/core/translation'
+import {localeDate} from '#/main/core/date'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 
 export const MODAL_DETAILS_TASK_MESSAGE = 'MODAL_DETAILS_TASK_MESSAGE'
@@ -19,7 +19,7 @@ export class MessageDetailsModal  extends Component {
               <label>{t('scheduled_date')}</label>
             </div>
             <div className="col-md-9">
-              {moment(this.props.task.scheduledDate).format('DD/MM/YYYY HH:mm')}
+              {localeDate(this.props.task.scheduledDate)}
             </div>
           </div>
           <hr/>

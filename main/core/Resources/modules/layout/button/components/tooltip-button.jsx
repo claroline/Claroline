@@ -27,7 +27,14 @@ const TooltipButton = props =>
         props.className,
         {disabled: props.disabled}
       )}
-      onClick={(e) => !props.disabled && props.onClick(e)}
+      onClick={(e) => {
+        if (!props.disabled) {
+          props.onClick(e)
+
+          e.preventDefault()
+          e.stopPropagation()
+        }
+      }}
     >
       {props.children}
     </button>

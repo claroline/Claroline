@@ -6,7 +6,7 @@ import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx
 
 const FontSize = props =>
   <FormGroup
-    controlId={props.controlId}
+    id={props.controlId}
     label={trans('font_size', {}, 'theme')}
   >
     <div>

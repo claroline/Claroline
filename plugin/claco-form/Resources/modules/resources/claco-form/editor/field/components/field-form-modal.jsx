@@ -394,15 +394,15 @@ class FieldFormModal  extends Component {
           {getFieldType(parseInt(this.state.field.type)).name === 'file' &&
             <div>
               <SelectGroup
-                controlId="file-field-types"
+                id="file-field-types"
                 label={trans('allowed_file_types', {}, 'clacoform')}
-                options={constants.FILE_TYPES}
-                selectedValue={this.state.field.details.file_types}
+                choices={constants.FILE_TYPES}
+                value={this.state.field.details.file_types}
                 multiple={true}
                 onChange={value => this.updateFieldDetailsProps('file_types', value)}
               />
               <NumberGroup
-                controlId="file-field-nb-max"
+                id="file-field-nb-max"
                 label={trans('max_number_of_files', {}, 'clacoform')}
                 value={this.state.field.details.nb_files_max}
                 min={0}
@@ -449,8 +449,8 @@ class FieldFormModal  extends Component {
           }
           <div className="clacoform-field-group">
             <CheckGroup
-              checkId="field-required"
-              checked={this.state.field.required}
+              id="field-required"
+              value={this.state.field.required}
               disabled={this.state.field.locked && !this.state.field.lockedEditionOnly}
               label={trans('mandatory', {}, 'clacoform')}
               onChange={checked => this.updateFieldProps('required', checked)}
@@ -464,28 +464,28 @@ class FieldFormModal  extends Component {
             </span>
           </div>
           <CheckGroup
-            checkId="field-is-metadata"
-            checked={this.state.field.isMetadata}
+            id="field-is-metadata"
+            value={this.state.field.isMetadata}
             label={trans('metadata', {}, 'clacoform')}
             onChange={checked => this.updateFieldProps('isMetadata', checked)}
           />
           <CheckGroup
-            checkId="field-hidden"
-            checked={this.state.field.hidden}
+            id="field-hidden"
+            value={this.state.field.hidden}
             label={trans('hide_field', {}, 'clacoform')}
             onChange={checked => this.updateFieldProps('hidden', checked)}
           />
           <hr/>
           <CheckGroup
-            checkId="field-locked"
-            checked={this.state.field.locked}
+            id="field-locked"
+            value={this.state.field.locked}
             label={t('locked')}
             onChange={checked => this.updateFieldProps('locked', checked)}
           />
           {this.state.field.locked &&
             <CheckGroup
-              checkId="field-locked-edition-only"
-              checked={this.state.field.lockedEditionOnly}
+              id="field-locked-edition-only"
+              value={this.state.field.lockedEditionOnly}
               label={trans('edition_only', {}, 'clacoform')}
               onChange={checked => this.updateFieldProps('lockedEditionOnly', checked)}
             />
@@ -497,7 +497,7 @@ class FieldFormModal  extends Component {
           </button>
           <button className="btn btn-primary" onClick={() => this.validateField()}>
             {this.state.isFetching ?
-              <span className="fa fa-fw fa-circle-o-notch fa-spin"></span> :
+              <span className="fa fa-fw fa-circle-o-notch fa-spin" /> :
               <span>{t('ok')}</span>
             }
           </button>

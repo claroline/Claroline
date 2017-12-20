@@ -369,5 +369,6 @@
     "with_session_event": "Also create a default session event",
     "word": "Word",
     "workspace_model": "Workspace model",
-    "yes": "Yes"
+    "yes": "Yes",
+    "open_courses_management": "Manage trainings"
 }

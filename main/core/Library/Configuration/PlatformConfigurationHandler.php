@@ -62,6 +62,16 @@ class PlatformConfigurationHandler
         }
     }
 
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    public function getDefaultsConfigs()
+    {
+        return $this->defaultConfigs;
+    }
+
     public function setParameter($parameter, $value)
     {
         if (!is_writable($this->configFile)) {
@@ -75,10 +85,18 @@ class PlatformConfigurationHandler
         $this->saveParameters();
     }
 
-    public function setParameters(array $parameters)
+    /**
+     * @param PlatformConfiguration|array $newParameters
+     */
+    public function setParameters($newParameters)
     {
-        $toMerge = [];
+        if (is_array($newParameters)) {
+            $parameters = $newParameters;
+        } else {
+            $parameters = $newParameters->getParameters();
+        }
 
+        $toMerge = [];
         foreach ($parameters as $key => $value) {
             if (!isset($this->lockedParameters[$key])) {
                 $toMerge[$key] = $value;

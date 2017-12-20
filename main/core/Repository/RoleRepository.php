@@ -15,7 +15,6 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -279,22 +278,6 @@ class RoleRepository extends EntityRepository
         return $query->getOneOrNullResult();
     }
 
-    public function searchByName($search)
-    {
-        $upperSearch = strtoupper(trim($search));
-
-        $dql = "
-            SELECT r
-            FROM Claroline\CoreBundle\Entity\Role r
-            WHERE UPPER(r.name) LIKE :search
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%{$upperSearch}%");
-
-        return $query->getResult();
-    }
-
     public function findAll()
     {
         $dql = "
@@ -357,20 +340,6 @@ class RoleRepository extends EntityRepository
 
             return $query->getResult();
         }
-    }
-
-    public function findByAdminTool(AdminTool $adminTool)
-    {
-        $dql = "
-            SELECT r FROM Claroline\CoreBundle\Entity\Role r
-            JOIN r.adminTools t
-            WHERE t.id = :id
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('id', $adminTool->getId());
-
-        return $query->getResult();
     }
 
     public function findRolesWithRightsByResourceNode(

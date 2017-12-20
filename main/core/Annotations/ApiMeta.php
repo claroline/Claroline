@@ -17,11 +17,18 @@ final class ApiMeta extends Annotation
      */
     public $class;
 
+    public $ignore = ['copyBulk'];
+
     /**
      * @return string
      */
     public function getClass()
     {
         return $this->class;
+    }
+
+    public function getIgnore()
+    {
+        return $this->ignore;
     }
 }

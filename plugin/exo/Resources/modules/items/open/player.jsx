@@ -4,13 +4,11 @@ import {PropTypes as T} from 'prop-types'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 
 export const OpenPlayer = (props) =>
-  <div>
-    <Textarea
-      id={`open-${props.item.id}-data`}
-      content={props.answer}
-      onChange={(value) => props.onChange(value)}
-    />
-  </div>
+  <Textarea
+    id={`open-${props.item.id}-data`}
+    value={props.answer}
+    onChange={(value) => props.onChange(value)}
+  />
 
 OpenPlayer.propTypes = {
   item: T.shape({

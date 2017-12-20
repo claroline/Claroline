@@ -1,6 +1,6 @@
 import {makeActionCreator} from '#/main/core/utilities/redux'
 import {generateUrl} from '#/main/core/fos-js-router'
-import {REQUEST_SEND} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/core/api/actions'
 import {trans} from '#/main/core/translation'
 
 export const COMPETENCIES_DATA_UPDATE = 'COMPETENCIES_DATA_UPDATE'
@@ -26,9 +26,8 @@ actions.updateCompetencyData = makeActionCreator(COMPETENCY_DATA_UPDATE, 'data')
 actions.fetchCompetencyData = (objectiveId, competencyId) => {
   return (dispatch) => {
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('hevinci_my_objectives_competency', {objective: objectiveId, competency: competencyId}),
-        request: {method: 'GET'},
+      [API_REQUEST]: {
+        url: ['hevinci_my_objectives_competency', {objective: objectiveId, competency: competencyId}],
         success: (data, dispatch) => {
           dispatch(actions.loadCompetencyData(data))
         }
@@ -40,9 +39,8 @@ actions.fetchCompetencyData = (objectiveId, competencyId) => {
 actions.fetchLevelData = (competencyId, level) => {
   return (dispatch) => {
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('hevinci_my_objectives_competency_level', {competency: competencyId, level: level}),
-        request: {method: 'GET'},
+      [API_REQUEST]: {
+        url: ['hevinci_my_objectives_competency_level', {competency: competencyId, level: level}],
         success: (data, dispatch) => {
           dispatch(actions.updateCompetencyData(data))
         }
@@ -54,9 +52,8 @@ actions.fetchLevelData = (competencyId, level) => {
 actions.fetchRelevantResource = (competencyId, level) => {
   return (dispatch) => {
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('hevinci_my_objectives_competency_resource_fetch', {competency: competencyId, level: level}),
-        request: {method: 'GET'},
+      [API_REQUEST]: {
+        url: ['hevinci_my_objectives_competency_resource_fetch', {competency: competencyId, level: level}],
         success: (data) => {
           if (data && data['resourceId']) {
             const url = generateUrl('claro_resource_open_short', {node: data['resourceId']})

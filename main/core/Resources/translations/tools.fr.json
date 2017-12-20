@@ -22,5 +22,6 @@
     "user_management": "Gestion des utilisateurs",
     "users": "Utilisateurs",
     "widgets_management": "Gestion des widgets",
-    "workspace_management": "Gestion des espaces d'activités"
+    "workspace_management": "Gestion des espaces d'activités",
+    "data_transfer": "Gestion des import export de données"
 }

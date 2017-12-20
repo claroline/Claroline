@@ -369,14 +369,6 @@ class WorkspaceManager
     }
 
     /**
-     * @return Workspace
-     */
-    public function getNonPersonalWorkspaces()
-    {
-        return $this->workspaceRepo->findNonPersonal();
-    }
-
-    /**
      * @param int $orderedToolType
      *
      * @return Workspace[]
@@ -846,6 +838,8 @@ class WorkspaceManager
      * @param array    $workspaces
      * @param callable $logger
      * @param bool     $update
+     *
+     * @deprecated
      */
     public function importWorkspaces(array $workspaces, $logger = null, $update = false)
     {
@@ -1088,17 +1082,6 @@ class WorkspaceManager
         );
     }
 
-    public function toArray(Workspace $workspace)
-    {
-        $data = [];
-        $data['id'] = $workspace->getId();
-        $data['name'] = $workspace->getName();
-        $data['code'] = $workspace->getCode();
-        $data['expiration_date'] = $workspace->getEndDate()->getTimeStamp();
-
-        return $data;
-    }
-
     public function getFirstOpenableTool(Workspace $workspace)
     {
         $token = $this->container->get('security.token_storage')->getToken();
@@ -1276,6 +1259,10 @@ class WorkspaceManager
             },
             $token->getRoles()
         );
+
+        if (in_array('ROLE_ADMIN', $roles)) {
+            return true;
+        }
 
         $managerRole = $this->roleManager->getManagerRole($workspace);
 
@@ -1846,7 +1833,7 @@ class WorkspaceManager
             $this->container->get('claroline.core_bundle.listener.log.log_listener')->disable();
             $workspace = new Workspace();
             $workspace->setName($name);
-            $workspace->setIsPersonal($isPersonal);
+            $workspace->setPersonal($isPersonal);
             $workspace->setCode($name);
             $workspace->setModel(true);
             $workspace->setCreator($this->container->get('claroline.manager.user_manager')->getDefaultUser());

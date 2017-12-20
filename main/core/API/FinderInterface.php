@@ -15,7 +15,14 @@ use Doctrine\ORM\QueryBuilder;
 
 interface FinderInterface
 {
-    //the queried object is already named "obj".
+    /**
+     * The queried object is already named "obj".
+     *
+     * @param QueryBuilder $qb
+     * @param array        $searches
+     * @param array|null   $sortBy
+     */
     public function configureQueryBuilder(QueryBuilder $qb, array $searches, array $sortBy = null);
+    /** @return $string */
     public function getClass();
 }

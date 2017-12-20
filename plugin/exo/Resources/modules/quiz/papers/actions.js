@@ -7,7 +7,7 @@ import {VIEW_PAPERS, VIEW_PAPER} from './../enums'
 import {selectors} from './selectors'
 import quizSelectors from './../selectors'
 import {normalize} from './normalizer'
-import {REQUEST_SEND} from './../../api/actions'
+import {API_REQUEST} from '#/main/core/api/actions'
 
 export const PAPER_ADD = 'PAPER_ADD'
 export const PAPERS_LIST = 'PAPERS_LIST'
@@ -24,14 +24,14 @@ actions.setCurrentPaper = makeActionCreator(PAPER_CURRENT, 'id')
 actions.addPaper = makeActionCreator(PAPER_ADD, 'paper')
 
 actions.fetchPapers = quizId => ({
-  [REQUEST_SEND]: {
-    route: ['exercise_papers', {exerciseId: quizId}],
+  [API_REQUEST]: {
+    url: ['exercise_papers', {exerciseId: quizId}],
     request: {method: 'GET'},
     success: (data, dispatch) => {
       dispatch(initPapers(normalize(data)))
       dispatch(setPaperFetched())
     },
-    failure: () => navigate('overview')
+    error: () => navigate('overview')
   }
 })
 

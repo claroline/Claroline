@@ -1,6 +1,7 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
 
+import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {Select} from '#/main/core/layout/form/components/field/select.jsx'
 
@@ -9,8 +10,9 @@ const SelectGroup = props =>
     {...props}
   >
     <Select
-      options={props.options}
-      selectedValue={props.selectedValue}
+      id={props.id}
+      choices={props.choices}
+      value={props.value}
       disabled={props.disabled}
       onChange={props.onChange}
       multiple={props.multiple}
@@ -18,15 +20,17 @@ const SelectGroup = props =>
     />
   </FormGroup>
 
-SelectGroup.propTypes = {
-  controlId: T.string.isRequired,
-  options: T.array.isRequired,
-  selectedValue: T.oneOfType([T.string, T.number, T.array]).isRequired,
-  disabled: T.bool,
+implementPropTypes(SelectGroup, FormGroupWithFieldTypes, {
+  // more precise value type
+  value: T.oneOfType([T.string, T.number, T.array]),
+  // custom props
+  choices: T.object.isRequired,
   multiple: T.bool,
-  noEmpty: T.bool,
-  onChange: T.func.isRequired
-}
+  noEmpty: T.bool
+}, {
+  multiple: false,
+  noEmpty: false
+})
 
 export {
   SelectGroup

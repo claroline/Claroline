@@ -1,6 +1,3 @@
-import merge  from 'lodash/merge'
-
-import {generateUrl} from '#/main/core/fos-js-router'
 import {bootstrap} from '#/main/core/utilities/app/bootstrap'
 import {routedApp} from '#/main/core/router'
 
@@ -24,18 +21,11 @@ bootstrap(
     }, {
       path: '/:id',
       component: Theme,
-      onEnterAction: (nextState) => actions.editTheme(nextState.params.id),
-      onLeaveAction: () => actions.resetThemeForm()
+      onEnter: (params) => actions.editTheme(params.id),
+      onLeave: () => actions.resetThemeForm()
     }
   ]),
 
   // app store configuration
-  reducer,
-
-  // remap data-attributes set on the app DOM container
-  (initialData) => ({
-    themes: merge({}, initialData.themes, {
-      fetchUrl: generateUrl('claro_theme_list')
-    })
-  })
+  reducer
 )

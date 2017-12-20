@@ -45,6 +45,8 @@ trait OrganizationsTrait
 
     /**
      * Get the organizations.
+     *
+     * @return ArrayCollection
      */
     public function getOrganizations()
     {

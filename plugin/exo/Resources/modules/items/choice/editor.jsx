@@ -47,8 +47,7 @@ class ChoiceItem extends Component {
         <div className="text-fields">
           <Textarea
             id={`choice-${this.props.id}-data`}
-            title={tex('response')}
-            content={this.props.data}
+            value={this.props.data}
             onChange={data => this.props.onChange(
               actions.updateChoice(this.props.id, 'data', data)
             )}
@@ -57,8 +56,7 @@ class ChoiceItem extends Component {
             <div className="feedback-container">
               <Textarea
                 id={`choice-${this.props.id}-feedback`}
-                title={tex('feedback')}
-                content={this.props.feedback}
+                value={this.props.feedback}
                 onChange={text => this.props.onChange(
                   actions.updateChoice(this.props.id, 'feedback', text)
                 )}
@@ -174,7 +172,7 @@ ChoiceItems.propTypes = {
 const Choice = props =>
   <fieldset className="choice-editor">
     <RadioGroup
-      controlId={`item-${props.item.id}-multiple`}
+      id={`item-${props.item.id}-multiple`}
       label={tex('choice_multiple')}
       hideLabel={true}
       options={[
@@ -189,8 +187,8 @@ const Choice = props =>
     />
 
     <CheckGroup
-      checkId={`item-${props.item.id}-fixedScore`}
-      checked={props.item.score.type === SCORE_FIXED}
+      id={`item-${props.item.id}-fixedScore`}
+      value={props.item.score.type === SCORE_FIXED}
       label={tex('fixed_score')}
       onChange={checked => props.onChange(
         actions.updateProperty('score.type', checked ? SCORE_FIXED : SCORE_SUM)
@@ -200,7 +198,7 @@ const Choice = props =>
     {props.item.score.type === SCORE_FIXED &&
       <div className="sub-fields">
         <FormGroup
-          controlId={`item-${props.item.id}-fixedSuccess`}
+          id={`item-${props.item.id}-fixedSuccess`}
           label={tex('fixed_score_on_success')}
           error={get(props.item, '_errors.score.success')}
           warnOnly={!props.validating}
@@ -217,7 +215,7 @@ const Choice = props =>
           />
         </FormGroup>
         <FormGroup
-          controlId={`item-${props.item.id}-fixedFailure`}
+          id={`item-${props.item.id}-fixedFailure`}
           label={tex('fixed_score_on_failure')}
           error={get(props.item, '_errors.score.failure')}
           warnOnly={!props.validating}
@@ -238,7 +236,7 @@ const Choice = props =>
     <hr className="item-content-separator" />
 
     <RadioGroup
-      controlId={`item-${props.item.id}-numbering`}
+      id={`item-${props.item.id}-numbering`}
       label={tex('choice_numbering')}
       options={[
         {value: NUMBERING_NONE, label: tex('quiz_numbering_none')},
@@ -250,8 +248,8 @@ const Choice = props =>
     />
 
     <CheckGroup
-      checkId={`item-${props.item.id}-random`}
-      checked={props.item.random}
+      id={`item-${props.item.id}-random`}
+      value={props.item.random}
       label={tex('qcm_shuffle')}
       onChange={checked => props.onChange(actions.updateProperty('random', checked))}
     />

@@ -1,7 +1,8 @@
 import React from 'react'
+import {NavLink, Switch, Redirect, withRouter, matchPath} from 'react-router-dom'
 
-import {Router} from '#/main/core/router/components/router.jsx'
 import {history} from '#/main/core/router/history'
+import {Router, Routes, Route} from '#/main/core/router/components/router.jsx'
 
 /**
  * Creates react router components based on config.
@@ -31,10 +32,14 @@ import {history} from '#/main/core/router/history'
  */
 function routedApp(routesConfig, basePath = '') {
   return () => {
-    const RoutedApp = React.createElement(Router, {
-      basePath: basePath,
-      routes: routesConfig
-    })
+    const RoutedApp = React.createElement(
+      Router,
+      {},
+      React.createElement(Routes, {
+        basePath: basePath,
+        routes: routesConfig
+      })
+    )
 
     return RoutedApp
   }
@@ -48,6 +53,14 @@ function navigate(url) {
 }
 
 export {
+  Router,
+  Routes,
+  Route,
+  Redirect,
+  NavLink,
+  Switch,
   routedApp,
-  navigate
+  navigate,
+  matchPath,
+  withRouter
 }

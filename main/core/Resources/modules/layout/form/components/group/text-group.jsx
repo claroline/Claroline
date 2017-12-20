@@ -1,6 +1,7 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
 
+import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 
 const TextGroup = props =>
@@ -9,7 +10,7 @@ const TextGroup = props =>
   >
     {props.long &&
       <textarea
-        id={props.controlId}
+        id={props.id}
         className="form-control"
         value={props.value || ''}
         disabled={props.disabled}
@@ -20,7 +21,7 @@ const TextGroup = props =>
 
     {!props.long &&
       <input
-        id={props.controlId}
+        id={props.id}
         type="text"
         className="form-control"
         value={props.value || ''}
@@ -30,21 +31,19 @@ const TextGroup = props =>
     }
   </FormGroup>
 
-TextGroup.propTypes = {
-  controlId: T.string.isRequired,
+implementPropTypes(TextGroup, FormGroupWithFieldTypes, {
+  // more precise value type
+  value: T.string,
+  // custom props
   long: T.bool,
   minRows: T.number,
-  value: T.string,
-  disabled: T.bool.isRequired,
-  onChange: T.func.isRequired
-}
-
-TextGroup.defaultProps = {
+  minLength: T.number, // todo implement
+  maxLength: T.number // todo implement
+}, {
   value: '',
   long: false,
-  minRows: 2,
-  disabled: false
-}
+  minRows: 2
+})
 
 export {
   TextGroup

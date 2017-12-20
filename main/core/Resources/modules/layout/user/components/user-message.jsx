@@ -4,7 +4,7 @@ import classes from 'classnames'
 import merge from 'lodash/merge'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/layout/data/types/date/utils'
+import {localeDate} from '#/main/core/date'
 
 import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
 import {User as UserTypes} from '#/main/core/layout/user/prop-types'

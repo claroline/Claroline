@@ -24,7 +24,7 @@ keywords.validate = (collection, useScore, minKeywords) => {
 
   if (useScore) {
     // Checks score for all keywords is correct
-    if (undefined !== collection.find(keyword => chain(keyword.score, [notBlank, number]))) {
+    if (undefined !== collection.find(keyword => chain(keyword.score, {}, [notBlank, number]))) {
       errors.score = tex('words_score_not_valid')
     }
 

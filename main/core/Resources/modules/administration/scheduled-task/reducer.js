@@ -1,12 +1,12 @@
-import cloneDeep from 'lodash/cloneDeep'
-import {makeReducer, combineReducers} from '#/main/core/utilities/redux'
+//import cloneDeep from 'lodash/cloneDeep'
+import {makeReducer} from '#/main/core/utilities/redux'
 import {VIEW_MANAGEMENT} from './constants'
-import {makeListReducer} from '#/main/core/layout/list/reducer'
+import {makeListReducer} from '#/main/core/data/list/reducer'
 
 import {
-  UPDATE_VIEW_MODE,
-  TASKS_LOAD,
-  TASK_ADD,
+//  UPDATE_VIEW_MODE,
+//  TASKS_LOAD,
+//  TASK_ADD,
   TASK_FORM_RESET,
   TASK_FORM_LOAD,
   TASK_FORM_TYPE_UPDATE
@@ -28,7 +28,7 @@ const initialState = {
   }
 }
 
-const mainReducers = {}
+/*const mainReducers = {}
 
 const viewReducers = {
   [UPDATE_VIEW_MODE]: (state, action) => {
@@ -52,7 +52,7 @@ const tasksReducers = {
       total: state.total + 1
     }
   }
-}
+}*/
 
 const taskFormReducers = {
   [TASK_FORM_RESET]: () => initialState['taskForm'],
@@ -65,9 +65,9 @@ export const reducer = {
   /*viewMode: makeReducer(initialState['viewMode'], viewReducers),*/
   /*tasks: makeReducer(initialState['tasks'], tasksReducers),*/
 
-  tasks: makeListReducer(),
+  tasks: makeListReducer('tasks'),
 
-  taskForm: makeReducer(initialState['taskForm'], taskFormReducers),
+  taskForm: makeReducer(initialState['taskForm'], taskFormReducers)
   /*list: makeListReducer(),*/
   /*pagination: paginationReducer*/
 }

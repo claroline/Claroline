@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 import {makeReducer} from '#/main/core/utilities/redux'
-import {makeListReducer} from '#/main/core/layout/list/reducer'
+import {makeListReducer} from '#/main/core/data/list/reducer'
 import {
   ENTRY_ADD,
   ENTRY_UPDATE,
@@ -149,7 +149,9 @@ const currentEntryReducers = makeReducer({}, {
   }
 })
 
-const reducer = makeListReducer({data: entriesReducers})
+const reducer = makeListReducer('entries', {}, {
+  data: entriesReducers
+})
 
 export {
   reducer,

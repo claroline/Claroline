@@ -1,10 +1,10 @@
 import {makeActionCreator} from '#/main/core/utilities/redux'
 import {generateUrl} from '#/main/core/fos-js-router'
 
-import {actions as listActions} from '#/main/core/layout/list/actions'
-import {getDataQueryString} from '#/main/core/layout/list/utils'
+import {actions as listActions} from '#/main/core/data/list/actions'
+import {getDataQueryString} from '#/main/core/data/list/utils'
 
-import {REQUEST_SEND} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/core/api/actions'
 
 export const WORKSPACE_ADD_MANAGER = 'WORKSPACE_ADD_MANAGER'
 export const WORKSPACE_REMOVE_MANAGER = 'WORKSPACE_REMOVE_MANAGER'
@@ -15,7 +15,7 @@ actions.workspaceAddManager = makeActionCreator(WORKSPACE_ADD_MANAGER, 'workspac
 actions.workspaceRemoveManager =  makeActionCreator(WORKSPACE_REMOVE_MANAGER, 'workspace', 'user')
 
 actions.copyWorkspaces = (workspaces, isModel = 0) => ({
-  [REQUEST_SEND]: {
+  [API_REQUEST]: {
     url: generateUrl('api_copy_workspaces', {isModel: isModel}) + getDataQueryString(workspaces),
     request: {
       method: 'PATCH'
@@ -25,8 +25,8 @@ actions.copyWorkspaces = (workspaces, isModel = 0) => ({
 })
 
 actions.addManager = (workspace, user) => ({
-  [REQUEST_SEND]: {
-    url: generateUrl('api_add_user_role', {user: user.id, role: getManagerRole(workspace).id}),
+  [API_REQUEST]: {
+    url: ['api_add_user_role', {user: user.id, role: getManagerRole(workspace).id}],
     request: {
       method: 'PATCH'
     },
@@ -35,8 +35,8 @@ actions.addManager = (workspace, user) => ({
 })
 
 actions.removeManager = (workspace, user) => ({
-  [REQUEST_SEND]: {
-    url: generateUrl('api_remove_user_role', {user: user.id, role: getManagerRole(workspace).id}),
+  [API_REQUEST]: {
+    url: ['api_remove_user_role', {user: user.id, role: getManagerRole(workspace).id}],
     request: {
       method: 'GET'
     },

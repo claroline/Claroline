@@ -4,6 +4,14 @@
 
     .panel-heading {
         position: relative; // used to create an absolute button bar in the right corner
+
+        .panel-actions {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            display: flex;
+        }
     }
 
     .panel-title-icon {
@@ -83,6 +91,16 @@
         + div, // allow containers (some SPA requires additional containers, cf. quizzes editor)
         + .panel {
             margin-top: @panel-group-panel-margin;
+        }
+    }
+
+    // disabled panels
+    .panel-disabled {
+        box-shadow: none;
+        opacity: 0.75;
+
+        .panel-title > a {
+            cursor: not-allowed;
         }
     }
 

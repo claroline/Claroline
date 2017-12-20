@@ -4,10 +4,12 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {withRouter} from 'react-router-dom'
 import classes from 'classnames'
-import moment from 'moment'
+
 import Datetime from 'react-datetime'
 import 'react-datetime/css/react-datetime.css'
+
 import {t} from '#/main/core/translation'
+import {isValidDate} from '#/main/core/date'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {actions} from '../actions'
 
@@ -97,7 +99,7 @@ class MessageFormView extends Component {
       contentError: null
     }
 
-    if (!moment(this.state['scheduledDate']).isValid()) {
+    if (!isValidDate(this.state['scheduledDate'])) {
       validation['scheduledDateError'] = t('form_not_valid_error')
       validation['hasError'] = true
     }
@@ -210,10 +212,9 @@ class MessageFormView extends Component {
             <div className="col-md-9">
               <Textarea
                 id="message-form-content"
-                content={this.state.content}
+                value={this.state.content}
                 onChange={text => this.updateProps('content', text)}
-              >
-              </Textarea>
+              />
               {this.state.contentError &&
                 <div className="help-block field-error">
                   {this.state.contentError}

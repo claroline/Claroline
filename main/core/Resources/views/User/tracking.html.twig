@@ -1,0 +1,17 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ user.name | striptags | raw }}{% endblock %}
+
+{% block content %}
+    <div
+        class="user-tracking-container"
+        data-user="{{ user | json_encode | raw | escape }}"
+        data-tracking="{{ tracking | json_encode | raw | escape }}"
+    ></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-user-tracking.js') }}"></script>
+{% endblock %}

@@ -18,12 +18,12 @@ class PlatformRoles
     const ADMIN = 'ROLE_ADMIN';
     const ANONYMOUS = 'ROLE_ANONYMOUS';
 
-    private static $roles = array(
+    private static $roles = [
         self::USER,
         self::WS_CREATOR,
         self::ADMIN,
         self::ANONYMOUS,
-    );
+    ];
 
     public static function contains($roleName)
     {

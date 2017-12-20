@@ -13,12 +13,12 @@ const FIELD_TYPES = [
   {name: 'file', value: 11, label: t('file'), hasChoice: false, hasCascade: false, answerType: 'array'}
 ]
 
-const FILE_TYPES = [
-  {value: 'audio/*', label: trans('audio', {}, 'clacoform')},
-  {value: 'image/*', label: trans('image', {}, 'clacoform')},
-  {value: 'video/*', label: trans('video', {}, 'clacoform')},
-  {value: 'application/pdf', label: 'PDF'}
-]
+const FILE_TYPES = {
+  'audio/*': trans('audio', {}, 'clacoform'),
+  'image/*': trans('image', {}, 'clacoform'),
+  'video/*': trans('video', {}, 'clacoform'),
+  'application/pdf': 'PDF'
+}
 
 const ENTRY_STATUS_PENDING = 0
 const ENTRY_STATUS_PUBLISHED = 1

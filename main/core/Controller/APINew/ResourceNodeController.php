@@ -6,10 +6,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
-class ResourceNodeController extends AbstractController
+/**
+ * This controller will probably need to change heavily in the future.
+ */
+class ResourceNodeController extends AbstractCrudController
 {
     /**
      * @Route("/portal", name="apiv2_portal_index", options={ "method_prefix" = false })
+     *
+     * @todo probably move this somewhere else
      *
      * @param Request $request
      *
@@ -19,33 +24,27 @@ class ResourceNodeController extends AbstractController
     {
         $options = $request->query->all();
 
-        $options['filters']['published'] = true;
+        $options['hiddenFilters']['published'] = true;
 
         // Limit the search to resource nodes published to portal
-        $options['filters']['publishedToPortal'] = true;
+        $options['hiddenFilters']['publishedToPortal'] = true;
 
         // Limit the search to only the authorized resource types which can be displayed on the portal
-        $options['filters']['resourceType'] = $this->container->get('claroline.manager.portal_manager')->getPortalEnabledResourceTypes();
+        $options['hiddenFilters']['resourceType'] = $this->container->get('claroline.manager.portal_manager')->getPortalEnabledResourceTypes();
 
         $result = $this->finder->search(
             'Claroline\CoreBundle\Entity\Resource\ResourceNode',
             $options
         );
 
-        // unset filters
-        //TODO: this workaround will be avoidable after the merge of #2901 by using the hiddenFilters key in $options to to hide the filters in the client.
-        $filtersToRemove = [
-            'published',
-            'publishedToPortal',
-            'resourceType',
-        ];
-        foreach ($result['filters'] as $key => $value) {
-            if (in_array($value['property'], $filtersToRemove)) {
-                unset($result['filters'][$key]);
-            }
-        }
-        $result['filters'] = array_values($result['filters']);
-
         return new JsonResponse($result);
+    }
+
+    /**
+     * @return array
+     */
+    public function getName()
+    {
+        return 'resourcenode';
     }
 }

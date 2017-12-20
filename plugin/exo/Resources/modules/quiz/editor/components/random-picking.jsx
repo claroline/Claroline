@@ -17,7 +17,7 @@ import {
 const RandomPicking = props =>
   <div className="sub-fields">
     <RadioGroup
-      controlId="quiz-random-pick"
+      id="quiz-random-pick"
       label={tex('random_picking')}
       options={shuffleModes}
       checkedValue={props.randomPick}
@@ -29,7 +29,7 @@ const RandomPicking = props =>
     {props.randomPick !== SHUFFLE_NEVER &&
       <div className="sub-fields">
         <NumberGroup
-          controlId="quiz-pick"
+          id="quiz-pick"
           label={tex('number_steps_draw')}
           min={0}
           value={props.pick}
@@ -42,7 +42,7 @@ const RandomPicking = props =>
     }
 
     <RadioGroup
-      controlId="quiz-random-order"
+      id="quiz-random-order"
       label={tex('random_order')}
       options={SHUFFLE_ALWAYS !== props.randomPick ? shuffleModes : shuffleModes.filter(m => SHUFFLE_ONCE !== m.value)}
       checkedValue={props.randomOrder}

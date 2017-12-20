@@ -1,8 +1,10 @@
 import React, {Component} from 'react'
-import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {t} from '#/main/core/translation'
+import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+
 import {getOffsets} from '#/main/core/utilities/text/selection'
 
 // see https://github.com/lovasoa/react-contenteditable
@@ -57,7 +59,6 @@ export class ContentEditable extends Component {
         onBlur={this.emitChange}
         dangerouslySetInnerHTML={{__html: this.props.content}}
         contentEditable={!this.props.disabled}
-        title={this.props.title}
         role="textbox"
         className="form-control"
         aria-multiline={true}
@@ -110,12 +111,10 @@ ContentEditable.propTypes = {
   onChange: T.func.isRequired,
   onSelect: T.func,
   onClick: T.func,
-  title: T.string,
   disabled: T.bool.isRequired
 }
 
 ContentEditable.defaultProps = {
-  title: 'editable-content',
   onClick: () => {},
   onSelect: () => {},
   minRows: 1,
@@ -188,7 +187,6 @@ export class Tinymce extends Component {
     return (
       <textarea
         id={this.props.id}
-        title={this.props.title}
         className="form-control claroline-tiny-mce hide"
         defaultValue={this.props.content}
       />
@@ -202,11 +200,10 @@ Tinymce.propTypes = {
   onChange: T.func.isRequired,
   onSelect: T.func,
   onClick: T.func,
-  title: T.string,
   disabled: T.bool
 }
 
-export class Textarea extends Component {
+class Textarea extends Component {
   constructor(props) {
     super(props)
     this.state = {minimal: true}
@@ -216,9 +213,8 @@ export class Textarea extends Component {
     return (
       <ContentEditable
         id={this.props.id}
-        title={this.props.title}
         minRows={this.props.minRows}
-        content={this.props.content}
+        content={this.props.value || ''}
         disabled={this.props.disabled}
         onChange={this.props.onChange}
         onSelect={this.props.onSelect}
@@ -231,8 +227,7 @@ export class Textarea extends Component {
     return (
       <Tinymce
         id={this.props.id}
-        title={this.props.title}
-        content={this.props.content}
+        content={this.props.value || ''}
         disabled={this.props.disabled}
         onChange={this.props.onChange}
         onSelect={this.props.onSelect}
@@ -243,7 +238,7 @@ export class Textarea extends Component {
 
   render() {
     return (
-      <div className={classes('text-editor', this.props.className, {'minimal': this.state.minimal === true})}>
+      <div className={classes('text-editor', {'minimal': this.state.minimal === true})}>
         <span
           role="button"
           title={t(this.state.minimal ? 'rich_text_tools' : 'minimize')}
@@ -266,23 +261,22 @@ export class Textarea extends Component {
   }
 }
 
-Textarea.propTypes = {
-  id: T.string.isRequired,
+implementPropTypes(Textarea, FormFieldTypes, {
+  // more precise value type
+  value: T.string,
+  // custom props
   minRows: T.number,
-  title: T.string,
-  content: T.string.isRequired,
-  onChange: T.func.isRequired,
   onSelect: T.func,
   onClick: T.func,
-  onChangeMode: T.func,
-  className: T.string,
-  disabled: T.bool.isRequired
-}
-
-Textarea.defaultProps = {
+  onChangeMode: T.func
+}, {
+  value: '',
   minRows: 2,
-  disabled: false,
   onClick: () => {},
   onSelect: () => {},
   onChangeMode: () => {}
+})
+
+export {
+  Textarea
 }

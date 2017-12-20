@@ -3,48 +3,80 @@
 namespace Claroline\CoreBundle\Controller\APINew\Model;
 
 use Claroline\CoreBundle\API\Crud;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
+/**
+ * Manages an organizations collection on an entity.
+ */
 trait HasOrganizationsTrait
 {
     /**
-     * @Route("{uuid}/organization")
-     * @Method("PATCH")
+     * List organizations of the collection.
+     *
+     * @EXT\Route("/{id}/organization")
+     * @EXT\Method("GET")
+     *
+     * @param string  $id
+     * @param string  $class
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
-    public function addOrganizationsAction($uuid, $class, Request $request, $env)
+    public function listOrganizationsAction($id, $class, Request $request)
     {
-        try {
-            $object = $this->find($class, $uuid);
-            $organizations = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Organization\Organization');
-            $this->crud->patch($object, 'organization', Crud::COLLECTION_ADD, $organizations);
-
-            return new JsonResponse(
-              $this->serializer->serialize($object)
-          );
-        } catch (\Exception $e) {
-            $this->handleException($e, $env);
-        }
+        return new JsonResponse(
+            $this->finder->search('Claroline\CoreBundle\Entity\Organization\Organization', array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => [$this->getName() => [$id]]]
+            ))
+        );
     }
 
     /**
-     * @Route("{uuid}/organization")
-     * @Method("DELETE")
+     * Adds organizations to the collection.
+     *
+     * @EXT\Route("/{id}/organization")
+     * @EXT\Method("PATCH")
+     *
+     * @param string  $id
+     * @param string  $class
+     * @param Request $request
+     *
+     * @return JsonResponse
      */
-    public function removeOrganizationsAction($uuid, $class, Request $request, $env)
+    public function addOrganizationsAction($id, $class, Request $request)
     {
-        try {
-            $object = $this->find($class, $uuid);
-            $organizations = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Organization\Organization');
-            $this->crud->patch($object, 'organization', Crud::COLLECTION_REMOVE, $organizations);
+        $object = $this->find($class, $id);
+        $organizations = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Organization\Organization');
+        $this->crud->patch($object, 'organization', Crud::COLLECTION_ADD, $organizations);
 
-            return new JsonResponse(
+        return new JsonResponse(
             $this->serializer->serialize($object)
         );
-        } catch (\Exception $e) {
-            $this->handleException($e, $env);
-        }
+    }
+
+    /**
+     * Removes organizations from the collection.
+     *
+     * @EXT\Route("/{id}/organization")
+     * @EXT\Method("DELETE")
+     *
+     * @param string  $id
+     * @param string  $class
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function removeOrganizationsAction($id, $class, Request $request)
+    {
+        $object = $this->find($class, $id);
+        $organizations = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\Organization\Organization');
+        $this->crud->patch($object, 'organization', Crud::COLLECTION_REMOVE, $organizations);
+
+        return new JsonResponse(
+              $this->serializer->serialize($object)
+          );
     }
 }

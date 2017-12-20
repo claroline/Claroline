@@ -1,8 +1,10 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-const Numeric = props =>
+import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+
+const NumericInput = props =>
   <input
     id={props.id}
     type="number"
@@ -11,22 +13,38 @@ const Numeric = props =>
     disabled={props.disabled}
     min={props.min}
     max={props.max}
+    placeholder={props.placeholder}
     onChange={(e) => props.onChange(Number(e.target.value))}
   />
 
-Numeric.propTypes = {
+NumericInput.propTypes = {
   id: T.string.isRequired,
+  className: T.string,
+  disabled: T.bool,
+  placeholder: T.string,
   value: T.oneOfType([T.number, T.string]),
   min: T.number,
   max: T.number,
-  disabled: T.bool,
-  className: T.string,
   onChange: T.func.isRequired
 }
 
-Numeric.defaultProps = {
-  disabled: false
-}
+// it's called Numeric to not override the default JS math object `Number`
+const Numeric = props => props.unit ?
+  <div className="input-group">
+    <NumericInput {...props} />
+    <span className="input-group-addon">
+      {props.unit}
+    </span>
+  </div>
+  :
+  <NumericInput {...props} />
+
+implementPropTypes(Numeric, FormFieldTypes, {
+  value: T.oneOfType([T.number, T.string]),
+  min: T.number,
+  max: T.number,
+  unit: T.string
+})
 
 export {
   Numeric

@@ -6,7 +6,7 @@ import {t} from '#/main/core/translation'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
 import {Ip} from '#/main/core/layout/form/components/field/ip.jsx'
-import {ipDefinition} from '#/main/core/layout/data/types/ip'
+import {ipDefinition} from '#/main/core/data/types/ip'
 
 class IpList extends Component {
   constructor(props) {
@@ -24,7 +24,7 @@ class IpList extends Component {
   }
 
   addIp() {
-    const newIps = this.props.ips.slice()
+    const newIps = this.props.value.slice()
 
     newIps.push(this.state.pendingIp)
 
@@ -40,7 +40,7 @@ class IpList extends Component {
   }
 
   updateIp(index, newIp) {
-    const newIps = this.props.ips.slice()
+    const newIps = this.props.value.slice()
 
     // update
     newIps[index] = newIp
@@ -49,7 +49,7 @@ class IpList extends Component {
   }
 
   removeIp(index) {
-    const newIps = this.props.ips.slice()
+    const newIps = this.props.value.slice()
 
     // remove
     newIps.splice(index, 1)
@@ -69,6 +69,7 @@ class IpList extends Component {
             id={`${this.props.id}-add`}
             size="sm"
             value={this.state.pendingIp}
+            disabled={this.props.disabled}
             onChange={this.updatePending}
           />
 
@@ -76,7 +77,7 @@ class IpList extends Component {
             id={`${this.props.id}-add-btn`}
             title={t('add')}
             className="btn-link"
-            disabled={!ipDefinition.validate(this.state.pendingIp)}
+            disabled={this.props.disabled || !ipDefinition.validate(this.state.pendingIp)}
             onClick={this.addIp}
           >
             <span className="fa fa-fw fa-plus" />
@@ -85,25 +86,27 @@ class IpList extends Component {
 
         <HelpBlock help={t('ip_input_help')} />
 
-        {0 !== this.props.ips.length &&
+        {0 !== this.props.value.length &&
           <button
             type="button"
             className="btn btn-sm btn-link-danger"
-            onClick={this.removeAll}
+            disabled={this.props.disabled}
+            onClick={!this.props.disabled && this.removeAll}
           >
             {t('delete_all')}
           </button>
         }
 
-        {0 !== this.props.ips.length &&
+        {0 !== this.props.value.length &&
           <ul>
-            {this.props.ips.map((ip, index) =>
+            {this.props.value.map((ip, index) =>
               <li key={`${this.props.id}-${index}`} className="ip-item">
                 <Ip
                   id={`${this.props.id}-auth-${index}`}
                   size="sm"
                   placeholder=""
                   value={ip}
+                  disabled={this.props.disabled}
                   onChange={ip => this.updateIp(index, ip)}
                 />
 
@@ -111,6 +114,7 @@ class IpList extends Component {
                   id={`${this.props.id}-auth-${index}-delete`}
                   title={t('delete')}
                   className="btn-link-danger"
+                  disabled={this.props.disabled}
                   onClick={() => this.removeIp(index)}
                 >
                   <span className="fa fa-fw fa-trash-o" />
@@ -120,8 +124,8 @@ class IpList extends Component {
           </ul>
         }
 
-        {0 === this.props.ips.length &&
-          <div className="no-ip-info">{this.props.emptyText}</div>
+        {0 === this.props.value.length &&
+          <div className="no-ip-info">{this.props.placeholder}</div>
         }
       </div>
     )
@@ -130,13 +134,15 @@ class IpList extends Component {
 
 IpList.propTypes = {
   id: T.string.isRequired,
-  ips: T.arrayOf(T.string).isRequired,
+  value: T.arrayOf(T.string).isRequired,
+  disabled: T.bool,
   onChange: T.func.isRequired,
-  emptyText: T.string
+  placeholder: T.string
 }
 
 IpList.defaultProps = {
-  emptyText: t('no_ip')
+  disabled: false,
+  placeholder: t('no_ip')
 }
 
 export {

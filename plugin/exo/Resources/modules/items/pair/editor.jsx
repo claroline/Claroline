@@ -107,11 +107,11 @@ class Pair extends Component {
           {this.state.showFeedback &&
             <div className="feedback-container">
               <Textarea
+                id={`${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback`}
+                value={this.props.pair.feedback}
                 onChange={(value) => this.props.onChange(
                   actions.updatePair(this.props.index, 'feedback', value)
                 )}
-                id={`${this.props.pair.itemIds[0]}-${this.props.pair.itemIds[1]}-feedback`}
-                content={this.props.pair.feedback}
               />
             </div>
           }
@@ -266,20 +266,20 @@ class Odd extends Component {
       <div className="answer-item item unexpected-answer">
         <div className="text-fields">
           <Textarea
+            id={`odd-${this.props.odd.id}-data`}
+            value={this.props.odd.data}
             onChange={(value) => this.props.onChange(
               actions.updateItem(this.props.odd.id, 'data', value, true)
             )}
-            id={`odd-${this.props.odd.id}-data`}
-            content={this.props.odd.data}
           />
           {this.state.showFeedback &&
             <div className="feedback-container">
               <Textarea
+                id={`odd-${this.props.odd.id}-feedback`}
+                value={this.props.solution.feedback}
                 onChange={ (value) => this.props.onChange(
                   actions.updateItem(this.props.odd.id, 'feedback', value, true)
                 )}
-                id={`odd-${this.props.odd.id}-feedback`}
-                content={this.props.solution.feedback}
               />
             </div>
           }
@@ -355,11 +355,11 @@ let Item = props => {
     <div className="answer-item item">
       <div className="text-fields">
         <Textarea
+          id={`${props.item.id}-data`}
+          value={props.item.data}
           onChange={(value) => props.onChange(
             actions.updateItem(props.item.id, 'data', value, false)
           )}
-          id={`${props.item.id}-data`}
-          content={props.item.data}
         />
       </div>
       <div className="right-controls">

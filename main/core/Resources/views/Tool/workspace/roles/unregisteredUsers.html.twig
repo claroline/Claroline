@@ -139,7 +139,7 @@
                                 <td> <input class="chk-user chk-item" type="checkbox" value="{{ user.getId() }}"></td>
                                 <td>
                                     {% if user.getPublicUrl() != '' %}
-                                        <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
+                                        <a href="{{ path('claro_user_profile', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
                                     {% else %}
                                         {{ user.getUsername() }}
                                     {% endif %}

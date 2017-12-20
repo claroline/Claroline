@@ -1,42 +1,80 @@
-.profile_aside {
-    .avatar {
+.user-profile {
+    .user-profile-aside {
+
+    }
+
+    .user-profile-content {
+
+    }
+
+    .profile-facet {
+
+    }
+
+    .no-section-info {
+        margin-bottom: 15px;
+        font-style: italic;
         text-align: center;
-        .profile_picture {
-            margin-top: 20px;
-        }
-        .profile_picture_placeholder {
-            font-size: 80px;
-        }
     }
-    .informations {
-        margin-top: 20px;
+
+    .add-section {
+        padding: @padding-large-vertical @padding-large-horizontal;
     }
-    .contact_methods {
-        margin-top: 20px;
-        li {
-            a {
-                font-size:     12px;
-                padding-right: 0;
-            }
+}
+
+.user-profile-nav {
+    padding: 0;
+    margin-bottom: @component-margin-bottom;
+
+    .user-profile-nav-actions {
+        > .btn {
+            padding: 0;
         }
     }
 }
-.profile_informations {
-    &> p {
-        margin-bottom: 0;
-        margin-top:    10px;
+
+.profile-facet-add,
+.user-profile-link {
+    display: block;
+    text-align: left;
+    padding: 10px 15px;
+    border: 1px solid transparent;
+    color: @text-color;
+    background: #ebebeb;
+    text-decoration: none;
+    border-radius: @border-radius-base;
+
+    > .fa {
+        margin-right: @icon-text-spacer;
     }
-    .description_block {
-        margin-top:    20px;
-        .lead {
-            border-bottom: 5px solid #eee;
-            margin-bottom: 10px;
-        }
-        .description {
-            margin-left: 15px;
-            p {
-                margin-bottom: 0;
-            }
-        }
+
+    &.active {
+        background: @summary-bg;
+        color: @summary-link-active-color;
+        padding-right: 30px;
+        margin-right: floor(-@grid-gutter-width / 2);
+        border-top-right-radius: @grid-gutter-width;
+        border-bottom-right-radius: @grid-gutter-width;
+
+        .box-shadow(@summary-box-shadow);
+    }
+
+    +.user-profile-link {
+        margin-top: 5px;
+    }
+}
+
+.user-profile-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.profile-facet-add {
+    color: @brand-primary;
+
+    &:hover {
+        color: white;
+        background: @brand-primary;
     }
 }

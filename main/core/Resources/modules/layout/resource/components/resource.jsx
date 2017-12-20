@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {registerModalTypes} from '#/main/core/layout/modal'
+import {registerModals} from '#/main/core/layout/modal'
 import {Page, PageHeader, PageContent} from '#/main/core/layout/page/components/page.jsx'
 import {ResourceActions} from '#/main/core/layout/resource/components/resource-actions.jsx'
 
@@ -13,7 +13,7 @@ class Resource extends Component {
     super(props)
 
     // register modals
-    registerModalTypes([
+    registerModals([
       [MODAL_RESOURCE_PROPERTIES, EditPropertiesModal],
       [MODAL_RESOURCE_RIGHTS, EditRightsModal]
     ])

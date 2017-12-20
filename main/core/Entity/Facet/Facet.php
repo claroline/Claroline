@@ -11,13 +11,12 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Role;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FacetRepository")
@@ -26,24 +25,29 @@ use JMS\Serializer\Annotation\SerializedName;
  */
 class Facet
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_facet_admin", "api_profile"})
+     *
+     * @var int
      */
     protected $id;
 
     /**
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
-     * @Groups({"api_facet_admin", "api_profile"})
+     *
+     * @var string
      */
     protected $name;
 
     /**
      * @ORM\Column(type="integer", name="position")
-     * @Groups({"api_facet_admin", "api_profile"})
+     *
+     * @var int
      */
     protected $position;
 
@@ -51,126 +55,199 @@ class Facet
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacet",
      *     mappedBy="facet",
-     *     cascade={"persist"}
+     *     cascade={"persist", "remove"},
+     *     orphanRemoval=true
      * )
      * @ORM\OrderBy({"position" = "ASC"})
-     * @Groups({"api_facet_admin", "api_profile"})
-     * @SerializedName("panels")
+     *
+     * @var ArrayCollection|PanelFacet[]
      */
     protected $panelFacets;
 
     /**
-     * @var Role[]|ArrayCollection
-     *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Role",
      *     inversedBy="facets"
      * )
      * @ORM\JoinTable(name="claro_facet_role")
-     * @Groups({"api_facet_admin"})
+     *
+     * @var ArrayCollection|Role[]
      */
     protected $roles;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"api_facet_admin", "api_profile"})
+     *
+     * @var bool
      */
     protected $forceCreationForm = false;
 
     /**
-     * @ORM\Column(type="boolean")
-     * @Groups({"api_facet_admin", "api_profile"})
+     * @ORM\Column(name="isMain", type="boolean")
+     *
+     * @var bool
      */
-    protected $isMain = false;
+    protected $main = false;
 
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         $this->roles = new ArrayCollection();
         $this->panelFacets = new ArrayCollection();
+        $this->refreshUuid();
     }
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param string $name
+     */
     public function setName($name)
     {
         $this->name = $name;
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @param PanelFacet $panelFacet
+     */
     public function addPanelFacet(PanelFacet $panelFacet)
     {
         $this->panelFacets->add($panelFacet);
     }
 
+    /**
+     * @param PanelFacet $panelFacet
+     */
     public function removePanelFacet(PanelFacet $panelFacet)
     {
         $this->panelFacets->removeElement($panelFacet);
     }
 
+    /**
+     * @return ArrayCollection|PanelFacet[]
+     */
     public function getPanelFacets()
     {
         return $this->panelFacets;
     }
 
+    /**
+     * Removes all PanelFacet.
+     */
     public function resetPanelFacets()
     {
+        foreach ($this->panelFacets as $panelFacet) {
+            $panelFacet->setFacet(null);
+        }
+
         $this->panelFacets = new ArrayCollection();
     }
 
+    /**
+     * @param int $position
+     */
     public function setPosition($position)
     {
         $this->position = $position;
     }
 
+    /**
+     * @return int
+     */
     public function getPosition()
     {
         return $this->position;
     }
 
+    /**
+     * @param Role $role
+     */
     public function addRole(Role $role)
     {
         $this->roles->add($role);
     }
 
+    /**
+     * @param Role $role
+     */
     public function removeRole(Role $role)
     {
         $this->roles->removeElement($role);
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function getRoles()
     {
         return $this->roles;
     }
 
+    /**
+     * @param array $roles
+     */
     public function setRoles(array $roles)
     {
         $this->roles = $roles;
     }
 
+    /**
+     * @param bool|string $boolean
+     */
     public function setForceCreationForm($boolean)
     {
         $this->forceCreationForm = !is_bool($boolean) ? $boolean === 'true' : $boolean;
     }
 
+    /**
+     * @return bool
+     */
     public function getForceCreationForm()
     {
         return $this->forceCreationForm;
     }
 
+    /**
+     * @param bool|string $boolean
+     *
+     * @deprecated
+     */
     public function setIsMain($boolean)
     {
-        $this->isMain = !is_bool($boolean) ? $boolean === 'true' : $boolean;
+        $this->setMain(
+            !is_bool($boolean) ? $boolean === 'true' : $boolean
+        );
     }
 
+    /**
+     * @param bool $main
+     */
+    public function setMain($main)
+    {
+        $this->main = $main;
+    }
+
+    /**
+     * @return bool
+     */
     public function isMain()
     {
-        return $this->isMain;
+        return $this->main;
     }
 }

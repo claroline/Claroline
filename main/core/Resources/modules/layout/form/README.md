@@ -6,6 +6,12 @@
 ## Groups
 `#/main/core/layout/form/components/group/*-group.jsx`
 
+A form group embed the following features : 
+- The label
+- The input field
+- An optional help message
+- An optional error message
+
 ### Components
   #### FormGroup
   `import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'`

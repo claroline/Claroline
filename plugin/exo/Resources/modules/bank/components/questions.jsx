@@ -3,7 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {t, tex, trans, transChoice} from '#/main/core/translation'
-import {localeDate} from '#/main/core/layout/data/types/date/utils'
+import {localeDate} from '#/main/core/date'
+import {generateUrl} from '#/main/core/fos-js-router'
+
 import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {MODAL_SHARE} from '#/plugin/exo/bank/components/modal/share.jsx'
 
@@ -11,23 +13,26 @@ import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {actions} from '#/plugin/exo/bank/actions'
 
 import {
-  PageContainer as Page,
+  PageContainer,
   PageHeader,
   PageContent
 } from '#/main/core/layout/page'
 
-import {DataListContainer as DataList} from '#/main/core/layout/list/containers/data-list.jsx'
+import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 
 import {getDefinition, listItemNames} from '#/plugin/exo/items/item-types'
 import {Icon as ItemIcon} from '#/plugin/exo/items/components/icon.jsx'
 
 const QuestionsPage = props =>
-  <Page id="question-bank">
+  <PageContainer id="question-bank">
     <PageHeader title={tex('questions_bank')} />
 
     <PageContent>
-      <DataList
+      <DataListContainer
         name="questions"
+        fetch={{
+          url: generateUrl('question_list')
+        }}
         definition={[
           {
             name: 'type',
@@ -42,7 +47,7 @@ const QuestionsPage = props =>
             },
             type: 'enum',
             options: {
-              enum: listItemNames().reduce(
+              choices: listItemNames().reduce(
                 (selectObj, itemType) => Object.assign(
                   selectObj, {
                     [itemType.type]: trans(itemType.name, {}, 'question_types')
@@ -106,7 +111,7 @@ const QuestionsPage = props =>
         card={(row) => ({
           poster: null,
           icon: <ItemIcon name={getDefinition(row.type).name} size="lg"/>,
-          title: row.title || row.content.substr(0, 50),
+          title: row.title || row.content.substr(0, 50), // todo remove html
           subtitle: trans(getDefinition(row.type).name, {}, 'question_types'),
           flags: [
             row.meta.model && ['fa fa-object-group', t('model')]
@@ -118,7 +123,7 @@ const QuestionsPage = props =>
         })}
       />
     </PageContent>
-  </Page>
+  </PageContainer>
 
 QuestionsPage.propTypes = {
   removeQuestions: T.func.isRequired,

@@ -67,8 +67,7 @@ class KeywordItem extends Component {
             <div className="feedback-container">
               <Textarea
                 id={`keyword-${this.props.keyword._id}-feedback`}
-                title={tex('feedback')}
-                content={this.props.keyword.feedback}
+                value={this.props.keyword.feedback}
                 onChange={feedback => this.props.updateKeyword('feedback', feedback)}
               />
             </div>
@@ -303,9 +302,9 @@ const KeywordsPopover = props =>
     {props.children}
 
     <CheckGroup
-      checkId={`keywords-show-${props.id}-list`}
+      id={`keywords-show-${props.id}-list`}
       label={tex('submit_a_list')}
-      checked={props._multiple}
+      value={props._multiple}
       onChange={checked => props.onChange('_multiple', checked)}
     />
 

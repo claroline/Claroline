@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {
-  Router,
+  Redirect,
+  Router as BaseRouter,
   Route as BaseRoute,
   Switch
 } from 'react-router-dom'
@@ -10,6 +11,7 @@ import {history} from '#/main/core/router/history'
 import {Route as RouteTypes} from '#/main/core/router/prop-types'
 
 // todo : implement canEnter for security purpose
+// todo : manage redirect
 
 /**
  * Creates a custom Route component to bind redux action on enter and leave.
@@ -64,50 +66,61 @@ const Routes = props =>
   <BaseRoute
     key={props.path}
     path={props.path}
+    exact={props.exact}
   >
     <Switch>
-      {props.routes.map(routeConfig => routeConfig.routes ?
+      {props.routes.map((routeConfig, routeIndex) => routeConfig.routes ?
         <Routes
           {...routeConfig}
-          key={props.path}
-          dispatchRouteAction={props.dispatchRouteAction}
+          key={`route-${routeIndex}`}
         /> :
         <Route
           {...routeConfig}
-          key={props.path}
+          key={`route-${routeIndex}`}
           onEnter={routeConfig.onEnter}
           onLeave={routeConfig.onLeave}
+        />
+      )}
+
+      {props.redirect.map((redirect, redirectIndex) =>
+        <Redirect
+          {...redirect}
+          key={`redirect-${redirectIndex}`}
         />
       )}
     </Switch>
   </BaseRoute>
 
 Routes.propTypes = {
-  path: T.string.isRequired,
+  path: T.string,
+  exact: T.bool,
   routes: T.arrayOf(
     T.shape(RouteTypes.propTypes).isRequired // todo : allow more than one nesting in prop-types
-  )
+  ),
+  redirect: T.arrayOf(T.shape({
+    from: T.string.isRequired,
+    to: T.string.isRequired,
+    exact: T.bool
+  }))
 }
 
-Routes.defaultProps = RouteTypes.defaultProps
-
-const CustomRouter = props =>
-  <Router history={history}>
-    <Routes
-      path={props.basePath}
-      routes={props.routes}
-    />
-  </Router>
-
-CustomRouter.propTypes = {
-  basePath: T.string,
-  routes: T.array.isRequired
+Routes.defaultProps = {
+  path: '',
+  exact: false,
+  redirect: []
 }
 
-CustomRouter.defaultProps = {
-  basePath: ''
+const Router = props =>
+  <BaseRouter history={history}>
+    {props.children}
+  </BaseRouter>
+
+Router.propTypes = {
+  children: T.node
 }
 
 export {
-  CustomRouter as Router
+  Router,
+  Routes,
+  Route
 }

@@ -39,7 +39,7 @@ const findRolePermissions = (roleName, perms) => perms[roleName] ? perms[roleNam
  * @param rolePerms
  */
 const roleHaveCustomPerms = (rolePerms) => {
-  const customPerms = Object.keys(rolePerms).filter(permName => -1 === ['open', 'create'].indexOf(permName) && rolePerms[permName])
+  const customPerms = Object.keys(rolePerms).filter(permName => -1 === ['open', 'download', 'create'].indexOf(permName) && rolePerms[permName])
 
   return 0 < customPerms.length
 }

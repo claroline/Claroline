@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Accessor;
@@ -22,31 +23,43 @@ use JMS\Serializer\Annotation\Groups;
  */
 class FieldFacetValue
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({"api_user", "api_profile", "api_user_min"})
+     *
+     * @var int
      */
     protected $id;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     *
+     * @var string
      */
     protected $stringValue;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     *
+     * @var float
      */
     protected $floatValue;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var \DateTime
      */
     protected $dateValue;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
+     *
+     * @var array
      */
     protected $arrayValue;
 
@@ -57,6 +70,8 @@ class FieldFacetValue
      *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
+     *
+     * @var User
      */
     protected $user;
 
@@ -68,20 +83,38 @@ class FieldFacetValue
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=false)
      * @Groups({"api_user_min"})
+     *
+     * @var FieldFacet
      */
     protected $fieldFacet;
 
     /**
      * @Groups({"api_user", "api_profile", "api_user_min"})
      * @Accessor(getter="getValue")
+     *
+     * @var mixed
      */
     protected $value;
 
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
+
+    /**
+     * @param \DateTime|null $dateValue
+     */
     public function setDateValue(\DateTime $dateValue = null)
     {
         $this->dateValue = $dateValue;
     }
 
+    /**
+     * return $dateValue.
+     */
     public function getDateValue()
     {
         return $this->dateValue;
@@ -103,43 +136,64 @@ class FieldFacetValue
         return $this->fieldFacet;
     }
 
+    /**
+     * @param float $floatValue
+     */
     public function setFloatValue($floatValue)
     {
         $this->floatValue = $floatValue;
     }
 
+    /**
+     * @return float
+     */
     public function getFloatValue()
     {
         return $this->floatValue;
     }
 
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param string $stringValue
+     */
     public function setStringValue($stringValue)
     {
         $this->stringValue = $stringValue;
     }
 
+    /**
+     * @return string
+     */
     public function getStringValue()
     {
         return $this->stringValue;
     }
 
+    /**
+     * @param array|null $arrayValue
+     */
     public function setArrayValue(array $arrayValue = null)
     {
         $this->arrayValue = $arrayValue;
     }
 
+    /**
+     * @return array
+     */
     public function getArrayValue()
     {
         return $this->arrayValue;
     }
 
     /**
-     * @param User $user
+     * @param User|null $user
      */
     public function setUser(User $user = null)
     {
@@ -154,6 +208,9 @@ class FieldFacetValue
         return $this->user;
     }
 
+    /**
+     * @return mixed
+     */
     public function getValue()
     {
         switch ($this->getFieldFacet()->getType()) {

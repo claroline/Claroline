@@ -334,8 +334,8 @@ const ResourceActions = props => {
         {0 !== moreActions.length &&
           <MoreAction
             id="resource-more"
+            title={t_res(props.resourceNode.meta.type)}
             actions={moreActions}
-            label={t_res(props.resourceNode.meta.type)}
           />
         }
       </PageGroupActions>

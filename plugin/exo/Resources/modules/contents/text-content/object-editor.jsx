@@ -8,14 +8,14 @@ import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 export const TextObjectEditor = (props) =>
   <fieldset>
     <FormGroup
-      controlId={`object-${props.object.id}-data`}
+      id={`object-${props.object.id}-data`}
       label=''
       warnOnly={!props.validating}
       error={get(props.object, '_errors.data')}
     >
       <Textarea
         id={`object-${props.object.id}-data`}
-        content={props.object.data || ''}
+        value={props.object.data || ''}
         onChange={data => props.onChange(data)}
       />
     </FormGroup>

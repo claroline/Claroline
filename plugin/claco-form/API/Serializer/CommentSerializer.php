@@ -3,7 +3,7 @@
 namespace Claroline\ClacoFormBundle\API\Serializer;
 
 use Claroline\ClacoFormBundle\Entity\Comment;
-use Claroline\CoreBundle\API\Serializer\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

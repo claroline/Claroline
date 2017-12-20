@@ -13,7 +13,6 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
-use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
@@ -30,7 +29,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *  )
  * @DoctrineAssert\UniqueEntity("name")
  */
-class Group extends AbstractRoleSubject implements OrderableInterface
+class Group extends AbstractRoleSubject
 {
     use UuidTrait;
     use OrganizationsTrait;
@@ -75,19 +74,31 @@ class Group extends AbstractRoleSubject implements OrderableInterface
     protected $roles;
 
     /**
-     * @var Organization[]|ArrayCollection
+     * @var ArrayCollection
      *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization",
+     *     inversedBy="groups"
      * )
      */
     protected $organizations;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Location",
+     *     inversedBy="groups"
+     * )
+     */
+    protected $locations;
 
     public function __construct()
     {
         parent::__construct();
         $this->users = new ArrayCollection();
         $this->organizations = new ArrayCollection();
+        $this->locations = new ArrayCollection();
         $this->refreshUuid();
     }
 
@@ -154,23 +165,6 @@ class Group extends AbstractRoleSubject implements OrderableInterface
         return $return;
     }
 
-    public function setPlatformRole($platformRole)
-    {
-        $roles = $this->getEntityRoles();
-
-        foreach ($roles as $role) {
-            if ($role->getType() !== Role::WS_ROLE) {
-                $removedRole = $role;
-            }
-        }
-
-        if (isset($removedRole)) {
-            $this->roles->removeElement($removedRole);
-        }
-
-        $this->roles->add($platformRole);
-    }
-
     /**
      * Replace the old platform roles of a user by a new array.
      *
@@ -196,19 +190,22 @@ class Group extends AbstractRoleSubject implements OrderableInterface
         }
     }
 
+    public function getOrganizations()
+    {
+        return $this->organizations;
+    }
+
     public function containsUser(User $user)
     {
         return $this->users->contains($user);
     }
 
-    public function getOrderableFields()
+    /**
+     * @return ArrayCollection
+     */
+    public function getLocations()
     {
-        return ['name', 'id'];
-    }
-
-    public static function getSearchableFields()
-    {
-        return ['name'];
+        return $this->locations;
     }
 
     public function __toString()

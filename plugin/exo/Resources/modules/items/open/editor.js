@@ -45,8 +45,8 @@ function reduce(item = {}, action) {
 
 function validate(item) {
   const errors = {}
-  setIfError(errors, 'maxScore', chain(item.score.max, [notBlank, number, gteZero]))
-  setIfError(errors, 'maxLength', chain(item.maxLength, [notBlank, number, gteZero]))
+  setIfError(errors, 'maxScore', chain(item.score.max, {}, [notBlank, number, gteZero]))
+  setIfError(errors, 'maxLength', chain(item.maxLength, {}, [notBlank, number, gteZero]))
 
   return errors
 }

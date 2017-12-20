@@ -23,7 +23,7 @@ describe('<Textarea/>', () => {
     shallow(
       React.createElement(Textarea)
     )
-    ensure.missingProps('Textarea', ['id', 'content', 'onChange'])
+    ensure.missingProps('Textarea', ['id', 'value', 'onChange'])
   })
 
   it('has typed props', () => {
@@ -34,14 +34,14 @@ describe('<Textarea/>', () => {
         onChange: 'foo'
       })
     )
-    ensure.invalidProps('Textarea', ['id', 'content', 'onChange'])
+    ensure.invalidProps('Textarea', ['id', 'value', 'onChange'])
   })
 
   it('renders an editable div by default', () => {
     const area = mount(
       React.createElement(Textarea, {
         id: 'ID',
-        content: 'CONTENT',
+        value: 'CONTENT',
         onChange: () => {}
       })
     )
@@ -55,7 +55,7 @@ describe('<Textarea/>', () => {
     const area = mount(
       React.createElement(Textarea, {
         id: 'ID',
-        content: 'CONTENT',
+        value: 'CONTENT',
         onChange: () => {}
       })
     )

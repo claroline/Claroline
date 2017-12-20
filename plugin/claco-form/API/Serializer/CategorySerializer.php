@@ -3,7 +3,7 @@
 namespace Claroline\ClacoFormBundle\API\Serializer;
 
 use Claroline\ClacoFormBundle\Entity\Category;
-use Claroline\CoreBundle\API\Serializer\UserSerializer;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 

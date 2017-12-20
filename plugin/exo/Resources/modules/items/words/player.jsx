@@ -3,10 +3,10 @@ import {PropTypes as T} from 'prop-types'
 
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 
-export const WordsPlayer = (props) =>
+const WordsPlayer = (props) =>
   <Textarea
     id={`open-${props.item.id}-data`}
-    content={props.answer}
+    value={props.answer}
     onChange={(value) => props.onChange(value)}
   />
 
@@ -20,4 +20,8 @@ WordsPlayer.propTypes = {
 
 WordsPlayer.defaultProps = {
   answer: ''
+}
+
+export {
+  WordsPlayer
 }

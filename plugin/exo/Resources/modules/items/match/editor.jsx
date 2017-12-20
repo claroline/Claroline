@@ -101,7 +101,7 @@ class MatchLinkPopover extends Component {
             <div className="feedback-container">
               <Textarea
                 id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
-                content={this.props.solution.feedback ? this.props.solution.feedback : ''}
+                value={this.props.solution.feedback}
                 onChange={feedback => this.props.onChange(
                   actions.updateSolution(this.props.solution.firstId, this.props.solution.secondId, 'feedback', feedback)
                 )}
@@ -150,11 +150,11 @@ class MatchItem extends Component{
         }
         <div className="text-fields">
           <Textarea
+            id={`${this.props.type}-${this.props.item.id}-data`}
+            value={this.props.item.data}
             onChange={data => this.props.onChange(
               actions.updateItem(this.props.type === 'source', this.props.item.id, data)
             )}
-            id={`${this.props.type}-${this.props.item.id}-data`}
-            content={this.props.item.data}
           />
         </div>
         { this.props.type === 'target' &&

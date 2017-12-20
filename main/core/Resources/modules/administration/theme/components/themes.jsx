@@ -4,26 +4,30 @@ import {connect} from 'react-redux'
 import {NavLink, withRouter} from 'react-router-dom'
 
 import {t, trans, transChoice} from '#/main/core/translation'
-import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {generateUrl} from '#/main/core/fos-js-router'
 
+import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
+
 import {actions} from '#/main/core/administration/theme/actions'
 
 import {
-  PageContainer as Page,
+  PageContainer,
   PageHeader,
   PageContent
 } from '#/main/core/layout/page'
 
-import {DataListContainer as DataList} from '#/main/core/layout/list/containers/data-list.jsx'
+import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 
 const ThemesPage = props =>
-  <Page id="theme-management">
+  <PageContainer id="theme-management">
     <PageHeader title={t('themes_management')} />
     <PageContent>
-      <DataList
+      <DataListContainer
         name="themes"
-
+        fetch={{
+          url: generateUrl('apiv2_theme_list')
+        }}
         definition={[
           {
             name: 'name',
@@ -66,7 +70,7 @@ const ThemesPage = props =>
         })}
       />
     </PageContent>
-  </Page>
+  </PageContainer>
 
 ThemesPage.propTypes = {
   rebuildThemes: T.func.isRequired,

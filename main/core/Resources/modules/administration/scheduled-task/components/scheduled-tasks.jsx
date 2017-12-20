@@ -5,17 +5,18 @@ import {connect} from 'react-redux'
 import {NavLink} from 'react-router-dom'
 
 import {t, trans, transChoice} from '#/main/core/translation'
-import {localeDate} from '#/main/core/layout/data/types/date/utils'
+import {localeDate} from '#/main/core/date'
+import {generateUrl} from '#/main/core/fos-js-router'
 
 import {
-  PageContainer as Page,
+  PageContainer,
   PageHeader,
   PageContent,
   PageActions,
   PageAction
 } from '#/main/core/layout/page'
 import {MODAL_DELETE_CONFIRM, MODAL_GENERIC_TYPE_PICKER} from '#/main/core/layout/modal'
-import {DataListContainer as DataList} from '#/main/core/layout/list/containers/data-list.jsx'
+import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {actions} from '#/main/core/administration/scheduled-task/actions'
@@ -39,7 +40,7 @@ import {constants} from '#/main/core/administration/scheduled-task/constants'
 }*/
 
 const ScheduledTasksPage = props =>
-  <Page id="scheduled-task-management">
+  <PageContainer id="scheduled-task-management">
     <PageHeader
       title={trans('tasks_scheduling', {}, 'tools')}
     >
@@ -56,8 +57,11 @@ const ScheduledTasksPage = props =>
     </PageHeader>
 
     <PageContent>
-      <DataList
+      <DataListContainer
         name="tasks"
+        fetch={{
+          url: generateUrl('apiv2_scheduledtask_list')
+        }}
         definition={[
           {
             name: 'name',
@@ -112,7 +116,7 @@ const ScheduledTasksPage = props =>
         })}
       />
     </PageContent>
-  </Page>
+  </PageContainer>
 
 ScheduledTasksPage.propTypes = {
   isCronConfigured: T.bool.isRequired,

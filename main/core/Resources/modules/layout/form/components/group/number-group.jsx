@@ -1,29 +1,23 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
 
 import {Numeric} from '#/main/core/layout/form/components/field/numeric.jsx'
+import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 
 const NumberGroup = props =>
   <FormGroup {...props}>
-    <Numeric
-      id={props.controlId}
-      value={props.value}
-      disabled={props.disabled}
-      min={props.min}
-      max={props.max}
-      onChange={props.onChange}
-    />
+    <Numeric {...props} />
   </FormGroup>
 
-NumberGroup.propTypes = {
-  controlId: T.string.isRequired,
-  value: T.oneOfType([T.number, T.string]),
+implementPropTypes(NumberGroup, FormGroupWithFieldTypes, {
+  // more precise value type
+  value: T.number,
+  // custom props
   min: T.number,
   max: T.number,
-  disabled: T.bool,
-  onChange: T.func.isRequired
-}
+  unit: T.string
+})
 
 export {
   NumberGroup

@@ -2,9 +2,8 @@
  * Forms.
  */
 
-@import "color-picker";
-@import "field";
-@import "file-thumbnail";
+@import "fields/index";
+@import "form-stepper";
 
 
 // Fixes checkbox and radio button display issue on inline
@@ -49,6 +48,8 @@ form .global-error {
     font-size: @help-block-font-size;
 
     .fa {
+        width: 20px - @icon-text-spacer; // small cheat to have the same spacing than checkbox (currently 20px)
+        text-align: center;
         margin-right: @icon-text-spacer;
     }
 }
@@ -102,133 +103,18 @@ form .global-error {
 
 
 // -
-// Fields
-// ---
-
-input[type=checkbox] {
-    cursor: pointer;
-}
-
-.checkbox-with-input,
-.radio-with-input {
-    line-height: 34px;
-    min-height: 40px;
-
-    .radio,
-    .checkbox {
-        display: inline-block;
-        margin: 0;
-    }
-
-    input[type=radio] {
-        margin-top: 10px;
-    }
-}
-
-// Fixes bootstrap that do not remove label font-weight like `.radio` and `.checkbox`
-// And so do not work as expected
-.radio-inline,
-.checkbox-inline {
-    label {
-        font-weight: normal;
-    }
-}
-
-// increase margin
-.radio-inline + .radio-inline,
-.checkbox-inline + .checkbox-inline {
-    margin-left: @grid-gutter-width;
-}
-
-.two_level_select {
-    select {
-        .form-control;
-        .input-sm;
-        width:   auto;
-        display: inline-block;
-        &+ select {
-            margin-left: 5px;
-        }
-    }
-    &.has-error {
-        select {
-            border-color : #b94a48;
-        }
-    }
-}
-
-.ip-control {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    .dot {
-        font-weight: 900;
-        display: block;
-        margin: 0 10px;
-    }
-
-    .form-control {
-        flex: 1;
-        text-align: right;
-        min-width: 0; // hack to avoid overflow in FF
-    }
-}
-
-.ip-list-control {
-    ul {
-        margin: 0;
-        padding: 0;
-        list-style-type: none;
-    }
-
-    .ip-add {
-        margin-bottom: 5px;
-    }
-
-    .no-ip-info {
-        font-style: italic;
-        text-align: center;
-
-        // todo use vars
-        line-height: 30px;
-        border: 1px dashed #999;
-        border-radius: 4px;
-        padding: 5px;
-        color: #999;
-    }
-
-    .ip-item {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        background: @gray-lighter;
-        padding: 5px;
-
-        + .ip-item {
-            margin-top: 5px;
-        }
-
-        .border-radius(@border-radius-base);
-
-        .ip-control {
-            flex: 1;
-        }
-
-        .btn {
-            margin-left: floor(@grid-gutter-width / 2);
-            padding: 4px;
-        }
-    }
-}
-
-
-// -
 // Labels
 // ---
 
 .control-label {
     color: @input-label-color;
+
+    > small {
+        color: @text-muted;
+        margin-left: 5px;
+        font-style: italic;
+        font-weight: normal;
+    }
 }
 
 // Just permits to individually control the color of the label during validation
@@ -242,6 +128,64 @@ input[type=checkbox] {
     color: @input-error-label-color;
 }
 
+
+// -
+// Modals
+// ---
+
+.form-modal {
+    .form-primary-section {
+        // removes panel styles
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        background: @modal-content-bg;
+        margin-bottom: 0;
+
+        .panel-body {
+            padding: @modal-inner-padding;
+        }
+    }
+
+    .form-sections {
+
+    }
+}
+
+
+// -
+// Embedded forms
+// ---
+
+// todo : maybe merge with override made for modals
+.embedded-form-section {
+    .form {
+        margin: -@panel-body-padding; // maybe not the best way to handle it
+    }
+
+    .form-primary-section {
+        // removes panel styles
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        margin-bottom: 0;
+    }
+
+    .form-sections {
+        margin: 0;
+        .panel {
+            box-shadow: none; // this may be applied to all panels in modals
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+
+            + .panel {
+                border-top: none;
+                margin: 0;
+            }
+        }
+    }
+}
 
 // -
 // Utilities

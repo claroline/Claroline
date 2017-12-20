@@ -19,7 +19,7 @@ import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.j
 import {ValidationStatus} from './validation-status.jsx'
 import {RandomPicking} from './random-picking.jsx'
 import {TagPicking} from './tag-picking.jsx'
-import {AlertBlock} from '#/main/core/layout/components/alert-block.jsx'
+import {AlertBlock} from '#/main/core/layout/alert/components/alert-block.jsx'
 import {
   correctionModes,
   markModes,
@@ -49,15 +49,15 @@ const Display = props =>
       onChange={checked => props.onChange('parameters.showOverview', checked)}
     >
       <HtmlGroup
-        controlId="quiz-description"
+        id="quiz-description"
         label={tex('overview_message')}
-        content={props.description}
+        value={props.description}
         onChange={description => props.onChange('description', description)}
       />
 
       <CheckGroup
-        checkId="quiz-show-metadata"
-        checked={props.parameters.showMetadata}
+        id="quiz-show-metadata"
+        value={props.parameters.showMetadata}
         label={tex('metadata_visible')}
         help={tex('metadata_visible_help')}
         onChange={checked => props.onChange('parameters.showMetadata', checked)}
@@ -71,15 +71,15 @@ const Display = props =>
       onChange={checked => props.onChange('parameters.showEndPage', checked)}
     >
       <HtmlGroup
-        controlId="quiz-end-message"
+        id="quiz-end-message"
         label={tex('end_message')}
-        content={props.parameters.endMessage}
+        value={props.parameters.endMessage}
         onChange={endMessage => props.onChange('parameters.endMessage', endMessage)}
       />
     </ActivableSet>
 
     <RadioGroup
-      controlId="quiz-numbering"
+      id="quiz-numbering"
       label={tex('quiz_numbering')}
       options={[
         {value: NUMBERING_NONE, label: tex('quiz_numbering_none')},
@@ -109,7 +109,7 @@ const Access = props => {
   return (
     <fieldset>
       <FormGroup
-        controlId="quiz-maxPapers"
+        id="quiz-maxPapers"
         label={tex('maximum_papers')}
         help={tex('maximum_papers_attempts_help')}
         warnOnly={!props.validating}
@@ -139,11 +139,11 @@ Access.propTypes = {
 const Picking = props =>
   <fieldset>
     <SelectGroup
-      controlId="quiz-picking"
+      id="quiz-picking"
       label={tex('quiz_picking_type')}
-      options={quizPicking}
+      choices={quizPicking}
       noEmpty={true}
-      selectedValue={props.picking.type}
+      value={props.picking.type}
       onChange={(value) => props.onChange('picking.type', value)}
     />
 
@@ -190,7 +190,7 @@ const Signing = props =>
   <fieldset>
     {/* TODO: enable this when feature is back
     <FormGroup
-      controlId="quiz-duration"
+      id="quiz-duration"
       label={tex('duration')}
       help={tex('duration_help')}
       warnOnly={!props.validating}
@@ -207,7 +207,7 @@ const Signing = props =>
     </FormGroup>
     */}
     <FormGroup
-      controlId="quiz-maxAttempts"
+      id="quiz-maxAttempts"
       label={tex('maximum_attempts')}
       help={tex('number_max_attempts_help')}
       warnOnly={!props.validating}
@@ -225,7 +225,7 @@ const Signing = props =>
 
     {props.parameters.maxAttempts > 0 &&
       <FormGroup
-        controlId="quiz-maxAttemptsPerDay"
+        id="quiz-maxAttemptsPerDay"
         label={tex('maximum_attempts_per_day')}
         help={tex('number_max_attempts_per_day_help')}
         warnOnly={!props.validating}
@@ -243,15 +243,15 @@ const Signing = props =>
     }
 
     <CheckGroup
-      checkId="quiz-interruptible"
-      checked={props.parameters.interruptible}
+      id="quiz-interruptible"
+      value={props.parameters.interruptible}
       label={tex('allow_test_exit')}
       onChange={checked => props.onChange('parameters.interruptible', checked)}
     />
 
     <CheckGroup
-      checkId="quiz-mandatoryQuestions"
-      checked={props.parameters.mandatoryQuestions}
+      id="quiz-mandatoryQuestions"
+      value={props.parameters.mandatoryQuestions}
       label={tex('mandatory_questions')}
       onChange={checked => props.onChange('parameters.mandatoryQuestions', checked)}
     />
@@ -290,7 +290,7 @@ class Correction extends Component {
     return(
       <fieldset>
         <RadioGroup
-          controlId="quiz-total-score-on"
+          id="quiz-total-score-on"
           label={tex('quiz_total_score_on')}
           options={[
             {value: TOTAL_SCORE_ON_DEFAULT, label: tex('quiz_total_score_on_mode_default')},
@@ -303,7 +303,7 @@ class Correction extends Component {
         {this.state.totalScoreOnMode === TOTAL_SCORE_ON_CUSTOM &&
           <div className="sub-fields">
             <FormGroup
-              controlId="quiz-total-score-on-value"
+              id="quiz-total-score-on-value"
               label={tex('quiz_total_score')}
             >
               <input
@@ -319,7 +319,7 @@ class Correction extends Component {
         }
 
         <FormGroup
-          controlId="quiz-success-score"
+          id="quiz-success-score"
           label={tex('quiz_success_score')}
         >
           <input
@@ -334,7 +334,7 @@ class Correction extends Component {
         </FormGroup>
 
         <FormGroup
-          controlId="quiz-showCorrectionAt"
+          id="quiz-showCorrectionAt"
           label={tex('availability_of_correction')}
         >
           <select
@@ -351,7 +351,7 @@ class Correction extends Component {
         {this.props.parameters.showCorrectionAt === SHOW_CORRECTION_AT_DATE &&
           <div className="sub-fields">
             <FormGroup
-              controlId="quiz-correctionDate"
+              id="quiz-correctionDate"
               label={tex('correction_date')}
             >
               <DatePicker
@@ -363,7 +363,10 @@ class Correction extends Component {
             </FormGroup>
           </div>
         }
-        <FormGroup controlId="quiz-showScoreAt" label={tex('score_displaying')}>
+        <FormGroup
+          id="quiz-showScoreAt"
+          label={tex('score_displaying')}
+        >
           <select
             id="quiz-showScoreAt"
             value={this.props.parameters.showScoreAt}
@@ -379,21 +382,21 @@ class Correction extends Component {
         </FormGroup>
 
         <CheckGroup
-          checkId="quiz-show-feedback"
-          checked={this.props.parameters.showFeedback}
+          id="quiz-show-feedback"
+          value={this.props.parameters.showFeedback}
           label={tex('show_feedback')}
           onChange={checked => this.props.onChange('parameters.showFeedback', checked)}
         />
         <CheckGroup
-          checkId="quiz-anonymizeAttempts"
-          checked={this.props.parameters.anonymizeAttempts}
+          id="quiz-anonymizeAttempts"
+          value={this.props.parameters.anonymizeAttempts}
           label={tex('anonymous')}
           onChange={checked => this.props.onChange('parameters.anonymizeAttempts', checked)}
         />
 
         <CheckGroup
-          checkId="quiz-showFullCorrection"
-          checked={this.props.parameters.showFullCorrection}
+          id="quiz-showFullCorrection"
+          value={this.props.parameters.showFullCorrection}
           label={tex('maximal_correction')}
           onChange={checked => this.props.onChange('parameters.showFullCorrection', checked)}
         />
@@ -404,7 +407,10 @@ class Correction extends Component {
           activated={this.props.parameters.showStatistics}
           onChange={checked => this.props.onChange('parameters.showStatistics', checked)}
         >
-          <FormGroup controlId="quiz-allPapersStatistics" label={tex('statistics_options')}>
+          <FormGroup
+            id="quiz-allPapersStatistics"
+            label={tex('statistics_options')}
+          >
             <select
               id="quiz-allPapersStatistics"
               value={this.props.parameters.allPapersStatistics}

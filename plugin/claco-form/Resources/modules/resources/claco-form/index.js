@@ -1,12 +1,11 @@
-import merge from 'lodash/merge'
 import React from 'react'
 import {
   hashHistory as history,
   HashRouter as Router
 } from 'react-router-dom'
+
 import {bootstrap} from '#/main/core/utilities/app/bootstrap'
-import {generateUrl} from '#/main/core/fos-js-router'
-import {registerModalTypes} from '#/main/core/layout/modal'
+import {registerModals} from '#/main/core/layout/modal'
 import {reducer as modalReducer}    from '#/main/core/layout/modal/reducer'
 import {reducer as resourceNodeReducer} from '#/main/core/layout/resource/reducer'
 import {reducer as apiReducer} from '#/main/core/api/reducer'
@@ -30,7 +29,7 @@ import {KeywordFormModal} from './editor/keyword/components/keyword-form-modal.j
 import {FieldFormModal} from './editor/field/components/field-form-modal.jsx'
 
 // register custom modals
-registerModalTypes([
+registerModals([
   ['MODAL_CATEGORY_FORM', CategoryFormModal],
   ['MODAL_KEYWORD_FORM', KeywordFormModal],
   ['MODAL_FIELD_FORM', FieldFormModal]
@@ -86,9 +85,7 @@ bootstrap(
       categories: resource.categories,
       keywords: resource.keywords,
       fields: initialData.fields,
-      entries: merge({}, initialData.entries, {
-        fetchUrl: generateUrl('claro_claco_form_entries_search', {clacoForm: resource.id})
-      }),
+      entries: initialData.entries,
       myEntriesCount: initialData.myEntriesCount,
       cascadeLevelMax: initialData.cascadeLevelMax,
       roles: initialData.roles,

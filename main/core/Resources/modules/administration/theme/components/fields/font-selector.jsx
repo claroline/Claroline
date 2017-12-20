@@ -10,7 +10,7 @@ import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx
 
 const FontSelector = props =>
   <FormGroup
-    controlId={props.controlId}
+    id={props.controlId}
     label={trans('font', {}, 'theme')}
   >
     <div>

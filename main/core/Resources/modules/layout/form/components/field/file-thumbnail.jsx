@@ -136,7 +136,6 @@ Actions.propTypes = {
 export const FileThumbnail = props =>
   <span
     className="file-thumbnail"
-    onClick={() => {}}
   >
     <span className="file-thumbnail-topbar">
       <Actions

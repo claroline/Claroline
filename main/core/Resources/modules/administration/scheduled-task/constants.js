@@ -7,12 +7,12 @@ export const VIEW_MESSAGE_FORM = 'message_form_view'
 export const taskTypes = [
   {
     type: 'mail',
-    name: t('mail'),
+    label: t('mail'),
     icon: 'fa fa-at'
   },
   {
     type: 'message',
-    name: t('message'),
+    label: t('message'),
     icon: 'fa fa-envelope'
   }
 ]

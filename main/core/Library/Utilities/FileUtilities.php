@@ -272,4 +272,9 @@ class FileUtilities
     {
         return $this->om->getRepository('ClarolineCoreBundle:File\PublicFile')->findBySourceType($type);
     }
+
+    public function getContents(PublicFile $file)
+    {
+        return file_get_contents($this->filesDir.DIRECTORY_SEPARATOR.$file->getUrl());
+    }
 }

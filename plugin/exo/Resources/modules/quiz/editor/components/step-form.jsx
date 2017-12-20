@@ -8,16 +8,16 @@ import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx
 const StepForm = props =>
   <fieldset>
     <TextGroup
-      controlId={`step-${props.id}-title`}
+      id={`step-${props.id}-title`}
       label={t('title')}
       value={props.title}
       onChange={text => props.onChange({title: text})}
     />
 
     <HtmlGroup
-      controlId={`step-${props.id}-description`}
+      id={`step-${props.id}-description`}
       label={t('description')}
-      content={props.description}
+      value={props.description}
       onChange={text => props.onChange({description: text})}
     />
   </fieldset>

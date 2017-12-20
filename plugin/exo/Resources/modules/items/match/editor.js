@@ -209,7 +209,7 @@ function validate(item) {
   // at least one solution
   if (item.solutions.length === 0) {
     errors.solutions = tex('match_no_solution')
-  } else if (undefined !== item.solutions.find(solution => chain(solution.score, [notBlank, number]))) {
+  } else if (undefined !== item.solutions.find(solution => chain(solution.score, {}, [notBlank, number]))) {
     // each solution should have a valid score
     errors.solutions = tex('match_score_not_valid')
   } else if (undefined === item.solutions.find(solution => solution.score > 0)) {
@@ -223,7 +223,7 @@ function validate(item) {
   }
 
   // empty penalty
-  if (chain(item.penalty, [notBlank, number])) {
+  if (chain(item.penalty, {}, [notBlank, number])) {
     errors.items = tex('match_penalty_not_valid')
   }
 

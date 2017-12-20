@@ -254,6 +254,7 @@
     "date_range.format.with_hours": "d/m/Y H:i:s",
     "date_range.from": "",
     "date_range.js_format": "DD/MM/YYYY",
+    "date_range.js_format.with_hours": "DD/MM/YYYY HH:MM:SS",
     "date_range.last_month": "",
     "date_range.last_school_year": "",
     "date_range.last_seven_days": "",

@@ -10,7 +10,6 @@ use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Icap\BibliographyBundle\Entity\BookReference;
 use Icap\BibliographyBundle\Form\BookReferenceType;
 use Icap\BibliographyBundle\Manager\BookReferenceManager;
@@ -126,13 +125,10 @@ class BibliographyListener
     public function onOpen(OpenResourceEvent $event)
     {
         $bookReference = $event->getResource();
-        $collection = new ResourceCollection([$bookReference->getResourceNode()]);
-        $isGranted = $this->container->get('security.authorization_checker')->isGranted('EDIT', $collection);
         $content = $this->container->get('templating')->render(
-            'IcapBibliographyBundle:BookReference:index.html.twig',
+            'IcapBibliographyBundle:BookReference:open.html.twig',
             [
                 '_resource' => $bookReference,
-                'isEditGranted' => $isGranted,
             ]
         );
         $response = new Response($content);

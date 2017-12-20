@@ -1,18 +1,19 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
 
+import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox.jsx'
 import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
 
 const CheckGroup = props =>
   <div className="form-group check-group">
     <Checkbox
-      id={props.checkId}
-      checked={props.checked}
+      id={props.id}
+      checked={props.value}
       disabled={props.disabled}
       label={props.label}
       labelChecked={props.labelChecked}
-      onChange={checked => props.onChange(checked)}
+      onChange={props.onChange}
     />
 
     {props.help &&
@@ -20,19 +21,14 @@ const CheckGroup = props =>
     }
   </div>
 
-CheckGroup.propTypes = {
-  checkId: T.string.isRequired,
-  label: T.string.isRequired,
-  labelChecked: T.string,
-  checked: T.bool.isRequired,
-  disabled: T.bool,
-  onChange: T.func.isRequired,
-  help: T.string
-}
-
-CheckGroup.defaultProps = {
-  disabled: false
-}
+implementPropTypes(CheckGroup, FormGroupWithFieldTypes, {
+  // more precise value type
+  value: T.bool,
+  // custom props
+  labelChecked: T.string
+}, {
+  value: false
+})
 
 export {
   CheckGroup

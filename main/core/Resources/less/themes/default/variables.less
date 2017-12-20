@@ -17,11 +17,12 @@
 
 @font-size-modifier:      1;
 
-@box-shadow-base:         0 0 2px rgba(0, 0, 0, 0.15);
-@component-margin-bottom: @line-height-computed;
+@box-shadow-base:               0 0 2px rgba(0, 0, 0, 0.15);
+@component-margin-bottom:       @line-height-computed; // ~20px
+@component-margin-bottom-small: floor(@line-height-computed / 2); // ~10px
 
 // react strips whitespaces, so we need to move icons to avoid from text
-@icon-text-spacer: 7px;
+@icon-text-spacer:     7px;
 @icon-dropdown-spacer: 15px;
 
 @images-path: "images/";
@@ -29,12 +30,14 @@
 // -
 // Z-indexes
 // ---
-@zindex-sidebar:    @zindex-navbar-fixed - 1;
+@zindex-sidebar:       @zindex-navbar-fixed - 1;
 // z-index for full screen pages.
 // we want to pass over navbars but under tooltips, popovers and modals
 // modify with caution !
-@zindex-fullscreen:  1035;
-@zindex-list-search: @zindex-popover;
+@zindex-fullscreen:    1035;
+@zindex-list-search:   @zindex-popover;
+@zindex-flying-alerts: @zindex-modal + 10;
+
 
 // -
 // Application
@@ -47,6 +50,7 @@
 // ---
 @login-bg-image:  "@{images-path}login-bg.jpg"; // will fallback on @body-bg if theme has no image
 @login-max-width: 740px;
+
 
 // -
 // Header
@@ -125,6 +129,42 @@
 
 
 // -
+// Flying alerts
+// ---
+@flying-alert-opacity:        .8; // becomes 1 on alert hover
+@flying-alert-width:          400px;
+@flying-alert-padding:        5px;
+@flying-alert-border-radius:  @panel-border-radius;
+@flying-alert-box-shadow:     0 0 3px rgba(0,0,0,.5); // same as topbar
+@flying-alert-margin-bottom:  10px;
+@flying-alert-icon-size:      32px;
+
+// variants
+@flying-alert-primary-color:  white;
+@flying-alert-primary-bg:     @brand-primary;
+@flying-alert-primary-border: @flying-alert-primary-bg;
+
+@flying-alert-success-color:  white;
+@flying-alert-success-bg:     @brand-success;
+@flying-alert-success-border: @flying-alert-success-bg;
+
+@flying-alert-warning-color:  white;
+@flying-alert-warning-bg:     @brand-warning;
+@flying-alert-warning-border: @flying-alert-warning-bg;
+
+@flying-alert-error-color:    white;
+@flying-alert-error-bg:       @brand-danger;
+@flying-alert-error-border:   @flying-alert-error-bg;
+
+@flying-alert-info-color:     white;
+@flying-alert-info-bg:        @brand-info;
+@flying-alert-info-border:    @flying-alert-info-bg;
+
+@flying-alert-pending-color:  white;
+@flying-alert-pending-bg:     #666;
+@flying-alert-pending-border: @flying-alert-pending-bg;
+
+// -
 // Summaries
 //
 // As summaries can have very different forms and usage (eg. path, quiz)
@@ -137,6 +177,7 @@
 @summary-bg:                #262626;
 @summary-color:             white;
 @summary-border-radius:     0;
+@summary-box-shadow:        0 0 4px 0 rgba(0, 0, 0, 0.4);
 @summary-box-shadow-v:      2px 0 4px 0 rgba(0, 0, 0, 0.4); // box shadow for vertical summaries
 @summary-box-shadow-h:      0 2px 4px 0 rgba(0, 0, 0, 0.4); // box shadow for horizontal summaries
 
@@ -169,7 +210,7 @@
 // -
 // Forms
 // ---
-@help-block-color:          lighten(@text-color, 25%); // lighten the text to add some for contrast
+@help-block-color:          @brand-info;
 @help-block-font-size:      12px;
 
 // Labels
@@ -333,3 +374,9 @@
 @user-message-border:        @panel-default-border;
 @user-message-inner-border:  @panel-default-border;
 @user-message-border-radius: @border-radius-large;
+
+
+// -
+// Thumbnails
+// ---
+@thumbnail-box-shadow: @box-shadow-base;

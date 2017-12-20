@@ -1,7 +1,8 @@
 import cloneDeep from 'lodash/cloneDeep'
 
 import {makeReducer} from '#/main/core/utilities/redux'
-import {makeListReducer} from '#/main/core/layout/list/reducer'
+import {makePageReducer} from '#/main/core/layout/page/reducer'
+import {makeListReducer} from '#/main/core/data/list/reducer'
 
 import {
   WORKSPACE_ADD_MANAGER,
@@ -26,8 +27,10 @@ const workspaceReducer = makeReducer([], {
   }
 })
 
-const reducer = makeListReducer({
-  data: workspaceReducer
+const reducer = makePageReducer({}, {
+  workspaces: makeListReducer('workspaces', {}, {
+    data: workspaceReducer
+  })
 })
 
 export {

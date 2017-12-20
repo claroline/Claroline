@@ -250,7 +250,7 @@ function validate(pair) {
   const errors = {}
 
   // penalty should be greater or equal to 0
-  if (chain(pair.penalty, [notBlank, number])) {
+  if (chain(pair.penalty, {}, [notBlank, number])) {
     errors.item = tex('penalty_not_valid')
   }
 
@@ -268,12 +268,12 @@ function validate(pair) {
   // solutions and odd
   if (pair.solutions.length > 0) {
     // odd score not empty and valid number
-    if (undefined !== pair.solutions.find(solution => solution.itemIds.length === 1 && chain(solution.score, [notBlank, number]) && solution.score > 0)) {
+    if (undefined !== pair.solutions.find(solution => solution.itemIds.length === 1 && chain(solution.score, {}, [notBlank, number]) && solution.score > 0)) {
       errors.odd = tex('odd_score_not_valid')
     }
 
     // no pair with no score
-    if (undefined !== pair.solutions.find(solution => solution.itemIds.length === 2 && chain(solution.score, [notBlank, number]))) {
+    if (undefined !== pair.solutions.find(solution => solution.itemIds.length === 2 && chain(solution.score, {}, [notBlank, number]))) {
       errors.solutions = tex('solution_score_not_valid')
     }
 

@@ -31,8 +31,7 @@ class AnswerRow extends Component {
             <div className="feedback-container">
               <Textarea
                 id={`feedback-${this.props.id}-data`}
-                title={tex('response')}
-                content={this.props.feedback ? `${this.props.feedback}` : ''}
+                value={this.props.feedback}
                 onChange={(text) => this.props.updateFeedback(this.props.id, text)}
               />
             </div>

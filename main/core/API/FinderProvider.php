@@ -20,14 +20,9 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class FinderProvider
 {
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
-
-    /**
-     * @var SerializerProvider
-     */
+    /** @var SerializerProvider */
     private $serializer;
 
     /**
@@ -86,16 +81,40 @@ class FinderProvider
         return $this->finders[$class];
     }
 
-    public function search($class, array $queryParams = [], array $serializerOptions = [])
+    /**
+     * Builds and fires the query for a given class. The result will be serialized afterwards.
+     *
+     * @param string $class
+     * @param array  $finderParams
+     * @param array  $serializerOptions
+     *
+     * @return array
+     */
+    public function search($class, array $finderParams = [], array $serializerOptions = [])
     {
         // get search params
-        $filters = isset($queryParams['filters']) ? $this->parseFilters($queryParams['filters']) : [];
-        $sortBy = isset($queryParams['sortBy']) ? $this->parseSortBy($queryParams['sortBy']) : null;
-        $page = isset($queryParams['page']) ? (int) $queryParams['page'] : 0;
-        $limit = isset($queryParams['limit']) ? (int) $queryParams['limit'] : -1;
+        $filters = isset($finderParams['filters']) ? $this->parseFilters($finderParams['filters']) : [];
+        $sortBy = isset($finderParams['sortBy']) ? $this->parseSortBy($finderParams['sortBy']) : null;
+        $page = isset($finderParams['page']) ? (int) $finderParams['page'] : 0;
+        $limit = isset($finderParams['limit']) ? (int) $finderParams['limit'] : -1;
 
-        $data = $this->fetch($class, $page, $limit, $filters, $sortBy);
-        $count = $this->fetch($class, $page, $limit, $filters, $sortBy, true);
+        // these filters are not configurable/displayed in UI
+        // it's mostly used for access restrictions or entity collections
+        $hiddenFilters = isset($finderParams['hiddenFilters']) ? $this->parseFilters($finderParams['hiddenFilters']) : [];
+
+        $queryFilters = array_merge_recursive($filters, $hiddenFilters);
+
+        // count the total results (without pagination)
+        $count = $this->fetch($class, $page, $limit, $queryFilters, $sortBy, true);
+        // get the list of data for the current search and page
+        $data = $this->fetch($class, $page, $limit, $queryFilters, $sortBy);
+
+        if (0 < $count && empty($data)) {
+            // search should have returned results, but we have requested a non existent page => get the last page
+            $page = ceil($count / $limit) - 1;
+            // load last page data
+            $data = $this->fetch($class, $page, $limit, $queryFilters, $sortBy);
+        }
 
         return [
             'data' => array_map(function ($result) use ($serializerOptions) {
@@ -109,13 +128,25 @@ class FinderProvider
         ];
     }
 
+    /**
+     * Builds and fires the query for a given class. There will be no serialization here.
+     *
+     * @param string     $class
+     * @param int        $page
+     * @param int        $limit
+     * @param array      $filters
+     * @param array|null $sortBy
+     * @param bool       $count
+     *
+     * @return mixed
+     */
     public function fetch($class, $page, $limit, array $filters, array $sortBy = null, $count = false)
     {
         try {
             /** @var QueryBuilder $qb */
             $qb = $this->om->createQueryBuilder();
 
-            $qb->select($count ? 'count(distinct obj)' : 'distinct obj')
+            $qb->select($count ? 'COUNT(DISTINCT obj)' : 'DISTINCT obj')
                ->from($class, 'obj');
 
             // filter query - let's the finder implementation process the filters to configure query
@@ -139,6 +170,10 @@ class FinderProvider
         }
     }
 
+    /**
+     * @param QueryBuilder $qb
+     * @param array|null   $sortBy
+     */
     private function sortResults(QueryBuilder $qb, array $sortBy = null)
     {
         if (!empty($sortBy) && !empty($sortBy['property']) && 0 !== $sortBy['direction']) {
@@ -180,6 +215,13 @@ class FinderProvider
         ];
     }
 
+    /**
+     * Properly convert the filters (boolean or integer for instance when they're displayed as string).
+     *
+     * @param array $filters
+     *
+     * @return array
+     */
     private function parseFilters(array $filters)
     {
         $parsed = [];

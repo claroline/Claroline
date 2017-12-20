@@ -77,7 +77,7 @@
                             </div>
                             <div>
                                 {% if not creator.isRemoved() %}
-                                    <a href="{{path('claro_profile_view', {'user': creator.getId()})}}">
+                                    <a href="{{path('claro_user_profile', {'user': creator.getPublicUrl()})}}">
                                 {% endif %}
 
                                 {{ message.getAuthor() }}

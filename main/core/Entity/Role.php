@@ -81,6 +81,8 @@ class Role implements RoleInterface
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     mappedBy="roles"
      * )
+     *
+     * @var ArrayCollection
      */
     protected $users;
 
@@ -121,6 +123,8 @@ class Role implements RoleInterface
      *     targetEntity="Claroline\CoreBundle\Entity\Group",
      *     mappedBy="roles"
      * )
+     *
+     * @var ArrayCollection
      */
     protected $groups;
 
@@ -281,24 +285,33 @@ class Role implements RoleInterface
         return $this->users;
     }
 
+    /**
+     * @param User $user
+     */
     public function addUser(User $user)
     {
         $this->users->add($user);
 
-        if ($user->hasRole($this)) {
+        if (!$user->hasRole($this)) {
             $user->addRole($this);
         }
     }
 
+    /**
+     * @param Group $group
+     */
     public function addGroup(Group $group)
     {
         $this->groups->add($group);
 
-        if ($group->hasRole($this)) {
+        if (!$group->hasRole($this)) {
             $group->addRole($this);
         }
     }
 
+    /**
+     * @param User $user
+     */
     public function removeUser(User $user)
     {
         $this->users->removeElement($user);
@@ -308,6 +321,9 @@ class Role implements RoleInterface
         }
     }
 
+    /**
+     * @param Group $group
+     */
     public function removeGroup(Group $group)
     {
         $this->groups->removeElement($group);

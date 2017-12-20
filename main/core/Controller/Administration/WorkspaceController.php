@@ -20,6 +20,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -61,16 +62,23 @@ class WorkspaceController extends Controller
 
     /**
      * @EXT\Template
+     * @EXT\Route("", name="claro_admin_workspace_list", options={"expose"=true})
      *
      * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
+        $filters = $request->query->get('filters');
+        if ($filters) {
+            $filters = ['model' => false, 'personal' => false];
+        }
+
         return [
             'workspaces' => $this->finder->search(
-                'Claroline\CoreBundle\Entity\Workspace\Workspace', [
+                'Claroline\CoreBundle\Entity\Workspace\Workspace',
+                [
                     'limit' => 20,
-                    'filters' => ['model' => false, 'personal' => false],
+                    'filters' => $filters,
                     'sortBy' => 'name',
                 ]
             ),

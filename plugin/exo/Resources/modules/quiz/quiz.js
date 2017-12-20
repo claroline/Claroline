@@ -11,7 +11,7 @@ import {makeRouter} from './router'
 import {makeSaveGuard} from './editor/save-guard'
 import {registerDefaultItemTypes, getDecorators} from './../items/item-types'
 import {registerDefaultContentItemTypes} from './../contents/content-types'
-import {registerModalTypes} from '#/main/core/layout/modal'
+import {registerModals} from '#/main/core/layout/modal'
 
 import {MODAL_ADD_ITEM, AddItemModal} from './editor/components/modal/add-item-modal.jsx'
 import {MODAL_IMPORT_ITEMS, ImportItemsModal} from './editor/components/modal/import-items-modal.jsx'
@@ -26,7 +26,7 @@ export class Quiz {
     registerDefaultContentItemTypes()
 
     // register modals
-    registerModalTypes([
+    registerModals([
       [MODAL_ADD_ITEM, AddItemModal],
       [MODAL_IMPORT_ITEMS, ImportItemsModal],
       [MODAL_ADD_CONTENT, AddContentModal],

@@ -1,0 +1,17 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ user.name | striptags | raw }}{% endblock %}
+
+{% block content %}
+    <div
+        class="user-profile-container"
+        data-user="{{ user | json_encode | raw | escape }}"
+        data-facets="{{ facets | json_encode | raw | escape }}"
+    ></div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-user-profile.js') }}"></script>
+{% endblock %}

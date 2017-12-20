@@ -9,6 +9,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.generic_serializer")
+ * This class is usefull for quick dev/prototype/simple objects but you shouldn't use it too much
  */
 class GenericSerializer
 {
@@ -45,6 +46,8 @@ class GenericSerializer
     public function deserialize($data, $object, array $options = [])
     {
         $properties = $this->getSerializableProperties($object, [self::INCLUDE_MANY_TO_ONE]);
+        //update the mapObjectToEntity method instead of doing this
+        $data = json_decode(json_encode($data));
 
         return $this->mapObjectToEntity(
             $properties,

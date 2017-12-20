@@ -3,8 +3,7 @@
 namespace Claroline\AnnouncementBundle\API\Serializer;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
-use Claroline\CoreBundle\API\Serializer\UserSerializer;
-use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\RoleRepository;

@@ -21,14 +21,12 @@ const MessageModal = props =>
         {props.message}
       </Alert>
     </Modal.Body>
-    <Modal.Footer>
-      <button
-        className="btn btn-primary"
-        onClick={() => props.fadeModal()}
-      >
-        {t('Ok')}
-      </button>
-    </Modal.Footer>
+    <button
+      className="modal-btn btn btn-primary"
+      onClick={() => props.fadeModal()}
+    >
+      {t('Ok')}
+    </button>
   </BaseModal>
 
 MessageModal.propTypes = {

@@ -162,10 +162,9 @@ class EventFormModal  extends Component {
             <div className="col-md-9">
               <Textarea
                 id="event-form-description"
-                content={this.state.description}
+                value={this.state.description}
                 onChange={text => this.updateEventProps('description', text)}
-              >
-              </Textarea>
+              />
             </div>
           </div>
 
@@ -282,10 +281,9 @@ class EventFormModal  extends Component {
             <div className="col-md-9">
               <Textarea
                 id="event-form-location-extra"
-                content={this.state.locationExtra}
+                value={this.state.locationExtra}
                 onChange={text => this.updateEventProps('locationExtra', text)}
-              >
-              </Textarea>
+              />
             </div>
           </div>
 

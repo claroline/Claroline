@@ -29,7 +29,8 @@ const PageAction = props =>
           {
             'disabled': props.disabled,
             'page-action-primary': props.primary,
-            'page-action-default': !props.primary
+            'page-action-danger': props.dangerous,
+            'page-action-default': !props.primary && !props.dangerous
           },
           props.className
         )}
@@ -47,7 +48,8 @@ const PageAction = props =>
           {
             'disabled': props.disabled,
             'page-action-primary': props.primary,
-            'page-action-default': !props.primary
+            'page-action-danger': props.dangerous,
+            'page-action-default': !props.primary && !props.dangerous
           },
           props.className
         )}
@@ -63,6 +65,7 @@ const PageAction = props =>
 PageAction.propTypes = {
   id: T.string.isRequired,
   primary: T.bool,
+  dangerous: T.bool,
   title: T.string.isRequired,
   icon: T.string.isRequired,
   disabled: T.bool,
@@ -81,7 +84,8 @@ PageAction.propTypes = {
 
 PageAction.defaultProps = {
   disabled: false,
-  primary: false
+  primary: false,
+  dangerous: false
 }
 
 /**
@@ -145,7 +149,7 @@ const MoreAction = props => {
         pullRight={true}
       >
         {0 !== unclassifiedActions.length &&
-          <MenuItem header={true}>{props.label}</MenuItem>
+          <MenuItem header={true}>{props.title}</MenuItem>
         }
 
         {unclassifiedActions.map((action, actionIndex) =>
@@ -182,7 +186,7 @@ const MoreAction = props => {
 }
 
 MoreAction.propTypes = {
-  label: T.string,
+  title: T.string,
   actions: T.arrayOf(T.shape({
     icon: T.string,
     label: T.string.isRequired,
@@ -195,7 +199,7 @@ MoreAction.propTypes = {
 }
 
 MoreAction.defaultProps = {
-  label: t('more_actions')
+  title: t('more_actions')
 }
 
 /**

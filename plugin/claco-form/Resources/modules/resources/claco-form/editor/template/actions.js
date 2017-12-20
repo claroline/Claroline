@@ -1,5 +1,4 @@
-import {generateUrl} from '#/main/core/fos-js-router'
-import {REQUEST_SEND} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/core/api/actions'
 import {trans} from '#/main/core/translation'
 import {actions as clacoFormActions} from '../../actions'
 import {actions as editorActions} from '../actions'
@@ -13,8 +12,8 @@ actions.saveTemplate = (template, useTemplate) => (dispatch, getState) => {
   formData.append('useTemplate', useTemplate ? 1 : 0)
 
   dispatch({
-    [REQUEST_SEND]: {
-      url: generateUrl('claro_claco_form_template_edit', {clacoForm: resourceId}),
+    [API_REQUEST]: {
+      url: ['claro_claco_form_template_edit', {clacoForm: resourceId}],
       request: {
         method: 'POST',
         body: formData

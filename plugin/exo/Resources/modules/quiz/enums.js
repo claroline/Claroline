@@ -18,10 +18,10 @@ export const quizTypes = [
 export const QUIZ_PICKING_DEFAULT = 'standard'
 export const QUIZ_PICKING_TAGS = 'tags'
 
-export const quizPicking = [
-  {value: QUIZ_PICKING_DEFAULT, label: tex('quiz_picking_steps')},
-  {value: QUIZ_PICKING_TAGS, label: tex('quiz_picking_tags')}
-]
+export const quizPicking = {
+  [QUIZ_PICKING_DEFAULT]: tex('quiz_picking_steps'),
+  [QUIZ_PICKING_TAGS]: tex('quiz_picking_tags')
+}
 
 export const NUMBERING_NONE = 'none'
 export const NUMBERING_LITTERAL = 'litteral'

@@ -49,11 +49,11 @@ class Association extends Component {
           {this.state.showFeedback &&
             <div className="feedback-container">
               <Textarea
+                id={`${this.props.association.itemId}-${this.props.association.setId}-feedback`}
+                value={this.props.association.feedback}
                 onChange={(value) => this.props.onChange(
                   actions.updateAssociation(this.props.association.setId, this.props.association.itemId, 'feedback', value)
                 )}
-                id={`${this.props.association.itemId}-${this.props.association.setId}-feedback`}
-                content={this.props.association.feedback}
               />
             </div>
           }
@@ -112,11 +112,11 @@ class Set extends Component {
         <div className="set-heading">
           <div className="text-fields">
             <Textarea
+              id={`${this.props.set.id}-data`}
+              value={this.props.set.data}
               onChange={(value) => this.props.onChange(
                 actions.updateSet(this.props.set.id, 'data', value)
               )}
-              id={`${this.props.set.id}-data`}
-              content={this.props.set.data}
             />
           </div>
 
@@ -222,11 +222,11 @@ let Item = props => {
     <div className="set-item answer-item">
       <div className="text-fields">
         <Textarea
+          id={`${props.item.id}-data`}
+          value={props.item.data}
           onChange={(value) => props.onChange(
             actions.updateItem(props.item.id, 'data', value, false)
           )}
-          id={`${props.item.id}-data`}
-          content={props.item.data}
         />
       </div>
       <div className="right-controls">
@@ -332,20 +332,20 @@ class Odd extends Component {
       <div className={classes('set-item answer-item', {'expected-answer' : this.props.solution.score > 0}, {'unexpected-answer': this.props.solution.score < 1})}>
         <div className="text-fields">
           <Textarea
+            id={`odd-${this.props.odd.id}-data`}
+            value={this.props.odd.data}
             onChange={(value) => this.props.onChange(
               actions.updateItem(this.props.odd.id, 'data', value, true)
             )}
-            id={`odd-${this.props.odd.id}-data`}
-            content={this.props.odd.data}
           />
           {this.state.showFeedback &&
             <div className="feedback-container">
               <Textarea
+                id={`odd-${this.props.odd.id}-feedback`}
+                value={this.props.solution.feedback}
                 onChange={ (value) => this.props.onChange(
                   actions.updateItem(this.props.odd.id, 'feedback', value, true)
                 )}
-                id={`odd-${this.props.odd.id}-feedback`}
-                content={this.props.solution.feedback}
               />
             </div>
           }

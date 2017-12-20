@@ -9,9 +9,9 @@ import {actions} from './editor.js'
 export const Words = props =>
   <fieldset className="words-editor">
     <CheckGroup
-      checkId={`item-${props.item.id}-_wordsCaseSensitive`}
+      id={`item-${props.item.id}-_wordsCaseSensitive`}
       label={tex('words_show_case_sensitive_option')}
-      checked={props.item._wordsCaseSensitive}
+      value={props.item._wordsCaseSensitive}
       onChange={checked =>
         props.onChange(actions.updateProperty('_wordsCaseSensitive', checked))
       }

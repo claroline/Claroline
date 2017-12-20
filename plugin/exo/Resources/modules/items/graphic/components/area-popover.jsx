@@ -83,15 +83,14 @@ export class AreaPopover extends Component {
 
         {this.state.showFeedback &&
           <FormGroup
-            controlId="area-feedback"
+            id="area-feedback"
             label={tex('feedback')}
             hideLabel={true}
             className="feedback-container form-last"
           >
             <Textarea
               id="graphic-popover-feedback"
-              title={tex('feedback')}
-              content={this.props.feedback}
+              value={this.props.feedback}
               onChange={this.props.onChangeFeedback}
             />
           </FormGroup>

@@ -2,20 +2,48 @@
 
 namespace Claroline\CoreBundle\API;
 
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
+use JVal\Validator;
 
 /**
  * @DI\Service("claroline.api.validator")
  */
 class ValidatorProvider
 {
+    /** @var string */
+    const CREATE = 'create';
+    /** @var string */
+    const UPDATE = 'update';
+    /** @var ObjectManager */
+    private $om;
+    /** @var SerializerProvider */
+    private $serializer;
+
     /**
      * The list of registered validators in the platform.
      *
      * @var array
      */
     private $validators = [];
+
+    /**
+     * GroupValidator constructor.
+     *
+     * @DI\InjectParams({
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
+     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     * })
+     *
+     * @param ObjectManager      $om
+     * @param SerializerProvider $serializer
+     */
+    public function __construct(ObjectManager $om, SerializerProvider $serializer)
+    {
+        $this->om = $om;
+        $this->serializer = $serializer;
+    }
 
     /**
      * Registers a new validator.
@@ -64,15 +92,64 @@ class ValidatorProvider
      *
      * @param string $class          - the class of the validator to use
      * @param mixed  $data           - the data to validate
+     * @param string $mode           - 'create' or 'update'
      * @param bool   $throwException - if true an InvalidDataException is thrown instead of returning the errors
      *
      * @return array - the list of validation errors
      *
      * @throws InvalidDataException
      */
-    public function validate($class, $data, $throwException = false)
+    public function validate($class, $data, $mode, $throwException = false)
     {
-        $errors = $this->get($class)->validate($data);
+        $schema = $this->serializer->getSchema($class);
+
+        //schema isn't always there yet
+        if ($schema) {
+            $validator = Validator::buildDefault();
+            $errors = $validator->validate((object) $data, $schema/*, 3rd param for uri resolution*/);
+
+            if (!empty($errors) && $throwException) {
+                throw new InvalidDataException(
+                    sprintf('Invalid data for "%s".', $class),
+                    $errors
+                );
+            }
+
+            if (count($errors) > 0) {
+                return $errors;
+            }
+        }
+
+        //validate uniques
+        $validator = $this->get($class);
+        //can be deduced from the mapping, but we won't know
+        //wich field is related to wich data prop in that case
+        $uniqueFields = $validator->getUniqueFields();
+        $errors = [];
+
+        foreach ($uniqueFields as $dataProp => $entityProp) {
+            $qb = $this->om->createQueryBuilder();
+
+            $qb->select('DISTINCT o')
+             ->from($class, 'o')
+             ->where("o.{$entityProp} LIKE :{$entityProp}")
+             ->setParameter($entityProp, $data[$dataProp]);
+
+            if ($mode === self::UPDATE) {
+                $qb->setParameter('uuid', $data['id'])
+                 ->andWhere('o.uuid != :uuid');
+            }
+
+            $objects = $qb->getQuery()->getResult();
+
+            if (count($objects) > 0) {
+                $errors[] = ['path' => $dataProp, 'message' => "{$entityProp} already exists and should be unique"];
+            }
+        }
+
+        //custom validation
+        $errors = array_merge($errors, $validator->validate($data));
+
         if (!empty($errors) && $throwException) {
             throw new InvalidDataException(
                 sprintf('Invalid data for "%s".', $class),

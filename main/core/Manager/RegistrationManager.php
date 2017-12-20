@@ -147,12 +147,19 @@ class RegistrationManager
         }
     }
 
-    public function loginUser($user, Request $request)
+    public function login($user)
     {
         //this is bad but I don't know any other way (yet)
         $providerKey = 'main';
         $token = new UsernamePasswordToken($user, $user->getPassword(), $providerKey, $user->getRoles());
         $this->tokenStorage->setToken($token);
+
+        return $token;
+    }
+
+    public function loginUser($user, Request $request)
+    {
+        $token = $this->login($user);
         //a bit hacky I know ~
         return $this->authenticationHandler->onAuthenticationSuccess($request, $token);
     }

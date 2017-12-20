@@ -1286,4 +1286,10 @@ class RoleManager
 
         return $operationExecuted;
     }
+
+    public function save(Role $role)
+    {
+        $this->om->persist($role);
+        $this->om->flush();
+    }
 }

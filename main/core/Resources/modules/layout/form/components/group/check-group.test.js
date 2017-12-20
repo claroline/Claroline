@@ -12,8 +12,8 @@ describe('<CheckGroup/>', () => {
   })
   afterEach(spyConsole.restore)
 
-  const typedProps    = ['checkId', 'label', 'checked', 'onChange', 'labelChecked', 'help']
-  const requiredProps = ['checkId', 'label', 'checked', 'onChange']
+  const typedProps    = ['id', 'label', 'value', 'onChange', 'labelChecked', 'help']
+  const requiredProps = ['id', 'label', 'value', 'onChange']
 
   it('has required props', () => {
     shallow(
@@ -26,10 +26,10 @@ describe('<CheckGroup/>', () => {
   it('has typed props', () => {
     shallow(
       React.createElement(CheckGroup, {
-        checkId: true,
+        id: true,
         label: 123,
         labelChecked: 123,
-        checked: [],
+        value: [],
         onChange: 'foo',
         help: []
       })
@@ -41,9 +41,9 @@ describe('<CheckGroup/>', () => {
   it('renders a checkbox with a label', () => {
     const group = shallow(
       React.createElement(CheckGroup, {
-        checkId: 'ID',
+        id: 'ID',
         label: 'LABEL',
-        checked: true,
+        value: true,
         onChange: () => {}
       })
     )
@@ -64,10 +64,10 @@ describe('<CheckGroup/>', () => {
   it('displays an help text if any', () => {
     const group = mount(
       React.createElement(CheckGroup, {
-        checkId: 'ID',
+        id: 'ID',
         label: 'LABEL',
         help: 'HELP',
-        checked: true,
+        value: true,
         onChange: () => {}
       })
     )
@@ -81,9 +81,9 @@ describe('<CheckGroup/>', () => {
 
     const group = mount(
       React.createElement(CheckGroup, {
-        checkId: 'ID',
+        id: 'ID',
         label: 'LABEL',
-        checked: true,
+        value: true,
         onChange: checked => isChecked = checked
       })
     )

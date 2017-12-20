@@ -9,16 +9,16 @@ import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx
 const ContentItemForm = props =>
   <form>
     <TextGroup
-      controlId={`item-${props.item.id}-title`}
+      id={`item-${props.item.id}-title`}
       label={t('title')}
       value={props.item.title || ''}
       onChange={text => props.onChange('title', text)}
     />
 
     <HtmlGroup
-      controlId={`item-${props.item.id}-description`}
+      id={`item-${props.item.id}-description`}
       label={t('description')}
-      content={props.item.description || ''}
+      value={props.item.description || ''}
       onChange={text => props.onChange('description', text)}
     />
 

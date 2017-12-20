@@ -1,6 +1,7 @@
 import {makeActionCreator} from '#/main/core/utilities/redux'
+import {getDataQueryString} from '#/main/core/data/list/utils'
 
-import {REQUEST_SEND} from '#/main/core/api/actions'
+import {API_REQUEST} from '#/main/core/api/actions'
 
 export const THEMES_REMOVE    = 'THEMES_REMOVE'
 export const THEMES_REBUILD   = 'THEMES_REBUILD'
@@ -17,13 +18,13 @@ actions.editTheme = makeActionCreator(THEME_EDIT, 'theme')
 actions.resetThemeForm = makeActionCreator(THEME_FORM_RESET)
 
 actions.saveTheme = (theme) => ({
-  [REQUEST_SEND]: {
-    route: ['claro_theme_update', {id: theme.id}],
+  [API_REQUEST]: {
+    url: ['apiv2_theme_update', {id: theme.id}],
     request: {
       method: 'PUT',
       body: JSON.stringify(theme)
     },
-    success: (data) => actions.updateTheme(data)
+    success: (data, dispatch) => dispatch(actions.updateTheme(data))
   }
 })
 
@@ -31,13 +32,12 @@ actions.deleteThemes = (themes) => {
   const themeIds = themes.map(theme => theme.id)
 
   return {
-    [REQUEST_SEND]: {
-      route: ['claro_themes_delete'],
+    [API_REQUEST]: {
+      url: ['apiv2_theme_delete_bulk'] + getDataQueryString(themes),
       request: {
-        method: 'DELETE',
-        body: JSON.stringify(themeIds)
+        method: 'DELETE'
       },
-      success: () => actions.removeThemes(themeIds)
+      success: (data, dispatch) => dispatch(actions.removeThemes(themeIds))
     }
   }
 }

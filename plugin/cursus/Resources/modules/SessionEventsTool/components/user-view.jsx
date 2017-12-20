@@ -7,9 +7,9 @@ import {makeModal} from '#/main/core/layout/modal'
 import {actions} from '../actions'
 import {selectors} from '../selectors'
 import {registrationStatus} from '../enums'
-import {actions as listActions} from '#/main/core/layout/list/actions'
-import {select as listSelect} from '#/main/core/layout/list/selectors'
-import {DataList} from '#/main/core/layout/list/components/data-list.jsx'
+import {actions as listActions} from '#/main/core/data/list/actions'
+import {select as listSelect} from '#/main/core/data/list/selectors'
+import {DataList} from '#/main/core/data/list/components/data-list.jsx'
 
 class UserView extends Component {
   constructor(props) {

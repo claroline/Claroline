@@ -7,9 +7,9 @@ import {makeModal, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {selectors} from '../selectors'
 import {actions} from '../actions'
 import {registrationTypes} from '../enums'
-import {actions as listActions} from '#/main/core/layout/list/actions'
-import {select as listSelect} from '#/main/core/layout/list/selectors'
-import {DataList} from '#/main/core/layout/list/components/data-list.jsx'
+import {actions as listActions} from '#/main/core/data/list/actions'
+import {select as listSelect} from '#/main/core/data/list/selectors'
+import {DataList} from '#/main/core/data/list/components/data-list.jsx'
 
 class ManagerView extends Component {
   constructor(props) {

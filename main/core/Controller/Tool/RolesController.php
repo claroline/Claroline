@@ -312,11 +312,6 @@ class RolesController extends Controller
      *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\User",
-     *     options={"orderable"=true}
-     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredUsers.html.twig")
      */
     public function unregisteredUserListAction($page, $search, Workspace $workspace, $max, $order, $direction)
@@ -358,11 +353,6 @@ class RolesController extends Controller
      *     name="claro_workspace_unregistered_group_list_search",
      *     defaults={"page"=1, "max"=50, "order"="id", "direction"= "ASC"},
      *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\Group",
-     *     options={"orderable"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredGroups.html.twig")
      */
@@ -538,11 +528,6 @@ class RolesController extends Controller
      *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\User",
-     *     options={"orderable"=true}
-     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsers.html.twig")
      */
     public function usersListAction(Workspace $workspace, $page, $search, $max, $order, $direction = 'ASC')
@@ -620,11 +605,6 @@ class RolesController extends Controller
      *     class="ClarolineCoreBundle:Role",
      *     options={"multipleIds"=true, "isRequired"=false, "name"="roleIds"}
      * )
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\Group",
-     *     options={"orderable"=true}
-     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceGroups.html.twig")
      */
     public function groupsListAction(Workspace $workspace, $page, $search, $max, $order, $direction)
@@ -677,11 +657,6 @@ class RolesController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:usersOfGroup.html.twig")
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\User",
-     *     options={"orderable"=true}
-     * )
      */
     public function usersOfGroupAction(
         Workspace $workspace,

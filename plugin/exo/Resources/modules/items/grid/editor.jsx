@@ -439,7 +439,7 @@ const Grid = props =>
       {props.item.score.type === SCORE_FIXED &&
         <div className="sub-fields">
           <FormGroup
-            controlId={`item-${props.item.id}-fixedSuccess`}
+            id={`item-${props.item.id}-fixedSuccess`}
             label={tex('fixed_score_on_success')}
             error={get(props.item, '_errors.score.success')}
             warnOnly={!props.validating}
@@ -457,7 +457,7 @@ const Grid = props =>
             />
           </FormGroup>
           <FormGroup
-            controlId={`item-${props.item.id}-fixedFailure`}
+            id={`item-${props.item.id}-fixedFailure`}
             label={tex('fixed_score_on_failure')}
             error={get(props.item, '_errors.score.failure')}
             warnOnly={!props.validating}
@@ -480,7 +480,7 @@ const Grid = props =>
 
     <FormGroup
       className="grid-size"
-      controlId={`table-${props.item.id}-rows`}
+      id={`table-${props.item.id}-rows`}
       label={tex('grid_table_size')}
     >
       <div className="row">
@@ -521,7 +521,7 @@ const Grid = props =>
     </FormGroup>
 
     <FormGroup
-      controlId={`table-${props.item.id}-border-width`}
+      id={`table-${props.item.id}-border-width`}
       label={tex('grid_table_border')}
     >
       <div className="input-group">

@@ -9,6 +9,8 @@ trait GroupsTrait
 {
     /**
      * Add an group.
+     *
+     * @param Group $group
      */
     public function addGroup(Group $group)
     {
@@ -21,6 +23,8 @@ trait GroupsTrait
 
     /**
      * Removes an group.
+     *
+     * @param Group $group
      */
     public function removeGroup(Group $group)
     {
@@ -33,6 +37,8 @@ trait GroupsTrait
 
     /**
      * Set the array directly.
+     *
+     * @param ArrayCollection|Group[] $groups
      */
     public function setGroups($groups)
     {
@@ -45,6 +51,8 @@ trait GroupsTrait
 
     /**
      * Get the groups.
+     *
+     * @return ArrayCollection|Group[]
      */
     public function getGroups()
     {

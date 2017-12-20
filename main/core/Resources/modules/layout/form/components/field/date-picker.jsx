@@ -4,11 +4,8 @@ import DatePicker from 'react-datepicker'
 import moment from 'moment'
 import 'react-datepicker/dist/react-datepicker.css'
 
+// class is required because we use refs inside the component
 class Date extends Component {
-  constructor(props) {
-    super(props)
-  }
-
   render() {
     return (
       <span>
@@ -19,9 +16,9 @@ class Date extends Component {
         }
         <DatePicker
           {...this.props}
+          ref={(c) => this._calendar = c}
           selected={this.props.value ? moment.utc(this.props.value) : null}
           onChange={date => this.props.onChange(moment.utc(date).format('YYYY-MM-DD\THH:mm:ss'))}
-          ref={(c) => this._calendar = c}
         />
       </span>
     )

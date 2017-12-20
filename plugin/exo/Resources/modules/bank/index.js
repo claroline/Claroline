@@ -1,10 +1,7 @@
-import merge  from 'lodash/merge'
-
-import {generateUrl} from '#/main/core/fos-js-router'
 import {bootstrap} from '#/main/core/utilities/app/bootstrap'
 
 import {registerDefaultItemTypes} from '#/plugin/exo/items/item-types'
-import {registerModalType} from '#/main/core/layout/modal'
+import {registerModal} from '#/main/core/layout/modal'
 
 // reducers
 import {reducer as apiReducer} from '#/main/core/api/reducer'
@@ -18,7 +15,7 @@ import {MODAL_SHARE, ShareModal} from '#/plugin/exo/bank/components/modal/share.
 registerDefaultItemTypes()
 
 // Register needed modals
-registerModalType(MODAL_SHARE, ShareModal)
+registerModal(MODAL_SHARE, ShareModal)
 
 // mount the react application
 bootstrap(
@@ -36,13 +33,5 @@ bootstrap(
     // generic reducers
     currentRequests: apiReducer,
     modal: modalReducer
-  },
-
-  // remap data-attributes set on the app DOM container
-  (initialData) => ({
-    currentUser: initialData.currentUser,
-    questions: merge({}, initialData.questions, {
-      fetchUrl: generateUrl('question_list')
-    })
-  })
+  }
 )

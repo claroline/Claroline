@@ -42,9 +42,6 @@ class Updater080000 extends Updater
         if (!$this->om->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName('resources_widget')) {
             $this->createResourcesWidget();
         }
-
-        $this->log('Resetting facet order...');
-        $this->container->get('claroline.manager.facet_manager')->resetFacetOrder();
     }
 
     private function setDisabledUserAsRemoved()
