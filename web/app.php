@@ -38,6 +38,7 @@ if (!$maintenanceMode || $authorized) {
     $kernel->handle($request)->send();
     //$kernel->terminate($request, $response);
 } else {
-    $url = $_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../maintenance.php';
-    header("Location: http://{$url}");
+    $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
+    $url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../maintenance.php';
+    header("Location: {$url}");
 }
