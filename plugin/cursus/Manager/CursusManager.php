@@ -125,6 +125,7 @@ class CursusManager
     private $cursusUserRepo;
     private $cursusWordRepo;
     private $documentModelRepo;
+    private $organizationRepo;
     private $reservationResourceRepo;
     private $sessionEventRepo;
     private $sessionEventSetRepo;
@@ -225,6 +226,7 @@ class CursusManager
         $this->cursusUserRepo = $om->getRepository('ClarolineCursusBundle:CursusUser');
         $this->cursusWordRepo = $om->getRepository('ClarolineCursusBundle:CursusDisplayedWord');
         $this->documentModelRepo = $om->getRepository('ClarolineCursusBundle:DocumentModel');
+        $this->organizationRepo = $om->getRepository('ClarolineCoreBundle:Organization\Organization');
         $this->reservationResourceRepo = $om->getRepository('FormaLibre\ReservationBundle\Entity\Resource');
         $this->sessionEventCommentRepo = $om->getRepository('ClarolineCursusBundle:SessionEventComment');
         $this->sessionEventRepo = $om->getRepository('ClarolineCursusBundle:SessionEvent');
@@ -5763,6 +5765,20 @@ class CursusManager
         }
 
         return $sessions;
+    }
+
+    /*************************
+     * Organizations methods *
+     *************************/
+
+    public function getAllOrganizations()
+    {
+        return $this->organizationRepo->findAll();
+    }
+
+    public function getOrganizationsByIds(array $ids)
+    {
+        return $this->om->findList('Claroline\CoreBundle\Entity\Organization\Organization', 'id', $ids);
     }
 
     /*******************
