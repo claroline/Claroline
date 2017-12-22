@@ -18,44 +18,61 @@ import {Optional} from '#/main/core/user/registration/components/optional.jsx'
 import {select} from '#/main/core/user/registration/selectors'
 import {actions} from '#/main/core/user/registration/actions'
 
-const RegistrationForm = props =>
-  <PageContainer id="user-registration">
-    <PageHeader
-      title={t('user_registration')}
-    />
+const RegistrationForm = props => {
+  return (
+    <PageContainer id="user-registration">
+      <PageHeader
+        key="header"
+        title={t('user_registration')}
+      />
 
-    <FormStepper
-      className="page-content"
-      submit={{
-        icon: 'fa fa-user-plus',
-        label: t('registration_confirm'),
-        action: () => props.register(props.user, props.termOfService)
-      }}
-      steps={[
-        {
-          path: '/account',
-          title: 'Compte utilisateur',
-          component: Required
-        }, {
-          path: '/options',
-          title: 'Configuration',
-          component: Optional
-        }, {
-          path: '/facet',
-          title: 'Facet title',
-          component: Facet
-        }
-      ]}
-      redirect={[
-        {from: '/', exact: true, to: '/account'}
-      ]}
-    />
-  </PageContainer>
+      <FormStepper
+        key="form"
+        className="page-content"
+        submit={{
+          icon: 'fa fa-user-plus',
+          label: t('registration_confirm'),
+          action: () => props.register(props.user, props.termOfService)
+        }}
+        steps={[].concat([
+          {
+            path: '/account',
+            title: 'Compte utilisateur',
+            component: Required
+          }, {
+            path: '/options',
+            title: 'Configuration',
+            component: Optional
+          }
+        ], props.facets.map(facet => ({
+          path: `/${facet.id}`,
+          title: facet.title,
+          component: () => {
+            const currentFacet = <Facet
+              facet={facet}
+            />
+
+            return currentFacet
+          }
+
+        })))}
+
+        redirect={[
+          {from: '/', exact: true, to: '/account'}
+        ]}
+      />
+    </PageContainer>
+  )
+}
 
 RegistrationForm.propTypes = {
   user: T.shape({
     // user type
   }).isRequired,
+  facets: T.arrayOf(T.shape({
+    id: T.string.isRequired,
+    title: T.string.isRequired
+  })),
   termOfService: T.string,
   register: T.func.isRequired
 }
@@ -63,6 +80,7 @@ RegistrationForm.propTypes = {
 const UserRegistration = connect(
   (state) => ({
     user: formSelect.data(formSelect.form(state, 'user')),
+    facets: select.facets(state),
     termOfService: select.termOfService(state),
     options: select.options(state)
   }),

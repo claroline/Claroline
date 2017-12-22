@@ -7,9 +7,11 @@ class ArrayUtils
     /**
      * This is more or less the equivalent of lodash set for array.
      *
-     * @param &$object - the array
-     * @param $keys    - the property path
-     * @param value    - the property value
+     * @param array  $object
+     * @param string $keys   - the property path
+     * @param $value
+     *
+     * @throws \Exception
      */
     public function set(array &$object, $keys, $value)
     {
@@ -33,11 +35,14 @@ class ArrayUtils
     /**
      * This is more or less the equivalent of lodash get for array.
      *
-     * @param &$object - the array
-     * @param $keys    - the property path
-     * @param value    - the property value
+     * @param array  $object - the array
+     * @param string $keys   - the property path
+     *
+     * @return mixed
+     *
+     * @throws \Exception
      */
-    public function get($object, $keys)
+    public function get(array $object, $keys)
     {
         $parts = explode('.', $keys);
         $key = array_shift($parts);

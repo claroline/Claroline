@@ -67,7 +67,7 @@ class FieldFacetValueSerializer
         $serialized = [
             'id' => $fieldFacetValue->getId(),
             'value' => $fieldFacetValue->getValue(),
-            'name' => $fieldFacetValue->getFieldFacet()->getPrettyName(),
+            'name' => $fieldFacetValue->getFieldFacet()->getName(),
         ];
 
         if (!in_array(static::OPTION_MINIMAL, $options)) {

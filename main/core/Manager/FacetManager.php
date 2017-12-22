@@ -72,26 +72,6 @@ class FacetManager
     }
 
     /**
-     * @deprecated
-     *
-     * @todo remove me
-     */
-    public function createFacet($name, $forceCreationForm = false, $isMain = false)
-    {
-        $this->om->startFlushSuite();
-        $count = $this->facetRepo->countFacets($isMain);
-        $facet = new Facet();
-        $facet->setName($name);
-        $facet->setIsMain($isMain);
-        $facet->setForceCreationForm($forceCreationForm);
-        $facet->setPosition($count);
-        $this->om->persist($facet);
-        $this->om->endFlushSuite();
-
-        return $facet;
-    }
-
-    /**
      * used by clacoForm Manager.
      *
      * @deprecated
@@ -101,9 +81,9 @@ class FacetManager
     public function createField($name, $isRequired, $type, ResourceNode $resourceNode = null)
     {
         $fieldFacet = new FieldFacet();
-        $fieldFacet->setName($name);
+        $fieldFacet->setLabel($name);
         $fieldFacet->setType($type);
-        $fieldFacet->setIsRequired($isRequired);
+        $fieldFacet->setRequired($isRequired);
         $fieldFacet->setResourceNode($resourceNode);
         $this->om->persist($fieldFacet);
         $this->om->flush();
@@ -229,9 +209,9 @@ class FacetManager
      */
     public function editField(FieldFacet $fieldFacet, $name, $isRequired, $type)
     {
-        $fieldFacet->setName($name);
+        $fieldFacet->setLabel($name);
         $fieldFacet->setType($type);
-        $fieldFacet->setIsRequired($isRequired);
+        $fieldFacet->setRequired($isRequired);
         $this->om->persist($fieldFacet);
         $this->om->flush();
 

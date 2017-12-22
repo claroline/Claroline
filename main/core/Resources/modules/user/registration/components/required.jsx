@@ -35,13 +35,17 @@ const Required = () =>
             type: 'email',
             label: t('email'),
             required: true,
-            uniqueCheck: ['apiv2_user_exist', {field: 'email'}]
+            options: {
+              unique: ['apiv2_user_exist', {field: 'email'}]
+            }
           }, {
             name: 'username',
             type: 'username',
             label: t('username'),
             required: true,
-            uniqueCheck: ['apiv2_user_exist', {field: 'username'}]
+            options: {
+              unique: ['apiv2_user_exist', {field: 'username'}]
+            }
           }, {
             name: 'plainPassword',
             type: 'password',

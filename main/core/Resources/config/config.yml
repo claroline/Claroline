@@ -114,7 +114,7 @@ plugin:
         - name: tasks_scheduling
           class: tasks
         - name: data_transfer
-          class: file
+          class: exchange
 
     widgets:
         - name: core_resource_logger

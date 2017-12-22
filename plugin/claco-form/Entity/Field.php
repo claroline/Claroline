@@ -169,6 +169,9 @@ class Field
         $this->type = $type;
     }
 
+    /**
+     * @return FieldFacet
+     */
     public function getFieldFacet()
     {
         return $this->fieldFacet;

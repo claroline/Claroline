@@ -31,7 +31,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  * that the user is anonymous and the self-registration is allowed by the
  * platform configuration.
  *
- * @EXT\Route("/register")
+ * @EXT\Route("/user/registration")
  */
 class RegistrationController extends Controller
 {

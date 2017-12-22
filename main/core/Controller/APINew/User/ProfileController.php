@@ -15,6 +15,8 @@ use Claroline\CoreBundle\API\Crud;
 use Claroline\CoreBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Controller\APINew\AbstractApiController;
+use Claroline\CoreBundle\Entity\Facet\Facet;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -23,14 +25,15 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * @EXT\Route("/profile")
  *
- * There is a thing named Link wich work through an event. See older version on github so we can
+ * There is a thing named Link which work through an event. See older version on github so we can
  * add it again
  */
 class ProfileController extends AbstractApiController
 {
+    /** @var ObjectManager */
+    private $om;
     /** @var Crud */
     private $crud;
-
     /** @var ProfileSerializer */
     private $serializer;
 
@@ -38,17 +41,21 @@ class ProfileController extends AbstractApiController
      * ProfileController constructor.
      *
      * @DI\InjectParams({
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
      *     "crud"       = @DI\Inject("claroline.api.crud"),
      *     "serializer" = @DI\Inject("claroline.serializer.profile")
      * })
      *
+     * @param ObjectManager     $om
      * @param Crud              $crud
      * @param ProfileSerializer $serializer
      */
     public function __construct(
+        ObjectManager $om,
         Crud $crud,
         ProfileSerializer $serializer
     ) {
+        $this->om = $om;
         $this->crud = $crud;
         $this->serializer = $serializer;
     }
@@ -85,16 +92,31 @@ class ProfileController extends AbstractApiController
     {
         $formData = $this->decodeRequest($request);
 
+        // dump current profile configuration (to know what to remove later)
+        /** @var Facet[] $facets */
+        $facets = $this->om->getRepository('ClarolineCoreBundle:Facet\Facet')->findAll();
+
+        $this->om->startFlushSuite();
+
+        // updates facets data
         $updatedFacets = [];
         foreach ($formData as $facetData) {
-            $updatedFacets[] = $this->crud->update(
+            $updated = $this->crud->update(
                 'Claroline\CoreBundle\Entity\Facet\Facet',
                 $facetData,
                 [Options::DEEP_DESERIALIZE]
             );
+            $updatedFacets[$updated->getId()] = $updated;
         }
 
-        // todo remove deleted
+        // removes deleted facets
+        foreach ($facets as $facet) {
+            if (empty($updated[$facet->getId()])) {
+                $this->crud->delete($facet);
+            }
+        }
+
+        $this->om->endFlushSuite();
 
         return new JsonResponse(
             $this->serializer->serialize()

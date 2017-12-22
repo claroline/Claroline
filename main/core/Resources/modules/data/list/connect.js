@@ -1,6 +1,5 @@
 import {connect} from 'react-redux'
-
-import {t} from '#/main/core/translation'
+import invariant from 'invariant'
 
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
@@ -21,6 +20,8 @@ import {select as listSelect} from '#/main/core/data/list/selectors'
 function mapStateToProps(state, ownProps) {
   // get the root of the list in the store
   const listState = listSelect.list(state, ownProps.name)
+
+  invariant(undefined !== listState, `Try to connect list on undefined store '${ownProps.name}'.`)
 
   const newProps = {
     loaded: listSelect.loaded(listState),
@@ -142,7 +143,7 @@ function mapDispatchToProps(dispatch, ownProps) {
  */
 function mergeProps(stateProps, dispatchProps, ownProps) {
   const asyncDecorator = (func) => {
-    if (!!ownProps.fetch) {
+    if (ownProps.fetch) {
       return (...args) => {
         // call original action
         func.apply(null, args)

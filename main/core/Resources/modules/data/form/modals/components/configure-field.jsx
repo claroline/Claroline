@@ -55,7 +55,7 @@ class ConfigureFieldModal extends Component {
             primary: true,
             fields: [
               {
-                name: 'name',
+                name: 'label',
                 type: 'string',
                 label: t('name'),
                 required: true

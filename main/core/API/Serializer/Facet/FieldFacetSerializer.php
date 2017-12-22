@@ -44,9 +44,9 @@ class FieldFacetSerializer
         if (in_array(Options::PROFILE_SERIALIZE, $options)) {
             $serialized = [
               'id' => $fieldFacet->getUuid(),
-              'name' => $fieldFacet->getPrettyName(),
+              'name' => $fieldFacet->getName(),
               'type' => $fieldFacet->getFieldType(),
-              'label' => $fieldFacet->getName(),
+              'label' => $fieldFacet->getLabel(),
               'required' => $fieldFacet->isRequired(),
             ];
 
@@ -70,7 +70,7 @@ class FieldFacetSerializer
             //PROFILE_SERIALIZE. See with @kitan
             $serialized = [
                 'id' => $fieldFacet->getId(),
-                'name' => $fieldFacet->getName(),
+                'name' => $fieldFacet->getLabel(),
                 'type' => $fieldFacet->getType(),
                 'translationKey' => $fieldFacet->getTypeTranslationKey(),
             ];
@@ -82,7 +82,7 @@ class FieldFacetSerializer
     public function deserialize(array $data, FieldFacet $field = null, array $options = [])
     {
         $this->sipe('id', 'setUuid', $data, $field);
-        $this->sipe('name', 'setName', $data, $field);
+        $this->sipe('label', 'setLabel', $data, $field);
         $this->sipe('type', 'setType', $data, $field);
         $this->sipe('required', 'setRequired', $data, $field);
         $this->sipe('options', 'setOptions', $data, $field);

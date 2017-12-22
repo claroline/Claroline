@@ -1,10 +1,10 @@
 
-const user = (state) => state.user
 const termOfService = (state) => state.termOfService
 const options = (state) => state.options
+const facets = (state) => state.facets
 
 export const select = {
-  user,
   termOfService,
-  options
+  options,
+  facets
 }

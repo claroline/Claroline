@@ -15,8 +15,6 @@ use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Accessor;
-use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -50,7 +48,7 @@ class FieldFacet
     /** @var int */
     const FILE_TYPE = 11;
     /** @var array */
-    protected static $types = [
+    private static $types = [
         'string' => self::STRING_TYPE,
         'float' => self::FLOAT_TYPE,
         'date' => self::DATE_TYPE,
@@ -68,28 +66,25 @@ class FieldFacet
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
      *
      * @var int
      */
-    protected $id;
+    private $id;
 
     /**
-     * @ORM\Column
+     * @ORM\Column(name="name")
      * @Assert\NotBlank()
-     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
      *
      * @var string
      */
-    protected $name;
+    private $label;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
      *
      * @var int
      */
-    protected $type;
+    private $type;
 
     /**
      * @ORM\ManyToOne(
@@ -102,70 +97,31 @@ class FieldFacet
      *
      * @todo should not be declared here (not used in ClacoForm)
      */
-    protected $panelFacet;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue",
-     *     mappedBy="fieldFacet",
-     *     cascade={"persist"}
-     * )
-     *
-     * @var ArrayCollection
-     */
-    protected $fieldsFacetValue;
+    private $panelFacet;
 
     /**
      * @ORM\Column(type="integer", name="position", nullable=true)
-     * @Groups({"api_facet_admin", "api_profile"})
      *
      * @var int
      */
-    protected $position;
-
-    /**
-     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
-     * @Accessor(getter="getInputType")
-     *
-     * @var string
-     */
-    protected $translationKey;
+    private $position;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",
      *     mappedBy="fieldFacet"
      * )
-     * @Groups({"api_facet_admin", "api_profile"})
-     * @ORM\OrderBy({"position" = "ASC"})
      *
      * @var ArrayCollection
      */
-    protected $fieldFacetChoices;
+    private $fieldFacetChoices;
 
     /**
-     * @Groups({"api_profile"})
-     * @Accessor(getter="getUserFieldValue")
-     *
-     * @var mixed
-     */
-    protected $userFieldValue;
-
-    /**
-     * @Groups({"api_profile"})
-     * @Accessor(getter="isEditable")
+     * @ORM\Column(name="isRequired", type="boolean")
      *
      * @var bool
      */
-    protected $isEditable;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @Groups({"api_profile", "api_facet_admin"})
-     *
-     * @var bool
-     */
-    protected $isRequired = false;
+    private $required = false;
 
     /**
      * @ORM\ManyToOne(
@@ -178,23 +134,31 @@ class FieldFacet
      *
      * @todo should not be declared here (not used in Profile)
      */
-    protected $resourceNode;
+    private $resourceNode;
 
     /**
      * @ORM\Column(type="json_array")
      *
      * @var array
      */
-    protected $options = [];
+    private $options = [];
 
     /**
      * Constructor.
      */
     public function __construct()
     {
+        $this->refreshUuid();
         $this->fieldsFacetValue = new ArrayCollection();
         $this->fieldFacetChoices = new ArrayCollection();
-        $this->refreshUuid();
+    }
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -218,27 +182,31 @@ class FieldFacet
     }
 
     /**
-     * @return int
+     * @return string
      */
-    public function getId()
+    public function getName()
     {
-        return $this->id;
+        $string = str_replace(' ', '-', $this->label); // Replaces all spaces with hyphens.
+        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+        $string = preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
+
+        return strtolower($string);
     }
 
     /**
-     * @param string $name
+     * @param string $label
      */
-    public function setName($name)
+    public function setLabel($label)
     {
-        $this->name = $name;
+        $this->label = $label;
     }
 
     /**
      * @return string
      */
-    public function getName()
+    public function getLabel()
     {
-        return $this->name;
+        return $this->label;
     }
 
     /**
@@ -249,20 +217,14 @@ class FieldFacet
         //if we pass a correct type name
         if (in_array($type, array_keys(static::$types))) {
             $this->type = static::$types[$type];
-
-            return $this;
-        }
-
-        //otherwise we use the integer
-        if (!in_array($type, static::$types)) {
+        } elseif (in_array($type, static::$types)) {
+            //otherwise we use the integer
+            $this->type = $type;
+        } else {
             throw new \InvalidArgumentException(
                 'Type must be a FieldFacet class constant'
             );
         }
-
-        $this->type = $type;
-
-        return $this;
     }
 
     /**
@@ -271,22 +233,6 @@ class FieldFacet
     public function getType()
     {
         return $this->type;
-    }
-
-    /**
-     * @return ArrayCollection
-     */
-    public function getFieldsFacetValue()
-    {
-        return $this->fieldsFacetValue;
-    }
-
-    /**
-     * @param FieldFacetValue $fieldFacetValue
-     */
-    public function addFieldFacet(FieldFacetValue $fieldFacetValue)
-    {
-        $this->fieldsFacetValue->add($fieldFacetValue);
     }
 
     /**
@@ -326,6 +272,8 @@ class FieldFacet
     }
 
     /**
+     * @deprecated
+     *
      * @return string
      */
     public function getTypeTranslationKey()
@@ -406,85 +354,19 @@ class FieldFacet
     }
 
     /**
-     * For serialization in user profile. It's easier that way.
-     * note for myself: do we need to remove it ?
-     *
-     * @param FieldFacetValue $val
-     */
-    public function setUserFieldValue(FieldFacetValue $val)
-    {
-        $this->userFieldValue = $val;
-    }
-
-    /**
-     * For serialization in user profile. It's easier that way.
-     * note for myself: do we need to remove it ?
-     *
-     * @return FieldFacetValue|null
-     */
-    public function getUserFieldValue()
-    {
-        return $this->userFieldValue ? $this->userFieldValue->getValue() : null;
-    }
-
-    /**
-     * For serialization in user profile. It's easier that way.
-     *
-     * @param bool $boolean
-     *                      note for myself: do we need to remove it ?
-     */
-    public function setIsEditable($boolean)
-    {
-        $this->isEditable = $boolean;
-    }
-
-    /**
-     * For serialization in user profile. It's easier that way.
-     * note for myself: do we need to remove it ?
-     *
-     * @return bool
-     */
-    public function isEditable()
-    {
-        return $this->isEditable;
-    }
-
-    /**
      * @return bool
      */
     public function isRequired()
     {
-        return $this->isRequired;
+        return $this->required;
     }
 
     /**
-     * @param bool $isRequired
+     * @param bool $required
      */
-    public function setIsRequired($isRequired)
+    public function setRequired($required)
     {
-        $this->isRequired = $isRequired;
-    }
-
-    /**
-     * @param bool $isRequired
-     *
-     * alias of setRequired
-     */
-    public function setRequired($isRequired)
-    {
-        $this->setIsRequired($isRequired);
-    }
-
-    /**
-     * @return string
-     */
-    public function getPrettyName()
-    {
-        $string = str_replace(' ', '-', $this->name); // Replaces all spaces with hyphens.
-        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-        $string = preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
-
-        return strtolower($string);
+        $this->required = $required;
     }
 
     /**

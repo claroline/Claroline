@@ -1560,5 +1560,7 @@
     "add_contact": "Ajouter aux contacts",
     "remove_contact": "Retirer des contacts",
     "never": "jamais",
-    "required": "requis"
+    "required": "requis",
+    "access_role_show": "Restreindre l'affichage par Roles",
+    "access_role_edit": "Restreindre l'édition par Roles"
 }

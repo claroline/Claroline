@@ -8,6 +8,7 @@ function getDefaultFacet() {
   return {
     id: 'main',
     title: t('general'),
+    position: 0,
     meta: {
       main: true
     },

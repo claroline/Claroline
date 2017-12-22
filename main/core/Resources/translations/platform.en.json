@@ -1535,5 +1535,7 @@
     "remove_contact": "Remove from contacts",
     "never": "never",
     "required": "required",
-    "import_headers": "List of available headers"
+    "import_headers": "List of available headers",
+    "access_role_show": "Restrict display by Roles",
+    "access_role_edit": "Restrict edition by Roles"
 }

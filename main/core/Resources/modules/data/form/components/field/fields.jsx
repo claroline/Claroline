@@ -14,10 +14,11 @@ import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button
 import {FormField} from '#/main/core/data/form/components/field.jsx'
 import {getCreatableTypes} from '#/main/core/data'
 
+
+// todo create working preview
 const FieldPreview = props =>
   <FormField
     {...props}
-    label={props.name}
     onChange={() => true}
   />
 

@@ -2087,11 +2087,10 @@ class ClacoFormManager
 
         $fieldFacet = $field->getFieldFacet();
         $newFieldFacet = new FieldFacet();
-        $newFieldFacet->setName($fieldFacet->getName());
+        $newFieldFacet->setLabel($fieldFacet->getLabel());
         $newFieldFacet->setType($fieldFacet->getType());
         $newFieldFacet->setPosition($fieldFacet->getPosition());
-        $newFieldFacet->setIsRequired($fieldFacet->isRequired());
-        $newFieldFacet->setIsEditable($fieldFacet->isEditable());
+        $newFieldFacet->setRequired($fieldFacet->isRequired());
         $newFieldFacet->setResourceNode($newNode);
         $this->om->persist($newFieldFacet);
         $links['fieldFacets'][$fieldFacet->getId()] = $newFieldFacet;

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository;
 
+use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -18,6 +19,14 @@ use Symfony\Component\Security\Core\Role\Role;
 
 class FacetRepository extends EntityRepository
 {
+    /**
+     * Find facets visible by the current User.
+     *
+     * @param TokenInterface $token
+     * @param bool           $isRegistration
+     *
+     * @return Facet[]
+     */
     public function findVisibleFacets(TokenInterface $token, $isRegistration = false)
     {
         // retrieves current user roles
@@ -29,8 +38,8 @@ class FacetRepository extends EntityRepository
         if (!in_array('ROLE_ADMIN', $roleNames)) {
             // filter query to only get accessible facets for the current roles
             $qb
-                ->join('f.roles', 'r')
-                ->where('r.name IN (:roles)')
+                ->leftJoin('f.roles', 'r')
+                ->where('(r.id IS NULL OR r.name IN (:roles))')
                 ->setParameter('roles', $roleNames);
         }
 
@@ -38,7 +47,7 @@ class FacetRepository extends EntityRepository
             $qb->andWhere('f.forceCreationForm = true');
         }
 
-        $qb->orderBy('f.main, f.position');
+        $qb->orderBy('f.main DESC, f.position');
 
         return $qb->getQuery()->getResult();
     }
@@ -66,20 +75,14 @@ class FacetRepository extends EntityRepository
     /**
      * @deprecated
      *
-     * @param bool $isMain
-     *
-     * @return mixed
+     * @return int
      */
-    public function countFacets($isMain = false)
+    public function countFacets()
     {
-        $isMain = !is_bool($isMain) ? $isMain === 'true' : $isMain;
-        $dql = '
-            SELECT COUNT(facet) FROM Claroline\CoreBundle\Entity\Facet\Facet facet
-            WHERE facet.main = :isMain
-        ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('isMain', $isMain);
-
-        return $query->getSingleScalarResult();
+        return $this->_em
+            ->createQuery('
+                SELECT COUNT(facet) FROM Claroline\CoreBundle\Entity\Facet\Facet facet
+            ')
+            ->getSingleScalarResult();
     }
 }

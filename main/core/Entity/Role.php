@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Facet\PanelFacetRole;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
@@ -93,14 +92,6 @@ class Role implements RoleInterface
      * )
      */
     protected $facets;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacetRole",
-     *     mappedBy="role"
-     * )
-     */
-    protected $panelFacetsRole;
 
     /**
      * @ORM\OneToMany(
@@ -197,7 +188,6 @@ class Role implements RoleInterface
         $this->resourceContext = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->facets = new ArrayCollection();
-        $this->panelFacetsRole = new ArrayCollection();
         $this->toolRights = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
         $this->profileProperties = new ArrayCollection();
@@ -437,11 +427,6 @@ class Role implements RoleInterface
         $name = $this->workspace ? '['.$this->workspace->getName().'] '.$this->name : $this->name;
 
         return "[{$this->getId()}]".$name;
-    }
-
-    public function addPanelFacetRole(PanelFacetRole $pfr)
-    {
-        $this->panelFacetsRole->add($pfr);
     }
 
     public function getIsReadOnly()

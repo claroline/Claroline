@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+import invariant from 'invariant'
 import get from 'lodash/get'
 import set from 'lodash/set'
 
@@ -64,6 +65,8 @@ const FormContainer = connect(
   (state, ownProps) => {
     // get the root of the form in the store
     const formState = select.form(state, ownProps.name)
+
+    invariant(undefined !== formState, `Try to connect form on undefined store '${ownProps.name}'.`)
 
     let data = select.data(formState)
     let errors = select.errors(formState)

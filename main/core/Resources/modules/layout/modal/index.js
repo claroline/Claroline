@@ -27,16 +27,16 @@ const modals = {
   [MODAL_IFRAME]: IframeModal
 }
 
-export function registerModal(type, component) {
+function registerModal(type, component) {
   invariant(!modals[type], `Modal type ${type} is already registered`)
   modals[type] = component
 }
 
-export function registerModals(types) {
+function registerModals(types) {
   types.map(type => registerModal(type[0], type[1]))
 }
 
-export function makeModal(type, props, fading, fadeCallback = () => true, hideCallback = () => true) {
+function makeModal(type, props, fading, fadeCallback = () => true, hideCallback = () => true) {
   invariant(modals[type], `Unknown modal type "${type}"`)
 
   const baseProps = {
@@ -49,16 +49,21 @@ export function makeModal(type, props, fading, fadeCallback = () => true, hideCa
 }
 
 // only for use with old Twig modals, will be deleted
-export function makeModalFromUrl(fading, hideCallback = () => true, url) {
-  return fetch(url, {method: 'GET', credentials: 'include'}).then(response => {
-    return response.text()
-  }).then(text => {
-    const baseProps = {
+function makeModalFromUrl(fading, hideCallback = () => true, url) {
+  return fetch(url, {
+    method: 'GET',
+    credentials: 'include'
+  }).then(response => response.text())
+    .then(text => React.createElement(UrlModal, {
       show: !fading,
       hideModal:() => hideCallback(),
       content: text
-    }
+    }))
+}
 
-    return React.createElement(UrlModal, baseProps)
-  })
+export {
+  makeModal,
+  makeModalFromUrl,
+  registerModal,
+  registerModals
 }

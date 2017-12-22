@@ -210,11 +210,6 @@ class Persister
         return $location;
     }
 
-    public function facet($name, $forceCreationForm, $isMain)
-    {
-        return $this->container->get('claroline.manager.facet_manager')->createFacet($name, $forceCreationForm, $isMain);
-    }
-
     public function panelFacet(Facet $facet, $name, $collapse, $autoEditable = false)
     {
         return $this->container->get('claroline.manager.facet_manager')->addPanel($facet, $name, $collapse, $autoEditable);
