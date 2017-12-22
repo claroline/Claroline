@@ -1,0 +1,90 @@
+{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+
+{% if isDesktop() %}
+    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% endif %}
+
+{% extends layout %}
+
+{% trans_default_domain 'competency' %}
+
+{% set resourceName = resourceNode.getName() %}
+{% set isEditMode = is_granted('ROLE_COMPETENCY_MANAGER') %}
+
+{% block title %}
+    {{ resourceName ~ ' - ' ~ 'associated_competencies'|trans({}, 'competency')|striptags|raw }}
+{% endblock %}
+
+{% block resourceBreadcrumb %}
+    <li class="active">{{ resourceName }}</li>
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <div class="panel-title">{{ resourceName ~ ' - ' ~ 'associated_competencies'|trans }}</div>
+    </div>
+    <div class="panel-body">
+        <table class="table table-condensed table-bordered associated-competencies"
+               {% if competencies|length == 0 %}style="display: none;"{% endif %}>
+            <thead>
+                <th>{{ 'competency_'|trans }}</th>
+                <th>{{ 'type'|trans({}, 'platform') }}</th>
+                <th>{{ 'level_'|trans }}</th>
+                <th>{{ 'origin'|trans }}</th>
+                {% if isEditMode %}
+                    <th></th>
+                {% endif %}
+            </thead>
+            <tbody>
+                {% for competency in competencies %}
+                    {%
+                        include 'HeVinciCompetencyBundle:Resource:competencyRow.html.twig'
+                        with {
+                            target: competency,
+                            isEditMode: isEditMode
+                        }
+                    %}
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if competencies|length == 0 %}
+            <br/>
+            <div class="alert alert-info">
+                <i class="fa fa-info-circle"></i>
+                {{ 'info.no_competency_association'|trans }}
+                {% if isEditMode %}
+                    {{ 'info.add_competency_association'|trans }}
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+    <div class="panel-footer">
+        {% if isEditMode %}
+            <button class="btn btn-primary associate-competency">{{ 'competency.associate'|trans }}</button>
+        {% endif %}
+    </div>
+    {# stores the resource id for script uses #}
+    <span id="resource-id"
+          class="hidden"
+          data-id="{{ resourceNode.getId() }}">
+    </span>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
+        "@HeVinciCompetencyBundle/Resources/views/Resource/competencyRow.html.twig"
+    %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/flasher.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/tree.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/competencyPicker.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/resource.js') }}"></script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ asset('bundles/hevincicompetency/css/style.css') }}"/>
+{% endblock %}

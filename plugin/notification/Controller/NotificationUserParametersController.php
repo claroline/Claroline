@@ -12,11 +12,11 @@
 namespace Icap\NotificationBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -31,10 +31,10 @@ class NotificationUserParametersController extends Controller
     public function getAction(User $user)
     {
         $parametersManager = $this->getParametersManager();
-        $parameters = $parametersManager->getParametersByUserId($user->getId());
+        $parameters = $parametersManager->getParametersByUser($user);
         $types = $parametersManager->allTypesList($parameters);
 
-        return array('types' => $types, 'rssId' => $parameters->getRssId());
+        return ['types' => $types, 'rssId' => $parameters->getRssId()];
     }
 
     /**
@@ -45,7 +45,7 @@ class NotificationUserParametersController extends Controller
      */
     public function postAction(Request $request, User $user)
     {
-        $this->getParametersManager()->processUpdate($request->request->all(), $user->getId());
+        $this->getParametersManager()->processUpdate($request->request->all(), $user);
 
         return new RedirectResponse($this->generateUrl('claro_desktop_parameters_menu'));
     }
@@ -61,7 +61,7 @@ class NotificationUserParametersController extends Controller
         $parameters = $parametersManager->regenerateRssId($user->getId());
         $types = $parametersManager->allTypesList($parameters);
 
-        return array('types' => $types, 'rssId' => $parameters->getRssId());
+        return ['types' => $types, 'rssId' => $parameters->getRssId()];
     }
 
     /**

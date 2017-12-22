@@ -15,6 +15,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class BookReferenceController extends Controller
 {
@@ -50,7 +51,7 @@ class BookReferenceController extends Controller
     public function changeBookReferenceAction(ResourceNode $node, Request $request)
     {
         if (!$this->get('security.authorization_checker')->isGranted('edit', $node)) {
-            throw new AccessDeniedException();
+            throw new AccessDeniedHttpException();
         }
 
         $em = $this->getDoctrine()->getManager();

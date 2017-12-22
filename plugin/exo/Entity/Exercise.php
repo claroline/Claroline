@@ -2,14 +2,15 @@
 
 namespace UJM\ExoBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use Ramsey\Uuid\Uuid;
+use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
 use UJM\ExoBundle\Library\Model\AttemptParametersTrait;
-use UJM\ExoBundle\Library\Model\UuidTrait;
+use UJM\ExoBundle\Library\Options\ExerciseNumbering;
 use UJM\ExoBundle\Library\Options\ExerciseType;
 
 /**
@@ -20,14 +21,14 @@ class Exercise extends AbstractResource
 {
     use UuidTrait;
 
+    use AttemptParametersTrait;
+
     /**
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
      */
     private $description = '';
-
-    use AttemptParametersTrait;
 
     /**
      * When corrections are available to the Users ?
@@ -148,10 +149,10 @@ class Exercise extends AbstractResource
     private $type = ExerciseType::SUMMATIVE;
 
     /**
-     * @var ArrayCollection
-     *
      * @ORM\OneToMany(targetEntity="Step", mappedBy="exercise", cascade={"all"}, orphanRemoval=true)
      * @ORM\OrderBy({"order" = "ASC"})
+     *
+     * @var ArrayCollection|Step[]
      */
     private $steps;
 
@@ -176,23 +177,57 @@ class Exercise extends AbstractResource
     private $totalScoreOn = 0;
 
     /**
+     * Score to obtain to pass the exercise.
+     *
+     * @ORM\Column(name="success_score", type="float", nullable=true)
+     *
+     * @var float
+     */
+    private $successScore;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(type="string")
+     */
+    private $numbering = ExerciseNumbering::NONE;
+
+    /**
+     * Number of papers allowed.
+     * If 0, infinite amount of papers.
+     *
+     * @ORM\Column(name="max_papers", type="integer")
+     *
+     * @var int
+     */
+    private $maxPapers = 0;
+
+    /**
+     * Use all papers to compute stats.
+     *
+     * @var bool
+     *
+     * @ORM\Column(name="all_papers_stats", type="boolean", options={"default" = 1})
+     */
+    private $allPapersStatistics = true;
+
+    /**
+     * Sets the mandatory question flag.
+     *
+     * @var string
+     *
+     * @ORM\Column(name="mandatory_questions", type="boolean")
+     */
+    private $mandatoryQuestions = false;
+
+    /**
      * Exercise constructor.
      */
     public function __construct()
     {
-        $this->uuid = Uuid::uuid4()->toString();
+        $this->refreshUuid();
         $this->dateCorrection = new \DateTime();
         $this->steps = new ArrayCollection();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     public function getTitle()
@@ -480,21 +515,40 @@ class Exercise extends AbstractResource
     /**
      * Gets a step by its UUID.
      *
-     * @param $uuid
+     * @param string $uuid
      *
      * @return Step|null
      */
     public function getStep($uuid)
     {
-        $foundStep = null;
         foreach ($this->steps as $step) {
             if ($step->getUuid() === $uuid) {
-                $foundStep = $step;
-                break;
+                return $step;
             }
         }
 
-        return $foundStep;
+        return null;
+    }
+
+    /**
+     * Gets a question by its UUID.
+     *
+     * @param string $uuid
+     *
+     * @return Item|null
+     */
+    public function getQuestion($uuid)
+    {
+        foreach ($this->steps as $step) {
+            $questions = $step->getQuestions();
+            foreach ($questions as $question) {
+                if ($question->getUuid() === $uuid) {
+                    return $question;
+                }
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -569,5 +623,85 @@ class Exercise extends AbstractResource
     public function getTotalScoreOn()
     {
         return $this->totalScoreOn;
+    }
+
+    /**
+     * Sets successScore.
+     *
+     * @param float $successScore
+     */
+    public function setSuccessScore($successScore)
+    {
+        $this->successScore = $successScore;
+    }
+
+    /**
+     * Gets successScore.
+     *
+     * @return float
+     */
+    public function getSuccessScore()
+    {
+        return $this->successScore;
+    }
+
+    public function setNumbering($numbering)
+    {
+        $this->numbering = $numbering;
+    }
+
+    public function getNumbering()
+    {
+        return $this->numbering;
+    }
+
+    public function setPicking($picking)
+    {
+        $this->picking = $picking;
+    }
+
+    public function getPicking()
+    {
+        return $this->picking;
+    }
+
+    public function setMaxPapers($maxPapers)
+    {
+        $this->maxPapers = $maxPapers;
+    }
+
+    public function getMaxPapers()
+    {
+        return $this->maxPapers;
+    }
+
+    /**
+     * Gets allPapersStatistics.
+     *
+     * @return bool
+     */
+    public function isAllPapersStatistics()
+    {
+        return $this->allPapersStatistics;
+    }
+
+    /**
+     * Sets allPapersStatistics.
+     *
+     * @param bool $allPapersStatistics
+     */
+    public function setAllPapersStatistics($allPapersStatistics)
+    {
+        $this->allPapersStatistics = $allPapersStatistics;
+    }
+
+    public function setMandatoryQuestions($mandatoryQuestions)
+    {
+        $this->mandatoryQuestions = $mandatoryQuestions;
+    }
+
+    public function getMandatoryQuestions()
+    {
+        return $this->mandatoryQuestions;
     }
 }

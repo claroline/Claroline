@@ -2,8 +2,9 @@
 
 {% block title %}{{ 'login_with_third_party'|trans({'%name%':service|trans({}, 'icap_oauth')}, 'platform') }}{% endblock %}
 
+{% set hideTopBarRightSide = true %}
 {% block topBarRender %}
-{% include 'IcapOAuthBundle:Connect:top_bar_render.html.twig' %}
+    {% include 'ClarolineCoreBundle:Layout:topBar.html.twig' %}
 {% endblock %}
 
 {% block content %}

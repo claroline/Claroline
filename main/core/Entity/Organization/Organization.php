@@ -13,12 +13,16 @@ namespace Claroline\CoreBundle\Entity\Organization;
 
 use Claroline\CoreBundle\Entity\Calendar\TimeSlot;
 use Claroline\CoreBundle\Entity\Calendar\Year;
+use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Model\CodeTrait;
+use Claroline\CoreBundle\Entity\Model\GroupsTrait;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
-use JMS\Serializer\Annotation\Groups;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -30,31 +34,43 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Organization
 {
+    use UuidTrait;
+    use CodeTrait;
+    use GroupsTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
+     * @Serializer\Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
+     *
+     * @var int
      */
     protected $id;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"api_organization_tree", "api_organization_list"})
+     * @Serializer\Groups({"api_organization_tree", "api_organization_list"})
+     *
+     * @var int
      */
     protected $position;
 
     /**
-     * @ORM\Column()
+     * @ORM\Column(type="string")
      * @Assert\NotBlank()
-     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
+     * @Serializer\Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
+     *
+     * @var string
      */
     protected $name;
 
     /**
-     * @ORM\Column(nullable=true)
+     * @ORM\Column(nullable=true, type="string")
      * @Assert\Email()
-     * @Groups({"api_organization_tree", "api_organization_list"})
+     * @Serializer\Groups({"api_organization_tree", "api_organization_list"})
+     *
+     * @var string
      */
     protected $email;
 
@@ -65,86 +81,101 @@ class Organization
      *     inversedBy="organizations"
      * )
      * @ORM\JoinTable(name="claro__location_organization")
-     * @Groups({"api_organization_tree", "api_organization_list"})
+     * @Serializer\Groups({"api_organization_tree", "api_organization_list"})
+     *
+     * @var ArrayCollection
      */
     protected $locations;
 
     /**
      * @Gedmo\TreeLeft
      * @ORM\Column(name="lft", type="integer")
+     *
+     * @var int
      */
     private $lft;
 
     /**
      * @Gedmo\TreeLevel
      * @ORM\Column(name="lvl", type="integer")
+     *
+     * @var int
      */
     private $lvl;
 
     /**
      * @Gedmo\TreeRight
      * @ORM\Column(name="rgt", type="integer")
+     *
+     * @var int
      */
     private $rgt;
 
     /**
      * @Gedmo\TreeRoot
      * @ORM\Column(name="root", type="integer", nullable=true)
+     *
+     * @var int
      */
     private $root;
 
     /**
      * @Gedmo\TreeParent
-     * @ORM\ManyToOne(targetEntity="Organization", inversedBy="children")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="children")
      * @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
-     * @Groups({"api_organization_tree"})
+     * @Serializer\Groups({"api_organization_tree"})
+     *
+     * @var Organization
      */
     private $parent;
 
     /**
-     * @ORM\OneToMany(targetEntity="Organization", mappedBy="parent")
+     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", mappedBy="parent")
      * @ORM\OrderBy({"lft" = "ASC"})
-     * @Groups({"api_organization_tree"})
+     * @Serializer\Groups({"api_organization_tree"})
+     *
+     * @var Organization[]|ArrayCollection
      */
     private $children;
 
     /**
-     * @var User[]|ArrayCollection
-     *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     mappedBy="organizations"
      * )
      * @ORM\JoinTable(name="claro_user_organization")
+     *
+     * @var ArrayCollection
      */
     protected $users;
 
     /**
-     * @var Workspace[]|ArrayCollection
-     *
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     mappedBy="organizations"
      * )
      * @ORM\JoinTable(name="claro_user_workspace")
+     *
+     * @var Workspace[]|ArrayCollection
      */
     protected $workspaces;
 
     /**
-     * @var User[]|ArrayCollection
-     *
      * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Group"
+     *     targetEntity="Claroline\CoreBundle\Entity\Group",
+     *     mappedBy="organizations"
      * )
      * @ORM\JoinTable(name="claro_group_organization")
+     *
+     * @var ArrayCollection
      */
     protected $groups;
 
     /**
-     * @var User[]|ArrayCollection
-     *
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User", mappedBy="administratedOrganizations")
-     * @Groups({"api_organization_tree", "api_organization_list"})
+     * @Serializer\Groups({"api_organization_tree", "api_organization_list"})
+     *
+     * @var User[]|ArrayCollection
      */
     protected $administrators;
 
@@ -154,6 +185,8 @@ class Organization
      *     mappedBy="organization",
      *     cascade={"persist"}
      * )
+     *
+     * @var TimeSlot[]|ArrayCollection
      */
     protected $timeSlots;
 
@@ -163,25 +196,30 @@ class Organization
      *     mappedBy="organization",
      *     cascade={"persist"}
      * )
+     *
+     * @var Year[]|ArrayCollection
      */
     protected $years;
 
     /**
      * @ORM\Column(name="is_default", type="boolean")
-     * @Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
+     * @Serializer\Groups({"api_user", "api_user_min", "api_workspace_min", "api_group_min", "api_organization_tree", "api_organization_list"})
      */
     protected $default = false;
 
     public function __construct()
     {
+        $this->refreshUuid();
+        $this->refreshCode();
+
         $this->locations = new ArrayCollection();
-        $this->departments = new ArrayCollection();
         $this->users = new ArrayCollection();
         $this->workspaces = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->administrators = new ArrayCollection();
         $this->timeSlots = new ArrayCollection();
         $this->years = new ArrayCollection();
+        $this->children = new ArrayCollection();
     }
 
     public function getId()
@@ -199,11 +237,6 @@ class Organization
         return $this->name;
     }
 
-    public function getDepartments()
-    {
-        return $this->departments;
-    }
-
     public function setPosition($position)
     {
         $this->position = $position;
@@ -214,12 +247,22 @@ class Organization
         return $this->position;
     }
 
+    /**
+     * Get parent.
+     *
+     * @return Organization
+     */
     public function getParent()
     {
         return $this->parent;
     }
 
-    public function setParent($parent)
+    /**
+     * Set parent.
+     *
+     * @param Organization $parent
+     */
+    public function setParent(Organization $parent = null)
     {
         $this->parent = $parent;
     }
@@ -331,5 +374,49 @@ class Organization
     public function getDefault()
     {
         return $this->default;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getChildren()
+    {
+        return $this->children;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function addUser(User $user)
+    {
+        $this->users->add($user);
+        $user->getUserOrganizations()->add($this);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function removeUser(User $user)
+    {
+        $this->users->remove($user);
+        $user->getUserOrganizations()->removeElement($this);
+    }
+
+    /**
+     * @param Group $group
+     */
+    public function addGroup(Group $group)
+    {
+        $this->groups->add($group);
+        $group->getOrganizations()->add($this);
+    }
+
+    /**
+     * @param Group $group
+     */
+    public function removeGroup(Group $group)
+    {
+        $this->groups->remove($group);
+        $group->getOrganizations()->removeElement($this);
     }
 }

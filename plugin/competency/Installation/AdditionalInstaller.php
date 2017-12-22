@@ -10,25 +10,25 @@ class AdditionalInstaller extends BaseInstaller
 {
     public function postInstall()
     {
-        $this->addActivityCustomAction();
+        $this->addResourceCustomAction();
         $this->addCompetencyManagerRole();
     }
 
-    private function addActivityCustomAction()
+    private function addResourceCustomAction()
     {
-        $this->log('Adding custom action to activities...');
+        $this->log('Adding custom action to resource...');
 
         $em = $this->container->get('doctrine.orm.entity_manager');
         $typeRepo = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType');
         $actionRepo = $em->getRepository('ClarolineCoreBundle:Resource\MenuAction');
 
-        $activityType = $typeRepo->findOneByName('activity');
+        $exoType = $typeRepo->findOneByName('ujm_exercise');
         $action = $actionRepo->findOneByName('manage-competencies');
 
         if (!$action) {
             $action = new MenuAction();
             $action->setName('manage-competencies');
-            $action->setResourceType($activityType);
+            $action->setResourceType($exoType);
             // the new action will be bound to the 'open' permission
             $action->setValue(MaskDecoder::OPEN);
             $em->persist($action);

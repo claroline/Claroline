@@ -7,6 +7,7 @@ use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Library\Mode\CorrectionMode;
 use UJM\ExoBundle\Library\Mode\MarkMode;
+use UJM\ExoBundle\Library\Options\Picking;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
 use UJM\ExoBundle\Library\Options\ShowScoreAt;
@@ -22,11 +23,6 @@ use UJM\ExoBundle\Manager\Item\ItemManager;
 class ExerciseSerializer implements SerializerInterface
 {
     /**
-     * @var UserSerializer
-     */
-    private $userSerializer;
-
-    /**
      * @var StepSerializer
      */
     private $stepSerializer;
@@ -40,21 +36,17 @@ class ExerciseSerializer implements SerializerInterface
      * ExerciseSerializer constructor.
      *
      * @param StepSerializer $stepSerializer
-     * @param UserSerializer $userSerializer
      * @param ItemManager    $itemManager
      *
      * @DI\InjectParams({
-     *     "userSerializer" = @DI\Inject("ujm_exo.serializer.user"),
      *     "stepSerializer" = @DI\Inject("ujm_exo.serializer.step"),
      *     "itemManager"    = @DI\Inject("ujm_exo.manager.item")
      * })
      */
     public function __construct(
-        UserSerializer $userSerializer,
         StepSerializer $stepSerializer,
-        ItemManager $itemManager)
-    {
-        $this->userSerializer = $userSerializer;
+        ItemManager $itemManager
+    ) {
         $this->stepSerializer = $stepSerializer;
         $this->itemManager = $itemManager;
     }
@@ -72,7 +64,7 @@ class ExerciseSerializer implements SerializerInterface
         $exerciseData = new \stdClass();
         $exerciseData->id = $exercise->getUuid();
         $exerciseData->title = $exercise->getTitle();
-        $exerciseData->meta = $this->serializeMetadata($exercise, $options);
+        $exerciseData->meta = $this->serializeMetadata($exercise);
 
         if (!in_array(Transfer::MINIMAL, $options)) {
             if (!empty($exercise->getDescription())) {
@@ -80,6 +72,7 @@ class ExerciseSerializer implements SerializerInterface
             }
 
             $exerciseData->parameters = $this->serializeParameters($exercise);
+            $exerciseData->picking = $this->serializePicking($exercise);
             $exerciseData->steps = $this->serializeSteps($exercise, $options);
         }
 
@@ -99,7 +92,6 @@ class ExerciseSerializer implements SerializerInterface
     {
         $exercise = $exercise ?: new Exercise();
         $exercise->setUuid($data->id);
-        $exercise->setTitle($data->title);
 
         if (isset($data->description)) {
             $exercise->setDescription($data->description);
@@ -107,6 +99,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (!empty($data->parameters)) {
             $this->deserializeParameters($exercise, $data->parameters);
+        }
+
+        if (!empty($data->picking)) {
+            $this->deserializePicking($exercise, $data->picking);
         }
 
         if (!empty($data->steps)) {
@@ -120,29 +116,12 @@ class ExerciseSerializer implements SerializerInterface
      * Serializes Exercise metadata.
      *
      * @param Exercise $exercise
-     * @param array    $options
      *
      * @return \stdClass
      */
-    private function serializeMetadata(Exercise $exercise, array $options = [])
+    private function serializeMetadata(Exercise $exercise)
     {
         $metadata = new \stdClass();
-
-        $node = $exercise->getResourceNode();
-        if (!empty($node)) {
-            $creator = $node->getCreator();
-            if (!empty($creator)) {
-                $metadata->authors = [
-                    $this->userSerializer->serialize($creator, $options),
-                ];
-            }
-
-            $metadata->created = $node->getCreationDate()->format('Y-m-d\TH:i:s');
-            $metadata->updated = $node->getModificationDate()->format('Y-m-d\TH:i:s');
-        }
-
-        $metadata->published = !empty($node) ? $node->isPublished() : $exercise->wasPublishedOnce();
-        $metadata->publishedOnce = $exercise->wasPublishedOnce();
 
         return $metadata;
     }
@@ -161,14 +140,15 @@ class ExerciseSerializer implements SerializerInterface
         $parameters->type = $exercise->getType();
 
         // Attempt parameters
-        $parameters->randomOrder = $exercise->getRandomOrder();
-        $parameters->randomPick = $exercise->getRandomPick();
-        $parameters->pick = $exercise->getPick();
         $parameters->maxAttempts = $exercise->getMaxAttempts();
+        $parameters->maxAttemptsPerDay = $exercise->getMaxAttemptsPerDay();
+        $parameters->maxPapers = $exercise->getMaxPapers();
         $parameters->showFeedback = $exercise->getShowFeedback();
         $parameters->duration = $exercise->getDuration();
         $parameters->anonymizeAttempts = $exercise->getAnonymizeAttempts();
         $parameters->interruptible = $exercise->isInterruptible();
+        $parameters->numbering = $exercise->getNumbering();
+        $parameters->mandatoryQuestions = $exercise->getMandatoryQuestions();
 
         // Visibility parameters
         $parameters->showOverview = $exercise->getShowOverview();
@@ -180,6 +160,7 @@ class ExerciseSerializer implements SerializerInterface
 
         $parameters->showMetadata = $exercise->isMetadataVisible();
         $parameters->showStatistics = $exercise->hasStatistics();
+        $parameters->allPapersStatistics = $exercise->isAllPapersStatistics();
         $parameters->showFullCorrection = !$exercise->isMinimalCorrection();
 
         switch ($exercise->getMarkMode()) {
@@ -211,6 +192,8 @@ class ExerciseSerializer implements SerializerInterface
 
         // score of parameter
         $parameters->totalScoreOn = $exercise->getTotalScoreOn();
+        // success score
+        $parameters->successScore = $exercise->getSuccessScore();
 
         $correctionDate = $exercise->getDateCorrection();
         $parameters->correctionDate = !empty($correctionDate) ? $correctionDate->format('Y-m-d\TH:i:s') : null;
@@ -228,19 +211,6 @@ class ExerciseSerializer implements SerializerInterface
     {
         if (isset($parameters->type)) {
             $exercise->setType($parameters->type);
-        }
-
-        if (isset($parameters->randomOrder)) {
-            $exercise->setRandomOrder($parameters->randomOrder);
-        }
-
-        if (isset($parameters->randomPick)) {
-            $exercise->setRandomPick($parameters->randomPick);
-            if (Recurrence::ONCE === $parameters->randomPick || Recurrence::ALWAYS === $parameters->randomPick) {
-                $exercise->setPick($parameters->pick);
-            } else {
-                $exercise->setPick(0);
-            }
         }
 
         if (isset($parameters->maxAttempts)) {
@@ -283,8 +253,28 @@ class ExerciseSerializer implements SerializerInterface
             $exercise->setStatistics($parameters->showStatistics);
         }
 
+        if (isset($parameters->allPapersStatistics)) {
+            $exercise->setAllPapersStatistics($parameters->allPapersStatistics);
+        }
+
         if (isset($parameters->showFullCorrection)) {
             $exercise->setMinimalCorrection(!$parameters->showFullCorrection);
+        }
+
+        if (isset($parameters->numbering)) {
+            $exercise->setNumbering($parameters->numbering);
+        }
+
+        if (isset($parameters->mandatoryQuestions)) {
+            $exercise->setMandatoryQuestions($parameters->mandatoryQuestions);
+        }
+
+        if (isset($parameters->maxAttemptsPerDay)) {
+            $exercise->setMaxAttemptsPerDay($parameters->maxAttemptsPerDay);
+        }
+
+        if (isset($parameters->maxPapers)) {
+            $exercise->setMaxPapers($parameters->maxPapers);
         }
 
         if (isset($parameters->showScoreAt)) {
@@ -304,6 +294,13 @@ class ExerciseSerializer implements SerializerInterface
         if (isset($parameters->totalScoreOn)) {
             $exercise->setTotalScoreOn($parameters->totalScoreOn);
         }
+        $success = isset($parameters->successScore) &&
+            $parameters->successScore !== '' &&
+            $parameters->successScore >= 0 &&
+            $parameters->successScore <= 100 ?
+            $parameters->successScore :
+            null;
+        $exercise->setSuccessScore($success);
 
         if (isset($parameters->showCorrectionAt)) {
             $correctionDate = null;
@@ -315,7 +312,6 @@ class ExerciseSerializer implements SerializerInterface
                     $exercise->setCorrectionMode(CorrectionMode::AFTER_LAST_ATTEMPT);
                     break;
                 case ShowCorrectionAt::AFTER_DATE:
-                case ShowCorrectionAt::AFTER_DATE:
                     $exercise->setCorrectionMode(CorrectionMode::AFTER_DATE);
                     $correctionDate = \DateTime::createFromFormat('Y-m-d\TH:i:s', $parameters->correctionDate);
                     break;
@@ -325,6 +321,70 @@ class ExerciseSerializer implements SerializerInterface
             }
 
             $exercise->setDateCorrection($correctionDate);
+        }
+    }
+
+    private function serializePicking(Exercise $exercise)
+    {
+        $picking = new \stdClass();
+
+        $picking->type = $exercise->getPicking();
+        $picking->randomOrder = $exercise->getRandomOrder();
+        $picking->randomPick = $exercise->getRandomPick();
+
+        switch ($picking->type) {
+            case Picking::TAGS:
+                $tagPicking = $exercise->getPick();
+
+                $picking->pick = $tagPicking['tags'];
+                $picking->pageSize = $tagPicking['pageSize'];
+
+                break;
+            case Picking::STANDARD:
+            default:
+                $picking->pick = $exercise->getPick();
+
+                break;
+        }
+
+        return $picking;
+    }
+
+    private function deserializePicking(Exercise $exercise, \stdClass $picking)
+    {
+        $exercise->setPicking($picking->type);
+
+        if (isset($picking->randomOrder)) {
+            $exercise->setRandomOrder($picking->randomOrder);
+        }
+
+        if (isset($picking->randomPick)) {
+            $exercise->setRandomPick($picking->randomPick);
+        }
+
+        switch ($picking->type) {
+            case Picking::TAGS:
+                // updates tags picking params
+                $exercise->setPick([
+                    'tags' => $picking->pick,
+                    'pageSize' => $picking->pageSize,
+                ]);
+
+                break;
+            case Picking::STANDARD:
+            default:
+                // updates steps picking params
+                if (isset($picking->randomPick)) {
+                    if (Recurrence::ONCE === $picking->randomPick || Recurrence::ALWAYS === $picking->randomPick) {
+                        $exercise->setPick($picking->pick);
+                    } else {
+                        $exercise->setPick(0);
+                    }
+                } else {
+                    $exercise->setPick(0);
+                }
+
+                break;
         }
     }
 

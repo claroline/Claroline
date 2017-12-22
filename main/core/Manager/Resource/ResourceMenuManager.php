@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager\Resource;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -41,5 +42,13 @@ class ResourceMenuManager
             $specificMenus->toArray(),
             $this->om->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findBy(['resourceType' => null])
         );
+    }
+
+    public function getByResourceType(ResourceType $resourceType = null)
+    {
+        return $this
+            ->om
+            ->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+            ->findBy(['resourceType' => $resourceType]);
     }
 }

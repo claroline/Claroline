@@ -11,6 +11,10 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
+use Claroline\CoreBundle\API\FinderProvider;
+use Claroline\CoreBundle\API\Options;
+use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\Action\AdditionalAction;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
@@ -18,8 +22,6 @@ use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Administration\ProfilePicsImportType;
-use Claroline\CoreBundle\Form\ImportUserType;
-use Claroline\CoreBundle\Form\ProfileCreationType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -37,7 +39,6 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -48,6 +49,8 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
+ * @todo rename UserController (without s)
+ *
  * @DI\Tag("security.secure_service")
  * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
  */
@@ -72,7 +75,9 @@ class UsersController extends Controller
     private $authorization;
     private $groupManager;
     private $tokenStorage;
-
+    private $finder;
+    private $parametersSerializer;
+    private $profileSerializer;
     /**
      * @DI\InjectParams({
      *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),
@@ -93,7 +98,10 @@ class UsersController extends Controller
      *     "translator"             = @DI\Inject("translator"),
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
      *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager")
+     *     "groupManager"           = @DI\Inject("claroline.manager.group_manager"),
+     *     "finder"                 = @DI\Inject("claroline.api.finder"),
+     *     "parametersSerializer"   = @DI\Inject("claroline.serializer.parameters"),
+     *     "profileSerializer"      = @DI\Inject("claroline.serializer.profile")
      * })
      */
     public function __construct(
@@ -115,7 +123,10 @@ class UsersController extends Controller
         TranslatorInterface $translator,
         UserManager $userManager,
         WorkspaceManager $workspaceManager,
-        GroupManager $groupManager
+        GroupManager $groupManager,
+        FinderProvider $finder,
+        ParametersSerializer $parametersSerializer,
+        ProfileSerializer $profileSerializer
     ) {
         $this->authenticationManager = $authenticationManager;
         $this->configHandler = $configHandler;
@@ -137,133 +148,9 @@ class UsersController extends Controller
         $this->workspaceManager = $workspaceManager;
         $this->groupManager = $groupManager;
         $this->tokenStorage = $tokenStorage;
-    }
-
-    /**
-     * @EXT\Route("/new", name="claro_admin_user_creation_form")
-     * @EXT\Template
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
-     *
-     * Displays the user creation form.
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function userCreationFormAction(User $currentUser)
-    {
-        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $roles = $this->roleManager->getAllPlatformRoles();
-        $unavailableRoles = [];
-
-        foreach ($roles as $role) {
-            $isAvailable = $this->roleManager->validateRoleInsert(new User(), $role);
-
-            if (!$isAvailable) {
-                $unavailableRoles[] = $role;
-            }
-        }
-        $profileType = new ProfileCreationType(
-            $this->localeManager,
-            [$roleUser],
-            $currentUser,
-            $this->authenticationManager->getDrivers()
-        );
-        $form = $this->formFactory->create($profileType);
-
-        $error = null;
-
-        if (!$this->mailManager->isMailerAvailable()) {
-            $error = 'mail_not_available';
-        }
-        $groupsData = [];
-        $groups = $this->groupManager->getAllGroupsWithoutPager();
-
-        foreach ($groups as $group) {
-            $organizations = $group->getOrganizations();
-
-            foreach ($organizations as $organization) {
-                $organizationId = $organization->getId();
-
-                if (!isset($groups[$organizationId])) {
-                    $groupsData[$organizationId] = [];
-                }
-                $groupsData[$organizationId][] = $group->getId();
-            }
-        }
-
-        return [
-            'form_complete_user' => $form->createView(),
-            'error' => $error,
-            'unavailableRoles' => $unavailableRoles,
-            'groupsData' => $groupsData,
-        ];
-    }
-
-    /**
-     * @EXT\Route("/new/submit", name="claro_admin_create_user")
-     * @EXT\Method("POST")
-     * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCoreBundle:Administration/Users:userCreationForm.html.twig")
-     *
-     * Creates an user (and its personal workspace) and redirects to the user list.
-     *
-     * @param User $currentUser
-     *
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function createAction(User $currentUser)
-    {
-        $sessionFlashBag = $this->session->getFlashBag();
-        $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-        $profileType = new ProfileCreationType(
-            $this->localeManager,
-            [$roleUser],
-            $currentUser,
-            $this->authenticationManager->getDrivers()
-        );
-        $form = $this->formFactory->create($profileType);
-        $form->handleRequest($this->request);
-        $roles = $form->get('platformRoles')->getData();
-        $unavailableRoles = $this->roleManager->validateNewUserRolesInsert($roles);
-        $groupsData = [];
-        $groups = $this->groupManager->getAllGroupsWithoutPager();
-
-        foreach ($groups as $group) {
-            $organizations = $group->getOrganizations();
-
-            foreach ($organizations as $organization) {
-                $organizationId = $organization->getId();
-
-                if (!isset($groups[$organizationId])) {
-                    $groupsData[$organizationId] = [];
-                }
-                $groupsData[$organizationId][] = $group->getId();
-            }
-        }
-        if ($form->isValid() && count($unavailableRoles) === 0) {
-            $user = $form->getData();
-            $newRoles = $form->get('platformRoles')->getData();
-            $orgas = $form->get('organizations')->getData();
-            $this->userManager->createUser($user, true, $newRoles, null, null, $orgas);
-            $sessionFlashBag->add(
-                'success',
-                $this->translator->trans('user_creation_success', [], 'platform')
-            );
-
-            return $this->redirect($this->generateUrl('claro_admin_users_index'));
-        }
-
-        $error = null;
-
-        if (!$this->mailManager->isMailerAvailable()) {
-            $error = 'mail_not_available';
-        }
-
-        return [
-            'form_complete_user' => $form->createView(),
-            'error' => $error,
-            'unavailableRoles' => $unavailableRoles,
-            'groupsData' => $groupsData,
-        ];
+        $this->finder = $finder;
+        $this->parametersSerializer = $parametersSerializer;
+        $this->profileSerializer = $profileSerializer;
     }
 
     /**
@@ -280,20 +167,11 @@ class UsersController extends Controller
      */
     public function indexAction()
     {
-        return [];
-    }
-
-    /**
-     * @EXT\Route("/import", name="claro_admin_import_users_form")
-     * @EXT\Template
-     *
-     * @return Response
-     */
-    public function importFormAction()
-    {
-        $form = $this->formFactory->create(new ImportUserType(true));
-
-        return ['form' => $form->createView(), 'error' => null];
+        return [
+            // todo : put it in the async load of form
+            'parameters' => $this->parametersSerializer->serialize(),
+            'profile' => $this->profileSerializer->serialize(),
+        ];
     }
 
     /**
@@ -316,100 +194,6 @@ class UsersController extends Controller
         $pager = $this->workspaceManager->getOpenableWorkspacesByRolesPager($user->getRoles(), $page, $max);
 
         return ['user' => $user, 'pager' => $pager, 'page' => $page, 'max' => $max];
-    }
-
-    /**
-     * @EXT\Route("/import/submit", name="claro_admin_import_users")
-     * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration/Users:importForm.html.twig")
-     *
-     * @param Request $request
-     *
-     * @return Response
-     *
-     * @throws \Claroline\CoreBundle\Manager\Exception\AddRoleException
-     */
-    public function importAction(Request $request)
-    {
-        $form = $this->formFactory->create(new ImportUserType(true));
-        $form->handleRequest($request);
-        $mode = $form->get('mode')->getData();
-        $options = ['ignore-update' => true];
-
-        if ($mode === 'update') {
-            $form = $this->formFactory->create(new ImportUserType(true, 1));
-            $form->handleRequest($this->request);
-            $options['ignore-update'] = false;
-        } else {
-        }
-
-        if ($form->isValid()) {
-            $file = $form->get('file')->getData();
-            $sendMail = $form->get('sendMail')->getData();
-            $enableEmailNotification = $form->get('enable_mail_notification')->getData();
-            $data = file_get_contents($file);
-            $data = $this->container->get('claroline.utilities.misc')->formatCsvOutput($data);
-            $lines = str_getcsv($data, PHP_EOL);
-            $users = [];
-            $sessionFlashBag = $this->session->getFlashBag();
-
-            foreach ($lines as $line) {
-                $users[] = str_getcsv($line, ';');
-            }
-
-            $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
-            $max = $roleUser->getMaxUsers();
-            $total = $this->userManager->countUsersByRoleIncludingGroup($roleUser);
-
-            $countUsersToUpdate = $options['ignore-update'] ? 0 : $this->userManager->countUsersToUpdate($users);
-
-            if ($total + count($users) - $countUsersToUpdate > $max) {
-                return ['form' => $form->createView(), 'error' => 'role_user unavailable'];
-            }
-
-            $additionalRoles = $form->get('roles')->getData();
-
-            foreach ($additionalRoles as $additionalRole) {
-                $max = $additionalRole->getMaxUsers();
-                $total = $this->userManager->countUsersByRoleIncludingGroup($additionalRole);
-                //this is not completely true I thnk
-                if ($total + count($users) - $countUsersToUpdate > $max) {
-                    return [
-                        'form' => $form->createView(),
-                        'error' => $additionalRole->getName().' unavailable',
-                    ];
-                }
-            }
-
-            $logs = $this->userManager->importUsers(
-                $users,
-                $sendMail,
-                null,
-                $additionalRoles,
-                $enableEmailNotification,
-                $options
-            );
-
-            foreach ($logs as $key => $names) {
-                $msgClass = 'success';
-                if ($key === 'skipped') {
-                    $msgClass = 'error';
-                }
-                foreach ($names as $name) {
-                    $msg = '<'.$name.'> ';
-                    $msg .= $this->translator->trans(
-                        'has_been_'.$key,
-                        [],
-                        'platform'
-                    );
-                    $sessionFlashBag->add($msgClass, $msg);
-                }
-            }
-
-            return new RedirectResponse($this->router->generate('claro_admin_users_index'));
-        }
-
-        return ['form' => $form->createView()];
     }
 
     /**
@@ -470,26 +254,6 @@ class UsersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/workspace/personal/resources/config",
-     *     name="claro_admin_personal_workspace_resource_rights"
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\Users:personalWorkspaceResourceRightsConfig.html.twig")
-     *
-     * @return array
-     */
-    public function personalWorkspaceResourceRightsConfigAction()
-    {
-        $roles = $this->roleManager->getAllPlatformRoles();
-        $rights = $this->rightsManager->getAllPersonalWorkspaceRightsConfig();
-
-        return [
-            'roles' => $roles,
-            'rights' => $rights,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
      *     "/pws/tool/activate/{perm}/{role}/{tool}",
      *     name="claro_admin_pws_activate_tool",
      *     options={"expose"=true}
@@ -512,34 +276,6 @@ class UsersController extends Controller
     public function removePersonalWorkspaceToolPermAction($perm, Role $role, Tool $tool)
     {
         $this->toolManager->removePersonalWorkspaceToolPerm($perm, $tool, $role);
-
-        return new JsonResponse([], 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/pws/rights/activate/{role}",
-     *     name="claro_admin_pws_activate_rights_change",
-     *     options={"expose"=true}
-     * )
-     */
-    public function activatePersonalWorkspaceRightsAction(Role $role)
-    {
-        $this->rightsManager->activatePersonalWorkspaceRightsPerm($role);
-
-        return new JsonResponse([], 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/pws/rights/deactivate/{role}",
-     *     name="claro_admin_pws_deactivate_rights_change",
-     *     options={"expose"=true}
-     * )
-     */
-    public function deactivatePersonalWorkspaceRightsAction(Role $role)
-    {
-        $this->rightsManager->deactivatePersonalWorkspaceRightsPerm($role);
 
         return new JsonResponse([], 200);
     }

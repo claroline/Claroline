@@ -24,4 +24,9 @@ class ClarolineChatBundle extends DistributionPluginBundle
     {
         return 'DataFixtures';
     }
+
+    public function isActiveByDefault()
+    {
+        return false;
+    }
 }

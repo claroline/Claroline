@@ -18,8 +18,6 @@ use Claroline\CoreBundle\Form\Administration as AdminForm;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\UnwritableException;
 use Claroline\CoreBundle\Library\Installation\Refresher;
-use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
-use Claroline\CoreBundle\Library\Installation\Settings\MailingSettings;
 use Claroline\CoreBundle\Library\Maintenance\MaintenanceHandler;
 use Claroline\CoreBundle\Library\Session\DatabaseSessionValidator;
 use Claroline\CoreBundle\Manager\CacheManager;
@@ -32,7 +30,7 @@ use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\SecurityTokenManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
-use Claroline\CoreBundle\Manager\ThemeManager;
+use Claroline\CoreBundle\Manager\Theme\ThemeManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -394,28 +392,17 @@ class ParametersController extends Controller
             'auth_mode' => $form['mailer_auth_mode']->getData(),
             'encryption' => $form['mailer_encryption']->getData(),
             'port' => $form['mailer_port']->getData(),
+            'api_key' => $form['mailer_api_key']->getData(),
+            'tag' => $form['mailer_tag']->getData(),
         ];
 
-        $settings = new MailingSettings();
-        $settings->setTransport($data['transport']);
-        $settings->setTransportOptions($data);
-        $errors = $settings->validate();
+        $errors = $this->container->get('claroline.library.mailing.mailer')->test($data);
 
         if (count($errors) > 0) {
             foreach ($errors as $field => $error) {
                 $trans = $this->translator->trans($error, [], 'platform');
                 $form->get('mailer_'.$field)->addError(new FormError($trans));
             }
-
-            return ['form_mail' => $form->createView()];
-        }
-
-        $checker = new MailingChecker($settings);
-        $error = $checker->testTransport();
-
-        if ($error !== true) {
-            $session = $this->request->getSession();
-            $session->getFlashBag()->add('error', $this->translator->trans($error, [], 'platform'));
 
             return ['form_mail' => $form->createView()];
         }
@@ -429,6 +416,8 @@ class ParametersController extends Controller
                 'mailer_auth_mode' => $data['auth_mode'],
                 'mailer_encryption' => $data['encryption'],
                 'mailer_port' => $data['port'],
+                'mailer_api_key' => $data['api_key'],
+                'mailer_tag' => $data['tag'],
             ]
         );
 
@@ -455,6 +444,8 @@ class ParametersController extends Controller
             'mailer_auth_mode' => null,
             'mailer_encryption' => null,
             'mailer_port' => null,
+            'mailer_api_key' => null,
+            'mailer_tag' => null,
         ];
 
         $this->configHandler->setParameters($data);

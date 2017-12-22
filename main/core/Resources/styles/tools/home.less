@@ -1,0 +1,82 @@
+
+@import "../../less/mixins";
+@import "../../less/themes/default/variables";
+
+// todo : move in variables file
+@default-active-tab-bg-color: #337AB7;
+@tab-background-color: #F5F5F5;
+@tab-background-active-color: #FFFFFF;
+
+.home-tabs-panel {
+    ul.nav.nav-tabs {
+        & > li.home-tab {
+            -webkit-transition: all 0.2s ease-in-out;
+            -moz-transition: all 0.2s ease-in-out;
+            -o-transition: all 0.2s ease-in-out;
+            transition: all 0.2s ease-in-out;
+            background-color: @tab-background-color;
+
+            span.icon-bg {
+                height : 3px;
+                left : 0;
+                position : absolute;
+                top : 0;
+                -webkit-transition: height 0.2s ease-in-out;
+                -moz-transition: height 0.2s ease-in-out;
+                -o-transition: height 0.2s ease-in-out;
+                transition: height 0.2s ease-in-out;
+                width: 100%;
+                z-index: 0;
+                background-color: @default-active-tab-bg-color;
+            }
+
+            span.option-text {
+                position: relative;
+                z-index: 5;
+            }
+
+            & > a {
+                -webkit-transition: all 0.2s ease-in-out;
+                -moz-transition: all 0.2s ease-in-out;
+                -o-transition: all 0.2s ease-in-out;
+                transition: all 0.2s ease-in-out;
+                &:not(.btn) {
+                    margin-right  : -1px !important;
+                    border-top    : 0;
+                    border-radius : 0;
+                    &:focus, &:active {
+                        outline : none;
+                    }
+                }
+            }
+
+            &:not(.active):hover {
+                .icon-bg {
+                    height: 100%;
+                }
+                a {
+                    color: #ffffff;
+                }
+            }
+
+            &:not(.active) a:hover,
+            &:not(.active) a:focus {
+                background-color: @tab-background-color;
+            }
+
+            &.active > a:hover,
+            &.active > a:focus,
+            &.active a {
+                background-color: @tab-background-active-color;
+            }
+        }
+
+        & > li.new-home-tab {
+            margin-left: 6px;
+        }
+    }
+}
+
+.gridster {
+    margin: floor(@grid-gutter-width / 2) auto !important;
+}

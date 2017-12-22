@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Library\Model;
 
+use UJM\ExoBundle\Library\Options\Picking;
 use UJM\ExoBundle\Library\Options\Recurrence;
 
 /**
@@ -9,6 +10,15 @@ use UJM\ExoBundle\Library\Options\Recurrence;
  */
 trait AttemptParametersTrait
 {
+    /**
+     * The picking method used to generate new attempts to the quiz.
+     *
+     * @ORM\Column(type="string")
+     *
+     * @var string
+     */
+    private $picking = Picking::STANDARD;
+
     /**
      * @ORM\Column(name="random_order", type="string")
      *
@@ -24,9 +34,9 @@ trait AttemptParametersTrait
     private $randomPick = Recurrence::NEVER;
 
     /**
-     * @var int
+     * @var int|array
      *
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="text")
      */
     private $pick = 0;
 
@@ -49,6 +59,16 @@ trait AttemptParametersTrait
      * @var int
      */
     private $maxAttempts = 0;
+
+    /**
+     * Number of attempts allowed per day.
+     * If 0, the user can retry as many times a he wishes.
+     *
+     * @ORM\Column(name="max_day_attempts", type="integer")
+     *
+     * @var int
+     */
+    private $maxAttemptsPerDay = 0;
 
     /**
      * Sets random order.
@@ -93,21 +113,21 @@ trait AttemptParametersTrait
     /**
      * Sets pick number.
      *
-     * @param int $pick
+     * @param int|array $pick
      */
     public function setPick($pick)
     {
-        $this->pick = $pick;
+        $this->pick = json_encode($pick);
     }
 
     /**
      * Gets pick number.
      *
-     * @return int
+     * @return int|array
      */
     public function getPick()
     {
-        return $this->pick;
+        return json_decode($this->pick, true);
     }
 
     /**
@@ -148,5 +168,30 @@ trait AttemptParametersTrait
     public function getMaxAttempts()
     {
         return $this->maxAttempts;
+    }
+
+    /**
+     * Sets max attempts.
+     *
+     * @param int $maxAttemptsPerDay
+     */
+    public function setMaxAttemptsPerDay($maxAttemptsPerDay)
+    {
+        if ($maxAttemptsPerDay > $this->maxAttempts) {
+            //we can't try more times per day than the maximum allowed attempts defined
+            $this->maxAttemptsPerDay = $this->maxAttempts;
+        }
+
+        $this->maxAttemptsPerDay = $maxAttemptsPerDay;
+    }
+
+    /**
+     * Gets max attempts.
+     *
+     * @return int
+     */
+    public function getMaxAttemptsPerDay()
+    {
+        return $this->maxAttemptsPerDay;
     }
 }

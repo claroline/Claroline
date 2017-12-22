@@ -57,6 +57,7 @@ class StepSerializer implements SerializerInterface
         }
 
         $stepData->parameters = $this->serializeParameters($step);
+        $stepData->picking = $this->serializePicking($step);
         $stepData->items = $this->serializeItems($step, $options);
 
         return $stepData;
@@ -88,6 +89,10 @@ class StepSerializer implements SerializerInterface
             $this->deserializeParameters($step, $data->parameters);
         }
 
+        if (!empty($data->picking)) {
+            $this->deserializePicking($step, $data->picking);
+        }
+
         if (!empty($data->items)) {
             $this->deserializeItems($step, $data->items, $options);
         }
@@ -107,9 +112,6 @@ class StepSerializer implements SerializerInterface
         $parameters = new \stdClass();
 
         // Attempt parameters
-        $parameters->randomOrder = $step->getRandomOrder();
-        $parameters->randomPick = $step->getRandomPick();
-        $parameters->pick = $step->getPick();
         $parameters->duration = $step->getDuration();
         $parameters->maxAttempts = $step->getMaxAttempts();
 
@@ -124,25 +126,39 @@ class StepSerializer implements SerializerInterface
      */
     private function deserializeParameters(Step $step, \stdClass $parameters)
     {
-        if (isset($parameters->randomOrder)) {
-            $step->setRandomOrder($parameters->randomOrder);
-        }
-
-        if (isset($parameters->randomPick)) {
-            $step->setRandomPick($parameters->randomPick);
-            if (Recurrence::ONCE === $parameters->randomPick || Recurrence::ALWAYS === $parameters->randomPick) {
-                $step->setPick($parameters->pick);
-            } else {
-                $step->setPick(0);
-            }
-        }
-
         if (isset($parameters->maxAttempts)) {
             $step->setMaxAttempts($parameters->maxAttempts);
         }
 
         if (isset($parameters->duration)) {
             $step->setDuration($parameters->duration);
+        }
+    }
+
+    private function serializePicking(Step $step)
+    {
+        $picking = new \stdClass();
+
+        $picking->randomOrder = $step->getRandomOrder();
+        $picking->randomPick = $step->getRandomPick();
+        $picking->pick = $step->getPick();
+
+        return $picking;
+    }
+
+    private function deserializePicking(Step $step, \stdClass $picking)
+    {
+        if (isset($picking->randomOrder)) {
+            $step->setRandomOrder($picking->randomOrder);
+        }
+
+        if (isset($picking->randomPick)) {
+            $step->setRandomPick($picking->randomPick);
+            if (Recurrence::ONCE === $picking->randomPick || Recurrence::ALWAYS === $picking->randomPick) {
+                $step->setPick($picking->pick);
+            } else {
+                $step->setPick(0);
+            }
         }
     }
 

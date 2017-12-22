@@ -3,16 +3,16 @@ let _$scope = new WeakMap()
 let _$location = new WeakMap()
 let _$q = new WeakMap()
 let _restService = new WeakMap()
-let _$filter = new WeakMap()
+let _transFilter = new WeakMap()
 
 export default class TreeController {
-  constructor($rootScope, $scope, $location, $q, lessonData, restService, Chapter, Tree, $filter) {
+  constructor($rootScope, $scope, $location, $q, lessonData, restService, Chapter, Tree, transFilter) {
     _$rootScope.set(this, $rootScope)
     _$scope.set(this, $scope)
     _$location.set(this, $location)
     _$q.set(this, $q)
     _restService.set(this, restService)
-    _$filter.set(this, $filter)
+    _transFilter.set(this, transFilter)
 
     this.lessonData = lessonData
     this.tree = Tree
@@ -100,17 +100,17 @@ export default class TreeController {
   }
 
   collapseAll() {
-    _$scope.get(this).$broadcast('angular-ui-tree:collapse-all');
+    _$scope.get(this).$broadcast('angular-ui-tree:collapse-all')
   }
 
   expandAll() {
-    _$scope.get(this).$broadcast('angular-ui-tree:expand-all');
+    _$scope.get(this).$broadcast('angular-ui-tree:expand-all')
   }
 
   getDragEnableButtonText() {
     return !this.dragEnabled
-      ? _$filter.get(this)('trans')('enable_move', 'icap_lesson')
-      : _$filter.get(this)('trans')('disable_move', 'icap_lesson')
+      ? _transFilter.get(this)('enable_move', {}, 'icap_lesson')
+      : _transFilter.get(this)('disable_move', {}, 'icap_lesson')
   }
 
 }
@@ -124,5 +124,5 @@ TreeController.$inject = [
   'restService',
   'Chapter',
   'Tree',
-  '$filter'
+  'transFilter'
 ]

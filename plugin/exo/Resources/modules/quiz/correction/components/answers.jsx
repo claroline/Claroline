@@ -7,8 +7,8 @@ import {t, tex} from '#/main/core/translation'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {actions} from './../actions'
 import {selectors as correctionSelectors} from './../selectors'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
-import {TooltipButton} from './../../../components/form/tooltip-button.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
 class AnswerRow extends Component {
   constructor(props) {
@@ -31,8 +31,7 @@ class AnswerRow extends Component {
             <div className="feedback-container">
               <Textarea
                 id={`feedback-${this.props.id}-data`}
-                title={tex('response')}
-                content={this.props.feedback ? `${this.props.feedback}` : ''}
+                value={this.props.feedback}
                 onChange={(text) => this.props.updateFeedback(this.props.id, text)}
               />
             </div>
@@ -56,9 +55,10 @@ class AnswerRow extends Component {
               id={`feedback-${this.props.id}-toggle`}
               className="btn-link-default"
               title={tex('feedback')}
-              label={<span className="fa fa-fw fa-comments-o" />}
               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-            />
+            >
+              <span className="fa fa-fw fa-comments-o" />
+            </TooltipButton>
           </div>
         </div>
       </div>

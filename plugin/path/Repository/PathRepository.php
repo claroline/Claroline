@@ -21,7 +21,10 @@ class PathRepository extends EntityRepository
         }
 
         $builder->whereTypeIn(['innova_path']);
-        $builder->whereRoleIn($userRoles);
+
+        if (!in_array('ROLE_ADMIN', $userRoles)) {
+            $builder->whereRoleIn($userRoles);
+        }
 
         // Add filters if defined
         if ($config) {
@@ -46,7 +49,7 @@ class PathRepository extends EntityRepository
                 }
 
                 if (!empty($whereStatus)) {
-                    $builder->addWhereClause(implode($whereStatus, ' OR '));
+                    $builder->addWhereClause('('.implode($whereStatus, ' OR ').')');
                 }
             }
 

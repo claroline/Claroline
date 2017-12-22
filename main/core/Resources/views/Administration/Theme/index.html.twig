@@ -1,0 +1,38 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'themes_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-main-core-theme-management.css') }}" />
+{% endblock %}
+
+{% block breadcrumb %}
+    {{ macros.breadcrumbs([
+        {
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_index')
+        },
+        {
+            'name': 'themes_management'|trans({}, 'platform'),
+            'href': ''
+        }
+    ]) }}
+{% endblock %}
+
+{% block content %}
+    <div
+        class="page-container themes-container"
+        data-themes="{{ themes | json_encode | raw | escape }}"
+        data-read-only="{{ isReadOnly }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Claroline JS #}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-theme-management.js') }}"></script>
+{% endblock %}

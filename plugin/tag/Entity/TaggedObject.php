@@ -25,21 +25,29 @@ class TaggedObject
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var int
      */
     protected $id;
 
     /**
-     * @ORM\Column(name="object_id", type="integer")
+     * @ORM\Column(name="object_id", type="string")
+     *
+     * @var string
      */
     protected $objectId;
 
     /**
      * @ORM\Column(name="object_class")
+     *
+     * @var string
      */
     protected $objectClass;
 
     /**
      * @ORM\Column(name="object_name", nullable=true)
+     *
+     * @var string
      */
     protected $objectName;
 
@@ -48,6 +56,8 @@ class TaggedObject
      *     targetEntity="Claroline\TagBundle\Entity\Tag"
      * )
      * @ORM\JoinColumn(name="tag_id", onDelete="CASCADE", nullable=false)
+     *
+     * @var Tag
      */
     protected $tag;
 

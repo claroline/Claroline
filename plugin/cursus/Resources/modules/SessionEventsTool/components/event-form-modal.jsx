@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/lib/Modal'
 import classes from 'classnames'
 import moment from 'moment'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {t, trans} from '#/main/core/translation'
 import Datetime from 'react-datetime'
 import 'react-datetime/css/react-datetime.css'
@@ -162,10 +162,9 @@ class EventFormModal  extends Component {
             <div className="col-md-9">
               <Textarea
                 id="event-form-description"
-                content={this.state.description}
+                value={this.state.description}
                 onChange={text => this.updateEventProps('description', text)}
-              >
-              </Textarea>
+              />
             </div>
           </div>
 
@@ -282,10 +281,9 @@ class EventFormModal  extends Component {
             <div className="col-md-9">
               <Textarea
                 id="event-form-location-extra"
-                content={this.state.locationExtra}
+                value={this.state.locationExtra}
                 onChange={text => this.updateEventProps('locationExtra', text)}
-              >
-              </Textarea>
+              />
             </div>
           </div>
 

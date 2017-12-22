@@ -1,0 +1,107 @@
+<div class='modal-dialog'>
+    <form role="form" novalidate="novalidate"
+          action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentId':'_nodeId'}) }}"
+          method="post" {{ form_enctype(form) }}
+          id="generic-form"
+          novalidate
+          class="modal-content"
+    >
+        <div class='modal-header'>
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                &times;
+            </button>
+            <h4 class="modal-title">
+                {{ 'create_resource' | trans({}, 'platform') }}
+                ({{ resourceType | trans({}, 'resource') }})
+            </h4>
+        </div>
+        <div class='modal-body'>
+            {{ form_row(form.name) }}
+            {{ form_row(form.published) }}
+            <hr/>
+            <div>
+                <h4 class="text-center">
+                    BigBlueButton
+                </h4>
+                <br/>
+                {{ form_rest(form) }}
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">
+                {{ 'cancel'|trans({}, 'platform') }}
+            </button>
+            <button type="submit" class="btn btn-primary">
+                {{ 'ok'|trans({}, 'platform') }}
+            </button>
+        </div>
+    </form>
+</div>
+
+{% block stylesheets %}
+    <link
+        rel='stylesheet'
+        type='text/css'
+        href='{{ asset('bundles/frontend/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}'
+    />
+{% endblock %}
+
+{% block javascripts %}
+    {% javascripts debug=false
+     'js/translations/agenda/*.js'
+       %}<script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script type="text/javascript" src="{{ asset('bundles/frontend/moment/min/moment-with-locales.min.js') }}"></script>
+    <script
+        type="text/javascript"
+        src="{{ asset('bundles/frontend/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"
+    >
+    </script>
+    <script type='text/javascript'>
+      function t(key) {
+        return Translator.trans(key, {}, 'agenda')
+      }
+
+      function initializeDateTimePicker() {
+        var dateTimePickerOptions = {
+          format: 'DD/MM/YYYY HH:mm',
+          useCurrent: false,
+          locale: 'fr',
+//          locale: t('picker.locale'),
+          icons: {
+            time: 'fa fa-clock-o',
+            date: 'fa fa-calendar',
+            up: 'fa fa-chevron-up',
+            down: 'fa fa-chevron-down',
+            previous: 'fa fa-chevron-left',
+            next: 'fa fa-chevron-right',
+            today: 'fa fa-dot-circle-o',
+            clear: 'fa fa-trash',
+            close: 'fa fa-times'
+          },
+          stepping: 5,
+          showTodayButton: true,
+          showClose: true,
+          tooltips: {
+            today: t('picker.go_to_today'),
+            close: t('picker.close'),
+            selectMonth: t('picker.select_month'),
+            prevMonth: t('picker.prev_month'),
+            nextMonth: t('picker.next_month'),
+            selectYear: t('picker.select_year'),
+            prevYear: t('picker.prev_year'),
+            nextYear: t('picker.next_year'),
+            selectDecade: t('picker.select_decade'),
+            prevDecade: t('picker.prev_decade'),
+            nextDecade: t('picker.next_decade'),
+            prevCentury: t('picker.prev_century'),
+            nextCentury: t('picker.next_century')
+          }
+        }
+
+        $('#bbb_form_startDate, #bbb_form_endDate').datetimepicker(dateTimePickerOptions)
+      }
+
+      initializeDateTimePicker()
+    </script>
+{% endblock javascripts %}

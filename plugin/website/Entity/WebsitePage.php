@@ -96,7 +96,7 @@ class WebsitePage
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
-     * @ORM\JoinColumn(name="resource_node_id", referencedColumnName="id", nullable=true)
+     * @ORM\JoinColumn(name="resource_node_id", referencedColumnName="id", nullable=true, onDelete="SET NULL")
      * @JMS\Type("integer")
      * @JMS\Accessor(getter="getResourceNodeId")
      * @JMS\SerializedName("resourceNode")

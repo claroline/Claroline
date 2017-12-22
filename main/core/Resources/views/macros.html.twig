@@ -47,11 +47,13 @@
     {% spaceless %}
     <ul class="breadcrumb">
         {% for element in elements %}
-            <li{% if loop.last %} class="active"{% endif %}>
-                {% if not loop.last %}
-                    <a href="{{ element['href'] }}">{% if element['icon'] is defined %}<i class="{{ element['icon'] }}"></i> {% endif %}{{ element['name'] }}</a>
-                {% else %}<span>{{ element['name'] }}</span>{% endif %}
-            </li>
+        <li{% if loop.last %} class="active"{% endif %}>
+            {% if not loop.last %}
+            <a href="{{ element['href'] }}">{{ element['name'] }}</a>
+            {% else %}
+            <span>{{ element['name'] }}</span>
+            {% endif %}
+        </li>
         {% endfor %}
     </ul>
     {% endspaceless %}
@@ -108,7 +110,7 @@
 {% macro displayUser(user) %}
     {% if user %}
         {% if not user.isRemoved %}
-            <a href="{{path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()})}}">
+            <a href="{{path('claro_user_profile', {'publicUrl': user.getPublicUrl()})}}">
                 {{ user.getUsername() }}
             </a>
         {% else %}

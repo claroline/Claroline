@@ -27,6 +27,11 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
         return "{$vendor}\\{$bundle}\\{$vendor}{$bundle}";
     }
 
+    public function getShortName()
+    {
+        return $this->getVendorName().$this->getBundleName();
+    }
+
     final public function getVendorName()
     {
         $namespaceParts = explode('\\', $this->getNamespace());

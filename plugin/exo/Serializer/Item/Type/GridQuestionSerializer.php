@@ -69,7 +69,9 @@ class GridQuestionSerializer implements SerializerInterface
         return array_map(function (Cell $cell) use ($options) {
             $cellData = new \stdClass();
             $cellData->id = $cell->getUuid();
-            $cellData->data = $cell->getData();
+            if ($cell->getData()) {
+                $cellData->data = $cell->getData();
+            }
             $cellData->background = $cell->getBackground();
             $cellData->color = $cell->getColor();
             $cellData->coordinates = $cell->getCoords();
@@ -139,7 +141,10 @@ class GridQuestionSerializer implements SerializerInterface
 
         $gridQuestion->setRows($data->rows);
         $gridQuestion->setColumns($data->cols);
-        $gridQuestion->setSumMode($data->sumMode);
+
+        if (!empty($data->sumMode)) {
+            $gridQuestion->setSumMode($data->sumMode);
+        }
 
         if ($data->border instanceof \stdClass) {
             //during the import, we're an instance of /stdClass otherwise I'm not sure
@@ -188,7 +193,11 @@ class GridQuestionSerializer implements SerializerInterface
             $cell->setCoordsY($cellData->coordinates[1]);
             $cell->setColor($cellData->color);
             $cell->setBackground($cellData->background);
-            $cell->setData($cellData->data);
+
+            if (!empty($cellData->data)) {
+                $cell->setData($cellData->data);
+            }
+
             $cell->setInput($cellData->input);
 
             if (!empty($cellData->choices)) {
@@ -207,10 +216,10 @@ class GridQuestionSerializer implements SerializerInterface
             $gridQuestion->addCell($cell);
         }
 
-      // Remaining cells are no longer in the Question
-      foreach ($cellEntities as $cellToRemove) {
-          $gridQuestion->removeCell($cellToRemove);
-      }
+        // Remaining cells are no longer in the Question
+        foreach ($cellEntities as $cellToRemove) {
+            $gridQuestion->removeCell($cellToRemove);
+        }
     }
 
     private function deserializeCellChoices(Cell $cell, array $answers, array $options)

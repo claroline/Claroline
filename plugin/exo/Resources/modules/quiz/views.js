@@ -5,6 +5,7 @@ import {
   VIEW_ATTEMPT_END,
   VIEW_PAPERS,
   VIEW_PAPER,
+  VIEW_STATISTICS,
   VIEW_CORRECTION_QUESTIONS,
   VIEW_CORRECTION_ANSWERS
 } from './enums'
@@ -17,6 +18,7 @@ import {Papers}     from './papers/components/papers.jsx'
 import {Paper}      from './papers/components/paper.jsx'
 import {Questions}  from './correction/components/questions.jsx'
 import {Answers}    from './correction/components/answers.jsx'
+import {Statistics}    from './statistics/components/statistics.jsx'
 
 // Map components to defined routes
 export const viewComponents = {
@@ -27,5 +29,6 @@ export const viewComponents = {
   [VIEW_PAPERS]: Papers,
   [VIEW_PAPER]: Paper,
   [VIEW_CORRECTION_QUESTIONS]: Questions,
-  [VIEW_CORRECTION_ANSWERS]: Answers
+  [VIEW_CORRECTION_ANSWERS]: Answers,
+  [VIEW_STATISTICS]: Statistics
 }

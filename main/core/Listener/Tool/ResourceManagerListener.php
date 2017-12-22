@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\ConfigureWorkspaceToolEvent;
+use Claroline\CoreBundle\Event\DisplayToolEvent;
+use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -23,11 +23,11 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
-use Claroline\CoreBundle\Event\StrictDispatcher;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @DI\Service()
@@ -141,16 +141,16 @@ class ResourceManagerListener
 
         $breadcrumbsIds = $this->request->query->get('_breadcrumbs');
 
-        if ($breadcrumbsIds != null) {
-            $ancestors = $this->manager->getByIds($breadcrumbsIds);
+        if ($breadcrumbsIds !== null) {
+            $ancestors = $this->manager->getByIds($breadcrumbsIds, true);
 
             if (!$this->manager->isPathValid($ancestors)) {
                 throw new \Exception('Breadcrumbs invalid');
-            };
+            }
         } else {
-            $ancestors = array();
+            $ancestors = [];
         }
-        $path = array();
+        $path = [];
 
         foreach ($ancestors as $ancestor) {
             $path[] = $this->manager->toArray($ancestor, $this->tokenStorage->getToken());
@@ -164,9 +164,10 @@ class ResourceManagerListener
             ->findAll();
         $resourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
             ->findByResourceType(null);
+        $defaultResourceActionsMask = $this->maskManager->getDefaultResourceActionsMask();
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig', array(
+            'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig', [
                 'workspace' => $workspace,
                 'directoryId' => $directoryId,
                 'resourceTypes' => $resourceTypes,
@@ -175,7 +176,8 @@ class ResourceManagerListener
                 'maxPostSize' => ini_get('post_max_size'),
                 'resourceZoom' => $this->getZoom(),
                 'displayMode' => $this->getDisplayMode($workspaceId),
-             )
+                'defaultResourceActionsMask' => $defaultResourceActionsMask,
+             ]
         );
     }
 
@@ -189,16 +191,18 @@ class ResourceManagerListener
         $resourceTypes = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
         $resourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')
             ->findByResourceType(null);
+        $defaultResourceActionsMask = $this->maskManager->getDefaultResourceActionsMask();
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\desktop\resource_manager:resources.html.twig',
-            array(
+            [
                 'resourceTypes' => $resourceTypes,
                 'resourceActions' => $resourceActions,
                 'maxPostSize' => ini_get('post_max_size'),
                 'resourceZoom' => $this->getZoom(),
                 'displayMode' => $this->getDisplayMode('desktop'),
-            )
+                'defaultResourceActionsMask' => $defaultResourceActionsMask,
+            ]
         );
     }
 
@@ -229,7 +233,7 @@ class ResourceManagerListener
 
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\resource_manager:resourcesRights.html.twig',
-            array(
+            [
                 'workspace' => $workspace,
                 'currentWorkspace' => $workspace,
                 'resource' => $resource,
@@ -245,7 +249,7 @@ class ResourceManagerListener
                 'mask' => $mask,
                 'wsMax' => $wsMax,
                 'wsSearch' => '',
-            )
+            ]
         );
     }
 

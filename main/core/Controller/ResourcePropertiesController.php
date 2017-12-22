@@ -14,6 +14,7 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Form\ResourceIconType;
 use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Form\ResourcePropertiesType;
@@ -184,7 +185,6 @@ class ResourcePropertiesController extends Controller
         $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
         $creatorUsername = $node->getCreator()->getUsername();
-        $wasPublished = $node->isPublished();
         $wasPublishedToPortal = $node->isPublishedToPortal();
         $form = $this->formFactory->create(
             new ResourcePropertiesType($creatorUsername, $this->translator),
@@ -195,10 +195,15 @@ class ResourcePropertiesController extends Controller
         if ($form->isValid()) {
             $name = $form->get('name')->getData();
             $file = $form->get('newIcon')->getData();
+            $thumbnail = $form->get('newThumbnail')->getData();
             $isRecursive = $this->request->get('isRecursive');
+            $publish = $form->get('published')->getData();
 
             if ($file) {
                 $this->resourceManager->changeIcon($node, $file);
+            }
+            if ($thumbnail) {
+                $this->resourceManager->changeThumbnail($node, $thumbnail);
             }
 
             $this->resourceManager->rename($node, $name);
@@ -211,9 +216,7 @@ class ResourcePropertiesController extends Controller
                     ->changeAccessibilityDate($node, $accessibleFrom, $accessibleUntil);
             }
 
-            if ($node->isPublished() !== $wasPublished) {
-                $this->resourceManager->setPublishedStatus([$node], $node->isPublished());
-            }
+            $this->resourceManager->setPublishedStatus([$node], $publish, $isRecursive);
 
             if (
                 $this->hasAccess('ADMINISTRATE', $collection) &&
@@ -336,7 +339,10 @@ class ResourcePropertiesController extends Controller
     private function checkAccess($permission, $collection)
     {
         if (!$this->hasAccess($permission, $collection)) {
-            throw new AccessDeniedException($collection->getErrorsForDisplay());
+            throw new ResourceAccessException(
+                $collection->getErrorsForDisplay(),
+                $collection->getResources()
+            );
         }
     }
 

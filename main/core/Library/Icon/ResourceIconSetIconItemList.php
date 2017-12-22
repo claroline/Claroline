@@ -106,4 +106,14 @@ class ResourceIconSetIconItemList
             $this->setIcons->prependShortcutIcon($icon);
         }
     }
+
+    public function getByMimeType($mimeType)
+    {
+        $icon = $this->setIcons->getIconByMimeType($mimeType);
+        if (is_null($icon)) {
+            return $this->defaultIcons->getIconByMimeType($mimeType);
+        }
+
+        return $icon;
+    }
 }

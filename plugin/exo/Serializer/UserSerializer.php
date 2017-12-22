@@ -70,6 +70,7 @@ class UserSerializer extends AbstractSerializer
     public function deserialize($data, $user = null, array $options = [])
     {
         if (empty($user)) {
+            /** @var User $user */
             $user = $this->om->getRepository('ClarolineCoreBundle:User')->find($data->id);
         }
 

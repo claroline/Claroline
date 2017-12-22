@@ -65,13 +65,14 @@
                                 <label for="page-url">{{ 'url'|trans({}, 'icap_website') }}</label>
                                 <input id="page-url" type="url" class="form-control" data-ng-model="vm.tree.activeNode.url" placeholder="http://www.example.com"/>
                             </div>
-                            <div class="form-group">
-                                <label for="page-target">{{ 'target'|trans({}, 'icap_website') }}</label>
-                                <select id="page-target" data-ng-model="vm.tree.activeNode.target" convert-to-number>
-                                    <option value="0">{{ 'embedded'|trans({}, 'icap_website') }}</option>
-                                    <option value="1">{{ 'new_window'|trans({}, 'icap_website') }}</option>
-                                </select>
-                            </div>
+                        </div>
+
+                        <div class="form-group" data-ng-if="vm.tree.activeNode.type=='{{ pageTypes.url }}' || vm.tree.activeNode.type=='{{ pageTypes.resource }}'">
+                            <label for="page-target">{{ 'target'|trans({}, 'icap_website') }}</label>
+                            <select id="page-target" data-ng-model="vm.tree.activeNode.target" convert-to-number>
+                                <option value="0">{{ 'embedded'|trans({}, 'icap_website') }}</option>
+                                <option value="1">{{ 'new_window'|trans({}, 'icap_website') }}</option>
+                            </select>
                         </div>
 
                         <div class="form-group" data-ng-if="vm.tree.activeNode.type=='{{ pageTypes.resource }}'">

@@ -5,8 +5,7 @@ import {VideoContentModal} from './modal.jsx'
 
 export default {
   type: 'video',
-  icon: 'fa fa-file-video-o',
-  altIcon: 'fa fa-video-camera',
+  icon: 'fa fa-video-camera',
   player: VideoContentPlayer,
   browseFiles: 'video',
   thumbnail: VideoContentThumbnail,

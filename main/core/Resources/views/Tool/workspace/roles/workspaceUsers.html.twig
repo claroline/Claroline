@@ -112,12 +112,14 @@
                                 <i class="fa fa-plus"></i>
                                 {{ 'add_users'|trans({}, 'platform') }}
                             </a>
+                            {% if isManager %}
                             <a href="{{ path('claro_workspace_users_tool_import_form', {'workspace': workspace.getId()}) }}"
                                class="btn btn-default dropdown-toggle"
                             >
                                 <i class="fa fa-sign-in"></i>
                                 {{ 'import_users'|trans({}, 'platform') }}
                             </a>
+                            {% endif %}
                         </div>
                     </div>
                 {% endif %}
@@ -219,7 +221,7 @@
                         >
                             <td>
                                 {% if user.getPublicUrl() != '' %}
-                                    <a href="{{ path('claro_public_profile_view', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
+                                    <a href="{{ path('claro_user_profile', {'publicUrl':user.getPublicUrl()}) }}">{{ user.getUsername() }}</a>
                                 {% else %}
                                     {{ user.getUsername() }}
                                 {% endif %}
@@ -238,9 +240,9 @@
                                         >
                                             {{ role.getTranslationKey()|trans({}, 'platform') }}
 
-                                            {% if canEdit %}
+                                            {% if isManager or (canEdit and role in wsNonAdminRoles) %}
                                                 <i class="fa fa-times-circle pointer-hand remove-role-button"
-                                                   href="{{ path('claro_workspace_remove_role_from_user', {'workspace': workspace.getId(), 'user': userId, 'role': role.getId() } ) }}"
+                                                   href="{{ path('apiv2_user_remove_roles', {id: user.getUuid()} ) }}?ids[]={{ role.getId() }}"
                                                 >
                                                 </i>
                                             {% endif %}
@@ -296,7 +298,7 @@
             var route = target.attr('href');
             $.ajax({
                 url: route,
-                type: 'DELETE',
+                method: 'DELETE',
                 success: function() {
                     if (target.parents('td').first().find('span').length === 1) {
                         target.parents('tr').first().remove();

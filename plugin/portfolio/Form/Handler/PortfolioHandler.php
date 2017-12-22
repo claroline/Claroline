@@ -3,11 +3,13 @@
 namespace Icap\PortfolioBundle\Form\Handler;
 
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Icap\PortfolioBundle\Event\Log\PortfolioEditEvent;
 use Icap\PortfolioBundle\Manager\PortfolioManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("icap_portfolio.form_handler.portfolio")
@@ -30,17 +32,28 @@ class PortfolioHandler
     protected $portfolioManager;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
      * @DI\InjectParams({
      *     "formFactory"      = @DI\Inject("form.factory"),
      *     "request"          = @DI\Inject("request_stack"),
-     *     "portfolioManager" = @DI\Inject("icap_portfolio.manager.portfolio")
+     *     "portfolioManager" = @DI\Inject("icap_portfolio.manager.portfolio"),
+     *     "eventDispatcher" = @DI\Inject("event_dispatcher")
      * })
      */
-    public function __construct(FormFactory $formFactory, RequestStack $requestStack, PortfolioManager $portfolioManager)
-    {
+    public function __construct(
+        FormFactory $formFactory,
+        RequestStack $requestStack,
+        PortfolioManager $portfolioManager,
+        EventDispatcherInterface $eventDispatcher
+    ) {
         $this->formFactory = $formFactory;
         $this->requestStack = $requestStack;
         $this->portfolioManager = $portfolioManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -120,6 +133,8 @@ class PortfolioHandler
 
             if ($form->isValid()) {
                 $this->portfolioManager->renamePortfolio($portfolio, $form->get('refreshUrl')->getData());
+                $event = new PortfolioEditEvent($portfolio);
+                $this->eventDispatcher->dispatch('log', $event);
 
                 return true;
             }

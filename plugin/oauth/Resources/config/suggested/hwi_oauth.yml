@@ -30,6 +30,20 @@ hwi_oauth:
             type:           office365
             client_id:      <client_id>
             client_secret:  <client_secret>
+        generic:
+            type:           oauth2
+            client_id:      <client_id>
+            client_secret:  <client_secret>
+            access_token_url:    https://owner.domain.tld/oauth/v2/token
+            authorization_url:   https://owner.domain.tld/oauth/v2/auth
+            infos_url:           https://owner.domain.tld/api/user
+            scope:               "user"
+            user_response_class: HWI\Bundle\OAuthBundle\OAuth\Response\PathUserResponse
+            paths:
+                identifier: id
+                nickname:   username
+                realname:   fullname
+                username:   username
 
 
 
@@ -58,6 +72,7 @@ security:
                     linkedin:     /login/check-linkedin
                     windows_live: /login/check-windows
                     office_365:   /login/check-o365
+                    generic:      /login/check-generic
                 success_handler:    claroline.authentication_handler
                 failure_handler:    icap.oauth.failure_handler
                 login_path: /login

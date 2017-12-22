@@ -173,7 +173,7 @@
                                                 >
                                                     {{ role.getTranslationKey()|trans({}, 'platform') }}
 
-                                                    {% if canEdit %}
+                                                    {% if isManager or (canEdit and role in wsNonAdminRoles) %}
                                                         <i class="fa fa-times-circle pointer-hand remove-role-button"
                                                             href="{{ path('claro_workspace_remove_role_from_group', {'workspace': workspace.getId(), 'group': group.getId(), 'role': role.getId() } ) }}"
                                                         >

@@ -1,0 +1,30 @@
+.locale-icon {
+    width: 32px;
+    height: 24px;
+    margin: 4px 0;
+}
+
+.locale-btn {
+    display: inline-flex;
+    flex-direction: column;
+    border-radius: 50%;
+    font-size: @font-size-small;
+    padding: 15px;
+    background: #ededed;
+
+    + .locale-btn {
+        margin-left: 10px;
+    }
+
+    .locale-icon {
+        opacity: 0.5;
+    }
+
+    .active,
+    &:hover,
+    &:focus {
+        .locale-icon {
+            opacity: 1;
+        }
+    }
+}

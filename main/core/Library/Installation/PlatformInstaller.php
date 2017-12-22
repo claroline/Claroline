@@ -101,16 +101,10 @@ class PlatformInstaller
 
     public function updateAll($from, $to)
     {
-        $operations = [];
         $pluginManager = $this->container->get('claroline.manager.plugin_manager');
         $bundles = $pluginManager->getInstalledBundles();
 
-        foreach ($bundles as $bundle) {
-            $operations[get_class($bundle['instance'])] = new Operation(Operation::UPDATE, $bundle['instance'], get_class($bundle['instance']));
-            $operations[get_class($bundle['instance'])]->setFromVersion($from);
-            $operations[get_class($bundle['instance'])]->setToVersion($to);
-        }
-
+        $operations = $this->operationExecutor->buildOperationListForBundles($bundles, $from, $to);
         $this->operationExecutor->execute($operations);
     }
 

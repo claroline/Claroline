@@ -1,0 +1,238 @@
+// Claroline & bootstrap variables
+@import "../../../../main/core/Resources/less/themes/default/variables";
+
+@competency-color-info: #337AB7;
+@competency-color-success: green;
+
+.my-objectives-tool-panel-body {
+  padding: 0px;
+}
+
+.my-objectives-tool-title {
+  padding: 15px;
+  font-size: 20px;
+  background-color: @panel-default-heading-bg;
+  border-bottom: @panel-default-border 1px solid;
+}
+
+.my-objectives-tool-container > [data-reactroot] {
+    width: 100%;
+}
+
+.my-objectives-tool-content {
+  padding: 15px;
+}
+
+.objective-heading {
+  display: flex;
+  justify-content: space-between;
+
+  .panel-title {
+    display: flex;
+  }
+
+  .progress {
+    width: 33%;
+    margin-bottom: 0px;
+    border: 1px grey solid;
+  }
+}
+
+.competencies-box {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.competency-box {
+  height: 300px;
+  width: 325px;
+  margin: 20px;
+}
+
+.box-header {
+  text-align: center;
+  height: 75px;
+  border: solid 1px @panel-default-border;
+  background-color: @panel-default-heading-bg;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+}
+
+.box-title {
+  margin-top:10px;
+}
+
+.box-content {
+  height: 225px;
+  border: solid 1px @panel-default-border;
+  border-radius: 0px 0px 10px 10px;
+
+  .competency-box-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .fa-line-chart {
+      color: @competency-color-info;
+      margin-top: 45px;
+      margin-bottom: 35px
+    }
+
+    .acquired-content {
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+
+    .fa-check-square-o {
+      margin-left: 7px;
+    }
+
+    .c100 {
+      margin-left: 5px;
+      margin-right: 5px;
+      margin-top: 10px;
+      margin-bottom: 15px;
+    }
+  }
+}
+
+.level {
+  display:flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 20px;
+  max-height: 60px;
+  overflow: auto;
+  color: @competency-color-info;
+}
+
+.extra-level {
+  color: darkgrey;
+}
+
+.fa-star,.fa-star-o{
+  margin-left: 3px;
+  margin-right: 3px;
+}
+
+.competency-panel {
+  border-radius: 10px;
+
+  .panel-heading {
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+  }
+
+  .panel-body {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .btn-primary {
+      margin-top: 10px;
+      margin-bottom: 30px;
+    }
+  }
+}
+
+.current-level {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  flex-wrap: wrap;
+
+  .fa-arrow-circle-left{
+    margin-right: 8px;
+  }
+
+  .fa-arrow-circle-right{
+    margin-left: 8px;
+  }
+}
+
+.change-level {
+  width: 250px;
+}
+
+.change-level-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.current-level-content {
+  padding:10px;
+  border:solid 2px @panel-default-border;
+  border-radius: 0 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  margin-right: 50px;
+  margin-left: 50px;
+
+  .acquired-content {
+    font-size: 20px;
+    height: 80px;
+    margin-top: 8px;
+  }
+}
+
+.current-level-challenge {
+  text-align:center;
+  margin-bottom: 20px;
+}
+
+.acquired-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: @competency-color-success;
+}
+
+.competency-extra-box {
+  background-color: @panel-default-heading-bg;
+  border-bottom:solid 1px @panel-default-border;
+
+  .competency-extra-content {
+    padding: 19px;
+  }
+}
+
+.extra-icons {
+  margin-left: 10px;
+}
+
+.competency-color-info {
+  color: @competency-color-info;
+}
+
+.competency-color-success {
+  color: @competency-color-success;
+}
+
+.challenge-error-alert {
+  width: 100%;
+}
+
+.level-icon {
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.current-level-icon {
+  border: 3px solid @competency-color-info;
+  border-radius: 20px;
+}

@@ -1,0 +1,32 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'tasks_scheduling'|trans({}, 'tools') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{ macros.breadcrumbs([
+        {
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_index')
+        },
+        {
+            'name': 'tasks_scheduling'|trans({}, 'tools'),
+            'href': ''
+        }
+    ]) }}
+{% endblock %}
+
+{% block content %}
+    <div
+        class="page-container scheduled-tasks-container"
+        data-is-cron-configured="{{ isCronConfigured }}"
+        data-tasks="{{ tasks | json_encode | raw | escape }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Claroline JS #}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-scheduled-task-management.js') }}"></script>
+{% endblock javascripts %}

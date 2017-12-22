@@ -4,6 +4,7 @@ namespace Icap\PortfolioBundle\Importer;
 
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Entity\Portfolio;
+use Icap\PortfolioBundle\Entity\PortfolioWidget;
 use Icap\PortfolioBundle\Entity\Widget\ExperienceWidget;
 use Icap\PortfolioBundle\Entity\Widget\FormationsWidget;
 use Icap\PortfolioBundle\Entity\Widget\FormationsWidgetResource;
@@ -11,9 +12,30 @@ use Icap\PortfolioBundle\Entity\Widget\SkillsWidget;
 use Icap\PortfolioBundle\Entity\Widget\SkillsWidgetSkill;
 use Icap\PortfolioBundle\Entity\Widget\TextWidget;
 use Icap\PortfolioBundle\Entity\Widget\UserInformationWidget;
+use Icap\PortfolioBundle\Manager\WidgetsManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
+/**
+ * @DI\Service("icap_portfolio.importer.leap2a")
+ */
 class Leap2aImporter implements ImporterInterface
 {
+    /**
+     * @var WidgetsManager
+     */
+    protected $widgetsManager;
+
+    /**
+     * @DI\InjectParams({
+     *     "widgetsManager"  = @DI\Inject("icap_portfolio.manager.widgets")
+     * })
+     */
+    public function __construct(
+        WidgetsManager $widgetsManager
+    ) {
+        $this->widgetsManager = $widgetsManager;
+    }
+
     /**
      * @return string
      */
@@ -40,7 +62,7 @@ class Leap2aImporter implements ImporterInterface
      */
     public function import($content, User $user)
     {
-        $content = str_replace('xmlns=', 'ns=', $content);// For getting something from the \SimpleXMLElement
+        $content = str_replace('xmlns=', 'ns=', $content); // For getting something from the \SimpleXMLElement
         $xml = new \SimpleXMLElement($content);
 
         $portfolio = $this->retrievePortfolioFromXml($xml, $user);
@@ -68,7 +90,7 @@ class Leap2aImporter implements ImporterInterface
         $portfolio
             ->setTitle((string) $portfolioTitleNodes[0])
             ->setUser($user)
-            ->setWidgets($this->retrieveWidgets($xml));
+            ->setPortfolioWidgets($this->retrieveWidgets($xml, $portfolio));
 
         return $portfolio;
     }
@@ -76,28 +98,30 @@ class Leap2aImporter implements ImporterInterface
     /**
      * @param \SimpleXmlElement $nodes
      *
-     * @return \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[]
+     * @return \Icap\PortfolioBundle\Entity\PortfolioWidget[]
      *
      * @throws \Exception
      */
-    public function retrieveWidgets(\SimpleXMLElement $nodes)
+    public function retrieveWidgets(\SimpleXMLElement $nodes, Portfolio $portfolio)
     {
-        $skillsWidgets = $this->extractSkillsWidgets($nodes);
+        $skillsWidgets = $this->extractSkillsWidgets($nodes, $portfolio);
 
-        $userInformationWidgets = $this->extractUserInformationWidgets($nodes);
+        $userInformationWidgets = $this->extractUserInformationWidgets($nodes, $portfolio);
 
-        $formationWidgets = $this->extractFormationsWidgets($nodes);
+        $formationWidgets = $this->extractFormationsWidgets($nodes, $portfolio);
 
-        $textWidgets = $this->extractTextWidgets($nodes);
+        $textWidgets = $this->extractTextWidgets($nodes, $portfolio);
 
-        $experienceWidgets = $this->extractExperienceWidgets($nodes);
+        $experienceWidgets = $this->extractExperienceWidgets($nodes, $portfolio);
 
-        /** @var \Icap\PortfolioBundle\Entity\Widget\AbstractWidget[] $widgets */
+        /** @var \Icap\PortfolioBundle\Entity\PortfolioWidget[] $widgets */
         $widgets = array_merge($skillsWidgets, $userInformationWidgets, $formationWidgets, $textWidgets, $experienceWidgets);
 
         $widgetRowNumber = 1;
         foreach ($widgets as $widget) {
             $widget->setRow($widgetRowNumber);
+            $widget->setCol(1);
+            $widget->setSize(['sizeX' => 3, 'sizeY' => 3]);
             ++$widgetRowNumber;
         }
 
@@ -107,17 +131,20 @@ class Leap2aImporter implements ImporterInterface
     /**
      * @param \SimpleXMLElement $nodes
      *
-     * @return SkillsWidget[]
+     * @return PortfolioWidget[]
      *
      * @throws \Exception
      */
-    protected function extractSkillsWidgets(\SimpleXMLElement $nodes)
+    protected function extractSkillsWidgets(\SimpleXMLElement $nodes, Portfolio $portfolio)
     {
-        $skillsWidgets = [];
+        $portfolioWidgets = [];
         $skillsWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:selection' and category/@term='Abilities']");
 
         foreach ($skillsWidgetNodes as $skillsWidgetNode) {
+            $portfolioWidget = $this->widgetsManager->getNewPortfolioWidget($portfolio, 'skills');
             $skillsWidget = new SkillsWidget();
+            $portfolioWidget->setWidget($skillsWidget);
+            $skillsWidget->setUser($portfolio->getUser());
             $skillsWidgetTitle = $skillsWidgetNode->xpath('title');
 
             if (0 === count($skillsWidgetTitle)) {
@@ -149,28 +176,30 @@ class Leap2aImporter implements ImporterInterface
                 $skillsWidgetSkills[] = $skillsWidgetSkill;
             }
             $skillsWidget->setSkills($skillsWidgetSkills);
-            $skillsWidgets[] = $skillsWidget;
+            $portfolioWidgets[] = $portfolioWidget;
         }
 
-        return $skillsWidgets;
+        return $portfolioWidgets;
     }
 
     /**
      * @param \SimpleXMLElement $nodes
      *
-     * @return FormationsWidget[]
+     * @return PortfolioWidget[]
      *
      * @throws \Exception
      */
-    protected function extractFormationsWidgets(\SimpleXMLElement $nodes)
+    protected function extractFormationsWidgets(\SimpleXMLElement $nodes, Portfolio $portfolio)
     {
-        $formationsWidgets = [];
+        $portfolioWidgets = [];
         $formationsWidgetsNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:activity' and category/@term='Education']");
 
         foreach ($formationsWidgetsNodes as $formationsWidgetsNode) {
+            $portfolioWidget = $this->widgetsManager->getNewPortfolioWidget($portfolio, 'formations');
             $formationsWidget = new FormationsWidget();
+            $portfolioWidget->setWidget($formationsWidget);
             $formationsWidgetTitle = $formationsWidgetsNode->xpath('title');
-
+            $formationsWidget->setUser($portfolio->getUser());
             if (0 === count($formationsWidgetTitle)) {
                 throw new \Exception('Entry has no title.');
             }
@@ -230,21 +259,21 @@ class Leap2aImporter implements ImporterInterface
                 $formationsWidgetResources[] = $formationsWidgetResource;
             }
             $formationsWidget->setResources($formationsWidgetResources);
-            $formationsWidgets[] = $formationsWidget;
+            $portfolioWidgets[] = $portfolioWidget;
         }
 
-        return $formationsWidgets;
+        return $portfolioWidgets;
     }
 
     /**
      * @param \SimpleXMLElement $nodes
      *
-     * @return UserInformationWidget
+     * @return PortfolioWidget[]
      */
-    private function extractUserInformationWidgets(\SimpleXMLElement $nodes)
+    private function extractUserInformationWidgets(\SimpleXMLElement $nodes, Portfolio $portfolio)
     {
         $userInformationWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:person']");
-        $userInformationWidgets = [];
+        $portfolioWidgets = [];
 
         if (0 < count($userInformationWidgetNodes)) {
             $birthDateNode = $userInformationWidgetNodes[0]->xpath("leap2:persondata[@leap2:field='dob']");
@@ -252,53 +281,65 @@ class Leap2aImporter implements ImporterInterface
 
             $cityNode = $userInformationWidgetNodes[0]->xpath("leap2:persondata[@leap2:field='other' and @leap2:label='city']");
             $city = (string) $cityNode[0];
-
+            $portfolioWidget = $this->widgetsManager->getNewPortfolioWidget($portfolio, 'userInformation');
             $userInformationWidget = new UserInformationWidget();
+            $portfolioWidget->setWidget($userInformationWidget);
+            $userInformationWidget->setUser($portfolio->getUser());
             $userInformationWidget
                 ->setLabel((string) $userInformationWidgetNodes[0]->title)
                 ->setBirthDate(new \DateTime($birthDate))
                 ->setCity($city);
 
-            $userInformationWidgets[] = $userInformationWidget;
+            $portfolioWidgets[] = $portfolioWidget;
         }
 
-        return $userInformationWidgets;
+        return $portfolioWidgets;
     }
 
     /**
      * @param \SimpleXMLElement $nodes
      *
-     * @return TextWidget[]
+     * @return PortfolioWidget[]
      */
-    private function extractTextWidgets(\SimpleXMLElement $nodes)
+    private function extractTextWidgets(\SimpleXMLElement $nodes, Portfolio $portfolio)
     {
-        $textWidgets = [];
+        $portfolioWidgets = [];
         $textWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:entry']");
 
         foreach ($textWidgetNodes as $textWidgetNode) {
+            $portfolioWidget = $this->widgetsManager->getNewPortfolioWidget($portfolio, 'text');
             $textWidget = new TextWidget();
+            $portfolioWidget->setWidget($textWidget);
+            $textWidget->setUser($portfolio->getUser());
+
             $textWidget
                 ->setLabel((string) $textWidgetNode->title)
                 ->setText((string) $textWidgetNode->content);
 
-            $textWidgets[] = $textWidget;
+            $portfolioWidgets[] = $portfolioWidget;
         }
 
-        return $textWidgets;
+        return $portfolioWidgets;
     }
 
     /**
      * @param \SimpleXMLElement $nodes
+     * @param Portfolio         $portfolio
      *
-     * @return ExperienceWidget[]
+     * @return PortfolioWidget[]
+     *
+     * @throws \Exception
      */
-    private function extractExperienceWidgets(\SimpleXMLElement $nodes)
+    private function extractExperienceWidgets(\SimpleXMLElement $nodes, Portfolio $portfolio)
     {
-        $experienceWidgets = [];
+        $portfolioWidgets = [];
         $experienceWidgetNodes = $nodes->xpath("//entry[rdf:type/@rdf:resource='leap2:activity' and category/@term='Work']");
 
         foreach ($experienceWidgetNodes as $experienceWidgetNode) {
+            $portfolioWidget = $this->widgetsManager->getNewPortfolioWidget($portfolio, 'text');
             $experienceWidget = new ExperienceWidget();
+            $portfolioWidget->setWidget($experienceWidget);
+            $experienceWidget->setUser($portfolio->getUser());
             $experienceWidgetTitleNode = $experienceWidgetNode->xpath('title');
 
             if (0 === count($experienceWidgetTitleNode)) {
@@ -333,9 +374,9 @@ class Leap2aImporter implements ImporterInterface
                 ->setCompanyName($companyName)
                 ->setPost($post);
 
-            $experienceWidgets[] = $experienceWidget;
+            $portfolioWidgets[] = $portfolioWidget;
         }
 
-        return $experienceWidgets;
+        return $portfolioWidgets;
     }
 }

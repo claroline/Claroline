@@ -15,8 +15,9 @@ import {ItemPlayer} from './item-player.jsx'
 import {ItemFeedback} from './item-feedback.jsx'
 import {ContentItemPlayer} from './content-item-player.jsx'
 import {PlayerNav} from './nav-bar.jsx'
-
 import {CustomDragLayer} from './../../../utils/custom-drag-layer.jsx'
+import {getNumbering} from './../../../utils/numbering'
+import {NUMBERING_NONE} from './../../../quiz/enums'
 
 const Player = props =>
   <div className="quiz-player">
@@ -28,7 +29,7 @@ const Player = props =>
       <div className="step-description" dangerouslySetInnerHTML={{ __html: props.step.description }}></div>
     }
 
-    {props.items.map((item) => (
+    {props.items.map((item, index) => (
       <Panel
         key={item.id}
       >
@@ -41,6 +42,7 @@ const Player = props =>
             item={item}
             showHint={(questionId, hint) => props.showHint(props.quizId, props.paper.id, questionId, hint)}
             usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+            numbering={props.numbering !== NUMBERING_NONE ? props.stepIndex + '.' + getNumbering(props.numbering, index): null}
           >
             {React.createElement(getDefinition(item.type).player, {
               item: item,
@@ -52,6 +54,7 @@ const Player = props =>
           <ItemFeedback
             item={item}
             usedHints={props.answers[item.id] ? props.answers[item.id].usedHints : []}
+            numbering={props.numbering !== NUMBERING_NONE ? props.stepIndex + '.' + getNumbering(props.numbering, index): null}
           >
             {React.createElement(getDefinition(item.type).feedback, {
               item: item,
@@ -64,8 +67,10 @@ const Player = props =>
 
     <PlayerNav
       previous={props.previous}
+      mandatoryQuestions={props.mandatoryQuestions}
       next={props.next}
       step={props.step}
+      answers = {props.answers}
       showFeedback={props.showFeedback}
       feedbackEnabled={props.feedbackEnabled}
       navigateTo={(step) => props.navigateTo(props.quizId, props.paper.id, step, props.answers, false)}
@@ -87,6 +92,7 @@ Player.propTypes = {
     description: T.string
   }).isRequired,
   items: T.array.isRequired,
+  mandatoryQuestions: T.bool.isRequired,
   answers: T.object.isRequired,
   paper: T.shape({
     id: T.string.isRequired,
@@ -98,6 +104,7 @@ Player.propTypes = {
   navigateTo: T.func.isRequired,
   showFeedback: T.bool.isRequired,
   feedbackEnabled: T.bool.isRequired,
+  numbering: T.string.isRequired,
   submit: T.func.isRequired,
   finish: T.func.isRequired,
   showHint: T.func.isRequired,
@@ -106,11 +113,13 @@ Player.propTypes = {
 
 Player.defaultProps = {
   next: null,
-  previous: null
+  previous: null,
+  answers: {}
 }
 
 function mapStateToProps(state) {
   return {
+    mandatoryQuestions: selectQuiz.parameters(state).mandatoryQuestions,
     quizId: selectQuiz.id(state),
     number: select.currentStepNumber(state),
     step: select.currentStep(state),
@@ -121,7 +130,9 @@ function mapStateToProps(state) {
     previous: select.previous(state),
     showFeedback: select.showFeedback(state),
     feedbackEnabled: select.feedbackEnabled(state),
-    currentStepSend: select.currentStepSend(state)
+    currentStepSend: select.currentStepSend(state),
+    numbering: selectQuiz.quizNumbering(state),
+    stepIndex: select.currentStepIndex(state)
   }
 }
 

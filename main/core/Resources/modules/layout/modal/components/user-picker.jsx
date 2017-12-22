@@ -1,23 +1,18 @@
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import Modal from 'react-bootstrap/lib/Modal'
 
 import {t} from '#/main/core/translation'
 import {BaseModal} from './base.jsx'
-import React, {PropTypes as T} from 'react'
 import {UserTypeahead} from '#/main/core/layout/typeahead/users/typeahead.jsx'
+import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
 
 const UserPickerModal = props =>
   <BaseModal {...props}>
     <Modal.Body>
+      {props.help && <HelpBlock help={props.help} />}
       <UserTypeahead {...props}/>
     </Modal.Body>
-    <Modal.Footer>
-      <button
-        className="btn btn-primary"
-        onClick={() => props.fadeModal()}
-      >
-        {t('Ok')}
-      </button>
-    </Modal.Footer>
   </BaseModal>
 
 UserPickerModal.propTypes = {
@@ -25,7 +20,8 @@ UserPickerModal.propTypes = {
   handleSelect: T.func.isRequired,
   handleRemove: T.func.isRequired,
   fadeModal: T.func.isRequired,
-  selected: T.array.isRequired
+  selected: T.array.isRequired,
+  help: T.string
 }
 
 UserPickerModal.defaultProps = {
@@ -34,4 +30,6 @@ UserPickerModal.defaultProps = {
   selected: []
 }
 
-export {UserPickerModal}
+export {
+  UserPickerModal
+}

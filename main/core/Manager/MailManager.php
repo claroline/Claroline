@@ -14,6 +14,8 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\RefreshCacheEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Mailing\Mailer;
+use Claroline\CoreBundle\Library\Mailing\Message;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -35,7 +37,7 @@ class MailManager
     /**
      * @DI\InjectParams({
      *     "router"         = @DI\Inject("router"),
-     *     "mailer"         = @DI\Inject("mailer"),
+     *     "mailer"         = @DI\Inject("claroline.library.mailing.mailer"),
      *     "ch"             = @DI\Inject("claroline.config.platform_config_handler"),
      *     "container"      = @DI\Inject("service_container"),
      *     "cacheManager"   = @DI\Inject("claroline.manager.cache_manager"),
@@ -43,7 +45,7 @@ class MailManager
      * })
      */
     public function __construct(
-        \Swift_Mailer $mailer,
+        Mailer $mailer,
         UrlGeneratorInterface $router,
         TranslatorInterface $translator,
         PlatformConfigurationHandler $ch,
@@ -81,7 +83,8 @@ class MailManager
         $subject = $this->translator->trans('resetting_your_password', [], 'platform');
 
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Mail:forgotPassword.html.twig', ['user' => $user, 'link' => $link]
+            'ClarolineCoreBundle:Mail:forgotPassword.html.twig',
+            ['user' => $user, 'link' => $link]
         );
 
         return $this->send($subject, $body, [$user], null, [], true);
@@ -95,7 +98,8 @@ class MailManager
         $subject = $this->translator->trans('initialize_your_password', [], 'platform');
 
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Mail:initialize_password.html.twig', ['user' => $user, 'link' => $link]
+            'ClarolineCoreBundle:Mail:initialize_password.html.twig',
+            ['user' => $user, 'link' => $link]
         );
 
         return $this->send($subject, $body, [$user], null, [], true);
@@ -108,7 +112,8 @@ class MailManager
         $subject = $this->translator->trans('activate_account', [], 'platform');
 
         $body = $this->container->get('templating')->render(
-            'ClarolineCoreBundle:Mail:activateUser.html.twig', ['user' => $user, 'link' => $link]
+            'ClarolineCoreBundle:Mail:activateUser.html.twig',
+            ['user' => $user, 'link' => $link]
         );
 
         return $this->send($subject, $body, [$user], null, [], true);
@@ -181,7 +186,9 @@ class MailManager
             $to = [];
 
             $layout = $this->contentManager->getTranslatedContent(['type' => 'claro_mail_layout']);
-            $fromEmail = $this->getMailerFrom();
+            $fromEmail = $this->ch->hasParameter('mailer_sender_from') && $this->ch->getParameter('mailer_sender_from') && !is_null($from) && !is_null($replyToMail) ?
+                $from->getMail() :
+                $this->getMailerFrom();
             $locale = count($users) === 1 ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
 
             if (!$locale) {
@@ -218,24 +225,23 @@ class MailManager
                 }
             }
 
-            $message = \Swift_Message::newInstance()
-                ->setSubject($subject)
-                ->setFrom($fromEmail)
-                ->setReplyTo($replyToMail)
-                ->setBody($body, 'text/html');
+            $message = new Message();
+            $message->subject($subject);
+            $message->from($fromEmail);
+            $message->body($body);
 
-            if ($from !== null && filter_var($from->getMail(), FILTER_VALIDATE_EMAIL)) {
-                $message->setReplyTo($from->getMail());
-            }
+            ($from !== null && filter_var($from->getMail(), FILTER_VALIDATE_EMAIL)) ?
+                $message->replyTo($from->getMail()) :
+                $message->replyTo($replyToMail);
 
             if (count($to) > 1) {
-                $message->setBcc($to);
+                $message->bcc($to);
             } else {
-                $message->setTo($to);
+                $message->to($to);
             }
 
             if (isset($extra['attachment'])) {
-                $message->attach(\Swift_Attachment::fromPath($extra['attachment'], 'application/octet-stream'));
+                $message->attach($extra['attachment'], 'application/octet-stream');
             }
 
             return $this->mailer->send($message) ? true : false;
@@ -280,12 +286,22 @@ class MailManager
      */
     public function refreshCache(RefreshCacheEvent $event)
     {
-        try {
-            $this->mailer->getTransport()->start();
-            $event->addCacheParameter('is_mailer_available', true);
-        } catch (\Swift_TransportException $e) {
-            $event->addCacheParameter('is_mailer_available', false);
-        }
+        $data = [
+          'transport' => $this->ch->getParameter('mailer_transport'),
+          'host' => $this->ch->getParameter('mailer_host'),
+          'username' => $this->ch->getParameter('mailer_username'),
+          'password' => $this->ch->getParameter('mailer_password'),
+          'auth_mode' => $this->ch->getParameter('mailer_auth_mode'),
+          'encryption' => $this->ch->getParameter('mailer_encryption'),
+          'port' => $this->ch->getParameter('mailer_port'),
+          'api_key' => $this->ch->getParameter('mailer_api_key'),
+        ];
+
+        $test = count($this->mailer->test($data) === 0) ? true : false;
+        $event->addCacheParameter(
+          'is_mailer_available',
+          $test
+        );
     }
 
     public function getMailerFrom()

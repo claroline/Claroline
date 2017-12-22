@@ -62,7 +62,7 @@
                     {% set user = queue.getUser() %}
                         <tr id="row-{{ user.id }}" class="row-user" data-user-id="{{ user.getId() }}">
                             <td>
-                                <a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}"> {{user.getUsername()}}</a>
+                                <a href="{{ path('claro_user_profile', {'publicUrl': user.getPublicUrl()}) }}"> {{user.getUsername()}}</a>
                             </td>
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>

@@ -17,3 +17,7 @@ plugin:
       is_displayable_in_desktop: false
       default_width: 4
       default_height: 3
+    - name: tag_workspace
+      is_configurable: true
+      is_displayable_in_desktop: true
+      is_displayable_in_workspace: false

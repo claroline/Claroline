@@ -1,0 +1,111 @@
+{#
+ # This file is part of the Inwicast plugin for Claroline Connect.
+ #
+ # (c) Claroline
+ #
+ # For the full copyright and license information, please view the LICENSE
+ # file that was distributed with this source code.
+ #}
+
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'packages' | trans({}, 'platform') | striptags | raw }}
+    {{ ' - ' ~ 'inwicastclarolineplugin' | trans({}, 'plugin_description') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{ macros.breadcrumbs([
+    {
+    'icon': 'icon-cog',
+    'name': 'administration'|trans({}, 'platform'),
+    'href': path('claro_admin_index')
+    },
+    {
+    'name': 'inwicastclarolineplugin'|trans({}, 'plugin_description'),
+    'href': ''
+    }
+    ]) }}
+{% endblock %}
+
+{% block section_content %}
+    <div class="panel-heading">
+        <h3 class="panel-title">{{ 'inwicastclarolineplugin' | trans({}, 'plugin_description') }}</h3>
+    </div>
+    <form action="{{ path('inwicast_mediacenter_configure') }}" method="POST">
+        <div class="panel-body">
+            {{ form_errors(form) }}
+            <div class="row">
+                <label for="link" class="control-label col-md-3 required">
+                    {{ 'inwicast_mediacenter_url'|trans({}, 'widget') }}:
+                </label>
+
+                <div class="col-md-9">
+                    {{ form_widget(form.url) }}
+                </div>
+            </div>
+            <div class="row inwicast-db-params">
+                <h4 class="col-md-12">{{ 'database_parameters'|trans({}, 'widget') }}</h4>
+            </div>
+            <div class="row">
+                <label for="link" class="control-label col-md-3 required">
+                    {{ 'inwicast_mediacenter_driver'|trans({}, 'widget') }}:
+                </label>
+
+                <div class="col-md-9">
+                    {{ form_widget(form.driver) }}
+                </div>
+            </div>
+            <div class="row">
+                <label for="link" class="control-label col-md-3 required">
+                    {{ 'inwicast_mediacenter_host'|trans({}, 'widget') }}:
+                </label>
+
+                <div class="col-md-9">
+                    {{ form_widget(form.host) }}
+                </div>
+            </div>
+            <div class="row">
+                <label for="link" class="control-label col-md-3 required">
+                    {{ 'inwicast_mediacenter_port'|trans({}, 'widget') }}:
+                </label>
+
+                <div class="col-md-9">
+                    {{ form_widget(form.port) }}
+                </div>
+            </div>
+            <div class="row">
+                <label for="link" class="control-label col-md-3 required">
+                    {{ 'inwicast_mediacenter_dbname'|trans({}, 'widget') }}:
+                </label>
+
+                <div class="col-md-9">
+                    {{ form_widget(form.dbname) }}
+                </div>
+            </div>
+            <div class="row">
+                <label for="link" class="control-label col-md-3 required">
+                    {{ 'inwicast_mediacenter_user'|trans({}, 'widget') }}:
+                </label>
+
+                <div class="col-md-9">
+                    {{ form_widget(form.user) }}
+                </div>
+            </div>
+            <div class="row">
+                <label for="link" class="control-label col-md-3 required">
+                    {{ 'inwicast_mediacenter_password'|trans({}, 'widget') }}:
+                </label>
+
+                <div class="col-md-9">
+                    {{ form_widget(form.password) }}
+                </div>
+            </div>
+            {{ form_rest(form) }}
+        </div>
+        <div class="panel-footer">
+            <input class="btn btn-primary" type="submit" id="inwicast_mediacenter_submit"
+                   value="{{ 'validate'|trans({}, 'widget') }}"/>
+            <a href="{{ path('claro_admin_index') }}"
+               class="btn btn-default">{{ 'cancel'|trans({}, 'platform') }}</a>
+        </div>
+    </form>
+{% endblock %}

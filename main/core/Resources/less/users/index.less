@@ -2,6 +2,70 @@
  * Users barrel.
  */
 
+@import "variables";
+@import "mixins";
+
+// Components styles
+@import "comments";
 @import "impersonation";
 @import "login";
+@import "message";
 @import "profile";
+@import "timeline";
+
+.user-avatar {
+    border-radius: 50%;
+
+    // for .fa when no picture
+    color: #ccc;
+}
+
+.user-micro {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    color: #777; // toto : use a var
+    vertical-align: middle;
+    font-size: @font-size-small;
+    font-weight: bold;
+
+    .user-avatar {
+        margin-right: 10px;
+
+        // for picture
+        max-height: 30px;
+
+        // for .fa when no picture
+        font-size: 30px;
+    }
+}
+
+.user-page {
+    .page-header {
+        // todo : check if this can be partially moved on base avatar styles
+        // this should not break anything but it need tests.
+        .user-avatar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 72px;
+            max-width: 100%;
+
+            // make avatar always look as a square
+            &:after {
+                content: "";
+                display: block;
+                padding-bottom: 100%;
+            }
+        }
+    }
+
+    .user-profile-aside {
+        margin-top: floor((@font-size-h2 * @headings-line-height) + (@line-height-computed / 2)); // because of the profile picture
+    }
+
+    h2:first-of-type {
+        margin-top: 0;
+    }
+
+}

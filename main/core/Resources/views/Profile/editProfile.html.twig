@@ -33,7 +33,7 @@
             </div>
         {% endif %}
         {% set actionForm = editYourself ? path('claro_user_profile_edit') : path('claro_user_profile_edit', {'user': user.getId()}) %}
-        {% set cancelUrl  = editYourself ? path('claro_public_profile_view', {'publicUrl': user.publicUrl}) : path('claro_admin_users_index') %}
+        {% set cancelUrl  = editYourself ? path('claro_user_profile', {'publicUrl': user.publicUrl}) : path('claro_admin_users_index') %}
         <form role="form" class="form-horizontal" action="{{ actionForm }}" method="post" {{ form_enctype(form) }} id="profile_form">
             <div class="panel-body">
                 {% for role in unavailableRoles %}
@@ -50,79 +50,6 @@
             </div>
         </form>
     </div>
-{% endblock %}
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        //disable unavailable checkboxes
-        {% for role in unavailableRoles %}
-            $('#profile_form_platformRoles_' + {{ role.getId() }}).attr('disabled', true)
-        {% endfor %}
-
-        //registers ids of checked organizations and updates groups choices accordingly
-        let groupsData = {}
-        let organizationsIds = []
-        let displayedGroupsIds = []
-
-        $('#profile_form_organizations').on('change', function () {
-          updateOrganizations()
-          generateGroupsIds()
-          updateGroups()
-        })
-
-        const updateOrganizations = function () {
-          const checkedOrganizations = $('input[name="profile_form[organizations][]"]:checked')
-          organizationsIds = []
-
-          for (let i = 0; i < checkedOrganizations.length; ++i) {
-            organizationsIds.push(parseInt(checkedOrganizations[i].value))
-          }
-        }
-
-        const generateGroupsIds = function () {
-          displayedGroupsIds = []
-          organizationsIds.forEach(o => {
-            if (groupsData[o]) {
-              groupsData[o].forEach(groupId => {
-                if (displayedGroupsIds.findIndex(dg => dg === groupId) === -1) {
-                  displayedGroupsIds.push(groupId)
-                }
-              })
-            }
-          })
-        }
-
-        const updateGroups = function () {
-          const groupsInputs = $('input[name="profile_form[groups][]"]');
-
-          for (let i = 0; i < groupsInputs.length; ++i) {
-            if (displayedGroupsIds.findIndex(groupId => groupId === parseInt(groupsInputs[i].value)) > -1) {
-              $(`#${groupsInputs[i].id}`).parent().show('slow')
-            } else {
-              $(`#${groupsInputs[i].id}`).prop('checked', false)
-              $(`#${groupsInputs[i].id}`).parent().hide('slow')
-            }
-          }
-          if (displayedGroupsIds.length === 0) {
-            $('#profile_form_groups').parent().parent().hide('slow')
-          } else {
-            $('#profile_form_groups').parent().parent().show('slow')
-          }
-        }
-
-        $(document).ready(function () {
-          {% for orgaId, groupsIds in groupsData %}
-            groupsData[{{ orgaId }}] = []
-
-            {% for groupId in groupsIds %}
-              groupsData[{{ orgaId }}].push({{ groupId }})
-            {% endfor %}
-          {% endfor %}
-          updateOrganizations()
-          generateGroupsIds()
-          updateGroups()
-        })
-    </script>
 {% endblock %}
 
 {% block stylesheets %}

@@ -8,6 +8,7 @@ use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Step;
+use UJM\ExoBundle\Library\Options\Picking;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Serializer\ExerciseSerializer;
@@ -22,19 +23,13 @@ use UJM\ExoBundle\Serializer\StepSerializer;
  */
 class PaperGenerator
 {
-    /**
-     * @var ExerciseSerializer
-     */
+    /** @var ExerciseSerializer */
     private $exerciseSerializer;
 
-    /**
-     * @var StepSerializer
-     */
+    /** @var StepSerializer */
     private $stepSerializer;
 
-    /**
-     * @var ItemSerializer
-     */
+    /** @var ItemSerializer */
     private $itemSerializer;
 
     /**
@@ -42,8 +37,8 @@ class PaperGenerator
      *
      * @DI\InjectParams({
      *     "exerciseSerializer" = @DI\Inject("ujm_exo.serializer.exercise"),
-     *     "stepSerializer" = @DI\Inject("ujm_exo.serializer.step"),
-     *     "itemSerializer" = @DI\Inject("ujm_exo.serializer.item")
+     *     "stepSerializer"     = @DI\Inject("ujm_exo.serializer.step"),
+     *     "itemSerializer"     = @DI\Inject("ujm_exo.serializer.item"),
      * })
      *
      * @param ExerciseSerializer $exerciseSerializer
@@ -53,8 +48,8 @@ class PaperGenerator
     public function __construct(
         ExerciseSerializer $exerciseSerializer,
         StepSerializer $stepSerializer,
-        ItemSerializer $itemSerializer)
-    {
+        ItemSerializer $itemSerializer
+    ) {
         $this->exerciseSerializer = $exerciseSerializer;
         $this->stepSerializer = $stepSerializer;
         $this->itemSerializer = $itemSerializer;
@@ -115,40 +110,119 @@ class PaperGenerator
 
     private function pickSteps(Exercise $exercise, \stdClass $previousExercise = null)
     {
-        if (!empty($previousExercise) && Recurrence::ALWAYS !== $exercise->getRandomPick()) {
-            // Just get the list of steps from the previous paper
-            $steps = array_map(function (\stdClass $pickedStep) use ($exercise) {
-                return $exercise->getStep($pickedStep->id);
-            }, $previousExercise->steps);
-        } else {
-            // Pick a new set of steps
-            $steps = static::pick(
-                $exercise->getSteps()->toArray(),
-                $exercise->getPick()
-            );
-        }
+        switch ($exercise->getPicking()) {
+            case Picking::TAGS:
+                return $this->pickStepsByTags($exercise, $previousExercise);
 
-        $pickedSteps = [];
-        foreach ($steps as $step) {
-            $previousStructure = null;
-            if ($previousExercise) {
-                foreach ($previousExercise->steps as $stepStructure) {
-                    if ($stepStructure->id === $step->getUuid()) {
-                        $previousStructure = $stepStructure;
-                        break;
+            case Picking::STANDARD:
+            default:
+                if (!empty($previousExercise) && Recurrence::ALWAYS !== $exercise->getRandomPick()) {
+                    // Just get the list of steps from the previous paper
+                    $steps = array_map(function (\stdClass $pickedStep) use ($exercise) {
+                        return $exercise->getStep($pickedStep->id);
+                    }, $previousExercise->steps);
+                } else {
+                    // Pick a new set of steps
+                    $steps = static::pick(
+                        $exercise->getSteps()->toArray(),
+                        $exercise->getPick()
+                    );
+                }
+
+                $pickedSteps = [];
+                foreach ($steps as $step) {
+                    $previousStructure = null;
+                    if ($previousExercise) {
+                        foreach ($previousExercise->steps as $stepStructure) {
+                            if ($stepStructure->id === $step->getUuid()) {
+                                $previousStructure = $stepStructure;
+                                break;
+                            }
+                        }
                     }
+
+                    $pickedStep = $this->stepSerializer->serialize($step);
+                    $pickedStep->items = $this->pickItems($step, $previousStructure);
+                    $pickedSteps[] = $pickedStep;
+                }
+
+                // Shuffle steps according to config
+                if ((empty($previousExercise) && Recurrence::ONCE === $exercise->getRandomOrder())
+                    || Recurrence::ALWAYS === $exercise->getRandomOrder()) {
+                    shuffle($pickedSteps);
+                }
+
+                return $pickedSteps;
+        }
+    }
+
+    /**
+     * Generates steps based on the quiz configuration and a list of items.
+     * In this kind of quiz all items are stored in a single step.
+     *
+     * @param Exercise  $exercise
+     * @param \stdClass $previousExercise
+     *
+     * @return array
+     */
+    private function pickStepsByTags(Exercise $exercise, \stdClass $previousExercise = null)
+    {
+        $pickConfig = $exercise->getPick();
+
+        // Retrieve the list of items to use
+        $items = [];
+        if (!empty($previousExercise) && Recurrence::ALWAYS !== $exercise->getRandomPick()) {
+            // Just get the list of items from the previous paper
+            foreach ($previousExercise->steps as $pickedStep) {
+                foreach ($pickedStep->items as $pickedItem) {
+                    $items[] = $exercise->getQuestion($pickedItem->id);
                 }
             }
-
-            $pickedStep = $this->stepSerializer->serialize($step);
-            $pickedStep->items = $this->pickItems($step, $previousStructure);
-            $pickedSteps[] = $pickedStep;
+        } else {
+            // Get the list of items from exercise
+            foreach ($exercise->getSteps() as $step) {
+                $items = array_merge($items, $step->getQuestions());
+            }
         }
 
-        // Shuffle steps according to config
+        // Serialize items (we will automatically get items tags for filtering)
+        $serializedItems = array_map(function (Item $pickedItem) {
+            return $this->itemSerializer->serialize($pickedItem, [
+                Transfer::SHUFFLE_ANSWERS,
+                Transfer::INCLUDE_SOLUTIONS,
+            ]);
+        }, $items);
+
+        $pickedItems = [];
+        if (!empty($previousExercise) && Recurrence::ALWAYS !== $exercise->getRandomPick()) {
+            // items are already filtered
+            $pickedItems = $serializedItems;
+        } else {
+            // Only pick wanted tags (format : ['tagName', itemCount])
+            foreach ($pickConfig['tags'] as $pickedTag) {
+                $taggedItems = array_filter($serializedItems, function ($serializedItem) use ($pickedTag) {
+                    return !empty($serializedItem->tags) && in_array($pickedTag[0], $serializedItem->tags);
+                });
+
+                // Get the correct number of items with the current tag
+                // There is no error if we want more items than there are in the quiz,
+                // we just stop to pick when there are no more available items
+                $pickedItems = array_merge($pickedItems, static::pick($taggedItems, $pickedTag[1], true));
+            }
+        }
+
+        // Shuffle items according to config
         if ((empty($previousExercise) && Recurrence::ONCE === $exercise->getRandomOrder())
             || Recurrence::ALWAYS === $exercise->getRandomOrder()) {
-            shuffle($pickedSteps);
+            shuffle($pickedItems);
+        }
+
+        // Create steps and fill it with the correct number of questions
+        $pickedSteps = [];
+        while (!empty($pickedItems)) {
+            $pickedStep = $this->stepSerializer->serialize(new Step());
+            $pickedStep->items = array_splice($pickedItems, 0, $pickConfig['pageSize']);
+            $pickedSteps[] = $pickedStep;
         }
 
         return $pickedSteps;
@@ -201,18 +275,30 @@ class PaperGenerator
      *
      * @param array $collection - the original collection
      * @param int   $count      - the number of items to pick in the collection (if 0, the whole collection is returned)
+     * @param bool  $force
      *
      * @return array - the truncated collection
      */
-    private static function pick(array $collection, $count = 0)
+    private static function pick(array $collection, $count = 0, $force = false)
     {
         if (count($collection) < $count) {
+            if ($force) {
+                return $collection;
+            }
             throw new \LogicException("Cannot pick more elements ({$count}) than there are in the collection.");
         }
 
         $picked = [];
         if (0 !== $count) {
             $randomSelect = array_rand($collection, $count);
+            if (is_int($randomSelect)) {
+                // only one element has been picked
+                $randomSelect = [$randomSelect];
+            }
+
+            // put back original collection order
+            sort($randomSelect, SORT_NUMERIC);
+
             foreach ($randomSelect as $randomIndex) {
                 $picked[] = $collection[$randomIndex];
             }

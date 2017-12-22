@@ -1,0 +1,30 @@
+inwicast_claroline_plugin: 'Inwicast Video'
+inwicast_mediacenter_url: 'Mediacenter URL'
+empty_mediacenter: 'No videos found in your mediacenter.'
+validate: 'Validate'
+success: 'Operation done!'
+warning: 'Warning!'
+error: 'Error!'
+error_get_medialist: 'An error as occurded while consulting mediacenter.'
+error_empty_mediacenter: 'No video available in mediacenter.'
+error_loading_media: 'Failed to load the selected video.'
+no_mediacenter: 'Platform mediacenter is not set. Ask your administrator to set it by the plugins parameters panel.'
+back_to_parameters: 'Back to plugin packages'
+reconfigure: 'Reconfigure'
+mediacenter_url_updated: 'The mediacenter URL was updated successfully.'
+error_bad_url: 'The URL you entered is not valid.'
+connected_as: 'Logged in as'
+logout_success: 'You are logged out.'
+error_not_logged_in: 'You are not allowed to do this because you are not logged in mediacenter.'
+display: 'Display'
+grid: 'Grid'
+list: 'List'
+date_format: 'm-d-Y h:M'
+no_media_defined: "You have yet to specify a video for this widget"
+choose_video_tinymce: "Choose the video you want to add (embed) to your content"
+inwicast_mediacenter_driver: Driver
+inwicast_mediacenter_host: Host
+inwicast_mediacenter_port: Port
+inwicast_mediacenter_dbname: Database name
+inwicast_mediacenter_user: User
+inwicast_mediacenter_password: Password

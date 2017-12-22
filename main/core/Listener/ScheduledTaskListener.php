@@ -11,9 +11,10 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Manager\MailManager;
-use Claroline\CoreBundle\Manager\ScheduledTaskManager;
+use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -25,10 +26,15 @@ class ScheduledTaskListener
     private $taskManager;
 
     /**
+     * ScheduledTaskListener constructor.
+     *
      * @DI\InjectParams({
      *     "mailManager" = @DI\Inject("claroline.manager.mail_manager"),
      *     "taskManager" = @DI\Inject("claroline.manager.scheduled_task_manager"),
      * })
+     *
+     * @param MailManager          $mailManager
+     * @param ScheduledTaskManager $taskManager
      */
     public function __construct(
         MailManager $mailManager,
@@ -45,7 +51,9 @@ class ScheduledTaskListener
      */
     public function onExecuteMailTask(GenericDataEvent $event)
     {
+        /** @var ScheduledTask $task */
         $task = $event->getData();
+
         $data = $task->getData();
         $users = $task->getUsers();
         $object = isset($data['object']) ? $data['object'] : null;
@@ -53,8 +61,9 @@ class ScheduledTaskListener
 
         if (count($users) > 0 && !empty($object) && !empty($content)) {
             $this->mailManager->send($object, $content, $users);
-            $this->taskManager->markTaskAsExecuted($task, new \DateTime());
+            $this->taskManager->markAsExecuted($task);
         }
+
         $event->stopPropagation();
     }
 }

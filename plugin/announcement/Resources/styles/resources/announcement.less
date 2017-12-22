@@ -1,0 +1,80 @@
+/**
+ * Announcement resource
+ */
+
+@import "./../variables.less";
+
+.announce-post {
+    .announce-title {
+        margin-top: 0;
+        // same style as current step in path
+        border-left: 3px solid #ccc;
+        padding-left: 12px;
+    }
+
+    &.active-post {
+        .announce-title {
+            border-left-color: @brand-secondary;
+        }
+    }
+}
+
+.announce-meta {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    color: #777;
+    background: #f5f5f5; // panel heading
+    padding: 5px 10px;
+    margin-bottom: @component-margin-bottom;
+
+    .announce-info {
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        .date {
+            padding: 0 10px;
+            font-size: @font-size-small;
+            font-style: italic;
+        }
+    }
+
+    .announce-actions {
+        padding-left: 10px;
+        border-left: 1px solid #ccc;
+
+        .btn {
+            padding: 0;
+            + .btn {
+                margin-left: 5px;
+            }
+        }
+    }
+}
+
+.announce-content {
+    padding: @announce-padding;
+}
+
+.announces-sort {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 10px; // same as list grid sort
+
+    .btn {
+        font-weight: bold;
+        border: none;
+        padding-top: 0;
+        padding-bottom: 0;
+
+        .fa {
+            margin-left: @icon-text-spacer;
+        }
+    }
+}

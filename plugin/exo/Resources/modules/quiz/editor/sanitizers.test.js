@@ -8,10 +8,6 @@ describe('sanitize quiz', () => {
       {parameters: {duration: 12}}
     )
     ensure.equal(
-      sanitize.quiz('parameters.pick', '34'),
-      {parameters: {pick: 34}}
-    )
-    ensure.equal(
       sanitize.quiz('parameters.maxAttempts', '56'),
       {parameters: {maxAttempts: 56}}
     )

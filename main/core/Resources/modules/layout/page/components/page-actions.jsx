@@ -2,9 +2,11 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import DropdownButton from 'react-bootstrap/lib/DropdownButton'
+import MenuItem from 'react-bootstrap/lib/MenuItem'
 
 import {t} from '#/main/core/translation'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
+import {MenuItemAction} from '#/main/core/layout/components/dropdown.jsx'
 
 /**
  * Base component for each page actions.
@@ -26,7 +28,9 @@ const PageAction = props =>
           'btn page-action-btn',
           {
             'disabled': props.disabled,
-            'page-action-primary': props.primary
+            'page-action-primary': props.primary,
+            'page-action-danger': props.dangerous,
+            'page-action-default': !props.primary && !props.dangerous
           },
           props.className
         )}
@@ -43,7 +47,9 @@ const PageAction = props =>
           'btn page-action-btn',
           {
             'disabled': props.disabled,
-            'page-action-primary': props.primary
+            'page-action-primary': props.primary,
+            'page-action-danger': props.dangerous,
+            'page-action-default': !props.primary && !props.dangerous
           },
           props.className
         )}
@@ -59,6 +65,7 @@ const PageAction = props =>
 PageAction.propTypes = {
   id: T.string.isRequired,
   primary: T.bool,
+  dangerous: T.bool,
   title: T.string.isRequired,
   icon: T.string.isRequired,
   disabled: T.bool,
@@ -77,7 +84,8 @@ PageAction.propTypes = {
 
 PageAction.defaultProps = {
   disabled: false,
-  primary: false
+  primary: false,
+  dangerous: false
 }
 
 /**
@@ -102,26 +110,96 @@ FullScreenAction.propTypes = {
   toggleFullscreen: T.func.isRequired
 }
 
-const MoreAction = props =>
-  <TooltipElement
-    id="page-more-title"
-    position="bottom"
-    tip={t('show_more_actions')}
-  >
-    <DropdownButton
-      id="page-more"
-      title={<span className="page-action-icon fa fa-ellipsis-v" />}
-      bsStyle=""
-      className="btn page-action-btn"
-      noCaret={true}
-      pullRight={true}
+const MoreAction = props => {
+  // set defaults
+  const actions = props.actions.map(action => Object.assign({}, {
+    displayed: true,
+    disabled: false,
+    dangerous: false
+  }, action))
+
+  // filters and groups actions
+  const unclassifiedActions = actions.filter(action => action.displayed && !action.dangerous && !action.group)
+  const dangerousActions = actions.filter(action => action.displayed && action.dangerous)
+
+  // generate actions groups
+  const groupActions = {}
+  for (let i=0; i < actions.length; i++) {
+    const action = actions[i]
+    if (action.displayed && !action.dangerous && !!action.group) {
+      if (!groupActions[action.group]) {
+        groupActions[action.group] = []
+      }
+
+      groupActions[action.group].push(action)
+    }
+  }
+
+  return (
+    <TooltipElement
+      id="page-more-title"
+      position="bottom"
+      tip={t('show_more_actions')}
     >
-      {props.children}
-    </DropdownButton>
-  </TooltipElement>
+      <DropdownButton
+        id="page-more"
+        title={<span className="page-action-icon fa fa-ellipsis-v" />}
+        className="btn page-action-btn page-action-default"
+        noCaret={true}
+        pullRight={true}
+      >
+        {0 !== unclassifiedActions.length &&
+          <MenuItem header={true}>{props.title}</MenuItem>
+        }
+
+        {unclassifiedActions.map((action, actionIndex) =>
+          <MenuItemAction
+            key={`page-more-${actionIndex}`}
+            {...action}
+          />
+        )}
+
+        {Object.keys(groupActions).map((group, groupIndex) => [
+          <MenuItem key={`page-more-group-${groupIndex}`} header={true}>{group}</MenuItem>,
+          ...groupActions[group].map((action, actionIndex) =>
+            <MenuItemAction
+              key={`page-more-group-action${actionIndex}`}
+              {...action}
+            />
+          )
+        ])}
+
+        {0 !== dangerousActions.length &&
+          <MenuItem divider />
+        }
+
+        {dangerousActions.map((action, actionIndex) =>
+          <MenuItemAction
+            key={`page-more-dangerous-${actionIndex}`}
+            {...action}
+          />
+        )}
+
+      </DropdownButton>
+    </TooltipElement>
+  )
+}
 
 MoreAction.propTypes = {
-  children: T.node.isRequired
+  title: T.string,
+  actions: T.arrayOf(T.shape({
+    icon: T.string,
+    label: T.string.isRequired,
+    action: T.oneOfType([T.string, T.func]).isRequired,
+    group: T.string,
+    dangerous: T.bool,
+    displayed: T.bool,
+    disabled: T.bool
+  })).isRequired
+}
+
+MoreAction.defaultProps = {
+  title: t('more_actions')
 }
 
 /**

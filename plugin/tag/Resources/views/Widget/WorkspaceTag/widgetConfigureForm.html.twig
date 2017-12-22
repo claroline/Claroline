@@ -1,0 +1,13 @@
+<form role="form"
+      class="form-horizontal widget-content-config-form"
+      action="{{ path('claro_widget_workspace_tag_update_config', {'widgetInstance': widgetInstance.getId()}) }}"
+      method="post"
+      novalidate
+>
+    <div class="panel-body">
+        <div id="tags-field">
+            {{ form_row(form.tags) }}
+        </div>
+        {{ form_rest(form) }}
+    </div>
+</form>

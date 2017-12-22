@@ -25,7 +25,9 @@ describe('<PlayerNav/>', () => {
       'submit',
       'showFeedback',
       'feedbackEnabled',
-      'currentStepSend'
+      'currentStepSend',
+      'mandatoryQuestions',
+      'answers'
     ])
   })
 
@@ -59,7 +61,9 @@ describe('<PlayerNav/>', () => {
         step: {id: '1',  items:[]},
         currentStepSend: true,
         showFeedback: false,
-        feedbackEnabled: false
+        feedbackEnabled: false,
+        mandatoryQuestions: false,
+        answers: []
       })
     )
     ensure.propTypesOk()
@@ -92,7 +96,9 @@ describe('<PlayerNav/>', () => {
         step: {id: '1',  items:[]},
         currentStepSend: true,
         showFeedback: true,
-        feedbackEnabled: true
+        feedbackEnabled: true,
+        mandatoryQuestions: false,
+        answers: []
       })
     )
     ensure.propTypesOk()
@@ -116,7 +122,9 @@ describe('<PlayerNav/>', () => {
         step: {id: '1',  items:[]},
         currentStepSend: true,
         showFeedback: true,
-        feedbackEnabled: true
+        feedbackEnabled: true,
+        mandatoryQuestions: false,
+        answers: []
       })
     )
 
@@ -125,4 +133,6 @@ describe('<PlayerNav/>', () => {
     // Finish btn is only shown if there is no next step
     ensure.equal(navbar.find('.btn-finish').length, 0)
   })
+
+  //@TODO disable the button if item is mandatory
 })

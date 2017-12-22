@@ -55,6 +55,7 @@ class WorkspacePropertiesImporter extends Importer implements ConfigurationInter
                 ->booleanNode('visible')->defaultTrue()->example('true')->isRequired()->end()
                 ->booleanNode('self_registration')->defaultFalse()->example('true')->isRequired()->end()
                 ->booleanNode('self_unregistration')->defaultFalse()->example('true')->isRequired()->end()
+                ->booleanNode('disabled_notifications')->defaultFalse()->example('true')->isRequired()->end()
                 ->scalarNode('owner')->info('The workspace owner username')->example('jdoe')->end()
             ->end()
         ->end();

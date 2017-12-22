@@ -49,6 +49,9 @@ class GraphicQuestionSerializer implements SerializerInterface
         $questionData->image = $this->serializeImage($graphicQuestion);
         $questionData->pointers = $graphicQuestion->getAreas()->count();
 
+        // the feature is not yet implemented, but the JSON schema already requires it
+        $questionData->pointerMode = 'pointer';
+
         if (in_array(Transfer::INCLUDE_SOLUTIONS, $options)) {
             $questionData->solutions = $this->serializeSolutions($graphicQuestion);
         }
@@ -162,7 +165,10 @@ class GraphicQuestionSerializer implements SerializerInterface
             $solutionData = new \stdClass();
             $solutionData->area = $this->serializeArea($area);
             $solutionData->score = $area->getScore();
-            $solutionData->feedback = $area->getFeedback();
+
+            if ($area->getFeedback()) {
+                $solutionData->feedback = $area->getFeedback();
+            }
 
             return $solutionData;
         }, $graphicQuestion->getAreas()->toArray());
@@ -195,7 +201,10 @@ class GraphicQuestionSerializer implements SerializerInterface
             $area->setUuid($solutionData->area->id);
 
             $area->setScore($solutionData->score);
-            $area->setFeedback($solutionData->feedback);
+
+            if (!empty($solutionData->feedback)) {
+                $area->setFeedback($solutionData->feedback);
+            }
 
             // Deserializes area definition
             $this->deserializeArea($area, $solutionData->area);
@@ -268,7 +277,10 @@ class GraphicQuestionSerializer implements SerializerInterface
      */
     private function deserializeArea(Area $area, \stdClass $data)
     {
-        $area->setColor($data->color);
+        if (!empty($data->color)) {
+            $area->setColor($data->color);
+        }
+
         $area->setShape($data->shape);
 
         switch ($data->shape) {
@@ -280,7 +292,8 @@ class GraphicQuestionSerializer implements SerializerInterface
                 $area->setSize($data->radius * 2);
                 break;
             case 'rect':
-                $area->setValue(sprintf('%s,%s,%s,%s',
+                $area->setValue(sprintf(
+                    '%s,%s,%s,%s',
                     $data->coords[0]->x,
                     $data->coords[0]->y,
                     $data->coords[1]->x,

@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "integer",
+      "description": "The workspace id"
+    },
+    "uuid": {
+      "type": "string",
+      "format": "email",
+      "description": "The workspace uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The workspace name"
+    },
+    "code": {
+      "type": "string",
+      "description": "The workspace code",
+      "minLength": 1
+    },
+    "poster": {
+      "type": "string"
+    },
+    "meta": {
+      "type": "object",
+      "properties": {
+        "model": {
+          "type": "boolean",
+          "description": "The workspace type"
+        },
+        "personal": {
+          "type": "boolean",
+          "description": "Is it a personal workspace"
+        },
+        "description": {
+          "type": "string",
+          "description": "The workspace description"
+        },
+        "created": {
+          "type": "string",
+          "description": "The workspace creation date"
+        },
+        "creator": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "The workspace creator"
+            }
+          }
+        }
+      }
+    },
+    "display": {
+      "type": "object",
+      "properties": {
+        "displayable": {
+          "type": "boolean",
+          "description": "Is the workspace displayable"
+        }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "accessibleFrom": {
+          "type": "string",
+          "description": "The workspace opening date"
+        },
+        "accessibleUntil": {
+          "type": "string",
+          "description": "The workspace closing date"
+        },
+        "maxUsers": {
+          "type": "integer",
+          "description": "The maximum amount of users the workspace can have"
+        },
+        "maxStorage": {
+          "type": "integer",
+          "description": "The maximum amount of data storage the workspace is allowed to take"
+        },
+        "maxResources": {
+          "type": "integer",
+          "description": "The maximum amount of resources in the workspace"
+        }
+      }
+    },
+    "restrictions": {
+      "type": "object",
+      "properties": {
+        "validation": {
+          "type": "boolean"
+        },
+        "selfRegistration": {
+          "type": "boolean"
+        },
+        "selfUnregistration": {
+          "type": "boolean"
+        }
+      }
+    },
+    "roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              }
+            },
+            "required": ["name"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"]
+          }
+        ]
+      }
+    },
+    "managers": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "username": {
+                "type": "string"
+              }
+            },
+            "required": ["username"]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              }
+            },
+            "required": ["id"]
+          }
+        ]
+      }
+    }
+  },
+  "claroIds": ["id", "code"],
+  "required": ["code"]
+}

@@ -1,0 +1,31 @@
+.data-grid-item {
+  /* force pointer on links without href */
+  a:hover {
+    cursor:pointer;
+  }
+  /* action dropdown is always displayed, even if empty */
+  //TODO: remove this hack when action dropdown display is corrected
+  .dropdown {
+    display: none;
+  }
+
+  /* adjustments for icons placed in front of a cover */
+  .item-icon-container {
+    background-color: rgba(255, 255 ,255, 0.9);
+    margin: 25px;
+
+    .item-icon-container {
+      border-radius: 0;
+      background-color: transparent;
+    }
+    .item-icon-container.fa-play {
+      color: rgba(0, 0, 0, 1);
+    }
+  }
+}
+
+.data-grid-sm {
+  .item-icon-container {
+    font-size: 1.5em;
+  }
+}

@@ -31,7 +31,7 @@
                         {{ 'your_profile_is_n_complete'|trans({'%n%': completion}, 'platform') }}
                     </p>
                 {% endif %}
-                <p class="text-center"><a href="{{ path('claro_public_profile_view', {'publicUrl': user.getPublicUrl()}) }}">{{ 'click_to_view_modify_profile'|trans({}, 'platform') }}</a></p>
+                <p class="text-center"><a href="{{ path('claro_user_profile', {'publicUrl': user.getPublicUrl()}) }}">{{ 'click_to_view_modify_profile'|trans({}, 'platform') }}</a></p>
             </div>
         </aside>
         <div class="col-md-10 profile_informations">

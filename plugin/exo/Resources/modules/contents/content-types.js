@@ -94,10 +94,6 @@ function assertValidItemType(definition) {
     definition.icon,
     makeError('icon component is mandatory', definition)
   )
-  invariant(
-    definition.altIcon,
-    makeError('altIcon component is mandatory', definition)
-  )
 
   const extraProperties = difference(Object.keys(definition), typeProperties)
 

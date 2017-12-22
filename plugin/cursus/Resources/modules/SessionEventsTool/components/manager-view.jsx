@@ -3,15 +3,13 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import moment from 'moment'
 import {trans, t} from '#/main/core/translation'
-import {makeModal} from '#/main/core/layout/modal'
+import {makeModal, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {selectors} from '../selectors'
 import {actions} from '../actions'
 import {registrationTypes} from '../enums'
-import {actions as listActions} from '#/main/core/layout/list/actions'
-import {actions as paginationActions} from '#/main/core/layout/pagination/actions'
-import {select as listSelect} from '#/main/core/layout/list/selectors'
-import {select as paginationSelect} from '#/main/core/layout/pagination/selectors'
-import {DataList} from '#/main/core/layout/list/components/data-list.jsx'
+import {actions as listActions} from '#/main/core/data/list/actions'
+import {select as listSelect} from '#/main/core/data/list/selectors'
+import {DataList} from '#/main/core/data/list/components/data-list.jsx'
 
 class ManagerView extends Component {
   constructor(props) {
@@ -25,11 +23,11 @@ class ManagerView extends Component {
   deleteSessionEvent(sessionEvent) {
     this.setState({
       modal: {
-        type: 'DELETE_MODAL',
+        type: MODAL_DELETE_CONFIRM,
         urlModal: null,
         props: {
           url: null,
-          isDangerous: true,
+          dangerous: true,
           question: trans('delete_session_event_confirm_message', {}, 'cursus'),
           handleConfirm: () =>  {
             this.setState({modal: {fading: true}})
@@ -46,11 +44,11 @@ class ManagerView extends Component {
   deleteSessionEvents(sessionEvents) {
     this.setState({
       modal: {
-        type: 'DELETE_MODAL',
+        type: MODAL_DELETE_CONFIRM,
         urlModal: null,
         props: {
           url: null,
-          isDangerous: true,
+          dangerous: true,
           question: trans('delete_selected_session_events_confirm_message', {}, 'cursus'),
           handleConfirm: () =>  {
             this.setState({modal: {fading: true}})
@@ -218,7 +216,7 @@ class ManagerView extends Component {
                 icon: 'fa fa-fw fa-trash-o',
                 label: t('delete'),
                 action: (row) => this.deleteSessionEvent(row),
-                isDangerous: true
+                dangerous: true
               }
             ]}
             filters={{
@@ -242,7 +240,7 @@ class ManagerView extends Component {
                 label: t('delete'),
                 icon: 'fa fa-fw fa-trash-o',
                 action: () => this.deleteSessionEvents(this.props.selected),
-                isDangerous: true
+                dangerous: true
               }]
             }}
           />
@@ -314,8 +312,8 @@ function mapStateToProps(state) {
     filters: listSelect.filters(state),
     sortBy: listSelect.sortBy(state),
     pagination: {
-      pageSize: paginationSelect.pageSize(state),
-      current:  paginationSelect.current(state)
+      pageSize: listSelect.pageSize(state),
+      current:  listSelect.currentPage(state)
     }
   }
 }
@@ -354,11 +352,11 @@ function mapDispatchToProps(dispatch) {
     },
     // pagination
     handlePageSizeUpdate: (pageSize) => {
-      dispatch(paginationActions.updatePageSize(pageSize))
+      dispatch(listActions.updatePageSize(pageSize))
       dispatch(actions.fetchSessionEvents())
     },
     handlePageChange: (page) => {
-      dispatch(paginationActions.changePage(page))
+      dispatch(listActions.changePage(page))
       dispatch(actions.fetchSessionEvents())
     },
     // selection

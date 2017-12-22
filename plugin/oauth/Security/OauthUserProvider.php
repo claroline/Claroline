@@ -66,7 +66,10 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
         if ($this->platformConfigHandler->getParameter('direct_third_party_authentication')) {
             $username = !empty($mail) ? $mail : $id;
             $user = $this->loadUserByUsername($username);
-            $oauthUser = new OauthUser($service, $id, $user);
+            $oauthUser = new OauthUser();
+            $oauthUser->setUser($user);
+            $oauthUser->setService($service);
+            $oauthUser->setOauthId($id);
             $this->em->persist($oauthUser);
             $this->em->flush();
 

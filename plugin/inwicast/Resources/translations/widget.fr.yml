@@ -1,0 +1,32 @@
+inwicast_claroline_plugin: 'Vidéo Inwicast'
+inwicast_mediacenter_url: 'URL du médiacenter '
+login_mediacenter: 'Connexion au médiacenter'
+empty_mediacenter: 'Vous n''avez actuellement aucune vidéo dans votre espace sur le mediacenter.'
+validate: 'Valider'
+success: 'Opération effectuée !'
+warning: 'Attention !'
+error: 'Erreur !'
+error_get_medialist: 'Une erreur s''est produite lors de la consultation du mediacenter.'
+error_empty_mediacenter: 'Aucune vidéo n''est disponible sur le médiacenter.'
+error_loading_media: 'Impossible de charger la vidéo sélectionnée.'
+no_mediacenter: 'Le médiacenter de la plateforme n''a pas été configuré. Demandez à votre administrateur de le modifier via le panneau des paramètres des plugins.'
+back_to_parameters: 'Retour aux paramètres'
+reconfigure: 'Reconfigurer'
+mediacenter_url_updated: 'L''URL du médiacenter a été modifiée avec succès.'
+error_bad_url: 'L''URL saisie n''est pas valide.'
+connected_as: 'Connecté en tant que'
+logout_success: 'Vous êtes déconnecté.'
+error_not_logged_in: 'Vous ne pouvez pas faire ceci car vous n''êtes pas connecté au médiacenter.'
+display: 'Affichage '
+grid: 'Grille'
+list: 'Liste'
+date_format: 'd/m/Y H:i'
+no_media_defined: "Vous n'avez precisé aucune vidéo pour ce Widget"
+choose_video_tinymce: "Choisissez la vidèo à ajouter (incruster) dans votre contenu"
+inwicast_mediacenter_driver: Pilote
+inwicast_mediacenter_host: Hôte
+inwicast_mediacenter_port: Porte
+inwicast_mediacenter_dbname: Base des données
+inwicast_mediacenter_user: Utilisateur
+inwicast_mediacenter_password: Mot de passe
+database_parameters: Paramètres de la base de données

@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
-use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Role;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 
 /**
@@ -21,11 +22,15 @@ use JMS\Serializer\Annotation\Groups;
  */
 class PanelFacetRole
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({"api_facet_admin"})
+     *
+     * @var int
      */
     protected $id;
 
@@ -36,71 +41,114 @@ class PanelFacetRole
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      * @Groups({"api_facet_admin"})
+     *
+     * @var Role
      */
     protected $role;
 
     /**
      * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\panelFacet",
+     *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacet",
      *     inversedBy="panelFacetsRole"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @var PanelFacet
      */
     protected $panelFacet;
 
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"api_facet_admin"})
+     *
+     * @var bool
      */
     protected $canOpen = false;
 
     /**
      * @ORM\Column(type="boolean")
      * @Groups({"api_facet_admin"})
+     *
+     * @var bool
      */
     protected $canEdit = false;
 
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
+
+    /**
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
+    /**
+     * @param Role $role
+     */
     public function setRole(Role $role)
     {
         $this->role = $role;
     }
 
+    /**
+     * return Role.
+     */
     public function getRole()
     {
         return $this->role;
     }
 
+    /**
+     * @param PanelFacet $panelFacet
+     */
     public function setPanelFacet(PanelFacet $panelFacet)
     {
         $this->panelFacet = $panelFacet;
         $panelFacet->addPanelFacetRole($this);
     }
 
+    /**
+     * @return PanelFacet
+     */
     public function getPanelFacet()
     {
         return $this->panelFacet;
     }
 
+    /**
+     * @param bool $bool
+     */
     public function setCanOpen($bool)
     {
         $this->canOpen = $bool;
     }
 
+    /**
+     * @return bool
+     */
     public function canOpen()
     {
         return $this->canOpen;
     }
 
+    /**
+     * @param bool $bool
+     */
     public function setCanEdit($bool)
     {
         $this->canEdit = $bool;
     }
 
+    /**
+     * @return bool
+     */
     public function canEdit()
     {
         return $this->canEdit;

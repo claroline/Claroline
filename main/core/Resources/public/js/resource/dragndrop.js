@@ -93,10 +93,10 @@
             if (file) {
                 var manager = Claroline.ResourceManager.get('main');
                 var currentDirectoryId = manager.parameters.currentDirectoryId || manager.parameters.directoryId;
-
+                var isSvg = (file.type) ? file.type.indexOf('svg+xml') !== -1 : false;
                 file.xhr = FileAPI.upload({
                     url: Routing.generate('claro_file_upload_with_ajax', {'parent': currentDirectoryId}),
-                    imageAutoOrientation: true,
+                    imageAutoOrientation: !isSvg,
                     data: { fileName: file.name },
                     files: { file: file },
                     upload: function () {

@@ -1,6 +1,6 @@
 .dropdown-menu {
     // adds more customization options
-    box-shadow: @dropdown-menu-box-shadow;
+    .box-shadow(@dropdown-menu-box-shadow);
     border-radius: @dropdown-menu-border-radius;
 
     > li > a {
@@ -36,7 +36,7 @@
 
     // increases space between icons and text
     .fa {
-        margin-right: 5px;
+        margin-right: @icon-dropdown-spacer;
     }
 
     // removes additional margin when checkboxes/radios are inside dropdown

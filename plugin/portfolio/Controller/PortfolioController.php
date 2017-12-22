@@ -314,8 +314,9 @@ class PortfolioController extends Controller
 
         $portfolioExporter = new Exporter($this->get('templating'));
 
-        $response = new Response($portfolioExporter->export($portfolio, $format));
-        $response->headers->set('Content-Type', 'text/xml');
+        $widgets = $this->getWidgetsManager()->getByPortfolioForGridster($portfolio, false);
+        $response = new Response($portfolioExporter->export($portfolio, $widgets, $format));
+        $response->headers->set('Content-Type', 'text');
 
         return $response;
     }
@@ -350,7 +351,7 @@ class PortfolioController extends Controller
 
                     $importManager->simulateImport(file_get_contents($file->getPathName()), $loggedUser, $importData->getFormat());
                     $previewId = uniqid();
-                    $temporaryImportFilePath = sprintf('%s-%s-%s.%s', strtolower($loggedUser->getUsername()), date("Y_m_d\TH_i_s\Z"), $previewId, $importData->getFormat()).'.import';
+                    $temporaryImportFilePath = sprintf('%s-%s.%s', strtolower($loggedUser->getUsername()), $previewId, $importData->getFormat()).'.import';
                     $file->move(
                         $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir'),
                         $temporaryImportFilePath
@@ -389,7 +390,7 @@ class PortfolioController extends Controller
     {
         $this->checkPortfolioToolAccess();
 
-        $temporaryImportFilePathToSearch = sprintf('%s-*-%s.%s.import', strtolower($loggedUser->getUsername()), $previewId, $format);
+        $temporaryImportFilePathToSearch = sprintf('%s-%s.%s.import', strtolower($loggedUser->getUsername()), $previewId, $format);
 
         $finder = new Finder();
         $files = $finder->files()->in($this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir'))
@@ -413,7 +414,6 @@ class PortfolioController extends Controller
             try {
                 foreach ($files as $file) {
                     $importManager = $this->getImportManager();
-                    $importManager->setEntityManager($this->getEntityManager());
 
                     $portfolio = $importManager->doImport($file->getContents(), $loggedUser, $format);
                 }
@@ -432,7 +432,7 @@ class PortfolioController extends Controller
                     ->add('error', $this->getTranslator()
                         ->trans('portfolio_import_error_message', [], 'icap_portfolio'));
 
-                return $this->redirect($this->generateUrl('icap_portfolio_import', ['format' => $format]));
+                throw $exception;
             }
         }
 

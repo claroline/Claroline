@@ -1,5 +1,4 @@
 import update from 'immutability-helper'
-import uuid from 'uuid'
 
 // re-export immutability-helper with a custom delete command
 update.extend('$delete', (property, object) => {
@@ -9,38 +8,6 @@ update.extend('$delete', (property, object) => {
 })
 
 export {update}
-
-// counter for id generation
-let lastGeneratedIds = []
-
-// generate a temporary id string
-export function makeId() {
-  lastGeneratedIds.push(uuid())
-
-  return lastGeneratedIds[lastGeneratedIds.length - 1]
-}
-
-// return the last generated id (mainly for test purposes)
-export function lastId() {
-  return lastGeneratedIds[lastGeneratedIds.length - 1]
-}
-
-// test purpose only
-export function lastIds(count) {
-  if (count > lastGeneratedIds.length) {
-    throw new Error(
-      `Cannot access last ${count} ids, only ${lastGeneratedIds.length} were generated`
-    )
-  }
-
-  const ids = []
-
-  for (let i = lastGeneratedIds.length - count; i < lastGeneratedIds.length; ++i) {
-    ids.push(lastGeneratedIds[i])
-  }
-
-  return ids
-}
 
 export function makeItemPanelKey(itemType, itemId) {
   return `item-${itemType}-${itemId}`
@@ -67,3 +34,11 @@ export function getIndex(array, element) {
 
   return index
 }
+
+// todo : import directly from core instead of reexport it
+export {
+  makeId,
+  refreshIds,
+  lastId,
+  lastIds
+} from '#/main/core/utilities/id'

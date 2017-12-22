@@ -1,0 +1,27 @@
+{% extends "ClarolineCoreBundle:Resource:layout.html.twig" %}
+
+{% block content %}
+    <div
+      class="page-container bbb-container"
+      {% if isAnon %}
+        data-user="{{ user | json_encode | raw | escape }}"
+      {% else %}
+        data-user="{{ user | api_serialize({'public': true}) | json_encode | raw | escape }}"
+      {% endif %}
+      data-resource="{{ _resource | json_encode | raw | escape }}"
+      data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
+      data-server-url="{{ serverUrl | json_encode | raw | escape }}"
+      data-security-salt="{{ securitySalt | json_encode | raw | escape }}"
+    >
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-big-blue-button-bbb.css') }}" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-big-blue-button-resource.js') }}"></script>
+{% endblock %}

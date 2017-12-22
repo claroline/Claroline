@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Logger;
 
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class FileLogger extends Logger
 {
@@ -26,7 +26,7 @@ class FileLogger extends Logger
 
     //make the interface happy altough we don't use it -,-.
     //that way we can use the same parmaeter order than the sf2 one
-    public function log($level, $log, array $context = array())
+    public function log($level, $log, array $context = [])
     {
         parent::log($level, $log, $context);
     }

@@ -4,6 +4,5 @@
     "extend_default_theme": "Extend default theme",
     "new_theme": "New theme",
     "stylesheet": "Style sheet",
-    "theme_dir_not_writable": "The directory \"web/themes\" is not writable. Custom themes cannot be created or deleted. Please change permissions for that directory to solve the issue.",
-    "theme_management": "Theme management"
+    "theme_dir_not_writable": "The directory \"web/themes\" is not writable. Custom themes cannot be created or deleted. Please change permissions for that directory to solve the issue."
 }

@@ -25,6 +25,7 @@
         pickerDirectoryId: null,
         preFetchedDirectory: null,
         resourceTypes: null,
+        defaultResourceActionsMask: null,
         webPath: null,
         language: null,
         zoom: null
@@ -49,6 +50,8 @@
      * - breadcrumbElement: an existing jquery element to reuse for breadcrumbs
      *      (defaults to null)
      * - resourceTypes: an object whose properties describe the available resource types
+     *      (defaults to empty object)
+     * - defaultResourceActionsMask: an object containing the default resource actions mask for all resource types
      *      (defaults to empty object)
      * - webPath: the base url of the web directory
      *      (defaults to empty string)
@@ -98,6 +101,8 @@
      * - preFetchedDirectory: a json representation of the first directory to open
      *      (defaults to null)
      * - resourceTypes: an object whose properties describe the available resource types
+     *      (defaults to empty object)
+     * - defaultResourceActionsMask: an object containing the default resource actions mask
      *      (defaults to empty object)
      * - webPath: the base url of the web directory
      *      (defaults to empty string)
@@ -215,6 +220,7 @@
             parentElement: parameters.parentElement || $('body'),
             breadcrumbElement: isPicker ? null : parameters.breadcrumbElement || null,
             resourceTypes: resolveResourceTypes(parameters),
+            defaultResourceActionsMask: resolveDefaultResourceActionsMask(parameters),
             language: parameters.language || fetchedParameters.language || 'en',
             webPath: parameters.webPath || fetchedParameters.webPath || '',
             zoom: parameters.zoom || fetchedParameters.zoom || 'zoom100',
@@ -260,8 +266,12 @@
         return types;
     }
 
+    function resolveDefaultResourceActionsMask(parameters) {
+      return parameters.defaultResourceActionsMask || fetchedParameters.defaultResourceActionsMask || {};
+    }
+
     function fetchMissingParameters(givenParameters, callback) {
-        var expectedParameters = ['resourceTypes', 'webPath', 'language', 'zoom', 'directoryId'];
+        var expectedParameters = ['resourceTypes', 'webPath', 'language', 'zoom', 'directoryId', 'defaultResourceActionsMask'];
         var hasMissingParameter = _.some(expectedParameters, function (parameter) {
             return !givenParameters.hasOwnProperty(parameter);
         });
@@ -273,6 +283,7 @@
                 fetchedParameters.directoryId = data.pickerDirectoryId;
                 fetchedParameters.preFetchedDirectory = data.preFetchedDirectory;
                 fetchedParameters.resourceTypes = data.resourceTypes;
+                fetchedParameters.defaultResourceActionsMask = data.defaultResourceActionsMask;
                 fetchedParameters.language = data.language;
                 fetchedParameters.webPath = data.webPath;
                 fetchedParameters.zoom = data.zoom;

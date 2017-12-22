@@ -49,7 +49,7 @@ class LogoService
         $files = $this->finder->files()->in($this->path)->name($this->fileTypes);
 
         foreach ($files as $file) {
-            $logos[] = $file->getRelativePathname();
+            $logos[] = 'uploads/logos/'.$file->getRelativePathname();
         }
 
         $publicLogos = $this->fu->getPublicFileByType(self::PUBLIC_FILE_TYPE);

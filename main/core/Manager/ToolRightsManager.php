@@ -71,6 +71,7 @@ class ToolRightsManager
         Role $role,
         $action
     ) {
+        $rightsMask = null;
         $tool = $orderedTool->getTool();
         $maskDecoder = $this->maskManager
             ->getMaskDecoderByToolAndName($tool, $action);
@@ -103,8 +104,10 @@ class ToolRightsManager
                  if (!$root) {
                      return;
                  }
-                 $perms = $this->maskManager->decodeMask($rightsMask, $orderedTool->getTool());
-                 $this->rightsManager->editPerms(['open' => $perms['open']], $role, $root, false);
+
+                 if ($rightsMask) {
+                     $this->rightsManager->editPerms($rightsMask, $role, $root, false, [], true);
+                 }
              }
          }
     }

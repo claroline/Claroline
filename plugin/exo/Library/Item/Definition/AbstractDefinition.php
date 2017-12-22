@@ -2,6 +2,7 @@
 
 namespace UJM\ExoBundle\Library\Item\Definition;
 
+use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\ItemType\AbstractItem;
 use UJM\ExoBundle\Library\Options\Validation;
 use UJM\ExoBundle\Library\Serializer\SerializerInterface;
@@ -11,7 +12,7 @@ use UJM\ExoBundle\Library\Validator\ValidatorInterface;
  * Base class for question definitions.
  * Permits to use separate classes to handle Serialization and Validation.
  */
-abstract class AbstractDefinition implements ItemDefinitionInterface, AnswerableItemDefinitionInterface
+abstract class AbstractDefinition implements ItemDefinitionInterface, ExportableCsvAnswerInterface, AnswerableItemDefinitionInterface
 {
     /**
      * Gets the question Validator instance.
@@ -88,5 +89,15 @@ abstract class AbstractDefinition implements ItemDefinitionInterface, Answerable
     public function deserializeQuestion(\stdClass $questionData, AbstractItem $question = null, array $options = [])
     {
         return $this->getQuestionSerializer()->deserialize($questionData, $question, $options);
+    }
+
+    public function getCsvTitles(AbstractItem $question)
+    {
+        return [$question->getTitle()];
+    }
+
+    public function getCsvAnswers(AbstractItem $question, Answer $answer)
+    {
+        return ['nope'];
     }
 }

@@ -5,17 +5,17 @@ import get from 'lodash/get'
 import Popover from 'react-bootstrap/lib/Popover'
 
 import {tex} from '#/main/core/translation'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
-import {Radios} from './../../components/form/radios.jsx'
-import {ColorPicker} from './../../components/form/color-picker.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
+import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
 import {actions} from './editor'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {utils} from './utils/utils'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
-import {CheckGroup} from './../../components/form/check-group.jsx'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 
 function updateAnswer(value, parameter, selectionId, mode) {
   switch(mode) {
@@ -100,21 +100,23 @@ class ChoiceItem extends Component {
               </span>
             </span>
           }
+
           <span>
             <TooltipButton
               id={`choice-${this.getSelectionId()}-feedback-toggle`}
-              className="fa fa-comments-o pull-right"
+              className="pull-right"
               title={tex('choice_feedback_info')}
               onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-            />
-        </span>
+            >
+              <span className="fa fa-fw fa-comments-o" />
+            </TooltipButton>
+          </span>
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
             <Textarea
               id={`choice-${this.getSelectionId()}-feedback`}
-              title={tex('feedback')}
+              value={this.props.solution.feedback}
               onChange={text => this.props.onChange(updateAnswer(text, 'feedback', this.getSelectionId(), this.props.item.mode))}
-              content={this.props.solution.feedback}
             />
           </div>
         }
@@ -225,16 +227,18 @@ class SelectionForm extends Component {
                 id={`selection-${this.props.item._selectionId}-delete`}
                 title={tex('delete')}
                 className="btn-link-default"
-                label={<span className="fa fa-fw fa-trash-o" />}
                 onClick={this.removeAndClose.bind(this)}
-              />
+              >
+                <span className="fa fa-fw fa-trash-o" />
+              </TooltipButton>
               <TooltipButton
                 id={`selection-${this.props.item._selectionId}-close`}
                 title={tex('close')}
                 className="btn-link-default"
-                label={<span className="fa fa-fw fa-times" />}
                 onClick={this.closePopover.bind(this)}
-              />
+              >
+                <span className="fa fa-fw fa-times" />
+              </TooltipButton>
             </div>
           </div>
         }
@@ -273,7 +277,7 @@ class SelectionForm extends Component {
         <div className="feedback-container selection-form-row">
           <Textarea
             id={`choice-${this.props.item._selectionId}-feedback`}
-            title={tex('feedback')}
+            value={this.props.item.feedback}
             onChange={text => this.props.onChange(updateAnswer('feedback', text, this.props.item._selectionId, this.props.item.mode))}
           />
         </div>
@@ -285,6 +289,7 @@ class SelectionForm extends Component {
 
 SelectionForm.propTypes = {
   item: T.shape({
+    feedback: T.string,
     _selectionId: T.string,
     _selectionPopover: T.bool,
     score: T.shape({
@@ -379,9 +384,9 @@ class HighlightAnswer extends Component {
             }
             {this.props.item.score.type === SCORE_FIXED &&
               <CheckGroup
+                id={this.props.answer._answerId}
                 label=""
-                checkId={this.props.answer._answerId}
-                checked={this.props.answer.score > 0}
+                value={this.props.answer.score > 0}
                 onChange={checked => this.props.onChange(actions.highlightUpdateAnswer('score', checked ? 1 : 0, this.props.answer._answerId))}
               />
             }
@@ -389,10 +394,11 @@ class HighlightAnswer extends Component {
          <div className="col-xs-2">
            <TooltipButton
              id={`choice-${this.props.answer._answerId}-feedback-toggle`}
-             className="fa fa-comments-o"
              title={tex('choice_feedback_info')}
              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-           />
+           >
+             <span className="fa fa-fw fa-comments-o" />
+           </TooltipButton>
         </div>
         <div className="col-xs-3">
           <i onClick={() => this.props.onChange(actions.highlightRemoveAnswer(this.props.answer._answerId))} className="fa fa-trash-o pointer checkbox"></i>
@@ -402,9 +408,8 @@ class HighlightAnswer extends Component {
         <div className="feedback-container selection-form-row">
           <Textarea
             id={`choice-${this.props.answer._answerId}-feedback`}
-            title={tex('feedback')}
             onChange={text => this.props.onChange(actions.highlightUpdateAnswer('feedback', text, this.props.answer._answerId))}
-            content={this.props.answer.feedback}
+            value={this.props.answer.feedback}
           />
         </div>
       }
@@ -497,15 +502,15 @@ export class Selection extends Component {
     return(
       <fieldset className="selection-editor">
         <CheckGroup
-          checkId={`item-${this.props.item.id}-fixedScore`}
-          checked={this.props.item.score.type === SCORE_FIXED}
+          id={`item-${this.props.item.id}-fixedScore`}
+          value={this.props.item.score.type === SCORE_FIXED}
           label={tex('fixed_score')}
           onChange={checked => this.props.onChange(actions.updateQuestion(checked ? SCORE_FIXED : SCORE_SUM, 'score.type', {}))}
         />
         {this.props.item.score.type === SCORE_FIXED &&
           <div>
             <FormGroup
-              controlId={`item-${this.props.item.id}-fixedSuccess`}
+              id={`item-${this.props.item.id}-fixedSuccess`}
               label={tex('fixed_score_on_success')}
               warnOnly={!this.props.validating}
             >
@@ -522,7 +527,7 @@ export class Selection extends Component {
               />
             </FormGroup>
             <FormGroup
-              controlId={`item-${this.props.item.id}-fixedFailure`}
+              id={`item-${this.props.item.id}-fixedFailure`}
               label={tex('fixed_score_on_failure')}
               warnOnly={!this.props.validating}
             >
@@ -553,7 +558,7 @@ export class Selection extends Component {
         </Radios>
         {this.props.item.mode === 'find' &&
           <FormGroup
-            controlId={`item-${this.props.item.id}-tries`}
+            id={`item-${this.props.item.id}-tries`}
             label={tex('tries_number')}
             warnOnly={!this.props.validating}
           >
@@ -569,7 +574,7 @@ export class Selection extends Component {
         }
         {this.props.item.score.type === SCORE_SUM && (this.props.item.mode === 'highlight' || this.props.item.mode === 'find') &&
           <FormGroup
-            controlId="selection-default-penalty"
+            id="selection-default-penalty"
             label={tex('global_penalty')}
             warnOnly={!this.props.validating}
           >
@@ -606,19 +611,19 @@ export class Selection extends Component {
         <FormGroup
           error={get(this.props.item, '_errors.text')}
           warnOnly={!this.props.validating}
-          controlId="selection-text-box"
+          id="selection-text-box"
           label=""
         >
-        <Textarea
-          id={this.props.item.id}
-          onSelect={this.onSelect}
-          onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
-          onClick={this.onSelectionClick.bind(this)}
-          content={this.props.item._text}
-          updateText={this.updateText}
-          onChangeMode={this.changeEditorMode}
-        />
-      </FormGroup>
+          <Textarea
+            id={this.props.item.id}
+            onSelect={this.onSelect}
+            onChange={(text, offsets) => this.props.onChange(actions.updateQuestion(text, 'text', offsets))}
+            onClick={this.onSelectionClick.bind(this)}
+            value={this.props.item._text}
+            updateText={this.updateText}
+            onChangeMode={this.changeEditorMode}
+          />
+        </FormGroup>
         <button
           type="button"
           className="btn btn-default"

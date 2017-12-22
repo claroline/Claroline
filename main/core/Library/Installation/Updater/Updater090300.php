@@ -53,10 +53,16 @@ class Updater090300 extends Updater
         $this->createDefaultModel();
         $roleManager = $this->container->get('claroline.manager.role_manager');
         $om = $this->container->get('claroline.persistence.object_manager');
-        $models = $this->connection->query('SELECT * FROM claro_workspace_model')->fetchAll();
+        try {
+            $models = $this->connection->query('SELECT * FROM claro_workspace_model')->fetchAll();
+        } catch (\Exception $e) {
+            $models = [];
+            $this->log('Table already removed');
+        }
         $toCheck = [];
         $i = 0;
         $this->connection->query('SET FOREIGN_KEY_CHECKS=0');
+        $this->container->get('claroline.core_bundle.listener.log.log_listener')->disable();
 
         foreach ($models as $model) {
             $code = '[MOD]'.$model['name'];
@@ -67,6 +73,7 @@ class Updater090300 extends Updater
                 $this->log('Creating workspace from model '.$model['name'].': '.$i.'/'.count($models));
 
                 try {
+                    $this->om->startFlushSuite();
                     $modelUsers = $this->connection->query("SELECT * FROM claro_workspace_model_user u where u.workspacemodel_id = {$model['id']}")->fetchAll();
                     $modelGroups = $this->connection->query("SELECT * FROM claro_workspace_model_group g where g.workspacemodel_id = {$model['id']}")->fetchAll();
                     $modelResources = $this->connection->query("SELECT * FROM claro_workspace_model_resource r where r.model_id = {$model['id']}")->fetchAll();
@@ -86,7 +93,7 @@ class Updater090300 extends Updater
                     $groups = $om->findByIds('Claroline\CoreBundle\Entity\User', $groupIds);
                     $nodes = $om->findByIds('Claroline\CoreBundle\Entity\Resource\ResourceNode', $nodeIds);
                     if (count($users) === 0) {
-                        $users[0] = $this->connection->get('claroline.manager.user_manager')->getDefaultUser();
+                        $users[0] = $this->container->get('claroline.manager.user_manager')->getDefaultUser();
                     }
                     $user = $users[0];
 
@@ -96,22 +103,26 @@ class Updater090300 extends Updater
                     $this->workspaceManager->createWorkspace($newWorkspace);
                     $this->workspaceManager->duplicateWorkspaceOptions($baseWorkspace, $newWorkspace);
                     $this->workspaceManager->duplicateWorkspaceRoles($baseWorkspace, $newWorkspace, $user);
-                    $this->workspaceManager->duplicateOrderedTools($baseWorkspace, $newWorkspace);
                     $baseRoot = $this->workspaceManager->duplicateRoot($baseWorkspace, $newWorkspace, $user);
+                    $resourceInfos = ['copies' => []];
 
                     $this->workspaceManager->duplicateResources(
                       $nodes,
                       $this->workspaceManager->getArrayRolesByWorkspace($baseWorkspace),
                       $user,
-                      $baseRoot
+                      $baseRoot,
+                      $resourceInfos
                     );
+                    $this->workspaceManager->duplicateOrderedTools($baseWorkspace, $newWorkspace, $resourceInfos);
 
                     $newWorkspace->setIsModel(true);
+                    $this->om->endFlushSuite();
                     $managerRole = $roleManager->getManagerRole($newWorkspace);
                     $roleManager->associateRoleToMultipleSubjects($users, $managerRole);
                     $roleManager->associateRoleToMultipleSubjects($groups, $managerRole);
                     $this->om->persist($newWorkspace);
-                    $this->om->forceFlush();
+                    $this->log('Flushing...');
+                    $this->om->flush();
                     $this->om->clear();
                     $defaultUser = $this->container->get('claroline.manager.user_manager')->getDefaultUser();
                     $token = new UsernamePasswordToken($defaultUser, '123', 'main', $defaultUser->getRoles());
@@ -138,6 +149,9 @@ class Updater090300 extends Updater
                 $this->log('Workspace already exists');
             }
         }
+
+        $this->container->get('claroline.core_bundle.listener.log.log_listener')->enable();
+        $this->om->allowForceFlush(true);
 
         $this->connection->query('SET FOREIGN_KEY_CHECKS=1');
         $this->dropModelTable();

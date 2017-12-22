@@ -104,7 +104,7 @@ class BundleManager
         $this->bundlesFile = $bundlesFile;
     }
 
-    private function getEnvironment()
+    public function getEnvironment()
     {
         $environment = $this->kernel->getEnvironment();
 

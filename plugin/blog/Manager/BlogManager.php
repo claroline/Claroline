@@ -358,14 +358,24 @@ class BlogManager
 
     public function updateOptions(Blog $blog, BlogOptions $options)
     {
-        // Remove old options and flush before adding the new ones
-        $oldOptions = $blog->getOptions();
-        $this->objectManager->remove($oldOptions);
-        $this->objectManager->flush();
+        $currentOptions = $blog->getOptions();
+        $currentOptions->setAuthorizeComment($options->getAuthorizeComment());
+        $currentOptions->setAuthorizeAnonymousComment($options->getAuthorizeAnonymousComment());
+        $currentOptions->setPostPerPage($options->getPostPerPage());
+        $currentOptions->setAutoPublishPost($options->getAutoPublishPost());
+        $currentOptions->setAutoPublishComment($options->getAutoPublishComment());
+        $currentOptions->setDisplayTitle($options->getDisplayTitle());
+        $currentOptions->setBannerActivate($options->isBannerActivate());
+        $currentOptions->setDisplayPostViewCounter($options->getDisplayPostViewCounter());
+        $currentOptions->setBannerBackgroundColor($options->getBannerBackgroundColor());
+        $currentOptions->setBannerHeight($options->getBannerHeight());
+        $currentOptions->setBannerBackgroundImagePosition($options->getBannerBackgroundImagePosition());
+        $currentOptions->setBannerBackgroundImageRepeat($options->getBannerBackgroundImageRepeat());
+        $currentOptions->setTagCloud($options->getTagCloud());
+        $currentOptions->setListWidgetBlog($options->getListWidgetBlog());
+        $currentOptions->setTagTopMode($options->isTagTopMode());
+        $currentOptions->setMaxTag($options->getMaxTag());
 
-        // Define the new options
-        $blog->setOptions($options);
-        $this->objectManager->persist($options);
         $this->objectManager->persist($blog);
         $this->objectManager->flush();
 

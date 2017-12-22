@@ -87,6 +87,10 @@ class ScormController extends Controller
                 $trackings = [];
                 break;
         }
+        foreach ($trackings as $tracking) {
+            $lastDate = $this->scormManager->getScoLastSessionDate($tracking->getUser(), $resourceNode, $type, $tracking->getSco()->getId());
+            $tracking->setLastSessionDate($lastDate);
+        }
         $serializedTrackings = $this->serializer->serialize(
             $trackings,
             'json',

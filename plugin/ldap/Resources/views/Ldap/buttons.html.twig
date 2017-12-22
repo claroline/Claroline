@@ -1,7 +1,7 @@
 {% if servers|length > 0 %}
 {% for server in servers %}
     <a href="{{ url("claro_ldap_login", {name: server}) }}" type="button" id="ldap-connect-btn" class='btn ldap-connect btn-third-party-login btn-block'>
-        {{ 'login_with_third_party'|trans({'%name%': server}, 'platform') }}
+        {{ 'login_with_third_party_btn'|trans({'%name%': server}, 'platform') }}
     </a>
 {% endfor %}
 {% endif %}

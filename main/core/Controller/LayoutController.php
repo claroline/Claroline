@@ -106,8 +106,7 @@ class LayoutController extends Controller
     {
         // TODO: replace core bundle version by distribution version when available
         // TODO: find the lightest way to get that information
-        $bundleManager = $this->get('claroline.manager.plugin_manager');
-        $version = $bundleManager->getDistributionVersion();
+        $version = $this->get('claroline.manager.version_manager')->getDistributionVersion();
 
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $selfRegistration = $this->configHandler->getParameter('allow_self_registration') &&
@@ -185,7 +184,7 @@ class LayoutController extends Controller
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
         } else {
-            $workspaces = $this->workspaceManager->getWorkspacesByAnonymous();
+            $workspaces = [];
 
             if (true === $this->configHandler->getParameter('allow_self_registration') &&
                 $this->roleManager->validateRoleInsert(
@@ -193,7 +192,7 @@ class LayoutController extends Controller
                     $this->roleManager->getRoleByName('ROLE_USER')
                 )
             ) {
-                $registerTarget = $this->router->generate('claro_registration_user_registration_form');
+                $registerTarget = $this->router->generate('claro_user_registration');
             }
 
             if (!$loginTargetRoute) {

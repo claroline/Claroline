@@ -17,7 +17,7 @@ const getHoleSolution = (hole, solutions) => solutions.find(solution => solution
 const getBestAnswer = (answers) => {
   let bestAnswer = null
   answers.map(answer => {
-    if (!bestAnswer || (answer.score > bestAnswer && 0 < answer.score)) {
+    if (!bestAnswer || (answer.score > bestAnswer.score && 0 < answer.score)) {
       bestAnswer = answer
     }
   })

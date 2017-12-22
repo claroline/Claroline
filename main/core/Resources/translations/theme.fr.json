@@ -4,6 +4,5 @@
     "extend_default_theme": "Étendre le thème par défaut",
     "new_theme": "Nouveau thème",
     "stylesheet": "Feuille de style",
-    "theme_dir_not_writable": "Il est impossible d'écrire dans le répertoire \"web/themes\". Aucun thème personnalisé ne peut être créé ou supprimé. Veuillez résoudre ce problème en changeant les permissions de ce répertoire.",
-    "theme_management": "Gestion des thèmes"
+    "theme_dir_not_writable": "Il est impossible d'écrire dans le répertoire \"web/themes\". Aucun thème personnalisé ne peut être créé ou supprimé. Veuillez résoudre ce problème en changeant les permissions de ce répertoire."
 }

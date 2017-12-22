@@ -2,16 +2,16 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {tex} from '#/main/core/translation'
-import {CheckGroup} from './../../components/form/check-group.jsx'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {KeywordItems} from './../components/keywords.jsx'
 import {actions} from './editor.js'
 
 export const Words = props =>
   <fieldset className="words-editor">
     <CheckGroup
-      checkId={`item-${props.item.id}-_wordsCaseSensitive`}
+      id={`item-${props.item.id}-_wordsCaseSensitive`}
       label={tex('words_show_case_sensitive_option')}
-      checked={props.item._wordsCaseSensitive}
+      value={props.item._wordsCaseSensitive}
       onChange={checked =>
         props.onChange(actions.updateProperty('_wordsCaseSensitive', checked))
       }

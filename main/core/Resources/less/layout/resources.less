@@ -56,7 +56,7 @@
     margin-bottom: 0;
 
     .fa {
-        margin-right: 7px; // todo : use a var
+        margin-right: @icon-text-spacer;
     }
 }
 
@@ -79,6 +79,16 @@
         &:first-child {
             text-align: left;
         }
+    }
+
+    & > tbody td:first-child,
+    & > tbody th:first-child {
+        border-left: none;
+    }
+
+    & > tbody td:last-child,
+    & > tbody th:last-child {
+        border-right: none;
     }
 
     .permission-name-container {

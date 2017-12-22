@@ -210,7 +210,7 @@ tinymce.claroline.mentionsItem = function (item) {
  * @todo documentation
  */
 tinymce.claroline.mentionsInsert = function (item) {
-  var publicProfileUrl = routing.generate('claro_public_profile_view') + '/'
+  var publicProfileUrl = routing.generate('claro_user_profile') + '/'
 
   return '<user id="' + item.id + '"><a href="' + publicProfileUrl + item.id + '">' + item.name + '</a></user>'
 }

@@ -11,25 +11,45 @@
 // ---
 @brand-secondary:         #C51162;
 
-@box-shadow-base:         0 0 2px rgba(0, 0, 0, 0.10);
-@component-margin-bottom: @line-height-computed;
+@enable-box-shadow:       true;
+@enable-border-radius:    true;
+@enable-border:           true;
 
+@font-size-modifier:      1;
+
+@box-shadow-base:               0 0 2px rgba(0, 0, 0, 0.15);
+@component-margin-bottom:       @line-height-computed; // ~20px
+@component-margin-bottom-small: floor(@line-height-computed / 2); // ~10px
+
+// react strips whitespaces, so we need to move icons to avoid from text
+@icon-text-spacer:     7px;
+@icon-dropdown-spacer: 15px;
+
+@images-path: "images/";
 
 // -
 // Z-indexes
 // ---
-
-@zindex-sidebar:    @zindex-navbar-fixed - 1;
+@zindex-sidebar:       @zindex-navbar-fixed - 1;
 // z-index for full screen pages.
 // we want to pass over navbars but under tooltips, popovers and modals
 // modify with caution !
-@zindex-fullscreen: 1035;
+@zindex-fullscreen:    1035;
+@zindex-list-search:   @zindex-popover;
+@zindex-flying-alerts: @zindex-modal + 10;
 
 
 // -
 // Application
 // ---
 @app-max-width:           1200px; // max width for the app content
+
+
+// -
+// Login
+// ---
+@login-bg-image:  "@{images-path}login-bg.jpg"; // will fallback on @body-bg if theme has no image
+@login-max-width: 740px;
 
 
 // -
@@ -41,14 +61,15 @@
 @top-bar-color:               lighten(@top-bar-bg, 30%);
 @top-bar-bg:                  @navbar-inverse-bg;
 @top-bar-border-bottom-size:  3px;
-@top-bar-border-bottom:       @top-bar-border-bottom-size solid @brand-primary;
+@top-bar-border-bottom-color: @brand-primary;
+@top-bar-border-bottom:       @top-bar-border-bottom-size solid @top-bar-border-bottom-color;
 @top-bar-box-shadow:          0 0 3px rgba(0, 0, 0, 0.5);
 
 @top-bar-logo-height:         35px;
 
 @top-bar-brand-font-size:     22px;
-@top-bar-brand-color:         #fff;
-@top-bar-brand-hover-color:   #fff;
+@top-bar-brand-color:         #FFFFFF;
+@top-bar-brand-hover-color:   #FFFFFF;
 @top-bar-brand-hover-bg:      transparent;
 
 @top-bar-link-color:          lighten(@top-bar-bg, 60%);
@@ -90,8 +111,8 @@
 // Sidebars
 // ---
 @sidebar-bg:           white;
-@sidebar-color:        #555;
-@sidebar-font-size:    16px;
+@sidebar-color:        #555555;
+@sidebar-font-size:    floor(16px * @font-size-modifier);
 
 @left-bar-box-shadow:  0 0 3px rgba(0, 0, 0, 0.5);
 @right-bar-box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
@@ -105,8 +126,43 @@
 @page-header-weight:           700;
 @page-header-link-color:       @gray; // todo : should be #666 for WCAG AA or #555 for AAA
 @page-header-link-hover-color: @gray-darker;
-@page-header-divider-color:    #CCCCCC;
 
+
+// -
+// Flying alerts
+// ---
+@flying-alert-opacity:        .8; // becomes 1 on alert hover
+@flying-alert-width:          400px;
+@flying-alert-padding:        5px;
+@flying-alert-border-radius:  @panel-border-radius;
+@flying-alert-box-shadow:     0 0 3px rgba(0,0,0,.5); // same as topbar
+@flying-alert-margin-bottom:  10px;
+@flying-alert-icon-size:      32px;
+
+// variants
+@flying-alert-primary-color:  white;
+@flying-alert-primary-bg:     @brand-primary;
+@flying-alert-primary-border: @flying-alert-primary-bg;
+
+@flying-alert-success-color:  white;
+@flying-alert-success-bg:     @brand-success;
+@flying-alert-success-border: @flying-alert-success-bg;
+
+@flying-alert-warning-color:  white;
+@flying-alert-warning-bg:     @brand-warning;
+@flying-alert-warning-border: @flying-alert-warning-bg;
+
+@flying-alert-error-color:    white;
+@flying-alert-error-bg:       @brand-danger;
+@flying-alert-error-border:   @flying-alert-error-bg;
+
+@flying-alert-info-color:     white;
+@flying-alert-info-bg:        @brand-info;
+@flying-alert-info-border:    @flying-alert-info-bg;
+
+@flying-alert-pending-color:  white;
+@flying-alert-pending-bg:     #666;
+@flying-alert-pending-border: @flying-alert-pending-bg;
 
 // -
 // Summaries
@@ -121,6 +177,7 @@
 @summary-bg:                #262626;
 @summary-color:             white;
 @summary-border-radius:     0;
+@summary-box-shadow:        0 0 4px 0 rgba(0, 0, 0, 0.4);
 @summary-box-shadow-v:      2px 0 4px 0 rgba(0, 0, 0, 0.4); // box shadow for vertical summaries
 @summary-box-shadow-h:      0 2px 4px 0 rgba(0, 0, 0, 0.4); // box shadow for horizontal summaries
 
@@ -141,7 +198,7 @@
 @footer-max-width:         none; // max width for the footer content (do not affect footer container)
 @footer-bg:                #F3F3F3;
 @footer-color:             @gray-light;
-@footer-border-color:      white;
+@footer-border-color:      transparent;
 @footer-box-shadow:        @box-shadow-base;
 
 // Links
@@ -153,13 +210,26 @@
 // -
 // Forms
 // ---
-@help-block-color:          lighten(@text-color, 25%); // lighten the text some for contrast
+@help-block-color:          @brand-info;
+@help-block-font-size:      12px;
 
 // Labels
 @input-label-color:         @text-color;
 @input-success-label-color: @text-color; // default bootstrap behavior : @state-success-text
 @input-warning-label-color: @text-color; // default bootstrap behavior : @state-warning-text
 @input-error-label-color:   @text-color; // default bootstrap behavior : @state-error-text
+
+
+// -
+// Lists
+// ---
+@list-controls-bg:             #EBEBEB;
+@list-controls-color:          #3A3A3A;
+@list-controls-border:         #E1E1E1;
+@list-controls-disabled-bg:    #F4F4F4;
+@list-controls-disabled-color: #666666;
+@list-controls-active-bg:      #E4E4E4;
+@list-controls-active-color:   #262626;
 
 
 // -
@@ -296,3 +366,17 @@
 @placeholder-lg-hover-border:  1px dashed @placeholder-hover-color;
 @placeholder-lg-border-radius: @border-radius-large;
 @placeholder-lg-padding:       @padding-large-vertical @padding-large-horizontal;
+
+// -
+// User
+// ---
+@user-message-bg:            @panel-bg;
+@user-message-border:        @panel-default-border;
+@user-message-inner-border:  @panel-default-border;
+@user-message-border-radius: @border-radius-large;
+
+
+// -
+// Thumbnails
+// ---
+@thumbnail-box-shadow: @box-shadow-base;

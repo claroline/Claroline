@@ -11,14 +11,14 @@
 
 namespace Claroline\WebInstaller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Filesystem\Filesystem;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
 use Claroline\CoreBundle\Library\Installation\Settings\DatabaseChecker;
 use Claroline\CoreBundle\Library\Installation\Settings\MailingChecker;
+use Claroline\CoreBundle\Library\Installation\Settings\SettingChecker;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class Controller
 {
@@ -47,10 +47,10 @@ class Controller
         return $this->renderStep(
             'language.html.php',
             'welcome',
-            array(
+            [
                 'install_language' => $this->parameters->getInstallationLanguage(),
                 'country' => $this->parameters->getCountry(),
-            )
+            ]
         );
     }
 
@@ -76,11 +76,11 @@ class Controller
         return $this->renderStep(
             'requirements.html.php',
             'requirements_check',
-            array(
+            [
                 'setting_categories' => $settingChecker->getSettingCategories(),
                 'has_failed_recommendation' => $settingChecker->hasFailedRecommendation(),
                 'has_failed_requirement' => $settingChecker->hasFailedRequirement(),
-            )
+            ]
         );
     }
 
@@ -89,11 +89,11 @@ class Controller
         return $this->renderStep(
             'database.html.php',
             'database_parameters',
-            array(
+            [
                 'settings' => $this->parameters->getDatabaseSettings(),
                 'global_error' => $this->parameters->getDatabaseGlobalError(),
                 'validation_errors' => $this->parameters->getDatabaseValidationErrors(),
-            )
+            ]
         );
     }
 
@@ -134,10 +134,10 @@ class Controller
         return $this->renderStep(
             'platform.html.php',
             'platform_parameters',
-            array(
+            [
                 'platform_settings' => $platformSettings,
                 'errors' => $this->parameters->getPlatformValidationErrors(),
-            )
+            ]
         );
     }
 
@@ -161,10 +161,10 @@ class Controller
         return $this->renderStep(
             'admin.html.php',
             'admin_user',
-            array(
+            [
                 'first_admin_settings' => $this->parameters->getFirstAdminSettings(),
                 'errors' => $this->parameters->getFirstAdminValidationErrors(),
-            )
+            ]
         );
     }
 
@@ -188,11 +188,11 @@ class Controller
         return $this->renderStep(
             'mailing.html.php',
             'mail_server',
-            array(
+            [
                 'mailing_settings' => $this->parameters->getMailingSettings(),
                 'global_error' => $this->parameters->getMailingGlobalError(),
                 'validation_errors' => $this->parameters->getMailingValidationErrors(),
-            )
+            ]
         );
     }
 
@@ -204,9 +204,9 @@ class Controller
 
         if ($transportId !== $mailingSettings->getTransport()) {
             $mailingSettings->setTransport($transportId);
-            $mailingSettings->setTransportOptions(array());
+            $mailingSettings->setTransportOptions([]);
             $this->parameters->setMailingGlobalError(null);
-            $this->parameters->setMailingValidationErrors(array());
+            $this->parameters->setMailingValidationErrors([]);
 
             return $this->redirect('/mailing');
         }
@@ -236,14 +236,14 @@ class Controller
     {
         $this->parameters->reinitializeMailingSettings();
         $this->parameters->setMailingGlobalError(null);
-        $this->parameters->setMailingValidationErrors(array());
+        $this->parameters->setMailingValidationErrors([]);
 
         return $this->redirect('/install');
     }
 
     public function installStep()
     {
-        return $this->renderStep('install.html.php', 'installation', array());
+        return $this->renderStep('install.html.php', 'installation', []);
     }
 
     public function installSubmitStep()
@@ -295,10 +295,10 @@ class Controller
         }
 
         return new JsonResponse(
-            array(
+            [
                 'timestamp' => $timestamp,
                 'content' => file_get_contents($logFile),
-            )
+            ]
         );
     }
 
@@ -310,10 +310,10 @@ class Controller
         return $this->renderStep(
             'error.html.php',
             'failed_install',
-            array(
+            [
                 'log' => $logContent,
                 'log_filename' => $logFilename,
-            )
+            ]
         );
     }
 
@@ -322,11 +322,11 @@ class Controller
         return new Response(
             $this->container->getTemplateEngine()->render(
                 'layout.html.php',
-                array(
+                [
                     'stepTitle' => $titleKey,
                     'stepTemplate' => $template,
                     'stepVariables' => $variables,
-                )
+                ]
             )
         );
     }
@@ -352,7 +352,7 @@ class Controller
 
     private function generateSentDatas()
     {
-        $datas = array();
+        $datas = [];
         $platformSettings = $this->parameters->getPlatformSettings();
 
         $datas['url'] = $this->configHandler->getParameter('datas_sending_url');

@@ -120,9 +120,10 @@ class RolesController extends Controller
     public function configureRolePageAction(Workspace $workspace)
     {
         $this->checkEditionAccess($workspace);
+        $isWsManager = $this->isWorkspaceManager($workspace);
         $roles = $this->roleManager->getRolesByWorkspace($workspace);
 
-        return ['workspace' => $workspace, 'roles' => $roles];
+        return ['workspace' => $workspace, 'roles' => $roles, 'isManager' => $isWsManager];
     }
 
     /**
@@ -222,21 +223,6 @@ class RolesController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/role/{role}/remove",
-     *     name="claro_workspace_role_remove",
-     *     options={"expose"=true}
-     * )
-     */
-    public function removeRoleAction(Workspace $workspace, Role $role)
-    {
-        $this->checkEditionAccess($workspace);
-        $this->roleManager->remove($role);
-
-        return new Response('success', 204);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/{workspace}/role/{role}/edit/form",
      *     name="claro_workspace_role_edit_form"
      * )
@@ -288,7 +274,17 @@ class RolesController extends Controller
     public function removeUserFromRoleAction(User $user, Role $role, Workspace $workspace)
     {
         $this->checkEditionAccess($workspace);
-
+        if (!$this->isWorkspaceManager($workspace)) {
+            $wsRoles = $this->roleManager->getWorkspaceNonAdministrateRoles($workspace);
+            if (!in_array($role, $wsRoles)) {
+                return new JsonResponse(
+                    [
+                        'message' => $this->translator->trans('resource_action_denied_message', [], 'platform'),
+                    ],
+                    500
+                );
+            }
+        }
         try {
             $this->roleManager->dissociateWorkspaceRole($user, $workspace, $role);
         } catch (LastManagerDeleteException $e) {
@@ -316,17 +312,17 @@ class RolesController extends Controller
      *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\User",
-     *     options={"orderable"=true}
-     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredUsers.html.twig")
      */
     public function unregisteredUserListAction($page, $search, Workspace $workspace, $max, $order, $direction)
     {
         $this->checkEditionAccess($workspace);
-        $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $isWsManager = $this->isWorkspaceManager($workspace);
+        if ($isWsManager) {
+            $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        } else {
+            $wsRoles = $this->roleManager->getWorkspaceNonAdministrateRoles($workspace);
+        }
         $preferences = $this->facetManager->getVisiblePublicPreference();
 
         $pager = $search === '' ?
@@ -358,17 +354,17 @@ class RolesController extends Controller
      *     defaults={"page"=1, "max"=50, "order"="id", "direction"= "ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\Group",
-     *     options={"orderable"=true}
-     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:unregisteredGroups.html.twig")
      */
     public function unregisteredGroupListAction($page, $search, Workspace $workspace, $max, $order, $direction)
     {
         $this->checkEditionAccess($workspace);
-        $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $isWsManager = $this->isWorkspaceManager($workspace);
+        if ($isWsManager) {
+            $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        } else {
+            $wsRoles = $this->roleManager->getWorkspaceNonAdministrateRoles($workspace);
+        }
 
         $pager = ($search === '') ?
             $this->groupManager->getGroups($page, $max, $order, $direction) :
@@ -468,6 +464,17 @@ class RolesController extends Controller
     public function removeGroupFromRoleAction(Group $group, Role $role, Workspace $workspace)
     {
         $this->checkEditionAccess($workspace);
+        if (!$this->isWorkspaceManager($workspace)) {
+            $wsRoles = $this->roleManager->getWorkspaceNonAdministrateRoles($workspace);
+            if (!in_array($role, $wsRoles)) {
+                return new JsonResponse(
+                    [
+                        'message' => $this->translator->trans('resource_action_denied_message', [], 'platform'),
+                    ],
+                    500
+                );
+            }
+        }
 
         try {
             $this->roleManager->dissociateWorkspaceRole($group, $workspace, $role);
@@ -521,18 +528,18 @@ class RolesController extends Controller
      *     defaults={"page"=1, "max"=50, "order"="id", "direction"="ASC"},
      *     options = {"expose"=true}
      * )
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\User",
-     *     options={"orderable"=true}
-     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceUsers.html.twig")
      */
     public function usersListAction(Workspace $workspace, $page, $search, $max, $order, $direction = 'ASC')
     {
         $this->checkAccess($workspace);
         $canEdit = $this->hasEditionAccess($workspace);
+        $isWsManager = $this->isWorkspaceManager($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $wsNonAdminRoles = [];
+        if (!$isWsManager) {
+            $wsNonAdminRoles = $this->roleManager->getWorkspaceNonAdministrateRoles($workspace);
+        }
         $currentUser = $this->tokenStorage->getToken()->getUser();
         $preferences = $this->facetManager->getVisiblePublicPreference();
 
@@ -575,6 +582,8 @@ class RolesController extends Controller
             'showMail' => $preferences['mail'],
             'canEdit' => $canEdit,
             'groupsRoles' => $groupsRoles,
+            'isManager' => $isWsManager,
+            'wsNonAdminRoles' => $wsNonAdminRoles,
         ];
     }
 
@@ -596,18 +605,18 @@ class RolesController extends Controller
      *     class="ClarolineCoreBundle:Role",
      *     options={"multipleIds"=true, "isRequired"=false, "name"="roleIds"}
      * )
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\Group",
-     *     options={"orderable"=true}
-     * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:workspaceGroups.html.twig")
      */
     public function groupsListAction(Workspace $workspace, $page, $search, $max, $order, $direction)
     {
         $this->checkAccess($workspace);
         $canEdit = $this->hasEditionAccess($workspace);
+        $isWsManager = $this->isWorkspaceManager($workspace);
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
+        $wsNonAdminRoles = [];
+        if (!$isWsManager) {
+            $wsNonAdminRoles = $this->roleManager->getWorkspaceNonAdministrateRoles($workspace);
+        }
 
         $pager = ($search === '') ?
             $pager = $this->groupManager->getGroupsByRoles($wsRoles, $page, $max, $order, $direction) :
@@ -629,6 +638,8 @@ class RolesController extends Controller
             'direction' => $direction,
             'canEdit' => $canEdit,
             'externalGroups' => $externalGroups,
+            'isManager' => $isWsManager,
+            'wsNonAdminRoles' => $wsNonAdminRoles,
         ];
     }
 
@@ -646,11 +657,6 @@ class RolesController extends Controller
      *     options = {"expose"=true}
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\roles:usersOfGroup.html.twig")
-     * @EXT\ParamConverter(
-     *     "order",
-     *     class="Claroline\CoreBundle\Entity\User",
-     *     options={"orderable"=true}
-     * )
      */
     public function usersOfGroupAction(
         Workspace $workspace,
@@ -866,8 +872,20 @@ class RolesController extends Controller
         $this->checkEditionAccess($workspace);
         $form = $this->formFactory->create(new WorkspaceUsersImportType($workspace));
         $importByFullName = $this->get('claroline.config.platform_config_handler')->getParameter('workspace_users_csv_import_by_full_name');
+        $defaultRoleNames = $workspace->getRoles()
+            ->filter(function ($role) {
+                return preg_match('/^ROLE_WS_(COLLABORATOR|MANAGER)(_|$)/', $role->getRole());
+            })
+            ->map(function ($role) {
+                return $role->getTranslationKey();
+            })->toArray();
 
-        return ['workspace' => $workspace, 'form' => $form->createView(), 'isImportByFullNameEnabled' => $importByFullName];
+        return [
+            'workspace' => $workspace,
+            'form' => $form->createView(),
+            'isImportByFullNameEnabled' => $importByFullName,
+            'defaultRoleNames' => $defaultRoleNames,
+        ];
     }
 
     /**
@@ -903,6 +921,10 @@ class RolesController extends Controller
             }
 
             $this->roleManager->associateWorkspaceRolesByImport($workspace, $datas);
+            $this->addFlash(
+                'success',
+                $this->translator->trans('workspace_users_subscribe_success', [], 'platform')
+            );
 
             return new RedirectResponse(
                 $this->router->generate(
@@ -911,7 +933,20 @@ class RolesController extends Controller
                 )
             );
         } else {
-            return ['workspace' => $workspace, 'form' => $form->createView(), 'isImportByFullNameEnabled' => $importByFullName];
+            $defaultRoleNames = $workspace->getRoles()
+                ->filter(function ($role) {
+                    return preg_match('/^ROLE_WS_(COLLABORATOR|MANAGER)(_|$)/', $role->getRole());
+                })
+                ->map(function ($role) {
+                    return $role->getTranslationKey();
+                })->toArray();
+
+            return [
+                'workspace' => $workspace,
+                'form' => $form->createView(),
+                'isImportByFullNameEnabled' => $importByFullName,
+                'defaultRoleNames' => $defaultRoleNames,
+            ];
         }
     }
 
@@ -932,5 +967,12 @@ class RolesController extends Controller
     private function hasEditionAccess(Workspace $workspace)
     {
         return $this->authorization->isGranted(['users', 'edit'], $workspace);
+    }
+
+    private function isWorkspaceManager(Workspace $workspace)
+    {
+        return $this
+            ->get('claroline.manager.workspace_manager')
+            ->isManager($workspace, $this->tokenStorage->getToken());
     }
 }

@@ -18,7 +18,6 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
-use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CursusBundle\Entity\Course;
@@ -63,7 +62,6 @@ class AdminManagementController extends Controller
     private $cursusManager;
     private $eventDispatcher;
     private $locationManager;
-    private $organizationManager;
     private $request;
     private $serializer;
     private $tagManager;
@@ -73,19 +71,18 @@ class AdminManagementController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "apiManager"            = @DI\Inject("claroline.manager.api_manager"),
-     *     "authorization"         = @DI\Inject("security.authorization_checker"),
-     *     "configHandler"         = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "cursusManager"         = @DI\Inject("claroline.manager.cursus_manager"),
-     *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
-     *     "locationManager"       = @DI\Inject("claroline.manager.organization.location_manager"),
-     *     "organizationManager"   = @DI\Inject("claroline.manager.organization.organization_manager"),
-     *     "request"               = @DI\Inject("request"),
-     *     "serializer"            = @DI\Inject("jms_serializer"),
-     *     "tagManager"            = @DI\Inject("claroline.manager.tag_manager"),
-     *     "translator"            = @DI\Inject("translator"),
-     *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager")
+     *     "apiManager"       = @DI\Inject("claroline.manager.api_manager"),
+     *     "authorization"    = @DI\Inject("security.authorization_checker"),
+     *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "cursusManager"    = @DI\Inject("claroline.manager.cursus_manager"),
+     *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
+     *     "locationManager"  = @DI\Inject("claroline.manager.organization.location_manager"),
+     *     "request"          = @DI\Inject("request"),
+     *     "serializer"       = @DI\Inject("jms_serializer"),
+     *     "tagManager"       = @DI\Inject("claroline.manager.tag_manager"),
+     *     "translator"       = @DI\Inject("translator"),
+     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
@@ -95,7 +92,6 @@ class AdminManagementController extends Controller
         CursusManager $cursusManager,
         EventDispatcherInterface $eventDispatcher,
         LocationManager $locationManager,
-        OrganizationManager $organizationManager,
         Request $request,
         Serializer $serializer,
         TagManager $tagManager,
@@ -109,7 +105,6 @@ class AdminManagementController extends Controller
         $this->cursusManager = $cursusManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->locationManager = $locationManager;
-        $this->organizationManager = $organizationManager;
         $this->request = $request;
         $this->serializer = $serializer;
         $this->tagManager = $tagManager;
@@ -159,7 +154,7 @@ class AdminManagementController extends Controller
             $worskpace = $this->workspaceManager->getWorkspaceById($cursusDatas['workspace']);
         }
         $organizations = isset($cursusDatas['organizations']) && count($cursusDatas['organizations']) > 0 ?
-            $this->organizationManager->getOrganizationsByIds($cursusDatas['organizations']) :
+            $this->cursusManager->getOrganizationsByIds($cursusDatas['organizations']) :
             [];
         $blocking = is_bool($cursusDatas['blocking']) ? $cursusDatas['blocking'] : $cursusDatas['blocking'] === 'true';
         $createdCursus = $this->cursusManager->createCursus(
@@ -268,7 +263,7 @@ class AdminManagementController extends Controller
         }
         if (empty($cursus->getParent())) {
             $organizations = isset($cursusDatas['organizations']) && count($cursusDatas['organizations']) > 0 ?
-                $this->organizationManager->getOrganizationsByIds($cursusDatas['organizations']) :
+                $this->cursusManager->getOrganizationsByIds($cursusDatas['organizations']) :
                 [];
             $this->cursusManager->updateCursusOrganizations($cursus, $organizations);
         }
@@ -428,7 +423,7 @@ class AdminManagementController extends Controller
             $this->userManager->getUsersByIds($courseDatas['validators']) :
             [];
         $organizations = isset($courseDatas['organizations']) && count($courseDatas['organizations']) > 0 ?
-            $this->organizationManager->getOrganizationsByIds($courseDatas['organizations']) :
+            $this->cursusManager->getOrganizationsByIds($courseDatas['organizations']) :
             [];
         $createdCourse = $this->cursusManager->createCourse(
             $courseDatas['title'],
@@ -499,14 +494,14 @@ class AdminManagementController extends Controller
             $worskpace = $this->workspaceManager->getWorkspaceById($courseDatas['workspace']);
         }
         if ($courseDatas['workspaceModel']) {
-            $worskpaceModel = $this->workspaceManager->getOneByCode($courseDatas['workspaceModel']);
+            $worskpaceModel = $this->workspaceManager->getWorkspaceById($courseDatas['workspaceModel']);
         }
 
         $validators = isset($courseDatas['validators']) && count($courseDatas['validators']) > 0 ?
             $this->userManager->getUsersByIds($courseDatas['validators']) :
             [];
         $organizations = isset($courseDatas['organizations']) && count($courseDatas['organizations']) > 0 ?
-            $this->organizationManager->getOrganizationsByIds($courseDatas['organizations']) :
+            $this->cursusManager->getOrganizationsByIds($courseDatas['organizations']) :
             [];
         $createdCourse = $this->cursusManager->createCourse(
             $courseDatas['title'],
@@ -648,7 +643,7 @@ class AdminManagementController extends Controller
         }
         $course->emptyOrganizations();
         $organizations = isset($courseDatas['organizations']) && count($courseDatas['organizations']) > 0 ?
-            $this->organizationManager->getOrganizationsByIds($courseDatas['organizations']) :
+            $this->cursusManager->getOrganizationsByIds($courseDatas['organizations']) :
             [];
 
         foreach ($organizations as $organization) {
@@ -1785,20 +1780,17 @@ class AdminManagementController extends Controller
      * Retrieves workspace models list for an user
      *
      * @param User $user
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
      */
     public function getWorkspaceModelsAction(User $user)
     {
-        $this->cursusManager->checkAccess($user);
-        $models = $this->workspaceModelManager->getModelsByUser($user);
-        $serializedModels = $this->serializer->serialize(
-            $models,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
+        $data = $this->get('claroline.API.finder')->search(
+            'Claroline\CoreBundle\Entity\Workspace\Workspace', [
+                'limit' => 100,
+                'filters' => ['model' => true],
+            ]
         );
 
-        return new JsonResponse($serializedModels, 200);
+        return new JsonResponse($data['data'], 200);
     }
 
     /**
@@ -2737,7 +2729,7 @@ class AdminManagementController extends Controller
     {
         $this->cursusManager->checkAccess($user);
         $organizations = $this->authorization->isGranted('ROLE_ADMIN') ?
-            $this->organizationManager->getAll() :
+            $this->cursusManager->getAllOrganizations() :
             $user->getAdministratedOrganizations()->toArray();
         $serializedOrganizations = $this->serializer->serialize(
             $organizations,
@@ -2780,5 +2772,32 @@ class AdminManagementController extends Controller
         );
 
         return new JsonResponse($serializedCourses, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/api/cursus/document/model/certificate/mail/retrieve",
+     *     name="api_get_cursus_certificate_mail_document_model",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * Returns the document model for the mail sent for certificate
+     *
+     * @param User $user
+     *
+     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     */
+    public function getCertificateMailDocumentModelAction(User $user)
+    {
+        $this->cursusManager->checkAccess($user);
+        $documentModel = $this->cursusManager->getCertificateEmail();
+        $serializedModel = $this->serializer->serialize(
+            $documentModel,
+            'json',
+            SerializationContext::create()->setGroups(['api_cursus'])
+        );
+
+        return new JsonResponse($serializedModel, 200);
     }
 }

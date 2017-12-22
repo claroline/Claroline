@@ -1,16 +1,15 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import MenuItem from 'react-bootstrap/lib/MenuItem'
 
 /*import {generateUrl} from '#/main/core/fos-js-router'*/
 import {t_res} from '#/main/core/layout/resource/translation'
 
-import {getSimpleAccessRule, hasCustomRules} from '#/main/core/layout/resource/rights/utils'
+import {getSimpleAccessRule, hasCustomRules} from '#/main/core/layout/resource/rights'
 
 /*import {MODAL_DELETE_CONFIRM}      from '#/main/core/layout/modal'*/
 import {MODAL_RESOURCE_PROPERTIES} from '#/main/core/layout/resource/components/modal/edit-properties.jsx'
-import {MODAL_RESOURCE_RIGHTS}     from '#/main/core/layout/resource/rights/components/modal/edit-rights.jsx'
+import {MODAL_RESOURCE_RIGHTS}     from '#/main/core/layout/resource/components/modal/edit-rights.jsx'
 
 import {
   PageActions,
@@ -113,141 +112,132 @@ LikeAction.propTypes = {
 
 function getMoreActions(resourceNode, props) {
   return [
-    resourceNode.rights.current.administrate &&
-    <MenuItem
-      key="resource-group-management"
-      header={true}
-    >
-      {t_res('resource_management')}
-    </MenuItem>,
-
-    resourceNode.rights.current.administrate &&
-    <MenuItem
-      key="resource-edit-props"
-      eventKey="resource-edit-props"
-      onClick={() => props.showModal(MODAL_RESOURCE_PROPERTIES, {
+    // edit resource properties
+    {
+      icon: 'fa fa-fw fa-pencil',
+      label: t_res('edit-properties'),
+      group: t_res('resource_management'),
+      displayed: resourceNode.rights.current.administrate,
+      action: () => props.showModal(MODAL_RESOURCE_PROPERTIES, {
         resourceNode: resourceNode,
         save: props.updateNode
-      })}
-    >
-      <span className="fa fa-fw fa-pencil" />
-      {t_res('edit-properties')}
-    </MenuItem>/*,*/
-
-    // TODO : grab custom actions from plugins
-    /*<MenuItem
-      key="resource-manage-tags"
-      eventKey="resource-manage-tags"
-    >
-      <span className="fa fa-fw fa-tags" />
-      Manage tags
-    </MenuItem>,*/
-
-    // TODO : enable tracking. It can't be enabled because for now resource actions wants the ID of the node
-    // and we only have its UUID
-    /*<MenuItem
-      key="resource-log"
-      eventKey="resource-log"
-    >
-      <span className="fa fa-fw fa-line-chart" />
-      {t_res('open-tracking')}
-    </MenuItem>,*/
-
-    // TODO : create new action
-    /*<MenuItem
-      key="resource-show-as"
-      eventKey="resource-show-as"
-    >
-      <span className="fa fa-fw fa-user-secret" />
-      Show as...
-    </MenuItem>,*/
-
-    // TODO : grab custom actions from plugins
-    /*<MenuItem
-      key="resource-group-plugins"
-      header={true}
-    >
-      Other
-    </MenuItem>,*/
-
-    /*<MenuItem
-      key="resource-comments"
-      eventKey="resource-comments"
-    >
-      <span className="fa fa-fw fa-comment" />
-      Add a comment
-    </MenuItem>,*/
-
-    /*<MenuItem
-      key="resource-notes"
-      eventKey="resource-notes"
-    >
-      <span className="fa fa-fw fa-sticky-note" />
-      Add a note
-    </MenuItem>,*/
-
-    // TODO : enable delete and export. It can't be enabled because for now resource actions wants the ID of the node
-    // and we only have its UUID
-    /*resourceNode.rights.current.export &&
-    <MenuItem key="resource-export-divider" divider={true} />,
-
-    resourceNode.rights.current.export &&
-    <MenuItem
-      key="resource-export"
-      eventKey="resource-export"
-      href={generateUrl('claro_resource_action', {
-        resourceType: resourceNode.meta.type,
-        action: 'export',
-        node: resourceNode.id
-      })}
-    >
-      <span className="fa fa-fw fa-upload" />
-      {t_res('export')}
-    </MenuItem>,
-
-    resourceNode.rights.current.delete &&
-    <MenuItem key="resource-delete-divider" divider={true} />,
-
-    resourceNode.rights.current.delete &&
-    <MenuItem
-      key="resource-delete"
-      eventKey="resource-delete"
-      className="dropdown-link-danger"
-      onClick={e => {
-        e.stopPropagation()
-        props.showModal(MODAL_DELETE_CONFIRM, {
-          title: t_res('delete'),
-          question: t_res('delete_confirm_question'),
-          handleConfirm: () => true
-        })
-      }}
-    >
-      <span className="fa fa-fw fa-trash" />
-      {t_res('delete')}
-    </MenuItem>*/
+      })
+    }
   ]
+
+  // TODO : grab custom actions from plugins
+  /*<MenuItem
+    key="resource-manage-tags"
+    eventKey="resource-manage-tags"
+  >
+    <span className="fa fa-fw fa-tags" />
+    Manage tags
+  </MenuItem>,*/
+
+  // TODO : enable tracking. It can't be enabled because for now resource actions wants the ID of the node
+  // and we only have its UUID
+  /*<MenuItem
+    key="resource-log"
+    eventKey="resource-log"
+  >
+    <span className="fa fa-fw fa-line-chart" />
+    {t_res('open-tracking')}
+  </MenuItem>,*/
+
+  // TODO : create new action
+  /*<MenuItem
+    key="resource-show-as"
+    eventKey="resource-show-as"
+  >
+    <span className="fa fa-fw fa-user-secret" />
+    Show as...
+  </MenuItem>,*/
+
+  // TODO : grab custom actions from plugins
+  /*<MenuItem
+    key="resource-group-plugins"
+    header={true}
+  >
+    Other
+  </MenuItem>,*/
+
+  /*<MenuItem
+    key="resource-comments"
+    eventKey="resource-comments"
+  >
+    <span className="fa fa-fw fa-comment" />
+    Add a comment
+  </MenuItem>,*/
+
+  /*<MenuItem
+    key="resource-notes"
+    eventKey="resource-notes"
+  >
+    <span className="fa fa-fw fa-sticky-note" />
+    Add a note
+  </MenuItem>,*/
+
+  // TODO : enable delete and export. It can't be enabled because for now resource actions wants the ID of the node
+  // and we only have its UUID
+  /*resourceNode.rights.current.export &&
+  <MenuItem key="resource-export-divider" divider={true} />,
+
+  resourceNode.rights.current.export &&
+  <MenuItem
+    key="resource-export"
+    eventKey="resource-export"
+    href={generateUrl('claro_resource_action', {
+      resourceType: resourceNode.meta.type,
+      action: 'export',
+      node: resourceNode.id
+    })}
+  >
+    <span className="fa fa-fw fa-upload" />
+    {t_res('export')}
+  </MenuItem>,
+
+  resourceNode.rights.current.delete &&
+  <MenuItem key="resource-delete-divider" divider={true} />,
+
+  resourceNode.rights.current.delete &&
+  <MenuItem
+    key="resource-delete"
+    eventKey="resource-delete"
+    className="dropdown-link-danger"
+    onClick={e => {
+      e.stopPropagation()
+      props.showModal(MODAL_DELETE_CONFIRM, {
+        title: t_res('delete'),
+        question: t_res('delete_confirm_question'),
+        handleConfirm: () => true
+      })
+    }}
+  >
+    <span className="fa fa-fw fa-trash" />
+    {t_res('delete')}
+  </MenuItem>*/
 }
 
 const ManagementGroupActions = props =>
   <PageGroupActions>
-    {(props.resourceNode.rights.current.edit && !props.editMode) &&
+    {(props.editor && !props.editor.opened && props.resourceNode.rights.current.edit) &&
       <PageAction
         id="resource-edit"
-        title={t_res('edit')}
-        icon="fa fa-pencil"
+        title={props.editor.label || t_res('edit')}
+        icon={props.editor.icon || 'fa fa-pencil'}
         primary={true}
-        action={props.edit}
+        action={props.editor.open}
       />
     }
 
-    {(props.resourceNode.rights.current.edit && props.editMode) &&
+    {(props.editor && props.editor.opened && props.resourceNode.rights.current.edit) &&
       <PageAction
         id="resource-save"
         title={t_res('save')}
         icon="fa fa-floppy-o"
         primary={true}
-        disabled={props.save.disabled}
-        action={props.save.action}
+        disabled={props.editor.save.disabled}
+        action={props.editor.save.action}
       />
     }
 
@@ -288,15 +278,22 @@ ManagementGroupActions.propTypes = {
       }).isRequired
     })
   }).isRequired,
-  save: T.shape({
-    disabled: T.bool.isRequired,
-    action: T.oneOfType([T.string, T.func]).isRequired
-  }).isRequired,
-  edit: T.oneOfType([T.func, T.string]).isRequired,
-  editMode: T.bool,
+  /**
+   * If provided, this permits to manage the resource editor in the header (aka. open, save actions).
+   */
+  editor: T.shape({
+    icon: T.string,
+    label: T.string,
+    opened: T.bool,
+    open: T.oneOfType([T.func, T.string]).isRequired,
+    save: T.shape({
+      disabled: T.bool.isRequired,
+      action: T.oneOfType([T.string, T.func]).isRequired
+    }).isRequired
+  }),
   togglePublication: T.func.isRequired,
-  showModal: T.func.isRequired,
-  updateNode: T.func.isRequired
+  updateNode: T.func.isRequired,
+  showModal: T.func.isRequired
 }
 
 const CustomGroupActions = () =>
@@ -314,48 +311,37 @@ CustomGroupActions.propTypes = {
  * @param props
  * @constructor
  */
-const ResourceActions = props =>
-  <PageActions className="resource-actions">
-    {(props.resourceNode.rights.current.edit || props.resourceNode.rights.current.administrate) &&
-      <ManagementGroupActions
-        resourceNode={props.resourceNode}
-        save={props.save}
-        edit={props.edit}
-        editMode={props.editMode}
-        togglePublication={props.togglePublication}
-        showModal={props.showModal}
-        updateNode={props.updateNode}
-      />
-    }
+const ResourceActions = props => {
+  const moreActions = [].concat(props.customActions, getMoreActions(props.resourceNode, props))
 
-    {/*<CustomGroupActions />*/}
+  return(
+    <PageActions className="resource-actions">
+      {(props.resourceNode.rights.current.edit || props.resourceNode.rights.current.administrate) &&
+        <ManagementGroupActions
+          resourceNode={props.resourceNode}
+          editor={props.editor}
+          togglePublication={props.togglePublication}
+          updateNode={props.updateNode}
+          showModal={props.showModal}
+        />
+      }
 
-    <PageGroupActions>
-      <FullScreenAction fullscreen={props.fullscreen} toggleFullscreen={props.toggleFullscreen} />
-      <MoreAction id="resource-more">
-        <MenuItem
-          key="resource-group-type"
-          header={true}
-        >
-          {t_res(props.resourceNode.meta.type)}
-        </MenuItem>
+      {/*<CustomGroupActions />*/}
 
-        {props.customActions.map((customAction, index) =>
-          React.createElement(MenuItem, {
-            key: `resource-more-action-${index}`,
-            eventKey: `resource-action-${index}`,
-            children: [
-              <span className={customAction.icon} />,
-              customAction.label
-            ],
-            [typeof customAction.action === 'function' ? 'onClick' : 'href']: customAction.action
-          })
-        )}
+      <PageGroupActions>
+        <FullScreenAction fullscreen={props.fullscreen} toggleFullscreen={props.toggleFullscreen} />
 
-        {getMoreActions(props.resourceNode, props)}
-      </MoreAction>
-    </PageGroupActions>
-  </PageActions>
+        {0 !== moreActions.length &&
+          <MoreAction
+            id="resource-more"
+            title={t_res(props.resourceNode.meta.type)}
+            actions={moreActions}
+          />
+        }
+      </PageGroupActions>
+    </PageActions>
+  )
+}
 
 ResourceActions.propTypes = {
   resourceNode: T.shape({
@@ -373,7 +359,7 @@ ResourceActions.propTypes = {
         export: T.bool,
         delete: T.bool
       }),
-      all: T.object.isRequired
+      all: T.object
     })
   }).isRequired,
 
@@ -384,19 +370,36 @@ ResourceActions.propTypes = {
   togglePublication: T.func.isRequired,
   updateNode: T.func.isRequired,
 
-  editMode: T.bool,
-  edit: T.oneOfType([T.func, T.string]).isRequired,
-  save: T.shape({
-    disabled: T.bool.isRequired,
-    action: T.oneOfType([T.string, T.func]).isRequired
-  }).isRequired,
+  /**
+   * If provided, this permits to manage the resource editor in the header (aka. open, save actions).
+   */
+  editor: T.shape({
+    icon: T.string,
+    label: T.string,
+    opened: T.bool,
+    open: T.oneOfType([T.func, T.string]).isRequired,
+    save: T.shape({
+      disabled: T.bool.isRequired,
+      action: T.oneOfType([T.string, T.func]).isRequired
+    }).isRequired
+  }),
 
+  /**
+   * Custom actions for the resources added by the UI.
+   */
   customActions: T.arrayOf(T.shape({
     icon: T.string.isRequired,
     label: T.string.isRequired,
     disabled: T.bool,
-    action: T.oneOfType([T.string, T.func]).isRequired
-  })).isRequired
+    displayed: T.bool,
+    action: T.oneOfType([T.string, T.func]).isRequired,
+    dangerous: T.bool,
+    group: T.string
+  }))
+}
+
+ResourceActions.defaultProps = {
+  customActions: []
 }
 
 export {

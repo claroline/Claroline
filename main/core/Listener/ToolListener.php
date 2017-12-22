@@ -127,20 +127,14 @@ class ToolListener
     {
         $workspace = $this->workspaceManager->getWorkspaceById($workspaceId);
         $tools = $this->toolManager->getToolByCriterias(
-            array('isConfigurableInWorkspace' => true, 'isDisplayableInWorkspace' => true)
+            ['isConfigurableInWorkspace' => true, 'isDisplayableInWorkspace' => true]
         );
 
         $canOpenResRights = true;
 
-        if ($workspace->isPersonal() && !$this->rightsManager->canEditPwsPerm(
-            $this->tokenStorage->getToken()
-        )) {
-            $canOpenResRights = false;
-        }
-
         return $this->templating->render(
             'ClarolineCoreBundle:Tool\workspace\parameters:parameters.html.twig',
-            array('workspace' => $workspace, 'tools' => $tools, 'canOpenResRights' => $canOpenResRights)
+            ['workspace' => $workspace, 'tools' => $tools, 'canOpenResRights' => $canOpenResRights]
         );
     }
 
@@ -152,9 +146,9 @@ class ToolListener
     public function desktopParameters()
     {
         $desktopTools = $this->toolManager->getToolByCriterias(
-            array('isConfigurableInDesktop' => true, 'isDisplayableInDesktop' => true)
+            ['isConfigurableInDesktop' => true, 'isDisplayableInDesktop' => true]
         );
-        $tools = array();
+        $tools = [];
 
         foreach ($desktopTools as $desktopTool) {
             $toolName = $desktopTool->getName();
@@ -167,7 +161,7 @@ class ToolListener
         if (count($tools) > 1) {
             return $this->templating->render(
                 'ClarolineCoreBundle:Tool\desktop\parameters:parameters.html.twig',
-                array('tools' => $tools)
+                ['tools' => $tools]
             );
         }
 
@@ -175,7 +169,7 @@ class ToolListener
         $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopParameters:desktopParametersMenu';
 
         $subRequest = $this->container->get('request')->duplicate(
-            array(),
+            [],
             null,
             $params
         );
@@ -197,12 +191,12 @@ class ToolListener
 
     public function workspaceAnalytics($workspace)
     {
-        $params = array(
+        $params = [
             '_controller' => 'ClarolineCoreBundle:WorkspaceAnalytics:showTraffic',
             'workspaceId' => $workspace->getId(),
-        );
+        ];
 
-        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
+        $subRequest = $this->container->get('request')->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         return $response->getContent();
@@ -220,16 +214,16 @@ class ToolListener
 
         if ($user !== 'anon.' && !is_null($tool)) {
             $toolName = $tool->getName();
-            $translatedName = $this->translator->trans($toolName, array(), 'tools');
+            $translatedName = $this->translator->trans($toolName, [], 'tools');
             $route = $this->router->generate(
                 'claro_desktop_open_tool',
-                array('toolName' => $toolName)
+                ['toolName' => $toolName]
             );
 
             $menu = $event->getMenu();
             $menu->addChild(
                 $translatedName,
-                array('uri' => $route)
+                ['uri' => $route]
             )->setExtra('icon', 'fa fa-'.$tool->getClass())
             ->setExtra('title', $translatedName);
 
@@ -249,14 +243,14 @@ class ToolListener
 
         if ($user !== 'anon.' && !is_null($tool)) {
             $toolName = $tool->getName();
-            $translatedName = $this->translator->trans($toolName, array(), 'tools');
+            $translatedName = $this->translator->trans($toolName, [], 'tools');
             $menu = $event->getMenu();
             $menu->addChild(
                 $translatedName,
-                array(
+                [
                     'route' => 'claro_desktop_open_tool',
-                    'routeParameters' => array('toolName' => $toolName),
-                )
+                    'routeParameters' => ['toolName' => $toolName],
+                ]
             )->setAttribute('class', 'dropdown')
             ->setAttribute('role', 'presentation')
             ->setExtra('icon', 'fa fa-'.$tool->getClass());
@@ -278,13 +272,13 @@ class ToolListener
         if ($user !== 'anon.') {
             $parametersTitle = $this->translator->trans(
                 'preferences',
-                array(),
+                [],
                 'platform'
             );
             $menu = $event->getMenu();
             $menu->addChild(
-                $this->translator->trans('preferences', array(), 'platform'),
-                array('route' => 'claro_desktop_parameters_menu')
+                $this->translator->trans('preferences', [], 'platform'),
+                ['route' => 'claro_desktop_parameters_menu']
             )->setExtra('icon', 'fa fa-'.$tool->getClass())
             ->setExtra('title', $parametersTitle);
 

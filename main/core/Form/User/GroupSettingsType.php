@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Form\User;
 
-use Symfony\Component\Form\FormBuilderInterface;
 use Claroline\CoreBundle\Entity\Role;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class GroupSettingsType extends GroupType
 {
@@ -33,7 +34,7 @@ class GroupSettingsType extends GroupType
         $builder->add(
             'platformRoles',
             'entity',
-            array(
+            [
                 'label' => 'roles',
                 'class' => 'Claroline\CoreBundle\Entity\Role',
                 'choice_translation_domain' => true,
@@ -43,7 +44,7 @@ class GroupSettingsType extends GroupType
                 'multiple' => true,
                 'property' => 'translationKey',
                 'disabled' => false,
-                'query_builder' => function (\Doctrine\ORM\EntityRepository $er) use ($isAdmin) {
+                'query_builder' => function (EntityRepository $er) use ($isAdmin) {
                     $query = $er->createQueryBuilder('r')
                         ->where('r.type = '.Role::PLATFORM_ROLE)
                         ->andWhere("r.name != 'ROLE_ANONYMOUS'")
@@ -55,19 +56,15 @@ class GroupSettingsType extends GroupType
 
                     return $query;
                 },
-            )
+            ]
         );
 
         $builder->add(
             'organizations',
-            'entity',
-            array(
-                'label' => 'organizations',
-                'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
-                'expanded' => true,
-                'multiple' => true,
-                'property' => 'name',
-            )
+            'organization_picker',
+            [
+               'label' => 'organizations',
+            ]
         );
     }
 
@@ -78,7 +75,7 @@ class GroupSettingsType extends GroupType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $default = array('translation_domain' => 'platform');
+        $default = ['translation_domain' => 'platform'];
         if ($this->forApi) {
             $default['csrf_protection'] = false;
         }

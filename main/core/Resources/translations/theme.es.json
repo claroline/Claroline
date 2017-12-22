@@ -3,6 +3,5 @@
     "delete_theme_confirm": "Esta seguro que desea borrar este tema?",
     "new_theme": "Nuevo tema",
     "stylesheet": "",
-    "theme_dir_not_writable": "",
-    "theme_management": ""
+    "theme_dir_not_writable": ""
 }

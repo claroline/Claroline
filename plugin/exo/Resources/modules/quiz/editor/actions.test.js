@@ -23,8 +23,8 @@ describe('#createItem', () => {
 
 describe('#createStep', () => {
   it('generates a unique id for each step', () => {
-    const step1 = actions.createStep()
-    const step2 = actions.createStep()
+    const step1 = actions.createStep('step 1')
+    const step2 = actions.createStep('step 2')
     ensure.equal(typeof step1.id, 'string', 'Step id must a string')
     ensure.equal(typeof step2.id, 'string', 'Step id must be a string')
     assert.notEqual(step1.id, step2.id, 'Item ids must be unique')
@@ -49,9 +49,9 @@ describe('#deleteStepAndItems', () => {
     })
     const expectedActions = [
       { type: OBJECT_NEXT, object: {id: '1', type: TYPE_STEP}},
-      { type: STEP_ITEM_DELETE, id: 'b', stepId: '2' },
+      { type: STEP_ITEM_DELETE, stepId: '2', id: 'b' },
       { type: ITEM_DELETE, id: 'b' },
-      { type: STEP_ITEM_DELETE, id: 'c', stepId: '2' },
+      { type: STEP_ITEM_DELETE, stepId: '2', id: 'c' },
       { type: ITEM_DELETE, id: 'c' },
       { type: STEP_DELETE, id: '2' }
     ]

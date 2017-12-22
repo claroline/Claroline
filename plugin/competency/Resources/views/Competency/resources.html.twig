@@ -1,0 +1,25 @@
+{% extends 'HeVinciCompetencyBundle:Competency:frameworkLayout.html.twig' %}
+
+{% set activeTab = 'resources' %}
+
+{% block tabContent %}
+    <br>
+    <table class="framework-resources table table-condensed table-bordered">
+        <thead>
+            <tr>
+                <th>{{ 'competency_'|trans({}, 'competency') }}</th>
+                <th>{{ 'resources'|trans({}, 'platform') }}</th>
+                <th>{{ 'ability.required_resource_count'|trans({}, 'competency') }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {%
+                include 'HeVinciCompetencyBundle:Competency:resourceRow.html.twig'
+                with {
+                    target: framework,
+                    isAbility: false
+                }
+        %}
+        </tbody>
+    </table>
+{% endblock %}

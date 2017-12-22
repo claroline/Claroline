@@ -26,6 +26,7 @@ describe('Choice reducer', () => {
       content: 'Question?',
       multiple: false,
       random: false,
+      numbering: 'none',
       choices: [
         {
           id: ids[0],
@@ -285,6 +286,7 @@ describe('Choice decorator', () => {
       content: 'Question?',
       random: true,
       multiple: true,
+      numbering: 'none',
       choices: [
         {
           id: '2',

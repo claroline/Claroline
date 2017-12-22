@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -27,26 +27,19 @@ class ResourceExtension extends \Twig_Extension
      * @var ResourceManager
      */
     private $resourceManager;
-
-    /**
-     * @var ResourceNodeManager
-     */
     private $resourceNodeManager;
 
     /**
      * ResourceExtension constructor.
      *
      * @DI\InjectParams({
-     *     "resourceManager"     = @DI\Inject("claroline.manager.resource_manager"),
+     *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node")
      * })
      *
-     * @param ResourceManager     $resourceManager
-     * @param ResourceNodeManager $resourceNodeManager
+     * @param ResourceManager $resourceManager
      */
-    public function __construct(
-        ResourceManager $resourceManager,
-        ResourceNodeManager $resourceNodeManager)
+    public function __construct(ResourceNodeManager $resourceNodeManager, ResourceManager $resourceManager)
     {
         $this->resourceManager = $resourceManager;
         $this->resourceNodeManager = $resourceNodeManager;
@@ -57,36 +50,29 @@ class ResourceExtension extends \Twig_Extension
         return 'resource_extension';
     }
 
-    public function getFilters()
-    {
-        return [
-            new \Twig_SimpleFilter('get_serialized_node', [$this, 'serializeNode']),
-        ];
-    }
-
     public function getFunctions()
     {
         return [
             'isMenuActionImplemented' => new \Twig_Function_Method($this, 'isMenuActionImplemented'),
             'getCurrentUrl' => new \Twig_Function_Method($this, 'getCurrentUrl'),
+            'isCodeProtected' => new \Twig_Function_Method($this, 'isCodeProtected'),
+            'requiresUnlock' => new \Twig_Function_Method($this, 'requiresUnlock'),
         ];
-    }
-
-    /**
-     * Gets a serialized representation of the node of a resource.
-     *
-     * @param AbstractResource $resource
-     *
-     * @return array
-     */
-    public function serializeNode(AbstractResource $resource)
-    {
-        return $this->resourceNodeManager->serialize($resource->getResourceNode());
     }
 
     public function isMenuActionImplemented(ResourceType $resourceType = null, $menuName)
     {
         return $this->resourceManager->isResourceActionImplemented($resourceType, $menuName);
+    }
+
+    public function isCodeProtected(ResourceNode $resourceNode)
+    {
+        return $this->resourceNodeManager->isCodeProtected($resourceNode);
+    }
+
+    public function requiresUnlock(ResourceNode $resourceNode)
+    {
+        return $this->resourceNodeManager->requiresUnlock($resourceNode);
     }
 
     public function getCurrentUrl()

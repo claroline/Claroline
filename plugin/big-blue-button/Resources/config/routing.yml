@@ -1,0 +1,4 @@
+claro_big_blue_button_bundle_bbb:
+    resource: "@ClarolineBigBlueButtonBundle/Controller/BBBController.php"
+    type:     annotation
+    prefix:   /

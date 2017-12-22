@@ -53,10 +53,14 @@ class StepValidator extends JsonSchemaValidator
 
         if (isset($step->parameters)) {
             $errors = array_merge($errors, $this->validateParameters($step->parameters));
-            if (isset($step->parameters->pick) && isset($step->items)
-                && count($step->items) < $step->parameters->pick) {
+        }
+
+        if (isset($step->picking)) {
+            $errors = array_merge($errors, $this->validatePicking($step->picking));
+            if (isset($step->picking->pick) && isset($step->items)
+                && count($step->items) < $step->picking->pick) {
                 $errors[] = [
-                    'path' => '/parameters/pick',
+                    'path' => '/picking/pick',
                     'message' => 'the property `pick` cannot be greater than the number of items of the step',
                 ];
             }
@@ -84,22 +88,27 @@ class StepValidator extends JsonSchemaValidator
 
     private function validateParameters(\stdClass $parameters)
     {
+        return [];
+    }
+
+    private function validatePicking(\stdClass $picking)
+    {
         $errors = [];
 
-        if (isset($parameters->randomPick) && Recurrence::NEVER !== $parameters->randomPick && !isset($parameters->pick)) {
+        if (isset($picking->randomPick) && Recurrence::NEVER !== $picking->randomPick && !isset($picking->pick)) {
             // Random pick is enabled but the number of steps to pick is missing
             $errors[] = [
-                'path' => '/parameters/randomPick',
+                'path' => '/picking/randomPick',
                 'message' => 'The property `pick` is required when `randomPick` is not "never"',
             ];
         }
 
         // We can not keep the randomOrder from previous papers as we generate a new subset of items for each attempt
-        if (isset($parameters->randomPick) && Recurrence::ALWAYS === $parameters->randomPick
-            && isset($parameters->randomOrder) && Recurrence::ONCE === $parameters->randomOrder) {
+        if (isset($picking->randomPick) && Recurrence::ALWAYS === $picking->randomPick
+            && isset($picking->randomOrder) && Recurrence::ONCE === $picking->randomOrder) {
             // Incompatible randomOrder and randomPick properties
             $errors[] = [
-                'path' => '/parameters/randomOrder',
+                'path' => '/picking/randomOrder',
                 'message' => 'The property `randomOrder` cannot be "once" when `randomPick` is "always"',
             ];
         }

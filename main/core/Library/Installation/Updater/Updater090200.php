@@ -35,9 +35,9 @@ class Updater090200 extends Updater
                 UPDATE claro_role AS r
                 LEFT JOIN claro_user_role AS ur ON (r.id = ur.role_id)
                 LEFT JOIN claro_user AS u ON (ur.user_id = u.id)
-                SET 
-                    r.name = CONCAT("ROLE_USER_", UPPER(u.username)), 
-                    r.translation_key = u.username 
+                SET
+                    r.name = CONCAT("ROLE_USER_", UPPER(u.username)),
+                    r.translation_key = u.username
                 WHERE r.type = :type
                   AND u.id IS NOT NULL
             ')

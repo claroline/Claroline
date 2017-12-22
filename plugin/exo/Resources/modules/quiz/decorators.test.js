@@ -4,6 +4,7 @@ import {decorate} from './decorators'
 import {
   TYPE_QUIZ,
   QUIZ_SUMMATIVE,
+  QUIZ_PICKING_DEFAULT,
   SHUFFLE_NEVER,
   SHOW_CORRECTION_AT_VALIDATION,
   SHOW_SCORE_AT_CORRECTION,
@@ -19,22 +20,19 @@ describe('Decorator', () => {
       quiz: {
         id: '1',
         steps: ['a', 'b'],
-        parameters: {
-          showMetadata: false
-        }
+        parameters: {}
       },
       steps: {
         a: {
           id: 'a',
           title: 'Step A',
-          items: ['x', 'y']
+          items: ['x', 'y'],
+          parameters: {}
         },
         b: {
           id: 'b',
           items: ['z'],
-          parameters: {
-            maxAttempts: 4
-          }
+          parameters: {}
         }
       },
       items: {
@@ -69,12 +67,12 @@ describe('Decorator', () => {
         steps: ['a', 'b'],
         parameters: {
           type: QUIZ_SUMMATIVE,
-          showMetadata: false,
-          randomOrder: SHUFFLE_NEVER,
-          randomPick: SHUFFLE_NEVER,
-          pick: 0,
+          showMetadata: true,
           duration: 0,
           maxAttempts: 0,
+          maxAttemptsPerDay: 0,
+          mandatoryQuestions: false,
+          maxPapers: 0,
           interruptible: false,
           showCorrectionAt: SHOW_CORRECTION_AT_VALIDATION,
           correctionDate: '',
@@ -83,6 +81,12 @@ describe('Decorator', () => {
           showStatistics: false,
           showFullCorrection: true,
           endMessage: ''
+        },
+        picking: {
+          type: QUIZ_PICKING_DEFAULT,
+          randomOrder: SHUFFLE_NEVER,
+          randomPick: SHUFFLE_NEVER,
+          pick: 0
         }
       },
       steps: {
@@ -92,22 +96,41 @@ describe('Decorator', () => {
           title: 'Step A',
           description: '',
           parameters: {
-            maxAttempts: 0
+            maxAttempts: 0,
+            maxAttemptsPerDay: 0
+          },
+          picking: {
+            randomOrder: SHUFFLE_NEVER,
+            randomPick: SHUFFLE_NEVER,
+            pick: 0
           }
         },
         b: {
           id: 'b',
           items: ['z'],
-          title: '',
+          title: 'step 1',
           description: '',
           parameters: {
-            maxAttempts: 4
+            maxAttempts: 0,
+            maxAttemptsPerDay: 0
+          },
+          picking: {
+            randomOrder: SHUFFLE_NEVER,
+            randomPick: SHUFFLE_NEVER,
+            pick: 0
           }
         }
       },
       items: {
         x: {
           id: 'x',
+          meta: {
+            mandatory: false,
+            protectQuestion: false
+          },
+          rights: {
+            edit: true
+          },
           title: '',
           description: '',
           type: 'application/x.test+json',
@@ -132,6 +155,13 @@ describe('Decorator', () => {
         y: {
           id: 'y',
           title: '',
+          meta: {
+            mandatory: false,
+            protectQuestion: false
+          },
+          rights: {
+            edit: true
+          },
           description: '',
           hints: [],
           feedback: '',
@@ -167,11 +197,18 @@ describe('Decorator', () => {
       steps: {
         a: {
           id: 'a',
-          items: ['x']
+          items: ['x'],
+          parameters: {}
         }
       },
       items: {
         x: {
+          meta: {
+            protectQuestion: false
+          },
+          rights: {
+            edit: true
+          },
           id: 'x',
           type: 'application/x.bar+json'
         }
@@ -197,6 +234,9 @@ describe('Decorator', () => {
           pick: 0,
           duration: 0,
           maxAttempts: 0,
+          maxAttemptsPerDay: 0,
+          mandatoryQuestions: false,
+          maxPapers: 0,
           interruptible: false,
           showCorrectionAt: SHOW_CORRECTION_AT_VALIDATION,
           correctionDate: '',
@@ -205,21 +245,40 @@ describe('Decorator', () => {
           showStatistics: false,
           showFullCorrection: true,
           endMessage: ''
+        },
+        picking: {
+          type: QUIZ_PICKING_DEFAULT,
+          randomOrder: SHUFFLE_NEVER,
+          randomPick: SHUFFLE_NEVER,
+          pick: 0
         }
       },
       steps: {
         a: {
           id: 'a',
-          title: '',
+          title: 'step 1',
           description: '',
           items: ['x'],
           parameters: {
-            maxAttempts: 0
+            maxAttempts: 0,
+            maxAttemptsPerDay: 0
+          },
+          picking: {
+            randomOrder: SHUFFLE_NEVER,
+            randomPick: SHUFFLE_NEVER,
+            pick: 0
           }
         }
       },
       items: {
         x: {
+          meta: {
+            protectQuestion: false,
+            mandatory: false
+          },
+          rights: {
+            edit: true
+          },
           id: 'x',
           type: 'application/x.bar+json',
           title: '',

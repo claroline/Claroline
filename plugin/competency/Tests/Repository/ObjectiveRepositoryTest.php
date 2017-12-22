@@ -164,19 +164,19 @@ class ObjectiveRepositoryTest extends RepositoryTestCase
         //   c1
         //     - c2
         //     - c3
-        //
+
         // Objectives:
         //   - o1
         //     - c2
         //   - o2
         //     - c2
         //     - c3
-        //
+
         // Users:
         //   - u1 (o1)
         //   - u2 (o1, o2)
         //   - u3
-        //
+
         // Groups:
         //   - g1 (o2)
         //     - u2

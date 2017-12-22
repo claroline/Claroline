@@ -5,5 +5,9 @@
     "next_session_registration_request_cancel": "Cancel request to be registered to the next training session",
     "next_session_registration_request_cancel_message": "Are you sure you want to cancel your request to be registered to the next training session ?",
     "next_session_registration_request_message": "Are you sure you want to be registered to the next training session ?",
-    "request_done": "Request done"
+    "request_done": "Request done",
+    "session_registration": "Session registration",
+    "session_self_registration_message": "Are you sure you want to register to this session ?",
+    "session_self_unregistration_message": "Are you sure you want to unregister from this session ?",
+    "session_unregistration": "Session unregistration"
 }

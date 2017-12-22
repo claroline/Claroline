@@ -5,8 +5,12 @@
     {% set node = app.session.get('current_resource_node') %}
     {% if node is not null %}
         {% set workspace = node.getWorkspace() %}
+    {% elseif _resource.getResourceNode() is defined %}
+        {% set node = _resource.getResourceNode() %}
+        {% set workspace = node.getWorkspace() %}
     {% else %}
-        {% set workspace = _resource.getResourceNode().getWorkspace() %}
+        {% set node = _resource %}
+        {% set workspace = node.getWorkspace() %}
     {% endif %}
 {% endif %}
 
@@ -33,12 +37,12 @@
 
 {% block title %}
     {% spaceless %}
-        {% if _resource is defined %}
-            {% if _resource.getWorkspace() is defined %}
-                {{ _resource.getWorkspace.getName() }} -
+        {% if node is defined %}
+            {% if node.getWorkspace() is defined %}
+                {{ node.getWorkspace.getName() }} -
             {% endif %}
 
-            {{ _resource.getResourceNode().getName() | striptags | raw }}
+            {{node.getName() | striptags | raw }}
         {% elseif workspace is defined %}
             {{ workspace.getName() }}
         {% endif %}
@@ -58,13 +62,13 @@
                 </li>
 
                 {% render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs", {
-                    'node': _resource.getResourceNode(),
+                    'node': node,
                     '_breadcrumbs': app.request.query.get('_breadcrumbs', {})
                 })) %}
             {% endif %}
 
             {% block resourceBreadcrumb %}
-                <li class="active">{{ _resource.getResourceNode().getName() }}</li>
+                <li class="active">{{ node.getName() }}</li>
             {% endblock %}
         </ul>
     {% endif %}
@@ -104,8 +108,8 @@
 
     <script type="text/javascript">
         window.Workspace = {};
-        {% if _resource is defined and _resource.getResourceNode().getWorkspace() is not null %}
-            window.Workspace.id = {{ _resource.getResourceNode().getWorkspace().getId() }};
+        {% if node is defined and node.getWorkspace() is not null %}
+            window.Workspace.id = {{ node.getWorkspace().getId() }};
         {% else %}
             window.Workspace.id = null;
         {% endif %}

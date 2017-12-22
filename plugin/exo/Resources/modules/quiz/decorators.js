@@ -5,6 +5,7 @@ import defaults from './defaults'
 import {TYPE_QUIZ} from './enums'
 import {makeId} from './../utils/utils'
 import {isQuestionType} from './../items/item-types'
+import {tex} from '#/main/core/translation'
 
 // augment normalized quiz data with editor state attributes and default values
 // (can be passed an array of sub-decorators for each item mime type)
@@ -21,9 +22,19 @@ export function decorate(state, itemDecorators = {}, applyOnItems = true) {
     newState.quiz.steps = [defaultStep.id]
   }
 
+  let stepIdx = 0
+
   return Object.assign(newState, {
     quiz: defaultsDeep(newState.quiz, defaults.quiz),
-    steps: mapValues(newState.steps, step => defaultsDeep(step, defaults.step)),
+    steps: mapValues(newState.steps, (step) => {
+      step = defaultsDeep(step, defaults.step)
+      if (!step.title) {
+        step.title = `${tex('step')} ${stepIdx + 1}`
+        stepIdx++
+      }
+
+      return step
+    }),
     items: mapValues(newState.items, item => {
       const subDecorator = itemDecorators[item.type] || (item => item)
       return applyOnItems && isQuestionType(item.type) ? decorateItem(item, subDecorator) : item

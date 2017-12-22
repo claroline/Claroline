@@ -425,8 +425,8 @@ class ExternalSynchronizationManager
                         $username .= uniqid();
                     }
                     $user->setUsername($username);
-                    $user->setPassword(random_bytes(10));
                     $user->setIsMailValidated(true);
+                    $user->setPlainPassword(bin2hex(random_bytes(10)));
                 }
                 // Update or set user values
                 $user->setFirstName($this->utilities->stringToUtf8($externalSourceUser['first_name']));
@@ -439,7 +439,7 @@ class ExternalSynchronizationManager
                     $publicUrl = $this->userManager->generatePublicUrl($user);
                     $publicUrl .= in_array($publicUrl, $publicUrlList) ? '_'.uniqid() : '';
                     $publicUrlList[] = $publicUrl;
-                    $this->userManager->createUser($user, false, $rolesToAdd, null, $publicUrl);
+                    $this->userManager->createUser($user, false, $rolesToAdd, null, $publicUrl, [], true);
                     $this->externalUserManager->createExternalUser(
                         $externalSourceUser['id'],
                         $sourceName,
@@ -543,9 +543,9 @@ class ExternalSynchronizationManager
             $unsubscribeUserIds = array_diff($subscribedUserIds, $alreadySubscribedIds);
             $unsubscribedUsers = $this->userManager->getUsersByIds($unsubscribeUserIds);
             foreach ($unsubscribedUsers as $user) {
-                $user->removeGroup($group);
-                $this->om->persist($user);
+                $group->removeUser($user);
             }
+            $this->om->persist($group);
         }
         $this->externalGroupManager->updateExternalGroupDate($extGroup);
         $this->om->endFlushSuite();

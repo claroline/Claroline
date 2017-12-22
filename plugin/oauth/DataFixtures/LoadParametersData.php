@@ -13,9 +13,9 @@ namespace Icap\OAuthBundle\DataFixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\Persistence\ObjectManager;
+use Icap\OAuthBundle\Model\Configuration;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Icap\OAuthBundle\Model\Configuration;
 
 class LoadParametersData extends AbstractFixture implements ContainerAwareInterface
 {

@@ -11,61 +11,201 @@
 
 namespace Claroline\AnnouncementBundle\Manager;
 
+use Claroline\AnnouncementBundle\API\Serializer\AnnouncementSerializer;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Entity\AnnouncementsWidgetConfig;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\MailManager;
+use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Repository\RoleRepository;
+use Claroline\CoreBundle\Repository\UserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
- * @DI\Service("claroline.announcement.manager.announcement_manager")
+ * @DI\Service("claroline.manager.announcement_manager")
  */
 class AnnouncementManager
 {
-    private $eventDispatcher;
-    private $mailManager;
+    /** @var ObjectManager */
     private $om;
 
+    /** @var StrictDispatcher */
+    private $eventDispatcher;
+
+    /** @var MailManager */
+    private $mailManager;
+
+    /** @var ScheduledTaskManager */
+    private $taskManager;
+
+    /** @var AnnouncementSerializer */
+    private $serializer;
+
+    /** @var AnnouncementRepository */
     private $announcementRepo;
     private $announcementsWidgetConfigRepo;
+
+    /** @var RoleRepository */
     private $roleRepo;
+
+    /** @var UserRepository */
     private $userRepo;
 
     /**
-     * Constructor.
+     * AnnouncementManager constructor.
      *
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "serializer"      = @DI\Inject("claroline.serializer.announcement"),
      *     "mailManager"     = @DI\Inject("claroline.manager.mail_manager"),
-     *     "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
+     *     "taskManager"     = @DI\Inject("claroline.manager.scheduled_task_manager")
      * })
+     *
+     * @param ObjectManager          $om
+     * @param StrictDispatcher       $eventDispatcher
+     * @param AnnouncementSerializer $serializer
+     * @param MailManager            $mailManager
+     * @param ScheduledTaskManager   $taskManager
      */
-    public function __construct(ObjectManager $om, MailManager $mailManager, StrictDispatcher $eventDispatcher)
-    {
-        $this->eventDispatcher = $eventDispatcher;
-        $this->mailManager = $mailManager;
+    public function __construct(
+        ObjectManager $om,
+        StrictDispatcher $eventDispatcher,
+        AnnouncementSerializer $serializer,
+        MailManager $mailManager,
+        ScheduledTaskManager $taskManager
+    ) {
         $this->om = $om;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->serializer = $serializer;
+        $this->mailManager = $mailManager;
+        $this->taskManager = $taskManager;
+
         $this->announcementRepo = $om->getRepository('ClarolineAnnouncementBundle:Announcement');
         $this->announcementsWidgetConfigRepo = $om->getRepository('ClarolineAnnouncementBundle:AnnouncementsWidgetConfig');
         $this->roleRepo = $om->getRepository('ClarolineCoreBundle:Role');
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
     }
 
-    public function insertAnnouncement(Announcement $announcement)
+    /**
+     * Serializes an Announcement entity.
+     *
+     * @param Announcement $announcement
+     *
+     * @return array
+     */
+    public function serialize(Announcement $announcement)
     {
-        $this->om->persist($announcement);
-        $this->om->flush();
+        return $this->serializer->serialize($announcement);
     }
 
-    public function deleteAnnouncement(Announcement $announcement)
+    /**
+     * Creates a new Announcement.
+     *
+     * @param AnnouncementAggregate $aggregate
+     * @param array                 $data
+     * @param bool                  $withLog
+     *
+     * @return Announcement
+     */
+    public function create(AnnouncementAggregate $aggregate, array $data, $withLog = true)
     {
+        $this->om->startFlushSuite();
+
+        $announce = new Announcement();
+        $announce->setAggregate($aggregate);
+
+        $this->update($announce, $data, 'LogAnnouncementCreate', $withLog);
+
+        $this->om->endFlushSuite();
+
+        return $announce;
+    }
+
+    /**
+     * Updates an Announcement.
+     *
+     * @param Announcement $announcement
+     * @param array        $data
+     * @param string       $logEvent
+     * @param bool         $withLog
+     *
+     * @return Announcement
+     */
+    public function update(Announcement $announcement, array $data, $logEvent = 'LogAnnouncementEdit', $withLog = true)
+    {
+        $this->om->startFlushSuite();
+
+        // deserialize data
+        $this->serializer->deserialize($data, $announcement);
+        $this->om->persist($announcement);
+
+        $roles = isset($data['roles']) && count($data['roles']) > 0 ? $this->roleRepo->findRolesByIds($data['roles']) : [];
+
+        // send message if needed
+        switch ($data['meta']['notifyUsers']) {
+            case 0:
+                $this->unscheduleMessage($announcement);
+                break;
+            case 1:
+                // directly send message
+                $this->unscheduleMessage($announcement);
+                $this->sendMessage($announcement, $roles);
+                break;
+            case 2:
+                // schedule sending
+                $this->scheduleMessage(
+                    $announcement,
+                    \DateTime::createFromFormat('Y-m-d\TH:i:s', $data['meta']['notificationDate']),
+                    $roles
+                );
+                break;
+        }
+
+        $this->om->endFlushSuite();
+
+        // log
+        if ($withLog) {
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Claroline\\AnnouncementBundle\\Event\\Log\\'.$logEvent.'Event',
+                [$announcement->getAggregate(), $announcement]
+            );
+        }
+
+        return $announcement;
+    }
+
+    /**
+     * Deletes an Announcement.
+     *
+     * @param Announcement $announcement
+     * @param bool         $withLog
+     */
+    public function delete(Announcement $announcement, $withLog = true)
+    {
+        $this->om->startFlushSuite();
+
+        // delete scheduled task is any
+        $this->unscheduleMessage($announcement);
+
+        // log deletion
+        if ($withLog) {
+            $this->eventDispatcher->dispatch(
+                'log',
+                'Claroline\\AnnouncementBundle\\Event\\Log\\LogAnnouncementDeleteEvent',
+                [$announcement->getAggregate(), $announcement]
+            );
+        }
+        // do remove
         $this->om->remove($announcement);
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     public function getVisibleAnnouncementsByWorkspace(Workspace $workspace, array $roles)
@@ -98,58 +238,147 @@ class AnnouncementManager
         );
     }
 
-    public function getAllAnnouncementsByAggregate(AnnouncementAggregate $aggregate)
+    /**
+     * Sends an Announcement by mail to Users that can access it.
+     *
+     * @param Announcement $announcement
+     * @param array        $roles
+     */
+    public function sendMail(Announcement $announcement, array $roles = [])
     {
-        return $this->announcementRepo->findAllAnnouncementsByAggregate($aggregate);
+        $message = $this->getMessage($announcement, $roles);
+        $this->mailManager->send(
+            $message['object'],
+            $message['content'],
+            $message['receivers'],
+            $message['sender']
+        );
     }
 
-    public function getVisibleAnnouncementsByAggregate(AnnouncementAggregate $aggregate)
+    /**
+     * Sends an Announcement by message to Users that can access it.
+     *
+     * @param Announcement $announcement
+     * @param array        $roles
+     */
+    public function sendMessage(Announcement $announcement, array $roles = [])
     {
-        return $this->announcementRepo->findVisibleAnnouncementsByAggregate($aggregate);
-    }
+        $message = $this->getMessage($announcement, $roles);
 
-    public function sendMessage(Announcement $announcement)
-    {
-        $targets = $this->getUsersByResource($announcement->getAggregate()->getResourceNode(), 1);
-        $workspace = $announcement->getAggregate()->getResourceNode()->getWorkspace();
-        $content = $announcement->getContent().'<br>['.$workspace->getCode().'] '.$workspace->getName();
         $this->eventDispatcher->dispatch(
             'claroline_message_sending_to_users',
             'SendMessage',
             [
-                $announcement->getCreator(),
-                $content,
-                $announcement->getTitle(),
+                $message['sender'],
+                $message['content'],
+                $message['object'],
                 null,
-                $targets,
+                $message['receivers'],
             ]
         );
     }
 
-    public function sendMail(Announcement $announcement, $users = null)
+    public function scheduleMessage(Announcement $announcement, \DateTime $scheduledDate, array $roles = [])
     {
-        $targets = is_null($users) ? $this->getUsersByResource($announcement->getAggregate()->getResourceNode(), 1) : $users;
-        $workspace = $announcement->getAggregate()->getResourceNode()->getWorkspace();
-        $title = '['.$workspace->getCode().'] '.$announcement->getTitle();
-        $content = $announcement->getContent().'<br>['.$workspace->getCode().'] '.$workspace->getName();
-        $this->mailManager->send($title, $content, $targets, $announcement->getCreator());
-    }
+        $this->om->startFlushSuite();
 
-    //@todo make a dql request to retrieve the users (it may be a difficult one to do)
-    public function getUsersByResource(ResourceNode $node, $mask)
-    {
-        $rights = $node->getRights();
-        $roles = [];
+        $message = $this->getMessage($announcement, $roles);
+        $taskData = [
+            'name' => $message['object'],
+            'type' => 'message',
+            'scheduledDate' => $scheduledDate->format('Y-m-d\TH:i:s'),
+            'data' => [
+                'object' => $message['object'],
+                'content' => $announcement->getContent(),
+                'users' => array_map(function (User $user) {
+                    return ['id' => $user->getId()];
+                }, $message['receivers']),
+            ],
+        ];
 
-        foreach ($rights as $right) {
-            //1 is the default "open" mask
-            if ($right->getMask() & 1) {
-                $roles[] = $right->getRole();
-            }
+        if (empty($announcement->getTask())) {
+            $task = $this->taskManager->create($taskData);
+
+            // link new task to announcement
+            $announcement->setTask($task);
+            $this->om->persist($announcement);
+        } else {
+            $this->taskManager->update($taskData, $announcement->getTask());
         }
 
-        $roles[] = $this->roleRepo->findOneByName('ROLE_WS_MANAGER_'.$node->getWorkspace()->getGuid());
-        //we must also add the ROLE_WS_MANAGER_{ws_guid}
+        $this->om->endFlushSuite();
+    }
+
+    public function unscheduleMessage(Announcement $announcement)
+    {
+        $this->om->startFlushSuite();
+
+        if (!empty($announcement->getTask())) {
+            $this->taskManager->delete($announcement->getTask());
+
+            // unlink task and announcement
+            $announcement->setTask(null);
+            $this->om->persist($announcement);
+        }
+
+        $this->om->endFlushSuite();
+    }
+
+    /**
+     * Gets the data which will be sent by message (internal &email) to Users.
+     *
+     * @param Announcement $announce
+     * @param array        $roles
+     *
+     * @return array
+     */
+    private function getMessage(Announcement $announce, array $roles = [])
+    {
+        $resourceNode = $announce->getAggregate()->getResourceNode();
+
+        $object = !empty($announce->getTitle()) ? $announce->getTitle() : $announce->getAggregate()->getName();
+
+        if (empty($announce->getTitle()) && !empty($announce->getVisibleFrom())) {
+            $object .= ' ['.$announce->getVisibleFrom()->format('Y-m-d H:i').']';
+        }
+        $content = $announce->getContent().'<br>['.$resourceNode->getWorkspace()->getCode().'] '.$resourceNode->getWorkspace()->getName();
+
+        return [
+            'sender' => $announce->getCreator(),
+            'receivers' => $this->getVisibleBy($announce, $roles),
+            'object' => $object,
+            'content' => $content,
+        ];
+    }
+
+    /**
+     * Gets the list of Users that can see an announce.
+     *
+     * @todo make a dql request to retrieve the users (it may be a difficult one to do)
+     *
+     * @param Announcement $announce
+     * @param array        $roles
+     *
+     * @return User[]
+     */
+    private function getVisibleBy(Announcement $announce, array $roles = [])
+    {
+        $node = $announce->getAggregate()->getResourceNode();
+
+        $rights = $node->getRights();
+
+        if (count($roles) === 0) {
+            foreach ($rights as $right) {
+                //1 is the default "open" mask
+                if ($right->getMask() & 1) {
+                    $roles[] = $right->getRole();
+                }
+            }
+
+            $roles[] = $this->roleRepo->findOneBy([
+                'name' => 'ROLE_WS_MANAGER_'.$node->getWorkspace()->getGuid(),
+            ]);
+        }
 
         return $this->userRepo->findByRolesIncludingGroups($roles, false, 'id', 'ASC');
     }

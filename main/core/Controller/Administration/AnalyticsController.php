@@ -165,7 +165,7 @@ class AnalyticsController extends Controller
     public function analyticsResourcesAction()
     {
         $manager = $this->get('doctrine.orm.entity_manager');
-        $wsCount = $this->workspaceManager->getNbWorkspaces();
+        $wsCount = $this->workspaceManager->getNbNonPersonalWorkspaces();
         $resourceCount = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')
             ->countResourcesByType();
 

@@ -175,7 +175,7 @@ class Manager
     public function unsubscribe(Forum $forum, User $user)
     {
         $this->om->startFlushSuite();
-        $notification = $this->notificationRepo->findOneBy(array('forum' => $forum, 'user' => $user));
+        $notification = $this->notificationRepo->findOneBy(['forum' => $forum, 'user' => $user]);
         $this->om->remove($notification);
         $this->dispatch(new UnsubscribeForumEvent($forum));
         $this->om->endFlushSuite();
@@ -233,7 +233,7 @@ class Manager
     public function createMessage(Message $message, Subject $subject)
     {
         $forum = $subject->getCategory()->getForum();
-        $collection = new ResourceCollection(array($forum->getResourceNode()));
+        $collection = new ResourceCollection([$forum->getResourceNode()]);
 
         if (!$this->authorization->isGranted('post', $collection)) {
             throw new AccessDeniedHttpException($collection->getErrorsForDisplay());
@@ -296,7 +296,7 @@ class Manager
      */
     public function hasSubscribed(User $user, Forum $forum)
     {
-        $notify = $this->notificationRepo->findBy(array('user' => $user, 'forum' => $forum));
+        $notify = $this->notificationRepo->findBy(['user' => $user, 'forum' => $forum]);
 
         return count($notify) === 1 ? true : false;
     }
@@ -310,8 +310,8 @@ class Manager
     public function sendMessageNotification(Message $message, User $user)
     {
         $forum = $message->getSubject()->getCategory()->getForum();
-        $notifications = $this->notificationRepo->findBy(array('forum' => $forum));
-        $users = array();
+        $notifications = $this->notificationRepo->findBy(['forum' => $forum]);
+        $users = [];
 
         foreach ($notifications as $notification) {
             $users[] = $notification->getUser();
@@ -319,12 +319,12 @@ class Manager
 
         $title = $this->translator->trans(
             'forum_new_message',
-            array('%forum%' => $forum->getResourceNode()->getName(), '%subject%' => $message->getSubject()->getTitle(), '%author%' => $message->getCreator()->getUsername()),
+            ['%forum%' => $forum->getResourceNode()->getName(), '%subject%' => $message->getSubject()->getTitle(), '%author%' => $message->getCreator()->getUsername()],
             'forum'
         );
 
         $url = $this->router->generate(
-            'claro_forum_subjects', array('category' => $message->getSubject()->getCategory()->getId()), true
+            'claro_forum_subjects', ['category' => $message->getSubject()->getCategory()->getId()], true
         );
 
         $body = "<a href='{$url}'>{$title}</a><hr>{$message->getContent()}";
@@ -583,12 +583,12 @@ class Manager
 
     public function getMessageQuoteHTML(Message $message)
     {
-        $answer = $this->translator->trans('answer_message', array(), 'forum');
+        $answer = $this->translator->trans('answer_message', [], 'forum');
         $author = $message->getCreator()->getFirstName()
             .' '
             .$message->getCreator()->getLastName();
-        $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
-        $by = $this->translator->trans('posted_by', array('%author%' => $author, '%date%' => $date), 'forum');
+        $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', [], 'platform'));
+        $by = $this->translator->trans('posted_by', ['%author%' => $author, '%date%' => $date], 'forum');
         $mask = '<div class="original-poster"><b>'.$by.'</b></div><div class="well">%s</div></div><b>'.$answer.':</b></div>';
 
         return sprintf(
@@ -602,8 +602,8 @@ class Manager
         $author = $message->getCreator()->getFirstName()
             .' '
             .$message->getCreator()->getLastName();
-        $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', array(), 'platform'));
-        $by = $this->translator->trans('posted_by', array('%author%' => $author, '%date%' => $date), 'forum');
+        $date = $message->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', [], 'platform'));
+        $by = $this->translator->trans('posted_by', ['%author%' => $author, '%date%' => $date], 'forum');
 
         return $by;
     }
@@ -640,7 +640,7 @@ class Manager
 
     public function getLastMessagesBySubjectsIds(array $subjectsIds)
     {
-        $lastMessages = array();
+        $lastMessages = [];
 
         if (count($subjectsIds) > 0) {
             $lastMessages = $this->forumRepo
@@ -743,7 +743,7 @@ class Manager
 
     /**
      * @param WidgetInstance $widgetInstance
-     * 
+     *
      * @return \Claroline\ForumBundle\Entity\Widget\LastMessageWidgetConfig
      */
     public function getConfig(WidgetInstance $widgetInstance)
@@ -782,7 +782,7 @@ class Manager
         $token = $this->tokenStorage->getToken();
         $roles = $this->securityUtilities->getRoles($token);
 
-        if ($participateOnly) {
+        if ($participateOnly && $token->getUser() instanceof User) {
             $mySubjects = $this->getSubjectsByParticipant($token->getUser());
         }
 

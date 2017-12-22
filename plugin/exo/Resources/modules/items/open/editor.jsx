@@ -3,12 +3,12 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import {actions} from './editor'
 import {tex} from '#/main/core/translation'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 
 export const Open = (props) =>
   <fieldset className="open-editor">
     <FormGroup
-      controlId={`item-${props.item.id}-maxScore`}
+      id={`item-${props.item.id}-maxScore`}
       label={tex('score_max')}
       error={get(props.item, '_errors.maxScore')}
     >
@@ -25,7 +25,7 @@ export const Open = (props) =>
     </FormGroup>
 
     <FormGroup
-      controlId={`item-${props.item.id}-maxLength`}
+      id={`item-${props.item.id}-maxLength`}
       label={tex('open_maximum_length')}
       error={get(props.item, '_errors.maxLength')}
       className="form-last"

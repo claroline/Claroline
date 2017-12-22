@@ -1,0 +1,314 @@
+/*
+ * Data tree.
+ */
+
+@item-preview-max-width: 200px;
+@item-preview-min-width: 150px;
+@item-preview-max-height: 150px;
+@item-preview-min-height: 40px;
+/* define custom drag layer style */
+.custom-drag-layer {
+    position: fixed;
+    pointer-events:none;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    color: black
+}
+
+
+/* classes for every drag preview component */
+.drag-preview{
+    width: 100%;
+    height: 100%;
+    min-width: @item-preview-min-width;
+    min-height: @item-preview-min-height;
+    max-width: @item-preview-max-width;
+    max-height: @item-preview-max-height;
+    background-color: #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    border-radius: 5px;
+    margin: 15px;
+}
+
+@data-tree-indent: 40px;
+@data-tree-gutter: 10px;
+@data-tree-lines-color: #777;
+
+.data-list {
+    // todo slightly ugly
+    .data-tree {
+        margin-left: -@data-tree-gutter;
+    }
+}
+
+.btn-tree-toggle {
+    z-index: 2;
+    display: inline-flex;
+    padding: 0;
+    justify-content: center;
+    align-items: center;
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    margin: @data-tree-gutter;
+    background: @body-bg; // should be overridden in panels / modales
+    border: 1px solid @data-tree-lines-color;
+    color: @data-tree-lines-color;
+    border-radius: 50%;
+    text-align: center;
+
+    .fa {
+        text-align: center;
+    }
+
+    &:hover,
+    &:focus {
+        border-color: #333; // todo use a var. same as default btn hover `color`
+    }
+}
+
+
+// -
+// Header
+// ---
+
+.data-tree-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+
+    > .btn-tree-toggle {
+        margin-bottom: 0;
+    }
+
+    > .checkbox {
+        flex: 1;
+        margin: @data-tree-gutter;
+        margin-bottom: 0;
+        border-left: 1px solid transparent; // for correct alignment
+    }
+}
+
+// customizes bulk actions
+.data-tree .list-selected {
+    position: relative;
+    border: 1px solid transparent;
+    margin-top: @data-tree-gutter;
+    margin-left: @data-tree-indent;
+
+    .list-selected-label {
+        padding: @data-tree-gutter;
+        .fa {
+            margin-right: @data-tree-gutter;
+        }
+    }
+
+    .btn {
+        padding: @data-tree-gutter;
+    }
+
+    &:before {
+        position: absolute;
+        z-index: 1;
+        top: -(@data-tree-gutter + 1px);
+        left: -((@data-tree-indent / 2) + 1px);
+        bottom: -1px;
+        content: " ";
+        border-left: 1px solid @data-tree-lines-color;
+    }
+
+    &:after {
+        z-index: 1;
+        position: absolute;
+        content: " ";
+        left: -((@data-tree-indent / 2) + 1px);
+        bottom: 50%;
+        border-top: 1px solid @data-tree-lines-color;
+        width: @data-tree-indent / 2;
+        box-sizing: content-box;
+    }
+}
+
+
+// -
+// Content & Items
+// ---
+
+.data-tree-content {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+    .btn-drag { // todo make it generic
+        display: flex;
+        align-self: stretch;
+        align-items: center;
+        background: #777;
+        color: white;
+        border-radius: 0 @panel-border-radius @panel-border-radius 0;
+
+        &:hover,
+        &:focus {
+            background: #555;
+        }
+    }
+}
+
+.data-tree-content,
+.data-tree-children {
+    > .data-tree-item-container:last-child {
+        > .data-tree-item:after {
+            border: none;
+        }
+    }
+}
+
+.data-tree-item {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .btn-tree-toggle {
+        margin-top: @data-tree-gutter*2;
+    }
+
+    .item-flags {
+        cursor: help;
+        opacity: 0.3; // todo not perfect
+        margin-left: auto; // right alignment in flex container
+
+        .item-flag+.item-flag {
+            margin-left: floor(@data-grid-gutter / 2);
+        }
+    }
+
+    .item-title {
+        flex: 1;
+        margin: 0;
+        padding: 0;
+        font-size: @font-size-base;
+        color: @text-color; // reset color when card is clickable (uses a <a> tag)
+        font-weight: bold;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        > small {
+            color: @headings-small-color; // reset color when card is clickable (uses a <a> tag)
+            font-weight: normal;
+            margin-top: 5px;
+            display: block;
+        }
+    }
+
+    .data-actions-btn {
+        padding: @data-tree-gutter;
+    }
+
+    // draw lines
+    // connect to parent
+    &:before {
+        z-index: 1;
+        position: absolute;
+        left: 20px;
+        top: 0;
+        content: " ";
+        border-bottom: 1px solid @data-tree-lines-color;
+        width: 20px;
+        border-left: 1px solid @data-tree-lines-color;
+        height: 50%;
+        padding-bottom: 5px;
+        box-sizing: content-box;
+    }
+
+    // draw lines
+    // connect to next sibling
+    &:after {
+        z-index: 1;
+        position: absolute;
+        left: 20px;
+        bottom: 0;
+        content: " ";
+        border-left: 1px solid @data-tree-lines-color;
+        height: 50%;
+    }
+
+    &:hover {
+        .data-tree-item-content {
+            background-color: @table-bg-hover;
+        }
+    }
+
+    &.selected {
+        .btn-drag {
+            background: #517586;
+
+            &:hover,
+            &:focus {
+                background: #335768;
+            }
+        }
+
+        .data-tree-item-content {
+            background-color: @state-info-bg;
+            border-color: #abcfe0; // todo : use a var same as .table
+            .box-shadow(0 0 2px fadeOut(@brand-info, 65%));
+        }
+
+        &:hover {
+            .data-tree-item-content {
+                background-color: #bfe3f4;
+            }
+        }
+    }
+}
+
+.data-tree-leaf {
+    padding-left: 40px;
+}
+
+.data-tree-item-content {
+    display: flex;
+    align-items: center;
+    flex: 1;
+
+    border: 1px solid @panel-default-border;
+    border-radius: @panel-border-radius;
+    box-shadow: @box-shadow-base;
+    background: @panel-bg;
+    margin-top: @data-tree-gutter;
+}
+
+.data-tree-item-label {
+    display: flex;
+    padding: @data-tree-gutter;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+
+    .data-tree-item-select {
+        margin-top: 0; // fix text alignment
+        margin-right: 5px; // todo use correct var
+        min-width: 16px; // because of flex
+    }
+}
+
+.data-tree-children {
+    position: relative;
+    list-style-type: none;
+    margin: 0;
+    padding-left: @data-tree-indent;
+
+    &:before {
+        z-index: 1;
+        position: absolute;
+        content: " ";
+        left: 20px;
+        height: 100%;
+        border-left: 1px solid @data-tree-lines-color;
+    }
+}

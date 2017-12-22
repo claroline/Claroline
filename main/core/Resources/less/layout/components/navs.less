@@ -23,7 +23,11 @@
         margin-right: @nav-spacing; // create space between tabs
     }
 
-    + li {
+    &:last-child > a {
+        margin-right: 0;
+    }
+
+    + li > a {
         margin-left: 0; // removes default bootstrap behavior
     }
 }
@@ -32,9 +36,11 @@
 .nav-stacked > li {
     > a {
         margin-top: @nav-spacing; // use new var for v-spacing
+        margin-right: 0; // horizontal spacing is not needed in this case
     }
 
-    + li {
-        margin-right: 0; // horizontal spacing is not needed in this case
+    + li, // removes default bootstrap behavior
+    &:first-child > a {
+        margin-top: 0;
     }
 }

@@ -1,0 +1,116 @@
+.user-message-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    max-width: 100%;
+    margin-bottom: @component-margin-bottom;
+
+    .user-avatar {
+        max-height: 60px;
+        font-size: 60px;
+    }
+
+    &.user-message-left {
+        .user-message {
+            margin-left: 30px;
+        }
+    }
+
+    &.user-message-right {
+        .user-message {
+            margin-right: 30px;
+        }
+    }
+}
+
+.user-message-form-container {
+    .form-group {
+        padding: 15px;
+        margin: 0;
+    }
+
+    .btn-save {
+        font-size: 16px;
+        padding: 10px 15px;
+        border-radius: 0 0 @user-message-border-radius @user-message-border-radius;
+    }
+}
+
+.user-message-meta {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: center;
+    color: #777;
+    font-size: @font-size-small;
+    padding: 10px 0;
+    margin: 0 15px;
+    border-bottom: 1px solid @user-message-inner-border;
+
+    .user-message-info {
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+
+        .date {
+            padding: 0 10px;
+            font-weight: normal;
+            font-style: italic;
+        }
+    }
+
+    .user-message-actions {
+        padding-left: 10px;
+        border-left: 1px solid @user-message-inner-border;
+        .btn {
+            padding: 0;
+            + .btn {
+                margin-left: 5px;
+            }
+        }
+    }
+}
+
+.user-message {
+    position: relative;
+    flex: 1;
+    align-self: stretch;
+    background: @user-message-bg;
+    border: 1px solid @user-message-border;
+    border-radius: @user-message-border-radius;
+
+    // black magic 1 : create a triangle the same color than .user-message to create a bubble
+    // black magic 2 : create another triangle 1px larger the same color than .user-message border to simulate border
+
+    &:before {
+        position: absolute;
+        left: -16px;
+        top: 14px;
+        content: " ";
+
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 16px 16px 16px 0;
+        border-color: transparent @user-message-border transparent transparent;
+    }
+    &:after {
+        position: absolute;
+        left: -15px;
+        top: 15px;
+        content: " ";
+
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: 15px 15px 15px 0;
+        border-color: transparent @user-message-bg transparent transparent;
+    }
+}
+
+.user-message-content {
+    padding: 15px;
+}

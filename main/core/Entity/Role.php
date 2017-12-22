@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Facet\PanelFacetRole;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
@@ -33,6 +33,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Role implements RoleInterface
 {
+    use UuidTrait;
+
     const PLATFORM_ROLE = 1;
     const WS_ROLE = 2;
     const CUSTOM_ROLE = 3;
@@ -43,6 +45,8 @@ class Role implements RoleInterface
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({"api_user", "api_facet_admin", "api_role"})
+     *
+     * @var int
      */
     protected $id;
 
@@ -50,6 +54,8 @@ class Role implements RoleInterface
      * @ORM\Column(unique=true)
      * @Assert\NotBlank()
      * @Groups({"api_user", "api_facet_admin", "api_role"})
+     *
+     * @var string
      */
     protected $name;
 
@@ -57,11 +63,15 @@ class Role implements RoleInterface
      * @ORM\Column(name="translation_key")
      * @Assert\NotBlank()
      * @Groups({"api_role", "api_user", "api_facet_admin"})
+     *
+     * @var string
      */
     protected $translationKey;
 
     /**
      * @ORM\Column(name="is_read_only", type="boolean")
+     *
+     * @var bool
      */
     protected $isReadOnly = false;
 
@@ -70,6 +80,8 @@ class Role implements RoleInterface
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     mappedBy="roles"
      * )
+     *
+     * @var ArrayCollection
      */
     protected $users;
 
@@ -80,14 +92,6 @@ class Role implements RoleInterface
      * )
      */
     protected $facets;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\PanelFacetRole",
-     *     mappedBy="role"
-     * )
-     */
-    protected $panelFacetsRole;
 
     /**
      * @ORM\OneToMany(
@@ -110,12 +114,16 @@ class Role implements RoleInterface
      *     targetEntity="Claroline\CoreBundle\Entity\Group",
      *     mappedBy="roles"
      * )
+     *
+     * @var ArrayCollection
      */
     protected $groups;
 
     /**
      * @ORM\Column(type="integer")
      * @Groups({"api_user", "api_role"})
+     *
+     * @var int
      */
     protected $type = self::PLATFORM_ROLE;
 
@@ -138,6 +146,8 @@ class Role implements RoleInterface
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     *
+     * @var int
      */
     protected $maxUsers;
 
@@ -158,15 +168,9 @@ class Role implements RoleInterface
     protected $pwsToolConfig;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Resource\PwsRightsManagementAccess",
-     *     mappedBy="role"
-     * )
-     */
-    protected $pwsRightsManagementAccess;
-
-    /**
      * @ORM\Column(name="personal_workspace_creation_enabled", type="boolean")
+     *
+     * @var bool
      */
     protected $personalWorkspaceCreationEnabled = false;
 
@@ -184,10 +188,10 @@ class Role implements RoleInterface
         $this->resourceContext = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->facets = new ArrayCollection();
-        $this->panelFacetsRole = new ArrayCollection();
         $this->toolRights = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
         $this->profileProperties = new ArrayCollection();
+        $this->refreshUuid();
     }
 
     public function getId()
@@ -271,12 +275,51 @@ class Role implements RoleInterface
         return $this->users;
     }
 
-    public function addUser($user)
+    /**
+     * @param User $user
+     */
+    public function addUser(User $user)
     {
         $this->users->add($user);
 
-        if ($user->hasRole($this)) {
+        if (!$user->hasRole($this)) {
             $user->addRole($this);
+        }
+    }
+
+    /**
+     * @param Group $group
+     */
+    public function addGroup(Group $group)
+    {
+        $this->groups->add($group);
+
+        if (!$group->hasRole($this)) {
+            $group->addRole($this);
+        }
+    }
+
+    /**
+     * @param User $user
+     */
+    public function removeUser(User $user)
+    {
+        $this->users->removeElement($user);
+
+        if ($user->hasRole($this)) {
+            $user->removeRole($this);
+        }
+    }
+
+    /**
+     * @param Group $group
+     */
+    public function removeGroup(Group $group)
+    {
+        $this->groups->removeElement($group);
+
+        if ($group->hasRole($this)) {
+            $group->removeRole($this);
         }
     }
 
@@ -386,8 +429,8 @@ class Role implements RoleInterface
         return "[{$this->getId()}]".$name;
     }
 
-    public function addPanelFacetRole(PanelFacetRole $pfr)
+    public function getIsReadOnly()
     {
-        $this->panelFacetsRole->add($pfr);
+        return $this->isReadOnly;
     }
 }

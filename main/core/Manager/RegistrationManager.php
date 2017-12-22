@@ -14,9 +14,9 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Form\BaseProfileType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Security\PlatformRoles;
 use Claroline\CoreBundle\Listener\AuthenticationSuccessListener;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -147,12 +147,19 @@ class RegistrationManager
         }
     }
 
-    public function loginUser($user, Request $request)
+    public function login($user)
     {
         //this is bad but I don't know any other way (yet)
         $providerKey = 'main';
         $token = new UsernamePasswordToken($user, $user->getPassword(), $providerKey, $user->getRoles());
         $this->tokenStorage->setToken($token);
+
+        return $token;
+    }
+
+    public function loginUser($user, Request $request)
+    {
+        $token = $this->login($user);
         //a bit hacky I know ~
         return $this->authenticationHandler->onAuthenticationSuccess($request, $token);
     }

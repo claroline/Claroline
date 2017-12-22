@@ -27,6 +27,11 @@ describe('<Paper/>', () => {
       quiz: {
         meta: {
           canViewPapers: true
+        },
+        parameters: {
+          showFullCorrection: true,
+          showStatistics: true,
+          allPapersStatistics: true
         }
       },
       papers: {

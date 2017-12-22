@@ -74,7 +74,6 @@ class GroupManager
      */
     public function insertGroup(Group $group)
     {
-        $group->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
         $this->om->persist($group);
         $this->eventDispatcher->dispatch('log', 'Log\LogGroupCreate', [$group]);
         $this->om->flush();

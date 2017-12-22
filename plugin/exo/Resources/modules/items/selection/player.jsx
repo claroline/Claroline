@@ -5,11 +5,11 @@ import cloneDeep from 'lodash/cloneDeep'
 import {tex} from '#/main/core/translation'
 
 import {utils} from './utils/utils'
-import {getOffsets} from '../../components/form/selection/selection'
+import {getOffsets} from './utils/selection'
 import {getReactAnswerInputs} from './utils/selection-input.jsx'
 import {SelectionText} from './utils/selection-text.jsx'
 
-export class SelectionPlayer extends Component {
+class SelectionPlayer extends Component {
   constructor(props) {
     super(props)
 
@@ -141,4 +141,8 @@ SelectionPlayer.propTypes = {
   item: T.object,
   answer: T.object,
   onChange: T.func.isRequired
+}
+
+export {
+  SelectionPlayer
 }

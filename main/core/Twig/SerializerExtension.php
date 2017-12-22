@@ -11,36 +11,47 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation\Inject;
-use JMS\DiExtraBundle\Annotation\InjectParams;
-use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\Tag;
+use Claroline\CoreBundle\API\SerializerProvider;
+use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 
 /**
- * @Service
- * @Tag("twig.extension")
+ * @DI\Service
+ * @DI\Tag("twig.extension")
  */
 class SerializerExtension extends \Twig_Extension
 {
-    protected $container;
+    /** @var SerializerInterface */
+    private $serializer;
+    /** @var SerializerProvider */
+    private $serializerProvider;
 
     /**
-     * @InjectParams({
-     *     "container" = @Inject("service_container")
+     * SerializerExtension constructor.
+     *
+     * @DI\InjectParams({
+     *     "serializer"         = @DI\Inject("serializer"),
+     *     "serializerProvider" = @DI\Inject("claroline.api.serializer")
      * })
+     *
+     * @param SerializerInterface $serializer
+     * @param SerializerProvider  $serializerProvider
      */
-    public function __construct($container)
+    public function __construct(
+        SerializerInterface $serializer,
+        SerializerProvider $serializerProvider)
     {
-        $this->container = $container;
+        $this->serializer = $serializer;
+        $this->serializerProvider = $serializerProvider;
     }
 
     public function getFilters()
     {
-        return array(
+        return [
             'api_serialize' => new \Twig_Filter_Method($this, 'apiSerialize'),
             'json_serialize' => new \Twig_Filter_Method($this, 'serialize'),
-        );
+        ];
     }
 
     public function getName()
@@ -49,13 +60,16 @@ class SerializerExtension extends \Twig_Extension
     }
 
     /**
-     * Serializes data to JSON using the "api" serialization group.
+     * Serializes data to JSON using the SerializerProvider.
      *
-     * @param mixed $data
+     * @param mixed $object
+     * @param array $options
+     *
+     * @return mixed
      */
-    public function apiSerialize($data)
+    public function apiSerialize($object, $options = [])
     {
-        return $this->serialize($data, 'api');
+        return $this->serializerProvider->serialize($object, $options);
     }
 
     /**
@@ -63,6 +77,8 @@ class SerializerExtension extends \Twig_Extension
      *
      * @param mixed  $data
      * @param string $group
+     *
+     * @deprecated serialization should be handled by SerializerProvider
      */
     public function serialize($data, $group = null)
     {
@@ -72,6 +88,6 @@ class SerializerExtension extends \Twig_Extension
             $context->setGroups($group);
         }
 
-        return $this->container->get('serializer')->serialize($data, 'json', $context);
+        return $this->serializer->serialize($data, 'json', $context);
     }
 }

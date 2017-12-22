@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Entity;
 
-use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -53,18 +53,18 @@ class Competency implements \JsonSerializable
     private $competencyAbilities;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity")
-     * @ORM\JoinTable(name="hevinci_competency_activity")
+     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinTable(name="hevinci_competency_resource")
      */
-    private $activities;
+    private $resources;
 
     /**
      * @ORM\Column(type="integer")
      *
-     * Note: this field denormalizes $activities data
+     * Note: this field denormalizes $resources data
      *       in order to decrease query complexity.
      */
-    private $activityCount = 0;
+    private $resourceCount = 0;
 
     /**
      * @Gedmo\TreeLeft
@@ -113,7 +113,7 @@ class Competency implements \JsonSerializable
     public function __construct()
     {
         $this->levels = new ArrayCollection();
-        $this->activities = new ArrayCollection();
+        $this->resources = new ArrayCollection();
         $this->competencyAbilities = new ArrayCollection();
         $this->children = new ArrayCollection();
     }
@@ -240,47 +240,47 @@ class Competency implements \JsonSerializable
     }
 
     /**
-     * @param Activity $activity
+     * @param ResourceNode $resource
      *
      * @return bool
      */
-    public function isLinkedToActivity(Activity $activity)
+    public function isLinkedToResource(ResourceNode $resource)
     {
-        return $this->activities->contains($activity);
+        return $this->resources->contains($resource);
     }
 
     /**
-     * Associates the ability with an activity.
+     * Associates the ability with a resource.
      *
-     * @param Activity $activity
+     * @param ResourceNode $resource
      */
-    public function linkActivity(Activity $activity)
+    public function linkResource(ResourceNode $resource)
     {
-        if (!$this->isLinkedToActivity($activity)) {
-            $this->activities->add($activity);
-            ++$this->activityCount;
+        if (!$this->isLinkedToResource($resource)) {
+            $this->resources->add($resource);
+            ++$this->resourceCount;
         }
     }
 
     /**
-     * Removes an association with an activity.
+     * Removes an association with an resource.
      *
-     * @param Activity $activity
+     * @param ResourceNode $resource
      */
-    public function removeActivity(Activity $activity)
+    public function removeResource(ResourceNode $resource)
     {
-        if ($this->isLinkedToActivity($activity)) {
-            $this->activities->removeElement($activity);
-            --$this->activityCount;
+        if ($this->isLinkedToResource($resource)) {
+            $this->resources->removeElement($resource);
+            --$this->resourceCount;
         }
     }
 
     /**
      * @return ArrayCollection
      */
-    public function getActivities()
+    public function getResources()
     {
-        return $this->activities;
+        return $this->resources;
     }
 
     /**
@@ -299,7 +299,7 @@ class Competency implements \JsonSerializable
             'description' => $this->description,
             'scale' => $this->scale ? $this->scale->getName() : null,
             'level' => $this->lvl,
-            'activityCount' => $this->activityCount,
+            'resourceCount' => $this->resourceCount,
         ];
     }
 }

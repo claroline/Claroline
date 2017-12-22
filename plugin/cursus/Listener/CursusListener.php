@@ -168,7 +168,7 @@ class CursusListener
      */
     public function onAgendaEventsRequest(GenericDataEvent $event)
     {
-        $events = [];
+        $events = $event->getResponse() ? $event->getResponse() : [];
         $data = $event->getData();
         $type = $data['type'];
         $sessionEvents = [];
@@ -238,6 +238,5 @@ class CursusListener
             ];
         }
         $event->setResponse($events);
-        $event->stopPropagation();
     }
 }

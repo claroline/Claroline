@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Persistence;
 
-use Doctrine\ORM\UnitOfWork;
-use Doctrine\Common\Persistence\ObjectManagerDecorator;
-use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\BundleRecorder\Log\LoggableTrait;
+use Doctrine\Common\Persistence\ObjectManager as ObjectManagerInterface;
+use Doctrine\Common\Persistence\ObjectManagerDecorator;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\UnitOfWork;
+use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 
@@ -31,27 +31,26 @@ class ObjectManager extends ObjectManagerDecorator
     private $supportsTransactions = false;
     private $hasEventManager = false;
     private $hasUnitOfWork = false;
-    private $allowForceFlush;
-    private $showFlushLevel;
+    private $activateLog = false;
+    private $allowForceFlush = true;
+    private $showFlushLevel = false;
 
     /**
-     * Constructor.
+     * ObjectManager constructor.
      *
      * @DI\InjectParams({
      *     "om" = @DI\Inject("doctrine.orm.entity_manager")
      * })
+     *
+     * @param ObjectManagerInterface $om
      */
     public function __construct(ObjectManagerInterface $om)
     {
         $this->wrapped = $om;
-        $this->activateLog = false;
         $this->supportsTransactions
             = $this->hasEventManager
             = $this->hasUnitOfWork
             = $om instanceof EntityManagerInterface;
-
-        $this->allowForceFlush = true;
-        $this->showFlushLevel = false;
     }
 
     /**
@@ -214,50 +213,64 @@ class ObjectManager extends ObjectManagerDecorator
     }
 
     /**
-     * Returns an instance of a class.
-     *
-     * Note: this is a convenience method intended to ease unit testing, as objects
-     * returned by this factory are mockable.
-     *
-     * @param string $class
-     *
-     * @return object
-     *
-     * @todo find a way to ensure that the class is a valid data class (e.g. by
-     * using the getClassMetatadata method)
-     */
-    public function factory($class)
-    {
-        return new $class();
-    }
-
-    /**
      * Finds a set of objects by their ids.
      *
-     * @param string $objectClass
-     * @param array  $ids
+     * @param $class
+     * @param array $ids
+     * @param bool  $orderStrict keep the same order as ids array
      *
-     * @return array[object]
+     * @return array [object]
      *
      * @throws MissingObjectException if any of the requested objects cannot be found
      *
+     * @internal param string $objectClass
+     *
      * @todo make this method compatible with odm implementations
      */
-    public function findByIds($class, array $ids)
+    public function findByIds($class, array $ids, $orderStrict = false)
     {
-        if (count($ids) === 0) {
-            return array();
+        return $this->findList($class, 'id', $ids, $orderStrict);
+    }
+
+    /**
+     * Finds a set of objects.
+     *
+     * @param $class
+     * @param $property
+     * @param array $list
+     * @param bool  $orderStrict keep the same order as ids array
+     *
+     * @return array [object]
+     *
+     * @throws MissingObjectException if any of the requested objects cannot be found
+     *
+     * @internal param string $objectClass
+     *
+     * @todo make this method compatible with odm implementations
+     */
+    public function findList($class, $property, array $list, $orderStrict = false)
+    {
+        if (count($list) === 0) {
+            return [];
         }
 
-        $dql = "SELECT object FROM {$class} object WHERE object.id IN (:ids)";
+        $dql = "SELECT object FROM {$class} object WHERE object.{$property} IN (:list)";
         $query = $this->wrapped->createQuery($dql);
-        $query->setParameter('ids', $ids);
+        $query->setParameter('list', $list);
         $objects = $query->getResult();
 
-        if (($entityCount = count($objects)) !== ($idCount = count($ids))) {
+        if (($entityCount = count($objects)) !== ($idCount = count($list))) {
             throw new MissingObjectException(
                 "{$entityCount} out of {$idCount} ids don't match any existing object"
             );
+        }
+
+        if ($orderStrict) {
+            // Sort objects to have the same order as given $ids array
+            $sortIds = array_flip($list);
+            usort($objects, function ($a, $b) use ($sortIds) {
+                return $sortIds[$a->getId()] - $sortIds[$b->getId()];
+            });
         }
 
         return $objects;
@@ -339,5 +352,36 @@ class ObjectManager extends ObjectManagerDecorator
         }
 
         $this->log('Flush level: '.$this->flushSuiteLevel.'.');
+    }
+
+    public function save($object, $options = [], $log = true)
+    {
+        $this->persist($object);
+
+        if ($log) {
+            //maybe log some stuff according to the options
+        }
+
+        $this->flush();
+    }
+
+    /**
+     * Fetch an object from database according to the class and the id/uuid of the data.
+     */
+    public function getObject(array $data, $class)
+    {
+        if (isset($data['id']) || isset($data['uuid'])) {
+            if (isset($data['uuid'])) {
+                $object = $this->getRepository($class)->findOneByUuid($data['uuid']);
+            } else {
+                $object = !is_numeric($data['id']) && property_exists($class, 'uuid') ?
+                $this->getRepository($class)->findOneByUuid($data['id']) :
+                $this->getRepository($class)->findOneById($data['id']);
+            }
+
+            return $object;
+        }
+
+        //else we look what's fetchable or no for that class
     }
 }

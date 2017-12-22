@@ -267,7 +267,7 @@ function validate(item) {
   const errors = {}
 
   // penalty should be greater or equal to 0
-  if (chain(item.penalty, [notBlank, number])) {
+  if (chain(item.penalty, {}, [notBlank, number])) {
     errors.item = tex('set_penalty_not_valid')
   }
 

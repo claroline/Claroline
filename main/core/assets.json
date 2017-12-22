@@ -1,30 +1,37 @@
 {
   "webpack": {
     "entry": {
-      "user-management": "users/module",
+      "modernizr": "modernizr/modernizr",
+      "core-js": "core-js",
+      "whatwg-fetch": "fetch-shim",
+      "translator": "translation/browser",
+      "organization-field": "symfony/form/organization/index",
+      "user-management": "administration/user",
       "facet-management": "facets/module",
       "workspace-management": "administration/workspace",
-      "private-profile": "profile/module",
-      "organization-management": "organization/module",
+      "theme-management": "administration/theme",
+      "import-management": "administration/import",
       "plugin-management": "plugins/module",
-      "portal": "portal/module",
+      "portal": "portal/index",
       "tinymce": "tinymce/tinymce",
       "desktop-home": "desktopHome/desktopHome",
       "admin-home-tabs-config": "adminHomeTabsConfig/adminHomeTabsConfig",
       "workspace-home": "workspace/tools/home/workspaceHome",
-      "modernizr": "modernizr/modernizr",
-      "core-js": "core-js",
-      "whatwg-fetch": "fetch-shim",
       "resource-icon-set-list": "icon/resource-icon-set-list/module",
       "resource-icon-item-list": "icon/resource-icon-item-list/module",
       "copy-text-to-clipboard": "copy-text-to-clipboard/copy-text-to-clipboard",
-      "admin-task-tool": "administration/scheduled-task/index.jsx"
+      "scheduled-task-management": "administration/scheduled-task/index",
+      "user-registration": "user/registration/index.js",
+      "user-profile": "user/profile/index.js",
+      "user-tracking": "user/tracking/index.js"
     }
   },
 
   "styles": {
     "entry": {
-      "admin-task-tool": "task/admin-task-tool.less"
+      "home": "tools/home.less",
+      "theme-management": "tools/theme-management.less",
+      "portal": "portal/portal.less"
     }
   }
 }

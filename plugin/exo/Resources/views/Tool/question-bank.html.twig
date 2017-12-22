@@ -25,9 +25,8 @@
 {# Content of the Page #}
 {% block content %}
     <div
-        id="questions-bank"
-        class="page-container"
-        data-initial="{{ initialSearch | json_encode | raw | escape }}"
+        class="page-container question-bank-container"
+        data-questions="{{ questions | json_encode | raw | escape }}"
         data-user="{{ currentUser | json_encode | raw | escape }}"
     ></div>
 {% endblock %}

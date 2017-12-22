@@ -113,29 +113,12 @@ class ProfileCreationType extends AbstractType
                 ]
             );
 
-        $currentUser = $this->currentUser;
-
         $builder->add(
-                'organizations',
-                'entity',
-                [
-                    'label' => 'organizations',
-                    'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
-                    'expanded' => true,
-                    'multiple' => true,
-                    'property' => 'name',
-                    'query_builder' => function (EntityRepository $er) use ($currentUser, $isAdmin) {
-                        $query = $er->createQueryBuilder('o');
-                        if (!$isAdmin) {
-                            $query->leftJoin('o.administrators', 'oa')
-                            ->where('oa.id = :id')
-                            ->orWhere('o.default = true')
-                            ->setParameter('id', $currentUser->getId());
-                        }
-
-                        return $query;
-                    },
-                ]
+              'organizations',
+              'organization_picker',
+              [
+                 'label' => 'organizations',
+              ]
             )
             ->add(
                 'groups',

@@ -1,0 +1,205 @@
+/*
+ * Forms.
+ */
+
+@import "fields/index";
+@import "form-stepper";
+
+
+// Fixes checkbox and radio button display issue on inline
+// Combine with change in form_theme.html.twig and form_theme_vertical.html.twig
+form {
+    // this is kept for the Twig form
+    // this is no longer needed in new UIs as all forms are vertical
+    &.form-horizontal {
+        label > input {
+            &[type=checkbox],
+            &[type=radio] {
+                position: relative;
+                margin-left: 0;
+            }
+        }
+    }
+}
+
+
+// -
+// Errors & messages
+// ---
+
+form .global-error {
+    .alert;
+    .alert-danger;
+}
+
+.error-message { // todo : should be removed
+    .fa {
+        margin-right: @icon-text-spacer;
+    }
+}
+
+.help-block {
+    text-align: justify;
+
+    padding-left: @padding-base-horizontal + 1px; // keep alignment with error blocks
+
+    // Just expose some vars as bootstrap doesn't do it
+    color: @help-block-color;
+    font-size: @help-block-font-size;
+
+    .fa {
+        width: 20px - @icon-text-spacer; // small cheat to have the same spacing than checkbox (currently 20px)
+        text-align: center;
+        margin-right: @icon-text-spacer;
+    }
+}
+
+.error-block {
+    padding: @padding-small-vertical @padding-base-horizontal;
+    border: 1px solid transparent;
+    border-radius: @border-radius-small;
+}
+
+.error-block-warning,
+.has-warning .error-block {
+    background: @state-warning-bg;
+    border-color: @state-warning-border;
+}
+
+.error-block-danger,
+.has-error .error-block {
+    background: @state-danger-bg;
+    border-color: @state-danger-border;
+}
+
+
+// -
+// Fieldset
+// ---
+
+.activable-set {
+    margin-bottom: @form-group-margin-bottom;
+
+    > .sub-fields {
+        margin-top: @form-group-margin-bottom;
+    }
+}
+
+.toggleable-set {
+    .toggleable-set-toggle .fa {
+        margin-right: @icon-text-spacer;
+    }
+}
+
+// todo : we may need a more specific namespacing
+.sub-fields {
+    // this is used to conditionally display fields on radio/checkbox check
+    // we align the displayed fields with the label of the radio/checkbox
+    // but there is no var in bootstrap for this (=20px)
+    margin-left: 4px; // cheat to have the border in the center of the checkbox/radio of the parent field if any
+    padding-left: 14px; // fill remaining space to be 20px
+    border-left: 2px solid #ccc;
+}
+
+
+// -
+// Labels
+// ---
+
+.control-label {
+    color: @input-label-color;
+
+    > small {
+        color: @text-muted;
+        margin-left: 5px;
+        font-style: italic;
+        font-weight: normal;
+    }
+}
+
+// Just permits to individually control the color of the label during validation
+.has-success .control-label {
+    color: @input-success-label-color;
+}
+.has-warning .control-label {
+    color: @input-warning-label-color;
+}
+.has-error .control-label {
+    color: @input-error-label-color;
+}
+
+
+// -
+// Modals
+// ---
+
+.form-modal {
+    .form-primary-section {
+        // removes panel styles
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        background: @modal-content-bg;
+        margin-bottom: 0;
+
+        .panel-body {
+            padding: @modal-inner-padding;
+        }
+    }
+
+    .form-sections {
+
+    }
+}
+
+
+// -
+// Embedded forms
+// ---
+
+// todo : maybe merge with override made for modals
+.embedded-form-section {
+    .form {
+        margin: -@panel-body-padding; // maybe not the best way to handle it
+    }
+
+    .form-primary-section {
+        // removes panel styles
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        margin-bottom: 0;
+    }
+
+    .form-sections {
+        margin: 0;
+        .panel {
+            box-shadow: none; // this may be applied to all panels in modals
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+
+            + .panel {
+                border-top: none;
+                margin: 0;
+            }
+        }
+    }
+}
+
+// -
+// Utilities
+// ---
+
+// this shouldn't be used in new React UI.
+// inputs should be removed in JS, not hidden in CSS (accessibility issue).
+// this is used by our react DatePicker
+.input-hide {
+    display: none;
+}
+
+// Utility class to avoid extra space after a form.
+// meant to be used on a `.form-group`
+.form-last {
+    margin-bottom: 0 !important;
+}

@@ -7,7 +7,7 @@ import times from 'lodash/times'
 import {tex, t} from '#/main/core/translation'
 import {utils} from './utils/utils'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {PairItemDragPreview} from './pair-item-drag-preview.jsx'
 
 let DropBox = props => {
@@ -39,9 +39,10 @@ const PairItem = props =>
         id={`pair-${props.item.id}-delete`}
         className="btn-link-default btn-item-remove pull-right"
         title={t('delete')}
-        label={<span className="fa fa-fw fa-trash-o" />}
         onClick={() => props.handleItemRemove(props.item.id)}
-      />
+      >
+        <span className="fa fa-fw fa-trash-o" />
+      </TooltipButton>
     }
     <div className="item-content" dangerouslySetInnerHTML={{__html: props.item.data}} />
   </div>

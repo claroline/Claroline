@@ -326,7 +326,13 @@ class FileListener implements ContainerAwareInterface
         if (!is_dir($workspaceDir)) {
             mkdir($workspaceDir);
         }
-        copy($filePath, $newPath);
+
+        try {
+            copy($filePath, $newPath);
+        } catch (\Exception $e) {
+            //do nothing yet
+            //maybe log an error
+        }
 
         return $newFile;
     }

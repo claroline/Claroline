@@ -1,7 +1,13 @@
 {
   "webpack": {
     "entry": {
-      "resource": "ClacoForm/clacoForm"
+      "claco-form-resource": "resources/claco-form"
+    }
+  },
+
+  "styles": {
+    "entry": {
+      "claco-form-resource": "resources/claco-form.less"
     }
   }
 }

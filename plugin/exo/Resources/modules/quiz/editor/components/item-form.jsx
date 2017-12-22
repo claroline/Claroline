@@ -1,43 +1,55 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {t, tex} from '#/main/core/translation'
 import {HINT_ADD, HINT_CHANGE, HINT_REMOVE} from './../actions'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
-import {SubSection} from './../../../components/form/sub-section.jsx'
-import {TooltipButton} from './../../../components/form/tooltip-button.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
+import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import ObjectsEditor from './item-objects-editor.jsx'
+import TagsEditor from '#/plugin/tag/item-tags-editor.jsx'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 
-// TODO: add categories, objects, resources, define-as-model
+// TODO: add categories, define-as-model
 
 const Metadata = props =>
-  <fieldset>
-    <FormGroup
-      controlId={`item-${props.item.id}-title`}
+  <div>
+    <TextGroup
+      id={`item-${props.item.id}-title`}
       label={t('title')}
-    >
-      <input
-        id={`item-${props.item.id}-title`}
-        type="text"
-        value={props.item.title || ''}
-        className="form-control"
-        onChange={e => props.onChange('title', e.target.value)}
-      />
-    </FormGroup>
-    <FormGroup
-      controlId={`item-${props.item.id}-description`}
+      value={props.item.title}
+      onChange={text => props.onChange('title', text)}
+    />
+
+    <HtmlGroup
+      id={`item-${props.item.id}-description`}
       label={t('description')}
-    >
-      <Textarea
-        id={`item-${props.item.id}-description`}
-        content={props.item.description || ''}
-        onChange={text => props.onChange('description', text)}
+      value={props.item.description}
+      onChange={text => props.onChange('description', text)}
+    />
+
+    {props.item.rights.edit &&
+      <CheckGroup
+        id={`item-${props.item.id}-editable`}
+        label={tex('protect_update')}
+        value={props.item.meta.protectQuestion}
+        onChange={checked => props.onChange('meta.protectQuestion', checked)}
       />
-    </FormGroup>
+    }
+
+    <CheckGroup
+      id={`item-${props.item.id}-mandatory`}
+      label={props.mandatoryQuestions ? tex('make_optional'): tex('mandatory_answer')}
+      value={props.item.meta.mandatory}
+      onChange={checked => props.onChange('meta.mandatory', checked)}
+    />
+
     <FormGroup
-      controlId={`item-${props.item.id}-objects`}
+      id={`item-${props.item.id}-objects`}
       label={tex('question_objects')}
     >
       <ObjectsEditor
@@ -47,14 +59,28 @@ const Metadata = props =>
         item={props.item}
       />
     </FormGroup>
-  </fieldset>
+    <FormGroup
+      id={`item-${props.item.id}-tags`}
+      label={t('tags')}
+    >
+      <TagsEditor
+        item={props.item}
+      />
+    </FormGroup>
+  </div>
 
 Metadata.propTypes = {
   item: T.shape({
     id: T.string.isRequired,
     title: T.string.isRequired,
-    description: T.string.isRequired
+    description: T.string.isRequired,
+    rights: T.object.isRequired,
+    meta: T.shape({
+      mandatory: T.bool.isRequired,
+      protectQuestion: T.bool.isRequired
+    }).isRequired
   }).isRequired,
+  mandatoryQuestions: T.bool.isRequired,
   showModal: T.func.isRequired,
   closeModal: T.func.isRequired,
   onChange: T.func.isRequired,
@@ -66,11 +92,11 @@ const Hint = props =>
     <div className="hint-value">
       <Textarea
         id={`hint-${props.id}`}
-        title={tex('hint')}
-        content={props.value}
+        value={props.value}
         onChange={value => props.onChange(HINT_CHANGE, {id: props.id, value})}
       />
     </div>
+
     <input
       id={`hint-${props.id}-penalty`}
       title={tex('penalty')}
@@ -84,13 +110,15 @@ const Hint = props =>
         {id: props.id, penalty: e.target.value}
       )}
     />
+
     <TooltipButton
       id={`hint-${props.id}-delete`}
       title={t('delete')}
-      label={<span className="fa fa-fw fa-trash-o"/>}
       className="btn-link-default"
       onClick={props.onRemove}
-    />
+    >
+      <span className="fa fa-fw fa-trash-o" />
+    </TooltipButton>
   </div>
 
 Hint.propTypes = {
@@ -106,6 +134,7 @@ const Hints = props =>
     <label className="control-label" htmlFor="hint-list">
       {tex('hints')}
     </label>
+
     {props.hints.length === 0 &&
       <div className="no-hint-info">{tex('no_hint_info')}</div>
     }
@@ -124,16 +153,14 @@ const Hints = props =>
       </ul>
     }
 
-    <div className="footer">
-      <button
-        type="button"
-        className="btn btn-default"
-        onClick={() => props.onChange(HINT_ADD, {})}
-      >
-        <span className="fa fa-fw fa-plus"/>
-        {tex('add_hint')}
-      </button>
-    </div>
+    <button
+      type="button"
+      className="btn btn-block btn-default"
+      onClick={() => props.onChange(HINT_ADD, {})}
+    >
+      <span className="fa fa-fw fa-plus"/>
+      {tex('add_hint')}
+    </button>
   </div>
 
 Hints.propTypes = {
@@ -143,75 +170,60 @@ Hints.propTypes = {
   onChange: T.func.isRequired
 }
 
-export class ItemForm extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      metaHidden: true,
-      feedbackHidden: true
-    }
-  }
+const ItemForm = props =>
+  <form>
+    <HtmlGroup
+      id={`item-${props.item.id}-content`}
+      label={tex('question')}
+      value={props.item.content}
+      onChange={content => props.onChange('content', content)}
+      warnOnly={!props.validating}
+      error={get(props.item, '_errors.content')}
+    />
 
-  render() {
-    return (
-      <form>
-        <FormGroup
-          controlId={`item-${this.props.item.id}-content`}
-          label={tex('question')}
-          warnOnly={!this.props.validating}
-          error={get(this.props.item, '_errors.content')}
-        >
-          <Textarea
-            id={`item-${this.props.item.id}-content`}
-            content={this.props.item.content}
-            onChange={content => this.props.onChange('content', content)}
-          />
-        </FormGroup>
-        <SubSection
-          hidden={this.state.metaHidden}
-          showText={tex('show_metadata_fields')}
-          hideText={tex('hide_metadata_fields')}
-          toggle={() => this.setState({metaHidden: !this.state.metaHidden})}
-        >
-          <Metadata
-            item={this.props.item}
-            showModal={this.props.showModal}
-            closeModal={this.props.closeModal}
-            onChange={this.props.onChange}
-            validating={this.props.validating}
-          />
-        </SubSection>
-        <hr className="item-content-separator" />
-        {this.props.children}
-        <hr className="item-content-separator" />
-        <SubSection
-          hidden={this.state.feedbackHidden}
-          showText={tex('show_interact_fields')}
-          hideText={tex('hide_interact_fields')}
-          toggle={() => this.setState({feedbackHidden: !this.state.feedbackHidden})}
-        >
-          <fieldset>
-            <Hints
-              hints={this.props.item.hints}
-              onChange={this.props.onHintsChange}
-            />
-            <hr className="item-content-separator" />
-            <FormGroup
-              controlId={`item-${this.props.item.id}-feedback`}
-              label={tex('feedback')}
-            >
-              <Textarea
-                id={`item-${this.props.item.id}-feedback`}
-                content={this.props.item.feedback}
-                onChange={text => this.props.onChange('feedback', text)}
-              />
-            </FormGroup>
-          </fieldset>
-        </SubSection>
-      </form>
-    )
-  }
-}
+    <ToggleableSet
+      showText={tex('show_metadata_fields')}
+      hideText={tex('hide_metadata_fields')}
+    >
+      <Metadata
+        mandatoryQuestions={props.mandatoryQuestions}
+        item={props.item}
+        showModal={props.showModal}
+        closeModal={props.closeModal}
+        onChange={props.onChange}
+        validating={props.validating}
+      />
+    </ToggleableSet>
+
+    <hr className="item-content-separator" />
+
+    {props.children}
+
+    <hr className="item-content-separator" />
+
+    <ToggleableSet
+      showText={tex('show_interact_fields')}
+      hideText={tex('hide_interact_fields')}
+    >
+      <Hints
+        hints={props.item.hints}
+        onChange={props.onHintsChange}
+      />
+
+      <hr className="item-content-separator" />
+
+      <FormGroup
+        id={`item-${props.item.id}-feedback`}
+        label={tex('feedback')}
+      >
+        <Textarea
+          id={`item-${props.item.id}-feedback`}
+          value={props.item.feedback}
+          onChange={text => props.onChange('feedback', text)}
+        />
+      </FormGroup>
+    </ToggleableSet>
+  </form>
 
 ItemForm.propTypes = {
   item: T.shape({
@@ -221,10 +233,15 @@ ItemForm.propTypes = {
     feedback: T.string.isRequired,
     _errors: T.object
   }).isRequired,
+  mandatoryQuestions: T.bool.isRequired,
   children: T.element.isRequired,
   validating: T.bool.isRequired,
   showModal: T.func.isRequired,
   closeModal: T.func.isRequired,
   onChange: T.func.isRequired,
   onHintsChange: T.func.isRequired
+}
+
+export {
+  ItemForm
 }

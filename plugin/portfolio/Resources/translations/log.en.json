@@ -5,6 +5,10 @@
     "log_portfolio-add_viewer_filter": "Add user access to a portfolio",
     "log_portfolio-add_viewer_shortname": "Add user access to a portfolio",
     "log_portfolio-add_viewer_title": "Add user access to a portfolio",
+    "log_portfolio-edit_filter": "Portfolio modification",
+    "log_portfolio-edit_shortname": "Portfolio modification",
+    "log_portfolio-edit_title": "Portfolio modification",
+    "log_portfolio-edit_sentence": "has modified the portfolio %portfolio%",
     "log_portfolio-remove_guide_filter": "Removing of a guide from portfolio",
     "log_portfolio-remove_guide_shortname": "Remove guide from portfolio",
     "log_portfolio-remove_guide_title": "Remove guide from portfolio",
@@ -17,6 +21,7 @@
     "portfolio": "Portfolio",
     "portfolio-add_guide": "has added %guide% in the guides list of the portfolio %portfolio%",
     "portfolio-add_viewer": "has removed access to %guide% on the portfolio %portfolio%",
+    "portfolio-edit": "has modified the portfolio %portfolio%",
     "portfolio-remove_guide": "has removed %guide% from the guides list of the portfolio %portfolio%",
     "portfolio-view": "has accessed the portfolio %portfolio%"
 }

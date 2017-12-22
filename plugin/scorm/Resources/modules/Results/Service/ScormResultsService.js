@@ -22,33 +22,37 @@ export default class ScormResultsService {
     this.trackingsDetails = {}
   }
 
-  getType () {
+  getType() {
     return this.type
   }
 
-  getScos () {
+  getScos() {
     return this.scos
   }
 
-  getTrackings () {
+  getTrackings() {
     return this.trackings
   }
 
-  getScosTrackings () {
+  getScosTrackings() {
     return this.scosTrackings
   }
 
-  getTrackingsDetails () {
+  getTrackingsDetails() {
     return this.trackingsDetails
   }
 
-  formatTrackingsDatas (serializedDatas) {
+  formatTrackingsDatas(serializedDatas) {
     let datas = JSON.parse(serializedDatas)
     datas.forEach(t => {
       t['userId'] = t['user']['id']
       t['userFirstName'] = t['user']['firstName']
       t['userLastName'] = t['user']['lastName']
       t['userUsername'] = t['user']['username']
+
+      if (t['lastSessionDate']) {
+        t['lastSessionDate'] = this.formatLastSessionDate(t['lastSessionDate'])
+      }
 
       if (this.type === 'scorm12') {
         t['transBestLessonStatus'] = Translator.trans(t['bestLessonStatus'], {}, 'scorm')
@@ -67,7 +71,7 @@ export default class ScormResultsService {
     return datas
   }
 
-  sortTrackingBySco (tracking) {
+  sortTrackingBySco(tracking) {
     const scoId = tracking['sco']['id']
 
     if (!this.scosTrackings[scoId]) {
@@ -76,7 +80,7 @@ export default class ScormResultsService {
     this.scosTrackings[scoId].push(tracking)
   }
 
-  convertScorm12Time (time) {
+  convertScorm12Time(time) {
     if (time === undefined || time === null) {
       return null
     }
@@ -91,7 +95,7 @@ export default class ScormResultsService {
     return `${hours}:${minutesTxt}:${secundsTxt}`
   }
 
-  convertScorm2004Time (time) {
+  convertScorm2004Time(time) {
     if (time === undefined || time === null) {
       return null
     }
@@ -107,19 +111,26 @@ export default class ScormResultsService {
     return `${hours}:${minutesTxt}:${secundsTxt}`
   }
 
-  formatScorm12Date (date) {
+  formatLastSessionDate(date) {
+    let formattedDate = date.replace('T', ' ')
+    formattedDate = formattedDate.replace(/\+.*$/, '')
+
+    return formattedDate
+  }
+
+  formatScorm12Date(date) {
     const formattedDate = date.replace(/\..*$/, '')
 
     return formattedDate
   }
 
-  formatScorm2004Date (date) {
+  formatScorm2004Date(date) {
     const formattedDate = date.replace(/\..*S$/, 'S')
 
     return formattedDate
   }
 
-  loadTrackingDetails (userId, trackingId, scoId) {
+  loadTrackingDetails(userId, trackingId, scoId) {
     if (this.trackingsDetails[trackingId] === undefined) {
       const url = Routing.generate('claro_scorm_get_tracking_details', {user: userId, resourceNode: this.resourceNodeId, scoId: scoId})
       this.$http.get(url).then(d => {
@@ -130,7 +141,7 @@ export default class ScormResultsService {
     }
   }
 
-  formatDetailsDatas (detailsDatas) {
+  formatDetailsDatas(detailsDatas) {
     detailsDatas.forEach(d => {
       d['formattedDate'] = this.formatScorm12Date(d['dateLog']['date'])
 
@@ -149,7 +160,7 @@ export default class ScormResultsService {
     return detailsDatas
   }
 
-  static _getGlobal (name) {
+  static _getGlobal(name) {
     if (typeof window[name] === 'undefined') {
       throw new Error(
         `Expected ${name} to be exposed in a window.${name} variable`

@@ -125,14 +125,13 @@
 
 .pair-feedback,
 .pair-paper {
-  .item {
+  .item, .unanswered-item {
     display: flex;
     padding: 5px;
     width: 100%;
     align-items: center;
     min-height: 34px;
     justify-content: space-between;
-
   }
 
   .item-content {
@@ -142,5 +141,12 @@
     > p { // remove margin on tinyMCE container
       margin-bottom: 0;
     }
+  }
+}
+
+.pair-paper {
+  .unanswered-item {
+    padding: 10px;
+    margin-top: 10px;
   }
 }

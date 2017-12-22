@@ -3,8 +3,6 @@ const shell = require('shelljs')
 
 const paths = require('../../paths')
 
-const DEFAULT_THEMES_PATH = path.resolve(paths.distribution(), 'main/core/Resources/less/themes')
-
 const THEME_ROOT_FILE    = 'index.less'
 const THEME_VARS_FILE    = 'variables.less'
 const THEME_PLUGINS_FILE = 'variables.plugins.less'
@@ -197,7 +195,6 @@ Theme.prototype = {
 }
 
 module.exports = {
-  DEFAULT_THEMES_PATH,
   THEME_ROOT_FILE,
   THEME_VARS_FILE,
   THEME_PLUGINS_FILE,

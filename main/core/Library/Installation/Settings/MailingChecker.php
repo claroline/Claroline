@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Settings;
 
-use Swift_SmtpTransport;
 use Swift_SendmailTransport;
+use Swift_SmtpTransport;
 use Swift_TransportException;
 
 class MailingChecker

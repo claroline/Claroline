@@ -2,15 +2,16 @@
 
 namespace Claroline\CoreBundle\Manager\Resource;
 
+use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Library\Validation\Exception\InvalidDataException;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
-use Claroline\CoreBundle\Serializer\Resource\ResourceNodeSerializer;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -57,7 +58,8 @@ class ResourceNodeManager
      *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
      *     "resourceNodeSerializer" = @DI\Inject("claroline.serializer.resource_node"),
      *     "rightsManager"          = @DI\Inject("claroline.manager.rights_manager"),
-     *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager")
+     *     "resourceManager"        = @DI\Inject("claroline.manager.resource_manager"),
+     *     "session"                = @DI\Inject("session")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
@@ -73,14 +75,16 @@ class ResourceNodeManager
         ObjectManager $om,
         ResourceNodeSerializer $resourceNodeSerializer,
         RightsManager $rightsManager,
-        ResourceManager $resourceManager)
-    {
+        ResourceManager $resourceManager,
+        SessionInterface $session
+    ) {
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
         $this->om = $om;
-        $this->serializer = $resourceNodeSerializer;
+        $this->serializer = $resourceNodeSerializer; // todo : load from the SerializerProvider
         $this->rightsManager = $rightsManager;
         $this->resourceManager = $resourceManager;
+        $this->session = $session;
     }
 
     /**
@@ -117,6 +121,9 @@ class ResourceNodeManager
             $this->resourceManager->rename($resourceNode, $data['name'], true);
         }
 
+        //why no unserialize from serializer ?
+        //@todo ask Axel
+
         $this->updateMeta($data['meta'], $resourceNode);
         $this->updateParameters($data['parameters'], $resourceNode);
         $this->updateRights($data['rights']['all']['permissions'], $resourceNode);
@@ -144,6 +151,10 @@ class ResourceNodeManager
 
         if (isset($meta['authors'])) {
             $resourceNode->setAuthor($meta['authors']);
+        }
+
+        if (isset($meta['accesses'])) {
+            $resourceNode->setAccesses($meta['accesses']);
         }
     }
 
@@ -236,5 +247,65 @@ class ResourceNodeManager
     public function delete(ResourceNode $resourceNode)
     {
         $this->resourceManager->delete($resourceNode);
+    }
+
+    public function unlock(ResourceNode $resourceNode, $code)
+    {
+        //if a code is defined
+        if ($accessCode = $resourceNode->getAccessCode()) {
+            if ($accessCode === $code) {
+                $this->session->set($resourceNode->getGuid(), true);
+
+                return true;
+            } else {
+                $this->session->set($resourceNode->getGuid(), false);
+
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function isCodeProtected(ResourceNode $resourceNode)
+    {
+        $access = $resourceNode->getAccesses();
+
+        if (!empty($access['code'])) {
+            return $access['code'] ? true : false;
+        }
+
+        return false;
+    }
+
+    public function requiresUnlock(ResourceNode $resourceNode)
+    {
+        $isProtected = $this->isCodeProtected($resourceNode);
+
+        if ($isProtected) {
+            return !$this->isUnlocked($resourceNode);
+        }
+
+        return false;
+    }
+
+    public function isUnlocked(ResourceNode $node)
+    {
+        if ($node->getAccessCode()) {
+            $access = $this->session->get($node->getGuid());
+
+            return $access !== null ? $access : false;
+        }
+
+        return true;
+    }
+
+    public function addView(ResourceNode $node)
+    {
+        $node->addView();
+        $this->om->persist($node);
+        $this->om->flush();
+
+        return $node;
     }
 }

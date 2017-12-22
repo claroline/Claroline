@@ -89,7 +89,8 @@
                             }
                         } {% if loop.last != true %},{% endif %}
                     {% endfor %}
-                }
+                },
+                "defaultResourceActionsMask": {{ defaultResourceActionsMask|json_encode|raw }}
             });
         });
     </script>

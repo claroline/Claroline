@@ -51,7 +51,7 @@ class PaperController extends AbstractController
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param PaperManager                  $paperManager
-     * @param EntityManager                 $em
+     * @param ExerciseManager               $exerciseManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -125,10 +125,7 @@ class PaperController extends AbstractController
      */
     public function deleteAllAction(Exercise $exercise)
     {
-        if (!$this->isAdmin($exercise)) {
-            // Only administrator or Paper Managers can delete Papers
-            throw new AccessDeniedException();
-        }
+        $this->assertHasPermission('MANAGE_PAPERS', $exercise);
 
         try {
             $this->paperManager->deleteAll($exercise);
@@ -152,10 +149,7 @@ class PaperController extends AbstractController
      */
     public function deleteAction(Paper $paper)
     {
-        if (!$this->isAdmin($paper->getExercise())) {
-            // Only administrator or Paper Managers can delete a Paper
-            throw new AccessDeniedException();
-        }
+        $this->assertHasPermission('MANAGE_PAPERS', $paper->getExercise());
 
         try {
             $this->paperManager->delete($paper);
@@ -178,13 +172,65 @@ class PaperController extends AbstractController
      */
     public function exportCsvAction(Exercise $exercise)
     {
+        $this->assertHasPermission('MANAGE_PAPERS', $exercise);
+
+        return new StreamedResponse(function () use ($exercise) {
+            $this->exerciseManager->exportPapersToCsv($exercise);
+        }, 200, [
+            'Content-Type' => 'application/force-download',
+            'Content-Disposition' => 'attachment; filename="export.csv"',
+        ]);
+    }
+
+    /**
+     * Exports papers into a json file.
+     *
+     * @EXT\Route("/export/json", name="exercise_papers_export_json")
+     * @EXT\Method("GET")
+     *
+     * @param Exercise $exercise
+     *
+     * @return StreamedResponse
+     */
+    public function exportJsonAction(Exercise $exercise)
+    {
+        if (!$this->isAdmin($exercise)) {
+            // Only administrator or Paper Managers can export Papers
+            throw new AccessDeniedException();
+        }
+
+        $response = new StreamedResponse(function () use ($exercise) {
+            $data = $this->paperManager->serializeExercisePapers($exercise);
+            $handle = fopen('php://output', 'w+');
+            fwrite($handle, json_encode($data, JSON_PRETTY_PRINT));
+            fclose($handle);
+        });
+
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename="statistics.json"');
+
+        return $response;
+    }
+
+    /**
+     * Exports papers into a csv file.
+     *
+     * @EXT\Route("/export/papers/csv", name="exercise_papers_export_csv")
+     * @EXT\Method("GET")
+     *
+     * @param Exercise $exercise
+     *
+     * @return StreamedResponse
+     */
+    public function exportCsvAnswersAction(Exercise $exercise)
+    {
         if (!$this->isAdmin($exercise)) {
             // Only administrator or Paper Managers can export Papers
             throw new AccessDeniedException();
         }
 
         return new StreamedResponse(function () use ($exercise) {
-            $this->exerciseManager->exportPapersToCsv($exercise);
+            $this->exerciseManager->exportResultsToCsv($exercise);
         }, 200, [
             'Content-Type' => 'application/force-download',
             'Content-Disposition' => 'attachment; filename="export.csv"',

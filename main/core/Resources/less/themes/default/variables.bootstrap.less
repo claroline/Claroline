@@ -7,7 +7,7 @@
 //
 //## Gray and brand colors for use across Bootstrap.
 
-@gray-base:              #000;
+@gray-base:              #000000;
 @gray-darker:            lighten(@gray-base, 13.5%); // #222
 @gray-dark:              lighten(@gray-base, 20%);   // #333
 @gray:                   lighten(@gray-base, 33.5%); // #555
@@ -16,8 +16,8 @@
 
 @brand-primary:         #148AC7; // bootstrap original : #337ab7
 @brand-success:         #4f7302;
-@brand-info:            #5bc0de;
-@brand-warning:         #f0ad4e;
+@brand-info:            #335768;
+@brand-warning:         #ED9E2F; // todo adapt to new @state-warning-text color
 @brand-danger:          #bf0404;
 
 
@@ -26,12 +26,12 @@
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-@body-bg:               #fafafa;
+@body-bg:               #FAFAFA;
 //** Global text color on `<body>`.
 @text-color:            @gray-dark;
 
 //** Global textual link color.
-@link-color:            #0076b3;
+@link-color:            #0076B3;
 //** Link hover color set via `darken()` function.
 @link-hover-color:      darken(@link-color, 15%);
 //** Link hover decoration.
@@ -48,7 +48,7 @@
 @font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace;
 @font-family-base:        @font-family-sans-serif;
 
-@font-size-base:          14px;
+@font-size-base:          floor(14px * @font-size-modifier);
 @font-size-large:         ceil((@font-size-base * 1.25)); // ~18px
 @font-size-small:         ceil((@font-size-base * 0.85)); // ~12px
 
@@ -447,21 +447,21 @@
 //
 //##
 
-@pagination-color:                     @link-color;
-@pagination-bg:                        #fff;
-@pagination-border:                    #ddd;
+@pagination-color:                     @list-controls-color;
+@pagination-bg:                        @list-controls-bg;
+@pagination-border:                    transparent;
 
-@pagination-hover-color:               @link-hover-color;
-@pagination-hover-bg:                  @gray-lighter;
-@pagination-hover-border:              #ddd;
+@pagination-hover-color:               @list-controls-active-color;
+@pagination-hover-bg:                  @list-controls-active-bg;
+@pagination-hover-border:              transparent;
 
-@pagination-active-color:              #fff;
-@pagination-active-bg:                 @brand-primary;
-@pagination-active-border:             @brand-primary;
+@pagination-active-color:              @state-info-bg;
+@pagination-active-bg:                 @brand-info;
+@pagination-active-border:             transparent;
 
-@pagination-disabled-color:            @gray-light;
-@pagination-disabled-bg:               #fff;
-@pagination-disabled-border:           #ddd;
+@pagination-disabled-color:            @list-controls-disabled-color;
+@pagination-disabled-bg:               @list-controls-disabled-bg;
+@pagination-disabled-border:           transparent;
 
 
 //== Pager
@@ -500,13 +500,13 @@
 @state-success-bg:               #dafd8d;
 @state-success-border:           @state-success-bg;
 
-@state-info-text:                #024f73;
+@state-info-text:                @brand-info;
 @state-info-bg:                  #c9edfe;
 @state-info-border:              @state-info-bg;
 
-@state-warning-text:             #c09853;
-@state-warning-bg:               lighten(#FFEE00, 35%);
-@state-warning-border:           darken(spin(@state-warning-bg, -10), 3%);
+@state-warning-text:             #686733;
+@state-warning-bg:               #f4f3bf;
+@state-warning-border:           @state-warning-bg;
 
 @state-danger-text:              @brand-danger;
 @state-danger-bg:                #ffd5d5;
@@ -808,7 +808,7 @@
 @carousel-control-color:                      #fff;
 @carousel-control-width:                      10%;
 @carousel-control-opacity:                    .5;
-@carousel-control-font-size:                  20px;
+@carousel-control-font-size:                  floor(20px * @font-size-modifier);
 
 @carousel-indicator-active-bg:                #fff;
 @carousel-indicator-border-color:             #fff;
@@ -860,7 +860,7 @@
 //** Blockquote border color
 @blockquote-border-color:     @gray-lighter;
 //** Page header border color
-@page-header-border-color:    transparent;
+@page-header-border-color:    @panel-default-border;
 //** Width of horizontal description list titles
 @dl-horizontal-offset:        @component-offset-horizontal;
 //** Point at which .dl-horizontal becomes horizontal

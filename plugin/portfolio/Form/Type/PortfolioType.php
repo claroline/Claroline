@@ -16,11 +16,11 @@ class PortfolioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('commentsViewAt', 'datetime', array(
+            ->add('commentsViewAt', 'datetime', [
                     'widget' => 'single_text',
-                ))
-            ->add('comments', 'text', array('mapped' => false))
-            ->add('widgets', 'text', array('mapped' => false))
+                ])
+            ->add('comments', 'text', ['mapped' => false])
+            ->add('portfolioWidgets', 'text', ['mapped' => false])
             ->add('title', 'text');
     }
 
@@ -32,12 +32,12 @@ class PortfolioType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'data_class' => 'Icap\PortfolioBundle\Entity\Portfolio',
                 'translation_domain' => 'icap_portfolio',
                 'csrf_protection' => false,
                 'date_format' => DateTimeType::HTML5_FORMAT,
-            )
+            ]
         );
     }
 }

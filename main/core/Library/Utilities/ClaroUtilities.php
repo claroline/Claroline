@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Library\Utilities;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use Ramsey\Uuid\Uuid;
 use Symfony\Component\Debug\Exception\ContextErrorException;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -85,60 +86,15 @@ class ClaroUtilities
     }
 
     /**
-     * From http://php.net/manual/en/function.time.php.
-     *
-     * @param int $secs
-     *
-     * @return string
-     */
-    public function timeElapsed($secs)
-    {
-        if ($secs === 0) {
-            return '0s';
-        }
-
-        $bit = [
-            'y' => $secs / 31556926 % 12,
-            'w' => $secs / 604800 % 52,
-            'd' => $secs / 86400 % 7,
-            'h' => $secs / 3600 % 24,
-            'm' => $secs / 60 % 60,
-            's' => $secs % 60,
-            ];
-
-        foreach ($bit as $k => $v) {
-            if ($v > 0) {
-                $ret[] = $v.$k;
-            }
-        }
-
-        return implode(' ', $ret);
-    }
-
-    /**
      * Generates a globally unique identifier.
      *
-     * @see http://php.net/manual/fr/function.com-create-guid.php
-     *
      * @return string
+     *
+     * @deprecated use UuidTrait instead
      */
     public function generateGuid()
     {
-        if (function_exists('com_create_guid') === true) {
-            return trim(com_create_guid(), '{}');
-        }
-
-        return sprintf(
-            '%04X%04X-%04X-%04X-%04X-%04X%04X%04X',
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(16384, 20479),
-            mt_rand(32768, 49151),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535),
-            mt_rand(0, 65535)
-        );
+        return Uuid::uuid4()->toString();
     }
 
     public function getDefaultEncoding()

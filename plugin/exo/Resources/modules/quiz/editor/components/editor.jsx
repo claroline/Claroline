@@ -43,6 +43,7 @@ function selectSubEditor(props) {
       return (
         <QuizEditor
           quiz={props.quizProperties}
+          items={props.items}
           validating={props.validating}
           updateProperties={props.updateQuiz}
           activePanelKey={props.activeQuizPanel}
@@ -53,13 +54,17 @@ function selectSubEditor(props) {
       return (
         <StepEditor
           step={props.currentObject}
+          stepIndex={props.currentObjectIndex}
+          mandatoryQuestions={props.quizProperties.parameters.mandatoryQuestions}
           validating={props.validating}
           updateStep={props.updateStep}
           activePanelKey={props.activeStepPanel}
           handlePanelClick={props.selectStepPanel}
-          handleItemDeleteClick={props.deleteStepItem}
+          handleItemDelete={props.deleteStepItem}
           handleItemMove={props.moveItem}
           handleItemCreate={props.createItem}
+          handleItemChangeStep={props.changeItemStep}
+          handleItemDuplicate={props.duplicateItem}
           handleItemUpdate={props.updateItem}
           handleItemHintsUpdate={props.updateItemHints}
           handleItemDetailUpdate={props.updateItemDetail}
@@ -68,6 +73,7 @@ function selectSubEditor(props) {
           handleContentItemUpdate={props.updateContentItem}
           handleContentItemDetailUpdate={props.updateContentItemDetail}
           handleFileUpload={props.saveContentItemFile}
+          numbering={props.quizProperties.parameters.numbering}
           showModal={props.showModal}
           closeModal={props.fadeModal}
         />
@@ -81,9 +87,11 @@ selectSubEditor.propTypes = {
   selectQuizPanel: T.func.isRequired,
   updateQuiz: T.func.isRequired,
   quizProperties: T.object.isRequired,
+  currentObjectIndex: T.number.isRequired,
   currentObject: T.shape({
     type: T.string.isRequired
   }).isRequired,
+  items: T.array.isRequired,
   updateStep: T.string.isRequired,
   activeStepPanel: T.string.isRequired,
   selectStepPanel: T.func.isRequired,
@@ -98,6 +106,8 @@ selectSubEditor.propTypes = {
   createContentItem: T.func.isRequired,
   updateContentItem: T.func.isRequired,
   updateContentItemDetail: T.func.isRequired,
+  changeItemStep: T.func.isRequired,
+  duplicateItem: T.func.isRequired,
   saveContentItemFile: T.func,
   showModal: T.func.isRequired,
   fadeModal: T.func.isRequired
@@ -106,7 +116,9 @@ selectSubEditor.propTypes = {
 function mapStateToProps(state) {
   return {
     thumbnails: select.thumbnails(state),
+    items: select.items(state),
     currentObject: select.currentObjectDeep(state),
+    currentObjectIndex: select.currentObjectIndex(state),
     activeQuizPanel: select.quizOpenPanel(state),
     activeStepPanel: select.stepOpenPanel(state),
     quizProperties: select.quiz(state),

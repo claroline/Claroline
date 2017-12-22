@@ -207,6 +207,18 @@
                                                 {% endif %}
                                             </span>
 
+                                            {% if session.getPublicUnregistration() and (registeredSessions[sessionId] is defined or pendingSessions[sessionId] is defined) %}
+                                                &nbsp;
+                                                <span  id="session-unregistration-btn-{{ sessionId }}">
+                                                    <span class="label label-danger pointer-hand session-unregister-btn"
+                                                          data-session-id="{{ sessionId }}"
+                                                    >
+                                                        <i class="fa fa-times"></i>
+                                                        {{ 'self_unregister'|trans({}, 'cursus') }}
+                                                    </span>
+                                                </span>
+                                            {% endif %}
+
                                             {% if session.getEvents()|length > 0 %}
                                                 <div id="collapse-events-{{ widgetInstance.getId() }}-{{ session.getId() }}" class="collapse {% if collapseSessions %}in{% endif %}">
                                                     <br>

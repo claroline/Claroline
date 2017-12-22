@@ -233,7 +233,9 @@ class PairQuestionSerializer implements SerializerInterface
         }
 
         foreach ($rowData->itemIds as $index => $itemId) {
-            $row->addItem($pairQuestion->getItem($itemId), $index);
+            if ($pairQuestion->getItem($itemId)) {
+                $row->addItem($pairQuestion->getItem($itemId), $index);
+            }
         }
 
         $pairQuestion->addRow($row);

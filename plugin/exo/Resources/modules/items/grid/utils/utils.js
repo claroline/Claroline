@@ -92,5 +92,39 @@ export const utils = {
     })
 
     return best === null ? '' : best.text
+  },
+
+  getKey(cellId, answer, solutions) {
+    let key = '_others'
+
+    solutions.forEach(s => {
+      if (s.cellId === cellId) {
+        s.answers.forEach(a => {
+          const expected = a.caseSensitive ? a.text : a.text.toUpperCase()
+          const provided = a.caseSensitive ? answer : answer.toUpperCase()
+
+          if (expected === provided) {
+            key = a.text
+          }
+        })
+      }
+    })
+
+    return key
+  },
+
+  getCellSolutionAnswers(cellId, solutions, success = true) {
+    const answers = []
+    solutions.forEach(s => {
+      if (s.cellId === cellId) {
+        s.answers.forEach(a => {
+          if ((success && a.score > 0) || (!success && a.score <= 0)) {
+            answers.push(a)
+          }
+        })
+      }
+    })
+
+    return answers
   }
 }

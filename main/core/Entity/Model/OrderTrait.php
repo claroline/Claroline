@@ -2,6 +2,8 @@
 
 namespace Claroline\CoreBundle\Entity\Model;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
  * Gives an entity the ability to be ordered in a collection.
  */

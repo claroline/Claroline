@@ -11,13 +11,13 @@
 
 namespace Icap\NotificationBundle\Controller\API;
 
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\View;
-use JMS\DiExtraBundle\Annotation as DI;
-use Icap\NotificationBundle\Manager\NotificationManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Claroline\CoreBundle\Entity\User;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use Icap\NotificationBundle\Manager\NotificationManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class NotificationController extends FOSRestController
 {
@@ -40,20 +40,20 @@ class NotificationController extends FOSRestController
      */
     public function getNotificationsAction(User $user)
     {
-        return $this->notificationManager->getUserNotifications($user->getId());
+        return $this->notificationManager->getUserNotifications($user);
     }
 
-   /**
-    * Mark all notifications as read.
-    *
-    * @Route("/notifications/read.{_format}", name="icap_notifications_read", defaults={"_format":"json"})
-    * @View(serializerGroups={"api_notification"})
-    * @EXT\ParamConverter("user", converter="current_user")
-    */
-   public function getNotificationsReadAction(User $user)
-   {
-       $this->notificationManager->markAllNotificationsAsViewed($user->getId());
+    /**
+     * Mark all notifications as read.
+     *
+     * @Route("/notifications/read.{_format}", name="icap_notifications_read", defaults={"_format":"json"})
+     * @View(serializerGroups={"api_notification"})
+     * @EXT\ParamConverter("user", converter="current_user")
+     */
+    public function getNotificationsReadAction(User $user)
+    {
+        $this->notificationManager->markAllNotificationsAsViewed($user->getId());
 
-       return $this->notificationManager->getUserNotifications($user->getId());
-   }
+        return $this->notificationManager->getUserNotifications($user);
+    }
 }

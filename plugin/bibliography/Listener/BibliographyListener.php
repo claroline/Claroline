@@ -3,13 +3,13 @@
 namespace Icap\BibliographyBundle\Listener;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Icap\BibliographyBundle\Entity\BookReference;
 use Icap\BibliographyBundle\Form\BookReferenceType;
 use Icap\BibliographyBundle\Manager\BookReferenceManager;
@@ -125,17 +125,45 @@ class BibliographyListener
     public function onOpen(OpenResourceEvent $event)
     {
         $bookReference = $event->getResource();
-        $collection = new ResourceCollection([$bookReference->getResourceNode()]);
-        $isGranted = $this->container->get('security.authorization_checker')->isGranted('EDIT', $collection);
         $content = $this->container->get('templating')->render(
-            'IcapBibliographyBundle:BookReference:index.html.twig',
+            'IcapBibliographyBundle:BookReference:open.html.twig',
             [
                 '_resource' => $bookReference,
-                'isEditGranted' => $isGranted,
             ]
         );
         $response = new Response($content);
         $event->setResponse($response);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("copy_icap_bibliography")
+     *
+     * @param CopyResourceEvent $event
+     */
+    public function onCopy(CopyResourceEvent $event)
+    {
+        $em = $this->container->get('claroline.persistence.object_manager');
+
+        $old = $event->getResource();
+        $new = new BookReference();
+
+        $new->setAuthor($old->getAuthor());
+        $new->setDescription($old->getDescription());
+        $new->setAbstract($old->getAbstract());
+        $new->setIsbn($old->getIsbn());
+        $new->setPublisher($old->getPublisher());
+        $new->setPrinter($old->getPrinter());
+        $new->setPublicationYear($old->getPublicationYear());
+        $new->setLanguage($old->getLanguage());
+        $new->setPageCount($old->getPageCount());
+        $new->setUrl($old->getUrl());
+        $new->setCoverUrl($old->getCoverUrl());
+
+        $em->persist($new);
+        $em->flush();
+
+        $event->setCopy($new);
         $event->stopPropagation();
     }
 

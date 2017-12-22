@@ -25,7 +25,8 @@ const typeProperties = [
   'decorate',
   'validate',
   'paper',
-  'getCorrectedAnswer'
+  'getCorrectedAnswer',
+  'generateStats'
 ]
 
 let registeredTypes = {}
@@ -160,4 +161,11 @@ function makeError(message, definition) {
   const name = definition.name ? definition.name.toString() : '[unnamed]'
 
   return `${message} in '${name}' definition`
+}
+
+export const BasePaperDefaultProps = {
+  answer: '',
+  showExpected: false,
+  showStats: true,
+  showYours: true
 }

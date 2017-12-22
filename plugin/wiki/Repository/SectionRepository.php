@@ -20,7 +20,7 @@ class SectionRepository extends NestedTreeRepository
     {
         $queryBuilder = $this->createQueryBuilder('section')
             ->join('section.activeContribution', 'contribution')
-            ->select('section, contribution')
+            ->select('section, contribution, IDENTITY(section.parent) as parent')
             ->andWhere('section.root = :rootId')
             ->orderBy('section.root, section.left', 'ASC')
             ->setParameter('rootId', $wiki->getRoot()->getId());
@@ -224,5 +224,20 @@ class SectionRepository extends NestedTreeRepository
     public function findDeletedSections(Wiki $wiki)
     {
         return $this->findDeletedSectionsQuery($wiki)->getArrayResult();
+    }
+
+    public function buildTree(array $nodes, array $options = [])
+    {
+        $nodeIds = [];
+        $newNodes = [];
+        foreach ($nodes as $item) {
+            if (empty($item['parent']) || in_array($item['parent'], $nodeIds)) {
+                $node = $item[0];
+                $nodeIds[] = $node['id'];
+                $newNodes[] = $node;
+            }
+        }
+
+        return parent::buildTree($newNodes, $options);
     }
 }

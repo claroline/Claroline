@@ -11,6 +11,7 @@
 
 namespace Icap\NotificationBundle\Entity;
 
+use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -27,19 +28,24 @@ class NotificationUserParameters
     protected $id;
 
     /**
-     * @ORM\Column(type="integer", name="user_id", nullable=true)
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\User"
+     * )
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
+     *
+     * @var User
      */
-    protected $userId;
+    protected $user;
 
     /**
      * @ORM\Column(type="array", name="display_enabled_types")
      */
-    protected $displayEnabledTypes = array();
+    protected $displayEnabledTypes = [];
 
     /**
      * @ORM\Column(type="array", name="rss_enabled_types")
      */
-    protected $rssEnabledTypes = array();
+    protected $rssEnabledTypes = [];
 
     /**
      * @ORM\Column(type="string", name="rss_id", unique=true)
@@ -64,15 +70,23 @@ class NotificationUserParameters
      */
     public function getUserId()
     {
-        return $this->userId;
+        return $this->user->getId();
     }
 
     /**
      * @param mixed $userId
      */
-    public function setUserId($userId)
+    public function setUser($user)
     {
-        $this->userId = $userId;
+        $this->user = $user;
+    }
+
+    /**
+     * @param mixed $userId
+     */
+    public function getUser()
+    {
+        return $this->user;
     }
 
     /**

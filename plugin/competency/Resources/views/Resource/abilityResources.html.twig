@@ -1,0 +1,17 @@
+{% extends 'HeVinciCompetencyBundle::modal.html.twig' %}
+
+{% block title %}{{ 'competency.resources'|trans({}, 'competency') }}{% endblock %}
+
+{% block body %}
+    <ul>
+        {% for resource in ability.getResources() %}
+            <li>{{ resource.getPathForDisplay() }}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
+{% block footer %}
+    <button type="button" class="btn btn-primary"  data-dismiss="modal">
+        {{ 'close'|trans({}, 'platform') }}
+    </button>
+{% endblock %}

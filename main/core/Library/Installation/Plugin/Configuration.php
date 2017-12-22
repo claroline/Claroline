@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\CoreBundle\Library\PluginBundle;
 use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -26,7 +26,7 @@ class Configuration implements ConfigurationInterface
     private $updateMode;
     private $listResourceActions;
 
-    public function __construct(DistributionPluginBundle $plugin, array $resourceNames, array $listTools, array $listResourceActions, array $listWidgets)
+    public function __construct(PluginBundle $plugin, array $resourceNames, array $listTools, array $listResourceActions, array $listWidgets)
     {
         $this->plugin = $plugin;
         $this->listNames = $resourceNames;

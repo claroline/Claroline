@@ -11,20 +11,20 @@
                 class="createchapter btn btn-sm lesson_tooltip btn-primary navbar-btn"
                 data-ng-click="vm.newChapter(vm.chapter.current.slug)">
             <span class="fa fa-plus"></span>
-            <span class="chapter_menu_labels">{{ 'new_subchapter'|trans:'icap_lesson' }}</span>
+            <span class="chapter_menu_labels">{{ 'new_subchapter'|trans:{}:'icap_lesson' }}</span>
         </a>
         <a
                 class="editchapter btn btn-default btn-sm navbar-btn lesson_tooltip"
                 data-ng-click="vm.updateChapter(vm.chapter.current.slug)">
             <span class="fa fa-edit"></span>
-            <span class='chapter_menu_labels'>{{ 'edit'|trans:'icap_lesson' }}</span>
+            <span class='chapter_menu_labels'>{{ 'edit'|trans:{}:'icap_lesson' }}</span>
         </a>
         <div class="btn-group btn-group-sm">
             <a
                     class="movechapter btn btn-default navbar-btn lesson_tooltip"
                     data-ng-click="vm.moveChapter(vm.chapter.current.slug)"
                     tooltip-placement="top"
-                    uib-tooltip="{{ 'move_chapter_button' | trans: 'icap_lesson' }}"
+                    uib-tooltip="{{ 'move_chapter_button' | trans:{}:'icap_lesson' }}"
                     tooltip-append-to-body="true">
                 <i class="fa fa-arrows"></i>
             </a>
@@ -32,7 +32,7 @@
                     class="duplicatechapter btn btn-default navbar-btn lesson_tooltip"
                     data-ng-click="vm.duplicateChapter(vm.chapter.current.slug)"
                     tooltip-placement="top"
-                    uib-tooltip="{{ 'duplicate_chapter_button' | trans: 'icap_lesson' }}"
+                    uib-tooltip="{{ 'duplicate_chapter_button' | trans:{}:'icap_lesson' }}"
                     tooltip-append-to-body="true">
                 <i class="fa fa-copy"></i>
             </a>
@@ -40,7 +40,7 @@
                     class="deletechapter-old btn btn-danger navbar-btn lesson_tooltip"
                     data-ng-click="vm.confirmDeleteChapter(vm.chapter.current.slug)"
                     tooltip-placement="top"
-                    uib-tooltip="{{ 'delete_chapter_button' | trans: 'icap_lesson' }}"
+                    uib-tooltip="{{ 'delete_chapter_button' | trans:{}:'icap_lesson' }}"
                     tooltip-append-to-body="true">
                 <i class="fa fa-trash-o"></i>
             </a>
@@ -56,7 +56,7 @@
                 class="btn lesson_tooltip"
                 data-ng-class="vm.chapter.current.previous == null ? 'disabled btn-default': 'btn-primary'"
                 data-ng-href="{{ vm.getPreviousChapterUrl() }}"
-                tooltip-placement="right" uib-tooltip="{{ 'previous' | trans: 'icap_lesson' }}">
+                tooltip-placement="right" uib-tooltip="{{ 'previous' | trans:{}:'icap_lesson' }}">
             <i class="fa fa-arrow-left lesson_footer_icon"></i>
         </a>
     </div>
@@ -65,7 +65,7 @@
                 class="lesson_tooltip btn btn_up btn-primary hidden"
                 href=""
                 data-ng-click="vm.goToAnchor('wrap')"
-                tooltip-placement="top" uib-tooltip="{{ 'back_top' | trans: 'icap_lesson' }}">
+                tooltip-placement="top" uib-tooltip="{{ 'back_top' | trans:{}:'icap_lesson' }}">
             <i class="fa fa-arrow-up lesson_footer_icon"></i>
         </a>
     </div>
@@ -74,7 +74,7 @@
                 class="btn lesson_tooltip"
                 data-ng-class="vm.chapter.current.next == null ? 'disabled btn-default' : 'btn-primary'"
                 data-ng-href="{{ vm.getNextChapterUrl() }}"
-                tooltip-placement="left" uib-tooltip="{{ 'next' | trans: 'icap_lesson' }}">
+                tooltip-placement="left" uib-tooltip="{{ 'next' | trans:{}:'icap_lesson' }}">
             <i class="fa fa-arrow-right lesson_footer_icon"></i>
         </a>
     </div>

@@ -464,7 +464,7 @@ class ToolManager
         );
 
         if (!$switchTool) {
-            $desktopTool = $this->om->factory('Claroline\CoreBundle\Entity\Tool\OrderedTool');
+            $desktopTool = new OrderedTool();
             $desktopTool->setUser($user);
             $desktopTool->setTool($tool);
             $desktopTool->setOrder($position);
@@ -502,8 +502,8 @@ class ToolManager
          );
 
         $newPosition = $movingTool->getOrder();
-         //if a tool is already at this position, he must go "far away"
-         $switchTool->setOrder($newPosition);
+        //if a tool is already at this position, he must go "far away"
+        $switchTool->setOrder($newPosition);
         $movingTool->setOrder(intval($position));
         $this->om->persist($switchTool);
         $this->om->persist($movingTool);

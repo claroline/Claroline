@@ -1,5 +1,5 @@
 const isCronConfigured = state => state.isCronConfigured === 1
 
-export const selectors = {
+export const select = {
   isCronConfigured
 }

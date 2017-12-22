@@ -64,7 +64,6 @@ utils.getTextElements = (text, solutions) => {
     let regexFlag = 'g'
     if (!solution.caseSensitive) regexFlag += 'i'
     const regex = new RegExp('\\b' + word + '\\b', regexFlag)
-    //console.log(regex)
     const position = text.search(regex)
     data.push({
       caseSensitive: solution.caseSensitive,
@@ -77,4 +76,19 @@ utils.getTextElements = (text, solutions) => {
   })
 
   return data
+}
+
+utils.getKey = (word, solutions) => {
+  let key = '_others'
+
+  solutions.forEach(s => {
+    const expected = s.caseSensitive ? s.text : s.text.toUpperCase()
+    const provided = s.caseSensitive ? word : word.toUpperCase()
+
+    if (expected === provided) {
+      key = s.text
+    }
+  })
+
+  return key
 }

@@ -2,11 +2,12 @@
 
 namespace UJM\ExoBundle\Controller\Tool;
 
+use Claroline\CoreBundle\API\FinderProvider;
+use Claroline\CoreBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use UJM\ExoBundle\Manager\Item\ItemManager;
-use UJM\ExoBundle\Serializer\UserSerializer;
+use UJM\ExoBundle\Library\Options\Transfer;
 
 /**
  * QuestionBankController
@@ -17,30 +18,32 @@ use UJM\ExoBundle\Serializer\UserSerializer;
 class QuestionBankController
 {
     /**
-     * @var ItemManager
+     * @var FinderProvider
      */
-    private $itemManager;
+    private $finder;
 
     /**
-     * @var UserSerializer
+     * @var SerializerProvider
      */
-    private $userSerializer;
+    private $serializer;
 
     /**
      * QuestionBankController constructor.
      *
      * @DI\InjectParams({
-     *     "itemManager" = @DI\Inject("ujm_exo.manager.item"),
-     *     "userSerializer"  = @DI\Inject("ujm_exo.serializer.user")
+     *     "finder"      = @DI\Inject("claroline.api.finder"),
+     *     "serializer"  = @DI\Inject("claroline.api.serializer")
      * })
      *
-     * @param ItemManager    $itemManager
-     * @param UserSerializer $userSerializer
+     * @param FinderProvider     $finder
+     * @param SerializerProvider $serializer
      */
-    public function __construct(ItemManager $itemManager, UserSerializer $userSerializer)
-    {
-        $this->itemManager = $itemManager;
-        $this->userSerializer = $userSerializer;
+    public function __construct(
+        FinderProvider $finder,
+        SerializerProvider $serializer
+    ) {
+        $this->finder = $finder;
+        $this->serializer = $serializer;
     }
 
     /**
@@ -58,8 +61,16 @@ class QuestionBankController
     public function openAction(User $user)
     {
         return [
-            'initialSearch' => $this->itemManager->search($user),
-            'currentUser' => $this->userSerializer->serialize($user),
+            'currentUser' => $this->serializer->serialize($user),
+            'questions' => $this->finder->search(
+                'UJM\ExoBundle\Entity\Item\Item', [
+                    'limit' => 20,
+                    'sortBy' => 'content',
+                    'filters' => ['selfOnly' => true],
+                ], [
+                    Transfer::INCLUDE_ADMIN_META,
+                ]
+            ),
         ];
     }
 }

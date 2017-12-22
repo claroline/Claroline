@@ -23,18 +23,20 @@ export function getReactAnswerSelections(item, answer, showScore, displayTrueAns
       let elId = element.selectionId
       let userAnswer = null
 
-      switch(item.mode) {
-        case 'find': {
-          userAnswer = answer.positions.find(a => a >= element.begin && a <= element.end)
-          break
-        }
-        case 'select': {
-          userAnswer = answer.selections.indexOf(element.selectionId) >= 0 ? elId: null
-          break
-        }
-        case 'highlight': {
-          userAnswer = answer.highlights.find(answer => answer.selectionId === elId) || null
-          break
+      if (answer) {
+        switch(item.mode) {
+          case 'find': {
+            userAnswer = answer.positions.find(a => a >= element.begin && a <= element.end)
+            break
+          }
+          case 'select': {
+            userAnswer = answer.selections.indexOf(element.selectionId) >= 0 ? elId: null
+            break
+          }
+          case 'highlight': {
+            userAnswer = answer.highlights.find(answer => answer.selectionId === elId) || null
+            break
+          }
         }
       }
 

@@ -7,49 +7,39 @@
 {% endblock %}
 {% block breadcrumb %}
     {{
-        macros.breadcrumbs([
-            {
-                'icon': 'fa fa-home',
-                'name': 'home'|trans({}, 'platform'),
-                'href': path('claro_index')
-            },
-            {
-                'name': 'portal'|trans({}, 'platform'),
-                'href': ''
-            }
-        ])
+    macros.breadcrumbs([
+    {
+        'icon': 'fa fa-home',
+        'name': 'home'|trans({}, 'platform'),
+        'href': path('claro_index')
+    },
+    {
+        'name': 'portal'|trans({}, 'platform'),
+        'href': ''
+    }
+    ])
     }}
-{% endblock %}
-
-{% block section_content %}
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'portal'|trans({}, 'platform') }}</h3>
-    </div>
-    <div class="panel-body">
-        <div data-ng-view></div>
-    </div>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel='stylesheet' href='{{ asset('packages/angular-loading-bar/build/loading-bar.min.css') }}' type='text/css' media='all' />
-    {% stylesheets debug=false filter='less, cssmin' output='css/corebundle/portal.css'
-    '@ClarolineCoreBundle/Resources/less/portal/portal.less'
-    %}
-    <link rel="stylesheet" type="text/css" href="{{ asset_url }}" />
-    {% endstylesheets %}
+
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-main-core-portal.css') }}" />
+
+{% endblock %}
+
+
+{% block content %}
+    <div
+        class="page-container portal-container"
+        data-portal="{{ resources | json_encode | raw | escape }}"
+    >
+    </div>
 {% endblock %}
 
 {% block javascripts %}
+    {# Claroline JS #}
     {{ parent() }}
-    <script src="{{ hotAsset("dist/claroline-distribution-main-core-portal.js") }}"></script>
-    <script>
-        (function() {
-            'use strict';
-            angular
-                .module('portalApp')
-                .constant('portal.types', {{ types|json_encode|raw }});
-        })();
-    </script>
-{% endblock %}
 
+    <script src="{{ hotAsset("dist/claroline-distribution-main-core-portal.js") }}"></script>
+{% endblock %}

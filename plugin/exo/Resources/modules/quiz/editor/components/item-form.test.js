@@ -31,7 +31,8 @@ describe('<ItemForm/>', () => {
       'showModal',
       'closeModal',
       'onChange',
-      'onHintsChange'
+      'onHintsChange',
+      'mandatoryQuestions'
     ])
   })
 

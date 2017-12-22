@@ -1,1 +1,1 @@
-import 'modernizr'
+//import 'modernizr'

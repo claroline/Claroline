@@ -2,14 +2,16 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
+import {withRouter} from 'react-router-dom'
 import classes from 'classnames'
-import moment from 'moment'
+
 import Datetime from 'react-datetime'
 import 'react-datetime/css/react-datetime.css'
+
 import {t} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
+import {isValidDate} from '#/main/core/date'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {actions} from '../actions'
-import {navigate} from '../router'
 
 class MessageFormView extends Component {
   constructor(props) {
@@ -84,7 +86,7 @@ class MessageFormView extends Component {
       } else {
         this.props.createTask(this.state)
       }
-      navigate('', true)
+      //navigate('', true)
     }
   }
 
@@ -97,7 +99,7 @@ class MessageFormView extends Component {
       contentError: null
     }
 
-    if (!moment(this.state['scheduledDate']).isValid()) {
+    if (!isValidDate(this.state['scheduledDate'])) {
       validation['scheduledDateError'] = t('form_not_valid_error')
       validation['hasError'] = true
     }
@@ -210,10 +212,9 @@ class MessageFormView extends Component {
             <div className="col-md-9">
               <Textarea
                 id="message-form-content"
-                content={this.state.content}
+                value={this.state.content}
                 onChange={text => this.updateProps('content', text)}
-              >
-              </Textarea>
+              />
               {this.state.contentError &&
                 <div className="help-block field-error">
                   {this.state.contentError}
@@ -226,7 +227,7 @@ class MessageFormView extends Component {
             {t('ok')}
           </button>
           &nbsp;
-          <a className="btn btn-default" href={'#'}>
+          <a className="btn btn-default" href="#">
             {t('cancel')}
           </a>
         </div>
@@ -256,6 +257,6 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-const ConnectedMessageFormView = connect(mapStateToProps, mapDispatchToProps)(MessageFormView)
+const ConnectedMessageFormView = withRouter(connect(mapStateToProps, mapDispatchToProps)(MessageFormView))
 
 export {ConnectedMessageFormView as MessageFormView}

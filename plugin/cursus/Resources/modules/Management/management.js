@@ -39,6 +39,7 @@ import DocumentModelCreationCtrl from './Controller/DocumentModelCreationCtrl'
 import DocumentModelEditionCtrl from './Controller/DocumentModelEditionCtrl'
 import LocationCreationModalCtrl from './Controller/LocationCreationModalCtrl'
 import LocationEditionModalCtrl from './Controller/LocationEditionModalCtrl'
+import CertificateMailEditionCtrl from './Controller/CertificateMailEditionCtrl'
 
 angular.module('CursusManagementModule', [
   'ui.router',
@@ -71,6 +72,7 @@ angular.module('CursusManagementModule', [
 .controller('SessionCreationCoursesListModalCtrl', SessionCreationCoursesListModalCtrl)
 .controller('LocationCreationModalCtrl', LocationCreationModalCtrl)
 .controller('LocationEditionModalCtrl', LocationEditionModalCtrl)
+.controller('CertificateMailEditionCtrl', ['$http', '$state', 'CourseService', 'DocumentModelService', CertificateMailEditionCtrl])
 .config(Routing)
 .config([
   'cfpLoadingBarProvider',

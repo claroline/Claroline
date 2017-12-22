@@ -3,10 +3,10 @@
 namespace Icap\NotificationBundle\Listener;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Event\Log\NotifiableInterface;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Icap\NotificationBundle\Manager\NotificationManager as NotificationManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
@@ -38,7 +38,10 @@ class LogListener
     public function onLog(LogGenericEvent $event)
     {
         if ($event instanceof NotifiableInterface && $this->ch->getParameter('is_notification_active')) {
-            if ($event->isAllowedToNotify()) {
+            $workspace = $event->getWorkspace();
+            if ($event->isAllowedToNotify() &&
+                ($workspace === null || ($workspace !== null && !$workspace->isDisabledNotifications()))
+            ) {
                 $this->notificationManager->createNotificationAndNotify($event);
             }
         }

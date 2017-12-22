@@ -14,5 +14,6 @@ twig:
             - 'ClarolineCoreBundle:Form:simple_auto_complete.html.twig'
             - 'ClarolineCoreBundle:Form:button_group_select.html.twig'
             - 'ClarolineCoreBundle:Form:user_picker.html.twig'
+            - 'ClarolineCoreBundle:Form:organization_picker.html.twig'
             - 'ClarolineCoreBundle:Form:resource_picker.html.twig'
             - 'ClarolineCoreBundle::form_theme.html.twig'

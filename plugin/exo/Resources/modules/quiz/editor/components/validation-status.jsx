@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {tex} from '#/main/core/translation'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 
-export const ValidationStatus = props =>
+const ValidationStatus = props =>
   <TooltipElement
     id={props.id}
     position={props.position}
@@ -27,4 +27,8 @@ ValidationStatus.propTypes = {
 
 ValidationStatus.defaultProps = {
   position: 'right'
+}
+
+export {
+  ValidationStatus
 }

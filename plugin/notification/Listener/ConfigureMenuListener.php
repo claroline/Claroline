@@ -2,13 +2,13 @@
 
 namespace Icap\NotificationBundle\Listener;
 
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Menu\ConfigureMenuEvent;
+use Icap\NotificationBundle\Manager\NotificationManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
-use Icap\NotificationBundle\Manager\NotificationManager;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 
 /**
  * @DI\Service()
@@ -59,20 +59,20 @@ class ConfigureMenuListener
         $isActive = $this->ch->getParameter('is_notification_active');
 
         if ($user !== 'anon.' && $isActive) {
-            $countUnviewedNotifications = $this->notificationManager->countUnviewedNotifications($user->getId());
+            $countUnviewedNotifications = $this->notificationManager->countUnviewedNotifications($user);
 
             $end = $this->templating->render(
                 'IcapNotificationBundle:Notification:dropdownScript.html.twig',
-                array('notificationElementId' => 'notification-topbar-item')
+                ['notificationElementId' => 'notification-topbar-item']
             );
 
             $menu = $event->getMenu();
             $countUnviewedNotificationsMenuLink = $menu->addChild(
-                $this->translator->trans('notifications', array(), 'platform'),
-                array('route' => 'icap_notification_view')
+                $this->translator->trans('notifications', [], 'platform'),
+                ['route' => 'icap_notification_view']
             )
                 ->setExtra('icon', 'fa fa-bell')
-                ->setExtra('title', $this->translator->trans('notifications', array(), 'platform'))
+                ->setExtra('title', $this->translator->trans('notifications', [], 'platform'))
                 ->setAttribute('id', 'notification-topbar-item')
                 ->setExtra('close', $end);
 
@@ -99,8 +99,8 @@ class ConfigureMenuListener
         if ($user !== 'anon.') {
             $menu = $event->getMenu();
             $menu->addChild(
-                $this->translator->trans('notifications', array(), 'platform'),
-                array('route' => 'icap_notification_user_parameters')
+                $this->translator->trans('notifications', [], 'platform'),
+                ['route' => 'icap_notification_user_parameters']
             );
 
             return $menu;

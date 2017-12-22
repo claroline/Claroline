@@ -6,8 +6,8 @@ plugin:
           name: ujm_exercise
           is_exportable: true
           actions:
-            - name: MANAGE_PAPERS
-            - name: VIEW_DOCIMOLOGY
+            - name: manage_papers
+            - name: view_docimology
               menu_name: docimology
           activity_rules:
             - action: resource-ujm_exercise-exercise_evaluated

@@ -1,0 +1,69 @@
+{% macro renderPager(pager, widgetInstanceId) %}
+    {{
+    pagerfanta(
+    pager,
+    'twitter_bootstrap_translated',
+    {
+        'proximity' : 1,
+        'routeName': 'claro_announcement_widget_pager',
+        'routeParams': {'widgetInstance': widgetInstanceId}
+    }
+    )
+    }}
+{% endmacro %}
+
+{% from _self import renderPager %}
+
+{% set nbAnnouncements = datas|length %}
+
+{% if nbAnnouncements > 0 %}
+    {% set nbPages = datas.getNbPages() %}
+
+    {% if nbPages > 1 %}
+        {{ renderPager(datas, widgetInstance.getId()) }}
+    {% endif %}
+    <ul class="list-group">
+
+        {% for data in datas %}
+            <li class="list-group-item">
+                {% set title = data['announcement'].getTitle() %}
+
+                {% if title is not null %}
+                    <h4 class="list-group-item-heading"><b>{{ title }}</b></h4>
+                {% endif %}
+                <div class="list-group-item-text">
+                    {{ data['announcement'].getContent()|raw }}
+                </div>
+
+                <div class="list-group-item-text text-muted">
+                    <small>
+                        {{ 'published_on'|trans({}, 'announcement') }}
+                        {{ data['announcement'].getPublicationDate().format('d-m-Y') }}
+
+                        {% if isDesktop %}
+                        {{ 'in_workspace'|trans({}, 'widget') }}
+                            <a href="{{ path('claro_resource_open_short', {'node': data['resourceNodeId']}) }}">
+                                {{ data['workspaceName'] }}
+                                <span class="workspace-code">({{ data['workspaceCode'] }})</span>
+                            </a>
+                        {% endif %}
+                        {% set announcer = data['announcement'].getAnnouncer() %}
+
+                        {% if announcer is not null %}
+                            {{ 'by'|trans({}, 'announcement') }}
+                            <b>{{ announcer }}</b>
+                        {% endif %}
+                    </small>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
+
+    {% if nbPages > 1 %}
+        {{ renderPager(datas, widgetInstance.getId()) }}
+    {% endif %}
+{% else %}
+    <div class="alert alert-warning">
+        {{ 'no_announcement_widget_message'|trans({}, 'widget') }}
+    </div>
+{% endif %}

@@ -20,7 +20,7 @@
                         {% for badgeClaim in claimPager %}
                             <tr>
                                 <td><a href="{{ path('icap_badge_view_badge', {'slug': badgeClaim.badge.slug}) }}" title="{{ badgeClaim.badge.name }}">{{ badgeClaim.badge.name }}</a></td>
-                                <td><a href="{{ path('claro_public_profile_view', {'publicUrl': badgeClaim.user.publicUrl}) }}" title="{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}">{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}</a></td>
+                                <td><a href="{{ path('claro_user_profile', {'publicUrl': badgeClaim.user.publicUrl}) }}" title="{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}">{{ badgeClaim.user.firstname }} {{ badgeClaim.user.lastname }}</a></td>
                                 <td>{{ badgeClaim.claimedAt|date('date_format'|trans({}, 'platform')) }}</td>
                                 <td>
                                     {% if (badgeClaim.badge.hasRules) %}

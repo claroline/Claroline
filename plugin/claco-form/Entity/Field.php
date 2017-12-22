@@ -117,6 +117,13 @@ class Field
      */
     protected $hidden = false;
 
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
+     * @SerializedName("details")
+     */
+    protected $details;
+
     public function __construct()
     {
         $this->fieldChoiceCategories = new ArrayCollection();
@@ -162,6 +169,9 @@ class Field
         $this->type = $type;
     }
 
+    /**
+     * @return FieldFacet
+     */
     public function getFieldFacet()
     {
         return $this->fieldFacet;
@@ -225,5 +235,43 @@ class Field
     public function setHidden($hidden)
     {
         $this->hidden = $hidden;
+    }
+
+    public function getDetails()
+    {
+        return $this->details;
+    }
+
+    public function setDetails($details)
+    {
+        $this->details = $details;
+    }
+
+    public function getFileTypes()
+    {
+        return !is_null($this->details) && isset($this->details['file_types']) ? $this->details['file_types'] : [];
+    }
+
+    public function setFileTypes(array $fileTypes = [])
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['file_types'] = $fileTypes;
+    }
+
+    public function getNbFilesMax()
+    {
+        return !is_null($this->details) && isset($this->details['nb_files_max']) ?
+            $this->details['nb_files_max'] :
+            1;
+    }
+
+    public function setNbFilesMax($nbFilesMax)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['nb_files_max'] = $nbFilesMax;
     }
 }

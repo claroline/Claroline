@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Entity\Workspace;
 
 use Claroline\CoreBundle\Entity\Calendar\Event;
+use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
@@ -31,6 +32,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Workspace
 {
+    use OrganizationsTrait;
+
     const DEFAULT_MAX_STORAGE_SIZE = '1 TB';
     const DEFAULT_MAX_FILE_COUNT = 10000;
     const DEFAULT_MAX_USERS = 10000;
@@ -126,14 +129,14 @@ class Workspace
     protected $displayable = false;
 
     /**
-     * @ORM\Column(type="boolean")
+     * @ORM\Column(name="isModel", type="boolean")
      *
      * @Serializer\Groups({"api_workspace", "api_workspace_min"})
      * @Serializer\SerializedName("isModel")
      *
      * @var bool
      */
-    protected $isModel = false;
+    protected $model = false;
 
     /**
      * @ORM\OneToMany(
@@ -231,7 +234,7 @@ class Workspace
      *
      * @var \DateTime
      */
-    protected $creationDate;
+    protected $created;
 
     /**
      * @ORM\Column(name="is_personal", type="boolean")
@@ -241,7 +244,7 @@ class Workspace
      *
      * @var bool
      */
-    protected $isPersonal = false;
+    protected $personal = false;
 
     /**
      * @ORM\Column(name="start_date", type="datetime", nullable=true)
@@ -282,6 +285,16 @@ class Workspace
      * @var int
      */
     protected $workspaceType;
+
+    /**
+     * @ORM\Column(name="disabled_notifications", type="boolean")
+     *
+     * @Serializer\Groups({"api_workspace", "api_workspace_min"})
+     * @Serializer\SerializedName("disabledNotifications")
+     *
+     * @var bool
+     */
+    protected $disabledNotifications = false;
 
     /**
      * @ORM\OneToOne(
@@ -335,6 +348,11 @@ class Workspace
         $this->orderedTools = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->organizations = new ArrayCollection();
+    }
+
+    public function __toString()
+    {
+        return $this->name.' ['.$this->code.']';
     }
 
     /**
@@ -569,14 +587,39 @@ class Workspace
         return $this->selfUnregistration;
     }
 
+    /**
+     * @param $creationDate
+     *
+     * @deprecated use `setCreated()` instead
+     */
     public function setCreationDate($creationDate)
     {
-        $this->creationDate = $creationDate;
+        $this->setCreated($creationDate);
     }
 
+    public function setCreated($created)
+    {
+        $this->created = $created;
+    }
+
+    /**
+     * @return \Datetime
+     *
+     * @deprecated use `getCreated()` instead
+     */
     public function getCreationDate()
     {
-        $date = !is_null($this->creationDate) ? date('d-m-Y H:i', $this->creationDate) : null;
+        return $this->getCreated();
+    }
+
+    /**
+     * @todo internal implementation should only return the prop. I don't know why it works like this
+     *
+     * @return \Datetime
+     */
+    public function getCreated()
+    {
+        $date = !is_null($this->created) ? date('d-m-Y H:i', $this->created) : null;
 
         return new \Datetime($date);
     }
@@ -611,14 +654,24 @@ class Workspace
         return $this->maxUploadResources;
     }
 
+    /**
+     * @param $isPersonal
+     *
+     * @deprecated use `setPersonal()` instead
+     */
     public function setIsPersonal($isPersonal)
     {
-        $this->isPersonal = $isPersonal;
+        $this->setPersonal($isPersonal);
+    }
+
+    public function setPersonal($personal)
+    {
+        $this->personal = $personal;
     }
 
     public function isPersonal()
     {
-        return $this->isPersonal;
+        return $this->personal;
     }
 
     public function serializeForWidgetPicker()
@@ -716,11 +769,6 @@ class Workspace
         return $backgroundColor;
     }
 
-    public function __toString()
-    {
-        return $this->name.' ['.$this->code.']';
-    }
-
     public function getManagerRole()
     {
         foreach ($this->roles as $role) {
@@ -737,43 +785,39 @@ class Workspace
         return $this->personalUser;
     }
 
+    /**
+     * @param $boolean
+     *
+     * @deprecated use `setModel()` instead
+     */
     public function setIsModel($boolean)
     {
-        $this->isModel = $boolean;
+        $this->setModel($boolean);
+    }
+
+    public function setModel($model)
+    {
+        $this->model = $model;
     }
 
     public function isModel()
     {
-        return $this->isModel;
+        return $this->model;
     }
 
-    public function getOrganizations()
+    /**
+     * @return bool
+     */
+    public function isDisabledNotifications()
     {
-        return $this->organizations;
+        return $this->disabledNotifications;
     }
 
-    public function addOrganization(Organization $organization)
+    /**
+     * @param bool $disabledNotifications
+     */
+    public function setDisabledNotifications($disabledNotifications)
     {
-        if (!$this->organizations->contains($organization)) {
-            $this->organizations->add($organization);
-        }
-    }
-
-    // todo: remove this method
-    public function setOrganizations($organizations)
-    {
-        $this->organizations = $organizations instanceof ArrayCollection ?
-            $organizations :
-            new ArrayCollection($organizations);
-    }
-
-    public static function getWorkspaceSearchableFields()
-    {
-        return ['name', 'code'];
-    }
-
-    public static function getSearchableFields()
-    {
-        return self::getWorkspaceSearchableFields();
+        $this->disabledNotifications = $disabledNotifications;
     }
 }

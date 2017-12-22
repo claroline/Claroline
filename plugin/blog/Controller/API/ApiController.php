@@ -93,11 +93,11 @@ class ApiController extends BaseController
 
         // Dispatch event
         $unitOfWork->computeChangeSets();
-        $changeSet = $unitOfWork->getEntityChangeSet($options);
+        $changeSet = $unitOfWork->getEntityChangeSet($blog->getOptions());
 
-        $this->dispatchBlogConfigureEvent($options, $changeSet);
+        $this->dispatchBlogConfigureEvent($blog->getOptions(), $changeSet);
 
-        return $options;
+        return $blog->getOptions();
     }
 
     /**

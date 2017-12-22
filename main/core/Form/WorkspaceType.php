@@ -69,33 +69,12 @@ class WorkspaceType extends AbstractType
             );
 
         $builder
-                ->add('displayable', 'checkbox', ['required' => false, 'label' => 'displayable_in_workspace_list'])
-                ->add('selfRegistration', 'checkbox', ['required' => false, 'label' => 'public_registration'])
-                ->add('registrationValidation', 'checkbox', ['required' => false, 'label' => 'registration_validation'])
-                ->add('selfUnregistration', 'checkbox', ['required' => false, 'label' => 'public_unregistration'])
-                ->add(
-                    'organizations',
-                    'entity',
-                    [
-                        'label' => 'organizations',
-                        'class' => 'Claroline\CoreBundle\Entity\Organization\Organization',
-                        //define here the allowed organizations~
-                        //what define wich organization I can bind to a workspace ?
-                        /*
-                        'query_builder' => function (EntityRepository $er) use ($user) {
-                            return $er->createQueryBuilder('o')
-                                ->leftJoin('o.users', 'u')
-                                ->leftJoin('o.groups', 'g')
-                                ->leftJoin('g.users', 'gu')
-                                ->where('u.id = :userId')
-                                ->orWhere('gu.id = :userId')
-                                ->setParameter('userId', $user->getId());
-                        },*/
-                        'expanded' => true,
-                        'multiple' => true,
-                        'property' => 'name',
-                    ]
-                );
+            ->add('displayable', 'checkbox', ['required' => false, 'label' => 'displayable_in_workspace_list'])
+            ->add('selfRegistration', 'checkbox', ['required' => false, 'label' => 'public_registration'])
+            ->add('registrationValidation', 'checkbox', ['required' => false, 'label' => 'registration_validation'])
+            ->add('selfUnregistration', 'checkbox', ['required' => false, 'label' => 'public_unregistration'])
+            ->add('disabledNotifications', 'checkbox', ['required' => false, 'label' => 'disable_workspace_notifications'])
+            ->add('organizations', 'organization_picker', ['label' => 'organizations']);
 
         if (!$this->forApi) {
             $options = [
@@ -112,25 +91,25 @@ class WorkspaceType extends AbstractType
                      ->leftJoin('w.roles', 'r')
                      ->leftJoin('r.users', 'u')
                      ->where('u.id = :userId')
-                     ->andWhere('w.isModel = true')
+                     ->andWhere('w.model = true')
                      ->setParameter('userId', $user->getId())
                      ->orderBy('w.name', 'ASC');
                 };
             } else {
                 $options['query_builder'] = function (EntityRepository $er) {
                     return $er->createQueryBuilder('w')
-                   ->where('w.isModel = true')
+                   ->where('w.model = true')
                    ->orderBy('w.name', 'ASC');
                 };
             }
 
             $builder->add(
-               'model',
+               'modelFrom',
                'entity',
                $options
             );
 
-            $builder->add('isModel', 'checkbox', ['required' => false, 'label' => 'model']);
+            $builder->add('model', 'checkbox', ['required' => false, 'label' => 'model']);
         }
 
         if ($this->forApi) {

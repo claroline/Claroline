@@ -24,12 +24,16 @@ abstract class AbstractResource
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      * @Groups({"api_resource"})
+     *
+     * @var int
      */
     protected $id;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
      * @ORM\JoinColumn(onDelete="CASCADE")
+     *
+     * @var ResourceNode
      */
     protected $resourceNode;
 
@@ -62,9 +66,7 @@ abstract class AbstractResource
     }
 
     /**
-     * For forms (otherwise name won't exist).
-     *
-     * TODO: this should be removed
+     * Shortcut to access name from Resource.
      *
      * @return string
      */

@@ -1,0 +1,17 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The group id"
+    },
+    "name": {
+      "type": "string",
+      "description": "The group name",
+      "minLength": 1
+    }
+  },
+  "required": ["name"],
+  "claroIds": ["id", "name"]
+}

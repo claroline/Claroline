@@ -3,7 +3,7 @@
 namespace Icap\PortfolioBundle\Manager;
 
 use Claroline\CoreBundle\Entity\user;
-use Doctrine\Common\Persistence\ObjectManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\PortfolioBundle\Importer\Importer;
 use Icap\PortfolioBundle\Importer\Leap2aImporter;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -26,18 +26,20 @@ class ImportManager
     /**
      * @var ObjectManager
      */
-    private $entityManager;
+    private $objectManager;
 
     /**
-     * @param \Icap\PortfolioBundle\Importer\ImporterInterface[] $importers
+     * @DI\InjectParams({
+     *     "objectManager"      = @DI\Inject("claroline.persistence.object_manager"),
+     *     "leap2aImporter"      = @DI\Inject("icap_portfolio.importer.leap2a")
+     * })
      */
-    public function __construct(array $importers = [])
-    {
-        if (0 === count($importers)) {
-            $importers = [
-                new Leap2aImporter(),
-            ];
-        }
+    public function __construct(
+        ObjectManager $objectManager,
+        Leap2aImporter $leap2aImporter
+    ) {
+        $importers = [$leap2aImporter];
+        $this->objectManager = $objectManager;
 
         foreach ($importers as $importer) {
             $this->importers[$importer->getFormat()] = $importer;
@@ -58,25 +60,13 @@ class ImportManager
      *
      * @throws \Exception
      */
-    public function getEntityManager()
+    public function getObjectManager()
     {
-        if (null === $this->entityManager) {
+        if (null === $this->objectManager) {
             throw new \Exception('No entity manager, you can only simulate an import.');
         }
 
-        return $this->entityManager;
-    }
-
-    /**
-     * @param ObjectManager $entityManager
-     *
-     * @return ImportManager
-     */
-    public function setEntityManager(ObjectManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-
-        return $this;
+        return $this->objectManager;
     }
 
     /**
@@ -123,8 +113,11 @@ class ImportManager
     public function doImport($content, User $user, $format)
     {
         $portfolio = $this->simulateImport($content, $user, $format);
-        $entityManager = $this->getEntityManager();
+        $entityManager = $this->getObjectManager();
 
+        foreach ($portfolio->getPortfolioWidgets() as $portfolioWidget) {
+            $entityManager->persist($portfolioWidget->getWidget());
+        }
         $entityManager->persist($portfolio);
         $entityManager->flush();
 

@@ -28,6 +28,7 @@
             <!-- Uncomment the following elements individually in the meantime -->
 
             <directory>main/core/Tests/API/</directory>
+            <directory>main/core/Tests/NewAPI/</directory>
             <directory>main/core/Tests/Security/</directory>
             <directory>main/migration/Tests/</directory>
             <!-- <directory>plugin/activity-tool/Tests/</directory> -->
@@ -52,12 +53,12 @@
 
             <!-- Unit tests: uncomment when ready -->
             <directory>main/core/Tests/Unit/Converter/</directory>
+            <directory>main/core/Tests/Unit/Entity/</directory>
             <directory>main/core/Tests/Unit/Event/</directory>
             <directory>main/core/Tests/Unit/Form/</directory>
             <directory>main/core/Tests/Unit/Library/Configuration/</directory>
             <directory>main/core/Tests/Unit/Library/HttpFoundation/</directory>
             <directory>main/core/Tests/Unit/Library/Installation/</directory>
-            <!-- <directory>main/core/Tests/Unit/Form/Library/Security/</directory> -->
             <!-- <directory>main/core/Tests/Unit/Form/Library/Transfert/</directory> -->
             <directory>main/core/Tests/Unit/Library/Utilities/</directory>
             <!-- <directory>main/core/Tests/Unit/Form/Manager/</directory> -->
@@ -86,6 +87,8 @@
             <!-- <file>main/core/Tests/Database/Repository/WorkspaceRepositoryTest.php</file> -->
             <file>main/core/Tests/Database/Repository/WorkspaceTagHierarchyRepositoryTest.php</file>
             <file>main/core/Tests/Database/Repository/WorkspaceTagRepositoryTest.php</file>
+            <file>main/core/Tests/Unit/Form/Library/Security/ResourceVoterTest.php</file>
+            <file>main/core/Tests/Unit/Form/Library/Security/WorkspaceVoterTest.php</file>
         </testsuite>
     </testsuites>
 

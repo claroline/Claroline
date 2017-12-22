@@ -51,4 +51,11 @@ final class Transfer
      * @var string
      */
     const NO_FETCH = 'noFetch';
+
+    /**
+     * Persist the tags of the question.
+     *
+     * @var string
+     */
+    const PERSIST_TAG = 'persistTag';
 }

@@ -2,7 +2,10 @@
   "id": "1",
   "title": "Lorem ipsum dolor sit amet",
   "parameters": {
-    "maxAttempts": 0,
+    "maxAttempts": 0
+  },
+  "picking": {
+    "type": "standard",
     "randomOrder": "once",
     "randomPick": "once"
   },

@@ -14,7 +14,7 @@ const ItemFeedback = props => {
         <h3 className="item-title">{props.item.title}</h3>
       }
 
-      <ItemMetadata item={props.item} />
+      <ItemMetadata item={props.item} numbering={props.numbering}/>
 
       <hr className="item-content-separator" />
 
@@ -39,7 +39,8 @@ ItemFeedback.propTypes = {
     feedback: T.string
   }).isRequired,
   usedHints: T.array.isRequired,
-  children: T.node.isRequired
+  children: T.node.isRequired,
+  numbering: T.string
 }
 
 export {ItemFeedback}

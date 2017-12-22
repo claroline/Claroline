@@ -14,7 +14,7 @@
             {% if comment.user.id == app.user.id %}
             <button type="button" data-item-id="{{ comment.id }}" class="close remove-sociamedia-comment-item"><span aria-hidden="true">&times;</span></button>
             {% endif %}
-            <a href="{{ path("claro_public_profile_view", {"publicUrl":comment.user.publicUrl}) }}">{{ comment.user.firstName~" "~comment.user.lastName }}</a>
+            <a href="{{ path("claro_user_profile", {"publicUrl":comment.user.publicUrl}) }}">{{ comment.user.firstName~" "~comment.user.lastName }}</a>
             <span><small class="small">{{ comment.creationDate|date("date_format"|trans({}, "icap_socialmedia")) }}</small></span><br/>
             <span class="socialmedia-comment-text">{{ comment.text }}</span>
         </p>

@@ -24,5 +24,38 @@ export const utils = {
       // text belonging to right answers is in succes style but backgrounf is in error style
       return utils.answerIsValid(answer, solutions) ? 'text-success negative-score' : 'text-danger negative-score'
     }
+  },
+  isInOddsSolutions(itemId, solutions) {
+    let isPresent = false
+
+    if (solutions) {
+      solutions.forEach(s => {
+        if (s.itemId === itemId && s.score <= 0) {
+          isPresent = true
+        }
+      })
+    }
+
+    return isPresent
+  },
+  isInSolutions(itemId, solutions) {
+    let isPresent = false
+
+    if (solutions) {
+      let key = ''
+      solutions.filter(s => s.score > 0).sort((a, b) => a - b).forEach(s => {key += s.itemId})
+
+      if (key === itemId) {
+        isPresent = true
+      }
+    }
+
+    return isPresent
+  },
+  getKey(items) {
+    let key = ''
+    items.sort((a, b) => a.position - b.position).forEach(i => {key += i.itemId})
+
+    return key
   }
 }

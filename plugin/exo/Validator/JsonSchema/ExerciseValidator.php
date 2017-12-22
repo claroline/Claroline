@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Validator\JsonSchema;
 
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Library\Options\Picking;
 use UJM\ExoBundle\Library\Options\Recurrence;
 use UJM\ExoBundle\Library\Options\ShowCorrectionAt;
 use UJM\ExoBundle\Library\Validator\JsonSchemaValidator;
@@ -42,10 +43,15 @@ class ExerciseValidator extends JsonSchemaValidator
 
         if (isset($exercise->parameters)) {
             $errors = array_merge($errors, $this->validateParameters($exercise->parameters));
-            if (isset($exercise->parameters->pick) && isset($exercise->steps)
-                && count($exercise->steps) < $exercise->parameters->pick) {
+        }
+
+        if (isset($exercise->picking)) {
+            $errors = array_merge($errors, $this->validatePicking($exercise->picking));
+            if (Picking::STANDARD === $exercise->picking->type
+                && isset($exercise->picking->pick) && isset($exercise->steps)
+                && count($exercise->steps) < $exercise->picking->pick) {
                 $errors[] = [
-                    'path' => '/parameters/pick',
+                    'path' => '/picking/pick',
                     'message' => 'the property `pick` cannot be greater than the number of steps of the exercise',
                 ];
             }
@@ -65,24 +71,6 @@ class ExerciseValidator extends JsonSchemaValidator
     {
         $errors = [];
 
-        if (isset($parameters->randomPick) && Recurrence::NEVER !== $parameters->randomPick && !isset($parameters->pick)) {
-            // Random pick is enabled but the number of steps to pick is missing
-            $errors[] = [
-                'path' => '/parameters/randomPick',
-                'message' => 'The property `pick` is required when `randomPick` is not "never"',
-            ];
-        }
-
-        // We can not keep the randomOrder from previous papers as we generate a new subset of steps for each attempt
-        if (isset($parameters->randomPick) && Recurrence::ALWAYS === $parameters->randomPick
-            && isset($parameters->randomOrder) && Recurrence::ONCE === $parameters->randomOrder) {
-            // Incompatible randomOrder and randomPick properties
-            $errors[] = [
-                'path' => '/parameters/randomOrder',
-                'message' => 'The property `randomOrder` cannot be "once" when `randomPick` is "always"',
-            ];
-        }
-
         if (isset($parameters->showCorrectionAt) && ShowCorrectionAt::AFTER_DATE === $parameters->showCorrectionAt && empty($parameters->correctionDate)) {
             // Correction is shown at a date, but the date is not specified
             $errors[] = [
@@ -97,6 +85,40 @@ class ExerciseValidator extends JsonSchemaValidator
                 $errors[] = [
                     'path' => '/parameters/correctionDate',
                     'message' => 'Invalid date format',
+                ];
+            }
+        }
+
+        return $errors;
+    }
+
+    private function validatePicking(\stdClass $picking)
+    {
+        $errors = [];
+
+        if (Picking::STANDARD === $picking->type) {
+            if (isset($picking->randomPick) && Recurrence::NEVER !== $picking->randomPick && !isset($picking->pick)) {
+                // Random pick is enabled but the number of steps to pick is missing
+                $errors[] = [
+                    'path' => '/picking/randomPick',
+                    'message' => 'The property `pick` is required when `randomPick` is not "never"',
+                ];
+            }
+
+            // We can not keep the randomOrder from previous papers as we generate a new subset of steps for each attempt
+            if (isset($picking->randomPick) && Recurrence::ALWAYS === $picking->randomPick
+                && isset($picking->randomOrder) && Recurrence::ONCE === $picking->randomOrder) {
+                // Incompatible randomOrder and randomPick properties
+                $errors[] = [
+                    'path' => '/picking/randomOrder',
+                    'message' => 'The property `randomOrder` cannot be "once" when `randomPick` is "always"',
+                ];
+            }
+        } elseif (Picking::TAGS === $picking->type) {
+            if (Recurrence::NEVER === $picking->randomPick) {
+                $errors[] = [
+                    'path' => '/picking/randomPick',
+                    'message' => 'The property `randomPick` cannot be "never" when picking `type` is "tags"',
                 ];
             }
         }

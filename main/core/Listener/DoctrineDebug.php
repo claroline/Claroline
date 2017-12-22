@@ -52,7 +52,7 @@ class DoctrineDebug extends ContainerAware
                     if (isset($call['file'])) {
                         $file = $call['file'];
                         if ($this->debugLevel === self::DEBUG_CLAROLINE) {
-                            if (strpos($file, 'Claroline')) {
+                            if (strpos($file, 'claroline')) {
                                 $this->logTrace($call);
                             }
                         } elseif ($this->debugLevel === self::DEBUG_ALL) {

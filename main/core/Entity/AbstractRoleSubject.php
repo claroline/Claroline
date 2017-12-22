@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
+//@todo move me to the trait list
 abstract class AbstractRoleSubject
 {
     protected $roles;
@@ -74,7 +75,7 @@ abstract class AbstractRoleSubject
     }
 
     /**
-     * Returns the subject roles as an array of sting values.
+     * Returns the subject roles as an array of string values.
      */
     public function getRoles()
     {

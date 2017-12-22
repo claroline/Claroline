@@ -14,7 +14,7 @@
 {% if config.getParameter('domain_name') %}
     {% set host = config.getParameter('domain_name') %}
 {% else %}
-    {% set host = app.request.headers.get('host') %}
+    {% set host = app.request.getHost() %}
 {% endif %}
 
 {% set homeAsset = protocol ~ '://' ~ host ~ app.request.getBasePath() ~ '/' %}

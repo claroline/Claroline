@@ -6,7 +6,7 @@ import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/componen
 
 function getCorrectedAnswer(item, answers) {
   const corrected = new CorrectedAnswer()
-
+  
   item.solutions.forEach(solution => {
     if (answers && answers.data) {
       answers.data.forEach(coords => {
@@ -18,6 +18,8 @@ function getCorrectedAnswer(item, answers) {
           corrected.addMissing(new Answerable(solution.score))
         }
       })
+    } else {
+      corrected.addMissing(new Answerable(solution.score))
     }
   })
 
@@ -48,6 +50,55 @@ function isPointInArea(area, x, y) {
   }
 }
 
+function generateStats(item, papers, withAllParpers) {
+  const stats = {
+    areas: {},
+    unanswered: 0,
+    total: 0
+  }
+  Object.values(papers).forEach(p => {
+    if (withAllParpers || p.finished) {
+      let total = 0
+      let nbAnswered = 0
+      // compute the number of times the item is present in the structure of the paper and initialize acceptable pairs
+      p.structure.steps.forEach(structure => {
+        structure.items.forEach(i => {
+          if (i.id === item.id) {
+            ++total
+            ++stats.total
+          }
+        })
+      })
+      // compute the number of times the item has been answered
+      p.answers.forEach(a => {
+        if (a.questionId === item.id && a.data) {
+          ++nbAnswered
+          const areasToInc = {}
+          a.data.forEach(d => {
+            let isInArea = false
+            item.solutions.forEach(s => {
+              if (isPointInArea(s.area, d.x, d.y)) {
+                areasToInc[s.area.id] = true
+                isInArea = true
+              }
+            })
+
+            if (!isInArea) {
+              stats.areas['_others'] = stats.areas['_others'] ? stats.areas['_others'] + 1 : 1
+            }
+          })
+          for (let areaId in areasToInc) {
+            stats.areas[areaId] = stats.areas[areaId] ? stats.areas[areaId] + 1 : 1
+          }
+        }
+      })
+      stats.unanswered += total - nbAnswered
+    }
+  })
+
+  return stats
+}
+
 export default {
   type: 'application/x.graphic+json',
   name: 'graphic',
@@ -55,5 +106,6 @@ export default {
   player: GraphicPlayer,
   feedback: GraphicFeedback,
   editor,
-  getCorrectedAnswer
+  getCorrectedAnswer,
+  generateStats
 }

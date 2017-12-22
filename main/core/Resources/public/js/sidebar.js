@@ -150,6 +150,11 @@
     sidebar.initialize('left');
     sidebar.initialize('right');
 
+    $('.sidebar .accordion-toggle').on('click', function(){
+      clearTimeout(sidebar.resizeWindow);
+      sidebar.resizeWindow = setTimeout(sidebar.checkHeight, 500);
+    });
+
     $(window).on('resize', function () {
         clearTimeout(sidebar.resizeWindow);
         sidebar.resizeWindow = setTimeout(sidebar.checkHeight, 500);

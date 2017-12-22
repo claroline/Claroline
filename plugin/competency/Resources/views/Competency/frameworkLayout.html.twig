@@ -27,9 +27,9 @@
                 {{ 'framework_'|trans({}, 'competency') }}
             </a>
         </li>
-        <li role="presentation"{% if activeTab == 'activities' %} class="active"{% endif %}>
-            <a href="{{ activeTab == 'activities' ? '#' : path('hevinci_framework_activities', { id: framework.id }) }}" aria-controls="activities" role="tab">
-                {{ 'activities'|trans({}, 'platform') }}
+        <li role="presentation"{% if activeTab == 'resources' %} class="active"{% endif %}>
+            <a href="{{ activeTab == 'resources' ? '#' : path('hevinci_framework_resources', { id: framework.id }) }}" aria-controls="resources" role="tab">
+                {{ 'resources'|trans({}, 'platform') }}
             </a>
         </li>
     </ul>

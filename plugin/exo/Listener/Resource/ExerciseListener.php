@@ -151,7 +151,9 @@ class ExerciseListener
 
     /**
      * @DI\Observe("docimology_ujm_exercise")
-     **/
+     *
+     * @param CustomActionResourceEvent $event
+     */
     public function onDocimology(CustomActionResourceEvent $event)
     {
         /** @var Exercise $exercise */

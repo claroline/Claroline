@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\CoreBundle\Library\PluginBundle;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -59,9 +59,9 @@ class RoutingChecker implements CheckerInterface
     /**
      * {@inheritdoc}
      *
-     * @param DistributionPluginBundle $plugin
+     * @param PluginBundle $plugin
      */
-    public function check(DistributionPluginBundle $plugin)
+    public function check(PluginBundle $plugin)
     {
         $this->plugin = $plugin;
         $this->pluginFqcn = get_class($plugin);

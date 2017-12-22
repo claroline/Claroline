@@ -7,11 +7,11 @@ import {t, tex} from '#/main/core/translation'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {makeSortable, SORT_HORIZONTAL, SORT_VERTICAL} from './../../utils/sortable'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
-import {CheckGroup} from './../../components/form/check-group.jsx'
-import {Radios} from './../../components/form/radios.jsx'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
+import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {MODE_INSIDE, MODE_BESIDE, DIRECTION_HORIZONTAL, DIRECTION_VERTICAL, actions} from './editor'
 import {OrderingItemDragPreview} from './ordering-item-drag-preview.jsx'
 
@@ -29,7 +29,7 @@ class Item extends Component {
         <div className="text-fields">
           <Textarea
             id={`item-${this.props.id}-data`}
-            content={this.props.data}
+            value={this.props.data}
             onChange={data => this.props.onChange(
               actions.updateItem(this.props.id, 'data', data)
             )}
@@ -38,8 +38,7 @@ class Item extends Component {
             <div className="feedback-container">
               <Textarea
                 id={`item-${this.props.id}-feedback`}
-                title={tex('ordering_feedback')}
-                content={this.props.feedback}
+                value={this.props.feedback}
                 onChange={text => this.props.onChange(
                   actions.updateItem(this.props.id, 'feedback', text)
                 )}
@@ -64,27 +63,28 @@ class Item extends Component {
           <TooltipButton
             id={`item-${this.props.id}-feedback-toggle`}
             className="btn-link-default"
-            label={<span className="fa fa-fw fa-comments-o"></span>}
             title={tex('choice_feedback_info')}
             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-          />
+          >
+            <span className="fa fa-fw fa-comments-o" />
+          </TooltipButton>
           <TooltipButton
             id={`item-${this.props.id}-delete`}
             className="btn-link-default"
-            label={<span className="fa fa-fw fa-trash-o"></span>}
-            enabled={this.props.deletable}
+            disabled={!this.props.deletable}
             title={t('delete')}
             onClick={() => this.props.onChange(
               actions.removeItem(this.props.id)
             )}
-          />
+          >
+            <span className="fa fa-fw fa-trash-o" />
+          </TooltipButton>
         </div>
         {this.props.item.direction === DIRECTION_HORIZONTAL && this.state.showFeedback &&
           <div className="feedback-container">
             <Textarea
               id={`item-${this.props.id}-feedback`}
-              title={tex('ordering_feedback')}
-              content={this.props.feedback}
+              value={this.props.feedback}
               onChange={text => this.props.onChange(
                 actions.updateItem(this.props.id, 'feedback', text)
               )}
@@ -291,8 +291,8 @@ export const Ordering = props => {
   return (
     <fieldset className="ordering-editor">
       <CheckGroup
-        checkId={`item-${props.item.id}-fixedScore`}
-        checked={props.item.score.type === SCORE_FIXED}
+        id={`item-${props.item.id}-fixedScore`}
+        value={props.item.score.type === SCORE_FIXED}
         label={tex('fixed_score')}
         onChange={checked => props.onChange(
           actions.updateProperty('score.type', checked ? SCORE_FIXED : SCORE_SUM)
@@ -316,7 +316,7 @@ export const Ordering = props => {
       {props.item.score.type === SCORE_FIXED &&
         <div className="sub-fields">
           <FormGroup
-            controlId={`item-${props.item.id}-fixedSuccess`}
+            id={`item-${props.item.id}-fixedSuccess`}
             label={tex('fixed_score_on_success')}
             error={get(props.item, '_errors.score.success')}
             warnOnly={!props.validating}
@@ -333,7 +333,7 @@ export const Ordering = props => {
             />
           </FormGroup>
           <FormGroup
-            controlId={`item-${props.item.id}-fixedFailure`}
+            id={`item-${props.item.id}-fixedFailure`}
             label={tex('fixed_score_on_failure')}
             error={get(props.item, '_errors.score.failure')}
             warnOnly={!props.validating}

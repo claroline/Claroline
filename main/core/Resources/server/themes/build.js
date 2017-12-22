@@ -17,29 +17,23 @@ const registeredPackagesNames = Object.keys(registeredPackages)
 /**
  * Builds themes.
  *
- * @param {Theme[]} themes  - the themes to build
+ * @param {Theme}   theme   - the themes to build
  * @param {boolean} noCache - if true, all files will be forced recompiled without checking cache
  */
-function build(themes, noCache) {
+function build(theme, noCache) {
   const previousBuild = getBuildState()
 
-  if (!fs.existsSync(BUILD_DIR)) {
-    fs.mkdirSync(BUILD_DIR)
+  if (!previousBuild[theme.name] || noCache) {
+    previousBuild[theme.name] = {}
   }
 
-  Promise.all(
-    themes.map(theme => {
-      if (!previousBuild[theme.name] || noCache) {
-        previousBuild[theme.name] = {}
-      }
+  buildTheme(theme, previousBuild[theme.name]).then(() => {
+    shell.echo('Theme state: ')
+    shell.echo(previousBuild[theme.name])
 
-      return buildTheme(theme, previousBuild[theme.name])
-    })
-  ).then(() => {
     dumpBuildState(previousBuild)
 
-    shell.echo('Rebuild themes: END')
-    shell.echo('Enjoy your fresh themes !')
+    shell.echo('Rebuild theme finished.')
   })
 }
 
@@ -50,16 +44,9 @@ function build(themes, noCache) {
  * @param {object} themeState
  */
 function buildTheme(theme, themeState) {
-  shell.echo('')
-  shell.echo('---------------------------------')
-  shell.echo(`| Theme: ${theme.name}`)
-  shell.echo('---------------------------------')
-  shell.echo('')
-
   const errors = theme.validate()
   if (0 !== errors.length) {
-    shell.echo('ATTENTION:')
-    errors.forEach(error => shell.echo('  - ' + error))
+    errors.forEach(error => shell.echo(error))
   }
 
   if (theme.canCompile()) {
@@ -67,6 +54,17 @@ function buildTheme(theme, themeState) {
     const themeDir = path.join(BUILD_DIR, theme.name)
     if (!fs.existsSync(themeDir)) {
       fs.mkdirSync(themeDir)
+    }
+
+    // Copy static assets
+    if (theme.hasStaticAssets()) {
+      theme.getStaticAssets().map(assetDir =>
+        copyStatic(
+          // src
+          path.resolve(theme.location, theme.name, assetDir),
+          // destination
+          path.resolve(themeDir))
+      )
     }
 
     return Promise.all([
@@ -140,14 +138,24 @@ function createAsset(asset, outputFile, currentVersion, globalVars) {
 }
 
 /**
+ * Recursively copies static files directories (eg. images, fonts)
+ * @param {string} src
+ * @param {string} destination
+ */
+function copyStatic(src, destination) {
+  console.log(src)
+  console.log(destination)
+  shell.rm('-rf', destination)
+  shell.cp('-R', src, destination)
+}
+
+/**
  * Dump the current build state into file.
  *
  * @param {object} state
  */
 function dumpBuildState(state) {
-  shell.echo('Dump current build state: ')
-  shell.echo(state)
-
+  shell.echo('Dump theme build state.')
   fs.writeFileSync(BUILD_FILE, JSON.stringify(state, null, 2))
 }
 

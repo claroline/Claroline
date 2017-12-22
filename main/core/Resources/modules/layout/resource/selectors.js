@@ -12,9 +12,14 @@ const rights = createSelector(
   (resourceNode) => resourceNode.rights
 )
 
-const editable = createSelector(
+const currentRights = createSelector(
   [rights],
-  (rights) => rights.current.edit
+  (rights) => rights.current
+)
+
+const editable = createSelector(
+  [currentRights],
+  (currentRights) => currentRights.edit
 )
 
 const published = createSelector(
@@ -22,9 +27,22 @@ const published = createSelector(
   (meta) => meta.published
 )
 
+const exportable = createSelector(
+  [currentRights],
+  (currentRights) => currentRights.export
+)
+
+const administrable = createSelector(
+  [currentRights],
+  (currentRights) => currentRights.administrate
+)
+
 export const select = {
   resourceNode,
   meta,
+  currentRights,
   editable,
-  published
+  published,
+  exportable,
+  administrable
 }

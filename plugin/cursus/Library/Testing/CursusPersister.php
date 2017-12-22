@@ -57,7 +57,6 @@ class CursusPersister
         $cursus->setCourse($course);
         $cursus->setCursusOrder($order);
         $cursus->setBlocking($blocking);
-        $cursus->refreshUuid();
         $this->om->persist($cursus);
 
         return $cursus;
@@ -69,7 +68,6 @@ class CursusPersister
         $course->setTitle($name);
         $course->setCode($name);
         $course->setDescription($name);
-        $course->refreshUuid();
         $this->om->persist($course);
 
         return $course;

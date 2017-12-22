@@ -23,6 +23,10 @@ class Version20170620133509 extends AbstractMigration
             ADD uuid VARCHAR(36) NOT NULL
         ');
         $this->addSql('
+            UPDATE claro_cursusbundle_course
+            SET uuid = (SELECT UUID())
+         ');
+        $this->addSql('
             ALTER TABLE claro_cursusbundle_course
             ADD CONSTRAINT FK_3359D349EE7F5384 FOREIGN KEY (workspace_model_id)
             REFERENCES claro_workspace (id)
@@ -47,6 +51,10 @@ class Version20170620133509 extends AbstractMigration
             ALTER TABLE claro_cursusbundle_cursus
             ADD uuid VARCHAR(36) NOT NULL
         ');
+        $this->addSql('
+            UPDATE claro_cursusbundle_cursus
+            SET uuid = (SELECT UUID())
+         ');
         $this->addSql('
             CREATE UNIQUE INDEX UNIQ_27921C33D17F50A6 ON claro_cursusbundle_cursus (uuid)
         ');

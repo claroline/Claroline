@@ -9,22 +9,11 @@ let _$route = new WeakMap()
 let _$location = new WeakMap()
 let _$anchorScroll = new WeakMap()
 let _restService = new WeakMap()
+let _transFilter = new WeakMap()
 
 export default class ChapterController {
 
-  constructor ($rootScope,
-    $scope,
-    lessonData,
-    modal,
-    $route,
-    $location,
-    $anchorScroll,
-    restService,
-    Chapter,
-    Tree,
-    Alerts,
-    tinyMceConfig
-  ) {
+  constructor($rootScope, $scope, lessonData, modal, $route, $location, $anchorScroll, restService, Chapter, Tree, Alerts, tinyMceConfig, transFilter) {
     _$rootScope.set(this, $rootScope)
     _$scope.set(this, $scope)
     _$route.set(this, $route)
@@ -33,6 +22,7 @@ export default class ChapterController {
     _modalInstance.set(this, null)
     _modalFactory.set(this, modal)
     _restService.set(this, restService)
+    _transFilter.set(this, transFilter)
 
     // lessonData contains the default values for the lesson
     this.lessonData = lessonData
@@ -54,7 +44,7 @@ export default class ChapterController {
     this.init()
   }
 
-  init () {
+  init() {
     // Intialize the chapter only if there is one in the lesson
     if (this.lessonData.defaultChapter) {
       // If a LESSON is displayed, there's no chapter slug in the route (route: '/')
@@ -87,40 +77,40 @@ export default class ChapterController {
   }
 
 
-  newChapter (slug) {
+  newChapter(slug) {
     _$location.get(this).url('/' + slug + '/new')
   }
 
-  updateChapter (slug) {
+  updateChapter(slug) {
     _$location.get(this).url('/' + slug + '/edit')
   }
 
-  moveChapter (slug) {
+  moveChapter(slug) {
     _$location.get(this).url('/' + slug + '/move')
   }
 
-  duplicateChapter (slug) {
+  duplicateChapter(slug) {
     _$location.get(this).url('/' + slug + '/duplicate')
   }
 
-  getPreviousChapterUrl () {
+  getPreviousChapterUrl() {
     return this.chapter.current.previous
       ? '#/' + this.chapter.current.previous
       : null
   }
 
-  getNextChapterUrl () {
+  getNextChapterUrl() {
     return this.chapter.current.next
       ? '#/' + this.chapter.current.next
       : null
   }
 
-  createFirstChapter () {
+  createFirstChapter() {
     this.lessonData.createNew = true
     _$location.get(this).url('/new')
   }
 
-  createChapter (form) {
+  createChapter(form) {
     if (form.$valid) {
       // Disable submit button while XHR
       this.buttonSubmit.disabled = true
@@ -150,11 +140,11 @@ export default class ChapterController {
           }
       )
     } else {
-      this.alerts.push({'type': 'danger', 'msg': window.Translator.trans('form_error', 'icap_lesson')})
+      this.alerts.push({'type': 'danger', 'msg': _transFilter.get(this)('form_error', {}, 'icap_lesson')})
     }
   }
 
-  editChapter (form) {
+  editChapter(form) {
     if (form.$valid) {
       // Disable submit button
       this.buttonSubmit.disabled = true
@@ -178,11 +168,11 @@ export default class ChapterController {
           }
       )
     } else {
-      this.alerts.push({'type': 'danger', 'msg': window.Translator.trans('form_error', 'icap_lesson')})
+      this.alerts.push({'type': 'danger', 'msg': _transFilter.get(this)('form_error', {}, 'icap_lesson')})
     }
   }
 
-  copyChapter (form) {
+  copyChapter(form) {
     if (form.$valid) {
       // Disable submit button
       this.buttonSubmit.disabled = true
@@ -210,16 +200,16 @@ export default class ChapterController {
           }
       )
     } else {
-      this.alerts.push({'type': 'danger', 'msg': window.Translator.trans('form_error', 'icap_lesson')})
+      this.alerts.push({'type': 'danger', 'msg': _transFilter.get(this)('form_error', {}, 'icap_lesson')})
     }
   }
 
-  confirmDeleteChapter () {
+  confirmDeleteChapter() {
     // this._deletedChapter = this.chapter.current
     this._modal(confirmDeletionTemplate)
   }
 
-  deleteChapter (form) {
+  deleteChapter(form) {
     // Disable submit button
     this.buttonSubmit.disabled = true
 
@@ -247,7 +237,7 @@ export default class ChapterController {
     )
   }
 
-  goToAnchor (anchor) {
+  goToAnchor(anchor) {
     let $location = _$location.get(this)
     let $anchorScroll = _$anchorScroll.get(this)
     if ($location.hash() !== anchor) {
@@ -257,7 +247,7 @@ export default class ChapterController {
     }
   }
 
-  _moveChapter (form) {
+  _moveChapter(form) {
     // Disable submit button
     this.buttonSubmit.disabled = true
 
@@ -292,13 +282,13 @@ export default class ChapterController {
     )
   }
 
-  _getChapterList (lesson) {
+  _getChapterList(lesson) {
     return _restService.get(this).getChapterList(lesson).then(
       response => {
         // Find the root chapter and adjust its title
         angular.forEach(response, (value) => {
           if (value.slug == this.lessonData.root) {
-            value.title = window.Translator.trans('Root', 'icap_lesson')
+            value.title = _transFilter.get(this)('Root', {}, 'icap_lesson')
             this.break
           }
         })
@@ -308,7 +298,7 @@ export default class ChapterController {
     )
   }
 
-  _getDefaultChapter (lesson) {
+  _getDefaultChapter(lesson) {
     return _restService.get(this).getDefaultChapter(lesson).then(
       response => {
         if ('defaultChapter' in response) {
@@ -322,7 +312,7 @@ export default class ChapterController {
     )
   }
 
-  cancelForm (slug) {
+  cancelForm(slug) {
     let url = !angular.isDefined(slug)
       ? '/'
       : '/' + slug
@@ -331,7 +321,7 @@ export default class ChapterController {
     _$location.get(this).url(url)
   }
 
-  cancelModal (form) {
+  cancelModal(form) {
     if (form) {
       this._resetForm(form)
     }
@@ -339,7 +329,7 @@ export default class ChapterController {
     _modalInstance.get(this).dismiss()
   }
 
-  _modal (template) {
+  _modal(template) {
     _modalInstance.set(this, _modalFactory.get(this).open(template, _$scope.get(this)))
   }
 }
@@ -356,5 +346,6 @@ ChapterController.$inject = [
   'Chapter',
   'Tree',
   'Alerts',
-  'tinyMceConfig'
+  'tinyMceConfig',
+  'transFilter'
 ]

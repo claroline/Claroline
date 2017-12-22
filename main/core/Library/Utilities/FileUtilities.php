@@ -60,6 +60,11 @@ class FileUtilities
         $this->tokenStorage = $tokenStorage;
     }
 
+    public function getFilesDir()
+    {
+        return $this->filesDir;
+    }
+
     /**
      * Creates a file into public files directory.
      * Then creates a <PublicFileUse> for created public file if $objectClass and $objectUuid are specified.
@@ -212,17 +217,17 @@ class FileUtilities
     public function getActiveDirectoryName()
     {
         $finder = new Finder();
+        $finder->depth('== 0');
         $finder->directories()->in($this->publicFilesDir)->name('/^[a-zA-Z]{20}$/');
         $finder->sortByName();
-
         if ($finder->count() === 0) {
             $activeDirectoryName = $this->generateNextDirectoryName();
         } else {
             $i = 0;
-
+            $cnt = $finder->count();
             foreach ($finder as $dir) {
                 ++$i;
-                if ($i === $finder->count()) {
+                if ($i === $cnt) {
                     $subFinder = new Finder();
                     $subFinder->in($dir->getRealPath());
                     $dirName = $dir->getFilename();
@@ -266,5 +271,10 @@ class FileUtilities
     public function getPublicFileByType($type)
     {
         return $this->om->getRepository('ClarolineCoreBundle:File\PublicFile')->findBySourceType($type);
+    }
+
+    public function getContents(PublicFile $file)
+    {
+        return file_get_contents($this->filesDir.DIRECTORY_SEPARATOR.$file->getUrl());
     }
 }

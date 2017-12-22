@@ -63,7 +63,7 @@
                 {{ 'workspace'|trans:{}:'platform' }}
             </label>
             <div class="col-md-9">
-                <select class="form-control" ng-model="cmc.workspace" ng-options="w['name'] for w in cmc.workspaces">
+                <select class="form-control" ng-model="cmc.workspace" ng-options="w['name'] + ' [' + w['code'] + ']' for w in cmc.workspaces">
                     <option></option>
                 </select>
             </div>

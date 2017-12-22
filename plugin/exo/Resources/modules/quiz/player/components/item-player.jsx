@@ -94,11 +94,13 @@ Hints.propTypes = {
 
 const ItemPlayer = props =>
   <div className="quiz-item item-player">
-    {props.item.title &&
-      <h3 className="item-title">{props.item.title}</h3>
-    }
+    <div>
+      {props.item.title &&
+        <h3 className="item-title">{props.item.title}</h3>
+      }
 
-    <ItemMetadata item={props.item} />
+      <ItemMetadata item={props.item} numbering={props.numbering}/>
+    </div>
 
     <hr className="item-content-separator" />
 
@@ -127,7 +129,8 @@ ItemPlayer.propTypes = {
   }).isRequired,
   showHint: T.func.isRequired,
   usedHints: T.array.isRequired,
-  children: T.node.isRequired
+  children: T.node.isRequired,
+  numbering: T.any
 }
 
 ItemPlayer.defaultProps = {

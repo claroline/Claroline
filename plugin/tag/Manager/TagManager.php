@@ -82,9 +82,12 @@ class TagManager
 
     public function getOrCreatePlatformTag($name)
     {
-        $tag = $this->getOnePlatformTagByName($name);
+        $tag = $this->getUowScheduledTag($name);
+        if (empty($tag)) {
+            $tag = $this->getOnePlatformTagByName($name);
+        }
 
-        if (is_null($tag)) {
+        if (empty($tag)) {
             $tag = new Tag();
             $tag->setName($name);
             $this->persistTag($tag);
@@ -95,9 +98,12 @@ class TagManager
 
     public function getOrCreateUserTag(User $user, $name)
     {
-        $tag = $this->getOneUserTagByName($user, $name);
+        $tag = $this->getUowScheduledTag($name, $user);
+        if (empty($tag)) {
+            $tag = $this->getOneUserTagByName($user, $name);
+        }
 
-        if (is_null($tag)) {
+        if (empty($tag)) {
             $tag = new Tag();
             $tag->setUser($user);
             $tag->setName($name);
@@ -107,8 +113,34 @@ class TagManager
         return $tag;
     }
 
+    /**
+     * Avoids duplicate creation of a tag when inside a flushSuite.
+     * The only way to do that is to search in the current UOW if a tag with the same name
+     * is already scheduled for insertion.
+     *
+     * @param string $name
+     * @param User   $user
+     *
+     * @return Tag|null
+     */
+    private function getUowScheduledTag($name, User $user = null)
+    {
+        $scheduledForInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
+        foreach ($scheduledForInsert as $entity) {
+            /** @var Tag $entity */
+            if ($entity instanceof Tag
+                && $name === $entity->getName()
+                && $user === $entity->getUser()) {
+                return $entity;
+            }
+        }
+
+        return null;
+    }
+
     public function tagObject(array $tags, $object, User $user = null)
     {
+        $taggedObjects = [];
         $uniqueTags = [];
 
         foreach ($tags as $tag) {
@@ -129,12 +161,15 @@ class TagManager
                 $tag = is_null($user) ? $this->getOrCreatePlatformTag($tagName) : $this->getOrCreateUserTag($user, $tagName);
                 $tagsList[$tagName] = $tag;
             }
-            $this->om->forceFlush();
 
             foreach ($uniqueTags as $tagName) {
                 $tag = $tagsList[$tagName];
 
-                $taggedObject = $this->getOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
+                $taggedObject = null;
+                //if tag is scheduled for insertion it's new so no need to search for it
+                if (!$this->getUowScheduledTag($tagName)) {
+                    $taggedObject = $this->getOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
+                }
 
                 if (is_null($taggedObject)) {
                     $taggedObject = new TaggedObject();
@@ -146,10 +181,68 @@ class TagManager
                         $taggedObject->setObjectName((string) $object);
                     }
                     $this->persistTaggedObject($taggedObject);
+                    $taggedObjects[] = $taggedObject;
                 }
             }
             $this->om->endFlushSuite();
         }
+
+        return $taggedObjects;
+    }
+
+    public function tagData(array $tags, $data, User $user = null, $replace = false)
+    {
+        $taggedObjects = [];
+        $uniqueTags = [];
+
+        foreach ($tags as $tag) {
+            $value = trim($tag);
+
+            if (!empty($value)) {
+                $uniqueTags[strtolower($value)] = $value;
+            }
+        }
+        $tagsList = [];
+
+        foreach ($uniqueTags as $tagName) {
+            $tag = is_null($user) ? $this->getOrCreatePlatformTag($tagName) : $this->getOrCreateUserTag($user, $tagName);
+            $tagsList[$tagName] = $tag;
+        }
+        $this->om->startFlushSuite();
+
+        foreach ($data as $objectData) {
+            $objectId = $objectData['id'];
+            $objectClass = $objectData['class'];
+            $objectName = isset($objectData['name']) ? $objectData['name'] : null;
+
+            if ($replace) {
+                $this->removeTaggedObjectsByClassAndIds($objectClass, [$objectId]);
+            }
+
+            foreach ($uniqueTags as $tagName) {
+                $tag = $tagsList[$tagName];
+
+                $taggedObject = $replace ?
+                    null :
+                    $this->getOneTaggedObjectByTagAndObject($tag, $objectId, $objectClass);
+
+                if (is_null($taggedObject)) {
+                    $taggedObject = new TaggedObject();
+                    $taggedObject->setTag($tag);
+                    $taggedObject->setObjectId($objectId);
+                    $taggedObject->setObjectClass($objectClass);
+
+                    if ($objectName) {
+                        $taggedObject->setObjectName($objectName);
+                    }
+                    $this->persistTaggedObject($taggedObject);
+                    $taggedObjects[] = $taggedObject;
+                }
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return $taggedObjects;
     }
 
     public function getObjectsByClassAndIds($class, array $ids, $orderedBy = 'id', $order = 'ASC')
@@ -168,6 +261,11 @@ class TagManager
         $roles = $user->getEntityRoles();
 
         return count($roles) > 0 ? $this->taggedObjectRepo->findTaggedWorkspacesByRoles($tag, $roles, $orderedBy, $order) : [];
+    }
+
+    public function getTaggedWorkspaces($tag)
+    {
+        return $this->taggedObjectRepo->findTaggedWorkspaces($tag);
     }
 
     public function removeTaggedObjectsByResourceAndTag(ResourceNode $resourceNode, Tag $tag)

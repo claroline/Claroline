@@ -31,25 +31,56 @@
 
 .page-header {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
     flex-shrink: 0;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 
     margin-top: 0;
-    margin-bottom: floor(@grid-gutter-width / 2);
     padding: @page-header-padding;
 
-    h1 {
-        font-size: @page-header-font-size;
-        font-weight: @page-header-weight;
+    margin-right: floor(-@grid-gutter-width / 2);
+    margin-left: floor(-@grid-gutter-width / 2);
+    border-bottom: 1px solid @page-header-border-color;
+
+    .page-title {
         margin: 0;
-        padding: 0;
+        margin-bottom: floor(@grid-gutter-width / 2);
+        padding: 0 floor(@grid-gutter-width / 2);
+
+        > small {
+            display: block; // todo this may have broken some things
+        }
+    }
+
+    .page-header-content {
+        flex: 3;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-shrink: 0;
+        flex-wrap: nowrap;
+    }
+
+    .page-header-picture {
+        flex: 1;
+        max-width: 200px;
+        margin-bottom: -40px;
+        padding: 0 floor(@grid-gutter-width / 2);
     }
 }
 
+.page-title {
+    flex: 1;
+    font-size: @page-header-font-size;
+    font-weight: @page-header-weight;
+}
+
 .page-actions {
-    margin-left: -0.25em; // absorb first btn margin
+    margin-left: auto;
+    margin-bottom: floor(@grid-gutter-width / 2);
+    padding: 0 floor(@grid-gutter-width / 2);
+    white-space: nowrap;
 
     .page-actions-group {
         display: inline-block;
@@ -58,6 +89,11 @@
         &:first-child {
             margin-left: 0;
         }
+    }
+
+    > .page-action-btn:first-child,
+    .page-actions-group .page-action-btn:first-child {
+        margin-left: 0; // absorb first btn margin
     }
 
     .page-action-btn,
@@ -72,20 +108,20 @@
 
 // Current styles permit to have 7 buttons in one line on 360px screens (without btn groups)
 .page-action-btn {
-    color: #333;
-    background: #ebebeb;
     position: relative; // for buttons with labels
     border-radius: 50%;
     padding: .65em;
 
-    &.page-action-primary {
-        color: @btn-primary-color;
-        background: @btn-primary-bg;
+    &.page-action-default {
+        .button-variant(#333333; #EBEBEB; transparent);
+    }
 
-        &:hover {
-            color: @btn-primary-color;
-            background-color: darken(@btn-primary-bg, 10%);
-        }
+    &.page-action-primary {
+         .button-variant(@btn-primary-color; @btn-primary-bg; transparent);
+     }
+
+    &.page-action-danger {
+        .button-variant(@btn-danger-color; @btn-danger-bg; transparent);
     }
 
     // displays icon as a square
@@ -110,21 +146,63 @@
         bottom: -5px;
         right: 0;
     }
+}
 
-    // states
-    &[disabled],
-    &.disabled {
+.page-tabs {
+    padding: 0 floor(@grid-gutter-width / 2);
+    a {
+        color: #777;
+        display: inline-flex;
+        text-align: center;
+        padding: 5px;
+        background: #ededed;
+        font-size: 10px;
+        width: 90px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border-bottom: 4px solid transparent;
+        border-top: 4px solid transparent;
+        margin-right: 5px;
 
+        &:last-child {
+            margin-right: 0;
+        }
+
+        &:hover {
+            background: white;
+            border-bottom-color: #777;
+        }
+
+        &.active {
+            color: @brand-primary;
+            background: white;
+            border-bottom-color: @brand-primary;
+        }
     }
-    &:hover {
-        color: #333; // body color
-    }
-    &:focus {
 
+    .page-tabs-icon {
+        font-size: 32px;
+        display: block;
+        margin-bottom: 5px;
     }
 }
 
 /* for retro-compatibility, will be removed */
 .page-buttons {
     margin-bottom: @component-margin-bottom;
+}
+
+@media (max-width: @screen-sm-min) {
+    .page-header {
+        flex-wrap: wrap;
+
+        .page-header-picture {
+            margin-bottom: floor(@grid-gutter-width / 2);
+        }
+
+        .page-header-content {
+            flex-wrap: wrap;
+        }
+    }
 }

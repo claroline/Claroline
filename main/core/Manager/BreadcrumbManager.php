@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\Manager;
 use Claroline\CoreBundle\Event\BuildBreadcrumbEvent;
 use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Doctrine\Common\Util\ClassUtils;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -44,7 +45,7 @@ class BreadcrumbManager
 
     public function getBreadcrumb($object)
     {
-        $class = get_class($object);
+        $class = ClassUtils::getRealClass(get_class($object));
         $eventName = strtolower('breadcrumb_'.str_replace('\\', '_', $class));
 
         $event = $this->dispatcher->dispatch(

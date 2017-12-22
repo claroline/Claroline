@@ -67,13 +67,13 @@ class PluginListener
     }
 
     /**
-     * @DI\Observe("manage-competencies_activity")
+     * @DI\Observe("resource_action_manage_competencies")
      *
      * @param CustomActionResourceEvent $event
      */
-    public function onOpenActivityCompetencies(CustomActionResourceEvent $event)
+    public function onOpenResourceCompetencies(CustomActionResourceEvent $event)
     {
-        $this->forward('HeVinciCompetencyBundle:Activity:competencies', $event);
+        $this->forward('HeVinciCompetencyBundle:Resource:competencies', $event, true);
     }
 
     /**
@@ -86,12 +86,14 @@ class PluginListener
         $this->forward('HeVinciCompetencyBundle:Widget:objectives', $event);
     }
 
-    private function forward($controller, Event $event)
+    private function forward($controller, Event $event, $withNode = false)
     {
         $attributes = ['_controller' => $controller];
 
         if ($event instanceof CustomActionResourceEvent) {
-            $attributes['id'] = $event->getResource()->getId();
+            $attributes['id'] = $withNode ?
+                $event->getResource()->getResourceNode()->getId() :
+                $event->getResource()->getId();
         }
 
         $subRequest = $this->request->duplicate([], null, $attributes);

@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\CoreBundle\Library\PluginBundle;
 use InvalidArgumentException;
 
 /**
@@ -52,11 +52,11 @@ class Validator
     /**
      * Validates a plugin.
      *
-     * @param DistributionPluginBundle $plugin
+     * @param PluginBundle $plugin
      *
      * @return array[ValidationError]
      */
-    public function validate(DistributionPluginBundle $plugin)
+    public function validate(PluginBundle $plugin)
     {
         $validationErrors = [];
 

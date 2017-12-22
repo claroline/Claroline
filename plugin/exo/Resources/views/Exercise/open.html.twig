@@ -1,4 +1,4 @@
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Resource:layout.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -11,21 +11,20 @@
     <div
       class="page-container quiz-container"
       data-quiz="{{ exercise | json_encode | raw | escape }}"
-      data-resource-node="{{ _resource | get_serialized_node | json_encode | raw | escape }}"
+      data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
     >
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {# Claroline JS #}
-
-
     {{ parent() }}
 
     <script>
+        // adds custom styles to TinyMCE for cloze questions
         window.tinymce.claroline.css = [window.Claroline.Home.asset + 'vendor/ujmexo/exercise.css']
     </script>
-    
+
     {# Translations #}
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'question_types' }) }}"></script>

@@ -78,6 +78,8 @@ class ResourceManager
     private $maskManager;
     /** @var IconManager */
     private $iconManager;
+    /** @var ThumbnailManager */
+    private $thumbnailManager;
     /** @var StrictDispatcher */
     private $dispatcher;
     /** @var ObjectManager */
@@ -100,6 +102,7 @@ class ResourceManager
      * @DI\InjectParams({
      *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
      *     "iconManager"           = @DI\Inject("claroline.manager.icon_manager"),
+     *     "thumbnailManager"      = @DI\Inject("claroline.manager.thumbnail_manager"),
      *     "maskManager"           = @DI\Inject("claroline.manager.mask_manager"),
      *     "container"             = @DI\Inject("service_container"),
      *     "rightsManager"         = @DI\Inject("claroline.manager.rights_manager"),
@@ -113,6 +116,7 @@ class ResourceManager
      *
      * @param RoleManager                  $roleManager
      * @param IconManager                  $iconManager
+     * @param ThumbnailManager             $thumbnailManager
      * @param ContainerInterface           $container
      * @param RightsManager                $rightsManager
      * @param StrictDispatcher             $dispatcher
@@ -126,6 +130,7 @@ class ResourceManager
     public function __construct(
         RoleManager $roleManager,
         IconManager $iconManager,
+        ThumbnailManager $thumbnailManager,
         ContainerInterface $container,
         RightsManager $rightsManager,
         StrictDispatcher $dispatcher,
@@ -144,6 +149,7 @@ class ResourceManager
         $this->directoryRepo = $om->getRepository('ClarolineCoreBundle:Resource\Directory');
         $this->roleManager = $roleManager;
         $this->iconManager = $iconManager;
+        $this->thumbnailManager = $thumbnailManager;
         $this->rightsManager = $rightsManager;
         $this->maskManager = $maskManager;
         $this->dispatcher = $dispatcher;
@@ -191,7 +197,7 @@ class ResourceManager
         $this->checkResourcePrepared($resource);
 
         /** @var ResourceNode $node */
-        $node = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $node = new ResourceNode();
         $node->setResourceType($resourceType);
         $node->setPublished($isPublished);
         $node->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
@@ -804,7 +810,7 @@ class ResourceManager
         $env = $this->container->get('kernel')->getEnvironment();
 
         if ($resource instanceof ResourceShortcut) {
-            $copy = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceShortcut');
+            $copy = new ResourceShortcut();
             $copy->setTarget($resource->getTarget());
             $newNode = $this->copyNode($node, $parent, $user, $withRights, $rights, $index);
             $copy->setResourceNode($newNode);
@@ -860,17 +866,17 @@ class ResourceManager
      * @param ResourceNode[] $nodes
      * @param bool           $arePublished
      */
-    public function setPublishedStatus(array $nodes, $arePublished)
+    public function setPublishedStatus(array $nodes, $arePublished, $isRecursive = false)
     {
+        $this->om->startFlushSuite();
         foreach ($nodes as $node) {
-            $children = $this->getAllChildren($node, true);
             $node->setPublished($arePublished);
             $this->om->persist($node);
 
             //do it on every children aswell
-            foreach ($children as $child) {
-                $child->setPublished($arePublished);
-                $this->om->persist($child);
+            if ($isRecursive) {
+                $descendants = $this->resourceNodeRepo->findDescendants($node, true);
+                $this->setPublishedStatus($descendants, $arePublished, false);
             }
 
             //only warn for the roots
@@ -885,7 +891,7 @@ class ResourceManager
             $this->dispatcher->dispatch('log', 'Log\LogResourcePublish', [$node, $usersToNotify]);
         }
 
-        $this->om->flush();
+        $this->om->endFlushSuite();
     }
 
     /**
@@ -940,7 +946,7 @@ class ResourceManager
         if (!$node->getWorkspace()) {
             $resourceArray['enableRightsEdition'] = false;
         } else {
-            if ($node->getWorkspace()->isPersonal() && !$this->rightsManager->canEditPwsPerm($token)) {
+            if ($node->getWorkspace()->isPersonal()) {
                 $resourceArray['enableRightsEdition'] = false;
             } else {
                 $resourceArray['enableRightsEdition'] = true;
@@ -996,51 +1002,53 @@ class ResourceManager
              */
             if ($resource !== null) {
                 if ($node->getClass() !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
-                    $event = $this->dispatcher->dispatch(
-                        "delete_{$node->getResourceType()->getName()}",
-                        'DeleteResource',
-                        [$resource]
-                    );
+                    // Dispatch DeleteResourceEvent only when soft delete is not enabled
+                    if (!$softDelete) {
+                        $event = $this->dispatcher->dispatch(
+                            "delete_{$node->getResourceType()->getName()}",
+                            'DeleteResource',
+                            [$resource, $softDelete]
+                        );
+                        $eventSoftDelete = $event->isSoftDelete();
 
-                    $eventSoftDelete = $event->isSoftDelete();
+                        foreach ($event->getFiles() as $file) {
+                            if ($softDelete) {
+                                $parts = explode(
+                                    $this->filesDirectory.DIRECTORY_SEPARATOR,
+                                    $file
+                                );
 
-                    foreach ($event->getFiles() as $file) {
-                        if ($softDelete) {
-                            $parts = explode(
-                                $this->filesDirectory.DIRECTORY_SEPARATOR,
-                                $file
-                            );
+                                if (count($parts) === 2) {
+                                    $deleteDir = $this->filesDirectory.
+                                        DIRECTORY_SEPARATOR.
+                                        'DELETED_FILES';
+                                    $dest = $deleteDir.
+                                        DIRECTORY_SEPARATOR.
+                                        $parts[1];
+                                    $additionalDirs = explode(DIRECTORY_SEPARATOR, $parts[1]);
 
-                            if (count($parts) === 2) {
-                                $deleteDir = $this->filesDirectory.
-                                    DIRECTORY_SEPARATOR.
-                                    'DELETED_FILES';
-                                $dest = $deleteDir.
-                                    DIRECTORY_SEPARATOR.
-                                    $parts[1];
-                                $additionalDirs = explode(DIRECTORY_SEPARATOR, $parts[1]);
+                                    for ($i = 0; $i < count($additionalDirs) - 1; ++$i) {
+                                        $deleteDir .= DIRECTORY_SEPARATOR.$additionalDirs[$i];
+                                    }
 
-                                for ($i = 0; $i < count($additionalDirs) - 1; ++$i) {
-                                    $deleteDir .= DIRECTORY_SEPARATOR.$additionalDirs[$i];
+                                    if (!is_dir($deleteDir)) {
+                                        mkdir($deleteDir, 0777, true);
+                                    }
+                                    rename($file, $dest);
                                 }
-
-                                if (!is_dir($deleteDir)) {
-                                    mkdir($deleteDir, 0777, true);
-                                }
-                                rename($file, $dest);
+                            } else {
+                                unlink($file);
                             }
-                        } else {
-                            unlink($file);
-                        }
 
-                        //It won't work if a resource has no workspace for a reason or an other. This could be a source of bug.
-                        $dir = $this->filesDirectory.
-                            DIRECTORY_SEPARATOR.
-                            'WORKSPACE_'.
-                            $workspace->getId();
+                            //It won't work if a resource has no workspace for a reason or an other. This could be a source of bug.
+                            $dir = $this->filesDirectory.
+                                DIRECTORY_SEPARATOR.
+                                'WORKSPACE_'.
+                                $workspace->getId();
 
-                        if (is_dir($dir) && $this->isDirectoryEmpty($dir)) {
-                            rmdir($dir);
+                            if (is_dir($dir) && $this->isDirectoryEmpty($dir)) {
+                                rmdir($dir);
+                            }
                         }
                     }
                 }
@@ -1050,6 +1058,8 @@ class ResourceManager
 
                 if ($softDelete || $eventSoftDelete) {
                     $node->setActive(false);
+                    // Rename node to allow future nodes have the same name
+                    $node->setName($node->getName().uniqid('_'));
                     $this->om->persist($node);
                 } else {
                     //what is it ?
@@ -1107,7 +1117,7 @@ class ResourceManager
 
         $archive = new \ZipArchive();
         $pathArch = $this->container->get('claroline.config.platform_config_handler')
-            ->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$this->ut->generateGuid().'.zip';
+                ->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$this->ut->generateGuid().'.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
         $nodes = $this->expandResources($elements);
 
@@ -1288,6 +1298,25 @@ class ResourceManager
     }
 
     /**
+     * Changes a node thumbnail.
+     *
+     * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
+     * @param \Symfony\Component\HttpFoundation\File\File        $file
+     *
+     * @return \Claroline\CoreBundle\Entity\Resource\ResourceThumbnail
+     */
+    public function changeThumbnail(ResourceNode $node, File $file)
+    {
+        $this->om->startFlushSuite();
+        $thumbnail = $this->thumbnailManager->createCustomThumbnail($file, $node->getWorkspace());
+        $this->thumbnailManager->replace($node, $thumbnail);
+        $this->logChangeSet($node);
+        $this->om->endFlushSuite();
+
+        return $thumbnail;
+    }
+
+    /**
      * Logs every change on a node.
      *
      * @param \Claroline\CoreBundle\Entity\Resource\ResourceNode $node
@@ -1317,7 +1346,7 @@ class ResourceManager
      */
     public function createResource($class, $name)
     {
-        $entity = $this->om->factory($class);
+        $entity = new $class();
 
         if ($entity instanceof AbstractResource) {
             $entity->setName($name);
@@ -1382,9 +1411,10 @@ class ResourceManager
         ResourceNode $node,
         array $roles,
         $user,
-        $withLastOpenDate = false
+        $withLastOpenDate = false,
+        $canAdministrate = false
     ) {
-        return $this->resourceNodeRepo->findChildren($node, $roles, $user, $withLastOpenDate);
+        return $this->resourceNodeRepo->findChildren($node, $roles, $user, $withLastOpenDate, $canAdministrate);
     }
 
     /**
@@ -1502,15 +1532,19 @@ class ResourceManager
 
     /**
      * @param int[] $ids
+     * @param bool  $orderStrict, keep tha same order as ids array
      *
      * @return ResourceNode[]
      */
-    public function getByIds(array $ids)
+    public function getByIds(array $ids, $orderStrict = false)
     {
-        return $this->om->findByIds(
+        $nodes = $this->om->findByIds(
             'Claroline\CoreBundle\Entity\Resource\ResourceNode',
-            $ids
+            $ids,
+            $orderStrict
         );
+
+        return $nodes;
     }
 
     /**
@@ -1556,7 +1590,7 @@ class ResourceManager
         $index = null
     ) {
         /** @var ResourceNode $newNode */
-        $newNode = $this->om->factory('Claroline\CoreBundle\Entity\Resource\ResourceNode');
+        $newNode = new ResourceNode();
         $newNode->setResourceType($node->getResourceType());
         $newNode->setCreator($user);
         $newNode->setWorkspace($newParent->getWorkspace());
@@ -1935,18 +1969,23 @@ class ResourceManager
 
         /** @var ResourceNode $resource */
         foreach ($resources as $resource) {
-            if ($resource->getWorkspace() === null && $parent = $resource->getParent()) {
-                if ($workspace = $parent->getWorkspace()) {
-                    $resource->setWorkspace($workspace);
-                    $this->om->persist($workspace);
-                    $this->log('Set workspace '.$workspace->getName().' for '.$resource->getName());
-                    ++$i;
+            $absRes = $this->getResourceFromNode($resource);
 
-                    if ($batchSize % $i === 0) {
-                        $this->om->flush();
+            if (!$absRes) {
+                $this->log('Resource '.$resource->getName().' not found. Removing...');
+                $this->om->remove($resource);
+            } else {
+                if ($resource->getWorkspace() === null && $parent = $resource->getParent()) {
+                    if ($workspace = $parent->getWorkspace()) {
+                        $resource->setWorkspace($workspace);
+                        $this->om->persist($workspace);
+                        if ($batchSize % $i === 0) {
+                            $this->om->flush();
+                        }
                     }
                 }
             }
+            ++$i;
         }
 
         $this->om->flush();

@@ -61,8 +61,8 @@ export default class BannerController {
     })
 
     _$scope.get(this).$watch(() => this.blog.options.banner_background_image_position, () => {
-      for (let idxX = 0; idxX < this.bannerPositions; idxX++) {
-        for (let idxY = 0; idxY < this.bannerPositions[idxX]; idxY++) {
+      for (let idxX = 0; idxX < this.bannerPositions.length; idxX++) {
+        for (let idxY = 0; idxY < this.bannerPositions[idxX].length; idxY++) {
           if (this.bannerPositions[idxX][idxY].text === this.blog.options.banner_background_image_position) {
             this.position = `${idxX}-${idxY}`
           }

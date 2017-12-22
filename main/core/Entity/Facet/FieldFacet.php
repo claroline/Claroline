@@ -11,11 +11,10 @@
 
 namespace Claroline\CoreBundle\Entity\Facet;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Accessor;
-use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -24,50 +23,68 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class FieldFacet
 {
-    const STRING_TYPE = 1;
-    const FLOAT_TYPE = 2;
-    const DATE_TYPE = 3;
-    const RADIO_TYPE = 4;
-    const SELECT_TYPE = 5;
-    const CHECKBOXES_TYPE = 6;
-    const COUNTRY_TYPE = 7;
-    const EMAIL_TYPE = 8;
-    const RICH_TEXT_TYPE = 9;
-    const CASCADE_SELECT_TYPE = 10;
+    use UuidTrait;
 
-    protected static $types = [
-        self::STRING_TYPE,
-        self::FLOAT_TYPE,
-        self::DATE_TYPE,
-        self::RADIO_TYPE,
-        self::SELECT_TYPE,
-        self::CHECKBOXES_TYPE,
-        self::COUNTRY_TYPE,
-        self::EMAIL_TYPE,
-        self::RICH_TEXT_TYPE,
-        self::CASCADE_SELECT_TYPE,
+    /** @var int */
+    const STRING_TYPE = 1;
+    /** @var int */
+    const FLOAT_TYPE = 2;
+    /** @var int */
+    const DATE_TYPE = 3;
+    /** @var int */
+    const RADIO_TYPE = 4;
+    /** @var int */
+    const SELECT_TYPE = 5;
+    /** @var int */
+    const CHECKBOXES_TYPE = 6;
+    /** @var int */
+    const COUNTRY_TYPE = 7;
+    /** @var int */
+    const EMAIL_TYPE = 8;
+    /** @var int */
+    const RICH_TEXT_TYPE = 9;
+    /** @var int */
+    const CASCADE_SELECT_TYPE = 10;
+    /** @var int */
+    const FILE_TYPE = 11;
+    /** @var array */
+    private static $types = [
+        'string' => self::STRING_TYPE,
+        'float' => self::FLOAT_TYPE,
+        'date' => self::DATE_TYPE,
+        'radio' => self::RADIO_TYPE,
+        'select' => self::SELECT_TYPE,
+        'checkboxes' => self::CHECKBOXES_TYPE,
+        'country' => self::COUNTRY_TYPE,
+        'email' => self::EMAIL_TYPE,
+        'text' => self::RICH_TEXT_TYPE,
+        'cascade ' => self::CASCADE_SELECT_TYPE,
+        'file' => self::FILE_TYPE,
     ];
 
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
+     *
+     * @var int
      */
-    protected $id;
+    private $id;
 
     /**
-     * @ORM\Column
+     * @ORM\Column(name="name")
      * @Assert\NotBlank()
-     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
+     *
+     * @var string
      */
-    protected $name;
+    private $label;
 
     /**
      * @ORM\Column(type="integer")
-     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
+     *
+     * @var int
      */
-    protected $type;
+    private $type;
 
     /**
      * @ORM\ManyToOne(
@@ -75,57 +92,36 @@ class FieldFacet
      *      inversedBy="fieldsFacet"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE", nullable=true)
+     *
+     * @var PanelFacet
+     *
+     * @todo should not be declared here (not used in ClacoForm)
      */
-    protected $panelFacet;
-
-    /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue",
-     *     mappedBy="fieldFacet",
-     *     cascade={"persist"}
-     * )
-     */
-    protected $fieldsFacetValue;
+    private $panelFacet;
 
     /**
      * @ORM\Column(type="integer", name="position", nullable=true)
-     * @Groups({"api_facet_admin", "api_profile"})
+     *
+     * @var int
      */
-    protected $position;
-
-    /**
-     * @Groups({"api_facet_admin", "api_profile", "api_user_min"})
-     * @Accessor(getter="getInputType")
-     */
-    protected $translationKey;
+    private $position;
 
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",
      *     mappedBy="fieldFacet"
      * )
-     * @Groups({"api_facet_admin", "api_profile"})
-     * @ORM\OrderBy({"position" = "ASC"})
+     *
+     * @var ArrayCollection
      */
-    protected $fieldFacetChoices;
+    private $fieldFacetChoices;
 
     /**
-     * @Groups({"api_profile"})
-     * @Accessor(getter="getUserFieldValue")
+     * @ORM\Column(name="isRequired", type="boolean")
+     *
+     * @var bool
      */
-    protected $userFieldValue;
-
-    /**
-     * @Groups({"api_profile"})
-     * @Accessor(getter="isEditable")
-     */
-    protected $isEditable;
-
-    /**
-     * @ORM\Column(type="boolean")
-     * @Groups({"api_profile", "api_facet_admin"})
-     */
-    protected $isRequired = false;
+    private $required = false;
 
     /**
      * @ORM\ManyToOne(
@@ -133,73 +129,115 @@ class FieldFacet
      *     inversedBy="fields"
      * )
      * @ORM\JoinColumn(name="resource_node", onDelete="CASCADE", nullable=true)
+     *
+     * @var ResourceNode
+     *
+     * @todo should not be declared here (not used in Profile)
      */
-    protected $resourceNode;
+    private $resourceNode;
 
+    /**
+     * @ORM\Column(type="json_array")
+     *
+     * @var array
+     */
+    private $options = [];
+
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
+        $this->refreshUuid();
         $this->fieldsFacetValue = new ArrayCollection();
         $this->fieldFacetChoices = new ArrayCollection();
     }
 
     /**
-     * @param Facet $facet
+     * @return int
      */
-    public function setPanelFacet(PanelFacet $panelFacet)
+    public function getId()
     {
-        $panelFacet->addFieldFacet($this);
-        $this->panelFacet = $panelFacet;
+        return $this->id;
     }
 
     /**
-     * @return Facet
+     * @param PanelFacet|null $panelFacet
+     */
+    public function setPanelFacet(PanelFacet $panelFacet = null)
+    {
+        $this->panelFacet = $panelFacet;
+
+        if ($panelFacet) {
+            $panelFacet->addFieldFacet($this);
+        }
+    }
+
+    /**
+     * @return PanelFacet
      */
     public function getPanelFacet()
     {
         return $this->panelFacet;
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
+    /**
+     * @return string
+     */
     public function getName()
     {
-        return $this->name;
+        $string = str_replace(' ', '-', $this->label); // Replaces all spaces with hyphens.
+        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
+        $string = preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
+
+        return strtolower($string);
     }
 
+    /**
+     * @param string $label
+     */
+    public function setLabel($label)
+    {
+        $this->label = $label;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    /**
+     * @param int|string $type
+     */
     public function setType($type)
     {
-        if (!in_array($type, static::$types)) {
+        //if we pass a correct type name
+        if (in_array($type, array_keys(static::$types))) {
+            $this->type = static::$types[$type];
+        } elseif (in_array($type, static::$types)) {
+            //otherwise we use the integer
+            $this->type = $type;
+        } else {
             throw new \InvalidArgumentException(
                 'Type must be a FieldFacet class constant'
             );
         }
-
-        $this->type = $type;
     }
 
+    /**
+     * @return int
+     */
     public function getType()
     {
         return $this->type;
     }
 
-    public function getFieldsFacetValue()
-    {
-        return $this->fieldsFacetValue;
-    }
-
-    public function addFieldFacet(FieldFacetValue $fieldFacetValue)
-    {
-        $this->fieldsFacetValue->add($fieldFacetValue);
-    }
-
+    /**
+     * @param FieldFacetChoice $choice
+     */
     public function addFieldChoice(FieldFacetChoice $choice)
     {
         if (!$this->fieldFacetChoices->contains($choice)) {
@@ -207,6 +245,9 @@ class FieldFacet
         }
     }
 
+    /**
+     * @param FieldFacetChoice $choice
+     */
     public function removeFieldChoice(FieldFacetChoice $choice)
     {
         if ($this->fieldFacetChoices->contains($choice)) {
@@ -214,16 +255,27 @@ class FieldFacet
         }
     }
 
+    /**
+     * @param int $position
+     */
     public function setPosition($position)
     {
         $this->position = $position;
     }
 
+    /**
+     * @return int
+     */
     public function getPosition()
     {
         return $this->position;
     }
 
+    /**
+     * @deprecated
+     *
+     * @return string
+     */
     public function getTypeTranslationKey()
     {
         switch ($this->type) {
@@ -237,10 +289,36 @@ class FieldFacet
             case self::EMAIL_TYPE: return 'email';
             case self::RICH_TEXT_TYPE: return 'rich_text';
             case self::CASCADE_SELECT_TYPE: return 'cascade_select';
+            case self::FILE_TYPE: return 'file';
             default: return 'error';
         }
     }
 
+    /**
+     * @return string
+     */
+    public function getFieldType()
+    {
+        switch ($this->type) {
+            case self::FLOAT_TYPE: return 'float';
+            case self::DATE_TYPE: return 'date';
+            case self::STRING_TYPE: return 'string';
+            case self::RADIO_TYPE: return 'radio';
+            case self::SELECT_TYPE: return 'select';
+            case self::CHECKBOXES_TYPE: return 'checkboxes';
+            case self::COUNTRY_TYPE: return 'country';
+            case self::EMAIL_TYPE: return 'email';
+            case self::RICH_TEXT_TYPE: return 'html';
+            case self::CASCADE_SELECT_TYPE: return 'cascade';
+            case self::FILE_TYPE: return 'file';
+            default: return 'error';
+        }
+    }
+    /**
+     * @deprecated
+     *
+     * @return string
+     */
     public function getInputType()
     {
         switch ($this->type) {
@@ -254,78 +332,72 @@ class FieldFacet
             case self::EMAIL_TYPE: return 'email';
             case self::RICH_TEXT_TYPE: return 'rich_text';
             case self::CASCADE_SELECT_TYPE: return 'cascade_select';
+            case self::FILE_TYPE: return 'file';
             default: return 'error';
         }
     }
 
+    /**
+     * @return ArrayCollection
+     */
     public function getFieldFacetChoices()
     {
         return $this->fieldFacetChoices;
     }
 
+    /**
+     * @return array
+     */
     public function getFieldFacetChoicesArray()
     {
         return $this->fieldFacetChoices->toArray();
     }
 
     /**
-     * For serialization in user profile. It's easier that way.
+     * @return bool
      */
-    public function setUserFieldValue(FieldFacetValue $val)
-    {
-        $this->userFieldValue = $val;
-    }
-
-    /**
-     * For serialization in user profile. It's easier that way.
-     */
-    public function getUserFieldValue()
-    {
-        return $this->userFieldValue ? $this->userFieldValue->getValue() : null;
-    }
-
-    /**
-     * For serialization in user profile. It's easier that way.
-     */
-    public function setIsEditable($boolean)
-    {
-        $this->isEditable = $boolean;
-    }
-
-    /**
-     * For serialization in user profile. It's easier that way.
-     */
-    public function isEditable()
-    {
-        return $this->isEditable;
-    }
-
     public function isRequired()
     {
-        return $this->isRequired;
+        return $this->required;
     }
 
-    public function setIsRequired($isRequired)
+    /**
+     * @param bool $required
+     */
+    public function setRequired($required)
     {
-        $this->isRequired = $isRequired;
+        $this->required = $required;
     }
 
-    public function getPrettyName()
-    {
-        $string = str_replace(' ', '-', $this->name); // Replaces all spaces with hyphens.
-        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-        $string = preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
-
-        return strtolower($string);
-    }
-
+    /**
+     * @return ResourceNode
+     */
     public function getResourceNode()
     {
         return $this->resourceNode;
     }
 
+    /**
+     * @param ResourceNode|null $resourceNode
+     */
     public function setResourceNode(ResourceNode $resourceNode = null)
     {
         $this->resourceNode = $resourceNode;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
+    }
+
+    /**
+     * @param array $options
+     */
+    public function setOptions(array $options)
+    {
+        $this->options = $options;
     }
 }

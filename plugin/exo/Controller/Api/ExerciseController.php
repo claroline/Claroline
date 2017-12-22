@@ -7,12 +7,15 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\ExerciseManager;
+use UJM\ExoBundle\Manager\JsonQuizManager;
 
 /**
  * Exercise API Controller exposes REST API.
@@ -36,7 +39,8 @@ class ExerciseController extends AbstractController
      *
      * @DI\InjectParams({
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "exerciseManager" = @DI\Inject("ujm_exo.manager.exercise")
+     *     "exerciseManager" = @DI\Inject("ujm_exo.manager.exercise"),
+     *     "jsonQuizManager" = @DI\Inject("ujm_exo.manager.json_quiz")
      * })
      *
      * @param AuthorizationCheckerInterface $authorization
@@ -44,10 +48,12 @@ class ExerciseController extends AbstractController
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        ExerciseManager $exerciseManager
+        ExerciseManager $exerciseManager,
+        JsonQuizManager $jsonQuizManager
     ) {
         $this->authorization = $authorization;
         $this->exerciseManager = $exerciseManager;
+        $this->jsonQuizManager = $jsonQuizManager;
     }
 
     /**
@@ -84,7 +90,7 @@ class ExerciseController extends AbstractController
      */
     public function updateAction(Exercise $exercise, Request $request)
     {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
+        $this->assertHasPermission('EDIT', $exercise);
 
         $errors = [];
 
@@ -172,6 +178,57 @@ class ExerciseController extends AbstractController
                 'exercise' => $this->exerciseManager->serialize($exercise, [Transfer::MINIMAL]),
                 'statistics' => $this->exerciseManager->getStatistics($exercise, 100),
         ]);
+    }
+
+    /**
+     * download json quiz.
+     *
+     * @EXT\Route("/{id}/export", name="exercise_export")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
+     *
+     * @param Exercise $exercise
+     *
+     * @return array
+     */
+    public function exportAction(Exercise $exercise)
+    {
+        $this->assertHasPermission('ADMINISTRATE', $exercise);
+
+        $file = $this->jsonQuizManager->export($exercise);
+
+        $response = new StreamedResponse();
+        $response->setCallBack(
+            function () use ($file) {
+                readfile($file);
+            }
+        );
+
+        $name = $exercise->getResourceNode()->getName().'.json';
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($name));
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Connection', 'close');
+        $response->send();
+
+        return new Response();
+    }
+
+    /**
+     * download json quiz.
+     *
+     * @EXT\Route("/{id}/import", name="exercise_import")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
+     *
+     * @param Exercise $exercise
+     *
+     * @return array
+     */
+    public function importAction(Excercise $exercise)
+    {
+        //do some stuff here
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

@@ -48,7 +48,7 @@ describe('Quiz reducer', () => {
 
   it('keeps an id reference on step creation', () => {
     const quiz = freeze({steps: ['1', '2']})
-    const newState = reducers.quiz(quiz, actions.createStep())
+    const newState = reducers.quiz(quiz, actions.createStep('step 1'))
     ensure.equal(newState.steps, ['1', '2', lastId()])
   })
 
@@ -74,12 +74,12 @@ describe('Step reducer', () => {
 
   it('creates a default object on step creation', () => {
     const steps = freeze({'1': {id: '1', items: [], parameters: {}}})
-    const newState = reducers.steps(steps, actions.createStep())
+    const newState = reducers.steps(steps, actions.createStep('1'))
     ensure.equal(newState, {
       '1': {id: '1', items: [], parameters: {}},
       [lastId()]: {
         id: lastId(),
-        title: '',
+        title: 'step 1',
         description: '',
         items: [],
         parameters: {
@@ -408,7 +408,7 @@ describe('Current object reducer', () => {
 
   it('updates on step creation', () => {
     const current = freeze({id: '2', type: 'text/html'})
-    const newState = reducers.currentObject(current, actions.createStep())
+    const newState = reducers.currentObject(current, actions.createStep('step 1'))
     ensure.equal(newState, {
       id: lastId(),
       type: TYPE_STEP

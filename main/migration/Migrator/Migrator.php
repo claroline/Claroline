@@ -11,10 +11,10 @@
 
 namespace Claroline\MigrationBundle\Migrator;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Doctrine\DBAL\Connection;
-use Doctrine\DBAL\Migrations\Migration;
 use Doctrine\DBAL\Migrations\Configuration\Configuration;
+use Doctrine\DBAL\Migrations\Migration;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * Class responsible for executing bundle migrations.
@@ -25,11 +25,12 @@ class Migrator
     const STATUS_AVAILABLE = 'available';
     const VERSION_FARTHEST = 'farthest';
     const VERSION_NEAREST = 'nearest';
+    const VERSION_LATEST = 'latest';
     const DIRECTION_UP = 'up';
     const DIRECTION_DOWN = 'down';
 
     private $connection;
-    private $cacheConfigs = array();
+    private $cacheConfigs = [];
 
     /**
      * Constructor.
@@ -77,10 +78,11 @@ class Migrator
             $availableVersions = [];
         }
 
-        return array(
+        return [
             self::STATUS_CURRENT => $currentVersion,
             self::STATUS_AVAILABLE => $availableVersions,
-        );
+            self::VERSION_LATEST => $config->getLatestVersion(),
+        ];
     }
 
     /**
@@ -126,7 +128,7 @@ class Migrator
                 }
             }
 
-            return $nearestVersion === false ? array() : $migration->migrate($nearestVersion);
+            return $nearestVersion === false ? [] : $migration->migrate($nearestVersion);
         } elseif (!is_numeric($version)) {
             throw new InvalidVersionException($version);
         } elseif ($version > $currentVersion && $direction === self::DIRECTION_DOWN
@@ -163,5 +165,29 @@ class Migrator
         $this->cacheConfigs[$bundle->getName()] = $config;
 
         return $config;
+    }
+
+    public function markMigrated(Bundle $bundle, $version)
+    {
+        $config = $this->getConfiguration($bundle);
+        $config->getVersion($version)->markMigrated();
+    }
+
+    public function markNotMigrated(Bundle $bundle, $version)
+    {
+        $config = $this->getConfiguration($bundle);
+        $config->getVersion($version)->markNotMigrated();
+    }
+
+    public function markAllMigrated(Bundle $bundle)
+    {
+        $config = $this->getConfiguration($bundle);
+
+        foreach ($config->getAvailableVersions() as $version) {
+            $version = $config->getVersion($version);
+            if (!$config->hasVersionMigrated($version)) {
+                $version->markMigrated();
+            }
+        }
     }
 }

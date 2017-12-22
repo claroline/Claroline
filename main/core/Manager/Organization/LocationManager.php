@@ -267,6 +267,7 @@ class LocationManager
         'ZM' => 'Zambia',
         'ZW' => 'Zimbabwe',
     ];
+
     private $om;
     private $repo;
     private $ch;
@@ -290,40 +291,6 @@ class LocationManager
         $this->cm = $cm;
     }
 
-    public function create(Location $location)
-    {
-        $this->setCoordinates($location);
-        $this->om->persist($location);
-        $this->om->flush();
-
-        return $location;
-    }
-
-    public function edit(Location $location)
-    {
-        $this->setCoordinates($location);
-        $this->om->persist($location);
-        $this->om->flush();
-
-        return $location;
-    }
-
-    public function delete(Location $location)
-    {
-        $this->om->remove($location);
-        $this->om->flush();
-    }
-
-    public function getByType($type)
-    {
-        return $this->repo->findBy(['type' => $type]);
-    }
-
-    public function getByTypes(array $types)
-    {
-        return $this->repo->findLocationsByTypes($types);
-    }
-
     public function setCoordinates(Location $location)
     {
         $data = $this->geolocate($location);
@@ -335,6 +302,9 @@ class LocationManager
             $location->setLongitude($loc['lng']);
             $location->setLatitude($loc['lat']);
         }
+
+        $this->om->persist($location);
+        $this->om->flush();
 
         return $location;
     }
@@ -348,11 +318,6 @@ class LocationManager
         $query = 'https://maps.googleapis.com/maps/api/geocode/json?address='.$address.'&key='.$this->ch->getParameter('google_geocoding_key');
 
         return $this->cm->exec($query);
-    }
-
-    public function getLocationById($id)
-    {
-        return $this->repo->findOneById($id);
     }
 
     public function getCountryByCode($code)

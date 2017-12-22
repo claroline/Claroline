@@ -45,6 +45,8 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * Controller of the user profile.
+ *
+ * @todo check what is still used
  */
 class ProfileController extends Controller
 {
@@ -155,24 +157,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * @EXT\Route(
-     *     "/show/{user}",
-     *      name="claro_profile_view",
-     *      options={"expose"=true}
-     * )
-     * @SEC\Secure(roles="ROLE_USER")
-     * @EXT\Template("ClarolineCoreBundle:Profile:publicProfile.html.twig")
-     *
-     * @param User $user
-     *
-     * @return array
-     */
-    public function viewAction(User $user)
-    {
-        return $this->publicProfileAction($user->getPublicUrl());
-    }
-
-    /**
      * @EXT\Template()
      *
      * @param Request $request
@@ -186,7 +170,7 @@ class ProfileController extends Controller
         if ($user === 'anon.') {
             return ['isAnon' => true];
         } else {
-            $facets = $this->facetManager->getVisibleFacets(5);
+            $facets = $this->facetManager->getVisibleFacets();
             $fieldFacetValues = $this->facetManager->getFieldValuesByUser($user);
             $fieldFacets = $this->facetManager->getVisibleFieldForCurrentUserFacets();
             $profileLinksEvent = new ProfileLinksEvent($user, $request->getLocale());
@@ -256,7 +240,8 @@ class ProfileController extends Controller
     {
         $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
         $isGrantedUserAdmin = $this->get('security.authorization_checker')->isGranted(
-            'OPEN', $this->toolManager->getAdminToolByName('user_management')
+            'OPEN',
+            $this->toolManager->getAdminToolByName('user_management')
         );
 
         if (null === $user) {
@@ -305,21 +290,7 @@ class ProfileController extends Controller
                 $unavailableRoles[] = $role;
             }
         }
-        $groupsData = [];
-        $groups = $this->groupManager->getAllGroupsWithoutPager();
 
-        foreach ($groups as $group) {
-            $organizations = $group->getOrganizations();
-
-            foreach ($organizations as $organization) {
-                $organizationId = $organization->getId();
-
-                if (!isset($groups[$organizationId])) {
-                    $groupsData[$organizationId] = [];
-                }
-                $groupsData[$organizationId][] = $group->getId();
-            }
-        }
         if ($form->isValid() && count($unavailableRoles) === 0) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
@@ -329,14 +300,13 @@ class ProfileController extends Controller
             $user = $form->getData();
 
             $this->userManager->rename($user, $previousUsername);
-
             $successMessage = $translator->trans('edit_profile_success', [], 'platform');
             $errorRight = $translator->trans('edit_profile_error_right', [], 'platform');
             $redirectUrl = $this->generateUrl('claro_admin_users_index');
 
             if ($editYourself) {
                 $successMessage = $translator->trans('edit_your_profile_success', [], 'platform');
-                $redirectUrl = $this->generateUrl('claro_public_profile_view', ['publicUrl' => $user->getPublicUrl()]);
+                $redirectUrl = $this->generateUrl('claro_user_profile', ['publicUrl' => $user->getPublicUrl()]);
             }
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -393,7 +363,6 @@ class ProfileController extends Controller
             'user' => $user,
             'editYourself' => $editYourself,
             'unavailableRoles' => $unavailableRoles,
-            'groupsData' => $groupsData,
         ];
     }
 
@@ -414,7 +383,8 @@ class ProfileController extends Controller
     {
         $isAdmin = $this->get('security.authorization_checker')->isGranted('ROLE_ADMIN');
         $isGrantedUserAdmin = $this->get('security.authorization_checker')->isGranted(
-            'OPEN', $this->toolManager->getAdminToolByName('user_management')
+            'OPEN',
+            $this->toolManager->getAdminToolByName('user_management')
         );
         $selfEdit = $user->getId() === $loggedUser->getId() ? true : false;
 
@@ -453,7 +423,7 @@ class ProfileController extends Controller
             }
 
             if ($selfEdit) {
-                return $this->redirect($this->generateUrl('claro_public_profile_view', ['publicUrl' => $user->getPublicUrl()]));
+                return $this->redirect($this->generateUrl('claro_user_profile', ['publicUrl' => $user->getPublicUrl()]));
             } else {
                 return $this->redirect($this->generateUrl('claro_admin_users_index'));
             }
@@ -505,7 +475,7 @@ class ProfileController extends Controller
                 $sessionFlashBag->add('error', $translator->trans('tune_public_url_error', [], 'platform'));
             }
 
-            return $this->redirect($this->generateUrl('claro_public_profile_view', ['publicUrl' => $user->getPublicUrl()]));
+            return $this->redirect($this->generateUrl('claro_user_profile', ['publicUrl' => $user->getPublicUrl()]));
         }
 
         return [

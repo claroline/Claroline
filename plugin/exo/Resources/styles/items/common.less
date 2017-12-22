@@ -67,7 +67,7 @@
     text-align: justify; // justify HTML contents by default (can be overridden through HTMLs WYSIWYG)
 }
 
-.solution-score {
+.solution-score, .answer-stats {
     white-space: nowrap;
     border-radius: @label-border-radius;
     font-size: @label-font-size;
@@ -76,6 +76,10 @@
     padding: 4px 6px;
     margin-left: 5px;
     line-height: 1;
+}
+
+.answer-stats {
+  padding-left: 5px;
 }
 
 .no-answer {
@@ -118,7 +122,7 @@
         color: @correct-answer-color;
     }
 
-    .solution-score {
+    .solution-score, .answer-stats {
         background: @correct-answer-color;
         color: @correct-answer-bg;
     }
@@ -133,7 +137,7 @@
         color: @incorrect-answer-color;
     }
 
-    .solution-score {
+    .solution-score, .answer-stats {
         background: @incorrect-answer-color;
         color: @incorrect-answer-bg;
     }
@@ -148,9 +152,29 @@
         color: @selected-answer-color;
     }
 
-    .solution-score {
+    .solution-score, .answer-stats {
         background: @selected-answer-color;
         color: @selected-answer-bg;
+    }
+}
+
+.stats-answer {
+    border-color: @answer-item-border;
+    background: @answer-item-bg;
+
+    .answer-stats {
+        background: #777;
+    }
+}
+
+.unanswered-item {
+    color: @unanswered-answer-color;
+    border-color: @unanswered-answer-border;
+    background: @unanswered-answer-bg;
+
+    .answer-stats {
+        background: @unanswered-answer-color;
+        color: @unanswered-answer-bg;
     }
 }
 

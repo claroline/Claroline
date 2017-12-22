@@ -15,6 +15,7 @@ use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Query;
 
 class WorkspaceRepository extends EntityRepository
 {
@@ -68,7 +69,7 @@ class WorkspaceRepository extends EntityRepository
             ->createQuery('
                 SELECT w
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE w.isPersonal = false
+                WHERE w.personal = false
                 ORDER BY w.id
             ')
             ->getResult();
@@ -87,15 +88,16 @@ class WorkspaceRepository extends EntityRepository
             ->createQuery("
                 SELECT DISTINCT w
                 FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace w
-                JOIN w.orderedTools ot
-                JOIN ot.rights otr
-                JOIN otr.role r
+                INNER JOIN w.orderedTools ot
+                INNER JOIN ot.rights otr
+                INNER JOIN otr.role r
                 WHERE r.name = 'ROLE_ANONYMOUS'
                 AND ot.type = :type
                 AND BIT_AND(otr.mask, :openValue) = :openValue
             ")
             ->setParameter('openValue', ToolMaskDecoder::$defaultValues['open'])
             ->setParameter('type', $orderedToolType)
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -125,7 +127,7 @@ class WorkspaceRepository extends EntityRepository
             ->createQuery('
                 SELECT COUNT(w)
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE w.isPersonal = true
+                WHERE w.personal = true
             ')
             ->getSingleScalarResult();
     }
@@ -141,7 +143,7 @@ class WorkspaceRepository extends EntityRepository
             ->createQuery('
                 SELECT COUNT(w)
                 FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-                WHERE w.isPersonal = false
+                WHERE w.personal = false
             ')
             ->getSingleScalarResult();
     }
@@ -371,21 +373,20 @@ class WorkspaceRepository extends EntityRepository
     public function findLatestWorkspacesByUser(User $user, array $roles, $max = 5)
     {
         return $this->_em
-            ->createQuery("
-                SELECT DISTINCT w AS workspace, MAX(l.dateLog) AS max_date
+            ->createQuery('
+                SELECT DISTINCT w AS workspace, MAX(wr.entryDate) AS max_date
                 FROM Claroline\\CoreBundle\\Entity\\Workspace\\Workspace w
                 JOIN w.roles r
-                INNER JOIN Claroline\\CoreBundle\\Entity\\Log\\Log l WITH l.workspace = w
-                JOIN l.doer u
-                WHERE l.action = 'workspace-tool-read'
-                AND u.id = :userId
+                INNER JOIN Claroline\\CoreBundle\\Entity\\Workspace\\WorkspaceRecent wr WITH wr.workspace = w
+                AND wr.user = :usr
                 AND r.name IN (:roles)
                 GROUP BY w.id
                 ORDER BY max_date DESC
-            ")
+            ')
             ->setMaxResults($max)
-            ->setParameter('userId', $user->getId())
+            ->setParameter('usr', $user)
             ->setParameter('roles', $roles)
+            ->setHint(Query::HINT_FORCE_PARTIAL_LOAD, true)
             ->getResult();
     }
 
@@ -976,7 +977,7 @@ class WorkspaceRepository extends EntityRepository
                 WHERE (gr IN (:roles) OR ur IN (:roles))
 
             )
-            AND w.isPersonal = true
+            AND w.personal = true
         ';
 
         if (!$includeOrphans) {
@@ -1021,7 +1022,7 @@ class WorkspaceRepository extends EntityRepository
             WHERE (uws.id = :wsId
             OR grws.id = :wsId)
             AND u.isRemoved = :isRemoved
-            AND w.isPersonal = true
+            AND w.personal = true
         ';
 
         if (!$includeOrphans) {
@@ -1048,7 +1049,7 @@ class WorkspaceRepository extends EntityRepository
     {
         $dql = '
             SELECT w FROM Claroline\CoreBundle\Entity\Workspace\Workspace w
-            WHERE w.isPersonal = false
+            WHERE w.personal = false
         ';
 
         if ($code) {
@@ -1078,5 +1079,18 @@ class WorkspaceRepository extends EntityRepository
         }
 
         return $query->getResult();
+    }
+
+    public function findAllPaginated($offset = null, $limit = null)
+    {
+        $qb = $this
+            ->createQueryBuilder('w')
+            ->orderBy('w.id')
+            ->setMaxResults($limit);
+        if ($offset) {
+            $qb->setFirstResult($offset);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

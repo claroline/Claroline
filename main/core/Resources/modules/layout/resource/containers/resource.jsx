@@ -1,12 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
-import {select as modalSelect} from '#/main/core/layout/modal/selectors'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {select as resourceSelect} from './../selectors'
-import {actions as resourceActions} from './../actions'
-import {Resource} from '../components/resource.jsx'
+import {connectPage} from '#/main/core/layout/page/connect'
+
+import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {actions as resourceActions} from '#/main/core/layout/resource/actions'
+import {Resource as ResourceComponent} from '#/main/core/layout/resource/components/resource.jsx'
 
 /**
  * Connected container for resources.
@@ -14,83 +13,45 @@ import {Resource} from '../components/resource.jsx'
  * Connects the <Resource> component to a redux store.
  * If you don't use redux in your implementation @see Resource functional component.
  *
- * Requires the following reducers to be registered in your store :
+ * Requires the following reducers to be registered in your store (@see makePageReducer) :
  *   - modal
+ *   - alerts [optional]
  *   - resource
  *
  * @param props
  * @constructor
  */
-const ResourceContainer = props =>
-  <Resource
+const Resource = props =>
+  <ResourceComponent
     {...props}
   >
     {props.children}
-  </Resource>
+  </ResourceComponent>
 
-ResourceContainer.propTypes = {
+Resource.propTypes = {
   /**
    * Application of the resource.
    */
-  children: T.node,
-
-  /**
-   * Current displayed modal if any.
-   */
-  modal: T.shape({
-    type: T.string,
-    fading: T.bool.isRequired,
-    props: T.object.isRequired
-  }),
-
-  /**
-   * Builds the current modal component.
-   */
-  createModal: T.func.isRequired,
-
-  /**
-   * Shows a modal.
-   */
-  showModal: T.func.isRequired,
-
-  /**
-   * Hides the current displayed modal.
-   */
-  fadeModal: T.func.isRequired,
-
-  customActions: T.array.isRequired,
-  editMode: T.bool,
-  edit: T.oneOfType([T.func, T.string]).isRequired,
-  save: T.object.isRequired,
-
-  /**
-   * Changes publication status of the resource.
-   */
-  togglePublication: T.func.isRequired,
-
-  /**
-   * Updates the resource node properties.
-   *
-   * @param {object} resourceNode - the new resourceNode properties
-   */
-  updateNode: T.func.isRequired
+  children: T.node
 }
 
-function mapStateToProps(state) {
-  return {
-    modal: modalSelect.modal(state),
+const ResourceContainer = connectPage(
+  (state) => ({
     resourceNode: resourceSelect.resourceNode(state)
-  }
-}
-
-// connects the container to redux
-const ConnectedResource = connect(
-  mapStateToProps,
-  Object.assign(
-    {},
-    modalActions,
-    resourceActions
-  )
+  }),
+  (dispatch) => ({
+    updateNode(resourceNode) {
+      dispatch(resourceActions.updateNode(resourceNode))
+    },
+    updatePublication(resourceNode) {
+      dispatch(resourceActions.updatePublication(resourceNode))
+    },
+    togglePublication(resourceNode) {
+      dispatch(resourceActions.togglePublication(resourceNode))
+    }
+  })
 )(Resource)
 
-export {ConnectedResource as Resource}
+export {
+  ResourceContainer
+}

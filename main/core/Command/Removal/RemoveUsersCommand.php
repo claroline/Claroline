@@ -123,7 +123,7 @@ class RemoveUsersCommand extends ContainerAwareCommand
     {
         $userManager = $this->getContainer()->get('claroline.manager.user_manager');
         $usersToDelete = $all ?
-            $userManager->getUsersExcudingRoles($rolesSearch, null, self::BATCH_SIZE) :
+            $userManager->getUsersExcludingRoles($rolesSearch, null, self::BATCH_SIZE) :
             //no real good method for that one atm
             $userManager->getUsersByRolesWithGroups($rolesSearch);
 

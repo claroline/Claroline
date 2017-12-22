@@ -125,6 +125,7 @@ class CursusManager
     private $cursusUserRepo;
     private $cursusWordRepo;
     private $documentModelRepo;
+    private $organizationRepo;
     private $reservationResourceRepo;
     private $sessionEventRepo;
     private $sessionEventSetRepo;
@@ -225,6 +226,7 @@ class CursusManager
         $this->cursusUserRepo = $om->getRepository('ClarolineCursusBundle:CursusUser');
         $this->cursusWordRepo = $om->getRepository('ClarolineCursusBundle:CursusDisplayedWord');
         $this->documentModelRepo = $om->getRepository('ClarolineCursusBundle:DocumentModel');
+        $this->organizationRepo = $om->getRepository('ClarolineCoreBundle:Organization\Organization');
         $this->reservationResourceRepo = $om->getRepository('FormaLibre\ReservationBundle\Entity\Resource');
         $this->sessionEventCommentRepo = $om->getRepository('ClarolineCursusBundle:SessionEventComment');
         $this->sessionEventRepo = $om->getRepository('ClarolineCursusBundle:SessionEvent');
@@ -276,7 +278,6 @@ class CursusManager
         $cursus->setCourse($course);
         $cursus->setDescription($description);
         $cursus->setBlocking($blocking);
-        $course->refreshUuid();
         $cursus->setWorkspace($workspace);
         $cursus->setDetails(['color' => $color]);
         if ($icon) {
@@ -366,7 +367,6 @@ class CursusManager
         array $organizations = []
     ) {
         $course = new Course();
-        $course->refreshUuid();
         $course->setTitle($title);
         $course->setCode($code);
         $course->setPublicRegistration($publicRegistration);
@@ -3814,9 +3814,16 @@ class CursusManager
 
     public function getWorkspacesListForCurrentUser()
     {
+        $workspaces = [];
         $token = $this->tokenStorage->getToken();
         $roles = $this->utils->getRoles($token);
-        $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
+        $openableWorkspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
+
+        foreach ($openableWorkspaces as $workspace) {
+            if (!$workspace->isModel()) {
+                $workspaces[] = $workspace;
+            }
+        }
 
         return $workspaces;
     }
@@ -3953,8 +3960,10 @@ class CursusManager
         $sessionTrainersHtml = '';
         $locationHtml = '';
         $eventTrainersHtml = '';
+        $locationName = '';
 
         if (!is_null($location)) {
+            $locationName = $location->getName();
             $locationHtml = $location->getStreet().', '.$location->getStreetNumber();
             $locationHtml .= $location->getBoxNumber() ? ' / '.$location->getBoxNumber() : '';
             $locationHtml .= '<br>'.$location->getPc().' '.$location->getTown().'<br>'.$location->getCountry();
@@ -3994,6 +4003,8 @@ class CursusManager
             '%event_start%',
             '%event_end%',
             '%event_location%',
+            '%event_location_address%',
+            '%event_location_name%',
             '%event_location_extra%',
             '%event_trainers%',
         ];
@@ -4012,6 +4023,8 @@ class CursusManager
             $event->getStartDate()->format('d/m/Y H:i'),
             $event->getEndDate()->format('d/m/Y H:i'),
             $locationHtml,
+            $locationHtml,
+            $locationName,
             $event->getLocationExtra(),
             $eventTrainersHtml,
         ];
@@ -4082,6 +4095,9 @@ class CursusManager
     {
         $creator = $this->container->get('security.token_storage')->getToken()->getUser();
         $data = [];
+        $certificateEmail = $this->getCertificateEmail();
+        $emailObject = $certificateEmail->getName();
+        $emailContent = $certificateEmail->getContent();
 
         foreach ($users as $user) {
             $name = $session->getName().'-'.$user->getUsername();
@@ -4111,8 +4127,15 @@ class CursusManager
             }
             $replacedContent = str_replace('%events_list%', $eventsList, $replacedContent);
             $pdf = $this->pdfManager->create($replacedContent, $name, $creator, 'session_certificate');
-            $title = $this->translator->trans('new_certificate_email_title', [], 'cursus');
-            $link = $this->templating->render('ClarolineCursusBundle:Mail:certificate.html.twig', ['pdf' => $pdf, 'session' => $session]);
+
+            $pdfLink = $this->router->generate('claro_pdf_download', ['pdf' => $pdf->getGuid()], true);
+            $replacedEmailContent = str_replace('%pdf_link_start%', '<a href="'.$pdfLink.'">', $emailContent);
+            $replacedEmailContent = str_replace('%pdf_link_end%', '</a>', $replacedEmailContent);
+
+            $title = !empty($emailObject) ? $emailObject : $this->translator->trans('new_certificate_email_title', [], 'cursus');
+            $link = !empty($replacedEmailContent) ?
+                $replacedEmailContent :
+                $this->templating->render('ClarolineCursusBundle:Mail:certificate.html.twig', ['pdf' => $pdf, 'session' => $session]);
             $this->mailManager->send($title, $link, [$user]);
             $data[] = ['user' => $user, 'pdf' => $pdf];
         }
@@ -4126,14 +4149,26 @@ class CursusManager
     {
         $creator = $this->container->get('security.token_storage')->getToken()->getUser();
         $data = [];
+        $certificateEmail = $this->getCertificateEmail();
+        $emailObject = $certificateEmail->getName();
+        $emailContent = $certificateEmail->getContent();
 
         foreach ($users as $user) {
             $name = $event->getName().'-'.$user->getUsername();
             $replacedContent = str_replace('%first_name%', $user->getFirstName(), $content);
             $replacedContent = str_replace('%last_name%', $user->getLastName(), $replacedContent);
             $pdf = $this->pdfManager->create($replacedContent, $name, $creator, 'session_event_certificate');
-            $title = $this->translator->trans('new_event_certificate_email_title', [], 'cursus');
-            $link = $this->templating->render('ClarolineCursusBundle:Mail:event_certificate.html.twig', ['pdf' => $pdf, 'sessionEvent' => $event]);
+
+            $pdfLink = $this->router->generate('claro_pdf_download', ['pdf' => $pdf->getGuid()], true);
+            $replacedEmailContent = str_replace('%pdf_link_start%', '<a href="'.$pdfLink.'">', $emailContent);
+            $replacedEmailContent = str_replace('%pdf_link_end%', '</a>', $replacedEmailContent);
+
+            $title = !empty($emailObject) ?
+                $emailObject :
+                $this->translator->trans('new_event_certificate_email_title', [], 'cursus');
+            $link = !empty($replacedEmailContent) ?
+                $replacedEmailContent :
+                $this->templating->render('ClarolineCursusBundle:Mail:event_certificate.html.twig', ['pdf' => $pdf, 'sessionEvent' => $event]);
             $this->mailManager->send($title, $link, [$user]);
             $data[] = ['user' => $user, 'pdf' => $pdf];
         }
@@ -5580,6 +5615,24 @@ class CursusManager
         return $this->documentModelRepo->findOneById($id);
     }
 
+    public function getCertificateEmail()
+    {
+        $document = null;
+        $documents = $this->documentModelRepo->findBy(['documentType' => DocumentModel::MAIL_CERTIFICATE]);
+
+        if (count($documents) > 0) {
+            $document = $documents[0];
+        } else {
+            $document = $this->createDocumentModel(
+                '',
+                '',
+                DocumentModel::MAIL_CERTIFICATE
+            );
+        }
+
+        return $document;
+    }
+
     /***************************************************
      * Access to ReservationResourceRepository methods *
      ***************************************************/
@@ -5712,6 +5765,20 @@ class CursusManager
         }
 
         return $sessions;
+    }
+
+    /*************************
+     * Organizations methods *
+     *************************/
+
+    public function getAllOrganizations()
+    {
+        return $this->organizationRepo->findAll();
+    }
+
+    public function getOrganizationsByIds(array $ids)
+    {
+        return $this->om->findList('Claroline\CoreBundle\Entity\Organization\Organization', 'id', $ids);
     }
 
     /*******************

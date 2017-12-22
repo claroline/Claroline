@@ -29,6 +29,23 @@ div.website-container {
   }
   .website-content{
     position: relative;
+    &.vertical-menu {
+      display: flex;
+      flex-direction: row;
+      align-items: stretch;
+      #menu {
+        flex-grow: 0;
+      }
+      .website-page-content {
+        flex-grow: 1;
+      }
+    }
+
+    iframe{
+      overflow: auto;
+      width: 100%;
+      height: 100vh;
+    }
   }
 }
 

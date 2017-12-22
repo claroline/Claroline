@@ -5,8 +5,7 @@ import {ImageContentModal} from './modal.jsx'
 
 export default {
   type: 'image',
-  icon: 'fa fa-file-image-o',
-  altIcon: 'fa fa-picture-o',
+  icon: 'fa fa-picture-o',
   player: ImageContentPlayer,
   browseFiles: 'image',
   thumbnail:ImageContentThumbnail,

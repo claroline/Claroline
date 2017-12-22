@@ -11,6 +11,8 @@
     "calendar_view": "Vue calendrier",
     "calendar_view_options": "Options de la vue calendrier",
     "certificate": "Certificat",
+    "certificate_mail_edition": "Modification de l'email d'envoi d'un certificat",
+    "certificate_email_message": "Le lien vers le certificat doit être défini entre les balises %pdf_link_start% et %pdf_link_end%.",
     "chronologic_view": "Vue chronologique",
     "chronological_view_options": "Options de la vue chronologique",
     "click_on_link_below_to_confirm_request": "Veuillez cliquer sur le lien ci-dessous pour confirmer la demande",
@@ -215,6 +217,7 @@
     "placeholder_session_event_end_message": "Ce placeholder sera remplacé par la date de fin de la séance",
     "placeholder_session_event_location_extra_message": "Ce placeholder sera remplacé par les informations complémentaires sur la localisation de la séance",
     "placeholder_session_event_location_message": "Ce placeholder sera remplacé par la localisation de la séance",
+    "placeholder_session_event_location_name_message": "Ce placeholder sera remplacé par le nom de la localisation de la séance",
     "placeholder_session_event_name_message": "Ce placeholder sera remplacé par le nom de la séance",
     "placeholder_session_event_start_message": "Ce placeholder sera remplacé par la date de début de la séance",
     "placeholder_session_event_trainers_message": "Ce placeholder sera remplacé par la liste des formateurs de la séance",
@@ -253,6 +256,7 @@
     "self_register": "S'inscrire",
     "self_register_to_session_event": "S'inscrire à la séance",
     "self_register_to_session_event_set": "S'inscrire aux séances du groupe",
+    "self_unregister": "Se désinscrire",
     "send_confirmation_mail": "Envoyer un courriel de confirmation",
     "send_confirmation_mail_to_session": "Envoyer un courriel de confirmation à tous les apprenants de la session de formation.",
     "send_confirmation_mail_to_session_message": "Êtes-vous sûr de vouloir envoyer un courriel de confirmation à tous les apprenants de la session de formation ?",
@@ -366,5 +370,6 @@
     "with_session_event": "Créer une séance par défaut",
     "word": "Mot",
     "workspace_model": "Modèle d'espace d'activités",
-    "yes": "Oui"
+    "yes": "Oui",
+    "open_courses_management": "Gérer les formations"
 }

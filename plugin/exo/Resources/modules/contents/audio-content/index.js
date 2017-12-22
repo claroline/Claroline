@@ -5,8 +5,7 @@ import {AudioContentModal} from './modal.jsx'
 
 export default {
   type: 'audio',
-  icon: 'fa fa-file-audio-o',
-  altIcon: 'fa fa-volume-down',
+  icon: 'fa fa-volume-up',
   player: AudioContentPlayer,
   browseFiles: 'audio',
   thumbnail: AudioContentThumbnail,

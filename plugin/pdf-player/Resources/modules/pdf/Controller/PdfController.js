@@ -12,6 +12,9 @@ export default class PdfController {
     this.pdfDoc = null
     this.scale = 100
     this.canvas = document.getElementById('the-canvas')
+    if (parseInt(this.download) !== 1) {
+      this.disableContextMenu(this.canvas)
+    }
     this.ctx = this.canvas.getContext('2d')
 
     this.renderPdf()
@@ -71,5 +74,17 @@ export default class PdfController {
       this.$scope.$apply()
       this.renderPage(this.pageNum)
     })
+  }
+
+  disableContextMenu(el) {
+    if (el.addEventListener) {
+      el.addEventListener('contextmenu', (e) => {
+        e.preventDefault()
+      }, false)
+    } else {
+      el.attachEvent('oncontextmenu', () => {
+        window.event.returnValue = false
+      })
+    }
   }
 }

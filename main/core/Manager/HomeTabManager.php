@@ -621,6 +621,11 @@ class HomeTabManager
         return $this->homeTabRepo->findOneBy(['id' => $homeTabId, 'workspace' => $workspace]);
     }
 
+    public function getHomeTabByWorkspace(Workspace $workspace)
+    {
+        return $this->homeTabRepo->findBy(['workspace' => $workspace]);
+    }
+
     public function getHomeTabByIdAndType($homeTabId, $type)
     {
         return $this->homeTabRepo->findOneBy(['id' => $homeTabId, 'type' => $type]);

@@ -1,55 +1,30 @@
-{% set layout = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends "ClarolineCoreBundle:Resource:layout.html.twig" %}
 
-{% if isDesktop() %}
-    {% set layout = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
-{% endif %}
-
-{% extends layout %}
-
-{% set _resource = clacoForm %}
-
-{% block section_panel %}
-    <div id="claco-form-app" ng-cloak="" ng-app="ClacoFormModule">
-        <div ui-view></div>
+{% block content %}
+    <div
+      class="page-container claco-form-container"
+      {% if not isAnon %}
+        data-user="{{ user | api_serialize | json_encode | raw | escape }}"
+      {% endif %}
+      data-resource="{{ _resource | api_serialize | json_encode | raw | escape }}"
+      data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
+      data-fields="{{ fields | json_serialize('api_facet_admin') | raw | escape }}"
+      data-cascade-level-max={{ cascadeLevelMax }}
+      data-can-generate-pdf="{{ canGeneratePdf }}"
+      data-entries="{{ entries | json_encode | raw | escape }}"
+      data-my-entries-count={{ myEntriesCount }}
+      data-roles="{{ roles | json_encode | raw | escape }}"
+      data-my-roles="{{ myRoles | json_encode | raw | escape }}"
+    >
     </div>
 {% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('packages/angular-loading-bar/build/loading-bar.min.css') }}" />
-    <link rel="stylesheet" href="{{ asset('packages/ng-table/dist/ng-table.css') }}" />
-    <link rel='stylesheet' href='{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}'>
-    <link rel="stylesheet" href="{{ asset('bundles/clarolineclacoform/css/clacoform.css') }}" />
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-claco-form-claco-form-resource.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts debug=false 'js/translations/clacoform/*.js' %}
-        <script src="{{ asset_url }}"></script>
-    {% endjavascripts %}
-    <script>
-        window.resourceId = {{ clacoForm.getId() }}
-        window.resourceDetails = {{ clacoForm.getDetails()|json_encode|raw }}
-        window.resourceNodeId = {{ clacoForm.getResourceNode().getId() }}
-        window.resourceNodeName = "{{ clacoForm.getResourceNode().getName() }}"
-        window.workspaceId = "{{ clacoForm.getResourceNode().getWorkspace().getId() }}"
-        window.isAnon = {{ isAnon ? 'true' : 'false' }}
-        window.isCategoryManager = {{ isCategoryManager ? 'true' : 'false' }}
-        window.userId = {{ userId }}
-        window.canEdit = {{ canEdit ? 'true' : 'false' }}
-        window.fields = {{ fields|raw }}
-        window.keywords = {{ keywords|raw }}
-        window.categories = {{ categories|raw }}
-        window.myEntries = {{ myEntries|raw }}
-        window.managerEntries = {{ managerEntries|raw }}
-        window.template = `{{ clacoForm.getTemplate()|raw }}`
-        window.nbEntries = {{ nbEntries }}
-        window.nbPublishedEntries = {{ nbPublishedEntries }}
-        window.canGeneratePdf = {{ canGeneratePdf ? 'true' : 'false' }}
-        window.sharedEntries = {{ sharedEntries|json_encode|raw }}
-        window.cascadeLevelMax = {{ cascadeLevelMax }}
-    </script>
-    <script type='text/javascript' src="{{ asset('packages/angular/angular.min.js') }}"></script>
-    <script type='text/javascript' src="{{ asset('packages/ng-table/dist/ng-table.js') }}"></script>
-    <script src="{{ hotAsset('dist/claroline-distribution-plugin-claco-form-resource.js') }}"></script>
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-claco-form-claco-form-resource.js') }}"></script>
 {% endblock %}

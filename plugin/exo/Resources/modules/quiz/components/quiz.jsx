@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {tex} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/fos-js-router'
-import {Resource as ResourceContainer} from '#/main/core/layout/resource/containers/resource.jsx'
+import {ResourceContainer} from '#/main/core/layout/resource/containers/resource.jsx'
 import {viewComponents} from './../views'
 import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
 import select from './../selectors'
@@ -14,13 +14,15 @@ import {actions as quizActions} from './../actions'
 
 import {VIEW_EDITOR} from './../enums'
 
-let Quiz = props =>
+const Quiz = props =>
   <ResourceContainer
-    edit="#editor"
-    editMode={VIEW_EDITOR === props.viewMode}
-    save={{
-      disabled: !props.saveEnabled,
-      action: props.saveQuiz
+    editor={{
+      opened: VIEW_EDITOR === props.viewMode,
+      open: '#editor',
+      save: {
+        disabled: !props.saveEnabled,
+        action: props.saveQuiz
+      }
     }}
     customActions={customActions(props)}
   >
@@ -71,7 +73,7 @@ function customActions(props) {
     })
   }
 
-  if (props.editable || props.papersAdmin) {
+  if (props.papersAdmin) {
     // Export results
     actions.push({
       icon: 'fa fa-fw fa-table',
@@ -82,7 +84,7 @@ function customActions(props) {
   }
 
   // Docimology
-  if (props.editable || props.docimologyAdmin) {
+  if (props.docimologyAdmin) {
     actions.push({
       icon: 'fa fa-fw fa-pie-chart',
       label: tex('docimology'),
@@ -90,13 +92,21 @@ function customActions(props) {
     })
   }
 
-  // Manual correction
-  actions.push({
-    icon: 'fa fa-fw fa-check-square-o',
-    label: tex('manual_correction'),
-    disabled: !props.hasPapers,
-    action: '#correction/questions'
-  })
+  if (props.papersAdmin) {
+    // Manual correction
+    actions.push({
+      icon: 'fa fa-fw fa-check-square-o',
+      label: tex('manual_correction'),
+      disabled: !props.hasPapers,
+      action: '#correction/questions'
+    })
+
+    actions.push({
+      icon: 'fa fa-fw fa-bar-chart',
+      label: tex('statistics'),
+      action: '#/statistics'
+    })
+  }
 
   return actions
 }
@@ -129,6 +139,8 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-Quiz = connect(mapStateToProps, mapDispatchToProps)(Quiz)
+const ConnectedQuiz = connect(mapStateToProps, mapDispatchToProps)(Quiz)
 
-export {Quiz}
+export {
+  ConnectedQuiz as Quiz
+}

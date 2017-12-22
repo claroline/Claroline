@@ -3,7 +3,7 @@ import set from 'lodash/set'
 
 import {tval} from '#/main/core/translation'
 import {setIfError, notBlank} from '#/main/core/validation'
-import {closeTargets} from '#/main/core/layout/resource/enums'
+import {closeTargets} from '#/main/core/layout/resource/constants'
 
 /**
  * Checks if a ResourceNode data are valid.

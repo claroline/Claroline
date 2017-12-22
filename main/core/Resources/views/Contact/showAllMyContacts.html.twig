@@ -119,7 +119,7 @@
                         </td>
                     {% endif %}
                     {% if options['show_username'] is not defined or options['show_username'] %}
-                        <td><a class="standard-link" href="{{ path('claro_profile_view', {'user': contact.getId()})}}"> {{ contact.getUsername() }} </a></td>
+                        <td><a class="standard-link" href="{{ path('claro_user_profile', {'user': contact.getPublicUrl()})}}"> {{ contact.getUsername() }} </a></td>
                     {% endif %}
                     <td>{{ contact.getFirstName() }}</td>
                     <td>{{ contact.getLastName() }}</td>

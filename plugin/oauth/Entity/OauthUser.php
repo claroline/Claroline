@@ -38,13 +38,6 @@ class OauthUser
      */
     protected $user;
 
-    public function __construct($service, $oauthId, User $user)
-    {
-        $this->service = $service;
-        $this->oauthId = $oauthId;
-        $this->user = $user;
-    }
-
     /**
      * @return mixed
      */

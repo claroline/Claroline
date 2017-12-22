@@ -1,32 +1,31 @@
-import {LoadingIndicator} from '#/main/core/loader/loading-indicator'
-
 import {makeReducer} from '#/main/core/utilities/redux'
 
 import {
-  REQUESTS_INCREMENT,
-  REQUESTS_DECREMENT
+  REQUEST_SEND,
+  RESPONSE_RECEIVE
 } from './actions'
 
-function incrementRequests(state) {
-  if (0 === state) {
-    LoadingIndicator.show()
-  }
-
-  return state + 1
-}
-
-function decrementRequests(state) {
-  const count = state - 1
-  if (0 === count) {
-    LoadingIndicator.hide()
-  }
-
-  return count
-}
-
+/**
+ * Reduces the current number of pending requests.
+ */
 const reducer = makeReducer(0, {
-  [REQUESTS_INCREMENT]: incrementRequests,
-  [REQUESTS_DECREMENT]: decrementRequests
+  /**
+   * Increments the number of pending requests when a new request is sent.
+   *
+   * @param {number} state
+   *
+   * @return {number}
+   */
+  [REQUEST_SEND]: (state) => state + 1,
+
+  /**
+   * Decrements the number of pending requests when a new response is received.
+   *
+   * @param {number} state
+   *
+   * @return {number}
+   */
+  [RESPONSE_RECEIVE]: (state) => state - 1
 })
 
 export {

@@ -52,7 +52,7 @@
         {% import _self as topbar %}
         {% set username = app.user.firstName ~ ' ' ~ app.user.lastName %}
         {% set user = username | length > 16 ? username | slice(0, 16) ~ '...' : username %}
-        {{ topbar.item({'name':user, 'icon':'user', 'route': path('claro_public_profile_view', {'publicUrl': app.security.token.user.publicUrl}), 'dropdown':block('dropdownLogged')}) }}
+        {{ topbar.item({'name':user, 'icon':'user', 'route': path('claro_user_profile', {'publicUrl': app.security.token.user.publicUrl}), 'dropdown':block('dropdownLogged')}) }}
     {% endblock logged %}
 
     {% block dropdownAdministration %}

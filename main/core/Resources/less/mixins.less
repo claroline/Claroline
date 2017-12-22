@@ -1,6 +1,45 @@
+/*
+ * Application mixins
+ */
+
+// gets bootstrap mixins
 @import "../../../../../../../web/packages/bootstrap/less/mixins";
 
+
+// -
+// Modifiers
+// ---
+
+.font-size-modifier(@font-size) {
+    font-size: floor(@font-size * @font-size-modifier);
+}
+
+.box-shadow(@shadow) when (@enable-box-shadow = true) {
+    box-shadow: @shadow;
+}
+.box-shadow(@shadow) when (@enable-box-shadow = false) {
+    box-shadow: none;
+}
+
+.border-radius(@border-radius) when (@enable-border-radius = true) {
+    border-radius: @border-radius;
+}
+.border-radius(@border-radius) when (@enable-border-radius = false) {
+    border-radius: 0;
+}
+
+.border(@border) when (@enable-border = true) {
+    border: @border;
+}
+
+.border(@border) when (@enable-border = false) {
+    border: none;
+}
+
+
+// -
 // Typography
+// ---
 
 // rewrite bootstrap method to add `!important` in order to have the correct color on any element
 // (even those who originally have a defined color)
@@ -12,7 +51,10 @@
     }
 }
 
+
+// -
 // Buttons
+// ---
 
 // expose a mixin to generate button links variant (this is not down by bootstrap)
 .btn-link-variant(@color, @hover-color, @hover-decoration: none) {
@@ -50,6 +92,33 @@
     }
 }
 
+.pagination-btn-variant() {
+    background: @pagination-bg;
+    color: @pagination-color;
+    border-color: @pagination-border;
+    .border-radius(@border-radius-base);
+
+    &.hover, &:hover,
+    &.focus, &:focus,
+    &.active, &:active {
+        background: @pagination-hover-bg;
+        color: @pagination-hover-color;
+        border-color: @pagination-hover-border;
+    }
+
+    &:disabled,
+    &.disabled {
+        background: @pagination-disabled-bg;
+        color: @pagination-disabled-color;
+        border-color: @pagination-disabled-border;
+    }
+}
+
+
+// -
+// Placeholders
+// ---
+
 .placeholder-variant(@font-size, @padding, @border-radius, @border, @border-hover) {
     font-size: @font-size;
     padding: @padding;
@@ -61,5 +130,21 @@
         &:hover {
             border: @border-hover;
         }
+    }
+}
+
+
+// -
+// Flying alerts
+// ---
+
+.flying-alert-variant(@color, @bg-color, @border-color) {
+    color: @color;
+    background-color: @bg-color;
+    border-color: @border-color;
+
+    .flying-alert-icon-secondary {
+        background: @bg-color;
+        border-color: @color;
     }
 }

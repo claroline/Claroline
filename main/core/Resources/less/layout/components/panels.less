@@ -4,6 +4,18 @@
 
     .panel-heading {
         position: relative; // used to create an absolute button bar in the right corner
+
+        .panel-actions {
+            position: absolute;
+            right: 0;
+            top: 0;
+            height: 100%;
+            display: flex;
+        }
+    }
+
+    .panel-title-icon {
+        margin-right: 10px;
     }
 
     .panel-body img {
@@ -38,11 +50,38 @@
     .panel,
     .breadcrumb, // this should not happen
     .table > tbody {
-         .box-shadow(none);
+         box-shadow: none;
      }
 
+    // embedded table
     .table > tbody {
         border: none;
+    }
+
+    // embedded panel group
+    > .panel-group {
+        margin: 0;
+
+        > div,
+        .panel {
+            border-radius: 0;
+            border-left: 0;
+            border-right: 0;
+
+            + div,
+            + .panel {
+                border-top: none;
+                margin-top: 0;
+            }
+        }
+
+        // avoids double border
+        // this may be problematic if the panel-group is not the last child
+        // of the parent panel
+        // todo : find a way to make this work properly
+        .panel:last-child {
+            border-bottom: none;
+        }
     }
 }
 
@@ -51,7 +90,36 @@
     .panel {
         + div, // allow containers (some SPA requires additional containers, cf. quizzes editor)
         + .panel {
-            margin-top: @panel-group-panel-margin; // use a var
+            margin-top: @panel-group-panel-margin;
+        }
+    }
+
+    // disabled panels
+    .panel-disabled {
+        box-shadow: none;
+        opacity: 0.75;
+
+        .panel-title > a {
+            cursor: not-allowed;
+        }
+    }
+
+    .panel-title > a {
+        display: block; // make the click zone fill the parent block
+        cursor: pointer; // the <a> tag to toggle the panel has no href, so the cursor do not change properly
+    }
+
+    .panel-title.opened,
+    .panel-title[aria-expanded=true],
+    .panel-title > *[aria-expanded=true] {
+        color: @brand-primary;
+        font-weight: bold;
+
+        .panel-title-icon {
+            color: @brand-primary;
+            // for svg icons
+            fill: @brand-primary;
+            stroke: @brand-primary;
         }
     }
 

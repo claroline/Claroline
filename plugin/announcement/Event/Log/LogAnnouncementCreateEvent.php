@@ -2,9 +2,9 @@
 
 namespace Claroline\AnnouncementBundle\Event\Log;
 
-use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
+use Claroline\CoreBundle\Event\Log\AbstractLogResourceEvent;
 
 class LogAnnouncementCreateEvent extends AbstractLogResourceEvent
 {
@@ -18,13 +18,13 @@ class LogAnnouncementCreateEvent extends AbstractLogResourceEvent
         AnnouncementAggregate $aggregate,
         Announcement $announcement
     ) {
-        $details = array(
-            'announcement' => array(
+        $details = [
+            'announcement' => [
                 'aggregate' => $aggregate->getId(),
                 'title' => $announcement->getTitle(),
                 'announcer' => $announcement->getAnnouncer(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct($aggregate->getResourceNode(), $details);
     }
@@ -34,6 +34,6 @@ class LogAnnouncementCreateEvent extends AbstractLogResourceEvent
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_WORKSPACE, self::DISPLAYED_ADMIN);
+        return [self::DISPLAYED_WORKSPACE, self::DISPLAYED_ADMIN];
     }
 }

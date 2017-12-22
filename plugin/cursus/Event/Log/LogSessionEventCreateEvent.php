@@ -39,7 +39,7 @@ class LogSessionEventCreateEvent extends LogGenericEvent
                 'username' => $tutor->getUsername(),
                 'firstName' => $tutor->getFirstName(),
                 'lastName' => $tutor->getLastName(),
-                'guid' => $tutor->getGuid(),
+                'guid' => $tutor->getUuid(),
             ];
         }
         parent::__construct(self::ACTION, $details);

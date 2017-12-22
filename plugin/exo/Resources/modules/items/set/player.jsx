@@ -6,7 +6,7 @@ import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
 import Tooltip from 'react-bootstrap/lib/Tooltip'
 import {tex, t} from '#/main/core/translation'
 import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {SetItemDragPreview} from './set-item-drag-preview.jsx'
 
 let DropBox = props => {
@@ -38,9 +38,10 @@ const Association = props =>
       id={`ass-${props.association.itemId}-${props.association.setId}-delete`}
       className="btn-link-default"
       title={t('delete')}
-      label={<span className="fa fa-fw fa-trash-o" />}
       onClick={() => props.handleItemRemove(props.association.setId, props.association.itemId)}
-    />
+    >
+      <span className="fa fa-fw fa-trash-o" />
+    </TooltipButton>
   </div>
 
 Association.propTypes = {

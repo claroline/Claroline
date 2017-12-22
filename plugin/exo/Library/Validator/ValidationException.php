@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Library\Validator;
 /**
  * Exception thrown by the Api when invalid data are received.
  *
- * @todo : use \Claroline\CoreBundle\Library\Validation\Exception\InvalidDataException
+ * @todo : use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
  *
  * @deprecated
  */

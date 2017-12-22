@@ -13,6 +13,7 @@ namespace Claroline\TeamBundle\Controller;
 
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Security\Token\ViewAsToken;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 use Claroline\TeamBundle\Form\MultipleTeamsType;
@@ -90,8 +91,9 @@ class TeamController extends Controller
         $params = [];
 
         //display the correct view when impersonnating
-        $impersonating = $this->authorization->isGranted('ROLE_USURPATE_WORKSPACE_ROLE');
+        $impersonating = $this->get('security.token_storage')->getToken() instanceof ViewAsToken;
         $impersonatingCollaborator = false;
+
         foreach ($this->get('security.token_storage')->getToken()->getRoles() as $role) {
             if ($role->getRole() === 'ROLE_WS_COLLABORATOR_'.$workspace->getGuid()) {
                 $impersonatingCollaborator = true;

@@ -8,6 +8,7 @@ import Popover from 'react-bootstrap/lib/Popover'
 import NavItem from 'react-bootstrap/lib/NavItem'
 import {Feedback} from '../components/feedback-btn.jsx'
 import {SolutionScore} from '../components/score.jsx'
+import {AnswerStats} from '../components/stats.jsx'
 import {utils} from './utils/utils'
 
 function getPopoverPosition(connectionClass, id){
@@ -74,7 +75,7 @@ export class MatchPaper extends Component
     this.handleWindowResize = this.handleWindowResize.bind(this)
   }
 
-  drawAnswers(){
+  drawAnswers() {
     if (this.state.key === 'first') {
       for (const answer of this.props.answer) {
         const solution = this.props.item.solutions.find(solution => answer.firstId === solution.firstId && answer.secondId === solution.secondId)
@@ -94,7 +95,7 @@ export class MatchPaper extends Component
           })
         }
       }
-    } else {
+    } else if (this.state.key === 'second') {
       for (const solution of this.props.item.solutions) {
         if (solution.score > 0) {
           this.jsPlumbInstance.connect({
@@ -131,7 +132,10 @@ export class MatchPaper extends Component
   }
 
   handleWindowResize() {
-    this.jsPlumbInstance.repaintEverything()
+    //this.jsPlumbInstance.repaintEverything()
+    //this fixes an issue I don't know where it come from.
+    //Feel free to uncomment it to see the paper no displaying the scores :p
+    utils.getJsPlumbInstance(false).repaintEverything()
   }
 
   // switch tab handler
@@ -166,59 +170,69 @@ export class MatchPaper extends Component
     return (
       <Tab.Container id={`match-${this.props.item.id}-paper`} defaultActiveKey="first">
         <div className="match-paper">
-            <Nav bsStyle="tabs">
+          <Nav bsStyle="tabs">
+            {this.props.showYours &&
               <NavItem eventKey="first" onSelect={() => this.handleSelect('first')}>
                   <span className="fa fa-fw fa-user"></span> {tex('your_answer')}
               </NavItem>
+            }
+            {this.props.showExpected &&
               <NavItem eventKey="second" onSelect={() => this.handleSelect('second')}>
                 <span className="fa fa-fw fa-check"></span> {tex('expected_answer')}
               </NavItem>
-            </Nav>
-            <div ref={(el) => { this.container = el }} id={`jsplumb-container-${this.props.item.id}`} className="jsplumb-container" style={{position:'relative'}}>
-              <Tab.Content animation>
-                <Tab.Pane eventKey="first">
-                  <span className="help-block">
-                    <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
-                  </span>
-                  <div id={`match-question-paper-${this.props.item.id}-first`} className="match-items row">
-                    <div className="item-col col-md-5 col-sm-5 col-xs-5">
-                      <ul>
-                      {this.props.item.firstSet.map((item) =>
-                        <li key={'first_source_' + item.id}>
-                          <MatchItem
-                            item={item}
-                            type="source"
-                            selectedTab={this.state.key}
-                          />
-                        </li>
-                      )}
-                      </ul>
-                    </div>
-                    <div className="divide-col col-md-2 col-sm-2 col-xs-2" id={`popover-container-${this.props.item.id}`}>
-                      { this.state.showPopover &&
-                          <MatchLinkPopover
-                            top={this.state.top}
-                            solution={this.state.current}
-                            showScore={this.props.showScore}
-                          />
-                        }
-                    </div>
-                    <div className="item-col col-md-5 col-sm-5 col-xs-5">
-                      <ul>
-                      {this.props.item.secondSet.map((item) =>
-                        <li key={'first_target_' + item.id}>
-                          <MatchItem
-                            item={item}
-                            type="target"
-                            selectedTab={this.state.key}
-                          />
-                        </li>
-                      )}
-                      </ul>
-                    </div>
+            }
+            {this.props.showStats &&
+              <NavItem eventKey="third" onSelect={() => this.handleSelect('third')}>
+                <span className="fa fa-fw fa-bar-chart"></span> {tex('stats')}
+              </NavItem>
+            }
+          </Nav>
+          <div ref={(el) => { this.container = el }} id={`jsplumb-container-${this.props.item.id}`} className="jsplumb-container" style={{position:'relative'}}>
+            <Tab.Content animation>
+              <Tab.Pane eventKey="first">
+                <span className="help-block">
+                  <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
+                </span>
+                <div id={`match-question-paper-${this.props.item.id}-first`} className="match-items row">
+                  <div className="item-col col-md-5 col-sm-5 col-xs-5">
+                    <ul>
+                    {this.props.item.firstSet.map((item) =>
+                      <li key={'first_source_' + item.id}>
+                        <MatchItem
+                          item={item}
+                          type="source"
+                          selectedTab={this.state.key}
+                        />
+                      </li>
+                    )}
+                    </ul>
                   </div>
-                </Tab.Pane>
+                  <div className="divide-col col-md-2 col-sm-2 col-xs-2" id={`popover-container-${this.props.item.id}`}>
+                    { this.state.showPopover &&
+                        <MatchLinkPopover
+                          top={this.state.top}
+                          solution={this.state.current}
+                          showScore={this.props.showScore}
+                        />
+                      }
+                  </div>
+                  <div className="item-col col-md-5 col-sm-5 col-xs-5">
+                    <ul>
+                    {this.props.item.secondSet.map((item) =>
+                      <li key={'first_target_' + item.id}>
+                        <MatchItem
+                          item={item}
+                          type="target"
+                          selectedTab={this.state.key}
+                        />
+                      </li>
+                    )}
+                    </ul>
+                  </div>
+                </div>
+              </Tab.Pane>
 
+              {this.props.showExpected &&
                 <Tab.Pane eventKey="second">
                   <span className="help-block" style={{visibility:'hidden'}} >
                     <span className="fa fa-info-circle"></span>{tex('match_player_click_link_help')}
@@ -275,15 +289,84 @@ export class MatchPaper extends Component
                           />
                           {this.props.showScore &&
                             <SolutionScore score={solution.score}/>
-                          }                          
+                          }
                         </div>
                       )}
                     </div>
                   </div>
                 </Tab.Pane>
-              </Tab.Content>
-            </div>
+              }
+
+              {this.props.showStats &&
+                <Tab.Pane eventKey="third">
+                  <div id={`match-question-paper-${this.props.item.id}-third`} className="match-items row">
+                    <div className="match-associations col-md-12">
+                      {this.props.item.solutions.map((solution) =>
+                        <div
+                          key={`stats-${solution.firstId}-${solution.secondId}`}
+                          className={classes(
+                            'answer-item',
+                            {'selected-answer' : solution.score > 0}
+                          )}
+                        >
+                          <div className="sets">
+                            <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionData(solution.firstId, this.props.item.firstSet)}} />
+                            <span className="fa fa-fw fa-chevron-left"></span>
+                            <span className="fa fa-fw fa-chevron-right"></span>
+                            <div className="item-content" dangerouslySetInnerHTML={{__html: utils.getSolutionData(solution.secondId, this.props.item.secondSet)}} />
+                          </div>
+
+                          <AnswerStats stats={{
+                            value: this.props.stats.matches[solution.firstId] && this.props.stats.matches[solution.firstId][solution.secondId] ?
+                              this.props.stats.matches[solution.firstId][solution.secondId] :
+                              0,
+                            total: this.props.stats.total
+                          }} />
+                        </div>
+                      )}
+                      {this.props.item.firstSet.map((first) =>
+                        this.props.item.secondSet.map((second) =>
+                          this.props.stats.matches[first.id] &&
+                          this.props.stats.matches[first.id][second.id] &&
+                          !utils.isPresentInSolutions(first.id, second.id, this.props.item.solutions) ?
+                            <div
+                              key={`stats-${first.id}-${second.id}`}
+                              className='answer-item'
+                            >
+                              <div className="sets">
+                                <div className="item-content" dangerouslySetInnerHTML={{__html: first.data}} />
+                                <span className="fa fa-fw fa-chevron-left"></span>
+                                <span className="fa fa-fw fa-chevron-right"></span>
+                                <div className="item-content" dangerouslySetInnerHTML={{__html: second.data}} />
+                              </div>
+
+                              <AnswerStats stats={{
+                                value: this.props.stats.matches[first.id] && this.props.stats.matches[first.id][second.id] ?
+                                  this.props.stats.matches[first.id][second.id] :
+                                  0,
+                                total: this.props.stats.total
+                              }} />
+                            </div> :
+                            ''
+                        )
+                      )}
+                      <div className='answer-item unanswered-item'>
+                        <div className="match-item-content">
+                          {tex('unanswered')}
+                        </div>
+
+                        <AnswerStats stats={{
+                          value: this.props.stats.unanswered ? this.props.stats.unanswered : 0,
+                          total: this.props.stats.total
+                        }} />
+                      </div>
+                    </div>
+                  </div>
+                </Tab.Pane>
+              }
+            </Tab.Content>
           </div>
+        </div>
       </Tab.Container>
     )
   }
@@ -307,7 +390,15 @@ MatchPaper.propTypes = {
     description: T.string
   }).isRequired,
   answer: T.array,
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  showExpected: T.bool.isRequired,
+  showStats: T.bool.isRequired,
+  showYours: T.bool.isRequired,
+  stats: T.shape({
+    matches: T.object,
+    unanswered: T.number,
+    total: T.number
+  })
 }
 
 MatchPaper.defaultProps = {

@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Repository;
 
-use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 use HeVinci\CompetencyBundle\Entity\Competency;
 
@@ -21,19 +21,19 @@ class CompetencyRepository extends NestedTreeRepository
     }
 
     /**
-     * Returns the competencies associated with an activity.
+     * Returns the competencies associated with a resource.
      *
-     * @param Activity $activity
+     * @param ResourceNode $resource
      *
      * @return array
      */
-    public function findByActivity(Activity $activity)
+    public function findByResource(ResourceNode $resource)
     {
         return $this->createQueryBuilder('c')
             ->select('c')
-            ->join('c.activities', 'a')
-            ->where('a = :activity')
-            ->setParameter(':activity', $activity)
+            ->join('c.resources', 'r')
+            ->where('r = :resource')
+            ->setParameter(':resource', $resource)
             ->getQuery()
             ->getResult();
     }

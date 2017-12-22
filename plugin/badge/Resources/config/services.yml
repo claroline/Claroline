@@ -45,6 +45,7 @@ services:
             - "@doctrine.orm.entity_manager"
             - "@icap_badge.manager.badge"
             - "%claroline.param.web_directory%"
+            - "@claroline.utilities.file"
 
     #notification listeners
     icap_badge.listener.core.notification_listener:

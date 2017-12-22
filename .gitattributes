@@ -2,3 +2,4 @@ main/dev/Command export-ignore
 main/dev/Manager export-ignore
 main/dev/Resources export-ignore
 */**/Tests export-ignore
+VERSION.txt merge=ours

@@ -56,6 +56,7 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -354,16 +355,18 @@ class WorkspaceController extends Controller
         $this->workspaceManager->setLogger($logger);
 
         if ($form->isValid()) {
-            $model = $form->get('model')->getData();
+            $modelFrom = $form->get('modelFrom')->getData();
             $workspace = $form->getData();
             $user = $this->tokenStorage->getToken()->getUser();
             $workspace->setCreator($user);
-            if (!$model) {
-                $model = $this->workspaceManager->getDefaultModel();
+
+            if (!$modelFrom) {
+                $modelFrom = $this->workspaceManager->getDefaultModel();
             }
-            $workspace = $this->workspaceManager->copy($model, $workspace);
+
+            $workspace = $this->workspaceManager->copy($modelFrom, $workspace, $workspace->isModel());
             $this->tokenUpdater->update($this->tokenStorage->getToken());
-            $route = $this->router->generate('claro_workspace_by_user');
+            $route = $this->router->generate('claro_workspace_open', ['workspaceId' => $workspace->getId()]);
 
             $msg = $this->get('translator')->trans(
                 'successfull_workspace_creation',
@@ -406,7 +409,8 @@ class WorkspaceController extends Controller
 
         $sessionFlashBag = $this->session->getFlashBag();
         $sessionFlashBag->add(
-            'success', $this->translator->trans(
+            'success',
+            $this->translator->trans(
                 'workspace_delete_success_message',
                 ['%workspaceName%' => $workspace->getName()],
                 'platform'
@@ -451,7 +455,10 @@ class WorkspaceController extends Controller
         $managerRole = $this->roleManager->getManagerRole($workspace);
 
         foreach ($currentRoles as $role) {
-            if ($managerRole->getName() === $role) {
+            //We check if $managerRole exists as an error proof condition.
+            //If something went wrong and it doesn't exists anymore,
+            //restorations tools should be used at this point
+            if ($managerRole && $managerRole->getName() === $role) {
                 $hasManagerAccess = true;
             }
         }
@@ -467,14 +474,14 @@ class WorkspaceController extends Controller
             $hideToolsMenu = false;
         } else {
             //if manager or admin, show every tools
-          if ($hasManagerAccess) {
-              $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
-              $hideToolsMenu = false;
-          } else {
-              //otherwise only shows the relevant tools
-              $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
-              $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
-          }
+            if ($hasManagerAccess) {
+                $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
+                $hideToolsMenu = false;
+            } else {
+                //otherwise only shows the relevant tools
+                $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
+                $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
+            }
         }
 
         $roleHasAccess = [];
@@ -520,6 +527,10 @@ class WorkspaceController extends Controller
         $event = $this->eventDispatcher->dispatch('open_tool_workspace_'.$toolName, new DisplayToolEvent($workspace));
         $this->eventDispatcher->dispatch('log', new LogWorkspaceToolReadEvent($workspace, $toolName));
         $this->eventDispatcher->dispatch('log', new LogWorkspaceEnterEvent($workspace));
+        // Add workspace to recent workspaces if user is not Usurped
+        if ($this->tokenStorage->getToken()->getUser() !== 'anon.' && !$this->isUsurpator($this->tokenStorage->getToken())) {
+            $this->workspaceManager->addRecentWorkspaceForUser($this->tokenStorage->getToken()->getUser(), $workspace);
+        }
 
         if ($toolName === 'resource_manager') {
             $this->session->set('isDesktop', false);
@@ -1505,6 +1516,17 @@ class WorkspaceController extends Controller
             'workspaceRoles' => $workspaceRoles,
             'resource' => $resource,
         ];
+    }
+
+    private function isUsurpator($token)
+    {
+        foreach ($token->getRoles() as $role) {
+            if ($role->getRole() === 'ROLE_USURPATE_WORKSPACE_ROLE' || $role instanceof SwitchUserRole) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function throwWorkspaceDeniedException(Workspace $workspace)

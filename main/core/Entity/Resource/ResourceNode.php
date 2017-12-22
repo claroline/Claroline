@@ -111,6 +111,17 @@ class ResourceNode
     protected $icon;
 
     /**
+     * @var ResourceThumbnail
+     *
+     * @ORM\OneToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceThumbnail",
+     *     cascade={"persist"}
+     * )
+     * @ORM\JoinColumn(onDelete="SET NULL")
+     */
+    protected $thumbnail;
+
+    /**
      * @var string
      *
      * @Gedmo\TreePathSource
@@ -300,6 +311,18 @@ class ResourceNode
      * @ORM\Column(nullable=false, type="integer")
      */
     protected $closeTarget = 0;
+
+    /**
+     * @ORM\Column(type="json_array", nullable=true)
+     */
+    protected $accesses = [];
+
+    /**
+     * @var int
+     *
+     * @ORM\Column(nullable=false, type="integer", name="views_count", options={"default": 0})
+     */
+    protected $viewsCount = 0;
 
     public function __construct()
     {
@@ -500,6 +523,26 @@ class ResourceNode
     public function setIcon(ResourceIcon $icon)
     {
         $this->icon = $icon;
+    }
+
+    /**
+     * Returns the resource thumbnail.
+     *
+     * @return ResourceThumbnail
+     */
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+
+    /**
+     * Sets the resource thumbnail.
+     *
+     * @param ResourceThumbnail $thumbnail
+     */
+    public function setThumbnail(ResourceThumbnail $thumbnail)
+    {
+        $this->thumbnail = $thumbnail;
     }
 
     /**
@@ -927,5 +970,79 @@ class ResourceNode
     public function setCloseTarget($closeTarget)
     {
         $this->closeTarget = $closeTarget;
+    }
+
+    public function setAllowedIps($ips)
+    {
+        $this->accesses['ips'] = $ips;
+    }
+
+    public function getAllowedIps()
+    {
+        return $this->accesses['ips'];
+    }
+
+    public function getAccesses()
+    {
+        //todo
+        //maybe remove the code from the front end
+        if (!$this->accesses) {
+            return $this->getDefaultAccesses();
+        }
+
+        return $this->accesses;
+    }
+
+    public function setAccesses($accesses)
+    {
+        $this->accesses = $accesses;
+    }
+
+    public function getDefaultAccesses()
+    {
+        return [
+            'ip' => [
+                'ips' => [],
+                'activateFilters' => false,
+            ],
+            'code' => null,
+        ];
+    }
+
+    public function getIPData()
+    {
+        return $this->getAccesses()['ip'];
+    }
+
+    public function getAccessCode()
+    {
+        if (
+            !empty($this->getAccesses()['code']) &&
+            trim($this->getAccesses()['code'], ' ') !== ''
+        ) {
+            return $this->getAccesses()['code'];
+        }
+    }
+
+    /**
+     * Gets how many times a resource has been viewed.
+     *
+     * @return int
+     */
+    public function getViewsCount()
+    {
+        return $this->viewsCount;
+    }
+
+    /**
+     * Adds one unit to the resource view count.
+     *
+     * @return ResourceNode
+     */
+    public function addView()
+    {
+        ++$this->viewsCount;
+
+        return $this;
     }
 }

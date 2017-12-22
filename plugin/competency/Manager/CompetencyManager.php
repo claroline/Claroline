@@ -25,6 +25,7 @@ class CompetencyManager
     private $competencyAbilityRepo;
     private $translator;
     private $converter;
+    private $levelRepo;
 
     /**
      * @DI\InjectParams({
@@ -49,6 +50,7 @@ class CompetencyManager
         $this->competencyAbilityRepo = $om->getRepository('HeVinciCompetencyBundle:CompetencyAbility');
         $this->translator = $translator;
         $this->converter = $converter;
+        $this->levelRepo = $om->getRepository('HeVinciCompetencyBundle:Level');
     }
 
     /**
@@ -504,5 +506,20 @@ class CompetencyManager
         }
 
         return $collection;
+    }
+
+    public function getCompetencyById($competencyId)
+    {
+        return $this->competencyRepo->findOneById($competencyId);
+    }
+
+    public function getCompetencyAbilityLinksByCompetencyAndLevel(Competency $competency, Level $level)
+    {
+        return $this->competencyAbilityRepo->findBy(['competency' => $competency, 'level' => $level]);
+    }
+
+    public function getLevelByScaleAndValue(Scale $scale, $value)
+    {
+        return $this->levelRepo->findOneBy(['scale' => $scale, 'value' => $value]);
     }
 }

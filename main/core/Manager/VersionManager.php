@@ -15,10 +15,10 @@ use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Update\Version;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Repository\VersionRepository;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Composer\Json\JsonFile;
 use Composer\Repository\InstalledFilesystemRepository;
-use FOS\RestBundle\View\View;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -30,25 +30,36 @@ class VersionManager
 {
     use LoggableTrait;
 
+    /** @var ObjectManager */
+    private $om;
+    /** @var VersionRepository */
+    private $repo;
+    /** @var string */
+    private $installedRepoFile;
+
     /**
+     * VersionManager constructor.
+     *
      * @DI\InjectParams({
      *     "om"        = @DI\Inject("claroline.persistence.object_manager"),
-     *     "container" = @DI\Inject("service_container")
+     *     "kernelDir" = @DI\Inject("%kernel.root_dir%")
      * })
+     *
+     * @param ObjectManager $om
+     * @param string        $kernelDir
      */
     public function __construct(
         ObjectManager $om,
-        $container
+        $kernelDir
     ) {
         $this->om = $om;
         $this->repo = $this->om->getRepository('ClarolineCoreBundle:Update\Version');
-        $this->container = $container;
-        $this->installedRepoFile = $this->container->get('kernel')->getRootDir().'/../vendor/composer/installed.json';
+        $this->installedRepoFile = $kernelDir.'/../vendor/composer/installed.json';
     }
 
     public function register(InstallableInterface $bundle)
     {
-        $data = $this->getVersionFile($bundle);
+        $data = $this->getVersionFile();
 
         $version = $this->repo->findOneBy(['version' => $data[0], 'bundle' => $bundle->getBundleFQCN()]);
 
@@ -85,6 +96,9 @@ class VersionManager
         return $this->getVersionFile()[0];
     }
 
+    /**
+     * @param string $bundle
+     */
     public function getLatestUpgraded($bundle)
     {
         $fqcn = $bundle instanceof PluginBundleInterface ? $bundle->getBundleFQCN() : $bundle;
@@ -102,6 +116,11 @@ class VersionManager
         $data = file_get_contents($this->getDistributionVersionFilePAth());
 
         return explode("\n", $data);
+    }
+
+    public function getDistributionVersion()
+    {
+        return $this->getVersionFile()[0];
     }
 
     public function getDistributionVersionFilePAth()
@@ -149,7 +168,7 @@ class VersionManager
             return $package;
         }
 
-        $previous = $this->versionManager->openRepository($this->previousRepoFile, true);
+        $previous = $this->openRepository($this->previousRepoFile, true);
 
         if (!$previous) {
             return;

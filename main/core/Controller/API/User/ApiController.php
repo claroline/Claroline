@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Controller\API\User;
 
-use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\Annotations\Get;
-use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
 
 /**
  * @NamePrefix("api_")
@@ -33,23 +33,6 @@ class ApiController extends FOSRestController
 
         if ($token) {
             return $token->getUser();
-        }
-
-        throw new \Exception('No security token.');
-    }
-
-    /**
-     * @View(serializerGroups={"api_roles"})
-     * @Get("/connected_roles", name="get_connected_roles", options={ "method_prefix" = false })
-     */
-    public function connectedRolesAction()
-    {
-        /* @var \Symfony\Component\Security\Core\SecurityContext $securityContext */
-        $tokenStorage = $this->container->get('security.token_storage');
-        $token = $tokenStorage->getToken();
-
-        if ($token) {
-            return $token->getRoles();
         }
 
         throw new \Exception('No security token.');

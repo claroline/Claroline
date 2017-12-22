@@ -15,7 +15,9 @@ function getItemStyles(props) {
   const {x, y} = currentOffset
   const transform = `translate(${x}px, ${y}px)`
   return {
-    transform: transform
+    pointerEvents: 'none',
+    transform: transform,
+    WebkitTransform: transform
   }
 }
 
@@ -29,7 +31,7 @@ class CustomDragLayerComponent extends Component {
     return (
       <div className="custom-drag-layer">
         <div style={getItemStyles(this.props)}>
-          {item.previewComponnent(item.props)}
+          {item.previewComponent(item.props)}
         </div>
       </div>
     )

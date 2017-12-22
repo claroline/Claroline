@@ -1,0 +1,4 @@
+inwicast_claroline:
+    resource: "@IcapInwicastBundle/Controller/"
+    type:     annotation
+    prefix:   /

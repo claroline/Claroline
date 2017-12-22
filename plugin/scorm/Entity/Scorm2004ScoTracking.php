@@ -98,6 +98,12 @@ class Scorm2004ScoTracking
      */
     protected $details;
 
+    /**
+     * @Groups({"api_user_min"})
+     * @SerializedName("lastSessionDate")
+     */
+    protected $lastSessionDate;
+
     public function getId()
     {
         return $this->id;
@@ -244,5 +250,15 @@ class Scorm2004ScoTracking
         }
 
         return $formattedTime;
+    }
+
+    public function getLastSessionDate()
+    {
+        return $this->lastSessionDate;
+    }
+
+    public function setLastSessionDate(\DateTime $lastSessionDate = null)
+    {
+        $this->lastSessionDate = $lastSessionDate;
     }
 }

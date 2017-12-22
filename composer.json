@@ -38,7 +38,7 @@
         "hwi/oauth-bundle": "0.5.2",
         "icap/html-diff": "1.1.0",
         "idci/exporter-bundle": "1.0.0",
-        "jangobrick/php-svg": "dev-master",
+        "meyfa/php-svg": "0.6.0",
         "jdorn/sql-formatter": "1.2.17",
         "jms/di-extra-bundle": "1.5.0",
         "jms/security-extra-bundle": "1.5.1",
@@ -74,7 +74,8 @@
         "innova/angular-ui-tinymce-bundle": "5.1.1",
         "claroline/front-end-bundle": "dev-7.x-test",
         "ocramius/proxy-manager": "1.0.2",
-        "ramsey/uuid": "~3.5"
+        "ramsey/uuid": "~3.5",
+        "postal/postal": "*"
     },
     "replace": {
         "claroline/distribution-bundle": "*",
@@ -125,7 +126,8 @@
         "innova/audio-recorder-bundle": "*",
         "innova/media-resource-bundle": "*",
         "ujm/exo-bundle": "*",
-        "icap/lesson-bundle": "*"
+        "icap/lesson-bundle": "*",
+        "icap/inwicast-plugin-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -186,7 +188,9 @@
             "UJM\\LtiBundle\\": "plugin/lti",
             "Claroline\\CasBundle\\": "plugin/cas",
             "Icap\\BibliographyBundle\\": "plugin/bibliography",
-            "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization"
+            "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization",
+            "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button",
+            "Icap\\InwicastBundle\\": "plugin/inwicast"
         }
     },
     "extra": {
@@ -246,7 +250,9 @@
             "UJM\\LtiBundle\\UJMLtiBundle",
             "Claroline\\CasBundle\\ClarolineCasBundle",
             "Icap\\BibliographyBundle\\IcapBibliographyBundle",
-            "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle"
+            "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle",
+            "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle",
+            "Icap\\InwicastBundle\\IcapInwicastBundle"
         ]
     }
 }

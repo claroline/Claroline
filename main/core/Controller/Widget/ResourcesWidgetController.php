@@ -89,12 +89,14 @@ class ResourcesWidgetController extends Controller
 
                 foreach ($directoriesIds as $directoryId) {
                     $parent = $this->resourceManager->getById($directoryId);
-                    $children = is_null($workspaceId) || ($workspaceId === $parent->getWorkspace()->getId()) ?
-                        $this->resourcesWidgetManager->getAllResourcesByDirectory($parent) :
-                        [];
+                    if ($parent) {
+                        $children = is_null($workspaceId) || ($workspaceId === $parent->getWorkspace()->getId()) ?
+                          $this->resourcesWidgetManager->getAllResourcesByDirectory($parent) :
+                          [];
 
-                    foreach ($children as $child) {
-                        array_push($resourceNodes, $child);
+                        foreach ($children as $child) {
+                            array_push($resourceNodes, $child);
+                        }
                     }
                 }
                 break;

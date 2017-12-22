@@ -53,8 +53,10 @@ export default class DocumentModelsManagementCtrl {
   initialize() {
     this.DocumentModelService.getAllDocumentModels().then(d => {
       d.forEach(m => {
-        m['documentTypeName'] = this.DocumentModelService.getDocumentTypeName(m['documentType'])
-        this.models.push(m)
+        if (m['documentType'] !== 4) {
+          m['documentTypeName'] = this.DocumentModelService.getDocumentTypeName(m['documentType'])
+          this.models.push(m)
+        }
       })
     })
   }

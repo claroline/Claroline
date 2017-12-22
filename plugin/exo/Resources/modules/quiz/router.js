@@ -3,6 +3,7 @@ import {actions} from './actions'
 import {actions as paperActions} from './papers/actions'
 import {actions as playerActions} from './player/actions'
 import {actions as correctionActions} from './correction/actions'
+import {actions as statisticActions} from './statistics/actions'
 import {VIEW_EDITOR, VIEW_OVERVIEW, VIEW_ATTEMPT_END} from './enums'
 
 let router = null
@@ -16,6 +17,7 @@ export function makeRouter(dispatch) {
       'papers': () => dispatch(paperActions.listPapers()),
       'correction/questions': () => dispatch(correctionActions.displayQuestions()),
       'correction/questions/:id': id => dispatch(correctionActions.displayQuestionAnswers(id)),
+      'statistics': () => dispatch(statisticActions.displayStatistics()),
       'test': () => dispatch(playerActions.play(null, true)),
       'play': () => dispatch(playerActions.play(null, false)),
       'play/end': () => dispatch(actions.updateViewMode(VIEW_ATTEMPT_END)),

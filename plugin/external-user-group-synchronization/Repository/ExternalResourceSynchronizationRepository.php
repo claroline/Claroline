@@ -99,11 +99,14 @@ class ExternalResourceSynchronizationRepository
             $replaceName = 'replace( replace( replace( replace( '.
                 $this->config['group_config']['fields']['group_name'].
                 ', \'"\', \'\'), \'.\', \'\'), \'-\', \'\'), \'\\\'\', \'\')';
+            $replaceCode = 'replace( replace( replace( replace( '.
+                $this->config['group_config']['fields']['code'].
+                ', \'"\', \'\'), \'.\', \'\'), \'-\', \'\'), \'\\\'\', \'\')';
             $replaceSearch = preg_replace('/[\'"\.-]/', '', $search);
             $qb->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->like($replaceName, ':search'),
-                    $qb->expr()->like($this->config['group_config']['fields']['code'], ':search')
+                    $qb->expr()->like($replaceCode, ':search')
                 ))
                 ->setParameter('search', '%'.$replaceSearch.'%');
         }
@@ -233,7 +236,9 @@ class ExternalResourceSynchronizationRepository
 
         $qb
             ->andWhere($qb->expr()->isNotNull($fields['username']))
+            ->andWhere("{$fields['username']} != ''")
             ->andWhere($qb->expr()->isNotNull($fields['email']))
+            ->andWhere("{$fields['email']} != ''")
             ->andWhere($qb->expr()->isNotNull($fields['first_name']))
             ->andWhere($qb->expr()->isNotNull($fields['last_name']));
     }

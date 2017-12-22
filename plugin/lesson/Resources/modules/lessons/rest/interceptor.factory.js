@@ -1,18 +1,20 @@
 let _$location = new WeakMap()
 let _Alerts = new WeakMap()
+let _transFilter = new WeakMap()
 
 export default class InterceptorFactory {
-  constructor($location, Alerts) {
+  constructor($location, Alerts, transFilter) {
     _$location.set(this, $location)
     _Alerts.set(this, Alerts)
+    _transFilter.set(this, transFilter)
   }
 
   get responseError() {
     return rejection => {
       if (rejection.status === 401 || rejection.status === 500) {
         _Alerts.get(this).push({
-          "type": 'danger',
-          "msg": Translator.trans('error_' + rejection.status, 'icap_lesson')})
+          'type': 'danger',
+          'msg': _transFilter.get(this)('error_' + rejection.status, {}, 'icap_lesson')})
       }
       if (rejection.status === 404) {
         _$location.get(this).path('/error/404')
@@ -20,3 +22,7 @@ export default class InterceptorFactory {
     }
   }
 }
+
+InterceptorFactory.$inject = [
+  'transFilter'
+]

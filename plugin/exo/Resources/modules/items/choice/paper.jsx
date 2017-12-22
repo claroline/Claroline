@@ -2,9 +2,11 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
+import {tex} from '#/main/core/translation'
 import {SCORE_FIXED} from '../../quiz/enums'
 import {Feedback} from '../components/feedback-btn.jsx'
 import {SolutionScore} from '../components/score.jsx'
+import {AnswerStats} from '../components/stats.jsx'
 import {WarningIcon} from './utils/warning-icon.jsx'
 import {utils} from './utils/utils'
 import {PaperTabs} from '../components/paper-tabs.jsx'
@@ -13,6 +15,9 @@ export const ChoicePaper = props => {
   return (
     <PaperTabs
       id={props.item.id}
+      showExpected={props.showExpected}
+      showStats={props.showStats}
+      showYours={props.showYours}
       yours={
         <div className="choice-paper">
           {props.item.solutions.map(solution =>
@@ -96,6 +101,44 @@ export const ChoicePaper = props => {
           )}
         </div>
       }
+      stats={props.showStats ?
+        <div className="choice-paper">
+          {props.item.solutions.map(solution =>
+            <label
+              key={solution.id}
+              className={classes(
+                'answer-item choice-item',
+                {
+                  'selected-answer': solution.score > 0
+                }
+              )}
+            >
+              <div
+                className="choice-item-content"
+                dangerouslySetInnerHTML={{__html: utils.getChoiceById(props.item.choices, solution.id).data}}
+              />
+
+              <AnswerStats stats={{
+                value: props.stats.choices[solution.id] ?
+                  props.stats.choices[solution.id] :
+                  0,
+                total: props.stats.total
+              }} />
+            </label>
+          )}
+          <label className='answer-item choice-item unanswered-item'>
+            <div className="choice-item-content">
+              {tex('unanswered')}
+            </div>
+
+            <AnswerStats stats={{
+              value: props.stats.unanswered ? props.stats.unanswered : 0,
+              total: props.stats.total
+            }} />
+          </label>
+        </div> :
+        <div></div>
+      }
     />
   )
 }
@@ -114,7 +157,15 @@ ChoicePaper.propTypes = {
     solutions: T.arrayOf(T.object)
   }).isRequired,
   answer: T.array,
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  showYours: T.bool.isRequired,
+  showExpected: T.bool.isRequired,
+  showStats: T.bool.isRequired,
+  stats: T.shape({
+    choices: T.object,
+    unanswered: T.number,
+    total: T.number
+  })
 }
 
 ChoicePaper.defaultProps = {

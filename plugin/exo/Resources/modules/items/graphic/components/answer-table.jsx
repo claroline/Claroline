@@ -1,12 +1,55 @@
-import React from 'react'
+import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import tinycolor from 'tinycolor2'
-import {transChoice} from '#/main/core/translation'
-import {SHAPE_RECT} from './../enums'
-import {HoverFeedback} from './../../../components/form/hover-feedback.jsx'
+import Popover from 'react-bootstrap/lib/Popover'
+import Overlay from 'react-bootstrap/lib/Overlay'
 
-export const AnswerTable = props =>
+import {transChoice} from '#/main/core/translation'
+
+import {SHAPE_RECT} from './../enums'
+
+class HoverFeedback extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      show: false
+    }
+  }
+
+  render() {
+    return (
+      <span style={{position: 'relative'}}>
+        <span
+          ref={el => this.el = el}
+          className="fa fa-fw fa-comments-o"
+          onMouseOver={() => this.setState({show: true})}
+          onMouseLeave={() => this.setState({show: false})}
+        />
+        <Overlay
+          show={this.state.show}
+          placement="top"
+          container={this}
+          target={this.el}
+        >
+          <Popover
+            id={this.props.id}
+            className="feedback-popover"
+          >
+            <span dangerouslySetInnerHTML={{ __html: this.props.feedback}}/>
+          </Popover>
+        </Overlay>
+      </span>
+    )
+  }
+}
+
+HoverFeedback.propTypes = {
+  id: T.string.isRequired,
+  feedback: T.string.isRequired
+}
+
+const AnswerTable = props =>
   <div className="answers-table">
     <h3 className="title">{props.title}</h3>
     {props.areas.map((area, idx) =>
@@ -59,4 +102,8 @@ AnswerTable.propTypes = {
     feedback: T.string
   })).isRequired,
   showScore: T.bool.isRequired
+}
+
+export {
+  AnswerTable
 }

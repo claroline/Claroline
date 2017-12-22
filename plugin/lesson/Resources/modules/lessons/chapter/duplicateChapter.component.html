@@ -1,6 +1,6 @@
 <div class='panel-heading chapter_title'>
     <h4>
-        {{ 'chapter_duplicate'|trans: 'icap_lesson' }}
+        {{ 'chapter_duplicate'|trans:{}:'icap_lesson' }}
     </h4>
 </div>
 
@@ -20,7 +20,7 @@
                     <label
                             class="control-label"
                             for="icap_lesson_duplicatechaptertype_title">
-                        {{ 'duplicate_title'|trans: 'icap_lesson' }}
+                        {{ 'duplicate_title'|trans:{}:'icap_lesson' }}
                     </label>
                     <div class="controls">
                         <input
@@ -30,12 +30,12 @@
                                 required
                                 class="form-control"
                                 data-ng-model="vm.chapter.current.title"
-                                data-uib-popover="{{ 'field_mandatory'|trans: 'icap_lesson' }}"
+                                data-uib-popover="{{ 'field_mandatory'|trans:{}:'icap_lesson' }}"
                                 data-popover-trigger="none"
                                 data-popover-is-open="duplicateForm.$submitted && duplicateForm.title.$invalid"
                         />
                         <label class="control-label" for="icap_lesson_duplicatechaptertype_chapters">
-                            {{ 'duplicate_destination'|trans: 'icap_lesson' }}
+                            {{ 'duplicate_destination'|trans:{}:'icap_lesson' }}
                         </label>
                         <select
                                 id="icap_lesson_duplicatechaptertype_chapters"
@@ -59,7 +59,7 @@
                         <label
                                 class="control-label"
                                 for="icap_lesson_duplicatechaptertype_duplicate_children">
-                            {{ 'duplicate_children'|trans: 'icap_lesson' }}
+                            {{ 'duplicate_children'|trans:{}:'icap_lesson' }}
                         </label>
                     </div>
 
@@ -77,13 +77,13 @@
                 data-ng-disabled="vm.buttonSubmit.disabled"
                 data-ng-click="vm.copyChapter(duplicateForm)"
                 >
-            {{ 'Ok'|trans: 'icap_lesson' }}
+            {{ 'Ok'|trans:{}:'icap_lesson' }}
         </button>
         <button
                 type="cancel"
                 class="btn btn-default"
                 data-ng-click="vm.cancelForm(vm.chapter.current.slug)">
-            {{ 'Cancel'|trans: 'icap_lesson' }}
+            {{ 'Cancel'|trans:{}:'icap_lesson' }}
         </button>
     </div>
 

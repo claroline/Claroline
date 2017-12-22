@@ -47,7 +47,7 @@ class AbilityTypeTest extends FormTestCase
         $formData = [
             'name' => 'Foo',
             'level' => $level->getId(),
-            'minActivityCount' => 2,
+            'minResourceCount' => 2,
         ];
 
         $form = $this->factory->create(new AbilityType(), null, ['competency' => $parent]);
@@ -58,7 +58,7 @@ class AbilityTypeTest extends FormTestCase
         $this->assertInstanceOf('HeVinci\CompetencyBundle\Entity\Ability', $ability);
         $this->assertEquals('Foo', $ability->getName());
         $this->assertEquals($level, $ability->getLevel());
-        $this->assertEquals(2, $ability->getMinActivityCount());
+        $this->assertEquals(2, $ability->getMinResourceCount());
         $this->assertViewIsValid($form, $formData);
     }
 }

@@ -14,7 +14,7 @@ trait FeedbackTrait
      *
      * @ORM\Column(name="feedback", type="text", nullable=true)
      */
-    private $feedback = null;
+    private $feedback = '';
 
     /**
      * Sets feedback.
@@ -33,6 +33,10 @@ trait FeedbackTrait
      */
     public function getFeedback()
     {
+        if (!$this->feedback) {
+            return '';
+        }
+
         return $this->feedback;
     }
 }

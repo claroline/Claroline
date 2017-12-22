@@ -7,10 +7,8 @@ plugin:
       name: innova_path
       is_exportable: true
       actions:
-        - name:      path_administrate
-          menu_name: administrate
-        - name:      manageresults
-          menu_name: manageresults
+        - name:      manage_results
+          menu_name: manage_results
 
   widgets:
      - name:                        innova_path_widget

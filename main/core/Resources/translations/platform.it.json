@@ -3,6 +3,7 @@
     "delete_category": "",
     "desktops": "",
     "display": "",
+    "display_views": "",
     "mandatory": "",
     "parameters": "Impostazioni",
     "404": "Pagina non trovata",
@@ -18,6 +19,8 @@
     "external_group_list": "",
     "in_workspaces": "",
     "on_desktops": "",
+    "thumbnail": "",
+    "published_at": "",
     "widget_type": "",
     "widgets_usage_list": "",
     "widgets_usage_ratio": ""

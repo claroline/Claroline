@@ -1,0 +1,27 @@
+{% extends 'HeVinciCompetencyBundle::modal.html.twig' %}
+
+{% trans_default_domain 'competency' %}
+
+{% block title %}{{ 'competency.resources'|trans }}{% endblock %}
+
+{% block body %}
+    {% set resources = competency.getResources() %}
+    {% if resources|length == 0 %}
+        <div class="alert alert-warning">
+            <i class="fa fa-warning"></i>
+            {{ 'info.no_competency_resources'|trans }}
+        </div>
+    {% else %}
+        <ul>
+            {% for resource in resources %}
+                <li>{{ resource.getPathForDisplay() }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    <button type="button" class="btn btn-primary"  data-dismiss="modal">
+        {{ 'close'|trans({}, 'platform') }}
+    </button>
+{% endblock %}

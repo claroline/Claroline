@@ -11,7 +11,6 @@
     'use strict';
 
     $('.role-delete-btn').on('click', function (event) {
-        console.debug(event);
         event.preventDefault();
 
         if (!$(event.target).hasClass('disabled')) {
@@ -40,6 +39,7 @@
             $('#confirm-ok').on('click', function(event) {
                 $.ajax({
                     url: url,
+                    method: 'DELETE',
                     success: function(data) {
                         $(saveEvent.target).parent().parent().remove();
                         $('#confirm-modal').modal('hide');

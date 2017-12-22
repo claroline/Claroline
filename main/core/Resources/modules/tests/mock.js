@@ -1,12 +1,13 @@
+
 // define a global noop Routing
-export function mockRouting() {
+function mockRouting() {
   window.Routing = {
     generate: (...args) => args[0]
   }
 }
 
 // define a global noop Translator
-export function mockTranslator() {
+function mockTranslator() {
   window.Translator = {
     trans: msg => msg,
     transChoice: msg => msg
@@ -14,7 +15,7 @@ export function mockTranslator() {
 }
 
 // define a global noop TinyMCE
-export function mockTinymce() {
+function mockTinymce() {
   window.tinymce = {
     get: () => ({
       on: () => {},
@@ -22,4 +23,10 @@ export function mockTinymce() {
       destroy: () => {}
     })
   }
+}
+
+export {
+  mockRouting,
+  mockTranslator,
+  mockTinymce
 }

@@ -13,8 +13,8 @@ namespace Claroline\CoreBundle\Controller\Tool;
 
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class ResourceManagerController extends Controller
 {
@@ -37,14 +37,6 @@ class ResourceManagerController extends Controller
         Workspace $workspace,
         Role $role
     ) {
-        $token = $this->get('security.token_storage')->getToken();
-
-        if (
-            $this->get('claroline.manager.rights_manager')->canEditPwsPerm($token)
-        ) {
-            throw new AccessDeniedException();
-        }
-
         $em = $this->get('doctrine.orm.entity_manager');
 
         if (!$this->get('security.authorization_checker')->isGranted('parameters', $workspace)) {
@@ -53,17 +45,17 @@ class ResourceManagerController extends Controller
 
         $node = $em->getRepository('ClarolineCoreBundle:Resource\ResourceNode')->findWorkspaceRoot($workspace);
         $config = $em->getRepository('ClarolineCoreBundle:Resource\ResourceRights')
-            ->findOneBy(array('resourceNode' => $node, 'role' => $role));
+            ->findOneBy(['resourceNode' => $node, 'role' => $role]);
         $resourceTypes = $em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
 
-        return array(
+        return [
             'workspace' => $workspace,
-            'configs' => array($config),
+            'configs' => [$config],
             'resourceTypes' => $resourceTypes,
             'nodeId' => $node->getId(),
             'roleId' => $role->getId(),
             'tool' => $this->getResourceManagerTool(),
-        );
+        ];
     }
 
     private function getResourceManagerTool()

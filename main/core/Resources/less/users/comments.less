@@ -1,0 +1,59 @@
+.comments-container {
+    padding: @panel-body-padding;
+    border: 1px solid transparent; // for correct alignment
+    background: #eee;
+    margin-bottom: @component-margin-bottom;
+
+    hr {
+        border-color: @body-bg;
+    }
+
+    &.opened .comments-title {
+        margin-bottom: 10px; // original value for titles
+    }
+}
+
+.btn-add-comment {
+    background: #E4E4E4;
+
+    &:hover,
+    &:focus {
+        background: #E0E0E0;
+    }
+}
+
+.comments-title {
+    display: flex;
+    align-items: center;
+    margin-top: 0;
+    margin-bottom: 0; // when closed keeping the margin is ugly
+
+    .comments-icon {
+        position: relative;
+        margin-right: 10px;
+    }
+
+    .comments-count {
+        position: absolute;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 16px;
+        height: 16px;
+        bottom: -8px;
+        right: -8px;
+        background: @label-primary-bg;
+        color: @label-color;
+        font-size: 10px;
+        font-weight: bold;
+        border-radius: 50%;
+    }
+
+    .btn-toggle-comments {
+        margin-left: auto;
+    }
+}
+
+.comments-section {
+    padding-left: 40px;
+}

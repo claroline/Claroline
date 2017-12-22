@@ -1,0 +1,34 @@
+{% extends 'ClarolineCoreBundle::base.html.twig' %}
+
+{% block stylesheets %}
+    {% include 'ClarolineCoreBundle:Layout:stylesheets.html.twig' %}
+    <link href="{{ themeAsset('claroline-distribution-plugin-inwicast-media-list.css') }}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+
+{% block javascripts_header %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('packages/jquery/dist/jquery.min.js') }}'></script>
+    <script src="{{ hotAsset('dist/es6_dll.js') }}"></script>
+    <script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
+    {% if app.environment == 'prod' %}
+        <script src="{{ hotAsset('dist/commons.js') }}"></script>
+    {% endif %}
+{% endblock %}
+
+{% block layout %}
+    {% if medialist|length == 0 %}
+        <div class="alert alert-warning">
+            <strong>{{ "warning"|trans({}, 'widget') }}</strong> {{ "error_empty_mediacenter"|trans({}, 'widget') }}
+        </div>
+    {% else %}
+        <div class="tinymce_title_choose">
+            {{ "choose_video_tinymce"|trans({}, "widget") }}
+        </div>
+        {% include 'IcapInwicastBundle:Media:videosListTpl.html.twig' with {'medialist' : medialist}  %}
+    {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src='{{ asset('bundles/clarolinecore/js/iframe/iframe.js') }}'></script>
+{% endblock %}

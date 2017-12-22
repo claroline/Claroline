@@ -1,0 +1,10 @@
+{
+  "The user id": "L'id de l'utilisateur (uuid/id)",
+  "The user email adress": "L'adresse email de l'utilisateur",
+  "The user first name": "Le prénom de l'utilisateur",
+  "The user last name": "Le nom de famille de l'utilisateur",
+  "The user username": "L'identifiant de l'utilisateur",
+  "The group name": "Le nom du groupe",
+  "The group id": "L'id du groupe (uuid/id)",
+  "The plain login password": "Le password (décrypté) de l'utilisateur"
+}

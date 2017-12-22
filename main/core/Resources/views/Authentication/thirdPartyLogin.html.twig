@@ -4,38 +4,80 @@
 
 {% block content %}
     {{ macros.flashBox() }}
-    <div class="row login_form_container" style="background-color: whitesmoke">
-        <div class="col-md-offset-5 col-md-2">
-            <form role="form" action="{{ formAction }}" method="post">
-                <h2>{% block login_form_title %}{{ 'login' | trans({}, "platform")}}{% endblock %}</h2>
-                {% if error is defined and error is not null %}
-                    <div class="alert alert-danger">
-                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                        {{ 'login_failure'|trans({}, 'platform') }}
-                    </div>
-                {% endif %}
-                <div class="form-group">
-                    <label for="username">{{ 'username_or_email'|trans({}, 'platform') }}</label>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-user" title="{{ 'username_or_email'|trans({}, 'platform') }}"></i>
-                        </span>
-                        <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username_or_email' | trans({}, 'platform') }}" tabindex="1" autofocus>
-                    </div>
+
+    <div class="page-container">
+        <div class="page login-page">
+            {% if config.getParameter('logo') %}
+                <img
+                        class="login-logo"
+                        src="{{ getAssetPath() ~ '/' ~ config.getParameter('logo') }}"
+                        {% if config.getParameter('name') is not empty %}
+                            alt="{{ config.getParameter('name') }}"
+                        {% endif %}
+                />
+            {% else %}
+                <h1 class="login-title page-title text-center">
+                {% block login_form_title %}
+                    {% if config.getParameter('name') is not empty %}
+                        {{ config.getParameter('name') }}
+                    {% else %}
+                        {{ 'login' | trans({}, "platform")}}
+                    {% endif %}
+                {% endblock %}
+                </h1>
+            {% endif %}
+
+            {% if config.getParameter('login_info_text') is not empty %}
+                <div class="login-info">
+                    {{ config.getParameter('login_info_text') | raw }}
                 </div>
-                <div class="form-group">
-                    <label for="password">
-                        {{ 'password'|trans({}, 'platform') }}
-                    </label>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-lock" title="{{ 'password'|trans({}, 'platform') }}"></i>
-                        </span>
-                        <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2">
-                    </div>
+            {% endif %}
+
+            <div class="login-container">
+                <div class="authentication-column account-authentication-column">
+                    {# Claroline authentication #}
+                    <form role="form" action="{{ formAction }}" method="post" id="login-form">
+                        {% if error is defined and error %}
+                            <div class="alert alert-danger">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ 'login_failure'|trans({}, 'platform') }}
+                            </div>
+                        {% endif %}
+
+                        {% if is_expired is defined and is_expired %}
+                            <div class="alert alert-danger">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                {{ 'closed_account'|trans({}, 'platform') }}
+                            </div>
+                        {% endif %}
+
+                        {# Username #}
+                        <div class="form-group">
+                            <label class="sr-only" for="username">{{ 'username_or_email'|trans({}, 'platform') }}</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-fw fa-user" role="presentation"></span>
+                                </span>
+                                <input type="text" class="form-control" id="username" name="_username" placeholder="{{ 'username_or_email' | trans({}, 'platform') }}" tabindex="1" autofocus />
+                            </div>
+                        </div>
+
+                        {# Password #}
+                        <div class="form-group">
+                            <label class="sr-only" for="password">{{ 'password'|trans({}, 'platform') }}</label>
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <span class="fa fa-fw fa-lock" role="presentation"></span>
+                                </span>
+                                <input type="password" class="form-control" id="password" name="_password" placeholder="{{ 'password'|trans({}, 'platform') }}" tabindex="2" />
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
+                    </form>
+
                 </div>
-                <button type="submit" class="btn btn-success btn-block" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
-            </form>
+            </div>
         </div>
     </div>
 {% endblock %}

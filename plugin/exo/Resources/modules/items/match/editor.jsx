@@ -5,9 +5,9 @@ import classes from 'classnames'
 import get from 'lodash/get'
 
 import {tex, t} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
-import {TooltipButton} from './../../components/form/tooltip-button.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {actions} from './editor'
 import {utils} from './utils/utils'
 
@@ -57,20 +57,23 @@ class MatchLinkPopover extends Component {
               <TooltipButton
                 id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-delete`}
                 title={'delete'}
-                enabled={this.props.solution._deletable}
+                disabled={!this.props.solution._deletable}
                 className="btn-link-default"
-                label={<span className="fa fa-fw fa-trash-o" />}
                 onClick={() => this.props.solution._deletable &&
-                this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)
+                  this.props.handleConnectionDelete(this.props.solution.firstId, this.props.solution.secondId)
                 }
-              />
+              >
+                <span className="fa fa-fw fa-trash-o" />
+              </TooltipButton>
+
               <TooltipButton
                 id={`match-connection-${this.props.solution.firstId}-${this.props.solution.secondId}-close`}
                 title={'close'}
                 className="btn-link-default"
-                label={<span className="fa fa-fw fa-times" />}
                 onClick={() => this.props.handlePopoverClose()}
-              />
+              >
+                <span className="fa fa-fw fa-times" />
+              </TooltipButton>
             </div>
           </div>
         }>
@@ -89,15 +92,16 @@ class MatchLinkPopover extends Component {
                id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback-toggle`}
                className="btn-link-default"
                title={tex('feedback_association_created')}
-               label={<span className="fa fa-fw fa-comments-o" />}
                onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-             />
+             >
+               <span className="fa fa-fw fa-comments-o" />
+             </TooltipButton>
           </div>
           {this.state.showFeedback &&
             <div className="feedback-container">
               <Textarea
                 id={`solution-${this.props.solution.firstId}-${this.props.solution.secondId}-feedback`}
-                content={this.props.solution.feedback ? this.props.solution.feedback : ''}
+                value={this.props.solution.feedback}
                 onChange={feedback => this.props.onChange(
                   actions.updateSolution(this.props.solution.firstId, this.props.solution.secondId, 'feedback', feedback)
                 )}
@@ -134,22 +138,23 @@ class MatchItem extends Component{
             <TooltipButton
               id={`match-source-${this.props.item.id}-delete`}
               title={t('delete')}
-              enabled={this.props.item._deletable}
-              label={<span className="fa fa-fw fa-trash-o"/>}
+              disabled={!this.props.item._deletable}
               className="btn-link-default"
               onClick={() => this.props.item._deletable && this.props.onUnmount(
                 true, this.props.item.id, this.props.type + '_' + this.props.item.id
               )}
-            />
+            >
+              <span className="fa fa-fw fa-trash-o"/>
+            </TooltipButton>
           </div>
         }
         <div className="text-fields">
           <Textarea
+            id={`${this.props.type}-${this.props.item.id}-data`}
+            value={this.props.item.data}
             onChange={data => this.props.onChange(
               actions.updateItem(this.props.type === 'source', this.props.item.id, data)
             )}
-            id={`${this.props.type}-${this.props.item.id}-data`}
-            content={this.props.item.data}
           />
         </div>
         { this.props.type === 'target' &&
@@ -157,13 +162,14 @@ class MatchItem extends Component{
             <TooltipButton
               id={`match-target-${this.props.type + '_' + this.props.item.id}-delete`}
               title={t('delete')}
-              enabled={this.props.item._deletable}
-              label={<span className="fa fa-fw fa-trash-o"/>}
+              disabled={!this.props.item._deletable}
               className="btn-link-default"
               onClick={() => this.props.item._deletable && this.props.onUnmount(
                 false, this.props.item.id, this.props.type + '_' + this.props.item.id
               )}
-            />
+            >
+              <span className="fa fa-fw fa-trash-o"/>
+            </TooltipButton>
           </div>
         }
       </div>

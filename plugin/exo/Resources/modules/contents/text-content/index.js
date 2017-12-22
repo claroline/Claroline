@@ -6,8 +6,7 @@ import {TextContentModal} from './modal.jsx'
 export default {
   type: 'text',
   mimeType: 'text/html',
-  icon: 'fa fa-align-left',
-  altIcon: 'fa fa-align-left',
+  icon: 'fa fa-align-justify',
   player: TextContentPlayer,
   thumbnail: TextContentThumbnail,
   modal: TextContentModal,

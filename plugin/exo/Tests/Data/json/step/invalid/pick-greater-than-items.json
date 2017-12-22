@@ -7,6 +7,12 @@
     "randomPick": "once",
     "pick": 2
   },
+  "picking": {
+    "type": "standard",
+    "randomOrder": "once",
+    "randomPick": "once",
+    "pick": 2
+  },
   "items": [
     {
       "id": "1",

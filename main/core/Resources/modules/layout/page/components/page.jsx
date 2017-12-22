@@ -1,91 +1,78 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 import classes from 'classnames'
 
+import {Router} from '#/main/core/router'
+import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
+
 import {makeModal} from '#/main/core/layout/modal'
 
-/**
- * Container for the current page.
- *
- * Its only purpose is to initialize the flex layout to auto fill the available space.
- * As most of the time we use SPA for building UI it's a common practice to just add
- * the class `.page-container` to the mount element of the SPA.
- *
- * @param props
- * @constructor
- */
-const PageContainer = props =>
-  <div className="page-container">
-    {props.children}
-  </div>
+import {FlyingAlerts} from '#/main/core/layout/alert/components/flying-alerts.jsx'
 
-PageContainer.propTypes = {
-  /**
-   * The root of the current page
-   *
-   * You may experience display issue (because of the flex layout)
-   * if you don't use the <Page> component or an HTML container with the `.page` class.
-   * For now we don't constrain it for more flexibility.
-   */
-  children: T.node.isRequired
+const PageWrapper = props => !props.embedded ?
+  <main className={props.className}>
+    {props.children}
+  </main> :
+  <section className={props.className}>
+    {props.children}
+  </section>
+
+PageWrapper.propTypes = {
+  className: T.string,
+  embedded: T.bool.isRequired,
+  children: T.node
 }
 
 /**
  * Root of the current page.
  *
- * We manage full screen feature here and not in the container
- * because container component may not exist (@see PageContainer doc block for more info).
+ * For now, modals are managed here.
+ * In future version, when the layout will be in React,
+ * it'll be moved in higher level.
  *
  * @param props
  * @constructor
  */
 const Page = props =>
-  React.createElement(
-    !props.embedded ? 'main' : 'section', {
-      className: classes('page', {
-        fullscreen: props.fullscreen,
-        embedded: props.embedded
-      }),
-      children: [
-        get(props, 'modal.type') && makeModal(
-          props.modal.type,
-          props.modal.props,
-          props.modal.fading,
-          props.fadeModal,
-          props.hideModal
-        ),
-        props.children
-      ]
+  <PageWrapper
+    embedded={props.embedded}
+    className={classes('page', props.className, {
+      fullscreen: props.fullscreen,
+      embedded: props.embedded
+    })}
+  >
+    {props.alerts &&
+      <FlyingAlerts alerts={props.alerts} removeAlert={props.removeAlert}/>
     }
-  )
 
-Page.propTypes = {
-  fullscreen: T.bool,
-  embedded: T.bool,
-  children: T.node.isRequired,
-  modal: T.shape({
-    type: T.string,
-    fading: T.bool.isRequired,
-    props: T.object.isRequired
-  }),
-  fadeModal: T.func.isRequired,
-  hideModal: T.func.isRequired
-}
+    {get(props, 'modal.type') && makeModal(
+      props.modal.type,
+      props.modal.props,
+      props.modal.fading,
+      props.fadeModal,
+      props.hideModal
+    )}
 
-Page.defaultTypes = {
-  /**
-   * Is the page displayed in full screen ?
-   */
-  fullscreen: false,
+    {props.children}
+  </PageWrapper>
 
-  /**
-   * Is the page embed into another ?
-   *
-   * Permits to know if we use a <main> or a <section> tag.
-   */
-  embedded: false
-}
+implementPropTypes(Page, PageTypes, {
+  children: T.node.isRequired
+})
+
+const RoutedPage = props =>
+  <Router>
+    <Page
+      {...props}
+    >
+      {props.children}
+    </Page>
+  </Router>
+
+implementPropTypes(RoutedPage, PageTypes, {
+  children: T.node.isRequired
+})
 
 /**
  * Header of the current page.
@@ -97,7 +84,7 @@ Page.defaultTypes = {
  */
 const PageHeader = props =>
   <header className={classes('page-header', props.className)}>
-    <h1>
+    <h1 className="page-title">
       {props.title}
       &nbsp;
       {props.subtitle && <small>{props.subtitle}</small>}
@@ -146,7 +133,7 @@ PageHeader.defaultTypes = {
  * @constructor
  */
 const PageContent = props =>
-  <div className="page-content">
+  <div className={classes('page-content', props.className)}>
     {props.children ?
       props.children :
       <div className="placeholder">This page has no content for now.</div>
@@ -154,6 +141,7 @@ const PageContent = props =>
   </div>
 
 PageContent.propTypes = {
+  className: T.string,
   /**
    * Content to display in the page.
    */
@@ -161,8 +149,8 @@ PageContent.propTypes = {
 }
 
 export {
-  PageContainer,
   Page,
+  RoutedPage,
   PageHeader,
   PageContent
 }

@@ -1,0 +1,34 @@
+<div id="announcement-widget-{{ widgetInstance.getId() }}">
+    <div id="announcements-list-{{ widgetInstance.getId() }}">
+        {{
+            render(controller(
+                'ClarolineAnnouncementBundle:Widget\\AnnouncementWidget:announcementsWidgetPager',
+                {'widgetInstance': widgetInstance.getId()}
+            ))
+        }}
+    </div>
+</div>
+
+{% block javascripts %}
+    <script>
+      (function () {
+        const widgetInstanceId = {{ widgetInstance.getId() }}
+        const widgetElement = $(`#announcement-widget-${widgetInstanceId}`)
+        const listElement = $(`#announcements-list-${widgetInstanceId}`)
+
+        widgetElement.on('click', '.pagination > ul > li > a', function (event) {
+          event.preventDefault()
+          const element = event.currentTarget
+          const url = $(element).attr('href')
+
+          $.ajax({
+            url: url,
+            type: 'GET',
+            success: function (datas) {
+              listElement.html(datas)
+            }
+          })
+        })
+      })();
+    </script>
+{% endblock %}

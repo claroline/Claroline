@@ -1,5 +1,5 @@
-hevinci_activity:
-    resource: "@HeVinciCompetencyBundle/Controller/ActivityController.php"
+hevinci_resource:
+    resource: "@HeVinciCompetencyBundle/Controller/ResourceController.php"
     type: annotation
     prefix: competencies
 

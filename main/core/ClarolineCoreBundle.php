@@ -16,6 +16,7 @@ use Claroline\CoreBundle\DependencyInjection\Compiler\ApiConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
+use Claroline\CoreBundle\DependencyInjection\Compiler\MailingConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\PlatformConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RichTextFormatterConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\RouterPass;
@@ -48,6 +49,7 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         $container->addCompilerPass(new RuleConstraintsConfigPass());
         $container->addCompilerPass(new RouterPass());
         $container->addCompilerPass(new ApiConfigPass());
+        $container->addCompilerPass(new MailingConfigPass());
 
         $extension = $container->getExtension('security');
         $extension->addSecurityListenerFactory(new ApiFactory());

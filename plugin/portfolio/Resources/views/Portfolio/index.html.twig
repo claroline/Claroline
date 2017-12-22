@@ -107,85 +107,32 @@
     {{ parent() }}
 
     <script type="text/javascript">
-        'use strict';
-        (function() {
-            window.currentPortfolioId = {{ portfolioId }};
-            window.assetPath = "{{ asset('') }}";
-            $('.import-dropdown').tooltip({
-                container: "body",
-                placement: "top",
-                title: "{{ 'choose_import_portfolio_format'|trans({}, 'icap_portfolio')|raw }}"
-            });
-        })();
+      'use strict';
+      (function() {
+        window.currentPortfolioId = {{ portfolioId }};
+        window.assetPath = "{{ asset('') }}";
+        $('.import-dropdown').tooltip({
+          container: "body",
+          placement: "top",
+          title: "{{ 'choose_import_portfolio_format'|trans({}, 'icap_portfolio')|raw }}"
+        });
+      })();
     </script>
-
-    <script type="text/javascript" src='{{ asset('packages/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}'></script>
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_portfolio' }) }}"></script>
+    <script type="text/javascript" src='{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}'></script>
 
-    {% javascripts debug=false filter='jsmin' output='js/portfolio/index/vendor.js'
-        'packages/angular/angular.min.js'
-        'packages/angular-resource/angular-resource.min.js'
-        'packages/angular-sanitize/angular-sanitize.min.js'
-        'packages/angular-animate/angular-animate.min.js'
-        'packages/angular-ui-resource-picker/angular-resource-picker.js'
-        'packages/angular-ui-tinymce/dist/tinymce.min.js'
-        'packages/moment/min/moment.min.js'
-        'packages/angular-datetime/dist/datetime.js'
-        'packages/angular-daterangepicker/js/angular-daterangepicker.min.js'
-        'packages/angular-strap/dist/angular-strap.min.js'
-        'packages/angular-strap/dist/angular-strap.tpl.min.js'
-        'packages/angular-bootstrap/ui-bootstrap.min.js'
-        'packages/angular-bootstrap/ui-bootstrap-tpls.min.js'
-        'packages/bootstrap-datepicker/dist/js/bootstrap-datepicker.js'
-        'packages/toastr/toastr.js'
-        '@IcapBadgeBundle/Resources/public/js/badge_picker.js'
-        'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
-        'packages/jqPlot/src/plugins/jqplot.cursor.js'
-        'packages/jqPlot/src/plugins/jqplot.highlighter.js'
-        'packages/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
-        'packages/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
-        'packages/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
-        'packages/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+    {% javascripts debug=false filter='jsmin' output='js/portfolio/index/jqplotPlugins.js'
+    'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
+    'packages/jqPlot/src/plugins/jqplot.cursor.js'
+    'packages/jqPlot/src/plugins/jqplot.highlighter.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
+    'packages/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
     %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
+    <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    {% javascripts debug=false filter='jsmin' output='js/portfolio/index/script.js'
-        '@IcapPortfolioBundle/Resources/public/js/index.js'
-        'packages/angular-toArrayFilter/toArrayFilter.js'
-        '@IcapPortfolioBundle/Resources/public/js/utils/Array.js'
-        '@IcapPortfolioBundle/Resources/public/js/comments/commentsApp.js'
-        '@IcapPortfolioBundle/Resources/public/js/comments/controllers/portfoliosController.js'
-        '@IcapPortfolioBundle/Resources/public/js/comments/controllers/commentsController.js'
-        '@IcapPortfolioBundle/Resources/public/js/comments/directives/portfoliosDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/comments/directives/commentsDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/comments/services/portfolioManager.js'
-        '@IcapPortfolioBundle/Resources/public/js/comments/services/commentsManager.js'
-        '@IcapPortfolioBundle/Resources/public/js/comments/services/commentFactory.js'
-        '@IcapPortfolioBundle/Resources/public/js/comments/services/portfolioFactory.js'
-        '@IcapPortfolioBundle/Resources/public/js/widget/widgetsApp.js'
-        '@IcapPortfolioBundle/Resources/public/js/widget/controllers/widgetController.js'
-        '@IcapPortfolioBundle/Resources/public/js/widget/directives/widgetDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/widget/services/widgetManager.js'
-        '@IcapPortfolioBundle/Resources/public/js/widget/services/widgetFactory.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/tinymceConfig.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/translation.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/urlInterpolator.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/scrollContainerDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/datepickerDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/badgePickerDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/bindHtmlDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/loadingFormDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/confirmClickDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/collectionFormController.js'
-        '@IcapPortfolioBundle/Resources/public/js/modules/collectionFormDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/statistics/statisticsApp.js'
-        '@IcapPortfolioBundle/Resources/public/js/statistics/controllers/statisticsViewController.js'
-        '@IcapPortfolioBundle/Resources/public/js/statistics/directives/statisticsViewDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/index/indexApp.js'
-        '@IcapPortfolioBundle/Resources/public/js/index/indexDirective.js'
-        '@IcapPortfolioBundle/Resources/public/js/index/indexController.js'
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+
+    <script type="text/javascript" src="{{ hotAsset("dist/claroline-distribution-plugin-portfolio-index-app.js") }}"></script>
+    <script type="text/javascript" src="{{ hotAsset("dist/claroline-distribution-plugin-portfolio-index.js") }}"></script>
 {% endblock %}

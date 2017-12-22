@@ -3,6 +3,7 @@ import {GridPaper} from './paper.jsx'
 import {GridPlayer} from './player.jsx'
 import {GridFeedback} from './feedback.jsx'
 import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/components/corrected-answer'
+import {utils} from './utils/utils'
 
 function getCorrectedAnswer(item, answer = {data: []}) {
   if (item.score.type === 'fixed') {
@@ -26,7 +27,9 @@ function getCorrectAnswerForSumCellsMode(item, answer = {data: []}) {
   const corrected = new CorrectedAnswer()
 
   item.solutions.forEach(solution => {
-    let userDataAnswer = answer.data.find(userSolution => userSolution.cellId === solution.cellId)
+    let userDataAnswer =
+     answer && answer.data ?
+      answer.data.find(userSolution => userSolution.cellId === solution.cellId): null
     let bestAnswer = findSolutionExpectedAnswer(solution)
     let userAnswer = userDataAnswer ?
         solution.answers.find(answer => (answer.text === userDataAnswer.text) && answer.caseSensitive || (answer.text.toLowerCase() === userDataAnswer.text.toLowerCase()) && ! answer.caseSensitive):
@@ -83,7 +86,7 @@ function getCorrectAnswerForFixMode(item, answer = {data: []}) {
 
 //check if the answers give by the users are all correct for an array of cellIds
 function validateCellsAnswer(corrected, item, answer, cellIds, mode) {
-  const answers = answer.data.filter(answer => cellIds.indexOf(answer.cellId) >= 0)
+  const answers = answer && answer.data ? answer.data.filter(answer => cellIds.indexOf(answer.cellId) >= 0): []
   const solutions = item.solutions.find(solution => cellIds.indexOf(solution.cellId) >= 0)
   const score = solutions.answers[0].score
   let valid = true
@@ -124,6 +127,69 @@ function findSolutionExpectedAnswer(solution) {
   return best
 }
 
+function generateStats(item, papers, withAllParpers) {
+  const stats = {
+    cells: {},
+    unanswered: 0,
+    total: 0
+  }
+  Object.values(papers).forEach(p => {
+    if (withAllParpers || p.finished) {
+      let total = 0
+      let nbAnswered = 0
+      const answered = {}
+      // compute the number of times the item is present in the structure of the paper and initialize acceptable pairs
+      p.structure.steps.forEach(structure => {
+        structure.items.forEach(i => {
+          if (i.id === item.id) {
+            ++total
+            ++stats.total
+
+            if (i.solutions) {
+              i.solutions.forEach(s => {
+                answered[s.cellId] = answered[s.cellId] ? answered[s.cellId] + 1 : 1
+              })
+            }
+          }
+        })
+      })
+      // compute the number of times the item has been answered
+      p.answers.forEach(a => {
+        if (a.questionId === item.id && a.data) {
+          ++nbAnswered
+          a.data.forEach(d => {
+            const key = utils.getKey(d.cellId, d.text, item.solutions)
+
+            if (!stats.cells[d.cellId]) {
+              stats.cells[d.cellId] = {}
+            }
+            stats.cells[d.cellId][key] = stats.cells[d.cellId][key] ? stats.cells[d.cellId][key] + 1 : 1
+
+            if (answered[d.cellId]) {
+              --answered[d.cellId]
+            }
+          })
+        }
+      })
+      const nbUnanswered = total - nbAnswered
+
+      for (let cellId in answered) {
+        if (answered[cellId] - nbUnanswered > 0) {
+          if (!stats.cells[cellId]) {
+            stats.cells[cellId] = {}
+          }
+          stats.cells[cellId]['_unanswered'] = stats.cells[cellId]['_unanswered'] ?
+            stats.cells[cellId]['_unanswered'] + (answered[cellId] - nbUnanswered) :
+            answered[cellId] - nbUnanswered
+        }
+      }
+      stats.unanswered += nbUnanswered
+    }
+  })
+
+  return stats
+}
+
 export default {
   type: 'application/x.grid+json',
   name: 'grid',
@@ -131,5 +197,6 @@ export default {
   player: GridPlayer,
   feedback: GridFeedback,
   editor,
-  getCorrectedAnswer
+  getCorrectedAnswer,
+  generateStats
 }

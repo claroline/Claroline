@@ -23,7 +23,7 @@ class AdminToolAccessEvaluatorTest extends UnitTestCase
     }
 
     /**
-     * @expectedException LogicException
+     * @expectedException \LogicException
      */
     public function testEvaluatorExpectsTheToolToExist()
     {

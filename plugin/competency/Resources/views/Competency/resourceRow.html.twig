@@ -1,0 +1,41 @@
+{% set level = level is defined ? level : 0 %}
+
+{%
+    set colorClass = isAbility and target.resourceCount < target.minResourceCount ?
+        'danger' :
+        target.resourceCount == 0 ? 'warning' : 'success'
+%}
+
+<tr data-id="{{ target.id }}" data-type="{{ isAbility ? 'ability' : 'competency' }}">
+    <td class="{{ isAbility ? 'ability' : 'competency' }}-name level-{{ level }}">
+        {{ target.name }}
+    </td>
+    <td class="small-cell {{ colorClass }}">
+        {% if target.resourceCount > 0 %}
+            <a href="#" class="show-resources ">{{ target.resourceCount }}</a>
+        {% else %}
+            {{ target.resourceCount }}
+        {% endif %}
+    </td>
+    <td class="small-cell">
+        {{ isAbility ? target.minResourceCount : '-' }}
+    </td>
+</tr>
+
+{% set childCount = target.__children is defined ? target.__children|length : 0 %}
+{% set abilityCount = target.__abilities is defined ? target.__abilities|length : 0 %}
+
+{% if childCount > 0 or abilityCount > 0 %}
+    {% set children = childCount > 0 ? target.__children : target.__abilities %}
+    {% set isAbility = abilityCount > 0 %}
+    {% for child in children %}
+        {%
+            include 'HeVinciCompetencyBundle:Competency:resourceRow.html.twig'
+            with {
+                target: child,
+                isAbility: isAbility,
+                level: level + 1
+            }
+        %}
+    {% endfor %}
+{% endif %}

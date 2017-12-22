@@ -1,10 +1,6 @@
 .cloze-editor {
   position: relative; // contain hole popovers
 
-  .footer {
-    text-align: center;
-  }
-
   .cloze-hole {
     .form-control {
       cursor: pointer; // don't know why it's not done by default
@@ -62,7 +58,9 @@
 }
 
 .cloze-text {
-  line-height: @input-height-small + 2px; // same as hole for better centering (2px for the hole borders)
+  .text-editor {
+    line-height: @input-height-small + 2px; // same as hole for better centering (2px for the hole borders)
+  }
 }
 
 .cloze-hole {
@@ -74,5 +72,24 @@
   .form-control {
     width: auto; // remove bootstrap default 100%
     max-width: 200px;
+  }
+}
+
+.cloze-stats {
+  .unanswered-item {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .answer-item {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .answer-stats-table {
+    border: solid 1px @answer-item-bg;
+    padding: 0 @answer-item-padding;
+    border-radius: @answer-item-border-radius;
   }
 }

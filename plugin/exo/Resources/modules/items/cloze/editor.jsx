@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
 import {t, tex} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
-import {FormGroup} from '#/main/core/layout/form/components/form-group.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {actions} from './editor'
 
 import {KeywordsPopover} from './../components/keywords.jsx'
@@ -43,7 +43,7 @@ const HolePopover = props => {
       updateKeyword={props.updateKeyword}
     >
       <FormGroup
-        controlId={`item-${props.hole.id}-size`}
+        id={`item-${props.hole.id}-size`}
         label={tex('size')}
         warnOnly={!props.validating}
         error={get(props, '_errors.size')}
@@ -115,35 +115,33 @@ export class Cloze extends Component {
     return(
       <fieldset className="cloze-editor">
         <FormGroup
-          controlId="cloze-text"
+          id="cloze-text"
+          className="cloze-text"
           label={t('text')}
           warnOnly={!this.props.validating}
           error={get(this.props.item, '_errors.text')}
         >
           <Textarea
             id="cloze-text"
-            className="cloze-text"
+            value={this.props.item._text}
             onChange={(value) => this.props.onChange(actions.updateText(value))}
             onSelect={this.onSelect.bind(this)}
             onClick={this.onHoleClick.bind(this)}
-            content={this.props.item._text}
             onChangeMode={this.changeEditorMode}
           />
         </FormGroup>
 
-        <div className="footer">
-          <button
-            type="button"
-            className="btn btn-default"
-            disabled={!this.state.allowCloze}
-            onClick={() => this.props.onChange(
-              this.addHole()
-            )}
-          >
-            <span className="fa fa-fw fa-plus" />
-            {tex('create_cloze')}
-          </button>
-        </div>
+        <button
+          type="button"
+          className="btn btn-block btn-default"
+          disabled={!this.state.allowCloze}
+          onClick={() => this.props.onChange(
+            this.addHole()
+          )}
+        >
+          <span className="fa fa-fw fa-plus" />
+          {tex('create_cloze')}
+        </button>
 
         {(this.props.item._popover && this.props.item._holeId) &&
           <HolePopover

@@ -5,10 +5,11 @@ namespace Icap\PortfolioBundle\Controller\Internal;
 use Claroline\CoreBundle\Entity\User;
 use Icap\PortfolioBundle\Controller\Controller as BaseController;
 use Icap\PortfolioBundle\Entity\Portfolio;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Icap\PortfolioBundle\Event\Log\PortfolioEditEvent;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -55,12 +56,14 @@ class PortfolioWidgetController extends BaseController
         $response = new JsonResponse();
         $widgetManager = $this->getWidgetsManager();
         $widgetsConfig = $widgetManager->getWidgetsConfig();
-        $data = array();
+        $data = [];
         $statusCode = Response::HTTP_BAD_REQUEST;
 
         if (isset($widgetsConfig[$type])) {
             $newWidget = $widgetManager->getNewPortfolioWidget($portfolio, $type);
             $data = $widgetManager->handlePortfolioWidget($newWidget, $request->request->all(), $this->get('kernel')->getEnvironment());
+            $event = new PortfolioEditEvent($portfolio);
+            $this->get('event_dispatcher')->dispatch('log', $event);
             $statusCode = Response::HTTP_CREATED;
         }
 
@@ -87,9 +90,12 @@ class PortfolioWidgetController extends BaseController
             'widgetType' => $type,
             'portfolio' => $portfolio,
         ]);
-
+        $oldWidget = $portfolioWidget->getWidget()->getId();
         $data = $this->getWidgetsManager()->handlePortfolioWidget($portfolioWidget, $request->request->all(), $this->get('kernel')->getEnvironment());
-
+        if ($oldWidget !== $data['widget_id']) {
+            $event = new PortfolioEditEvent($portfolio);
+            $this->get('event_dispatcher')->dispatch('log', $event);
+        }
         $response = new JsonResponse();
         $response->setData($data);
 
@@ -117,6 +123,8 @@ class PortfolioWidgetController extends BaseController
 
         try {
             $this->getWidgetsManager()->deletePortfolioWidget($portfolioWidget);
+            $event = new PortfolioEditEvent($portfolio);
+            $this->get('event_dispatcher')->dispatch('log', $event);
         } catch (\Exception $exception) {
             $response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
         }

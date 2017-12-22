@@ -5,7 +5,7 @@ import moment from 'moment'
 import Modal from 'react-bootstrap/lib/Modal'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {t, trans} from '#/main/core/translation'
-import {Textarea} from '#/main/core/layout/form/components/textarea.jsx'
+import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {actions} from '../actions'
 
 export const MODAL_EVENT_COMMENTS = 'MODAL_EVENT_COMMENTS'
@@ -146,10 +146,9 @@ class EventCommentsModal  extends Component {
                   <label>{trans('add_information', {}, 'cursus')}</label>
                   <Textarea
                     id="new-event-comment"
-                    content={this.state.newComment}
+                    value={this.state.newComment}
                     onChange={text => this.updateNewComment(text)}
-                  >
-                  </Textarea>
+                  />
                   <br/>
                   <button className="btn btn-primary" onClick={() => this.validateNewComment(false)}>
                       {t('ok')}
@@ -186,10 +185,9 @@ class EventCommentsModal  extends Component {
                             <label>{trans('edit_information', {}, 'cursus')}</label>
                             <Textarea
                               id="edition-event-comment"
-                              content={this.state.currentComment}
+                              value={this.state.currentComment}
                               onChange={text => this.updateCurrentComment(text)}
-                            >
-                            </Textarea>
+                            />
                             <br/>
                             <button className="btn btn-primary" onClick={() => this.validateEditionComment()}>
                                 {t('ok')}

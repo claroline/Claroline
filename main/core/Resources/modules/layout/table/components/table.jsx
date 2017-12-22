@@ -1,8 +1,8 @@
-import React, {PropTypes as T} from 'react'
+import React from 'react'
+import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import OverlayTrigger from 'react-bootstrap/lib/OverlayTrigger'
-import Tooltip from 'react-bootstrap/lib/Tooltip'
+import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 
 const TableCell = props =>
   <td className={classes(`text-${props.align}`, props.className)}>
@@ -22,20 +22,21 @@ TableCell.defaultProps = {
 
 const TableTooltipCell = props =>
   <TableCell {...props}>
-    <OverlayTrigger
-      placement={props.placement}
-      overlay={<Tooltip id={props.id}>{props.tooltip}</Tooltip>}
+    <TooltipElement
+      id={props.id}
+      tip={props.tip}
+      position={props.placement}
     >
       <span>
         {props.children}
       </span>
-    </OverlayTrigger>
+    </TooltipElement>
   </TableCell>
 
 TableTooltipCell.propTypes = {
   id: T.node.isRequired,
   placement: T.string,
-  tooltip: T.string.isRequired,
+  tip: T.string.isRequired,
   children: T.node
 }
 
@@ -74,7 +75,8 @@ const TableSortingCell = props =>
       classes(
         'fa',
         0 === props.direction ? 'fa-sort' : (1 === props.direction ? 'fa-sort-asc' : 'fa-sort-desc')
-      )} aria-hidden="true"
+      )}
+      aria-hidden="true"
     />
   </th>
 
@@ -112,13 +114,22 @@ TableRow.propTypes = {
 }
 
 const Table = props =>
-  <table className={classes('table table-striped table-hover', props.className)}>
+  <table
+    className={classes('table table-striped table-hover', {
+      'table-condensed': props.condensed
+    }, props.className)}
+  >
     {props.children}
   </table>
 
 Table.propTypes = {
   children: T.array.isRequired,
-  className: T.string
+  className: T.string,
+  condensed: T.bool
+}
+
+Table.defaultProps = {
+  condensed: false
 }
 
 export {

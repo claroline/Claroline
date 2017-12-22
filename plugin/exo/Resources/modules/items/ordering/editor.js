@@ -93,11 +93,9 @@ function reduce(ordering = {}, action) {
       }))
     }
     case UPDATE_PROP: {
-      let value = action.value
 
-      if (action.property === 'score.success' || action.property === 'score.failure') {
-        value = parseFloat(value)
-      }
+      const value = ['score.success', 'score.failure', 'penalty'].indexOf(action.property) >= 0 ?
+        parseFloat(action.value): action.value
 
       const newItem = cloneDeep(ordering)
       const property = set({}, action.property, value)

@@ -1,4 +1,4 @@
-{% extends "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Resource:layout.html.twig" %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -8,10 +8,15 @@
 
 {# Content of the Page #}
 {% block content %}
-    <div id="docimology" data-statistics="{{ statistics | json_encode | raw | escape }}" data-exercise="{{ exercise | json_encode | raw | escape }}"></div>
+    <div
+        class="page-container docimology-container"
+        data-quiz="{{ exercise | json_encode | raw | escape }}"
+        data-statistics="{{ statistics | json_encode | raw | escape }}"
+    ></div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
+
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-exo-docimology.js') }}"></script>
 {% endblock %}

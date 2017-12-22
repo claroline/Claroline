@@ -1,9 +1,11 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-
+import has from 'lodash/has'
+import {tex} from '#/main/core/translation'
 import {Feedback} from './../components/feedback-btn.jsx'
 import {SolutionScore} from './../components/score.jsx'
+import {AnswerStats} from '../components/stats.jsx'
 import {PaperTabs} from './../components/paper-tabs.jsx'
 import {utils} from './utils/utils'
 import {WarningIcon} from './utils/warning-icon.jsx'
@@ -447,147 +449,255 @@ class GridPaper extends Component {
 
   render(){
     return (
-        <PaperTabs
-          id={this.props.item.id}
-          yours={
-            <div className="grid-paper">
-              <div className="grid-body">
-                <table className="grid-table">
-                  <tbody>
-                    {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_COL &&
-                      <tr>
-                        {[...Array(this.props.item.cols)].map((x, i) =>
-                          <td key={`grid-col-score-col-${i}`} style={{padding: '8px'}}>
-                            { utils.atLeastOneSolutionInCol(i, this.props.item.cells, this.props.item.solutions) &&
-                              <span className={classes(
-                                {'text-success': this.getColumnScore(i, false) > 0},
-                                {'text-danger': this.getColumnScore(i, false) < 1}
-                              )}>
-                                <SolutionScore score={this.getColumnScore(i, false)}/>
-                              </span>
-                            }
-                          </td>
-                        )}
-                      </tr>
-                    }
-                    {[...Array(this.props.item.rows)].map((x, i) =>
-                      <tr key={`grid-row-${i}`}>
-                        {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_ROW &&
-                          <td key={`grid-row-score-col-${i}`} style={{padding: '8px', verticalAlign: 'middle'}}>
-                            { utils.atLeastOneSolutionInRow(i, this.props.item.cells, this.props.item.solutions) &&
-                              <span className={classes(
-                                {'text-success': this.getRowScore(i, false) > 0},
-                                {'text-danger': this.getRowScore(i, false) < 1}
-                              )}>
-                                <SolutionScore score={this.getRowScore(i, false)}/>
-                              </span>
-                            }
-                          </td>
-                        }
-                        {[...Array(this.props.item.cols)].map((x, j) => {
-                          const cell = utils.getCellByCoordinates(j, i, this.props.item.cells)
-                          const valid = this.isValidAnswer(cell)
-                          const colors = this.getYourAnswerCellColors(cell, valid)
-                          if(!cell.input) {
-                            return(
-                                <td
-                                key={`grid-row-${i}-col-${j}`}
-                                style={Object.assign({border: `${this.props.item.border.width}px solid ${this.props.item.border.color}`}, colors)}>
-                                  <div className="grid-cell">
-                                    <div className="cell-body">{cell.data}</div>
-                                  </div>
-                                </td>
-                            )
-                          } else {
-                            return (
-                                <td
-                                key={`grid-row-${i}-col-${j}`}
-                                style={Object.assign({border: `${this.props.item.border.width}px solid ${colors.color}`}, colors)}>
-                                  <YourGridCell
-                                    isValid={valid}
-                                    answers={this.props.answer}
-                                    solutions={this.props.item.solutions}
-                                    showScore={this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL}
-                                    cell={cell}
-                                    penalty={this.props.item.penalty}/>
-                                </td>
-                            )
+      <PaperTabs
+        id={this.props.item.id}
+        showExpected={this.props.showExpected}
+        showStats={this.props.showStats}
+        showYours={this.props.showYours}
+        yours={
+          <div className="grid-paper">
+            <div className="grid-body">
+              <table className="grid-table">
+                <tbody>
+                  {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_COL &&
+                    <tr>
+                      {[...Array(this.props.item.cols)].map((x, i) =>
+                        <td key={`grid-col-score-col-${i}`} style={{padding: '8px'}}>
+                          { utils.atLeastOneSolutionInCol(i, this.props.item.cells, this.props.item.solutions) &&
+                            <span className={classes(
+                              {'text-success': this.getColumnScore(i, false) > 0},
+                              {'text-danger': this.getColumnScore(i, false) < 1}
+                            )}>
+                              <SolutionScore score={this.getColumnScore(i, false)}/>
+                            </span>
                           }
-                        }
+                        </td>
                       )}
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          }
-          expected={
-            <div className="grid-paper">
-              <div className="grid-body">
-                <table className="grid-table">
-                  <tbody>
-                    {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_COL &&
-                      <tr>
-                        {[...Array(this.props.item.cols)].map((x, i) =>
-                          <td key={`grid-col-score-col-${i}`} style={{padding: '8px'}}>
-                            { utils.atLeastOneSolutionInCol(i, this.props.item.cells, this.props.item.solutions) &&
-                              <span className="text-info">
-                                <SolutionScore score={this.getColumnScore(i, true)}/>
-                              </span>
-                            }
-                          </td>
-                        )}
-                      </tr>
-                    }
-                    {[...Array(this.props.item.rows)].map((x, i) =>
-                      <tr key={`grid-row-${i}`}>
-                        {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_ROW &&
-                          <td key={`grid-row-score-col-${i}`} style={{padding: '8px', verticalAlign: 'middle'}}>
-                            { utils.atLeastOneSolutionInRow(i, this.props.item.cells, this.props.item.solutions) &&
-                              <span className="text-info">
-                                <SolutionScore score={this.getRowScore(i, true)}/>
-                              </span>
-                            }
-                          </td>
-                        }
-                        {[...Array(this.props.item.cols)].map((x, j) => {
-                          const cell = utils.getCellByCoordinates(j, i, this.props.item.cells)
-                          const colors = this.getExpectedAnswerCellColors(cell)
-                          if(!cell.input) {
-                            return(
-                                <td
-                                key={`grid-row-${i}-col-${j}`}
-                                style={Object.assign({border: `${this.props.item.border.width}px solid ${this.props.item.border.color}`}, colors)}>
-                                  <div className="grid-cell">
-                                    <div className="cell-body">{cell.data}</div>
-                                  </div>
-                                </td>
-                            )
-                          } else {
-                            return (
-                                <td
-                                key={`grid-row-${i}-col-${j}`}
-                                style={Object.assign({border: `${this.props.item.border.width}px solid ${colors.color}`}, colors)}>
-                                  <ExpectedGridCell
-                                    showScore = {this.props.showScore}
-                                    answers={this.props.answer}
-                                    solutions={this.props.item.solutions}
-                                    isSumCellMode={this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL}
-                                    cell={cell}/>
-                                </td>
-                            )
+                    </tr>
+                  }
+                  {[...Array(this.props.item.rows)].map((x, i) =>
+                    <tr key={`grid-row-${i}`}>
+                      {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_ROW &&
+                        <td key={`grid-row-score-col-${i}`} style={{padding: '8px', verticalAlign: 'middle'}}>
+                          { utils.atLeastOneSolutionInRow(i, this.props.item.cells, this.props.item.solutions) &&
+                            <span className={classes(
+                              {'text-success': this.getRowScore(i, false) > 0},
+                              {'text-danger': this.getRowScore(i, false) < 1}
+                            )}>
+                              <SolutionScore score={this.getRowScore(i, false)}/>
+                            </span>
                           }
+                        </td>
+                      }
+                      {[...Array(this.props.item.cols)].map((x, j) => {
+                        const cell = utils.getCellByCoordinates(j, i, this.props.item.cells)
+                        const valid = this.isValidAnswer(cell)
+                        const colors = this.getYourAnswerCellColors(cell, valid)
+                        if(!cell.input) {
+                          return(
+                              <td
+                              key={`grid-row-${i}-col-${j}`}
+                              style={Object.assign({border: `${this.props.item.border.width}px solid ${this.props.item.border.color}`}, colors)}>
+                                <div className="grid-cell">
+                                  <div className="cell-body">{cell.data}</div>
+                                </div>
+                              </td>
+                          )
+                        } else {
+                          return (
+                              <td
+                              key={`grid-row-${i}-col-${j}`}
+                              style={Object.assign({border: `${this.props.item.border.width}px solid ${colors.color}`}, colors)}>
+                                <YourGridCell
+                                  isValid={valid}
+                                  answers={this.props.answer}
+                                  solutions={this.props.item.solutions}
+                                  showScore={this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL}
+                                  cell={cell}
+                                  penalty={this.props.item.penalty}/>
+                              </td>
+                          )
                         }
-                      )}
-                      </tr>
+                      }
                     )}
-                  </tbody>
-                </table>
-              </div>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
             </div>
-          }
-        />
+          </div>
+        }
+        expected={
+          <div className="grid-paper">
+            <div className="grid-body">
+              <table className="grid-table">
+                <tbody>
+                  {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_COL &&
+                    <tr>
+                      {[...Array(this.props.item.cols)].map((x, i) =>
+                        <td key={`grid-col-score-col-${i}`} style={{padding: '8px'}}>
+                          { utils.atLeastOneSolutionInCol(i, this.props.item.cells, this.props.item.solutions) &&
+                            <span className="text-info">
+                              <SolutionScore score={this.getColumnScore(i, true)}/>
+                            </span>
+                          }
+                        </td>
+                      )}
+                    </tr>
+                  }
+                  {[...Array(this.props.item.rows)].map((x, i) =>
+                    <tr key={`grid-row-${i}`}>
+                      {this.props.showScore && this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_ROW &&
+                        <td key={`grid-row-score-col-${i}`} style={{padding: '8px', verticalAlign: 'middle'}}>
+                          { utils.atLeastOneSolutionInRow(i, this.props.item.cells, this.props.item.solutions) &&
+                            <span className="text-info">
+                              <SolutionScore score={this.getRowScore(i, true)}/>
+                            </span>
+                          }
+                        </td>
+                      }
+                      {[...Array(this.props.item.cols)].map((x, j) => {
+                        const cell = utils.getCellByCoordinates(j, i, this.props.item.cells)
+                        const colors = this.getExpectedAnswerCellColors(cell)
+                        if(!cell.input) {
+                          return(
+                              <td
+                              key={`grid-row-${i}-col-${j}`}
+                              style={Object.assign({border: `${this.props.item.border.width}px solid ${this.props.item.border.color}`}, colors)}>
+                                <div className="grid-cell">
+                                  <div className="cell-body">{cell.data}</div>
+                                </div>
+                              </td>
+                          )
+                        } else {
+                          return (
+                              <td
+                              key={`grid-row-${i}-col-${j}`}
+                              style={Object.assign({border: `${this.props.item.border.width}px solid ${colors.color}`}, colors)}>
+                                <ExpectedGridCell
+                                  showScore = {this.props.showScore}
+                                  answers={this.props.answer}
+                                  solutions={this.props.item.solutions}
+                                  isSumCellMode={this.props.item.score.type === SCORE_SUM && this.props.item.sumMode === SUM_CELL}
+                                  cell={cell}/>
+                              </td>
+                          )
+                        }
+                      }
+                    )}
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        }
+        stats={
+          <div className="grid-paper">
+            <div className="grid-body">
+              <table className="grid-table grid-stats-table">
+                <tbody>
+                  {[...Array(this.props.item.rows)].map((x, i) =>
+                    <tr key={`grid-row-${i}`}>
+                      {[...Array(this.props.item.cols)].map((x, j) => {
+                        const cell = utils.getCellByCoordinates(j, i, this.props.item.cells)
+
+                        if(!cell.input) {
+                          return(
+                            <td key={`grid-row-${i}-col-${j}`} style={{border: `${this.props.item.border.width}px solid ${this.props.item.border.color}`}}>
+                              <div className="grid-cell">
+                                <div className="cell-body">{cell.data}</div>
+                              </div>
+                            </td>
+                          )
+                        } else {
+                          return (
+                            <td key={`grid-row-${i}-col-${j}`} style={{border: `${this.props.item.border.width}px solid ${this.props.item.border.color}`}}>
+                              {utils.getCellSolutionAnswers(cell.id, this.props.item.solutions).map((answer, i) => {
+                                const key = utils.getKey(cell.id, answer.text, this.props.item.solutions)
+
+                                return (
+                                  <div
+                                    key={`expected-answer-${cell.id}-${i}`}
+                                    className='answer-item selected-answer'
+                                  >
+                                    <div>{answer.text}</div>
+
+                                    <AnswerStats stats={{
+                                      value: has(this.props.stats, ['cells', cell.id, key]) ?
+                                        this.props.stats.cells[cell.id][key] :
+                                        0,
+                                      total: this.props.stats.total
+                                    }} />
+                                  </div>
+                                )
+                              })}
+                              {utils.getCellSolutionAnswers(cell.id, this.props.item.solutions, false).map((answer, i) => {
+                                const key = utils.getKey(cell.id, answer.text, this.props.item.solutions)
+
+                                return (
+                                  <div
+                                    key={`incorrect-answer-${cell.id}-${i}`}
+                                    className='answer-item stats-answer'
+                                  >
+                                    <div>{answer.text}</div>
+
+                                    <AnswerStats stats={{
+                                      value: has(this.props.stats, ['cells', cell.id, key]) ?
+                                        this.props.stats.cells[cell.id][key] :
+                                        0,
+                                      total: this.props.stats.total
+                                    }} />
+                                  </div>
+                                )
+                              })}
+                              {has(this.props.stats, ['cells', cell.id, '_others']) &&
+                                <div
+                                  key={`others-answer-${cell.id}-${i}`}
+                                  className='answer-item stats-answer'
+                                >
+                                  <div>{tex('other_answers')}</div>
+
+                                  <AnswerStats stats={{
+                                    value: this.props.stats.cells[cell.id]['_others'],
+                                    total: this.props.stats.total
+                                  }} />
+                                </div>
+                              }
+                              {has(this.props.stats, ['cells', cell.id, '_unanswered']) &&
+                                <div
+                                  key={`unanswered-answer-${cell.id}-${i}`}
+                                  className='answer-item unanswered-item'
+                                >
+                                  <div>{tex('unanswered')}</div>
+
+                                  <AnswerStats stats={{
+                                    value: this.props.stats.cells[cell.id]['_unanswered'],
+                                    total: this.props.stats.total
+                                  }} />
+                                </div>
+                              }
+                            </td>
+                          )
+                        }
+                      }
+                    )}
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+            <div className='answer-item unanswered-item'>
+              <div>{tex('unanswered')}</div>
+
+              <AnswerStats stats={{
+                value: this.props.stats.unanswered ? this.props.stats.unanswered : 0,
+                total: this.props.stats.total
+              }} />
+            </div>
+          </div>
+        }
+      />
     )
   }
 }
@@ -616,7 +726,15 @@ GridPaper.propTypes = {
     solutions: T.arrayOf(T.object).isRequired
   }).isRequired,
   answer: T.array.isRequired,
-  showScore: T.bool.isRequired
+  showScore: T.bool.isRequired,
+  showExpected: T.bool.isRequired,
+  showStats: T.bool.isRequired,
+  showYours: T.bool.isRequired,
+  stats: T.shape({
+    cells: T.object,
+    unanswered: T.number,
+    total: T.number
+  })
 }
 
 GridPaper.defaultProps = {

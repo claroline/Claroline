@@ -1,10 +1,8 @@
 import {makeActionCreator} from '#/main/core/utilities/redux'
 import {generateUrl} from '#/main/core/fos-js-router'
-import {REQUEST_SEND} from '#/main/core/api/actions'
-import {actions as listActions} from '#/main/core/layout/list/actions'
-import {select as listSelect} from '#/main/core/layout/list/selectors'
-import {actions as paginationActions} from '#/main/core/layout/pagination/actions'
-import {select as paginationSelect} from '#/main/core/layout/pagination/selectors'
+import {API_REQUEST} from '#/main/core/api/actions'
+import {actions as listActions} from '#/main/core/data/list/actions'
+import {select as listSelect} from '#/main/core/data/list/selectors'
 import {trans} from '#/main/core/translation'
 import {VIEW_MANAGER, VIEW_USER, VIEW_EVENT} from './enums'
 
@@ -45,26 +43,26 @@ actions.addSessionEvents = makeActionCreator(SESSION_EVENTS_ADD, 'sessionEvents'
 actions.updateSessionEvent = makeActionCreator(SESSION_EVENT_UPDATE, 'sessionEvent')
 
 actions.deleteSessionEvent = (workspaceId, sessionEventId) => ({
-  [REQUEST_SEND] : {
-    url: generateUrl('claro_cursus_session_event_delete', {workspace: workspaceId, sessionEvent: sessionEventId}),
+  [API_REQUEST] : {
+    url: ['claro_cursus_session_event_delete', {workspace: workspaceId, sessionEvent: sessionEventId}],
     request: {
       method: 'DELETE'
     },
     success: (data, dispatch) => {
-      dispatch(paginationActions.changePage(0))
+      dispatch(listActions.changePage(0))
       dispatch(actions.fetchSessionEvents())
     }
   }
 })
 
 actions.deleteSessionEvents = (workspaceId, sessionEvents) => ({
-  [REQUEST_SEND]: {
+  [API_REQUEST]: {
     url: generateUrl('claro_cursus_session_events_delete', {workspace: workspaceId}) + getQueryString(sessionEvents),
     request: {
       method: 'DELETE'
     },
     success: (data, dispatch) => {
-      dispatch(paginationActions.changePage(0))
+      dispatch(listActions.changePage(0))
       dispatch(actions.fetchSessionEvents())
     }
   }
@@ -108,8 +106,8 @@ actions.createSessionEvent = (sessionId, eventData) => {
     formData.append('type', type)
 
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('claro_cursus_session_event_create', {session: sessionId}),
+      [API_REQUEST]: {
+        url: ['claro_cursus_session_event_create', {session: sessionId}],
         request: {
           method: 'POST',
           body: formData
@@ -160,8 +158,8 @@ actions.editSessionEvent = (eventId, eventData) => {
     formData.append('type', type)
 
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('claro_cursus_session_event_edit', {sessionEvent: eventId}),
+      [API_REQUEST]: {
+        url: ['claro_cursus_session_event_edit', {sessionEvent: eventId}],
         request: {
           method: 'POST',
           body: formData
@@ -206,8 +204,8 @@ actions.repeatSessionEvent = (sessionEventId, repeatEventData) => {
       formData.append('duration', repeatEventData['duration'])
     }
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('claro_cursus_session_event_repeat', {sessionEvent: sessionEventId}),
+      [API_REQUEST]: {
+        url: ['claro_cursus_session_event_repeat', {sessionEvent: sessionEventId}],
         request: {
           method: 'POST',
           body: formData
@@ -222,8 +220,8 @@ actions.repeatSessionEvent = (sessionEventId, repeatEventData) => {
 
 actions.fetchSessionEvents = () => (dispatch, getState) => {
   const state = getState()
-  const page = paginationSelect.current(state)
-  const pageSize = paginationSelect.pageSize(state)
+  const page = listSelect.currentPage(state)
+  const pageSize = listSelect.pageSize(state)
   const url = generateUrl('claro_cursus_session_events_search', {session: state.sessionId, page: page, limit: pageSize}) + '?'
 
   // build queryString
@@ -242,7 +240,7 @@ actions.fetchSessionEvents = () => (dispatch, getState) => {
   }
 
   dispatch({
-    [REQUEST_SEND]: {
+    [API_REQUEST]: {
       url: url + queryString,
       request: {
         method: 'GET'
@@ -258,8 +256,8 @@ actions.fetchSessionEvents = () => (dispatch, getState) => {
 actions.fetchSessionEvent = (sessionEventId) => {
   return (dispatch) => {
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('claro_cursus_session_event_fetch', {sessionEvent: sessionEventId}),
+      [API_REQUEST]: {
+        url: ['claro_cursus_session_event_fetch', {sessionEvent: sessionEventId}],
         request: {method: 'GET'},
         success: (data, dispatch) => {
           dispatch(actions.loadSessionEvent({data: JSON.parse(data['data']), participants: JSON.parse(data['participants'])}))
@@ -270,7 +268,7 @@ actions.fetchSessionEvent = (sessionEventId) => {
 }
 
 actions.registerUsersToSessionEvent = (sessionEventId, usersIds) => ({
-  [REQUEST_SEND]: {
+  [API_REQUEST]: {
     url: generateUrl('claro_cursus_session_event_users_register', {sessionEvent: sessionEventId}) + getQueryString(usersIds),
     request: {
       method: 'PUT'
@@ -294,7 +292,7 @@ actions.registerUsersToSessionEvent = (sessionEventId, usersIds) => ({
 })
 
 actions.deleteSessionEventUsers = (sessionEventUsersIds) => ({
-  [REQUEST_SEND]: {
+  [API_REQUEST]: {
     url: generateUrl('claro_cursus_session_event_users_delete') + getQueryString(sessionEventUsersIds),
     request: {
       method: 'DELETE'
@@ -308,8 +306,8 @@ actions.deleteSessionEventUsers = (sessionEventUsersIds) => ({
 })
 
 actions.acceptSessionEventUser = (sessionEventUserId) => ({
-  [REQUEST_SEND]: {
-    url: generateUrl('claro_cursus_session_event_user_accept', {sessionEventUser: sessionEventUserId}),
+  [API_REQUEST]: {
+    url: ['claro_cursus_session_event_user_accept', {sessionEventUser: sessionEventUserId}],
     request: {
       method: 'PUT'
     },
@@ -337,8 +335,8 @@ actions.displaySessionEvent = (sessionEventId) => {
 }
 
 actions.selfRegisterToSessionEvent = (sessionEventId, addInSet = false) => ({
-  [REQUEST_SEND]: {
-    url: generateUrl('claro_cursus_session_event_self_register', {sessionEvent: sessionEventId}),
+  [API_REQUEST]: {
+    url: ['claro_cursus_session_event_self_register', {sessionEvent: sessionEventId}],
     request: {
       method: 'POST'
     },
@@ -357,15 +355,11 @@ actions.getAllLocations = () => (dispatch, getState) => {
   const state = getState()
   const workspaceId = state.workspaceId
   const loaded = state.locationsLoaded
-  const url = generateUrl('claro_cursus_locations_retrieve', {workspace: workspaceId})
 
   if (!loaded) {
     dispatch({
-      [REQUEST_SEND]: {
-        url: url,
-        request: {
-          method: 'GET'
-        },
+      [API_REQUEST]: {
+        url: ['claro_cursus_locations_retrieve', {workspace: workspaceId}],
         success: (data, dispatch) => {
           const locations = JSON.parse(data)
           dispatch(actions.loadLocations(locations))
@@ -380,15 +374,11 @@ actions.getSessionTeachers = () => (dispatch, getState) => {
   const state = getState()
   const sessionId = state.sessionId
   const loaded = state.teachersLoaded
-  const url = generateUrl('claro_cursus_session_teachers_retrieve', {session: sessionId})
 
   if (sessionId && !loaded) {
     dispatch({
-      [REQUEST_SEND]: {
-        url: url,
-        request: {
-          method: 'GET'
-        },
+      [API_REQUEST]: {
+        url: ['claro_cursus_session_teachers_retrieve', {session: sessionId}],
         success: (data, dispatch) => {
           const teachers = JSON.parse(data)
           dispatch(actions.loadTeachers(teachers))
@@ -401,11 +391,8 @@ actions.getSessionTeachers = () => (dispatch, getState) => {
 
 actions.getEventComments = (sessionEventId) => (dispatch) => {
   dispatch({
-    [REQUEST_SEND]: {
-      url: generateUrl('claro_cursus_session_event_comments_retrieve', {sessionEvent: sessionEventId}),
-      request: {
-        method: 'GET'
-      },
+    [API_REQUEST]: {
+      url: ['claro_cursus_session_event_comments_retrieve', {sessionEvent: sessionEventId}],
       success: (data, dispatch) => {
         dispatch(actions.loadEventComments(JSON.parse(data)))
       }
@@ -419,8 +406,8 @@ actions.createEventComment = (eventId, content) => (dispatch) => {
     formData.append('content', content)
 
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('claro_cursus_session_event_comment_create', {sessionEvent: eventId}),
+      [API_REQUEST]: {
+        url: ['claro_cursus_session_event_comment_create', {sessionEvent: eventId}],
         request: {
           method: 'POST',
           body: formData
@@ -439,8 +426,8 @@ actions.editEventComment = (eventCommentId, content) => (dispatch) => {
     formData.append('content', content)
 
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('claro_cursus_session_event_comment_edit', {sessionEventComment: eventCommentId}),
+      [API_REQUEST]: {
+        url: ['claro_cursus_session_event_comment_edit', {sessionEventComment: eventCommentId}],
         request: {
           method: 'POST',
           body: formData
@@ -454,8 +441,8 @@ actions.editEventComment = (eventCommentId, content) => (dispatch) => {
 }
 
 actions.deleteEventComment = (eventCommentId) => ({
-  [REQUEST_SEND]: {
-    url: generateUrl('claro_cursus_session_event_comment_delete', {sessionEventComment: eventCommentId}),
+  [API_REQUEST]: {
+    url: ['claro_cursus_session_event_comment_delete', {sessionEventComment: eventCommentId}],
     request: {
       method: 'DELETE'
     },
@@ -477,8 +464,8 @@ actions.editEventSet = (eventSetId, eventSetData) => {
     }
 
     dispatch({
-      [REQUEST_SEND]: {
-        url: generateUrl('claro_cursus_session_event_set_edit', {sessionEventSet: eventSetId}),
+      [API_REQUEST]: {
+        url: ['claro_cursus_session_event_set_edit', {sessionEventSet: eventSetId}],
         request: {
           method: 'POST',
           body: formData
@@ -492,8 +479,8 @@ actions.editEventSet = (eventSetId, eventSetData) => {
 }
 
 actions.deleteEventSet = (eventSetId) => ({
-  [REQUEST_SEND]: {
-    url: generateUrl('claro_cursus_session_event_set_delete', {sessionEventSet: eventSetId}),
+  [API_REQUEST]: {
+    url: ['claro_cursus_session_event_set_delete', {sessionEventSet: eventSetId}],
     request: {
       method: 'DELETE'
     },
@@ -505,11 +492,8 @@ actions.deleteEventSet = (eventSetId) => ({
 
 actions.getSetEvents = (sessionEventSetId) => (dispatch) => {
   dispatch({
-    [REQUEST_SEND]: {
-      url: generateUrl('claro_cursus_session_event_set_events_retrieve', {sessionEventSet: sessionEventSetId}),
-      request: {
-        method: 'GET'
-      },
+    [API_REQUEST]: {
+      url: ['claro_cursus_session_event_set_events_retrieve', {sessionEventSet: sessionEventSetId}],
       success: (data, dispatch) => {
         dispatch(actions.loadSetEvents(JSON.parse(data.events), JSON.parse(data.registrations)))
       }

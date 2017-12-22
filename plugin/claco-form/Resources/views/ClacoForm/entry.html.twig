@@ -26,7 +26,7 @@
                 </div>
             {% endif %}
             <div class="panel-body">
-                {% if template is empty %}
+                {% if template is empty or not useTemplate %}
                     {% for field in fields %}
                         {% if withMeta or not field.getIsMetadata() %}
                             <div class="row entry-row">
@@ -47,6 +47,12 @@
                                             {{ fieldValues[field.getId()]|raw }}
                                         {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::CASCADE_SELECT_TYPE') %}
                                             {{ fieldValues[field.getId()]|join(', ') }}
+                                        {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::FILE_TYPE') %}
+                                            {% set values = [] %}
+                                            {% for fileValue in fieldValues[field.getId()] %}
+                                                {% set values = values|merge(['['~fileValue|join(', ')~']']) %}
+                                            {% endfor %}
+                                            {{ values|join(', ') }}
                                         {% else %}
                                             {{ fieldValues[field.getId()] }}
                                         {% endif %}
@@ -55,7 +61,7 @@
                             </div>
 
                             {% if not loop.last %}
-                                <hr>
+                                <hr/>
                             {% endif %}
                         {% endif %}
                     {% endfor %}
@@ -64,7 +70,7 @@
                 {% endif %}
 
                 {% if withMeta %}
-                    <br>
+                    <br/>
                     <div>
                         {% if entry.getPublicationDate() is not empty %}
                             {{ 'publication_date'|trans({}, 'clacoform') }} :
@@ -85,6 +91,33 @@
                             {{ 'anonymous'|trans({}, 'platform') }}
                         {% endif %}
                     </div>
+                {% endif %}
+
+                {% if canViewComments and comments|length > 0 %}
+                    <hr/>
+                    <h2>{{ 'comments'|trans({}, 'clacoform') }}</h2>
+
+                    {% for comment in comments %}
+                        <div>
+                            {{ comment.content|raw }}
+                        </div>
+                        <br/>
+                        <b>{{ 'author'|trans({}, 'platform') }} :</b>
+
+                        {% if comment.getUser() is not empty %}
+                            {{ comment.getUser().getFirstName() }}
+                            {{ comment.getUser().getLastName() }}
+                        {% else %}
+                            {{ 'anonymous'|trans({}, 'platform') }}
+                        {% endif %}
+                        -
+                        <b>{{ 'publication_date'|trans({}, 'clacoform') }} :</b>
+                        {{ comment.getCreationDate()|date('d/m/Y H:i:s') }}
+
+                        {% if not loop.last %}
+                            <hr/>
+                        {% endif %}
+                    {% endfor %}
                 {% endif %}
             </div>
         </div>
