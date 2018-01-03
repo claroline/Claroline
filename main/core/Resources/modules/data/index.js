@@ -2,6 +2,7 @@ import invariant from 'invariant'
 
 import {BOOLEAN_TYPE,  booleanDefinition}  from '#/main/core/data/types/boolean/index'
 import {COLOR_TYPE,    colorDefinition}    from '#/main/core/data/types/color'
+import {COUNTRY_TYPE,  countryDefinition}  from '#/main/core/data/types/country'
 import {DATE_TYPE,     dateDefinition}     from '#/main/core/data/types/date/index'
 import {DATETIME_TYPE, datetimeDefinition} from '#/main/core/data/types/datetime'
 import {EMAIL_TYPE,    emailDefinition}    from '#/main/core/data/types/email'
@@ -21,6 +22,7 @@ const dataTypes = {}
 // register default types
 registerType(BOOLEAN_TYPE,  booleanDefinition)
 registerType(COLOR_TYPE,    colorDefinition)
+registerType(COUNTRY_TYPE,  countryDefinition)
 registerType(DATE_TYPE,     dateDefinition)
 registerType(DATETIME_TYPE, datetimeDefinition)
 registerType(EMAIL_TYPE,    emailDefinition)

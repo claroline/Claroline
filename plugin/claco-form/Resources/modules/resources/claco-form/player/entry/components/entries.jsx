@@ -354,7 +354,7 @@ class Entries extends Component {
             formattedValue = value.date ? localeDate(value.date) : localeDate(value)
             break
           case 'country':
-            formattedValue = getCountry(value).label
+            formattedValue = getCountry(value)
             break
           case 'checkboxes':
             formattedValue = value.join(', ')

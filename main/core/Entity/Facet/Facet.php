@@ -208,11 +208,11 @@ class Facet
     }
 
     /**
-     * @param bool|string $boolean
+     * @param bool $forceCreationForm
      */
-    public function setForceCreationForm($boolean)
+    public function setForceCreationForm($forceCreationForm)
     {
-        $this->forceCreationForm = !is_bool($boolean) ? $boolean === 'true' : $boolean;
+        $this->forceCreationForm = $forceCreationForm;
     }
 
     /**
