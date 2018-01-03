@@ -48,13 +48,13 @@ class ArrayUtils
         $key = array_shift($parts);
 
         if (isset($object[$key])) {
-            if (is_array($object[$key])) {
-                return $this->get($object, implode('.', $parts));
+            if (!empty($parts)) {
+                return $this->get($object[$key], implode('.', $parts));
             }
 
             return $object[$key];
         }
 
-        throw new \Exception("Key {$keys} doesn't exist for array keys [".implode(',', array_keys($object)).']');
+        throw new \Exception("Key `{$keys}` doesn't exist for array keys [".implode(',', array_keys($object)).']');
     }
 }
