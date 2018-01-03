@@ -5,6 +5,7 @@ import moment from 'moment'
 
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {CheckboxesGroup} from '#/main/core/layout/form/components/group/checkboxes-group.jsx'
+import {CountryGroup} from '#/main/core/layout/form/components/group/country-group.jsx'
 import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
 import {CascadeSelectGroup} from '#/main/core/layout/form/components/group/cascade-select-group.jsx'
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
@@ -21,8 +22,6 @@ import {CascadeSelect} from '#/main/core/layout/form/components/field/cascade-se
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
 import {File} from '#/main/core/layout/form/components/field/file.jsx'
-
-import {constants} from '#/main/core/layout/form/constants'
 
 const isCascadeSelect = choices => {
   return choices.filter(c => c.parent).length > 0
@@ -125,11 +124,10 @@ export const FormField = props => {
       }
     case 'country':
       return (
-        <SelectGroup
+        <CountryGroup
           id={props.controlId}
           label={props.label}
           hideLabel={props.noLabel}
-          choices={constants.COUNTRIES}
           value={props.value || ''}
           disabled={props.disabled}
           error={props.error}

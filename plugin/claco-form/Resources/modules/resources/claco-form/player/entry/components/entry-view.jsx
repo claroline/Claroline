@@ -19,7 +19,7 @@ import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.j
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 
 import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail.jsx'
-import {getFieldType, getCountry, getFileType} from '../../../utils'
+import {getFieldType, getCountry, getFileType} from '#/plugin/claco-form/resources/claco-form/utils'
 
 import {selectors} from '../../../selectors'
 import {actions} from '../actions'
@@ -300,7 +300,7 @@ class EntryView extends Component {
         case 'select':
           return Array.isArray(value) ? value.join(', ') : value
         case 'country':
-          return getCountry(value) ? getCountry(value).label : ''
+          return getCountry(value) || ''
         case 'date' :
           return value != undefined && value !== null && value.date ?
             localeDate(value.date) :
@@ -394,7 +394,7 @@ class EntryView extends Component {
               fieldValue ? localeDate(fieldValue) : ''
             break
           case 'country':
-            replacedField = fieldValue && getCountry(fieldValue) ? getCountry(fieldValue).label : ''
+            replacedField = getCountry(fieldValue) || ''
             break
           case 'file':
             replacedField = fieldValue && Array.isArray(fieldValue) ?
