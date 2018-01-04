@@ -26,7 +26,7 @@ class LocaleGroup extends Component {
     let localeUrl = generateUrl('apiv2_locale_list')
 
     this.pending = makeCancelable(
-      fetch(localeUrl)
+      fetch(localeUrl, {credentials: 'include'})
         .then(response => response.json())
         .then(
           (data) => {

@@ -26,7 +26,7 @@ class OrganizationGroup extends Component {
   fetchOrganizations() {
     this.pending = makeCancelable(
       fetch(
-        generateUrl('apiv2_organization_list')
+        generateUrl('apiv2_organization_list'), {credentials: 'include'}
       )
         .then(response => response.json())
         .then(
