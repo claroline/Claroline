@@ -11,12 +11,16 @@ import {select as formSelect} from '#/main/core/data/form/selectors'
 export const FORM_RESET          = 'FORM_RESET'
 export const FORM_SET_ERRORS     = 'FORM_SET_ERRORS'
 export const FORM_SUBMIT         = 'FORM_SUBMIT'
+export const FORM_SUBMIT_SUCCESS = 'FORM_SUBMIT_SUCCESS'
+export const FORM_SUBMIT_ERROR   = 'FORM_SUBMIT_ERROR'
 export const FORM_UPDATE_PROP    = 'FORM_UPDATE_PROP'
 
 export const actions = {}
 
 actions.setErrors = makeInstanceActionCreator(FORM_SET_ERRORS, 'errors')
 actions.submitForm = makeInstanceActionCreator(FORM_SUBMIT)
+actions.submitFormSuccess = makeInstanceActionCreator(FORM_SUBMIT_SUCCESS, 'updatedData')
+actions.submitFormError = makeInstanceActionCreator(FORM_SUBMIT_ERROR, 'errors')
 actions.updateProp = makeInstanceActionCreator(FORM_UPDATE_PROP, 'propName', 'propValue')
 
 actions.cancelChanges = (formName) => (dispatch, getState) => {
@@ -76,6 +80,7 @@ actions.saveForm = (formName, target) => (dispatch, getState) => {
           body: JSON.stringify(formData)
         },
         success: (response, dispatch) => {
+          dispatch(actions.submitFormSuccess(formName, response))
           dispatch(actions.resetForm(formName, response, false))
         },
         error: (errors, dispatch) => {
@@ -91,6 +96,7 @@ actions.saveForm = (formName, target) => (dispatch, getState) => {
             })
 
             // inject errors in form
+            dispatch(actions.submitFormError(formErrors))
             dispatch(actions.setErrors(formName, formErrors))
           }
         }

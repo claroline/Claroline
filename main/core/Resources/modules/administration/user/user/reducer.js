@@ -3,13 +3,17 @@ import {combineReducers, makeReducer} from '#/main/core/utilities/redux'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
 
-import {FORM_RESET} from '#/main/core/data/form/actions'
+import {FORM_RESET, FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
 import {PLATFORM_ROLE} from '#/main/core/user/role/constants'
 
 const reducer = combineReducers({
   picker: makeListReducer('users.picker'),
-  list: makeListReducer('users.list'),
+  list: makeListReducer('users.list', {}, {
+    invalidated: makeReducer(false, {
+      [FORM_SUBMIT_SUCCESS+'/users.current']: () => true // todo : find better
+    })
+  }),
   current: makeFormReducer('users.current', {}, {
     workspaces: makeListReducer('users.current.workspaces', {}, {
       invalidated: makeReducer(false, {
@@ -23,7 +27,7 @@ const reducer = combineReducers({
     }),
     organizations: makeListReducer('users.current.organizations', {}, {
       invalidated: makeReducer(false, {
-        [FORM_RESET+'/user.current']: () => true // todo : find better
+        [FORM_RESET+'/users.current']: () => true // todo : find better
       })
     }),
     roles: makeListReducer('users.current.roles', {

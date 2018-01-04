@@ -3,10 +3,14 @@ import {combineReducers, makeReducer} from '#/main/core/utilities/redux'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
 
-import {FORM_RESET} from '#/main/core/data/form/actions'
+import {FORM_RESET, FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
 const reducer = combineReducers({
-  list: makeListReducer('locations.list'),
+  list: makeListReducer('locations.list', {}, {
+    invalidated: makeReducer(false, {
+      [FORM_SUBMIT_SUCCESS+'/locations.current']: () => true // todo : find better
+    })
+  }),
   current: makeFormReducer('locations.current', {}, {
     users: makeListReducer('locations.current.users', {}, {
       invalidated: makeReducer(false, {
