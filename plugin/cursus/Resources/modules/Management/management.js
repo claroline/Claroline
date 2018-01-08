@@ -16,6 +16,8 @@ import 'angular-ui-translation/angular-translation'
 import 'angular-breadcrumb'
 import 'angular-loading-bar'
 
+import 'ng-table'
+
 import '#/main/core/api/router/module'
 import '../Cursus/cursus'
 import '../Course/course'
