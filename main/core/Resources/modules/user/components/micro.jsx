@@ -13,7 +13,7 @@ import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
  */
 const UserMicro = props =>
   <div className="user-micro">
-    <UserAvatar picture={props.picture} />
+    <UserAvatar picture={props.picture} alt={false} />
 
     {props.name ?
       props.name : t('unknown')

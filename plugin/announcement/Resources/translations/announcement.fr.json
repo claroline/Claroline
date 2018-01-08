@@ -40,5 +40,6 @@
     "send_announce": "Envoyer l'annonce par email",
     "send_announce_confirm": "Êtes-vous sûr de vouloir envoyer cette annonce par email ?",
     "send_at_predefined_date": "Envoyer à une date prédéfinie",
-    "send_directly": "Envoyer directement"
+    "send_directly": "Envoyer directement",
+    "no_announcement": "Aucune annonce n'a été postée pour le moment."
 }

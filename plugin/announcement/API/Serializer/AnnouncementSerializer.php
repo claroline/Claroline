@@ -4,6 +4,7 @@ namespace Claroline\AnnouncementBundle\API\Serializer;
 
 use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\RoleRepository;
@@ -135,7 +136,7 @@ class AnnouncementSerializer
         // set roles
         $announce->emptyRoles();
 
-        if (isset($data['roles']) && count($data['roles'] > 0)) {
+        if (!empty($data['roles'])) {
             foreach ($data['roles'] as $roleId) {
                 $role = $this->roleRepo->findOneById($roleId);
 

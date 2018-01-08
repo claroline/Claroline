@@ -6,6 +6,8 @@ import {t, trans} from '#/main/core/translation'
 
 import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder.jsx'
+
 import {actions} from './../actions'
 import {select} from './../selectors'
 
@@ -18,6 +20,7 @@ const AnnouncesList = props =>
       <button
         type="button"
         className="btn btn-link"
+        disabled={0 === props.posts.length}
         onClick={props.toggleSort}
       >
         {trans(1 === props.sortOrder ? 'from_older_to_newer':'from_newer_to_older', {}, 'announcement')}
@@ -33,7 +36,15 @@ const AnnouncesList = props =>
       />
     )}
 
-    {1 !== props.pages &&
+    {0 === props.posts.length &&
+      <EmptyPlaceholder
+        size="lg"
+        icon="fa fa-frown-o"
+        title={trans('no_announcement', {}, 'announcement')}
+      />
+    }
+
+    {1 < props.pages &&
       <nav className="text-right">
         <div className="pagination-condensed btn-group">
           <button

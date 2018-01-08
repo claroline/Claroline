@@ -40,5 +40,6 @@
     "send_announce": "Send announcement by email",
     "send_announce_confirm": "Are you sure you want to send this announce?",
     "send_at_predefined_date": "Send at predefined date",
-    "send_directly": "Send directly"
+    "send_directly": "Send directly",
+    "no_announcement": "No announcement have been published yet."
 }
