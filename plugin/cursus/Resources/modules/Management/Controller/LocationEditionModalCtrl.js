@@ -20,9 +20,9 @@ export default class LocationEditionModalCtrl {
     this.location = {
       name: this.source['name'],
       street: this.source['street'],
-      streetNumber: this.source['street_number'],
-      boxNumber: this.source['box_number'],
-      pc: this.source['pc'],
+      streetNumber: this.source['streetNumber'],
+      boxNumber: this.source['boxNumber'],
+      pc: this.source['zipCode'],
       town: this.source['town'],
       country: this.source['country'],
       phone: this.source['phone']

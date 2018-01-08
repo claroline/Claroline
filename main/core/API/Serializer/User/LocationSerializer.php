@@ -14,6 +14,7 @@ class LocationSerializer
     public function serialize(Location $location, array $options = [])
     {
         return [
+            'autoId' => $location->getId(),
             'id' => $location->getUuid(),
             'name' => $location->getName(),
             'meta' => [

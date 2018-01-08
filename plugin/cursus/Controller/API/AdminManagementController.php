@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Controller\API;
 
+use Claroline\CoreBundle\API\Serializer\User\LocationSerializer;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use Claroline\CoreBundle\Entity\User;
@@ -62,6 +63,7 @@ class AdminManagementController extends Controller
     private $cursusManager;
     private $eventDispatcher;
     private $locationManager;
+    private $locationSerializer;
     private $request;
     private $serializer;
     private $tagManager;
@@ -71,18 +73,19 @@ class AdminManagementController extends Controller
 
     /**
      * @DI\InjectParams({
-     *     "apiManager"       = @DI\Inject("claroline.manager.api_manager"),
-     *     "authorization"    = @DI\Inject("security.authorization_checker"),
-     *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "cursusManager"    = @DI\Inject("claroline.manager.cursus_manager"),
-     *     "eventDispatcher"  = @DI\Inject("event_dispatcher"),
-     *     "locationManager"  = @DI\Inject("claroline.manager.organization.location_manager"),
-     *     "request"          = @DI\Inject("request"),
-     *     "serializer"       = @DI\Inject("jms_serializer"),
-     *     "tagManager"       = @DI\Inject("claroline.manager.tag_manager"),
-     *     "translator"       = @DI\Inject("translator"),
-     *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
+     *     "apiManager"          = @DI\Inject("claroline.manager.api_manager"),
+     *     "authorization"       = @DI\Inject("security.authorization_checker"),
+     *     "configHandler"       = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "cursusManager"       = @DI\Inject("claroline.manager.cursus_manager"),
+     *     "eventDispatcher"     = @DI\Inject("event_dispatcher"),
+     *     "locationManager"     = @DI\Inject("claroline.manager.organization.location_manager"),
+     *     "locationSerializer"  = @DI\Inject("claroline.serializer.location"),
+     *     "request"             = @DI\Inject("request"),
+     *     "serializer"          = @DI\Inject("jms_serializer"),
+     *     "tagManager"          = @DI\Inject("claroline.manager.tag_manager"),
+     *     "translator"          = @DI\Inject("translator"),
+     *     "userManager"         = @DI\Inject("claroline.manager.user_manager"),
+     *     "workspaceManager"    = @DI\Inject("claroline.manager.workspace_manager")
      * })
      */
     public function __construct(
@@ -92,6 +95,7 @@ class AdminManagementController extends Controller
         CursusManager $cursusManager,
         EventDispatcherInterface $eventDispatcher,
         LocationManager $locationManager,
+        LocationSerializer $locationSerializer,
         Request $request,
         Serializer $serializer,
         TagManager $tagManager,
@@ -105,6 +109,7 @@ class AdminManagementController extends Controller
         $this->cursusManager = $cursusManager;
         $this->eventDispatcher = $eventDispatcher;
         $this->locationManager = $locationManager;
+        $this->locationSerializer = $locationSerializer;
         $this->request = $request;
         $this->serializer = $serializer;
         $this->tagManager = $tagManager;
@@ -1128,7 +1133,7 @@ class AdminManagementController extends Controller
         $tutors = $this->userManager->getUsersByIds($tutorsIds);
 
         if ($sessionEventData['location']) {
-            $location = $this->locationManager->getLocationById($sessionEventData['location']);
+            $location = $this->cursusManager->getLocationByUuid($sessionEventData['location']);
         }
         if ($sessionEventData['locationResource']) {
             $locationResource = $this->cursusManager->getReservationResourceById($sessionEventData['locationResource']);
@@ -1195,7 +1200,7 @@ class AdminManagementController extends Controller
         $sessionEvent->setLocation(null);
 
         if ($sessionEventData['location']) {
-            $location = $this->locationManager->getLocationById($sessionEventData['location']);
+            $location = $this->cursusManager->getLocationByUuid($sessionEventData['location']);
 
             if (!is_null($location)) {
                 $sessionEvent->setLocation($location);
@@ -1810,12 +1815,12 @@ class AdminManagementController extends Controller
     public function getLocationsAction(User $user)
     {
         $this->cursusManager->checkAccess($user);
-        $locations = $this->locationManager->getByTypes([Location::TYPE_DEPARTMENT, Location::TYPE_TRAINING]);
-        $serializedLocations = $this->serializer->serialize(
-            $locations,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $locations = $this->cursusManager->getLocationsByTypes([Location::TYPE_DEPARTMENT, Location::TYPE_TRAINING]);
+        $serializedLocations = [];
+
+        foreach ($locations as $location) {
+            $serializedLocations[] = $this->locationSerializer->serialize($location);
+        }
 
         return new JsonResponse($serializedLocations, 200);
     }
@@ -2295,12 +2300,8 @@ class AdminManagementController extends Controller
         $location->setTown($locationDatas['town']);
         $location->setCountry($locationDatas['country']);
         $location->setPhone($locationDatas['phone']);
-        $this->locationManager->create($location);
-        $serializedLocation = $this->serializer->serialize(
-            $location,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $this->locationManager->setCoordinates($location);
+        $serializedLocation = $this->locationSerializer->serialize($location);
 
         return new JsonResponse($serializedLocation, 200);
     }
@@ -2310,6 +2311,11 @@ class AdminManagementController extends Controller
      *     "/api/cursus/location/{location}/edit",
      *     name="api_put_cursus_location_edition",
      *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "location",
+     *     class="ClarolineCoreBundle:Organization\Location",
+     *     options={"mapping": {"location": "uuid"}}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
@@ -2334,44 +2340,8 @@ class AdminManagementController extends Controller
         $location->setTown($locationDatas['town']);
         $location->setCountry($locationDatas['country']);
         $location->setPhone($locationDatas['phone']);
-        $this->locationManager->edit($location);
-        $serializedLocation = $this->serializer->serialize(
-            $location,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
-
-        return new JsonResponse($serializedLocation, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/api/cursus/location/{location}/delete",
-     *     name="api_delete_cursus_location",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter("user", converter="current_user")
-     *
-     * Deletes session event
-     *
-     * @param User     $user
-     * @param Location $location
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function deleteLocationAction(User $user, Location $location)
-    {
-        $this->cursusManager->checkAccess($user);
-
-        if ($location->getType() !== Location::TYPE_TRAINING) {
-            throw new AccessDeniedException();
-        }
-        $serializedLocation = $this->serializer->serialize(
-            $location,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
-        $this->locationManager->delete($location);
+        $this->locationManager->setCoordinates($location);
+        $serializedLocation = $this->locationSerializer->serialize($location);
 
         return new JsonResponse($serializedLocation, 200);
     }

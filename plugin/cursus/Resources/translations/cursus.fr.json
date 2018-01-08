@@ -139,6 +139,7 @@
     "generate_event_certificate": "Générer le certificat pour la séance",
     "generate_event_certificates": "Générer les certificats pour la séance",
     "go_to_workspace": "Accéder à l'espace d'activités",
+    "hide_session_registration_button": "Masquer le bouton pour s'inscrire à une session",
     "icon": "Icône",
     "import_courses": "Importer des formations",
     "informations_management": "Gestion des informations",
