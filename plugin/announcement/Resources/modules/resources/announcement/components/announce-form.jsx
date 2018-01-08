@@ -7,6 +7,7 @@ import get from 'lodash/get'
 import {t, trans} from '#/main/core/translation'
 
 import {ActivableSet} from '#/main/core/layout/form/components/fieldset/activable-set.jsx'
+import {ConditionalSet} from '#/main/core/layout/form/components/fieldset/conditional-set.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {DateGroup}  from '#/main/core/layout/form/components/group/date-group.jsx'
@@ -102,13 +103,12 @@ const AnnounceForm = props =>
       </FormSection>
       <FormSection
         id="announcement-sending"
-        icon="fa fa-fw fa-envelope"
+        icon="fa fa-fw fa-paper-plane-o"
         title={trans('announcement_sending', {}, 'announcement')}
       >
         <RadioGroup
           id="announcement-notify-users"
           label={trans('announcement_notify_users', {}, 'announcement')}
-          hideLabel={true}
           options={[
             {value: 0, label: trans('do_not_send', {}, 'announcement')},
             {value: 1, label: trans('send_directly', {}, 'announcement')},
@@ -124,33 +124,35 @@ const AnnounceForm = props =>
             }
           }}
         />
-        {props.announcement.meta.notifyUsers === 2 &&
-          <DateGroup
-            id="announcement-sending-date"
-            label={trans('announcement_sending_date', {}, 'announcement')}
-            value={props.announcement.meta.notificationDate || null}
-            onChange={(date) => props.updateProperty('meta.notificationDate', date)}
-            warnOnly={!props.validating}
-            error={get(props.errors, 'meta.notificationDate')}
-          />
-        }
-        <CheckboxesGroup
-          controlId="announcement-sending-roles"
-          label={trans('roles_to_send_to', {}, 'announcement')}
-          options={props.workspaceRoles.map(r => {
-            return {
+
+        <ConditionalSet condition={0 !== props.announcement.meta.notifyUsers}>
+          <CheckboxesGroup
+            id="announcement-sending-roles"
+            label={trans('roles_to_send_to', {}, 'announcement')}
+            options={props.workspaceRoles.map(r => ({
               value: r.id,
               label: t(r.translationKey)
-            }
-          })}
-          inline={false}
-          checkedValues={props.announcement.roles.map(r => parseInt(r))}
-          onChange={values => {
-            props.updateProperty('roles', values)
-          }}
-          warnOnly={!props.validating}
-          error={get(props.errors, 'roles')}
-        />
+            }))}
+            inline={false}
+            value={props.announcement.roles.map(r => parseInt(r))}
+            onChange={values => {
+              props.updateProperty('roles', values)
+            }}
+            warnOnly={!props.validating}
+            error={get(props.errors, 'roles')}
+          />
+
+          {props.announcement.meta.notifyUsers === 2 &&
+            <DateGroup
+              id="announcement-sending-date"
+              label={trans('announcement_sending_date', {}, 'announcement')}
+              value={props.announcement.meta.notificationDate || null}
+              onChange={(date) => props.updateProperty('meta.notificationDate', date)}
+              warnOnly={!props.validating}
+              error={get(props.errors, 'meta.notificationDate')}
+            />
+          }
+        </ConditionalSet>
       </FormSection>
     </FormSections>
   </form>
@@ -162,7 +164,7 @@ AnnounceForm.propTypes = {
     AnnouncementTypes.propTypes
   ).isRequired,
   workspaceRoles: T.arrayOf(T.shape({
-    id: T.number.isRequired,
+    id: T.string.isRequired,
     translationKey: T.string.isRequired
   })).isRequired,
   updateProperty: T.func.isRequired

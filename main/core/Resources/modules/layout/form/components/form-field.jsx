@@ -36,10 +36,10 @@ export const FormField = props => {
       return (props.noLabel ?
         <div className={classes({'has-error': props.error})}>
           <Checkboxes
-            groupName={props.controlId}
+            id={props.controlId}
             inline={true}
             options={props.choices || []}
-            checkedValues={props.value || []}
+            value={props.value || []}
             disabled={props.disabled}
             error={props.error}
             onChange={value => props.onChange(value)}
@@ -49,10 +49,10 @@ export const FormField = props => {
           }
         </div> :
         <CheckboxesGroup
-          controlId={props.controlId}
+          id={props.controlId}
           label={props.label}
           options={props.choices || []}
-          checkedValues={props.value || []}
+          value={props.value}
           disabled={props.disabled}
           error={props.error}
           onChange={value => props.onChange(value)}

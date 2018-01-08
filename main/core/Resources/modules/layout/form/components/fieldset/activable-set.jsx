@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
+import {ConditionalSet} from '#/main/core/layout/form/components/fieldset/conditional-set.jsx'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox.jsx'
 
 /**
@@ -33,11 +34,9 @@ class ActivableSet extends Component {
           onChange={this.toggle}
         />
 
-        {this.state.activated &&
-          <div className="sub-fields">
-            {this.props.children}
-          </div>
-        }
+        <ConditionalSet condition={this.state.activated}>
+          {this.props.children}
+        </ConditionalSet>
       </div>
     )
   }
