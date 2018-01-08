@@ -1,11 +1,11 @@
-import 'angular/angular.min'
+import angular from 'angular/index'
 import 'angular-sanitize'
+import 'angular-bootstrap'
 
 import ConfirmModalController from './Controller/ConfirmModalController'
 import ClarolineAPIService from './Service/ClarolineAPIService'
 import Interceptors from '../interceptorsDefault'
-import HtmlTruster from '../html-truster/module'
-import bootstrap from 'angular-bootstrap'
+import '../html-truster/module'
 
 angular.module('ClarolineAPI', ['ui.bootstrap', 'ui.bootstrap.tpls', 'ui.html-truster'])
     .config(Interceptors)

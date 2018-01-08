@@ -1,7 +1,7 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Alert as AlertTypes} from '#/main/core/layout/alert/prop-types'
 import {constants as actionConstants} from '#/main/core/layout/action/constants'
 import {constants} from '#/main/core/layout/alert/constants'

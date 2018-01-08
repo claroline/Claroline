@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import invariant from 'invariant'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {notBlank} from '#/main/core/validation'
 import {tex} from '#/main/core/translation'
 

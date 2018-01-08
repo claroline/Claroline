@@ -1,4 +1,4 @@
-import {ensure, mockTranslator} from '#/main/core/tests'
+import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
 import {createStore} from './store'
 
 describe('createStore', () => {

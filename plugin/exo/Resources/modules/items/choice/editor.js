@@ -3,7 +3,7 @@ import merge from 'lodash/merge'
 import zipObject from 'lodash/zipObject'
 import set from 'lodash/set'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {tex} from '#/main/core/translation'
 import {notBlank} from '#/main/core/validation'
 

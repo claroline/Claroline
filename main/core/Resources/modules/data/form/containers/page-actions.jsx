@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {getUrl} from '#/main/core/fos-js-router'
+import {getUrl} from '#/main/core/api/router'
 import {FormPageActions as FormPageActionsComponent} from '#/main/core/layout/form/components/page-actions.jsx'
 
 import {actions} from '#/main/core/data/form/actions'

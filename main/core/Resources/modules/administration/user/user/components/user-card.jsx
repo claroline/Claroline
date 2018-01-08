@@ -1,9 +1,9 @@
 import React from 'react'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/date'
+import {localeDate} from '#/main/core/scaffolding/date'
 
-import {UserAvatar} from '#/main/core/layout/user/components/user-avatar.jsx'
+import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 
 const UserCard = (row) => ({
   icon: <UserAvatar picture={row.picture} alt={true} />,

@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
-import {makeReducer} from '#/main/core/utilities/redux'
+import {makeReducer} from '#/main/core/scaffolding/reducer'
 import {
   CATEGORY_ADD,
   CATEGORY_UPDATE,

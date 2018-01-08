@@ -4,17 +4,17 @@ import {withRouter} from 'react-router-dom'
 import {PropTypes as T} from 'prop-types'
 
 import {trans, t} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/fos-js-router'
-import {localeDate} from '#/main/core/date'
+import {generateUrl} from '#/main/core/api/router'
+import {localeDate} from '#/main/core/scaffolding/date'
 
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link.jsx'
 
-import {UserMicro} from '#/main/core/layout/user/components/user-micro.jsx'
+import {UserMicro} from '#/main/core/user/components/micro.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 

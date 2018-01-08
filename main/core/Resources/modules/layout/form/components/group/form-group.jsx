@@ -1,5 +1,5 @@
 import React from 'react'
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import classes from 'classnames'
 
 import {t} from '#/main/core/translation'

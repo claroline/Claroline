@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 
 // TODO : use reselect
 // TODO : there is possible code refactoring with editor/selectors.js

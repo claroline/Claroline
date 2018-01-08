@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import Modal from 'react-bootstrap/lib/Modal'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/date'
+import {localeDate} from '#/main/core/scaffolding/date'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 
 export const MODAL_DETAILS_TASK_MESSAGE = 'MODAL_DETAILS_TASK_MESSAGE'

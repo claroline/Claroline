@@ -1,6 +1,6 @@
 import invariant from 'invariant'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {navigate} from './../router'
 import {actions as baseActions} from './../actions'
 import {VIEW_PAPERS, VIEW_PAPER} from './../enums'

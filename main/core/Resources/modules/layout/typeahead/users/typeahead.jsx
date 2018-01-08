@@ -4,7 +4,7 @@ import classes from 'classnames'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {t} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 

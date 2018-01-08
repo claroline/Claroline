@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
 
-import {asset} from '#/main/core/asset'
+import {asset} from '#/main/core/scaffolding/asset'
 import {tex} from '#/main/core/translation'
 import {makeDroppable} from './../../utils/dragAndDrop'
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'

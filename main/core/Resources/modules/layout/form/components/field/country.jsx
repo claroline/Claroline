@@ -2,7 +2,7 @@ import React from 'react'
 
 import {constants as intlConstants} from '#/main/core/intl/constants'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {Select} from '#/main/core/layout/form/components/field/select.jsx'
 

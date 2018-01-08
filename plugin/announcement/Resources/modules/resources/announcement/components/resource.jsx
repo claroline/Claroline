@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 
 import {Router, Routes} from '#/main/core/router'
-import {ResourceContainer} from '#/main/core/layout/resource/containers/resource.jsx'
+import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
 
 import {Announces} from './announces.jsx'
 import {Announce} from './announce.jsx'

@@ -3,7 +3,7 @@ import 'angular-bootstrap'
 import 'angular-resource'
 import 'angular-ui-translation/angular-translation'
 import 'angular-loading-bar'
-import '#/main/core/fos-js-router/module'
+import '#/main/core/api/router/module'
 import bibliographyController from './bibliography.controller.js'
 
 

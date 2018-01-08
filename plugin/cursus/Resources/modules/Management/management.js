@@ -16,7 +16,7 @@ import 'angular-ui-translation/angular-translation'
 import 'angular-breadcrumb'
 import 'angular-loading-bar'
 
-import '#/main/core/fos-js-router/module'
+import '#/main/core/api/router/module'
 import '../Cursus/cursus'
 import '../Course/course'
 import '../Session/session'

@@ -1,13 +1,13 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 import {RoutedPage, PageContent} from '#/main/core/layout/page'
 
 import {UserPageActions} from '#/main/core/user/components/page-actions.jsx'
-import {UserAvatar} from '#/main/core/layout/user/components/user-avatar.jsx'
+import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 
 const UserPageHeader = props =>
   <header className={classes('page-header', props.className)}>

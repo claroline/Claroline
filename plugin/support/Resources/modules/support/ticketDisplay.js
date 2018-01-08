@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import {asset} from '#/main/core/asset'
+import {asset} from '#/main/core/scaffolding/asset'
 
 $('#ticket-comment-form-box').on('click', '#add-comment-btn', function (e) {
   e.stopImmediatePropagation()

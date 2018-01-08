@@ -1,10 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
 import shajs from 'sha.js'
 
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 import {trans, t} from '#/main/core/translation'
-import {isValidDate} from '#/main/core/date'
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {isValidDate} from '#/main/core/scaffolding/date'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {API_REQUEST} from '#/main/core/api/actions'
 
 export const BBB_URL_UPDATE = 'BBB_URL_UPDATE'

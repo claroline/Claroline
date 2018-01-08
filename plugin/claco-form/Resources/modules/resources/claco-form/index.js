@@ -4,11 +4,9 @@ import {
   HashRouter as Router
 } from 'react-router-dom'
 
-import {bootstrap} from '#/main/core/utilities/app/bootstrap'
+import {bootstrap} from '#/main/core/scaffolding/bootstrap'
 import {registerModals} from '#/main/core/layout/modal'
-import {reducer as modalReducer}    from '#/main/core/layout/modal/reducer'
-import {reducer as resourceNodeReducer} from '#/main/core/layout/resource/reducer'
-import {reducer as apiReducer} from '#/main/core/api/reducer'
+import {makeResourceReducer} from '#/main/core/resource/reducer'
 import {
   resourceReducers,
   mainReducers,
@@ -46,8 +44,7 @@ bootstrap(
   }, React.createElement(ClacoFormResource)),
 
   // app store configuration
-  {
-    // app reducers
+  makeResourceReducer({}, {
     user: mainReducers,
     resource: resourceReducers,
     canEdit: mainReducers,
@@ -63,13 +60,8 @@ bootstrap(
     cascadeLevelMax: mainReducers,
     message: messageReducers,
     roles: mainReducers,
-    myRoles: mainReducers,
-
-    // generic reducers
-    resourceNode: resourceNodeReducer,
-    modal: modalReducer,
-    currentRequests: apiReducer
-  },
+    myRoles: mainReducers
+  }),
 
   // transform data attributes for redux store
   (initialData) => {

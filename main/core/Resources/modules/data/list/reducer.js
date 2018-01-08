@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 import difference from 'lodash/difference'
 
-import {makeInstanceReducer, reduceReducers, combineReducers} from '#/main/core/utilities/redux'
+import {makeInstanceReducer, reduceReducers, combineReducers} from '#/main/core/scaffolding/actions'
 
 import {constants} from '#/main/core/data/list/constants'
 import {

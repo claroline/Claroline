@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {asset} from '#/main/core/asset'
+import {asset} from '#/main/core/scaffolding/asset'
 import {t} from '#/main/core/translation'
 
 const AudioThumbnail = props =>

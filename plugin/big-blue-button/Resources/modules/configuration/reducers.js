@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
-import {makeReducer} from '#/main/core/utilities/redux'
+import {makeReducer} from '#/main/core/scaffolding/reducer'
 import {
   CONFIGURATION_UPDATE,
   CONFIGURATION_MESSAGE_RESET,

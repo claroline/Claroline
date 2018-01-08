@@ -1,6 +1,6 @@
 import freeze from 'deep-freeze'
 import merge from 'lodash/merge'
-import {ensure, mockTranslator} from '#/main/core/tests'
+import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
 import {lastId} from './../../utils/utils'
 import {reducers} from './reducers'
 import {registerItemType, resetTypes} from './../../items/item-types'

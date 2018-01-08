@@ -1,7 +1,7 @@
 /*global Routing*/
 /*global Translator*/
 import $ from 'jquery'
-import {asset} from '#/main/core/asset'
+import {asset} from '#/main/core/scaffolding/asset'
 
 let currentForwardBtn = null
 

@@ -8,7 +8,7 @@ import {Icon} from './../../../../items/components/icon.jsx'
 import {t, tex, trans} from '#/main/core/translation'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {API_REQUEST} from '#/main/core/api/actions'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 
 export const MODAL_IMPORT_ITEMS = 'MODAL_IMPORT_ITEMS'

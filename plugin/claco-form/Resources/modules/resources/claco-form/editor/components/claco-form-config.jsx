@@ -15,7 +15,7 @@ import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.j
 import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
 
 
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {constants as listConstants} from '#/main/core/data/list/constants'
 import {actions} from '../actions'

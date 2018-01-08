@@ -5,16 +5,16 @@ import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 
 import {trans, t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/date'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {localeDate} from '#/main/core/scaffolding/date'
+import {generateUrl} from '#/main/core/api/router'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {constants as listConstants} from '#/main/core/data/list/constants'
-import {UserAvatar} from '#/main/core/layout/user/components/user-avatar.jsx'
+import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 
 import {selectors} from '#/plugin/claco-form/resources/claco-form/selectors'
 import {constants} from '#/plugin/claco-form/resources/claco-form/constants'

@@ -4,9 +4,19 @@
  * (@see webpack DllPlugin and DllReferencePlugin)
  */
 module.exports = {
+  'react_dll': [
+    'react',
+    'redux',
+    'react-dom',
+    'react-redux',
+    'react-router-dom',
+    'reselect',
+    'prop-types',
+    'invariant',
+    'classnames'
+  ],
   'angular_dll': [
     'angular',
-    'angular/angular.min',
     'angular-animate',
     'angular-bootstrap',
     'angular-bootstrap-colorpicker',
@@ -14,7 +24,6 @@ module.exports = {
     'angular-daterangepicker',
     'angular-datetime',
     'angular-data-table/release/dataTable.helpers.min',
-    'angular-dragula',
     'angular-loading-bar',
     'angular-resource',
     'angular-route',
@@ -28,9 +37,6 @@ module.exports = {
     'angular-ui-translation',
     'angular-ui-tree',
     'angular-ui-pageslide',
-    'ng-file-upload',
-    'at-table/dist/angular-table',
-    'angular-dragula'
-  ],
-  'es6_dll': ['core-js', 'whatwg-fetch']
+    'ng-file-upload'
+  ]
 }

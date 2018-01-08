@@ -14,7 +14,7 @@ import 'angular-bootstrap-colorpicker'
 import 'angular-ui-translation/angular-translation'
 
 import '#/main/core/services/module'
-import '#/main/core/asset/module'
+import '#/main/core/scaffolding/asset/module'
 import '#/main/core/form/module'
 import CourseService from './Service/CourseService'
 import CourseCreationModalCtrl from './Controller/CourseCreationModalCtrl'

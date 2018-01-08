@@ -5,7 +5,7 @@ import 'angular-bootstrap'
 import 'angular-strap'
 import 'angular-ui-translation/angular-translation'
 import '#/main/core/modal/module'
-import '#/main/core/fos-js-router/module'
+import '#/main/core/api/router/module'
 
 import './../dashboards/module'
 import './../dashboard/module'

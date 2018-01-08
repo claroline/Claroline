@@ -1,7 +1,7 @@
 import {t} from '#/main/core/translation'
 
 import {WorkspaceCard} from '#/main/core/administration/workspace/components/workspace-card.jsx'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 const WorkspaceList = {
   open: {

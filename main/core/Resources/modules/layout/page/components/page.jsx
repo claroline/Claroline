@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import classes from 'classnames'
 
 import {Router} from '#/main/core/router'
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 
 import {makeModal} from '#/main/core/layout/modal'

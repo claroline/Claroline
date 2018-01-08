@@ -1,5 +1,5 @@
 
-import { makeActionCreator } from '#/main/core/utilities/redux/actions'
+import { makeActionCreator } from '#/main/core/scaffolding/actions'
 
 export const BOOK_REFERENCE_SET = 'BOOK_REFERENCE_SET'
 

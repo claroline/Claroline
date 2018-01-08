@@ -1,6 +1,6 @@
 import invariant from 'invariant'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 
 import {constants as actionConstants} from '#/main/core/layout/action/constants'
 import {constants} from '#/main/core/layout/alert/constants'

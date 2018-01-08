@@ -1,8 +1,14 @@
 {# todo : this needs to be removed and be managed server side #}
 <script src='{{ asset('bundles/clarolinecore/js/iframe/iframe.js') }}'></script>
 
-<script src="{{ hotAsset('dist/es6_dll.js') }}"></script>
-<script src="{{ hotAsset('dist/angular_dll.js') }}"></script> 
+{# AngularJS & related libraries #}
+<script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
+
+{# React/Redux & related libraries #}
+<script src="{{ hotAsset('dist/react_dll.js') }}"></script>
+
+{# Polyfills #}
+<script src="{{ hotAsset('dist/claroline-distribution-main-core-polyfills.js') }}"></script>
 
 {% if app.environment == 'prod' %}
     <script src="{{ hotAsset('dist/commons.js') }}"></script>
@@ -13,21 +19,6 @@
         $('.outdated-browser-warning').hide();
     }
 </script>
-
-{# Polyfills #}
-<script src="{{ hotAsset('dist/claroline-distribution-main-core-core-js.js') }}"></script>
-<script src="{{ hotAsset('dist/claroline-distribution-main-core-whatwg-fetch.js') }}"></script>
-<script src="{{ hotAsset('dist/claroline-distribution-main-core-modernizr.js') }}"></script>
-
-{# SVG external reference polyfill for IE<13 #}
-{% javascripts debug=false filter='jsmin' output='vendor/svg4everybody/svg4everybody.js'
-    '../node_modules/svg4everybody/dist/svg4everybody.js'
-%}
-    <script src="{{ asset_url }}"></script>
-    <script>
-        svg4everybody();
-    </script>
-{% endjavascripts %}
 
 {% javascripts debug=false filter='jsmin' output='vendor/twitter/bootstrap/js/bootstrap.js'
     'packages/bootstrap/js/transition.js'
@@ -47,7 +38,8 @@
 
 {% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
     '../vendor/jms/twig-js/twig.js'
-    %}<script src="{{ asset_url }}"></script>
+%}
+    <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
     "@ClarolineCoreBundle/Resources/views/Resource/breadcrumbs.html.twigjs"
@@ -111,12 +103,6 @@
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
-{#<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}"></script>
-<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'home' }) }}"></script>
-<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'platform' }) }}"></script>
-<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'error' }) }}"></script>
-<script src="{{ url('bazinga_jstranslation_js', { 'domain': 'validators' }) }}"></script>#}
-
 <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
 <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 <script src="{{ asset('packages/bootstrap-datepicker/dist/js/bootstrap-datepicker.js') }}"></script>
@@ -163,26 +149,6 @@
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
-{# Angular JS #}
-{% javascripts debug=false filter='jsmin' output='vendor/angular.js'
-    'packages/angular/angular.min.js'
-    'packages/angular-route/angular-route.min.js'
-    'packages/angular-sanitize/angular-sanitize.min.js'
-%}
-    <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
-
-{# Angular UI #}
-{% javascripts debug=false filter='jsmin' output='vendor/angular-ui.js'
-    'packages/angular-ui-tree/dist/angular-ui-tree.js'
-    'packages/angular-ui-select/dist/select.min.js'
-    'packages/angular-data-table/release/dataTable.helpers.min.js'
-    'packages/angular-breadcrumb/dist/angular-breadcrumb.min.js'
-    'packages/angular-ui-router/release/angular-ui-router.min.js'
-%}
-    <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
-
 {# TinyMCE #}
 <script src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
 <script src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
@@ -204,25 +170,18 @@
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
-
 <script>
     $('body').tooltip({
         selector: '[data-toggle=tooltip]'
     });
-</script>
 
-{{ render(controller('ClarolineCoreBundle:Layout:injectJavascript', {})) }}
-
-<script>
     $('.maintenance-popover').popover();
-</script>
 
-<script>
     $('#hide-email-confirmation').on('click', function () {
         $.ajax({
             url: Routing.generate('claro_security_validate_email_hide'),
             type: 'GET',
-            success: function (datas) {
+            success: function () {
                 $('.alert-email-confirm').hide();
             }
         });
@@ -248,3 +207,5 @@
         return oldJqTrigger.apply(this, arguments);
     };
 </script>
+
+{{ render(controller('ClarolineCoreBundle:Layout:injectJavascript', {})) }}

@@ -1,7 +1,7 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
 
-import {spyConsole, renew, ensure} from '#/main/core/tests'
+import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
 
 import {ActivableSet} from './activable-set.jsx'
 

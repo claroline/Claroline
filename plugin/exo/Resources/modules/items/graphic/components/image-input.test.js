@@ -1,6 +1,6 @@
 import React from 'react'
 import {shallow} from 'enzyme'
-import {spyConsole, renew, ensure} from '#/main/core/tests'
+import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
 import {ImageInput} from './image-input.jsx'
 
 describe('<ImageInput/>', () => {

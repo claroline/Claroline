@@ -25,7 +25,6 @@
 ## DEV DEPENDENCIES
 - sensio/generator-bundle
 - sensio/distribution-bundle
-- nelmio/api-doc-bundle
 
 
 ## OURS

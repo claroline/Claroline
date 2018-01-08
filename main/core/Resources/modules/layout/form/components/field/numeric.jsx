@@ -1,7 +1,7 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 const NumericInput = props =>

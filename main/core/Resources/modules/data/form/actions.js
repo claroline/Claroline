@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
-import {makeInstanceActionCreator} from '#/main/core/utilities/redux'
+import {makeInstanceActionCreator} from '#/main/core/scaffolding/actions'
 
 import {tval} from '#/main/core/translation'
 import {API_REQUEST} from '#/main/core/api/actions'

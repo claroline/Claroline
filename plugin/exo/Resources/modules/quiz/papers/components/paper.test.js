@@ -3,8 +3,8 @@ import {mount} from 'enzyme'
 import configureMockStore from 'redux-mock-store'
 import merge from 'lodash/merge'
 
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
-import {resourceNodeFixture} from '#/main/core/layout/resource/tests'
+import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {resourceNodeFixture} from '#/main/core/resource/tests'
 
 import {registerItemType} from './../../../items/item-types'
 import {Paper} from './paper.jsx'

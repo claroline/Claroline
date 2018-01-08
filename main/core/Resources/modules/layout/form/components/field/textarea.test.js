@@ -7,7 +7,7 @@ import {
   ensure,
   mockTranslator,
   mockTinymce
-} from '#/main/core/tests'
+} from '#/main/core/scaffolding/tests'
 import {Textarea} from './textarea.jsx'
 
 describe('<Textarea/>', () => {

@@ -1,4 +1,4 @@
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
 /**
  * Definition of common props of a form field.

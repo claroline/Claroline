@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import Configuration from '#/main/core/library/Configuration/Configuration'
 import {t, transChoice, Translator} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_CONFIRM, MODAL_URL, MODAL_USER_PICKER} from '#/main/core/layout/modal'

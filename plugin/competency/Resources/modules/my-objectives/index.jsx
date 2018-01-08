@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/core/utilities/app/bootstrap'
+import {bootstrap} from '#/main/core/scaffolding/bootstrap'
 import {routedApp} from '#/main/core/router'
 import {reducer as modalReducer}    from '#/main/core/layout/modal/reducer'
 import {

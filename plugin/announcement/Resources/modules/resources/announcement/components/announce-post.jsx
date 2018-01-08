@@ -3,10 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/date'
-import {User as UserTypes} from '#/main/core/layout/user/prop-types'
+import {localeDate} from '#/main/core/scaffolding/date'
+import {User as UserTypes} from '#/main/core/user/prop-types'
 
-import {UserMicro} from '#/main/core/layout/user/components/user-micro.jsx'
+import {UserMicro} from '#/main/core/user/components/micro.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link.jsx'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'

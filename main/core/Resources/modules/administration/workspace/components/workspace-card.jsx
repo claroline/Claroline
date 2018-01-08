@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/date'
+import {localeDate} from '#/main/core/scaffolding/date'
 
 const WorkspaceCard = (row) => ({
   icon: 'fa fa-book',

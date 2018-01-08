@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 import {t} from '#/main/core/translation'
 
 import {UserPageContainer} from '#/main/core/user/containers/page.jsx'

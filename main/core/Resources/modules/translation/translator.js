@@ -1,5 +1,5 @@
-import {execute} from '#/main/core/file-loader'
-import {web} from '#/main/core/path'
+import {loadFile} from '#/main/core/scaffolding/loader/file'
+import {web} from '#/main/core/scaffolding/path'
 
 /**
  * This class was copied from BazingaJsTranslationBundle
@@ -351,7 +351,7 @@ function has_domain(locale, domain) {
  */
 function load_domain(locale, domain) {
   if (!has_domain(locale, domain)) {
-    execute(web(`js/translations/${domain}/${locale}.js`))
+    loadFile(web(`js/translations/${domain}/${locale}.js`))
   }
 }
 

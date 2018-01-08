@@ -1,7 +1,7 @@
-import 'angular/angular.min'
+import angular from 'angular/index'
 import 'angular-bootstrap'
+import 'angular-ui-translation/angular-translation'
 
-import translation from 'angular-ui-translation/angular-translation'
 import DateDirective from './DateDirective'
 
 angular.module('FieldDate', [

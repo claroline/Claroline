@@ -1,7 +1,7 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
 
-import {spyConsole, renew, ensure} from '#/main/core/tests'
+import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
 
 // note the alias is required for correct props validation
 // the underlying library we use also use DatePicker as component name

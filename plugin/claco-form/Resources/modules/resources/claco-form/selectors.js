@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 
 const resource = state => state.resource
 const isAnon = state => state.isAnon
