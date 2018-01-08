@@ -211,7 +211,7 @@ class RoleRepository extends EntityRepository
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
             JOIN r.users user
-            WHERE ws.guid = '{$workspace->getGuid()}'
+            WHERE ws.uuid = '{$workspace->getGuid()}'
             AND r.name != 'ROLE_ADMIN'
             AND user.id = {$user->getId()}
         ";

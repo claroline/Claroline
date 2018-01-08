@@ -173,12 +173,18 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     public function copyBulkAction(Request $request, $class)
     {
-        $this->crud->copyBulk(
+        $serializer = $this->serializer;
+        $options = $this->options;
+
+        $copies = $this->crud->copyBulk(
+            $class,
             $this->decodeIdsString($request, $class),
             $this->options['copyBulk']
         );
 
-        return new JsonResponse(null, 204);
+        return new JsonResponse(array_map(function ($copy) use ($serializer, $options) {
+            return $serializer->serialize($copy, $options['get']);
+        }, $copies), 200);
     }
 
     /**

@@ -9,10 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Event;
+namespace Claroline\CoreBundle\Event\Crud;
 
 use Symfony\Component\EventDispatcher\Event;
 
+/**
+ * Crud event class.
+ */
 class CrudEvent extends Event
 {
     /**

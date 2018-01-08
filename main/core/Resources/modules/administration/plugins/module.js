@@ -13,7 +13,7 @@ angular.module('PluginManager', [
   'ui.fos-js-router',
   'ui.bootstrap',
   'ui.bootstrap.tpls',
-  'ui.translation',
+  'ui.translation'
 ])
   .controller('PluginController', ['$http', '$uibModal', PluginController])
   .controller('WarningController', WarningController)

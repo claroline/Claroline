@@ -110,24 +110,29 @@ class UserSerializer
             'picture' => $user->getPicture(),
             'email' => $user->getMail(),
             'administrativeCode' => $user->getAdministrativeCode(),
-            'meta' => $this->serializeMeta($user),
-            'restrictions' => $this->serializeRestrictions($user),
-            'rights' => $this->serializeRights($user),
-            'roles' => array_map(function (Role $role) {
-                return [
-                    'id' => $role->getUuid(),
-                    'type' => $role->getType(),
-                    'name' => $role->getName(),
-                    'translationKey' => $role->getTranslationKey(),
-                ];
-            }, $user->getEntityRoles()),
-            'groups' => array_map(function (Group $group) {
-                return [
-                    'id' => $group->getUuid(),
-                    'name' => $group->getName(),
-                ];
-            }, $user->getGroups()->toArray()),
         ];
+
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $serialized = array_merge($serialized, [
+                'meta' => $this->serializeMeta($user),
+                'restrictions' => $this->serializeRestrictions($user),
+                'rights' => $this->serializeRights($user),
+                'roles' => array_map(function (Role $role) {
+                    return [
+                        'id' => $role->getUuid(),
+                        'type' => $role->getType(),
+                        'name' => $role->getName(),
+                        'translationKey' => $role->getTranslationKey(),
+                    ];
+                }, $user->getEntityRoles()),
+                'groups' => array_map(function (Group $group) {
+                    return [
+                        'id' => $group->getUuid(),
+                        'name' => $group->getName(),
+                    ];
+                }, $user->getGroups()->toArray()),
+            ]);
+        }
 
         // todo deserialize facets
         if (in_array(Options::SERIALIZE_FACET, $options)) {

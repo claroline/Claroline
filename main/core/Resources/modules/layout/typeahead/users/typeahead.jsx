@@ -37,7 +37,7 @@ UsersList.propTypes = {
 
 const SelectedUser = props =>
   <li className="selected-user">
-    {props.user.name ? props.user.name : props.user.firstName+' '+props.user.lastName}
+    {props.user.name ? props.user.name : props.user.firstName + ' ' + props.user.lastName}
 
     <TooltipButton
       id={`remove-${props.user.id}`}
@@ -53,7 +53,7 @@ const SelectedUser = props =>
 
 SelectedUser.propTypes = {
   user: T.shape({
-    id: T.number.isRequired,
+    id: T.string.isRequired,
     name: T.string,
     firstName: T.string,
     lastName: T.string
@@ -79,12 +79,12 @@ export class UserTypeahead extends Component {
     if (search && search.length > 2) {
       this.setState({isFetching: true})
 
-      fetch(generateUrl('api_get_search_users', {limit: 20, page: 0}) + '?name[]=' + search, {
+      fetch(generateUrl('apiv2_user_list', {limit: 20, page: 0}) + '?filters[name]=' + search, {
         method: 'GET' ,
         credentials: 'include'
       })
       .then(response => response.json())
-      .then(results => this.setState({results: results.users, isFetching: false}))
+      .then(results => this.setState({results: results.data, isFetching: false}))
     }
   }
 

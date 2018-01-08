@@ -1,7 +1,9 @@
+/* global require */
+
 import ClarolinePluginController from '../Controller/PluginController'
 
 export default class ClarolineSearchDirective {
-  constructor () {
+  constructor() {
     this.scope = {}
     this.restrict = 'E'
     this.template = require('../Partial/plugins.html')

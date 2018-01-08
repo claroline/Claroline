@@ -1,5 +1,5 @@
 export default class WarningController {
-  constructor (plugin) {
+  constructor(plugin) {
     this.plugin = plugin
   }
 }

@@ -44,7 +44,7 @@ class EventRepository extends EntityRepository
                         AND tm.name = :open
                         AND BIT_AND(otr.mask, tm.value) = tm.value
                     )
-                    OR r.name = CONCAT('ROLE_WS_MANAGER_', w.guid)
+                    OR r.name = CONCAT('ROLE_WS_MANAGER_', w.uuid)
                 )
             )
             WHERE e.isTask = :isTask
@@ -90,7 +90,7 @@ class EventRepository extends EntityRepository
                         AND tm.name = :open
                         AND BIT_AND(otr.mask, tm.value) = tm.value
                     )
-                    OR r.name = CONCAT('ROLE_WS_MANAGER_', w.guid)
+                    OR r.name = CONCAT('ROLE_WS_MANAGER_', w.uuid)
                 )
             )
             ORDER BY e.start DESC
@@ -127,7 +127,7 @@ class EventRepository extends EntityRepository
                     AND tm.name = :edit
                     AND BIT_AND(otr.mask, tm.value) = tm.value
                 )
-                OR r.name = CONCAT('ROLE_WS_MANAGER_', w.guid)
+                OR r.name = CONCAT('ROLE_WS_MANAGER_', w.uuid)
             )
         ";
 

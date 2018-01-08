@@ -1308,12 +1308,11 @@ class WorkspaceManager
 
         $newWorkspace->setModel($model);
         // create new name and code
-        $prefix = $model ? '[MODEL]' : '[COPY]';
         $ws = $this->getOneByCode($newWorkspace->getCode());
 
         if ($ws) {
-            $name = $prefix.' '.$newWorkspace->getName();
-            $code = $prefix.' '.$newWorkspace->getCode();
+            $name = $newWorkspace->getName().'-'.uniqid('', true);
+            $code = $newWorkspace->getCode().'-'.uniqid('', true);
         } else {
             $name = $newWorkspace->getName();
             $code = $newWorkspace->getCode();

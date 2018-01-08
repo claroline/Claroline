@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer;
 
+use Claroline\CoreBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -15,7 +16,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class WorkspaceSerializer
 {
-    const OPTION_MINIMAL = 'minimal';
+    use SerializerTrait;
 
     /** @var UserSerializer */
     private $userSerializer;
@@ -60,9 +61,9 @@ class WorkspaceSerializer
             'thumbnail' => null, // todo : add as Workspace prop
         ];
 
-        if (!in_array(static::OPTION_MINIMAL, $options)) {
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
-                'poster' => null, // todo : add as Workspace prop
+                'poster' => '', // todo : add as Workspace prop
                 'meta' => $this->getMeta($workspace),
                 'display' => $this->getDisplay($workspace),
                 'restrictions' => $this->getRestrictions($workspace),
@@ -71,7 +72,7 @@ class WorkspaceSerializer
                     return ['id' => $role->getId(), 'name' => $role->getName()];
                 }, $workspace->getRoles()->toArray()),
                 'managers' => array_map(function (User $manager) {
-                    return $this->userSerializer->serialize($manager);
+                    return $this->userSerializer->serialize($manager, [Options::SERIALIZE_MINIMAL]);
                 }, $this->workspaceManager->getManagers($workspace)),
             ]);
         }
@@ -79,6 +80,11 @@ class WorkspaceSerializer
         return $serialized;
     }
 
+    /**
+     * @param Workspace $workspace
+     *
+     * @return array
+     */
     private function getMeta(Workspace $workspace)
     {
         return [
@@ -86,10 +92,15 @@ class WorkspaceSerializer
             'personal' => $workspace->isPersonal(),
             'description' => $workspace->getDescription(),
             'created' => $workspace->getCreated()->format('Y-m-d\TH:i:s'),
-            'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator()) : null,
+            'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
         ];
     }
 
+    /**
+     * @param Workspace $workspace
+     *
+     * @return array
+     */
     private function getDisplay(Workspace $workspace)
     {
         return [
@@ -97,6 +108,11 @@ class WorkspaceSerializer
         ];
     }
 
+    /**
+     * @param Workspace $workspace
+     *
+     * @return array
+     */
     private function getRestrictions(Workspace $workspace)
     {
         return [
@@ -108,6 +124,11 @@ class WorkspaceSerializer
         ];
     }
 
+    /**
+     * @param Workspace $workspace
+     *
+     * @return array
+     */
     private function getRegistration(Workspace $workspace)
     {
         return [
@@ -117,8 +138,48 @@ class WorkspaceSerializer
         ];
     }
 
+    /**
+     * @param array     $data
+     * @param Workspace $workspace
+     * @param array     $options
+     */
+    public function deserialize(array $data, Workspace $workspace, array $options = [])
+    {
+        $this->sipe('uuid', 'setUuid', $data, $workspace);
+        $this->sipe('code', 'setCode', $data, $workspace);
+        $this->sipe('name', 'setName', $data, $workspace);
+
+        $this->sipe('meta.model', 'setIsModel', $data, $workspace);
+        $this->sipe('meta.description', 'setDescription', $data, $workspace);
+
+        $this->sipe('display.displayable', 'setDisplayable', $data, $workspace);
+
+        $this->sipe('restrictions.accessibleFrom', 'setStartDate', $data, $workspace);
+        $this->sipe('restrictions.accessibleUntil', 'setEndDate', $data, $workspace);
+        $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $workspace);
+        $this->sipe('restrictions.maxStorage', 'setMaxStorageSize', $data, $workspace);
+        $this->sipe('restrictions.maxResources', 'setMaxUploadResources', $data, $workspace);
+
+        $this->sipe('registration.validation', 'setRegistrationValidation', $data, $workspace);
+        $this->sipe('registration.selfRegistration', 'setSelfRegistration', $data, $workspace);
+        $this->sipe('registration.selfUnregistration', 'setSelfUnregistration', $data, $workspace);
+
+        return $workspace;
+    }
+
+    /**
+     * @return string
+     */
     public function getSchema()
     {
         return '#/main/core/workspace.json';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSamples()
+    {
+        return '#/main/core/workspace';
     }
 }

@@ -279,14 +279,6 @@ claro_api:
     options:
         expose: true
 
-claro_workspace_api:
-    resource: "@ClarolineCoreBundle/Controller/API/Workspace/WorkspaceController.php"
-    type: rest
-    prefix: api
-    defaults: {_format: json}
-    options:
-        expose: true
-
 claro_plugin_api:
     resource: "@ClarolineCoreBundle/Controller/API/Admin/PluginController.php"
     prefix: api

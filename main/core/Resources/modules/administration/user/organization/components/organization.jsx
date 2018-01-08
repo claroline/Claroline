@@ -16,7 +16,7 @@ import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
 import {actions} from '#/main/core/administration/user/organization/actions'
 import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
-import {WorkspaceList} from '#/main/core/administration/workspace/components/workspace-list.jsx'
+import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list.jsx'
 
 const OrganizationSaveAction = makeSaveAction('organizations.current', formData => ({
   create: ['apiv2_organization_create'],

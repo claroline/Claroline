@@ -305,10 +305,7 @@ class Role implements RoleInterface
     public function removeUser(User $user)
     {
         $this->users->removeElement($user);
-
-        if ($user->hasRole($this)) {
-            $user->removeRole($this);
-        }
+        $user->removeRole($this);
     }
 
     /**
