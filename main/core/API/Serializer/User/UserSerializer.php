@@ -276,17 +276,16 @@ class UserSerializer
         // remove this later (with the Trait)
         $object = $this->genericSerializer->deserialize($data, $user, $options);
 
-        // todo rename mail into email later
-        if (isset($data['email'])) {
-            $object->setMail($data['email']);
-        }
+        $this->sipe('email', 'setMail', $data, $object);
+        $this->sipe('plainPassword', 'setPlainPassword', $data, $object);
+        $this->sipe('meta.enabled', 'setIsEnabled', $data, $object);
 
         if (isset($data['plainPassword'])) {
-            $object->setPlainPassword($data['plainPassword']);
-        }
+            $password = $this->container->get('security.encoder_factory')
+                ->getEncoder($object)
+                ->encodePassword($object->getPlainPassword(), $user->getSalt());
 
-        if (isset($data['enabled'])) {
-            $object->setEnabled($data['enabled']);
+            $object->setPassword($password);
         }
 
         //avoid recursive dependencies
