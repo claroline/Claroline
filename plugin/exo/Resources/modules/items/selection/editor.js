@@ -198,7 +198,7 @@ function validate(item) {
     }
   }
 
-  if (notBlank(item.text, true)) {
+  if (notBlank(item.text, {isHtml: true})) {
     _errors.text = tex('selection_empty_text_error')
   }
 

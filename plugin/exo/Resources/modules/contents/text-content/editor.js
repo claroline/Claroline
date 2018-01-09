@@ -26,7 +26,7 @@ function reduce(item = {}, action = {}) {
 
 function validate(item) {
   const errors = {}
-  setIfError(errors, 'data', notBlank(item.data, true))
+  setIfError(errors, 'data', notBlank(item.data, {isHtml: true}))
 
   return errors
 }

@@ -218,7 +218,7 @@ function validate(item) {
   }
 
   // no blank item data
-  if (item.firstSet.find(set => notBlank(set.data, true)) || item.secondSet.find(set => notBlank(set.data, true))) {
+  if (item.firstSet.find(set => notBlank(set.data, {isHtml: true})) || item.secondSet.find(set => notBlank(set.data, {isHtml: true}))) {
     errors.items = tex('match_item_empty_data_error')
   }
 

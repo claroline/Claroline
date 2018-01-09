@@ -106,7 +106,7 @@ function reduce(item = {}, action) {
 function validate(item) {
   const errors = {}
 
-  if (item.choices.find(choice => notBlank(choice.data, true))) {
+  if (item.choices.find(choice => notBlank(choice.data, {isHtml: true}))) {
     errors.choices = tex('choice_empty_data_error')
   }
 

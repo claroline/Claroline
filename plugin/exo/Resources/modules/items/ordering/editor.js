@@ -202,7 +202,7 @@ function reduce(ordering = {}, action) {
 function validate(ordering) {
   const errors = {}
 
-  if (ordering.items.find(item => notBlank(item.data, true))) {
+  if (ordering.items.find(item => notBlank(item.data, {isHtml: true}))) {
     errors.items = tex('ordering_item_empty_data_error')
   }
 
