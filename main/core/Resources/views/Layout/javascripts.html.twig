@@ -1,18 +1,18 @@
 {# todo : this needs to be removed and be managed server side #}
 <script src='{{ asset('bundles/clarolinecore/js/iframe/iframe.js') }}'></script>
 
-{# AngularJS & related libraries #}
-<script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
-
 {# React/Redux & related libraries #}
 <script src="{{ hotAsset('dist/react_dll.js') }}"></script>
 
-{# Polyfills #}
-<script src="{{ hotAsset('dist/claroline-distribution-main-core-polyfills.js') }}"></script>
+{# AngularJS & related libraries #}
+<script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
 
 {% if app.environment == 'prod' %}
     <script src="{{ hotAsset('dist/commons.js') }}"></script>
 {% endif %}
+
+{# Polyfills #}
+<script src="{{ hotAsset('dist/claroline-distribution-main-core-polyfills.js') }}"></script>
 
 <script>
     if (window.sessionStorage.getItem('hide_brower_warning')) {
