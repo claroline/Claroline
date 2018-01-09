@@ -795,6 +795,15 @@ class WorkspaceManager
         $this->om->flush();
     }
 
+    public function isUserInValidationQueue(Workspace $workspace, User $user)
+    {
+        $workspaceRegistrationQueueRepo =
+            $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
+        $userQueued = $workspaceRegistrationQueueRepo->findOneBy(['workspace' => $workspace, 'user' => $user]);
+
+        return !empty($userQueued);
+    }
+
     /**
      * @param Workspace $workspace
      * @param User      $user
