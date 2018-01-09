@@ -37,30 +37,11 @@
       "items": {
         "oneOf": [
           {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              }
-            },
-            "required": ["name"]
-          },
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              }
-            },
-            "required": ["id"]
-          },
-          {
-              "type": "object"
+              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schema/group.json"
           }
         ]
       }
     }
   },
-  "required": ["email", "firstName", "lastName", "username"],
   "claroIds": ["id", "email", "username"]
 }

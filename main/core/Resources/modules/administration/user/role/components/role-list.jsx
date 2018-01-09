@@ -15,7 +15,7 @@ const RoleList = {
       name: 'name',
       type: 'string',
       label: t('code'),
-      displayed: true,
+      displayed: false,
       primary: true
     }, {
       name: 'translationKey',
@@ -32,6 +32,13 @@ const RoleList = {
       },
       alias: 'type',
       displayed: true
+    },
+    {
+      name: 'workspace.name',
+      type: 'string',
+      label: t('workspace'),
+      displayed: true,
+      filterable: false
     }
   ],
   card: RoleCard

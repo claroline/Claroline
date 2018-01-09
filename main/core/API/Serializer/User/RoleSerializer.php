@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\CoreBundle\API\Options;
+use Claroline\CoreBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Role;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -12,6 +13,23 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class RoleSerializer
 {
+    /** @var SerializerProvider */
+    private $serializer;
+
+    /**
+     * RoleSerializer constructor.
+     *
+     * @DI\InjectParams({
+     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     * })
+     *
+     * @param SerializerProvider $serializer
+     */
+    public function __construct(SerializerProvider $serializer)
+    {
+        $this->serializer = $serializer;
+    }
+
     /**
      * Serializes a Role entity.
      *
@@ -31,6 +49,10 @@ class RoleSerializer
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized['meta'] = $this->serializeMeta($role, $options);
             $serialized['restrictions'] = $this->serializeRestrictions($role);
+
+            if ($workspace = $role->getWorkspace()) {
+                $serialized['workspace'] = $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
+            }
         }
 
         return $serialized;
