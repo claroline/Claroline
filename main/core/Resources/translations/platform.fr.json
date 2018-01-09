@@ -1563,5 +1563,6 @@
     "required": "requis",
     "access_role_show": "Restreindre l'affichage par Roles",
     "access_role_edit": "Restreindre l'édition par Roles",
-    "information": "Informations"
+    "information": "Informations",
+    "add_managers": "Ajouter des gestionnaires"
 }

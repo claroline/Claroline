@@ -30,6 +30,11 @@ const reducer = combineReducers({
       invalidated: makeReducer(false, {
         [FORM_RESET+'/organizations.current']: () => true // todo : find better
       })
+    }),
+    managers: makeListReducer('organizations.current.managers', {}, {
+      invalidated: makeReducer(false, {
+        [FORM_RESET+'/organizations.current']: () => true // todo : find better
+      })
     })
   })
 })

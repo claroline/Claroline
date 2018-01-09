@@ -1203,7 +1203,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
 
     public function removeAdministratedOrganization(Organization $organization)
     {
-        $this->administratedOrganizations->remove($organization);
+        $this->administratedOrganizations->removeElement($organization);
     }
 
     public function setAdministratedOrganizations($organizations)

@@ -1538,5 +1538,6 @@
     "import_headers": "List of available headers",
     "access_role_show": "Restrict display by Roles",
     "access_role_edit": "Restrict edition by Roles",
-    "information": "Information"
+    "information": "Information",
+    "add_managers": "Add managers"
 }

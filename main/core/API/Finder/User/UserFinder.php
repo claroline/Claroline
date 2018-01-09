@@ -90,6 +90,11 @@ class UserFinder implements FinderInterface
                     $qb->andWhere('l.uuid IN (:locationIds)');
                     $qb->setParameter('locationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'organizationManager':
+                    $qb->leftJoin('obj.administratedOrganizations', 'ao');
+                    $qb->andWhere('ao.uuid IN (:administratedOrganizations)');
+                    $qb->setParameter('administratedOrganizations', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
                 default:
                     if (is_bool($filterValue)) {
                         $qb->andWhere("obj.{$filterName} = :{$filterName}");
