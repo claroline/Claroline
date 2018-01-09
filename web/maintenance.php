@@ -3,8 +3,9 @@
 $maintenanceMode = file_exists(__DIR__.'/../app/config/.update');
 
 if (!$maintenanceMode) {
-    $url = $_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../app.php';
-    header("Location: http://{$url}");
+    $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
+    $url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../app.php';
+    header("Location: {$url}");
 }
 
 ?>
