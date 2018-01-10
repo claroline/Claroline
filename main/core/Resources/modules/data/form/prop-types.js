@@ -11,6 +11,7 @@ const DataFormProperty = {
     hideLabel: T.bool,
     displayed: T.bool,
     disabled: T.bool,
+    readOnly: T.bool,
     options: T.object,
     required: T.bool,
     onChange: T.func,
@@ -21,6 +22,7 @@ const DataFormProperty = {
     required: false,
     hideLabel: false,
     disabled: false,
+    readOnly: false,
     displayed: true
   }
 }
