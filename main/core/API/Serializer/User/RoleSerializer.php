@@ -84,8 +84,13 @@ class RoleSerializer
            'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
        ];
 
-        if (in_array(Options::SERIALIZE_COUNT_USER, $options)) {
+        if (in_array(Options::SERIALIZE_COUNT_USER, $options) && $role->getType() !== Role::USER_ROLE) {
             $meta['users'] = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+        }
+
+        if ($role->getType() === Role::USER_ROLE) {
+            $meta['users'] = 1;
+            $meta['user'] = $this->serializer->serialize($role->getUsers()->toArray()[0], [Options::SERIALIZE_MINIMAL]);
         }
 
         return $meta;
@@ -101,8 +106,15 @@ class RoleSerializer
      */
     public function serializeRestrictions(Role $role, array $options = [])
     {
+        $adminTools = [];
+        //easier request than count users wich will go into mysql cache so I'm not too woried about looping here.
+        foreach ($this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll() as $adminTool) {
+            $adminTools[$adminTool->getName()] = $role->getAdminTools()->contains($adminTool);
+        }
+
         return [
             'maxUsers' => $role->getMaxUsers(),
+            'adminTools' => $adminTools,
         ];
     }
 

@@ -141,6 +141,8 @@ class Role implements RoleInterface
      *     inversedBy="roles"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
+     *
+     * @var Workspace
      */
     protected $workspace;
 
@@ -270,6 +272,11 @@ class Role implements RoleInterface
         $this->isReadOnly = $value;
     }
 
+    /**
+     * Get the users property.
+     *
+     * @return ArrayCollection
+     */
     public function getUsers()
     {
         return $this->users;
@@ -418,6 +425,21 @@ class Role implements RoleInterface
         $this->profileProperties->add($property);
     }
 
+    /**
+     * Get the adminTools property.
+     *
+     * @return ArrayCollection
+     */
+    public function getAdminTools()
+    {
+        return $this->adminTools;
+    }
+
+    /**
+     * Debug purpose.
+     *
+     * @return string
+     */
     public function __toString()
     {
         $name = $this->workspace ? '['.$this->workspace->getName().'] '.$this->name : $this->name;
@@ -425,6 +447,11 @@ class Role implements RoleInterface
         return "[{$this->getId()}]".$name;
     }
 
+    /**
+     * Get the isReadOnly property.
+     *
+     * @return bool
+     */
     public function getIsReadOnly()
     {
         return $this->isReadOnly;
