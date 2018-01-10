@@ -48,7 +48,6 @@ class ResourceManagerListener
      *     "em"                     = @DI\Inject("doctrine.orm.entity_manager"),
      *     "ed"                     = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"             = @DI\Inject("templating"),
-     *     "manager"                = @DI\Inject("claroline.manager.resource_manager"),
      *     "authorization"          = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"           = @DI\Inject("security.token_storage"),
      *     "requestStack"           = @DI\Inject("request_stack"),
@@ -65,7 +64,6 @@ class ResourceManagerListener
         $em,
         StrictDispatcher $ed,
         $templating,
-        $manager,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         RequestStack $requestStack,
@@ -80,7 +78,6 @@ class ResourceManagerListener
         $this->em = $em;
         $this->ed = $ed;
         $this->templating = $templating;
-        $this->manager = $manager;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->request = $requestStack->getCurrentRequest();
@@ -142,9 +139,9 @@ class ResourceManagerListener
         $breadcrumbsIds = $this->request->query->get('_breadcrumbs');
 
         if ($breadcrumbsIds !== null) {
-            $ancestors = $this->manager->getByIds($breadcrumbsIds, true);
+            $ancestors = $this->resourceManager->getByIdsLevelOrder($breadcrumbsIds);
 
-            if (!$this->manager->isPathValid($ancestors)) {
+            if (!$this->resourceManager->isPathValid($ancestors)) {
                 throw new \Exception('Breadcrumbs invalid');
             }
         } else {
@@ -153,7 +150,7 @@ class ResourceManagerListener
         $path = [];
 
         foreach ($ancestors as $ancestor) {
-            $path[] = $this->manager->toArray($ancestor, $this->tokenStorage->getToken());
+            $path[] = $this->resourceManager->toArray($ancestor, $this->tokenStorage->getToken());
         }
 
         $jsonPath = json_encode($path);
