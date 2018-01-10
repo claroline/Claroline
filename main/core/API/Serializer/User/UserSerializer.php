@@ -313,6 +313,7 @@ class UserSerializer
                     }
 
                     $fieldFacetValue = $serializer->deserialize('Claroline\CoreBundle\Entity\Facet\FieldFacetValue', $fieldFacetValue);
+                    $fieldFacetValue->setUser($user);
                     $user->addFieldFacet($fieldFacetValue);
                 }
             }
