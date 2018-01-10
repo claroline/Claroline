@@ -9,6 +9,8 @@ import {generateUrl} from '#/main/core/api/router'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 
+// todo : move Locale presentational component in `#/main/core/layout/form`
+
 class LocaleGroup extends Component {
   constructor(props) {
     super(props)

@@ -1,40 +1,42 @@
 import invariant from 'invariant'
 
-import {BOOLEAN_TYPE,  booleanDefinition}  from '#/main/core/data/types/boolean/index'
-import {COLOR_TYPE,    colorDefinition}    from '#/main/core/data/types/color'
-import {COUNTRY_TYPE,  countryDefinition}  from '#/main/core/data/types/country'
-import {DATE_TYPE,     dateDefinition}     from '#/main/core/data/types/date/index'
-import {DATETIME_TYPE, datetimeDefinition} from '#/main/core/data/types/datetime'
-import {EMAIL_TYPE,    emailDefinition}    from '#/main/core/data/types/email'
-import {ENUM_TYPE,     enumDefinition}     from '#/main/core/data/types/enum'
-import {FILE_TYPE,     fileDefinition}     from '#/main/core/data/types/file'
-import {HTML_TYPE,     htmlDefinition}     from '#/main/core/data/types/html'
-import {IP_TYPE,       ipDefinition}       from '#/main/core/data/types/ip'
-import {LOCALE_TYPE,   localeDefinition}   from '#/main/core/data/types/locale'
-import {NUMBER_TYPE,   numberDefinition}   from '#/main/core/data/types/number'
-import {PASSWORD_TYPE, passwordDefinition} from '#/main/core/data/types/password'
-import {STRING_TYPE,   stringDefinition}   from '#/main/core/data/types/string'
-import {USERNAME_TYPE, usernameDefinition} from '#/main/core/data/types/username'
+import {BOOLEAN_TYPE,     booleanDefinition}     from '#/main/core/data/types/boolean/index'
+import {COLOR_TYPE,       colorDefinition}       from '#/main/core/data/types/color'
+import {COUNTRY_TYPE,     countryDefinition}     from '#/main/core/data/types/country'
+import {DATE_TYPE,        dateDefinition}        from '#/main/core/data/types/date/index'
+import {DATETIME_TYPE,    datetimeDefinition}    from '#/main/core/data/types/datetime'
+import {EMAIL_TYPE,       emailDefinition}       from '#/main/core/data/types/email'
+import {ENUM_TYPE,        enumDefinition}        from '#/main/core/data/types/enum'
+import {FILE_TYPE,        fileDefinition}        from '#/main/core/data/types/file'
+import {HTML_TYPE,        htmlDefinition}        from '#/main/core/data/types/html'
+import {IP_TYPE,          ipDefinition}          from '#/main/core/data/types/ip'
+import {LOCALE_TYPE,      localeDefinition}      from '#/main/core/data/types/locale'
+import {NUMBER_TYPE,      numberDefinition}      from '#/main/core/data/types/number'
+import {PASSWORD_TYPE,    passwordDefinition}    from '#/main/core/data/types/password'
+import {STRING_TYPE,      stringDefinition}      from '#/main/core/data/types/string'
+import {TRANSLATION_TYPE, translationDefinition} from '#/main/core/data/types/translation'
+import {USERNAME_TYPE,    usernameDefinition}    from '#/main/core/data/types/username'
 
 // the list of registered data types
 const dataTypes = {}
 
 // register default types
-registerType(BOOLEAN_TYPE,  booleanDefinition)
-registerType(COLOR_TYPE,    colorDefinition)
-registerType(COUNTRY_TYPE,  countryDefinition)
-registerType(DATE_TYPE,     dateDefinition)
-registerType(DATETIME_TYPE, datetimeDefinition)
-registerType(EMAIL_TYPE,    emailDefinition)
-registerType(ENUM_TYPE,     enumDefinition)
-registerType(FILE_TYPE,     fileDefinition)
-registerType(HTML_TYPE,     htmlDefinition)
-registerType(IP_TYPE,       ipDefinition)
-registerType(LOCALE_TYPE,   localeDefinition)
-registerType(NUMBER_TYPE,   numberDefinition)
-registerType(PASSWORD_TYPE, passwordDefinition)
-registerType(STRING_TYPE,   stringDefinition)
-registerType(USERNAME_TYPE, usernameDefinition)
+registerType(BOOLEAN_TYPE,     booleanDefinition)
+registerType(COLOR_TYPE,       colorDefinition)
+registerType(COUNTRY_TYPE,     countryDefinition)
+registerType(DATE_TYPE,        dateDefinition)
+registerType(DATETIME_TYPE,    datetimeDefinition)
+registerType(EMAIL_TYPE,       emailDefinition)
+registerType(ENUM_TYPE,        enumDefinition)
+registerType(FILE_TYPE,        fileDefinition)
+registerType(HTML_TYPE,        htmlDefinition)
+registerType(IP_TYPE,          ipDefinition)
+registerType(LOCALE_TYPE,      localeDefinition)
+registerType(NUMBER_TYPE,      numberDefinition)
+registerType(PASSWORD_TYPE,    passwordDefinition)
+registerType(STRING_TYPE,      stringDefinition)
+registerType(TRANSLATION_TYPE, translationDefinition)
+registerType(USERNAME_TYPE,    usernameDefinition)
 
 /**
  * Validates & registers a data type.
