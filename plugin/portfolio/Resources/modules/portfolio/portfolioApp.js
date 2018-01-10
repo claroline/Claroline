@@ -26,7 +26,7 @@ import '../modules/appDirectives/appDirectives'
 
 import 'angular-strap'
 import 'angular-ui-resource-picker/angular-resource-picker'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'confirm-bootstrap/confirm-bootstrap.js'
 
 import {} from 'checklist-model'

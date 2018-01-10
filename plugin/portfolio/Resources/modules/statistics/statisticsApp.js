@@ -1,5 +1,5 @@
 import angular from 'angular/index'
-import 'angular-toArrayFilter/toArrayFilter'
+import 'angular-toarrayfilter/toArrayFilter'
 
 //this hack is required for the daterange picker to work
 import moment from 'moment'
@@ -13,7 +13,7 @@ import '../modules/translation'
 import Directive from './directives/statisticsViewDirective'
 import Controller from './controllers/statisticsViewController'
 
-var statisticsApp = angular.module('statisticsApp', ['angular-toArrayFilter', 'daterangepicker'])
+var statisticsApp = angular.module('statisticsApp', ['angular-toarrayfilter', 'daterangepicker'])
 
 statisticsApp.controller('statisticsViewController', ['$scope', 'portfolioManager', '$filter', '$http', 'urlInterpolator', 'translationService', Controller])
 statisticsApp.directive('statisticsViewContainer', Directive)

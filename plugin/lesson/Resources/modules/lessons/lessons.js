@@ -1,5 +1,5 @@
 import angular from 'angular/index'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-route'
 import 'angular-ui-tinymce'
 import 'angular-ui-tree'

@@ -8,7 +8,7 @@ import 'angular-resource'
 import 'angular-sanitize'
 import 'angular-animate'
 import 'angular-ui-tinymce'
-import 'angular-datetime'
+import 'angular-datetime-input'
 
 import '../modules/translation'
 import '../modules/urlInterpolator'
@@ -19,7 +19,7 @@ import '../modules/badgePickerDirective'
 
 import 'angular-strap'
 import 'angular-ui-resource-picker/angular-resource-picker'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 
 var widgetsApp = angular.module('widgetsApp', ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.tinymce',
   'ui.resourcePicker', 'ui.badgePicker', 'ui.datepicker', 'datetime', 'mgcrea.ngStrap.popover',

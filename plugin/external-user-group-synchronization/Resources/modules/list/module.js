@@ -1,6 +1,6 @@
 import angular from 'angular/index'
 import {} from '#/main/core/modal/module'
-import {} from 'angular-bootstrap'
+import {} from 'angular-ui-bootstrap'
 import {} from 'angular-loading-bar'
 import {} from 'angular-ui-translation/angular-translation'
 import {} from '#/main/core/api/router/module'

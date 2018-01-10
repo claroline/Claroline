@@ -1,6 +1,6 @@
 import angular from 'angular/index'
 import 'angular-sanitize'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 
 import ConfirmModalController from './Controller/ConfirmModalController'
 import ClarolineAPIService from './Service/ClarolineAPIService'

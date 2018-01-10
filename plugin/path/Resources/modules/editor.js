@@ -5,7 +5,7 @@
 import angular from 'angular/index'
 import 'angular-route'
 import 'angular-sanitize'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-ui-translation/angular-translation'
 
 import './path/module'

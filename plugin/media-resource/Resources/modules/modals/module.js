@@ -1,5 +1,5 @@
 import angular from 'angular/index'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import '#/main/core/html-truster/module'
 import HelpModalService from './Services/HelpModalService'
 import OptionsModalService from './Services/OptionsModalService'

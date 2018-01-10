@@ -14,7 +14,7 @@
 - tinymce-codemirror (coloration synthaxique dans TinyMCE)
 - angular-gridster (système de grille pour les widgets)
 - angular-ui-tree (Path / Organization / Cursus)
-- angular-ui-select (Sélecteur avancé avec Recherche/Filtre / Module de recherche dans le CoreBundle)
+- ui-select (Sélecteur avancé avec Recherche/Filtre / Module de recherche dans le CoreBundle)
 - fullcalendar
 - angular-bootstrap-colorpicker
 - angular-touch (développé par Google / évènement des touchscreens)
@@ -33,7 +33,7 @@
 - angular-animate
 - select2 (remplace les select par une alternative jQuery)
 - angular-motion
- 
+
 
 ## DUPLICATES
 - angular-ui-router
@@ -57,7 +57,7 @@
 - backbone (gestionnaire de ressource va disparaitre au profit d'angular)
 - underscore (gestionnaire de ressource va disparaitre au profit d'angular)
 
-- angular-toArrayFilter (certainement utilisé, mais ça ne vaut pas le coup d'avoir une dépendance pour un filtre)
+- angular-toarrayfilter (certainement utilisé, mais ça ne vaut pas le coup d'avoir une dépendance pour un filtre)
 => écrire le filtre nous même
 
 - ngBootbox (modales de confirmation Angular / Utilisé par ExoBundle)
@@ -101,6 +101,6 @@
 
 ## TO REMOVE
 - fluidvids
-- system.js
-- bootstrapaccessibilityplugin (ajoute des fonctionnalités d'accessibilité dans les components Bootstrap / Non utilisé)
+- systemjs
+- bootstrap-accessibility-plugin (ajoute des fonctionnalités d'accessibilité dans les components Bootstrap / Non utilisé)
 - jquery.cookie (Non utilisé)

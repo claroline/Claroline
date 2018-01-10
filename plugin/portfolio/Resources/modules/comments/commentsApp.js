@@ -1,5 +1,5 @@
 import angular from 'angular/index'
-import 'angular-toArrayFilter/toArrayFilter'
+import 'angular-toarrayfilter/toArrayFilter'
 import 'angular-sanitize'
 import 'angular-resource'
 import 'angular-animate'
@@ -20,7 +20,7 @@ import PortfolioFactory from './services/portfolioFactory'
 import PortfolioManager from './services/portfolioManager'
 
 var commentsApp = angular.module('commentsApp', ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.tinymce',
-  'app.translation', 'app.interpolator', 'app.directives', 'angular-toArrayFilter', 'app.config'])
+  'app.translation', 'app.interpolator', 'app.directives', 'angular-toarrayfilter', 'app.config'])
 
 commentsApp.value('assetPath', window.assetPath)
 

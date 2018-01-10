@@ -1,14 +1,14 @@
 import angular from 'angular/index'
 import 'angular-ui-translation/angular-translation'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-ui-calendar'
 import 'angular-route'
 import 'angular-ui-tinymce'
 import 'angular-resource'
 import 'angular-loading-bar'
 import 'ng-file-upload'
-import 'ng-tags-input/ng-tags-input.min.js'
-import 'ng-tags-input/ng-tags-input.min.css'
+import 'ng-tags-input/build/ng-tags-input.min.js'
+import 'ng-tags-input/build/ng-tags-input.min.css'
 import '#/main/core/api/router/module'
 import '#/main/core/modal/module'
 import '#/main/core/html-truster/module'
@@ -78,7 +78,7 @@ angular
 
   .service('tinyMceConfig', tinyMceConfig)
   .service('blogService', blogService)
-  
+
   .factory('Messages', () => ([]))
   .factory('blogModal', [
     '$uibModal',
@@ -102,7 +102,7 @@ angular
     controllerAs: 'main',
     controller: mainController
   }))
-  
+
   .directive('blogMessages', () => ({
     restrict: 'E',
     controllerAs: 'ctrl',

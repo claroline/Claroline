@@ -10,7 +10,7 @@
 import angular from 'angular/index'
 
 import 'angular-ui-router'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-ui-translation/angular-translation'
 import '../user/user'
 import '../xmpp/xmpp'

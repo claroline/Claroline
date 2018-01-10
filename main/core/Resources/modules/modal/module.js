@@ -1,6 +1,6 @@
 import angular from 'angular'
 
-import {} from 'angular-bootstrap'
+import {} from 'angular-ui-bootstrap'
 
 import {} from '../html-truster/module'
 

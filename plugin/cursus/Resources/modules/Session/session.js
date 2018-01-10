@@ -9,7 +9,7 @@
 
 import angular from 'angular/index'
 
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-bootstrap-colorpicker'
 import 'angular-ui-translation/angular-translation'
 import 'angular-ui-tinymce'
