@@ -54,7 +54,7 @@ const numberDefinition = {
    *
    * @return {string}
    */
-  render: (raw, options) => raw + (options.unit ? ' ' + options.unit : ''),
+  render: (raw, options) => raw || 0 === raw ? raw + (options.unit ? ' ' + options.unit : '') : null,
 
   /**
    * Validates a number value.
