@@ -49,6 +49,11 @@ const RoleForm = props =>
             type: 'string',
             label: t('name'),
             required: true
+          }, {
+            name: 'meta.personalWorkspaceCreation',
+            type: 'boolean',
+            label: t('personalWorkspaceCreation'),
+            help: t('personalWorkspaceCreation_help')
           }
         ]
       }
@@ -57,6 +62,14 @@ const RoleForm = props =>
     <FormSections
       level={3}
     >
+      <FormSection
+        id="role-admin-tools"
+        icon="fa fa-fw fa-cogs"
+        title={t('administration_tools')}
+      >
+        ADMINISTRATION TOOLS
+      </FormSection>
+
       <FormSection
         id="role-users"
         icon="fa fa-fw fa-user"

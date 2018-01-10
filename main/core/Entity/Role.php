@@ -370,8 +370,7 @@ class Role implements RoleInterface
 
     public function getMaxUsers()
     {
-        //2147483647 is the maximium integer in the database field.
-        return ($this->maxUsers === null) ? 2147483647 : $this->maxUsers;
+        return $this->maxUsers;
     }
 
     public function addToolRights(ToolRights $tr)

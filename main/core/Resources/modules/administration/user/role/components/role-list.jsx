@@ -25,15 +25,24 @@ const RoleList = {
       displayed: true
     }, {
       name: 'meta.type',
+      alias: 'type',
       type: 'enum',
       label: t('type'),
       options: {
         choices: enumRole
       },
-      alias: 'type',
       displayed: true
-    },
-    {
+    }, {
+      name: 'meta.users',
+      type: 'number',
+      label: t('count_users'),
+      displayed: true
+    },  {
+      name: 'restrictions.maxUsers',
+      type: 'number',
+      label: t('max_users'),
+      displayed: false
+    }, {
       name: 'workspace.name',
       type: 'string',
       label: t('workspace'),
