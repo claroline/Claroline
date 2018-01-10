@@ -3,8 +3,10 @@
 namespace Claroline\CoreBundle\API\Serializer\User;
 
 use Claroline\CoreBundle\API\Options;
+use Claroline\CoreBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -13,21 +15,29 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class RoleSerializer
 {
+    use SerializerTrait;
+
     /** @var SerializerProvider */
     private $serializer;
+
+    /** @var ObjectManager */
+    private $om;
 
     /**
      * RoleSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param SerializerProvider $serializer
+     * @param ObjectManager      $om
      */
-    public function __construct(SerializerProvider $serializer)
+    public function __construct(SerializerProvider $serializer, ObjectManager $om)
     {
         $this->serializer = $serializer;
+        $this->om = $om;
     }
 
     /**
@@ -48,7 +58,7 @@ class RoleSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized['meta'] = $this->serializeMeta($role, $options);
-            $serialized['restrictions'] = $this->serializeRestrictions($role);
+            $serialized['restrictions'] = $this->serializeRestrictions($role, $options);
 
             if ($workspace = $role->getWorkspace()) {
                 $serialized['workspace'] = $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
@@ -58,16 +68,37 @@ class RoleSerializer
         return $serialized;
     }
 
+    /**
+     * Serialize role metadata.
+     *
+     * @param Role  $role
+     * @param array $options
+     *
+     * return array
+     */
     public function serializeMeta(Role $role, array $options = [])
     {
-        return [
-            'type' => $role->getType(),
-            'readOnly' => $role->isReadOnly(),
-            'users' => $role->getUsers()->count(),
-            'personalWorkspaceCreation' => $role->getPersonalWorkspaceCreationEnabled(),
+        $meta = [
+           'readOnly' => $role->isReadOnly(),
+           'type' => $role->getType(),
+           'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
        ];
+
+        if (in_array(Options::SERIALIZE_COUNT_USER, $options)) {
+            $meta['users'] = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+        }
+
+        return $meta;
     }
 
+    /**
+     * Serialize role restrictions.
+     *
+     * @param Role  $role
+     * @param array $options
+     *
+     * return array
+     */
     public function serializeRestrictions(Role $role, array $options = [])
     {
         return [
@@ -84,7 +115,7 @@ class RoleSerializer
      *
      * @return Role
      */
-    public function deserialize($data, Role $role = null, array $options = [])
+    public function deserialize($data, Role $role, array $options = [])
     {
         if (isset($data['translationKey'])) {
             $role->setTranslationKey($data['translationKey']);
@@ -94,9 +125,14 @@ class RoleSerializer
             $role->setName('ROLE_'.str_replace(' ', '_', strtoupper($data['translationKey'])));
         }
 
+        $this->sipe('meta.personalWorkspaceCreationEnabled', 'setPersonalWorkspaceCreationEnabled', $data, $role);
+
         return $role;
     }
 
+    /**
+     * @return string
+     */
     public function getClass()
     {
         return 'Claroline\CoreBundle\Entity\Role';
