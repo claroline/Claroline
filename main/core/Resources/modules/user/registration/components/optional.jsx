@@ -27,6 +27,10 @@ const Optional = () =>
             options: {
               onlyEnabled: true
             }
+          }, {
+            name: 'meta.description',
+            type: 'html',
+            label: t('description')
           }
         ]
       }

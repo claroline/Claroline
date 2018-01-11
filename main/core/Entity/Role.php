@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -106,6 +107,8 @@ class Role implements RoleInterface
      *     targetEntity="Claroline\CoreBundle\Entity\Tool\AdminTool",
      *     mappedBy="roles"
      * )
+     *
+     * @var ArrayCollection|AdminTool[]
      */
     protected $adminTools;
 

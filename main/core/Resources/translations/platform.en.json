@@ -1539,5 +1539,10 @@
     "access_role_show": "Restrict display by Roles",
     "access_role_edit": "Restrict edition by Roles",
     "information": "Information",
-    "add_managers": "Add managers"
+    "add_managers": "Add managers",
+    "administration_tools": "Administration tools",
+    "role_personalWorkspaceCreation": "Create a Personal Workspace for new users",
+    "role_personalWorkspaceCreation_help": "A new Personal Workspace will be automatically generated for users created with this Role.",
+    "access_max_users": "Restrict number of users",
+    "maxUsers": "Maximum number of users"
 }

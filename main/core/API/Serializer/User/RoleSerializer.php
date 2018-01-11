@@ -6,6 +6,7 @@ use Claroline\CoreBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -58,11 +59,25 @@ class RoleSerializer
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized['meta'] = $this->serializeMeta($role, $options);
-            $serialized['restrictions'] = $this->serializeRestrictions($role, $options);
+            $serialized['restrictions'] = $this->serializeRestrictions($role);
 
             if ($workspace = $role->getWorkspace()) {
                 $serialized['workspace'] = $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
             }
+
+            if ($role->getType() === Role::USER_ROLE) {
+                $serialized['user'] = $this->serializer->serialize($role->getUsers()->toArray()[0], [Options::SERIALIZE_MINIMAL]);
+            }
+
+            // easier request than count users which will go into mysql cache so I'm not too worried about looping here.
+            $adminTools = [];
+
+            /** @var AdminTool $adminTool */
+            foreach ($this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll() as $adminTool) {
+                $adminTools[$adminTool->getName()] = $role->getAdminTools()->contains($adminTool);
+            }
+
+            $serialized['adminTools'] = $adminTools;
         }
 
         return $serialized;
@@ -74,9 +89,9 @@ class RoleSerializer
      * @param Role  $role
      * @param array $options
      *
-     * return array
+     * @return array
      */
-    public function serializeMeta(Role $role, array $options = [])
+    public function serializeMeta(Role $role, array $options)
     {
         $meta = [
            'readOnly' => $role->isReadOnly(),
@@ -85,12 +100,11 @@ class RoleSerializer
        ];
 
         if (in_array(Options::SERIALIZE_COUNT_USER, $options) && $role->getType() !== Role::USER_ROLE) {
-            $meta['users'] = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
-        }
-
-        if ($role->getType() === Role::USER_ROLE) {
-            $meta['users'] = 1;
-            $meta['user'] = $this->serializer->serialize($role->getUsers()->toArray()[0], [Options::SERIALIZE_MINIMAL]);
+            if ($role->getType() !== Role::USER_ROLE) {
+                $meta['users'] = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+            } else {
+                $meta['users'] = 1;
+            }
         }
 
         return $meta;
@@ -99,22 +113,14 @@ class RoleSerializer
     /**
      * Serialize role restrictions.
      *
-     * @param Role  $role
-     * @param array $options
+     * @param Role $role
      *
-     * return array
+     * @return array
      */
-    public function serializeRestrictions(Role $role, array $options = [])
+    public function serializeRestrictions(Role $role)
     {
-        $adminTools = [];
-        //easier request than count users wich will go into mysql cache so I'm not too woried about looping here.
-        foreach ($this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll() as $adminTool) {
-            $adminTools[$adminTool->getName()] = $role->getAdminTools()->contains($adminTool);
-        }
-
         return [
             'maxUsers' => $role->getMaxUsers(),
-            'adminTools' => $adminTools,
         ];
     }
 
@@ -129,6 +135,8 @@ class RoleSerializer
      */
     public function deserialize($data, Role $role, array $options = [])
     {
+        // todo set readOnly based on role type
+
         if (isset($data['translationKey'])) {
             $role->setTranslationKey($data['translationKey']);
             //2 roles can have the same translationKey while the name is unique, for now we only allow to create
@@ -138,6 +146,20 @@ class RoleSerializer
         }
 
         $this->sipe('meta.personalWorkspaceCreationEnabled', 'setPersonalWorkspaceCreationEnabled', $data, $role);
+        $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $role);
+
+        if (isset($data['adminTools'])) {
+            $adminTools = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();
+
+            /** @var AdminTool $adminTool */
+            foreach ($adminTools as $adminTool) {
+                if ($data['adminTools'][$adminTool->getName()]) {
+                    $adminTool->addRole($role);
+                } else {
+                    $adminTool->removeRole($role);
+                }
+            }
+        }
 
         return $role;
     }

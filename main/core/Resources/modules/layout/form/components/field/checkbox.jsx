@@ -1,8 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 
 const Checkbox = props =>
-  <div className="checkbox">
+  <div className={classes('checkbox', props.className)}>
     <label htmlFor={props.id}>
       <input
         id={props.id}
@@ -18,6 +19,7 @@ const Checkbox = props =>
 
 Checkbox.propTypes = {
   id: T.string.isRequired,
+  className: T.string,
   label: T.string.isRequired,
   labelChecked: T.string,
   checked: T.bool.isRequired,

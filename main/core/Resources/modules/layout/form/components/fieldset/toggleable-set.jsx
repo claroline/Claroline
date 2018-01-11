@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import classes from 'classnames'
 import Collapse from 'react-bootstrap/lib/Collapse'
 
 /**
@@ -23,23 +24,24 @@ class ToggleableSet extends Component {
   render() {
     return (
       <div className="toggleable-set">
-        {this.state.hidden &&
-          <a role="button" className="toggleable-set-toggle" onClick={this.toggle}>
-            <span className="fa fa-caret-right" />
-            {this.props.showText}
-          </a>
-        }
-
         <Collapse in={!this.state.hidden}>
           <div className="toggleable-set-group">
             {this.props.children}
-
-            <a role="button" className="toggleable-set-toggle" onClick={this.toggle}>
-              <span className="fa fa-caret-up" />
-              {this.props.hideText}
-            </a>
           </div>
         </Collapse>
+
+        <a
+          role="button"
+          className="toggleable-set-toggle"
+          onClick={this.toggle}
+        >
+          <span className={classes('fa fa-fw', {
+            'fa-caret-right': this.state.hidden,
+            'fa-caret-up': !this.state.hidden
+          })} />
+
+          {this.state.hidden ? this.props.showText : this.props.hideText}
+        </a>
       </div>
     )
   }
