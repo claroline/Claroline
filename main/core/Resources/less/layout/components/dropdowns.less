@@ -25,12 +25,23 @@
 
     // creates contextual links
     .dropdown-link-danger a {
-        color: @brand-danger;
 
-        &:hover,
-        &:focus {
-            color: white;
-            background: @brand-danger;
+    }
+
+    .dropdown-link-danger {
+        a {
+            color: @brand-danger;
+
+            &:hover,
+            &:focus {
+                color: white;
+                background: @brand-danger;
+            }
+        }
+
+        &.disabled a {
+            color: #c57878;
+            background: transparent;
         }
     }
 
