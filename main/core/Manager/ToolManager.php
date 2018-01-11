@@ -735,20 +735,6 @@ class ToolManager
         return $this->adminToolRepo->findAll();
     }
 
-    public function addRoleToAdminTool(AdminTool $tool, Role $role)
-    {
-        $tool->addRole($role);
-        $this->om->persist($tool);
-        $this->om->flush();
-    }
-
-    public function removeRoleFromAdminTool(AdminTool $tool, Role $role)
-    {
-        $tool->removeRole($role);
-        $this->om->persist($tool);
-        $this->om->flush();
-    }
-
     public function getAdminToolByName($name)
     {
         return $this->om->getRepository('Claroline\CoreBundle\Entity\Tool\AdminTool')
