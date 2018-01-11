@@ -40,6 +40,9 @@ class Resource extends Component {
         modal={this.props.modal}
         fadeModal={this.props.fadeModal}
         hideModal={this.props.hideModal}
+
+        alerts={this.props.alerts}
+        removeAlert={this.props.removeAlert}
       >
         <PageHeader
           className="resource-header"
@@ -72,18 +75,8 @@ Resource.propTypes = {
       fullscreen: T.bool.isRequired
     }).isRequired
   }).isRequired,
-  embedded: T.bool,
-  children: T.node.isRequired,
-  modal: T.shape({
-    type: T.string,
-    fading: T.bool.isRequired,
-    props: T.object.isRequired
-  }),
-  showModal: T.func.isRequired,
-  fadeModal: T.func.isRequired,
-  hideModal: T.func.isRequired,
-
   customActions: T.array,
+
   /**
    * If provided, this permits to manage the resource editor in the header (aka. open, save actions).
    */
@@ -99,7 +92,25 @@ Resource.propTypes = {
   }),
 
   togglePublication: T.func.isRequired,
-  updateNode: T.func.isRequired
+  updateNode: T.func.isRequired,
+
+  // todo : reuse Page propTypes
+  embedded: T.bool,
+  children: T.node.isRequired,
+
+  // modal management
+  modal: T.shape({
+    type: T.string,
+    fading: T.bool.isRequired,
+    props: T.object.isRequired
+  }),
+  showModal: T.func.isRequired,
+  fadeModal: T.func.isRequired,
+  hideModal: T.func.isRequired,
+
+  // alerts management
+  alerts: T.array,
+  removeAlert: T.func
 }
 
 Resource.defaultProps = {
