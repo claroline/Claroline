@@ -4,13 +4,15 @@ import {connect} from 'react-redux'
 import Panel from 'react-bootstrap/lib/Panel'
 
 import {tex} from '#/main/core/translation'
+
+import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {MODAL_CONFIRM} from '#/main/core/layout/modal'
+
 import {getDefinition, isQuestionType} from './../../../items/item-types'
 import {getContentDefinition} from './../../../contents/content-types'
 import selectQuiz from './../../selectors'
 import {select} from './../selectors'
-
-import {actions as playerActions} from './../actions'
-
+import {actions} from './../actions'
 import {ItemPlayer} from './item-player.jsx'
 import {ItemFeedback} from './item-feedback.jsx'
 import {ContentItemPlayer} from './content-item-player.jsx'
@@ -19,7 +21,7 @@ import {CustomDragLayer} from './../../../utils/custom-drag-layer.jsx'
 import {getNumbering} from './../../../utils/numbering'
 import {NUMBERING_NONE} from './../../../quiz/enums'
 
-const Player = props =>
+const PlayerComponent = props =>
   <div className="quiz-player">
     <h2 className="step-title">
       {props.step.title ? props.step.title : tex('step') + ' ' + props.number}
@@ -30,11 +32,11 @@ const Player = props =>
     }
 
     {props.items.map((item, index) => (
-      <Panel
-        key={item.id}
-      >
+      <Panel key={item.id}>
         {!isQuestionType(item.type) ?
-          <ContentItemPlayer item={item}>
+          <ContentItemPlayer
+            item={item}
+          >
             {React.createElement(getContentDefinition(item.type)['player'], {item: item})}
           </ContentItemPlayer>
           : (!props.feedbackEnabled ?
@@ -83,8 +85,9 @@ const Player = props =>
     <CustomDragLayer />
   </div>
 
-Player.propTypes = {
+PlayerComponent.propTypes = {
   quizId: T.string.isRequired,
+  numbering: T.string.isRequired,
   number: T.number.isRequired,
   step: T.shape({
     id: T.string.isRequired,
@@ -100,25 +103,25 @@ Player.propTypes = {
   }).isRequired,
   next: T.object,
   previous: T.object,
-  updateAnswer: T.func.isRequired,
-  navigateTo: T.func.isRequired,
   showFeedback: T.bool.isRequired,
   feedbackEnabled: T.bool.isRequired,
-  numbering: T.string.isRequired,
+  currentStepSend: T.bool.isRequired,
+
+  updateAnswer: T.func.isRequired,
+  navigateTo: T.func.isRequired,
   submit: T.func.isRequired,
   finish: T.func.isRequired,
-  showHint: T.func.isRequired,
-  currentStepSend: T.bool.isRequired
+  showHint: T.func.isRequired
 }
 
-Player.defaultProps = {
+PlayerComponent.defaultProps = {
   next: null,
   previous: null,
   answers: {}
 }
 
-function mapStateToProps(state) {
-  return {
+const Player = connect(
+  state => ({
     mandatoryQuestions: selectQuiz.parameters(state).mandatoryQuestions,
     quizId: selectQuiz.id(state),
     number: select.currentStepNumber(state),
@@ -133,9 +136,34 @@ function mapStateToProps(state) {
     currentStepSend: select.currentStepSend(state),
     numbering: selectQuiz.quizNumbering(state),
     stepIndex: select.currentStepIndex(state)
-  }
+  }),
+  dispatch => ({
+    updateAnswer(questionId, answerData) {
+      dispatch(actions.updateAnswer(questionId, answerData))
+    },
+    navigateTo(quizId, paperId, nextStep, pendingAnswers, currentStepSend, openFeedback) {
+      dispatch(actions.navigateTo(quizId, paperId, nextStep, pendingAnswers, currentStepSend, openFeedback))
+    },
+    submit(quizId, paperId, answers) {
+      dispatch(actions.submit(quizId, paperId, answers))
+    },
+    finish(quizId, paper, pendingAnswers, showFeedback) {
+      dispatch(modalActions.showModal(MODAL_CONFIRM, {
+        title: tex('finish_confirm_title'),
+        question: tex('finish_confirm_question'),
+        handleConfirm: () => dispatch(actions.finish(quizId, paper, pendingAnswers, showFeedback))
+      }))
+    },
+    showHint(quizId, paperId, questionId, hint) {
+      dispatch(modalActions.showModal(MODAL_CONFIRM, {
+        title: tex('hint_confirm_title'),
+        question: tex('hint_confirm_question'),
+        handleConfirm: () => dispatch(actions.showHint(quizId, paperId, questionId, hint))
+      }))
+    }
+  })
+)(PlayerComponent)
+
+export {
+  Player
 }
-
-const ConnectedPlayer = connect(mapStateToProps, playerActions)(Player)
-
-export {ConnectedPlayer as Player}

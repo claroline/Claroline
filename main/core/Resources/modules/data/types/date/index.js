@@ -1,4 +1,4 @@
-import {isValidDate, localeDate, serverDate} from '#/main/core/date'
+import {isValidDate, localeDate, serverDate} from '#/main/core/scaffolding/date'
 import {t} from '#/main/core/translation'
 
 import {DateGroup} from '#/main/core/layout/form/components/group/date-group.jsx'

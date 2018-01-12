@@ -14,6 +14,7 @@ import 'angular-bootstrap'
 import 'angular-animate'
 import 'angular-ui-translation/angular-translation'
 import 'angular-loading-bar'
+import 'ng-table'
 
 import ScormResultsCtrl from './Controller/ScormResultsCtrl'
 import ScormResultsService from './Service/ScormResultsService'
@@ -33,7 +34,7 @@ angular.module('ScormResultsModule', [
 .directive('scormResults', () => new ScormResultsDirective)
 .config([
   'cfpLoadingBarProvider',
-  function configureLoadingBar (cfpLoadingBarProvider) {
+  function configureLoadingBar(cfpLoadingBarProvider) {
     // Configure loader
     cfpLoadingBarProvider.latencyThreshold = 200
     cfpLoadingBarProvider.includeBar = true

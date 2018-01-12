@@ -2,13 +2,8 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "properties": {
-    "id": {
-      "type": "integer",
-      "description": "The workspace id"
-    },
     "uuid": {
       "type": "string",
-      "format": "email",
       "description": "The workspace uuid"
     },
     "name": {
@@ -35,15 +30,15 @@
           "description": "Is it a personal workspace"
         },
         "description": {
-          "type": "string",
+          "type": ["string"],
           "description": "The workspace description"
         },
         "created": {
-          "type": "string",
+          "type": ["string"],
           "description": "The workspace creation date"
         },
         "creator": {
-          "type": "object",
+          "type": ["object", "null"],
           "properties": {
             "id": {
               "type": "string",
@@ -66,11 +61,11 @@
       "type": "object",
       "properties": {
         "accessibleFrom": {
-          "type": "string",
+          "type": ["string", "null"],
           "description": "The workspace opening date"
         },
         "accessibleUntil": {
-          "type": "string",
+          "type": ["string", "null"],
           "description": "The workspace closing date"
         },
         "maxUsers": {
@@ -78,7 +73,7 @@
           "description": "The maximum amount of users the workspace can have"
         },
         "maxStorage": {
-          "type": "integer",
+          "type": "string",
           "description": "The maximum amount of data storage the workspace is allowed to take"
         },
         "maxResources": {
@@ -87,7 +82,7 @@
         }
       }
     },
-    "restrictions": {
+    "registration": {
       "type": "object",
       "properties": {
         "validation": {

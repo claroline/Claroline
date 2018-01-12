@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {asset} from '#/main/core/asset'
+import {asset} from '#/main/core/scaffolding/asset'
 import {POINTER_CORRECT, POINTER_WRONG} from './enums'
 import {PointableImage} from './components/pointable-image.jsx'
 import {findArea} from './player'

@@ -26,7 +26,8 @@ const Roles = () =>
       autoload: true
     }}
     delete={{
-      url: ['apiv2_role_delete_bulk']
+      url: ['apiv2_role_delete_bulk'],
+      disabled: (rows) => !!rows.find(role => role.meta.readOnly)
     }}
     definition={RoleList.definition}
     card={RoleList.card}

@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {notBlank, setIfError} from '#/main/core/validation'
 
 import {TextContent as component} from './editor.jsx'
@@ -26,7 +26,7 @@ function reduce(item = {}, action = {}) {
 
 function validate(item) {
   const errors = {}
-  setIfError(errors, 'data', notBlank(item.data, true))
+  setIfError(errors, 'data', notBlank(item.data, {isHtml: true}))
 
   return errors
 }

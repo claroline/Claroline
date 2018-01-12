@@ -134,6 +134,7 @@ class CursusManager
     private $sessionQueueRepo;
     private $sessionUserRepo;
     private $fu;
+    private $locationRepo;
 
 /**
  * @DI\InjectParams({
@@ -235,6 +236,7 @@ class CursusManager
         $this->sessionGroupRepo = $om->getRepository('ClarolineCursusBundle:CourseSessionGroup');
         $this->sessionQueueRepo = $om->getRepository('ClarolineCursusBundle:CourseSessionRegistrationQueue');
         $this->sessionUserRepo = $om->getRepository('ClarolineCursusBundle:CourseSessionUser');
+        $this->locationRepo = $om->getRepository('ClarolineCoreBundle:Organization\Location');
     }
 
     public function persistCursusDisplayedWord(CursusDisplayedWord $word)
@@ -5779,6 +5781,16 @@ class CursusManager
     public function getOrganizationsByIds(array $ids)
     {
         return $this->om->findList('Claroline\CoreBundle\Entity\Organization\Organization', 'id', $ids);
+    }
+
+    public function getLocationsByTypes(array $types)
+    {
+        return $this->locationRepo->findLocationsByTypes($types);
+    }
+
+    public function getLocationByUuid($uuid)
+    {
+        return $this->locationRepo->findOneByUuid($uuid);
     }
 
     /*******************

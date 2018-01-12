@@ -78,6 +78,11 @@ class ExplanationBuilder
         return $explanation;
     }
 
+    /**
+     * @param array $schemas
+     *
+     * @return Explanation
+     */
     public function explainIdentifiers(array $schemas)
     {
         $explanation = new Explanation();

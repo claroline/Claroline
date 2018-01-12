@@ -5,6 +5,7 @@ import moment from 'moment'
 
 import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {CheckboxesGroup} from '#/main/core/layout/form/components/group/checkboxes-group.jsx'
+import {CountryGroup} from '#/main/core/layout/form/components/group/country-group.jsx'
 import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
 import {CascadeSelectGroup} from '#/main/core/layout/form/components/group/cascade-select-group.jsx'
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
@@ -19,10 +20,8 @@ import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 import {Checkboxes} from '#/main/core/layout/form/components/field/checkboxes.jsx'
 import {CascadeSelect} from '#/main/core/layout/form/components/field/cascade-select.jsx'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
+import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 import {File} from '#/main/core/layout/form/components/field/file.jsx'
-
-import {constants} from '#/main/core/layout/form/constants'
 
 const isCascadeSelect = choices => {
   return choices.filter(c => c.parent).length > 0
@@ -37,10 +36,10 @@ export const FormField = props => {
       return (props.noLabel ?
         <div className={classes({'has-error': props.error})}>
           <Checkboxes
-            groupName={props.controlId}
+            id={props.controlId}
             inline={true}
             options={props.choices || []}
-            checkedValues={props.value || []}
+            value={props.value || []}
             disabled={props.disabled}
             error={props.error}
             onChange={value => props.onChange(value)}
@@ -50,10 +49,10 @@ export const FormField = props => {
           }
         </div> :
         <CheckboxesGroup
-          controlId={props.controlId}
+          id={props.controlId}
           label={props.label}
           options={props.choices || []}
-          checkedValues={props.value || []}
+          value={props.value}
           disabled={props.disabled}
           error={props.error}
           onChange={value => props.onChange(value)}
@@ -125,11 +124,10 @@ export const FormField = props => {
       }
     case 'country':
       return (
-        <SelectGroup
+        <CountryGroup
           id={props.controlId}
           label={props.label}
           hideLabel={props.noLabel}
-          choices={constants.COUNTRIES}
           value={props.value || ''}
           disabled={props.disabled}
           error={props.error}
@@ -222,9 +220,8 @@ export const FormField = props => {
     case 'date':
       return (props.noLabel ?
         <div className={classes({'has-error': props.error})}>
-          <DatePicker
-            controlId={props.controlId}
-            dateFormat="DD/MM/YYYY"
+          <Date
+            id={props.controlId}
             minDate={moment.utc('1900-01-01T12:00:00')}
             value={props.value !== undefined && props.value !== null ? props.value.date || props.value || '' : ''}
             disabled={props.disabled}
@@ -237,7 +234,6 @@ export const FormField = props => {
         <DateGroup
           id={props.controlId}
           label={props.label}
-          dateFormat="DD/MM/YYYY"
           minDate={moment.utc('1900-01-01T12:00:00')}
           value={props.value !== undefined && props.value !== null ? props.value.date || props.value || '' : ''}
           disabled={props.disabled}

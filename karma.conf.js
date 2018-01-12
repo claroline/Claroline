@@ -7,11 +7,7 @@ module.exports = config => {
     frameworks: ['mocha'],
     files: [
       {
-        pattern: 'main/core/Resources/modules/core-js/index.js',
-        watched: false
-      },
-      {
-        pattern: 'main/core/Resources/modules/fetch-shim/index.js',
+        pattern: 'main/core/Resources/modules/scaffolding/shim/index.js',
         watched: false
       },
       '*/*/Resources/modules/**/*\.test.js'

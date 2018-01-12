@@ -1,5 +1,5 @@
 import freeze from 'deep-freeze'
-import {ensure, mockTranslator} from '#/main/core/tests'
+import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
 import {decorate} from './decorators'
 import {
   TYPE_QUIZ,

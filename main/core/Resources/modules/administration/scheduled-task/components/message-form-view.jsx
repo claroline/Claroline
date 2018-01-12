@@ -9,7 +9,7 @@ import Datetime from 'react-datetime'
 import 'react-datetime/css/react-datetime.css'
 
 import {t} from '#/main/core/translation'
-import {isValidDate} from '#/main/core/date'
+import {isValidDate} from '#/main/core/scaffolding/date'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {actions} from '../actions'
 

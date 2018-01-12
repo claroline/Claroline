@@ -102,7 +102,7 @@ export default class SessionEventEditionModalCtrl {
       d.forEach(r => this.locations.push(r))
 
       if (this.source['location']) {
-        const selectedLocation = this.locations.find(l => l['id'] === this.source['location']['id'])
+        const selectedLocation = this.locations.find(l => l['autoId'] === this.source['location']['id'])
         this.location = selectedLocation
       }
     })

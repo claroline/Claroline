@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
-import {makeReducer, combineReducers} from '#/main/core/utilities/redux'
+import {makeReducer, combineReducers} from '#/main/core/scaffolding/reducer'
 import {VIEW_USER} from './enums'
 
 import {

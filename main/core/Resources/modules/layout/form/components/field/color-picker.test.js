@@ -1,7 +1,7 @@
 import React from 'react'
 import {mount} from 'enzyme'
 
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
+import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
 import {ColorPicker} from './color-picker.jsx'
 
 describe('<ColorPicker/>', () => {

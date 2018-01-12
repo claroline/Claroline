@@ -1,10 +1,10 @@
-import 'angular/angular.min'
+import angular from 'angular/index'
 import 'angular-bootstrap'
+import 'angular-ui-translation/angular-translation'
 
-import translation from 'angular-ui-translation/angular-translation'
 import FileDirective from './FileDirective'
 import FileModelDirective from './FileModelDirective'
-import HelpBlock from '../../HelpBlock/module'
+import '../../HelpBlock/module'
 
 angular.module('FieldFile', [
   'ui.translation',

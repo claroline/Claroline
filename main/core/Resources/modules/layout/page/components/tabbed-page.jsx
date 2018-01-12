@@ -1,7 +1,7 @@
 import React from 'react'
 import classes from 'classnames'
 
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 
 import {Router, Route, Redirect, NavLink, Switch} from '#/main/core/router'

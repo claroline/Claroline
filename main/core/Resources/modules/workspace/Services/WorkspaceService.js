@@ -17,7 +17,7 @@ export default class WorkspaceService{
             const data = response.data
             //remap attributes because new schema is different
             data.map(el => {
-              el.creatorId = el.meta.creator.autoId
+              el.creatorId = el.meta.creator ? el.meta.creator.autoId: 0
 
               return el
             })

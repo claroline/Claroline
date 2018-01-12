@@ -4,8 +4,8 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 
-import {Router, Routes} from '#/main/core/router'
-import {ResourceContainer} from '#/main/core/layout/resource/containers/resource.jsx'
+import {Routes} from '#/main/core/router'
+import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
 
 import {Announces} from './announces.jsx'
 import {Announce} from './announce.jsx'
@@ -37,34 +37,33 @@ const Resource = props =>
       }
     ]}
   >
-    <Router>
-      <Routes
-        routes={[
-          {
-            path: '/',
-            component: Announces
-          }, {
-            path: '/add',
-            component: AnnounceForm,
-            onEnter: () => {
-              props.openForm(AnnouncementTypes.defaultProps)
-              props.initFormDefaultRoles(props.roles.map(r => r.id))
-            },
-            onLeave: props.resetForm
-          }, {
-            path: '/:id',
-            component: Announce,
-            onEnter: (params) => props.openDetail(params.id),
-            onLeave: props.resetDetail
-          }, {
-            path: '/:id/edit',
-            component: AnnounceForm,
-            onEnter: (params) => props.openForm(props.posts.find(post => post.id === params.id)),
-            onLeave: props.resetForm
-          }
-        ]}
-      />
-    </Router>
+    <Routes
+      routes={[
+        {
+          path: '/',
+          exact: true,
+          component: Announces
+        }, {
+          path: '/add',
+          component: AnnounceForm,
+          onEnter: () => {
+            props.openForm(AnnouncementTypes.defaultProps)
+            props.initFormDefaultRoles(props.roles.map(r => r.id))
+          },
+          onLeave: props.resetForm
+        }, {
+          path: '/:id',
+          component: Announce,
+          onEnter: (params) => props.openDetail(params.id),
+          onLeave: props.resetDetail
+        }, {
+          path: '/:id/edit',
+          component: AnnounceForm,
+          onEnter: (params) => props.openForm(props.posts.find(post => post.id === params.id)),
+          onLeave: props.resetForm
+        }
+      ]}
+    />
   </ResourceContainer>
 
 Resource.propTypes = {
@@ -81,7 +80,7 @@ Resource.propTypes = {
   formValidating: T.bool.isRequired,
   formValid: T.bool.isRequired,
   roles: T.arrayOf(T.shape({
-    id: T.number.isRequired
+    id: T.string.isRequired
   })),
 
   save: T.func.isRequired,

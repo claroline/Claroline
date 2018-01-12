@@ -1,9 +1,7 @@
-import {bootstrap} from '#/main/core/utilities/app/bootstrap'
+import {bootstrap} from '#/main/core/scaffolding/bootstrap'
 
 // reducers
-import {reducer as apiReducer} from '#/main/core/api/reducer'
-import {reducer as modalReducer} from '#/main/core/layout/modal/reducer'
-import {reducer as resourceReducer} from '#/main/core/layout/resource/reducer'
+import {makeResourceReducer} from '#/main/core/resource/reducer'
 
 import {Image} from './components/image.jsx'
 
@@ -16,13 +14,8 @@ bootstrap(
   Image,
 
   // app store configuration
-  {
+  makeResourceReducer({}, {
     // there is no editor for now, so we just init a static store
-    image: (state = {}) => state,
-
-    // generic reducers
-    currentRequests: apiReducer,
-    modal: modalReducer,
-    resourceNode: resourceReducer
-  }
+    image: (state = {}) => state
+  })
 )

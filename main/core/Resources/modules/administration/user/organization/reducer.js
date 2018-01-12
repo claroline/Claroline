@@ -1,13 +1,17 @@
-import {combineReducers, makeReducer} from '#/main/core/utilities/redux'
+import {combineReducers, makeReducer} from '#/main/core/scaffolding/reducer'
 
 import {makeFormReducer} from '#/main/core/data/form/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 
-import {FORM_RESET} from '#/main/core/data/form/actions'
+import {FORM_RESET, FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
 const reducer = combineReducers({
   picker: makeListReducer('organizations.picker'),
-  list: makeListReducer('organizations.list', {}, {}, {
+  list: makeListReducer('organizations.list', {}, {
+    invalidated: makeReducer(false, {
+      [FORM_SUBMIT_SUCCESS+'/organizations.current']: () => true // todo : find better
+    })
+  }, {
     sortable: false,
     paginated: false
   }),
@@ -23,6 +27,11 @@ const reducer = combineReducers({
       })
     }),
     groups: makeListReducer('organizations.current.groups', {}, {
+      invalidated: makeReducer(false, {
+        [FORM_RESET+'/organizations.current']: () => true // todo : find better
+      })
+    }),
+    managers: makeListReducer('organizations.current.managers', {}, {
       invalidated: makeReducer(false, {
         [FORM_RESET+'/organizations.current']: () => true // todo : find better
       })

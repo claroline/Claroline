@@ -1,4 +1,4 @@
-import {} from 'angular/angular.min'
+import angular from 'angular'
 
 import {} from 'angular-bootstrap'
 
@@ -6,7 +6,7 @@ import {} from '../html-truster/module'
 
 import ConfirmModalDirective from './Directive/ConfirmModalDirective'
 
-window.angular
+angular
   .module('ui.modal',[
     'ui.bootstrap',
     'ui.html-truster'

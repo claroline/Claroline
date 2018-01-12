@@ -3,7 +3,7 @@ import merge from 'lodash/merge'
 import zipObject from 'lodash/zipObject'
 import set from 'lodash/set'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {tex} from '#/main/core/translation'
 import {notBlank} from '#/main/core/validation'
 
@@ -202,7 +202,7 @@ function reduce(ordering = {}, action) {
 function validate(ordering) {
   const errors = {}
 
-  if (ordering.items.find(item => notBlank(item.data, true))) {
+  if (ordering.items.find(item => notBlank(item.data, {isHtml: true}))) {
     errors.items = tex('ordering_item_empty_data_error')
   }
 

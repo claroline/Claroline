@@ -196,7 +196,7 @@
                                                     <span class="label label-warning">
                                                         {{ 'pending'|trans({}, 'platform') }}
                                                     </span>
-                                                {% elseif session.getPublicRegistration() %}
+                                                {% elseif session.getPublicRegistration() and not hideSessionRegistrationButton %}
                                                     &nbsp;
                                                     <span class="btn btn-default btn-sm session-register-btn"
                                                           data-session-id="{{ sessionId }}"

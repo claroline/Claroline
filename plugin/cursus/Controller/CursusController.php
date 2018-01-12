@@ -210,6 +210,7 @@ class CursusController extends Controller
     public function coursesRegistrationWidgetAction(WidgetInstance $widgetInstance)
     {
         $config = $this->cursusManager->getCoursesWidgetConfiguration($widgetInstance);
+        $extra = $config->getExtra();
         $defaultMode = $config->getDefaultMode();
         $disableSessionEventRegistration = $this->platformConfigHandler->hasParameter('cursus_disable_session_event_registration') ?
             $this->platformConfigHandler->getParameter('cursus_disable_session_event_registration') :
@@ -219,6 +220,7 @@ class CursusController extends Controller
             'widgetInstance' => $widgetInstance,
             'mode' => $defaultMode,
             'disableSessionEventRegistration' => $disableSessionEventRegistration,
+            'hideSessionRegistrationButton' => isset($extra['hideSessionRegistrationButton']) ? $extra['hideSessionRegistrationButton'] : false,
         ];
     }
 
@@ -246,6 +248,9 @@ class CursusController extends Controller
         $extra = $config->getExtra();
         $collapseCourses = isset($extra['collapseCourses']) ? $extra['collapseCourses'] : false;
         $collapseSessions = isset($extra['collapseSessions']) ? $extra['collapseSessions'] : false;
+        $hideSessionRegistrationButton = isset($extra['hideSessionRegistrationButton']) ?
+            $extra['hideSessionRegistrationButton'] :
+            false;
         $displayAll = isset($extra['displayAll']) ? $extra['displayAll'] : false;
 
         if ($displayAll || (is_null($configCursus) && !$isAnon && $authenticatedUser->hasRole('ROLE_ADMIN'))) {
@@ -349,6 +354,7 @@ class CursusController extends Controller
             'courseQueues' => $courseQueues,
             'collapseCourses' => $collapseCourses,
             'collapseSessions' => $collapseSessions,
+            'hideSessionRegistrationButton' => $hideSessionRegistrationButton,
             'disableSessionEventRegistration' => $disableSessionEventRegistration,
             'sessionEventUsersStatus' => $sessionEventUsersStatus,
         ];
@@ -372,6 +378,9 @@ class CursusController extends Controller
         $configPublicSessions = $config->isPublicSessionsOnly();
         $extra = $config->getExtra();
         $displayAll = isset($extra['displayAll']) ? $extra['displayAll'] : false;
+        $hideSessionRegistrationButton = isset($extra['hideSessionRegistrationButton']) ?
+            $extra['hideSessionRegistrationButton'] :
+            false;
 
         if ($displayAll || (is_null($configCursus) && !$isAnon && $authenticatedUser->hasRole('ROLE_ADMIN'))) {
             $courses = $this->cursusManager->getAllCourses($search, 'title', 'ASC', false);
@@ -437,6 +446,7 @@ class CursusController extends Controller
             'registeredSessions' => $registeredSessions,
             'pendingSessions' => $pendingSessions,
             'courseSessions' => $serializedCourseSessions,
+            'hideSessionRegistrationButton' => $hideSessionRegistrationButton,
             'disableSessionEventRegistration' => $disableSessionEventRegistration,
             'sessionEventUsersStatus' => $sessionEventUsersStatus,
         ];
@@ -589,6 +599,9 @@ class CursusController extends Controller
             $extra['collapseCourses'] = $form->get('collapseCourses')->getData();
             $extra['collapseSessions'] = $form->get('collapseSessions')->getData();
             $extra['displayAll'] = $form->has('displayAll') ? $form->get('displayAll')->getData() : false;
+            $extra['hideSessionRegistrationButton'] = $form->has('hideSessionRegistrationButton') ?
+                $form->get('hideSessionRegistrationButton')->getData() :
+                false;
             $config->setExtra($extra);
             $this->cursusManager->persistCoursesWidgetConfiguration($config);
 

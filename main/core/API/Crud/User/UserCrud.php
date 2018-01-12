@@ -4,7 +4,9 @@ namespace Claroline\CoreBundle\API\Crud\User;
 
 use Claroline\CoreBundle\API\Options;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\CrudEvent;
+use Claroline\CoreBundle\Event\Crud\CreateEvent;
+use Claroline\CoreBundle\Event\Crud\DeleteEvent;
+use Claroline\CoreBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -39,9 +41,9 @@ class UserCrud
     /**
      * @DI\Observe("crud_pre_create_object_claroline_corebundle_entity_user")
      *
-     * @param CrudEvent $event
+     * @param CreateEvent $event
      */
-    public function preCreate(CrudEvent $event)
+    public function preCreate(CreateEvent $event)
     {
         $this->create($event->getObject(), $event->getOptions());
     }
@@ -49,9 +51,9 @@ class UserCrud
     /**
      * @DI\Observe("crud_post_create_object_claroline_corebundle_entity_user")
      *
-     * @param CrudEvent $event
+     * @param CreateEvent $event
      */
-    public function postCreate(CrudEvent $event)
+    public function postCreate(CreateEvent $event)
     {
         if (in_array(Options::USER_SELF_LOG, $event->getOptions())) {
             $this->userManager->logUser($event->getObject());
@@ -105,9 +107,9 @@ class UserCrud
     /**
      * @DI\Observe("crud_pre_delete_object_claroline_corebundle_entity_user")
      *
-     * @param CrudEvent $event
+     * @param DeleteEvent $event
      */
-    public function preDelete(CrudEvent $event)
+    public function preDelete(DeleteEvent $event)
     {
         /** @var User $user */
         $user = $event->getObject();
@@ -151,9 +153,9 @@ class UserCrud
     /**
      * @DI\Observe("crud_pre_update_object_claroline_corebundle_entity_user")
      *
-     * @param CrudEvent $event
+     * @param UpdateEvent $event
      */
-    public function preUpdate(CrudEvent $event)
+    public function preUpdate(UpdateEvent $event)
     {
         //do stuff here
     }

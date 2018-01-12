@@ -89,6 +89,16 @@ class CoursesWidgetConfigurationType extends AbstractType
             ]
         );
         $builder->add(
+            'hideSessionRegistrationButton',
+            'checkbox',
+            [
+                'mapped' => false,
+                'data' => isset($this->extra['hideSessionRegistrationButton']) ? $this->extra['hideSessionRegistrationButton'] : false,
+                'label' => 'hide_session_registration_button',
+                'translation_domain' => 'cursus',
+            ]
+        );
+        $builder->add(
             'publicSessionsOnly',
             'checkbox',
             ['label' => 'public_sessions_only']

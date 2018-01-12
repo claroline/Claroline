@@ -1,12 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
 import set from 'lodash/set'
 
-import {makeReducer} from '#/main/core/utilities/redux'
+import {makeReducer} from '#/main/core/scaffolding/reducer'
 
 // generic reducers
-import {reducer as apiReducer} from '#/main/core/api/reducer'
-import {reducer as modalReducer} from '#/main/core/layout/modal/reducer'
-import {reducer as resourceReducer} from '#/main/core/layout/resource/reducer'
+import {makeResourceReducer} from '#/main/core/resource/reducer'
 
 import {validate} from './validator'
 import {
@@ -117,7 +115,7 @@ const announcementDetailReducer = makeReducer(null, {
   [ANNOUNCE_DETAIL_RESET]: () => null
 })
 
-const reducer = {
+const reducer = makeResourceReducer({}, {
   currentPage: pageReducer,
   sortOrder: sortReducer,
   announcement: announcementReducer,
@@ -125,13 +123,8 @@ const reducer = {
   announcementForm: announcementFormReducer,
   announcementDetail: announcementDetailReducer,
 
-  workspaceRoles: makeReducer({}, {}),
-
-  // generic reducers
-  currentRequests: apiReducer,
-  modal: modalReducer,
-  resourceNode: resourceReducer
-}
+  workspaceRoles: makeReducer({}, {})
+})
 
 export {
   reducer

@@ -83,7 +83,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      *     "manager"                = @DI\Inject("claroline.persistence.object_manager"),
      *     "router"                 = @DI\Inject("router"),
      *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
-     *     "requestStack"           = @DI\Inject("request_stack")
+     *     "requestStack"           = @DI\Inject("request_stack"),
+     *     "kernelRootDir"          = @DI\Inject("%kernel.root_dir%")
      * })
      */
     public function __construct(
@@ -97,7 +98,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         ObjectManager $manager,
         Router $router,
         UserManager $userManager,
-        RequestStack $requestStack
+        RequestStack $requestStack,
+        $kernelRootDir
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
@@ -110,7 +112,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->router = $router;
         $this->userManager = $userManager;
         $this->requestStack = $requestStack;
-        $this->logger = FileLogger::get('login',  'claroline.login.logger');
+        $this->logger = FileLogger::get($kernelRootDir.'/logs/login.log',  'claroline.login.logger');
     }
 
     /**

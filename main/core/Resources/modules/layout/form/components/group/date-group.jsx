@@ -1,20 +1,20 @@
 import React from 'react'
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
+import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 
 const DateGroup = props =>
   <FormGroup
     {...props}
   >
-    <DatePicker
-      controlId={props.controlId}
-      dateFormat={props.dateFormat}
+    <Date
+      id={props.id}
       minDate={props.minDate}
-      value={props.value || ''}
-      showCalendarButton={props.showCalendarButton}
+      maxDate={props.maxDate}
+      value={props.value}
+      onlyButton={props.onlyButton}
       disabled={props.disabled}
       onChange={props.onChange}
     />
@@ -24,12 +24,12 @@ implementPropTypes(DateGroup, FormGroupWithFieldTypes, {
   // more precise value type
   value: T.string,
   // custom props
-  dateFormat: T.string,
   minDate: T.object,
-  showCalendarButton: T.bool
+  maxDate: T.object,
+  onlyButton: T.bool
 }, {
   value: '',
-  showCalendarButton: false
+  onlyButton: false
 })
 
 export {

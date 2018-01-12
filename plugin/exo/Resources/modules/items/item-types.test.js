@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {ensure, mockTranslator} from '#/main/core/tests'
+import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
 import {
   registerItemType,
   listItemMimeTypes,

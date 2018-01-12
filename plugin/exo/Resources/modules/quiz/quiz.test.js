@@ -1,8 +1,8 @@
 import assert from 'assert'
 import freeze from 'deep-freeze'
 
-import {spyConsole, mockRouting, mockTranslator} from '#/main/core/tests'
-import {resourceNodeFixture} from '#/main/core/layout/resource/tests'
+import {spyConsole, mockRouting, mockTranslator} from '#/main/core/scaffolding/tests'
+import {resourceNodeFixture} from '#/main/core/resource/tests'
 
 import {resetTypes} from './../items/item-types'
 import {Quiz} from './quiz'

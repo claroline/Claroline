@@ -21,6 +21,12 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ProfilePanelFieldsType extends AbstractType
 {
+    /** @var PanelFacet */
+    private $panel;
+
+    /** @var TranslatorInterface */
+    private $translator;
+
     public function __construct(
         PanelFacet $panel,
         TranslatorInterface $translator
@@ -42,10 +48,10 @@ class ProfilePanelFieldsType extends AbstractType
             switch ($field->getType()) {
                 case FieldFacet::STRING_TYPE:
                     $builder->add(
-                        $field->getPrettyName(),
+                        $field->getName(),
                         'text',
                         [
-                            'label' => $this->translator->trans($field->getName(), [], 'platform'),
+                            'label' => $this->translator->trans($field->getLabel(), [], 'platform'),
                             'mapped' => false,
                             'required' => false,
                             'attr' => ['facet' => $this->panel->getFacet()->getName()],
@@ -55,10 +61,10 @@ class ProfilePanelFieldsType extends AbstractType
                     break;
                 case FieldFacet::EMAIL_TYPE:
                     $builder->add(
-                        $field->getPrettyName(),
+                        $field->getName(),
                         'email',
                         [
-                            'label' => $this->translator->trans($field->getName(), [], 'platform'),
+                            'label' => $this->translator->trans($field->getLabel(), [], 'platform'),
                             'mapped' => false,
                             'required' => false,
                             'attr' => ['facet' => $this->panel->getFacet()->getName()],
@@ -68,10 +74,10 @@ class ProfilePanelFieldsType extends AbstractType
                     break;
                 case FieldFacet::DATE_TYPE:
                     $builder->add(
-                        $field->getPrettyName(),
+                        $field->getName(),
                         'datepicker',
                         [
-                            'label' => $this->translator->trans($field->getName(), [], 'platform'),
+                            'label' => $this->translator->trans($field->getLabel(), [], 'platform'),
                             'required' => false,
                             'widget' => 'single_text',
                             'format' => $this->translator->trans('date_form_datepicker_format', [], 'platform'),
@@ -85,10 +91,10 @@ class ProfilePanelFieldsType extends AbstractType
                     break;
                 case FieldFacet::FLOAT_TYPE:
                     $builder->add(
-                        $field->getPrettyName(),
+                        $field->getName(),
                         'number',
                         [
-                            'label' => $this->translator->trans($field->getName(), [], 'platform'),
+                            'label' => $this->translator->trans($field->getLabel(), [], 'platform'),
                             'mapped' => false,
                             'required' => false,
                             'attr' => ['facet' => $this->panel->getFacet()->getName()],
@@ -98,10 +104,10 @@ class ProfilePanelFieldsType extends AbstractType
                     break;
                 case FieldFacet::COUNTRY_TYPE:
                         $builder->add(
-                            $field->getPrettyName(),
+                            $field->getLabel(),
                             'country',
                             [
-                                'label' => $this->translator->trans($field->getName(), [], 'platform'),
+                                'label' => $this->translator->trans($field->getLabel(), [], 'platform'),
                                 'mapped' => false,
                                 'required' => false,
                                 'attr' => ['facet' => $this->panel->getFacet()->getName()],
@@ -133,11 +139,11 @@ class ProfilePanelFieldsType extends AbstractType
                     }
 
                     $builder->add(
-                        $field->getPrettyName(),
+                        $field->getName(),
                         'choice',
                         [
                             'choices' => $attrs,
-                            'label' => $this->translator->trans($field->getName(), [], 'platform'),
+                            'label' => $this->translator->trans($field->getLabel(), [], 'platform'),
                             'mapped' => false,
                             'required' => false,
                             'attr' => ['facet' => $this->panel->getFacet()->getName()],

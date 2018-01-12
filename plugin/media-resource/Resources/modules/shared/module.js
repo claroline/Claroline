@@ -4,7 +4,7 @@
  */
 import angular from 'angular/index'
 import 'angular-sanitize'
-import '#/main/core/fos-js-router/module'
+import '#/main/core/api/router/module'
 import SecondsToHmsFilter from './Filters/SecondsToHmsFilter'
 import ConfigService from './Services/ConfigService'
 import RegionsService from './Services/RegionsService'

@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {notBlank, number, chain} from '#/main/core/validation'
 import {tex} from '#/main/core/translation'
 
@@ -218,7 +218,7 @@ function validate(item) {
   }
 
   // no blank item data
-  if (item.firstSet.find(set => notBlank(set.data, true)) || item.secondSet.find(set => notBlank(set.data, true))) {
+  if (item.firstSet.find(set => notBlank(set.data, {isHtml: true})) || item.secondSet.find(set => notBlank(set.data, {isHtml: true}))) {
     errors.items = tex('match_item_empty_data_error')
   }
 

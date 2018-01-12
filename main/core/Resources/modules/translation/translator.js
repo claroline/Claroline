@@ -1,5 +1,5 @@
-import {execute} from '#/main/core/file-loader'
-import {web} from '#/main/core/path'
+import {loadFile} from '#/main/core/scaffolding/loader/file'
+import {web} from '#/main/core/scaffolding/path'
 
 /**
  * This class was copied from BazingaJsTranslationBundle
@@ -13,6 +13,13 @@ var _messages     = {},
   _iPluralRegex = new RegExp(/^\s*(\{\s*(\-?\d+[\s*,\s*\-?\d+]*)\s*\})|([\[\]])\s*(-Inf|\-?\d+)\s*,\s*(\+?Inf|\-?\d+)\s*([\[\]])/)
 
 const Translator = {
+
+   /**
+    * The current locale.
+    *
+    * @type {Array}
+    */
+  loaded_domains: [],
 
     /**
      * The current locale.
@@ -350,8 +357,13 @@ function has_domain(locale, domain) {
  * @param domain
  */
 function load_domain(locale, domain) {
-  if (!has_domain(locale, domain)) {
-    execute(web(`js/translations/${domain}/${locale}.js`))
+
+  if (!has_domain(locale, domain) && Translator.loaded_domains.indexOf(domain) === -1) {
+    loadFile(web(`js/translations/${domain}/${locale}.js`))
+  }
+
+  if (Translator.loaded_domains.indexOf(domain) === -1) {
+    Translator.loaded_domains.push(domain)
   }
 }
 

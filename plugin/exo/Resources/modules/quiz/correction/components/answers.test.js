@@ -2,7 +2,7 @@ import React from 'react'
 import {mount} from 'enzyme'
 import configureMockStore from 'redux-mock-store'
 
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
+import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
 import {Answers} from './answers.jsx'
 
 describe('<Answers/>', () => {

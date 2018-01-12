@@ -4,12 +4,12 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import quizSelect from './../../selectors'
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {selectors as paperSelect} from './../selectors'
 import {tex, t} from '#/main/core/translation'
 import {ScoreBox} from './../../../items/components/score-box.jsx'
 import {utils} from './../utils'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 export const PaperRow = props =>
   <tr>

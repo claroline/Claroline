@@ -1,7 +1,7 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
 
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
+import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
 import {SHUFFLE_ONCE, SHUFFLE_NEVER} from './../../enums'
 import {QuizEditor} from './quiz-editor.jsx'
 

@@ -111,7 +111,7 @@ class ProfileController extends AbstractApiController
 
         // removes deleted facets
         foreach ($facets as $facet) {
-            if (empty($updated[$facet->getId()])) {
+            if (empty($updatedFacets[$facet->getId()])) {
                 $this->crud->delete($facet);
             }
         }

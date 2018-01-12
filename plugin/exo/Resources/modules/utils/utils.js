@@ -41,4 +41,4 @@ export {
   refreshIds,
   lastId,
   lastIds
-} from '#/main/core/utilities/id'
+} from '#/main/core/scaffolding/id'

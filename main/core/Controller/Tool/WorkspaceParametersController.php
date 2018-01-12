@@ -360,19 +360,28 @@ class WorkspaceParametersController extends Controller
      */
     public function userSubscriptionAction(Workspace $workspace)
     {
-        $sc = $this->get('security.authorization_checker');
-
-        if (!$sc->isGranted('IS_AUTHENTICATED_FULLY')) {
+        if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
             throw new AccessDeniedException();
         }
 
-        $this->workspaceManager->addUserAction($workspace, $this->get('security.token_storage')->getToken()->getUser());
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        return $this->redirect(
-            $this->generateUrl(
-                'claro_workspace_open', ['workspaceId' => $workspace->getId()]
-            )
-        );
+        // If user is admin or registration validation is disabled, subscribe user
+        if ($this->isGranted('ROLE_ADMIN') || !$workspace->getRegistrationValidation()) {
+            $this->workspaceManager->addUserAction($workspace, $user);
+
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_workspace_open', ['workspaceId' => $workspace->getId()]
+                )
+            );
+        }
+        // Otherwise add user to validation queue if not already there
+        if (!$this->workspaceManager->isUserInValidationQueue($workspace, $user)) {
+            $this->workspaceManager->addUserQueue($workspace, $user);
+        }
+
+        return $this->redirect($this->generateUrl('claro_desktop_open'));
     }
 
     private function checkAccess(Workspace $workspace)

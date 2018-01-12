@@ -2,10 +2,10 @@ import React, {Component} from 'react'
 import classes from 'classnames'
 
 import {t} from '#/main/core/translation'
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
-import {getOffsets} from '#/main/core/utilities/text/selection'
+import {getOffsets} from '#/main/core/scaffolding/text/selection'
 
 // see https://github.com/lovasoa/react-contenteditable
 export class ContentEditable extends Component {

@@ -47,6 +47,16 @@ class ConfigureFieldModal extends Component {
     return (
       <DataFormModal
         {...this.props}
+        save={fieldData => {
+          // generate normalized name for field (c/p from api Entity)
+          let normalizedName = fieldData.label.replace(' ', '-') // Replaces all spaces with hyphens.
+          normalizedName.replace(/[^A-Za-z0-9\-]/, '') // Removes special chars.
+          normalizedName.replace(/-+/, '-') // Replaces multiple hyphens with single one.
+
+          this.props.save(merge({}, fieldData, {
+            name: normalizedName
+          }))
+        }}
         title={t('edit_field')}
         sections={[
           {

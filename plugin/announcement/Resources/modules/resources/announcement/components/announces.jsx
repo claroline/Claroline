@@ -6,8 +6,11 @@ import {t, trans} from '#/main/core/translation'
 
 import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {actions} from './../actions'
-import {select} from './../selectors'
+import {EmptyPlaceholder} from '#/main/core/layout/components/placeholder.jsx'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
+
+import {actions} from '#/plugin/announcement/resources/announcement/actions'
+import {select} from '#/plugin/announcement/resources/announcement/selectors'
 
 import {AnnouncePost} from './announce-post.jsx'
 
@@ -18,6 +21,7 @@ const AnnouncesList = props =>
       <button
         type="button"
         className="btn btn-link"
+        disabled={0 === props.posts.length}
         onClick={props.toggleSort}
       >
         {trans(1 === props.sortOrder ? 'from_older_to_newer':'from_newer_to_older', {}, 'announcement')}
@@ -28,12 +32,22 @@ const AnnouncesList = props =>
       <AnnouncePost
         {...post}
         key={post.id}
+        editable={props.editable}
+        deletable={props.deletable}
         removePost={() => props.removePost(props.aggregateId, post)}
         sendPost={() => props.sendPost(props.aggregateId, post)}
       />
     )}
 
-    {1 !== props.pages &&
+    {0 === props.posts.length &&
+      <EmptyPlaceholder
+        size="lg"
+        icon="fa fa-frown-o"
+        title={trans('no_announcement', {}, 'announcement')}
+      />
+    }
+
+    {1 < props.pages &&
       <nav className="text-right">
         <div className="pagination-condensed btn-group">
           <button
@@ -72,22 +86,23 @@ AnnouncesList.propTypes = {
   })).isRequired,
   toggleSort: T.func.isRequired,
   changePage: T.func.isRequired,
+  editable: T.bool,
+  deletable: T.bool,
   sendPost: T.func.isRequired,
   removePost: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const Announces = connect(
+  state => ({
     sortOrder: select.sortOrder(state),
     currentPage: select.currentPage(state),
     pages: select.pages(state),
     aggregateId: select.aggregateId(state),
-    posts: select.visibleSortedPosts(state)
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
+    posts: select.visibleSortedPosts(state),
+    editable: resourceSelect.editable(state),
+    deletable: resourceSelect.deletable(state)
+  }),
+  dispatch => ({
     removePost(aggregateId, announcePost) {
       dispatch(
         modalActions.showModal(MODAL_DELETE_CONFIRM, {
@@ -112,10 +127,8 @@ function mapDispatchToProps(dispatch) {
     changePage(page) {
       dispatch(actions.changeAnnouncesPage(page))
     }
-  }
-}
-
-const Announces = connect(mapStateToProps, mapDispatchToProps)(AnnouncesList)
+  })
+)(AnnouncesList)
 
 export {
   Announces

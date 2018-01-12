@@ -89,6 +89,11 @@ class OrganizationFinder implements FinderInterface
                     $qb->andWhere('g.uuid IN (:groupIds)');
                     $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'workspace':
+                    $qb->leftJoin('obj.workspaces', 'w');
+                    $qb->andWhere('w.uuid IN (:workspaceIds)');
+                    $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
                 default:
                     if (is_bool($filterValue)) {
                         $qb->andWhere("obj.{$filterName} = :{$filterName}");

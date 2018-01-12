@@ -1,6 +1,6 @@
-import 'angular/angular.min'
+import angular from 'angular/index'
+import 'angular-ui-translation/angular-translation'
 
-import translation from 'angular-ui-translation/angular-translation'
 import HelpBlockDirective from './HelpBlockDirective'
 
 angular.module('HelpBlock', ['ui.translation'])

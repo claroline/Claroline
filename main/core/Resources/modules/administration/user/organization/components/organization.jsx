@@ -16,7 +16,7 @@ import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
 import {actions} from '#/main/core/administration/user/organization/actions'
 import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
-import {WorkspaceList} from '#/main/core/administration/workspace/components/workspace-list.jsx'
+import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list.jsx'
 
 const OrganizationSaveAction = makeSaveAction('organizations.current', formData => ({
   create: ['apiv2_organization_create'],
@@ -63,11 +63,7 @@ const OrganizationForm = props =>
             name: 'email',
             type: 'email',
             label: t('email')
-          }/*, {
-            name: 'managers',
-            type: 'users',
-            label: t('managers')
-          }*/
+          }
         ]
       }
     ]}
@@ -158,6 +154,34 @@ const OrganizationForm = props =>
           card={GroupList.card}
         />
       </FormSection>
+
+      <FormSection
+        id="organization-managers"
+        icon="fa fa-fw fa-users"
+        title={t('managers')}
+        disabled={props.new}
+        actions={[
+          {
+            icon: 'fa fa-fw fa-plus',
+            label: t('add_managers'),
+            action: () => props.pickManagers(props.organization.id)
+          }
+        ]}
+      >
+        <DataListContainer
+          name="organizations.current.managers"
+          open={UserList.open}
+          fetch={{
+            url: ['apiv2_organization_list_managers', {id: props.organization.id}],
+            autoload: props.organization.id && !props.new
+          }}
+          delete={{
+            url: ['apiv2_organization_remove_managers', {id: props.organization.id}]
+          }}
+          definition={UserList.definition}
+          card={UserList.card}
+        />
+      </FormSection>
     </FormSections>
   </FormContainer>
 
@@ -168,7 +192,8 @@ OrganizationForm.propTypes = {
   }).isRequired,
   pickUsers: T.func.isRequired,
   pickGroups: T.func.isRequired,
-  pickWorkspaces: T.func.isRequired
+  pickWorkspaces: T.func.isRequired,
+  pickManagers: T.func.isRequired
 }
 
 const Organization = connect(
@@ -190,6 +215,21 @@ const Organization = connect(
           autoload: true
         },
         handleSelect: (selected) => dispatch(actions.addUsers(organizationId, selected))
+      }))
+    },
+    pickManagers(organizationId) {
+      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
+        icon: 'fa fa-fw fa-user',
+        title: t('add_managers'),
+        confirmText: t('add'),
+        name: 'users.picker',
+        definition: UserList.definition,
+        card: UserList.card,
+        fetch: {
+          url: ['apiv2_user_list'],
+          autoload: true
+        },
+        handleSelect: (selected) => dispatch(actions.addManagers(organizationId, selected))
       }))
     },
     pickGroups(organizationId) {

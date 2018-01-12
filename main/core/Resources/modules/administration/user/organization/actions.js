@@ -1,4 +1,4 @@
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as formActions} from '#/main/core/data/form/actions'
@@ -32,6 +32,19 @@ actions.addUsers = (id, users) => ({
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData('organizations.list'))
       dispatch(listActions.invalidateData('organizations.current.users'))
+    }
+  }
+})
+
+actions.addManagers = (id, users) => ({
+  [API_REQUEST]: {
+    url: generateUrl('apiv2_organization_add_managers', {id: id}) +'?'+ users.map(id => 'ids[]='+id).join('&'),
+    request: {
+      method: 'PATCH'
+    },
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData('organizations.list'))
+      dispatch(listActions.invalidateData('organizations.current.managers'))
     }
   }
 })

@@ -62,6 +62,9 @@ final class Options
     //for workspace
     const WORKSPACE_MODEL = 'workspace_model';
 
+    //for role
+    const SERIALIZE_COUNT_USER = 'serialize_count_user';
+
     //for serialize, do we want to (de)serialize objects in subtrees ?
     const DEEP_SERIALIZE = 'deep_serialize';
     const DEEP_DESERIALIZE = 'deep_deserialize';

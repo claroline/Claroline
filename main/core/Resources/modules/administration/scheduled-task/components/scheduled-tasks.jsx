@@ -5,8 +5,8 @@ import {connect} from 'react-redux'
 import {NavLink} from 'react-router-dom'
 
 import {t, trans, transChoice} from '#/main/core/translation'
-import {localeDate} from '#/main/core/date'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {localeDate} from '#/main/core/scaffolding/date'
+import {generateUrl} from '#/main/core/api/router'
 
 import {
   PageContainer,

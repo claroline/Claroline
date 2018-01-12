@@ -106,6 +106,8 @@ class WorkspaceFinder implements FinderInterface
             }
         }
 
+        $qb->orderBy('obj.id', 'ASC');
+
         return $qb;
     }
 }

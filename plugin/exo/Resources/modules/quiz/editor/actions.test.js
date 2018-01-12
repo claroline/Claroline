@@ -1,6 +1,6 @@
 import thunk from 'redux-thunk'
 import assert from 'assert'
-import {ensure} from '#/main/core/tests'
+import {ensure} from '#/main/core/scaffolding/tests'
 import configureMockStore from 'redux-mock-store'
 import {TYPE_STEP} from './../enums'
 import {

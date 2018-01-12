@@ -1,6 +1,6 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure, mockTranslator, mockRouting} from '#/main/core/tests'
+import {spyConsole, renew, ensure, mockTranslator, mockRouting} from '#/main/core/scaffolding/tests'
 import {PlayerNav} from './nav-bar.jsx'
 
 describe('<PlayerNav/>', () => {

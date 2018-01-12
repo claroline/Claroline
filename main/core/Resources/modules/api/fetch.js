@@ -1,9 +1,9 @@
 import merge from 'lodash/merge'
 import {checkPropTypes} from 'prop-types'
 
-import {getUrl} from '#/main/core/fos-js-router'
-import {authenticate} from '#/main/core/authentication'
-import {makeId} from '#/main/core/utilities/id'
+import {getUrl} from '#/main/core/api/router'
+import {authenticate} from '#/main/core/api/authentication'
+import {makeId} from '#/main/core/scaffolding/id'
 
 import {actions} from '#/main/core/api/actions'
 import {ApiRequest as ApiRequestTypes} from '#/main/core/api/prop-types'

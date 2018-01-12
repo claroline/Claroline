@@ -1,7 +1,7 @@
 import invariant from 'invariant'
 import select from './selectors'
 import times from 'lodash/times'
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {makeId} from './../../utils/utils'
 import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'

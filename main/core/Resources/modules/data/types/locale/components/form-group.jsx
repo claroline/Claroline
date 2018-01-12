@@ -1,13 +1,15 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {asset} from '#/main/core/asset'
+import {asset} from '#/main/core/scaffolding/asset'
 import {t} from '#/main/core/translation'
 import {makeCancelable} from '#/main/core/api/utils'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+
+// todo : move Locale presentational component in `#/main/core/layout/form`
 
 class LocaleGroup extends Component {
   constructor(props) {
@@ -26,7 +28,7 @@ class LocaleGroup extends Component {
     let localeUrl = generateUrl('apiv2_locale_list')
 
     this.pending = makeCancelable(
-      fetch(localeUrl)
+      fetch(localeUrl, {credentials: 'include'})
         .then(response => response.json())
         .then(
           (data) => {

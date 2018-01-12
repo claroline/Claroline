@@ -85,5 +85,8 @@ export function tex(message, placeholders = {}, domain = 'ujm_exo') {
 // reexport translator object
 const Translator = getTranslator()
 export {
-   Translator
+  DEFAULT_DOMAIN,
+  PLATFORM_DOMAIN,
+  VALIDATION_DOMAIN,
+  Translator
 }

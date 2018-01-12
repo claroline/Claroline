@@ -2,12 +2,6 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'themes_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
-{% block stylesheets %}
-    {{ parent() }}
-
-    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-main-core-theme-management.css') }}" />
-{% endblock %}
-
 {% block breadcrumb %}
     {{ macros.breadcrumbs([
         {
@@ -33,5 +27,5 @@
     {# Claroline JS #}
     {{ parent() }}
 
-    <script src="{{ hotAsset('dist/claroline-distribution-main-core-import-management.js') }}"></script>
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-transfer-management.js') }}"></script>
 {% endblock %}

@@ -1,3 +1,6 @@
+// TODO : remove me
+// Used by : chat
+
 import angular from 'angular/index'
 import StickBottomDirective from './Directive/StickBottomDirective'
 

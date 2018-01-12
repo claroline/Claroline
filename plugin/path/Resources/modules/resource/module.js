@@ -4,8 +4,8 @@
 
 import angular from 'angular/index'
 
-import '#/main/core/asset/module'
-import '#/main/core/fos-js-router/module'
+import '#/main/core/scaffolding/asset/module'
+import '#/main/core/api/router/module'
 import '../utils/module'
 import '../confirm/module'
 

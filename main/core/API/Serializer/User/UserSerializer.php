@@ -110,24 +110,29 @@ class UserSerializer
             'picture' => $user->getPicture(),
             'email' => $user->getMail(),
             'administrativeCode' => $user->getAdministrativeCode(),
-            'meta' => $this->serializeMeta($user),
-            'restrictions' => $this->serializeRestrictions($user),
-            'rights' => $this->serializeRights($user),
-            'roles' => array_map(function (Role $role) {
-                return [
-                    'id' => $role->getUuid(),
-                    'type' => $role->getType(),
-                    'name' => $role->getName(),
-                    'translationKey' => $role->getTranslationKey(),
-                ];
-            }, $user->getEntityRoles()),
-            'groups' => array_map(function (Group $group) {
-                return [
-                    'id' => $group->getUuid(),
-                    'name' => $group->getName(),
-                ];
-            }, $user->getGroups()->toArray()),
         ];
+
+        if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $serialized = array_merge($serialized, [
+                'meta' => $this->serializeMeta($user),
+                'restrictions' => $this->serializeRestrictions($user),
+                'rights' => $this->serializeRights($user),
+                'roles' => array_map(function (Role $role) {
+                    return [
+                        'id' => $role->getUuid(),
+                        'type' => $role->getType(),
+                        'name' => $role->getName(),
+                        'translationKey' => $role->getTranslationKey(),
+                    ];
+                }, $user->getEntityRoles()),
+                'groups' => array_map(function (Group $group) {
+                    return [
+                        'id' => $group->getUuid(),
+                        'name' => $group->getName(),
+                    ];
+                }, $user->getGroups()->toArray()),
+            ]);
+        }
 
         // todo deserialize facets
         if (in_array(Options::SERIALIZE_FACET, $options)) {
@@ -271,17 +276,16 @@ class UserSerializer
         // remove this later (with the Trait)
         $object = $this->genericSerializer->deserialize($data, $user, $options);
 
-        // todo rename mail into email later
-        if (isset($data['email'])) {
-            $object->setMail($data['email']);
-        }
+        $this->sipe('email', 'setMail', $data, $object);
+        $this->sipe('plainPassword', 'setPlainPassword', $data, $object);
+        $this->sipe('meta.enabled', 'setIsEnabled', $data, $object);
 
         if (isset($data['plainPassword'])) {
-            $object->setPlainPassword($data['plainPassword']);
-        }
+            $password = $this->container->get('security.encoder_factory')
+                ->getEncoder($object)
+                ->encodePassword($object->getPlainPassword(), $user->getSalt());
 
-        if (isset($data['enabled'])) {
-            $object->setEnabled($data['enabled']);
+            $object->setPassword($password);
         }
 
         //avoid recursive dependencies
@@ -309,6 +313,7 @@ class UserSerializer
                     }
 
                     $fieldFacetValue = $serializer->deserialize('Claroline\CoreBundle\Entity\Facet\FieldFacetValue', $fieldFacetValue);
+                    $fieldFacetValue->setUser($user);
                     $user->addFieldFacet($fieldFacetValue);
                 }
             }

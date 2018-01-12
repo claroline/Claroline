@@ -1,4 +1,4 @@
-import {makeActionCreator} from '#/main/core/utilities/redux/actions'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 
 export const API_REQUEST = 'API_REQUEST'
 

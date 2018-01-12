@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
-import {createStore} from '#/main/core/utilities/redux'
+import {createStore} from '#/main/core/scaffolding/store'
 import {reducer} from './reducer'
 import {OrganizationPicker} from '#/main/core/symfony/form/organization/organization_picker.jsx'
 

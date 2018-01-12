@@ -24,13 +24,12 @@ class OrganizationVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        if (!$object->getWorkspace()) {
-            return $this->hasAdminToolAccess($token, 'organization_management') ?
-            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+        if ($this->hasAdminToolAccess($token, 'user_management')) {
+            return VoterInterface::ACCESS_GRANTED;
         }
 
         //not used in workspaces yet so no implementation
-        return VoterInterface::ACCESS_ABSTAIN;
+        return VoterInterface::ACCESS_DENIED;
     }
 
     public function getClass()

@@ -4,7 +4,7 @@ import Modal from 'react-bootstrap/lib/Modal'
 import classes from 'classnames'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {t, trans} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 export const MODAL_KEYWORD_FORM = 'MODAL_KEYWORD_FORM'
 

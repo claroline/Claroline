@@ -303,6 +303,11 @@
             } else {
               s['color'] = '#D9534F'
             }
+            {% if hideSessionRegistrationButton %}
+              s['hideSessionRegistrationButton'] = true
+            {% else %}
+              s['hideSessionRegistrationButton'] = false
+            {% endif %}
             events.push(s)
           })
         }
@@ -444,7 +449,7 @@
                   ${Translator.trans('pending', {}, 'platform')}
               </button>
             `
-          } else {
+          } else if (!event['hideSessionRegistrationButton']) {
             registerBtn = `
               <button class="btn btn-primary register-to-session-btn-${widgetInstanceId} pull-right" data-session-id="${event['id']}">
                   ${Translator.trans('register', {}, 'platform')}

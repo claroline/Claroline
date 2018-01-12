@@ -6,6 +6,7 @@ import get from 'lodash/get'
 import {t} from '#/main/core/translation'
 
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
+import {SubSet} from '#/main/core/layout/form/components/fieldset/sub-set.jsx'
 import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set.jsx'
 
 import {createFormDefinition} from '#/main/core/data/form/utils'
@@ -85,21 +86,36 @@ class Form extends Component {
   }
 
   renderFields(fields) {
-    return fields.map(field =>
-      <FormField
-        {...field}
-        key={field.name}
-        value={get(this.props.data, field.name)}
-        disabled={this.props.disabled || field.disabled}
-        validating={this.props.validating}
-        error={get(this.props.errors, field.name)}
-        updateProp={this.props.updateProp}
-        setErrors={this.props.setErrors}
-      />
-    )
+    let rendered = []
+
+    fields.map(field => {
+      rendered.push(
+        <FormField
+          {...field}
+          key={field.name}
+          value={undefined !== field.calculated ? field.calculated : get(this.props.data, field.name)}
+          disabled={this.props.disabled || field.disabled}
+          validating={this.props.validating}
+          error={get(this.props.errors, field.name)}
+          updateProp={this.props.updateProp}
+          setErrors={this.props.setErrors}
+        />
+      )
+
+      if (field.linked && 0 !== field.linked.length) {
+        rendered.push(
+          <SubSet key={`${field.name}-subset`}>
+            {this.renderFields(field.linked)}
+          </SubSet>
+        )
+      }
+    })
+
+    return rendered
   }
 
   render() {
+    const hLevel = this.props.level + (this.props.title ? 1 : 0)
     const sections = createFormDefinition(this.props.sections)
 
     const primarySection = 1 === sections.length ? sections[0] : sections.find(section => section.primary)
@@ -115,7 +131,7 @@ class Form extends Component {
         {primarySection &&
           <div className="form-primary-section panel panel-default">
             <fieldset className="panel-body">
-              {React.createElement('h'+(this.props.level + (this.props.title ? 1 : 0)), {
+              {React.createElement('h'+hLevel, {
                 className: 'sr-only'
               }, primarySection.title)}
 
@@ -130,7 +146,7 @@ class Form extends Component {
 
         {0 !== otherSections.length &&
           <FormSections
-            level={this.props.level + (this.props.title ? 1 : 0)}
+            level={hLevel}
             defaultOpened={openedSection ? openedSection.id : undefined}
           >
             {otherSections.map(section =>

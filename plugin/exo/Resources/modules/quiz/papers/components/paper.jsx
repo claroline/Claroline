@@ -5,7 +5,7 @@ import Panel from 'react-bootstrap/lib/Panel'
 
 import {tex} from '#/main/core/translation'
 import {getDefinition, isQuestionType} from './../../../items/item-types'
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 import quizSelect from './../../selectors'
 import {selectors as paperSelect} from './../selectors'
 import {Metadata as ItemMetadata} from './../../../items/components/metadata.jsx'

@@ -1,6 +1,6 @@
 import isEmpty from 'lodash/isEmpty'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as quizActions} from './../actions'
 import {VIEW_PLAYER} from './../enums'

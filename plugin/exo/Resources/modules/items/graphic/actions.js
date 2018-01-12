@@ -1,4 +1,4 @@
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 
 export const SELECT_MODE = 'SELECT_MODE'
 export const SELECT_IMAGE = 'SELECT_IMAGE'
