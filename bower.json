@@ -13,10 +13,7 @@
     "underscore": "1.8.3",
     "font-awesome": "fontawesome#4.7.0",
     "tablesorter": "#774576308e",
-    "tag-it": "#6ccd2de95e",
-    "jquery-option-tree": "https://github.com/jongilbraith/jquery-option-tree.git#6b7137ec6e",
-    "confirm-bootstrap": "https://github.com/maxailloud/confirm-bootstrap.git#d436ee942d",
-    "jquery-tagcanvas": "https://github.com/goat1000/TagCanvas.git#ab3cb98be8753247d674a385a17c085a2dc950db",
+    "tag-it": "#6ccd2de95e"
   },
   "ignore": [
     "*",

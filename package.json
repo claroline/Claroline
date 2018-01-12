@@ -80,22 +80,9 @@
     "svg4everybody": "^2.1.2",
     "tinycolor2": "^1.4.1",
     "uuid": "^3.0.1",
-    "whatwg-fetch": "^2.0.1",
-    "tinymce-codemirror": "git://github.com/christiaan/tinymce-codemirror.git#20c1bbe708",
-    "typeahead.js-bootstrap3.less": "git://github.com/bassjobsen/typeahead.js-bootstrap-css.git#1.2.1",
-    "jqPlot": "git://github.com/jqPlot/jqPlot.git#080c6de5a6",
-    "angular-data-table": "git://github.com/ngodfraind/angular-data-table.git#f80646159282c7487c90ff9b13a850112e4aa030",
-    "claroline-tinymce-mention": "git://github.com/iCAPLyon1/tinymceMentionPlugin.git#9baea090feca3c53dd3019adefda2a37932c97d6",
-    "angular-ui-calendar": "git://github.com/iCAPLyon1/ui-calendar.git#7b4d604d8beb07e3a4a174dc52fcd9dafa594d09",
-    "Datejs": "git://github.com/datejs/Datejs.git#71afdd79a4",
-    "hark": "git://github.com/otalk/hark.git#v1.1.4",
-    "strophejs": "git://github.com/strophe/strophejs.git#v1.2.7",
-    "strophejs-plugins": "git://github.com/strophe/strophejs-plugins.git#v0.0.6"
+    "whatwg-fetch": "^2.0.1"
   },
   "files": [
     "package.json"
-  ],
-  "scripts": {
-    "preinstall": "touch GOTCHA.txt"
-  }
+  ]
 }
