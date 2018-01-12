@@ -17,7 +17,7 @@ import {FormGroup}    from '#/main/core/layout/form/components/group/form-group.
 import {HtmlGroup}    from '#/main/core/layout/form/components/group/html-group.jsx'
 import {CheckGroup}   from '#/main/core/layout/form/components/group/check-group.jsx'
 import {TextGroup}    from '#/main/core/layout/form/components/group/text-group.jsx'
-import {DatePicker}   from '#/main/core/layout/form/components/field/date-picker.jsx'
+import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 import {IpList}       from '#/main/core/layout/form/components/field/ip-list.jsx'
 import {validate}     from '#/main/core/resource/validator'
 import {closeTargets} from '#/main/core/resource/constants'
@@ -140,7 +140,7 @@ const AccessesSection = (props) =>
           label={t_res('resource_accessible_from')}
           validating={props.validating}
         >
-          <DatePicker
+          <Date
             id="resource-accessible-from"
             value={props.parameters.accessibleFrom || ''}
             onChange={date => props.updateParameter('parameters.accessibleFrom', date)}
@@ -153,7 +153,7 @@ const AccessesSection = (props) =>
           label={t_res('resource_accessible_until')}
           validating={props.validating}
         >
-          <DatePicker
+          <Date
             id="resource-accessible-until"
             value={props.parameters.accessibleUntil || ''}
             onChange={date => props.updateParameter('parameters.accessibleUntil', date)}

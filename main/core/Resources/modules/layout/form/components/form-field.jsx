@@ -20,7 +20,7 @@ import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 import {Checkboxes} from '#/main/core/layout/form/components/field/checkboxes.jsx'
 import {CascadeSelect} from '#/main/core/layout/form/components/field/cascade-select.jsx'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
+import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 import {File} from '#/main/core/layout/form/components/field/file.jsx'
 
 const isCascadeSelect = choices => {
@@ -220,9 +220,8 @@ export const FormField = props => {
     case 'date':
       return (props.noLabel ?
         <div className={classes({'has-error': props.error})}>
-          <DatePicker
-            controlId={props.controlId}
-            dateFormat="DD/MM/YYYY"
+          <Date
+            id={props.controlId}
             minDate={moment.utc('1900-01-01T12:00:00')}
             value={props.value !== undefined && props.value !== null ? props.value.date || props.value || '' : ''}
             disabled={props.disabled}
@@ -235,7 +234,6 @@ export const FormField = props => {
         <DateGroup
           id={props.controlId}
           label={props.label}
-          dateFormat="DD/MM/YYYY"
           minDate={moment.utc('1900-01-01T12:00:00')}
           value={props.value !== undefined && props.value !== null ? props.value.date || props.value || '' : ''}
           disabled={props.disabled}

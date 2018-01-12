@@ -12,8 +12,7 @@ import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
 import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'
-import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
-
+import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 
 import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
@@ -158,12 +157,10 @@ const Random = props =>
         {trans('label_random_date', {}, 'clacoform')}
       </span>
       <div className="col-md-2">
-        <DatePicker
+        <Date
           id="params-random-start-date"
-          dateFormat="DD/MM/YYYY"
           minDate={moment.utc('1900-01-01T12:00:00')}
-          locale="fr"
-          value={props.params.random_start_date || ''}
+          value={props.params.random_start_date}
           onChange={date => props.updateParameters('random_start_date', date)}
         />
       </div>
@@ -171,12 +168,10 @@ const Random = props =>
         <span className="fa fa-w fa-long-arrow-right" />
       </div>
       <div className="col-md-2">
-        <DatePicker
+        <Date
           id="params-random-end-date"
-          dateFormat="DD/MM/YYYY"
           minDate={moment.utc('1900-01-01T12:00:00')}
-          locale="fr"
-          value={props.params.random_end_date || ''}
+          value={props.params.random_end_date}
           onChange={date => props.updateParameters('random_end_date', date)}
         />
       </div>

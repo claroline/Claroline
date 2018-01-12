@@ -15,10 +15,11 @@ function localeDate(date, withTime = false) {
 }
 
 function serverDate(displayDate, withTime = false) {
-  return moment(displayDate, getFormat(withTime)).toISOString()
+  return moment(displayDate, getFormat(withTime)).format('YYYY-MM-DD\THH:mm:ss')
 }
 
 export {
+  getFormat,
   isValidDate,
   localeDate,
   serverDate

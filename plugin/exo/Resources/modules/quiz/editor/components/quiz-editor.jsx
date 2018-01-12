@@ -15,7 +15,7 @@ import {SelectGroup} from '#/main/core/layout/form/components/group/select-group
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'
-import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
+import {DateGroup} from '#/main/core/layout/form/components/group/date-group.jsx'
 import {ValidationStatus} from './validation-status.jsx'
 import {RandomPicking} from './random-picking.jsx'
 import {TagPicking} from './tag-picking.jsx'
@@ -350,17 +350,12 @@ class Correction extends Component {
         </FormGroup>
         {this.props.parameters.showCorrectionAt === SHOW_CORRECTION_AT_DATE &&
           <div className="sub-fields">
-            <FormGroup
+            <DateGroup
               id="quiz-correctionDate"
               label={tex('correction_date')}
-            >
-              <DatePicker
-                id="quiz-correctionDate"
-                name="quiz-correctionDate"
-                value={this.props.parameters.correctionDate || ''}
-                onChange={date => this.props.onChange('parameters.correctionDate', date)}
-              />
-            </FormGroup>
+              value={this.props.parameters.correctionDate}
+              onChange={date => this.props.onChange('parameters.correctionDate', date)}
+            />
           </div>
         }
         <FormGroup

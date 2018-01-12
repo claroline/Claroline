@@ -6,9 +6,9 @@ import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
 // note the alias is required for correct props validation
 // the underlying library we use also use DatePicker as component name
 // so when checking for invalid prop types the library errors makes the tests fail
-import {DatePicker as CustomDatePicker} from './date-picker.jsx'
+import {Date as CustomDatePicker} from './date.jsx'
 
-describe('<DatePicker/>', () => {
+describe('<Date/>', () => {
   beforeEach(() => {
     spyConsole.watch()
     renew(CustomDatePicker, 'CustomDatePicker')
