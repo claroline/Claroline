@@ -27,7 +27,6 @@
     "additional_info": "Informations complémentaires",
     "advanced_edition": "Edition avancée",
     "after_the_last_attempt": "Après le dernier essai de l'étape",
-    "alert_ending": "Êtes-vous sûr(e) de vouloir terminer ? (Vous ne pourrez plus modifier vos réponses.)",
     "all": "Tous",
     "all_question": "Toutes les questions",
     "all_step": "Toutes les étapes",
@@ -693,5 +692,9 @@
     "quiz_no_tag_help": "Ajoutez des tags à vos questions afin de pouvoir configurer et utiliser le tirage par tag.",
     "tags_to_pick": "Tags à tirer",
     "exercise_attempt_limit": "Votre nombre maximum de tentatives pour le questionnaire a été atteint.",
-    "exercise_paper_limit": "Le nombre maximum de réponses à au questionnaire a été atteint."
+    "exercise_paper_limit": "Le nombre maximum de réponses à au questionnaire a été atteint.",
+    "finish_confirm_title": "Terminer le questionnaire",
+    "finish_confirm_question": "Êtes-vous sûr de vouloir terminer le questionnaire ? Vous ne pourrez plus modifier les réponses de cette tentative.",
+    "hint_confirm_title": "Utiliser un indice",
+    "hint_confirm_question": "Êtes-vous sûr de vouloir utiliser cet indice ?"
 }

@@ -27,7 +27,6 @@
     "additional_info": "Additional information",
     "advanced_edition": "Advanced edition",
     "after_the_last_attempt": "After the last attempt of the step",
-    "alert_ending": "Are you sure you want to finish ? (You won't be allowed to modify your answers anymore.)",
     "all": "All",
     "all_question": "All the questions",
     "all_step": "All the steps",
@@ -693,5 +692,9 @@
     "quiz_no_tag_help": "Add tags to your questions to be able to use and configure tag picking.",
     "tags_to_pick": "Tags to pick",
     "exercise_attempt_limit": "Your limit of attempts as been reached.",
-    "exercise_paper_limit": "The limit of attempts as been reached."
+    "exercise_paper_limit": "The limit of attempts as been reached.",
+    "finish_confirm_title": "Finish the quiz",
+    "finish_confirm_question": "Are you sure you want to finish the quiz ? You will no longer be able to change your answers for this attempt.",
+    "hint_confirm_title": "Use a hint",
+    "hint_confirm_question": "Are you sure you want to use this hint ?"
 }
