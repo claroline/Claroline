@@ -2,28 +2,27 @@ import freeze from 'deep-freeze'
 import {ensure} from '#/main/core/scaffolding/tests'
 import {TYPE_QUIZ, TYPE_STEP} from './../enums'
 import select from './selectors'
-import {tex, t} from '#/main/core/translation'
 
 describe('Thumbnails selector', () => {
   it('returns the quiz and step thumbs with active and errors set', () => {
     ensure.equal(select.thumbnails(fixtureState1()), [
       {
         id: '1',
-        title: t('parameters'),
+        title: 'parameters',
         type: TYPE_QUIZ,
         active: false,
         hasErrors: false
       },
       {
         id: 'a',
-        title: `${tex('step')} 1`,
+        title: 'step 1',
         type: TYPE_STEP,
         active: false,
         hasErrors: true
       },
       {
         id: 'b',
-        title: `${tex('step')} 2`,
+        title: 'step 2',
         type: TYPE_STEP,
         active: true,
         hasErrors: false

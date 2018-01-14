@@ -2,7 +2,7 @@ import React from 'react'
 import freeze from 'deep-freeze'
 import merge from 'lodash/merge'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {actions} from './../../quiz/editor/actions'
 import {SCORE_SUM, SCORE_FIXED} from './../../quiz/enums'
 import {lastId, lastIds} from './../../utils/utils'
@@ -412,8 +412,6 @@ describe('Choice decorator', () => {
 })
 
 describe('Choice validator', () => {
-  before(mockTranslator)
-
   const validate = definition.editor.validate
 
   it('checks answer data are not empty', () => {
@@ -610,28 +608,35 @@ describe('<Choice/>', () => {
   afterEach(spyConsole.restore)
 
   it('has required props', () => {
-    shallow(<Choice item={{score: {}}}/>)
+    shallow(
+      React.createElement(Choice, {
+        item: {
+          score: {}
+        }
+      })
+    )
     ensure.missingProps('Choice', ['item.id', 'validating', 'onChange'])
   })
 
   it('has typed props', () => {
     shallow(
-      <Choice
-        item={{
+      React.createElement(Choice, {
+        item: {
           id: [],
           score: {}
-        }}
-        validating={123}
-        onChange={false}
-      />
+        },
+        validating: 123,
+        onChange: false
+      })
     )
+
     ensure.invalidProps('Choice', ['item.id', 'validating', 'onChange'])
   })
 
   it('renders a list of choices', () => {
     mount(
-      <Choice
-        item={{
+      React.createElement(Choice, {
+        item: {
           id: '1',
           content: 'Question?',
           random: true,
@@ -661,11 +666,12 @@ describe('<Choice/>', () => {
             success: 1,
             failure: 0
           }
-        }}
-        validating={false}
-        onChange={() => {}}
-      />
+        },
+        validating: false,
+        onChange: () => {}
+      })
     )
+
     ensure.propTypesOk()
   })
 })

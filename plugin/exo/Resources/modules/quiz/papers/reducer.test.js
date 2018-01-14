@@ -1,12 +1,10 @@
 import freeze from 'deep-freeze'
 
-import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {ensure} from '#/main/core/scaffolding/tests'
 import {reducePapers} from './reducer'
 import {PAPERS_INIT, PAPER_CURRENT} from './actions'
 
 describe('Papers reducer', () => {
-  before(mockTranslator)
-
   it('returns an empty papers list by default', () => {
     const papers = reducePapers(undefined, {})
     ensure.equal(papers, {

@@ -1,6 +1,6 @@
 import React from 'react'
 import {mount} from 'enzyme'
-import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {MODE_RECT, MODE_CIRCLE} from './../enums'
 import {ModeSelector} from './mode-selector.jsx'
 

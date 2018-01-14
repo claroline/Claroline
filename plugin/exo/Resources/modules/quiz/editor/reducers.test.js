@@ -1,6 +1,6 @@
 import freeze from 'deep-freeze'
 import merge from 'lodash/merge'
-import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {ensure} from '#/main/core/scaffolding/tests'
 import {lastId} from './../../utils/utils'
 import {reducers} from './reducers'
 import {registerItemType, resetTypes} from './../../items/item-types'
@@ -12,14 +12,13 @@ import {
   actions
 } from './actions'
 import {
+  QUIZ_PICKING_DEFAULT,
   TYPE_QUIZ,
   TYPE_STEP,
   SCORE_SUM
 } from './../enums'
 
 describe('Quiz reducer', () => {
-  before(mockTranslator)
-
   it('returns a new quiz by default', () => {
     const quiz = reducers.quiz(undefined, {})
     ensure.equal(typeof quiz.id, 'string', 'Quiz must have an id')
@@ -33,6 +32,9 @@ describe('Quiz reducer', () => {
       parameters: {
         type: 'formative',
         showMetadata: true
+      },
+      picking: {
+        type: QUIZ_PICKING_DEFAULT
       }
     })
     const newState = reducers.quiz(quiz, actions.updateQuiz('parameters.type', 'summative'))
@@ -42,6 +44,9 @@ describe('Quiz reducer', () => {
       parameters: {
         type: 'summative',
         showMetadata: true
+      },
+      picking: {
+        type: QUIZ_PICKING_DEFAULT
       }
     })
   })
@@ -66,8 +71,6 @@ describe('Quiz reducer', () => {
 })
 
 describe('Step reducer', () => {
-  before(mockTranslator)
-
   it('returns an empty steps object by default', () => {
     ensure.equal({}, reducers.steps(undefined, {}))
   })
@@ -169,7 +172,6 @@ describe('Step reducer', () => {
 })
 
 describe('Items reducer', () => {
-  before(mockTranslator)
   afterEach(resetTypes)
 
   it('returns an empty object by default', () => {
@@ -390,8 +392,6 @@ describe('Items reducer', () => {
 })
 
 describe('Current object reducer', () => {
-  before(mockTranslator)
-
   it('returns an empty object by default', () => {
     const current = reducers.currentObject(undefined, {})
     ensure.equal(current, {})
@@ -429,8 +429,6 @@ describe('Current object reducer', () => {
 })
 
 describe('Open panels reducer', () => {
-  before(mockTranslator)
-
   it('returns an empty structure for quiz and steps by default', () => {
     const current = reducers.openPanels(undefined, {})
     ensure.equal(current, {[TYPE_QUIZ]: false, [TYPE_STEP]: {}})

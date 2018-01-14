@@ -5,7 +5,7 @@ import diff from 'json-diff'
 import escapeRegExp from 'lodash/escapeRegExp'
 
 // deep equality test with a nice diff
-function assertEqual(actual, expected, message) {
+function equal(actual, expected, message) {
   try {
     assert.deepStrictEqual(actual, expected, message)
   } catch (e) {
@@ -16,8 +16,8 @@ function assertEqual(actual, expected, message) {
 }
 
 // assert no prop types errors where issued
-function assertPropTypesOk() {
-  assertEqual(
+function propTypesOk() {
+  equal(
     extractPropTypesWarnings(),
     [],
     'Failed asserting that no PropTypes warnings were issued'
@@ -25,8 +25,8 @@ function assertPropTypesOk() {
 }
 
 // assert prop types errors about missing props where issued
-function assertMissingProps(componentName, propNames) {
-  assertPropTypesErrors(
+function missingProps(componentName, propNames) {
+  propTypesErrors(
     propNames,
     'missing',
     `The prop .+ is marked as required in \`${componentName}(\-|\`)`,
@@ -35,8 +35,8 @@ function assertMissingProps(componentName, propNames) {
 }
 
 // assert prop types errors about invalid props where issued
-function assertInvalidProps(componentName, propNames) {
-  assertPropTypesErrors(
+function invalidProps(componentName, propNames) {
+  propTypesErrors(
     propNames,
     'invalid',
     `Invalid prop .+ supplied to \`${componentName}(\-|\`)`,
@@ -44,7 +44,7 @@ function assertInvalidProps(componentName, propNames) {
   )
 }
 
-function assertPropTypesErrors(propNames, criterion, componentRegex, makeErrorRegex) {
+function propTypesErrors(propNames, criterion, componentRegex, makeErrorRegex) {
   const warnings = extractPropTypesWarnings()
   const componentPropsWarnings = warnings.filter(warning => {
     return warning.match(new RegExp(componentRegex))
@@ -54,7 +54,7 @@ function assertPropTypesErrors(propNames, criterion, componentRegex, makeErrorRe
       return warning.match(makeErrorRegex(escapeRegExp(name)))
     })
   })
-  assertEqual([], notFound, `Failed asserting some props were ${criterion}`)
+  equal([], notFound, `Failed asserting some props were ${criterion}`)
   assert(
     componentPropsWarnings.length === propNames.length,
     `Failed asserting only specified props were ${criterion}:\n${componentPropsWarnings.join('\n')})`
@@ -72,9 +72,8 @@ function extractPropTypesWarnings() {
 }
 
 export {
-  assertEqual,
-  assertPropTypesOk,
-  assertMissingProps,
-  assertInvalidProps,
-  assertPropTypesErrors
+  equal,
+  propTypesOk,
+  missingProps,
+  invalidProps
 }

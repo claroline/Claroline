@@ -112,8 +112,9 @@ export class CategoryFormModal  extends Component {
             </label>
             <div className="col-md-9">
               <ColorPicker
-                color={this.state.color}
-                onPick={(e) => {this.updateCategoryProps('color', e.hex)}}
+                id="category-color"
+                value={this.state.color}
+                onChange={(e) => {this.updateCategoryProps('color', e.hex)}}
                 autoOpen={false}
               />
             </div>

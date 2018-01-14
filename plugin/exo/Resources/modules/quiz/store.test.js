@@ -1,9 +1,7 @@
-import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {ensure} from '#/main/core/scaffolding/tests'
 import {createStore} from './store'
 
 describe('createStore', () => {
-  beforeEach(mockTranslator)
-
   it('initializes the store with initial data and calls reducer', () => {
     const state = {
       resourceNode: {id: '1'},

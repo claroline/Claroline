@@ -10,7 +10,7 @@ const SubSet = props =>
   </div>
 
 SubSet.propTypes = {
-  children: T.any.isRequired
+  children: T.node.isRequired
 }
 
 export {

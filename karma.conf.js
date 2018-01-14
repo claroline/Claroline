@@ -4,7 +4,7 @@ const webpackConfig = require('./webpack.test')
 module.exports = config => {
   const base = {
     basePath: '',
-    frameworks: ['mocha'],
+    frameworks: ['mocha', 'sinon'],
     files: [
       {
         pattern: 'main/core/Resources/modules/scaffolding/shim/index.js',

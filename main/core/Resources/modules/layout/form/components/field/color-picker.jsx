@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
-import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-
-import {TwitterPicker} from 'react-color'
 import Overlay from 'react-bootstrap/lib/Overlay'
+import {TwitterPicker} from 'react-color'
+
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 class ColorPicker extends Component {
   constructor(props) {
@@ -32,25 +33,25 @@ class ColorPicker extends Component {
           <span
             className="color-indicator"
             style={{
-              backgroundColor: this.props.color
+              backgroundColor: this.props.value
             }}
           />
         </button>
 
         <Overlay
           show={this.state.open}
-          onHide={() => this.setState({ open: false })}
+          onHide={() => this.setState({open: false})}
           placement="bottom"
           container={this}
           target={this.refs.target}
           rootClose={true}
         >
           <TwitterPicker
-            color={this.props.color}
+            color={this.props.value}
             colors={this.props.colors}
             onChangeComplete={color => {
               this.setState({open: false})
-              this.props.onPick(color)
+              this.props.onChange(color)
             }}
           />
         </Overlay>
@@ -59,8 +60,13 @@ class ColorPicker extends Component {
   }
 }
 
-ColorPicker.defaultProps = {
-  forFontColor: false,
+implementPropTypes(ColorPicker, FormFieldTypes, {
+  // more precise value type
+  value: T.string,
+  colors: T.arrayOf(T.string),
+  forFontColor: T.bool,
+  autoOpen: T.bool
+}, {
   colors: [
     '#FF6900',
     '#FCB900',
@@ -73,18 +79,9 @@ ColorPicker.defaultProps = {
     '#FFFFFF',
     '#000000'
   ],
+  forFontColor: false,
   autoOpen: false
-}
-
-ColorPicker.propTypes = {
-  color: T.string.isRequired,
-  onPick: T.func.isRequired,
-  id: T.string,
-  colors: T.arrayOf(T.string),
-  forFontColor: T.bool,
-  className: T.string,
-  autoOpen: T.bool
-}
+})
 
 export {
   ColorPicker

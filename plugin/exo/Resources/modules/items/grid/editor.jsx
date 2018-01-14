@@ -74,16 +74,18 @@ class GridCell extends Component {
         <div className="cell-header">
           <div className="cell-actions">
             <ColorPicker
+              id={`cell-${this.props.cell.id}-font`}
               className="btn-link-default"
-              color={this.props.cell.color}
+              value={this.props.cell.color}
+              onChange={color => this.props.update('color', color.hex)}
               forFontColor={true}
-              onPick={color => this.props.update('color', color.hex)}
             />
 
             <ColorPicker
+              id={`cell-${this.props.cell.id}-bg`}
               className="btn-link-default"
-              color={this.props.cell.background}
-              onPick={color => this.props.update('background', color.hex)}
+              value={this.props.cell.background}
+              onChange={color => this.props.update('background', color.hex)}
             />
           </div>
 
@@ -526,9 +528,10 @@ const Grid = props =>
       <div className="input-group">
         <span className="input-group-btn">
           <ColorPicker
+            id={`table-${props.item.id}-border-color`}
             className="btn-default"
-            color={props.item.border.color}
-            onPick={color => props.onChange(
+            value={props.item.border.color}
+            onChange={color => props.onChange(
               actions.updateProperty('borderColor', color.hex)
             )}
           />

@@ -2,7 +2,7 @@ import React from 'react'
 import freeze from 'deep-freeze'
 import merge from 'lodash/merge'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {lastId, lastIds} from './../../utils/utils'
 import {actions} from './../../quiz/editor/actions'
 import {actions as subActions} from './editor'
@@ -191,7 +191,6 @@ describe('Match reducer', () => {
 })
 
 describe('Match validator', () => {
-  before(mockTranslator)
   const validate = definition.editor.validate
 
   it('checks match penalty validity', () => {
@@ -295,7 +294,6 @@ describe('<Match />', () => {
 
   const Match = definition.editor.component
 
-  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     renew(Match, 'Match')

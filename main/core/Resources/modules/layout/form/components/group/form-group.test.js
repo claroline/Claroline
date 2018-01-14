@@ -1,84 +1,92 @@
 import React from 'react'
-import {shallow, mount} from 'enzyme'
 
-import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+import {
+  ensure,
+  describeComponent,
+  mountComponent,
+  shallowComponent
+} from '#/main/core/scaffolding/tests'
+
 import {FormGroup} from './form-group.jsx'
 
-describe('<FormGroup/>', () => {
-  beforeEach(() => {
-    spyConsole.watch()
-    renew(FormGroup, 'FormGroup')
-  })
-  afterEach(spyConsole.restore)
+describeComponent('FormGroup', FormGroup,
+  // required props
+  [
+    'id',
+    'label',
+    'children'
+  ],
+  // invalid props
+  {
+    id: true,
+    label: 123,
+    warnOnly: '456',
+    children: {
+      toto: true
+    }
+  },
+  // valid props
+  {
+    id: 'ID',
+    label: 'LABEL',
+    children: React.createElement('span', {children: 'CHILD'})
+  },
+  // custom tests
+  () => {
+    it('renders a label and a given field', () => {
+      const group = shallowComponent(FormGroup, 'FormGroup', {
+        id: 'ID',
+        label: 'LABEL',
+        children: React.createElement('span', {children: 'CHILD'})
+      })
 
-  it('has required props', () => {
-    shallow(
-      React.createElement(FormGroup)
-    )
+      // check propTypes
+      ensure.propTypesOk()
 
-    ensure.missingProps('FormGroup', [
-      'id',
-      'label',
-      'children'
-    ])
-  })
+      // search form group container
+      ensure.equal(group.name(), 'div')
+      ensure.equal(group.hasClass('form-group'), true)
+      ensure.equal(group.children().length, 2)
 
-  it('has typed props', () => {
-    shallow(
-      React.createElement(FormGroup, {
-        id: true,
-        label: 123,
-        warnOnly: '456'
-      }, {toto: true})
-    )
+      // search for group label
+      const label = group.childAt(0)
+      ensure.equal(label.name(), 'label')
+      ensure.equal(label.hasClass('control-label'), true)
+      ensure.equal(label.props().htmlFor, 'ID')
 
-    ensure.invalidProps('FormGroup', [
-      'id',
-      'label',
-      'warnOnly',
-      'children'
-    ])
-  })
+      // search for group content
+      const child = group.childAt(1)
+      ensure.equal(child.text(), 'CHILD')
+    })
 
-  it('renders a label and a given field', () => {
-    const group = shallow(
-      <FormGroup id='ID' label='LABEL' warnOnly={false}>
-        <input id='ID' name='NAME' type='text' value='VALUE'/>
-      </FormGroup>
-    )
-    ensure.propTypesOk()
-    ensure.equal(group.name(), 'div')
-    ensure.equal(group.hasClass('form-group'), true)
-    ensure.equal(group.children().length, 2)
+    it('displays an help text if any', () => {
+      const group = mountComponent(FormGroup, 'FormGroup', {
+        id: 'ID',
+        label: 'LABEL',
+        help: 'HELP',
+        children: React.createElement('span', {children: 'CHILD'})
+      })
 
-    const label = group.childAt(0)
-    ensure.equal(label.name(), 'label')
-    ensure.equal(label.hasClass('control-label'), true)
-    ensure.equal(label.props().htmlFor, 'ID')
+      // check propTypes
+      ensure.propTypesOk()
 
-    const input = group.childAt(1)
-    ensure.equal(input.name(), 'input')
-    ensure.equal(input.props().name, 'NAME')
-  })
+      // search for help
+      ensure.equal(group.find('.help-block').text(), 'HELP')
+    })
 
-  it('displays an help text if any', () => {
-    const group = mount(
-      <FormGroup id='ID' label='LABEL' help='HELP'>
-        <input id='ID' name='NAME' type='text' value='VALUE' />
-      </FormGroup>
-    )
-    ensure.propTypesOk()
-    ensure.equal(group.find('.help-block').text(), 'HELP')
-  })
+    it('displays an error if any', () => {
+      const group = mountComponent(FormGroup, 'FormGroup', {
+        id: 'ID',
+        label: 'LABEL',
+        error: 'ERROR',
+        children: React.createElement('span', {children: 'CHILD'})
+      })
 
-  it('displays an error if any', () => {
-    const group = mount(
-      <FormGroup id='ID' label='LABEL' error='ERROR' warnOnly={false}>
-        <input id='ID' name='NAME' type='text' value='VALUE'/>
-      </FormGroup>
-    )
+      // check propTypes
+      ensure.propTypesOk()
 
-    ensure.propTypesOk()
-    ensure.equal(group.find('.help-block').text(), 'ERROR')
-  })
-})
+      // search for error
+      ensure.equal(group.find('.error-block').text(), 'ERROR')
+    })
+  }
+)

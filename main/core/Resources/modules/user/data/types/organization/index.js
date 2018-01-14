@@ -11,9 +11,7 @@ const organizationDefinition = {
     label: t('organization'),
     description: t('organization_desc')
   },
-  parse: (display) => display,
   render: (raw) => raw ? raw.name : null,
-  validate: () => undefined,
   components: {
     form: OrganizationGroup
   }

@@ -5,16 +5,13 @@ import {
   spyConsole,
   renew,
   ensure,
-  mockTranslator,
-  mockTinymce
+  mockGlobals
 } from '#/main/core/scaffolding/tests'
 import {Textarea} from './textarea.jsx'
 
 describe('<Textarea/>', () => {
-  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
-    mockTinymce()
     renew(Textarea, 'Textarea')
   })
   afterEach(spyConsole.restore)
@@ -23,18 +20,27 @@ describe('<Textarea/>', () => {
     shallow(
       React.createElement(Textarea)
     )
-    ensure.missingProps('Textarea', ['id', 'value', 'onChange'])
+
+    ensure.missingProps('Textarea', [
+      'id',
+      'onChange'
+    ])
   })
 
   it('has typed props', () => {
     shallow(
       React.createElement(Textarea, {
         id: true,
-        content: [],
+        value: [],
         onChange: 'foo'
       })
     )
-    ensure.invalidProps('Textarea', ['id', 'value', 'onChange'])
+
+    ensure.invalidProps('Textarea', [
+      'id',
+      'value',
+      'onChange'
+    ])
   })
 
   it('renders an editable div by default', () => {
@@ -45,6 +51,7 @@ describe('<Textarea/>', () => {
         onChange: () => {}
       })
     )
+
     ensure.propTypesOk()
     const textBox = area.find('div[role="textbox"]#ID')
     ensure.equal(textBox.length, 1)
@@ -59,6 +66,7 @@ describe('<Textarea/>', () => {
         onChange: () => {}
       })
     )
+
     ensure.propTypesOk()
 
     const toggle = area.find('span[role="button"]')
