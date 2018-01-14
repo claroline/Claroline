@@ -406,15 +406,14 @@ const Grid = props =>
     <div className="form-group">
       <label htmlFor="grid-score-mode">{tex('grid_score_mode_label')}</label>
       <Radios
-        id="grid-score-mode"
-        groupName="scoreMode"
+        id="scoreMode"
         options={[
           {value: SUM_CELL, label:tex('grid_score_sum_cell')},
           {value: SUM_COL, label:tex('grid_score_sum_col')},
           {value: SUM_ROW, label:tex('grid_score_sum_row')},
           {value: SCORE_FIXED, label:tex('fixed_score')}
         ]}
-        checkedValue={props.item.score.type === SCORE_FIXED ? SCORE_FIXED : props.item.sumMode}
+        value={props.item.score.type === SCORE_FIXED ? SCORE_FIXED : props.item.sumMode}
         onChange={value => props.onChange(
           actions.updateProperty('sumMode', value)
         )}

@@ -9,7 +9,7 @@ import {CountryGroup} from '#/main/core/layout/form/components/group/country-gro
 import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
 import {CascadeSelectGroup} from '#/main/core/layout/form/components/group/cascade-select-group.jsx'
 import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
-import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'
+import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'
 import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'
 import {NumberGroup} from '#/main/core/layout/form/components/group/number-group.jsx'
 import {EmailGroup} from '#/main/core/layout/form/components/group/email-group.jsx'
@@ -62,10 +62,9 @@ export const FormField = props => {
       return (props.noLabel ?
         <div className={classes({'has-error': props.error})}>
           <Radios
-            groupName={props.controlId}
-            inline={true}
+            id={props.controlId}
             options={props.choices || []}
-            checkedValue={props.value || ''}
+            value={props.value || ''}
             disabled={props.disabled}
             onChange={value => props.onChange(value)}
           />
@@ -73,11 +72,11 @@ export const FormField = props => {
             <ErrorBlock text={props.error}/>
           }
         </div> :
-        <RadioGroup
+        <RadiosGroup
           id={props.controlId}
           label={props.label}
           options={props.choices || []}
-          checkedValue={props.value || ''}
+          value={props.value || ''}
           disabled={props.disabled}
           error={props.error}
           onChange={value => props.onChange(value)}
@@ -147,48 +146,24 @@ export const FormField = props => {
         />
       )
     case 'number':
-      return (props.noLabel ?
-        <div className={classes({'has-error': props.error})}>
-          <input
-            id={props.controlId}
-            type="number"
-            className="form-control"
-            value={props.value === null || isNaN(props.value) ? undefined : props.value}
-            disabled={props.disabled}
-            onChange={(e) => props.onChange(e.target.value)}
-          />
-          {props.error &&
-            <ErrorBlock text={props.error}/>
-          }
-        </div> :
+      return (
         <NumberGroup
           id={props.controlId}
           label={props.label}
-          value={props.value === null ? undefined : props.value}
+          hideLabel={props.noLabel}
+          value={props.value}
           disabled={props.disabled}
           error={props.error}
           onChange={props.onChange}
         />
       )
     case 'email':
-      return (props.noLabel ?
-        <div className={classes({'has-error': props.error})}>
-          <input
-            id={props.controlId}
-            type="email"
-            className="form-control"
-            value={props.value || ''}
-            disabled={props.disabled}
-            onChange={(e) => props.onChange(e.target.value)}
-          />
-          {props.error &&
-            <ErrorBlock text={props.error}/>
-          }
-        </div> :
+      return (
         <EmailGroup
-          controlId={props.controlId}
+          id={props.controlId}
           label={props.label}
-          value={props.value || undefined}
+          hideLabel={props.noLabel}
+          value={props.value}
           disabled={props.disabled}
           error={props.error}
           onChange={props.onChange}

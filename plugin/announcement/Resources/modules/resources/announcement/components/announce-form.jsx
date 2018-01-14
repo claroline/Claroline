@@ -13,7 +13,7 @@ import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.j
 import {DateGroup}  from '#/main/core/layout/form/components/group/date-group.jsx'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group.jsx'
-import {RadioGroup}  from '#/main/core/layout/form/components/group/radio-group.jsx'
+import {RadiosGroup}  from '#/main/core/layout/form/components/group/radios-group.jsx'
 import {CheckboxesGroup}  from '#/main/core/layout/form/components/group/checkboxes-group.jsx'
 
 import {Announcement as AnnouncementTypes} from './../prop-types'
@@ -106,7 +106,7 @@ const AnnounceForm = props =>
         icon="fa fa-fw fa-paper-plane-o"
         title={trans('announcement_sending', {}, 'announcement')}
       >
-        <RadioGroup
+        <RadiosGroup
           id="announcement-notify-users"
           label={trans('announcement_notify_users', {}, 'announcement')}
           options={[
@@ -114,8 +114,7 @@ const AnnounceForm = props =>
             {value: 1, label: trans('send_directly', {}, 'announcement')},
             {value: 2, label: trans('send_at_predefined_date', {}, 'announcement')}
           ]}
-          checkedValue={props.announcement.meta.notifyUsers}
-          inline={true}
+          value={props.announcement.meta.notifyUsers}
           onChange={value => {
             props.updateProperty('meta.notifyUsers', value)
 

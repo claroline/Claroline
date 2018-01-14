@@ -545,17 +545,16 @@ export class Selection extends Component {
           </div>
         }
         <Radios
-          groupName="mode-group"
+          id="mode-group"
           options={[
             {value: 'select', label: tex('select')},
             {value: 'find', label: tex('find')},
             {value: 'highlight', label: tex('highlight')}
           ]}
-          checkedValue={this.props.item.mode}
-          inline={true}
+          value={this.props.item.mode}
           onChange={value => this.props.onChange(actions.updateQuestion(value, 'mode', {}))}
-        >
-        </Radios>
+        />
+
         {this.props.item.mode === 'find' &&
           <FormGroup
             id={`item-${this.props.item.id}-tries`}

@@ -9,7 +9,7 @@ import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'
+import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {QCM_MULTIPLE, QCM_SINGLE, actions} from './editor'
 
@@ -171,7 +171,7 @@ ChoiceItems.propTypes = {
 
 const Choice = props =>
   <fieldset className="choice-editor">
-    <RadioGroup
+    <RadiosGroup
       id={`item-${props.item.id}-multiple`}
       label={tex('choice_multiple')}
       hideLabel={true}
@@ -179,8 +179,7 @@ const Choice = props =>
         {value: QCM_SINGLE, label: tex('qcm_single_answer')},
         {value: QCM_MULTIPLE, label: tex('qcm_multiple_answers')}
       ]}
-      checkedValue={props.item.multiple ? QCM_MULTIPLE : QCM_SINGLE}
-      inline={true}
+      value={props.item.multiple ? QCM_MULTIPLE : QCM_SINGLE}
       onChange={value => props.onChange(
         actions.updateProperty('multiple', value === QCM_MULTIPLE)
       )}
@@ -235,7 +234,7 @@ const Choice = props =>
 
     <hr className="item-content-separator" />
 
-    <RadioGroup
+    <RadiosGroup
       id={`item-${props.item.id}-numbering`}
       label={tex('choice_numbering')}
       options={[
@@ -243,7 +242,7 @@ const Choice = props =>
         {value: NUMBERING_NUMERIC, label: tex('quiz_numbering_numeric')},
         {value: NUMBERING_LITTERAL, label: tex('quiz_numbering_litteral')}
       ]}
-      checkedValue={props.item.numbering ? props.item.numbering : NUMBERING_NONE}
+      value={props.item.numbering ? props.item.numbering : NUMBERING_NONE}
       onChange={numbering => props.onChange(actions.updateProperty('numbering', numbering))}
     />
 

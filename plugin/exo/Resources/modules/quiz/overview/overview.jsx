@@ -12,8 +12,6 @@ import {
   SHOW_CORRECTION_AT_DATE
 } from './../enums'
 
-
-
 const Parameter = props =>
   <tr>
     <th className="text-right col-md-4" scope="row">

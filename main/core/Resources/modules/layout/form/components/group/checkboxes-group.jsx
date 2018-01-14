@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
-import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
+import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {Checkboxes} from '#/main/core/layout/form/components/field/checkboxes.jsx'
 

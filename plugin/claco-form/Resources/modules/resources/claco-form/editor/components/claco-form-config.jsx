@@ -11,7 +11,7 @@ import {trans, t} from '#/main/core/translation'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
 import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
-import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'
+import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'
 import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 
 import {select as resourceSelect} from '#/main/core/resource/selectors'
@@ -79,7 +79,7 @@ General.propTypes = {
 
 const Display = props =>
   <fieldset>
-    <RadioGroup
+    <RadiosGroup
       id="params-default-home"
       label={trans('label_default_home', {}, 'clacoform')}
       options={[
@@ -88,10 +88,10 @@ const Display = props =>
         {value: 'search', label: trans('search_mode', {}, 'clacoform')},
         {value: 'add', label: trans('entry_addition', {}, 'clacoform')}
       ]}
-      checkedValue={props.params.default_home}
+      value={props.params.default_home}
       onChange={value => props.updateParameters('default_home', value)}
     />
-    <RadioGroup
+    <RadiosGroup
       id="params-display-nb-entries"
       label={trans('label_display_nb_entries', {}, 'clacoform')}
       options={[
@@ -99,10 +99,10 @@ const Display = props =>
         {value: 'published', label: trans('choice_entry_published', {}, 'clacoform')},
         {value: 'none', label: t('no')}
       ]}
-      checkedValue={props.params.display_nb_entries}
+      value={props.params.display_nb_entries}
       onChange={value => props.updateParameters('display_nb_entries', value)}
     />
-    <RadioGroup
+    <RadiosGroup
       id="params-menu-position"
       label={trans('label_menu_position', {}, 'clacoform')}
       options={[
@@ -110,7 +110,7 @@ const Display = props =>
         {value: 'up', label: trans('choice_menu_position_up', {}, 'clacoform')},
         {value: 'both', label: trans('both', {}, 'clacoform')}
       ]}
-      checkedValue={props.params.menu_position}
+      value={props.params.menu_position}
       onChange={value => props.updateParameters('menu_position', value)}
     />
   </fieldset>
@@ -241,7 +241,7 @@ const List = props =>
         </select>
       </div>
     </div>
-    <RadioGroup
+    <RadiosGroup
       id="params-default-display-mode"
       label={trans('default_display_mode', {}, 'clacoform')}
       options={
@@ -252,7 +252,7 @@ const List = props =>
           }
         })
       }
-      checkedValue={props.params.default_display_mode || listConstants.DISPLAY_TABLE}
+      value={props.params.default_display_mode || listConstants.DISPLAY_TABLE}
       onChange={value => props.updateParameters('default_display_mode', value)}
     />
     <SelectGroup
@@ -300,7 +300,7 @@ List.propTypes = {
 
 const Metadata = props =>
   <fieldset>
-    <RadioGroup
+    <RadiosGroup
       id="params-display-metadata"
       label={trans('label_display_metadata', {}, 'clacoform')}
       options={[
@@ -308,7 +308,7 @@ const Metadata = props =>
         {value: 'none', label: t('no')},
         {value: 'manager', label: trans('choice_manager_only', {}, 'clacoform')}
       ]}
-      checkedValue={props.params.display_metadata}
+      value={props.params.display_metadata}
       onChange={value => props.updateParameters('display_metadata', value)}
     />
   </fieldset>
@@ -322,7 +322,7 @@ Metadata.propTypes = {
 
 const Locked = props =>
   <fieldset>
-    <RadioGroup
+    <RadiosGroup
       id="params-locked-fields-for"
       label={trans('lock_fields', {}, 'clacoform')}
       options={[
@@ -330,7 +330,7 @@ const Locked = props =>
         {value: 'manager', label: trans('choice_manager_only', {}, 'clacoform')},
         {value: 'all', label: trans('both', {}, 'clacoform')}
       ]}
-      checkedValue={props.params.locked_fields_for}
+      value={props.params.locked_fields_for}
       onChange={value => props.updateParameters('locked_fields_for', value)}
     />
   </fieldset>
@@ -379,7 +379,7 @@ const Comments = props =>
       />
     }
 
-    <RadioGroup
+    <RadiosGroup
       id="params-moderate-comments"
       label={trans('label_moderate_comments', {}, 'clacoform')}
       options={[
@@ -387,7 +387,7 @@ const Comments = props =>
         {value: 'none', label: t('no')},
         {value: 'anonymous', label: trans('choice_anonymous_comments_only', {}, 'clacoform')}
       ]}
-      checkedValue={props.params.moderate_comments}
+      value={props.params.moderate_comments}
       onChange={value => props.updateParameters('moderate_comments', value)}
     />
     <CheckGroup

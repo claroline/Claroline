@@ -1,6 +1,11 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+
+/**
+ * Renders a list of radio inputs.
+ */
 const Radios = props =>
   <fieldset>
     {props.options.map(option =>
@@ -11,9 +16,9 @@ const Radios = props =>
         <label>
           <input
             type="radio"
-            name={props.groupName}
+            name={props.id}
             value={option.value}
-            checked={option.value === props.checkedValue}
+            checked={option.value === props.value}
             disabled={props.disabled}
             onChange={() => props.onChange(option.value)}
           />
@@ -24,17 +29,17 @@ const Radios = props =>
     )}
   </fieldset>
 
-Radios.propTypes = {
-  groupName: T.string.isRequired,
-  options: T.arrayOf(T.shape({
-    value: T.oneOfType([T.string, T.number]).isRequired,
+implementPropTypes(Radios, FormFieldTypes, {
+  value: T.oneOfType([T.string, T.number]),
+  options: T.arrayOf(T.shape({ // todo use same format than enum
+    value: T.string.isRequired,
     label: T.string.isRequired
   })).isRequired,
-  checkedValue: T.oneOfType([T.string, T.number]).isRequired,
-  inline: T.bool,
-  disabled: T.bool,
-  onChange: T.func.isRequired
-}
+  inline: T.bool
+}, {
+  value: '',
+  inline: true
+})
 
 export {
   Radios

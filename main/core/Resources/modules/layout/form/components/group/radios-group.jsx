@@ -3,36 +3,38 @@ import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-t
 
 import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {Text} from '#/main/core/layout/form/components/field/text.jsx'
+import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
 
-const TextGroup = props =>
+/**
+ * @todo : radios should switch to vertical on xs (maybe sm) screen (MUST be done in less).
+ *
+ * @param props
+ * @constructor
+ */
+const RadiosGroup = props =>
   <FormGroup {...props}>
-    <Text
+    <Radios
       id={props.id}
+      inline={props.inline}
+      options={props.options}
       value={props.value}
       disabled={props.disabled}
       onChange={props.onChange}
-      long={props.long}
-      minRows={props.minRows}
-      minLength={props.minLength}
-      maxLength={props.maxLength}
     />
   </FormGroup>
 
-implementPropTypes(TextGroup, FormGroupWithFieldTypes, {
+implementPropTypes(RadiosGroup, FormGroupWithFieldTypes, {
   // more precise value type
-  value: T.string,
+  value: T.oneOfType([T.string, T.number]),
+
   // custom props
-  long: T.bool,
-  minRows: T.number,
-  minLength: T.number, // todo implement
-  maxLength: T.number // todo implement
+  options: T.array.isRequired,
+  inline: T.bool
 }, {
-  value: '',
-  long: false,
-  minRows: 2
+  value: [],
+  inline: true
 })
 
 export {
-  TextGroup
+  RadiosGroup
 }
