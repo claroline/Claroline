@@ -119,16 +119,16 @@
       })();
     </script>
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_portfolio' }) }}"></script>
-    <script type="text/javascript" src='{{ asset('packages/jqPlot/src/jquery.jqplot.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('packages/jqplot/src/jquery.jqplot.js') }}'></script>
 
     {% javascripts debug=false filter='jsmin' output='js/portfolio/index/jqplotPlugins.js'
     'bundles/clarolinecore/js/jqplot/jqplot.colors.js'
-    'packages/jqPlot/src/plugins/jqplot.cursor.js'
-    'packages/jqPlot/src/plugins/jqplot.highlighter.js'
-    'packages/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
-    'packages/jqPlot/src/plugins/jqplot.dateAxisRenderer.js'
-    'packages/jqPlot/src/plugins/jqplot.canvasAxisTickRenderer.js'
-    'packages/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+    'packages/jqplot/src/plugins/jqplot.cursor.js'
+    'packages/jqplot/src/plugins/jqplot.highlighter.js'
+    'packages/jqplot/src/plugins/jqplot.canvasTextRenderer.js'
+    'packages/jqplot/src/plugins/jqplot.dateAxisRenderer.js'
+    'packages/jqplot/src/plugins/jqplot.canvasAxisTickRenderer.js'
+    'packages/jqplot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
     %}
     <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}

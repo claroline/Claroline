@@ -81,10 +81,10 @@
 
 {# TODO: remove this when custom js builds are available #}
 {% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
-    'packages/jquery-ui/ui/core.js'
-    'packages/jquery-ui/ui/widget.js'
-    'packages/jquery-ui/ui/mouse.js'
-    'packages/jquery-ui/ui/sortable.js'
+    'packages/components-jqueryui/ui/core.js'
+    'packages/components-jqueryui/ui/widget.js'
+    'packages/components-jqueryui/ui/widgets/mouse.js'
+    'packages/components-jqueryui/ui/widgets/sortable.js'
 %}
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}

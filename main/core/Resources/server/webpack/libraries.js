@@ -21,7 +21,7 @@ module.exports = {
     'angular-ui-bootstrap',
     'angular-bootstrap-colorpicker',
     'angular-breadcrumb',
-    'angular-daterangepicker',
+    'angular-daterangepicker/js/angular-daterangepicker',
     'angular-datetime-input',
     'angular-loading-bar',
     'angular-resource',
@@ -33,9 +33,9 @@ module.exports = {
     'angular-ui-router',
     'ui-select',
     'angular-ui-tinymce',
-    'angular-ui-translation',
+    'angular-ui-translation/angular-translation',
     'angular-ui-tree',
-    'angular-ui-pageslide',
+    'angular-ui-pageslide/angular-ui-pageslide',
     'ng-file-upload'
   ]
 }
