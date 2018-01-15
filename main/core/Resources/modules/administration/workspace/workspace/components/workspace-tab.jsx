@@ -2,46 +2,52 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {Routes} from '#/main/core/router'
-import {Workspace,  WorkspaceActions}  from '#/main/core/administration/workspace/workspace/components/workspace.jsx'
-import {Workspaces, WorkspacesActions} from '#/main/core/administration/workspace/workspace/components/workspaces.jsx'
+import {t} from '#/main/core/translation'
+import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
 
-import {actions} from '#/main/core/administration/workspace/workspace/actions'
+import {Workspace}  from '#/main/core/administration/workspace/workspace/components/workspace.jsx'
+import {Workspaces} from '#/main/core/administration/workspace/workspace/components/workspaces.jsx'
+import {actions}    from '#/main/core/administration/workspace/workspace/actions'
 
-const WorkspaceTabActions = () =>
-  <Routes
-    routes={[
-      {
-        path: '/workspaces',
-        exact: true,
-        component: WorkspacesActions
-      }, {
-        path: '/workspaces/add',
-        exact: true,
-        component: WorkspaceActions
-      }, {
-        path: '/workspaces/:id',
-        component: WorkspaceActions
+const WorkspaceTabActionsComponent = props =>
+  <PageActions>
+    <FormPageActionsContainer
+      formName="workspaces.current"
+      target={(workspace, isNew) => isNew ?
+        ['apiv2_workspace_create'] :
+        ['apiv2_workspace_update', {id: workspace.id}]
       }
-    ]}
-  />
+      opened={!!matchPath(props.location.pathname, {path: '/workspaces/form'})}
+      open={{
+        icon: 'fa fa-plus',
+        label: t('add_workspace'),
+        action: '#/workspaces/form'
+      }}
+      cancel={{
+        action: () => navigate('/workspaces')
+      }}
+    />
+  </PageActions>
+
+WorkspaceTabActionsComponent.propTypes = {
+  location: T.shape({
+    pathname: T.string
+  }).isRequired
+}
+
+const WorkspaceTabActions = withRouter(WorkspaceTabActionsComponent)
 
 const WorkspaceTabComponent = props =>
   <Routes
     routes={[
       {
-        path: '/workspaces',
+        path: '/',
         exact: true,
         component: Workspaces
       }, {
-        path: '/workspaces/add',
-        exact: true,
+        path: '/workspaces/form/:id?',
         component: Workspace,
-        onEnter: () => props.openForm()
-      }, {
-        path: '/workspaces/:id',
-        component: Workspace,
-        onEnter: (params) => props.openForm(params.id)
+        onEnter: (params) => props.openForm(params.id || null)
       }
     ]}
   />

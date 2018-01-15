@@ -2,21 +2,8 @@ import React from 'react'
 
 import {t} from '#/main/core/translation'
 
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
 import {DataTreeContainer} from '#/main/core/data/list/containers/data-tree.jsx'
-
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'
-
-const OrganizationsActions = () =>
-  <PageActions>
-    <PageAction
-      id="organization-add"
-      icon="fa fa-plus"
-      title={t('add_organization')}
-      action="#/organizations/add"
-      primary={true}
-    />
-  </PageActions>
 
 const Organizations = () =>
   <DataTreeContainer
@@ -45,6 +32,5 @@ const Organizations = () =>
   />
 
 export {
-  OrganizationsActions,
   Organizations
 }

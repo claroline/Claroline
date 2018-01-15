@@ -4,8 +4,6 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
-import {makeSaveAction} from '#/main/core/data/form/containers/form-save.jsx'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {select as formSelect} from '#/main/core/data/form/selectors'
@@ -17,23 +15,6 @@ import {actions} from '#/main/core/administration/user/organization/actions'
 import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
 import {WorkspaceList} from '#/main/core/administration/workspace/workspace/components/workspace-list.jsx'
-
-const OrganizationSaveAction = makeSaveAction('organizations.current', formData => ({
-  create: ['apiv2_organization_create'],
-  update: ['apiv2_organization_update', {id: formData.id}]
-}))(PageAction)
-
-const OrganizationActions = () =>
-  <PageActions>
-    <OrganizationSaveAction />
-
-    <PageAction
-      id="organization-list"
-      icon="fa fa-list"
-      title={t('back_to_list')}
-      action="#/organizations"
-    />
-  </PageActions>
 
 const OrganizationForm = props =>
   <FormContainer
@@ -266,6 +247,5 @@ const Organization = connect(
 )(OrganizationForm)
 
 export {
-  OrganizationActions,
   Organization
 }

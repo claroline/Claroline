@@ -5,7 +5,6 @@ import {connect} from 'react-redux'
 import {t, Translator} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
 
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import Configuration from '#/main/core/library/Configuration/Configuration'
 
@@ -15,17 +14,6 @@ import {MODAL_URL} from '#/main/core/layout/modal'
 
 import {actions} from '#/main/core/administration/user/user/actions'
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
-
-const UsersActions = () =>
-  <PageActions>
-    <PageAction
-      id="user-add"
-      icon="fa fa-plus"
-      title={t('add_user')}
-      action="#/users/add"
-      primary={true}
-    />
-  </PageActions>
 
 const UsersList = props =>
   <DataListContainer
@@ -51,7 +39,7 @@ const UsersList = props =>
         context: 'row',
         action: (rows) => props.updatePassword(rows[0]),
         dangerous: true
-      },{
+      }, {
         icon: 'fa fa-fw fa-line-chart',
         label: t('show_tracking'),
         action: (rows) => window.location = generateUrl('claro_user_tracking', {publicUrl: rows[0].meta.publicUrl}),
@@ -113,8 +101,9 @@ UsersList.propTypes = {
   deleteWorkspace: T.func.isRequired
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
+const Users = connect(
+  null,
+  dispatch => ({
     enable(user) {
       dispatch(actions.enable(user))
     },
@@ -134,12 +123,9 @@ function mapDispatchToProps(dispatch) {
         })
       )
     }
-  }
-}
-
-const Users = connect(null, mapDispatchToProps)(UsersList)
+  })
+)(UsersList)
 
 export {
-  UsersActions,
   Users
 }

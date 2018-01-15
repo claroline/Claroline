@@ -4,7 +4,7 @@ import {UserCard} from '#/main/core/administration/user/user/components/user-car
 
 const UserList = {
   open: {
-    action: (row) => `#/users/${row.id}`
+    action: (row) => `#/users/form/${row.id}`
   },
   definition: [
     {

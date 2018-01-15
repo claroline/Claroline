@@ -14,28 +14,21 @@ import {
 } from '#/main/core/layout/page'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
-const EditGroupActionsComponent = props => {
-  const isEditorOpened = !!matchPath(props.location.pathname, {
-    path: '/edit'
-  })
-
-  return (
-    <PageGroupActions>
-      <FormPageActionsContainer
-        formName="user"
-        opened={isEditorOpened}
-        target={(user) => ['apiv2_user_update', {id: user.id}]}
-        open={{
-          label: t('edit_profile'),
-          action: '#/edit'
-        }}
-        cancel={{
-          action: () => navigate('/show')
-        }}
-      />
-    </PageGroupActions>
-  )
-}
+const EditGroupActionsComponent = props =>
+  <PageGroupActions>
+    <FormPageActionsContainer
+      formName="user"
+      opened={!!matchPath(props.location.pathname, {path: '/edit'})}
+      target={(user) => ['apiv2_user_update', {id: user.id}]}
+      open={{
+        label: t('edit_profile'),
+        action: '#/edit'
+      }}
+      cancel={{
+        action: () => navigate('/show')
+      }}
+    />
+  </PageGroupActions>
 
 EditGroupActionsComponent.propTypes = {
   location: T.shape({
