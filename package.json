@@ -80,7 +80,10 @@
     "svg4everybody": "^2.1.2",
     "tinycolor2": "^1.4.1",
     "uuid": "^3.0.1",
-    "whatwg-fetch": "^2.0.1"
+    "whatwg-fetch": "^2.0.1",
+    "angular-gridster": "0.13.14",
+    "underscore": "1.8.3",
+    "fluidvids": "https://github.com/toddmotto/fluidvids/archive/v2.4.1.tar.gz"
   },
   "files": [
     "package.json"

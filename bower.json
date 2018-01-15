@@ -3,17 +3,14 @@
   "version": "1.0.0",
   "description": "core frontend dependencies",
   "dependencies": {
-    "angular-gridster": "0.13.5",
-    "select2": "3.5.4",
     "angular-ui-pageslide":"1.0.0",
     "angular-ui-translation": "1.0.1",
     "angular-ui-resource-picker": "1.0.0",
     "fluidvids": "2.4.1",
     "angular-daterangepicker": "0.2.2",
-    "underscore": "1.8.3",
     "font-awesome": "fontawesome#4.7.0",
     "tablesorter": "#774576308e",
-    "tag-it": "#6ccd2de95e"
+    "tag-it": "#6ccd2de95e",
   },
   "ignore": [
     "*",
