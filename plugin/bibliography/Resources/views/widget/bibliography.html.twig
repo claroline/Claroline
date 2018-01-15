@@ -1,16 +1,11 @@
-{% block stylesheets %}
-    {% stylesheets debug=false filter="less, cssmin"  output="css/icapbiliography/widget.css"
-    "@IcapBibliographyBundle/Resources/views/less/widget.less"
-    %}
-    <link rel="stylesheet" href="{{ asset_url }}" screen="media" />
-    {% endstylesheets %}
-{% endblock %}
-
 <ul>
     {% for bookReference in bookReferences %}
         <li>
             {{ bookReference.author }}.
-            <a href="{{ path('claro_resource_open', {'resourceType': 'icap_bibliography', 'node': bookReference.resourceNode.id}) }}">{{ bookReference.resourceNode.name }}</a>{% if bookReference.url %} [{{ 'available_on_line' | trans({ 'url': bookReference.url }, 'icap_bibliography') | raw }}] {% endif %}.
+            <a href="{{ path('claro_resource_open', {'resourceType': 'icap_bibliography', 'node': bookReference.resourceNode.id}) }}">
+                {{ bookReference.resourceNode.name }}
+            </a>
+            {% if bookReference.url %} [{{ 'available_on_line' | trans({ 'url': bookReference.url }, 'icap_bibliography') | raw }}] {% endif %}.
             {% if bookReference.publisher %}{{ bookReference.publisher }} ; {% endif %}
             {% if bookReference.publisher %}{{ bookReference.publicationYear }}.{% endif %}
         </li>

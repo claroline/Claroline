@@ -90,8 +90,8 @@ Resource.propTypes = {
   initFormDefaultRoles: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const AnnouncementResource = connect(
+  state => ({
     aggregateId: select.aggregateId(state),
     posts: select.posts(state),
     formPendingChanges: select.formHasPendingChanges(state),
@@ -100,11 +100,8 @@ function mapStateToProps(state) {
     formValid: select.formValid(state),
     formValidating: select.formValidating(state),
     roles: select.workspaceRoles(state)
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
+  }),
+  dispatch => ({
     openDetail(id) {
       dispatch(actions.openDetail(id))
     },
@@ -126,11 +123,9 @@ function mapDispatchToProps(dispatch) {
     initFormDefaultRoles(roleIds) {
       dispatch(actions.updateForm('roles', roleIds))
     }
-  }
-}
-
-const ConnectedAnnouncementResource = connect(mapStateToProps, mapDispatchToProps)(Resource)
+  })
+)(Resource)
 
 export {
-  ConnectedAnnouncementResource as AnnouncementResource
+  AnnouncementResource
 }

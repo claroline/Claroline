@@ -3,6 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 /*import {generateUrl} from '#/main/core/api/router'*/
+import {matchPath, withRouter} from '#/main/core/router'
 import {t_res} from '#/main/core/resource/translation'
 
 import {getSimpleAccessRule, hasCustomRules} from '#/main/core/resource/rights'
@@ -218,49 +219,67 @@ function getMoreActions(resourceNode, props) {
   </MenuItem>*/
 }
 
-const ManagementGroupActions = props =>
-  <PageGroupActions>
-    {(props.editor && !props.editor.opened && props.resourceNode.rights.current.edit) &&
-      <PageAction
-        id="resource-edit"
-        title={props.editor.label || t_res('edit')}
-        icon={props.editor.icon || 'fa fa-pencil'}
-        primary={true}
-        action={props.editor.open}
-      />
-    }
+const ManagementGroup = props => {
+  let editorOpened = false
+  let editorOpen
+  if (props.editor.path) {
+    // routed editor
+    editorOpened = !!matchPath(props.location.pathname, {path: props.editor.path})
+    editorOpen = '#'+props.editor.path
+  } else {
+    // for retro compatibility (all resource editor should be routed)
+    editorOpened = props.editor.opened
+    editorOpen = props.editor.open
+  }
 
-    {(props.editor && props.editor.opened && props.resourceNode.rights.current.edit) &&
-      <PageAction
-        id="resource-save"
-        title={t_res('save')}
-        icon="fa fa-floppy-o"
-        primary={true}
-        disabled={props.editor.save.disabled}
-        action={props.editor.save.action}
-      />
-    }
+  return (
+    <PageGroupActions>
+      {(props.editor && !editorOpened && props.resourceNode.rights.current.edit) &&
+        <PageAction
+          id="resource-edit"
+          title={props.editor.label || t_res('edit')}
+          icon={props.editor.icon || 'fa fa-pencil'}
+          primary={true}
+          action={editorOpen}
+        />
+      }
 
-    {props.resourceNode.rights.current.administrate &&
-      <PublishAction
-        published={props.resourceNode.meta.published}
-        togglePublication={() => props.togglePublication(props.resourceNode)}
-      />
-    }
+      {(props.editor && editorOpened && props.resourceNode.rights.current.edit) &&
+        <PageAction
+          id="resource-save"
+          title={t_res('save')}
+          icon="fa fa-floppy-o"
+          primary={true}
+          disabled={props.editor.save.disabled}
+          action={props.editor.save.action}
+        />
+      }
 
-    {props.resourceNode.rights.current.administrate &&
-      <ManageRightsAction
-        rights={getSimpleAccessRule(props.resourceNode.rights.all.permissions, props.resourceNode.workspace)}
-        customRules={hasCustomRules(props.resourceNode.rights.all.permissions, props.resourceNode.workspace)}
-        openRightsManagement={() => props.showModal(MODAL_RESOURCE_RIGHTS, {
-          resourceNode: props.resourceNode,
-          save: props.updateNode
-        })}
-      />
-    }
-  </PageGroupActions>
+      {props.resourceNode.rights.current.administrate &&
+        <PublishAction
+          published={props.resourceNode.meta.published}
+          togglePublication={() => props.togglePublication(props.resourceNode)}
+        />
+      }
 
-ManagementGroupActions.propTypes = {
+      {props.resourceNode.rights.current.administrate &&
+        <ManageRightsAction
+          rights={getSimpleAccessRule(props.resourceNode.rights.all.permissions, props.resourceNode.workspace)}
+          customRules={hasCustomRules(props.resourceNode.rights.all.permissions, props.resourceNode.workspace)}
+          openRightsManagement={() => props.showModal(MODAL_RESOURCE_RIGHTS, {
+            resourceNode: props.resourceNode,
+            save: props.updateNode
+          })}
+        />
+      }
+    </PageGroupActions>
+  )
+}
+
+ManagementGroup.propTypes = {
+  location: T.shape({
+    pathname: T.string
+  }).isRequired,
   resourceNode: T.shape({
     workspace: T.object,
     meta: T.shape({
@@ -285,7 +304,8 @@ ManagementGroupActions.propTypes = {
     icon: T.string,
     label: T.string,
     opened: T.bool,
-    open: T.oneOfType([T.func, T.string]).isRequired,
+    path: T.string,
+    open: T.oneOfType([T.func, T.string]),
     save: T.shape({
       disabled: T.bool.isRequired,
       action: T.oneOfType([T.string, T.func]).isRequired
@@ -295,6 +315,8 @@ ManagementGroupActions.propTypes = {
   updateNode: T.func.isRequired,
   showModal: T.func.isRequired
 }
+
+const ManagementGroupActions = withRouter(ManagementGroup)
 
 const CustomGroupActions = () =>
   <PageGroupActions>
@@ -377,7 +399,8 @@ ResourceActions.propTypes = {
     icon: T.string,
     label: T.string,
     opened: T.bool,
-    open: T.oneOfType([T.func, T.string]).isRequired,
+    path: T.string,
+    open: T.oneOfType([T.func, T.string]),
     save: T.shape({
       disabled: T.bool.isRequired,
       action: T.oneOfType([T.string, T.func]).isRequired
