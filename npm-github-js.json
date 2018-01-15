@@ -4,7 +4,7 @@
   "strophejs": "https://github.com/strophe/strophejs.git#v1.2.7",
   "strophejs-plugins": "https://github.com/strophe/strophejs-plugins.git#v0.0.6",
 
-  "jquery-tagcanvas": "https://github.com/goat1000/TagCanvas.git#ab3cb98be8753247d674a385a17c085a2dc950db",
+  "jquery-tagcanvas": "https://github.com/goat1000/TagCanvas.git#master",
   "jquery-option-tree": "https://github.com/jongilbraith/jquery-option-tree.git#6b7137ec6e",
   "tag-it": "https://github.com/aehlke/tag-it.git#6ccd2de95e",
 

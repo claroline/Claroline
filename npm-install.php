@@ -17,10 +17,11 @@ foreach ($data as $subfolder => $url) {
 function update($subfolder, $url, $nodeModulesDir)
 {
     $parts = explode('#', $url);
-    $nodeModulesDir.$subfolder;
+    $subfolder = $nodeModulesDir.$subfolder;
 
     //update
     if (realpath($subfolder)) {
+        echo "go to {$subfolder}";
         chdir($subfolder);
         exec('git pull');
 
