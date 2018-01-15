@@ -1,5 +1,5 @@
 import $ from 'jquery'
-import 'components-jqueryui/jquery-ui.min.js'
+import 'jquery-ui-dist/jquery-ui.min.js'
 import 'Select2'
 
 /* global ZenstruckFormHelper */

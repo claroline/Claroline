@@ -10,5 +10,7 @@
 
   "angular-ui-pageslide":"https://github.com/Elorfin/angular-ui-pageslide.git#1.0.0",
   "angular-ui-translation": "https://github.com/InnovaLangues/angular-ui-translation.git#master",
-  "angular-ui-resource-picker": "https://github.com/InnovaLangues/angular-ui-resource-picker.git#master"
+  "angular-ui-resource-picker": "https://github.com/InnovaLangues/angular-ui-resource-picker.git#master",
+
+  "jquery-2.2.4": "https://github.com/jquery/jquery.git#2.2.4"
 }

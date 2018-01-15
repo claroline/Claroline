@@ -26,7 +26,7 @@
     "ui-select": "0.18.0",
     "angular-ui-tinymce": "0.0.14",
     "angular-ui-tree": "2.16.0",
-    "components-jqueryui": "1.12.1",
+    "jquery-ui-dist": "1.12.1",
     "jquery.cookie": "1.4.1",
     "lodash": "4.13.1",
     "jsplumb": "2.1.3",
