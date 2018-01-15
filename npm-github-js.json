@@ -1,17 +1,14 @@
 {
   "strophe.jingle": "https://github.com/ESTOS/strophe.jingle.git#master",
-  "tinymce-codemirror": "https://github.com/christiaan/tinymce-codemirror.git#20c1bbe708",
-  "typeahead.js-bootstrap3.less": "https://github.com/bassjobsen/typeahead.js-bootstrap-css.git#1.2.1",
-  "jqPlot": "https://github.com/jqPlot/jqPlot.git#080c6de5a6",
-  "angular-data-table": "https://github.com/ngodfraind/angular-data-table.git#f80646159282c7487c90ff9b13a850112e4aa030",
-  "claroline-tinymce-mention": "https://github.com/iCAPLyon1/tinymceMentionPlugin.git#9baea090feca3c53dd3019adefda2a37932c97d6",
-  "angular-ui-calendar": "https://github.com/iCAPLyon1/ui-calendar.git#7b4d604d8beb07e3a4a174dc52fcd9dafa594d09",
-  "Datejs": "https://github.com/datejs/Datejs.git#71afdd79a4",
   "hark": "https://github.com/otalk/hark.git#v1.1.4",
   "strophejs": "https://github.com/strophe/strophejs.git#v1.2.7",
   "strophejs-plugins": "https://github.com/strophe/strophejs-plugins.git#v0.0.6",
-  "jquery-option-tree": "https://github.com/jongilbraith/jquery-option-tree.git#6b7137ec6e",
-  "confirm-bootstrap": "https://github.com/maxailloud/confirm-bootstrap.git#d436ee942d",
+
   "jquery-tagcanvas": "https://github.com/goat1000/TagCanvas.git#ab3cb98be8753247d674a385a17c085a2dc950db",
-  "select2": "https://github.com/select2/select2.git#3.5.4"
+  "jquery-option-tree": "https://github.com/jongilbraith/jquery-option-tree.git#6b7137ec6e",
+  "tag-it": "https://github.com/aehlke/tag-it.git#6ccd2de95e",
+
+  "angular-ui-pageslide":"https://github.com/Elorfin/angular-ui-pageslide.git#1.0.0",
+  "angular-ui-translation": "https://github.com/InnovaLangues/angular-ui-translation.git#master",
+  "angular-ui-resource-picker": "https://github.com/InnovaLangues/angular-ui-resource-picker.git#master"
 }
