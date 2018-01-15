@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/date'
+import {localeDate} from '#/main/core/scaffolding/date'
 
 import {getPlatformRoles} from '#/main/core/user/role/utils'
 

@@ -1,8 +1,9 @@
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as listActions} from '#/main/core/data/list/actions'
 import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as userActions} from '#/main/core/user/actions'
 
 import {User as UserTypes} from '#/main/core/administration/user/user/prop-types'
 
@@ -64,25 +65,35 @@ actions.addOrganizations = (id, organizations) => ({
 
 actions.enable = (user) => ({
   [API_REQUEST]: {
-    url: ['apiv2_user_update', {uuid: user.id}],
+    url: ['apiv2_user_update', {id: user.id}],
     request: {
-      body: JSON.stringify({isEnabled: true, uuid: user.id}),
+      body: JSON.stringify(Object.assign({}, user, {meta: {enabled:true}})),
       method: 'PUT'
     },
-    success: (data, dispatch) => dispatch(listActions.fetchData('users'))
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData('users.list'))
+    }
   }
 })
 
 actions.disable = (user) => ({
   [API_REQUEST]: {
-    url: ['apiv2_user_update', {uuid: user.id}],
+    url: ['apiv2_user_update', {id: user.id}],
     request: {
       method: 'PUT',
-      body: JSON.stringify({isEnabled: false, uuid: user.id})
+      body: JSON.stringify(Object.assign({}, user, {meta: {enabled:false}}))
     },
-    success: (data, dispatch) => dispatch(listActions.fetchData('users'))
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData('users.list'))
+    }
   }
 })
+
+actions.changePassword = (user, plainPassword) => userActions.changePassword(
+  user,
+  plainPassword,
+  (data, dispatch) => dispatch(listActions.invalidateData('users.list'))
+)
 
 actions.createWorkspace = (user) => ({
   [API_REQUEST]: {

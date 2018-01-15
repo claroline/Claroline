@@ -72,8 +72,7 @@ class WidgetVoter implements VoterInterface
             foreach ($grantedAdminTools as $grantedAdminTool) {
                 $allowedTools[] = $grantedAdminTool->getName();
             }
-
-            if (!in_array('home_tabs', $allowedTools)) {
+            if (!in_array('desktop_and_home', $allowedTools)) {
                 return VoterInterface::ACCESS_DENIED;
             }
 

@@ -11,7 +11,7 @@ import {SelectInput} from '#/main/core/layout/form/components/field/select-input
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {getFieldType} from '../../../utils'
 import {selectors} from '../../../selectors'
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {actions} from '../actions'
 
 const InfosList = props =>

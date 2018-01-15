@@ -90,6 +90,7 @@ class HomeTab
     public function __construct()
     {
         $this->roles = new ArrayCollection();
+        $this->widgetHomeTabConfigs = new ArrayCollection();
     }
 
     public function getId()

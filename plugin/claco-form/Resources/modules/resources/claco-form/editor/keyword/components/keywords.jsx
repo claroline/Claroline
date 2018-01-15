@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 import {trans, t} from '#/main/core/translation'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {actions} from '../actions'
 
 class Keywords extends Component {

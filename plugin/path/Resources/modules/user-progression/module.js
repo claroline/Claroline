@@ -4,7 +4,7 @@
 
 import angular from 'angular/index'
 
-import '#/main/core/fos-js-router/module'
+import '#/main/core/api/router/module'
 import '#/main/core/translation/module'
 import '../alert/module'
 

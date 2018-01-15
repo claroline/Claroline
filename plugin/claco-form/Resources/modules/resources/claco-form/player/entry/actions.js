@@ -1,5 +1,5 @@
-import {generateUrl} from '#/main/core/fos-js-router'
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {generateUrl} from '#/main/core/api/router'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {getDataQueryString} from '#/main/core/data/list/utils'
 import {API_REQUEST} from '#/main/core/api/actions'
 

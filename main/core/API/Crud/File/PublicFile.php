@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Crud\File;
 
-use Claroline\CoreBundle\Event\CrudEvent;
+use Claroline\CoreBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -51,9 +51,9 @@ class PublicFile
     /**
      * @DI\Observe("crud_pre_create_object_claroline_corebundle_entity_file_publicfile")
      *
-     * @param CrudEvent $event
+     * @param CreateEvent $event
      */
-    public function preCreate(CrudEvent $event)
+    public function preCreate(CreateEvent $event)
     {
         $publicFile = $event->getObject();
         $options = $event->getOptions();

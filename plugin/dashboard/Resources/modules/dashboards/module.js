@@ -1,6 +1,6 @@
 
 import angular from 'angular/index'
-import '#/main/core/fos-js-router/module'
+import '#/main/core/api/router/module'
 
 import DashboardService from './Services/DashboardService'
 import DashboardsCtrl from './Controllers/DashboardsCtrl'

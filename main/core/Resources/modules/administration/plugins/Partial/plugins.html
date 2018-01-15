@@ -1,0 +1,43 @@
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <button class="btn btn-xs btn-warning pull-right" data-ng-click="cpc.onCacheWarningClick()">
+            <i class="fa fa-warning"> {{ 'cache_management'|trans:{}:'platform' }}</i>
+        </button>
+        <h3 class="panel-title">{{ 'plugins'|trans:{}:'platform' }}</h3>
+    </div>
+
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>{{ 'activate'|trans:{}: 'platform' }}</th>
+                <th>{{ 'name'|trans:{}: 'platform'}}</th>
+                <th>{{ 'version'|trans:{}: 'platform'}}</th>
+                <th>{{ 'origin'|trans:{}: 'platform' }}</th>
+                <th>{{ 'actions'|trans:{}: 'platform' }}</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr data-ng-repeat="(key, plugin) in cpc.plugins" data-ng-class="{'danger': !plugin.is_ready, 'warning': plugin.is_locked}">
+                <td>
+                    <input
+                        type="checkbox"
+                        ng-model="plugin.is_loaded"
+                        ng-checked="plugin.is_loaded"
+                        ng-disabled="!plugin.is_ready || plugin.is_locked"
+                        ng-change="cpc.onCheckboxChange(plugin)"
+                    />
+                </td>
+                <td> {{ plugin.name }} </td>
+                <td> {{ plugin.version }} </td>
+                <td> {{ plugin.origin }} </td>
+                <td class="text-right">
+                    <button class="btn btn-sm btn-default" ng-if="!plugin.is_ready || plugin.is_locked" ng-click="cpc.onWarningClick(plugin)"><i class="fa fa-warning"></i></button>
+                    <button class="btn btn-sm btn-default" ng-disabled="true" ><i class="fa fa-download"></i></button>
+                    <button class="btn btn-sm btn-default" ng-disabled="plugin.description !== null"><i class="fa fa-info-circle"></i></button>
+                    <button class="btn btn-sm btn-default" ng-disabled="!plugin.has_options" ng-click="cpc.openPluginConfiguration(plugin)"><i class="fa fa-cog"></i></button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

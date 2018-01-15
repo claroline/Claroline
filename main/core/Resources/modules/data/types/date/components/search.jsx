@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
+import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 
 const DateSearch = props =>
   <span className="date-filter">
@@ -9,10 +9,9 @@ const DateSearch = props =>
       <span className="available-filter-value">{props.search}</span>
     }
     &nbsp;
-    <DatePicker
-      name="filter-date"
-      className="input-hide"
-      showCalendarButton={true}
+    <Date
+      id="filter-date"
+      onlyButton={true}
       onChange={date => props.updateSearch(date)}
     />
   </span>

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {localeDate} from '#/main/core/date'
+import {localeDate} from '#/main/core/scaffolding/date'
 import {constants} from '#/main/core/user/tracking/constants'
 
 import {ScoreGauge} from '#/main/core/layout/progression/components/score-gauge.jsx'

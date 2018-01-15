@@ -1,7 +1,7 @@
 import merge from 'lodash/merge'
 import difference from 'lodash/difference'
 
-import {combineReducers} from '#/main/core/utilities/redux'
+import {combineReducers} from '#/main/core/scaffolding/reducer'
 
 import {reducer as apiReducer} from '#/main/core/api/reducer'
 import {reducer as alertReducer} from '#/main/core/layout/alert/reducer'
@@ -32,6 +32,7 @@ function makePageReducer(initialState = {}, customReducer = {}, options = {}) {
   //const pageState = merge({}, initialState) // todo use
   const pageOptions = merge({}, constants.DEFAULT_FEATURES, options)
 
+  // add pages required reducers
   reducer.currentRequests = apiReducer
 
   if (pageOptions.modals) {
@@ -43,7 +44,6 @@ function makePageReducer(initialState = {}, customReducer = {}, options = {}) {
   }
 
   // get custom keys
-  // todo : not used and I'm not sure it works
   const rest = difference(Object.keys(customReducer), Object.keys(baseReducer))
   rest.map(reducerName =>
     reducer[reducerName] = customReducer[reducerName]

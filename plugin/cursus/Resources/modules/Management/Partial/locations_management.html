@@ -68,7 +68,7 @@
                                     data-placement="top"
                                     title="{{ 'edit_location'|trans:{}:'cursus' }}"
                                     ng-click="cmc.editLocation(location)"
-                                    ng-if="location['type'] === 3"
+                                    ng-if="location['meta']['type'] === 3"
                             >
                                 <i class="fa fa-edit"></i>
                             </button>
@@ -77,7 +77,7 @@
                                     data-placement="top"
                                     title="{{ 'delete_location'|trans:{}:'cursus' }}"
                                     ng-click="cmc.deleteLocation(location['id'])"
-                                    ng-if="location['type'] === 3"
+                                    ng-if="location['meta']['type'] === 3"
                             >
                                 <i class="fa fa-trash"></i>
                             </button>

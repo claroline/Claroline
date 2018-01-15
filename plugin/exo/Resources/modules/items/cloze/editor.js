@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import invariant from 'invariant'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {notBlank} from '#/main/core/validation'
 import {tex} from '#/main/core/translation'
 
@@ -262,7 +262,7 @@ function getSolutionFromHole(item, hole)
 function validate(item) {
   const _errors = {}
 
-  if (notBlank(item.text, true)) {
+  if (notBlank(item.text, {isHtml: true})) {
     _errors.text = tex('cloze_empty_text_error')
   } else {
     if (item.holes.length === 0) {
@@ -274,7 +274,7 @@ function validate(item) {
     const holeErrors = {}
     const solution = getSolutionFromHole(item, hole)
 
-    if (notBlank(hole.size, true)) {
+    if (notBlank(hole.size, {isHtml: true})) {
       holeErrors.size = tex('cloze_empty_size_error')
     }
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 
-import {spyConsole, renew, ensure} from '#/main/core/tests'
+import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
 
 import {HelpBlock} from './help-block.jsx'
 

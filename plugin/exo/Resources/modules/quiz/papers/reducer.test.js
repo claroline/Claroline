@@ -1,6 +1,6 @@
 import freeze from 'deep-freeze'
 
-import {ensure, mockTranslator} from '#/main/core/tests'
+import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
 import {reducePapers} from './reducer'
 import {PAPERS_INIT, PAPER_CURRENT} from './actions'
 

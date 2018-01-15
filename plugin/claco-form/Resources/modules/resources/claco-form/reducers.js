@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
-import {makeReducer} from '#/main/core/utilities/redux'
+import {makeReducer} from '#/main/core/scaffolding/reducer'
 import {
   RESOURCE_PROPERTY_UPDATE,
   RESOURCE_PARAMS_PROPERTY_UPDATE,

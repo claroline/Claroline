@@ -3,11 +3,14 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {t, Translator} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import Configuration from '#/main/core/library/Configuration/Configuration'
+
+import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {MODAL_CHANGE_PASSWORD} from '#/main/core/user/modals/components/change-password.jsx'
 import {MODAL_URL} from '#/main/core/layout/modal'
 
 import {actions} from '#/main/core/administration/user/user/actions'
@@ -41,7 +44,15 @@ const UsersList = props =>
         label: t('show_profile'),
         action: (rows) => window.location = generateUrl('claro_user_profile', {publicUrl: rows[0].meta.publicUrl}),
         context: 'row'
-      }, {
+      },
+      {
+        icon: 'fa fa-fw fa-pencil',
+        label: t('change_password'),
+        context: 'row',
+        displayed: (rows) => rows[0].meta.personalWorkspace,
+        action: (rows) => props.updatePassword(rows[0]),
+        dangerous: true
+      },{
         icon: 'fa fa-fw fa-line-chart',
         label: t('show_tracking'),
         action: (rows) => window.location = generateUrl('claro_user_tracking', {publicUrl: rows[0].meta.publicUrl}),
@@ -116,6 +127,13 @@ function mapDispatchToProps(dispatch) {
     },
     deleteWorkspace(user) {
       dispatch(actions.deleteWorkspace(user))
+    },
+    updatePassword(user) {
+      dispatch(
+        modalActions.showModal(MODAL_CHANGE_PASSWORD, {
+          changePassword: (password) => dispatch(actions.changePassword(user, password))
+        })
+      )
     }
   }
 }

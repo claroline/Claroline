@@ -8,8 +8,8 @@ import {t, trans} from '#/main/core/translation'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 
-import {UserMessage} from '#/main/core/layout/user/components/user-message.jsx'
-import {UserMessageForm} from '#/main/core/layout/user/components/user-message-form.jsx'
+import {UserMessage} from '#/main/core/user/message/components/user-message.jsx'
+import {UserMessageForm} from '#/main/core/user/message/components/user-message-form.jsx'
 
 import {selectors} from '../../../selectors'
 import {actions} from '../actions'

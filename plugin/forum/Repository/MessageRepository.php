@@ -60,7 +60,7 @@ class MessageRepository extends EntityRepository
             WHERE rr.name IN (:roles)
             AND (
                 BIT_AND(r.mask, 1) = 1
-                OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+                OR CONCAT('ROLE_WS_MANAGER_', w.uuid) IN (:roles)
             )
             ORDER BY m.creationDate DESC
         ";
@@ -90,7 +90,7 @@ class MessageRepository extends EntityRepository
             AND rr.name IN (:roles)
             AND (
                 BIT_AND(r.mask, 1) = 1
-                OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+                OR CONCAT('ROLE_WS_MANAGER_', w.uuid) IN (:roles)
             )
             ORDER BY m.creationDate DESC
         ";
@@ -119,7 +119,7 @@ class MessageRepository extends EntityRepository
                 AND rr.name IN (:roles)
                 AND (
                     BIT_AND(r.mask, 1) = 1
-                    OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+                    OR CONCAT('ROLE_WS_MANAGER_', w.uuid) IN (:roles)
                 )
                 ORDER BY m.creationDate DESC";
 
@@ -150,7 +150,7 @@ class MessageRepository extends EntityRepository
             AND rr.name IN (:roles)
             AND (
                 BIT_AND(r.mask, 1) = 1
-                OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+                OR CONCAT('ROLE_WS_MANAGER_', w.uuid) IN (:roles)
             )
             ORDER BY m.creationDate DESC
         ";
@@ -182,7 +182,7 @@ class MessageRepository extends EntityRepository
             AND rr.name IN (:roles)
             AND (
                 BIT_AND(r.mask, 1) = 1
-                OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+                OR CONCAT('ROLE_WS_MANAGER_', w.uuid) IN (:roles)
             )
             ORDER BY m.creationDate DESC
         ";
@@ -213,7 +213,7 @@ class MessageRepository extends EntityRepository
             AND rr.name IN (:roles)
             AND (
                 BIT_AND(r.mask, 1) = 1
-                OR CONCAT('ROLE_WS_MANAGER_', w.guid) IN (:roles)
+                OR CONCAT('ROLE_WS_MANAGER_', w.uuid) IN (:roles)
             )
             ORDER BY m.creationDate DESC
         ";

@@ -1,4 +1,4 @@
-import {makeReducer} from '#/main/core/utilities/redux'
+import {makeReducer} from '#/main/core/scaffolding/reducer'
 import { BOOK_REFERENCE_SET } from './actions'
 
 const reducer = makeReducer({}, {

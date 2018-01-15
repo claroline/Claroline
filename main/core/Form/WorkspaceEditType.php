@@ -138,14 +138,6 @@ class WorkspaceEditType extends AbstractType
         }
 
         $builder->add('number', 'text', ['disabled' => 'disabled', 'data' => $this->number, 'mapped' => false, 'label' => 'registered_user_amount']);
-
-        $builder->add(
-            'organizations',
-            'organization_picker',
-            [
-               'label' => 'organizations',
-            ]
-        );
     }
 
     public function getName()

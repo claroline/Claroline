@@ -1,6 +1,6 @@
 export const CHANGE_ORGANIZATION = 'CHANGE_ORGANIZATION'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 
 export const actions = {}
 

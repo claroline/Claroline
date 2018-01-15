@@ -139,6 +139,7 @@
     "generate_event_certificate": "Generate event certificate",
     "generate_event_certificates": "Generate event certificates",
     "go_to_workspace": "Go to workspace",
+    "hide_session_registration_button": "Hide button to register to session",
     "icon": "Icon",
     "import_courses": "Import trainings",
     "informations_management": "Manage information",

@@ -6,7 +6,7 @@ import angular from 'angular/index'
 import 'angular-ui-resource-picker/angular-resource-picker'
 import 'angular-ui-tinymce/src/tinymce'
 
-import '#/main/core/fos-js-router/module'
+import '#/main/core/api/router/module'
 import '#/main/core/translation/module'
 import '../utils/module'
 import '../form/module'

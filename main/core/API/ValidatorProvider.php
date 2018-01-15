@@ -106,7 +106,7 @@ class ValidatorProvider
         //schema isn't always there yet
         if ($schema) {
             $validator = Validator::buildDefault();
-            $errors = $validator->validate((object) $data, $schema/*, 3rd param for uri resolution*/);
+            $errors = $validator->validate($this->toObject($data), $schema/*, 3rd param for uri resolution*/);
 
             if (!empty($errors) && $throwException) {
                 throw new InvalidDataException(
@@ -121,7 +121,12 @@ class ValidatorProvider
         }
 
         //validate uniques
-        $validator = $this->get($class);
+        try {
+            $validator = $this->get($class);
+        } catch (\Exception $e) {
+            //no custom validator
+            return [];
+        }
         //can be deduced from the mapping, but we won't know
         //wich field is related to wich data prop in that case
         $uniqueFields = $validator->getUniqueFields();
@@ -158,5 +163,15 @@ class ValidatorProvider
         }
 
         return $errors;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return \stdClass
+     */
+    public function toObject(array $data)
+    {
+        return json_decode(json_encode($data));
     }
 }

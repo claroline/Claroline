@@ -795,6 +795,15 @@ class WorkspaceManager
         $this->om->flush();
     }
 
+    public function isUserInValidationQueue(Workspace $workspace, User $user)
+    {
+        $workspaceRegistrationQueueRepo =
+            $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
+        $userQueued = $workspaceRegistrationQueueRepo->findOneBy(['workspace' => $workspace, 'user' => $user]);
+
+        return !empty($userQueued);
+    }
+
     /**
      * @param Workspace $workspace
      * @param User      $user
@@ -1308,12 +1317,12 @@ class WorkspaceManager
 
         $newWorkspace->setModel($model);
         // create new name and code
-        $prefix = $model ? '[MODEL]' : '[COPY]';
         $ws = $this->getOneByCode($newWorkspace->getCode());
 
-        if ($ws) {
-            $name = $prefix.' '.$newWorkspace->getName();
-            $code = $prefix.' '.$newWorkspace->getCode();
+        //the && part is if we somehow already flushed the workspace
+        if ($ws && $ws->getId() !== $newWorkspace->getId()) {
+            $name = $newWorkspace->getName().'-'.uniqid('', true);
+            $code = $newWorkspace->getCode().'-'.uniqid('', true);
         } else {
             $name = $newWorkspace->getName();
             $code = $newWorkspace->getCode();
@@ -1544,7 +1553,7 @@ class WorkspaceManager
 
         foreach ($copy->getChildren() as $child) {
             foreach ($resourceNode->getChildren() as $sourceChild) {
-                if ($child->getName() === $sourceChild->getName()) {
+                if ($child->getPathForDisplay() === $sourceChild->getPathForDisplay()) {
                     $this->duplicateRights($sourceChild, $child, $workspaceRoles);
                 }
             }
@@ -1763,6 +1772,7 @@ class WorkspaceManager
             );
 
             $this->om->persist($createdRole);
+
             if ($roleName === 'ROLE_WS_MANAGER') {
                 $this->log('Adding role manager to user '.$user->getUsername());
                 $user->addRole($createdRole);

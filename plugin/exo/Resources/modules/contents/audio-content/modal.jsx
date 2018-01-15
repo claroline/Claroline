@@ -1,6 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import {asset} from '#/main/core/asset'
+import {asset} from '#/main/core/scaffolding/asset'
 
 export const AudioContentModal = (props) =>
   <div className="audio-content-modal">

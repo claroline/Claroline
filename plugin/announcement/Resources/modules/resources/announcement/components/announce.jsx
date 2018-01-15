@@ -6,19 +6,21 @@ import {trans} from '#/main/core/translation'
 
 import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {actions} from './../actions'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 
-import {Announcement as AnnouncementTypes} from './../prop-types'
-import {AnnouncePost} from './announce-post.jsx'
-
-import {select} from './../selectors'
+import {actions} from '#/plugin/announcement/resources/announcement/actions'
+import {select} from '#/plugin/announcement/resources/announcement/selectors'
+import {Announcement as AnnouncementTypes} from '#/plugin/announcement/resources/announcement/prop-types'
+import {AnnouncePost} from '#/plugin/announcement/resources/announcement/components/announce-post.jsx'
 
 const AnnounceDetail = props =>
   <AnnouncePost
+    {...props.announcement}
     active={true}
     sendPost={() => props.sendPost(props.aggregateId, props.announcement)}
     removePost={() => props.sendPost(props.aggregateId, props.announcement)}
-    {...props.announcement}
+    editable={props.editable}
+    deletable={props.deletable}
   />
 
 AnnounceDetail.propTypes = {
@@ -27,18 +29,19 @@ AnnounceDetail.propTypes = {
     AnnouncementTypes.propTypes
   ).isRequired,
   sendPost: T.func.isRequired,
-  removePost: T.func.isRequired
+  removePost: T.func.isRequired,
+  editable: T.bool.isRequired,
+  deletable: T.bool.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const Announce = connect(
+  state => ({
     aggregateId: select.aggregateId(state),
-    announcement: select.detail(state)
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
+    announcement: select.detail(state),
+    editable: resourceSelect.editable(state),
+    deletable: resourceSelect.deletable(state)
+  }),
+  dispatch => ({
     removePost(aggregateId, announcePost) {
       dispatch(
         modalActions.showModal(MODAL_DELETE_CONFIRM, {
@@ -57,10 +60,8 @@ function mapDispatchToProps(dispatch) {
         })
       )
     }
-  }
-}
-
-const Announce = connect(mapStateToProps, mapDispatchToProps)(AnnounceDetail)
+  })
+)(AnnounceDetail)
 
 export {
   Announce

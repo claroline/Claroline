@@ -39,25 +39,22 @@ export default class LocationsManagementCtrl {
     this.initialize()
   }
 
-  _addLocationCallback(datas) {
-    const locationJson = JSON.parse(datas)
-    this.locations.push(this.generateLocationAddress(locationJson))
+  _addLocationCallback(data) {
+    this.locations.push(this.generateLocationAddress(data))
     this.tableParams['locations'].reload()
   }
 
-  _updateLocationCallback(datas) {
-    const locationJson = JSON.parse(datas)
-    const index = this.locations.findIndex(l => l['id'] === locationJson['id'])
+  _updateLocationCallback(data) {
+    const index = this.locations.findIndex(l => l['id'] === data['id'])
 
     if (index > -1) {
-      this.locations[index] = this.generateLocationAddress(locationJson)
+      this.locations[index] = this.generateLocationAddress(data)
       this.tableParams['locations'].reload()
     }
   }
 
-  _removeLocationCallback(datas) {
-    const locationJson = JSON.parse(datas)
-    const index = this.locations.findIndex(l => l['id'] === locationJson['id'])
+  _removeLocationCallback(data) {
+    const index = this.locations.findIndex(l => l['id'] === data['id'])
 
     if (index > -1) {
       this.locations.splice(index, 1)
@@ -73,9 +70,9 @@ export default class LocationsManagementCtrl {
     const url = Routing.generate('api_get_cursus_locations')
     this.$http.get(url).then(d => {
       if (d['status'] === 200) {
-        const datas = JSON.parse(d['data'])
+        const data = d['data']
         this.locations.splice(0, this.locations.length)
-        datas.forEach(l => {
+        data.forEach(l => {
           this.locations.push(this.generateLocationAddress(l))
         })
       }
@@ -138,9 +135,9 @@ export default class LocationsManagementCtrl {
 
   generateLocationAddress(location) {
     location['address'] = `
-      ${location['street']}, ${location['street_number']} ${location['box_number'] ? '(' + location['box_number'] + ')' : ''}
+      ${location['street']}, ${location['streetNumber']} ${location['boxNumber'] ? '(' + location['boxNumber'] + ')' : ''}
       <br>
-      ${location['pc']} ${location['town']}
+      ${location['zipCode']} ${location['town']}
       <br>
       ${location['country']}
     `
@@ -174,7 +171,7 @@ export default class LocationsManagementCtrl {
   }
 
   deleteLocation(locationId) {
-    const url = Routing.generate('api_delete_cursus_location', {location: locationId})
+    const url = Routing.generate('apiv2_location_delete_bulk') + '?ids[]='+ locationId
     this.ClarolineAPIService.confirm(
       {url, method: 'DELETE'},
       this._removeLocationCallback,

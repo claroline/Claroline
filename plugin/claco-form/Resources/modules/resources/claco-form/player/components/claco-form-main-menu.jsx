@@ -4,7 +4,7 @@ import {withRouter} from 'react-router-dom'
 import {PropTypes as T} from 'prop-types'
 import {trans} from '#/main/core/translation'
 import {selectors} from '../../selectors'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 class ClacoFormMainMenu extends Component {
   goToRandomEntry() {

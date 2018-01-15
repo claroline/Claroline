@@ -33,13 +33,21 @@
             "delete": true
         }
     },
-    "roles": [{
+    "roles": [
+      {
         "name": "ROLE_USER"
-    }, {
-        "id": "b2e4c784-9416-4320-af06-c91f6654be88",
-        "type": 4,
-        "name": "ROLE_USER_ELORFIN",
-        "translationKey": "Elorfin"
-    }
-  ]
+      },
+      {
+          "id": "b2e4c784-9416-4320-af06-c91f6654be88",
+          "type": 4,
+          "name": "ROLE_USER_ELORFIN",
+          "translationKey": "Elorfin"
+        }
+      ],
+    "groups": [
+      {
+        "id": "2c95f2a0-0966-4496-a37e-5ea220dec1cb",
+        "name": "hey ho"
+      }
+    ]
 }

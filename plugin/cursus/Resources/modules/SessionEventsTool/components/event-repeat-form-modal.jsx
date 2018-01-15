@@ -5,7 +5,7 @@ import classes from 'classnames'
 import moment from 'moment'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {t, trans} from '#/main/core/translation'
-import {DatePicker} from '#/main/core/layout/form/components/field/date-picker.jsx'
+import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 
 export const MODAL_EVENT_REPEAT_FORM = 'MODAL_EVENT_REPEAT_FORM'
 
@@ -185,10 +185,9 @@ export class EventRepeatFormModal  extends Component {
                 {trans('until', {}, 'cursus')}
               </label>
               <div className="col-md-9">
-                <DatePicker
+                <Date
                   id="event-repeat-until"
-                  name="event-repeat-until"
-                  value={this.state.until || ''}
+                  value={this.state.until}
                   minDate={moment.utc(this.props.event.startDate)}
                   onChange={date => this.updateFormState('until', date)}
                 />

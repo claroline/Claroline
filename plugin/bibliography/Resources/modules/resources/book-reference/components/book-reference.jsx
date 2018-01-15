@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {ResourceContainer} from '#/main/core/layout/resource/containers/resource.jsx'
+import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
 import {Routes, Router} from '#/main/core/router'
 import {Player} from './player.jsx'
 import {Editor} from './editor.jsx'

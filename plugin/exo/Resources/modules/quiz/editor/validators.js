@@ -80,7 +80,7 @@ function validateContentItem(contentItem) {
 function validateBaseItem(item) {
   const errors = {}
 
-  setIfError(errors, 'content', notBlank(item.content, true))
+  setIfError(errors, 'content', notBlank(item.content, {isHtml: true}))
   const objectsErrors = validateItemObjects(item)
 
   return Object.assign(errors, objectsErrors)

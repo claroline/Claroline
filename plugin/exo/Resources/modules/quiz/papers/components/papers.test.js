@@ -2,8 +2,8 @@ import React from 'react'
 import {mount} from 'enzyme'
 import configureMockStore from 'redux-mock-store'
 
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/tests'
-import {resourceNodeFixture} from '#/main/core/layout/resource/tests'
+import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {resourceNodeFixture} from '#/main/core/resource/tests'
 
 import {Papers} from './papers.jsx'
 import {SHOW_SCORE_AT_CORRECTION} from './../../enums'

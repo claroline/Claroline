@@ -14,14 +14,14 @@ function notEmpty(value) {
   }
 }
 
-function notBlank(value, isHtml = false) {
+function notBlank(value, options = {}) {
   if (typeof value === 'string') {
     value = value.trim()
   } else if (isNaN(value)) {
     value = ''
   }
 
-  if (value === '' || value === null || (isHtml && isHtmlEmpty(value))) {
+  if (value === '' || value === null || (undefined !== options.isHtml && options.isHtml && isHtmlEmpty(value))) {
     return tval('This value should not be blank.')
   }
 }
@@ -110,7 +110,7 @@ function lengthInRange(value, options) {
 }
 
 function ip(value) {
-  if (match(value, {regex: /^([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])$/g})) {
+  if (!match(value, {regex: /^([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])$/g})) {
     return tval('This value should be a valid IPv4.')
   }
 }

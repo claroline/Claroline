@@ -1,4 +1,4 @@
-import {isValidDate, localeDate, serverDate} from '#/main/core/date'
+import {isValidDate, localeDate, serverDate} from '#/main/core/scaffolding/date'
 import {t} from '#/main/core/translation'
 
 import {DateSearch} from '#/main/core/data/types/date/components/search.jsx'

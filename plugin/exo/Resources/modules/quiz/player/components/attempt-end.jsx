@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {tex} from '#/main/core/translation'
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {select as playerSelectors} from './../selectors'
 import quizSelectors from './../../selectors'
 import {selectors as paperSelectors} from './../../papers/selectors'

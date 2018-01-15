@@ -1,7 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {asset} from '#/main/core/asset'
+import {asset} from '#/main/core/scaffolding/asset'
 
 export const VideoContentModal = (props) =>
   <div className="video-content-modal">

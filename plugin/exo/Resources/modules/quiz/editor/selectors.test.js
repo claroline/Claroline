@@ -1,5 +1,5 @@
 import freeze from 'deep-freeze'
-import {ensure} from '#/main/core/tests'
+import {ensure} from '#/main/core/scaffolding/tests'
 import {TYPE_QUIZ, TYPE_STEP} from './../enums'
 import select from './selectors'
 import {tex, t} from '#/main/core/translation'

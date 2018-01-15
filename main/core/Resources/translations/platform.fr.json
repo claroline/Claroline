@@ -1562,5 +1562,12 @@
     "never": "jamais",
     "required": "requis",
     "access_role_show": "Restreindre l'affichage par Roles",
-    "access_role_edit": "Restreindre l'édition par Roles"
+    "access_role_edit": "Restreindre l'édition par Roles",
+    "information": "Informations",
+    "add_managers": "Ajouter des gestionnaires",
+    "administration_tools": "Outils d'administration",
+    "role_personalWorkspaceCreation": "Créer un Espace personnel pour les nouveaux utilisateurs",
+    "role_personalWorkspaceCreation_help": "Un nouvel Espace personnel sera automatiquement généré pour les utilisateurs créés avec ce Rôle.",
+    "access_max_users": "Restreindre le nombre d'utilisateurs",
+    "maxUsers": "Nombre d'utilisateurs maximum"
 }

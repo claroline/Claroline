@@ -3,7 +3,7 @@ import isEmpty from 'lodash/isEmpty'
 
 import {Words as component} from './editor.jsx'
 import {ITEM_CREATE} from './../../quiz/editor/actions'
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {keywords as keywordUtils} from './../../utils/keywords'
 import {makeId} from './../../utils/utils'
 

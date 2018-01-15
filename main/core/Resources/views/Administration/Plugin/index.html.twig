@@ -1,7 +1,6 @@
-
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'users' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'plugins' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
 {{
@@ -16,21 +15,17 @@
             'href': path('claro_admin_parameters_index')
         },
         {
-        	'name': 'plugins'|trans({}, 'platform'),
-        	'href': ''
+            'name': 'plugins'|trans({}, 'platform'),
+            'href': ''
         }
     ])
 }}
 {% endblock %}
-{% block section_content %}
-    <div id="plugin-panel" class="panel panel-default" ng-app="PluginManager">
-        <div class="panel panel-body">
-            <plugin-manager></plugin-manager>
-        </div>
+
+{% block section_panel %}
+    <div id="plugin-panel" data-ng-app="PluginManager">
+        <plugin-manager></plugin-manager>
     </div>
-{% endblock %}
-{% block stylesheets %}
-    {{ parent() }}
 {% endblock %}
 
 {% block javascripts %}

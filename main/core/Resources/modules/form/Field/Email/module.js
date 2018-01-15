@@ -1,9 +1,9 @@
-import 'angular/angular.min'
+import angular from 'angular/index'
 import 'angular-bootstrap'
 
-import translation from 'angular-ui-translation/angular-translation'
+import 'angular-ui-translation/angular-translation'
 import EmailDirective from './EmailDirective'
-import HelpBlock from '../../HelpBlock/module'
+import '../../HelpBlock/module'
 
 angular.module('FieldEmail', [
   'ui.translation',

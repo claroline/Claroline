@@ -3,7 +3,7 @@ import difference from 'lodash/difference'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
 
-import {makeInstanceReducer, combineReducers, reduceReducers} from '#/main/core/utilities/redux'
+import {makeInstanceReducer, combineReducers, reduceReducers} from '#/main/core/scaffolding/reducer'
 import {cleanErrors} from '#/main/core/data/form/utils'
 
 import {

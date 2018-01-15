@@ -4,9 +4,9 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 import {copyToClipboard} from '#/main/core/copy-text-to-clipboard'
-import {ResourceContainer} from '#/main/core/layout/resource/containers/resource.jsx'
+import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
 
-import {select as resourceSelect} from '#/main/core/layout/resource/selectors'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {select} from './../selectors'
 
 const Image = props =>

@@ -1,5 +1,5 @@
 import {trans} from '#/main/core/translation'
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as clacoFormActions} from '../actions'
 import {actions as entryActions} from '../player/entry/actions'

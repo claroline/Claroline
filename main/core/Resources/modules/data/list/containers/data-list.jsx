@@ -27,9 +27,11 @@ class DataList extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.fetch) {
+    if (this.isAutoLoaded()) {
+      // list is configured to auto fetch data
       if (this.props.loaded !== prevProps.loaded // data are not loaded
         || this.props.invalidated !== prevProps.invalidated // data have been invalidated
+        || (this.props.fetch.autoload !== prevProps.fetch.autoload) // autoload has been enabled
       ) {
         this.reload()
       }
@@ -42,18 +44,20 @@ class DataList extends Component {
 
   reload() {
     if (!this.props.loaded || this.props.invalidated) {
-      if (this.pending) {
+      if (this.pending && this.props.invalidated) {
         this.pending.cancel()
       }
 
-      this.pending = makeCancelable(
-        this.props.fetchData()
-      )
+      if (!this.pending) {
+        this.pending = makeCancelable(
+          this.props.fetchData()
+        )
 
-      this.pending.promise.then(
-        () => this.pending = null,
-        () => this.pending = null
-      )
+        this.pending.promise.then(
+          () => this.pending = null,
+          () => this.pending = null
+        )
+      }
     }
   }
 

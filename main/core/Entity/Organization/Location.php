@@ -16,11 +16,12 @@ use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\Groups;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Organization\LocationRepository")
  * @ORM\Table(name="claro__location")
  * @DoctrineAssert\UniqueEntity("name")
  */
@@ -36,6 +37,7 @@ class Location
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @Groups({"api_user_min"})
      *
      * @var int
      */
@@ -44,6 +46,7 @@ class Location
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api_user_min"})
      *
      * @var string
      */
@@ -51,6 +54,7 @@ class Location
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"api_user_min"})
      *
      * @var int
      */
@@ -59,6 +63,7 @@ class Location
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api_user_min"})
      *
      * @var string
      */
@@ -67,6 +72,7 @@ class Location
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api_user_min"})
      *
      * @var string
      */
@@ -74,6 +80,7 @@ class Location
 
     /**
      * @ORM\Column(nullable=true)
+     * @Groups({"api_user_min"})
      *
      * @var string
      */
@@ -82,6 +89,7 @@ class Location
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api_user_min"})
      *
      * @var string
      */
@@ -90,6 +98,7 @@ class Location
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api_user_min"})
      *
      * @var string
      */
@@ -98,6 +107,7 @@ class Location
     /**
      * @ORM\Column()
      * @Assert\NotBlank()
+     * @Groups({"api_user_min"})
      *
      * @var string
      */
@@ -105,6 +115,7 @@ class Location
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"api_user_min"})
      *
      * @var float
      */
@@ -112,6 +123,7 @@ class Location
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups({"api_user_min"})
      *
      * @var float
      */
@@ -119,6 +131,7 @@ class Location
 
     /**
      * @ORM\Column(nullable=true)
+     * @Groups({"api_user_min"})
      *
      * @var string
      */

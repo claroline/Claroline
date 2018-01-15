@@ -1,7 +1,7 @@
 import merge from 'lodash/merge'
 import validate from './validators'
 import {registerItemType, resetTypes} from './../../items/item-types'
-import {ensure, mockTranslator} from '#/main/core/tests'
+import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
 
 describe('quiz validator', () => {
   before(mockTranslator)

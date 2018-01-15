@@ -96,7 +96,7 @@ plugin:
         - name: platform_parameters
           class: cog
         - name: user_management
-          class: user
+          class: users
         - name: workspace_management
           class: book
         - name: registration_to_workspace
@@ -107,8 +107,6 @@ plugin:
           class: bars
         - name: platform_analytics
           class: bar-chart-o
-        - name: roles_management
-          class: users
         - name: widgets_management
           class: list-alt
         - name: tasks_scheduling

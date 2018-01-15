@@ -125,6 +125,23 @@
     border: @border;
     border-radius: @border-radius;
 
+    .placeholder-icon {
+        font-size: @font-size*2;
+        margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    .placeholder-body {
+        .placeholder-title {
+            display: block;
+            font-size: @font-size;
+            font-weight: bold;
+        }
+
+        .placeholder-help {
+            font-size: @font-size-base; // todo this will be ugly on sm placeholder
+        }
+    }
+
     &.placeholder-hover {
         &.hover,
         &:hover {

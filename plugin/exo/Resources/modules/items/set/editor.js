@@ -1,6 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {makeActionCreator} from '#/main/core/utilities/redux'
+import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {notBlank, number, chain} from '#/main/core/validation'
 import {tex} from '#/main/core/translation'
 
@@ -274,7 +274,7 @@ function validate(item) {
   // one item (that is not an odd) min
   if (item.items.filter(el => undefined === item.solutions.odd.find(odd => odd.itemId === el.id)).length === 0) {
     errors.items = tex('set_at_least_one_item')
-  } else if (item.items.filter(el => undefined === item.solutions.odd.find(odd => odd.itemId === el.id)).find(item => notBlank(item.data, true))) {
+  } else if (item.items.filter(el => undefined === item.solutions.odd.find(odd => odd.itemId === el.id)).find(item => notBlank(item.data, {isHtml: true}))) {
     // item data should not be empty
     errors.items = tex('set_item_empty_data_error')
   }
@@ -290,7 +290,7 @@ function validate(item) {
   // one set min
   if (item.sets.length === 0) {
     errors.sets = tex('set_at_least_one_set')
-  } else if (item.sets.find(set => notBlank(set.data, true))) {
+  } else if (item.sets.find(set => notBlank(set.data, {isHtml: true}))) {
     // set data should not be empty
     errors.sets = tex('set_set_empty_data_error')
   }
@@ -314,7 +314,7 @@ function validate(item) {
       errors.odd = tex('set_odd_score_not_valid')
     }
     // odd data not empty
-    if (item.items.filter(el => undefined !== item.solutions.odd.find(odd => odd.itemId === el.id)).find(odd => notBlank(odd.data, true))) {
+    if (item.items.filter(el => undefined !== item.solutions.odd.find(odd => odd.itemId === el.id)).find(odd => notBlank(odd.data, {isHtml: true}))) {
       // set data should not be empty
       errors.odd = tex('set_odd_empty_data_error')
     }

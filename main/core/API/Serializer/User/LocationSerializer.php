@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\User;
 
+use Claroline\CoreBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Organization\Location;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -11,9 +12,20 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class LocationSerializer
 {
+    use SerializerTrait;
+
+    /**
+     * Serialize a Location Entity.
+     *
+     * @param Location $location
+     * @param array    $options
+     *
+     * @return array
+     */
     public function serialize(Location $location, array $options = [])
     {
         return [
+            'autoId' => $location->getId(),
             'id' => $location->getUuid(),
             'name' => $location->getName(),
             'meta' => [
@@ -33,28 +45,33 @@ class LocationSerializer
         ];
     }
 
-    public function deserialize($data, Location $location = null, array $options = [])
+    /**
+     * Serialize a Location Entity.
+     *
+     * @param mixed    $data
+     * @param Location $location
+     * @param array    $options
+     *
+     * @return Location
+     */
+    public function deserialize($data, Location $location, array $options = [])
     {
-        $this->addIfPropertyExists('name', 'setName', $data, $location);
-        $this->addIfPropertyExists('street', 'setStreet', $data, $location);
-        $this->addIfPropertyExists('boxNumber', 'setBoxNumber', $data, $location);
-        $this->addIfPropertyExists('street', 'setStreet', $data, $location);
-        $this->addIfPropertyExists('streetNumber', 'setStreetNumber', $data, $location);
-        $this->addIfPropertyExists('zipCode', 'setPc', $data, $location);
-        $this->addIfPropertyExists('town', 'setTown', $data, $location);
-        $this->addIfPropertyExists('country', 'setCountry', $data, $location);
-        $this->addIfPropertyExists('phone', 'setPhone', $data, $location);
+        $this->sipe('name', 'setName', $data, $location);
+        $this->sipe('street', 'setStreet', $data, $location);
+        $this->sipe('boxNumber', 'setBoxNumber', $data, $location);
+        $this->sipe('street', 'setStreet', $data, $location);
+        $this->sipe('streetNumber', 'setStreetNumber', $data, $location);
+        $this->sipe('zipCode', 'setPc', $data, $location);
+        $this->sipe('town', 'setTown', $data, $location);
+        $this->sipe('country', 'setCountry', $data, $location);
+        $this->sipe('phone', 'setPhone', $data, $location);
 
         return $location;
     }
 
-    private function addIfPropertyExists($prop, $setter, $data, Location $location)
-    {
-        if (isset($data[$prop])) {
-            $location->$setter($data[$prop]);
-        }
-    }
-
+    /**
+     * @return string
+     */
     public function getClass()
     {
         return 'Claroline\CoreBundle\Entity\Organization\Location';

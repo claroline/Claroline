@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import {PropTypes as T, implementPropTypes} from '#/main/core/prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
 import {t} from '#/main/core/translation'
 import {makeCancelable} from '#/main/core/api/utils'
-import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
@@ -26,7 +26,7 @@ class OrganizationGroup extends Component {
   fetchOrganizations() {
     this.pending = makeCancelable(
       fetch(
-        generateUrl('apiv2_organization_list')
+        generateUrl('apiv2_organization_list'), {credentials: 'include'}
       )
         .then(response => response.json())
         .then(

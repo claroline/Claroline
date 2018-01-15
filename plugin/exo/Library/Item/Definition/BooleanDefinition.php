@@ -197,5 +197,7 @@ class BooleanDefinition extends AbstractDefinition
                 return [$choice->getData()];
             }
         }
+
+        return [''];
     }
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import {implementPropTypes} from '#/main/core/prop-types'
+import {implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
 import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
 

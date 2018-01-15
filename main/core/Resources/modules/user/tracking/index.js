@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/core/utilities/app/bootstrap'
+import {bootstrap} from '#/main/core/scaffolding/bootstrap'
 
 import {reducer} from '#/main/core/user/tracking/reducer'
 import {Tracking} from '#/main/core/user/tracking/components/main.jsx'

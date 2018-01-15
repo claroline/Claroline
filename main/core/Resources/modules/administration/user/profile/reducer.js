@@ -1,7 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 
-import {makeId} from '#/main/core/utilities/id'
-import {makeReducer} from '#/main/core/utilities/redux'
+import {makeId} from '#/main/core/scaffolding/id'
+import {makeReducer} from '#/main/core/scaffolding/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
 
 import {

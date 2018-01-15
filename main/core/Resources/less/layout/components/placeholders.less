@@ -1,5 +1,10 @@
 // ATTENTION : never create a .placeholder class as bootstrap already define a mixin with that name.
 .empty-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: @component-margin-bottom;
+    text-align: left;
     color: @placeholder-color;
     min-height: @input-height-base;
     line-height: @line-height-computed;
@@ -24,6 +29,15 @@
             @placeholder-lg-border
         );
     }
+
+    .placeholder-icon {
+        margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    .placeholder-title {
+        display: block;
+        font-weight: bold;
+    }
 }
 
 .drop-placeholder {
@@ -33,7 +47,7 @@
 
     .fa {
         opacity: .5;
-        margin-right: 7px; // todo: find a better way to do this
+        margin-right: @icon-text-spacer; // todo: find a better way to do this
     }
 
     &.placeholder-hover {

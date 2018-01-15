@@ -419,4 +419,12 @@ class Organization
         $this->groups->remove($group);
         $group->getOrganizations()->removeElement($this);
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getWorkspaces()
+    {
+        return $this->workspaces;
+    }
 }

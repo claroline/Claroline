@@ -1,4 +1,4 @@
-import {makeReducer, combineReducers} from '#/main/core/utilities/redux'
+import {makeReducer, combineReducers} from '#/main/core/scaffolding/reducer'
 import {CHANGE_ORGANIZATION} from './actions'
 import cloneDeep from 'lodash/cloneDeep'
 
