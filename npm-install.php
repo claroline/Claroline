@@ -21,7 +21,7 @@ function update($subfolder, $url, $nodeModulesDir)
 
     //update
     if (realpath($subfolder)) {
-        echo "go to {$subfolder}";
+        echo "go to {$subfolder}\n";
         chdir($subfolder);
         exec('git pull');
 

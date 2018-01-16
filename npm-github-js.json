@@ -12,5 +12,6 @@
   "angular-ui-translation": "https://github.com/InnovaLangues/angular-ui-translation.git#master",
   "angular-ui-resource-picker": "https://github.com/InnovaLangues/angular-ui-resource-picker.git#master",
 
-  "jquery-2.2.4": "https://github.com/jquery/jquery.git#2.2.4"
+  "jquery-2.2.4": "https://github.com/jquery/jquery.git#2.2.4",
+  "angular-1.5.7": "https://github.com/angular/angular.js.git#v1.5.7"
 }

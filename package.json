@@ -84,9 +84,7 @@
     "whatwg-fetch": "^2.0.1",
     "angular-gridster": "0.13.14",
     "underscore": "1.8.3",
-
     "font-awesome": "4.7.0",
-
     "fluidvids.js": "git://github.com/toddmotto/fluidvids.git#v2.4.1",
     "tablesorter": "git://github.com/christianbach/tablesorter.git#774576308e",
     "Select2": "git://github.com/select2/select2.git#3.5.4",
