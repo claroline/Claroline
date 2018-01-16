@@ -43,6 +43,7 @@
         "fetch-dev": [
             "composer install --prefer-source",
             "npm install",
+            "npm install fullcalendar",
             "npm run bower"
         ],
         "build": [
