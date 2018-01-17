@@ -140,7 +140,7 @@ class BlogController extends BaseController
             200,
             [
                 'Content-Type' => 'application/pdf',
-                'Content-Disposition' => 'inline; filename="'.$blog->getResourceNode()->getName(),
+                'Content-Disposition' => 'inline; filename="'.$blog->getResourceNode()->getName().'.pdf"',
             ]
         );
     }
