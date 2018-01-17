@@ -12,7 +12,10 @@
 namespace Claroline\CoreBundle\API\Finder\User;
 
 use Claroline\CoreBundle\API\FinderInterface;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -30,23 +33,30 @@ class UserFinder implements FinderInterface
     /** @var TokenStorageInterface */
     private $tokenStorage;
 
+    /** @var WorkspaceManager */
+    private $workspaceManager;
+
     /**
-     * WorkspaceFinder constructor.
+     * UserFinder constructor.
      *
      * @DI\InjectParams({
-     *     "authChecker"  = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage" = @DI\Inject("security.token_storage")
+     *     "authChecker"      = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authChecker
      * @param TokenStorageInterface         $tokenStorage
+     * @param WorkspaceManager              $workspaceManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
-        TokenStorageInterface $tokenStorage
+        TokenStorageInterface $tokenStorage,
+        WorkspaceManager $workspaceManager
     ) {
         $this->authChecker = $authChecker;
         $this->tokenStorage = $tokenStorage;
+        $this->workspaceManager = $workspaceManager;
     }
 
     public function getClass()
@@ -56,7 +66,9 @@ class UserFinder implements FinderInterface
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
-        if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
+        if (isset($searches['contactable'])) {
+            $qb = $this->getContactableUsers($qb);
+        } elseif (!$this->authChecker->isGranted('ROLE_ADMIN')) {
             /** @var User $currentUser */
             $currentUser = $this->tokenStorage->getToken()->getUser();
             $qb->leftJoin('obj.organizations', 'uo');
@@ -95,6 +107,12 @@ class UserFinder implements FinderInterface
                     $qb->andWhere('ao.uuid IN (:administratedOrganizations)');
                     $qb->setParameter('administratedOrganizations', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'contactable':
+                    break;
+                case 'blacklist':
+                    $qb->andWhere("obj.uuid NOT IN (:{$filterName})");
+                    $qb->setParameter($filterName, $filterValue);
+                    break;
                 default:
                     if (is_bool($filterValue)) {
                         $qb->andWhere("obj.{$filterName} = :{$filterName}");
@@ -109,6 +127,32 @@ class UserFinder implements FinderInterface
         if (!in_array('isRemoved', array_keys($searches))) {
             $qb->andWhere('obj.isRemoved = FALSE');
         }
+
+        return $qb;
+    }
+
+    private function getContactableUsers(QueryBuilder $qb)
+    {
+        $currentUser = $this->tokenStorage->getToken()->getUser();
+        $organizationsIds = array_map(function (Organization $organization) {
+            return $organization->getUuid();
+        }, $currentUser->getOrganizations());
+        $workspacesIds = array_map(function (Workspace $workspace) {
+            return $workspace->getUuid();
+        }, $this->workspaceManager->getWorkspacesByUser($currentUser));
+
+        $qb->leftJoin('obj.organizations', 'uo');
+        $qb->orWhere('uo.uuid IN (:orgaIds)');
+        $qb->setParameter('orgaIds', $organizationsIds);
+
+        $qb->leftJoin('obj.roles', 'ur');
+        $qb->leftJoin('obj.groups', 'ug');
+        $qb->leftJoin('ug.roles', 'ugr');
+        $qb->leftJoin('ur.workspace', 'urw');
+        $qb->leftJoin('ugr.workspace', 'ugrw');
+        $qb->orWhere('urw.uuid IN (:workspacesIds)');
+        $qb->orWhere('ugrw.uuid IN (:workspacesIds)');
+        $qb->setParameter('workspacesIds', $workspacesIds);
 
         return $qb;
     }

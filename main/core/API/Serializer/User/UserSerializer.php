@@ -110,6 +110,7 @@ class UserSerializer
             'picture' => $user->getPicture(),
             'email' => $user->getMail(),
             'administrativeCode' => $user->getAdministrativeCode(),
+            'phone' => $user->getPhone(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
