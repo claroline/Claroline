@@ -9,13 +9,13 @@
     "themes": "node vendor/claroline/distribution/main/core/Resources/server/themes/bin build",
     "old-themes": "node vendor/claroline/distribution/main/core/Resources/server/scripts/build-old-themes",
     "uglify": "for f in web/dist/*.js; do echo \"Uglifying ${f}...\" && ./node_modules/.bin/uglifyjs $f -o $f; done",
-    "webpack": "export NODE_ENV=production && rm -rf web/dist/* && node_modules/webpack/bin/webpack.js --config=vendor/claroline/distribution/webpack.prod.js --progress --colors --display-error-details && npm run uglify",
-    "webpack:stats": "export NODE_ENV=production && rm -rf web/dist/* && npm run dll && node_modules/webpack/bin/webpack.js  --json --config=vendor/claroline/distribution/webpack.prod.js --progress --colors --display-error-details > webpack-stats.json && npm run uglify",
-    "watch": "node_modules/webpack-dev-server/bin/webpack-dev-server.js --hot  --config=vendor/claroline/distribution/webpack.dev.js --inline --content-base web --claro-tgt=watch --display-error-details",
+    "webpack:stats": "export NODE_ENV=production && rm -rf web/dist/* && npm run dll && node_modules/webpack/bin/webpack.js  --json --config=vendor/claroline/distribution/webpack.prod.js --progress --display-error-details > webpack-stats.json && npm run uglify",
+    "watch": "yarn run encore dev --watch --config=vendor/claroline/distribution/webpack.config.dev.js --display-error-details --progress --color --bail",
     "karma": "node_modules/.bin/karma start vendor/claroline/distribution/karma.conf.js",
     "mocha": "./node_modules/mocha/bin/mocha vendor/claroline/distribution/main/core/Resources/server/**/*.test.js",
     "istanbul": "npm run karma -- --single-run --reporters=coverage",
-    "compile": "yarn run encore production --config=vendor/claroline/distribution/webpack.config.js --display-error-details --progress --color --bail"
+    "webpack": "yarn run encore production --config=vendor/claroline/distribution/webpack.config.prod.js --display-error-details --progress --color --bail",
+    "dll": "yarn run encore production --config=vendor/claroline/distribution/webpack.config.dll.js --progress --colors --display-error-details"
   },
   "dependencies": {
     "claroline-distribution": "file:./vendor/claroline/distribution"
@@ -33,6 +33,10 @@
     "babel-preset-es2015": "^6.5.0",
     "html-loader": "*",
     "@symfony/webpack-encore": "*",
-    "eslint": "^2.13.1"
+    "redux-freeze": "^0.1.4",
+    "eslint": "^2.13.1",
+    "assets-webpack-plugin": "*",
+    "less": "*",
+    "yarn": "*"
   }
 }
