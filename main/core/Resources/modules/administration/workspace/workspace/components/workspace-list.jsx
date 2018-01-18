@@ -1,15 +1,12 @@
 import {t} from '#/main/core/translation'
 
 import {WorkspaceCard} from '#/main/core/administration/workspace/workspace/components/workspace-card.jsx'
-//import {generateUrl} from '#/main/core/fos-js-router'
+import {generateUrl} from '#/main/core/api/router'
 
 const WorkspaceList = {
   open: {
-    action: (row) => `#/workspaces/${row.id}`
-  },/*
-  open: {
     action: (rowData) => generateUrl('claro_workspace_open', {workspaceId: rowData.id})
-  },*/
+  },
   definition: [
     {
       name: 'name',

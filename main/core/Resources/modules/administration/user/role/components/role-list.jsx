@@ -32,16 +32,17 @@ const RoleList = {
       name: 'meta.users',
       type: 'number',
       label: t('count_users'),
-      displayed: true
+      displayed: false
     },  {
       name: 'restrictions.maxUsers',
       type: 'number',
       label: t('max_users'),
-      displayed: true
+      displayed: false
     }, {
       name: 'workspace.name',
       type: 'string',
       label: t('workspace'),
+      displayed: true,
       filterable: false
     }
   ],

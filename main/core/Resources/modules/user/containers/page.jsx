@@ -3,6 +3,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {connectPage} from '#/main/core/layout/page/connect'
 
+import {actions} from '#/main/core/administration/user/user/actions'
+
 import {UserPage as UserPageComponent} from '#/main/core/user/components/page.jsx'
 
 /**
@@ -41,7 +43,12 @@ const UserPageContainer = connectPage(
   }) : ({
     user: state.user
   }),
-  null
+  dispatch => ({
+    //edition
+    updatePassword(user, password) {
+      dispatch(actions.changePassword(user, password))
+    }
+  })
 )(UserPage)
 
 export {

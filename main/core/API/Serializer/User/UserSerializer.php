@@ -107,7 +107,7 @@ class UserSerializer
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
-            'picture' => $user->getPicture(),
+            'picture' => $this->serializePicture($user),
             'email' => $user->getMail(),
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $user->getPhone(),
@@ -155,6 +155,22 @@ class UserSerializer
     }
 
     /**
+     * Serialize the user picture.
+     *
+     * @param User $user
+     */
+    private function serializePicture(User $user)
+    {
+        $file = $this->container->get('claroline.persistence.object_manager')
+          ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
+          ->findOneByUrl($user->getPicture());
+
+        if ($file) {
+            return $this->container->get('claroline.api.serializer')->serialize($file);
+        }
+    }
+
+    /**
      * @param User $user
      *
      * @return array
@@ -175,6 +191,7 @@ class UserSerializer
             'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
             'enabled' => $user->isEnabled(),
             'removed' => $user->isRemoved(),
+            'locale' => $user->getLocale(),
         ];
     }
 
@@ -280,6 +297,14 @@ class UserSerializer
         $this->sipe('email', 'setMail', $data, $object);
         $this->sipe('plainPassword', 'setPlainPassword', $data, $object);
         $this->sipe('meta.enabled', 'setIsEnabled', $data, $object);
+        $this->sipe('meta.locale', 'setLocale', $data, $object);
+        $this->sipe('picture.url', 'setPicture', $data, $object);
+
+        if (isset($data['restrictions']['accessibleUntil'])) {
+            if ($date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $data['restrictions']['accessibleUntil'])) {
+                $object->setExpirationDate($date);
+            }
+        }
 
         if (isset($data['plainPassword'])) {
             $password = $this->container->get('security.encoder_factory')

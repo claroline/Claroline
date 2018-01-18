@@ -4,7 +4,6 @@ import {connect} from 'react-redux'
 
 import Configuration from '#/main/core/library/Configuration/Configuration'
 import {t, transChoice, Translator} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/api/router'
 
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_CONFIRM, MODAL_URL} from '#/main/core/layout/modal'
@@ -69,8 +68,8 @@ const WorkspacesPage = props =>
       },
       {
         icon: 'fa fa-fw fa-book',
-        label: t('open'),
-        action: (rows) => window.location.href = generateUrl('claro_workspace_open', {workspaceId: rows[0].id})
+        label: t('edit'),
+        action: (rows) => window.location.href = `#/workspaces/${rows[0].id}`
       }
     ]}
 
