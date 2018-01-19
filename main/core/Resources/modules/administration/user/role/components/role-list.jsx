@@ -1,7 +1,12 @@
+
+import React from 'react'
+
 import {t} from '#/main/core/translation'
 
 import {enumRole} from '#/main/core/user/role/constants'
 import {RoleCard} from '#/main/core/administration/user/role/components/role-card.jsx'
+
+import {generateUrl} from '#/main/core/api/router'
 
 const RoleList = {
   open: {
@@ -43,7 +48,18 @@ const RoleList = {
       type: 'string',
       label: t('workspace'),
       displayed: true,
-      filterable: false
+      filterable: false,
+      renderer: (rowData) => {
+        let WorkspaceLink
+
+        if (rowData.workspace) {
+          WorkspaceLink = <a href={generateUrl('claro_workspace_open', {workspaceId: rowData.workspace.id})}>{rowData.workspace.name}</a>
+        } else {
+          WorkspaceLink = '-'
+        }
+
+        return WorkspaceLink
+      }
     }
   ],
 
