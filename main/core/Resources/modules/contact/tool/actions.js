@@ -11,7 +11,7 @@ actions.loadOptions = makeActionCreator(OPTIONS_LOAD, 'options')
 
 actions.saveOptions = options => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_contact_options_update', {id: options.id}),
+    url: ['apiv2_contact_options_update', {id: options.id}],
     request: {
       method: 'PUT',
       body: JSON.stringify(options)
