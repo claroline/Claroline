@@ -30,10 +30,12 @@ const TooltipButton = props =>
       onClick={(e) => {
         if (!props.disabled) {
           props.onClick(e)
-
-          e.preventDefault()
-          e.stopPropagation()
         }
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        e.target.blur()
       }}
     >
       {props.children}

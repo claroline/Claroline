@@ -64,8 +64,9 @@ WorkspacesList.propTypes = {
   showModal: T.func.isRequired
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
+const Workspaces = connect(
+  null,
+  dispatch => ({
     copyWorkspaces(workspaces, asModel = false) {
       dispatch(
         modalActions.showModal(MODAL_CONFIRM, {
@@ -81,11 +82,9 @@ function mapDispatchToProps(dispatch) {
     showModal(type, props) {
       dispatch(modalActions.showModal(type, props))
     }
-  }
-}
-
-const Workspaces = connect(null, mapDispatchToProps)(WorkspacesList)
+  })
+)(WorkspacesList)
 
 export {
-  WorkspacesList
+  Workspaces
 }

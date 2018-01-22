@@ -25,7 +25,16 @@ const Redirect = {
   }
 }
 
+const LocationAware = {
+  propTypes: {
+    location: T.shape({
+      pathname: T.string
+    }).isRequired
+  }
+}
+
 export {
+  LocationAware,
   Route,
   Redirect
 }

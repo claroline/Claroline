@@ -5,6 +5,9 @@ import {connect} from 'react-redux'
 import {t} from '#/main/core/translation'
 import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
 
+import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
+import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
+
 import {Workspace}  from '#/main/core/administration/workspace/workspace/components/workspace.jsx'
 import {Workspaces} from '#/main/core/administration/workspace/workspace/components/workspaces.jsx'
 import {actions}    from '#/main/core/administration/workspace/workspace/actions'

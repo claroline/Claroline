@@ -10,13 +10,12 @@ import classes from 'classnames'
  */
 const Link = props =>
   <a
+    role="link"
     href={!props.disabled ? props.target : ''}
     disabled={props.disabled}
-    className={classes(
-      'btn',
-      props.className,
-      {disabled: props.disabled}
-    )}
+    className={classes('btn', props.className, {
+      disabled: props.disabled
+    })}
   >
     {props.children}
   </a>

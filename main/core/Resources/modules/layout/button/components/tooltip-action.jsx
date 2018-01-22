@@ -1,6 +1,7 @@
 import React from 'react'
-import {implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import classes from 'classnames'
 
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
@@ -15,10 +16,17 @@ const TooltipAction = props => React.createElement(
     title: props.label,
     [typeof props.action === 'function' ? 'onClick' : 'target']: props.action
   }),
-  <span className={props.icon} />
+  [
+    <span key="action-icon" aria-hidden={true} className={classes('action-icon', props.icon)} />,
+    props.children
+  ]
 )
 
-implementPropTypes(TooltipAction, ActionTypes)
+implementPropTypes(TooltipAction, ActionTypes, {
+  id: T.string.isRequired, // for tooltip
+  position: T.string, // for tooltip
+  children: T.node
+})
 
 export {
   TooltipAction

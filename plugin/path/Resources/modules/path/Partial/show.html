@@ -23,7 +23,7 @@
         <nav class="page-actions resource-actions" data-ng-if="pathShowCtrl.path.steps.length !== 0 && pathShowCtrl.editEnabled">
             <div class="page-actions-group">
                 <button type="button" class="btn page-action-btn page-action-primary" data-ng-click="pathShowCtrl.edit()">
-                    <span class="page-action-icon fa fa-pencil"></span>
+                    <span class="action-icon fa fa-pencil"></span>
                     <span class="sr-only">{{ 'edit'|trans:{}:'path_wizards' }}</span>
                 </button>
             </div>
@@ -31,7 +31,7 @@
             <div class="page-actions-group">
                 <button type="button" class="btn page-action-btn" data-ng-click="pathShowCtrl.toggleFullscreen()">
                     <span
-                        class="page-action-icon fa"
+                        class="action-icon fa"
                         data-ng-class="{
                             'fa-expand': !pathShowCtrl.fullscreen,
                             'fa-compress': pathShowCtrl.fullscreen
@@ -42,7 +42,7 @@
                 </button>
                 <div class="btn-group dropdown">
                     <button class="btn page-action-btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <span class="page-action-icon fa fa-ellipsis-v"></span>
+                        <span class="action-icon fa fa-ellipsis-v"></span>
                         <span class="sr-only">{{ 'more_actions'|trans:{}:'path_wizards' }}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right">

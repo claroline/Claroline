@@ -1,7 +1,5 @@
 import React from 'react'
 
-import {t} from '#/main/core/translation'
-
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {RoleList} from '#/main/core/administration/user/role/components/role-list.jsx'
 
