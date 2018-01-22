@@ -632,9 +632,7 @@ class WorkspaceManager
      */
     public function getOneByGuid($guid)
     {
-        return $this->workspaceRepo->findOneBy([
-            'guid' => $guid,
-        ]);
+        return $this->workspaceRepo->findOneByUuid($guid);
     }
 
     /**
