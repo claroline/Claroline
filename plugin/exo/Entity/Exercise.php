@@ -94,6 +94,15 @@ class Exercise extends AbstractResource
     private $endMessage = '';
 
     /**
+     * Show navigation buttons on the end page.
+     *
+     * @ORM\Column(name="end_navigation", type="boolean")
+     *
+     * @var bool
+     */
+    private $endNavigation = true;
+
+    /**
      * Show the Exercise meta in the overview of the Exercise.
      *
      * @var bool
@@ -703,5 +712,15 @@ class Exercise extends AbstractResource
     public function getMandatoryQuestions()
     {
         return $this->mandatoryQuestions;
+    }
+
+    public function hasEndNavigation()
+    {
+        return $this->endNavigation;
+    }
+
+    public function setEndNavigation($endNavigation)
+    {
+        $this->endNavigation = $endNavigation;
     }
 }

@@ -618,7 +618,7 @@
     "user_shared": "Name of user to share the question with",
     "users": "Users",
     "validate": "Validate",
-    "view_paper": "View paper",
+    "view_paper": "Show my answers",
     "warning": "Are you sure you want to delete this picture ?",
     "warning_change_type_q": "Warning: You may lose the data you've entered. Continue?",
     "warning_one_word": "You have chosen a question word. Caution: You need spaces in your answer.",
@@ -696,5 +696,7 @@
     "finish_confirm_title": "Finish the quiz",
     "finish_confirm_question": "Are you sure you want to finish the quiz ? You will no longer be able to change your answers for this attempt.",
     "hint_confirm_title": "Use a hint",
-    "hint_confirm_question": "Are you sure you want to use this hint ?"
+    "hint_confirm_question": "Are you sure you want to use this hint ?",
+    "show_end_navigation": "Display navigation shortcuts",
+    "show_end_navigation_help": "If checked, the shortcuts 'Show my answers' and 'Restart' will be displayed."
 }

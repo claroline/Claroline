@@ -76,6 +76,14 @@ const Display = props =>
         value={props.parameters.endMessage}
         onChange={endMessage => props.onChange('parameters.endMessage', endMessage)}
       />
+
+      <CheckGroup
+        id="quiz-end-navigation"
+        value={props.parameters.endNavigation}
+        label={tex('show_end_navigation')}
+        help={tex('show_end_navigation_help')}
+        onChange={checked => props.onChange('parameters.endNavigation', checked)}
+      />
     </ActivableSet>
 
     <RadioGroup
@@ -99,6 +107,7 @@ Display.propTypes = {
     showMetadata: T.bool.isRequired,
     showEndPage: T.bool.isRequired,
     endMessage: T.string,
+    endNavigation: T.bool,
     numbering: T.string
   }).isRequired,
   validating: T.bool.isRequired,
