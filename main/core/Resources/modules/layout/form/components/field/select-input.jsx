@@ -68,7 +68,7 @@ class SelectInput extends Component {
               onChange={e => this.props.onChange(e.target.value)}
             >
               {this.props.withEmptyOption &&
-                <option value={this.props.emptyValue}></option>
+                <option value={this.props.emptyValue} />
               }
               {this.props.options.map((o, idx) =>
                 <option key={`select-input-option-${idx}`} value={o.value}>

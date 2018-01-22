@@ -1,7 +1,6 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
-import merge from 'lodash/merge'
 
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {DataSearch as DataSearchTypes} from '#/main/core/data/prop-types'
 
 const EnumSearch = (props) =>
@@ -16,6 +15,7 @@ const EnumSearch = (props) =>
       onChange={e => {
         props.updateSearch(e.target.value)
         e.preventDefault()
+        e.stopPropagation()
       }}
     >
       <option />
@@ -25,7 +25,7 @@ const EnumSearch = (props) =>
     </select>
   </span>
 
-EnumSearch.propTypes = merge({}, DataSearchTypes.propTypes, {
+implementPropTypes(EnumSearch, DataSearchTypes, {
   choices: T.object.isRequired
 })
 

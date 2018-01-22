@@ -78,7 +78,10 @@ const UserForm = props =>
         fields: [{
           name: 'restrictions.accessibleUntil',
           type: 'date',
-          label: t('expiration_date')
+          label: t('expiration_date'),
+          options: {
+            time: true
+          }
         }]
       }
     ]}

@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans, t} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 
 import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
@@ -303,8 +303,8 @@ class EntryView extends Component {
           return getCountry(value) || ''
         case 'date' :
           return value != undefined && value !== null && value.date ?
-            localeDate(value.date) :
-            value ? localeDate(value) : ''
+            displayDate(value.date) :
+            value ? displayDate(value) : ''
         case 'rich_text':
           return (<div dangerouslySetInnerHTML={{ __html: value}}/>)
         case 'file':
@@ -390,8 +390,8 @@ class EntryView extends Component {
             break
           case 'date':
             replacedField = fieldValue && fieldValue.date ?
-              localeDate(fieldValue.date) :
-              fieldValue ? localeDate(fieldValue) : ''
+              displayDate(fieldValue.date) :
+              fieldValue ? displayDate(fieldValue) : ''
             break
           case 'country':
             replacedField = getCountry(fieldValue) || ''
@@ -434,10 +434,10 @@ class EntryView extends Component {
 
                     <div className="date">
                       {this.props.entry.publicationDate ?
-                        t('published_at', {date: localeDate(this.props.entry.publicationDate)}) : t('not_published')
+                        t('published_at', {date: displayDate(this.props.entry.publicationDate, false, true)}) : t('not_published')
                       }
 
-                      , {t('last_modified_at', {date: localeDate(this.props.entry.editionDate)})}
+                      , {t('last_modified_at', {date: displayDate(this.props.entry.editionDate, false, true)})}
                     </div>
                   </div>
                 }

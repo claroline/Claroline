@@ -197,7 +197,6 @@ export const FormField = props => {
         <div className={classes({'has-error': props.error})}>
           <Date
             id={props.controlId}
-            minDate={moment.utc('1900-01-01T12:00:00')}
             value={props.value !== undefined && props.value !== null ? props.value.date || props.value || '' : ''}
             disabled={props.disabled}
             onChange={props.onChange}
@@ -209,7 +208,6 @@ export const FormField = props => {
         <DateGroup
           id={props.controlId}
           label={props.label}
-          minDate={moment.utc('1900-01-01T12:00:00')}
           value={props.value !== undefined && props.value !== null ? props.value.date || props.value || '' : ''}
           disabled={props.disabled}
           error={props.error}

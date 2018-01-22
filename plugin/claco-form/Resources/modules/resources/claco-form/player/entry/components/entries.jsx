@@ -5,7 +5,7 @@ import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 
 import {trans, t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 import {generateUrl} from '#/main/core/api/router'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
@@ -167,7 +167,7 @@ class Entries extends Component {
         type: 'date',
         filterable: false,
         displayed: this.isDisplayedField('creationDateString'),
-        renderer: (rowData) => this.canViewEntryMetadata(rowData) ? localeDate(rowData.creationDate) : '-'
+        renderer: (rowData) => this.canViewEntryMetadata(rowData) ? displayDate(rowData.creationDate) : '-'
       })
       columns.push({
         name: 'createdAfter',
@@ -351,7 +351,7 @@ class Entries extends Component {
       if (value !== undefined && value !== null && value !== '') {
         switch (getFieldType(field.type).name) {
           case 'date':
-            formattedValue = value.date ? localeDate(value.date) : localeDate(value)
+            formattedValue = value.date ? localeDate(value.date) : displayDate(value)
             break
           case 'country':
             formattedValue = getCountry(value)

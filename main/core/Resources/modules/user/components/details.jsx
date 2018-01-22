@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 
 import {getPlatformRoles} from '#/main/core/user/role/utils'
 
@@ -16,13 +16,13 @@ const UserDetails = props =>
       <li className="list-group-item">
         {t('registered_at')}
         <span className="value">
-          {localeDate(props.user.meta.created)}
+          {displayDate(props.user.meta.created)}
         </span>
       </li>
       <li className="list-group-item">
         {t('last_logged_at')}
         <span className="value">
-          {props.user.meta.lastLogin ? localeDate(props.user.meta.lastLogin) : t('never')}
+          {props.user.meta.lastLogin ? displayDate(props.user.meta.lastLogin, false, true) : t('never')}
         </span>
       </li>
     </ul>

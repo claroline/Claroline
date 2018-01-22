@@ -159,7 +159,6 @@ const Random = props =>
       <div className="col-md-2">
         <Date
           id="params-random-start-date"
-          minDate={moment.utc('1900-01-01T12:00:00')}
           value={props.params.random_start_date}
           onChange={date => props.updateParameters('random_start_date', date)}
         />
@@ -170,7 +169,6 @@ const Random = props =>
       <div className="col-md-2">
         <Date
           id="params-random-end-date"
-          minDate={moment.utc('1900-01-01T12:00:00')}
           value={props.params.random_end_date}
           onChange={date => props.updateParameters('random_end_date', date)}
         />

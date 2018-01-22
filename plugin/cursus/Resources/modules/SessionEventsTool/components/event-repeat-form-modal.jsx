@@ -188,7 +188,7 @@ export class EventRepeatFormModal  extends Component {
                 <Date
                   id="event-repeat-until"
                   value={this.state.until}
-                  minDate={moment.utc(this.props.event.startDate)}
+                  minDate={this.props.event.startDate}
                   onChange={date => this.updateFormState('until', date)}
                 />
                 {this.state.untilError &&

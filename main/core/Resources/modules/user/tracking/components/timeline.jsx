@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 import {constants} from '#/main/core/user/tracking/constants'
 
 import {ScoreGauge} from '#/main/core/layout/progression/components/score-gauge.jsx'
@@ -17,7 +17,7 @@ const EventWrapper = props =>
 
     <div className="timeline-event">
       <span className="timeline-event-date">
-        {localeDate(props.date, true)}
+        {displayDate(props.date, true, true)}
       </span>
 
       {props.status && <span className={classes('timeline-event-status', {

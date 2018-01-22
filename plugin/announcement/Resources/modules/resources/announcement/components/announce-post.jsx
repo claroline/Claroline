@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
 import {UserMicro} from '#/main/core/user/components/micro.jsx'
@@ -29,7 +29,7 @@ const AnnouncePost = props =>
 
           <div className="date">
             {props.meta.publishedAt ?
-              t('published_at', {date: localeDate(props.meta.publishedAt)}) : t('not_published')
+              t('published_at', {date: displayDate(props.meta.publishedAt, true, true)}) : t('not_published')
             }
           </div>
         </div>

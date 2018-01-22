@@ -1,5 +1,5 @@
-import {isValidDate, localeDate, serverDate} from '#/main/core/scaffolding/date'
-import {t} from '#/main/core/translation'
+import {isValidDate, displayDate, apiDate} from '#/main/core/scaffolding/date'
+import {trans} from '#/main/core/translation'
 
 import {DateGroup} from '#/main/core/layout/form/components/group/date-group.jsx'
 import {DateSearch} from '#/main/core/data/types/date/components/search.jsx'
@@ -11,36 +11,39 @@ const dateDefinition = {
     type: DATE_TYPE,
     creatable: true,
     icon: 'fa fa-fw fa-calendar',
-    label: t('date'),
-    description: t('date_desc')
+    label: trans('date'),
+    description: trans('date_desc')
   },
 
   /**
    * Parses display date into ISO 8601 date.
    *
    * @param {string} display
+   * @param {object} options
    *
    * @return {string}
    */
-  parse: (display) => display ? serverDate(display, false) : null,
+  parse: (display, options = {}) => display ? apiDate(display, false, options.time) : null,
 
   /**
    * Renders ISO date into locale date.
    *
    * @param {string} raw
+   * @param {object} options
    *
    * @return {string}
    */
-  render: (raw) => raw ? localeDate(raw, false) : null,
+  render: (raw, options = {}) => raw ? displayDate(raw, false, options.time) : null,
 
   /**
    * Validates input value for a date.
    *
    * @param {string} value
+   * @param {object} options
    *
    * @return {boolean}
    */
-  validate: (value) => typeof value === 'string' && isValidDate(value),
+  validate: (value, options = {}) => typeof value === 'string' && isValidDate(value),
 
   components: {
     form: DateGroup,

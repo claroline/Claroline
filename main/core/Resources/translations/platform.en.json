@@ -1545,5 +1545,9 @@
     "access_max_users": "Restrict number of users",
     "maxUsers": "Maximum number of users",
     "add_location": "Add a location",
+    "add_scheduled_task": "Schedule a task",
+    "open_calendar": "Open calendar",
+    "close_calendar": "Close calendar",
+    "now": "Now",
     "workspace_awaiting_validation": "An administrator must accept your registration to the workspace."
 }

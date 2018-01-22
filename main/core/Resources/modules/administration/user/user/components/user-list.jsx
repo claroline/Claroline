@@ -53,10 +53,13 @@ const UserList = {
     },
     {
       name: 'meta.lastLogin',
-      type: 'datetime',
+      type: 'date',
       alias: 'lastLogin',
       label: t('last_login'),
-      displayed: true
+      displayed: true,
+      options: {
+        time: true
+      }
     }
   ],
   card: UserCard

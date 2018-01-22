@@ -1,62 +1,71 @@
-import React, {Component} from 'react'
-import DatePicker from 'react-datepicker'
-import classes from 'classnames'
-import moment from 'moment'
-import 'react-datepicker/dist/react-datepicker.css'
+import React from 'react'
 
-import {getLocale} from '#/main/core/intl/locale'
-import {getFormat} from '#/main/core/scaffolding/date'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {isValidDate, getApiFormat, getDisplayFormat, displayDate, apiDate} from '#/main/core/scaffolding/date'
 
-// todo : date input should only return date part (no time).
-//        But if I remove it now, it will break deserializers which expect time to be present
+import {CalendarPicker} from '#/main/core/layout/calendar/components/picker.jsx'
 
-// class is required because we use refs inside the component
-class Date extends Component {
-  render() {
-    return (
-      <span>
-        {this.props.onlyButton &&
-          <button
-            className="btn btn-sm btn-filter"
-            onClick={e => {
-              this._calendar.setOpen(true)
+const Date = props => {
+  const displayFormat = getDisplayFormat(false, props.time)
 
-              // stop propagation
-              // this is mostly required when input is used in list search (without it it submit the filter)
-              e.preventDefault()
-              e.stopPropagation()
-            }}
-          >
-            <span className="fa fa-fw fa-calendar" />
-          </button>
-        }
-        <DatePicker
-          {...this.props}
-          name={this.props.id}
-          className={classes('form-control', this.props.onlyButton && 'input-hide')}
-          locale={getLocale()}
-          dateFormat={getFormat(false)}
-          ref={(c) => this._calendar = c}
-          selected={this.props.value ? moment(this.props.value) : ''}
-          onChange={date => this.props.onChange(moment(date).format('YYYY-MM-DD\THH:mm:ss'))}
+  let displayValue = props.value || ''
+  if (props.value && isValidDate(props.value, getApiFormat())) {
+    displayValue = displayDate(props.value, false, props.time)
+  }
+
+  return (
+    <div className="input-group">
+      <span className="input-group-btn">
+        <CalendarPicker
+          className="btn-default"
+          selected={props.value}
+          disabled={props.disabled}
+          onChange={props.onChange}
+          minDate={props.minDate}
+          maxDate={props.maxDate}
+          time={props.time}
+          minTime={props.minTime}
+          maxTime={props.maxTime}
         />
       </span>
-    )
-  }
+
+      <input
+        id={props.id}
+        type="text"
+        className="form-control"
+        placeholder={displayFormat}
+        value={displayValue}
+        disabled={props.disabled}
+        onChange={(e) => {
+          if (!props.disabled) {
+            // strict parsing to avoid catching too many things
+            // (ex. a simple int like 10 is a valid date for moment)
+            if (isValidDate(e.target.value, displayFormat)) {
+              props.onChange(apiDate(e.target.value, false, props.time))
+            } else {
+              props.onChange(e.target.value)
+            }
+          }
+        }}
+      />
+    </div>
+  )
 }
 
 implementPropTypes(Date, FormFieldTypes, {
   value: T.string,
-  // custom props
-  minDate: T.object,
-  maxDate: T.object,
-  onlyButton: T.bool
+
+  // date configuration
+  minDate: T.string,
+  maxDate: T.string,
+
+  // time configuration
+  time: T.bool,
+  minTime: T.string,
+  maxTime: T.string
 }, {
-  value: '',
-  minDate: moment.utc(),
-  onlyButton: false
+  value: ''
 })
 
 export {

@@ -4,7 +4,7 @@ import classes from 'classnames'
 import merge from 'lodash/merge'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 
 import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
 import {User as UserTypes} from '#/main/core/user/prop-types'
@@ -43,7 +43,7 @@ const UserMessage = props => {
             }
 
             {props.date &&
-              <div className="date">{t('published_at', {date: localeDate(props.date)})}</div>
+              <div className="date">{t('published_at', {date: displayDate(props.date, true, true)})}</div>
             }
           </div>
 

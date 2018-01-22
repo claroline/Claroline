@@ -332,6 +332,7 @@ class Correction extends Component {
               label={tex('correction_date')}
               value={this.props.parameters.correctionDate}
               onChange={date => this.props.onChange('parameters.correctionDate', date)}
+              time={true}
             />
           </div>
         }
