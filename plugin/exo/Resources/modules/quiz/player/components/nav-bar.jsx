@@ -1,5 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {isQuestionType} from './../../../items/item-types'
 
 import {t, tex} from '#/main/core/translation'
 
@@ -59,9 +60,11 @@ const canGoForward = (step, answers, mandatoryQuestions) => {
 
   items.forEach(item => {
     let hasAnswer = Boolean(answers[item.id] && answers[item.id].data)
-    let goForward = mandatoryQuestions ?
+    let goForward = isQuestionType(item.type) ?
+      mandatoryQuestions ?
       item.meta.mandatory ? true: hasAnswer:
-      item.meta.mandatory ? hasAnswer: true
+      item.meta.mandatory ? hasAnswer: true:
+      true
 
     if (!goForward) {
       canGoForward = false
