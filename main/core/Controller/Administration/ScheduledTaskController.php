@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\API\FinderProvider;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
@@ -24,24 +23,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
  */
 class ScheduledTaskController extends Controller
 {
-    private $finder;
     private $configHandler;
 
     /**
      * @DI\InjectParams({
-     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "finder"        = @DI\Inject("claroline.api.finder")
+     *     "configHandler" = @DI\Inject("claroline.config.platform_config_handler")
      * })
      *
      * @param PlatformConfigurationHandler $configHandler
-     * @param FinderProvider               $finder
      */
     public function __construct(
-        PlatformConfigurationHandler $configHandler,
-        FinderProvider $finder
+        PlatformConfigurationHandler $configHandler
     ) {
         $this->configHandler = $configHandler;
-        $this->finder = $finder;
     }
 
     /**
@@ -55,12 +49,6 @@ class ScheduledTaskController extends Controller
     {
         return [
             'isCronConfigured' => $this->configHandler->hasParameter('is_cron_configured') && $this->configHandler->getParameter('is_cron_configured'),
-            'tasks' => $this->finder->search(
-                'Claroline\CoreBundle\Entity\Task\ScheduledTask', [
-                    'limit' => 20,
-                    'sortBy' => 'name',
-                ]
-            ),
         ];
     }
 }

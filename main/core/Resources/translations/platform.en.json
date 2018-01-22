@@ -1544,10 +1544,10 @@
     "role_personalWorkspaceCreation_help": "A new Personal Workspace will be automatically generated for users created with this Role.",
     "access_max_users": "Restrict number of users",
     "maxUsers": "Maximum number of users",
-    "add_location": "Add a location",
     "add_scheduled_task": "Schedule a task",
     "open_calendar": "Open calendar",
     "close_calendar": "Close calendar",
     "now": "Now",
+    "task": "Task",
     "workspace_awaiting_validation": "An administrator must accept your registration to the workspace."
 }
