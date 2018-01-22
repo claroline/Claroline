@@ -24,7 +24,7 @@ function getTranslator() {
  *
  * @returns {string}
  */
-export function trans(key, placeholders = {}, domain = DEFAULT_DOMAIN) {
+export function trans(key, placeholders = {}, domain = PLATFORM_DOMAIN) {
   return getTranslator().trans(key, placeholders, domain)
 }
 
@@ -39,7 +39,7 @@ export function trans(key, placeholders = {}, domain = DEFAULT_DOMAIN) {
  * @returns {string}
  */
 
-export function transChoice(key, count, placeholders = {}, domain = DEFAULT_DOMAIN) {
+export function transChoice(key, count, placeholders = {}, domain = PLATFORM_DOMAIN) {
   return getTranslator().transChoice(key, count, placeholders, domain)
 }
 
@@ -50,6 +50,8 @@ export function transChoice(key, count, placeholders = {}, domain = DEFAULT_DOMA
  * @param {object} placeholders
  *
  * @returns {string}
+ *
+ * @deprecated use `trans()` instead.
  */
 export function t(message, placeholders = {}) {
   return trans(message, placeholders, PLATFORM_DOMAIN)
