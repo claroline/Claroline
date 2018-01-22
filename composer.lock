@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "8e5aa11f4fae6384169cecebe927548702c6da59"
+                "reference": "5c2124611c262d5cee1fb71dd421041993cff39d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/8e5aa11f4fae6384169cecebe927548702c6da59",
-                "reference": "8e5aa11f4fae6384169cecebe927548702c6da59",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/5c2124611c262d5cee1fb71dd421041993cff39d",
+                "reference": "5c2124611c262d5cee1fb71dd421041993cff39d",
                 "shasum": ""
             },
             "require": {
@@ -380,7 +380,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "GPL-3.0+"
+                "GPL-3.0-or-later"
             ],
             "authors": [
                 {
@@ -395,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-01-17 12:10:36"
+            "time": "2018-01-20 07:09:52"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -4603,16 +4603,16 @@
         },
         {
             "name": "ramsey/uuid",
-            "version": "3.7.2",
+            "version": "3.7.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ramsey/uuid.git",
-                "reference": "bba83ad77bb9deb6d3c352a7361b818e415b221d"
+                "reference": "44abcdad877d9a46685a3a4d221e3b2c4b87cb76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ramsey/uuid/zipball/bba83ad77bb9deb6d3c352a7361b818e415b221d",
-                "reference": "bba83ad77bb9deb6d3c352a7361b818e415b221d",
+                "url": "https://api.github.com/repos/ramsey/uuid/zipball/44abcdad877d9a46685a3a4d221e3b2c4b87cb76",
+                "reference": "44abcdad877d9a46685a3a4d221e3b2c4b87cb76",
                 "shasum": ""
             },
             "require": {
@@ -4623,17 +4623,15 @@
                 "rhumsaa/uuid": "self.version"
             },
             "require-dev": {
-                "apigen/apigen": "^4.1",
                 "codeception/aspect-mock": "^1.0 | ~2.0.0",
                 "doctrine/annotations": "~1.2.0",
                 "goaop/framework": "1.0.0-alpha.2 | ^1.0 | ^2.1",
                 "ircmaxell/random-lib": "^1.1",
                 "jakub-onderka/php-parallel-lint": "^0.9.0",
-                "mockery/mockery": "^0.9.4",
+                "mockery/mockery": "^0.9.9",
                 "moontoast/math": "^1.1",
                 "php-mock/php-mock-phpunit": "^0.3|^1.1",
                 "phpunit/phpunit": "^4.7|^5.0",
-                "satooshi/php-coveralls": "^0.6.1",
                 "squizlabs/php_codesniffer": "^2.3"
             },
             "suggest": {
@@ -4681,7 +4679,7 @@
                 "identifier",
                 "uuid"
             ],
-            "time": "2018-01-13 22:22:03"
+            "time": "2018-01-20 00:28:24"
         },
         {
             "name": "rmccue/requests",
@@ -7820,12 +7818,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "12b11404c0f9f047a956f07f2fe702577f32c05d"
+                "reference": "cbbf07012355e1aba9a057f6c78268139acadfd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/12b11404c0f9f047a956f07f2fe702577f32c05d",
-                "reference": "12b11404c0f9f047a956f07f2fe702577f32c05d",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/cbbf07012355e1aba9a057f6c78268139acadfd5",
+                "reference": "cbbf07012355e1aba9a057f6c78268139acadfd5",
                 "shasum": ""
             },
             "require": {
@@ -7878,7 +7876,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-01-13 14:06:00"
+            "time": "2018-01-21 19:07:38"
         },
         {
             "name": "webmozart/assert",
