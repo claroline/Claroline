@@ -18,10 +18,7 @@
     "dll": "yarn run encore production --config=vendor/claroline/distribution/webpack.config.dll.js --progress --colors --display-error-details"
   },
   "dependencies": {
-    "claroline-distribution": "file:./vendor/claroline/distribution"
-  },
-  "devDependencies": {
-    "bower": "^1.7.7",
+    "claroline-distribution": "file:./vendor/claroline/distribution",
     "filesystem-bower-resolver": "*",
     "bower-resolve-webpack-plugin": "*",
     "webpack": "^3",
@@ -35,8 +32,13 @@
     "@symfony/webpack-encore": "*",
     "redux-freeze": "^0.1.4",
     "eslint": "^2.13.1",
+    "eslint-plugin-react": "*",
     "assets-webpack-plugin": "*",
     "less": "*",
-    "yarn": "*"
+    "yarn": "*",
+    "angular": "1.5.7"
+  },
+  "devDependencies": {
+    "bower": "^1.7.7"
   }
 }
