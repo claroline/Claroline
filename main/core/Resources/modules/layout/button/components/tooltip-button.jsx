@@ -17,6 +17,7 @@ const TooltipButton = props =>
     id={props.id}
     position={props.position}
     tip={props.title}
+    disabled={props.disabled}
   >
     <button
       type="button"
