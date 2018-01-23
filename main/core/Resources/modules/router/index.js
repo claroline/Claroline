@@ -29,6 +29,8 @@ import {Router, Routes, Route} from '#/main/core/router/components/router.jsx'
  *
  * @param {Array}  routesConfig
  * @param {string} basePath
+ *
+ * @deprecated use the RoutedPage component instead.
  */
 function routedApp(routesConfig, basePath = '') {
   return () => {
