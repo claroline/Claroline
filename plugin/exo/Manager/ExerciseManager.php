@@ -288,23 +288,35 @@ class ExerciseManager
         ]);
 
         $handle = fopen('php://output', 'w+');
-        /** @var Paper $paper */
-        foreach ($papers as $paper) {
-            $structure = json_decode($paper->getStructure());
-            $totalScoreOn = $structure->parameters->totalScoreOn && floatval($structure->parameters->totalScoreOn) > 0 ? floatval($structure->parameters->totalScoreOn) : $this->paperManager->calculateTotal($paper);
-            $user = $paper->getUser();
-            $score = $this->paperManager->calculateScore($paper, $totalScoreOn);
-            fputcsv($handle, [
-                $user && !$paper->isAnonymized() ? $user->getLastName() : '',
-                $user && !$paper->isAnonymized() ? $user->getFirstName() : '',
-                $paper->getNumber(),
-                $paper->getStart()->format('Y-m-d H:i:s'),
-                $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : '',
-                $paper->isInterrupted() ? 'not finished' : 'finished',
-                $score !== floor($score) ? number_format($score, 2) : $score,
-                $totalScoreOn,
-            ], ';');
+        $limit = 250;
+        $iteration = 0;
+        $papers = [];
+
+        while ($iteration === 0 || count($papers) >= $limit) {
+            $papers = $repo->findBy(['exercise' => $exercise], [], $limit, $iteration * $limit);
+            ++$iteration;
+
+            /** @var Paper $paper */
+            foreach ($papers as $paper) {
+                $structure = json_decode($paper->getStructure());
+                $totalScoreOn = $structure->parameters->totalScoreOn && floatval($structure->parameters->totalScoreOn) > 0 ? floatval($structure->parameters->totalScoreOn) : $this->paperManager->calculateTotal($paper);
+                $user = $paper->getUser();
+                $score = $this->paperManager->calculateScore($paper, $totalScoreOn);
+                fputcsv($handle, [
+                    $user && !$paper->isAnonymized() ? $user->getLastName() : '',
+                    $user && !$paper->isAnonymized() ? $user->getFirstName() : '',
+                    $paper->getNumber(),
+                    $paper->getStart()->format('Y-m-d H:i:s'),
+                    $paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : '',
+                    $paper->isInterrupted() ? 'not finished' : 'finished',
+                    $score !== floor($score) ? number_format($score, 2) : $score,
+                    $totalScoreOn,
+                ], ';');
+            }
+
+            $this->om->clear('UJM\ExoBundle\Entity\Attempt\Paper');
         }
+
         fclose($handle);
 
         return $handle;
@@ -315,8 +327,7 @@ class ExerciseManager
         /** @var PaperRepository $repo */
         $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
 
-        $dataPapers = [];
-        $titles = [['username'], ['lastname'], ['firstname']];
+        $titles = [['username'], ['lastname'], ['firstname'], ['start'], ['end'], ['status'], ['score'], ['total_score_on']];
         $items = [];
         $questions = [];
 
@@ -337,65 +348,7 @@ class ExerciseManager
             }
         }
 
-        //this is the same reason why we use an array of array here
-        $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
-        $papers = $repo->findBy(['exercise' => $exercise]);
-
-        foreach ($papers as $paper) {
-            $answers = $paper->getAnswers();
-            $csv = [];
-            $user = $paper->getUser();
-
-            if ($user) {
-                $csv['username'] = [$user->getUsername()];
-                $csv['firstname'] = [$user->getFirstName()];
-                $csv['lastname'] = [$user->getLastName()];
-            } else {
-                $csv['username'] = ['none'];
-                $csv['lastname'] = ['none'];
-                $csv['firstname'] = ['none'];
-            }
-
-            $notFound = [];
-            foreach ($questions as $question) {
-                $item = $items[$question->getId()];
-                $found = false;
-
-                foreach ($answers as $answer) {
-                    if ($answer->getQuestionId() === $question->getUuid()) {
-                        if ($this->definitions->has($item->getMimeType())) {
-                            $found = true;
-                            $definition = $this->definitions->get($item->getMimeType());
-                            $csv[$answer->getQuestionId()] = $definition->getCsvAnswers($item->getInteraction(), $answer);
-                        }
-                    }
-                }
-
-                if (!$found) {
-                    $notFound[] = $question->getUuid();
-                    $items[$question->getId()];
-                    $itemType = $item->getInteraction();
-                    $countBlank = 0;
-
-                    if ($this->definitions->has($item->getMimeType())) {
-                        $definition = $this->definitions->get($item->getMimeType());
-                        $countBlank = count($definition->getCsvTitles($itemType));
-                    }
-
-                    $blankData = [];
-                    for ($i = 0; $i < $countBlank; ++$i) {
-                        $blankData[] = '';
-                    }
-
-                    $csv[$item->getUuid()] = $blankData;
-                }
-            }
-
-            $dataPapers[] = $csv;
-        }
-
         $flattenedTitles = [];
-        $flattenedData = [];
 
         foreach ($titles as $title) {
             foreach ($title as $subTitle) {
@@ -403,25 +356,102 @@ class ExerciseManager
             }
         }
 
-        $flattenedData = [];
+        $fp = fopen('php://output', 'w+');
+        fputcsv($fp, $flattenedTitles, ';');
 
-        foreach ($dataPapers as $paper) {
-            $flattenedAnswers = [];
-            foreach ($paper as $paperItem) {
-                if (is_array($paperItem)) {
-                    foreach ($paperItem as $paperEl) {
-                        $flattenedAnswers[] = $paperEl;
+        //this is the same reason why we use an array of array here
+        $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
+        $limit = 250;
+        $iteration = 0;
+        $papers = [];
+
+        while ($iteration === 0 || count($papers) >= $limit) {
+            $papers = $repo->findBy(['exercise' => $exercise], [], $limit, $iteration * $limit);
+            ++$iteration;
+            $dataPapers = [];
+
+            foreach ($papers as $paper) {
+                $structure = json_decode($paper->getStructure());
+                $totalScoreOn = $structure->parameters->totalScoreOn && floatval($structure->parameters->totalScoreOn) > 0 ? floatval($structure->parameters->totalScoreOn) : $this->paperManager->calculateTotal($paper);
+                $score = $this->paperManager->calculateScore($paper, $totalScoreOn);
+
+                $answers = $paper->getAnswers();
+                $csv = [];
+                $user = $paper->getUser();
+
+                if ($user) {
+                    $csv['username'] = [$user->getUsername()];
+                    $csv['lastname'] = [$user->getLastName()];
+                    $csv['firstname'] = [$user->getFirstName()];
+                } else {
+                    $csv['username'] = ['none'];
+                    $csv['lastname'] = ['none'];
+                    $csv['firstname'] = ['none'];
+                }
+
+                $csv['start'] = [$paper->getStart()->format('Y-m-d H:i:s')];
+                $csv['end'] = [$paper->getEnd() ? $paper->getEnd()->format('Y-m-d H:i:s') : ''];
+                $csv['status'] = [$paper->isInterrupted() ? 'not finished' : 'finished'];
+                $csv['score'] = [$score !== floor($score) ? number_format($score, 2) : $score];
+                $csv['total_score_on'] = [$totalScoreOn];
+
+                $notFound = [];
+                foreach ($questions as $question) {
+                    $item = $items[$question->getId()];
+                    $found = false;
+
+                    foreach ($answers as $answer) {
+                        if ($answer->getQuestionId() === $question->getUuid()) {
+                            if ($this->definitions->has($item->getMimeType())) {
+                                $found = true;
+                                $definition = $this->definitions->get($item->getMimeType());
+                                $csv[$answer->getQuestionId()] = $definition->getCsvAnswers($item->getInteraction(), $answer);
+                            }
+                        }
+                    }
+
+                    if (!$found) {
+                        $notFound[] = $question->getUuid();
+                        $items[$question->getId()];
+                        $itemType = $item->getInteraction();
+                        $countBlank = 0;
+
+                        if ($this->definitions->has($item->getMimeType())) {
+                            $definition = $this->definitions->get($item->getMimeType());
+                            $countBlank = count($definition->getCsvTitles($itemType));
+                        }
+
+                        $blankData = [];
+                        for ($i = 0; $i < $countBlank; ++$i) {
+                            $blankData[] = '';
+                        }
+
+                        $csv[$item->getUuid()] = $blankData;
                     }
                 }
+
+                $dataPapers[] = $csv;
             }
-            $flattenedData[] = $flattenedAnswers;
-        }
 
-        $fp = fopen('php://output', 'w+');
-        fputcsv($fp, $flattenedTitles);
+            $flattenedData = [];
 
-        foreach ($flattenedData as $item) {
-            fputcsv($fp, $item);
+            foreach ($dataPapers as $paper) {
+                $flattenedAnswers = [];
+                foreach ($paper as $paperItem) {
+                    if (is_array($paperItem)) {
+                        foreach ($paperItem as $paperEl) {
+                            $flattenedAnswers[] = $paperEl;
+                        }
+                    }
+                }
+                $flattenedData[] = $flattenedAnswers;
+            }
+
+            $this->om->clear('UJM\ExoBundle\Entity\Attempt\Paper');
+
+            foreach ($flattenedData as $item) {
+                fputcsv($fp, $item, ';');
+            }
         }
 
         fclose($fp);

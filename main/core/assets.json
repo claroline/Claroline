@@ -20,7 +20,8 @@
       "scheduled-task-management": "administration/scheduled-task",
       "user-registration": "user/registration",
       "user-profile": "user/profile",
-      "user-tracking": "user/tracking"
+      "user-tracking": "user/tracking",
+      "contacts-tool": "contact/tool"
     }
   },
 

@@ -15,7 +15,7 @@ const CheckboxesGroup = props =>
       id={props.id}
       inline={props.inline}
       options={props.options}
-      checkedValues={props.value || []}
+      value={props.value || []}
       disabled={props.disabled}
       onChange={props.onChange}
     />

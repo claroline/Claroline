@@ -67,4 +67,9 @@ class OrganizationManager
     {
         return $this->repo->findOrganizationsByIds($ids);
     }
+
+    public function getAllOrganizations()
+    {
+        return $this->repo->findAll();
+    }
 }

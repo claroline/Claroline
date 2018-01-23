@@ -813,6 +813,10 @@ class RoleManager
             return true;
         }
 
+        if ($role->getMaxUsers() === null) {
+            return true;
+        }
+
         if ($role->getWorkspace()) {
             $maxUsers = $role->getWorkspace()->getMaxUsers();
             $countByWorkspace = $this->container->get('claroline.manager.workspace_manager')->countUsers($role->getWorkspace(), true);

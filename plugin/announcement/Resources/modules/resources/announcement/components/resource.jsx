@@ -54,6 +54,7 @@ const Resource = props =>
         }, {
           path: '/:id',
           component: Announce,
+          exact: true,
           onEnter: (params) => props.openDetail(params.id),
           onLeave: props.resetDetail
         }, {

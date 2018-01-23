@@ -76,8 +76,29 @@ const UserForm = props =>
             name: 'administrativeCode',
             type: 'string',
             label: t('administrativeCode')
+          }, {
+            name: 'meta.locale',
+            type: 'locale',
+            label: t('default_language'),
+            options: {
+              onlyEnabled: true
+            }
+          }, {
+            name: 'picture',
+            type: 'image',
+            label: t('picture')
           }
         ]
+      },
+      {
+        id: 'restrictions',
+        icon: 'fa fa-fw fa-key',
+        title: t('access_restrictions'),
+        fields: [{
+          name: 'restrictions.accessibleUntil',
+          type: 'date',
+          label: t('expiration_date')
+        }]
       }
     ]}
   >

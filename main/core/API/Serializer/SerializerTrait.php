@@ -53,12 +53,15 @@ trait SerializerTrait
      */
     public function setIfPropertyExists($prop, $setter, $data, $object)
     {
+        //date parsing just in case
+
         if (!$this->arrayUtils) {
             $this->arrayUtils = new ArrayUtils();
         }
 
         try {
             $value = $this->arrayUtils->get($data, $prop);
+
             $object->{$setter}($value);
         } catch (\Exception $e) {
         }

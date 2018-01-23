@@ -1,0 +1,29 @@
+{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+
+{% block title %}
+    {{ 'my_contacts' | trans({}, 'tools') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.desktopBreadcrumbs([
+            {
+                'name': 'my_contacts'|trans({}, 'tools'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block content %}
+    <div
+        class="page-container contacts-container"
+        data-options="{{ options | api_serialize | json_encode | raw | escape }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-contacts-tool.js') }}"></script>
+{% endblock %}

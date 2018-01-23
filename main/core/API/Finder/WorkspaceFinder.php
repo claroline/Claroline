@@ -72,6 +72,15 @@ class WorkspaceFinder implements FinderInterface
         }
 
         foreach ($searches as $filterName => $filterValue) {
+            //remap some filters...
+            if ($filterName === 'meta.personal') {
+                $filterName = 'personal';
+            }
+
+            if ($filterName === 'meta.model') {
+                $filterName = 'model';
+            }
+
             switch ($filterName) {
                 case 'createdAfter':
                     $qb->andWhere("obj.created >= :{$filterName}");

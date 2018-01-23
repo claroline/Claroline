@@ -21,7 +21,6 @@ const DataCell = props => {
 
   let cellRendering
   if (props.column.renderer) {
-    // use custom renderer defined for the current DataTable
     cellRendering = props.column.renderer(props.rowData)
   } else if (typeDef.components && typeDef.components.table) {
     // use custom component defined in the type definition

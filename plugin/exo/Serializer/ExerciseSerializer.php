@@ -158,6 +158,8 @@ class ExerciseSerializer implements SerializerInterface
             $parameters->endMessage = $exercise->getEndMessage();
         }
 
+        $parameters->endNavigation = $exercise->hasEndNavigation();
+
         $parameters->showMetadata = $exercise->isMetadataVisible();
         $parameters->showStatistics = $exercise->hasStatistics();
         $parameters->allPapersStatistics = $exercise->isAllPapersStatistics();
@@ -243,6 +245,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (isset($parameters->endMessage)) {
             $exercise->setEndMessage($parameters->endMessage);
+        }
+
+        if (isset($parameters->endNavigation)) {
+            $exercise->setEndNavigation($parameters->endNavigation);
         }
 
         if (isset($parameters->showMetadata)) {

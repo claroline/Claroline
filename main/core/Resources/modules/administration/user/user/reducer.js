@@ -5,8 +5,6 @@ import {makeFormReducer} from '#/main/core/data/form/reducer'
 
 import {FORM_RESET, FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
-import {PLATFORM_ROLE} from '#/main/core/user/role/constants'
-
 const reducer = combineReducers({
   picker: makeListReducer('users.picker'),
   list: makeListReducer('users.list', {}, {
@@ -30,9 +28,7 @@ const reducer = combineReducers({
         [FORM_RESET+'/users.current']: () => true // todo : find better
       })
     }),
-    roles: makeListReducer('users.current.roles', {
-      filters: [{property: 'type', value: PLATFORM_ROLE}]
-    }, {
+    roles: makeListReducer('users.current.roles', {}, {
       invalidated: makeReducer(false, {
         [FORM_RESET+'/users.current']: () => true // todo : find better
       })

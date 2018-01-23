@@ -99,8 +99,8 @@ class LtiWsController extends Controller
             array_push($launch_params, $key.'='.rawurlencode($ltiData[$key]));
         }
 
-        $base_string = 'POST&'.urlencode($app->getUrl()).'&'.rawurlencode(implode('&', $launch_params));
-        $secret = urlencode($app->getSecret()).'&';
+        $base_string = 'POST&'.rawurlencode($app->getUrl()).'&'.rawurlencode(implode('&', $launch_params));
+        $secret = rawurlencode($app->getSecret()).'&';
         $signature = base64_encode(hash_hmac('sha1', $base_string, $secret, true));
 
         $ltiParams['ltiData'] = $ltiData;
