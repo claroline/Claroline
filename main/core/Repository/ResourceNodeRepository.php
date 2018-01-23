@@ -48,7 +48,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
      *
      * @return ResourceNode|null
      */
-    public function find($id)
+    public function find($id, $lockMode = null, $lockVersion = null)
     {
         $qb = $this->createQueryBuilder('n');
 
