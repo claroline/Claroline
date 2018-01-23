@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "5c2124611c262d5cee1fb71dd421041993cff39d"
+                "reference": "3854410ebe7b9e2dfd88365b672dc35ebef71997"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/5c2124611c262d5cee1fb71dd421041993cff39d",
-                "reference": "5c2124611c262d5cee1fb71dd421041993cff39d",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/3854410ebe7b9e2dfd88365b672dc35ebef71997",
+                "reference": "3854410ebe7b9e2dfd88365b672dc35ebef71997",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-01-20 07:09:52"
+            "time": "2018-01-22 13:06:50"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -3533,17 +3533,17 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/json-quiz/json-quiz.git",
-                "reference": "cc874e680ffd7f8cf21f40a33761338870060183"
+                "reference": "8512b18017c43957a6f67a9cc79a48da140c1ac9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/cc874e680ffd7f8cf21f40a33761338870060183",
-                "reference": "cc874e680ffd7f8cf21f40a33761338870060183",
+                "url": "https://api.github.com/repos/json-quiz/json-quiz/zipball/8512b18017c43957a6f67a9cc79a48da140c1ac9",
+                "reference": "8512b18017c43957a6f67a9cc79a48da140c1ac9",
                 "shasum": ""
             },
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
-            "time": "2017-11-22 13:53:40"
+            "time": "2018-01-22 06:48:49"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -3731,16 +3731,16 @@
         },
         {
             "name": "knplabs/knp-snappy",
-            "version": "v1.0.3",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/snappy.git",
-                "reference": "68590ef3aa94425b1c0019cc28ce471729f51fcb"
+                "reference": "144c4ecd1ccaeda936bf832b93079efc490e6850"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/68590ef3aa94425b1c0019cc28ce471729f51fcb",
-                "reference": "68590ef3aa94425b1c0019cc28ce471729f51fcb",
+                "url": "https://api.github.com/repos/KnpLabs/snappy/zipball/144c4ecd1ccaeda936bf832b93079efc490e6850",
+                "reference": "144c4ecd1ccaeda936bf832b93079efc490e6850",
                 "shasum": ""
             },
             "require": {
@@ -3793,7 +3793,7 @@
                 "thumbnail",
                 "wkhtmltopdf"
             ],
-            "time": "2017-12-03 23:18:18"
+            "time": "2018-01-22 19:40:51"
         },
         {
             "name": "knplabs/knp-snappy-bundle",
