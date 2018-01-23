@@ -97,16 +97,16 @@ actions.changePassword = (user, plainPassword) => userActions.changePassword(
 
 actions.createWorkspace = (user) => ({
   [API_REQUEST]: {
-    url: ['apiv2_user_pws_create', {uuid: user.id}],
+    url: ['apiv2_user_pws_create', {id: user.id}],
     request: { method: 'POST'},
-    success: (data, dispatch) => dispatch(listActions.fetchData('users'))
+    success: (data, dispatch) => dispatch(listActions.invalidateData('users.list'))
   }
 })
 
 actions.deleteWorkspace = (user) => ({
   [API_REQUEST]: {
-    url: ['apiv2_user_pws_delete', {uuid: user.id}],
+    url: ['apiv2_user_pws_delete', {id: user.id}],
     request: {method: 'DELETE'},
-    success: (data, dispatch) => dispatch(listActions.fetchData('users'))
+    success: (data, dispatch) => dispatch(listActions.invalidateData('users.list'))
   }
 })

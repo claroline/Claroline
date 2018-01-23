@@ -63,8 +63,7 @@ class UserController extends AbstractCrudController
     public function deletePersonalWorkspaceAction(User $user)
     {
         $personalWorkspace = $user->getPersonalWorkspace();
-        $this->eventDispatcher->dispatch('log', 'Log\LogWorkspaceDelete', [$personalWorkspace]);
-        $this->workspaceManager->deleteWorkspace($personalWorkspace);
+        $this->container->get('claroline.manager.workspace_manager')->deleteWorkspace($personalWorkspace);
 
         return new JsonResponse($this->serializer->get('Claroline\CoreBundle\Entity\User')->serialize($user));
     }
