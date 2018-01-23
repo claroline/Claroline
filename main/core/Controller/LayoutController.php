@@ -260,7 +260,10 @@ class LayoutController extends Controller
                 $workspace = $this->workspaceManager->getOneByGuid($guid);
                 $roleEntity = $this->roleManager->getRoleByName($impersonatedRole);
                 $roleName = $roleEntity->getTranslationKey();
-                $workspaceName = $workspace->getName();
+
+                if ($workspace) {
+                    $workspaceName = $workspace->getName();
+                }
             }
         }
 

@@ -118,36 +118,49 @@
     <script>
         $(document).ready(function () {
             if (window.self !== window.top) {
-              // I'm an IFrame
-              var currentHeight = 0;
-              var element = document.getElementById('wrap');
+                // I'm an IFrame
+                var currentHeight = 0;
+                var element = document.getElementById('wrap');
 
-              function getHeight() {
-                return Math.max(
-                  document.body.scrollHeight,
-                  document.body.offsetHeight
-                );
-              }
-
-              function postHeight(height) {
-                if (parent && height !== currentHeight) {
-                  currentHeight = height;
-                  parent.postMessage('documentHeight:'+height, "*");
+                function getHeight() {
+                    return Math.max(
+                        document.body.scrollHeight,
+                        document.body.offsetHeight
+                    );
                 }
-              }
 
-              // post height
-              postHeight(getHeight());
+                function postHeight(height) {
+                    if (parent && height !== currentHeight) {
+                        currentHeight = height;
+                        parent.postMessage('documentHeight:'+height, "*");
+                    }
+                }
 
-              // attach mutation observer
-              new MutationObserver(function () {
+                // post height
                 postHeight(getHeight());
-              }).observe(element, {
-                attributes: true,
-                childList: true,
-                characterData: true,
-                subtree: true
-              })
+
+                // attach mutation observer
+                // we also listen to image loading to resize after load
+                new MutationObserver(function (mutations) {
+                    mutations.forEach(function (mutation) {
+                        if ('childList' === mutation.type) {
+                            var children = mutation.target.getElementsByTagName('img')
+                            for (var i = 0; i < children.length; i++) {
+                                var child = children[i]
+                                child.addEventListener('load', function() {
+                                    postHeight(getHeight());
+                                })
+                            }
+                        }
+                    });
+
+                    postHeight(getHeight());
+                }).observe(element, {
+                    attributes: true,
+                    childList: true,
+                    characterData: true,
+                    subtree: true
+                })
             }
         });
     </script>

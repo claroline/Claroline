@@ -189,14 +189,15 @@ class Role implements RoleInterface
 
     public function __construct()
     {
+        $this->refreshUuid();
+
         $this->users = new ArrayCollection();
-        $this->resourceContext = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->facets = new ArrayCollection();
         $this->toolRights = new ArrayCollection();
         $this->pwsToolConfig = new ArrayCollection();
         $this->profileProperties = new ArrayCollection();
-        $this->refreshUuid();
+        $this->adminTools = new ArrayCollection();
     }
 
     public function getId()

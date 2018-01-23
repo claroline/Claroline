@@ -11,11 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Entity\Contact\Category;
 use Claroline\CoreBundle\Entity\Contact\Contact;
 use Claroline\CoreBundle\Entity\Contact\Options;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -25,127 +23,51 @@ use JMS\DiExtraBundle\Annotation as DI;
 class ContactManager
 {
     private $om;
+
     private $categoryRepo;
     private $contactRepo;
     private $optionsRepo;
-    private $pagerFactory;
 
     /**
+     * ContactManager constructor.
+     *
      * @DI\InjectParams({
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "pagerFactory" = @DI\Inject("claroline.pager.pager_factory")
+     *     "om" = @DI\Inject("claroline.persistence.object_manager")
      * })
+     *
+     * @param ObjectManager $om
      */
-    public function __construct(ObjectManager $om, PagerFactory $pagerFactory)
+    public function __construct(ObjectManager $om)
     {
         $this->om = $om;
-        $this->pagerFactory = $pagerFactory;
+
         $this->categoryRepo = $om->getRepository('ClarolineCoreBundle:Contact\Category');
         $this->contactRepo = $om->getRepository('ClarolineCoreBundle:Contact\Contact');
         $this->optionsRepo = $om->getRepository('ClarolineCoreBundle:Contact\Options');
     }
 
-    public function getUserContacts(
-        User $user,
-        $search = '',
-        $orderedBy = 'lastName',
-        $order = 'ASC'
-    ) {
-        $users = array();
-
-        if (empty($search)) {
-            $contacts = $this->getContactsByUser($user, $orderedBy, $order);
-        } else {
-            $options = $this->getUserOptionsValues($user);
-            $withUsername = isset($options['username']) && ($options['username'] === 1);
-            $withMail = isset($options['mail']) && ($options['mail'] === 1);
-
-            $contacts = $this->getContactsByUserAndSearch(
-                $user,
-                $search,
-                $withUsername,
-                $withMail,
-                $orderedBy,
-                $order
-            );
-        }
-
-        foreach ($contacts as $contact) {
-            $users[] = $contact->getContact();
-        }
-
-        return $users;
-    }
-
-    public function getUserContactsWithPager(
-        User $user,
-        $search = '',
-        $page = 1,
-        $max = 50,
-        $orderedBy = 'lastName',
-        $order = 'ASC'
-    ) {
-        $contacts = $this->getUserContacts($user, $search, $orderedBy, $order);
-
-        return $this->pagerFactory->createPagerFromArray($contacts, $page, $max);
-    }
-
-    public function getUserContactsByCategory(
-        User $user,
-        Category $category,
-        $orderedBy = 'lastName',
-        $order = 'ASC'
-    ) {
-        $users = array();
-        $contacts = $this->getContactsByUserAndCategory(
-            $user,
-            $category,
-            $orderedBy,
-            $order
-        );
-
-        foreach ($contacts as $contact) {
-            $users[] = $contact->getContact();
-        }
-
-        return $users;
-    }
-
-    public function getUserContactsByCategoryWithPager(
-        User $user,
-        Category $category,
-        $page = 1,
-        $max = 50,
-        $orderedBy = 'lastName',
-        $order = 'ASC'
-    ) {
-        $contacts = $this->getUserContactsByCategory($user, $category, $orderedBy, $order);
-
-        return $this->pagerFactory->createPagerFromArray($contacts, $page, $max);
-    }
-
-    public function getUserOptionsValues(User $user)
-    {
-        $options = $this->getUserOptions($user);
-
-        return $options->getOptions();
-    }
-
+    /**
+     * Fetches user options.
+     *
+     * @param User $user
+     *
+     * @return Options
+     */
     public function getUserOptions(User $user)
     {
-        $options = $this->getOptionsByUser($user);
+        $options = $this->optionsRepo->findOneBy(['user' => $user]);
 
         if (is_null($options)) {
             $options = new Options();
             $options->setUser($user);
-            $defaultValues = array(
+            $defaultValues = [
                 'show_all_my_contacts' => true,
                 'show_all_visible_users' => true,
                 'show_username' => true,
                 'show_mail' => false,
                 'show_phone' => false,
                 'show_picture' => true,
-            );
+            ];
             $options->setOptions($defaultValues);
             $this->om->persist($options);
             $this->om->flush();
@@ -154,218 +76,57 @@ class ContactManager
         return $options;
     }
 
-    public function persistContact(Contact $contact)
+    /**
+     * Creates contacts from a list of user.
+     *
+     * @param User   $currentUser
+     * @param User[] $users
+     *
+     * @return Contact[]
+     */
+    public function createContacts(User $currentUser, array $users)
     {
-        $this->om->persist($contact);
-        $this->om->flush();
+        $this->om->startFlushSuite();
+        $createdContacts = [];
+
+        foreach ($users as $user) {
+            $contact = $this->contactRepo->findOneBy(['user' => $currentUser, 'contact' => $user]);
+
+            if (is_null($contact)) {
+                $contact = new Contact();
+                $contact->setUser($currentUser);
+                $contact->setContact($user);
+                $this->om->persist($contact);
+                $createdContacts[] = $contact;
+            }
+        }
+        $this->om->endFlushSuite();
+
+        return $createdContacts;
     }
 
+    /**
+     * Removes a contact.
+     *
+     * @param Contact $contact
+     */
     public function deleteContact(Contact $contact)
     {
         $this->om->remove($contact);
         $this->om->flush();
     }
 
-    public function persistCategory(Category $category)
+    /**
+     * Gets all contacts (User property) from given user.
+     *
+     * @param User $user
+     *
+     * @return User[]
+     */
+    public function getContactsUser(User $user)
     {
-        $this->om->persist($category);
-        $this->om->flush();
-    }
-
-    public function deleteCategory(Category $category)
-    {
-        $this->om->remove($category);
-        $this->om->flush();
-    }
-
-    public function persistOptions(Options $options)
-    {
-        $this->om->persist($options);
-        $this->om->flush();
-    }
-
-    public function addContactsToUser(User $user, array $contacts)
-    {
-        $this->om->startFlushSuite();
-
-        foreach ($contacts as $contact) {
-            $existingContact = $this->getContactByUserAndContact($user, $contact);
-
-            if (is_null($existingContact)) {
-                $existingContact = new Contact();
-                $existingContact->setUser($user);
-                $existingContact->setContact($contact);
-                $this->om->persist($existingContact);
-            }
-        }
-        $this->om->endFlushSuite();
-    }
-
-    public function addContactsToUserAndCategory(
-        User $user,
-        Category $category,
-        array $contacts
-    ) {
-        $this->om->startFlushSuite();
-
-        foreach ($contacts as $contact) {
-            $existingContact = $this->getContactByUserAndContact($user, $contact);
-
-            if (is_null($existingContact)) {
-                $existingContact = new Contact();
-                $existingContact->setUser($user);
-                $existingContact->setContact($contact);
-                $existingContact->addCategory($category);
-                $this->om->persist($existingContact);
-            }
-        }
-        $this->om->endFlushSuite();
-    }
-
-    public function sortContactsByCategories(
-        User $user,
-        array $categories,
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $page = 1,
-        $max = 50
-    ) {
-        $contacts = array();
-        $contacts['all_my_contacts'] = array();
-
-        foreach ($categories as $category) {
-            $contacts[$category->getId()] = array();
-        }
-
-        $contacts['all_my_contacts'] = $this->getUserContactsWithPager(
-            $user,
-            '',
-            $page,
-            $max,
-            $orderedBy,
-            $order
-        );
-
-        foreach ($categories as $category) {
-            $contacts[$category->getId()] = $this->getUserContactsByCategoryWithPager(
-                $user,
-                $category,
-                $page,
-                $max,
-                $orderedBy,
-                $order
-            );
-        }
-
-        return $contacts;
-    }
-
-    public function removeContactFromCategory(Contact $contact, Category $category)
-    {
-        $contact->removeCategory($category);
-        $this->persistContact($contact);
-    }
-
-    /***************************************
-     * Access to ContactRepository methods *
-     ***************************************/
-
-    public function getContactsByUser(
-        User $user,
-        $orderedBy = 'lastName',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        return $this->contactRepo->findContactsByUser(
-            $user,
-            $orderedBy,
-            $order,
-            $executeQuery
-        );
-    }
-
-    public function getContactsByUserAndSearch(
-        User $user,
-        $search,
-        $withUsername = false,
-        $withMail = false,
-        $orderedBy = 'lastName',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        return $this->contactRepo->findContactsByUserAndSearch(
-            $user,
-            $search,
-            $withUsername,
-            $withMail,
-            $orderedBy,
-            $order,
-            $executeQuery
-        );
-    }
-
-    public function getContactByUserAndContact(
-        User $user,
-        User $contact,
-        $executeQuery = true
-    ) {
-        return $this->contactRepo->findContactByUserAndContact(
-            $user,
-            $contact,
-            $executeQuery
-        );
-    }
-
-    public function getContactsByUserAndCategory(
-        User $user,
-        Category $category,
-        $orderedBy = 'lastName',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        return $this->contactRepo->findContactsByUserAndCategory(
-            $user,
-            $category,
-            $orderedBy,
-            $order,
-            $executeQuery
-        );
-    }
-
-    /****************************************
-     * Access to CategoryRepository methods *
-     ****************************************/
-
-    public function getCategoriesByUser(
-        User $user,
-        $orderedBy = 'order',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        return $this->categoryRepo->findCategoriesByUser(
-            $user,
-            $orderedBy,
-            $order,
-            $executeQuery
-        );
-    }
-
-    public function getCategoryByUserAndName(User $user, $name, $executeQuery = true)
-    {
-        return $this->categoryRepo->findCategoryByUserAndName($user, $name, $executeQuery);
-    }
-
-    public function getOrderOfLastCategoryByUser(User $user)
-    {
-        return $this->categoryRepo->findOrderOfLastCategoryByUser($user);
-    }
-
-    /***************************************
-     * Access to OptionsRepository methods *
-     ***************************************/
-
-    public function getOptionsByUser(User $user, $executeQuery = true)
-    {
-        return $this->optionsRepo->findOptionsByUser($user, $executeQuery);
+        return array_map(function (Contact $contact) {
+            return $contact->getContact();
+        }, $this->contactRepo->findBy(['user' => $user]));
     }
 }

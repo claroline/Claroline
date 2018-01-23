@@ -26,14 +26,12 @@ class MyContactsListener
 
     /**
      * @DI\InjectParams({
-     *     "httpKernel"     = @DI\Inject("http_kernel"),
-     *     "requestStack"   = @DI\Inject("request_stack")
+     *     "httpKernel"   = @DI\Inject("http_kernel"),
+     *     "requestStack" = @DI\Inject("request_stack")
      * })
      */
-    public function __construct(
-        HttpKernelInterface $httpKernel,
-        RequestStack $requestStack
-    ) {
+    public function __construct(HttpKernelInterface $httpKernel, RequestStack $requestStack)
+    {
         $this->httpKernel = $httpKernel;
         $this->request = $requestStack->getCurrentRequest();
     }
@@ -45,9 +43,9 @@ class MyContactsListener
      */
     public function onDisplayDesktopContactTool(DisplayToolEvent $event)
     {
-        $params = array();
-        $params['_controller'] = 'ClarolineCoreBundle:Contact:myContactsToolIndex';
-        $subRequest = $this->request->duplicate(array(), null, $params);
+        $params = [];
+        $params['_controller'] = 'ClarolineCoreBundle:Contact:myContacts';
+        $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
         $event->stopPropagation();

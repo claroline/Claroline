@@ -169,6 +169,26 @@ class ApiManager
         return $entities;
     }
 
+    public function getParametersByUuid($name, $class)
+    {
+        $request = $this->container->get('request');
+        $data = $entities = [];
+
+        if ($request->request->has($name)) {
+            $data = $request->request->get($name);
+        }
+        if ($request->query->has($name)) {
+            $data = $request->query->get($name);
+        }
+
+        foreach ($data as $uuid) {
+            //make one big query later
+            $entities[] = $this->om->getRepository($class)->findOneByUuid($uuid);
+        }
+
+        return $entities;
+    }
+
     private function validateUrl($url)
     {
     }

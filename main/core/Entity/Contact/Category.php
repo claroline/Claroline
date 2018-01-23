@@ -25,7 +25,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *         )
  *     }
  * )
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Contact\CategoryRepository")
+ * @ORM\Entity
  * @DoctrineAssert\UniqueEntity({"user", "name"})
  */
 class Category

@@ -134,7 +134,7 @@ const AnnounceForm = props =>
               label: t(r.translationKey)
             }))}
             inline={false}
-            value={props.announcement.roles.map(r => parseInt(r))}
+            value={props.announcement.roles}
             onChange={values => {
               props.updateProperty('roles', values)
             }}

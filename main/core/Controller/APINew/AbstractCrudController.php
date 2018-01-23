@@ -99,9 +99,13 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     public function listAction(Request $request, $class)
     {
+        $query = $request->query->all();
+        $hiddenFilters = isset($query['hiddenFilters']) ? $query['hiddenFilters'] : [];
+        $query['hiddenFilters'] = array_merge($hiddenFilters, $this->getDefaultHiddenFilters());
+
         return new JsonResponse($this->finder->search(
             $class,
-            $request->query->all(),
+            $query,
             $this->options['list']
         ));
     }
@@ -271,5 +275,13 @@ abstract class AbstractCrudController extends AbstractApiController
     private function mergeOptions()
     {
         return array_merge_recursive($this->getDefaultOptions(), $this->getOptions());
+    }
+
+    /**
+     * @return array
+     */
+    public function getDefaultHiddenFilters()
+    {
+        return [];
     }
 }

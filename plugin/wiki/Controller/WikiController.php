@@ -54,7 +54,7 @@ class WikiController extends Controller
                 200,
                 [
                     'Content-Type' => 'application/pdf',
-                    'Content-Disposition' => 'inline; filename="'.$wiki->getResourceNode()->getName(),
+                    'Content-Disposition' => 'inline; filename="'.$wiki->getResourceNode()->getName().'.pdf"',
                 ]
             );
         }

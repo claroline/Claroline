@@ -53,7 +53,7 @@ const UserPageActions = props => {
       group: t('user_management'),
       displayed: props.user.rights.current.edit,
       action: () => props.showModal(MODAL_CHANGE_PASSWORD, {
-
+        changePassword: (password) => props.updatePassword(props.user, password)
       })
     }, {
       icon: 'fa fa-fw fa-trash-o',
@@ -118,7 +118,8 @@ UserPageActions.propTypes = {
     }).isRequired
   }).isRequired,
   customActions: T.array,
-  showModal: T.func.isRequired
+  showModal: T.func.isRequired,
+  updatePassword: T.func.isRequired
 }
 
 UserPageActions.defaultProps = {

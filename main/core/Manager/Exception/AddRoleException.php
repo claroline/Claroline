@@ -13,8 +13,10 @@ namespace Claroline\CoreBundle\Manager\Exception;
 
 class AddRoleException extends \Exception
 {
-    public function __construct($total, $toAdd, $max)
+    public function __construct($message = null, $total = null, $toAdd = null, $max = null)
     {
+        parent::__construct($message);
+
         $this->total = $total;
         $this->toAdd = $toAdd;
         $this->max = $max;
