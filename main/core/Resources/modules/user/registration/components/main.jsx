@@ -7,6 +7,7 @@ import {t} from '#/main/core/translation'
 import {PageContainer, PageHeader} from '#/main/core/layout/page/index'
 import {FormStepper} from '#/main/core/layout/form/components/form-stepper.jsx'
 import {select as formSelect} from '#/main/core/data/form/selectors'
+import {generateUrl} from '#/main/core/api/router'
 
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_CONFIRM} from '#/main/core/layout/modal'
@@ -32,7 +33,7 @@ const RegistrationForm = props => {
         submit={{
           icon: 'fa fa-user-plus',
           label: t('registration_confirm'),
-          action: () => props.register(props.user, props.termOfService)
+          action: () => props.register(props.user, props.termOfService, props.options)
         }}
         steps={[].concat([
           {
@@ -85,7 +86,7 @@ const UserRegistration = connect(
     options: select.options(state)
   }),
   (dispatch) => ({
-    register(user, termOfService) {
+    register(user, termOfService, options) {
       if (termOfService) {
         // show terms before create new account
         dispatch(modalActions.showModal(MODAL_CONFIRM, {
@@ -96,22 +97,22 @@ const UserRegistration = connect(
           confirmButtonText: t('accept_term_of_service'),
           handleConfirm: () => {
             // todo : set acceptedTerms flag
-            dispatch(actions.createUser(user))
+            dispatch(actions.createUser(user, this.onCreated(options)))
           }
         }))
       } else {
         // create new account
-        dispatch(actions.createUser(user))
+        dispatch(actions.createUser(user, this.onCreated(options)))
       }
     },
-    onCreated() {
-      /*if (this.props.options.redirectAfterLoginUrl) {
-        window.location = this.props.options.redirectAfterLoginUrl
+    onCreated(options) {
+      if (options.redirectAfterLoginUrl) {
+        window.location = options.redirectAfterLoginUrl
       }
 
-      switch (this.props.options.redirectAfterLoginOption) {
+      switch (options.redirectAfterLoginOption) {
         case 'DESKTOP': window.location = generateUrl('claro_desktop_open')
-      }*/
+      }
     }
   })
 )(RegistrationForm)
