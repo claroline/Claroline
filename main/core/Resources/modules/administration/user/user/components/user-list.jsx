@@ -29,6 +29,11 @@ const UserList = {
       label: t('email'),
       displayed: true
     }, {
+      name: 'administrativeCode',
+      type: 'string',
+      label: t('code'),
+      displayed: false
+    }, {
       name: 'meta.personalWorkspace',
       alias: 'hasPersonalWorkspace',
       type: 'boolean',
