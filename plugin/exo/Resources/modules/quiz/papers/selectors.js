@@ -56,11 +56,7 @@ const itemScoreMax = item => {
   return scoreMax || 0
 }
 
-const paperScoreMax = paper => {
-  if (totalScoreOn(paper)) {
-    return totalScoreOn(paper)
-  }
-
+const paperTotalAnswerScore = paper => {
   let scoreMax = 0
 
   paper.structure.steps.map(step =>
@@ -68,6 +64,14 @@ const paperScoreMax = paper => {
   )
 
   return scoreMax
+}
+
+const paperScoreMax = paper => {
+  if (totalScoreOn(paper)) {
+    return totalScoreOn(paper)
+  }
+
+  return paperTotalAnswerScore(paper)
 }
 
 export const selectors = {
@@ -81,5 +85,6 @@ export const selectors = {
   showScoreAt,
   showCorrectionAt,
   correctionDate,
-  totalScoreOn
+  totalScoreOn,
+  paperTotalAnswerScore
 }

@@ -1,10 +1,15 @@
 export class Answerable {
-  constructor(score = null) {
+  constructor(score = null, id = null) {
     this.score = score
+    this.id = id
   }
 
   getScore() {
     return this.score
+  }
+
+  getId() {
+    return this.id
   }
 }
 
@@ -21,7 +26,7 @@ export class CorrectedAnswer {
   }
 
   addExpected(expected) {
-    this.expected.push(expected)
+    this.addElement(expected, 'expected')
   }
 
   getMissing() {
@@ -29,7 +34,7 @@ export class CorrectedAnswer {
   }
 
   addMissing(missing) {
-    this.missing.push(missing)
+    this.addElement(missing, 'missing')
   }
 
   getUnexpected() {
@@ -37,7 +42,7 @@ export class CorrectedAnswer {
   }
 
   addUnexpected(unexpected) {
-    this.unexpected.push(unexpected)
+    this.addElement(unexpected, 'unexpected')
   }
 
   getPenalties() {
@@ -45,6 +50,19 @@ export class CorrectedAnswer {
   }
 
   addPenalty(penalty) {
-    this.penalties.push(penalty)
+    this.addElement(penalty, 'penalties')
+  }
+
+  addElement(element, property) {
+    //if we didn't bother to add and id, just push the element no matter what
+    if (element.getId() === null) {
+      this[property].push(element)
+    } else {
+      //check duplicatas
+      let answer = this[property].find(answer => answer.getId() === element.getId())
+      if (!answer) {
+        this[property].push(element)
+      }
+    }
   }
 }
