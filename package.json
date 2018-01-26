@@ -14,7 +14,7 @@
     "karma": "node_modules/.bin/karma start vendor/claroline/distribution/karma.conf.js",
     "mocha": "./node_modules/mocha/bin/mocha vendor/claroline/distribution/main/core/Resources/server/**/*.test.js",
     "istanbul": "npm run karma -- --single-run --reporters=coverage",
-    "webpack": "yarn run encore production --config=vendor/claroline/distribution/webpack.config.prod.js --display-error-details --progress --color --bail",
+    "webpack": "yarn run encore dev --config=vendor/claroline/distribution/webpack.config.prod.js --display-error-details --progress --color --bail",
     "dll": "yarn run encore production --config=vendor/claroline/distribution/webpack.config.dll.js --progress --colors --display-error-details"
   },
   "dependencies": {
