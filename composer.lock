@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "6a5e6755fa6202f45cd75f321978ef0f35692a81"
+                "reference": "cd65a05f3d4079de567df3c3fc21ce8ba4b4451c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/6a5e6755fa6202f45cd75f321978ef0f35692a81",
-                "reference": "6a5e6755fa6202f45cd75f321978ef0f35692a81",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/cd65a05f3d4079de567df3c3fc21ce8ba4b4451c",
+                "reference": "cd65a05f3d4079de567df3c3fc21ce8ba4b4451c",
                 "shasum": ""
             },
             "require": {
@@ -395,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-01-23 20:02:04"
+            "time": "2018-01-25 18:05:03"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -4780,16 +4780,16 @@
         },
         {
             "name": "seld/jsonlint",
-            "version": "1.7.0",
+            "version": "1.7.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/jsonlint.git",
-                "reference": "9b355654ea99460397b89c132b5c1087b6bf4473"
+                "reference": "d15f59a67ff805a44c50ea0516d2341740f81a38"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/9b355654ea99460397b89c132b5c1087b6bf4473",
-                "reference": "9b355654ea99460397b89c132b5c1087b6bf4473",
+                "url": "https://api.github.com/repos/Seldaek/jsonlint/zipball/d15f59a67ff805a44c50ea0516d2341740f81a38",
+                "reference": "d15f59a67ff805a44c50ea0516d2341740f81a38",
                 "shasum": ""
             },
             "require": {
@@ -4825,7 +4825,7 @@
                 "parser",
                 "validator"
             ],
-            "time": "2018-01-03 12:13:57"
+            "time": "2018-01-24 12:46:19"
         },
         {
             "name": "seld/phar-utils",
