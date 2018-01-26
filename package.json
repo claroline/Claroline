@@ -36,7 +36,16 @@
     "assets-webpack-plugin": "*",
     "less": "*",
     "yarn": "*",
-    "angular": "1.5.7"
+    "angular": "1.5.7",
+    "karma": "^0.13.22",
+    "karma-chrome-launcher": "^1.0.1",
+    "karma-coverage": "^1.1.1",
+    "karma-mocha": "^1.0.1",
+    "karma-webpack": "^1.7.0",
+    "mocha": "^2.5.3",
+    "react-test-renderer": "^15.6.1",
+    "redux-mock-store": "^1.1.4",
+    "shelljs": "^0.5.3"
   },
   "devDependencies": {
     "bower": "^1.7.7"
