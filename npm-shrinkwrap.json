@@ -622,9 +622,9 @@
       "resolved": "https://registry.npmjs.org/caniuse-api/-/caniuse-api-1.6.1.tgz"
     },
     "caniuse-db": {
-      "version": "1.0.30000795",
+      "version": "1.0.30000797",
       "from": "caniuse-db@>=1.0.30000634 <2.0.0",
-      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000795.tgz"
+      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000797.tgz"
     },
     "caseless": {
       "version": "0.12.0",
@@ -2286,9 +2286,9 @@
       "resolved": "https://registry.npmjs.org/jquery/-/jquery-3.3.1.tgz"
     },
     "js-base64": {
-      "version": "2.4.2",
+      "version": "2.4.3",
       "from": "js-base64@>=2.1.9 <3.0.0",
-      "resolved": "https://registry.npmjs.org/js-base64/-/js-base64-2.4.2.tgz"
+      "resolved": "https://registry.npmjs.org/js-base64/-/js-base64-2.4.3.tgz"
     },
     "js-tokens": {
       "version": "3.0.2",
