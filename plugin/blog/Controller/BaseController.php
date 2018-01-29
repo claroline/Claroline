@@ -2,6 +2,9 @@
 
 namespace Icap\BlogBundle\Controller;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceUpdateEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
@@ -314,5 +317,22 @@ class BaseController extends FOSRestController
     protected function checkPermission($permission, Blog $blog = null)
     {
         return $this->get('security.authorization_checker')->isGranted($permission, $blog);
+    }
+
+    /**
+     * Logs participation in resource tracking.
+     *
+     * @param ResourceNode $node
+     * @param User         $user
+     * @param \DateTime    $date
+     */
+    protected function updateResourceTracking(ResourceNode $node, User $user, \DateTime $date)
+    {
+        $this->get('claroline.manager.resource_evaluation_manager')->updateResourceUserEvaluationData(
+            $node,
+            $user,
+            $date,
+            AbstractResourceEvaluation::STATUS_PARTICIPATED
+        );
     }
 }

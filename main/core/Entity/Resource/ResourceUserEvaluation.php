@@ -56,6 +56,16 @@ class ResourceUserEvaluation extends AbstractResourceEvaluation
      */
     protected $evaluations;
 
+    /**
+     * @ORM\Column(name="nb_attempts", type="integer")
+     */
+    protected $nbAttempts = 0;
+
+    /**
+     * @ORM\Column(name="nb_openings", type="integer")
+     */
+    protected $nbOpenings = 0;
+
     public function __construct()
     {
         $this->evaluations = new ArrayCollection();
@@ -79,6 +89,7 @@ class ResourceUserEvaluation extends AbstractResourceEvaluation
     public function setUser(User $user = null)
     {
         $this->user = $user;
+
         if ($user) {
             $this->setUserName($user->getFirstName().' '.$user->getLastName());
         } else {
@@ -99,5 +110,25 @@ class ResourceUserEvaluation extends AbstractResourceEvaluation
     public function getEvaluations()
     {
         return $this->evaluations->toArray();
+    }
+
+    public function getNbAttempts()
+    {
+        return $this->nbAttempts;
+    }
+
+    public function setNbAttempts($nbAttempts)
+    {
+        $this->nbAttempts = $nbAttempts;
+    }
+
+    public function getNbOpenings()
+    {
+        return $this->nbOpenings;
+    }
+
+    public function setNbOpenings($nbOpenings)
+    {
+        $this->nbOpenings = $nbOpenings;
     }
 }

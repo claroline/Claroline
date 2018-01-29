@@ -317,12 +317,13 @@ class ApiController extends BaseController
         $this->checkAccess(['EDIT', 'POST'], $blog, 'OR');
 
         $em = $this->getDoctrine()->getManager();
+        $user = $this->get('security.token_storage')->getToken()->getUser();
 
         $post = new Post();
         $post
             ->setBlog($blog)
             // User has already been checked and is logged in
-            ->setAuthor($this->get('security.token_storage')->getToken()->getUser())
+            ->setAuthor($user)
             ->setStatus($blog->isAutoPublishPost() ? Post::STATUS_PUBLISHED : Post::STATUS_UNPUBLISHED)
             ->setTitle($paramFetcher->get('title'))
             ->setContent($paramFetcher->get('content'));
@@ -345,6 +346,10 @@ class ApiController extends BaseController
         $em->flush();
 
         $this->dispatchPostCreateEvent($blog, $post);
+
+        if ($user !== 'anon.') {
+            $this->updateResourceTracking($blog->getResourceNode(), $user, new \DateTime());
+        }
 
         return $post;
     }
@@ -411,6 +416,12 @@ class ApiController extends BaseController
         $changeSet = $unitOfWork->getEntityChangeSet($myPost);
 
         $this->dispatchPostUpdateEvent($myPost, $changeSet);
+
+        $user = $this->get('security.token_storage')->getToken()->getUser();
+
+        if ($user !== 'anon.') {
+            $this->updateResourceTracking($blog->getResourceNode(), $user, new \DateTime());
+        }
 
         return $myPost;
     }
@@ -571,6 +582,10 @@ class ApiController extends BaseController
         $em->flush();
 
         $this->dispatchCommentCreateEvent($myPost, $comment);
+
+        if ($user !== 'anon.') {
+            $this->updateResourceTracking($blog->getResourceNode(), $user, new \DateTime());
+        }
 
         return $comment;
     }

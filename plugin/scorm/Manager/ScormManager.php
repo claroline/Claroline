@@ -14,6 +14,7 @@ namespace Claroline\ScormBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
@@ -45,23 +46,31 @@ class ScormManager
     private $libsco12;
     private $libsco2004;
     private $logRepo;
+    private $resourceEvalManager;
 
     /**
      * Constructor.
      *
      * @DI\InjectParams({
-     *     "om"         = @DI\Inject("claroline.persistence.object_manager"),
-     *     "container"  = @DI\Inject("service_container"),
-     *     "libsco12"   = @DI\Inject("claroline.library.scorm_12"),
-     *     "libsco2004" = @DI\Inject("claroline.library.scorm_2004")
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "container"           = @DI\Inject("service_container"),
+     *     "libsco12"            = @DI\Inject("claroline.library.scorm_12"),
+     *     "libsco2004"          = @DI\Inject("claroline.library.scorm_2004"),
+     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
      * })
      */
-    public function __construct(ObjectManager $om, ContainerInterface $container, Scorm12 $libsco12, Scorm2004 $libsco2004)
-    {
+    public function __construct(
+        ObjectManager $om,
+        ContainerInterface $container,
+        Scorm12 $libsco12,
+        Scorm2004 $libsco2004,
+        ResourceEvaluationManager $resourceEvalManager
+    ) {
         $this->om = $om;
         $this->container = $container;
         $this->libsco12 = $libsco12;
         $this->libsco2004 = $libsco2004;
+        $this->resourceEvalManager = $resourceEvalManager;
         $this->scorm12ResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm12Resource');
         $this->scorm12ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
         $this->scorm2004ResourceRepo = $om->getRepository('ClarolineScormBundle:Scorm2004Resource');
@@ -192,6 +201,104 @@ class ScormManager
     {
         $this->om->persist($scoTracking);
         $this->om->flush();
+    }
+
+    public function formatSessionTime($sessionTime)
+    {
+        $formattedValue = 'PT0S';
+        $generalPattern = '/^P([0-9]+Y)?([0-9]+M)?([0-9]+D)?T([0-9]+H)?([0-9]+M)?([0-9]+S)?$/';
+        $decimalPattern = '/^P([0-9]+Y)?([0-9]+M)?([0-9]+D)?T([0-9]+H)?([0-9]+M)?[0-9]+\.[0-9]{1,2}S$/';
+
+        if ($sessionTime !== 'PT') {
+            if (preg_match($generalPattern, $sessionTime)) {
+                $formattedValue = $sessionTime;
+            } elseif (preg_match($decimalPattern, $sessionTime)) {
+                $formattedValue = preg_replace(['/\.[0-9]+S$/'], ['S'], $sessionTime);
+            }
+        }
+
+        return $formattedValue;
+    }
+
+    public function generateScorm12Evaluation(Scorm12ScoTracking $scoTracking)
+    {
+        $status = $scoTracking->getLessonStatus();
+
+        switch ($status) {
+            case 'passed':
+            case 'failed':
+            case 'completed':
+            case 'incomplete':
+                break;
+            case 'not attempted':
+                $status = 'not_attempted';
+                break;
+            case 'browsed':
+                $status = 'opened';
+                break;
+            default:
+                $status = 'unknown';
+        }
+        $this->resourceEvalManager->createResourceEvaluation(
+            $scoTracking->getSco()->getScormResource()->getResourceNode(),
+            $scoTracking->getUser(),
+            new \DateTime(),
+            $status,
+            $scoTracking->getScoreRaw(),
+            $scoTracking->getScoreMin(),
+            $scoTracking->getScoreMax(),
+            null,
+            $scoTracking->getSessionTime() ? $scoTracking->getSessionTime() / 100 : $scoTracking->getSessionTime()
+        );
+    }
+
+    public function generateScorm2004Evaluation(
+        ResourceNode $node,
+        User $user,
+        $completionStatus = null,
+        $successStatus = null,
+        $score = null,
+        $scoreMin = null,
+        $scoreMax = null,
+        $sessionTime = null
+    ) {
+        switch ($completionStatus) {
+            case 'incomplete':
+                $status = $completionStatus;
+                break;
+            case 'completed':
+                if (in_array($successStatus, ['passed', 'failed'])) {
+                    $status = $successStatus;
+                } else {
+                    $status = $completionStatus;
+                }
+                break;
+            case 'not attempted':
+                $status = 'not_attempted';
+                break;
+            default:
+                $status = 'unknown';
+        }
+        $duration = null;
+
+        if (!is_null($sessionTime)) {
+            $time = new \DateInterval($sessionTime);
+            $computedTime = new \DateTime();
+            $computedTime->setTimestamp(0);
+            $computedTime->add($time);
+            $duration = $computedTime->getTimestamp();
+        }
+        $this->resourceEvalManager->createResourceEvaluation(
+            $node,
+            $user,
+            new \DateTime(),
+            $status,
+            $score,
+            $scoreMin,
+            $scoreMax,
+            null,
+            $duration
+        );
     }
 
     /***********************************************

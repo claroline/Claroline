@@ -2,6 +2,9 @@
 
 namespace Icap\WikiBundle\Controller\API;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Library\Resource\ResourceCollection;
 use FOS\RestBundle\Controller\Annotations\Get;
@@ -417,7 +420,8 @@ class ApiController extends FOSRestController
         $contribution->setText($paramFetcher->get('text'));
         $contribution->setSection($section);
         $contribution->setContributor($contributor);
-        $contribution->setCreationDate(new \DateTime());
+        $creationDate = new \DateTime();
+        $contribution->setCreationDate($creationDate);
         $section->setActiveContribution($contribution);
 
         // Adjust section visibility
@@ -435,6 +439,9 @@ class ApiController extends FOSRestController
             $unitOfWork->computeChangeSets();
             $changeSet = $unitOfWork->getEntityChangeSet($section);
             $this->dispatchSectionUpdateEvent($wiki, $section, $changeSet);
+        }
+        if (!empty($contributor)) {
+            $this->updateResourceTracking($wiki->getResourceNode(), $contributor, $creationDate);
         }
 
         return [
@@ -782,5 +789,22 @@ class ApiController extends FOSRestController
         }
 
         return $user;
+    }
+
+    /**
+     * Logs participation in resource tracking.
+     *
+     * @param ResourceNode $node
+     * @param User         $user
+     * @param \DateTime    $date
+     */
+    protected function updateResourceTracking(ResourceNode $node, User $user, \DateTime $date)
+    {
+        $this->get('claroline.manager.resource_evaluation_manager')->updateResourceUserEvaluationData(
+            $node,
+            $user,
+            $date,
+            AbstractResourceEvaluation::STATUS_PARTICIPATED
+        );
     }
 }

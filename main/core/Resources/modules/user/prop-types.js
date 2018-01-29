@@ -5,7 +5,10 @@ const User = {
     id: T.string.isRequired,
     name: T.string.isRequired,
     username: T.string.isRequired,
-    picture: T.string
+    picture: T.string,
+    meta: T.shape({
+      publicUrl: T.string
+    })
   }
 }
 
