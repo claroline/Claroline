@@ -2,11 +2,13 @@
 
 namespace Icap\BlogBundle\Listener;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\Comment;
@@ -172,6 +174,60 @@ class BlogListener extends ContainerAware
                 ['blogId' => $event->getResource()->getId()]
             );
         $event->setResponse(new RedirectResponse($route));
+        $event->stopPropagation();
+    }
+
+    /**
+     * @param GenericDataEvent $event
+     */
+    public function onGenerateResourceTracking(GenericDataEvent $event)
+    {
+        $om = $this->container->get('claroline.persistence.object_manager');
+        $resourceEvalManager = $this->container->get('claroline.manager.resource_evaluation_manager');
+        $data = $event->getData();
+        $node = $data['resourceNode'];
+        $user = $data['user'];
+        $startDate = $data['startDate'];
+
+        $logs = $resourceEvalManager->getLogsForResourceTracking(
+            $node,
+            $user,
+            ['resource-read', 'resource-icap_blog-post_create', 'resource-icap_blog-post_update', 'resource-icap_blog-comment_create'],
+            $startDate
+        );
+        $nbLogs = count($logs);
+
+        if ($nbLogs > 0) {
+            $om->startFlushSuite();
+            $tracking = $resourceEvalManager->getResourceUserEvaluation($node, $user);
+            $tracking->setDate($logs[0]->getDateLog());
+            $status = AbstractResourceEvaluation::STATUS_UNKNOWN;
+            $nbAttempts = 0;
+            $nbOpenings = 0;
+
+            foreach ($logs as $log) {
+                switch ($log->getAction()) {
+                    case 'resource-read':
+                        ++$nbOpenings;
+
+                        if ($status === AbstractResourceEvaluation::STATUS_UNKNOWN) {
+                            $status = AbstractResourceEvaluation::STATUS_OPENED;
+                        }
+                        break;
+                    case 'resource-icap_blog-post_create':
+                    case 'resource-icap_blog-post_update':
+                    case 'resource-icap_blog-comment_create':
+                        ++$nbAttempts;
+                        $status = AbstractResourceEvaluation::STATUS_PARTICIPATED;
+                        break;
+                }
+            }
+            $tracking->setStatus($status);
+            $tracking->setNbAttempts($nbAttempts);
+            $tracking->setNbOpenings($nbOpenings);
+            $om->persist($tracking);
+            $om->endFlushSuite();
+        }
         $event->stopPropagation();
     }
 }

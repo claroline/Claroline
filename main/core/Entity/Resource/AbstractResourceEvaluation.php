@@ -24,6 +24,19 @@ class AbstractResourceEvaluation
     const STATUS_INCOMPLETE = 'incomplete';
     const STATUS_NOT_ATTEMPTED = 'not_attempted';
     const STATUS_UNKNOWN = 'unknown';
+    const STATUS_OPENED = 'opened';
+    const STATUS_PARTICIPATED = 'participated';
+
+    const STATUS_PRORITY = [
+        self::STATUS_NOT_ATTEMPTED => 0,
+        self::STATUS_UNKNOWN => 1,
+        self::STATUS_OPENED => 2,
+        self::STATUS_INCOMPLETE => 3,
+        self::STATUS_PARTICIPATED => 4,
+        self::STATUS_COMPLETED => 5,
+        self::STATUS_FAILED => 6,
+        self::STATUS_PASSED => 7,
+    ];
 
     /**
      * @ORM\Id

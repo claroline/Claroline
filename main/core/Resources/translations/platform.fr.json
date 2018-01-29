@@ -773,6 +773,8 @@
     "my_workspaces": "Mes espaces d'activités",
     "name": "Nom",
     "name_required": "Nom requis",
+    "nb_attempts_participations": "Nombre de tentatives/participations",
+    "nb_openings": "Nombre d'ouvertures",
     "new": "Nouveau",
     "new_folder_in_current_ws": "Nouveau répertoire dans l'espace d'activité courant",
     "new_icon_set": "Nouveau jeu d'icônes",

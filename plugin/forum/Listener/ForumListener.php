@@ -11,12 +11,14 @@
 
 namespace Claroline\ForumBundle\Listener;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteUserEvent;
+use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\ResourceCreatedEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\ForumType;
@@ -30,10 +32,10 @@ class ForumListener extends ContainerAware
         $form = $this->container->get('form.factory')->create(new ForumType(), new Forum());
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_forum',
-            )
+            ]
         );
         $event->setResponseContent($content);
         $event->stopPropagation();
@@ -48,7 +50,7 @@ class ForumListener extends ContainerAware
         if ($form->isValid()) {
             $forum = $form->getData();
             $this->container->get('claroline.manager.forum_manager')->createCategory($forum, $forum->getName(), false);
-            $event->setResources(array($forum));
+            $event->setResources([$forum]);
             $event->stopPropagation();
 
             return;
@@ -56,10 +58,10 @@ class ForumListener extends ContainerAware
 
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_forum',
-            )
+            ]
         );
         $event->setErrorFormContent($content);
         $event->stopPropagation();
@@ -70,10 +72,10 @@ class ForumListener extends ContainerAware
         $requestStack = $this->container->get('request_stack');
         $httpKernel = $this->container->get('http_kernel');
         $request = $requestStack->getCurrentRequest();
-        $params = array();
+        $params = [];
         $params['_controller'] = 'ClarolineForumBundle:Forum:open';
         $params['forum'] = $event->getResource()->getId();
-        $subRequest = $request->duplicate(array(), null, $params);
+        $subRequest = $request->duplicate([], null, $params);
         $response = $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();
@@ -88,7 +90,6 @@ class ForumListener extends ContainerAware
 
     public function onCopy(CopyResourceEvent $event)
     {
-        $em = $this->container->get('doctrine.orm.entity_manager');
         $resource = $event->getResource();
         $event->setCopy($this->container->get('claroline.manager.forum_manager')->copy($resource));
         $event->stopPropagation();
@@ -100,7 +101,7 @@ class ForumListener extends ContainerAware
         $em = $this->container->get('doctrine.orm.entity_manager');
         $notificationRepo = $em->getRepository('ClarolineForumBundle:Notification');
 
-        $notifications = $notificationRepo->findOneBy(array('user' => $event->getUser()));
+        $notifications = $notificationRepo->findOneBy(['user' => $event->getUser()]);
         if (count($notifications) > 0) {
             foreach ($notifications as $notification) {
                 $em->remove($notification);
@@ -113,5 +114,53 @@ class ForumListener extends ContainerAware
     {
         $node = $event->getResourceNode();
         $this->container->get('claroline.manager.forum_manager')->createDefaultPostRights($node);
+    }
+
+    public function onGenerateResourceTracking(GenericDataEvent $event)
+    {
+        $om = $this->container->get('claroline.persistence.object_manager');
+        $resourceEvalManager = $this->container->get('claroline.manager.resource_evaluation_manager');
+        $data = $event->getData();
+        $node = $data['resourceNode'];
+        $user = $data['user'];
+        $startDate = $data['startDate'];
+
+        $logs = $resourceEvalManager->getLogsForResourceTracking(
+            $node,
+            $user,
+            ['resource-read', 'resource-claroline_forum-create_message'],
+            $startDate
+        );
+
+        if (count($logs) > 0) {
+            $om->startFlushSuite();
+            $tracking = $resourceEvalManager->getResourceUserEvaluation($node, $user);
+            $tracking->setDate($logs[0]->getDateLog());
+            $status = AbstractResourceEvaluation::STATUS_UNKNOWN;
+            $nbAttempts = 0;
+            $nbOpenings = 0;
+
+            foreach ($logs as $log) {
+                switch ($log->getAction()) {
+                    case 'resource-read':
+                        ++$nbOpenings;
+
+                        if ($status === AbstractResourceEvaluation::STATUS_UNKNOWN) {
+                            $status = AbstractResourceEvaluation::STATUS_OPENED;
+                        }
+                        break;
+                    case 'resource-claroline_forum-create_message':
+                        ++$nbAttempts;
+                        $status = AbstractResourceEvaluation::STATUS_PARTICIPATED;
+                        break;
+                }
+            }
+            $tracking->setStatus($status);
+            $tracking->setNbAttempts($nbAttempts);
+            $tracking->setNbOpenings($nbOpenings);
+            $om->persist($tracking);
+            $om->endFlushSuite();
+        }
+        $event->stopPropagation();
     }
 }

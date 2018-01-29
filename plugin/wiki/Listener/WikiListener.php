@@ -2,10 +2,12 @@
 
 namespace Icap\WikiBundle\Listener;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Icap\WikiBundle\Entity\Wiki;
 use Icap\WikiBundle\Form\WikiType;
@@ -124,6 +126,61 @@ class WikiListener
         $loggedUser = $this->container->get('security.token_storage')->getToken()->getUser();
         $newWiki = $this->container->get('icap.wiki.manager')->copyWiki($wiki, $loggedUser);
         $event->setCopy($newWiki);
+        $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("generate_resource_user_evaluation_icap_wiki")
+     *
+     * @param GenericDataEvent $event
+     */
+    public function onGenerateResourceTracking(GenericDataEvent $event)
+    {
+        $om = $this->container->get('claroline.persistence.object_manager');
+        $resourceEvalManager = $this->container->get('claroline.manager.resource_evaluation_manager');
+        $data = $event->getData();
+        $node = $data['resourceNode'];
+        $user = $data['user'];
+        $startDate = $data['startDate'];
+
+        $logs = $resourceEvalManager->getLogsForResourceTracking(
+            $node,
+            $user,
+            ['resource-read', 'resource-icap_wiki-section_create', 'resource-icap_wiki-section_update'],
+            $startDate
+        );
+        $nbLogs = count($logs);
+
+        if ($nbLogs > 0) {
+            $om->startFlushSuite();
+            $tracking = $resourceEvalManager->getResourceUserEvaluation($node, $user);
+            $tracking->setDate($logs[0]->getDateLog());
+            $status = AbstractResourceEvaluation::STATUS_UNKNOWN;
+            $nbAttempts = 0;
+            $nbOpenings = 0;
+
+            foreach ($logs as $log) {
+                switch ($log->getAction()) {
+                    case 'resource-read':
+                        ++$nbOpenings;
+
+                        if ($status === AbstractResourceEvaluation::STATUS_UNKNOWN) {
+                            $status = AbstractResourceEvaluation::STATUS_OPENED;
+                        }
+                        break;
+                    case 'resource-icap_wiki-section_create':
+                    case 'resource-icap_wiki-section_update':
+                        ++$nbAttempts;
+                        $status = AbstractResourceEvaluation::STATUS_PARTICIPATED;
+                        break;
+                }
+            }
+            $tracking->setStatus($status);
+            $tracking->setNbAttempts($nbAttempts);
+            $tracking->setNbOpenings($nbOpenings);
+            $om->persist($tracking);
+            $om->endFlushSuite();
+        }
         $event->stopPropagation();
     }
 }

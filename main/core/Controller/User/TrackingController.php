@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\User;
 
 use Claroline\CoreBundle\API\SerializerProvider;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -33,6 +34,8 @@ class TrackingController extends Controller
     private $configHandler;
     /** @var UserRepository */
     private $userRepo;
+    /** @var ResourceUserEvaluation */
+    private $resourceUserEvaluationRepo;
     /** @var SerializerProvider */
     private $serializer;
 
@@ -60,14 +63,16 @@ class TrackingController extends Controller
         $this->tokenStorage = $tokenStorage;
         $this->configHandler = $configHandler;
         $this->userRepo = $om->getRepository('ClarolineCoreBundle:User');
+        $this->resourceUserEvaluationRepo = $om->getRepository('ClarolineCoreBundle:Resource\ResourceUserEvaluation');
         $this->serializer = $serializer;
     }
 
     /**
-     * Displays a user profile.
+     * Displays a user tracking.
      *
      * @EXT\Route("/{publicUrl}", name="claro_user_tracking")
      * @EXT\Template("ClarolineCoreBundle:User:tracking.html.twig")
+     * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param string $publicUrl
      *
@@ -79,10 +84,13 @@ class TrackingController extends Controller
 
         try {
             $user = $this->userRepo->findOneByIdOrPublicUrl($publicUrl);
+            $evaluations = $this->resourceUserEvaluationRepo->findBy(['user' => $user], ['date' => 'desc']);
 
             return [
                 'user' => $this->serializer->serialize($user),
-                'tracking' => [],
+                'evaluations' => array_map(function (ResourceUserEvaluation $rue) {
+                    return $this->serializer->serialize($rue);
+                }, $evaluations),
             ];
         } catch (NoResultException $e) {
             throw new NotFoundHttpException('Page not found');

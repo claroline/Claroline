@@ -761,6 +761,8 @@
     "my_workspaces": "My workspaces",
     "name": "Name",
     "name_required": "Name required",
+    "nb_attempts_participations": "Number of attempts/participations",
+    "nb_openings": "Number of openings",
     "new": "New",
     "new_folder_in_current_ws": "New directory in the current workspace",
     "new_icon_set": "New icon pack",

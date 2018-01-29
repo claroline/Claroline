@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Repository\Log;
 
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Doctrine\ORM\EntityRepository;
@@ -717,5 +718,26 @@ class LogRepository extends EntityRepository
             ->setParameter('otherElementId', $otherElementId);
 
         return $queryBuilder;
+    }
+
+    public function findLogsForResourceTracking(ResourceNode $node, User $user, array $actions, \DateTime $date = null)
+    {
+        $queryBuilder = $this
+            ->createQueryBuilder('log')
+            ->orderBy('log.dateLog', 'DESC')
+            ->andWhere('log.resourceNode = :node')
+            ->andWhere('log.doer = :user')
+            ->andWhere('log.action IN (:actions)')
+            ->setParameter('actions', $actions)
+            ->setParameter('node', $node)
+            ->setParameter('user', $user);
+
+        if (!empty($date)) {
+            $queryBuilder
+                ->andWhere('log.dateLog >= :date')
+                ->setParameter('date', $date);
+        }
+
+        return $queryBuilder->getQuery()->getResult();
     }
 }

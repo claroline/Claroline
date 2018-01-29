@@ -11,13 +11,16 @@
 
 namespace Claroline\ScormBundle\Listener;
 
+use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DownloadResourceEvent;
+use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
+use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
@@ -53,17 +56,19 @@ class Scorm12Listener
     private $scorm12ScoTrackingRepo;
     private $templating;
     private $translator;
+    private $resourceEvalManager;
 
     /**
      * @DI\InjectParams({
-     *     "container"          = @DI\Inject("service_container"),
-     *     "formFactory"        = @DI\Inject("form.factory"),
-     *     "httpKernel"         = @DI\Inject("http_kernel"),
-     *     "om"                 = @DI\Inject("claroline.persistence.object_manager"),
-     *     "requestStack"       = @DI\Inject("request_stack"),
-     *     "router"             = @DI\Inject("router"),
-     *     "templating"         = @DI\Inject("templating"),
-     *     "translator"         = @DI\Inject("translator")
+     *     "container"           = @DI\Inject("service_container"),
+     *     "formFactory"         = @DI\Inject("form.factory"),
+     *     "httpKernel"          = @DI\Inject("http_kernel"),
+     *     "om"                  = @DI\Inject("claroline.persistence.object_manager"),
+     *     "requestStack"        = @DI\Inject("request_stack"),
+     *     "router"              = @DI\Inject("router"),
+     *     "templating"          = @DI\Inject("templating"),
+     *     "translator"          = @DI\Inject("translator"),
+     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
      * })
      */
     public function __construct(
@@ -74,7 +79,8 @@ class Scorm12Listener
         RequestStack $requestStack,
         UrlGeneratorInterface $router,
         TwigEngine $templating,
-        TranslatorInterface $translator
+        TranslatorInterface $translator,
+        ResourceEvaluationManager $resourceEvalManager
     ) {
         $this->container = $container;
         $this->filePath = $this->container
@@ -90,6 +96,7 @@ class Scorm12Listener
         $this->scorm12ScoTrackingRepo = $om->getRepository('ClarolineScormBundle:Scorm12ScoTracking');
         $this->templating = $templating;
         $this->translator = $translator;
+        $this->resourceEvalManager = $resourceEvalManager;
     }
 
     /**
@@ -105,10 +112,10 @@ class Scorm12Listener
         );
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'resourceType' => 'claroline_scorm_12',
-            )
+            ]
         );
         $event->setResponseContent($content);
         $event->stopPropagation();
@@ -130,13 +137,12 @@ class Scorm12Listener
         try {
             if ($form->isValid()) {
                 $tmpFile = $form->get('file')->getData();
-                $workspace = $event->getParent()->getWorkspace();
 
                 if ($this->isScormArchive($tmpFile)) {
                     $scormResource = $this->container
                         ->get('claroline.manager.scorm_manager')
                         ->createScorm($tmpFile, $form->get('name')->getData(), '1.2');
-                    $event->setResources(array($scormResource));
+                    $event->setResources([$scormResource]);
                     $event->stopPropagation();
 
                     return;
@@ -146,17 +152,17 @@ class Scorm12Listener
             $msg = $e->getMessage();
             $errorMsg = $this->translator->trans(
                 $msg,
-                array(),
+                [],
                 'resource'
             );
             $form->addError(new FormError($errorMsg));
         }
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'resourceType' => $event->getResourceType(),
-            )
+            ]
         );
         $event->setErrorFormContent($content);
         $event->stopPropagation();
@@ -177,7 +183,7 @@ class Scorm12Listener
         $params['scormId'] = $scorm->getId();
 
         $subRequest = $this->request->duplicate(
-            array(),
+            [],
             null,
             $params
         );
@@ -202,7 +208,7 @@ class Scorm12Listener
 
         if ($nbScorm === 1) {
             if (file_exists($scormArchiveFile)) {
-                $event->setFiles(array($scormArchiveFile));
+                $event->setFiles([$scormArchiveFile]);
             }
             if (file_exists($scormResourcesPath)) {
                 $this->deleteFiles($scormResourcesPath);
@@ -250,12 +256,106 @@ class Scorm12Listener
     }
 
     /**
+     * @DI\Observe("generate_resource_user_evaluation_claroline_scorm_12")
+     *
+     * @param GenericDataEvent $event
+     */
+    public function onGenerateResourceTracking(GenericDataEvent $event)
+    {
+        $data = $event->getData();
+        $node = $data['resourceNode'];
+        $user = $data['user'];
+        $startDate = $data['startDate'];
+
+        $logs = $this->resourceEvalManager->getLogsForResourceTracking(
+            $node,
+            $user,
+            ['resource-read', 'resource-scorm_12-sco_result'],
+            $startDate
+        );
+
+        if (count($logs) > 0) {
+            $this->om->startFlushSuite();
+            $tracking = $this->resourceEvalManager->getResourceUserEvaluation($node, $user);
+            $tracking->setDate($logs[0]->getDateLog());
+            $nbAttempts = 0;
+            $nbOpenings = 0;
+            $status = AbstractResourceEvaluation::STATUS_UNKNOWN;
+            $score = null;
+            $scoreMin = null;
+            $scoreMax = null;
+            $totalTime = null;
+            $statusValues = [
+                'not attempted' => 0,
+                'unknown' => 1,
+                'browsed' => 2,
+                'incomplete' => 3,
+                'failed' => 4,
+                'completed' => 5,
+                'passed' => 6,
+            ];
+
+            foreach ($logs as $log) {
+                switch ($log->getAction()) {
+                    case 'resource-read':
+                        ++$nbOpenings;
+                        break;
+                    case 'resource-scorm_12-sco_result':
+                        ++$nbAttempts;
+                        $details = $log->getDetails();
+
+                        if (isset($details['bestScore']) && (empty($score) || $details['bestScore'] > $score)) {
+                            $score = $details['bestScore'];
+                            $scoreMin = isset($details['scoreMin']) ? $details['scoreMin'] : null;
+                            $scoreMax = isset($details['scoreMax']) ? $details['scoreMax'] : null;
+                        }
+                        if (isset($details['totalTime']) && (empty($totalTime) || $details['totalTime'] > $totalTime)) {
+                            $totalTime = $details['totalTime'];
+                        }
+                        if (isset($details['bestStatus']) && ($statusValues[$details['bestStatus']] > $statusValues[$status])) {
+                            $status = $details['bestStatus'];
+                        }
+                        break;
+                }
+            }
+            switch ($status) {
+                case 'passed':
+                case 'failed':
+                case 'completed':
+                case 'incomplete':
+                    break;
+                case 'not attempted':
+                    $status = AbstractResourceEvaluation::STATUS_NOT_ATTEMPTED;
+                    break;
+                case 'browsed':
+                    $status = AbstractResourceEvaluation::STATUS_OPENED;
+                    break;
+                default:
+                    $status = AbstractResourceEvaluation::STATUS_UNKNOWN;
+            }
+            $tracking->setStatus($status);
+            $tracking->setScore($score);
+            $tracking->setScoreMin($scoreMin);
+            $tracking->setScoreMax($scoreMax);
+
+            if ($totalTime) {
+                $tracking->setDuration($totalTime / 100);
+            }
+            $tracking->setNbAttempts($nbAttempts);
+            $tracking->setNbOpenings($nbOpenings);
+            $this->om->persist($tracking);
+            $this->om->endFlushSuite();
+        }
+        $event->stopPropagation();
+    }
+
+    /**
      * Checks if a UploadedFile is a zip archive that contains a
      * imsmanifest.xml file in its root directory.
      *
      * @param UploadedFile $file
      *
-     * @return boolean.
+     * @return bool
      */
     private function isScormArchive(UploadedFile $file)
     {
@@ -275,7 +375,7 @@ class Scorm12Listener
     /**
      * Deletes recursively a directory and its content.
      *
-     * @param $dirPath The path to the directory to delete.
+     * @param $dirPath The path to the directory to delete
      */
     private function deleteFiles($dirPath)
     {

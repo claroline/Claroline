@@ -329,6 +329,9 @@ class ScormController extends Controller
                 $bestScore,
                 $bestStatus
             );
+
+            // Generate resource evaluation
+            $this->scormManager->generateScorm12Evaluation($scoTracking);
         }
         $this->scormManager->updateScorm12ScoTracking($scoTracking);
 
@@ -579,7 +582,9 @@ class ScormController extends Controller
         }
 
         if ($mode === 'log') {
-            $dataSessionTime = isset($datas['cmi.session_time']) ? $this->formatSessionTime($datas['cmi.session_time']) : 'PT0S';
+            $dataSessionTime = isset($datas['cmi.session_time']) ?
+                $this->scormManager->formatSessionTime($datas['cmi.session_time']) :
+                'PT0S';
             $completionStatus = isset($datas['cmi.completion_status']) ? $datas['cmi.completion_status'] : 'unknown';
             $successStatus = isset($datas['cmi.success_status']) ? $datas['cmi.success_status'] : 'unknown';
             $scoreRaw = isset($datas['cmi.score.raw']) ? intval($datas['cmi.score.raw']) : null;
@@ -635,6 +640,19 @@ class ScormController extends Controller
             $datas['scoId'] = $scorm2004Sco->getId();
 
             $this->logScorm2004ScoResult($scorm2004Sco, $user, $datas);
+
+            // Generate resource evaluation
+            $scoTracking->setDetails($datas);
+            $this->scormManager->generateScorm2004Evaluation(
+                $scorm->getResourceNode(),
+                $user,
+                $completionStatus,
+                $successStatus,
+                $scoreRaw,
+                $scoreMin,
+                $scoreMax,
+                $dataSessionTime
+            );
         }
         $scoTracking->setDetails($datas);
         $this->scormManager->updateScorm2004ScoTracking($scoTracking);
@@ -795,28 +813,6 @@ class ScormController extends Controller
         }
 
         return $result;
-    }
-
-    /**
-     * Checks format of given session time interval and tries to fix format if invalid.
-     *
-     * @param string $sessionTime
-     */
-    private function formatSessionTime($sessionTime)
-    {
-        $formattedValue = 'PT0S';
-        $generalPattern = '/^P([0-9]+Y)?([0-9]+M)?([0-9]+D)?T([0-9]+H)?([0-9]+M)?([0-9]+S)?$/';
-        $decimalPattern = '/^P([0-9]+Y)?([0-9]+M)?([0-9]+D)?T([0-9]+H)?([0-9]+M)?[0-9]+\.[0-9]{1,2}S$/';
-
-        if ($sessionTime !== 'PT') {
-            if (preg_match($generalPattern, $sessionTime)) {
-                $formattedValue = $sessionTime;
-            } elseif (preg_match($decimalPattern, $sessionTime)) {
-                $formattedValue = preg_replace(['/\.[0-9]+S$/'], ['S'], $sessionTime);
-            }
-        }
-
-        return $formattedValue;
     }
 
     /**
