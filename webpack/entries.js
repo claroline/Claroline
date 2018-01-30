@@ -1,6 +1,6 @@
 const fs = require('fs')
-const paths = require('../paths')
-const packages = require('../packages')
+const paths = require('./paths')
+const packages = require('./packages')
 
 /**
  * Creates an "entry" map containing all the entries declared in claroline

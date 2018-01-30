@@ -1,5 +1,5 @@
 const paths = require('./main/core/Resources/server/paths')
-const webpackConfig = require('./webpack.test')
+const webpackConfig = require('./webpack.config.test')
 
 module.exports = config => {
   const base = {

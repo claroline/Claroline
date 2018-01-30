@@ -4,7 +4,6 @@ import 'angular-toArrayFilter/toArrayFilter'
 //this hack is required for the daterange picker to work
 import moment from 'moment'
 window.moment = moment
-import 'angular-daterangepicker'
 
 import '../comments/commentsApp'
 import '../modules/urlInterpolator'

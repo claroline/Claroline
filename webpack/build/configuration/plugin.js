@@ -1,5 +1,5 @@
-const paths = require('../../../paths')
-const packages = require('../../../packages')
+const paths = require('../../paths')
+const packages = require('../../packages')
 const fs = require('fs')
 const validator = require('./validator')
 

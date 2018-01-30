@@ -1,7 +1,7 @@
-<div id="modal-ticket-create-form" 
-     class="modal-dialog" 
-     role="dialog" 
-     aria-labelledby="modalLabel" 
+<div id="modal-ticket-create-form"
+     class="modal-dialog"
+     role="dialog"
+     aria-labelledby="modalLabel"
      aria-hidden="true"
 >
     <div class="modal-content">
@@ -98,7 +98,7 @@
 {% block javascripts %}
     <script src="{{ hotAsset('dist/es6_dll.js') }}"></script>
     <script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
-    <script src="{{ hotAsset('dist/commons.js') }}"></script>
+    {#<script src="{{ hotAsset('dist/commons.js') }}"></script>#}
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'support' }) }}"></script>
     <script>
         const message = window['exceptionData']['message']
