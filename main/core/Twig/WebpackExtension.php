@@ -81,10 +81,6 @@ class WebpackExtension extends \Twig_Extension
 
         $asset = 'dist/'.$assets[$assetName]['js'];
 
-        if ($this->environment === 'dev' && !$assetUrl) {
-            return "http://localhost:8080/{$asset}";
-        }
-
         return $this->assetExtension->getAssetUrl($asset);
     }
 

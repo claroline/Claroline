@@ -49,6 +49,7 @@ before_install:
   - git clone https://github.com/creationix/nvm.git /tmp/.nvm
   - source /tmp/.nvm/nvm.sh
   - nvm install 5
+  - npm install yarn
 
 before_script:
   # get and configure claroline platform

@@ -1,8 +1,3 @@
-/**
- * Exports lists of modules to be bundled as external "dynamic" libraries
- *
- * (@see webpack DllPlugin and DllReferencePlugin)
- */
 module.exports = {
   'react_dll': [
     'react',
@@ -23,7 +18,7 @@ module.exports = {
     'angular-bootstrap',
     'angular-bootstrap-colorpicker',
     'angular-breadcrumb',
-    'angular-daterangepicker',
+    'angular-daterangepicker/js/angular-daterangepicker',
     'angular-datetime',
     'angular-data-table/release/dataTable.helpers.min',
     'angular-loading-bar',

@@ -26,7 +26,7 @@
 
     <!-- dunno why I must do this include here-->
     {% if app.environment == 'prod' %}
-        <script src="{{ hotAsset('dist/commons.js') }}"></script>
+        {#<script src="{{ hotAsset('dist/commons.js') }}"></script>#}
     {% endif %}
     <script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
     {# We have replaced WillDurand by our own to be able to lazy load trans domains #}
