@@ -13,6 +13,7 @@ namespace Claroline\ClacoFormBundle\Controller;
 
 use Claroline\ClacoFormBundle\API\Serializer\CommentSerializer;
 use Claroline\ClacoFormBundle\API\Serializer\EntrySerializer;
+use Claroline\ClacoFormBundle\API\Serializer\FieldSerializer;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
@@ -54,6 +55,7 @@ class ClacoFormController extends Controller
     private $userManager;
     private $entrySerializer;
     private $commentSerializer;
+    private $fieldSerializer;
 
     /**
      * @DI\InjectParams({
@@ -69,7 +71,8 @@ class ClacoFormController extends Controller
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
      *     "entrySerializer"       = @DI\Inject("claroline.serializer.clacoform.entry"),
-     *     "commentSerializer"     = @DI\Inject("claroline.serializer.clacoform.comment")
+     *     "commentSerializer"     = @DI\Inject("claroline.serializer.clacoform.comment"),
+     *     "fieldSerializer"       = @DI\Inject("claroline.serializer.clacoform.field")
      * })
      */
     public function __construct(
@@ -85,7 +88,8 @@ class ClacoFormController extends Controller
         TokenStorageInterface $tokenStorage,
         UserManager $userManager,
         EntrySerializer $entrySerializer,
-        CommentSerializer $commentSerializer
+        CommentSerializer $commentSerializer,
+        FieldSerializer $fieldSerializer
     ) {
         $this->apiManager = $apiManager;
         $this->clacoFormManager = $clacoFormManager;
@@ -100,6 +104,7 @@ class ClacoFormController extends Controller
         $this->userManager = $userManager;
         $this->entrySerializer = $entrySerializer;
         $this->commentSerializer = $commentSerializer;
+        $this->fieldSerializer = $fieldSerializer;
     }
 
     /**
@@ -149,7 +154,9 @@ class ClacoFormController extends Controller
             '_resource' => $clacoForm,
             'isAnon' => $isAnon,
             'clacoForm' => $clacoForm,
-            'fields' => $fields,
+            'fields' => array_map(function (Field $field) {
+                return $this->fieldSerializer->serialize($field);
+            }, $fields),
             'canGeneratePdf' => $canGeneratePdf,
             'cascadeLevelMax' => $cascadeLevelMax,
             'entries' => $entries,
@@ -290,11 +297,7 @@ class ClacoFormController extends Controller
             $choicesChildren,
             $details
         );
-        $serializedField = $this->serializer->serialize(
-            $field,
-            'json',
-            SerializationContext::create()->setGroups(['api_facet_admin'])
-        );
+        $serializedField = $this->fieldSerializer->serialize($field);
 
         return new JsonResponse($serializedField, 200);
     }
@@ -366,11 +369,7 @@ class ClacoFormController extends Controller
             $choicesChildren,
             $details
         );
-        $serializedField = $this->serializer->serialize(
-            $field,
-            'json',
-            SerializationContext::create()->setGroups(['api_facet_admin'])
-        );
+        $serializedField = $this->fieldSerializer->serialize($field);
 
         return new JsonResponse($serializedField, 200);
     }
