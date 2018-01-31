@@ -8,7 +8,7 @@ const plugins = require('./webpack/plugins')
 Encore
   .setOutputPath('web/dist')
   .setPublicPath('/dist')
-  .cleanupOutputBeforeBuild()
+  //.cleanupOutputBeforeBuild()
   .enableBuildNotifications()
   //.enableVersioning()
   .enableSourceMaps(false)
@@ -19,8 +19,8 @@ Encore
   
   //fixes performance issues
   .configureUglifyJsPlugin(uglifyJsPluginOptionsCallback = (options) => {
-      options.compress = true
-      options.beautify = true
+      /*options.compress = true
+      options.beautify = true*/
   })
   .configureBabel(babelConfig => {
       babelConfig.compact = true
