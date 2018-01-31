@@ -49,6 +49,7 @@
         "build": [
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
             "Sensio\\Bundle\\DistributionBundle\\Composer\\ScriptHandler::buildBootstrap",
+            "npm run dll",
             "npm run webpack"
         ],
         "disable-maintenance": [
@@ -88,10 +89,6 @@
         {
              "type": "vcs",
              "url": "https://github.com/jstuhli/twig.js"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/ptsavdar/php-svg"
         }
     ]
 }
