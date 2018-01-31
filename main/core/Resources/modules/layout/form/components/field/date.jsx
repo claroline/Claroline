@@ -19,6 +19,7 @@ const Date = props => {
       <span className="input-group-btn">
         <CalendarPicker
           className="btn-default"
+          icon={props.calendarIcon}
           selected={props.value}
           disabled={props.disabled}
           onChange={props.onChange}
@@ -55,6 +56,7 @@ const Date = props => {
 
 implementPropTypes(Date, FormFieldTypes, {
   value: T.string,
+  calendarIcon: T.string,
 
   // date configuration
   minDate: T.string,
