@@ -7,7 +7,7 @@ import moment from 'moment'
 import {trans} from '#/main/core/translation'
 import {NumberGroup}  from '#/main/core/layout/form/components/group/number-group.jsx'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
-import {RadioGroup}  from '#/main/core/layout/form/components/group/radio-group.jsx'
+import {RadiosGroup}  from '#/main/core/layout/form/components/group/radios-group.jsx'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 
@@ -32,23 +32,19 @@ const CriteriaForm = props =>
               </HtmlText>
             </td>
             <td className="criterion-scale-form-row">
-              <RadioGroup
+              <RadiosGroup
                 id={`criterion-form-${c.id}-radio`}
                 label="criterion_form_radio"
-                options={[...Array(props.dropzone.parameters.criteriaTotal).keys()].map((idx) => {
-                  return {
-                    label: '',
-                    value: idx
-                  }
-                })}
+                options={[...Array(props.dropzone.parameters.criteriaTotal).keys()].map((idx) => ({label: '', value: idx}))}
                 inline={true}
                 hideLabel={true}
-                checkedValue={props.grades.find(g => g.criterion === c.id).value}
+                value={props.grades.find(g => g.criterion === c.id).value}
                 onChange={value => props.handleUpdate(c.id, parseInt(value))}
               />
             </td>
           </tr>
         )}
+
         </tbody>
       </table> :
       <div className="alert alert-warning">

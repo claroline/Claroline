@@ -351,7 +351,7 @@ class Entries extends Component {
       if (value !== undefined && value !== null && value !== '') {
         switch (getFieldType(field.type).name) {
           case 'date':
-            formattedValue = value.date ? localeDate(value.date) : displayDate(value)
+            formattedValue = value.date ? displayDate(value.date) : displayDate(value)
             break
           case 'country':
             formattedValue = getCountry(value)
