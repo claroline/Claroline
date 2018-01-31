@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "86f5eee63b4abb54fe498443bd150be66b62dde9"
+                "reference": "580ec419d1d398833348c1ea60134d691d6c9178"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/86f5eee63b4abb54fe498443bd150be66b62dde9",
-                "reference": "86f5eee63b4abb54fe498443bd150be66b62dde9",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/580ec419d1d398833348c1ea60134d691d6c9178",
+                "reference": "580ec419d1d398833348c1ea60134d691d6c9178",
                 "shasum": ""
             },
             "require": {
@@ -188,9 +188,9 @@
                 "symfony/assetic-bundle": "2.8.0",
                 "symfony/monolog-bundle": "2.12.0",
                 "symfony/swiftmailer-bundle": "2.4.0",
-                "symfony/symfony": "2.7.22",
+                "symfony/symfony": "2.7.38",
                 "twig/extensions": "1.4.1",
-                "twig/twig": "1.30.0",
+                "twig/twig": "1.35.0",
                 "u01jmg3/ics-parser": "2.0.0",
                 "werkint/jsmin": "1.0.0",
                 "white-october/pagerfanta-bundle": "1.0.2",
@@ -395,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-01-30 13:23:12"
+            "time": "2018-01-31 12:06:36"
         },
         {
             "name": "claroline/front-end-bundle",
@@ -5504,26 +5504,30 @@
         },
         {
             "name": "symfony/symfony",
-            "version": "v2.7.22",
+            "version": "v2.7.38",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/symfony.git",
-                "reference": "4b0fd9881d3ab98578cd92739fa1d3a1a74ebe8d"
+                "reference": "b95964ae888c9e25ad7c3eee22730c68b33b1a8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/symfony/zipball/4b0fd9881d3ab98578cd92739fa1d3a1a74ebe8d",
-                "reference": "4b0fd9881d3ab98578cd92739fa1d3a1a74ebe8d",
+                "url": "https://api.github.com/repos/symfony/symfony/zipball/b95964ae888c9e25ad7c3eee22730c68b33b1a8b",
+                "reference": "b95964ae888c9e25ad7c3eee22730c68b33b1a8b",
                 "shasum": ""
             },
             "require": {
                 "doctrine/common": "~2.4",
+                "ext-xml": "*",
                 "paragonie/random_compat": "~1.0",
                 "php": ">=5.3.9",
                 "psr/log": "~1.0",
                 "symfony/polyfill-apcu": "~1.1",
                 "symfony/polyfill-mbstring": "~1.1",
-                "twig/twig": "~1.28|~2.0"
+                "twig/twig": "~1.34|~2.4"
+            },
+            "conflict": {
+                "phpunit/phpunit": "<4.8.35|<5.4.3,>=5.0"
             },
             "replace": {
                 "symfony/asset": "self.version",
@@ -5572,6 +5576,7 @@
                 "symfony/yaml": "self.version"
             },
             "require-dev": {
+                "doctrine/annotations": "~1.0",
                 "doctrine/data-fixtures": "1.0.*",
                 "doctrine/dbal": "~2.4",
                 "doctrine/doctrine-bundle": "~1.2",
@@ -5580,6 +5585,7 @@
                 "ircmaxell/password-compat": "~1.0",
                 "monolog/monolog": "~1.11",
                 "ocramius/proxy-manager": "~0.4|~1.0|~2.0",
+                "sensio/framework-extra-bundle": "^3.0.2",
                 "symfony/phpunit-bridge": "~3.2"
             },
             "type": "library",
@@ -5628,7 +5634,7 @@
             "keywords": [
                 "framework"
             ],
-            "time": "2016-12-13 10:53:44"
+            "time": "2017-11-16 16:26:07"
         },
         {
             "name": "twig/extensions",
@@ -5684,34 +5690,38 @@
         },
         {
             "name": "twig/twig",
-            "version": "v1.30.0",
+            "version": "v1.35.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "c6ff71094fde15d12398eaba029434b013dc5e59"
+                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/c6ff71094fde15d12398eaba029434b013dc5e59",
-                "reference": "c6ff71094fde15d12398eaba029434b013dc5e59",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/daa657073e55b0a78cce8fdd22682fddecc6385f",
+                "reference": "daa657073e55b0a78cce8fdd22682fddecc6385f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.2.7"
+                "php": ">=5.3.3"
             },
             "require-dev": {
+                "psr/container": "^1.0",
                 "symfony/debug": "~2.7",
-                "symfony/phpunit-bridge": "~3.2@dev"
+                "symfony/phpunit-bridge": "~3.3@dev"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.30-dev"
+                    "dev-master": "1.35-dev"
                 }
             },
             "autoload": {
                 "psr-0": {
                     "Twig_": "lib/"
+                },
+                "psr-4": {
+                    "Twig\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -5741,7 +5751,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-12-23 11:06:22"
+            "time": "2017-09-27 18:06:46"
         },
         {
             "name": "u01jmg3/ics-parser",
@@ -7818,12 +7828,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "cbbf07012355e1aba9a057f6c78268139acadfd5"
+                "reference": "5f5c593272f34be91a9ecb58f82cf285f0e438bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/cbbf07012355e1aba9a057f6c78268139acadfd5",
-                "reference": "cbbf07012355e1aba9a057f6c78268139acadfd5",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/5f5c593272f34be91a9ecb58f82cf285f0e438bd",
+                "reference": "5f5c593272f34be91a9ecb58f82cf285f0e438bd",
                 "shasum": ""
             },
             "require": {
@@ -7876,7 +7886,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-01-21 19:07:38"
+            "time": "2018-01-31 10:41:42"
         },
         {
             "name": "webmozart/assert",
