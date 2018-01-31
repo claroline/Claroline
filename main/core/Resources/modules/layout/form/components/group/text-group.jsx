@@ -25,6 +25,7 @@ const TextGroup = props =>
         type="text"
         className="form-control"
         value={props.value || ''}
+        placeholder={props.placeholder}
         disabled={props.disabled}
         onChange={(e) => props.onChange(e.target.value)}
       />
@@ -41,6 +42,7 @@ implementPropTypes(TextGroup, FormGroupWithFieldTypes, {
   maxLength: T.number // todo implement
 }, {
   value: '',
+  placeholder: '',
   long: false,
   minRows: 2
 })

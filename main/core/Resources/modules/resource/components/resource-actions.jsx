@@ -84,7 +84,7 @@ const ManageRightsAction = props => {
 }
 
 ManageRightsAction.propTypes = {
-  rights: T.oneOf(['all', 'admin', 'workspace']).isRequired,
+  rights: T.oneOf(['all', 'admin', 'user', 'workspace']).isRequired,
   customRules: T.bool,
   openRightsManagement: T.func.isRequired
 }

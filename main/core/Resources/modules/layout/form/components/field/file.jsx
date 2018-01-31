@@ -111,5 +111,9 @@ File.propTypes = {
 File.defaultProps = {
   disabled: false,
   types: [],
-  max: 1
+  max: 1,
+  autoUpload: true,
+  onUpload: () => {},
+  uploadFile: () => {},
+  uploadUrl: ['apiv2_file_upload']
 }

@@ -39,7 +39,9 @@ class Date extends Component {
           locale={getLocale()}
           dateFormat={getFormat(false)}
           ref={(c) => this._calendar = c}
-          selected={this.props.value ? moment(this.props.value) : ''}
+          minDate={this.props.minDate ? moment(this.props.minDate) : undefined}
+          maxDate={this.props.maxDate ? moment(this.props.maxDate) : undefined}
+          selected={this.props.value ? moment(this.props.value) : undefined}
           onChange={date => this.props.onChange(moment(date).format('YYYY-MM-DD\THH:mm:ss'))}
         />
       </span>
@@ -50,8 +52,8 @@ class Date extends Component {
 implementPropTypes(Date, FormFieldTypes, {
   value: T.string,
   // custom props
-  minDate: T.object,
-  maxDate: T.object,
+  minDate: T.oneOfType([T.object, T.string]),
+  maxDate: T.oneOfType([T.object, T.string]),
   onlyButton: T.bool
 }, {
   value: '',

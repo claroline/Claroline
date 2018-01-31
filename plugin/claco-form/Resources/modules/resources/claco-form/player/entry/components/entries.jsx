@@ -221,7 +221,7 @@ class Entries extends Component {
           if (getFieldType(f.type).name === 'rich_text') {
             const value = fieldValue && fieldValue.fieldFacetValue && fieldValue.fieldFacetValue.value ?
               <span
-                className="fa fa-w fa-exclamation-circle"
+                className="fa fa-fw fa-exclamation-circle"
                 data-toggle="tooltip"
                 title={trans('rich_text_field_info', {}, 'clacoform')}
               /> :
@@ -242,7 +242,7 @@ class Entries extends Component {
 
   generateActions() {
     const dataListActions = [{
-      icon: 'fa fa-w fa-eye',
+      icon: 'fa fa-fw fa-eye',
       label: trans('view_entry', {}, 'clacoform'),
       action: (rows) => this.navigateTo(`/entry/${rows[0].id}/view`),
       context: 'row'
@@ -250,7 +250,7 @@ class Entries extends Component {
 
     if (this.props.canGeneratePdf) {
       dataListActions.push({
-        icon: 'fa fa-w fa-print',
+        icon: 'fa fa-fw fa-print',
         label: trans('print_entry', {}, 'clacoform'),
         action: (rows) => this.props.downloadEntryPdf(rows[0].id),
         context: 'row'
@@ -263,21 +263,21 @@ class Entries extends Component {
       })
     }
     dataListActions.push({
-      icon: 'fa fa-w fa-pencil',
+      icon: 'fa fa-fw fa-pencil',
       label: t('edit'),
       action: (rows) => this.navigateTo(`/entry/${rows[0].id}/edit`),
       displayed: (rows) => !rows[0].locked && this.canEditEntry(rows[0]),
       context: 'row'
     })
     dataListActions.push({
-      icon: 'fa fa-w fa-eye',
+      icon: 'fa fa-fw fa-eye',
       label: t('publish'),
       action: (rows) => this.props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
       displayed: (rows) => rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length &&
         rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length
     })
     dataListActions.push({
-      icon: 'fa fa-w fa-eye-slash',
+      icon: 'fa fa-fw fa-eye-slash',
       label: t('unpublish'),
       action: (rows) => this.props.switchEntriesStatus(rows, constants.ENTRY_STATUS_UNPUBLISHED),
       displayed: (rows) => rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length &&
@@ -299,7 +299,7 @@ class Entries extends Component {
       })
     }
     dataListActions.push({
-      icon: 'fa fa-w fa-trash',
+      icon: 'fa fa-fw fa-trash',
       label: t('delete'),
       action: (rows) => this.deleteEntry(rows[0]),
       displayed: (rows) => !rows[0].locked && this.canManageEntry(rows[0]),

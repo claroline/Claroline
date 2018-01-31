@@ -8,7 +8,7 @@ import {trans} from '#/main/core/translation'
 import {localeDate} from '#/main/core/scaffolding/date'
 import {constants} from '#/main/core/user/tracking/constants'
 
-import {ScoreGauge} from '#/main/core/layout/progression/components/score-gauge.jsx'
+import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge.jsx'
 
 const EventWrapper = props =>
   <li className={classes('timeline-event-container', {

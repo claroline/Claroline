@@ -50,7 +50,7 @@ ImageThumbnail.propTypes = {
 
 const DefaultThumbnail = props =>
   <div className="default-file-thumbnail">
-    <span className="file-thumbnail-icon fa fa-w fa-file-o"/>
+    <span className="file-thumbnail-icon fa fa-fw fa-file-o"/>
     {props.data && props.data.name &&
       <div className="file-thumbnail-name text-center">{props.data.name}</div>
     }
@@ -84,7 +84,7 @@ const Actions = props =>
       <span
         role="button"
         title={t('watch_at_the_original_size')}
-        className="action-button fa fa-w fa-external-link"
+        className="action-button fa fa-fw fa-external-link"
         onClick={e => {
           e.stopPropagation()
           props.handleExpand(e)
@@ -96,7 +96,7 @@ const Actions = props =>
         <span
           role="button"
           title={t('download')}
-          className="action-button fa fa-w fa-download"
+          className="action-button fa fa-fw fa-download"
           onClick={e => {
             props.handleDownload(e, props.data)
           }}
@@ -107,7 +107,7 @@ const Actions = props =>
       <span
         role="button"
         title={t('edit')}
-        className="action-button fa fa-w fa-pencil"
+        className="action-button fa fa-fw fa-pencil"
         onClick={e => props.handleEdit(e)}
       />
     }
@@ -115,7 +115,7 @@ const Actions = props =>
       <span
         role="button"
         title={t('delete')}
-        className="action-button fa fa-w fa-trash-o"
+        className="action-button fa fa-fw fa-trash-o"
         onClick={e => props.handleDelete(e)}
       />
     }

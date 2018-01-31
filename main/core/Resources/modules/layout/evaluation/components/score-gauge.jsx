@@ -3,19 +3,16 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 const ScoreGauge = props => {
-  const userScore = Math.round(props.userScore * 100) / 100
-  const pClass = 'p' + (Math.round((props.userScore / props.maxScore) * 100))
-  const pObj = {}
-  pObj[pClass] = props.userScore && Math.round(props.userScore) > 0
+  let userScore = props.userScore
+  let fillClass
+  if (null !== userScore) {
+    userScore = Math.round(props.userScore * 100) / 100
+    fillClass = 'p' + (Math.round((userScore / props.maxScore) * 100))
+  }
   
   return (
-    <div className={classes(
-      'score-gauge',
-      'c100',
-      props.size,
-      pObj
-    )}>
-      <span>{ (userScore || 0 === userScore ? userScore+'' : '-') + '/' + props.maxScore }</span>
+    <div className={classes('score-gauge c100', props.size, fillClass)}>
+      <span>{(userScore || 0 === userScore ? userScore+'' : '-') + '/' + props.maxScore}</span>
 
       <div className="slice" role="presentation">
         <div className="bar" role="presentation"></div>

@@ -24,8 +24,8 @@ implementPropTypes(DateGroup, FormGroupWithFieldTypes, {
   // more precise value type
   value: T.string,
   // custom props
-  minDate: T.object,
-  maxDate: T.object,
+  minDate: T.oneOfType([T.object, T.string]),
+  maxDate: T.oneOfType([T.object, T.string]),
   onlyButton: T.bool
 }, {
   value: '',

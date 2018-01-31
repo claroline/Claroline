@@ -24,7 +24,7 @@ function getTranslator() {
  *
  * @returns {string}
  */
-export function trans(key, placeholders = {}, domain = DEFAULT_DOMAIN) {
+export function trans(key, placeholders = {}, domain = PLATFORM_DOMAIN) {
   return getTranslator().trans(key, placeholders, domain)
 }
 

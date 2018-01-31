@@ -1,0 +1,38 @@
+{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+
+{% block title %}
+    {{ parent() ~ ' - ' ~ 'dropzone_plugin_configuration' | trans({}, 'dropzone') | striptags | raw }}
+{% endblock %}
+
+{% block breadcrumb %}
+    {{
+        macros.breadcrumbs([
+            {
+                'name': 'administration'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'parameters'|trans({}, 'platform'),
+                'href': path('claro_admin_index')
+            },
+            {
+                'name': 'plugins'|trans({}, 'platform'),
+                'href': path('claro_admin_plugins')
+            },
+            {
+                'name': 'dropzone_plugin_configuration'|trans({}, 'dropzone'),
+                'href': ''
+            }
+        ])
+    }}
+{% endblock %}
+
+{% block content %}
+    <div class="page-container dropzone-plugin-container">
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-drop-zone-configuration.js') }}"></script>
+{% endblock %}

@@ -4,6 +4,8 @@ import merge from 'lodash/merge'
 import {makeReducer} from '#/main/core/scaffolding/reducer'
 import {makePageReducer} from '#/main/core/layout/page/reducer'
 
+import {reducer as evaluationReducer} from '#/main/core/resource/evaluation/reducer'
+
 import {
   RESOURCE_UPDATE_PUBLICATION,
   RESOURCE_UPDATE_NODE
@@ -44,8 +46,11 @@ function makeResourceReducer(initialState = {}, customReducer = {}) {
 
   resourceReducer.resourceNode = reducer
 
+  // todo maybe make it customizable (like forms and lists)
+  resourceReducer.evaluation = evaluationReducer
+
   // get custom keys
-  const rest = difference(Object.keys(customReducer), ['resourceNode'])
+  const rest = difference(Object.keys(customReducer), ['resourceNode', 'evaluation'])
   rest.map(reducerName =>
     resourceReducer[reducerName] = customReducer[reducerName]
   )

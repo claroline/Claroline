@@ -60,7 +60,7 @@ class ChoiceField  extends Component {
                 title={trans('sub_list_management', {}, 'clacoform')}
                 onClick={() => this.switchChildrenManagement()}
               >
-                <span className="fa fa-w fa-list-ul"></span>
+                <span className="fa fa-fw fa-list-ul"></span>
               </TooltipButton>
             }
             <TooltipButton
@@ -72,14 +72,14 @@ class ChoiceField  extends Component {
               }
               onClick={() => this.switchCategorySelection()}
             >
-              <span className="fa fa-w fa-inbox"></span>
+              <span className="fa fa-fw fa-inbox"></span>
             </TooltipButton>
             <button
               type="button"
               className="btn btn-danger"
               onClick={() => this.props.deleteChoice(this.props.choice.index)}
             >
-              <span className="fa fa-w fa-trash"></span>
+              <span className="fa fa-fw fa-trash"></span>
             </button>
           </span>
         </div>

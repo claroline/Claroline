@@ -1,0 +1,156 @@
+// same as form stepper
+@timeline-icon-size:      @font-size-large*3;
+@timeline-lines-width:    8px;
+@timeline-lines-color:    #EBEBEB; // same gray than lists
+@timeline-endpoint-size:  @font-size-large*2;
+
+.evaluation-parameters {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: @component-margin-bottom;
+
+    .evaluation-parameter {
+        flex: 1;
+        background: #EBEBEB;
+        padding: 10px @panel-body-padding;
+        border: 1px solid transparent;
+        border-radius: @border-radius-small;
+
+        + .evaluation-parameter {
+            margin-top: 5px;
+        }
+    }
+}
+
+.evaluation-timeline {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    list-style-type: none;
+    padding: 0 @timeline-endpoint-size;
+    padding-top: @timeline-endpoint-size + @component-margin-bottom;
+    margin: 0 0 @component-margin-bottom;
+
+    // timeline line
+    &:before {
+        z-index: 1;
+        content: " ";
+        position: absolute;
+        border-top: @timeline-lines-width solid @timeline-lines-color;
+        left: 0;
+        right: @timeline-endpoint-size;
+        top: @timeline-endpoint-size/2 - @timeline-lines-width/2;
+    }
+
+    // timeline arrow
+    &:after {
+        z-index: 1;
+        content: " ";
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-style: solid;
+        border-width: @timeline-endpoint-size/2 0 @timeline-endpoint-size/2 @timeline-endpoint-size;
+        border-color: transparent transparent transparent @timeline-lines-color;
+    }
+}
+
+.evaluation-status {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: @panel-bg;
+    border: 1px solid @panel-default-border;
+    text-align: center;
+
+    &:before {
+        z-index: 1;
+        content: " ";
+        position: absolute;
+        left: 50%;
+        bottom: 100%;
+        margin-left: -@timeline-lines-width/2;
+        height: @timeline-endpoint-size + @component-margin-bottom;
+        width: @timeline-lines-width;
+        background: @timeline-lines-color;
+    }
+
+    &:after {
+        z-index: 2;
+        content: " ";
+        position: absolute;
+        top: -(@timeline-endpoint-size + @component-margin-bottom);
+        left: 50%;
+        margin-left: -@timeline-endpoint-size/2;
+        border-radius: 50%;
+        width: @timeline-endpoint-size;
+        height: @timeline-endpoint-size;
+        background: @timeline-lines-color;
+    }
+
+    + .evaluation-status {
+        margin-left: 5px;
+        margin-top: 0;
+    }
+
+    &.active {
+        .box-shadow(@dropdown-menu-box-shadow);
+
+        &:before,
+        &:after {
+            background: @brand-primary;
+        }
+
+        .evaluation-status-heading {
+            background: @brand-primary;
+            color: white;
+            border-color: @btn-primary-border;
+        }
+
+        .evaluation-planning {
+            color: @text-color;
+        }
+    }
+
+    .evaluation-status-heading {
+        flex: 1 0 60%;
+        margin: 0;
+        padding: @panel-body-padding;
+        font-size: @font-size-base;
+        color: @text-muted;
+        background: #f5f5f5; // todo : add var (same as feedback in exo)
+        border-bottom: 1px solid #e5e5e5; // todo : add var (same as feedback in exo)
+
+        .fa {
+            opacity: .5;
+            display: block;
+            font-size: 42px;
+            margin-bottom: 10px;
+        }
+    }
+
+    .evaluation-planning {
+        flex: 1 0 40%;
+        padding: @panel-body-padding;
+        font-style: italic;
+        color: @text-muted;
+    }
+}
+
+@media (max-width: @screen-sm-min) {
+    .evaluation-timeline {
+        flex-direction: column;
+    }
+
+    .evaluation-status {
+        flex-direction: row;
+
+        + .evaluation-status {
+            margin-left: 0;
+            margin-top: 5px;
+        }
+    }
+}

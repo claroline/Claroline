@@ -282,7 +282,7 @@ class EntryCreateForm extends Component {
                     className="btn btn-default margin-bottom-sm"
                     onClick={() => this.setState({showKeywordForm: true, currentKeyword: ''})}
                   >
-                      <span className="fa fa-w fa-plus"></span>
+                      <span className="fa fa-fw fa-plus"></span>
                   </button>
                 }
               </div>

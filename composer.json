@@ -127,7 +127,8 @@
         "innova/media-resource-bundle": "*",
         "ujm/exo-bundle": "*",
         "icap/lesson-bundle": "*",
-        "icap/inwicast-plugin-bundle": "*"
+        "icap/inwicast-plugin-bundle": "*",
+        "claroline/drop-zone-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -190,7 +191,8 @@
             "Icap\\BibliographyBundle\\": "plugin/bibliography",
             "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization",
             "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button",
-            "Icap\\InwicastBundle\\": "plugin/inwicast"
+            "Icap\\InwicastBundle\\": "plugin/inwicast",
+            "Claroline\\DropZoneBundle\\": "plugin/drop-zone"
         }
     },
     "extra": {
@@ -252,7 +254,8 @@
             "Icap\\BibliographyBundle\\IcapBibliographyBundle",
             "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle",
             "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle",
-            "Icap\\InwicastBundle\\IcapInwicastBundle"
+            "Icap\\InwicastBundle\\IcapInwicastBundle",
+            "Claroline\\DropZoneBundle\\ClarolineDropZoneBundle"
         ]
     }
 }

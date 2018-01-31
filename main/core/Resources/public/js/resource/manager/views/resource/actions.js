@@ -350,6 +350,9 @@
       this.currentDirectoryId = event.id
       this.isSearchMode = event.isSearchMode
 
+      if (event.creatableTypes && event.creatableTypes['icap_dropzone']) {
+        delete event.creatableTypes['icap_dropzone']
+      }
       var creatableTypes = event.creatableTypes || []
       var isCreationAllowed = (this.currentDirectoryId !== '0')
                 && !this.parameters.isPickerMode

@@ -1,5 +1,6 @@
 {
     "2047_characters_max": "You may not exceed 2047 characters.",
+    "date_after": "This date must be defined after %limit%.",
     "Each row requires 2 parameters.": "Every row requires 2 parameters (separated by semicolons).",
     "Each row requires at least 2 parameters.": "Every row requires at least 2 parameters (separated by semicolons).",
     "Each row requires at least 5 parameters.": "Every row requires at least 5 parameters (separated by semicolons).",
@@ -28,5 +29,8 @@
     "valid_end_hour_required": "A valid end hour is required.",
     "valid_start_date_required": "A valid start date is required.",
     "valid_start_hour_required": "A valid start hour is required.",
+    "value_between": "This value must be defined between %min% and %max%.",
+    "value_greater_or_equal_to": "This value must be greater or equal to %limit%.",
+    "value_lower_or_equal_to": "This value must be lower or equal to %limit%.",
     "value_not_blank": "This value can not be blank."
 }

@@ -165,7 +165,7 @@ const Random = props =>
         />
       </div>
       <div className="col-md-1 text-center">
-        <span className="fa fa-w fa-long-arrow-right" />
+        <i className="fa fa-fw fa-long-arrow-right"></i>
       </div>
       <div className="col-md-2">
         <Date

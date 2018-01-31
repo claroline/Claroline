@@ -1024,6 +1024,11 @@ class ResourceNode
         }
     }
 
+    public function getLogs()
+    {
+        return $this->logs;
+    }
+
     /**
      * Gets how many times a resource has been viewed.
      *

@@ -65,5 +65,9 @@
     "text": "Texte",
     "update_file": "Mettre le fichier à jour",
     "video": "Vidéo",
-    "write": "Écrire"
+    "write": "Écrire",
+    "resource_overview": "Vue d'ensemble de la ressource",
+    "resource_overview_actions": "Actions disponibles",
+    "resource_overview_info": "Informations",
+    "resource_overview_progression": "Ma progression"
 }

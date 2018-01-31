@@ -136,7 +136,7 @@ export class CategoryFormModal  extends Component {
                     className="btn btn-default"
                     onClick={() => this.showManagersSelection()}
                   >
-                    <span className="fa fa-w fa-user"></span>
+                    <span className="fa fa-fw fa-user"></span>
                   </button>
                 </span>
               </span>

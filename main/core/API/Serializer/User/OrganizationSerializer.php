@@ -83,9 +83,9 @@ class OrganizationSerializer
 
     public function deserialize($data, Organization $organization = null, array $options = [])
     {
-        $this->setIfPropertyExists('name', 'setName', $data, $organization);
-        $this->setIfPropertyExists('code', 'setCode', $data, $organization);
-        $this->setIfPropertyExists('code', 'setEmail', $data, $organization);
+        $this->sipe('name', 'setName', $data, $organization);
+        $this->sipe('code', 'setCode', $data, $organization);
+        $this->sipe('code', 'setEmail', $data, $organization);
 
         if (isset($data['parent'])) {
             if (empty($data['parent'])) {
