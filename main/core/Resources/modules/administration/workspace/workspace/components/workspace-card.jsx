@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 
 const WorkspaceCard = (row) => ({
   icon: 'fa fa-book',
@@ -20,7 +20,7 @@ const WorkspaceCard = (row) => ({
     </span>,
   footerLong:
     <span>
-      created at <b>{localeDate(row.meta.created)}</b>,
+      created at <b>{displayDate(row.meta.created)}</b>,
       by <b>{row.meta.creator ? row.meta.creator.name: t('unknown')}</b>
     </span>
 })

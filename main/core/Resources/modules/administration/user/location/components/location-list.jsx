@@ -5,7 +5,7 @@ import {LocationCard} from '#/main/core/administration/user/location/components/
 
 const LocationList = {
   open: {
-    action: (row) => `#/locations/${row.id}`
+    action: (row) => `#/locations/form/${row.id}`
   },
   definition: [
     {

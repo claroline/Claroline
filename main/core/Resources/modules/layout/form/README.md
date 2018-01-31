@@ -22,8 +22,8 @@ A form group embed the following features :
   #### HtmlGroup
   `import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'`
   
-  #### RadioGroup
-  `import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'`
+  #### RadiosGroup
+  `import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'`
   
   #### TextGroup
   `import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'`

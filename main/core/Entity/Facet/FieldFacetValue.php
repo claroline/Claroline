@@ -115,8 +115,12 @@ class FieldFacetValue
     /**
      * return $dateValue.
      */
-    public function getDateValue()
+    public function getDateValue($format = true)
     {
+        if ($format) {
+            return !empty($this->dateValue) ? $this->dateValue->format('Y-m-d\TH:i:s') : null;
+        }
+
         return $this->dateValue;
     }
 

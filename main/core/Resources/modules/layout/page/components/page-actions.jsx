@@ -7,6 +7,7 @@ import MenuItem from 'react-bootstrap/lib/MenuItem'
 import {t} from '#/main/core/translation'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 import {MenuItemAction} from '#/main/core/layout/components/dropdown.jsx'
+import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
 
 /**
  * Base component for each page actions.
@@ -15,52 +16,21 @@ import {MenuItemAction} from '#/main/core/layout/components/dropdown.jsx'
  * @constructor
  */
 const PageAction = props =>
-  <TooltipElement
+  <TooltipAction
     id={props.id}
+    className={classes('page-action-btn', props.className, {
+      'page-action-default': !props.primary && !props.dangerous,
+      'page-action-primary': props.primary,
+      'page-action-danger': props.dangerous
+    })}
     position="bottom"
-    tip={props.title}
+    icon={props.icon}
+    label={props.title}
+    action={props.action}
+    disabled={props.disabled}
   >
-    {typeof props.action === 'function' ?
-      <button
-        type="button"
-        role="button"
-        className={classes(
-          'btn page-action-btn',
-          {
-            'disabled': props.disabled,
-            'page-action-primary': props.primary,
-            'page-action-danger': props.dangerous,
-            'page-action-default': !props.primary && !props.dangerous
-          },
-          props.className
-        )}
-        disabled={props.disabled}
-        onClick={() => !props.disabled && props.action()}
-      >
-        <span className={classes('page-action-icon', props.icon)} aria-hidden={true} />
-        {props.children}
-      </button>
-      :
-      <a
-        role="link"
-        className={classes(
-          'btn page-action-btn',
-          {
-            'disabled': props.disabled,
-            'page-action-primary': props.primary,
-            'page-action-danger': props.dangerous,
-            'page-action-default': !props.primary && !props.dangerous
-          },
-          props.className
-        )}
-        disabled={props.disabled}
-        href={!props.disabled ? props.action : ''}
-      >
-        <span className={classes('page-action-icon', props.icon)} aria-hidden={true} />
-        {props.children}
-      </a>
-    }
-  </TooltipElement>
+    {props.children}
+  </TooltipAction>
 
 PageAction.propTypes = {
   id: T.string.isRequired,
@@ -143,7 +113,7 @@ const MoreAction = props => {
     >
       <DropdownButton
         id="page-more"
-        title={<span className="page-action-icon fa fa-ellipsis-v" />}
+        title={<span className="action-icon fa fa-ellipsis-v" />}
         className="btn page-action-btn page-action-default"
         noCaret={true}
         pullRight={true}

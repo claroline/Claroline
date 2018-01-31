@@ -17,6 +17,7 @@ const TooltipButton = props =>
     id={props.id}
     position={props.position}
     tip={props.title}
+    disabled={props.disabled}
   >
     <button
       type="button"
@@ -30,10 +31,12 @@ const TooltipButton = props =>
       onClick={(e) => {
         if (!props.disabled) {
           props.onClick(e)
-
-          e.preventDefault()
-          e.stopPropagation()
         }
+
+        e.preventDefault()
+        e.stopPropagation()
+
+        e.target.blur()
       }}
     >
       {props.children}

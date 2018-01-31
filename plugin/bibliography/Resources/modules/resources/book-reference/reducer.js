@@ -1,9 +1,6 @@
-import {makeReducer} from '#/main/core/scaffolding/reducer'
-import { BOOK_REFERENCE_SET } from './actions'
+import {makeFormReducer} from '#/main/core/data/form/reducer'
 
-const reducer = makeReducer({}, {
-  [BOOK_REFERENCE_SET]: (state, action) => action.bookReference
-})
+const reducer = makeFormReducer('bookReference')
 
 export {
   reducer

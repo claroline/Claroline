@@ -16,8 +16,8 @@ import {ActivableSet} from '#/main/core/layout/form/components/fieldset/activabl
 import {FormGroup}    from '#/main/core/layout/form/components/group/form-group.jsx'
 import {HtmlGroup}    from '#/main/core/layout/form/components/group/html-group.jsx'
 import {CheckGroup}   from '#/main/core/layout/form/components/group/check-group.jsx'
+import {DateGroup}    from '#/main/core/layout/form/components/group/date-group.jsx'
 import {TextGroup}    from '#/main/core/layout/form/components/group/text-group.jsx'
-import {Date} from '#/main/core/layout/form/components/field/date.jsx'
 import {IpList}       from '#/main/core/layout/form/components/field/ip-list.jsx'
 import {validate}     from '#/main/core/resource/validator'
 import {closeTargets} from '#/main/core/resource/constants'
@@ -134,31 +134,25 @@ const AccessesSection = (props) =>
       }}
     >
       <div className="row">
-        <FormGroup
+        <DateGroup
           className="col-md-6 col-xs-6 form-last"
           id="resource-accessible-from"
           label={t_res('resource_accessible_from')}
+          value={props.parameters.accessibleFrom}
+          onChange={date => props.updateParameter('parameters.accessibleFrom', date)}
+          time={true}
           validating={props.validating}
-        >
-          <Date
-            id="resource-accessible-from"
-            value={props.parameters.accessibleFrom || ''}
-            onChange={date => props.updateParameter('parameters.accessibleFrom', date)}
-          />
-        </FormGroup>
+        />
 
-        <FormGroup
+        <DateGroup
           className="col-md-6 col-xs-6 form-last"
           id="resource-accessible-until"
           label={t_res('resource_accessible_until')}
+          value={props.parameters.accessibleUntil}
+          onChange={date => props.updateParameter('parameters.accessibleUntil', date)}
+          time={true}
           validating={props.validating}
-        >
-          <Date
-            id="resource-accessible-until"
-            value={props.parameters.accessibleUntil || ''}
-            onChange={date => props.updateParameter('parameters.accessibleUntil', date)}
-          />
-        </FormGroup>
+        />
       </div>
     </ActivableSet>
 

@@ -67,6 +67,13 @@ class UserVoter extends AbstractVoter
      */
     private function checkEdit(TokenInterface $token, User $user)
     {
+        //the user can edit himself too.
+        //He just can add roles and stuff but it's not handled atm (I think)
+        //note: be carefull for group/organizations/roles later
+        if ($token->getUser() === $user) {
+            return true;
+        }
+
         return $this->isOrganizationManager($token, $user) ?
             VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
     }

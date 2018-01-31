@@ -73,6 +73,15 @@ export class Graphic extends Component {
           img.src = this.props.item.image.data
         }
       }
+
+      setTimeout(() => {
+        if (
+          this.props.item.image._clientWidth !== img.width &&
+          this.props.item.image._clientHeigth !== img.height
+        ) {
+          this.onResize()
+        }
+      }, 100)
     }
   }
 
@@ -255,7 +264,9 @@ Graphic.propTypes = {
   item: T.shape({
     image: T.oneOfType([
       T.shape({
-        data: T.string.isRequired
+        data: T.string.isRequired,
+        _clientWidth: T.integer,
+        _clientHeigth: T.integer
       }),
       T.shape({
         url: T.string.isRequired

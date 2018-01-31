@@ -1,14 +1,12 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure, mockTranslator, mockRouting} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {PlayerNav} from './nav-bar.jsx'
 
 describe('<PlayerNav/>', () => {
-  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     renew(PlayerNav, 'PlayerNav')
-    mockRouting()
   })
   afterEach(spyConsole.restore)
 

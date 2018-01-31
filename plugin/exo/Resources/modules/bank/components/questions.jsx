@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {t, tex, trans, transChoice} from '#/main/core/translation'
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 import {generateUrl} from '#/main/core/api/router'
 
 import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
@@ -77,7 +77,10 @@ const QuestionsPage = props =>
             label: t('last_modification'),
             type: 'date',
             alias: 'updated',
-            displayed: true
+            displayed: true,
+            options: {
+              time: true
+            }
           }, {
             name: 'selfOnly',
             label: tex('filter_by_self_only'),
@@ -118,7 +121,7 @@ const QuestionsPage = props =>
           ].filter(flag => !!flag),
           footer:
             <span>
-              last updated at <b>{localeDate(row.meta.updated)}</b>,
+              last updated at <b>{displayDate(row.meta.updated, false, true)}</b>,
             </span>
         })}
       />

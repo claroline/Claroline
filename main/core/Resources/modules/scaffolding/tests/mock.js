@@ -1,32 +1,31 @@
+import {mock as mockAsset} from '#/main/core/scaffolding/asset/mock'
+import {mock as mockRouter} from '#/main/core/api/router/mock'
+import {mock as mockTranslation} from '#/main/core/translation/mock'
 
-// define a global noop Routing
-function mockRouting() {
-  window.Routing = {
-    generate: (...args) => args[0]
-  }
-}
+let mocked = false
 
-// define a global noop Translator
-function mockTranslator() {
-  window.Translator = {
-    trans: msg => msg,
-    transChoice: msg => msg
-  }
-}
+/**
+ * Mocks global Claroline app components.
+ */
+function mock() {
+  if (!mocked) {
+    mockAsset()
+    mockTranslation()
+    mockRouter()
 
-// define a global noop TinyMCE
-function mockTinymce() {
-  window.tinymce = {
-    get: () => ({
-      on: () => {},
-      setContent: () => {},
-      destroy: () => {}
-    })
+    // mock tinyMCE
+    window.tinymce = {
+      get: () => ({
+        on: () => {},
+        setContent: () => {},
+        destroy: () => {}
+      })
+    }
+
+    mocked = true
   }
 }
 
 export {
-  mockRouting,
-  mockTranslator,
-  mockTinymce
+  mock
 }

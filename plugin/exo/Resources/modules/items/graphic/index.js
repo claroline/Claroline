@@ -6,20 +6,20 @@ import {CorrectedAnswer, Answerable} from '#/plugin/exo/quiz/correction/componen
 
 function getCorrectedAnswer(item, answers) {
   const corrected = new CorrectedAnswer()
-  
+
   item.solutions.forEach(solution => {
     if (answers && answers.data) {
       answers.data.forEach(coords => {
         if (isPointInArea(solution.area, coords.x, coords.y)) {
           solution.score > 0 ?
-            corrected.addExpected(new Answerable(solution.score)):
-            corrected.addUnexpected(new Answerable(solution.score))
+            corrected.addExpected(new Answerable(solution.score, solution.area.id)):
+            corrected.addUnexpected(new Answerable(solution.score, solution.area.id))
         } else if (solution.score > 0) {
-          corrected.addMissing(new Answerable(solution.score))
+          corrected.addMissing(new Answerable(solution.score, solution.area.id))
         }
       })
     } else {
-      corrected.addMissing(new Answerable(solution.score))
+      corrected.addMissing(new Answerable(solution.score, solution.area.id))
     }
   })
 

@@ -1,12 +1,11 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
 
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {registerItemType, resetTypes} from './../../../../items/item-types'
 import {AddItemModal} from './add-item-modal.jsx'
 
 describe('<AddItemModal/>', () => {
-  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     registerTestTypes()

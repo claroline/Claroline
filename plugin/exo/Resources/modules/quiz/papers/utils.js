@@ -1,4 +1,6 @@
 import {getDefinition} from '#/plugin/exo/items/item-types'
+import {selectors as paperSelect} from './selectors'
+
 import {
   SHOW_CORRECTION_AT_VALIDATION,
   SHOW_CORRECTION_AT_LAST_ATTEMPT,
@@ -47,6 +49,17 @@ export const utils = {
         }
       })
     })
+
+    //then we need to compute it according to the total score if it exists...
+    const totalScoreOn = paper.structure.parameters.totalScoreOn
+
+    if (totalScoreOn) {
+      //get the max score for the paper
+      const maxScore = paperSelect.paperTotalAnswerScore(paper)
+
+      total *= totalScoreOn/maxScore
+    }
+
     return total
   }
 }

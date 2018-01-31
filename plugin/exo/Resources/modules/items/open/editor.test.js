@@ -2,7 +2,7 @@ import React from 'react'
 import freeze from 'deep-freeze'
 import merge from 'lodash/merge'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {actions} from './../../quiz/editor/actions'
 import {actions as subActions} from './editor'
 import definition from './index'
@@ -47,8 +47,6 @@ describe('Open reducer', () => {
 })
 
 describe('Open validator', () => {
-  before(mockTranslator)
-
   const validate = definition.editor.validate
 
   it('checks maxScore is greater or equal to zero', () => {

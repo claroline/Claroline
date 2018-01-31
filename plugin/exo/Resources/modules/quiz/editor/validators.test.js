@@ -1,19 +1,20 @@
 import merge from 'lodash/merge'
 import validate from './validators'
 import {registerItemType, resetTypes} from './../../items/item-types'
-import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 
 describe('quiz validator', () => {
-  before(mockTranslator)
-
   it('returns no errors on valid quiz', () => {
     const quiz = {
       parameters: {
-        pick: 1,
         duration: 2,
         maxAttempts: 3,
         maxAttemptsPerDay: 0,
         maxPapers: 5
+      },
+      picking: {
+        type: 'standard',
+        pick: 1
       }
     }
     ensure.equal(validate.quiz(quiz), {})
@@ -22,18 +23,22 @@ describe('quiz validator', () => {
   it('returns validation errors if invalid', () => {
     const quiz = {
       parameters: {
-        pick: null,
         duration: 'foo',
         maxAttempts: -3
+      },
+      picking: {
+        pick: null
       }
     }
     ensure.equal(validate.quiz(quiz), {
       parameters: {
-        pick: 'This value should not be blank.',
         duration: 'This value should be a valid number.',
         maxAttempts: 'This value should be 0 or more.',
         maxAttemptsPerDay: 'This value should not be blank.',
         maxPapers: 'This value should not be blank.'
+      },
+      picking: {
+        pick: 'This value should not be blank.'
       }
     })
   })

@@ -7,18 +7,6 @@ import {getLocale} from '#/main/core/intl/locale'
 // this may be not the better place to do it
 moment.locale(getLocale())
 
-function getFormat(withTime) {
-  return t(withTime ? 'date_range.js_format.with_hours':'date_range.js_format')
-}
-
-function localeDate(date, withTime = false) {
-  return moment(date).format(getFormat(withTime))
-}
-
-function serverDate(displayDate, withTime = false) {
-  return moment(displayDate, getFormat(withTime)).format('YYYY-MM-DD\THH:mm:ss')
-}
-
 /**
  * Gets the date format expected by the server API.
  *
@@ -100,10 +88,6 @@ function now() {
 }
 
 export {
-  getFormat,
-  localeDate,
-  serverDate,
-
   getApiFormat,
   getDisplayFormat,
   isValidDate,

@@ -1,11 +1,9 @@
 import freeze from 'deep-freeze'
-import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {ensure} from '#/main/core/scaffolding/tests'
 import {reduceCorrection} from './reducer'
 import {CORRECTION_INIT, QUESTION_CURRENT, SCORE_UPDATE, FEEDBACK_UPDATE, REMOVE_ANSWERS} from './actions'
 
 describe('Correction reducer', () => {
-  before(mockTranslator)
-
   it('returns an empty correction object by default', () => {
     const correction = reduceCorrection(undefined, {})
     ensure.equal(correction, {})

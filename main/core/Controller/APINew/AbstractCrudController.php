@@ -48,6 +48,41 @@ abstract class AbstractCrudController extends AbstractApiController
     }
 
     /**
+     * @param Request $request
+     * @param string  $class
+     *
+     * @return JsonResponse
+     */
+    public function findAction(Request $request, $class)
+    {
+        $query = $request->query->all();
+        $data = $this->finder->fetch($class, 0, 2, $query['filters']);
+
+        switch (count($data)) {
+            case 0:
+                return new JsonResponse('No object found', 404);
+                break;
+            case 1:
+                return new JsonResponse(
+                    $this->serializer->serialize($data[0], $this->options['get'])
+                );
+                break;
+            default:
+                return new JsonResponse('Multiple results, use "list" instead', 400);
+        }
+    }
+
+    /**
+     * @param string $class
+     *
+     * @return JsonResponse
+     */
+    public function schemaAction($class)
+    {
+        return new JsonResponse($this->serializer->getSchema($class));
+    }
+
+    /**
      * @param string|int $id
      * @param string     $class
      * @param string     $env
@@ -62,24 +97,13 @@ abstract class AbstractCrudController extends AbstractApiController
             new JsonResponse(
                 $this->serializer->serialize($object, $this->options['get'])
             ) :
-            new JsonResponse('', 404);
-    }
-
-    /**
-     * @param string $class
-     *
-     * @return JsonResponse
-     */
-    public function schemaAction($class)
-    {
-        return new JsonResponse($this->serializer->getSchema($class));
+            new JsonResponse("No object found for id {$id} of class {$class}", 404);
     }
 
     /**
      * @param string $class
      * @param string $field
      * @param string $value
-     * @param string $env
      *
      * @return JsonResponse
      */
@@ -93,7 +117,6 @@ abstract class AbstractCrudController extends AbstractApiController
     /**
      * @param Request $request
      * @param string  $class
-     * @param string  $env
      *
      * @return JsonResponse
      */
@@ -230,6 +253,7 @@ abstract class AbstractCrudController extends AbstractApiController
             'copyBulk' => [],
             'exist' => [],
             'schema' => [],
+            'find' => [],
         ];
     }
 
@@ -239,8 +263,8 @@ abstract class AbstractCrudController extends AbstractApiController
     private function getDefaultRequirements()
     {
         return [
-          'get' => ['id' => '^(?!.*(schema|copy|parameters|\/)).*'],
-          'update' => ['id' => '^(?!.*(schema|parameters|\/)).*'],
+          'get' => ['id' => '^(?!.*(schema|copy|parameters|find|\/)).*'],
+          'update' => ['id' => '^(?!.*(schema|parameters|find|\/)).*'],
           'exist' => [],
         ];
     }

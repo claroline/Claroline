@@ -2,9 +2,10 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import Datetime from 'react-datetime'
-import 'react-datetime/css/react-datetime.css'
+
 import {trans, t} from '#/main/core/translation'
+import {Date} from '#/main/core/layout/form/components/field/date.jsx'
+
 import {actions} from '../actions'
 
 class BBBConfig extends Component {
@@ -102,17 +103,14 @@ class BBBConfig extends Component {
 
         <div className={classes('form-group row', {'has-error': this.props.params.startDateError})}>
           <div className="control-label col-md-3">
-            <label>{t('start_date')}</label>
+            <label htmlFor="startDate">{t('start_date')}</label>
           </div>
           <div className="col-md-9">
-            <Datetime
-              closeOnSelect={true}
-              dateFormat={true}
-              timeFormat={true}
-              locale="fr"
-              utc={false}
-              defaultValue={this.props.params.startDate ? new Date(this.props.params.startDate) : undefined}
+            <Date
+              id="startDate"
+              value={this.props.params.startDate}
               onChange={date => this.updateConfig('startDate', date)}
+              time={true}
             />
             {this.props.params.startDateError &&
               <div className="help-block field-error">
@@ -124,18 +122,16 @@ class BBBConfig extends Component {
 
         <div className={classes('form-group row', {'has-error': this.props.params.endDateError})}>
           <div className="control-label col-md-3">
-            <label>{t('end_date')}</label>
+            <label htmlFor="endDate">{t('end_date')}</label>
           </div>
           <div className="col-md-9">
-            <Datetime
-              closeOnSelect={true}
-              dateFormat={true}
-              timeFormat={true}
-              locale="fr"
-              utc={false}
-              defaultValue={this.props.params.endDate ? new Date(this.props.params.endDate) : undefined}
+            <Date
+              id="endDate"
+              value={this.props.params.endDate}
               onChange={date => this.updateConfig('endDate', date)}
+              time={true}
             />
+
             {this.props.params.endDateError &&
               <div className="help-block field-error">
                 {this.props.params.endDateError}

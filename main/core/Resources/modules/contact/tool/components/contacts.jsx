@@ -7,39 +7,40 @@ import {generateUrl} from '#/main/core/api/router'
 import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
-import {select} from '#/main/core/contact/tool/selectors'
-import {OptionsType} from '#/main/core/contact/prop-types'
 import {constants as listConst} from '#/main/core/data/list/constants'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {actions} from '#/main/core/contact/tool/actions'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
+
+import {select} from '#/main/core/contact/tool/selectors'
+import {OptionsType} from '#/main/core/contact/prop-types'
+import {actions} from '#/main/core/contact/tool/actions'
 import {MODAL_CONTACTS_OPTIONS_FORM} from '#/main/core/contact/tool/components/modal/contacts-options-form.jsx'
 
-const ContactsActions = props =>
+const ContactsActionsComponent = props =>
   <PageActions>
     <PageAction
-     id="contact-add"
-     icon="fa fa-fw fa-plus"
-     title={t('add_contacts')}
-     action={props.pickUsers}
-     primary={true}
-   />
+      id="contact-add"
+      icon="fa fa-fw fa-plus"
+      title={t('add_contacts')}
+      action={props.pickUsers}
+      primary={true}
+    />
+
     <PageAction
-     id="options-edit"
-     icon="fa fa-fw fa-pencil"
-     title={t('configure')}
-     action={() => props.configure(props.options)}
-     primary={false}
-   />
+      id="options-edit"
+      icon="fa fa-fw fa-cog"
+      title={t('configure')}
+      action={() => props.configure(props.options)}
+    />
   </PageActions>
 
-ContactsActions.propTypes = {
+ContactsActionsComponent.propTypes = {
   options: T.object.isRequired,
   pickUsers: T.func.isRequired,
   configure: T.func.isRequired
 }
 
-const Contacts = props =>
+const ContactsComponent = props =>
   <DataListContainer
     name="contacts"
     open={{
@@ -78,27 +79,23 @@ const Contacts = props =>
         label: t('username'),
         displayed: props.options.data.show_username,
         primary: props.options.data.show_username
-      },
-      {
+      }, {
         name: 'data.lastName',
         type: 'string',
         label: t('last_name'),
         displayed: true,
         primary: !props.options.data.show_username
-      },
-      {
+      }, {
         name: 'data.firstName',
         type: 'string',
         label: t('first_name'),
         displayed: true
-      },
-      {
+      }, {
         name: 'data.email',
         type: 'string',
         label: t('mail'),
         displayed: props.options.data.show_mail
-      },
-      {
+      }, {
         name: 'data.phone',
         type: 'string',
         label: t('phone'),
@@ -119,7 +116,7 @@ const Contacts = props =>
     })}
   />
 
-Contacts.propTypes = {
+ContactsComponent.propTypes = {
   options: T.shape(OptionsType.propTypes)
 }
 
@@ -143,14 +140,12 @@ function mapDispatchToProps(dispatch) {
             type: 'username',
             label: t('username'),
             displayed: true
-          },
-          {
+          }, {
             name: 'lastName',
             type: 'string',
             label: t('last_name'),
             displayed: true
-          },
-          {
+          }, {
             name: 'firstName',
             type: 'string',
             label: t('first_name'),
@@ -160,17 +155,10 @@ function mapDispatchToProps(dispatch) {
         card: row => ({
           icon: <UserAvatar picture={row.data.picture} alt={true}/>,
           title: row.data.username,
-          subtitle: row.data.firstName + ' ' + row.data.lastName,
-          contentText: '',
-          footer:
-            <span>
-            </span>,
-          footerLong:
-            <span>
-            </span>
+          subtitle: row.data.firstName + ' ' + row.data.lastName
         }),
         fetch: {
-          url: generateUrl('apiv2_visible_users_list', {picker: 1}),
+          url: ['apiv2_visible_users_list', {picker: 1}],
           autoload: true
         },
         handleSelect: selected => {
@@ -187,10 +175,10 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-const ConnectedContacts = connect(mapStateToProps, {})(Contacts)
-const ConnectedContactsActions = connect(mapStateToProps, mapDispatchToProps)(ContactsActions)
+const Contacts = connect(mapStateToProps, {})(ContactsComponent)
+const ContactsActions = connect(mapStateToProps, mapDispatchToProps)(ContactsActionsComponent)
 
 export {
-  ConnectedContacts as Contacts,
-  ConnectedContactsActions as ContactsActions
+  Contacts,
+  ContactsActions
 }

@@ -3,7 +3,6 @@ import cloneDeep from 'lodash/cloneDeep'
 import merge from 'lodash/merge'
 import set from 'lodash/set'
 
-import sanitize from './sanitizers'
 import validate from './validators'
 import {decorateItem} from './../decorators'
 import {getIndex, makeId, makeItemPanelKey, update, refreshIds} from './../../utils/utils'
@@ -77,7 +76,7 @@ function reduceQuiz(quiz = initialQuizState(), action = {}) {
       const updatedQuiz = cloneDeep(quiz)
 
       // append new prop value
-      set(updatedQuiz, action.propertyPath, sanitize.quiz(action.propertyPath, action.value))
+      set(updatedQuiz, action.propertyPath, action.value)
 
       // handles custom cases
       if ('picking.type' === action.propertyPath) {
@@ -177,8 +176,7 @@ function reduceSteps(steps = {}, action = {}) {
     case STEP_DELETE:
       return update(steps, {$delete: action.id})
     case STEP_UPDATE: {
-      const sanitizedProps = sanitize.step(action.newProperties)
-      const updatedStep = merge({}, steps[action.id], sanitizedProps)
+      const updatedStep = merge({}, steps[action.id], action.newProperties)
 
       updatedStep._errors = validate.step(updatedStep)
       return update(steps, {[action.id]: {$set: updatedStep}})

@@ -47,6 +47,8 @@ class GraphService
             if (isset($this->graph['type'])) {
                 //for example in case of slideshare:presentation
                 $this->graph['type'] = str_replace(':', '-', $this->graph['type']);
+                // If video.other or video.whatever replace it with just video
+                $this->graph['type'] = preg_replace('/^video\.[a-zA-Z0-9]*/', 'video', $this->graph['type']);
             } else {
                 $this->graph['type'] = 'default';
             }

@@ -10,6 +10,9 @@ const getCheckedValues = (e) => {
   return values
 }
 
+/**
+ * Renders a list of radios checkbox inputs.
+ */
 const Checkboxes = props =>
   <fieldset
     onChange={e => props.onChange(getCheckedValues(e))}

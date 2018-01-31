@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 
@@ -17,13 +17,13 @@ const UserCard = (row) => ({
   footer:
     row.meta.lastLogin &&
     <span>
-      {t('last_logged_at')} <b>{localeDate(row.meta.lastLogin)}</b>
+      {t('last_logged_at')} <b>{displayDate(row.meta.lastLogin, false, true)}</b>
     </span>,
   footerLong:
     <span>
-      {t('registered_at')} <b>{localeDate(row.meta.created)}</b>
+      {t('registered_at')} <b>{displayDate(row.meta.created)}</b>
       {row.meta.lastLogin &&
-        <span>, {t('last_logged_at')} <b>{localeDate(row.meta.lastLogin)}</b></span>
+        <span>, {t('last_logged_at')} <b>{displayDate(row.meta.lastLogin, false, true)}</b></span>
       }
     </span>
 })

@@ -10,7 +10,7 @@ import {generateUrl} from '#/main/core/api/router'
 
 const RoleList = {
   open: {
-    action: (row) => `#/roles/${row.id}`
+    action: (row) => `#/roles/form/${row.id}`
   },
   definition: [
     {

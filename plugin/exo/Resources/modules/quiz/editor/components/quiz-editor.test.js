@@ -1,12 +1,11 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
 
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
-import {SHUFFLE_ONCE, SHUFFLE_NEVER} from './../../enums'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
+import {QUIZ_PICKING_DEFAULT, SHUFFLE_ONCE, SHUFFLE_NEVER} from './../../enums'
 import {QuizEditor} from './quiz-editor.jsx'
 
 describe('<QuizEditor/>', () => {
-  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     renew(QuizEditor, 'QuizEditor')
@@ -20,16 +19,15 @@ describe('<QuizEditor/>', () => {
       })
     )
 
-    ensure.missingProps(
-      'QuizEditor',
-      [
-        'quiz.description',
-        'validating',
-        'updateProperties',
-        'activePanelKey',
-        'handlePanelClick'
-      ]
-    )
+    ensure.missingProps('QuizEditor', [
+      'quiz.description',
+      'items',
+      'tags',
+      'validating',
+      'updateProperties',
+      'activePanelKey',
+      'handlePanelClick'
+    ])
   })
 
   it('has typed props', () => {
@@ -42,16 +40,14 @@ describe('<QuizEditor/>', () => {
         handlePanelClick: 'bar'
       })
     )
-    ensure.invalidProps(
-      'QuizEditor',
-      [
-        'quiz',
-        'validating',
-        'updateProperties',
-        'activePanelKey',
-        'handlePanelClick'
-      ]
-    )
+
+    ensure.invalidProps('QuizEditor', [
+      'quiz',
+      'validating',
+      'updateProperties',
+      'activePanelKey',
+      'handlePanelClick'
+    ])
   })
 
   it('renders a form and dispatches changes', () => {
@@ -61,6 +57,8 @@ describe('<QuizEditor/>', () => {
     const form = mount(
       React.createElement(QuizEditor, {
         quiz: fixture(),
+        tags: [],
+        items: {},
         validating: false,
         updateProperties: (path, value) => {
           updatedPath = path
@@ -88,9 +86,6 @@ function fixture() {
     parameters: {
       type: 'type',
       showMetadata: true,
-      randomOrder: SHUFFLE_NEVER,
-      randomPick: SHUFFLE_ONCE,
-      pick: 12,
       duration: 123,
       numbering: 'none',
       maxAttempts: 4,
@@ -108,6 +103,12 @@ function fixture() {
       allPapersStatistics: true,
       showFullCorrection: false,
       showFeedback: false
+    },
+    picking: {
+      type: QUIZ_PICKING_DEFAULT,
+      randomOrder: SHUFFLE_NEVER,
+      randomPick: SHUFFLE_ONCE,
+      pick: 12
     }
   }
 }

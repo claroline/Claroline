@@ -73,6 +73,11 @@ class FieldFacetSerializer
                 'name' => $fieldFacet->getLabel(),
                 'type' => $fieldFacet->getType(),
                 'translationKey' => $fieldFacet->getTypeTranslationKey(),
+                'field_facet_choices' => array_map(function (FieldFacetChoice $choice) {
+                    return $this->serializer
+                        ->get('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice')
+                        ->serialize($choice);
+                }, $fieldFacet->getFieldFacetChoices()->toArray()),
             ];
         }
 

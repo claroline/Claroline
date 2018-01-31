@@ -10,8 +10,9 @@ function getCorrectedAnswer(item, answers = null) {
 
   item.solutions.forEach(solution => {
     const hole = item.holes.find(hole => hole.id === solution.holeId)
-    const answer = answer ? answers.data.find(answer => answer.holeId === hole.id): null
+    const answer = answers ? answers.data.find(answer => answer.holeId === hole.id): null
     const expected = findSolutionExpectedAnswer(solution)
+
 
     if (answer) {
       if (answer.answerText === expected.text) {

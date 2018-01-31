@@ -11,7 +11,7 @@ const FormField = {
     className: T.string,
     value: T.any,
     placeholder: T.string,
-    disabled: T.bool.isRequired,
+    disabled: T.bool,
     onChange: T.func.isRequired
   },
   defaultProps: {

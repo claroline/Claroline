@@ -1,62 +1,53 @@
-import React from 'react'
-import {shallow, mount} from 'enzyme'
-
-import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+import {
+  ensure,
+  describeComponent,
+  mountComponent
+} from '#/main/core/scaffolding/tests'
 
 import {ToggleableSet} from './toggleable-set.jsx'
 
-describe('<ToggleableSet/>', () => {
-  beforeEach(() => {
-    spyConsole.watch()
-    renew(ToggleableSet, 'ToggleableSet')
-  })
-  afterEach(spyConsole.restore)
-
-  it('has required props', () => {
-    shallow(
-      React.createElement(ToggleableSet)
-    )
-
-    ensure.missingProps(
-      'ToggleableSet',
-      ['showText', 'hideText', 'children']
-    )
-  })
-
-  it('has typed props', () => {
-    shallow(
-      React.createElement(ToggleableSet, {
-        showText: 123,
-        hideText: false
-      }, 'Bar')
-    )
-
-    ensure.invalidProps(
-      'ToggleableSet',
-      ['showText', 'hideText']
-    )
-  })
-
-  it('Renders a link to toggle section', () => {
-    const section = mount(
-      React.createElement(ToggleableSet, {
+describeComponent('ToggleableSet', ToggleableSet,
+  // required props
+  [
+    'showText',
+    'hideText',
+    'children'
+  ],
+  // invalid props
+  {
+    showText: 123,
+    hideText: false,
+    children: {toto: 'TOTO'}
+  },
+  // valid props
+  {
+    showText: 'Show section',
+    hideText: 'Hide section',
+    children: 'Bar'
+  },
+  // custom tests
+  () => {
+    it('Renders a link to toggle section', () => {
+      const section = mountComponent(ToggleableSet, {
         showText: 'Show section',
-        hideText: 'Hide section'
-      }, 'Bar')
-    )
+        hideText: 'Hide section',
+        children: 'Bar'
+      })
 
-    ensure.propTypesOk()
+      // check propTypes
+      ensure.propTypesOk()
 
-    // show
-    const showLink = section.find('.toggleable-set-toggle').at(0)
-    ensure.equal(showLink.name(), 'a')
-    ensure.equal(showLink.text(), 'Show section')
+      // show
+      const showLink = section.find('.toggleable-set-toggle').at(0)
+      ensure.equal(showLink.name(), 'a')
+      ensure.equal(showLink.text(), 'Show section')
 
-    showLink.simulate('click')
+      showLink.simulate('click')
 
-    // hide
-    const hideLink = section.find('.toggleable-set-toggle').at(0)
-    ensure.equal(hideLink.name(), 'a')
-    ensure.equal(hideLink.text(), 'Hide section')
-  })
-})
+      // hide
+      const hideLink = section.find('.toggleable-set-toggle').at(0)
+      ensure.equal(hideLink.name(), 'a')
+      ensure.equal(hideLink.text(), 'Hide section')
+    })
+  }
+)

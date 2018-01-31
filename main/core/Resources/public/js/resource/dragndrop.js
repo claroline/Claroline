@@ -63,7 +63,7 @@
                 window.Claroline.Modal.simpleContainer(null, Translator.trans('desktop_root_directory_upload_error', {}, 'platform'));
                 return;
             }
-            
+
             FU.files.push(file);
         },
 
@@ -96,7 +96,8 @@
                 var isSvg = (file.type) ? file.type.indexOf('svg+xml') !== -1 : false;
                 file.xhr = FileAPI.upload({
                     url: Routing.generate('claro_file_upload_with_ajax', {'parent': currentDirectoryId}),
-                    imageAutoOrientation: !isSvg,
+                    //if we don't comment this line, every image becomes a png.
+                    //imageAutoOrientation: !isSvg,
                     data: { fileName: file.name },
                     files: { file: file },
                     upload: function () {

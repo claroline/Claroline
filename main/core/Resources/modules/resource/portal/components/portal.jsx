@@ -4,7 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {t, trans, transChoice} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 
 import {MODAL_IFRAME} from '#/main/core/layout/modal'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
@@ -77,12 +77,12 @@ const PortalPage = props =>
           contentText: row.meta.description,
           footer:
             <div>
-              {t('published_at', {'date': localeDate(row.meta.created)})}
+              {t('published_at', {'date': displayDate(row.meta.created, false, true)})}
             </div>,
           footerLong:
             //TODO: social data anv view count should be displayed in flags. Display in footer should be a hidden option of the platform.
             <div>
-              <span className="publish-date">{trans(row.meta.type, {}, 'resource')} {t('published_at', {'date': localeDate(row.meta.created)})}</span>
+              <span className="publish-date">{trans(row.meta.type, {}, 'resource')} {t('published_at', {'date': displayDate(row.meta.created, false, true)})}</span>
               <span className="creator"> {t('by')} {row.meta.creator ? row.meta.creator.name: t('unknown')}</span>
               <br />
               <span className="social">

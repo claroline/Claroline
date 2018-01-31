@@ -8,28 +8,28 @@ import {PageActions, PageAction} from '#/main/core/layout/page/components/page-a
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
+
 import {actions} from '#/main/core/contact/tool/actions'
 import {select} from '#/main/core/contact/tool/selectors'
 import {OptionsType} from '#/main/core/contact/prop-types'
 import {MODAL_CONTACTS_OPTIONS_FORM} from '#/main/core/contact/tool/components/modal/contacts-options-form.jsx'
 
-const VisibleUsersActions = props =>
+const VisibleUsersActionsComponent = props =>
   <PageActions>
     <PageAction
      id="options-edit"
-     icon="fa fa-fw fa-pencil"
+     icon="fa fa-fw fa-cog"
      title={t('configure')}
      action={() => props.configure(props.options)}
-     primary={false}
    />
   </PageActions>
 
-VisibleUsersActions.propTypes = {
+VisibleUsersActionsComponent.propTypes = {
   options: T.object.isRequired,
   configure: T.func.isRequired
 }
 
-const VisibleUsers = props =>
+const VisibleUsersComponent = props =>
   <DataListContainer
     name="users.contactable"
     open={{
@@ -94,20 +94,13 @@ const VisibleUsers = props =>
       }
     ]}
     card={(row) => ({
-      icon: <UserAvatar picture={row.picture} alt={true}/>,
+      icon: <UserAvatar picture={row.picture} alt={true} />,
       title: row.username,
-      subtitle: row.firstName + ' ' + row.lastName,
-      contentText: '',
-      footer:
-        <span>
-        </span>,
-      footerLong:
-        <span>
-        </span>
+      subtitle: row.firstName + ' ' + row.lastName
     })}
   />
 
-VisibleUsers.propTypes = {
+VisibleUsersComponent.propTypes = {
   options: T.shape(OptionsType.propTypes),
   createContacts: T.func.isRequired
 }
@@ -130,10 +123,10 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-const ConnectedVisibleUsers = connect(mapStateToProps, mapDispatchToProps)(VisibleUsers)
-const ConnectedVisibleUsersActions = connect(mapStateToProps, mapDispatchToProps)(VisibleUsersActions)
+const VisibleUsers = connect(mapStateToProps, mapDispatchToProps)(VisibleUsersComponent)
+const VisibleUsersActions = connect(mapStateToProps, mapDispatchToProps)(VisibleUsersActionsComponent)
 
 export {
-  ConnectedVisibleUsers as VisibleUsers,
-  ConnectedVisibleUsersActions as VisibleUsersActions
+  VisibleUsers,
+  VisibleUsersActions
 }

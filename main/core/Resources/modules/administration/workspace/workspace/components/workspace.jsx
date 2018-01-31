@@ -4,10 +4,8 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
-import {makeSaveAction} from '#/main/core/data/form/containers/form-save.jsx'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {select as formSelect} from '#/main/core/data/form/selectors'
@@ -16,23 +14,6 @@ import {actions} from '#/main/core/administration/workspace/workspace/actions'
 
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
-
-const WorkspaceSaveAction = makeSaveAction('workspaces.current', formData => ({
-  create: ['apiv2_workspace_create'],
-  update: ['apiv2_workspace_update', {id: formData.id}]
-}))(PageAction)
-
-const WorkspaceActions = () =>
-  <PageActions>
-    <WorkspaceSaveAction />
-
-    <PageAction
-      id="workspace-list"
-      icon="fa fa-list"
-      title={t('back_to_list')}
-      action="#/workspaces"
-    />
-  </PageActions>
 
 const WorkspaceForm = (props) => {
   const roleId = props.workspace.roles !== undefined ?
@@ -211,6 +192,5 @@ const Workspace = connect(
 )(WorkspaceForm)
 
 export {
-  WorkspaceActions,
   Workspace
 }

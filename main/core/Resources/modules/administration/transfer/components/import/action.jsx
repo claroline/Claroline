@@ -1,17 +1,17 @@
 import React from 'react'
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
-import {makeSaveAction} from '#/main/core/data/form/containers/form-save.jsx'
 
-const ImportAction = makeSaveAction('import', () => {
-  return {
-    create: ['apiv2_transfer_execute'],
-    update: ['apiv2_transfer_execute']
-  }
-})(PageAction)
+import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
+import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
 const Action = () =>
   <PageActions>
-    <ImportAction/>
+    <FormPageActionsContainer
+      formName="import"
+      target={['apiv2_transfer_execute']}
+      opened={true}
+    />
   </PageActions>
 
-export {Action}
+export {
+  Action
+}

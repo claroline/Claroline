@@ -13,8 +13,8 @@ export const ErrorBlock = ({text, inGroup, warnOnly}) =>
 
 ErrorBlock.propTypes = {
   text: T.string.isRequired,
-  inGroup: T.bool.isRequired,
-  warnOnly: T.bool.isRequired
+  inGroup: T.bool,
+  warnOnly: T.bool
 }
 
 ErrorBlock.defaultProps = {

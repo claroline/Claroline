@@ -70,7 +70,22 @@ class CorrectedAnswer
      */
     public function addExpected(AnswerPartInterface $expected)
     {
-        $this->expected[] = $expected;
+        $found = false;
+
+        if (method_exists($expected, 'getUuid')) {
+            foreach ($this->expected as $data) {
+                if ($data->getUuid() === $expected->getUuid()) {
+                    $found = true;
+                }
+            }
+        }
+
+        //avoid duplicatas here
+        if (!$found) {
+            $this->expected[] = $expected;
+        } else {
+            $this->addMissing($expected);
+        }
     }
 
     /**

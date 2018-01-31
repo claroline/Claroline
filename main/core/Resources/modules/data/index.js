@@ -5,7 +5,6 @@ import {COLOR_TYPE,       colorDefinition}       from '#/main/core/data/types/co
 import {COUNTRY_TYPE,     countryDefinition}     from '#/main/core/data/types/country'
 import {DATE_TYPE,        dateDefinition}        from '#/main/core/data/types/date'
 import {DATE_RANGE_TYPE,  dateRangeDefinition}   from '#/main/core/data/types/date-range'
-import {DATETIME_TYPE,    datetimeDefinition}    from '#/main/core/data/types/datetime'
 import {EMAIL_TYPE,       emailDefinition}       from '#/main/core/data/types/email'
 import {ENUM_TYPE,        enumDefinition}        from '#/main/core/data/types/enum'
 import {FILE_TYPE,        fileDefinition}        from '#/main/core/data/types/file'
@@ -28,7 +27,6 @@ registerType(COLOR_TYPE,       colorDefinition)
 registerType(COUNTRY_TYPE,     countryDefinition)
 registerType(DATE_TYPE,        dateDefinition)
 registerType(DATE_RANGE_TYPE,  dateRangeDefinition)
-registerType(DATETIME_TYPE,    datetimeDefinition)
 registerType(EMAIL_TYPE,       emailDefinition)
 registerType(ENUM_TYPE,        enumDefinition)
 registerType(FILE_TYPE,        fileDefinition)

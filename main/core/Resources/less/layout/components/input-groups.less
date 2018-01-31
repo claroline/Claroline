@@ -1,0 +1,60 @@
+.input-group-btn {
+    > .btn {
+        &:hover,
+        &:focus,
+        &:active {
+            z-index: 3; // make sure button overlaps input
+        }
+    }
+}
+
+// fixes calendar picker (Reset rounded corners)
+// it's broken because of the additional .calendar-picker container
+.input-group-btn:first-child > .calendar-picker > .btn  {
+    .border-right-radius(0);
+}
+
+.input-group-btn:last-child > .calendar-picker > .btn {
+    .border-left-radius(0);
+}
+
+// c/c from original bootstrap styles
+.input-group-btn {
+    // Negative margin for spacing, position for bringing hovered/focused/actived
+    // element above the siblings.
+    > .calendar-picker {
+        &.open {
+            > .btn {
+                z-index: 3;
+            }
+        }
+
+        + .btn {
+            margin-left: -1px;
+        }
+
+        > .btn {
+            position: relative;
+
+            // Bring the "active" button to the front
+            &:hover,
+            &:focus,
+            &:active {
+                z-index: 3;
+            }
+        }
+    }
+
+    // Negative margin to only have a 1px border between the two
+    &:first-child {
+        > .calendar-picker > .btn {
+            margin-right: -1px;
+        }
+    }
+    &:last-child {
+        > .calendar-picker > .btn {
+            z-index: 2;
+            margin-left: -1px;
+        }
+    }
+}

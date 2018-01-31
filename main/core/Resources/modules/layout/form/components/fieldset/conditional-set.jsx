@@ -13,7 +13,7 @@ const ConditionalSet = props => props.condition &&
 
 ConditionalSet.propTypes = {
   condition: T.bool,
-  children: T.any.isRequired
+  children: T.node.isRequired
 }
 
 export {

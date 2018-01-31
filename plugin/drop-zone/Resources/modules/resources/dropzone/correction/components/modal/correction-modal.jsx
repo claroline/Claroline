@@ -5,7 +5,7 @@ import Modal from 'react-bootstrap/lib/Modal'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {trans} from '#/main/core/translation'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
-import {RadioGroup}  from '#/main/core/layout/form/components/group/radio-group.jsx'
+import {RadiosGroup}  from '#/main/core/layout/form/components/group/radios-group.jsx'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 
@@ -138,19 +138,14 @@ export class CorrectionModal extends Component {
                       </HtmlText>
                     </td>
                     <td className="criterion-scale-form-row">
-                      <RadioGroup
+                      <RadiosGroup
                         id={`correction-criterion-${c.id}-radio`}
                         label="correction_criterion_radio"
-                        options={[...Array(this.props.dropzone.parameters.criteriaTotal).keys()].map((idx) => {
-                          return {
-                            label: '',
-                            value: idx
-                          }
-                        })}
+                        options={[...Array(this.props.dropzone.parameters.criteriaTotal).keys()].map((idx) => ({label: '', value: idx}))}
                         disabled={true}
                         inline={true}
                         hideLabel={true}
-                        checkedValue={this.state.correction.grades.find(g => g.criterion === c.id) ?
+                        value={this.state.correction.grades.find(g => g.criterion === c.id) ?
                           this.state.correction.grades.find(g => g.criterion === c.id).value :
                           ''
                         }
