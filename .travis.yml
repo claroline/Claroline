@@ -48,7 +48,7 @@ before_install:
   # get node >=5.6 (manual upgrade of nvm is currently required, pre-installed version is buggy)
   - git clone https://github.com/creationix/nvm.git /tmp/.nvm
   - source /tmp/.nvm/nvm.sh
-  - nvm install 8
+  - nvm install 6.12
   - npm install yarn
 
 before_script:
