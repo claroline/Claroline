@@ -138,7 +138,7 @@ const Timeline = props =>
     )}
     {props.events.length > 0 &&
       <li className="timeline-endpoint timeline-event-date">
-        {localeDate(props.events[props.events.length - 1].date, false)}
+        {displayDate(props.events[props.events.length - 1].date, false)}
       </li>
     }
   </ul>
