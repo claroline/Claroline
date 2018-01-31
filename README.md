@@ -30,7 +30,7 @@ For a development installation, you'll need at least:
     - [ffmpeg][ffmpeg] (optional)
 - MySQL/MariaDB >=5.0
 - [composer][composer] (recent version)
-- [node.js][node] >= 5.5, <6.0
+- [node.js][node] >= 6.12
 - [npm][npm] >= 3.7
 
 It's also highly recommended to develop on an UNIX-like OS.
