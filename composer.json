@@ -88,10 +88,6 @@
         {
              "type": "vcs",
              "url": "https://github.com/jstuhli/twig.js"
-        },
-        {
-            "type": "vcs",
-            "url": "https://github.com/ptsavdar/php-svg"
         }
     ]
 }
