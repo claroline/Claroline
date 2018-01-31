@@ -62,7 +62,7 @@
         "symfony/symfony": "2.7.38",
         "symfony/swiftmailer-bundle": "2.4.0",
         "twig/extensions": "1.4.1",
-        "twig/twig": "1.34.0",
+        "twig/twig": "1.35.0",
         "werkint/jsmin": "1.0.0",
         "white-october/pagerfanta-bundle": "1.0.2",
         "willdurand/js-translation-bundle": "2.6.1",
