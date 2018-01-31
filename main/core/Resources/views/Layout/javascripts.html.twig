@@ -7,9 +7,8 @@
 {# AngularJS & related libraries #}
 <script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
 
-{% if app.environment == 'prod' %}
-    {#<script src="{{ hotAsset('dist/commons.js') }}"></script>#}
-{% endif %}
+{# Frequently used Claroline JS #}
+<script src="{{ hotAsset('dist/commons.js') }}"></script>
 
 {# Polyfills #}
 <script src="{{ hotAsset('dist/claroline-distribution-main-core-polyfills.js') }}"></script>

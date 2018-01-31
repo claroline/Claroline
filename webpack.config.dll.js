@@ -16,7 +16,6 @@ Encore
   .addPlugin(plugins.dlls())
   .addPlugin(plugins.assetsInfoFile('webpack-dlls.json'))
   .addPlugin(plugins.clarolineConfiguration())
-  
   //fixes performance issues
   .configureUglifyJsPlugin(uglifyJsPluginOptionsCallback = (options) => {
       /*options.compress = true

@@ -8,40 +8,44 @@ const plugins = require('./webpack/plugins')
 const paths = require('./webpack/paths')
 const shared = require('./webpack/shared')
 const collectedEntries = entries.collectEntries()
-const manifests = shared.dllManifests()
 
 Encore
-    .setOutputPath(paths.output())
-    //localhost***1080 doesn't work properly
-    .setPublicPath('/dist')
-    .autoProvidejQuery()
-    .enableReactPreset()
-    .setManifestKeyPrefix('/dist')
-    .enableSourceMaps(true)//false si plus rapide
-    //.cleanupOutputBeforeBuild()
-    .enableBuildNotifications()
-    .enableVersioning(true)
-    .configureManifestPlugin(options => options.fileName = 'manifest.lib.json')
-    .addPlugin(plugins.assetsInfoFile())
-    .addPlugin(plugins.distributionShortcut())
-    .addPlugin(plugins.reactDllReference())
-    .addPlugin(plugins.angularDllReference())
-    .addPlugin(plugins.configShortcut())
-    //fixes performance issues
+  .setOutputPath(paths.output())
+  //localhost***1080 doesn't work properly
+  .setPublicPath('/dist')
+  .autoProvidejQuery()
+  .enableReactPreset()
+  .setManifestKeyPrefix('/dist')
+  .enableSourceMaps(true)//false si plus rapide
+  //.cleanupOutputBeforeBuild()
+  .enableBuildNotifications()
+  .enableVersioning(true)
+  .configureManifestPlugin(options => options.fileName = 'manifest.lib.json')
+  .addPlugin(plugins.assetsInfoFile())
+  .addPlugin(plugins.distributionShortcut())
+  .addPlugin(plugins.reactDllReference())
+  .addPlugin(plugins.angularDllReference())
+  .addPlugin(plugins.configShortcut())
+  .addPlugin(plugins.commonsChunk())
 
-    .configureUglifyJsPlugin(uglifyJsPluginOptionsCallback = (options) => {
-        options.compress = false
-        options.beautify = false
-    })
-    .configureBabel(babelConfig => {
-        babelConfig.compact = false
-    })
-
-Encore.addLoader({test: /\.html$/, loader: 'html-loader'})
+  //fixes performance issues
+  .configureUglifyJsPlugin(uglifyJsPluginOptionsCallback = (options) => {
+      options.compress = false
+      options.beautify = false
+  })
+  .configureBabel(babelConfig => {
+      babelConfig.compact = false
+  })
+  .addLoader({test: /\.html$/, loader: 'html-loader'})
 
 Object.keys(collectedEntries).forEach(key => Encore.addEntry(key, collectedEntries[key]))
 
-config = Encore.getWebpackConfig()
+var config = Encore.getWebpackConfig()
+
+config.watchOptions = {
+  poll: true,
+  ignored: /web\/packages|node_modules/
+}
 
 config.resolve.modules = ['./node_modules', './web/packages']
 //in that order it solves some issues... if we start with bower.json, many packages don't work

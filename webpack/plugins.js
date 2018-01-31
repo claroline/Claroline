@@ -151,6 +151,7 @@ const rethrowCompilationErrors = () => {
 const commonsChunk = () => {
   return new webpack.optimize.CommonsChunkPlugin({
     name: 'commons',
+    filename: 'commons.js',
     minChunks: 5
   })
 }
