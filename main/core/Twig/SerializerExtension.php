@@ -69,7 +69,11 @@ class SerializerExtension extends \Twig_Extension
      */
     public function apiSerialize($object, $options = [])
     {
-        return $this->serializerProvider->serialize($object, $options);
+        if (!empty($object)) {
+            return $this->serializerProvider->serialize($object, $options);
+        }
+
+        return $object;
     }
 
     /**

@@ -29,6 +29,7 @@ implementPropTypes(TextGroup, FormGroupWithFieldTypes, {
   maxLength: T.number // todo implement
 }, {
   value: '',
+  placeholder: '',
   long: false,
   minRows: 2
 })

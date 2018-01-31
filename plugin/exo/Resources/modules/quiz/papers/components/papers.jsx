@@ -7,7 +7,7 @@ import quizSelect from './../../selectors'
 import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {selectors as paperSelect} from './../selectors'
 import {tex, t} from '#/main/core/translation'
-import {ScoreBox} from './../../../items/components/score-box.jsx'
+import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 import {utils} from './../utils'
 import {generateUrl} from '#/main/core/api/router'
 

@@ -10,7 +10,7 @@ const dateDefinition = {
   meta: {
     type: DATE_TYPE,
     creatable: true,
-    icon: 'fa fa-fw fa-calendar',
+    icon: 'fa fa-fw fa-calendar-o',
     label: trans('date'),
     description: trans('date_desc')
   },

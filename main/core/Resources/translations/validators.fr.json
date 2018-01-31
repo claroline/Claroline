@@ -1,5 +1,6 @@
 {
     "2047_characters_max": "Vous ne pouvez pas dépasser la limite de 2047 caractères.",
+    "date_after": "Cette date doit être définie après le %limit%.",
     "6_parameters_min_msg": "Chaque ligne nécessite 6 paramètres (séparés par des points-virgules).",
     "7_parameters_min_msg": "Chaque ligne nécessite 7 paramètres (séparés par des points-virgules).",
     "Each row requires 2 parameters.": "Chaque ligne nécessite 2 paramètres (séparés par des points-virgules).",
@@ -30,5 +31,8 @@
     "valid_end_hour_required": "Une heure de fin valide est requise.",
     "valid_start_date_required": "Une date de début valide est requise.",
     "valid_start_hour_required": "Une heure de début valide est requise.",
+    "value_between": "Cette valeur doit être définie entre %min% et %max%.",
+    "value_greater_or_equal_to": "Cette valeur doit être supérieure ou égale à %limit%.",
+    "value_lower_or_equal_to": "Cette valeur doit être inférieure ou égale à %limit%.",
     "value_not_blank": "Cette valeur ne peut pas être vide."
 }

@@ -439,7 +439,7 @@ class FieldFormModal  extends Component {
                     className="btn btn-primary btn-sm"
                     onClick={() => this.addNewChoice()}
                   >
-                    <span className="fa fa-w fa-plus-circle"></span>
+                    <span className="fa fa-fw fa-plus-circle"></span>
                     {trans('add_choice', {}, 'clacoform')}
                   </button>
                 </div>
@@ -456,7 +456,7 @@ class FieldFormModal  extends Component {
               onChange={checked => this.updateFieldProps('required', checked)}
             />
             <span
-              className="fa fa-w fa-info-circle field-tooltip"
+              className="fa fa-fw fa-info-circle field-tooltip"
               data-toggle="tooltip"
               data-placement="top"
               title={trans('mandatory_locked_conflict', {}, 'clacoform')}

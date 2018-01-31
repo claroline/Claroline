@@ -158,9 +158,9 @@ const Picking = props =>
 
     {QUIZ_PICKING_TAGS === props.picking.type && 0 === props.tags.length &&
       <AlertBlock
-        title={tex('quiz_no_tag')}
         type={props.validating ? 'danger':'warning'}
-        description={tex('quiz_no_tag_help')}
+        title={tex('quiz_no_tag')}
+        message={tex('quiz_no_tag_help')}
       />
     }
 

@@ -9,6 +9,7 @@
 // -
 // Base & utilities
 // ---
+
 @brand-secondary:         #C51162;
 
 @enable-box-shadow:       true;
@@ -30,6 +31,7 @@
 // -
 // Z-indexes
 // ---
+
 @zindex-sidebar:       @zindex-navbar-fixed - 1;
 // z-index for full screen pages.
 // we want to pass over navbars but under tooltips, popovers and modals
@@ -42,12 +44,14 @@
 // -
 // Application
 // ---
-@app-max-width:           1200px; // max width for the app content
+
+@app-max-width: 1200px; // max width for the app content
 
 
 // -
 // Login
 // ---
+
 @login-bg-image:  "@{images-path}login-bg.jpg"; // will fallback on @body-bg if theme has no image
 @login-max-width: 740px;
 
@@ -55,6 +59,7 @@
 // -
 // Header
 // ---
+
 @top-bar-max-width:           none; // max width for the top bar content (do not affect top bar container)
 @top-bar-height:              @navbar-height + @top-bar-border-bottom-size;
 @top-bar-font-size:           @font-size-base;
@@ -89,6 +94,7 @@
 // -
 // Loader
 // ---
+
 @loader-bg:            @label-primary-bg;
 @loader-color:         @label-color;
 @loader-border:        transparent;
@@ -101,6 +107,7 @@
 // -
 // Breadcrumb
 // ---
+
 @breadcrumb-box-shadow:     none;
 @breadcrumb-font-size:      @font-size-small;
 @breadcrumb-text-transform: inherit;
@@ -121,6 +128,7 @@
 // -
 // Page
 // ---
+
 @page-header-padding:          0;
 @page-header-font-size:        @font-size-h1;
 @page-header-weight:           700;
@@ -131,6 +139,7 @@
 // -
 // Flying alerts
 // ---
+
 @flying-alert-opacity:        .8; // becomes 1 on alert hover
 @flying-alert-width:          400px;
 @flying-alert-padding:        5px;
@@ -172,6 +181,7 @@
 // but each UI component intended to be used as a summary MUST use this vars
 // and adapt to the use case in order to keep common look & feel between all summary implementations
 // ---
+
 @summary-padding:           15px;
 @summary-font:              16px;
 @summary-bg:                #262626;
@@ -194,6 +204,7 @@
 // -
 // Footer
 // ---
+
 @footer-height:            @navbar-height;
 @footer-max-width:         none; // max width for the footer content (do not affect footer container)
 @footer-bg:                #F3F3F3;
@@ -210,6 +221,7 @@
 // -
 // Forms
 // ---
+
 @help-block-color:          @brand-info;
 @help-block-font-size:      12px;
 
@@ -223,6 +235,7 @@
 // -
 // Lists
 // ---
+
 @list-controls-bg:             #EBEBEB;
 @list-controls-color:          #3A3A3A;
 @list-controls-border:         #E1E1E1;
@@ -235,6 +248,7 @@
 // -
 // Panels
 // ---
+
 @panel-box-shadow:         @box-shadow-base;
 @panel-margin-bottom:      @component-margin-bottom;
 
@@ -245,6 +259,7 @@
 // -
 // Navs
 // ---
+
 @nav-spacing:            5px; // margin between 2 tabs
 
 @nav-tabs-link-color:    @gray;
@@ -257,6 +272,7 @@
 // -
 // Widgets (by default give the same look as panels)
 // ---
+
 @widget-bg:                 @panel-bg;
 @widget-text:               @panel-default-text;
 @widget-border:             @panel-default-border;
@@ -295,6 +311,7 @@
 // -
 // Carousel
 // ---
+
 @carousel-indicator-size:        10px;
 @carousel-indicator-active-size: 12px;
 
@@ -302,6 +319,7 @@
 // -
 // Dropdown
 // ---
+
 @dropdown-menu-box-shadow:    0 1px 2px rgba(0, 0, 0, 0.2);
 @dropdown-menu-border-radius: 0;
 
@@ -311,6 +329,7 @@
 // -
 // Labels
 // ---
+
 @label-border-radius: .25em;
 @label-font-size:     75%;
 
@@ -318,6 +337,7 @@
 // -
 // Modal
 // ---
+
 @modal-content-box-shadow:    0 0 10px rgba(0, 0, 0, 0.5);
 @modal-content-border-radius: 0;
 @modal-footer-bg:             #f5f5f5;
@@ -326,6 +346,7 @@
 // -
 // Popover
 // ---
+
 @popover-box-shadow:         0 1px 2px rgba(0, 0, 0, 0.25);
 @popover-border-radius:      @border-radius-base;
 @popover-title-padding:      10px;
@@ -336,6 +357,7 @@
 // -
 // Tooltip
 // ---
+
 @tooltip-border-radius: 0;
 @tooltip-padding:       5px 10px;
 
@@ -343,6 +365,7 @@
 // -
 // Placeholders
 // ---
+
 @placeholder-color:            @text-muted;
 @placeholder-hover-color:      @brand-primary;
 
@@ -370,6 +393,7 @@
 // -
 // User
 // ---
+
 @user-message-bg:            @panel-bg;
 @user-message-border:        @panel-default-border;
 @user-message-inner-border:  @panel-default-border;
@@ -379,4 +403,34 @@
 // -
 // Thumbnails
 // ---
+
 @thumbnail-box-shadow: @box-shadow-base;
+
+
+// -
+// Scores
+// ---
+
+@score-border-radius:    @border-radius-base;
+@score-bg:               @brand-secondary;
+@score-color:            white;
+@score-border:           none;
+@score-font-size:        @font-size-base;
+@score-padding-v:        5px;
+@score-padding-h:        10px;
+
+// small box variant
+@score-border-radius-sm: @border-radius-small;
+@score-font-size-sm:     @font-size-small;
+@score-padding-v-sm:     3px;
+@score-padding-h-sm:     6px;
+
+// large box variant
+@score-border-radius-lg: @border-radius-large;
+@score-font-size-lg:     @font-size-large;
+@score-padding-v-lg:     6px;
+@score-padding-h-lg:     12px;
+
+// -
+// Timelines
+// ---

@@ -3,6 +3,9 @@
 // and is not intended to be customized.
 @separator-size: 10px;
 
+// todo add mixin to generate size variant
+// todo add a mixin to force it in a panel corner
+
 .score-box {
     display: inline-block;
     border-radius: @score-border-radius;
@@ -64,6 +67,31 @@
 
             &:before {
                 border-bottom-width: @score-font-size-sm + @score-padding-v-sm*2;
+            }
+        }
+    }
+
+    // large version of the box
+    &.score-box-lg {
+        font-size: @score-font-size-lg;
+        border-radius: @score-border-radius-lg;
+
+        .user-score,
+        .max-score {
+            padding: @score-padding-v-lg @score-padding-h-lg;
+        }
+
+        .user-score {
+            padding-right: @separator-size + floor(@score-padding-h-lg / 2);
+            border-bottom-left-radius: @score-border-radius-lg - 1;
+            border-top-left-radius: @score-border-radius-lg - 1;
+        }
+
+        .max-score {
+            padding-left: floor(@score-padding-h-lg / 2);
+
+            &:before {
+                border-bottom-width: @score-font-size-lg + @score-padding-v-lg*2;
             }
         }
     }

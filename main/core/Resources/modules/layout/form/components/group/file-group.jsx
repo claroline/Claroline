@@ -26,7 +26,7 @@ FileGroup.propTypes = {
 }
 
 FileGroup.defaultProps = {
-  value: '',
+  value: [],
   disabled: false,
   types: [],
   max: 1,

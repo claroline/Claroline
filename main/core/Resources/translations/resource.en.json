@@ -65,5 +65,9 @@
     "text": "Text",
     "update_file": "Update file",
     "video": "Video",
-    "write": "Write"
+    "write": "Write",
+    "resource_overview": "Resource overview",
+    "resource_overview_actions": "Available actions",
+    "resource_overview_info": "Information",
+    "resource_overview_progression": "My progression"
 }

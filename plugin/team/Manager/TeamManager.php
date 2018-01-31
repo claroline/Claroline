@@ -21,6 +21,7 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\TeamBundle\API\Serializer\TeamSerializer;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -36,8 +37,10 @@ class TeamManager
     private $resourceManager;
     private $rightsManager;
     private $roleManager;
-    private $teamRepo;
+    private $teamSerializer;
     private $translator;
+
+    private $teamRepo;
     private $workspaceTeamParamsRepo;
     private $toolRightsManager;
 
@@ -49,6 +52,7 @@ class TeamManager
      *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager"),
      *     "toolRightsManager" = @DI\Inject("claroline.manager.tool_rights_manager"),
      *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
+     *     "teamSerializer"   = @DI\Inject("claroline.serializer.team"),
      *     "translator"        = @DI\Inject("translator")
      * })
      */
@@ -58,6 +62,7 @@ class TeamManager
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         RoleManager $roleManager,
+        TeamSerializer $teamSerializer,
         TranslatorInterface $translator,
         ToolRightsManager $toolRightsManager
     ) {
@@ -66,11 +71,12 @@ class TeamManager
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->roleManager = $roleManager;
-        $this->teamRepo = $om->getRepository('ClarolineTeamBundle:Team');
+        $this->teamSerializer = $teamSerializer;
         $this->translator = $translator;
         $this->toolRightsManager = $toolRightsManager;
-        $this->workspaceTeamParamsRepo =
-            $om->getRepository('ClarolineTeamBundle:WorkspaceTeamParameters');
+
+        $this->teamRepo = $om->getRepository('ClarolineTeamBundle:Team');
+        $this->workspaceTeamParamsRepo = $om->getRepository('ClarolineTeamBundle:WorkspaceTeamParameters');
     }
 
     public function createMultipleTeams(
@@ -710,26 +716,26 @@ class TeamManager
         );
     }
 
-    public function getTeamsWithUsersByWorkspace(
-        Workspace $workspace,
-        $executeQuery = true
-    ) {
-        return $this->teamRepo->findTeamsWithUsersByWorkspace(
-            $workspace,
-            $executeQuery
-        );
+    public function getTeamsWithUsersByWorkspace(Workspace $workspace, $executeQuery = true)
+    {
+        return $this->teamRepo->findTeamsWithUsersByWorkspace($workspace, $executeQuery);
     }
 
-    public function getTeamsByUserAndWorkspace(
-        User $user,
-        Workspace $workspace,
-        $executeQuery = true
-    ) {
-        return $this->teamRepo->findTeamsByUserAndWorkspace(
-            $user,
-            $workspace,
-            $executeQuery
-        );
+    public function getTeamsByUserAndWorkspace(User $user, Workspace $workspace, $executeQuery = true)
+    {
+        return $this->teamRepo->findTeamsByUserAndWorkspace($user, $workspace, $executeQuery);
+    }
+
+    public function getSearializedTeamsByUserAndWorkspace(User $user, Workspace $workspace)
+    {
+        $serializedTeams = [];
+        $teams = $this->teamRepo->findTeamsByUserAndWorkspace($user, $workspace);
+
+        foreach ($teams as $team) {
+            $serializedTeams[] = $this->teamSerializer->serialize($team);
+        }
+
+        return $serializedTeams;
     }
 
     public function getUnregisteredUsersByTeam(
@@ -782,12 +788,7 @@ class TeamManager
         $max = 50,
         $executeQuery = true
     ) {
-        $users = $this->teamRepo->findWorkspaceUsers(
-            $workspace,
-            $orderedBy,
-            $order,
-            $executeQuery
-        );
+        $users = $this->teamRepo->findWorkspaceUsers($workspace, $orderedBy, $order, $executeQuery);
 
         return $executeQuery ?
             $this->pagerFactory->createPagerFromArray($users, $page, $max) :
@@ -858,18 +859,9 @@ class TeamManager
             $this->pagerFactory->createPager($users, $page, $max);
     }
 
-    public function getNbTeamsByUsers(
-        Workspace $workspace,
-        array $users,
-        $executeQuery = true
-    ) {
-        return count($users) > 0 ?
-            $this->teamRepo->findNbTeamsByUsers(
-                $workspace,
-                $users,
-                $executeQuery
-            ) :
-            [];
+    public function getNbTeamsByUsers(Workspace $workspace, array $users, $executeQuery = true)
+    {
+        return count($users) > 0 ? $this->teamRepo->findNbTeamsByUsers($workspace, $users, $executeQuery) : [];
     }
 
     public function getTeamsWithExclusionsByWorkspace(
@@ -888,12 +880,7 @@ class TeamManager
                 $executeQuery
             );
         } else {
-            return $this->teamRepo->findTeamsByWorkspace(
-                $workspace,
-                $orderedBy,
-                $order,
-                $executeQuery
-            );
+            return $this->teamRepo->findTeamsByWorkspace($workspace, $orderedBy, $order, $executeQuery);
         }
     }
 
@@ -901,13 +888,8 @@ class TeamManager
      * Access to WorkspaceTeamParametersRepository methods *
      *******************************************************/
 
-    public function getParametersByWorkspace(
-        Workspace $workspace,
-        $executeQuery = true
-    ) {
-        return $this->workspaceTeamParamsRepo->findParametersByWorkspace(
-            $workspace,
-            $executeQuery
-        );
+    public function getParametersByWorkspace(Workspace $workspace, $executeQuery = true)
+    {
+        return $this->workspaceTeamParamsRepo->findParametersByWorkspace($workspace, $executeQuery);
     }
 }

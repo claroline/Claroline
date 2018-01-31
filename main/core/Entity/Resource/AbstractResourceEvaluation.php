@@ -38,6 +38,15 @@ class AbstractResourceEvaluation
         self::STATUS_PASSED => 7,
     ];
 
+    const STATUS_PRIORITY = [
+        self::STATUS_NOT_ATTEMPTED => 0,
+        self::STATUS_UNKNOWN => 1,
+        self::STATUS_INCOMPLETE => 2,
+        self::STATUS_COMPLETED => 3,
+        self::STATUS_FAILED => 4,
+        self::STATUS_PASSED => 5,
+    ];
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -161,14 +170,14 @@ class AbstractResourceEvaluation
 
     public function isTerminated()
     {
-        return $this->status !== self::STATUS_NOT_ATTEMPTED
-            && $this->status !== self::STATUS_INCOMPLETE
-            && $this->status !== self::STATUS_UNKNOWN;
+        return $this->status !== self::STATUS_NOT_ATTEMPTED &&
+            $this->status !== self::STATUS_INCOMPLETE &&
+            $this->status !== self::STATUS_UNKNOWN;
     }
 
     public function isSuccessful()
     {
-        return $this->status === self::STATUS_PASSED
-            || $this->status === self::STATUS_COMPLETED;
+        return $this->status === self::STATUS_PASSED ||
+            $this->status === self::STATUS_COMPLETED;
     }
 }

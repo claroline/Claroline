@@ -1,0 +1,63 @@
+/*
+ * DropZone resource styles.
+ */
+
+// Plugin
+@import "../variables";
+@import "../mixins";
+// Custom data types
+@import "../data/criteria";
+
+// Resource styles
+@import "overview";
+
+// old
+#drop-form {
+    border: solid 1px #CCCCCC;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 20px;
+}
+
+.document-type,
+.document-date {
+    white-space: nowrap;
+}
+
+.correction-form-panel {
+    padding: 20px;
+}
+
+.btn-group-right {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.correction-row {
+    .correction-form-panel {
+        margin: 0px;
+        border: none;
+        box-shadow: none;
+    }
+}
+
+.correction-form-row {
+    background-color: gray;
+}
+
+.criterion-scale-form-row {
+    min-width: 300px;
+}
+
+#denial-box {
+    margin-top: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-top: solid 1px #BBBBBB;
+    border-bottom: solid 1px #BBBBBB;
+}
+
+.dropzone-button-icon {
+    margin-right: 5px;
+}
+
