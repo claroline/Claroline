@@ -8,7 +8,6 @@ const plugins = require('./webpack/plugins')
 const paths = require('./webpack/paths')
 const shared = require('./webpack/shared')
 const collectedEntries = entries.collectEntries()
-const manifests = shared.dllManifests()
 
 Encore
     .setOutputPath(paths.output())
@@ -26,7 +25,7 @@ Encore
     .addPlugin(plugins.reactDllReference())
     .addPlugin(plugins.angularDllReference())
     .addPlugin(plugins.configShortcut())
-    //.addPlugin(plugins.commonsChunk())
+    .addPlugin(plugins.commonsChunk())
     //fixes performance issues
     .configureUglifyJsPlugin(uglifyJsPluginOptionsCallback = (options) => {
         options.compress = true
