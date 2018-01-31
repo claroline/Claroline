@@ -13,6 +13,7 @@ const DateGroup = props =>
 implementPropTypes(DateGroup, FormGroupWithFieldTypes, {
   // more precise value type
   value: T.string,
+  calendarIcon: T.string,
 
   // date configuration
   minDate: T.string,

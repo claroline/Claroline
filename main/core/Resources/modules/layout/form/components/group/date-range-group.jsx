@@ -20,7 +20,7 @@ const DateRangeGroup = props =>
         <DateGroup
           id={`${props.id}-start`}
           className="form-last"
-          icon="fa fa fa-fw fa-calendar-check-o"
+          calendarIcon="fa fa fa-fw fa-calendar-check-o"
           label={trans('date_range_start')}
           hideLabel={true}
           value={props.value[0]}
@@ -38,7 +38,7 @@ const DateRangeGroup = props =>
         <DateGroup
           id={`${props.id}-end`}
           className="form-last"
-          icon="fa fa fa-fw fa-calendar-times-o"
+          calendarIcon="fa fa fa-fw fa-calendar-times-o"
           label={trans('date_range_end')}
           hideLabel={true}
           value={props.value[1]}
