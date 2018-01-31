@@ -1,8 +1,5 @@
 import React from 'react'
 
-//import {DragDropContext} from 'react-dnd'
-//import {default as TouchBackend} from 'react-dnd-touch-backend'
-
 import {t} from '#/main/core/translation'
 import {TabbedPageContainer} from '#/main/core/layout/page/containers/tabbed-page.jsx'
 
@@ -24,8 +21,6 @@ const Tool = () =>
       }
     ]}
   />
-
-//const ToolDnD = DragDropContext(TouchBackend({ enableMouseEvents: true }))(Tool)
 
 export {
   Tool as WorkspaceTool

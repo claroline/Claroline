@@ -314,13 +314,14 @@ class ColorElement extends Component {
   render() {
     return (
       <div>
-        <ColorPicker color={this.props.color.code}
-          onPick={(e) => {this.props.onChange(actions.highlightEditColor(this.props.color.id, e.hex))}}
+        <ColorPicker
+          id={`color-${this.props.index}`}
+          value={this.props.color.code}
+          onChange={(e) => {this.props.onChange(actions.highlightEditColor(this.props.color.id, e.hex))}}
           autoOpen={this.props.autoOpen}
-        >
-        </ColorPicker>
+        />
         {'\u00a0'}
-        <i onClick={() => this.props.onChange(actions.highlightRemoveColor(this.props.color.id))} className="fa fa-trash-o pointer"></i>
+        <span onClick={() => this.props.onChange(actions.highlightRemoveColor(this.props.color.id))} className="fa fa-trash-o pointer" />
       </div>
     )
   }
@@ -545,17 +546,16 @@ export class Selection extends Component {
           </div>
         }
         <Radios
-          groupName="mode-group"
+          id="mode-group"
           options={[
             {value: 'select', label: tex('select')},
             {value: 'find', label: tex('find')},
             {value: 'highlight', label: tex('highlight')}
           ]}
-          checkedValue={this.props.item.mode}
-          inline={true}
+          value={this.props.item.mode}
           onChange={value => this.props.onChange(actions.updateQuestion(value, 'mode', {}))}
-        >
-        </Radios>
+        />
+
         {this.props.item.mode === 'find' &&
           <FormGroup
             id={`item-${this.props.item.id}-tries`}

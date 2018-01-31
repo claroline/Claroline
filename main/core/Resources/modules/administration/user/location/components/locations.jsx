@@ -4,27 +4,9 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-
 import {actions} from '#/main/core/administration/user/location/actions'
 import {LocationList} from '#/main/core/administration/user/location/components/location-list.jsx'
-
-/**
- * Locations list actions.
- *
- * @constructor
- */
-const LocationsActions = () =>
-  <PageActions>
-    <PageAction
-      id="location-add"
-      icon="fa fa-plus"
-      title={t('add_location')}
-      action="#/locations/add"
-      primary={true}
-    />
-  </PageActions>
 
 /**
  * Locations list.
@@ -65,6 +47,5 @@ const Locations = connect(
 )(LocationsList)
 
 export {
-  LocationsActions,
   Locations
 }

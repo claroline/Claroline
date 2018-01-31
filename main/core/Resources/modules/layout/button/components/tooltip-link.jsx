@@ -17,6 +17,7 @@ const TooltipLink = props =>
     id={props.id}
     position={props.position}
     tip={props.title}
+    disabled={props.disabled}
   >
     <a
       href={!props.disabled ? props.target : ''}

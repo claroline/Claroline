@@ -1,98 +1,88 @@
-import React from 'react'
-import {shallow, mount} from 'enzyme'
-
-import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+import {
+  ensure,
+  describeComponent,
+  mountComponent,
+  shallowComponent
+} from '#/main/core/scaffolding/tests'
 
 import {CheckGroup} from './check-group.jsx'
 
-describe('<CheckGroup/>', () => {
-  beforeEach(() => {
-    spyConsole.watch()
-    renew(CheckGroup, 'CheckGroup')
-  })
-  afterEach(spyConsole.restore)
-
-  const typedProps    = ['id', 'label', 'value', 'onChange', 'labelChecked', 'help']
-  const requiredProps = ['id', 'label', 'value', 'onChange']
-
-  it('has required props', () => {
-    shallow(
-      React.createElement(CheckGroup)
-    )
-
-    ensure.missingProps('CheckGroup', requiredProps)
-  })
-
-  it('has typed props', () => {
-    shallow(
-      React.createElement(CheckGroup, {
-        id: true,
-        label: 123,
-        labelChecked: 123,
-        value: [],
-        onChange: 'foo',
-        help: []
-      })
-    )
-
-    ensure.invalidProps('CheckGroup', typedProps)
-  })
-
-  it('renders a checkbox with a label', () => {
-    const group = shallow(
-      React.createElement(CheckGroup, {
+describeComponent('CheckGroup', CheckGroup,
+  // required props
+  [
+    'id',
+    'label',
+    'onChange'
+  ],
+  // invalid props
+  {
+    id: true,
+    label: 123,
+    labelChecked: 123,
+    value: [],
+    onChange: 'foo',
+    help: []
+  },
+  // valid props
+  {
+    id: 'ID',
+    label: 'LABEL',
+    value: true,
+    onChange: () => {}
+  },
+  // custom tests
+  () => {
+    it('renders a checkbox with a label', () => {
+      const group = shallowComponent(CheckGroup, 'CheckGroup', {
         id: 'ID',
         label: 'LABEL',
         value: true,
         onChange: () => {}
       })
-    )
 
-    ensure.propTypesOk()
-    ensure.equal(group.name(), 'div')
-    ensure.equal(group.hasClass('form-group'), true)
-    ensure.equal(group.children().length, 1)
+      // check propTypes
+      ensure.propTypesOk()
 
-    //const inputContainer = group.childAt(0)
-    ensure.equal(group.find('#ID').exists(), true)
+      ensure.equal(group.name(), 'div')
+      ensure.equal(group.hasClass('form-group'), true)
+      ensure.equal(group.children().length, 1)
 
-    /*const label = inputContainer.find('label')
-    ensure.equal(label.name(), 'label')
-    ensure.equal(label.props().htmlFor, 'ID')*/
-  })
+      ensure.equal(group.find('#ID').exists(), true)
+    })
 
-  it('displays an help text if any', () => {
-    const group = mount(
-      React.createElement(CheckGroup, {
+    it('displays an help text if any', () => {
+      const group = mountComponent(CheckGroup, 'CheckGroup', {
         id: 'ID',
         label: 'LABEL',
         help: 'HELP',
         value: true,
         onChange: () => {}
       })
-    )
 
-    ensure.propTypesOk()
-    ensure.equal(group.find('.help-block').text(), 'HELP')
-  })
+      // check propTypes
+      ensure.propTypesOk()
 
-  it('calls onChange with boolean value', () => {
-    let isChecked = false
+      ensure.equal(group.find('.help-block').text(), 'HELP')
+    })
 
-    const group = mount(
-      React.createElement(CheckGroup, {
+    it('calls onChange with boolean value', () => {
+      let isChecked = false
+
+      const group = mountComponent(CheckGroup, 'CheckGroup', {
         id: 'ID',
         label: 'LABEL',
         value: true,
         onChange: checked => isChecked = checked
       })
-    )
 
-    ensure.propTypesOk()
-    const input = group.find('input[type="checkbox"]#ID')
-    ensure.equal(input.length, 1)
+      // check propTypes
+      ensure.propTypesOk()
 
-    input.simulate('change', {target: {checked: true}})
-    ensure.equal(isChecked, true)
-  })
-})
+      const input = group.find('input[type="checkbox"]#ID')
+      ensure.equal(input.length, 1)
+
+      input.simulate('change', {target: {checked: true}})
+      ensure.equal(isChecked, true)
+    })
+  }
+)

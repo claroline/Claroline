@@ -61,7 +61,7 @@ ToggleableSet.propTypes = {
   /**
    * Sub-section content.
    */
-  children: T.any.isRequired
+  children: T.node.isRequired
 }
 
 export {

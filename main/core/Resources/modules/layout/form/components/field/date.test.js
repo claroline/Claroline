@@ -1,54 +1,33 @@
-import React from 'react'
-import {shallow, mount} from 'enzyme'
+import {describeComponent} from '#/main/core/scaffolding/tests'
 
-import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+import {Date as DateField} from './date.jsx'
 
-// note the alias is required for correct props validation
-// the underlying library we use also use DatePicker as component name
-// so when checking for invalid prop types the library errors makes the tests fail
-import {Date as CustomDatePicker} from './date.jsx'
-
-describe('<Date/>', () => {
-  beforeEach(() => {
-    spyConsole.watch()
-    renew(CustomDatePicker, 'CustomDatePicker')
-  })
-  afterEach(spyConsole.restore)
-
-  it('has required props', () => {
-    shallow(
-      React.createElement(CustomDatePicker)
-    )
-    ensure.missingProps('CustomDatePicker', ['onChange'])
-  })
-
-  it('has typed props', () => {
-    shallow(
-      React.createElement(CustomDatePicker, {
-        value: false,
-        onChange: 'foo'
-      })
-    )
-
-    ensure.invalidProps('CustomDatePicker', ['value', 'onChange'])
-  })
-
-  it('renders a clickable input', () => {
-    const date = mount(
-      React.createElement(CustomDatePicker, {
-        value: '2012-09-01',
-        onChange: () => {}
-      })
-    )
-    ensure.propTypesOk()
-
-    const container = date.find('div')
-    ensure.equal(container.length, 1)
-    const input = container.find('input[type="text"]')
-    ensure.equal(input.length, 1)
-
-    input.simulate('click')
-
-    ensure.equal(container.hasClass('react-datepicker__tether-enabled'), true)
-  })
-})
+describeComponent('Date', DateField,
+  // required props
+  [
+    'id',
+    'onChange'
+  ],
+  // invalid props
+  {
+    id: 123,
+    value: false,
+    onChange: 'foo',
+    minDate: true,
+    maxDate: true,
+    time: 'bar',
+    minTime: true,
+    maxTime: true
+  },
+  // valid props
+  {
+    id: '123',
+    value: '2012-09-01',
+    onChange: () => {},
+    minDate: '2000-01-01',
+    maxDate: '2050-01-01',
+    time: true,
+    minTime: '06:30',
+    maxTime: '22:00'
+  }
+)

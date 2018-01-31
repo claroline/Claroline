@@ -13,7 +13,7 @@ import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.j
 import {DateGroup}  from '#/main/core/layout/form/components/group/date-group.jsx'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
 import {TextGroup}  from '#/main/core/layout/form/components/group/text-group.jsx'
-import {RadioGroup}  from '#/main/core/layout/form/components/group/radio-group.jsx'
+import {RadiosGroup}  from '#/main/core/layout/form/components/group/radios-group.jsx'
 import {CheckboxesGroup}  from '#/main/core/layout/form/components/group/checkboxes-group.jsx'
 
 import {Announcement as AnnouncementTypes} from './../prop-types'
@@ -85,8 +85,9 @@ const AnnounceForm = props =>
               id="announcement-visible-from"
               className="col-md-6 col-xs-6 form-last"
               label={trans('announcement_visible_from', {}, 'announcement')}
-              value={props.announcement.restrictions.visibleFrom || ''}
+              value={props.announcement.restrictions.visibleFrom}
               onChange={(date) => props.updateProperty('restrictions.visibleFrom', date)}
+              time={true}
               warnOnly={!props.validating}
             />
 
@@ -94,8 +95,9 @@ const AnnounceForm = props =>
               id="announcement-visible-until"
               className="col-md-6 col-xs-6 form-last"
               label={trans('announcement_visible_until', {}, 'announcement')}
-              value={props.announcement.restrictions.visibleUntil || ''}
+              value={props.announcement.restrictions.visibleUntil}
               onChange={(date) => props.updateProperty('restrictions.visibleUntil', date)}
+              time={true}
               warnOnly={!props.validating}
             />
           </div>
@@ -106,7 +108,7 @@ const AnnounceForm = props =>
         icon="fa fa-fw fa-paper-plane-o"
         title={trans('announcement_sending', {}, 'announcement')}
       >
-        <RadioGroup
+        <RadiosGroup
           id="announcement-notify-users"
           label={trans('announcement_notify_users', {}, 'announcement')}
           options={[
@@ -114,8 +116,7 @@ const AnnounceForm = props =>
             {value: 1, label: trans('send_directly', {}, 'announcement')},
             {value: 2, label: trans('send_at_predefined_date', {}, 'announcement')}
           ]}
-          checkedValue={props.announcement.meta.notifyUsers}
-          inline={true}
+          value={props.announcement.meta.notifyUsers}
           onChange={value => {
             props.updateProperty('meta.notifyUsers', value)
 
@@ -146,8 +147,9 @@ const AnnounceForm = props =>
             <DateGroup
               id="announcement-sending-date"
               label={trans('announcement_sending_date', {}, 'announcement')}
-              value={props.announcement.meta.notificationDate || null}
+              value={props.announcement.meta.notificationDate}
               onChange={(date) => props.updateProperty('meta.notificationDate', date)}
+              time={true}
               warnOnly={!props.validating}
               error={get(props.errors, 'meta.notificationDate')}
             />

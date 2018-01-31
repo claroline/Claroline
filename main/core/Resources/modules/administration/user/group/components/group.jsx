@@ -4,10 +4,8 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
-import {makeSaveAction} from '#/main/core/data/form/containers/form-save.jsx'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {select as formSelect} from '#/main/core/data/form/selectors'
@@ -18,23 +16,6 @@ import {actions} from '#/main/core/administration/user/group/actions'
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'
 import {RoleList} from '#/main/core/administration/user/role/components/role-list.jsx'
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
-
-const GroupSaveAction = makeSaveAction('groups.current', formData => ({
-  create: ['apiv2_group_create'],
-  update: ['apiv2_group_update', {id: formData.id}]
-}))(PageAction)
-
-const GroupActions = () =>
-  <PageActions>
-    <GroupSaveAction />
-
-    <PageAction
-      id="group-list"
-      icon="fa fa-list"
-      title={t('back_to_list')}
-      action="#/groups"
-    />
-  </PageActions>
 
 const GroupForm = props =>
   <FormContainer
@@ -210,6 +191,5 @@ const Group = connect(
 )(GroupForm)
 
 export {
-  GroupActions,
   Group
 }

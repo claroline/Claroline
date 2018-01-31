@@ -2,7 +2,7 @@ import React from 'react'
 import freeze from 'deep-freeze'
 import merge from 'lodash/merge'
 import {shallow} from 'enzyme'
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {lastId, lastIds} from './../../utils/utils'
 import {actions} from './../../quiz/editor/actions'
 import definition from './index'
@@ -276,7 +276,6 @@ describe('Set reducer', () => {
 })
 
 describe('Set validator', () => {
-  before(mockTranslator)
   const validate = definition.editor.validate
 
   it('checks set penalty validity', () => {
@@ -315,8 +314,8 @@ describe('Set validator', () => {
       sets: [{}, {}]
     }, false)
     item.sets.splice(0, 2)
-    const errors = validate(item)
-    ensure.equal(errors, {
+
+    ensure.equal(validate(item), {
       sets: 'set_at_least_one_set'
     })
   })
@@ -325,8 +324,8 @@ describe('Set validator', () => {
     const item = makeFixture({
       sets: [{}, {data:''}]
     })
-    const errors = validate(item)
-    ensure.equal(errors, {
+
+    ensure.equal(validate(item), {
       sets: 'set_set_empty_data_error'
     })
   })
@@ -334,50 +333,46 @@ describe('Set validator', () => {
   it('checks that at least one solutions association exists', () => {
     const item = makeFixture({}, false)
     item.solutions.associations.splice(0, 2)
-    const errors = validate(item)
-    ensure.equal(errors, {
+
+    ensure.equal(validate(item), {
       solutions: 'set_no_solution',
       items: 'set_no_orphean_items'
     })
   })
 
   it('checks that at least one solutions association score is a valid number exists', () => {
-    const item = makeFixture(
-      {
-        solutions:{
-          associations: [
-            {score: 'not a number'}
-          ]
-        }
+    const item = makeFixture({
+      solutions:{
+        associations: [
+          {score: 'not a number'}
+        ]
       }
-    )
-    const errors = validate(item)
-    ensure.equal(errors, {
+    })
+
+    ensure.equal(validate(item), {
       solutions: 'set_score_not_valid'
     })
   })
 
   it('checks that at least one solutions association with a score that is greater than 0 exists', () => {
-    const item = makeFixture(
-      {
-        solutions:{
-          associations: [
-            {score: -2},
-            {score: -1}
-          ]
-        }
+    const item = makeFixture({
+      solutions:{
+        associations: [
+          {score: -2},
+          {score: -1}
+        ]
       }
-    )
-    const errors = validate(item)
-    ensure.equal(errors, {
+    })
+
+    ensure.equal(validate(item), {
       solutions: 'set_no_valid_solution'
     })
   })
 
   it('returns no errors if item is valid', () => {
     const item = makeFixture()
-    const errors = validate(item)
-    ensure.equal(errors, {})
+
+    ensure.equal(validate(item), {})
   })
 })
 
@@ -391,29 +386,44 @@ describe('<Set />', () => {
   afterEach(spyConsole.restore)
 
   it('has required props', () => {
-    shallow(<Set item={{items:[], sets:[], solutions:{}}}/>)
-    ensure.missingProps('Set', ['validating', 'onChange', 'item.id'])
+    shallow(
+      React.createElement(Set, {
+        item: {
+          items: [],
+          sets: [],
+          solutions: {}
+        }
+      })
+    )
+
+    ensure.missingProps('Set', [
+      'validating',
+      'onChange',
+      'item.id'
+    ])
   })
 
   it('has typed props', () => {
     shallow(
-      <Set
-        item={
-          {
-            id: [],
-            penalty: 'a',
-            random: [],
-            items:[],
-            sets: [],
-            solutions: {},
-            _errors: {}
-          }
-        }
-        validating={false}
-        onChange={false}
-      />
+      React.createElement(Set, {
+        item: {
+          id: [],
+          penalty: 'a',
+          random: [],
+          items:[],
+          sets: [],
+          solutions: {},
+          _errors: {}
+        },
+        validating: false,
+        onChange: false
+      })
     )
-    ensure.invalidProps('Set', ['item.id', 'onChange'])
+
+    ensure.invalidProps('Set', [
+      'item.id',
+      'onChange'
+    ])
   })
 })
 

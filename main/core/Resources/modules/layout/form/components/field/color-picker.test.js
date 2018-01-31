@@ -1,31 +1,49 @@
-import React from 'react'
-import {mount} from 'enzyme'
+import {
+  ensure,
+  describeComponent,
+  mountComponent
+} from '#/main/core/scaffolding/tests'
 
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
 import {ColorPicker} from './color-picker.jsx'
 
-describe('<ColorPicker/>', () => {
-  before(mockTranslator)
-  beforeEach(() => {
-    spyConsole.watch()
-    renew(ColorPicker, 'ColorPicker')
-  })
-  afterEach(spyConsole.restore)
-
-  it('renders a clickable widget opening a color picker', () => {
-    const picker = mount(
-      React.createElement(ColorPicker, {
-        id: 'PICKER-ID',
-        color: 'blue',
-        onPick: () => {}
+describeComponent('ColorPicker', ColorPicker,
+  // required props
+  [
+    'id',
+    'onChange'
+  ],
+  // invalid props
+  {
+    id: {},
+    value: [],
+    onChange: 123,
+    colors: true,
+    forFontColor: 'invalid',
+    autoOpen: 'invalid'
+  },
+  // valid props
+  {
+    id: 'ID',
+    value: 'blue',
+    onChange: () => {}
+  },
+  // custom tests
+  () => {
+    it('renders a clickable widget opening a color picker', () => {
+      const picker = mountComponent(ColorPicker, 'ColorPicker', {
+        id: 'ID',
+        value: 'blue',
+        onChange: () => {}
       })
-    )
-    ensure.propTypesOk()
 
-    const button = picker.find('.color-picker')
-    ensure.equal(button.length, 1)
+      // check propTypes
+      ensure.propTypesOk()
 
-    button.simulate('click')
-    //ensure.equal(picker.find('.twitter-picker').length, 1)
-  })
-})
+      const button = picker.find('.color-picker')
+      ensure.equal(button.length, 1)
+
+      button.simulate('click')
+      //ensure.equal(picker.find('.twitter-picker').length, 1)
+    })
+  }
+)

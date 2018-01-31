@@ -74,16 +74,18 @@ class GridCell extends Component {
         <div className="cell-header">
           <div className="cell-actions">
             <ColorPicker
+              id={`cell-${this.props.cell.id}-font`}
               className="btn-link-default"
-              color={this.props.cell.color}
+              value={this.props.cell.color}
+              onChange={color => this.props.update('color', color.hex)}
               forFontColor={true}
-              onPick={color => this.props.update('color', color.hex)}
             />
 
             <ColorPicker
+              id={`cell-${this.props.cell.id}-bg`}
               className="btn-link-default"
-              color={this.props.cell.background}
-              onPick={color => this.props.update('background', color.hex)}
+              value={this.props.cell.background}
+              onChange={color => this.props.update('background', color.hex)}
             />
           </div>
 
@@ -406,15 +408,14 @@ const Grid = props =>
     <div className="form-group">
       <label htmlFor="grid-score-mode">{tex('grid_score_mode_label')}</label>
       <Radios
-        id="grid-score-mode"
-        groupName="scoreMode"
+        id="scoreMode"
         options={[
           {value: SUM_CELL, label:tex('grid_score_sum_cell')},
           {value: SUM_COL, label:tex('grid_score_sum_col')},
           {value: SUM_ROW, label:tex('grid_score_sum_row')},
           {value: SCORE_FIXED, label:tex('fixed_score')}
         ]}
-        checkedValue={props.item.score.type === SCORE_FIXED ? SCORE_FIXED : props.item.sumMode}
+        value={props.item.score.type === SCORE_FIXED ? SCORE_FIXED : props.item.sumMode}
         onChange={value => props.onChange(
           actions.updateProperty('sumMode', value)
         )}
@@ -527,9 +528,10 @@ const Grid = props =>
       <div className="input-group">
         <span className="input-group-btn">
           <ColorPicker
+            id={`table-${props.item.id}-border-color`}
             className="btn-default"
-            color={props.item.border.color}
-            onPick={color => props.onChange(
+            value={props.item.border.color}
+            onChange={color => props.onChange(
               actions.updateProperty('borderColor', color.hex)
             )}
           />

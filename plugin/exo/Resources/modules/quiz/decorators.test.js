@@ -1,5 +1,5 @@
 import freeze from 'deep-freeze'
-import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {decorate} from './decorators'
 import {
   TYPE_QUIZ,
@@ -13,8 +13,6 @@ import {
 } from './enums'
 
 describe('Decorator', () => {
-  before(mockTranslator)
-
   it('adds editor state sections and default values to quiz state', () => {
     const state = freeze({
       quiz: {
@@ -128,6 +126,7 @@ describe('Decorator', () => {
             mandatory: false,
             protectQuestion: false
           },
+          tags: [],
           rights: {
             edit: true
           },
@@ -159,6 +158,7 @@ describe('Decorator', () => {
             mandatory: false,
             protectQuestion: false
           },
+          tags: [],
           rights: {
             edit: true
           },
@@ -229,9 +229,6 @@ describe('Decorator', () => {
         parameters: {
           type: QUIZ_SUMMATIVE,
           showMetadata: true,
-          randomOrder: SHUFFLE_NEVER,
-          randomPick: SHUFFLE_NEVER,
-          pick: 0,
           duration: 0,
           maxAttempts: 0,
           maxAttemptsPerDay: 0,
@@ -279,6 +276,7 @@ describe('Decorator', () => {
           rights: {
             edit: true
           },
+          tags: [],
           id: 'x',
           type: 'application/x.bar+json',
           title: '',

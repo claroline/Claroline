@@ -3,6 +3,7 @@
 {% block title %}{{ 'desktop' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block content %}
+    {{ macros.flashBox() }}
     {% block section_panel %}
         <div class="panel panel-default">
             {% block section_content %}{% endblock %}

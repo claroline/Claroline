@@ -142,7 +142,7 @@ class UserSerializer
             $fields = $finder->search(
                 'Claroline\CoreBundle\Entity\Facet\FieldFacetValue',
                 ['filters' => ['user' => $user->getUuid()]],
-                //should be an option but claco form messes thubgs up
+                //should be an option but claco form messes things up
                 ['minimal']
               );
 
@@ -298,6 +298,7 @@ class UserSerializer
         $this->sipe('plainPassword', 'setPlainPassword', $data, $object);
         $this->sipe('meta.enabled', 'setIsEnabled', $data, $object);
         $this->sipe('meta.locale', 'setLocale', $data, $object);
+        $this->sipe('meta.description', 'setDescription', $data, $object);
         $this->sipe('picture.url', 'setPicture', $data, $object);
 
         if (isset($data['restrictions']['accessibleUntil'])) {

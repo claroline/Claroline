@@ -8,7 +8,7 @@
       {% endif %}
       data-resource="{{ _resource | api_serialize | json_encode | raw | escape }}"
       data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
-      data-fields="{{ fields | json_serialize('api_facet_admin') | raw | escape }}"
+      data-fields="{{ fields | json_encode | raw | escape }}"
       data-cascade-level-max={{ cascadeLevelMax }}
       data-can-generate-pdf="{{ canGeneratePdf }}"
       data-entries="{{ entries | json_encode | raw | escape }}"

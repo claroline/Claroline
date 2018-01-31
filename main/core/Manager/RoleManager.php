@@ -1210,13 +1210,17 @@ class RoleManager
 
         if (!$manager) {
             $this->log('Adding manager role for workspace '.$workspace->getCode().'...', LogLevel::DEBUG);
-            $this->createWorkspaceRole(
+            $manager = $this->createWorkspaceRole(
                 'ROLE_WS_MANAGER_'.$workspace->getGuid(),
                 'manager',
                 $workspace,
                 true
             );
             $operationExecuted = true;
+        }
+
+        if ($creator = $workspace->getCreator()) {
+            $creator->addRole($manager);
         }
 
         return $operationExecuted;

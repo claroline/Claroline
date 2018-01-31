@@ -20,6 +20,7 @@ class ContactsOptionsFormModal extends Component {
       <DataFormModal
         {...this.props}
         save={(data) => {this.props.save(data)}}
+        icon="fa fa-fw fa-cog"
         title={t('configuration')}
         sections={[
           {

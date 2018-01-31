@@ -110,7 +110,7 @@ plugin:
         - name: widgets_management
           class: list-alt
         - name: tasks_scheduling
-          class: tasks
+          class: clock-o
         - name: data_transfer
           class: exchange
 
@@ -208,7 +208,7 @@ plugin:
           is_locked_for_admin: false
           is_anonymous_excluded: true
         - name: my_contacts
-          class: users
+          class: address-book
           is_displayable_in_workspace: false
           is_displayable_in_desktop: true
           is_configurable_in_workspace: false

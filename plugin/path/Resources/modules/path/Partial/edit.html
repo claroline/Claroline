@@ -29,7 +29,7 @@
                     data-toggle="tooltip"
                     data-original-title="{{ 'undo'|trans:{}:'path_wizards' }}"
                 >
-                    <span class="page-action-icon fa fa-reply"></span>
+                    <span class="action-icon fa fa-reply"></span>
                     <span class="sr-only">{{ 'undo'|trans:{}:'path_wizards' }}</span>
                 </button>
 
@@ -41,7 +41,7 @@
                     data-toggle="tooltip"
                     data-original-title="{{ 'redo'|trans:{}:'path_wizards' }}"
                 >
-                    <span class="page-action-icon fa fa-share"></span>
+                    <span class="action-icon fa fa-share"></span>
                     <span class="sr-only">{{ 'redo'|trans:{}:'path_wizards' }}</span>
                 </button>
             </div>
@@ -52,7 +52,7 @@
                     data-ng-disabled="!pathEditCtrl.unsaved"
                     data-ng-click="pathEditCtrl.save()"
                 >
-                    <span class="page-action-icon fa fa-floppy-o"></span>
+                    <span class="action-icon fa fa-floppy-o"></span>
                     <span class="sr-only">{{ 'save'|trans:{}:'path_wizards' }}</span>
                 </button>
 
@@ -60,7 +60,7 @@
                     data-ng-disabled="!pathEditCtrl.published"
                     data-ng-click="pathEditCtrl.preview()"
                 >
-                    <span class="page-action-icon fa fa-times"></span>
+                    <span class="action-icon fa fa-times"></span>
                     <span class="sr-only">{{ 'preview'|trans:{}:'path_wizards' }}</span>
                 </button>
             </div>
@@ -68,7 +68,7 @@
             <div class="page-actions-group">
                 <button type="button" class="btn page-action-btn" data-ng-click="pathEditCtrl.toggleFullscreen()">
                     <span
-                        class="page-action-icon fa"
+                        class="action-icon fa"
                         data-ng-class="{
                             'fa-expand': !pathEditCtrl.fullscreen,
                             'fa-compress': pathEditCtrl.fullscreen
@@ -80,7 +80,7 @@
 
                 <div class="dropdown btn-group">
                     <button class="btn page-action-btn dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                        <span class="page-action-icon fa fa-ellipsis-v"></span>
+                        <span class="action-icon fa fa-ellipsis-v"></span>
                         <span class="sr-only">{{ 'more_actions'|trans:{}:'path_wizards' }}</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-right">

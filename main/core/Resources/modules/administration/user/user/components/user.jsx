@@ -4,10 +4,8 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
-import {makeSaveAction} from '#/main/core/data/form/containers/form-save.jsx'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {select as formSelect} from '#/main/core/data/form/selectors'
@@ -18,23 +16,6 @@ import {actions} from '#/main/core/administration/user/user/actions'
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'
 import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
 import {RoleList} from '#/main/core/administration/user/role/components/role-list.jsx'
-
-const UserSaveAction = makeSaveAction('users.current', formData => ({
-  create: ['apiv2_user_create'],
-  update: ['apiv2_user_update', {id: formData.id}]
-}))(PageAction)
-
-const UserActions = () =>
-  <PageActions>
-    <UserSaveAction />
-
-    <PageAction
-      id="users-list"
-      icon="fa fa-list"
-      title={t('cancel')}
-      action="#/users"
-    />
-  </PageActions>
 
 const UserForm = props =>
   <FormContainer
@@ -97,7 +78,10 @@ const UserForm = props =>
         fields: [{
           name: 'restrictions.accessibleUntil',
           type: 'date',
-          label: t('expiration_date')
+          label: t('expiration_date'),
+          options: {
+            time: true
+          }
         }]
       }
     ]}
@@ -256,6 +240,5 @@ const User = connect(
 )(UserForm)
 
 export {
-  UserActions,
   User
 }

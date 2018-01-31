@@ -5,8 +5,6 @@ import classes from 'classnames'
 
 import {t, trans} from '#/main/core/translation'
 
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
-import {makeSaveAction} from '#/main/core/data/form/containers/form-save.jsx'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
@@ -21,23 +19,6 @@ import {Role as RoleTypes} from '#/main/core/administration/user/role/prop-types
 import {actions} from '#/main/core/administration/user/role/actions'
 import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
-
-const RoleSaveAction = makeSaveAction('roles.current', formData => ({
-  create: ['apiv2_role_create'],
-  update: ['apiv2_role_update', {id: formData.id}]
-}))(PageAction)
-
-const RoleActions = () =>
-  <PageActions>
-    <RoleSaveAction />
-
-    <PageAction
-      id="roles-list"
-      icon="fa fa-list"
-      title={t('back_to_list')}
-      action="#/roles"
-    />
-  </PageActions>
 
 const RoleForm = props =>
   <FormContainer
@@ -249,6 +230,5 @@ const Role = connect(
 )(RoleForm)
 
 export {
-  RoleActions,
   Role
 }

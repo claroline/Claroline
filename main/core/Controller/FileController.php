@@ -161,7 +161,8 @@ class FileController extends Controller
         $tmpFile = $this->request->files->get('file');
         $extension = pathinfo($fileName, PATHINFO_EXTENSION);
         $size = filesize($tmpFile);
-        $mimeType = $tmpFile->getClientMimeType();
+        $ext = strtolower($tmpFile->getClientOriginalExtension());
+        $mimeType = $this->mimeTypeGuesser->guess($ext);
         $hashName = 'WORKSPACE_'.
             $parent->getWorkspace()->getId().
             DIRECTORY_SEPARATOR.
@@ -263,7 +264,8 @@ class FileController extends Controller
         );
 
         $nodesArray[0] = $this->resourceManager->toArray(
-            $file->getResourceNode(), $this->tokenStorage->getToken()
+            $file->getResourceNode(),
+            $this->tokenStorage->getToken()
         );
 
         return new JsonResponse($nodesArray);

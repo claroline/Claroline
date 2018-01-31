@@ -1,22 +1,13 @@
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
-export const VIEW_MANAGEMENT = 'management_view'
-export const VIEW_MAIL_FORM = 'mail_form_view'
-export const VIEW_MESSAGE_FORM = 'message_form_view'
+const TASK_TYPE_MAIL = 'mail'
+const TASK_TYPE_MESSAGE = 'message'
 
-export const taskTypes = [
-  {
-    type: 'mail',
-    label: t('mail'),
-    icon: 'fa fa-at'
-  },
-  {
-    type: 'message',
-    label: t('message'),
-    icon: 'fa fa-envelope'
-  }
-]
+const TASK_TYPES = {
+  [TASK_TYPE_MAIL]:    trans('mail'),
+  [TASK_TYPE_MESSAGE]: trans('message'),
+}
 
 export const constants = {
-  taskTypes
+  TASK_TYPES
 }

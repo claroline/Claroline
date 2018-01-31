@@ -4,8 +4,6 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
-import {makeSaveAction} from '#/main/core/data/form/containers/form-save.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
@@ -18,23 +16,6 @@ import {UserList} from '#/main/core/administration/user/user/components/user-lis
 import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
 
 import {locationTypes} from '#/main/core/administration/user/location/constants'
-
-const LocationSaveAction = makeSaveAction('locations.current', formData => ({
-  create: ['apiv2_location_create'],
-  update: ['apiv2_location_update', {id: formData.id}]
-}))(PageAction)
-
-const LocationActions = () =>
-  <PageActions>
-    <LocationSaveAction />
-
-    <PageAction
-      id="location-list"
-      icon="fa fa-list"
-      title={t('cancel')}
-      action="#/locations"
-    />
-  </PageActions>
 
 const LocationForm = props =>
   <FormContainer
@@ -227,6 +208,5 @@ const Location = connect(
 )(LocationForm)
 
 export {
-  LocationActions,
   Location
 }

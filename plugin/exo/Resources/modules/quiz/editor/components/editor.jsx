@@ -44,6 +44,7 @@ function selectSubEditor(props) {
         <QuizEditor
           quiz={props.quizProperties}
           items={props.items}
+          tags={props.tags}
           validating={props.validating}
           updateProperties={props.updateQuiz}
           activePanelKey={props.activeQuizPanel}
@@ -92,6 +93,7 @@ selectSubEditor.propTypes = {
     type: T.string.isRequired
   }).isRequired,
   items: T.array.isRequired,
+  tags: T.array.isRequired,
   updateStep: T.string.isRequired,
   activeStepPanel: T.string.isRequired,
   selectStepPanel: T.func.isRequired,
@@ -117,6 +119,7 @@ function mapStateToProps(state) {
   return {
     thumbnails: select.thumbnails(state),
     items: select.items(state),
+    tags: select.tags(state),
     currentObject: select.currentObjectDeep(state),
     currentObjectIndex: select.currentObjectIndex(state),
     activeQuizPanel: select.quizOpenPanel(state),

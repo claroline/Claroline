@@ -1,0 +1,148 @@
+{
+  "generic": {
+    "pending": {
+      "title": "Loading",
+      "message": "Please wait while we load your data."
+    },
+    "success": {
+      "title": "Success",
+      "message": ""
+    },
+    "warning": {
+      "title": "Attention",
+      "message": ""
+    },
+    "unauthorized": {
+      "title": "Unauthorized access",
+      "message": "You must be be logged to access to this feature."
+    },
+    "forbidden": {
+      "title": "Access forbidden",
+      "message": "You don't have access to this feature."
+    },
+    "error": {
+      "title": "Error",
+      "message": "Please contact an administrator."
+    }
+  },
+  "load": {
+    "pending": {
+      "title": "Loading",
+      "message": "Please wait while we load your data."
+    },
+    "error": {
+      "title": "Load failure",
+      "message": "We were unable to load your data."
+    }
+  },
+  "refresh": {
+    "pending": {
+      "title": "Reloading",
+      "message": "Please wait while we reload your data."
+    },
+    "error": {
+      "title": "Reload failure",
+      "message": "We were unable to reload your data."
+    }
+  },
+  "save": {
+    "pending": {
+      "title": "Save in progress",
+      "message": "Please wait while we save your data."
+    },
+    "success": {
+      "title": "Successful save",
+      "message": "Your data has been saved correctly."
+    },
+    "warning": {
+      "title": "Save failure",
+      "message": "Please correct the errors on your form and try again."
+    },
+    "error": {
+      "title": "Save failure",
+      "message": "We were unable to save your data."
+    }
+  },
+  "create": {
+    "pending": {
+      "title": "Creation in progress",
+      "message": "Please wait while we save your data."
+    },
+    "success": {
+      "title": "Successful creation",
+      "message": "Your data has been saved correctly."
+    },
+    "warning": {
+      "title": "Creation failure",
+      "message": "Please correct the errors on your form and try again."
+    },
+    "error": {
+      "title": "Creation failure",
+      "message": "We were unable to save your data."
+    }
+  },
+  "update": {
+    "pending": {
+      "title": "Update in progress",
+      "message": "Please wait while we save your data."
+    },
+    "success": {
+      "title": "Successful update",
+      "message": "Your data has been saved correctly."
+    },
+    "warning": {
+      "title": "Update failure",
+      "message": "Please correct the errors on your form and try again."
+    },
+    "error": {
+      "title": "Update failure",
+      "message": "We were unable to save your data."
+    }
+  },
+  "delete": {
+    "pending": {
+      "title": "Deletion in progress",
+      "message": "Please wait while we delete your data."
+    },
+    "success": {
+      "title": "Successful deletion",
+      "message": "Your data has been deleted correctly."
+    },
+    "error": {
+      "title": "Deletion failure",
+      "message": "We were unable to delete your data."
+    }
+  },
+  "send": {
+    "pending": {
+      "title": "Sending in progress",
+      "message": "Please wait while we send your message."
+    },
+    "success": {
+      "title": "Successful sending",
+      "message": "Your message has been sent correctly."
+    },
+    "error": {
+      "title": "Sending failure",
+      "message": "We were unable to send your message."
+    }
+  },
+  "upload": {
+    "pending": {
+      "title": "Uploading",
+      "message": "Please wait while we upload your file."
+    },
+    "success": {
+      "title": "Successful download",
+      "message": "Your file has been uploaded correctly."
+    },
+    "warning": {
+      "title": "Download failure",
+      "message": "Please use a supported file type and try again."
+    },
+    "error": {
+      "title": "Download failure",
+      "message": "We were unable to upload your file."
+    }
+  }
+}

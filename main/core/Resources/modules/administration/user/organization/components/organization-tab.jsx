@@ -2,30 +2,43 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {Routes} from '#/main/core/router'
+import {t} from '#/main/core/translation'
+import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
 
-import {Organization, OrganizationActions} from '#/main/core/administration/user/organization/components/organization.jsx'
-import {Organizations, OrganizationsActions} from '#/main/core/administration/user/organization/components/organizations.jsx'
+import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
+import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
-import {actions} from '#/main/core/administration/user/organization/actions'
+import {Organization}  from '#/main/core/administration/user/organization/components/organization.jsx'
+import {Organizations} from '#/main/core/administration/user/organization/components/organizations.jsx'
+import {actions}       from '#/main/core/administration/user/organization/actions'
 
-const OrganizationTabActions = () =>
-  <Routes
-    routes={[
-      {
-        path: '/organizations',
-        exact: true,
-        component: OrganizationsActions
-      }, {
-        path: '/organizations/add',
-        exact: true,
-        component: OrganizationActions
-      }, {
-        path: '/organizations/:id',
-        component: OrganizationActions
+const OrganizationTabActionsComponent = props =>
+  <PageActions>
+    <FormPageActionsContainer
+      formName="organizations.current"
+      target={(organization, isNew) => isNew ?
+        ['apiv2_organization_create'] :
+        ['apiv2_organization_update', {id: organization.id}]
       }
-    ]}
-  />
+      opened={!!matchPath(props.location.pathname, {path: '/organizations/form'})}
+      open={{
+        icon: 'fa fa-plus',
+        label: t('add_organization'),
+        action: '#/organizations/form'
+      }}
+      cancel={{
+        action: () => navigate('/organizations')
+      }}
+    />
+  </PageActions>
+
+OrganizationTabActionsComponent.propTypes = {
+  location: T.shape({
+    pathname: T.string
+  }).isRequired
+}
+
+const OrganizationTabActions = withRouter(OrganizationTabActionsComponent)
 
 const OrganizationTabComponent = props =>
   <Routes
@@ -35,12 +48,7 @@ const OrganizationTabComponent = props =>
         exact: true,
         component: Organizations
       }, {
-        path: '/organizations/add',
-        exact: true,
-        onEnter: () => props.openForm(),
-        component: Organization
-      }, {
-        path: '/organizations/:id',
+        path: '/organizations/form/:id?',
         onEnter: (params) => props.openForm(params.id),
         component: Organization
       }

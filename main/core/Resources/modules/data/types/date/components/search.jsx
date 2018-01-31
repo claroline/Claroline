@@ -1,7 +1,9 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
-import {Date} from '#/main/core/layout/form/components/field/date.jsx'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {DataSearch as DataSearchTypes} from '#/main/core/data/prop-types'
+
+import {CalendarPicker} from '#/main/core/layout/calendar/components/picker.jsx'
 
 const DateSearch = props =>
   <span className="date-filter">
@@ -9,18 +11,28 @@ const DateSearch = props =>
       <span className="available-filter-value">{props.search}</span>
     }
     &nbsp;
-    <Date
-      id="filter-date"
-      onlyButton={true}
-      onChange={date => props.updateSearch(date)}
+    <CalendarPicker
+      className="btn-sm btn-filter"
+      selected={props.isValid ? props.search : ''}
+      onChange={props.updateSearch}
+      minDate={props.minDate}
+      maxDate={props.maxDate}
+      time={props.time}
+      minTime={props.minTime}
+      maxTime={props.maxTime}
     />
   </span>
 
-DateSearch.propTypes = {
-  search: T.string.isRequired,
-  isValid: T.bool.isRequired,
-  updateSearch: T.func.isRequired
-}
+implementPropTypes(DateSearch, DataSearchTypes, {
+  // date configuration
+  minDate: T.string,
+  maxDate: T.string,
+
+  // time configuration
+  time: T.bool,
+  minTime: T.string,
+  maxTime: T.string
+})
 
 export {
   DateSearch

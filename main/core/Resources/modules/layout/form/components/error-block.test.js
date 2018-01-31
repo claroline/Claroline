@@ -1,28 +1,52 @@
-import React from 'react'
-import {shallow} from 'enzyme'
+import {
+  ensure,
+  describeComponent,
+  shallowComponent
+} from '#/main/core/scaffolding/tests'
 
-import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
 import {ErrorBlock} from './error-block.jsx'
 
-describe('<ErrorBlock/>', () => {
-  beforeEach(() => {
-    spyConsole.watch()
-    renew(ErrorBlock, 'ErrorBlock')
-  })
-  afterEach(spyConsole.restore)
+describeComponent('ErrorBlock', ErrorBlock,
+  // required props
+  [
+    'text'
+  ],
+  // invalid props
+  {
+    text: {},
+    inGroup: '123',
+    warnOnly: '123'
+  },
+  // valid props
+  {
+    text: 'ERROR'
+  },
+  // custom tests
+  () => {
+    it('renders an error text by default', () => {
+      const error = shallowComponent(ErrorBlock, 'ErrorBlock', {
+        text: 'ERROR'
+      })
 
-  it('renders an error text by default', () => {
-    const block = shallow(React.createElement(ErrorBlock, {text: 'ERROR'}))
+      // check propTypes
+      ensure.propTypesOk()
 
-    ensure.propTypesOk()
-    ensure.equal(block.hasClass('text-danger'), true)
-    ensure.equal(block.text(), 'ERROR')
-  })
+      ensure.equal(error.hasClass('error-block'), true)
+      ensure.equal(error.hasClass('error-block-danger'), true)
+      ensure.equal(error.text(), 'ERROR')
+    })
 
-  it('renders a simple warning if needed', () => {
-    const block = shallow(React.createElement(ErrorBlock, {text: 'ERROR', warnOnly: true}))
+    it('renders a simple warning if needed', () => {
+      const error = shallowComponent(ErrorBlock, 'ErrorBlock', {
+        text: 'ERROR',
+        warnOnly: true
+      })
 
-    ensure.propTypesOk()
-    ensure.equal(block.hasClass('text-warning'), true)
-  })
-})
+      // check propTypes
+      ensure.propTypesOk()
+
+      ensure.equal(error.hasClass('error-block'), true)
+      ensure.equal(error.hasClass('error-block-warning'), true)
+    })
+  }
+)

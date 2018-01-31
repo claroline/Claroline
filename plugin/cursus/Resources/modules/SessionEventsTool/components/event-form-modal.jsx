@@ -4,11 +4,12 @@ import {PropTypes as T} from 'prop-types'
 import Modal from 'react-bootstrap/lib/Modal'
 import classes from 'classnames'
 import moment from 'moment'
+
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
 import {t, trans} from '#/main/core/translation'
-import Datetime from 'react-datetime'
-import 'react-datetime/css/react-datetime.css'
+import {Date} from '#/main/core/layout/form/components/field/date.jsx'
+
 import {actions} from '../actions'
 
 export const MODAL_EVENT_FORM = 'MODAL_EVENT_FORM'
@@ -26,8 +27,8 @@ class EventFormModal  extends Component {
       description: props.event.description ? props.event.description : undefined,
       registrationType: props.event.registrationType ? props.event.registrationType : undefined,
       maxUsers: props.event.maxUsers ? props.event.maxUsers : undefined,
-      startDate: props.event.startDate ?  new Date(props.event.startDate) : new Date(props.session.startDate),
-      endDate: props.event.endDate ?  new Date(props.event.endDate) : new Date(props.session.endDate),
+      startDate: props.event.startDate,
+      endDate: props.event.endDate,
       location: props.event.location ? props.event.location.id : undefined,
       locationExtra: props.event.locationExtra ? props.event.locationExtra : undefined,
       teachers: props.event.tutors ? props.event.tutors.map(t => t.id) : [],
@@ -170,17 +171,14 @@ class EventFormModal  extends Component {
 
           <div className={classes('form-group row', {'has-error': this.state.startDateError})}>
             <div className="control-label col-md-3">
-              <label>{t('start_date')}</label>
+              <label htmlFor="startDate">{t('start_date')}</label>
             </div>
             <div className="col-md-9">
-              <Datetime
-                closeOnSelect={true}
-                dateFormat={true}
-                timeFormat={true}
-                locale="fr"
-                utc={false}
-                defaultValue={this.state.startDate}
+              <Date
+                id="startDate"
+                value={this.state.startDate}
                 onChange={date => this.updateEventProps('startDate', date)}
+                time={true}
               />
               {this.state.startDateError &&
                 <div className="help-block field-error">
@@ -192,18 +190,16 @@ class EventFormModal  extends Component {
 
           <div className={classes('form-group row', {'has-error': this.state.endDateError})}>
             <div className="control-label col-md-3">
-              <label>{t('end_date')}</label>
+              <label htmlFor="endDate">{t('end_date')}</label>
             </div>
             <div className="col-md-9">
-              <Datetime
-                closeOnSelect={true}
-                dateFormat={true}
-                timeFormat={true}
-                locale="fr"
-                utc={false}
+              <Date
+                id="endDate"
                 defaultValue={this.state.endDate}
                 onChange={date => this.updateEventProps('endDate', date)}
+                time={true}
               />
+
               {this.state.endDateError &&
                 <div className="help-block field-error">
                   {this.state.endDateError}

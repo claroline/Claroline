@@ -3,7 +3,7 @@ import freeze from 'deep-freeze'
 import merge from 'lodash/merge'
 import {shallow, mount} from 'enzyme'
 import assert from 'assert'
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {actions} from './../../quiz/editor/actions'
 import definition from './index'
 import {actions as subActions} from './editor'
@@ -111,7 +111,6 @@ describe('Words reducer', () => {
 
 // TODO : move keywords validation in its own test suite
 describe('Words validator', () => {
-  before(mockTranslator)
   const validate = definition.editor.validate
   it('checks solutions text are not empty', () => {
     const errors = validate({

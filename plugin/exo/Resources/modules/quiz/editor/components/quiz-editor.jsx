@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 import classes from 'classnames'
 import isObject from 'lodash/isObject'
 import get from 'lodash/get'
@@ -11,11 +10,12 @@ import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 import {tex, t} from '#/main/core/translation'
 import {ActivableSet} from '#/main/core/layout/form/components/fieldset/activable-set.jsx'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
-import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
-import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'
 import {DateGroup} from '#/main/core/layout/form/components/group/date-group.jsx'
+import {HtmlGroup} from '#/main/core/layout/form/components/group/html-group.jsx'
+import {NumberGroup} from '#/main/core/layout/form/components/group/number-group.jsx'
+import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'
+import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
 import {ValidationStatus} from './validation-status.jsx'
 import {RandomPicking} from './random-picking.jsx'
 import {TagPicking} from './tag-picking.jsx'
@@ -86,7 +86,7 @@ const Display = props =>
       />
     </ActivableSet>
 
-    <RadioGroup
+    <RadiosGroup
       id="quiz-numbering"
       label={tex('quiz_numbering')}
       options={[
@@ -94,7 +94,7 @@ const Display = props =>
         {value: NUMBERING_NUMERIC, label: tex('quiz_numbering_numeric')},
         {value: NUMBERING_LITTERAL, label: tex('quiz_numbering_litteral')}
       ]}
-      checkedValue={props.parameters.numbering}
+      value={props.parameters.numbering}
       onChange={numbering => props.onChange('parameters.numbering', numbering)}
     />
   </fieldset>
@@ -114,28 +114,19 @@ Display.propTypes = {
   onChange: T.func.isRequired
 }
 
-const Access = props => {
-  return (
-    <fieldset>
-      <FormGroup
-        id="quiz-maxPapers"
-        label={tex('maximum_papers')}
-        help={tex('maximum_papers_attempts_help')}
-        warnOnly={!props.validating}
-        error={get(props, 'errors.parameters.maxPapers')}
-      >
-        <input
-          id="quiz-maxPapers"
-          type="number"
-          min="0"
-          value={props.parameters.maxPapers}
-          className="form-control"
-          onChange={e => props.onChange('parameters.maxPapers', e.target.value)}
-        />
-      </FormGroup>
-    </fieldset>
-  )
-}
+const Access = props =>
+  <fieldset>
+    <NumberGroup
+      id="quiz-maxPapers"
+      label={tex('maximum_papers')}
+      min={0}
+      value={props.parameters.maxPapers}
+      onChange={maxPapers => props.onChange('parameters.maxPapers', maxPapers)}
+      help={tex('maximum_papers_attempts_help')}
+      warnOnly={!props.validating}
+      error={get(props, 'errors.parameters.maxPapers')}
+    />
+  </fieldset>
 
 Access.propTypes = {
   parameters: T.shape({
@@ -215,40 +206,28 @@ const Signing = props =>
       />
     </FormGroup>
     */}
-    <FormGroup
+    <NumberGroup
       id="quiz-maxAttempts"
       label={tex('maximum_attempts')}
+      min={0}
+      value={props.parameters.maxAttempts}
+      onChange={maxAttempts => props.onChange('parameters.maxAttempts', maxAttempts)}
       help={tex('number_max_attempts_help')}
       warnOnly={!props.validating}
       error={get(props, 'errors.parameters.maxAttempts')}
-    >
-      <input
-        id="quiz-maxAttempts"
-        type="number"
-        min="0"
-        value={props.parameters.maxAttempts}
-        className="form-control"
-        onChange={e => props.onChange('parameters.maxAttempts', e.target.value)}
-      />
-    </FormGroup>
+    />
 
     {props.parameters.maxAttempts > 0 &&
-      <FormGroup
+      <NumberGroup
         id="quiz-maxAttemptsPerDay"
         label={tex('maximum_attempts_per_day')}
+        min={0}
+        value={props.parameters.maxAttemptsPerDay}
+        onChange={maxAttemptsPerDay => props.onChange('parameters.maxAttemptsPerDay', maxAttemptsPerDay)}
         help={tex('number_max_attempts_per_day_help')}
         warnOnly={!props.validating}
         error={get(props, 'errors.parameters.maxAttemptsPerDay')}
-      >
-        <input
-          id="quiz-maxAttemptsPerDay"
-          type="number"
-          min="0"
-          value={props.parameters.maxAttemptsPerDay}
-          className="form-control"
-          onChange={e => props.onChange('parameters.maxAttemptsPerDay', e.target.value)}
-        />
-      </FormGroup>
+      />
     }
 
     <CheckGroup
@@ -298,49 +277,38 @@ class Correction extends Component {
   render() {
     return(
       <fieldset>
-        <RadioGroup
+        <RadiosGroup
           id="quiz-total-score-on"
           label={tex('quiz_total_score_on')}
           options={[
             {value: TOTAL_SCORE_ON_DEFAULT, label: tex('quiz_total_score_on_mode_default')},
             {value: TOTAL_SCORE_ON_CUSTOM, label: tex('quiz_total_score_on_mode_custom')}
           ]}
-          checkedValue={this.state.totalScoreOnMode}
+          value={this.state.totalScoreOnMode}
           onChange={mode => this.handleScoreModeChange(mode)}
         />
 
         {this.state.totalScoreOnMode === TOTAL_SCORE_ON_CUSTOM &&
           <div className="sub-fields">
-            <FormGroup
+            <NumberGroup
               id="quiz-total-score-on-value"
               label={tex('quiz_total_score')}
-            >
-              <input
-                id="quiz-total-score-on-value"
-                onChange={e => this.props.onChange('parameters.totalScoreOn', Number(e.target.value))}
-                type="number"
-                min="1"
-                className="form-control"
-                value={this.props.parameters.totalScoreOn || TOTAL_SCORE_ON_DEFAULT_VALUE}
-              />
-            </FormGroup>
+              min={1}
+              value={this.props.parameters.totalScoreOn || TOTAL_SCORE_ON_DEFAULT_VALUE}
+              onChange={totalScore => this.props.onChange('parameters.totalScoreOn', totalScore)}
+            />
           </div>
         }
 
-        <FormGroup
+        <NumberGroup
           id="quiz-success-score"
           label={tex('quiz_success_score')}
-        >
-          <input
-            id="quiz-success-score"
-            onChange={e => this.props.onChange('parameters.successScore', e.target.value)}
-            type="number"
-            min="0"
-            max="100"
-            className="form-control"
-            value={this.props.parameters.successScore || ''}
-          />
-        </FormGroup>
+          min={0}
+          max={100}
+          unit="%"
+          value={this.props.parameters.successScore}
+          onChange={successScore => this.props.onChange('parameters.successScore', successScore)}
+        />
 
         <FormGroup
           id="quiz-showCorrectionAt"
@@ -364,6 +332,7 @@ class Correction extends Component {
               label={tex('correction_date')}
               value={this.props.parameters.correctionDate}
               onChange={date => this.props.onChange('parameters.correctionDate', date)}
+              time={true}
             />
           </div>
         }
@@ -549,13 +518,6 @@ QuizEditor.propTypes = {
   handlePanelClick: T.func.isRequired
 }
 
-const ConnectedQuizEditor = connect(
-  state => ({
-    tags: select.tags(state)
-  }),
-  null
-)(QuizEditor)
-
 export {
-  ConnectedQuizEditor as QuizEditor
+  QuizEditor
 }

@@ -157,6 +157,7 @@ class ApiLoader extends Loader
     {
         $defaults = [
           'schema' => ['/schema', 'GET'],
+          'find' => ['/find', 'GET'],
           'create' => ['', 'POST'],
           'update' => ['/{id}', 'PUT'],
           'deleteBulk' => ['', 'DELETE'],
