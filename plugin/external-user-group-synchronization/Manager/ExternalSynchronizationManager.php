@@ -25,6 +25,7 @@ use Claroline\ExternalSynchronizationBundle\Entity\ExternalGroup;
 use Claroline\ExternalSynchronizationBundle\Entity\ExternalUser;
 use Claroline\ExternalSynchronizationBundle\Repository\ExternalResourceSynchronizationRepository;
 use Cocur\Slugify\Slugify;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -334,6 +335,7 @@ class ExternalSynchronizationManager
                 },
                 $existingPlatformUsers
             );
+            $updateReferenceUserIds = array_merge([], $existingPlatformUserIds);
             // If CAS enabled get existing user in CAS
             if (
                 $synchronizeCas &&
@@ -364,7 +366,16 @@ class ExternalSynchronizationManager
                     },
                     $existingCasUsers
                 );
+                $updateReferenceUserIds = array_merge($updateReferenceUserIds, $existingCasUserIds);
             }
+            // Initialize table for users whose reference id got updated
+            $updateReferenceUsers = $this->externalUserManager->getExternalUsersByUserIds($updateReferenceUserIds);
+            $updateReferenceUserIds = array_map(
+                function (ExternalUser $extUser) {
+                    return $extUser->getUser()->getId();
+                },
+                $updateReferenceUsers
+            );
             // List with already used public urls
             $publicUrlList = [];
             // For every user
@@ -395,10 +406,14 @@ class ExternalSynchronizationManager
                     ) !== false
                 ) {
                     $casAccount = $existingCasUsers[$key];
-                    $alreadyImportedUser = $this->externalUserManager->createExternalUser(
+                    // Check if an existing user's reference has been updated, if so update reference
+                    // otherwise create new external user
+                    $alreadyImportedUser = $this->externalUserManager->createOrUpdateExternalUser(
                         $externalSourceUser['id'],
                         $sourceName,
-                        $casAccount->getUser()
+                        $casAccount->getUser(),
+                        $updateReferenceUserIds,
+                        $updateReferenceUsers
                     );
                 }
                 // If user mail exists already in platform then link with this account
@@ -408,10 +423,14 @@ class ExternalSynchronizationManager
                     ($key = array_search(strtoupper($externalSourceUser['email']), $existingPlatformUserMails)) !== false
                 ) {
                     $platformUser = $existingPlatformUsers[$key];
-                    $alreadyImportedUser = $this->externalUserManager->createExternalUser(
+                    // Check if an existing user's reference has been updated, if so update reference
+                    // otherwise create new external user
+                    $alreadyImportedUser = $this->externalUserManager->createOrUpdateExternalUser(
                         $externalSourceUser['id'],
                         $sourceName,
-                        $platformUser
+                        $platformUser,
+                        $updateReferenceUserIds,
+                        $updateReferenceUsers
                     );
                 }
                 $user = is_null($alreadyImportedUser) ? null : $alreadyImportedUser->getUser();
@@ -463,7 +482,10 @@ class ExternalSynchronizationManager
                     $this->casManager->createCasUser($externalSourceUser[$casSynchronizedField], $user);
                 }
             }
-            $this->om->endFlushSuite();
+            try {
+                $this->om->endFlushSuite();
+            } catch (UniqueConstraintViolationException $e) {
+            }
             $this->om->clear();
 
             $countUsers -= $curBatchSize;
