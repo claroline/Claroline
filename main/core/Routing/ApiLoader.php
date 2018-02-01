@@ -60,10 +60,22 @@ class ApiLoader extends Loader
         $path = $this->locator->locate($resource);
         //this is the default
         $imported = $this->import($resource, 'annotation');
+
         $routes = new RouteCollection();
         $routes->addCollection($imported);
 
-        $this->loadFromPath($path, $routes);
+        $autoRoutes = new RouteCollection();
+        $this->loadFromPath($path, $autoRoutes);
+
+        foreach ($routes as $keyRoute => $route) {
+            foreach ($autoRoutes as $autoRoute) {
+                if ($route->getPath() === $autoRoute->getPath()) {
+                    $routes->remove($keyRoute);
+                }
+            }
+        }
+
+        $routes->addCollection($autoRoutes);
 
         return $routes;
     }
@@ -143,12 +155,6 @@ class ApiLoader extends Loader
                         }
                     }
                 }
-            }
-        }
-        //remove duplicatas autogenrated by sf2 router
-        foreach ($routes->getIterator() as $key => $route) {
-            if (strpos($key, 'claroline_core_apinew') === 0) {
-                $routes->remove($key);
             }
         }
     }
