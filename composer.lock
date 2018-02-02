@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "1c356148315018a044a20a552f4e102c",
+    "content-hash": "793fd4a292630ddae9923fc82104ada1",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -119,16 +119,16 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "11.x-dev",
+            "version": "dev-phpcs-fixer",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "a5e09134f0a65462686dfe997e066740b016c9ed"
+                "reference": "f0948a2205bbc2c5d628057319f6a29e53a9d131"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/a5e09134f0a65462686dfe997e066740b016c9ed",
-                "reference": "a5e09134f0a65462686dfe997e066740b016c9ed",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/f0948a2205bbc2c5d628057319f6a29e53a9d131",
+                "reference": "f0948a2205bbc2c5d628057319f6a29e53a9d131",
                 "shasum": ""
             },
             "require": {
@@ -397,7 +397,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-02-01T10:50:59+00:00"
+            "time": "2018-02-02T13:19:32+00:00"
         },
         {
             "name": "claroline/front-end-bundle",
