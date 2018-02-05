@@ -1,17 +1,9 @@
 {
-  "strophe.jingle": "https://github.com/ESTOS/strophe.jingle.git#master",
-  "hark": "https://github.com/otalk/hark.git#v1.1.4",
-  "strophejs": "https://github.com/strophe/strophejs.git#v1.2.7",
-  "strophejs-plugins": "https://github.com/strophe/strophejs-plugins.git#v0.0.6",
-
   "jquery-tagcanvas": "https://github.com/goat1000/TagCanvas.git#master",
   "jquery-option-tree": "https://github.com/jongilbraith/jquery-option-tree.git#6b7137ec6e",
   "tag-it": "https://github.com/aehlke/tag-it.git#6ccd2de95e",
 
   "angular-ui-pageslide":"https://github.com/Elorfin/angular-ui-pageslide.git#1.0.0",
   "angular-ui-translation": "https://github.com/InnovaLangues/angular-ui-translation.git#master",
-  "angular-ui-resource-picker": "https://github.com/InnovaLangues/angular-ui-resource-picker.git#master",
-
-  "jquery-2.2.4": "https://github.com/jquery/jquery.git#2.2.4",
-  "angular-1.5.7": "https://github.com/angular/angular.js.git#v1.5.7"
+  "angular-ui-resource-picker": "https://github.com/InnovaLangues/angular-ui-resource-picker.git#master"
 }
