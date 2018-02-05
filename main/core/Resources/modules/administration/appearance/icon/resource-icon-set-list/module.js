@@ -1,6 +1,6 @@
 import angular from 'angular/index'
 import 'angular-loading-bar'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 
 import {} from '#/main/core/modal/module'
 import {} from '#/main/core/api/router/module'

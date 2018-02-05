@@ -10,7 +10,7 @@
 import angular from 'angular/index'
 
 import 'angular-ui-bootstrap'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 
 import SessionEventService from './Service/SessionEventService'
 import SessionEventCreationModalCtrl from './Controller/SessionEventCreationModalCtrl'

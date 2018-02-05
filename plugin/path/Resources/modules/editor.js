@@ -6,7 +6,7 @@ import angular from 'angular/index'
 import 'angular-route'
 import 'angular-sanitize'
 import 'angular-ui-bootstrap'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 
 import './path/module'
 import './summary/module'

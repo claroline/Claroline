@@ -11,7 +11,7 @@ import angular from 'angular/index'
 
 import 'angular-ui-bootstrap'
 import 'angular-bootstrap-colorpicker'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 
 import '../services/module'
 import '../widgets/widgets'

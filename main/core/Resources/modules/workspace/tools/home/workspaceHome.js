@@ -11,7 +11,7 @@ import angular from 'angular/index'
 
 import 'angular-ui-router'
 import 'angular-ui-bootstrap'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 
 import '../../../homeTabs/homeTabs'
 import '../../../widgets/widgets'

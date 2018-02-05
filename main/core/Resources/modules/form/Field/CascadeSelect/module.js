@@ -1,5 +1,5 @@
 import angular from 'angular/index'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 import '../../HelpBlock/module'
 import CascadeSelectDirective from './CascadeSelectDirective'
 
