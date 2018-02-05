@@ -1,19 +1,17 @@
 import {PropTypes as T} from 'prop-types'
+import merge from 'lodash/merge'
+
+import {DataProperty} from '#/main/core/data/prop-types'
 
 const DataDetailsProperty = {
-  propTypes: {
-    name: T.string.isRequired,
-    type: T.string,
-    label: T.string.isRequired,
+  propTypes: merge({}, DataProperty.propTypes, {
     hideLabel: T.bool,
-    displayed: T.bool,
-    options: T.object
-  },
-  defaultProps: {
-    options: {},
+    displayed: T.bool
+  }),
+  defaultProps: merge({}, DataProperty.defaultProps, {
     hideLabel: false,
     displayed: true
-  }
+  })
 }
 
 // todo merge with DataFormSection

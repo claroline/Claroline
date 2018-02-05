@@ -22,9 +22,9 @@ actions.addDocuments = makeActionCreator(DOCUMENTS_ADD, 'documents')
 actions.updateDocument = makeActionCreator(DOCUMENT_UPDATE, 'document')
 actions.removeDocument = makeActionCreator(DOCUMENT_REMOVE, 'documentId')
 
-actions.initializeMyDrop = (dropzone, teamId = null) => ({
+actions.initializeMyDrop = (dropzoneId, teamId = null) => ({
   [API_REQUEST]: {
-    url: ['claro_dropzone_drop_create', {id: dropzone.id, teamId: teamId}],
+    url: ['claro_dropzone_drop_create', {id: dropzoneId, teamId: teamId}],
     request: {
       method: 'POST'
     },
@@ -35,29 +35,20 @@ actions.initializeMyDrop = (dropzone, teamId = null) => ({
   }
 })
 
-actions.saveDocument = (dropType, dropData) => (dispatch, getState) => {
-  const state = getState()
-  const myDropId = select.myDropId(state)
+actions.saveDocument = (dropId, documentType, documentData) => {
   const formData = new FormData()
+  formData.append('dropData', documentData)
 
-  if (dropType === constants.DOCUMENT_TYPE_FILE) {
-    dropData.forEach((file, idx) => formData.append(`fileDrop${idx}`, file))
-  } else {
-    formData.append('dropData', dropData)
-  }
-
-  dispatch({
+  return {
     [API_REQUEST]: {
-      url: ['claro_dropzone_documents_add', {id: myDropId, type: dropType}],
+      url: ['claro_dropzone_documents_add', {id: dropId, type: documentType}],
       request: {
         method: 'POST',
         body: formData
       },
-      success: (data, dispatch) => {
-        dispatch(actions.addDocuments(data))
-      }
+      success: (data, dispatch) => dispatch(actions.addDocuments(data))
     }
-  })
+  }
 }
 
 actions.deleteDocument = (documentId) => ({
@@ -66,28 +57,19 @@ actions.deleteDocument = (documentId) => ({
     request: {
       method: 'DELETE'
     },
-    success: (data, dispatch) => {
-      dispatch(actions.removeDocument(documentId))
-    }
+    success: (data, dispatch) => dispatch(actions.removeDocument(documentId))
   }
 })
 
-actions.renderMyDrop = () => (dispatch, getState) => {
-  const myDropId = select.myDropId(getState())
-
-  dispatch({
-    [API_REQUEST]: {
-      url: ['claro_dropzone_drop_submit', {id: myDropId}],
-      request: {
-        method: 'PUT'
-      },
-      success: (data, dispatch) => {
-        dispatch(actions.updateMyDrop('finished', true))
-        dispatch(actions.updateMyDrop('dropDate', data.dropDate))
-      }
-    }
-  })
-}
+actions.submitDrop = (dropId) => ({
+  [API_REQUEST]: {
+    url: ['claro_dropzone_drop_submit', {id: dropId}],
+    request: {
+      method: 'PUT'
+    },
+    success: (data, dispatch) => dispatch(actions.loadMyDrop(data))
+  }
+})
 
 actions.fetchPeerDrop = () => (dispatch, getState) => {
   const state = getState()

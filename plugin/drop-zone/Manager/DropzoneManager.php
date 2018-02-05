@@ -402,8 +402,7 @@ class DropzoneManager
         $document->setUser($user);
         $document->setDropDate(new \DateTime());
         $document->setType($documentType);
-        $data = $documentData;
-        $document->setData($data);
+        $document->setData($documentData);
         $this->om->persist($document);
         $this->om->flush();
 

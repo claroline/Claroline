@@ -6,11 +6,13 @@ import {reducer} from '#/plugin/drop-zone/resources/dropzone/reducer'
 import {registerDropzoneTypes} from '#/plugin/drop-zone/data/types'
 import {DropzoneResource} from '#/plugin/drop-zone/resources/dropzone/components/resource.jsx'
 import {CorrectionModal} from '#/plugin/drop-zone/resources/dropzone/correction/components/modal/correction-modal.jsx'
+import {MODAL_ADD_DOCUMENT, AddDocumentModal} from '#/plugin/drop-zone/resources/dropzone/player/components/modal/add-document.jsx'
 
 registerDropzoneTypes()
 
 registerModals([
-  ['MODAL_CORRECTION', CorrectionModal]
+  ['MODAL_CORRECTION', CorrectionModal],
+  [MODAL_ADD_DOCUMENT, AddDocumentModal]
 ])
 
 // mount the react application

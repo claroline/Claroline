@@ -1554,5 +1554,6 @@
     "points": "[0,1] %count% point|]1,Inf[ %count% points",
     "date_range_start": "from",
     "date_range_end": "to",
-    "show_overview": "Go to overview"
+    "show_overview": "Go to overview",
+    "submit": "Submit"
 }

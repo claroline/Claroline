@@ -1580,5 +1580,6 @@
     "points": "[0,1] %count% point|]1,Inf[ %count% points",
     "date_range_start": "à partir du",
     "date_range_end": "jusqu'au",
-    "show_overview": "Aller à l'accueil"
+    "show_overview": "Aller à l'accueil",
+    "submit": "Soumettre"
 }

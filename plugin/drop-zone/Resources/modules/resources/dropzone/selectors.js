@@ -134,39 +134,39 @@ const dropDisabledMessages = createSelector(
 
     // anonymous user error
     if (!user) {
-      messages.push(trans('drop_state_user_required', {}, 'dropzone'))
+      messages.push(trans('drop_disabled_user_required', {}, 'dropzone'))
     }
 
     // no team error
     if (dropzoneRequireTeam && !userHasTeam) {
-      messages.push(trans('drop_state_team_required', {}, 'dropzone'))
+      messages.push(trans('drop_disabled_team_required', {}, 'dropzone'))
     }
 
     // state error
     switch (currentState) {
       // not started error
       case constants.STATE_NOT_STARTED:
-        messages.push(trans('drop_state_not_started', {}, 'dropzone'))
+        messages.push(trans('drop_disabled_not_started', {}, 'dropzone'))
         break
 
       // finished error
       case constants.STATE_FINISHED:
-        messages.push(trans('drop_state_finished', {}, 'dropzone'))
+        messages.push(trans('drop_disabled_finished', {}, 'dropzone'))
         break
 
       // otherwise checks drop date boundaries
       default:
         if (constants.PLANNING_TYPE_MANUAL === dropzone.planning.type) {
           if (!isDropEnabledManual) {
-            messages.push(trans('drop_state_not_active', {}, 'dropzone'))
+            messages.push(trans('drop_disabled_not_active', {}, 'dropzone'))
           }
         } else {
           if (now() < dropzone.planning.drop[0]) {
             // drop has not already started
-            messages.push(trans('drop_state_not_started', {}, 'dropzone'))
+            messages.push(trans('drop_disabled_not_started', {}, 'dropzone'))
           } else if (now() > dropzone.planning.drop[1]) {
             // drop has already finished
-            messages.push(trans('drop_state_finished', {}, 'dropzone'))
+            messages.push(trans('drop_disabled_finished', {}, 'dropzone'))
           }
         }
 
@@ -186,42 +186,42 @@ const peerReviewDisabledMessages = createSelector(
     if (constants.REVIEW_TYPE_PEER === dropzone.parameters.reviewType) {
       // anonymous user error
       if (!user) {
-        messages.push(trans('review_state_user_required', {}, 'dropzone'))
+        messages.push(trans('review_disabled_user_required', {}, 'dropzone'))
       }
 
       if (!myDrop || !myDrop.finished) {
-        messages.push(trans('review_state_drop_not_finished', {}, 'dropzone'))
+        messages.push(trans('review_disabled_drop_not_finished', {}, 'dropzone'))
       }
 
       if (nbCorrections === dropzone.parameters.expectedCorrectionTotal) {
-        messages.push(trans('review_state_corrections_done', {}, 'dropzone'))
+        messages.push(trans('review_disabled_corrections_done', {}, 'dropzone'))
       }
 
       // state error
       switch (currentState) {
         // not started error
         case constants.STATE_NOT_STARTED:
-          messages.push(trans('review_state_not_started', {}, 'dropzone'))
+          messages.push(trans('review_disabled_not_started', {}, 'dropzone'))
           break
 
         // finished error
         case constants.STATE_FINISHED:
-          messages.push(trans('review_state_finished', {}, 'dropzone'))
+          messages.push(trans('review_disabled_finished', {}, 'dropzone'))
           break
 
         // otherwise checks drop date boundaries
         default:
           if (constants.PLANNING_TYPE_MANUAL === dropzone.planning.type) {
             if (!isPeerReviewEnabledManual) {
-              messages.push(trans('review_state_not_active', {}, 'dropzone'))
+              messages.push(trans('review_disabled_not_active', {}, 'dropzone'))
             }
           } else {
             if (now() < dropzone.planning.review[0]) {
               // drop has not already started
-              messages.push(trans('review_state_not_started', {}, 'dropzone'))
+              messages.push(trans('review_disabled_not_started', {}, 'dropzone'))
             } else if (now() > dropzone.planning.review[1]) {
               // drop has already finished
-              messages.push(trans('review_state_finished', {}, 'dropzone'))
+              messages.push(trans('review_disabled_finished', {}, 'dropzone'))
             }
           }
 

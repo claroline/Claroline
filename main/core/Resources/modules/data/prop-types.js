@@ -37,7 +37,8 @@ const DataProperty = {
     options: T.object
   },
   defaultProps: {
-    type: 'string'
+    type: 'string',
+    options: {}
   }
 }
 

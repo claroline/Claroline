@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import merge from 'lodash/merge'
 
 import {t} from '#/main/core/translation'
 import {getTypeOrDefault} from '#/main/core/data/index'
@@ -19,15 +20,22 @@ import {ListActions, ListPrimaryAction, ListBulkActions} from '#/main/core/data/
 const DataCell = props => {
   const typeDef = getTypeOrDefault(props.column.type)
 
+  let cellData
+  if (undefined !== props.column.calculated) {
+    cellData = props.column.calculated(props.rowData)
+  } else {
+    cellData = get(props.rowData, props.column.name)
+  }
+
   let cellRendering
   if (props.column.renderer) {
     cellRendering = props.column.renderer(props.rowData)
   } else if (typeDef.components && typeDef.components.table) {
     // use custom component defined in the type definition
-    cellRendering = React.createElement(typeDef.components.table, {data: get(props.rowData, props.column.name)})
+    cellRendering = React.createElement(typeDef.components.table, merge({data: cellData}, props.column.options || {}))
   } else {
     // use render defined in the type definition
-    cellRendering = typeDef.render(get(props.rowData, props.column.name), props.column.options || {})
+    cellRendering = typeDef.render(cellData, props.column.options || {})
   }
 
   return (

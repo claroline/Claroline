@@ -27,7 +27,7 @@ class AbstractResourceEvaluation
     const STATUS_OPENED = 'opened';
     const STATUS_PARTICIPATED = 'participated';
 
-    const STATUS_PRORITY = [
+    const STATUS_PRIORITY = [
         self::STATUS_NOT_ATTEMPTED => 0,
         self::STATUS_UNKNOWN => 1,
         self::STATUS_OPENED => 2,
@@ -36,15 +36,6 @@ class AbstractResourceEvaluation
         self::STATUS_COMPLETED => 5,
         self::STATUS_FAILED => 6,
         self::STATUS_PASSED => 7,
-    ];
-
-    const STATUS_PRIORITY = [
-        self::STATUS_NOT_ATTEMPTED => 0,
-        self::STATUS_UNKNOWN => 1,
-        self::STATUS_INCOMPLETE => 2,
-        self::STATUS_COMPLETED => 3,
-        self::STATUS_FAILED => 4,
-        self::STATUS_PASSED => 5,
     ];
 
     /**
@@ -108,6 +99,7 @@ class AbstractResourceEvaluation
     {
         $this->date = $date;
     }
+
     public function getStatus()
     {
         return $this->status;
@@ -170,14 +162,14 @@ class AbstractResourceEvaluation
 
     public function isTerminated()
     {
-        return $this->status !== self::STATUS_NOT_ATTEMPTED &&
-            $this->status !== self::STATUS_INCOMPLETE &&
-            $this->status !== self::STATUS_UNKNOWN;
+        return self::STATUS_NOT_ATTEMPTED !== $this->status &&
+            self::STATUS_INCOMPLETE !== $this->status &&
+            self::STATUS_UNKNOWN !== $this->status;
     }
 
     public function isSuccessful()
     {
-        return $this->status === self::STATUS_PASSED ||
-            $this->status === self::STATUS_COMPLETED;
+        return self::STATUS_PASSED === $this->status ||
+            self::STATUS_COMPLETED === $this->status;
     }
 }
