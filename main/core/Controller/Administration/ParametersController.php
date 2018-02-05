@@ -208,7 +208,7 @@ class ParametersController extends Controller
                     $platformConfig = $form->getData();
                     $portfolioOptions = $request->get('portfolioUrlOptions', 0);
 
-                    if ($portfolioOptions === 0 || $portfolioOptions === '0') {
+                    if (0 === $portfolioOptions || '0' === $portfolioOptions) {
                         $platformConfig->setPortfolioUrl(null);
                     }
 
@@ -641,7 +641,7 @@ class ParametersController extends Controller
             $this->configHandler->getPlatformConfig()
         );
 
-        if ($this->request->getMethod() === 'POST') {
+        if ('POST' === $this->request->getMethod()) {
             $form->handleRequest($this->request);
 
             if ($form->isValid()) {
@@ -716,7 +716,7 @@ class ParametersController extends Controller
 
             $errors = $this->dbSessionValidator->validate($data);
 
-            if (count($errors) === 0) {
+            if (0 === count($errors)) {
                 $this->configHandler->setParameters($data);
             } else {
                 foreach ($errors as $error) {
@@ -764,7 +764,7 @@ class ParametersController extends Controller
     public function deleteLogoAction($file)
     {
         try {
-            $this->get('claroline.common.logo_service')->deleteLogo($file);
+            $this->get('claroline.common.logo_service')->deleteLogo(urldecode($file));
 
             return new Response('true');
         } catch (\Exeption $e) {
@@ -1079,7 +1079,7 @@ class ParametersController extends Controller
     public function sendDatasAction($token)
     {
         if ($token === $this->configHandler->getParameter('token') &&
-            $this->configHandler->getParameter('confirm_send_datas') === 'OK') {
+            'OK' === $this->configHandler->getParameter('confirm_send_datas')) {
             $this->sendDatas(2);
 
             return new Response('success', 200);
