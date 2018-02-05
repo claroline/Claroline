@@ -1,13 +1,13 @@
 import React, {Component} from 'react'
-
-//this is not pretty
 import {connect} from 'react-redux'
-import {actions} from '#/main/core/data/form/actions.js'
-import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail.jsx'
 import has from 'lodash/has'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {actions} from '#/main/core/api/actions'
+import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail.jsx'
+
+// todo : merge with file type
 
 class Image extends Component {
   constructor(props) {
@@ -45,6 +45,7 @@ class Image extends Component {
             }}
           }
         />
+
         {has(this.props.value, 'id') &&
           <div className="file-thumbnail">
             <FileThumbnail
@@ -86,8 +87,8 @@ const ConnectedImage = connect(
     uploadFile(file, url, callback) {
       dispatch(actions.uploadFile(file, url, callback))
     },
-    deleteFile(file, url, callback) {
-      dispatch(actions.deleteFile(file, url, callback))
+    deleteFile(file, callback) {
+      dispatch(actions.deleteFile(file, callback))
     }
   })
 )(Image)

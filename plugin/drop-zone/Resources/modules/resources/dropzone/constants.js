@@ -53,7 +53,7 @@ const PLANNING_STATES = {
 
 // documents
 const DOCUMENT_TYPE_FILE     = 'file'
-const DOCUMENT_TYPE_TEXT     = 'text'
+const DOCUMENT_TYPE_TEXT     = 'html'
 const DOCUMENT_TYPE_URL      = 'url'
 const DOCUMENT_TYPE_RESOURCE = 'resource'
 

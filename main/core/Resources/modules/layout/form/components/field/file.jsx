@@ -1,13 +1,24 @@
 import React, {Component} from 'react'
-import {PropTypes as T} from 'prop-types'
+import {connect} from 'react-redux'
 import cloneDeep from 'lodash/cloneDeep'
+
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {actions} from '#/main/core/api/actions'
+
 import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail.jsx'
 
-export class File extends Component {
+class FileComponent extends Component {
   constructor(props) {
     super(props)
+
+    let value = []
+    if (props.value) {
+      value = props.multiple ? props.value : [props.value]
+    }
+
     this.state = {
-      files: props.value || []
+      files: value
     }
   }
 
@@ -33,17 +44,43 @@ export class File extends Component {
       if (this.isTypeAllowed(type)) {
         const files = cloneDeep(this.state.files)
         files.push(file)
-        this.setState({files: files}, () => this.props.onChange(this.state.files))
+
+        this.setState(
+          {files: files},
+          () => {
+            if (this.props.autoUpload) {
+              this.props.uploadFile(file, this.props.uploadUrl, () => this.onChange())
+            } else {
+              this.onChange()
+            }
+          }
+        )
       }
     }
   }
 
   removeFile(idx) {
     const files = cloneDeep(this.state.files)
-    files.splice(idx, 1)
-    this.setState({files: files}, () => this.props.onChange(this.state.files))
+    const deletedFile = files.splice(idx, 1)
+
+    this.setState(
+      {files: files},
+      () => {
+        if (this.props.autoUpload && deletedFile.id) {
+          this.props.deleteFile(deletedFile.id, () => this.onChange())
+        } else {
+          this.onChange()
+        }
+      })
   }
 
+  onChange() {
+    if (this.props.multiple) {
+      this.props.onChange(this.state.files)
+    } else {
+      this.props.onChange(this.state.files[0] || null)
+    }
+  }
 
   getFileType(mimeType) {
     const typeParts = mimeType.split('/')
@@ -62,58 +99,76 @@ export class File extends Component {
     return (
       <fieldset>
         <input
-          id={this.props.controlId}
+          id={this.props.id}
           type="file"
           className="form-control"
-          accept={`${this.props.types.join(',')}`}
+          accept={this.props.types.join(',')}
           ref={input => this.input = input}
           onChange={() => {
-
             if (this.input.files[0]) {
-              const file = this.input.files[0]
-              //this is default from Le Grand Maitre upload
-              this.addFile(file)
+              this.addFile(this.input.files[0])
             }
-          }
-        }
+          }}
         />
-        <div className="file-thumbnails">
-          {this.state.files.map((f, idx) =>
-            <FileThumbnail
-              key={`file-thumbnail-${idx}`}
-              type={!f.mimeType ? 'file' : this.getFileType(f.mimeType)}
-              data={f}
-              canEdit={false}
-              canExpand={false}
-              canDownload={false}
-              handleDelete={() => this.removeFile(idx)}
-            />
-          )}
-        </div>
+
+        {0 !== this.state.files.length &&
+          <div className="file-thumbnails">
+            {this.state.files.map((file, index) =>
+              <FileThumbnail
+                key={index}
+                type={!file.mimeType ? 'file' : this.getFileType(file.mimeType)}
+                data={file}
+                canEdit={false}
+                canExpand={false}
+                canDownload={false}
+                handleDelete={() => this.removeFile(index)}
+              />
+            )}
+          </div>
+        }
       </fieldset>
     )
   }
 }
 
-File.propTypes = {
-  controlId: T.string.isRequired,
-  value: T.array,
-  disabled: T.bool.isRequired,
-  types: T.arrayOf(T.string).isRequired,
-  max: T.number.isRequired,
-  onChange: T.func.isRequired,
-  autoUpload: T.bool.isRequired,
-  onUpload: T.func.isRequired,
-  uploadUrl: T.array.isRequired,
-  uploadFile: T.func.isRequired
-}
+implementPropTypes(FileComponent, FormFieldTypes, {
+  // more precise value type
+  value: T.oneOfType([T.array, T.object]),
+  // custom props
+  types: T.arrayOf(T.string),
 
-File.defaultProps = {
-  disabled: false,
+  multiple: T.bool,
+  min: T.number,
+  max: T.number,
+
+  autoUpload: T.bool,
+
+  // async method for autoUpload
+  uploadFile: T.func.isRequired,
+  deleteFile: T.func.isRequired
+}, {
   types: [],
-  max: 1,
+
+  multiple: false,
+
   autoUpload: true,
-  onUpload: () => {},
-  uploadFile: () => {},
+  onChange: () => {},
   uploadUrl: ['apiv2_file_upload']
+})
+
+//this is not pretty
+const File = connect(
+  null,
+  dispatch => ({
+    uploadFile(file, url, callback) {
+      dispatch(actions.uploadFile(file, url, callback))
+    },
+    deleteFile(file, url, callback) {
+      dispatch(actions.deleteFile(file, url, callback))
+    }
+  })
+)(FileComponent)
+
+export {
+  File
 }

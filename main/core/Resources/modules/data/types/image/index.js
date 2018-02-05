@@ -9,16 +9,11 @@ const IMAGE_TYPE = 'image'
 const imageDefinition = {
   meta: {
     type: IMAGE_TYPE,
-    creatable: true,
+    creatable: false,
     icon: 'fa fa-fw fa fa-picture-o',
     label: t('image'),
     description: t('image_desc')
   },
-  // nothing special to do
-  parse: (display) => display,
-  // nothing special to do
-  render: (raw) => raw,
-  validate: (value) => typeof value === 'string',
   components: {
     form: ImageGroup
   }

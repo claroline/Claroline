@@ -6,9 +6,9 @@ import {makeInstanceActionCreator} from '#/main/core/scaffolding/actions'
 import {tval} from '#/main/core/translation'
 import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as alertActions} from '#/main/core/layout/alert/actions'
+import {constants as alertConstants} from '#/main/core/layout/alert/constants'
+import {constants as actionConstants} from '#/main/core/layout/action/constants'
 import {select as formSelect} from '#/main/core/data/form/selectors'
-
-import {generateUrl} from '#/main/core/api/router'
 
 export const FORM_RESET          = 'FORM_RESET'
 export const FORM_SET_ERRORS     = 'FORM_SET_ERRORS'
@@ -38,40 +38,6 @@ actions.resetForm = (formName, data = {}, isNew = false) => ({
   isNew: isNew
 })
 
-actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload'], onSuccess = () => {}) => {
-  const formData = new FormData()
-  formData.append('file', file)
-  formData.append('fileName', file.name)
-  formData.append('sourceType', 'uploadedfile')
-
-  return ({
-    [API_REQUEST]: {
-      url: uploadUrl,
-      type: 'upload',
-      request: {
-        method: 'POST',
-        body: formData
-      },
-      success: (response) => {
-        onSuccess(response[0])
-      }
-    }
-  })
-}
-
-actions.deleteFile = (fileId, onSuccess = () => {}) => {
-
-  return ({
-    [API_REQUEST]: {
-      url: generateUrl('apiv2_uploadedfile_delete_bulk') + '?ids[]=' + fileId,
-      request: {
-        method: 'DELETE'
-      },
-      success: () => onSuccess({})
-    }
-  })
-}
-
 actions.saveForm = (formName, target) => (dispatch, getState) => {
   const formNew = formSelect.isNew(formSelect.form(getState(), formName))
   const formData = formSelect.data(formSelect.form(getState(), formName))
@@ -80,11 +46,16 @@ actions.saveForm = (formName, target) => (dispatch, getState) => {
   dispatch(actions.submitForm(formName))
 
   if (!isEmpty(formErrors)) {
+    const status = alertConstants.ALERT_STATUS_WARNING
+    const action = formNew ? actionConstants.ACTION_CREATE:actionConstants.ACTION_UPDATE
+    const alert = alertConstants.ALERT_ACTIONS[action][status]
+
     dispatch(alertActions.addAlert(
       formName+'validation',
-      'warning',
-      formNew ? 'create':'update',
-      formNew ? 'Création impossible':'Mise à jour impossible'
+      status,
+      action,
+      alert.title,
+      alert.message
     ))
   } else {
     dispatch({

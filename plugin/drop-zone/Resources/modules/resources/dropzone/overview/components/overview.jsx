@@ -6,13 +6,11 @@ import {trans} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_GENERIC_TYPE_PICKER} from '#/main/core/layout/modal'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 
 import {ResourceOverview} from '#/main/core/resource/components/overview.jsx'
 
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
-import {computeDropCompletion} from '#/plugin/drop-zone/resources/dropzone/utils'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 
@@ -60,8 +58,8 @@ const OverviewComponent = props =>
       // todo add show Drop
       {
         icon: 'fa fa-fw fa-upload icon-with-text-right',
-        label: trans('submit_my_copy', {}, 'dropzone'),
-        action: !props.myDrop || !props.myDrop.finished ? () => props.startDrop(props.dropzone.parameters.dropType, props.teams) : '#/my/drop',
+        label: trans(!props.myDrop ? 'start_evaluation' : (!props.myDrop.finished ? 'continue_evaluation' : 'show_evaluation'), {}, 'dropzone'),
+        action: !props.myDrop ? () => props.startDrop(props.dropzone.parameters.dropType, props.teams) : '#/my/drop',
         primary: !props.myDrop || !props.myDrop.finished,
         disabled: !props.dropEnabled,
         disabledMessages: props.dropDisabledMessages
@@ -134,14 +132,14 @@ const Overview = connect(
     teams: select.teams(state)
   }),
   (dispatch) => ({
-    startDrop(dropType, teams = []) {
+    startDrop(dropzoneId, dropType, teams = []) {
       switch (dropType) {
         case constants.DROP_TYPE_USER :
-          dispatch(actions.initializeMyDrop())
+          dispatch(actions.initializeMyDrop(dropzoneId))
           break
         case constants.DROP_TYPE_TEAM :
           if (teams.length === 1) {
-            dispatch(actions.initializeMyDrop(teams[0].id))
+            dispatch(actions.initializeMyDrop(dropzoneId, teams[0].id))
           } else {
             dispatch(
               modalActions.showModal(MODAL_GENERIC_TYPE_PICKER, {
@@ -151,7 +149,7 @@ const Overview = connect(
                   name: t.name,
                   icon: 'fa fa-users'
                 })),
-                handleSelect: (type) => dispatch(actions.initializeMyDrop(type.type))
+                handleSelect: (type) => dispatch(actions.initializeMyDrop(dropzoneId, type.type))
               })
             )
           }

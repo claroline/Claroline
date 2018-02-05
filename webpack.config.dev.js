@@ -43,7 +43,7 @@ Object.keys(collectedEntries).forEach(key => Encore.addEntry(key, collectedEntri
 var config = Encore.getWebpackConfig()
 
 config.watchOptions = {
-  poll: true,
+  poll: 2000,
   ignored: /web\/packages|node_modules/
 }
 
