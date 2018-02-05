@@ -174,6 +174,16 @@ abstract class PluginBundle extends InstallableBundle implements PluginBundleInt
     }
 
     /**
+     * Returns true if the plugin has to be hidden.
+     *
+     * @return bool
+     */
+    public function isHidden()
+    {
+        return false;
+    }
+
+    /**
      * Returns the version file path.
      *
      * @return bool

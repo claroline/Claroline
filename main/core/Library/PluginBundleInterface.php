@@ -21,12 +21,22 @@ use Symfony\Component\HttpKernel\Bundle\BundleInterface;
 interface PluginBundleInterface extends BundleInterface, AutoConfigurableInterface, InstallableInterface
 {
     public function getVendorName();
+
     public function getBundleName();
+
     public function getConfigFile();
+
     public function getImgFolder();
+
     public function getAssetsFolder();
+
     public function getRequiredExtensions();
+
     public function getRequiredPlugins();
+
     public function getExtraRequirements();
+
     public function isActiveByDefault();
+
+    public function isHidden();
 }

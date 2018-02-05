@@ -172,8 +172,7 @@ class ThumbnailCreator
         $stampImg = null,
         $targetDirPath = null,
         $filename = null // Just the filename, no extension
-)
-    {
+) {
         if (!$this->isGdLoaded) {
             throw new UnloadedExtensionException('The GD extension is missing \n');
         }
@@ -221,14 +220,17 @@ class ThumbnailCreator
             }
             $this->fs->dumpFile($dir, $im);
         } else {
-            if ($stampExtension === 'svg') {
-                $stamp = $stamp->toRasterImage(imagesx($im), imagesy($im));
+            try {
+                if ($stampExtension === 'svg') {
+                    $stamp = $stamp->toRasterImage(imagesx($im), imagesy($im));
+                }
+                imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));
+                $funcname = "image{$extension}";
+                $funcname($im, $dir);
+                imagedestroy($im);
+                imagedestroy($stamp);
+            } catch (\Exception $e) {
             }
-            imagecopy($im, $stamp, 0, imagesy($im) - imagesy($stamp), 0, 0, imagesx($stamp), imagesy($stamp));
-            $funcname = "image{$extension}";
-            $funcname($im, $dir);
-            imagedestroy($im);
-            imagedestroy($stamp);
         }
 
         return $dir;
