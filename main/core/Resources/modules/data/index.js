@@ -16,6 +16,7 @@ import {PASSWORD_TYPE, passwordDefinition} from '#/main/core/data/types/password
 import {STRING_TYPE,   stringDefinition}   from '#/main/core/data/types/string'
 import {USERNAME_TYPE, usernameDefinition} from '#/main/core/data/types/username'
 import {TRANSLATION_TYPE, translationDefinition} from '#/main/core/data/types/translation'
+import {TRANSLATED_TYPE, translatedDefinition}   from '#/main/core/data/types/translated'
 
 // the list of registered data types
 const dataTypes = {}
@@ -36,7 +37,8 @@ registerType(NUMBER_TYPE,   numberDefinition)
 registerType(PASSWORD_TYPE, passwordDefinition)
 registerType(STRING_TYPE,   stringDefinition)
 registerType(TRANSLATION_TYPE, translationDefinition)
-registerType(USERNAME_TYPE, usernameDefinition)
+registerType(TRANSLATED_TYPE,  translatedDefinition)
+registerType(USERNAME_TYPE,    usernameDefinition)
 
 /**
  * Validates & registers a data type.
