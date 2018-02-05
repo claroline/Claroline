@@ -18,7 +18,7 @@ import '../modules/datepickerDirective'
 import '../modules/badgePickerDirective'
 
 import 'angular-strap'
-import 'angular-ui-resource-picker/angular-resource-picker'
+import '#/main/core/innova/angular-resource-picker'
 import 'angular-ui-bootstrap'
 
 var widgetsApp = angular.module('widgetsApp', ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.tinymce',

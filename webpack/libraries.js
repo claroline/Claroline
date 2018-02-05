@@ -30,9 +30,7 @@ module.exports = {
     'angular-ui-router',
     'ui-select',
     'angular-ui-tinymce',
-    'angular-ui-translation/angular-translation',
     'angular-ui-tree',
-    'angular-ui-pageslide/angular-ui-pageslide',
     'ng-file-upload'
   ]
 }
