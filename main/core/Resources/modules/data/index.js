@@ -9,14 +9,15 @@ import {EMAIL_TYPE,       emailDefinition}       from '#/main/core/data/types/em
 import {ENUM_TYPE,        enumDefinition}        from '#/main/core/data/types/enum'
 import {FILE_TYPE,        fileDefinition}        from '#/main/core/data/types/file'
 import {HTML_TYPE,        htmlDefinition}        from '#/main/core/data/types/html'
-import {IMAGE_TYPE,       imageDefinition}    from '#/main/core/data/types/image'
+import {IMAGE_TYPE,       imageDefinition}       from '#/main/core/data/types/image'
 import {IP_TYPE,          ipDefinition}          from '#/main/core/data/types/ip'
 import {LOCALE_TYPE,      localeDefinition}      from '#/main/core/data/types/locale'
 import {NUMBER_TYPE,      numberDefinition}      from '#/main/core/data/types/number'
 import {PASSWORD_TYPE,    passwordDefinition}    from '#/main/core/data/types/password'
+import {SCORE_TYPE,       scoreDefinition}       from '#/main/core/data/types/score'
 import {STRING_TYPE,      stringDefinition}      from '#/main/core/data/types/string'
-import {USERNAME_TYPE,    usernameDefinition} from '#/main/core/data/types/username'
 import {TRANSLATION_TYPE, translationDefinition} from '#/main/core/data/types/translation'
+import {USERNAME_TYPE,    usernameDefinition}    from '#/main/core/data/types/username'
 
 // the list of registered data types
 const dataTypes = {}
@@ -36,6 +37,7 @@ registerType(IP_TYPE,          ipDefinition)
 registerType(LOCALE_TYPE,      localeDefinition)
 registerType(NUMBER_TYPE,      numberDefinition)
 registerType(PASSWORD_TYPE,    passwordDefinition)
+registerType(SCORE_TYPE,       scoreDefinition)
 registerType(STRING_TYPE,      stringDefinition)
 registerType(TRANSLATION_TYPE, translationDefinition)
 registerType(USERNAME_TYPE,    usernameDefinition)

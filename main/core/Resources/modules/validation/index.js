@@ -8,7 +8,7 @@ function notEmpty(value) {
   if (
     undefined === value
     || null === value
-    || (typeof value === 'object' && isEmpty(value)) // objects and arrays
+    || (!(value instanceof File) && typeof value === 'object' && isEmpty(value)) // objects and arrays (lodash isEmpty always returns true for files)
     || (typeof value === 'string' && ('' === value || '' === value.trim() || isHtmlEmpty(value))) // strings and HTML
   ) {
     return tval('This value should not be blank.')

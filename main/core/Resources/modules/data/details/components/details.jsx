@@ -10,6 +10,7 @@ import {getTypeOrDefault} from '#/main/core/data'
 import {DataDetailsSection as DataDetailsSectionTypes} from '#/main/core/data/details/prop-types'
 import {createDetailsDefinition} from '#/main/core/data/details/utils'
 
+// todo add `calculated` value like Forms and Lists
 // todo there are big c/c from Form component but I don't know if we can do better
 
 const DataDetailsField = props => {

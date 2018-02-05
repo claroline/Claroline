@@ -44,7 +44,7 @@ const WorkspaceTabComponent = props =>
   <Routes
     routes={[
       {
-        path: '/',
+        path: '/workspaces',
         exact: true,
         component: Workspaces
       }, {

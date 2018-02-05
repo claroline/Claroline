@@ -18,7 +18,7 @@ const EvaluationStatus = props =>
     </h3>
 
     <div className="evaluation-planning">
-      {false && props.children}
+      {props.children}
     </div>
   </li>
 
@@ -37,7 +37,7 @@ const Timeline = props =>
       active={constants.STATE_NOT_STARTED === props.state}
     >
       <span>
-        L'évaluation commencera le : <b>08/02/2018 08:30</b>
+        {trans('dropzone_start', {}, 'dropzone')}: <b>08/02/2018 08:30</b>
       </span>
     </EvaluationStatus>
 
@@ -49,7 +49,7 @@ const Timeline = props =>
         constants.STATE_ALLOW_DROP_AND_PEER_REVIEW
       ].indexOf(props.state) > -1}
     >
-      La période est définie par les gestionnaires
+      {trans('manager_defined_period', {}, 'dropzone')}
     </EvaluationStatus>
 
     {constants.REVIEW_TYPE_PEER === props.reviewType &&
@@ -61,7 +61,7 @@ const Timeline = props =>
           constants.STATE_ALLOW_DROP_AND_PEER_REVIEW
         ].indexOf(props.state) > -1}
       >
-        La période sera définie par les gestionnaires
+        {trans('manager_defined_period', {}, 'dropzone')}
       </EvaluationStatus>
     }
 
@@ -71,7 +71,7 @@ const Timeline = props =>
       active={constants.STATE_FINISHED === props.state}
     >
         <span>
-          L'évaluation se terminera le : <b>28/02/2018 18:30</b>
+          {trans('dropzone_end', {}, 'dropzone')} : <b>28/02/2018 18:30</b>
         </span>
     </EvaluationStatus>
   </ul>

@@ -136,7 +136,7 @@ class ResourceEvaluationManager
         $incOpenings = false
     ) {
         $rue = $this->getResourceUserEvaluation($node, $user);
-        $statusPriority = AbstractResourceEvaluation::STATUS_PRORITY;
+        $statusPriority = AbstractResourceEvaluation::STATUS_PRIORITY;
 
         if (!empty($date)) {
             $rue->setDate($date);
