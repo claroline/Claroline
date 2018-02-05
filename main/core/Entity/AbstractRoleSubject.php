@@ -79,7 +79,7 @@ abstract class AbstractRoleSubject
      */
     public function getRoles()
     {
-        if (count($this->rolesStringAsArray) > 0) {
+        if (is_array($this->rolesStringAsArray) && count($this->rolesStringAsArray) > 0) {
             return $this->rolesStringAsArray;
         }
 
@@ -88,6 +88,8 @@ abstract class AbstractRoleSubject
         foreach ($this->getEntityRoles(true) as $role) {
             $roleNames[] = $role->getName();
         }
+
+        $this->rolesStringAsArray = $roleNames;
 
         return $roleNames;
     }

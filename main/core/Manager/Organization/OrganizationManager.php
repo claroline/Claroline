@@ -48,7 +48,7 @@ class OrganizationManager
 
     public function createDefault($force = false)
     {
-        if (!$force && count($this->getDefault()) > 0) {
+        if (!$force && $this->getDefault()) {
             return;
         }
         $this->log('Adding default organization...');

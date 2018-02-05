@@ -10,6 +10,7 @@
  */
 $binDir = __DIR__.'/../../../../../../bin';
 $csFixer = realpath("{$binDir}/php-cs-fixer");
+$configFile = __DIR__.'/../config/phpcs.php';
 
 if (!$csFixer) {
     echo "Cannot found php-cs-fixer (looked in {$binDir}) \n";
@@ -29,7 +30,7 @@ foreach ($files as $file) {
 
         if ($return === 0) {
             // fix file and add it back
-            exec("{$csFixer} fix {$fileName} --level=symfony --fixers=ordered_use,short_array_syntax; git add {$fileName}");
+            exec("{$csFixer} fix {$fileName} --config={$configFile}; git add {$fileName}");
         } else {
             echo implode("\n", $output)."\n";
             exit(1);

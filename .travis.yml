@@ -48,7 +48,7 @@ before_install:
   # get node >=5.6 (manual upgrade of nvm is currently required, pre-installed version is buggy)
   - git clone https://github.com/creationix/nvm.git /tmp/.nvm
   - source /tmp/.nvm/nvm.sh
-  - nvm install 6.12
+  - nvm install 8.9.4
   - npm install yarn
 
 before_script:
@@ -76,7 +76,7 @@ script:
   # run static analysis tools on modified files if needed
   - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/phpmd --exclude main/core/Resources/bundle-creator,main/web-installer `echo "$DIFF" | xargs | sed -e :a -e '$!N; s/ /,/; ta'` text phpmd.xml; fi
   - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/md `echo "$DIFF" | tr '\n' ' '`; fi
-  - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/php-cs-fixer fix --dry-run --diff --config-file=main/dev/Resources/travis/php-cs.php; fi
+  - if [ "$DIFF" != '' ]; then $ROOT/vendor/bin/php-cs-fixer fix --dry-run --diff --config=main/dev/Resources/travis/php-cs.php; fi
   - if [ "$DIFF" != '' ]; then $ROOT/node_modules/.bin/eslint --ext js --ext jsx `echo "$DIFF" | grep 'Resources/modules/.\+\.js' | tr '\n' ' '`; fi
   # launch php tests
   - SYMFONY_DEPRECATIONS_HELPER=weak $ROOT/vendor/bin/phpunit

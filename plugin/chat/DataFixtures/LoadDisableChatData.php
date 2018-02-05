@@ -21,8 +21,10 @@ class LoadDisableChatData extends AbstractFixture
         $chatType = $manager->getRepository('ClarolineCoreBundle:Resource\ResourceType')->
             findOneByName('claroline_chat_room');
 
-        $chatType->setIsEnabled(false);
-        $manager->persist($chatType);
-        $manager->flush();
+        if ($chatType) {
+            $chatType->setIsEnabled(false);
+            $manager->persist($chatType);
+            $manager->flush();
+        }
     }
 }

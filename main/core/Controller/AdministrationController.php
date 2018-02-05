@@ -12,11 +12,11 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\CoreBundle\Event\StrictDispatcher;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use Claroline\CoreBundle\Manager\ToolManager;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -66,7 +66,7 @@ class AdministrationController extends Controller
             throw new AccessDeniedException();
         }
 
-        return $this->redirect($this->generateUrl('claro_admin_open_tool', array('toolName' => $tools[0]->getName())));
+        return $this->redirect($this->generateUrl('claro_admin_open_tool', ['toolName' => $tools[0]->getName()]));
     }
 
     /**
@@ -85,7 +85,7 @@ class AdministrationController extends Controller
         $event = $this->eventDispatcher->dispatch(
             'administration_tool_'.$toolName,
             'OpenAdministrationTool',
-            array('toolName' => $toolName)
+            ['toolName' => $toolName]
         );
 
         return $event->getResponse();
@@ -100,6 +100,6 @@ class AdministrationController extends Controller
     {
         $tools = $this->toolManager->getAdminToolsByRoles($this->tokenStorage->getToken()->getRoles());
 
-        return array('tools' => $tools);
+        return ['tools' => $tools];
     }
 }
