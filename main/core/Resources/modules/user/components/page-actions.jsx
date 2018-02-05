@@ -14,28 +14,21 @@ import {
 } from '#/main/core/layout/page'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
-const EditGroupActionsComponent = props => {
-  const isEditorOpened = !!matchPath(props.location.pathname, {
-    path: '/edit'
-  })
-
-  return (
-    <PageGroupActions>
-      <FormPageActionsContainer
-        formName="user"
-        opened={isEditorOpened}
-        target={(user) => ['apiv2_user_update', {id: user.id}]}
-        open={{
-          label: t('edit_profile'),
-          action: '#/edit'
-        }}
-        cancel={{
-          action: () => navigate('/show')
-        }}
-      />
-    </PageGroupActions>
-  )
-}
+const EditGroupActionsComponent = props =>
+  <PageGroupActions>
+    <FormPageActionsContainer
+      formName="user"
+      opened={!!matchPath(props.location.pathname, {path: '/edit'})}
+      target={(user) => ['apiv2_user_update', {id: user.id}]}
+      open={{
+        label: t('edit_profile'),
+        action: '#/edit'
+      }}
+      cancel={{
+        action: () => navigate('/show')
+      }}
+    />
+  </PageGroupActions>
 
 EditGroupActionsComponent.propTypes = {
   location: T.shape({
@@ -53,7 +46,7 @@ const UserPageActions = props => {
       group: t('user_management'),
       displayed: props.user.rights.current.edit,
       action: () => props.showModal(MODAL_CHANGE_PASSWORD, {
-
+        changePassword: (password) => props.updatePassword(props.user, password)
       })
     }, {
       icon: 'fa fa-fw fa-trash-o',
@@ -118,7 +111,8 @@ UserPageActions.propTypes = {
     }).isRequired
   }).isRequired,
   customActions: T.array,
-  showModal: T.func.isRequired
+  showModal: T.func.isRequired,
+  updatePassword: T.func.isRequired
 }
 
 UserPageActions.defaultProps = {

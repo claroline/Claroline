@@ -297,7 +297,12 @@ class MailManager
           'api_key' => $this->ch->getParameter('mailer_api_key'),
         ];
 
-        $test = count($this->mailer->test($data) === 0) ? true : false;
+        if (is_array($this->mailer->test($data))) {
+            $test = count($this->mailer->test($data)) === 0 ? true : false;
+        } else {
+            $test = is_null($test);
+        }
+
         $event->addCacheParameter(
           'is_mailer_available',
           $test

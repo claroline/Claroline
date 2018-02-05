@@ -7,7 +7,10 @@ import {FORM_RESET} from '#/main/core/data/form/actions'
 
 const workspacesReducer = combineReducers({
   picker: makeListReducer('workspaces.picker'),
-  list: makeListReducer('workspaces.list'),
+  list: makeListReducer(
+    'workspaces.list',
+    {filters: [{property: 'meta.personal', value: false}, {property: 'meta.model', value: false}]}
+  ),
   current: makeFormReducer('workspaces.current', {}, {
     organizations: makeListReducer('workspaces.current.organizations', {}, {
       invalidated: makeReducer(false, {

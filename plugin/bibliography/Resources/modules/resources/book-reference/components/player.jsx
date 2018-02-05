@@ -1,63 +1,64 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
 
-const Player = props =>
-  <div className="book-reference">
-    <div>
-      {props.bookReference.author}
-    </div>
-    <div>
-      {props.bookReference.isbn}
-    </div>
-    <div>
-      {props.bookReference.abstract}
-    </div>
-    <div>
-      {props.bookReference.publisher}
-    </div>
-    <div>
-      {props.bookReference.printer}
-    </div>
-    <div>
-      {props.bookReference.publicationYear}
-    </div>
-    <div>
-      {props.bookReference.language}
-    </div>
-    <div>
-      {props.bookReference.pages}
-    </div>
-    <div>
-      {props.bookReference.url}
-    </div>
-    <div>
-      {props.bookReference.cover}
-    </div>
-  </div>
+import {t, trans} from '#/main/core/translation'
+import {DataDetailsContainer} from '#/main/core/data/details/containers/details.jsx'
 
-Player.propTypes = {
-  bookReference: T.shape({
-    author: T.string,
-    isbn: T.string,
-    abstract: T.string,
-    publisher: T.string,
-    printer: T.string,
-    publicationYear: T.int,
-    language: T.string,
-    pages: T.int,
-    url: T.string,
-    cover: T.string
-  }).isRequired
-}
-
-const ConnectedPlayer = connect(
-  state => ({
-    'bookReference': state.bookReference
-  }),
-  null
-)(Player)
+const Player = () =>
+  <DataDetailsContainer
+    level={3}
+    name="bookReference"
+    sections={[
+      {
+        id: 'general',
+        title: t('general'),
+        primary: true,
+        fields: [
+          {
+            name: 'author',
+            type: 'string',
+            label: trans('author', {}, 'icap_bibliography')
+          }, {
+            name: 'isbn',
+            type: 'string',
+            label: trans('isbn', {}, 'icap_bibliography')
+          }, {
+            name: 'abstract',
+            type: 'string',
+            label: trans('abstract', {}, 'icap_bibliography')
+          }, {
+            name: 'publisher',
+            type: 'string',
+            label: trans('publisher', {}, 'icap_bibliography')
+          }, {
+            name: 'printer',
+            type: 'string',
+            label: trans('printer', {}, 'icap_bibliography')
+          }, {
+            name: 'publicationYear',
+            type: 'number',
+            label: trans('publication_year', {}, 'icap_bibliography')
+          }, {
+            name: 'language',
+            type: 'string',
+            label: trans('language', {}, 'icap_bibliography')
+          }, {
+            name: 'pages',
+            type: 'number',
+            label: trans('page_count', {}, 'icap_bibliography')
+          }, {
+            name: 'url',
+            type: 'string',
+            label: trans('url', {}, 'icap_bibliography')
+          }, {
+            name: 'cover',
+            type: 'string',
+            label: trans('cover_url', {}, 'icap_bibliography')
+          }
+        ]
+      }
+    ]}
+  />
 
 export {
-  ConnectedPlayer as Player
+  Player
 }

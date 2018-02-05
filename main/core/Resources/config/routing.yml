@@ -230,11 +230,6 @@ claro_admin_workspaces:
     resource: "@ClarolineCoreBundle/Controller/Administration/WorkspaceController.php"
     type: annotation
 
-claro_admin_roles:
-    prefix: admin/roles
-    resource: "@ClarolineCoreBundle/Controller/Administration/RolesController.php"
-    type: annotation
-
 claro_admin_users:
     prefix: admin/users
     resource: "@ClarolineCoreBundle/Controller/Administration/UsersController.php"

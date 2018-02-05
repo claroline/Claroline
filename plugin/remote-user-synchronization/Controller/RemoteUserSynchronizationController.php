@@ -99,10 +99,10 @@ class RemoteUserSynchronizationController extends Controller
         $token = isset($datas['token']) ? $datas['token'] : null;
         $clientName = isset($datas['client']) ? $datas['client'] : null;
         $username = isset($datas['username']) ? $datas['username'] : null;
-        $firstName = isset($datas['firstName']) ? utf8_encode($datas['firstName']) : null;
-        $lastName = isset($datas['lastName']) ? utf8_encode($datas['lastName']) : null;
+        $firstName = isset($datas['firstName']) ? $datas['firstName'] : null;
+        $lastName = isset($datas['lastName']) ? $datas['lastName'] : null;
         $email = isset($datas['email']) ? $datas['email'] : null;
-        $password = isset($datas['password']) ? utf8_encode($datas['password']) : null;
+        $password = isset($datas['password']) ? $datas['password'] : null;
         $workspacesTab = isset($datas['workspaces']) ? $datas['workspaces'] : [];
         $userId = isset($datas['userId']) ? $datas['userId'] : null;
         $workspacesAddOnly = isset($datas['workspacesAddOnly']) ? boolval($datas['workspacesAddOnly']) : false;

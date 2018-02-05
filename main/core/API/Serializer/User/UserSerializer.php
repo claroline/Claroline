@@ -110,9 +110,10 @@ class UserSerializer
             'firstName' => $user->getFirstName(),
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
-            'picture' => $user->getPicture(),
+            'picture' => $this->serializePicture($user),
             'email' => $user->getMail(),
             'administrativeCode' => $user->getAdministrativeCode(),
+            'phone' => $user->getPhone(),
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
@@ -144,7 +145,7 @@ class UserSerializer
             $fields = $finder->search(
                 'Claroline\CoreBundle\Entity\Facet\FieldFacetValue',
                 ['filters' => ['user' => $user->getUuid()]],
-                //should be an option but claco form messes thubgs up
+                //should be an option but claco form messes things up
                 ['minimal']
               );
 
@@ -154,6 +155,22 @@ class UserSerializer
         }
 
         return $serialized;
+    }
+
+    /**
+     * Serialize the user picture.
+     *
+     * @param User $user
+     */
+    private function serializePicture(User $user)
+    {
+        $file = $this->container->get('claroline.persistence.object_manager')
+          ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
+          ->findOneByUrl($user->getPicture());
+
+        if ($file) {
+            return $this->container->get('claroline.api.serializer')->serialize($file);
+        }
     }
 
     /**
@@ -177,6 +194,7 @@ class UserSerializer
             'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
             'enabled' => $user->isEnabled(),
             'removed' => $user->isRemoved(),
+            'locale' => $user->getLocale(),
         ];
     }
 
@@ -282,6 +300,15 @@ class UserSerializer
         $this->sipe('email', 'setMail', $data, $object);
         $this->sipe('plainPassword', 'setPlainPassword', $data, $object);
         $this->sipe('meta.enabled', 'setIsEnabled', $data, $object);
+        $this->sipe('meta.locale', 'setLocale', $data, $object);
+        $this->sipe('meta.description', 'setDescription', $data, $object);
+        $this->sipe('picture.url', 'setPicture', $data, $object);
+
+        if (isset($data['restrictions']['accessibleUntil'])) {
+            if ($date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $data['restrictions']['accessibleUntil'])) {
+                $object->setExpirationDate($date);
+            }
+        }
 
         if (isset($data['plainPassword'])) {
             $password = $this->container->get('security.encoder_factory')
@@ -316,6 +343,7 @@ class UserSerializer
                     }
 
                     $fieldFacetValue = $serializer->deserialize('Claroline\CoreBundle\Entity\Facet\FieldFacetValue', $fieldFacetValue);
+                    $fieldFacetValue->setUser($user);
                     $user->addFieldFacet($fieldFacetValue);
                 }
             }

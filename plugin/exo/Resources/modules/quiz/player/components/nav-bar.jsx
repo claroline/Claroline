@@ -1,11 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import {isQuestionType} from './../../../items/item-types'
 
 import {t, tex} from '#/main/core/translation'
 
 const PreviousButton = props =>
   <button className="btn btn-previous btn-default" onClick={props.onClick}>
-    <span className="fa fa-fw fa-angle-double-left"></span>
+    <span className="fa fa-fw fa-angle-double-left" />
     {t('previous')}
   </button>
 
@@ -16,7 +17,7 @@ PreviousButton.propTypes = {
 const NextButton = props =>
   <button className="btn btn-next btn-default" onClick={props.onClick}>
     {t('next')}
-    <span className="fa fa-fw fa-angle-double-right"></span>
+    <span className="fa fa-fw fa-angle-double-right" />
   </button>
 
 NextButton.propTypes = {
@@ -26,7 +27,7 @@ NextButton.propTypes = {
 const ValidateButton = props =>
   <button className="btn btn-next btn-validate btn-default" onClick={props.onClick}>
     {t('validate')}
-    <span className="fa fa-fw fa-angle-double-right"></span>
+    <span className="fa fa-fw fa-angle-double-right" />
   </button>
 
 ValidateButton.propTypes = {
@@ -35,7 +36,7 @@ ValidateButton.propTypes = {
 
 const SubmitButton = props =>
   <button className="btn btn-submit btn-success" onClick={props.onClick}>
-    <span className="fa fa-fw fa-check"></span>
+    <span className="fa fa-fw fa-check" />
     {t('validate')}
   </button>
 
@@ -45,7 +46,7 @@ SubmitButton.propTypes = {
 
 const FinishButton = props =>
   <button className="btn btn-finish btn-primary" onClick={props.onClick}>
-    <span className="fa fa-fw fa-sign-out"></span>
+    <span className="fa fa-fw fa-sign-out" />
     {tex('finish')}
   </button>
 
@@ -59,9 +60,11 @@ const canGoForward = (step, answers, mandatoryQuestions) => {
 
   items.forEach(item => {
     let hasAnswer = Boolean(answers[item.id] && answers[item.id].data)
-    let goForward = mandatoryQuestions ?
+    let goForward = isQuestionType(item.type) ?
+      mandatoryQuestions ?
       item.meta.mandatory ? true: hasAnswer:
-      item.meta.mandatory ? hasAnswer: true
+      item.meta.mandatory ? hasAnswer: true:
+      true
 
     if (!goForward) {
       canGoForward = false
@@ -105,7 +108,7 @@ ForwardButton.propTypes = {
   feedbackEnabled: T.bool.isRequired,
   currentStepSend: T.bool.isRequired,
   mandatoryQuestions: T.bool.isRequired,
-  answers: T.array
+  answers: T.object
 }
 
 const LastQuestionButton = props =>
@@ -181,7 +184,7 @@ PlayerNav.propTypes = {
   showFeedback: T.bool.isRequired,
   feedbackEnabled: T.bool.isRequired,
   currentStepSend: T.bool.isRequired,
-  answers: T.array.isRequired,
+  answers: T.object.isRequired,
   mandatoryQuestions: T.bool.isRequired
 }
 
@@ -190,4 +193,6 @@ PlayerNav.defaultProps = {
   next: null
 }
 
-export {PlayerNav}
+export {
+  PlayerNav
+}

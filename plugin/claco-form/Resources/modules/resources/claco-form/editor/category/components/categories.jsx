@@ -82,7 +82,7 @@ class Categories extends Component {
                     <td>
                       {category.details && category.details.color &&
                         <span>
-                          <span className="fa fa-w fa-circle" style={{color: category.details.color}}>
+                          <span className="fa fa-fw fa-circle" style={{color: category.details.color}}>
                           </span>
                           &nbsp;
                         </span>
@@ -94,26 +94,26 @@ class Categories extends Component {
                     </td>
                     <td className="text-center">
                       {category.details && category.details.notify_addition ?
-                        <span className="fa fa-w fa-check text-success"></span> :
-                        <span className="fa fa-w fa-times text-danger"></span>
+                        <span className="fa fa-fw fa-check text-success"></span> :
+                        <span className="fa fa-fw fa-times text-danger"></span>
                       }
                     </td>
                     <td className="text-center">
                       {category.details && category.details.notify_edition ?
-                        <span className="fa fa-w fa-check text-success"></span> :
-                        <span className="fa fa-w fa-times text-danger"></span>
+                        <span className="fa fa-fw fa-check text-success"></span> :
+                        <span className="fa fa-fw fa-times text-danger"></span>
                       }
                     </td>
                     <td className="text-center">
                       {category.details && category.details.notify_removal ?
-                        <span className="fa fa-w fa-check text-success"></span> :
-                        <span className="fa fa-w fa-times text-danger"></span>
+                        <span className="fa fa-fw fa-check text-success"></span> :
+                        <span className="fa fa-fw fa-times text-danger"></span>
                       }
                     </td>
                     <td className="text-center">
                       {category.details && category.details.notify_pending_comment ?
-                        <span className="fa fa-w fa-check text-success"></span> :
-                        <span className="fa fa-w fa-times text-danger"></span>
+                        <span className="fa fa-fw fa-check text-success"></span> :
+                        <span className="fa fa-fw fa-times text-danger"></span>
                       }
                     </td>
                     <td>
@@ -121,14 +121,14 @@ class Categories extends Component {
                         className="btn btn-default btn-sm"
                         onClick={() => this.showCategoryEditionForm(category)}
                       >
-                        <span className="fa fa-w fa-pencil"></span>
+                        <span className="fa fa-fw fa-pencil"></span>
                       </button>
                       &nbsp;
                       <button
                         className="btn btn-danger btn-sm"
                         onClick={() => this.showCategoryDeletion(category)}
                       >
-                        <span className="fa fa-w fa-trash"></span>
+                        <span className="fa fa-fw fa-trash"></span>
                       </button>
                     </td>
                   </tr>
@@ -137,7 +137,7 @@ class Categories extends Component {
             </table>
 
             <button className="btn btn-primary" onClick={() => this.showCategoryCreationForm()}>
-              <span className="fa fa-w fa-plus"></span>
+              <span className="fa fa-fw fa-plus"></span>
               &nbsp;
               {trans('create_a_category', {}, 'clacoform')}
             </button>

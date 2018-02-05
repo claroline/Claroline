@@ -48,7 +48,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
      *
      * @return ResourceNode|null
      */
-    public function find($id)
+    public function find($id, $lockMode = null, $lockVersion = null)
     {
         $qb = $this->createQueryBuilder('n');
 
@@ -151,7 +151,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
                 $item[$key]['mask'] = 65535;
                 $returnedArray[] = $item[$key];
             }
-        //otherwise only show visible children
+            //otherwise only show visible children
         } else {
             $this->builder->selectAsArray(true)
                 ->whereParentIs($parent)
@@ -469,7 +469,7 @@ class ResourceNodeRepository extends MaterializedPathRepository implements Conta
         return $resultArray;
     }
 
-    private function addFilters(ResourceQueryBuilder $builder,  array $criteria, array $roles = null)
+    private function addFilters(ResourceQueryBuilder $builder, array $criteria, array $roles = null)
     {
         if ($roles) {
             if (!in_array('ROLE_ADMIN', $roles)) {

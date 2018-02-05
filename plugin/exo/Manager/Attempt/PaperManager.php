@@ -438,7 +438,8 @@ class PaperManager
     public function generateResourceEvaluation(Paper $paper, $finished)
     {
         $totalScoreOn = $paper->getExercise()->getTotalScoreOn();
-        $score = $this->calculateScore($paper, $totalScoreOn);
+        $total = $totalScoreOn ? $totalScoreOn : $this->calculateTotal($paper);
+        $score = $this->calculateScore($paper, $total);
         $successScore = $paper->getExercise()->getSuccessScore();
         $data = [];
         $data['paper'] = [
@@ -466,7 +467,7 @@ class PaperManager
             $status,
             $score,
             null,
-            $totalScoreOn,
+            $total,
             null,
             null,
             null,

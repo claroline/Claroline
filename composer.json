@@ -4,7 +4,7 @@
     "keywords": ["Claroline", "Distribution"],
     "homepage": "http://www.claroline.net",
     "type": "claroline-core",
-    "license": "GPL-3.0+",
+    "license": "GPL-3.0-or-later",
     "authors": [{
         "name": "Claroline development team",
         "email": "dev@claroline.net",
@@ -59,10 +59,10 @@
         "stof/doctrine-extensions-bundle": "1.1.0",
         "symfony/assetic-bundle": "2.8.0",
         "symfony/monolog-bundle": "2.12.0",
-        "symfony/symfony": "2.7.22",
+        "symfony/symfony": "2.7.38",
         "symfony/swiftmailer-bundle": "2.4.0",
         "twig/extensions": "1.4.1",
-        "twig/twig": "1.30.0",
+        "twig/twig": "1.35.0",
         "werkint/jsmin": "1.0.0",
         "white-october/pagerfanta-bundle": "1.0.2",
         "willdurand/js-translation-bundle": "2.6.1",
@@ -127,7 +127,8 @@
         "innova/media-resource-bundle": "*",
         "ujm/exo-bundle": "*",
         "icap/lesson-bundle": "*",
-        "icap/inwicast-plugin-bundle": "*"
+        "icap/inwicast-plugin-bundle": "*",
+        "claroline/drop-zone-bundle": "*"
     },
     "autoload": {
         "psr-4": {
@@ -190,7 +191,8 @@
             "Icap\\BibliographyBundle\\": "plugin/bibliography",
             "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization",
             "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button",
-            "Icap\\InwicastBundle\\": "plugin/inwicast"
+            "Icap\\InwicastBundle\\": "plugin/inwicast",
+            "Claroline\\DropZoneBundle\\": "plugin/drop-zone"
         }
     },
     "extra": {
@@ -252,7 +254,8 @@
             "Icap\\BibliographyBundle\\IcapBibliographyBundle",
             "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle",
             "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle",
-            "Icap\\InwicastBundle\\IcapInwicastBundle"
+            "Icap\\InwicastBundle\\IcapInwicastBundle",
+            "Claroline\\DropZoneBundle\\ClarolineDropZoneBundle"
         ]
     }
 }

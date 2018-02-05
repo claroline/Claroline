@@ -1,0 +1,17 @@
+# Plugin
+claro_dropzone_plugin:
+    resource: "@ClarolineDropZoneBundle/Controller/Resource/DropzoneController.php"
+    type: annotation
+
+# Resource
+claro_dropzone_resource:
+    resource: "@ClarolineDropZoneBundle/Controller/PluginController.php"
+    type: annotation
+
+# JSON API
+claro_dropzone_api:
+    resource: "@ClarolineDropZoneBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

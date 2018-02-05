@@ -48,7 +48,7 @@ class OrganizationManager
 
     public function createDefault($force = false)
     {
-        if (!$force && count($this->getDefault()) > 0) {
+        if (!$force && $this->getDefault()) {
             return;
         }
         $this->log('Adding default organization...');
@@ -66,5 +66,10 @@ class OrganizationManager
     public function getOrganizationsByIds(array $ids)
     {
         return $this->repo->findOrganizationsByIds($ids);
+    }
+
+    public function getAllOrganizations()
+    {
+        return $this->repo->findAll();
     }
 }

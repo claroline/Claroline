@@ -7,7 +7,16 @@ const MenuItemAction = props => {
   // construct action prop
   const action = {}
   if (typeof props.action === 'function') {
-    action.onClick = (e) => !props.disabled && props.action(e)
+    action.onClick = (e) => {
+      if (!props.disabled) {
+        props.action(e)
+      }
+
+      e.preventDefault()
+      e.stopPropagation()
+
+      e.target.blur()
+    }
   } else {
     action.href = !props.disabled ? props.action : ''
   }

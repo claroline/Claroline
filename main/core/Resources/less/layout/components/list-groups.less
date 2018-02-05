@@ -7,6 +7,8 @@
         font-size: (@font-size-base * 1.125);
         background: @panel-default-heading-bg;
     }
+
+    .list-group-item-variant(selected; @state-info-bg; @state-info-text);
 }
 
 .list-group-values {
@@ -20,5 +22,16 @@
             color: #777;
             font-weight: normal;
         }
+    }
+}
+
+.checkbox.list-group-item {
+    margin-top: 0;
+
+    // Hover state
+    &:not(.list-group-item-selected):hover,
+    &:not(.list-group-item-selected):focus {
+        color: @list-group-link-hover-color;
+        background-color: @list-group-hover-bg;
     }
 }

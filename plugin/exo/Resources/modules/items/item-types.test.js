@@ -1,5 +1,5 @@
 import assert from 'assert'
-import {ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {
   registerItemType,
   listItemMimeTypes,
@@ -9,7 +9,6 @@ import {
 } from './../items/item-types'
 
 describe('Registering an item type', () => {
-  before(mockTranslator)
   afterEach(resetTypes)
 
   it('throws if item name type is absent or invalid', () => {
@@ -142,7 +141,6 @@ describe('Registering an item type', () => {
 })
 
 describe('Getting a type definition', () => {
-  before(mockTranslator)
   afterEach(resetTypes)
 
   it('throws if type does not exist', () => {
@@ -164,7 +162,6 @@ describe('Getting a type definition', () => {
 })
 
 describe('Getting type decorates', () => {
-  before(mockTranslator)
   afterEach(resetTypes)
 
   it('sorts decorators by type', () => {

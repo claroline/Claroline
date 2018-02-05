@@ -122,4 +122,31 @@ class ResourceTypeRepository extends EntityRepository implements ContainerAwareI
 
         return $query->getResult();
     }
+
+    /**
+     * Returns enabled resource types by their names.
+     *
+     * @param array $names
+     *
+     * @return ResourceType[]
+     */
+    public function findEnabledResourceTypesByNames(array $names)
+    {
+        if (count($names) > 0) {
+            $dql = '
+                SELECT r
+                FROM Claroline\CoreBundle\Entity\Resource\ResourceType r
+                WHERE r.isEnabled = true
+                AND r.name IN (:names)
+            ';
+
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('names', $names);
+            $result = $query->getResult();
+        } else {
+            $result = [];
+        }
+
+        return $result;
+    }
 }

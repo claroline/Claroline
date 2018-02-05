@@ -10,6 +10,7 @@ const OpenAction = props =>
     id="form-open"
     title={props.label}
     icon={props.icon}
+    disabled={props.disabled}
     action={props.action}
     primary={true}
   />
@@ -17,12 +18,14 @@ const OpenAction = props =>
 OpenAction.propTypes = {
   icon: T.string,
   label: T.string,
+  disabled: T.bool,
   action: T.oneOfType([T.string, T.func]).isRequired
 }
 
 OpenAction.defaultProps = {
   icon: 'fa fa-pencil',
-  label: t('edit')
+  label: t('edit'),
+  disabled: false
 }
 
 const SaveAction = props =>

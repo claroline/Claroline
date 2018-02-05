@@ -1,6 +1,6 @@
 import React from 'react'
 import {mount} from 'enzyme'
-import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {SHAPE_RECT, SHAPE_CIRCLE} from './enums'
 import {findArea} from './player'
 import {GraphicPlayer} from './player.jsx'

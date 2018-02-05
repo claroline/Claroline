@@ -92,7 +92,7 @@ class Fields extends Component {
                       {field.hidden &&
                         <span>
                           <span
-                            className="fa fa-w fa-eye-slash"
+                            className="fa fa-fw fa-eye-slash"
                             data-toggle="tooltip"
                             data-placement="top"
                             title={trans('hidden_field', {}, 'clacoform')}
@@ -108,22 +108,22 @@ class Fields extends Component {
                     </td>
                     <td className="text-center">
                       {field.required ?
-                        <span className="fa fa-w fa-check text-success"></span> :
-                        <span className="fa fa-w fa-times text-danger"></span>
+                        <span className="fa fa-fw fa-check text-success"></span> :
+                        <span className="fa fa-fw fa-times text-danger"></span>
                       }
                     </td>
                     <td className="text-center">
                       {field.isMetadata ?
-                        <span className="fa fa-w fa-check text-success"></span> :
-                        <span className="fa fa-w fa-times text-danger"></span>
+                        <span className="fa fa-fw fa-check text-success"></span> :
+                        <span className="fa fa-fw fa-times text-danger"></span>
                       }
                     </td>
                     <td className="text-center">
                       {field.locked ?
                         field.lockedEditionOnly ?
-                          <span className="fa fa-w fa-unlock-alt"></span> :
-                          <span className="fa fa-w fa-lock"></span> :
-                        <span className="fa fa-w fa-unlock"></span>
+                          <span className="fa fa-fw fa-unlock-alt"></span> :
+                          <span className="fa fa-fw fa-lock"></span> :
+                        <span className="fa fa-fw fa-unlock"></span>
                       }
                     </td>
                     <td>
@@ -131,14 +131,14 @@ class Fields extends Component {
                         className="btn btn-default btn-sm"
                         onClick={() => this.showFieldEditionForm(field)}
                       >
-                        <span className="fa fa-w fa-pencil"></span>
+                        <span className="fa fa-fw fa-pencil"></span>
                       </button>
                       &nbsp;
                       <button
                         className="btn btn-danger btn-sm"
                         onClick={() => this.showFieldDeletion(field)}
                       >
-                        <span className="fa fa-w fa-trash"></span>
+                        <span className="fa fa-fw fa-trash"></span>
                       </button>
                     </td>
                   </tr>
@@ -147,7 +147,7 @@ class Fields extends Component {
             </table>
 
             <button className="btn btn-primary" onClick={() => this.showFieldCreationForm()}>
-              <span className="fa fa-w fa-plus"></span>
+              <span className="fa fa-fw fa-plus"></span>
               &nbsp;
               {trans('create_a_field', {}, 'clacoform')}
             </button>

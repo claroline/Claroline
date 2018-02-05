@@ -1532,7 +1532,7 @@ class ResourceManager
 
     /**
      * @param int[] $ids
-     * @param bool  $orderStrict, keep tha same order as ids array
+     * @param bool  $orderStrict, keep the same order as ids array
      *
      * @return ResourceNode[]
      */
@@ -1543,6 +1543,18 @@ class ResourceManager
             $ids,
             $orderStrict
         );
+
+        return $nodes;
+    }
+
+    /**
+     * @param int[] $ids
+     *
+     * @return ResourceNode[]
+     */
+    public function getByIdsLevelOrder(array $ids)
+    {
+        $nodes = $this->resourceNodeRepo->findBy(['id' => $ids], ['lvl' => 'ASC']);
 
         return $nodes;
     }

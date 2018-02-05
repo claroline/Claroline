@@ -2,20 +2,16 @@
 
 namespace Icap\BibliographyBundle\Controller;
 
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Icap\BibliographyBundle\Entity\BookReference;
 use Icap\BibliographyBundle\Entity\BookReferenceConfiguration;
 use Icap\BibliographyBundle\Form\BookReferenceConfigurationType;
-use Icap\BibliographyBundle\Form\BookReferenceType;
 use Icap\BibliographyBundle\Manager\BookReferenceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class BookReferenceController extends Controller
 {
@@ -38,52 +34,6 @@ class BookReferenceController extends Controller
         $this->formFactory = $formFactory;
         $this->request = $requestStack->getCurrentRequest();
         $this->manager = $manager;
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/change/{node}",
-     *     name="icap_bibliography_change",
-     *     options={"expose"=true}
-     * )
-     * @EXT\Template("IcapBibliographyBundle:BookReference:editForm.html.twig")
-     */
-    public function changeBookReferenceAction(ResourceNode $node, Request $request)
-    {
-        if (!$this->get('security.authorization_checker')->isGranted('edit', $node)) {
-            throw new AccessDeniedHttpException();
-        }
-
-        $em = $this->getDoctrine()->getManager();
-        $bookReference = $em->getRepository('IcapBibliographyBundle:BookReference')
-            ->findOneBy(['resourceNode' => $node->getId()]);
-
-        if (!$bookReference) {
-            throw new \Exception("This resource doesn't exist.");
-        }
-
-        $bookReference->setName($bookReference->getResourceNode()->getName());
-
-        $form = $this->formFactory->create(new BookReferenceType(), $bookReference);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $updatedBookReference = $form->getData();
-            $resourceNode = $updatedBookReference->getResourceNode();
-            $resourceNode->setName($updatedBookReference->getName());
-
-            $em->flush();
-
-            if ($request->isXmlHttpRequest()) {
-                // Modal is used by the resource manager
-                return new JsonResponse();
-            } else {
-                // Modal is displayed on node view page
-                return $this->redirectToRoute('claro_resource_open', ['resourceType' => 'icap_bibliography', 'node' => $bookReference->getResourceNode()->getId()]);
-            }
-        }
-
-        return ['form' => $form->createView(), 'node' => $node->getId()];
     }
 
     /**

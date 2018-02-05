@@ -3,7 +3,7 @@ import {mount} from 'enzyme'
 import configureMockStore from 'redux-mock-store'
 import merge from 'lodash/merge'
 
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {resourceNodeFixture} from '#/main/core/resource/tests'
 
 import {registerItemType} from './../../../items/item-types'
@@ -11,7 +11,6 @@ import {Paper} from './paper.jsx'
 import {SHOW_SCORE_AT_CORRECTION} from './../../enums'
 
 describe('<Paper/>', () => {
-  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     renew(Paper, 'Paper')

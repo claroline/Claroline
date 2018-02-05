@@ -3,7 +3,9 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {generateUrl} from '#/main/core/api/router'
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
+import {User} from '#/main/core/user/prop-types'
+import {ResourceUserEvaluation} from '#/main/core/user/tracking/prop-types'
 
 import {UserPageContainer} from '#/main/core/user/containers/page.jsx'
 import {UserDetails} from '#/main/core/user/components/details.jsx'
@@ -14,11 +16,11 @@ const TrackingComponent = props =>
     customActions={[
       {
         icon: 'fa fa-fw fa-id-card-o',
-        label: t('show_profile'),
+        label: trans('show_profile', {}, 'platform'),
         action: generateUrl('claro_user_profile', {publicUrl: props.user.meta.publicUrl})
       }, {
         icon: 'fa fa-fw fa-file-pdf-o',
-        label: t('export_tracking_pdf'),
+        label: trans('export_tracking_pdf', {}, 'platform'),
         action: () => true
       }
     ]}
@@ -36,115 +38,32 @@ const TrackingComponent = props =>
         {/* TODO add search */}
 
         <Timeline
-          events={[
-            {
-              date: '2017-12-04T15:00:00',
-              type: 'evaluation',
-              status: 'success',
-              progression: [18, 20],
-              workspaces: [
-
-              ],
-              data: {
-                resourceNode: {
-                  id: '',
-                  icon: '',
-                  poster: '',
-                  name: 'This is the related resource'
-                },
-                duration: 10000,
-                attempts: 10
-              }
-            }, {
-              date: '2017-12-04T12:30:00',
-              type: 'content',
-              progression: [50, 100],
-              data: {
-                resourceNode: {
-                  id: '',
-                  icon: '',
-                  poster: '',
-                  name: 'This is the related resource'
-                },
-                duration: 10000,
-                views: 15
-              }
-            }, {
-              date: '2017-12-04T09:10:00',
-              type: 'content',
-              data: {
-                resourceNode: {
-                  id: '',
-                  icon: '',
-                  poster: '',
-                  name: 'This is the related resource'
-                },
-                duration: 10000,
-                views: 20
-              }
-            }, {
-              date: '2017-12-04T07:00:00',
-              type: 'evaluation',
-              status: 'partial',
-              progression: [12, 20],
-              workspaces: [
-
-              ],
-              data: {
-                resourceNode: {
-                  id: '',
-                  icon: '',
-                  poster: '',
-                  name: 'This is the related resource'
-                },
-                duration: 10000,
-                attempts: 10
-              }
-            }, {
-              date: '2017-12-03T21:00:00',
-              type: 'evaluation',
-              status: 'failure',
-              progression: [4, 20],
-              workspaces: [
-
-              ],
-              data: {
-                resourceNode: {
-                  id: '',
-                  icon: '',
-                  poster: '',
-                  name: 'This is the related resource'
-                },
-                duration: 10000,
-                attempts: 10
-              }
-            }, {
-              date: '2017-12-03T19:00:00',
-              type: 'badge',
-              status: 'success',
-              data: {
-                badge: {
-
-                }
-              }
+          events={props.evaluations.map(e => {return {
+            date: e.date,
+            type: 'evaluation',
+            status: e.status,
+            progression: e.score !== null && e.scoreMax !== null ? [e.score, e.scoreMax] : null,
+            data: {
+              resourceNode: e.resourceNode,
+              nbAttempts: e.nbAttempts,
+              nbOpenings: e.nbOpenings,
+              duration: e.duration
             }
-          ]}
+          }})}
         />
       </div>
     </div>
   </UserPageContainer>
 
 TrackingComponent.propTypes = {
-  user: T.shape({
-    meta: T.shape({
-      publicUrl: T.string.isRequired
-    }).isRequired
-  }).isRequired
+  user: T.shape(User.propTypes).isRequired,
+  evaluations: T.arrayOf(T.shape(ResourceUserEvaluation.propTypes))
 }
 
 const Tracking = connect(
   state => ({
-    user: state.user
+    user: state.user,
+    evaluations: state.evaluations
   }),
   null
 )(TrackingComponent)

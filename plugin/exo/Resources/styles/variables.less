@@ -2,7 +2,6 @@
  * Quiz plugin vars.
  */
 
-
 // Claroline & bootstrap variables
 @import "../../../../main/core/Resources/less/themes/default/variables";
 
@@ -10,12 +9,18 @@
 // -
 // Base & utilities
 // ---
-@quiz-container-width: 820px;
+
+@quiz-container-width:         820px;
+// only applied in paper, not in list
+// permits to stick box to the border (absorb panel padding)
+@score-margin:                 -@panel-body-padding -@panel-body-padding @panel-body-padding @panel-body-padding;
+@item-content-separator-width: 100%;
 
 
 // -
 // Summary
 // ---
+
 @quiz-summary-width:             130px;
 
 @quiz-summary-font:              @summary-font;
@@ -35,36 +40,19 @@
 
 
 // -
-// Score
-// ---
-@score-border-radius:    @border-radius-base;
-@score-bg:               @brand-secondary;
-@score-color:            white;
-@score-border:           none;
-@score-font-size:        @font-size-base;
-@score-padding-v:        5px;
-@score-padding-h:        10px;
-@score-margin:           -@panel-body-padding -@panel-body-padding @panel-body-padding @panel-body-padding; // only applied in paper, not in list
-
-// small box variant
-@score-border-radius-sm: @border-radius-small;
-@score-font-size-sm:     @font-size-small;
-@score-padding-v-sm:     3px;
-@score-padding-h-sm:     6px;
-
-@item-content-separator-width: 100%;
-
-// -
 // Drag Preview
 // ---
-@item-preview-max-width: 200px;
-@item-preview-min-width: 150px;
+
+@item-preview-max-width:  200px;
+@item-preview-min-width:  150px;
 @item-preview-max-height: 150px;
 @item-preview-min-height: 40px;
+
 
 // -
 // Answers
 // ---
+
 @answer-item-bg:            @gray-lighter;
 @answer-item-border:        @answer-item-bg;
 @answer-item-border-radius: @border-radius-base;
@@ -98,6 +86,7 @@
 @selected-answer-bg:        @state-info-bg;
 
 // highlight unanswered questions in stats (in paper)
+// todo removes this ugly color
 @unanswered-answer-color:   #FF5400;
 @unanswered-answer-border:  #F2DAB0;
 @unanswered-answer-bg:      #F2DAB0;

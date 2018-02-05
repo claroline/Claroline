@@ -1,0 +1,17 @@
+{
+  "evaluation_unknown_status": "",
+  "evaluation_not_attempted_status": "You have not started the evaluation.",
+  "evaluation_incomplete_status": "You have started the evaluation.",
+
+  "evaluation_completed_status": "You have finished the evaluation.",
+  "evaluation_completed_feedback": "",
+  "evaluation_completed_feedback_msg": "",
+
+  "evaluation_passed_status": "You have passed the evaluation.",
+  "evaluation_passed_feedback": "",
+  "evaluation_passed_feedback_msg": "",
+
+  "evaluation_failed_status": "You did not pass the evaluation.",
+  "evaluation_failed_feedback": "",
+  "evaluation_failed_feedback_msg": ""
+}

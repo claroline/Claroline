@@ -9,7 +9,7 @@ import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
 import {Numeric} from '#/main/core/layout/form/components/field/numeric.jsx'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {NumberGroup} from '#/main/core/layout/form/components/group/number-group.jsx'
-import {RadioGroup} from '#/main/core/layout/form/components/group/radio-group.jsx'
+import {RadiosGroup} from '#/main/core/layout/form/components/group/radios-group.jsx'
 
 import {
   shuffleModes,
@@ -178,11 +178,11 @@ TagList.propTypes = {
 
 const TagPicking = props =>
   <div className="sub-fields">
-    <RadioGroup
+    <RadiosGroup
       id="quiz-random-pick"
       label={tex('random_picking')}
       options={shuffleModes.filter(m => SHUFFLE_NEVER !== m.value)}
-      checkedValue={props.randomPick}
+      value={props.randomPick}
       onChange={mode => props.onChange('randomPick', mode)}
       warnOnly={!props.validating}
       error={get(props, 'errors.randomPick')}
@@ -214,11 +214,11 @@ const TagPicking = props =>
       </FormGroup>
     </div>
 
-    <RadioGroup
+    <RadiosGroup
       id="quiz-random-order"
       label={tex('random_order')}
       options={SHUFFLE_ALWAYS !== props.randomPick ? shuffleModes : shuffleModes.filter(m => SHUFFLE_ONCE !== m.value)}
-      checkedValue={props.randomOrder}
+      value={props.randomOrder}
       onChange={mode => props.onChange('randomOrder', mode)}
       warnOnly={!props.validating}
       error={get(props, 'errors.randomOrder')}

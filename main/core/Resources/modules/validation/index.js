@@ -1,5 +1,6 @@
 import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
+import moment from 'moment'
 
 import {trans, tval} from '#/main/core/translation'
 
@@ -14,7 +15,7 @@ function notEmpty(value) {
   }
 }
 
-function notBlank(value, options) {
+function notBlank(value, options = {}) {
   if (typeof value === 'string') {
     value = value.trim()
   } else if (isNaN(value)) {
@@ -37,6 +38,12 @@ function isHtmlEmpty(html, allowedTags = ['img', 'audio', 'iframe', 'video']) {
   return !(wrapper.textContent || allowedTags.some((tag) => {
     return html.indexOf(tag) >= 0
   }))
+}
+
+function array(value) {
+  if (!Array.isArray(value)) {
+    return tval('This value should be an array.')
+  }
 }
 
 function string(value) {
@@ -110,7 +117,7 @@ function lengthInRange(value, options) {
 }
 
 function ip(value) {
-  if (match(value, {regex: /^([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])$/g})) {
+  if (!match(value, {regex: /^([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])$/g})) {
     return tval('This value should be a valid IPv4.')
   }
 }
@@ -184,12 +191,53 @@ function setIfError(errors, errorPath, error) {
   }
 }
 
+function greaterOrEqual(value, limit) {
+  if (value < limit) {
+    return trans(
+      'value_greater_or_equal_to',
+      {limit: limit},
+      'validators'
+    )
+  }
+}
+
+function lowerOrEqual(value, limit) {
+  if (value > limit) {
+    return trans(
+      'value_lower_or_equal_to',
+      {limit: limit},
+      'validators'
+    )
+  }
+}
+
+function between(value, min, max) {
+  if (value < min || value > max) {
+    return trans(
+      'value_between',
+      {min: min, max: max},
+      'validators'
+    )
+  }
+}
+
+function dateAfter(value, limit) {
+  if (moment(value) <= moment(limit)) {
+    return trans(
+      'date_after',
+      {limit: moment(limit).format('YYYY-MM-DD')},
+      'validators'
+    )
+  }
+}
+
 export {
   validateIf,
   chain,
   setIfError,
 
   // validators
+  array,
   string,
   notBlank,
   ip,
@@ -204,5 +252,9 @@ export {
   lengthMin,
   lengthMax,
   lengthInRange,
-  notEmpty
+  notEmpty,
+  greaterOrEqual,
+  lowerOrEqual,
+  between,
+  dateAfter
 }

@@ -62,8 +62,8 @@ class ChoicesChildren  extends Component {
                   return {value: f.id, label: f.name}
                 })
               }
-              primaryLabel="<span class='fa fa-w fa-plus-circle'></span>"
-              secondaryLabel="<span class='fa fa-w fa-times-circle'></span>"
+              primaryLabel="<span class='fa fa-fw fa-plus-circle'></span>"
+              secondaryLabel="<span class='fa fa-fw fa-times-circle'></span>"
               disablePrimary={!this.state.selectedField}
               typeAhead={false}
               value={this.state.selectedField}
@@ -79,7 +79,7 @@ class ChoicesChildren  extends Component {
                 className="btn btn-default btn-sm choices-management-btn"
                 onClick={() => this.props.addChoice(this.props.parent.index)}
               >
-                <span className="fa fa-w fa-plus-circle"></span>
+                <span className="fa fa-fw fa-plus-circle"></span>
                 &nbsp;
                 {trans('add_choice', {}, 'clacoform')}
               </button>
@@ -87,7 +87,7 @@ class ChoicesChildren  extends Component {
                 className="btn btn-default btn-sm choices-management-btn"
                 onClick={() => this.updateStateProps('showFieldsWithChoices', !this.state.showFieldsWithChoices)}
               >
-                <span className="fa fa-w fa-bars"></span>
+                <span className="fa fa-fw fa-bars"></span>
                 &nbsp;
                 {trans('copy_a_list', {}, 'clacoform')}
               </button>

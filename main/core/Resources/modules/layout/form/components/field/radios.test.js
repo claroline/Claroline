@@ -1,6 +1,6 @@
 import React from 'react'
 import {shallow, mount} from 'enzyme'
-import {spyConsole, renew, ensure} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {Radios} from './radios.jsx'
 
 describe('<Radios/>', () => {
@@ -11,30 +11,31 @@ describe('<Radios/>', () => {
   afterEach(spyConsole.restore)
 
   it('has required props', () => {
-    shallow(<Radios options={[]}/>)
+    shallow(
+      React.createElement(Radios, {
+        options: []
+      })
+    )
     ensure.missingProps('Radios', [
-      'groupName',
-      'checkedValue',
+      'id',
       'onChange'
     ])
   })
 
   it('has typed props', () => {
     shallow(
-      <Radios
-        groupName={false}
-        options={[{
+      React.createElement(Radios, {
+        value: {},
+        options: [{
           value: [],
           label: {}
-        }]}
-        checkedValue={123}
-        onChange="foo"
-      />
+        }],
+        onChange: 'foo'
+      })
     )
     ensure.invalidProps('Radios', [
-      'groupName',
       'options[0].value',
-      'checkedValue',
+      'value',
       'onChange'
     ])
   })
@@ -43,24 +44,28 @@ describe('<Radios/>', () => {
     let updatedValue = null
 
     const group = mount(
-      <Radios
-        groupName="NAME"
-        options={[
+      React.createElement(Radios, {
+        id: 'NAME',
+        options: [
           {
             value: 'foo',
             label: 'FOO'
-          },
-          {
+          }, {
             value: 'bar',
             label: 'BAR'
           }
-        ]}
-        checkedValue="foo"
-        onChange={value => updatedValue = value}
-      />
+        ],
+        value: 'foo',
+        onChange: value => updatedValue = value
+      })
     )
 
     ensure.propTypesOk()
+
+    // renders inline radios by default
+    const containers = group.find('div.radio-inline')
+    ensure.equal(containers.length, 2, 'has 2 inline radios containers')
+
     const inputs = group.find('input[type="radio"]')
     ensure.equal(inputs.length, 2, 'has 2 radios')
     ensure.equal(inputs.at(0).prop('checked'), true)
@@ -69,29 +74,27 @@ describe('<Radios/>', () => {
     ensure.equal(updatedValue, 'bar')
   })
 
-  it('renders an inline group of radios when asked', () => {
-
+  it('renders a vertical group of radios when asked', () => {
     const group = mount(
-      <Radios
-        groupName="NAME"
-        options={[
+      React.createElement(Radios, {
+        id: 'NAME',
+        options: [
           {
             value: 'foo',
             label: 'FOO'
-          },
-          {
+          }, {
             value: 'bar',
             label: 'BAR'
           }
-        ]}
-        checkedValue="foo"
-        onChange={() => {}}
-        inline={true}
-      />
+        ],
+        value: 'foo',
+        onChange: () => true,
+        inline: false
+      })
     )
 
     ensure.propTypesOk()
-    const containers = group.find('div.radio-inline')
-    ensure.equal(containers.length, 2, 'has 2 inline radios containers')
+    const containers = group.find('div.radio')
+    ensure.equal(containers.length, 2, 'has 2 vertical radios containers')
   })
 })

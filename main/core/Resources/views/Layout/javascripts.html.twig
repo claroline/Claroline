@@ -7,9 +7,8 @@
 {# AngularJS & related libraries #}
 <script src="{{ hotAsset('dist/angular_dll.js') }}"></script>
 
-{% if app.environment == 'prod' %}
-    <script src="{{ hotAsset('dist/commons.js') }}"></script>
-{% endif %}
+{# Frequently used Claroline JS #}
+<script src="{{ hotAsset('dist/commons.js') }}"></script>
 
 {# Polyfills #}
 <script src="{{ hotAsset('dist/claroline-distribution-main-core-polyfills.js') }}"></script>
@@ -69,7 +68,6 @@
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/roles/roleGroupLabel.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/removeWorkspacesConfirm.html.twigjs"
     "@ClarolineCoreBundle/Resources/views/ConfirmationMessage/noRoleSelected.html.twigjs"
-    "@ClarolineCoreBundle/Resources/views/Administration/Roles/renderRoleRow.html.twig"
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/modelRow.html.twig"
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/userRow.html.twig"
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/groupRow.html.twig"
@@ -96,6 +94,7 @@
     'js/translations/platform/*.js'
     'js/translations/error/*.js'
     'js/translations/validators/*.js'
+    'js/translations/alerts/*.js'
 %}
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}

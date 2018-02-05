@@ -1,17 +1,16 @@
+import {Asset} from './asset'
+
 /**
- * Get the path to an asset file in the web directory.
+ * Get the path to an asset file.
  *
  * @param {string} assetName - the name of the asset
  *
  * @returns {string}
  */
-export function asset(assetName) {
-  const element = document.getElementById('baseAsset')
+function asset(assetName) {
+  return Asset.path(assetName)
+}
 
-  let basePath = ''
-  if (element) {
-    basePath = element.innerHTML
-  }
-
-  return basePath.trim() + assetName
+export {
+  asset
 }

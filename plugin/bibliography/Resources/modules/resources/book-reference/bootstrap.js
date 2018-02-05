@@ -3,9 +3,8 @@ import {bootstrap} from '#/main/core/scaffolding/bootstrap'
 // reducers
 import {makeResourceReducer} from '#/main/core/resource/reducer'
 
-import {BookReference} from './components/book-reference.jsx'
+import {BookReferenceResource} from './components/resource.jsx'
 import {reducer} from './reducer'
-import { makeFormReducer } from '#/main/core/data/form/reducer'
 
 // mount the react application
 bootstrap(
@@ -13,12 +12,18 @@ bootstrap(
   '.book-reference-container',
 
   // app main component (accepts either a `routedApp` or a `ReactComponent`)
-  BookReference,
+  BookReferenceResource,
 
   // app store configuration
   makeResourceReducer({}, {
-    // there is no editor for now, so we just init a static store
-    bookReference: reducer,
-    bookReferenceForm: makeFormReducer('bookReferenceForm')
+    bookReference: reducer
+  }),
+
+  initialState => ({
+    resourceNode: initialState.resourceNode,
+    bookReference: {
+      data: initialState.bookReference,
+      originalData: initialState.bookReference
+    }
   })
 )

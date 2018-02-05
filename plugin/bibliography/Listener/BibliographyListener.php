@@ -39,6 +39,12 @@ class BibliographyListener
      *     "manager"          = @DI\Inject("icap.bookReference.manager"),
      *     "configRepository" = @DI\Inject("icap_bibliography.repository.book_reference_configuration")
      * })
+     *
+     * @param ContainerInterface                   $container
+     * @param HttpKernelInterface                  $httpKernel
+     * @param RequestStack                         $requestStack
+     * @param BookReferenceManager                 $manager
+     * @param BookReferenceConfigurationRepository $configRepository
      */
     public function __construct(
         ContainerInterface $container,
@@ -85,6 +91,7 @@ class BibliographyListener
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
+            /** @var BookReference $bookResource */
             $bookResource = $form->getData();
 
             $bookReferenceInWorkspace = $this->manager->bookExistsInWorkspace($bookResource->getIsbn(), $event->getParent()->getWorkspace());
@@ -100,7 +107,6 @@ class BibliographyListener
                 $event->setParent($bookReferenceInWorkspace->getResourceNode());
                 $event->setResources([$resourceShortcut]);
             } else {
-
                 // Create book as a new resource
                 $event->setResources([$bookResource]);
             }
@@ -145,6 +151,7 @@ class BibliographyListener
     {
         $em = $this->container->get('claroline.persistence.object_manager');
 
+        /** @var BookReference $old */
         $old = $event->getResource();
         $new = new BookReference();
 
@@ -205,6 +212,8 @@ class BibliographyListener
 
     /**
      * @DI\Observe("plugin_options_bibliographybundle")
+     *
+     * @param PluginOptionsEvent $event
      */
     public function onConfig(PluginOptionsEvent $event)
     {

@@ -331,7 +331,7 @@ class PublishingManager
             foreach ($nodes as $node) {
                 foreach ($pathRights as $right) {
                     if ($right->getMask() & 1) {
-                        $this->rightsManager->editPerms($right->getMask(), $right->getRole(), $node, true);
+                        $this->rightsManager->editPerms($right->getMask(), $right->getRole(), $node, true, [], true);
                     }
                 }
             }

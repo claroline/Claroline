@@ -813,6 +813,10 @@ class RoleManager
             return true;
         }
 
+        if ($role->getMaxUsers() === null) {
+            return true;
+        }
+
         if ($role->getWorkspace()) {
             $maxUsers = $role->getWorkspace()->getMaxUsers();
             $countByWorkspace = $this->container->get('claroline.manager.workspace_manager')->countUsers($role->getWorkspace(), true);
@@ -1206,13 +1210,17 @@ class RoleManager
 
         if (!$manager) {
             $this->log('Adding manager role for workspace '.$workspace->getCode().'...', LogLevel::DEBUG);
-            $this->createWorkspaceRole(
+            $manager = $this->createWorkspaceRole(
                 'ROLE_WS_MANAGER_'.$workspace->getGuid(),
                 'manager',
                 $workspace,
                 true
             );
             $operationExecuted = true;
+        }
+
+        if ($creator = $workspace->getCreator()) {
+            $creator->addRole($manager);
         }
 
         return $operationExecuted;

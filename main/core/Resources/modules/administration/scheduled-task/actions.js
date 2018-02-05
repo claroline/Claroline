@@ -1,124 +1,24 @@
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {generateUrl} from '#/main/core/api/router'
 
-import {actions as listActions} from '#/main/core/data/list/actions'
-import {getDataQueryString} from '#/main/core/data/list/utils'
-
+import {now} from '#/main/core/scaffolding/date'
 import {API_REQUEST} from '#/main/core/api/actions'
-import {
-  VIEW_MANAGEMENT,
-  VIEW_MAIL_FORM,
-  VIEW_MESSAGE_FORM
-} from './constants'
-
-export const UPDATE_VIEW_MODE = 'UPDATE_VIEW_MODE'
-/*export const TASKS_LOAD = 'TASKS_LOAD'*/
-export const TASK_ADD = 'TASK_ADD'
-export const TASK_FORM_RESET = 'TASK_FORM_RESET'
-export const TASK_FORM_LOAD = 'TASK_FORM_LOAD'
-export const TASK_FORM_TYPE_UPDATE = 'TASK_FORM_TYPE_UPDATE'
+import {actions as formActions} from '#/main/core/data/form/actions'
 
 export const actions = {}
 
-actions.updateViewMode = makeActionCreator(UPDATE_VIEW_MODE, 'mode')
-actions.addTask = makeActionCreator(TASK_ADD, 'task')
-actions.resetTaskForm = makeActionCreator(TASK_FORM_RESET)
-actions.loadTaskForm = makeActionCreator(TASK_FORM_LOAD, 'task')
-actions.updateTaskFormType = makeActionCreator(TASK_FORM_TYPE_UPDATE, 'value')
-
-actions.editTask = makeActionCreator(UPDATE_VIEW_MODE, 'mode')
-
-actions.displayManagementView = () => {
-  return (dispatch) => {
-    dispatch(actions.resetTaskForm('mail'))
-    dispatch(actions.updateViewMode(VIEW_MANAGEMENT))
-  }
-}
-
-actions.displayMailView = () => {
-  return (dispatch) => {
-    dispatch(actions.updateTaskFormType('mail'))
-    dispatch(actions.updateViewMode(VIEW_MAIL_FORM))
-  }
-}
-
-actions.displayMessageView = () => {
-  return (dispatch) => {
-    dispatch(actions.updateTaskFormType('message'))
-    dispatch(actions.updateViewMode(VIEW_MESSAGE_FORM))
-  }
-}
-
-actions.createMessageTask = (data) => {
-  return (dispatch) => {
-    const formData = new FormData()
-    formData.append('type', data['type'])
-    formData.append('scheduledDate', data['scheduledDate'])
-    formData.append('users', data['receiversIds'])
-    const mailData = {
-      object: data['object'],
-      content: data['content']
-    }
-    formData.append('data', JSON.stringify(mailData))
-
-    if (data['name'] !== undefined) {
-      formData.append('name', data['name'])
-    }
-
+actions.open = (formName, id = null) => (dispatch) => {
+  if (id) {
     dispatch({
       [API_REQUEST]: {
-        url: ['claro_admin_scheduled_task_create'],
-        request: {
-          method: 'POST',
-          body: formData
-        },
-        success: (data, dispatch) => {
-          dispatch(actions.addTask(JSON.parse(data)))
+        url: ['apiv2_scheduledtask_get', {id}],
+        success: (response, dispatch) => {
+          dispatch(formActions.resetForm(formName, response, false))
         }
       }
     })
+  } else {
+    dispatch(formActions.resetForm(formName, {
+      scheduledDate: now()
+    }, true))
   }
 }
-
-actions.editMessageTask = (taskId, data) => {
-  return (dispatch) => {
-    const formData = new FormData()
-    formData.append('scheduledDate', data['scheduledDate'])
-    formData.append('users', data['receiversIds'])
-    const mailData = {
-      object: data['object'],
-      content: data['content']
-    }
-    formData.append('data', JSON.stringify(mailData))
-
-    if (data['name'] !== undefined) {
-      formData.append('name', data['name'])
-    }
-
-    dispatch({
-      [API_REQUEST]: {
-        url: ['claro_admin_scheduled_task_edit', {task: taskId}],
-        request: {
-          method: 'POST',
-          body: formData
-        },
-        success: (data, dispatch) => {
-          dispatch(actions.fetchTasks())
-        }
-      }
-    })
-  }
-}
-
-actions.removeTasks = (tasks) => ({
-  [API_REQUEST]: {
-    url: generateUrl('claro_admin_scheduled_tasks_delete') + getDataQueryString(tasks),
-    request: {
-      method: 'DELETE'
-    },
-    success: (data, dispatch) => {
-      dispatch(listActions.changePage(0))
-      dispatch(listActions.fetchData('tasks'))
-    }
-  }
-})

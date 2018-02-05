@@ -1,17 +1,13 @@
 const paths = require('./main/core/Resources/server/paths')
-const webpackConfig = require('./webpack.test')
+const webpackConfig = require('./webpack.config.test')
 
 module.exports = config => {
   const base = {
     basePath: '',
-    frameworks: ['mocha'],
+    frameworks: ['mocha', 'sinon'],
     files: [
       {
-        pattern: 'main/core/Resources/modules/core-js/index.js',
-        watched: false
-      },
-      {
-        pattern: 'main/core/Resources/modules/fetch-shim/index.js',
+        pattern: 'main/core/Resources/modules/scaffolding/shim/index.js',
         watched: false
       },
       '*/*/Resources/modules/**/*\.test.js'

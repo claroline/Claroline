@@ -4,7 +4,7 @@ import {UserCard} from '#/main/core/administration/user/user/components/user-car
 
 const UserList = {
   open: {
-    action: (row) => `#/users/${row.id}`
+    action: (row) => `#/users/form/${row.id}`
   },
   definition: [
     {
@@ -29,6 +29,11 @@ const UserList = {
       label: t('email'),
       displayed: true
     }, {
+      name: 'administrativeCode',
+      type: 'string',
+      label: t('code'),
+      displayed: false
+    }, {
       name: 'meta.personalWorkspace',
       alias: 'hasPersonalWorkspace',
       type: 'boolean',
@@ -48,10 +53,13 @@ const UserList = {
     },
     {
       name: 'meta.lastLogin',
-      type: 'datetime',
+      type: 'date',
       alias: 'lastLogin',
       label: t('last_login'),
-      displayed: true
+      displayed: true,
+      options: {
+        time: true
+      }
     }
   ],
   card: UserCard

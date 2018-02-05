@@ -112,8 +112,9 @@ export class CategoryFormModal  extends Component {
             </label>
             <div className="col-md-9">
               <ColorPicker
-                color={this.state.color}
-                onPick={(e) => {this.updateCategoryProps('color', e.hex)}}
+                id="category-color"
+                value={this.state.color}
+                onChange={(e) => {this.updateCategoryProps('color', e.hex)}}
                 autoOpen={false}
               />
             </div>
@@ -136,7 +137,7 @@ export class CategoryFormModal  extends Component {
                     className="btn btn-default"
                     onClick={() => this.showManagersSelection()}
                   >
-                    <span className="fa fa-w fa-user"></span>
+                    <span className="fa fa-fw fa-user"></span>
                   </button>
                 </span>
               </span>

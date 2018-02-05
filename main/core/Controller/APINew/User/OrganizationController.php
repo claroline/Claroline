@@ -83,7 +83,7 @@ class OrganizationController extends AbstractCrudController
      *
      * @return JsonResponse
      */
-    public function addUsersAction(Organization $organization, Request $request)
+    public function addManagersAction(Organization $organization, Request $request)
     {
         $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
         $this->crud->patch($organization, 'administrator', Crud::COLLECTION_ADD, $users);
@@ -103,7 +103,7 @@ class OrganizationController extends AbstractCrudController
      *
      * @return JsonResponse
      */
-    public function removeUsersAction(Organization $organization, Request $request)
+    public function removeManagersAction(Organization $organization, Request $request)
     {
         $users = $this->decodeIdsString($request, 'Claroline\CoreBundle\Entity\User');
         $this->crud->patch($organization, 'administrator', Crud::COLLECTION_REMOVE, $users);

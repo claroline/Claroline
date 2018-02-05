@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Listener\Log;
 
 use Claroline\CoreBundle\Entity\Log\Log;
+use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Event\Log\LogGroupDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogNotRepeatableInterface;
@@ -21,6 +22,7 @@ use Claroline\CoreBundle\Event\Log\LogUserDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceRoleDeleteEvent;
 use Claroline\CoreBundle\Event\LogCreateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
@@ -38,6 +40,7 @@ class LogListener
     private $roleManager;
     private $ch;
     private $resourceNodeManager;
+    private $resourceEvalManager;
 
     /**
      * @DI\InjectParams({
@@ -46,7 +49,8 @@ class LogListener
      *     "container"           = @DI\Inject("service_container"),
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
      *     "ch"                  = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node")
+     *     "resourceNodeManager" = @DI\Inject("claroline.manager.resource_node"),
+     *     "resourceEvalManager" = @DI\Inject("claroline.manager.resource_evaluation_manager")
      * })
      */
     public function __construct(
@@ -55,7 +59,8 @@ class LogListener
         $container,
         RoleManager $roleManager,
         PlatformConfigurationHandler $ch,
-        ResourceNodeManager $resourceNodeManager
+        ResourceNodeManager $resourceNodeManager,
+        ResourceEvaluationManager $resourceEvalManager
     ) {
         $this->om = $om;
         $this->tokenStorage = $tokenStorage;
@@ -64,6 +69,7 @@ class LogListener
         $this->ch = $ch;
         $this->enabledLog = $this->ch->getParameter('platform_log_enabled');
         $this->resourceNodeManager = $resourceNodeManager;
+        $this->resourceEvalManager = $resourceEvalManager;
     }
 
     private function createLog(LogGenericEvent $event)
@@ -123,9 +129,9 @@ class LogListener
         if (!($event->getAction() === LogUserDeleteEvent::ACTION && $event->getReceiver() === $doer)) {
             //Prevent self delete case
             //Sometimes, the entity manager has been cleared, so we must merge the doer.
-           if ($doer) {
-               $doer = $this->om->merge($doer);
-           }
+            if ($doer) {
+                $doer = $this->om->merge($doer);
+            }
             $log->setDoer($doer);
         }
         $log->setDoerType($doerType);
@@ -279,8 +285,11 @@ class LogListener
      */
     public function onLog(LogGenericEvent $event)
     {
+        $logCreated = false;
+
         if (!($event instanceof LogNotRepeatableInterface) || !$this->isARepeat($event)) {
             $this->createLog($event);
+            $logCreated = true;
         }
 
         // Increment view count
@@ -293,6 +302,22 @@ class LogListener
             // Increment view count if viewer is not creator of the resource
             if (is_null($user) || is_string($user) || $user !== $event->getResource()->getCreator()) {
                 $this->resourceNodeManager->addView($event->getResource());
+            }
+            if ($logCreated && !empty($user) && $user !== 'anon.' && $event->getResource()->getResourceType()->getName() !== 'directory') {
+                $this->resourceEvalManager->updateResourceUserEvaluationData(
+                    $event->getResource(),
+                    $user,
+                    new \DateTime(),
+                    AbstractResourceEvaluation::STATUS_OPENED,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    false,
+                    false,
+                    true
+                );
             }
         }
     }

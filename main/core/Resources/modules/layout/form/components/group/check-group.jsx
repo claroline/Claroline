@@ -1,12 +1,12 @@
 import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
-import {FormGroup as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
+import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox.jsx'
 import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
 
 const CheckGroup = props =>
-  <div className="form-group check-group">
+  <div className="form-group">
     <Checkbox
       id={props.id}
       checked={props.value}

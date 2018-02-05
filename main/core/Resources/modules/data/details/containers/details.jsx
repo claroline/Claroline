@@ -42,8 +42,7 @@ DataDetailsComponent.propTypes = {
 }
 
 DataDetailsComponent.defaultProps = {
-  data: {},
-  errors: {}
+  data: {}
 }
 
 const DataDetailsContainer = connect(

@@ -351,25 +351,23 @@ export const Ordering = props => {
         </div>
       }
       <Radios
-        groupName="direction"
+        id="direction"
         options={[
           {value: DIRECTION_VERTICAL, label: tex('ordering_direction_vertical')},
           {value: DIRECTION_HORIZONTAL, label: tex('ordering_direction_horizontal')}
         ]}
-        checkedValue={props.item.direction}
-        inline={true}
+        value={props.item.direction}
         onChange={value => props.onChange(
           actions.updateProperty('direction', value)
         )}
       />
       <Radios
-        groupName="mode"
+        id="mode"
         options={[
           {value: MODE_INSIDE, label: tex('ordering_mode_inside')},
           {value: MODE_BESIDE, label: tex('ordering_mode_beside')}
         ]}
-        checkedValue={props.item.mode}
-        inline={true}
+        value={props.item.mode}
         onChange={value => props.onChange(
           actions.updateProperty('mode', value)
         )}

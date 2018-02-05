@@ -14,6 +14,7 @@ const AttemptEnd = props => {
   const showScore = paperUtils.showScore(props.admin, props.paper.finished, paperSelectors.showScoreAt(props.paper), paperSelectors.showCorrectionAt(props.paper), paperSelectors.correctionDate(props.paper))
   const showCorrection = paperUtils.showCorrection(props.admin, props.paper.finished, paperSelectors.showCorrectionAt(props.paper), paperSelectors.correctionDate(props.paper))
   const answers = Object.keys(props.answers).map(key => props.answers[key])
+
   return (
     <div className="quiz-player attempt-end">
       <div className="row">
@@ -22,6 +23,7 @@ const AttemptEnd = props => {
             <ScoreGauge userScore={paperUtils.computeScore(props.paper, answers)} maxScore={paperSelectors.paperScoreMax(props.paper)} />
           </div>
         }
+
         <div className={showScore ? 'col-md-9':'col-md-12'}>
           {props.endMessage ?
             <div dangerouslySetInnerHTML={{__html: props.endMessage}}></div> :
@@ -31,14 +33,17 @@ const AttemptEnd = props => {
             </div>
           }
 
-          {showCorrection &&
+          {props.endNavigation && showCorrection &&
             <a href={`#papers/${props.paper.id}`} className="btn btn-start btn-lg btn-block btn-primary">
               {tex('view_paper')}
             </a>
           }
-          <a href="#play" className="btn btn-start btn-lg btn-block btn-primary">
-            {tex('exercise_restart')}
-          </a>
+
+          {props.endNavigation &&
+            <a href="#play" className="btn btn-start btn-lg btn-block btn-primary">
+              {tex('exercise_restart')}
+            </a>
+          }
         </div>
       </div>
     </div>
@@ -53,18 +58,20 @@ AttemptEnd.propTypes = {
     structure: T.object.isRequired,
     finished: T.bool.isRequired
   }).isRequired,
-  endMessage: T.string
+  endMessage: T.string,
+  endNavigation: T.bool.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const ConnectedAttemptEnd = connect(
+  (state) => ({
     admin: resourceSelect.editable(state) || quizSelectors.papersAdmin(state),
     paper: playerSelectors.paper(state),
     endMessage: playerSelectors.quizEndMessage(state),
+    endNavigation: playerSelectors.quizEndNavigation(state),
     answers: playerSelectors.answers(state)
-  }
+  })
+)(AttemptEnd)
+
+export {
+  ConnectedAttemptEnd as AttemptEnd
 }
-
-const ConnectedAttemptEnd = connect(mapStateToProps)(AttemptEnd)
-
-export {ConnectedAttemptEnd as AttemptEnd}

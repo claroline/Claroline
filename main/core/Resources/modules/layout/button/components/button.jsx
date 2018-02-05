@@ -13,16 +13,18 @@ const Button = props =>
     type="button"
     role="button"
     disabled={props.disabled}
-    className={classes(
-      'btn',
-      props.className,
-      {disabled: props.disabled}
-    )}
+    className={classes('btn', props.className, {
+      disabled: props.disabled
+    })}
     onClick={(e) => {
-      e.preventDefault()
       if (!props.disabled) {
         props.onClick(e)
       }
+
+      e.preventDefault()
+      e.stopPropagation()
+
+      e.target.blur()
     }}
   >
     {props.children}

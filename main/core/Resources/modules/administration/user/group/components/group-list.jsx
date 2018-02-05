@@ -5,7 +5,7 @@ import {GroupCard} from '#/main/core/administration/user/group/components/group-
 
 const GroupList = {
   open: {
-    action: (row) => `#/groups/${row.id}`
+    action: (row) => `#/groups/form/${row.id}`
   },
   definition: [
     {

@@ -1,11 +1,10 @@
 import React from 'react'
 import {shallow} from 'enzyme'
 
-import {spyConsole, renew, ensure, mockTranslator} from '#/main/core/scaffolding/tests'
+import {spyConsole, renew, ensure, mockGlobals} from '#/main/core/scaffolding/tests'
 import {ItemForm} from './item-form.jsx'
 
 describe('<ItemForm/>', () => {
-  before(mockTranslator)
   beforeEach(() => {
     spyConsole.watch()
     renew(ItemForm, 'ItemForm')

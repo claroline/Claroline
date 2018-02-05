@@ -7,10 +7,6 @@ plugin:
       name: icap_bibliography
       is_exportable: false
       icon: icap_bibliography_icon.png
-      actions:
-        - name: edit
-          menu_name: change_bookreference_menu
-          is_form: true
 
   widgets:
     - name: book_reference_list

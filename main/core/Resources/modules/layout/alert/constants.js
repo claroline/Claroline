@@ -1,3 +1,5 @@
+import {trans} from '#/main/core/translation'
+
 import {constants as actionConstants} from '#/main/core/layout/action/constants'
 
 const ALERT_DISPLAY_MAX     = 5
@@ -67,148 +69,148 @@ const ALERT_STACKED_STATUS = [
 const ALERT_ACTIONS = {
   [actionConstants.ACTION_GENERIC]: {
     [ALERT_STATUS_PENDING]: {
-      title: 'Chargement en cours',
-      message: 'Veuillez patienter pendant le chargement de vos données.'
+      title: trans('generic.pending.title', {}, 'alerts'),
+      message: trans('generic.pending.message', {}, 'alerts')
     },
     [ALERT_STATUS_SUCCESS]: {
-      title: 'Succès'
+      title: trans('generic.success.title', {}, 'alerts'),
+      message: trans('generic.success.message', {}, 'alerts')
     },
     [ALERT_STATUS_WARNING]: {
-      title: 'Attention'
+      title: trans('generic.warning.title', {}, 'alerts'),
+      message: trans('generic.warning.message', {}, 'alerts')
     },
     [ALERT_STATUS_UNAUTHORIZED]: {
-      title: 'Accès non authorisé',
-      message: 'Vous devez être connecté pour accéder à cette fonctionnalité.'
+      title: trans('generic.unauthorized.title', {}, 'alerts'),
+      message: trans('generic.unauthorized.message', {}, 'alerts')
     },
     [ALERT_STATUS_FORBIDDEN]: {
-      title: 'Accès interdit',
-      message: 'Vous n\'avez pas accès à cette fonctionnalité.'
+      title: trans('generic.forbidden.title', {}, 'alerts'),
+      message: trans('generic.forbidden.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
-      title: 'Erreur',
-      message: 'Veuillez contacter un administrateur.'
-    },
-    [ALERT_STATUS_INFO]: {
-      title: 'Information'
+      title: trans('generic.error.title', {}, 'alerts'),
+      message: trans('generic.error.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_LOAD]: {
     [ALERT_STATUS_PENDING]: {
-      title: 'Chargement en cours',
-      message: 'Veuillez patienter pendant le chargement de vos données.'
+      title: trans('load.pending.title', {}, 'alerts'),
+      message: trans('load.pending.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
-      title: 'Echec du chargement',
-      message: 'Nous n\'avons pas réussi à charger vos données.'
+      title: trans('load.error.title', {}, 'alerts'),
+      message: trans('load.error.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_REFRESH]: {
     [ALERT_STATUS_PENDING]: {
-      title: 'Rechargement en cours',
-      message: 'Veuillez patienter pendant le rafraîchissement de vos données.'
+      title: trans('refresh.pending.title', {}, 'alerts'),
+      message: trans('refresh.pending.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
-      title: 'Echec du rechargement',
-      message: 'Nous n\'avons pas réussi à rafraîchir vos données.'
+      title: trans('refresh.error.title', {}, 'alerts'),
+      message: trans('refresh.error.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_SAVE]: {
     [ALERT_STATUS_PENDING]: {
-      title: 'Sauvegarde en cours',
-      message: 'Veuillez patienter pendant la sauvegarde de vos données.'
+      title: trans('save.pending.title', {}, 'alerts'),
+      message: trans('save.pending.message', {}, 'alerts')
     },
     [ALERT_STATUS_SUCCESS]: {
-      title: 'Sauvegarde réussie',
-      message: 'Vos données ont correctement été sauvegardée.'
+      title: trans('save.success.title', {}, 'alerts'),
+      message: trans('save.success.message', {}, 'alerts')
     },
     [ALERT_STATUS_WARNING]: {
-      title: 'Echec de la sauvegarde',
-      message: 'Veuillez corriger les erreurs de votre formulaire et réessayer.'
+      title: trans('save.warning.title', {}, 'alerts'),
+      message: trans('save.warning.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
-      title: 'Echec de la sauvegarde',
-      message: 'Nous n\'avons pas réussi à charger vos données.'
+      title: trans('save.error.title', {}, 'alerts'),
+      message: trans('save.error.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_CREATE]: {
     [ALERT_STATUS_PENDING]: {
-      title: 'Création en cours',
-      message: 'Veuillez patienter pendant la sauvegarde de vos données.'
+      title: trans('create.pending.title', {}, 'alerts'),
+      message: trans('create.pending.message', {}, 'alerts')
     },
     [ALERT_STATUS_SUCCESS]: {
-      title: 'Création réussie',
-      message: 'Vos données ont correctement été sauvegardée.'
+      title: trans('create.success.title', {}, 'alerts'),
+      message: trans('create.success.message', {}, 'alerts')
     },
     [ALERT_STATUS_WARNING]: {
-      title: 'Echec de la création',
-      message: 'Veuillez corriger les erreurs de votre formulaire et réessayer.'
+      title: trans('create.warning.title', {}, 'alerts'),
+      message: trans('create.warning.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
-      title: 'Echec de la création'
+      title: trans('create.error.title', {}, 'alerts'),
+      message: trans('create.error.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_UPDATE]: {
     [ALERT_STATUS_PENDING]: {
-      title: 'Mise à jour en cours',
-      message: 'Veuillez patienter pendant la sauvegarde de vos données.'
+      title: trans('update.pending.title', {}, 'alerts'),
+      message: trans('update.pending.message', {}, 'alerts')
     },
     [ALERT_STATUS_SUCCESS]: {
-      title: 'Mise à jour réussie',
-      message: 'Vos données ont correctement été sauvegardée.'
+      title: trans('update.success.title', {}, 'alerts'),
+      message: trans('update.success.message', {}, 'alerts')
     },
     [ALERT_STATUS_WARNING]: {
-      title: 'Echec de la mise à jour',
-      message: 'Veuillez corriger les erreurs de votre formulaire et réessayer.'
+      title: trans('update.warning.title', {}, 'alerts'),
+      message: trans('update.warning.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
-      title: 'Echec de la mise à jour'
+      title: trans('update.error.title', {}, 'alerts'),
+      message: trans('update.error.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_DELETE]: {
     [ALERT_STATUS_PENDING]: {
-      title: 'Suppression en cours',
-      message: 'Veuillez patienter pendant la suppression de vos données.'
+      title: trans('delete.pending.title', {}, 'alerts'),
+      message: trans('delete.pending.message', {}, 'alerts')
     },
     [ALERT_STATUS_SUCCESS]: {
-      title: 'Suppression réussie',
-      message: 'Vos données ont correctement été supprimée.'
-    },
-    [ALERT_STATUS_WARNING]: {
-      title: 'Echec de la suppression'
+      title: trans('delete.success.title', {}, 'alerts'),
+      message: trans('delete.success.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
-      title: 'Echec de la suppression'
+      title: trans('delete.error.title', {}, 'alerts'),
+      message: trans('delete.error.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_SEND]: {
     [ALERT_STATUS_PENDING]: {
-      title: 'Envoi en cours',
-      message: 'Veuillez patienter pendant l\'envoi de votre message.'
+      title: trans('send.pending.title', {}, 'alerts'),
+      message: trans('send.pending.message', {}, 'alerts')
     },
     [ALERT_STATUS_SUCCESS]: {
-      title: 'Envoi réussi'
-    },
-    [ALERT_STATUS_WARNING]: {
-      title: 'Echec de l\'envoi'
+      title: trans('send.success.title', {}, 'alerts'),
+      message: trans('send.success.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
-      title: 'Echec de l\'envoi'
+      title: trans('send.error.title', {}, 'alerts'),
+      message: trans('send.error.message', {}, 'alerts')
     }
   },
   [actionConstants.ACTION_UPLOAD]: {
     [ALERT_STATUS_PENDING]: {
-      title: 'Téléchargement en cours',
-      message: 'Veuillez patienter pendant le téléchargement de votre fichier.'
+      title: trans('upload.pending.title', {}, 'alerts'),
+      message: trans('upload.pending.message', {}, 'alerts')
     },
     [ALERT_STATUS_SUCCESS]: {
-      title: 'Téléchargement réussi',
-      message: 'Votre fichier a correctement été téléchargé.'
+      title: trans('upload.success.title', {}, 'alerts'),
+      message: trans('upload.success.message', {}, 'alerts')
     },
     [ALERT_STATUS_WARNING]: {
-      title: 'Echec de l\'envoi'
+      title: trans('upload.warning.title', {}, 'alerts'),
+      message: trans('upload.warning.message', {}, 'alerts')
     },
     [ALERT_STATUS_ERROR]: {
-      title: 'Echec de l\'envoi'
+      title: trans('upload.error.title', {}, 'alerts'),
+      message: trans('upload.error.message', {}, 'alerts')
     }
   }
 }

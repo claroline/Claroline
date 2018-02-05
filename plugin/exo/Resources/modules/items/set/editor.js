@@ -39,7 +39,6 @@ export const actions = {
 }
 
 function decorate(question) {
-
   const itemDeletable = question.items.filter(item => undefined === question.solutions.odd.find(el => el.itemId === item.id)).length > 1
   const itemsWithDeletable = question.items.map(
     item => Object.assign({}, item, {
@@ -53,22 +52,17 @@ function decorate(question) {
     })
   )
 
-  // add item data to solution
-  const associationsWithItemData = getAssociationsWithItemData(question)
-
-  let decorated = Object.assign({}, question, {
+  return Object.assign({}, question, {
     items: itemsWithDeletable,
     sets: setsWithDeletable,
     solutions: Object.assign({}, question.solutions, {
-      associations: associationsWithItemData
+      associations: getAssociationsWithItemData(question)
     })
   })
-
-  return decorated
 }
 
 function getAssociationsWithItemData(item){
-  const withData = item.solutions.associations.map(
+  return item.solutions.associations.map(
       association => {
         const questionItem = item.items.find(el => el.id === association.itemId)
         const data = questionItem !== undefined ? questionItem.data : ''
@@ -76,14 +70,10 @@ function getAssociationsWithItemData(item){
         return association
       }
   )
-
-  return withData
 }
 
 function reduce(item = {}, action) {
-
   switch (action.type) {
-
     case ITEM_CREATE: {
       return decorate(Object.assign({}, item, {
         random: false,
@@ -297,7 +287,7 @@ function validate(item) {
 
   if (item.solutions.associations.length === 0) {
     errors.solutions = tex('set_no_solution')
-  } else if (undefined !== item.solutions.associations.find(association => chain(association.score, [notBlank, number]))) {
+  } else if (undefined !== item.solutions.associations.find(association => chain(association.score, {}, [notBlank, number]))) {
     // each solution should have a valid score
     errors.solutions = tex('set_score_not_valid')
   } else if (undefined === item.solutions.associations.find(association => association.score > 0)) {
@@ -308,7 +298,7 @@ function validate(item) {
   // odd
   if (item.solutions.odd.length > 0) {
     // odd score not empty and valid number
-    if(undefined !== item.solutions.odd.find(odd => chain(odd.score, [notBlank, number]))) {
+    if(undefined !== item.solutions.odd.find(odd => chain(odd.score, {}, [notBlank, number]))) {
       errors.odd = tex('set_score_not_valid')
     } else if (undefined !== item.solutions.odd.find(odd => odd.score > 0)) {
       errors.odd = tex('set_odd_score_not_valid')

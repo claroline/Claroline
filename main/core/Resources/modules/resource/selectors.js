@@ -37,6 +37,11 @@ const administrable = createSelector(
   (currentRights) => currentRights.administrate
 )
 
+const deletable = createSelector(
+  [currentRights],
+  (currentRights) => currentRights.delete
+)
+
 export const select = {
   resourceNode,
   meta,
@@ -44,5 +49,6 @@ export const select = {
   editable,
   published,
   exportable,
-  administrable
+  administrable,
+  deletable
 }

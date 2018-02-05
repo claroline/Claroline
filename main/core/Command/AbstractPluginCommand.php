@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Command;
 
 use Claroline\BundleRecorder\Detector\Detector;
-use Claroline\CoreBundle\Library\DistributionPluginBundle;
+use Claroline\CoreBundle\Library\PluginBundle;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -68,8 +68,8 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
             if ($name === $bundleName) {
                 $bundle = new $bundleFqcn($kernel);
 
-                if (!$bundle instanceof DistributionPluginBundle) {
-                    throw new \Exception("Bundle {$bundle->getName()} must extend DistributionPluginBundle");
+                if (!$bundle instanceof PluginBundle) {
+                    throw new \Exception("Bundle {$bundle->getName()} must extend (Distribution)PluginBundle");
                 }
 
                 return $bundle;

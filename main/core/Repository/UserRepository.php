@@ -443,6 +443,33 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
+     * Returns enabled users by their usernames.
+     *
+     * @param array $usernames
+     *
+     * @return User[]
+     */
+    public function findEnabledUsersByUsernames(array $usernames)
+    {
+        if (count($usernames) > 0) {
+            $dql = '
+                SELECT u FROM Claroline\CoreBundle\Entity\User u
+                WHERE u.isRemoved = false
+                AND u.isEnabled = true
+                AND u.username IN (:usernames)
+            ';
+
+            $query = $this->_em->createQuery($dql);
+            $query->setParameter('usernames', $usernames);
+            $result = $query->getResult();
+        } else {
+            $result = [];
+        }
+
+        return $result;
+    }
+
+    /**
      * Counts the users subscribed in a platform role.
      *
      * @param $role
@@ -1606,6 +1633,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
     /**
      * Returns the users who are not members of a group and whose first name, last
      * name or username match a given search string.
@@ -1643,6 +1671,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
     /**
      * Returns all the users except a given one.
      *

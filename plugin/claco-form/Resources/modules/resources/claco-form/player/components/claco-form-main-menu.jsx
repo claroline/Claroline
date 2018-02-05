@@ -28,7 +28,7 @@ class ClacoFormMainMenu extends Component {
             className="btn btn-default claco-form-menu-btn"
             href="#/entry/create"
           >
-            <span className="fa fa-w fa-pencil-square-o fa-5x"></span>
+            <span className="fa fa-fw fa-pencil-square-o fa-5x"></span>
             <h4>{trans('add_entry', {}, 'clacoform')}</h4>
           </a>
         }
@@ -37,7 +37,7 @@ class ClacoFormMainMenu extends Component {
             className="btn btn-default claco-form-menu-btn"
             href="#/entries"
           >
-            <span className="fa fa-w fa-search fa-5x"></span>
+            <span className="fa fa-fw fa-search fa-5x"></span>
             <h4>{trans('find_entry', {}, 'clacoform')}</h4>
           </a>
         }
@@ -46,7 +46,7 @@ class ClacoFormMainMenu extends Component {
             className="btn btn-default claco-form-menu-btn"
             onClick={() => this.goToRandomEntry()}
           >
-            <span className="fa fa-w fa-random fa-5x"></span>
+            <span className="fa fa-fw fa-random fa-5x"></span>
             <h4>{trans('random_entry', {}, 'clacoform')}</h4>
           </button>
         }

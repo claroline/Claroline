@@ -47,7 +47,9 @@ class WorkspaceCrud
      */
     public function preCreate(CreateEvent $event)
     {
-        $this->manager->createWorkspace($event->getObject());
+        $workspace = $this->manager->createWorkspace($event->getObject());
+
+        return $this->manager->copy($this->manager->getDefaultModel(), $workspace, false);
     }
 
     /**

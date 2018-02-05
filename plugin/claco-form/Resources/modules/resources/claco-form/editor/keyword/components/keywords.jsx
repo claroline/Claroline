@@ -71,14 +71,14 @@ class Keywords extends Component {
                         className="btn btn-default btn-sm"
                         onClick={() => this.showKeywordEditionForm(keyword)}
                       >
-                        <span className="fa fa-w fa-pencil" />
+                        <span className="fa fa-fw fa-pencil"></span>
                       </button>
                       &nbsp;
                       <button
                         className="btn btn-danger btn-sm"
                         onClick={() => this.showKeywordDeletion(keyword)}
                       >
-                        <span className="fa fa-w fa-trash" />
+                        <span className="fa fa-fw fa-trash"></span>
                       </button>
                     </td>
                   </tr>
@@ -87,7 +87,7 @@ class Keywords extends Component {
             </table>
 
             <button className="btn btn-primary" onClick={() => this.showKeywordCreationForm()}>
-              <span className="fa fa-w fa-plus" />
+              <span className="fa fa-fw fa-plus"></span>
               &nbsp;
               {trans('create_a_keyword', {}, 'clacoform')}
             </button>

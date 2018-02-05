@@ -32,12 +32,6 @@ form .global-error {
     .alert-danger;
 }
 
-.error-message { // todo : should be removed
-    .fa {
-        margin-right: @icon-text-spacer;
-    }
-}
-
 .help-block {
     text-align: justify;
 
@@ -86,8 +80,18 @@ form .global-error {
 }
 
 .toggleable-set {
+    .toggleable-set-group {
+        padding: @panel-body-padding;
+        border: 1px dashed #ccc; // same color than sub-fields
+        margin-bottom: 5px;
+        border-radius: @border-radius-base;
+        background: @panel-default-heading-bg;
+    }
+
     .toggleable-set-toggle .fa {
         margin-right: @icon-text-spacer;
+        width: 20px - @icon-text-spacer; // small cheat to have the same spacing than checkbox (currently 20px)
+        text-align: center;
     }
 }
 

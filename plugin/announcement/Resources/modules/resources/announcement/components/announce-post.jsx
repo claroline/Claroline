@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {t} from '#/main/core/translation'
-import {localeDate} from '#/main/core/scaffolding/date'
+import {displayDate} from '#/main/core/scaffolding/date'
 import {User as UserTypes} from '#/main/core/user/prop-types'
 
 import {UserMicro} from '#/main/core/user/components/micro.jsx'
@@ -17,7 +17,7 @@ const AnnouncePost = props =>
   })}>
     <div className="announce-content panel-body">
       {props.title &&
-      <h2 className="announce-title">{props.title}</h2>
+        <h2 className="announce-title">{props.title}</h2>
       }
 
       <div className="announce-meta">
@@ -29,7 +29,7 @@ const AnnouncePost = props =>
 
           <div className="date">
             {props.meta.publishedAt ?
-              t('published_at', {date: localeDate(props.meta.publishedAt)}) : t('not_published')
+              t('published_at', {date: displayDate(props.meta.publishedAt, true, true)}) : t('not_published')
             }
           </div>
         </div>
@@ -45,33 +45,38 @@ const AnnouncePost = props =>
               <span className="fa fa-fw fa-expand" />
             </TooltipLink>
           }
+          {props.editable &&
+            <TooltipButton
+              id={`${props.id}-send`}
+              title={t('send_mail')}
+              onClick={props.sendPost}
+              className="btn-link-default"
+            >
+              <span className="fa fa-fw fa-at"/>
+            </TooltipButton>
+          }
 
-          <TooltipButton
-            id={`${props.id}-send`}
-            title={t('send_mail')}
-            onClick={props.sendPost}
-            className="btn-link-default"
-          >
-            <span className="fa fa-fw fa-at" />
-          </TooltipButton>
+          {props.editable &&
+            <TooltipLink
+              id={`${props.id}-edit`}
+              title={t('edit')}
+              target={`#/${props.id}/edit`}
+              className="btn-link-default"
+            >
+              <span className="fa fa-fw fa-pencil"/>
+            </TooltipLink>
+          }
 
-          <TooltipLink
-            id={`${props.id}-edit`}
-            title={t('edit')}
-            target={`#/${props.id}/edit`}
-            className="btn-link-default"
-          >
-            <span className="fa fa-fw fa-pencil" />
-          </TooltipLink>
-
-          <TooltipButton
-            id={`${props.id}-delete`}
-            title={t('delete')}
-            onClick={props.removePost}
-            className="btn-link-danger"
-          >
-            <span className="fa fa-fw fa-trash-o" />
-          </TooltipButton>
+          {props.deletable &&
+            <TooltipButton
+              id={`${props.id}-delete`}
+              title={t('delete')}
+              onClick={props.removePost}
+              className="btn-link-danger"
+            >
+              <span className="fa fa-fw fa-trash-o" />
+            </TooltipButton>
+          }
         </div>
       </div>
 
@@ -95,6 +100,8 @@ AnnouncePost.propTypes = {
   restrictions: T.shape({
     visible: T.bool.isRequired
   }).isRequired,
+  deletable: T.bool.isRequired,
+  editable: T.bool.isRequired,
   sendPost: T.func.isRequired,
   removePost: T.func.isRequired
 }

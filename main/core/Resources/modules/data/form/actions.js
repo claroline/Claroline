@@ -8,6 +8,8 @@ import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as alertActions} from '#/main/core/layout/alert/actions'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 
+import {generateUrl} from '#/main/core/api/router'
+
 export const FORM_RESET          = 'FORM_RESET'
 export const FORM_SET_ERRORS     = 'FORM_SET_ERRORS'
 export const FORM_SUBMIT         = 'FORM_SUBMIT'
@@ -53,6 +55,19 @@ actions.uploadFile = (file, uploadUrl = ['apiv2_file_upload'], onSuccess = () =>
       success: (response) => {
         onSuccess(response[0])
       }
+    }
+  })
+}
+
+actions.deleteFile = (fileId, onSuccess = () => {}) => {
+
+  return ({
+    [API_REQUEST]: {
+      url: generateUrl('apiv2_uploadedfile_delete_bulk') + '?ids[]=' + fileId,
+      request: {
+        method: 'DELETE'
+      },
+      success: () => onSuccess({})
     }
   })
 }

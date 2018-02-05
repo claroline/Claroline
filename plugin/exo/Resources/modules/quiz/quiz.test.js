@@ -1,14 +1,13 @@
 import assert from 'assert'
 import freeze from 'deep-freeze'
 
-import {spyConsole, mockRouting, mockTranslator} from '#/main/core/scaffolding/tests'
+import {spyConsole, mockGlobals} from '#/main/core/scaffolding/tests'
 import {resourceNodeFixture} from '#/main/core/resource/tests'
 
 import {resetTypes} from './../items/item-types'
 import {Quiz} from './quiz'
 
 describe('Quiz', () => {
-  before(mockTranslator)
   beforeEach(spyConsole.watch)
 
   afterEach(() => {
@@ -20,7 +19,6 @@ describe('Quiz', () => {
     const quiz = new Quiz(quizFixture(), resourceNodeFixture())
     const element = document.createElement('div')
 
-    mockRouting()
     quiz.render(element)
 
     // this is just a rough test to check main components have been rendered

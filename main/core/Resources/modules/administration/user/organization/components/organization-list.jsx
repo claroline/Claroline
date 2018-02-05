@@ -4,7 +4,7 @@ import {OrganizationCard} from '#/main/core/administration/user/organization/com
 
 const OrganizationList = {
   open: {
-    action: (row) => `#/organizations/${row.id}`
+    action: (row) => `#/organizations/form/${row.id}`
   },
   definition: [
     {

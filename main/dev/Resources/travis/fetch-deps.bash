@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ################################################################################
 # This script handles dependency fetching in travis builds. Whenever possible,
 # it reuses dependency sets which where built by previous requests and sent to a

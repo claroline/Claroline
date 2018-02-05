@@ -100,7 +100,9 @@ class ResourceNodeSerializer
     public function serialize(ResourceNode $resourceNode)
     {
         $serializedNode = [
+            'autoId' => $resourceNode->getId(),
             'id' => $resourceNode->getGuid(),
+            'actualId' => $resourceNode->getId(),
             'name' => $resourceNode->getName(),
             'poster' => $resourceNode->getThumbnail() ? '/'.$resourceNode->getThumbnail()->getRelativeUrl() : null, // todo : add as ResourceNode prop
             'thumbnail' => null,

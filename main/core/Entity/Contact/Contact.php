@@ -26,7 +26,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  *         )
  *     }
  * )
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Contact\ContactRepository")
+ * @ORM\Entity
  * @DoctrineAssert\UniqueEntity({"user", "contact"})
  */
 class Contact
@@ -123,5 +123,10 @@ class Contact
         }
 
         return $this;
+    }
+
+    public function emptyCategories()
+    {
+        return $this->categories->clear();
     }
 }

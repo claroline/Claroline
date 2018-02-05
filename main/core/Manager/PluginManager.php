@@ -108,7 +108,7 @@ class PluginManager
         $datas = [];
 
         foreach ($plugins as $plugin) {
-            if ($this->getBundle($plugin)) {
+            if ($this->getBundle($plugin) && !$this->getBundle($plugin)->isHidden()) {
                 $datas[] = [
                     'id' => $plugin->getId(),
                     'name' => $plugin->getVendorName().$plugin->getBundleName(),
@@ -211,6 +211,14 @@ class PluginManager
     public function getDescription($plugin)
     {
         return $this->getBundle($plugin)->getOrigin();
+    }
+
+    /**
+     * @param mixed $plugin Plugin Entity, ShortName (ClarolineCoreBundle) Fqcn (Claroline\CoreBundle\ClarolineCoreBundle)
+     */
+    public function isHidden($plugin)
+    {
+        return $this->getBundle($plugin)->isHidden();
     }
 
     /**

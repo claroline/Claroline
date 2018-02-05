@@ -9,7 +9,7 @@ const NumericInput = props =>
     id={props.id}
     type="number"
     className={classes('form-control', props.className)}
-    value={isNaN(props.value) ? '' : props.value}
+    value={null === props.value || isNaN(props.value) ? '' : props.value}
     disabled={props.disabled}
     min={props.min}
     max={props.max}
@@ -44,6 +44,8 @@ implementPropTypes(Numeric, FormFieldTypes, {
   min: T.number,
   max: T.number,
   unit: T.string
+}, {
+  value: ''
 })
 
 export {

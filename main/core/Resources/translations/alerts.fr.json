@@ -1,0 +1,152 @@
+{
+  "generic": {
+    "pending": {
+      "title": "Chargement en cours",
+      "message": "Veuillez patienter pendant le chargement de vos données."
+    },
+    "success": {
+      "title": "Succès",
+      "message": ""
+    },
+    "warning": {
+      "title": "Attention",
+      "message": ""
+    },
+    "unauthorized": {
+      "title": "Accès non authorisé",
+      "message": "Vous devez être connecté pour accéder à cette fonctionnalité."
+    },
+    "forbidden": {
+      "title": "Accès interdit",
+      "message": "Vous n'avez pas accès à cette fonctionnalité."
+    },
+    "error": {
+      "title": "Erreur",
+      "message": "Veuillez contacter un administrateur."
+    },
+    "info": {
+      "title": "Information",
+      "message": ""
+    }
+  },
+  "load": {
+    "pending": {
+      "title": "Chargement en cours",
+      "message": "Veuillez patienter pendant le chargement de vos données."
+    },
+    "error": {
+      "title": "Echec du chargement",
+      "message": "Nous n'avons pas réussi à charger vos données."
+    }
+  },
+  "refresh": {
+    "pending": {
+      "title": "Rechargement en cours",
+      "message": "Veuillez patienter pendant le rafraîchissement de vos données."
+    },
+    "error": {
+      "title": "Echec du rechargement",
+      "message": "Nous n'avons pas réussi à rafraîchir vos données."
+    }
+  },
+  "save": {
+    "pending": {
+      "title": "Sauvegarde en cours",
+      "message": "Veuillez patienter pendant la sauvegarde de vos données."
+    },
+    "success": {
+      "title": "Sauvegarde réussie",
+      "message": "Vos données ont correctement été sauvegardées."
+    },
+    "warning": {
+      "title": "Echec de la sauvegarde",
+      "message": "Veuillez corriger les erreurs de votre formulaire et réessayer."
+    },
+    "error": {
+      "title": "Echec de la sauvegarde",
+      "message": "Nous n'avons pas réussi à sauvegarder vos données."
+    }
+  },
+  "create": {
+    "pending": {
+      "title": "Création en cours",
+      "message": "Veuillez patienter pendant la sauvegarde de vos données."
+    },
+    "success": {
+      "title": "Création réussie",
+      "message": "Vos données ont correctement été sauvegardées."
+    },
+    "warning": {
+      "title": "Echec de la création",
+      "message": "Veuillez corriger les erreurs de votre formulaire et réessayer."
+    },
+    "error": {
+      "title": "Echec de la création",
+      "message": "Nous n'avons pas réussi à sauvegarder vos données."
+    }
+  },
+  "update": {
+    "pending": {
+      "title": "Mise à jour en cours",
+      "message": "Veuillez patienter pendant la sauvegarde de vos données."
+    },
+    "success": {
+      "title": "Mise à jour réussie",
+      "message": "Vos données ont correctement été sauvegardées."
+    },
+    "warning": {
+      "title": "Echec de la mise à jour",
+      "message": "Veuillez corriger les erreurs de votre formulaire et réessayer."
+    },
+    "error": {
+      "title": "Echec de la mise à jour",
+      "message": "Nous n'avons pas réussi à sauvegarder vos données."
+    }
+  },
+  "delete": {
+    "pending": {
+      "title": "Suppresion en cours",
+      "message": "Veuillez patienter pendant la suppression de vos données."
+    },
+    "success": {
+      "title": "Suppression réussie",
+      "message": "Vos données ont correctement été supprimée."
+    },
+    "error": {
+      "title": "Echec de la suppression",
+      "message": "Nous n'avons pas réussi à supprimer vos données."
+    }
+  },
+  "send": {
+    "pending": {
+      "title": "Envoi en cours",
+      "message": "Veuillez patienter pendant l'envoi de votre message."
+    },
+    "success": {
+      "title": "Envoi réussi",
+      "message": "Votre message a correctement été envoyé."
+    },
+    "error": {
+      "title": "Echec de l'envoi",
+      "message": "Nous n'avons pas réussi à envoyer votre message."
+    }
+  },
+  "upload": {
+    "pending": {
+      "title": "Téléchargement en cours",
+      "message": "Veuillez patienter pendant le téléchargement de votre fichier."
+    },
+    "success": {
+      "title": "Téléchargement réussi",
+      "message": "Votre fichier a correctement été téléchargé."
+    },
+    "warning": {
+      "title": "Echec du téléchargement",
+      "message": "Veuillez utiliser un type de fichier supporté et réessayer."
+    },
+    "error": {
+      "title": "Echec du téléchargement",
+      "message": "Nous n'avons pas réussi à télécharger votre fichier."
+    }
+  }
+}

@@ -20,7 +20,10 @@ class ActivableSet extends Component {
 
   toggle(checked) {
     this.setState({activated: checked})
-    this.props.onChange(checked)
+
+    if (this.props.onChange) {
+      this.props.onChange(checked)
+    }
   }
 
   render() {
@@ -48,7 +51,7 @@ ActivableSet.propTypes = {
   labelActivated: T.string,
   activated: T.bool,
   onChange: T.func,
-  children: T.any.isRequired
+  children: T.node.isRequired
 }
 
 ActivableSet.defaultProps = {
