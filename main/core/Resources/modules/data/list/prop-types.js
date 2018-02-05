@@ -2,7 +2,7 @@ import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
 import {DataProperty} from '#/main/core/data/prop-types'
-import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
+import {Action} from '#/main/core/layout/button/prop-types'
 
 /**
  * Action available for data in the list.
@@ -11,7 +11,7 @@ import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
  * @type {object}
  */
 const DataListAction = {
-  propTypes: merge({}, ActionTypes.propTypes, {
+  propTypes: merge({}, Action.propTypes, {
     /**
      * A function to calculate if the action should be disabled.
      * It receives the list of data objects as param.
@@ -31,7 +31,8 @@ const DataListAction = {
      * @type {string}
      */
     context: T.oneOf(['row', 'selection'])
-  })
+  }),
+  defaultProps: merge({}, Action.defaultProps)
 }
 
 /**
@@ -53,11 +54,13 @@ const DataListProperty = {
     alias: T.string,
 
     /**
-     * A list of options to configure the data type (eg. the list of choices of an enum).
+     * The calculated value for virtual properties.
      *
-     * @type {object}
+     * @param {object} row - The full row data.
+     *
+     * @type {mixed} - The computed value. Type depends on the data type.
      */
-    options: T.object,
+    calculated : T.func, // only used in tables representation
 
     /**
      * Customizes how the property is rendered in `table` like representations.

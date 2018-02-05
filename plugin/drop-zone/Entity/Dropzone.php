@@ -626,7 +626,7 @@ class Dropzone extends AbstractResource
             $allowed[] = 'file';
         }
         if ($this->richTextEnabled) {
-            $allowed[] = 'text';
+            $allowed[] = 'html';
         }
         if ($this->urlEnabled) {
             $allowed[] = 'url';
@@ -641,7 +641,7 @@ class Dropzone extends AbstractResource
     public function setAllowedDocuments(array $allowedDocuments)
     {
         $this->uploadEnabled = in_array('file', $allowedDocuments);
-        $this->richTextEnabled = in_array('text', $allowedDocuments);
+        $this->richTextEnabled = in_array('html', $allowedDocuments);
         $this->urlEnabled = in_array('url', $allowedDocuments);
         $this->workspaceResourceEnabled = in_array('resource', $allowedDocuments);
     }

@@ -1,9 +1,6 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
-import moment from 'moment'
 
-import {ErrorBlock} from '#/main/core/layout/form/components/error-block.jsx'
 import {CheckboxesGroup} from '#/main/core/layout/form/components/group/checkboxes-group.jsx'
 import {CountryGroup} from '#/main/core/layout/form/components/group/country-group.jsx'
 import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
@@ -16,41 +13,17 @@ import {EmailGroup} from '#/main/core/layout/form/components/group/email-group.j
 import {DateGroup} from '#/main/core/layout/form/components/group/date-group.jsx'
 import {FileGroup} from '#/main/core/layout/form/components/group/file-group.jsx'
 
-import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
-import {Checkboxes} from '#/main/core/layout/form/components/field/checkboxes.jsx'
-import {CascadeSelect} from '#/main/core/layout/form/components/field/cascade-select.jsx'
-import {Textarea} from '#/main/core/layout/form/components/field/textarea.jsx'
-import {Date} from '#/main/core/layout/form/components/field/date.jsx'
-import {File} from '#/main/core/layout/form/components/field/file.jsx'
-
-const isCascadeSelect = choices => {
-  return choices.filter(c => c.parent).length > 0
-}
-
 // deprecated
 // only used by claco-form
 // todo : rewrite claco-form to use form.jsx
 export const FormField = props => {
   switch (props.type) {
     case 'checkboxes':
-      return (props.noLabel ?
-        <div className={classes({'has-error': props.error})}>
-          <Checkboxes
-            id={props.controlId}
-            inline={true}
-            options={props.choices || []}
-            value={props.value || []}
-            disabled={props.disabled}
-            error={props.error}
-            onChange={value => props.onChange(value)}
-          />
-          {props.error &&
-            <ErrorBlock text={props.error}/>
-          }
-        </div> :
+      return (
         <CheckboxesGroup
           id={props.controlId}
           label={props.label}
+          noLabel={props.noLabel}
           options={props.choices || []}
           value={props.value}
           disabled={props.disabled}
@@ -59,22 +32,11 @@ export const FormField = props => {
         />
       )
     case 'radio':
-      return (props.noLabel ?
-        <div className={classes({'has-error': props.error})}>
-          <Radios
-            id={props.controlId}
-            options={props.choices || []}
-            value={props.value || ''}
-            disabled={props.disabled}
-            onChange={value => props.onChange(value)}
-          />
-          {props.error &&
-            <ErrorBlock text={props.error}/>
-          }
-        </div> :
+      return (
         <RadiosGroup
           id={props.controlId}
           label={props.label}
+          noLabel={props.noLabel}
           options={props.choices || []}
           value={props.value || ''}
           disabled={props.disabled}
@@ -83,22 +45,12 @@ export const FormField = props => {
         />
       )
     case 'select':
-      if (props.choices && isCascadeSelect(props.choices)) {
-        return (props.noLabel ?
-          <div className={classes({'has-error': props.error})}>
-            <CascadeSelect
-              options={props.choices || []}
-              selectedValue={props.value || []}
-              disabled={props.disabled}
-              onChange={props.onChange}
-            />
-            {props.error &&
-              <ErrorBlock text={props.error}/>
-            }
-          </div> :
+      if (props.choices && props.choices.filter(c => c.parent).length > 0) {
+        return (
           <CascadeSelectGroup
             controlId={props.controlId}
             label={props.label}
+            noLabel={props.noLabel}
             options={props.choices || []}
             selectedValue={props.value || []}
             disabled={props.disabled}
@@ -170,22 +122,11 @@ export const FormField = props => {
         />
       )
     case 'rich_text':
-      return (props.noLabel ?
-        <div className={classes({'has-error': props.error})}>
-          <Textarea
-            id={props.controlId}
-            value={props.value || ''}
-            minRows={2}
-            disabled={props.disabled}
-            onChange={props.onChange}
-          />
-          {props.error &&
-            <ErrorBlock text={props.error}/>
-          }
-        </div> :
+      return (
         <HtmlGroup
           id={props.controlId}
           label={props.label}
+          noLabel={props.noLabel}
           value={props.value}
           disabled={props.disabled}
           error={props.error}
@@ -193,21 +134,11 @@ export const FormField = props => {
         />
       )
     case 'date':
-      return (props.noLabel ?
-        <div className={classes({'has-error': props.error})}>
-          <Date
-            id={props.controlId}
-            value={props.value !== undefined && props.value !== null ? props.value.date || props.value || '' : ''}
-            disabled={props.disabled}
-            onChange={props.onChange}
-          />
-          {props.error &&
-          <ErrorBlock text={props.error}/>
-          }
-        </div> :
+      return (
         <DateGroup
           id={props.controlId}
           label={props.label}
+          noLabel={props.noLabel}
           value={props.value !== undefined && props.value !== null ? props.value.date || props.value || '' : ''}
           disabled={props.disabled}
           error={props.error}
@@ -215,29 +146,18 @@ export const FormField = props => {
         />
       )
     case 'file':
-      return (props.noLabel ?
-        <div className={classes({'has-error': props.error})}>
-          <File
-            controlId={props.controlId}
-            value={props.value || []}
-            types={props.types || []}
-            max={props.max}
-            disabled={props.disabled}
-            onChange={value => props.onChange(value)}
-          />
-          {props.error &&
-            <ErrorBlock text={props.error}/>
-          }
-        </div> :
+      return (
         <FileGroup
-          controlId={props.controlId}
+          id={props.controlId}
           label={props.label}
-          value={props.value || []}
-          types={props.types || []}
+          noLabel={props.noLabel}
+          value={props.value}
+          types={props.types}
           max={props.max}
+          multiple={true}
           disabled={props.disabled}
           error={props.error}
-          onChange={value => props.onChange(value)}
+          onChange={props.onChange}
         />
       )
     default:

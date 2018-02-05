@@ -1,6 +1,7 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
+import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
 import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
 import {Image} from '#/main/core/layout/form/components/field/image.jsx'
 
@@ -9,18 +10,12 @@ const ImageGroup = props =>
     <Image {...props} />
   </FormGroup>
 
-ImageGroup.propTypes = {
-  controlId: T.string.isRequired,
-  value: T.object,
-  disabled: T.bool.isRequired,
-  onChange: T.func.isRequired
-}
+implementPropTypes(ImageGroup, FormGroupWithFieldTypes, {
+  // more precise value type
+  value: T.object
+}, {
 
-ImageGroup.defaultProps = {
-  value: '',
-  disabled: false,
-  onChange: () => {}
-}
+})
 
 export {
   ImageGroup

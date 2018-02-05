@@ -6,9 +6,7 @@ import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx
 import {Select} from '#/main/core/layout/form/components/field/select.jsx'
 
 const SelectGroup = props =>
-  <FormGroup
-    {...props}
-  >
+  <FormGroup {...props}>
     <Select
       id={props.id}
       choices={props.choices}

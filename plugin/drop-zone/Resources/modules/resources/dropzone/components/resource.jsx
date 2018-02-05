@@ -41,8 +41,8 @@ const Resource = props =>
         label: trans('show_overview'),
         action: '#/'
       }, {
-        icon: 'fa fa-fw fa-download',
-        label: trans('my_drop', {}, 'dropzone'),
+        icon: 'fa fa-fw fa-upload',
+        label: trans('show_evaluation', {}, 'dropzone'),
         action: '#/my/drop',
         displayed: !!props.myDrop
       }, {

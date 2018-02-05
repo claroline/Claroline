@@ -1554,5 +1554,6 @@
     "close_calendar": "Close calendar",
     "now": "Now",
     "task": "Task",
+    "submit": "Submit",
     "workspace_awaiting_validation": "An administrator must accept your registration to the workspace."
 }
