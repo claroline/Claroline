@@ -1,5 +1,6 @@
 import angular from 'angular/index'
 import 'angular-toArrayFilter/toArrayFilter'
+import 'angular-daterangepicker/js/angular-daterangepicker'
 
 //this hack is required for the daterange picker to work
 import moment from 'moment'
