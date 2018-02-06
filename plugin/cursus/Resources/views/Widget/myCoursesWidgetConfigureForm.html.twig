@@ -25,7 +25,7 @@
 
 
 {% block javascripts %}
-    <script src="{{ asset('bundles/frontend/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}">
+    <script src="{{ asset('packages/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}">
     </script>
     <script>
         $('body').on('focus', '.cursus_colorpicker', function () {
@@ -37,6 +37,6 @@
 {% block stylesheets %}
     <link rel="stylesheet"
           type="text/css"
-          href="{{ asset('bundles/frontend/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css')}}"
+          href="{{ asset('packages/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.css')}}"
     >
 {% endblock %}

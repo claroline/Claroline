@@ -21,9 +21,9 @@
 {% if isAuthorized %}
     {% block stylesheets %}
         {{ parent() }}
-        <link rel="stylesheet" href="{{ asset('bundles/frontend/angular-ui-tree/dist/angular-ui-tree.min.css') }}" />
-        <link rel="stylesheet" href="{{ asset('bundles/frontend/angular-data-table/release/dataTable.css') }}" />
-        <link rel="stylesheet" href="{{ asset('bundles/frontend/angular-data-table/release/material.css') }}" />
+        <link rel="stylesheet" href="{{ asset('packages/angular-ui-tree/dist/angular-ui-tree.min.css') }}" />
+        <link rel="stylesheet" href="{{ asset('packages/angular-data-table/release/dataTable.css') }}" />
+        <link rel="stylesheet" href="{{ asset('packages/angular-data-table/release/material.css') }}" />
         <link rel="stylesheet" href="{{ asset('packages/angular-loading-bar/build/loading-bar.min.css') }}" />
         <link rel="stylesheet" href="{{ asset('packages/ng-table/dist/ng-table.css') }}" />
         <link rel='stylesheet' href='{{ asset('packages/angular-bootstrap-colorpicker/css/colorpicker.min.css')}}'>

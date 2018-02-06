@@ -36,9 +36,9 @@
 {% if isAuthorized %}
     {% block stylesheets %}
         {{ parent() }}
-        <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-ui-tree/dist/angular-ui-tree.min.css') }}" />
-        <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/dataTable.css') }}" />
-        <link rel="stylesheet"  href="{{ asset('bundles/frontend/angular-data-table/release/material.css') }}" />
+        <link rel="stylesheet"  href="{{ asset('packages/angular-ui-tree/dist/angular-ui-tree.min.css') }}" />
+        <link rel="stylesheet"  href="{{ asset('packages/angular-data-table/release/dataTable.css') }}" />
+        <link rel="stylesheet"  href="{{ asset('packages/angular-data-table/release/material.css') }}" />
     {% endblock %}
 
     {% block javascripts %}

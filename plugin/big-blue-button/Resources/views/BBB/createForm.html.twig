@@ -42,7 +42,7 @@
     <link
         rel='stylesheet'
         type='text/css'
-        href='{{ asset('bundles/frontend/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}'
+        href='{{ asset('packages/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}'
     />
 {% endblock %}
 
@@ -51,10 +51,10 @@
      'js/translations/agenda/*.js'
        %}<script src="{{ asset_url }}"></script>
     {% endjavascripts %}
-    <script type="text/javascript" src="{{ asset('bundles/frontend/moment/min/moment-with-locales.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('packages/moment/min/moment-with-locales.min.js') }}"></script>
     <script
         type="text/javascript"
-        src="{{ asset('bundles/frontend/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"
+        src="{{ asset('packages/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"
     >
     </script>
     <script type='text/javascript'>
