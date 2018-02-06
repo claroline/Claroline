@@ -1,5 +1,4 @@
 {
   "jquery-tagcanvas": "https://github.com/goat1000/TagCanvas.git#master",
-  "jquery-option-tree": "https://github.com/jongilbraith/jquery-option-tree.git#6b7137ec6e",
   "tag-it": "https://github.com/aehlke/tag-it.git#6ccd2de95e"
 }
