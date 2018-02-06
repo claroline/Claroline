@@ -52,6 +52,7 @@ class AdditionalInstaller extends BaseInstaller
         try {
             $updater = new Updater\Updater110000($this->container);
             $updater->lnPictureDirectory();
+            $updater->lnPackageDirectory();
         } catch (\Exception $e) {
             $this->log($e->getMessage(), LogLevel::ERROR);
         }

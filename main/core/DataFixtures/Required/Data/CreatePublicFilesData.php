@@ -46,5 +46,6 @@ class CreatePublicFilesData implements RequiredFixture
 
         $updater = new Updater110000($this->container);
         $updater->lnPictureDirectory($this->container);
+        $updater->lnPackageDirectory($this->container);
     }
 }
