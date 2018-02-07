@@ -20,7 +20,7 @@ import PortfolioFactory from './services/portfolioFactory'
 import PortfolioManager from './services/portfolioManager'
 
 var commentsApp = angular.module('commentsApp', ['ngResource', 'ngSanitize', 'ngAnimate', 'ui.tinymce',
-  'app.translation', 'app.interpolator', 'app.directives', 'angular-toarrayfilter', 'app.config'])
+  'app.translation', 'app.interpolator', 'app.directives', 'angular-toArrayFilter', 'app.config'])
 
 commentsApp.value('assetPath', window.assetPath)
 

@@ -25,7 +25,7 @@ module.exports = {
     'angular-route',
     'angular-sanitize',
     'angular-strap',
-    'angular-toarrayfilter',
+    'angular-toarrayfilter/toArrayFilter',
     'angular-touch',
     'angular-ui-router',
     'ui-select',
