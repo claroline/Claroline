@@ -25,6 +25,7 @@ const UserList = {
       displayed: true
     }, {
       name: 'email',
+      alias: 'mail',
       type: 'email',
       label: t('email'),
       displayed: true
