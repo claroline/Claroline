@@ -62,52 +62,59 @@ ListPrimaryAction.defaultProps = {
  * @param props
  * @constructor
  */
-const ListActions = props =>
-  <TooltipElement
-    id={`${props.id}-tip`}
-    tip={t('actions')}
-    position="left"
-  >
-    <DropdownButton
-      id={`${props.id}-btn`}
-      title={<span className="fa fa-fw fa-ellipsis-v" />}
-      className="data-actions-btn btn-link-default"
-      bsStyle="link"
-      noCaret={true}
-      pullRight={true}
+const ListActions = props => {
+  const displayedActions = props.actions.filter(
+    action => !action.displayed || action.displayed([props.item])
+  )
+
+  const actions          = displayedActions.filter(action => !action.dangerous)
+  const dangerousActions = displayedActions.filter(action =>  action.dangerous)
+
+  // only display button if there are actions
+  return (0 !== displayedActions.length) && (
+    <TooltipElement
+      id={`${props.id}-tip`}
+      tip={t('actions')}
+      position="left"
     >
-      <MenuItem header>{t('actions')}</MenuItem>
+      <DropdownButton
+        id={`${props.id}-btn`}
+        title={<span className="fa fa-fw fa-ellipsis-v" />}
+        className="data-actions-btn btn-link-default"
+        bsStyle="link"
+        noCaret={true}
+        pullRight={true}
+      >
+        <MenuItem header>{t('actions')}</MenuItem>
 
-      {props.actions.filter(
-        action => !action.dangerous && (!action.displayed || action.displayed([props.item]))
-      ).map((action, actionIndex) =>
-        <MenuItemAction
-          key={`${props.id}-action-${actionIndex}`}
-          icon={action.icon}
-          label={action.label}
-          disabled={action.disabled ? action.disabled([props.item]) : false}
-          action={typeof action.action === 'function' ? () => action.action([props.item]) : action.action}
-        />
-      )}
+        {actions.map((action, actionIndex) =>
+          <MenuItemAction
+            key={`${props.id}-action-${actionIndex}`}
+            icon={action.icon}
+            label={action.label}
+            disabled={action.disabled ? action.disabled([props.item]) : false}
+            action={typeof action.action === 'function' ? () => action.action([props.item]) : action.action}
+          />
+        )}
 
-      {0 !== props.actions.filter(action => action.dangerous && (!action.displayed || action.displayed([props.item]))).length &&
-        <MenuItem divider />
-      }
+        {(0 !== actions.length && 0 !== dangerousActions.length) &&
+          <MenuItem divider />
+        }
 
-      {props.actions.filter(
-        action => action.dangerous && (!action.displayed || action.displayed([props.item]))
-      ).map((action, actionIndex) =>
-        <MenuItemAction
-          key={`${props.id}-action-dangerous-${actionIndex}`}
-          icon={action.icon}
-          label={action.label}
-          disabled={action.disabled ? action.disabled([props.item]) : false}
-          action={typeof action.action === 'function' ? () => action.action([props.item]) : action.action}
-          dangerous={true}
-        />
-      )}
-    </DropdownButton>
-  </TooltipElement>
+        {dangerousActions.map((action, actionIndex) =>
+          <MenuItemAction
+            key={`${props.id}-action-dangerous-${actionIndex}`}
+            icon={action.icon}
+            label={action.label}
+            disabled={action.disabled ? action.disabled([props.item]) : false}
+            action={typeof action.action === 'function' ? () => action.action([props.item]) : action.action}
+            dangerous={true}
+          />
+        )}
+      </DropdownButton>
+    </TooltipElement>
+  )
+}
 
 ListActions.propTypes = {
   id: T.string.isRequired,
