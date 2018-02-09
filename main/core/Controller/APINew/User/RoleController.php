@@ -16,7 +16,10 @@ use Claroline\CoreBundle\API\Options;
 use Claroline\CoreBundle\Controller\APINew\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * @ApiMeta(class="Claroline\CoreBundle\Entity\Role")
@@ -38,6 +41,26 @@ class RoleController extends AbstractCrudController
             'list' => [Options::SERIALIZE_COUNT_USER],
             'get' => [Options::SERIALIZE_COUNT_USER],
         ];
+    }
+
+    /**
+     * List platform roles.
+     *
+     * @Route("platform/roles", name="apiv2_platform_roles_list")
+     * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function listPlatformRolesAction(Request $request)
+    {
+        return new JsonResponse(
+            $this->finder->search('Claroline\CoreBundle\Entity\Role', array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['type' => 1]]
+            ))
+        );
     }
 
     use HasUsersTrait;

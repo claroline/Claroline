@@ -8,9 +8,9 @@ use Doctrine\Common\Persistence\ObjectManager;
 use FormaLibre\ReservationBundle\Entity\Reservation;
 use FormaLibre\ReservationBundle\Entity\Resource;
 use FormaLibre\ReservationBundle\Manager\ReservationManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\RouterInterface;
@@ -76,7 +76,7 @@ class ReservationController extends Controller
         $reservations = $this->reservationRepo->findAll();
 
         $events = [];
-        foreach ($reservations as $key => $reservation) {
+        foreach ($reservations as $reservation) {
             if ($this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), $this::SEE)) {
                 $events[] = $this->reservationManager->completeJsonEventWithReservation($reservation);
             }
@@ -112,12 +112,12 @@ class ReservationController extends Controller
             return new JsonResponse($this->reservationManager->completeJsonEventWithReservation($reservation));
         }
 
-        return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', array(
+        return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', [
             'form' => $form->createView(),
             'action' => $this->router->generate('formalibre_add_reservation'),
             'reservation' => $this->request->getMethod() === 'POST' ? $form->getData() : null,
             'editMode' => false,
-        ));
+        ]);
     }
 
     /**
@@ -137,13 +137,13 @@ class ReservationController extends Controller
         $reservation->setEnd($reservation->getEvent()->getEndInTimestamp());
         $form = $this->createForm($formType, $reservation);
 
-        return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', array(
+        return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', [
             'form' => $form->createView(),
             'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
             'reservation' => $reservation,
             'editMode' => true,
             'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), self::BOOK),
-        ));
+        ]);
     }
 
     /**
@@ -174,13 +174,13 @@ class ReservationController extends Controller
             return new JsonResponse($this->reservationManager->completeJsonEventWithReservation($reservation));
         }
 
-        return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', array(
+        return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', [
             'form' => $form->createView(),
             'action' => $this->router->generate('formalibre_change_reservation', ['id' => $reservation->getId()]),
             'reservation' => $reservation,
             'editMode' => true,
             'canDelete' => $this->reservationManager->hasAccess($reservation->getEvent()->getUser(), $reservation->getResource(), self::BOOK),
-        ));
+        ]);
     }
 
     /**

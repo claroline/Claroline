@@ -3,9 +3,9 @@
 namespace FormaLibre\ReservationBundle\Validator\Constraints;
 
 use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Validator("reservation_modify_validator")

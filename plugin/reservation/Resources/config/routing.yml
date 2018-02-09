@@ -7,3 +7,10 @@ reservation_admin_controller:
     resource: "@FormaLibreReservationBundle/Controller/ReservationAdminController.php"
     type: annotation
     prefix: /
+
+formalibre_reservation_api:
+    resource: "@FormaLibreReservationBundle/Controller/API/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true
