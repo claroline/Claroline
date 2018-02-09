@@ -174,13 +174,13 @@
 
     a {
         flex: 1;
-        font-size: @font-size-base;
-        height: (@line-height-computed*2) + 12px + 4px;
+        font-size: @font-size-small;
+        height: floor((@font-size-small * @line-height-small))*2 + 8px + 4px;
         display: inline-flex;
         flex-direction: row;
         justify-content: flex-start;
         align-items: center;
-        padding: 6px 12px;
+        padding: 4px 12px;
         color: #666666;
         background: #EDEDED;
         border: 2px solid #EDEDED;

@@ -31,7 +31,9 @@ const UserPageHeader = props =>
 
 UserPageHeader.propTypes = {
   className: T.string,
-  picture: T.string,
+  picture: T.shape({
+    url: T.string.isRequired
+  }),
   title: T.string.isRequired,
   subtitle: T.string,
   children: T.node.isRequired
