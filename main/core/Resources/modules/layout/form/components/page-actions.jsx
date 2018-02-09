@@ -1,8 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {t} from '#/main/core/translation'
-
+import {trans} from '#/main/core/translation'
 import {PageAction} from '#/main/core/layout/page'
 
 const OpenAction = props =>
@@ -24,7 +23,7 @@ OpenAction.propTypes = {
 
 OpenAction.defaultProps = {
   icon: 'fa fa-pencil',
-  label: t('edit'),
+  label: trans('edit'),
   disabled: false
 }
 
@@ -47,7 +46,7 @@ SaveAction.propTypes = {
 
 SaveAction.defaultProps = {
   icon: 'fa fa-floppy-o',
-  label: t('save'),
+  label: trans('save'),
   disabled: false
 }
 
@@ -69,7 +68,7 @@ CancelAction.propTypes = {
 
 CancelAction.defaultProps = {
   icon: 'fa fa-times',
-  label: t('cancel'),
+  label: trans('cancel'),
   disabled: false
 }
 
@@ -108,10 +107,27 @@ const FormPageActions = props => props.opened ?
   <ClosedPageActions {...props} />
 
 FormPageActions.propTypes = {
-  save: T.object.isRequired,
   opened: T.bool,
-  open: T.object,
-  cancel: T.object
+  open: T.shape({
+    label: T.string,
+    icon: T.string,
+    action: T.oneOfType([T.string, T.func]),
+    disabled: T.bool
+  }),
+
+  save: T.shape({
+    label: T.string,
+    icon: T.string,
+    action: T.func,
+    disabled: T.bool
+  }).isRequired,
+
+  cancel: T.shape({
+    label: T.string,
+    icon: T.string,
+    action: T.func,
+    disabled: T.bool
+  })
 }
 
 FormPageActions.defaultProps = {

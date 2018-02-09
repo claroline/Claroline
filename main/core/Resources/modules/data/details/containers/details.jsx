@@ -1,49 +1,9 @@
-import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 import get from 'lodash/get'
 
 import {DataDetails} from '#/main/core/data/details/components/details.jsx'
 import {select} from '#/main/core/data/details/selectors'
-
-const DataDetailsComponent = props =>
-  <DataDetails
-    {...props}
-
-    data={props.data}
-  >
-    {props.children}
-  </DataDetails>
-
-DataDetailsComponent.propTypes = {
-  /**
-   * The name of the data in the form.
-   *
-   * It should be the key in the store where the list has been mounted
-   * (aka where `makeFormReducer()` has been called).
-   */
-  name: T.string.isRequired,
-
-  /**
-   * Permits to connect the details on a sub-part of the data.
-   * This is useful when the details are broken in multiple steps/pages
-   *
-   * It MUST be a valid lodash/get selector.
-   */
-  dataPart: T.string,
-
-  /**
-   * Custom parts of the form.
-   */
-  children: T.node,
-
-  // retrieved from store
-  data: T.object
-}
-
-DataDetailsComponent.defaultProps = {
-  data: {}
-}
 
 const DataDetailsContainer = connect(
   (state, ownProps) => {
@@ -61,7 +21,25 @@ const DataDetailsContainer = connect(
     }
   },
   null
-)(DataDetailsComponent)
+)(DataDetails)
+
+DataDetailsContainer.propTypes = {
+  /**
+   * The name of the data in the form.
+   *
+   * It should be the key in the store where the list has been mounted
+   * (aka where `makeFormReducer()` has been called).
+   */
+  name: T.string.isRequired,
+
+  /**
+   * Permits to connect the details on a sub-part of the data.
+   * This is useful when the details are broken in multiple steps/pages
+   *
+   * It MUST be a valid lodash/get selector.
+   */
+  dataPart: T.string
+}
 
 export {
   DataDetailsContainer

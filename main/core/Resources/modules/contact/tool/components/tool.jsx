@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {trans} from '#/main/core/translation'
-import {TabbedPageContainer} from '#/main/core/layout/page/containers/tabbed-page.jsx'
+import {TabbedPageContainer} from '#/main/core/layout/tabs'
 
 import {Contacts, ContactsActions} from '#/main/core/contact/tool/components/contacts.jsx'
 import {VisibleUsers, VisibleUsersActions} from '#/main/core/contact/tool/components/visible-users.jsx'

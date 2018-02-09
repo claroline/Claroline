@@ -145,6 +145,7 @@ const ResourceOverview = props =>
                 {...action}
                 key={index}
                 className={classes('btn-block', {
+                  'btn-default': !action.primary && !action.dangerous,
                   'btn-primary': action.primary,
                   'btn-danger': action.dangerous
                 })}

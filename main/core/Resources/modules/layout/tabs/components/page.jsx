@@ -4,8 +4,8 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 
-import {Router, Route, Redirect, NavLink, Switch} from '#/main/core/router'
-import {Page, PageContent} from '#/main/core/layout/page/components/page.jsx'
+import {Route, NavLink, Switch} from '#/main/core/router'
+import {RoutedPage, RoutedPageContent} from '#/main/core/layout/router'
 
 const PageTabs = props =>
   <header className={classes('page-header', props.className)}>

@@ -1,6 +1,6 @@
 
 import {connectPage} from '#/main/core/layout/page/connect'
-import {RoutedPage} from '#/main/core/layout/page/components/page.jsx'
+import {RoutedPage} from '#/main/core/layout/router/components/page.jsx'
 
 /**
  * Connected container for routed pages.

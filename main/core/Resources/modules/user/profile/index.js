@@ -9,7 +9,7 @@ bootstrap(
   // app DOM container (also holds initial app data as data attributes)
   '.user-profile-container',
 
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  // app main component
   Profile,
 
   // app store configuration

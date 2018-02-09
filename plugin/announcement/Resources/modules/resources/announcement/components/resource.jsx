@@ -76,6 +76,7 @@ Resource.propTypes = {
   openDetail: T.func.isRequired,
   resetDetail: T.func.isRequired,
 
+  formData: T.object,
   formOpened: T.bool.isRequired,
   formPendingChanges: T.bool.isRequired,
   formValidating: T.bool.isRequired,

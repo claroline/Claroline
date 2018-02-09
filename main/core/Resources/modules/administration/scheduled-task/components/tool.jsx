@@ -3,13 +3,15 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
+import {navigate, matchPath, withRouter} from '#/main/core/router'
 import {
   PageActions,
-  PageContent,
-  PageHeader,
-  RoutedPageContainer
+  PageHeader
 } from '#/main/core/layout/page'
+import {
+  RoutedPageContainer,
+  RoutedPageContent
+} from '#/main/core/layout/router'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
 import {ScheduledTasks} from '#/main/core/administration/scheduled-task/components/scheduled-tasks.jsx'
@@ -57,21 +59,19 @@ const Tool = props =>
       />
     </PageHeader>
 
-    <PageContent>
-      <Routes
-        routes={[
-          {
-            path: '/',
-            component: ScheduledTasks,
-            exact: true
-          }, {
-            path: '/form/:id?',
-            component: ScheduledTask,
-            onEnter: (params) => props.openForm(params.id || null)
-          }
-        ]}
-      />
-    </PageContent>
+    <RoutedPageContent
+      routes={[
+        {
+          path: '/',
+          component: ScheduledTasks,
+          exact: true
+        }, {
+          path: '/form/:id?',
+          component: ScheduledTask,
+          onEnter: (params) => props.openForm(params.id || null)
+        }
+      ]}
+    />
   </RoutedPageContainer>
 
 Tool.propTypes = {
@@ -81,7 +81,7 @@ Tool.propTypes = {
 
 const ScheduledTaskTool = connect(
   state => ({
-    isCronConfigured: select.isCronConfigured(state),
+    isCronConfigured: select.isCronConfigured(state)
   }),
   dispatch => ({
     openForm(id = null) {

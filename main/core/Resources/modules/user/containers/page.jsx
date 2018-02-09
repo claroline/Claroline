@@ -1,5 +1,3 @@
-import React from 'react'
-
 import {connectPage} from '#/main/core/layout/page/connect'
 
 import {actions} from '#/main/core/administration/user/user/actions'

@@ -20,7 +20,7 @@ bootstrap(
   // app DOM container (also holds initial app data as data attributes)
   '.dropzone-container',
 
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  // app main component
   DropzoneResource,
 
   // app store configuration

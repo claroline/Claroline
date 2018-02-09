@@ -1,43 +1,11 @@
-import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {getUrl} from '#/main/core/api/router'
-import {FormPageActions as FormPageActionsComponent} from '#/main/core/layout/form/components/page-actions.jsx'
+import {url} from '#/main/core/api/router'
+import {FormPageActions} from '#/main/core/layout/form/components/page-actions.jsx'
 
 import {actions} from '#/main/core/data/form/actions'
 import {select} from '#/main/core/data/form/selectors'
-
-const FormPageActions = props =>
-  <FormPageActionsComponent
-    {...props}
-  />
-
-FormPageActions.propTypes = {
-  formName: T.string.isRequired,
-  target: T.oneOfType([T.string, T.array, T.func]),
-
-  open: T.shape({
-    label: T.string,
-    icon: T.string,
-    action: T.oneOfType([T.string, T.func]),
-    disabled: T.bool
-  }),
-
-  save: T.shape({
-    label: T.string,
-    icon: T.string,
-    action: T.func,
-    disabled: T.bool
-  }),
-
-  cancel: T.shape({
-    label: T.string,
-    icon: T.string,
-    action: T.func,
-    disabled: T.bool
-  })
-}
 
 const FormPageActionsContainer = connect(
   (state, ownProps) => ({
@@ -63,7 +31,7 @@ const FormPageActionsContainer = connect(
         }
 
         if (ownProps.target) {
-          const targetUrl = getUrl(
+          const targetUrl = url(
             typeof ownProps.target === 'function' ? ownProps.target(stateProps.data, stateProps.new) : ownProps.target
           )
 
@@ -83,6 +51,11 @@ const FormPageActionsContainer = connect(
     })
   })
 )(FormPageActions)
+
+FormPageActionsContainer.propTypes = {
+  formName: T.string.isRequired,
+  target: T.oneOfType([T.string, T.array, T.func])
+}
 
 export {
   FormPageActionsContainer

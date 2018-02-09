@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {t} from '#/main/core/translation'
-import {TabbedPageContainer} from '#/main/core/layout/page/containers/tabbed-page.jsx'
+import {TabbedPageContainer} from '#/main/core/layout/tabs'
 
 import {WorkspaceTab, WorkspaceTabActions} from '#/main/core/administration/workspace/workspace/components/workspace-tab.jsx'
 

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {TabbedPageContainer} from '#/main/core/layout/page/containers/tabbed-page.jsx'
+import {TabbedPageContainer} from '#/main/core/layout/tabs'
 import {t} from '#/main/core/translation'
 
 import {Import as ImportTab} from '#/main/core/administration/transfer/components/import/tab.jsx'

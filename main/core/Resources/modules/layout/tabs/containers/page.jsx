@@ -1,6 +1,6 @@
 
 import {connectPage} from '#/main/core/layout/page/connect'
-import {TabbedPage} from '#/main/core/layout/page/components/tabbed-page.jsx'
+import {TabbedPage} from '#/main/core/layout/tabs/components/page.jsx'
 
 /**
  * Connected container for tabbed pages.

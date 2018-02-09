@@ -10,7 +10,7 @@ bootstrap(
   // app DOM container (also holds initial app data as data attributes)
   '.image-container',
 
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  // app main component
   Image,
 
   // app store configuration

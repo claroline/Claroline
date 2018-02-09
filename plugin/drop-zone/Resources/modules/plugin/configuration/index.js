@@ -10,7 +10,7 @@ bootstrap(
   // app DOM container (also holds initial app data as data attributes)
   '.dropzone-plugin-container',
 
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  // app main component
   Tools,
 
   // app store configuration

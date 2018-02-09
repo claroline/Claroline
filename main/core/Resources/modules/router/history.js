@@ -1,3 +1,10 @@
 import createHistory from 'history/createHashHistory'
 
-export const history = createHistory()
+/**
+ * Creates application navigation history.
+ */
+const history = createHistory()
+
+export {
+  history
+}

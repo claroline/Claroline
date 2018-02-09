@@ -17,7 +17,7 @@ bootstrap(
   // app DOM container (also holds initial app data as data attributes)
   '.contacts-container',
 
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  // app main component
   Tool,
 
   // app store configuration
