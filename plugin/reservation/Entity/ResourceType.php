@@ -2,17 +2,27 @@
 
 namespace FormaLibre\ReservationBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="formalibre_reservation_resource_type")
+ * @ORM\Table(
+ *     name="formalibre_reservation_resource_type",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="reservation_unique_resource_type",
+ *             columns={"name"}
+ *         )
+ *     }
+ * )
  * @ORM\Entity()
  */
 class ResourceType
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -22,9 +32,7 @@ class ResourceType
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="string", length=50)
-     * @Assert\NotNull()
-     * @Assert\Length(min="2", max="50")
+     * @ORM\Column(name="name")
      * @Groups({"api_reservation", "api_cursus"})
      */
     private $name;
@@ -37,6 +45,8 @@ class ResourceType
 
     public function __construct()
     {
+        $this->refreshUuid();
+
         $this->resources = new ArrayCollection();
     }
 

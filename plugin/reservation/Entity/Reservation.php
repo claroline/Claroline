@@ -3,9 +3,10 @@
 namespace FormaLibre\ReservationBundle\Entity;
 
 use Claroline\AgendaBundle\Entity\Event;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use FormaLibre\ReservationBundle\Validator\Constraints as Validator;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="formalibre_reservation")
@@ -16,6 +17,8 @@ use FormaLibre\ReservationBundle\Validator\Constraints as Validator;
  */
 class Reservation
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -55,6 +58,11 @@ class Reservation
     private $start;
 
     private $end;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     /**
      * @ORM\PrePersist
