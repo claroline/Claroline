@@ -48,6 +48,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $this->platformConfigHandler = $platformConfigHandler;
     }
 
+    public function findOneBy(array $criteria = null, array $orderBy = null)
+    {
+        $trueFilter = [];
+
+        foreach ($criteria as $prop => $value) {
+            if ('email' === $prop) {
+                $trueFilter['mail'] = $value;
+            } else {
+                $trueFilter[$prop] = $value;
+            }
+        }
+
+        return parent::findOneBy($trueFilter, $orderBy);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -819,7 +834,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function extract($params)
     {
         $search = $params['search'];
-        if ($search !== null) {
+        if (null !== $search) {
             $query = $this->findByName($search, false);
 
             return $query
@@ -1560,7 +1575,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findAllUserBySearch($search)
     {
         $upperSearch = strtoupper(trim($search));
-        if ($search !== '') {
+        if ('' !== $search) {
             $dql = '
                 SELECT u
                 FROM Claroline\CoreBundle\Entity\User u
@@ -1606,6 +1621,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
     /**
      * Returns the users who are not members of a group and whose first name, last
      * name or username match a given search string.
@@ -1643,6 +1659,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $executeQuery ? $query->getResult() : $query;
     }
+
     /**
      * Returns all the users except a given one.
      *

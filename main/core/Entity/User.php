@@ -855,7 +855,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $roles = $this->getEntityRoles();
 
         foreach ($roles as $role) {
-            if ($role->getType() !== Role::WS_ROLE) {
+            if (Role::WS_ROLE !== $role->getType()) {
                 return $role;
             }
         }
@@ -872,7 +872,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $removedRoles = [];
 
         foreach ($roles as $role) {
-            if ($role->getType() !== Role::WS_ROLE) {
+            if (Role::WS_ROLE !== $role->getType()) {
                 $removedRoles[] = $role;
             }
         }
@@ -959,7 +959,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function isAccountNonExpired()
     {
         foreach ($this->getRoles() as $role) {
-            if ($role === 'ROLE_ADMIN') {
+            if ('ROLE_ADMIN' === $role) {
                 return true;
             }
         }
@@ -1069,7 +1069,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     {
         $defaultExpirationDate = (strtotime('2100-01-01')) ? '2100-01-01' : '2038-01-01';
 
-        return ($this->expirationDate !== null && $this->expirationDate->getTimestamp()) ?
+        return (null !== $this->expirationDate && $this->expirationDate->getTimestamp()) ?
             $this->expirationDate :
             new \DateTime($defaultExpirationDate);
     }
@@ -1245,7 +1245,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function clearRoles()
     {
         foreach ($this->roles as $role) {
-            if ($role->getName() !== 'ROLE_USER') {
+            if ('ROLE_USER' !== $role->getName()) {
                 $this->removeRole($role);
             }
         }
