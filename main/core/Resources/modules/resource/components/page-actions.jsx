@@ -329,11 +329,7 @@ CustomGroupActions.propTypes = {
 
 }
 
-/**
- * @param props
- * @constructor
- */
-const ResourceActions = props => {
+const ResourcePageActions = props => {
   const moreActions = [].concat(props.customActions, getMoreActions(props.resourceNode, props))
 
   return(
@@ -365,7 +361,7 @@ const ResourceActions = props => {
   )
 }
 
-ResourceActions.propTypes = {
+ResourcePageActions.propTypes = {
   resourceNode: T.shape({
     name: T.string.isRequired,
     description: T.string,
@@ -421,10 +417,10 @@ ResourceActions.propTypes = {
   }))
 }
 
-ResourceActions.defaultProps = {
+ResourcePageActions.defaultProps = {
   customActions: []
 }
 
 export {
-  ResourceActions
+  ResourcePageActions
 }

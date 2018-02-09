@@ -5,7 +5,7 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 
 import {Routes} from '#/main/core/router'
-import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
 import {Announces} from './announces.jsx'
 import {Announce} from './announce.jsx'
@@ -16,7 +16,7 @@ import {select} from './../selectors.js'
 import {actions} from './../actions.js'
 
 const Resource = props =>
-  <ResourceContainer
+  <ResourcePageContainer
     editor={{
       opened: props.formOpened,
       open: '#/add',
@@ -65,7 +65,7 @@ const Resource = props =>
         }
       ]}
     />
-  </ResourceContainer>
+  </ResourcePageContainer>
 
 Resource.propTypes = {
   aggregateId: T.string.isRequired,

@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {tex} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
-import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 import {viewComponents} from './../views'
 import {select as resourceSelect} from '#/main/core/resource/selectors'
 import select from './../selectors'
@@ -15,7 +15,7 @@ import {actions as quizActions} from './../actions'
 import {VIEW_EDITOR} from './../enums'
 
 const Quiz = props =>
-  <ResourceContainer
+  <ResourcePageContainer
     editor={{
       opened: VIEW_EDITOR === props.viewMode,
       open: '#editor',
@@ -27,7 +27,7 @@ const Quiz = props =>
     customActions={customActions(props)}
   >
     {React.createElement(viewComponents[props.viewMode], props)}
-  </ResourceContainer>
+  </ResourcePageContainer>
 
 Quiz.propTypes = {
   quiz: T.shape({

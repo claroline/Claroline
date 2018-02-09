@@ -1,11 +1,10 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 
 import {connectPage} from '#/main/core/layout/page/connect'
 
 import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {actions as resourceActions} from '#/main/core/resource/actions'
-import {Resource as ResourceComponent} from '#/main/core/resource/components/resource.jsx'
+import {ResourcePage} from '#/main/core/resource/components/page.jsx'
 
 /**
  * Connected container for resources.
@@ -17,25 +16,8 @@ import {Resource as ResourceComponent} from '#/main/core/resource/components/res
  *   - modal
  *   - alerts [optional]
  *   - resource
- *
- * @param props
- * @constructor
  */
-const Resource = props =>
-  <ResourceComponent
-    {...props}
-  >
-    {props.children}
-  </ResourceComponent>
-
-Resource.propTypes = {
-  /**
-   * Application of the resource.
-   */
-  children: T.node
-}
-
-const ResourceContainer = connectPage(
+const ResourcePageContainer = connectPage(
   (state) => ({
     resourceNode: resourceSelect.resourceNode(state)
   }),
@@ -50,8 +32,8 @@ const ResourceContainer = connectPage(
       dispatch(resourceActions.togglePublication(resourceNode))
     }
   })
-)(Resource)
+)(ResourcePage)
 
 export {
-  ResourceContainer
+  ResourcePageContainer
 }
