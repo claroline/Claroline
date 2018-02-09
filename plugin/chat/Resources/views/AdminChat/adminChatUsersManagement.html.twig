@@ -48,7 +48,7 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
 {% block title %}
-    {{ parent() ~ ' - ' ~ 'users_management'|trans({}, 'platform') | striptags | raw }}
+    {{ parent() ~ ' - ' ~ 'users_management'|trans({}, 'tools') | striptags | raw }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -63,7 +63,7 @@
                 'href': path('claro_chat_admin_management')
             },
             {
-                'name': 'users_management'|trans({}, 'platform'),
+                'name': 'users_management'|trans({}, 'tools'),
                 'href': ''
             }
         ])
@@ -73,7 +73,7 @@
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
-            {{ 'users_management'|trans({}, 'platform') }}
+            {{ 'users_management'|trans({}, 'tools') }}
         </h3>
     </div>
     <div class="panel-body">

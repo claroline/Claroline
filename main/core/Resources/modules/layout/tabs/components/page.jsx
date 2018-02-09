@@ -7,26 +7,29 @@ import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 import {Route, NavLink, Switch} from '#/main/core/router'
 import {RoutedPage, RoutedPageContent} from '#/main/core/layout/router'
 
-const PageTabs = props =>
+const PageHeader = props =>
   <header className={classes('page-header', props.className)}>
-    <nav className="page-tabs">
-      {props.tabs.map((section, sectionIndex) =>
-        <NavLink
-          key={`section-link-${sectionIndex}`}
-          to={section.path}
-          exact={section.exact}
-        >
-          <span className={classes('page-tabs-icon', section.icon)} />
-          {section.title}
-        </NavLink>
-      )}
-    </nav>
-
+    <div>
+      <h1 className="page-title">{props.title}</h1>
+      <nav className="page-tabs">
+        {props.tabs.map((section, sectionIndex) =>
+          <NavLink
+            key={`section-link-${sectionIndex}`}
+            to={section.path}
+            exact={section.exact}
+          >
+            <span className={classes('page-tabs-icon', section.icon)} />
+            <span className="page-tab-label">{section.title}</span>
+          </NavLink>
+        )}
+      </nav>
+    </div>
     {props.children}
   </header>
 
-PageTabs.propTypes = {
+PageHeader.propTypes = {
   className: T.string,
+  title: T.string.isRequired,
   tabs: T.arrayOf(T.shape({
     path: T.string.isRequired,
     exact: T.bool,
@@ -39,46 +42,35 @@ PageTabs.propTypes = {
 // todo add H1 (page title) and H2 (current tab)
 
 const TabbedPage = props =>
-  <Router>
-    <Page
-      {...props}
+  <RoutedPage {...props} className="tabbed-page">
+    <PageHeader
+      title={props.title}
+      tabs={props.tabs}
     >
-      <PageTabs
-        tabs={props.tabs}
-      >
-        <Switch>
-          {props.tabs.map((tab, tabIndex) =>
-            <Route
-              {...tab}
-              key={`tab-actions-${tabIndex}`}
-              component={tab.actions}
-            />
-          )}
-        </Switch>
-      </PageTabs>
+      <Switch>
+        {props.tabs.map((tab, tabIndex) =>
+          <Route
+            {...tab}
+            key={`tab-actions-${tabIndex}`}
+            component={tab.actions}
+          />
+        )}
+      </Switch>
+    </PageHeader>
 
-      <PageContent className="page-tab">
-        <Switch>
-          {props.tabs.map((tab, tabIndex) =>
-            <Route
-              {...tab}
-              key={`tab-actions-${tabIndex}`}
-              component={tab.content}
-            />
-          )}
-
-          {props.redirect.map((redirect, redirectIndex) =>
-            <Redirect
-              {...redirect}
-              key={`tab-redirect-${redirectIndex}`}
-            />
-          )}
-        </Switch>
-      </PageContent>
-    </Page>
-  </Router>
+    <RoutedPageContent
+      className="page-tab"
+      routes={props.tabs.map((tab) => ({
+        path: tab.path,
+        exact: tab.exact,
+        component: tab.content
+      }))}
+      redirect={props.redirect}
+    />
+  </RoutedPage>
 
 implementPropTypes(TabbedPage, PageTypes, {
+  title: T.string.isRequired,
   tabs: T.arrayOf(T.shape({
     path: T.string.isRequired,
     exact: T.bool,

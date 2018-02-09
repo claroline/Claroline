@@ -1,6 +1,6 @@
 import React from 'react'
 
-import {Router} from '#/main/core/router'
+import {Router, Routes} from '#/main/core/router'
 import {Page, PageContent} from '#/main/core/layout/page'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
@@ -31,7 +31,7 @@ RoutedPageContent.propTypes = {
   exact: T.bool,
   routes: T.arrayOf(
     T.shape(RouteTypes.propTypes).isRequired
-  ),
+  ).isRequired,
   redirect: T.arrayOf(T.shape({
     from: T.string.isRequired,
     to: T.string.isRequired,

@@ -30,7 +30,6 @@ actions.createContacts = users => ({
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData('contacts'))
-      dispatch(listActions.invalidateData('users.picker'))
     }
   }
 })

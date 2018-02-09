@@ -19,14 +19,6 @@ import {MODAL_CONTACTS_OPTIONS_FORM} from '#/main/core/contact/tool/components/m
 const ContactsActionsComponent = props =>
   <PageActions>
     <PageAction
-      id="contact-add"
-      icon="fa fa-fw fa-plus"
-      title={t('add_contacts')}
-      action={props.pickUsers}
-      primary={true}
-    />
-
-    <PageAction
       id="options-edit"
       icon="fa fa-fw fa-cog"
       title={t('configure')}
@@ -36,7 +28,6 @@ const ContactsActionsComponent = props =>
 
 ContactsActionsComponent.propTypes = {
   options: T.object.isRequired,
-  pickUsers: T.func.isRequired,
   configure: T.func.isRequired
 }
 
@@ -58,12 +49,6 @@ const ContactsComponent = props =>
       url: ['apiv2_contact_delete_bulk']
     }}
     actions={[
-      {
-        icon: 'fa fa-fw fa-eye',
-        label: t('show_profile'),
-        action: (rows) => window.location = generateUrl('claro_user_profile', {'publicUrl': rows[0].data.meta.publicUrl}),
-        context: 'row'
-      },
       {
         icon: 'fa fa-fw fa-envelope-o',
         label: t('send_message'),
@@ -105,14 +90,7 @@ const ContactsComponent = props =>
     card={row => ({
       icon: <UserAvatar picture={row.data.picture} alt={true}/>,
       title: row.data.username,
-      subtitle: row.data.firstName + ' ' + row.data.lastName,
-      contentText: '',
-      footer:
-        <span>
-        </span>,
-      footerLong:
-        <span>
-        </span>
+      subtitle: row.data.firstName + ' ' + row.data.lastName
     })}
   />
 
@@ -128,44 +106,6 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    pickUsers: () => {
-      dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
-        icon: 'fa fa-fw fa-user',
-        title: t('add_contacts'),
-        confirmText: t('add_contact'),
-        name: 'users.picker',
-        definition: [
-          {
-            name: 'username',
-            type: 'username',
-            label: t('username'),
-            displayed: true
-          }, {
-            name: 'lastName',
-            type: 'string',
-            label: t('last_name'),
-            displayed: true
-          }, {
-            name: 'firstName',
-            type: 'string',
-            label: t('first_name'),
-            displayed: true
-          }
-        ],
-        card: row => ({
-          icon: <UserAvatar picture={row.data.picture} alt={true}/>,
-          title: row.data.username,
-          subtitle: row.data.firstName + ' ' + row.data.lastName
-        }),
-        fetch: {
-          url: ['apiv2_visible_users_list', {picker: 1}],
-          autoload: true
-        },
-        handleSelect: selected => {
-          dispatch(actions.createContacts(selected))
-        }
-      }))
-    },
     configure: options => {
       dispatch(modalActions.showModal(MODAL_CONTACTS_OPTIONS_FORM, {
         data: options,

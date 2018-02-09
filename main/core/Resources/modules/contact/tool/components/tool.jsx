@@ -8,16 +8,17 @@ import {VisibleUsers, VisibleUsersActions} from '#/main/core/contact/tool/compon
 
 const Tool = () =>
   <TabbedPageContainer
+    title={trans('my_contacts', {}, 'tools')}
     tabs={[
       {
-        icon: 'fa fa-fw fa-address-book',
+        icon: 'fa fa-address-book',
         title: trans('my_contacts'),
         path: '/',
         exact: true,
         actions: ContactsActions,
         content: Contacts
       }, {
-        icon: 'fa fa-fw fa-users',
+        icon: 'fa fa-users',
         title: trans('all_visible_users'),
         path: '/users',
         actions: VisibleUsersActions,

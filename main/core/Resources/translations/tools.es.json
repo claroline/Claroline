@@ -8,7 +8,7 @@
     "learning_outcomes": "",
     "learning_profil": "Perfil de aprendizaje",
     "logs": "Registros",
-    "my_contacts": "Mis contactos",
+    "my_contacts": "Contactos",
     "parameters": "Parámetros",
     "platform_analytics": "Análisis de la plataforma",
     "platform_logs": "Registros de la plataforma",
@@ -20,5 +20,6 @@
     "user_management": "Gestión de usuarios",
     "users": "Usuarios",
     "widgets_management": "Gestión de widgets",
-    "workspace_management": "Gestión de espacios de actividades"
+    "workspace_management": "Gestión de espacios de actividades",
+    "users_management": "Gestión de usuarios"
 }

@@ -8,6 +8,7 @@ import {PageActions, PageAction} from '#/main/core/layout/page/components/page-a
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {constants as listConst} from '#/main/core/data/list/constants'
 
 import {actions} from '#/main/core/contact/tool/actions'
 import {select} from '#/main/core/contact/tool/selectors'
@@ -31,7 +32,7 @@ VisibleUsersActionsComponent.propTypes = {
 
 const VisibleUsersComponent = props =>
   <DataListContainer
-    name="users.contactable"
+    name="visibleUsers"
     open={{
       action: (row) => generateUrl('claro_user_profile', {'publicUrl': row.meta.publicUrl})
     }}
@@ -39,19 +40,16 @@ const VisibleUsersComponent = props =>
       url: ['apiv2_visible_users_list'],
       autoload: true
     }}
+    display={{
+      current: listConst.DISPLAY_TILES_SM,
+      available: Object.keys(listConst.DISPLAY_MODES)
+    }}
     actions={[
       {
         icon: 'fa fa-fw fa-address-book-o',
         label: t('add_contact'),
         action: (rows) => props.createContacts(rows.map(r => r.id))
-      },
-      {
-        icon: 'fa fa-fw fa-eye',
-        label: t('show_profile'),
-        action: (rows) => window.location = generateUrl('claro_user_profile', {'publicUrl': rows[0].meta.publicUrl}),
-        context: 'row'
-      },
-      {
+      }, {
         icon: 'fa fa-fw fa-envelope-o',
         label: t('send_message'),
         action: (rows) => {

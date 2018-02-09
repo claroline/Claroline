@@ -8,7 +8,7 @@
     "learning_outcomes": "Référentiel de compétences",
     "learning_profil": "Profil d'apprentissage",
     "logs": "Suivi",
-    "my_contacts": "Mes contacts",
+    "my_contacts": "Contacts",
     "organization_management": "Gestion des organisations",
     "parameters": "Paramètres",
     "platform_analytics": "Statistiques de la plateforme",
@@ -23,5 +23,6 @@
     "users": "Utilisateurs",
     "widgets_management": "Gestion des widgets",
     "workspace_management": "Gestion des espaces d'activités",
-    "data_transfer": "Import/Export de données"
+    "data_transfer": "Import/Export de données",
+    "users_management": "Gestion des utilisateurs"
 }

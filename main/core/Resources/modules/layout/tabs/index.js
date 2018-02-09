@@ -2,7 +2,7 @@
  * Tabs module.
  */
 
-// components
+// presentational components
 export {
   TabbedPage
 } from '#/main/core/layout/tabs/components/page.jsx'
