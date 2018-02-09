@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": ["string", "null"],
+      "description": "The resource uuid"
+    },
+    "name": {
+      "type": "string",
+      "description": "The resource name"
+    },
+    "maxTimeReservation": {
+      "type": ["string", "null"],
+      "description": "The maximum time a resource can be reserved"
+    },
+    "description": {
+      "type": ["string", "null"],
+      "description": "The resource description"
+    },
+    "localization": {
+      "type": ["string", "null"],
+      "description": "The resource localization"
+    },
+    "quantity": {
+      "type": "integer",
+      "description": "The maximum quantity for the resource"
+    },
+    "color": {
+      "type": ["string", "null"],
+      "description": "The resource color"
+    },
+    "resourceType": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": ["string", "null"],
+          "description": "The uuid of the resource type"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the resource type"
+        }
+      },
+      "required": ["name"]
+    }
+  },
+  "claroIds": ["id"],
+  "required": ["name", "quantity", "resourceType"]
+}

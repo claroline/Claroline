@@ -61,11 +61,6 @@ class ReservationToolListener
     {
         $params = [];
         $params['_controller'] = 'FormaLibreReservationBundle:ReservationAdmin:index';
-        $this->redirect($params, $event);
-    }
-
-    private function redirect($params, $event)
-    {
         $subRequest = $this->request->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);

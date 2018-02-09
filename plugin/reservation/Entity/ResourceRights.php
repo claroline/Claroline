@@ -2,18 +2,29 @@
 
 namespace FormaLibre\ReservationBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(name="formalibre_reservation_resource_rights")
+ * @ORM\Table(
+ *     name="formalibre_reservation_resource_rights",
+ *     uniqueConstraints={
+ *         @ORM\UniqueConstraint(
+ *             name="reservation_unique_resource_rights",
+ *             columns={"role_id", "resource_id"}
+ *         )
+ *     }
+ * )
  * @ORM\Entity()
  * @UniqueEntity({"role", "resource"})
  */
 class ResourceRights
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -41,6 +52,11 @@ class ResourceRights
      * @Assert\NotNull()
      */
     private $role;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     /**
      * Get id.

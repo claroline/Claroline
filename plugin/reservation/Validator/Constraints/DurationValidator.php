@@ -3,9 +3,9 @@
 namespace FormaLibre\ReservationBundle\Validator\Constraints;
 
 use FormaLibre\ReservationBundle\Manager\ReservationManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Validator("formalibre_duration_validator")

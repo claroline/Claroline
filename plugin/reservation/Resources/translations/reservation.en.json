@@ -105,6 +105,7 @@
     "modify_resource_type_name": "Change name.",
     "no_resources_in_resource_type": "There are no resources in this category.",
     "no_resources_type_yet": "There are no resources to reserve yet.",
+    "no_rights_configured": "There are no configured rights.",
     "picker.close": "Close",
     "picker.go_to_today": "Today",
     "picker.locale": "fr",
@@ -119,5 +120,7 @@
     "picker.select_decade": "Select a decade",
     "picker.select_month": "Select a month",
     "picker.select_year": "Select a year",
-    "reservation": "Reservation"
+    "quantity": "Quantity",
+    "reservation": "Reservation",
+    "resource_types": "Resource types"
 }

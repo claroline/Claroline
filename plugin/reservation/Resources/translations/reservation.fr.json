@@ -105,6 +105,7 @@
     "modify_resource_type_name": "Modifier le nom",
     "no_resources_in_resource_type": "Il n'y a pas encore de ressources dans cette catégorie.",
     "no_resources_type_yet": "Il n'y a pas encore de ressources pour les réservations.",
+    "no_rights_configured": "Aucune permission n'est configurée.",
     "picker.close": "Fermer",
     "picker.go_to_today": "Aujourd'hui",
     "picker.locale": "fr",
@@ -119,5 +120,7 @@
     "picker.select_decade": "Sélectionnez une décade",
     "picker.select_month": "Sélectionnez un mois",
     "picker.select_year": "Sélectionnez une année",
-    "reservation": "Réservation"
+    "quantity": "Quantité",
+    "reservation": "Réservation",
+    "resource_types": "Types de ressources"
 }

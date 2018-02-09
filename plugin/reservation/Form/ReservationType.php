@@ -7,8 +7,8 @@ use FormaLibre\ReservationBundle\Controller\ReservationController;
 use FormaLibre\ReservationBundle\Manager\ReservationManager;
 use FormaLibre\ReservationBundle\Validator\Constraints\Reservation;
 use FormaLibre\ReservationBundle\Validator\Constraints\ReservationModify;
-use Symfony\Component\Form\AbstractType;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -39,20 +39,20 @@ class ReservationType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('start', 'text', array(
+        $builder->add('start', 'text', [
             'label' => 'agenda.form.start_date',
-        ));
+        ]);
 
-        $builder->add('end', 'text', array(
+        $builder->add('end', 'text', [
             'label' => 'agenda.form.end_date',
-        ));
+        ]);
 
-        $builder->add('duration', 'text', array(
+        $builder->add('duration', 'text', [
             'label' => 'agenda.form.duration',
-            'attr' => array(
+            'attr' => [
                 'placeholder' => 'hh:mm',
-            ),
-        ));
+            ],
+        ]);
 
         $builder->add('comment', 'textarea', [
             'label' => 'agenda.form.comment',
@@ -63,14 +63,14 @@ class ReservationType extends AbstractType
             ],
         ]);
 
-        $builder->add('resource', 'entity', array(
+        $builder->add('resource', 'entity', [
             'label' => 'agenda.form.resource',
             'class' => 'FormaLibre\ReservationBundle\Entity\Resource',
             'choices' => $this->getResourceByMask(),
             'property' => 'name',
             'group_by' => 'resource_type.name',
             'empty_value' => 'agenda.form.select_resource_pls',
-        ));
+        ]);
     }
 
     public function getResourceByMask()
@@ -101,19 +101,19 @@ class ReservationType extends AbstractType
     {
         if ($this->editMode) {
             $resolver->setDefaults(
-                array(
+                [
                     'class' => 'FormaLibre\ReservationBundle\Entity\Reservation',
                     'translation_domain' => 'reservation',
                     'constraints' => new ReservationModify(),
-                )
+                ]
             );
         } else {
             $resolver->setDefaults(
-                array(
+                [
                     'class' => 'FormaLibre\ReservationBundle\Entity\Reservation',
                     'translation_domain' => 'reservation',
                     'constraints' => new Reservation(),
-                )
+                ]
             );
         }
     }

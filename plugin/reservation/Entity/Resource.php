@@ -2,21 +2,22 @@
 
 namespace FormaLibre\ReservationBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 use JMS\Serializer\Annotation\SerializedName;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="formalibre_reservation_resource")
  * @ORM\Entity()
  * @ORM\HasLifecycleCallbacks()
- * @UniqueEntity({"name", "resourceType"})
  */
 class Resource
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
@@ -26,15 +27,13 @@ class Resource
     protected $id;
 
     /**
-     * @ORM\Column(name="name", type="text")
-     * @Assert\Length(min="2", max="50")
-     * @Assert\NotNull()
+     * @ORM\Column(name="name")
      * @Groups({"api_reservation", "api_cursus"})
      */
     private $name;
 
     /**
-     * @ORM\Column(name="max_time_reservation", type="string", length=8, nullable=true)
+     * @ORM\Column(name="max_time_reservation", nullable=true)
      * @Groups({"api_reservation", "api_cursus"})
      * @SerializedName("maxTimeReservation")
      */
@@ -55,15 +54,13 @@ class Resource
     private $description;
 
     /**
-     * @ORM\Column(name="localisation", type="string", length=255, nullable=true)
-     * @Assert\Length(min="2", max="50")
+     * @ORM\Column(name="localisation", nullable=true)
      * @Groups({"api_reservation", "api_cursus"})
      */
     private $localisation;
 
     /**
      * @ORM\Column(name="quantity", type="integer", nullable=false)
-     * @Assert\Range(min=1)
      * @Groups({"api_reservation", "api_cursus"})
      */
     private $quantity = 1;
@@ -81,14 +78,25 @@ class Resource
     private $reservations;
 
     /**
-     * @ORM\Column(type="string", nullable=true)
+     * @ORM\Column(nullable=true)
      * @Groups({"api_reservation", "api_cursus"})
      */
     private $color;
 
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\Organization"
+     * )
+     * @ORM\JoinTable(name="formalibre_reservation_resource_organizations")
+     */
+    protected $organizations;
+
     public function __construct()
     {
+        $this->refreshUuid();
+
         $this->resourceRights = new ArrayCollection();
+        $this->organizations = new ArrayCollection();
     }
 
     public function getId()
@@ -138,6 +146,7 @@ class Resource
 
         return $this;
     }
+
     public function getDescription()
     {
         return $this->description;
@@ -218,5 +227,33 @@ class Resource
     public function getColor()
     {
         return $this->color;
+    }
+
+    public function getOrganizations()
+    {
+        return $this->organizations->toArray();
+    }
+
+    public function addOrganization(Organization $organization)
+    {
+        if (!$this->organizations->contains($organization)) {
+            $this->organizations->add($organization);
+        }
+
+        return $this;
+    }
+
+    public function removeOrganization(Organization $organization)
+    {
+        if ($this->organizations->contains($organization)) {
+            $this->organizations->removeElement($organization);
+        }
+
+        return $this;
+    }
+
+    public function emptyOrganizations()
+    {
+        $this->organizations->clear();
     }
 }

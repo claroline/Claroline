@@ -1,68 +1,35 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block stylesheets %}
-    {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('packages/mjolnic-bootstrap-colorpicker/dist/css/bootstrap-colorpicker.min.css') }}">
-    <style>
-        .roles-list {
-            max-height: 200px;
-            overflow-y: scroll;
-            overflow-x: hidden;
-        }
-    </style>
+{% block title %}{{ parent() ~ ' - ' ~ 'admin_resources_reservation'|trans({}, 'tools') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{ macros.breadcrumbs([
+    {
+        'name': 'administration'|trans({}, 'platform'),
+        'href': path('claro_admin_index')
+    },
+    {
+        'name': 'admin_resources_reservation'|trans({}, 'tools'),
+        'href': ''
+    }
+    ]) }}
 {% endblock %}
 
-{% block section_content %}
-    <div class="panel-heading">
-        <h1>{{ 'admin_resources_reservation'|trans({}, 'tools') }}</h1>
+{% block content %}
+    <div
+        class="page-container reservation-tool-container"
+        data-is-admin="{{ isAdmin | json_encode | raw | escape }}"
+        data-resource-types="{{ resourceTypes | json_encode | raw | escape }}"
+    >
     </div>
-    <div class="panel-body">
-        <div class="row list-group-resource-type">
-            {% for resourceType in resourcesType %}
-                <div class="col-sm-6">
-                    <div class="list-group">
-                        <div class="list-group-item active" data-resource-type-id="{{ resourceType.getId() }}">
-                            <div class="pull-right" style="margin: -5px -5px 0 0">
-                                <button class="btn btn-sm btn-success add-new-resource" title="{{ 'add_resource'|trans({}, 'reservation') }}" data-toggle="tooltip"><span class="fa fa-plus"></span></button>
-                                <button class="btn btn-sm btn-warning modify-resource-type" title="{{ 'modify_resource_type_name'|trans({}, 'reservation') }}" data-toggle="tooltip"><span class="fa fa-pencil"></span></button>
-                                <button class="btn btn-sm btn-danger delete-resource-type" title="{{ 'delete_resource_type'|trans({}, 'reservation') }}" data-toggle="tooltip"><span class="fa fa-trash"></span></button>
-                            </div>
-                            <div class="list-group-item-title">
-                                {{ resourceType.getName() }}
-                            </div>
-                        </div>
-                        {% for resource in resourceType.getResources() %}
-                            <a class="list-group-item" href="#" data-resource-id="{{ resource.getId() }}">{{ resource.getName() }}</a>
-                        {% else %}
-                            <div class="list-group-item no-resource-yet">{{ 'no_resources_in_resource_type'|trans({}, 'reservation') }}</div>
-                        {%  endfor %}
-                    </div>
-                </div>
-            {% else %}
-                <div class="col-sm-12">
-                    <div class="alert alert-info">{{ 'no_resources_type_yet'|trans({}, 'reservation') }}</div>
-                </div>
-            {% endfor %}
-        </div>
+{% endblock %}
 
-        <div class="row">
-            <div class="col-sm-6">
-                <div class="input-group">
-                    <input type="text" name="resource_type" class="form-control">
-                    <span class="input-group-btn"><button class="btn btn-success add-new-resource-type"><span class="fa fa-plus-circle"></span> {{ 'add_new_resource_type'|trans({}, 'reservation') }}</button></span>
-                </div>
-            </div>
-            <div class="col-sm-6">
-                <a href="{{ path('formalibre_reservation_export_resources') }}" class="btn btn-primary">{{ 'export_resources'|trans({}, 'reservation') }}</a>
-                <button class="btn btn-warning import-resources">{{ 'import.resources'|trans({}, 'reservation') }}</button>
-            </div>
-        </div>
-    </div>
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-reservation-admin-tool.css') }}" />
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('packages/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js') }}"></script>
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'reservation' }) }}"></script>
-    <script src="{{ asset('bundles/formalibrereservation/js/admin.js') }}"></script>
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-reservation-admin-tool.js') }}"></script>
 {% endblock %}
