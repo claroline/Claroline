@@ -60,7 +60,8 @@ const UserForm = props =>
           }, {
             name: 'meta.locale',
             type: 'locale',
-            label: t('default_language'),
+            label: t('language'),
+            required: true,
             options: {
               onlyEnabled: true
             }

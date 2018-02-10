@@ -1,19 +1,17 @@
-import {LocaleGroup} from '#/main/core/data/types/locale/components/form-group.jsx'
+import {LocaleGroup} from '#/main/core/layout/form/components/group/locale-group.jsx'
 
 const LOCALE_TYPE = 'locale'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 const localeDefinition = {
   meta: {
     type: LOCALE_TYPE,
     creatable: false,
-    label: t('locale'),
-    description: t('locale_desc')
+    label: trans('locale'),
+    description: trans('locale_desc')
   },
-  parse: (display) => parseFloat(display),
-  render: (raw) => t(raw),
-  validate: () => undefined,
+  render: (raw) => trans(raw),
   components: {
     form: LocaleGroup
   }
