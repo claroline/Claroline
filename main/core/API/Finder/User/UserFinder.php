@@ -79,6 +79,10 @@ class UserFinder implements FinderInterface
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'isDisabled':
+                    $qb->andWhere('obj.isEnabled = :isEnabled');
+                    $qb->setParameter('isEnabled', !$filterValue);
+                    break;
                 case 'hasPersonalWorkspace':
                     $qb->andWhere('obj.personalWorkspace IS NOT NULL');
                     break;

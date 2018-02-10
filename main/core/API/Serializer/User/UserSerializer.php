@@ -2,17 +2,23 @@
 
 namespace Claroline\CoreBundle\API\Serializer\User;
 
-use Claroline\CoreBundle\API\FinderProvider;
 use Claroline\CoreBundle\API\Options;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\SerializerTrait;
+use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\FacetManager;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * @DI\Service("claroline.serializer.user")
@@ -28,11 +34,23 @@ class UserSerializer
     /** @var AuthorizationCheckerInterface */
     private $authChecker;
 
+    /** @var EncoderFactoryInterface */
+    private $encoderFactory;
+
+    /** @var ObjectManager */
+    private $om;
+
+    /** @var PlatformConfigurationHandler */
+    private $config;
+
     /** @var FacetManager */
     private $facetManager;
 
-    /** @var FinderProvider */
-    private $finder;
+    /** @var PublicFileSerializer */
+    private $fileSerializer;
+
+    /** @var ContainerInterface */
+    private $container;
 
     /** @var ContainerInterface */
     private $container;
@@ -41,26 +59,42 @@ class UserSerializer
      * UserManager constructor.
      *
      * @DI\InjectParams({
-     *     "tokenStorage" = @DI\Inject("security.token_storage"),
-     *     "authChecker"  = @DI\Inject("security.authorization_checker"),
-     *     "facetManager" = @DI\Inject("claroline.manager.facet_manager"),
-     *     "container"       = @DI\Inject("service_container")
+     *     "tokenStorage"   = @DI\Inject("security.token_storage"),
+     *     "authChecker"    = @DI\Inject("security.authorization_checker"),
+     *     "encoderFactory" = @DI\Inject("security.encoder_factory"),
+     *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
+     *     "config"         = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "facetManager"   = @DI\Inject("claroline.manager.facet_manager"),
+     *     "fileSerializer" = @DI\Inject("claroline.serializer.public_file"),
+     *     "container"      = @DI\Inject("service_container")
      * })
      *
      * @param TokenStorageInterface         $tokenStorage
      * @param AuthorizationCheckerInterface $authChecker
+     * @param EncoderFactoryInterface       $encoderFactory
+     * @param ObjectManager                 $om
+     * @param PlatformConfigurationHandler  $config
      * @param FacetManager                  $facetManager
+     * @param PublicFileSerializer          $fileSerializer
      * @param ContainerInterface            $container
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authChecker,
+        EncoderFactoryInterface $encoderFactory,
+        ObjectManager $om,
+        PlatformConfigurationHandler $config,
         FacetManager $facetManager,
+        PublicFileSerializer $fileSerializer,
         ContainerInterface $container
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authChecker = $authChecker;
+        $this->encoderFactory = $encoderFactory;
+        $this->om = $om;
+        $this->config = $config;
         $this->facetManager = $facetManager;
+        $this->fileSerializer = $fileSerializer;
         $this->container = $container;
     }
 
@@ -103,8 +137,7 @@ class UserSerializer
         }
 
         $serialized = [
-            //for old compatibility purposes
-            'autoId' => $user->getId(),
+            'autoId' => $user->getId(), //for old compatibility purposes
             'id' => $user->getUuid(),
             'name' => $user->getFirstName().' '.$user->getLastName(),
             'firstName' => $user->getFirstName(),
@@ -138,19 +171,15 @@ class UserSerializer
             ]);
         }
 
-        // todo deserialize facets
         if (in_array(Options::SERIALIZE_FACET, $options)) {
-            //avoid recursive dependencies
-            $finder = $this->container->get('claroline.api.finder');
-            $fields = $finder->search(
-                'Claroline\CoreBundle\Entity\Facet\FieldFacetValue',
-                ['filters' => ['user' => $user->getUuid()]],
-                //should be an option but claco form messes things up
-                ['minimal']
-              );
+            $fields = $this->om
+                ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetValue')
+                ->findOneBy(['user' => $user]);
 
-            foreach ($fields['data'] as $field) {
-                $serialized[$field['name']] = $field['value'];
+            /** @var FieldFacetValue $field */
+            foreach ($fields as $field) {
+                // we just flatten field facets in the base user structure
+                $serialized[$field->getFieldFacet()->getName()] = $field->getValue();
             }
         }
 
@@ -158,19 +187,72 @@ class UserSerializer
     }
 
     /**
+     * @param User $user
+     *
+     * @return array
+     */
+    private function serializePublic(User $user)
+    {
+        $settingsProfile = $this->facetManager->getVisiblePublicPreference();
+        $publicUser = [];
+
+        foreach ($settingsProfile as $property => $isViewable) {
+            if ($isViewable || $user === $this->tokenStorage->getToken()->getUser()) {
+                switch ($property) {
+                    case 'baseData':
+                        $publicUser['lastName'] = $user->getLastName();
+                        $publicUser['firstName'] = $user->getFirstName();
+                        $publicUser['fullName'] = $user->getFirstName().' '.$user->getLastName();
+                        $publicUser['username'] = $user->getUsername();
+                        $publicUser['picture'] = $user->getPicture();
+                        $publicUser['description'] = $user->getDescription();
+                        break;
+                    case 'email':
+                        $publicUser['mail'] = $user->getMail();
+                        break;
+                    case 'phone':
+                        $publicUser['phone'] = $user->getPhone();
+                        break;
+                    case 'sendMail':
+                        $publicUser['mail'] = $user->getMail();
+                        $publicUser['allowSendMail'] = true;
+                        break;
+                    case 'sendMessage':
+                        $publicUser['allowSendMessage'] = true;
+                        $publicUser['id'] = $user->getId();
+                        break;
+                }
+            }
+        }
+
+        $publicUser['groups'] = [];
+        //this should be protected by the visiblePublicPreference but it's not yet the case
+        foreach ($user->getGroups() as $group) {
+            $publicUser['groups'][] = ['name' => $group->getName(), 'id' => $group->getId()];
+        }
+
+        return $publicUser;
+    }
+
+    /**
      * Serialize the user picture.
      *
      * @param User $user
+     *
+     * @return array|null
      */
     private function serializePicture(User $user)
     {
-        $file = $this->container->get('claroline.persistence.object_manager')
+        /** @var PublicFile $file */
+        $file = $this->om
           ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
-          ->findOneByUrl($user->getPicture());
+          ->findOneBy(['url' => $user->getPicture()]);
 
         if ($file) {
-            return $this->container->get('claroline.api.serializer')->serialize($file);
+            return $this->fileSerializer->serialize($file);
         }
+
+        return null;
     }
 
     /**
@@ -180,6 +262,11 @@ class UserSerializer
      */
     private function serializeMeta(User $user)
     {
+        $locale = $user->getLocale();
+        if (empty($locale)) {
+            $locale = $this->config->getParameter('locale_language');
+        }
+
         return [
             'publicUrl' => $user->getPublicUrl(),
             'acceptedTerms' => $user->hasAcceptedTerms(),
@@ -194,8 +281,24 @@ class UserSerializer
             'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
             'enabled' => $user->isEnabled(),
             'removed' => $user->isRemoved(),
-            'locale' => $user->getLocale(),
+            'locale' => $locale,
         ];
+    }
+
+    private function deserializeMeta(array $meta, User $user)
+    {
+        $this->sipe('enabled', 'setIsEnabled', $meta, $user);
+        if (empty($meta) || empty($meta['locale'])) {
+            if (empty($user->getLocale())) {
+                // set default
+                $user->setLocale($this->config->getParameter('locale_language'));
+            }
+        } else {
+            // use given locale
+            $user->setLocale($meta['locale']);
+        }
+
+        $this->sipe('description', 'setDescription', $meta, $user);
     }
 
     /**
@@ -229,57 +332,18 @@ class UserSerializer
     private function serializeRestrictions(User $user)
     {
         return [
-            'accessibleFrom' => !empty($user->getInitDate()) ? $user->getInitDate()->format('Y-m-d\TH:i:s') : null,
-            'accessibleUntil' => !empty($user->getExpirationDate()) ? $user->getExpirationDate()->format('Y-m-d\TH:i:s') : null,
+            'dates' => DateRangeNormalizer::normalize($user->getInitDate(), $user->getExpirationDate()),
         ];
     }
 
-    /**
-     * @param User $user
-     *
-     * @return array
-     */
-    private function serializePublic(User $user)
+    private function deserializeRestrictions(array $restrictions, User $user)
     {
-        $settingsProfile = $this->facetManager->getVisiblePublicPreference();
-        $publicUser = [];
+        if (isset($restrictions['dates'])) {
+            $dateRange = DateRangeNormalizer::denormalize($restrictions['dates']);
 
-        foreach ($settingsProfile as $property => $isViewable) {
-            if ($isViewable || $user === $this->tokenStorage->getToken()->getUser()) {
-                switch ($property) {
-                  case 'baseData':
-                      $publicUser['lastName'] = $user->getLastName();
-                      $publicUser['firstName'] = $user->getFirstName();
-                      $publicUser['fullName'] = $user->getFirstName().' '.$user->getLastName();
-                      $publicUser['username'] = $user->getUsername();
-                      $publicUser['picture'] = $user->getPicture();
-                      $publicUser['description'] = $user->getDescription();
-                      break;
-                  case 'email':
-                      $publicUser['email'] = $user->getEmail();
-                      break;
-                  case 'phone':
-                      $publicUser['phone'] = $user->getPhone();
-                      break;
-                  case 'sendMail':
-                      $publicUser['email'] = $user->getEmail();
-                      $publicUser['allowSendMail'] = true;
-                      break;
-                  case 'sendMessage':
-                      $publicUser['allowSendMessage'] = true;
-                      $publicUser['id'] = $user->getId();
-                      break;
-              }
-            }
+            $user->setInitDate($dateRange[0]);
+            $user->setExpirationDate($dateRange[1]);
         }
-
-        $publicUser['groups'] = [];
-        //this should be protected by the visiblePublicPreference but it's not yet the case
-        foreach ($user->getGroups() as $group) {
-            $publicUser['groups'][] = ['name' => $group->getName(), 'id' => $group->getId()];
-        }
-
-        return $publicUser;
     }
 
     /**
@@ -298,20 +362,16 @@ class UserSerializer
         $object = $this->genericSerializer->deserialize($data, $user, $options);
 
         $this->sipe('email', 'setEmail', $data, $object);
-        $this->sipe('plainPassword', 'setPlainPassword', $data, $object);
-        $this->sipe('meta.enabled', 'setIsEnabled', $data, $object);
-        $this->sipe('meta.locale', 'setLocale', $data, $object);
-        $this->sipe('meta.description', 'setDescription', $data, $object);
+
+        $this->deserializeMeta($data['meta'], $user);
+        $this->deserializeRestrictions($data['restrictions'], $user);
+
         $this->sipe('picture.url', 'setPicture', $data, $object);
 
-        if (isset($data['restrictions']['accessibleUntil'])) {
-            if ($date = \DateTime::createFromFormat('Y-m-d\TH:i:s', $data['restrictions']['accessibleUntil'])) {
-                $object->setExpirationDate($date);
-            }
-        }
+        if (!empty($data['plainPassword'])) {
+            $object->setPlainPassword($data['plainPassword']);
 
-        if (isset($data['plainPassword'])) {
-            $password = $this->container->get('security.encoder_factory')
+            $password = $this->encoderFactory
                 ->getEncoder($object)
                 ->encodePassword($object->getPlainPassword(), $user->getSalt());
 
@@ -342,9 +402,9 @@ class UserSerializer
                         $fieldFacetValue['id'] = $fieldFacetValues['data'][0]['id'];
                     }
 
-                    $fieldFacetValue = $serializer->deserialize('Claroline\CoreBundle\Entity\Facet\FieldFacetValue', $fieldFacetValue);
-                    $fieldFacetValue->setUser($user);
-                    $user->addFieldFacet($fieldFacetValue);
+                    $user->addFieldFacet(
+                        $serializer->deserialize('Claroline\CoreBundle\Entity\Facet\FieldFacetValue', $fieldFacetValue)
+                    );
                 }
             }
         }
