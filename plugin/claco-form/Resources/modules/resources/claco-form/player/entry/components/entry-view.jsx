@@ -535,7 +535,7 @@ EntryView.propTypes = {
   resourceId: T.number.isRequired,
   entryId: T.number,
   user: T.shape({
-    id: T.number,
+    id: T.string,
     firstName: T.string,
     lastName: T.string
   }),
@@ -585,13 +585,13 @@ EntryView.propTypes = {
       id: T.number.isRequired,
       content: T.string.isRequired,
       user: T.shape({
-        id: T.number,
+        id: T.string,
         firstName: T.string,
         lastName: T.string
       })
     })),
     user: T.shape({
-      id: T.number,
+      id: T.string,
       firstName: T.string,
       lastName: T.string
     }),

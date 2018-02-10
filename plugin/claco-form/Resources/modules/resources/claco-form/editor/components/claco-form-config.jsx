@@ -2,7 +2,6 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import moment from 'moment'
 import Panel from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
@@ -18,7 +17,6 @@ import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {constants as listConstants} from '#/main/core/data/list/constants'
 import {actions} from '../actions'
-import {Message} from '../../components/message.jsx'
 
 const getMultipleSelectValues = (e) => {
   const values = []
@@ -368,11 +366,15 @@ const Comments = props =>
 
     {props.params.comments_enabled &&
       <SelectGroup
-        controlId="params-comments-roles"
+        id="params-comments-roles"
         label={trans('enable_comments_for_roles', {}, 'clacoform')}
-        options={props.roles.map(r => ({value: r.name, label: t(r.translationKey)}))}
+        choices={props.roles.reduce((acc, r) => {
+          acc[r.name] = t(r.translationKey)
+
+          return acc
+        }, {})}
         multiple={true}
-        selectedValue={props.params.comments_roles || []}
+        value={props.params.comments_roles || []}
         onChange={value => props.updateParameters('comments_roles', value)}
       />
     }
@@ -396,11 +398,15 @@ const Comments = props =>
     />
     {props.params.display_comments &&
       <SelectGroup
-        controlId="params-comments-display-roles"
+        id="params-comments-display-roles"
         label={trans('display_comments_for_roles', {}, 'clacoform')}
-        options={props.roles.map(r => ({value: r.name, label: t(r.translationKey)}))}
+        choices={props.roles.reduce((acc, r) => {
+          acc[r.name] = t(r.translationKey)
+
+          return acc
+        }, {})}
         multiple={true}
-        selectedValue={props.params.comments_display_roles || []}
+        value={props.params.comments_display_roles || []}
         onChange={value => props.updateParameters('comments_display_roles', value)}
       />
     }
@@ -581,13 +587,11 @@ class ClacoFormConfig extends Component {
   render() {
     return (
       <div>
-        <h2>
+        <h2 className="h-first">
           {trans('general_configuration', {}, 'clacoform')}
         </h2>
-        <br/>
         {this.props.canEdit ?
           <form>
-            <Message/>
             <PanelGroup accordion>
               {makePanel(General, t('general'), 'general', this.props)}
               {makePanel(Display, t('display_parameters', {}, 'clacoform'), 'display', this.props)}
