@@ -132,6 +132,10 @@ class UserFinder implements FinderInterface
             $qb->andWhere('obj.isRemoved = FALSE');
         }
 
+        if (!empty($sortBy) && 'isDisabled' === $sortBy['property'] && 0 !== $sortBy['direction']) {
+            $qb->orderBy('obj.isEnabled ', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+        }
+
         return $qb;
     }
 

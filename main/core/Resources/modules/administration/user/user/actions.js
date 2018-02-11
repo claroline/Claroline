@@ -1,32 +1,29 @@
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/core/api/router'
 
 import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as listActions} from '#/main/core/data/list/actions'
 import {actions as formActions} from '#/main/core/data/form/actions'
-import {actions as userActions} from '#/main/core/user/actions'
 
 import {User as UserTypes} from '#/main/core/administration/user/user/prop-types'
 
 export const actions = {}
 
-actions.open = (formName, id = null) => (dispatch) => {
+actions.open = (formName, id = null) => {
   if (id) {
-    dispatch({
+    return {
       [API_REQUEST]: {
         url: ['apiv2_user_get', {id}],
-        success: (response, dispatch) => {
-          dispatch(formActions.resetForm(formName, response, false))
-        }
+        success: (response, dispatch) => dispatch(formActions.resetForm(formName, response, false))
       }
-    })
+    }
   } else {
-    dispatch(formActions.resetForm(formName, UserTypes.defaultProps, true))
+    return formActions.resetForm(formName, UserTypes.defaultProps, true)
   }
 }
 
 actions.addGroups = (id, groups) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_user_add_groups', {id: id}) +'?'+ groups.map(id => 'ids[]='+id).join('&'),
+    url: url(['apiv2_user_add_groups', {id: id}], {ids: groups}),
     request: {
       method: 'PATCH'
     },
@@ -39,7 +36,7 @@ actions.addGroups = (id, groups) => ({
 
 actions.addRoles = (id, roles) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_user_add_roles', {id: id}) +'?'+ roles.map(id => 'ids[]='+id).join('&'),
+    url: url(['apiv2_user_add_roles', {id: id}], {ids: roles}),
     request: {
       method: 'PATCH'
     },
@@ -52,7 +49,7 @@ actions.addRoles = (id, roles) => ({
 
 actions.addOrganizations = (id, organizations) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_user_add_organizations', {id: id}) +'?'+ organizations.map(id => 'ids[]='+id).join('&'),
+    url: url(['apiv2_user_add_organizations', {id: id}], {ids: organizations}),
     request: {
       method: 'PATCH'
     },
@@ -67,7 +64,7 @@ actions.enable = (user) => ({
   [API_REQUEST]: {
     url: ['apiv2_user_update', {id: user.id}],
     request: {
-      body: JSON.stringify(Object.assign({}, user, {meta: {enabled:true}})),
+      body: JSON.stringify(Object.assign({}, user, {restrictions: {disabled:false}})),
       method: 'PUT'
     },
     success: (data, dispatch) => {
@@ -81,19 +78,13 @@ actions.disable = (user) => ({
     url: ['apiv2_user_update', {id: user.id}],
     request: {
       method: 'PUT',
-      body: JSON.stringify(Object.assign({}, user, {meta: {enabled:false}}))
+      body: JSON.stringify(Object.assign({}, user, {restrictions: {disabled:true}}))
     },
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData('users.list'))
     }
   }
 })
-
-actions.changePassword = (user, plainPassword) => userActions.changePassword(
-  user,
-  plainPassword,
-  (data, dispatch) => dispatch(listActions.invalidateData('users.list'))
-)
 
 actions.createWorkspace = (user) => ({
   [API_REQUEST]: {

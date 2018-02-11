@@ -96,13 +96,7 @@ class FieldFacetValueSerializer
           $data['fieldFacet']
         );
 
-        $user = $this->container->get('claroline.api.serializer')->deserialize(
-            'Claroline\CoreBundle\Entity\User',
-            $data['user']
-        );
-
         $fieldFacetValue->setFieldFacet($fieldFacet);
-        $fieldFacetValue->setUser($user);
         $value = $data['value'];
 
         switch ($fieldFacet->getType()) {

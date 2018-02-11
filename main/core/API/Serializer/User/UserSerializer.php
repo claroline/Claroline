@@ -5,6 +5,7 @@ namespace Claroline\CoreBundle\API\Serializer\User;
 use Claroline\CoreBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\SerializerTrait;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Group;
@@ -174,7 +175,7 @@ class UserSerializer
         if (in_array(Options::SERIALIZE_FACET, $options)) {
             $fields = $this->om
                 ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetValue')
-                ->findOneBy(['user' => $user]);
+                ->findPlatformValuesByUser($user);
 
             /** @var FieldFacetValue $field */
             foreach ($fields as $field) {
@@ -245,8 +246,8 @@ class UserSerializer
     {
         /** @var PublicFile $file */
         $file = $this->om
-          ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
-          ->findOneBy(['url' => $user->getPicture()]);
+            ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
+            ->findOneBy(['url' => $user->getPicture()]);
 
         if ($file) {
             return $this->fileSerializer->serialize($file);
@@ -279,7 +280,6 @@ class UserSerializer
             'publicUrlTuned' => $user->hasTunedPublicUrl(),
             'authentication' => $user->getAuthentication(),
             'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
-            'enabled' => $user->isEnabled(),
             'removed' => $user->isRemoved(),
             'locale' => $locale,
         ];
@@ -287,7 +287,7 @@ class UserSerializer
 
     private function deserializeMeta(array $meta, User $user)
     {
-        $this->sipe('enabled', 'setIsEnabled', $meta, $user);
+        $this->sipe('description', 'setDescription', $meta, $user);
         if (empty($meta) || empty($meta['locale'])) {
             if (empty($user->getLocale())) {
                 // set default
@@ -297,8 +297,6 @@ class UserSerializer
             // use given locale
             $user->setLocale($meta['locale']);
         }
-
-        $this->sipe('description', 'setDescription', $meta, $user);
     }
 
     /**
@@ -332,12 +330,17 @@ class UserSerializer
     private function serializeRestrictions(User $user)
     {
         return [
+            'disabled' => !$user->isEnabled(),
             'dates' => DateRangeNormalizer::normalize($user->getInitDate(), $user->getExpirationDate()),
         ];
     }
 
     private function deserializeRestrictions(array $restrictions, User $user)
     {
+        if (isset($restrictions['disabled'])) {
+            $user->setIsEnabled(!$restrictions['disabled']);
+        }
+
         if (isset($restrictions['dates'])) {
             $dateRange = DateRangeNormalizer::denormalize($restrictions['dates']);
 
@@ -359,70 +362,63 @@ class UserSerializer
     public function deserialize(array $data, User $user = null, array $options = [])
     {
         // remove this later (with the Trait)
-        $object = $this->genericSerializer->deserialize($data, $user, $options);
+        $this->genericSerializer->deserialize($data, $user, $options);
 
-        $this->sipe('email', 'setEmail', $data, $object);
+        $this->sipe('picture.url', 'setPicture', $data, $user);
+        $this->sipe('email', 'setEmail', $data, $user);
 
-        $this->deserializeMeta($data['meta'], $user);
-        $this->deserializeRestrictions($data['restrictions'], $user);
+        if (isset($data['meta'])) {
+            $this->deserializeMeta($data['meta'], $user);
+        }
 
-        $this->sipe('picture.url', 'setPicture', $data, $object);
+        if (isset($data['restrictions'])) {
+            $this->deserializeRestrictions($data['restrictions'], $user);
+        }
 
         if (!empty($data['plainPassword'])) {
-            $object->setPlainPassword($data['plainPassword']);
-
-            $password = $this->encoderFactory
-                ->getEncoder($object)
-                ->encodePassword($object->getPlainPassword(), $user->getSalt());
-
-            $object->setPassword($password);
+            $this->deserializePassword($data['plainPassword'], $user);
         }
 
         //avoid recursive dependencies
-        $finder = $this->container->get('claroline.api.finder');
         $serializer = $this->container->get('claroline.api.serializer');
-        $fieldFacets = $finder->search('Claroline\CoreBundle\Entity\Facet\FieldFacet');
 
-        foreach ($fieldFacets['data'] as $fieldFacet) {
-            foreach (array_keys($data) as $propertyName) {
-                if ($this->getPrettyName($propertyName) === $this->getPrettyName($fieldFacet['name'])) {
-                    $fieldFacetValue = [
-                        'name' => $propertyName,
-                        'value' => $data[$propertyName],
-                        'user' => ['id' => $data['id']],
-                        'fieldFacet' => ['id' => $fieldFacet['id']],
-                    ];
+        $fieldFacets = $this->om
+            ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacet')
+            ->findPlatformFieldFacets();
 
-                    //if the fieldFacetValue exists, we'll find it's id so we don't have to create a new one
-                    $fieldFacetValues = $finder->search('Claroline\CoreBundle\Entity\Facet\FieldFacetValue', [
-                        'filters' => ['user' => $data['id'], 'fieldFacet' => $fieldFacet['id']],
+        /** @var FieldFacet $fieldFacet */
+        foreach ($fieldFacets as $fieldFacet) {
+            if (isset($data[$fieldFacet->getName()])) {
+                /** @var FieldFacetValue $fieldFacetValue */
+                $fieldFacetValue = $this->om
+                    ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetValue')
+                    ->findOneBy([
+                        'user' => $user,
+                        'fieldFacet' => $fieldFacet,
                     ]);
 
-                    if (count($fieldFacetValues['data']) > 0) {
-                        $fieldFacetValue['id'] = $fieldFacetValues['data'][0]['id'];
-                    }
-
-                    $user->addFieldFacet(
-                        $serializer->deserialize('Claroline\CoreBundle\Entity\Facet\FieldFacetValue', $fieldFacetValue)
-                    );
-                }
+                $user->addFieldFacet(
+                    $serializer->deserialize('Claroline\CoreBundle\Entity\Facet\FieldFacetValue', [
+                        'id' => !empty($fieldFacetValue) ? $fieldFacetValue->getUuid() : null,
+                        'name' => $fieldFacet->getName(),
+                        'value' => $data[$fieldFacet->getName()],
+                        'fieldFacet' => ['id' => $fieldFacet->getUuid()],
+                    ])
+                );
             }
         }
 
-        return $object;
+        return $user;
     }
 
-    /**
-     * @return string
-     *
-     * Maybe move this somewhere else or in a trait
-     */
-    private function getPrettyName($name)
+    private function deserializePassword($plainPassword, User $user)
     {
-        $string = str_replace(' ', '-', $name); // Replaces all spaces with hyphens.
-        $string = preg_replace('/[^A-Za-z0-9\-]/', '', $string); // Removes special chars.
-        $string = preg_replace('/-+/', '-', $string); // Replaces multiple hyphens with single one.
+        $user->setPlainPassword($plainPassword);
 
-        return strtolower($string);
+        $password = $this->encoderFactory
+            ->getEncoder($user)
+            ->encodePassword($user->getPlainPassword(), $user->getSalt());
+
+        $user->setPassword($password);
     }
 }

@@ -32,19 +32,17 @@ const UserList = {
     }, {
       name: 'administrativeCode',
       type: 'string',
-      label: t('code'),
-      displayed: false
+      label: t('code')
     }, {
       name: 'meta.personalWorkspace',
       alias: 'hasPersonalWorkspace',
       type: 'boolean',
-      label: t('has_personal_workspace'),
-      displayed: true
+      label: t('has_personal_workspace')
     }, {
-      name: 'meta.enabled',
-      alias: 'isEnabled',
+      name: 'restrictions.disabled',
+      alias: 'isDisabled',
       type: 'boolean',
-      label: t('user_enabled'),
+      label: t('user_disabled'),
       displayed: true
     }, {
       name: 'meta.created',

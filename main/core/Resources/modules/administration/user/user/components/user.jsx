@@ -54,11 +54,29 @@ const UserForm = props =>
             label: t('password'),
             displayed: props.new,
             required: true
-          }, {
+          }
+        ]
+      }, {
+        id: 'information',
+        icon: 'fa fa-fw fa-info',
+        title: t('information'),
+        fields: [
+          {
             name: 'administrativeCode',
             type: 'string',
             label: t('administrativeCode')
           }, {
+            name: 'meta.description',
+            type: 'html',
+            label: t('description')
+          }
+        ]
+      }, {
+        id: 'display_parameters',
+        icon: 'fa fa-fw fa-desktop',
+        title: t('display_parameters'),
+        fields: [
+          {
             name: 'meta.locale',
             type: 'locale',
             label: t('language'),
@@ -72,13 +90,16 @@ const UserForm = props =>
             label: t('picture')
           }
         ]
-      },
-      {
+      }, {
         id: 'restrictions',
         icon: 'fa fa-fw fa-key',
         title: t('access_restrictions'),
         fields: [
           {
+            name: 'restrictions.disabled',
+            type: 'boolean',
+            label: t('disable_user')
+          }, {
             name: 'restrictions.enableDates',
             type: 'boolean',
             label: t('restrict_by_dates'),
@@ -96,6 +117,7 @@ const UserForm = props =>
                 type: 'date-range',
                 label: t('access_dates'),
                 displayed: props.user.restrictions && 0!== props.user.restrictions.dates.length,
+                required: true,
                 options: {
                   time: true
                 }
