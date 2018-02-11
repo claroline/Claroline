@@ -188,6 +188,11 @@
         border-left: 1px solid transparent;
         background-clip: padding-box;
 
+        &.only-icon {
+            margin-left: auto;
+            flex: 0;
+        }
+
         &:last-child {
             margin-right: 0;
         }
@@ -206,10 +211,10 @@
 
     .page-tabs-icon {
         font-size: 24px;
-        margin-right: 10px;
     }
 
     .page-tab-label {
+        margin-left: 10px;
         overflow: hidden;
         max-height: 100%;
     }

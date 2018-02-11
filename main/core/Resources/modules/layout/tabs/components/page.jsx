@@ -14,12 +14,20 @@ const PageHeader = props =>
       <nav className="page-tabs">
         {props.tabs.map((section, sectionIndex) =>
           <NavLink
+            className={classes({
+              'only-icon': section.onlyIcon
+            })}
             key={`section-link-${sectionIndex}`}
             to={section.path}
             exact={section.exact}
           >
             <span className={classes('page-tabs-icon', section.icon)} />
-            <span className="page-tab-label">{section.title}</span>
+            <span className={classes({
+              'page-tab-label': !section.onlyIcon,
+              'sr-only': section.onlyIcon
+            })}>
+              {section.title}
+            </span>
           </NavLink>
         )}
       </nav>
@@ -34,7 +42,8 @@ PageHeader.propTypes = {
     path: T.string.isRequired,
     exact: T.bool,
     icon: T.string.isRequired,
-    title: T.string.isRequired
+    title: T.string.isRequired,
+    onlyIcon: T.bool
   })).isRequired,
   children: T.node
 }
@@ -48,7 +57,7 @@ const TabbedPage = props =>
       tabs={props.tabs}
     >
       <Switch>
-        {props.tabs.map((tab, tabIndex) =>
+        {props.tabs.map((tab, tabIndex) => tab.actions &&
           <Route
             {...tab}
             key={`tab-actions-${tabIndex}`}
