@@ -1,5 +1,104 @@
+/**
+ * DataList styles.
+ */
 
 @import "mixins";
 @import "data-grids";
 @import "data-lists";
 @import "data-trees";
+
+
+// -
+// Modals
+// ---
+
+.data-picker-modal {
+    .embedded-list-variant();
+
+    .list-header {
+        background: @modal-footer-bg;
+        border-bottom: 1px solid @modal-header-border-color;
+    }
+
+    .list-selected {
+        border-top: 1px solid @modal-header-border-color; // force border top for table display
+        border-color: @modal-header-border-color;
+        background: @modal-footer-bg;
+    }
+
+    .list-footer {
+        background: @modal-footer-bg;
+        border-top-color: @modal-header-border-color;
+    }
+}
+
+
+// -
+// Embedded list
+// ---
+
+.embedded-list-section {
+    .embedded-list-variant();
+
+    .list-header {
+        background: @panel-default-heading-bg;
+        border-bottom: 1px solid @panel-inner-border;
+    }
+
+    .list-selected {
+        border-top: 1px solid @panel-inner-border; // force border top for table display
+        border-color: @panel-inner-border;
+        background: @panel-default-heading-bg;
+    }
+
+    .data-list {
+        margin: -@panel-body-padding; // maybe not the best way to handle it
+    }
+
+    .list-footer {
+        background: @panel-footer-bg;
+        border-top-color: @panel-inner-border;
+    }
+}
+
+.embedded-list-variant() {
+    .data-table,
+    .data-grid {
+        margin-bottom: 0;
+    }
+
+    .data-grid {
+        margin-bottom: @data-grid-gutter;
+
+        .data-grid-header,
+        .list-selected-label {
+            margin-left: @data-grid-gutter;
+        }
+
+        .data-grid-content {
+            margin: -@data-grid-gutter 0;
+        }
+    }
+
+    .table {
+        th:first-child,
+        td:first-child {
+            border-left: none;
+        }
+
+        th:last-child,
+        td:last-child {
+            border-right: none;
+        }
+    }
+
+    .list-selected {
+        border-left: none;
+        border-right: none;
+    }
+
+    .list-footer {
+        border-top: 1px solid transparent;
+        padding: 5px;
+    }
+}
