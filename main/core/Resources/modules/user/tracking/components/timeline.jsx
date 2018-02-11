@@ -2,10 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {displayDate} from '#/main/core/scaffolding/date'
 import {asset} from '#/main/core/scaffolding/asset'
 import {generateUrl} from '#/main/core/api/router'
 import {trans} from '#/main/core/translation'
+import {displayDate} from '#/main/core/scaffolding/date'
 import {constants} from '#/main/core/user/tracking/constants'
 
 import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge.jsx'

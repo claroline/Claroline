@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Entity;
 
-use Gedmo\Mapping\Annotation as Gedmo;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\Translatable\Translatable;
 
 /**
@@ -102,9 +102,7 @@ class Content implements Translatable
      */
     public function setTitle($title)
     {
-        if ($title !== null) {
-            $this->title = $title;
-        }
+        $this->title = $title;
 
         return $this;
     }
@@ -128,9 +126,7 @@ class Content implements Translatable
      */
     public function setContent($content)
     {
-        if ($content !== null) {
-            $this->content = $content;
-        }
+        $this->content = $content;
 
         return $this;
     }
@@ -154,9 +150,7 @@ class Content implements Translatable
      */
     public function setType($type)
     {
-        if ($type !== null) {
-            $this->type = $type;
-        }
+        $this->type = $type;
 
         return $this;
     }

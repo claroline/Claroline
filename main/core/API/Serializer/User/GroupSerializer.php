@@ -33,11 +33,6 @@ class GroupSerializer
         return 'Claroline\CoreBundle\Entity\Group';
     }
 
-    public function getIdentifiers()
-    {
-        return ['id', 'uuid', 'name'];
-    }
-
     /**
      * Serializes a Group entity.
      *

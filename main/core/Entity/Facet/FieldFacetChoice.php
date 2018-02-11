@@ -173,7 +173,7 @@ class FieldFacetChoice
     /**
      * @param FieldFacetChoice|null $parent
      */
-    public function setParent(FieldFacetChoice $parent = null)
+    public function setParent(self $parent = null)
     {
         $this->parent = $parent;
     }
@@ -194,5 +194,15 @@ class FieldFacetChoice
     public function getValue()
     {
         return $this->name;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
     }
 }

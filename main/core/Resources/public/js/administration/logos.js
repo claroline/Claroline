@@ -13,8 +13,7 @@
     var modal = window.Claroline.Modal;
 
     function deletelogo(element) {
-        var logo = $(element).data('logo');
-
+        var logo = encodeURIComponent($(element).data('logo'));
         if (logo && element) {
 
             var route = Routing.generate('claro_admin_delete_logo', {'file': logo});

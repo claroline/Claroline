@@ -29,7 +29,7 @@ security:
             anonymous: true
 
         api:
-            pattern:    /api/
+            pattern:    /(api|apiv2)/
             claro_api: true
             #fos_oauth: true
             #stateless:  true
