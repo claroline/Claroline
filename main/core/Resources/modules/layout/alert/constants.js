@@ -3,7 +3,7 @@ import {trans} from '#/main/core/translation'
 import {constants as actionConstants} from '#/main/core/layout/action/constants'
 
 const ALERT_DISPLAY_MAX     = 5
-const ALERT_DISPLAY_TIMEOUT = 1000
+const ALERT_DISPLAY_TIMEOUT = 2000
 
 const ALERT_STATUS_SUCCESS      = 'success'
 const ALERT_STATUS_WARNING      = 'warning'
@@ -22,7 +22,8 @@ const ALERT_STATUS = {
   [ALERT_STATUS_FORBIDDEN]: {
     order: 2,
     icon: 'fa-lock',
-    removable: true
+    removable: true,
+    timeout: ALERT_DISPLAY_TIMEOUT
   },
   [ALERT_STATUS_ERROR]: {
     order: 3,
@@ -32,22 +33,26 @@ const ALERT_STATUS = {
   [ALERT_STATUS_UNAUTHORIZED]: {
     order: 4,
     icon: 'fa-lock-alt',
-    removable: true
+    removable: true,
+    timeout: ALERT_DISPLAY_TIMEOUT
   },
   [ALERT_STATUS_WARNING]: {
     order: 5,
     icon: 'fa-exclamation',
-    removable: true
+    removable: true,
+    timeout: ALERT_DISPLAY_TIMEOUT
   },
   [ALERT_STATUS_SUCCESS]: {
     order: 6,
     icon: 'fa-check',
-    removable: true
+    removable: true,
+    timeout: ALERT_DISPLAY_TIMEOUT
   },
   [ALERT_STATUS_INFO]: {
     order: 7,
     icon: 'fa-info',
-    removable: true
+    removable: true,
+    timeout: ALERT_DISPLAY_TIMEOUT
   }
 }
 
