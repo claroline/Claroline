@@ -63,6 +63,7 @@ const Tool = () =>
         icon: 'fa fa-cog',
         title: trans('parameters'),
         path: '/parameters',
+        onlyIcon: true,
         actions: ParametersTabActions,
         content: ParametersTab
       }

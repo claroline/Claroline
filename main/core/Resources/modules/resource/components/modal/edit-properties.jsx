@@ -124,7 +124,7 @@ const AccessesSection = (props) =>
   >
     <ActivableSet
       id="access-dates"
-      label={t('access_dates')}
+      label={t('restrict_by_dates')}
       activated={!isEmpty(props.parameters.accessibleFrom) || !isEmpty(props.parameters.accessibleUntil)}
       onChange={activated => {
         if (!activated) {

@@ -98,7 +98,8 @@ UsersList.propTypes = {
   enable: T.func.isRequired,
   disable: T.func.isRequired,
   createWorkspace: T.func.isRequired,
-  deleteWorkspace: T.func.isRequired
+  deleteWorkspace: T.func.isRequired,
+  updatePassword: T.func.isRequired
 }
 
 const Users = connect(

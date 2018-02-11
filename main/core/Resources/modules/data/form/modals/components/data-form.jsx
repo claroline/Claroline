@@ -62,7 +62,7 @@ class DataFormModal extends Component {
     return (
       <BaseModal
         {...this.props}
-        className={classes('form-modal', this.props.className)}
+        className={classes('data-form-modal', this.props.className)}
       >
         <Form
           level={5}

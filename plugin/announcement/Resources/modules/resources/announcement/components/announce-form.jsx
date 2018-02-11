@@ -71,7 +71,7 @@ const AnnounceForm = props =>
 
         <ActivableSet
           id="access-dates"
-          label={t('access_dates')}
+          label={t('restrict_by_dates')}
           activated={!isEmpty(props.announcement.restrictions.visibleFrom) || !isEmpty(props.announcement.restrictions.visibleUntil)}
           onChange={activated => {
             if (!activated) {
