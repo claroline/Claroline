@@ -4,32 +4,12 @@ import {PropTypes as T} from 'prop-types'
 
 import {t} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
-import {PageActions, PageAction} from '#/main/core/layout/page/components/page-actions.jsx'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 import {constants as listConst} from '#/main/core/data/list/constants'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
 
 import {select} from '#/main/core/contact/tool/selectors'
 import {OptionsType} from '#/main/core/contact/prop-types'
-import {actions} from '#/main/core/contact/tool/actions'
-import {MODAL_CONTACTS_OPTIONS_FORM} from '#/main/core/contact/tool/components/modal/contacts-options-form.jsx'
-
-const ContactsActionsComponent = props =>
-  <PageActions>
-    <PageAction
-      id="options-edit"
-      icon="fa fa-fw fa-cog"
-      title={t('configure')}
-      action={() => props.configure(props.options)}
-    />
-  </PageActions>
-
-ContactsActionsComponent.propTypes = {
-  options: T.object.isRequired,
-  configure: T.func.isRequired
-}
 
 const ContactsComponent = props =>
   <DataListContainer
@@ -50,7 +30,7 @@ const ContactsComponent = props =>
     }}
     actions={[
       {
-        icon: 'fa fa-fw fa-envelope-o',
+        icon: 'fa fa-fw fa-paper-plane-o',
         label: t('send_message'),
         action: (rows) => {
           window.location = `${generateUrl('claro_message_show', {'message': 0})}?${rows.map(c => `userIds[]=${c.data.autoId}`).join('&')}`
@@ -104,21 +84,8 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    configure: options => {
-      dispatch(modalActions.showModal(MODAL_CONTACTS_OPTIONS_FORM, {
-        data: options,
-        save: options => dispatch(actions.saveOptions(options))
-      }))
-    }
-  }
-}
-
 const Contacts = connect(mapStateToProps, {})(ContactsComponent)
-const ContactsActions = connect(mapStateToProps, mapDispatchToProps)(ContactsActionsComponent)
 
 export {
-  Contacts,
-  ContactsActions
+  Contacts
 }

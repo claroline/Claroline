@@ -1,6 +1,6 @@
 import {createSelector} from 'reselect'
 
-const options = state => state.options
+const options = state => state.options.originalData
 
 const optionsData = createSelector(
   [options],
