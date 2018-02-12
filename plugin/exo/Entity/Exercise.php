@@ -85,6 +85,15 @@ class Exercise extends AbstractResource
     private $showEndPage = false;
 
     /**
+     * Show an end page when the user has finished the quiz.
+     *
+     * @ORM\Column(name="show_end_confirm", type="boolean")
+     *
+     * @var bool
+     */
+    private $showEndConfirm = true;
+
+    /**
      * A message to display at the end of the quiz.
      *
      * @ORM\Column(name="end_message", type="text", nullable=true)
@@ -349,6 +358,26 @@ class Exercise extends AbstractResource
     public function isInterruptible()
     {
         return $this->interruptible;
+    }
+
+    /**
+     * Set show end confirm dialog.
+     *
+     * @param bool $showEndConfirm
+     */
+    public function setShowEndConfirm($showEndConfirm)
+    {
+        $this->showEndConfirm = $showEndConfirm;
+    }
+
+    /**
+     * Is end confirm dialog shown ?
+     *
+     * @return bool
+     */
+    public function getShowEndConfirm()
+    {
+        return $this->showEndConfirm;
     }
 
     /**

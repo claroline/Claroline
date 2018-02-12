@@ -24,6 +24,7 @@ const quiz = {
     showScoreAt: SHOW_SCORE_AT_CORRECTION,
     showStatistics: false,
     showFullCorrection: true,
+    showEndConfirm: true,
     endMessage: ''
   },
   picking: {

@@ -698,5 +698,7 @@
     "hint_confirm_title": "Use a hint",
     "hint_confirm_question": "Are you sure you want to use this hint ?",
     "show_end_navigation": "Display navigation shortcuts",
-    "show_end_navigation_help": "If checked, the shortcuts 'Show my answers' and 'Restart' will be displayed."
+    "show_end_navigation_help": "If checked, the shortcuts 'Show my answers' and 'Restart' will be displayed.",
+    "show_end_confirm": "Confirm attempts submissions",
+    "show_end_confirm_help": "If checked, a confirmation will be displayed to users before completing the quiz."
 }

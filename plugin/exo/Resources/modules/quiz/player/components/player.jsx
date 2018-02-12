@@ -79,7 +79,7 @@ const PlayerComponent = props =>
       navigateToAndValidate={(step) => props.navigateTo(props.quizId, props.paper.id, step, props.answers, props.currentStepSend)}
       openFeedbackAndValidate={(step) => props.navigateTo(props.quizId, props.paper.id, step, props.answers, props.currentStepSend, true)}
       submit={() => props.submit(props.quizId, props.paper.id, props.answers)}
-      finish={() => props.finish(props.quizId, props.paper, props.answers, props.showFeedback)}
+      finish={() => props.finish(props.quizId, props.paper, props.answers, props.showFeedback, props.showEndConfirm)}
       currentStepSend={props.currentStepSend}
     />
     <CustomDragLayer />
@@ -89,6 +89,7 @@ PlayerComponent.propTypes = {
   quizId: T.string.isRequired,
   numbering: T.string.isRequired,
   number: T.number.isRequired,
+  stepIndex: T.number,
   step: T.shape({
     id: T.string.isRequired,
     title: T.string,
@@ -104,6 +105,7 @@ PlayerComponent.propTypes = {
   next: T.object,
   previous: T.object,
   showFeedback: T.bool.isRequired,
+  showEndConfirm: T.bool.isRequired,
   feedbackEnabled: T.bool.isRequired,
   currentStepSend: T.bool.isRequired,
 
@@ -132,6 +134,7 @@ const Player = connect(
     next: select.next(state),
     previous: select.previous(state),
     showFeedback: select.showFeedback(state),
+    showEndConfirm: select.showEndConfirm(state),
     feedbackEnabled: select.feedbackEnabled(state),
     currentStepSend: select.currentStepSend(state),
     numbering: selectQuiz.quizNumbering(state),
@@ -147,12 +150,16 @@ const Player = connect(
     submit(quizId, paperId, answers) {
       dispatch(actions.submit(quizId, paperId, answers))
     },
-    finish(quizId, paper, pendingAnswers, showFeedback) {
-      dispatch(modalActions.showModal(MODAL_CONFIRM, {
-        title: tex('finish_confirm_title'),
-        question: tex('finish_confirm_question'),
-        handleConfirm: () => dispatch(actions.finish(quizId, paper, pendingAnswers, showFeedback))
-      }))
+    finish(quizId, paper, pendingAnswers, showFeedback, showConfirm) {
+      if (showConfirm) {
+        dispatch(modalActions.showModal(MODAL_CONFIRM, {
+          title: tex('finish_confirm_title'),
+          question: tex('finish_confirm_question'),
+          handleConfirm: () => dispatch(actions.finish(quizId, paper, pendingAnswers, showFeedback))
+        }))
+      } else {
+        dispatch(actions.finish(quizId, paper, pendingAnswers, showFeedback))
+      }
     },
     showHint(quizId, paperId, questionId, hint) {
       dispatch(modalActions.showModal(MODAL_CONFIRM, {

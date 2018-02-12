@@ -152,6 +152,7 @@ class ExerciseSerializer implements SerializerInterface
 
         // Visibility parameters
         $parameters->showOverview = $exercise->getShowOverview();
+        $parameters->showEndConfirm = $exercise->getShowEndConfirm();
         $parameters->showEndPage = $exercise->getShowEndPage();
 
         if (!empty($exercise->getEndMessage())) {
@@ -237,6 +238,10 @@ class ExerciseSerializer implements SerializerInterface
 
         if (isset($parameters->showOverview)) {
             $exercise->setShowOverview($parameters->showOverview);
+        }
+
+        if (isset($parameters->showEndConfirm)) {
+            $exercise->setShowEndConfirm($parameters->showEndConfirm);
         }
 
         if (isset($parameters->showEndPage)) {

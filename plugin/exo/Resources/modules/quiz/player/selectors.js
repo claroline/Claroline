@@ -7,6 +7,7 @@ const answers = (state) => state.answers
 const quizMaxAttempts = (state) => state.quiz.parameters.maxAttempts
 const quizEndMessage = (state) => state.quiz.parameters.endMessage
 const quizEndNavigation = (state) => state.quiz.parameters.endNavigation
+const showEndConfirm = (state) => state.quiz.parameters.showEndConfirm
 const showFeedback = (state) => state.quiz.parameters.showFeedback
 const feedbackEnabled = state => state.currentStep.feedbackEnabled
 const showCorrectionAt = state => state.quiz.parameters.showCorrectionAt
@@ -121,6 +122,7 @@ export const select = {
   answers,
   quizMaxAttempts,
   showFeedback,
+  showEndConfirm,
   feedbackEnabled,
   currentStepId,
   currentStep,

@@ -698,5 +698,7 @@
     "hint_confirm_title": "Utiliser un indice",
     "hint_confirm_question": "Êtes-vous sûr de vouloir utiliser cet indice ?",
     "show_end_navigation": "Afficher les raccourcis de navigation",
-    "show_end_navigation_help": "Si coché, les raccourcis 'Voir mes réponses' et 'Recommencer' seront affichés sur la page de fin."
+    "show_end_navigation_help": "Si coché, les raccourcis 'Voir mes réponses' et 'Recommencer' seront affichés sur la page de fin.",
+    "show_end_confirm": "Confirmer la soumission des tentatives",
+    "show_end_confirm_help": "Si coché, une demande de confirmation sera proposée aux utilisateurs avant de terminer le questionnaire."
 }

@@ -243,6 +243,14 @@ const Signing = props =>
       label={tex('mandatory_questions')}
       onChange={checked => props.onChange('parameters.mandatoryQuestions', checked)}
     />
+
+    <CheckGroup
+      id="quiz-end-confirm"
+      value={props.parameters.showEndConfirm}
+      label={tex('show_end_confirm')}
+      help={tex('show_end_confirm_help')}
+      onChange={checked => props.onChange('parameters.showEndConfirm', checked)}
+    />
 </fieldset>
 
 Signing.propTypes = {
@@ -252,7 +260,8 @@ Signing.propTypes = {
     mandatoryQuestions: T.bool.isRequired,
     maxAttemptsPerDay: T.number.isRequired,
     interruptible: T.bool.isRequired,
-    showFeedback: T.bool.isRequired
+    showFeedback: T.bool.isRequired,
+    showEndConfirm: T.bool
   }).isRequired,
   validating: T.bool.isRequired,
   onChange: T.func.isRequired
