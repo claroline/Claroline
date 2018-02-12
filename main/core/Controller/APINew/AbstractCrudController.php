@@ -136,7 +136,6 @@ abstract class AbstractCrudController extends AbstractApiController
     /**
      * @param Request $request
      * @param string  $class
-     * @param string  $env
      *
      * @return JsonResponse
      */
@@ -158,7 +157,6 @@ abstract class AbstractCrudController extends AbstractApiController
      * @param string|int $id
      * @param Request    $request
      * @param string     $class
-     * @param string     $env
      *
      * @return JsonResponse
      */
@@ -178,7 +176,6 @@ abstract class AbstractCrudController extends AbstractApiController
     /**
      * @param Request $request
      * @param string  $class
-     * @param string  $env
      *
      * @return JsonResponse
      */

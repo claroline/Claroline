@@ -158,7 +158,7 @@ class SerializerProvider
             //or remove it as it doens't do anyhting anymore I think
             if (!$object) {
                 foreach (array_keys($data) as $property) {
-                    if (method_exists($serializer, 'getIdentifiers') && in_array($property, $serializer->getIdentifiers()) && !$object) {
+                    if (in_array($property, $this->getIdentifiers($class)) && !$object) {
                         $object = $this->om->getRepository($class)->findOneBy([$property => $data[$property]]);
                     }
                 }
@@ -172,6 +172,20 @@ class SerializerProvider
         $serializer->deserialize($data, $object, $options);
 
         return $object;
+    }
+
+    /**
+     * Get the identifier list from the json schema.
+     */
+    public function getIdentifiers($class)
+    {
+        $schema = $this->getSchema($class);
+
+        if (isset($schema->claroIds)) {
+            return $schema->claroIds;
+        }
+
+        return [];
     }
 
     /**

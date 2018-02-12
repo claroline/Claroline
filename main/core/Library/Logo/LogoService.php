@@ -26,21 +26,24 @@ class LogoService
     private $fileTypes;
     private $finder;
     private $fu;
+    private $filedir;
 
     const PUBLIC_FILE_TYPE = 'platform-logo';
 
     /**
      * @DI\InjectParams({
-     *     "fu"   = @DI\Inject("claroline.utilities.file"),
-     *     "path" = @DI\Inject("%claroline.param.logos_directory%")
+     *     "fu"      = @DI\Inject("claroline.utilities.file"),
+     *     "path"    = @DI\Inject("%claroline.param.logos_directory%"),
+     *     "filedir" = @DI\Inject("%claroline.param.files_directory%"),
      * })
      */
-    public function __construct($path, FileUtilities $fu)
+    public function __construct($path, FileUtilities $fu, $filedir)
     {
         $this->path = $path.'/';
         $this->fileTypes = '/\.jpg$|\.png$|\.gif$|\.jpeg$/';
         $this->finder = new Finder();
         $this->fu = $fu;
+        $this->filedir = $filedir;
     }
 
     public function listLogos()
@@ -76,8 +79,19 @@ class LogoService
      */
     public function deleteLogo($file)
     {
-        if (file_exists($this->path.$file)) {
-            unlink($this->path.$file);
+        //old system
+        $path = realpath($this->path.$file);
+
+        //new public file system
+        if (!$path) {
+            $path = realpath($this->filedir.'/'.$file);
+        }
+
+        $publicFile = $this->fu->getOneBy(['url' => $file]);
+        $this->fu->deletePublicFile($publicFile);
+
+        if (file_exists($path)) {
+            unlink($path);
         }
     }
 }

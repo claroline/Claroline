@@ -52,7 +52,7 @@ const WorkspacesList = props =>
       {
         icon: 'fa fa-fw fa-book',
         label: t('edit'),
-        action: (rows) => window.location.href = `#/workspaces/${rows[0].id}`
+        action: (rows) => window.location.href = `#/workspaces/form/${rows[0].uuid}`
       }
     ]}
 

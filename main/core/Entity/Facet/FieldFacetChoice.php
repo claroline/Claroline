@@ -201,7 +201,7 @@ class FieldFacetChoice
         return $this->name;
     }
 
-    public function setName()
+    public function setName($name)
     {
         $this->name = $name;
     }

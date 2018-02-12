@@ -84,6 +84,38 @@ class ExternalSynchronizationUserManager
         }
     }
 
+    /**
+     * @param $externalId
+     * @param $sourceSlug
+     * @param User $user
+     * @param $referenceUserIds
+     * @param ExternalUser[] $referenceUsers
+     *
+     * @return ExternalUser
+     */
+    public function createOrUpdateExternalUser(
+        $externalId,
+        $sourceSlug,
+        User $user,
+        $referenceUserIds,
+        $referenceUsers
+    ) {
+        // Check if user's external reference has been updated, if so update it.
+        if (($key = array_search($user->getId(), $referenceUserIds)) !== false) {
+            $externalUser = $referenceUsers[$key];
+            $externalUser->setExternalUserId($externalId);
+            $externalUser->setSourceSlug($sourceSlug);
+            $externalUser->updateLastSynchronizationDate();
+            $this->om->persist($externalUser);
+            $this->om->flush();
+
+            return $externalUser;
+        }
+
+        // Otherwise create new user
+        return $this->createExternalUser($externalId, $sourceSlug, $user);
+    }
+
     public function searchExternalUsersForSource(
         $source,
         $page = 1,
@@ -113,5 +145,10 @@ class ExternalSynchronizationUserManager
     public function deleteExternalUserByUserId($userId)
     {
         $this->externalUserRepo->deleteExternalUserByUserId($userId);
+    }
+
+    public function getExternalUsersByUserIds(array $userIds)
+    {
+        return $this->externalUserRepo->findBy(['user' => $userIds]);
     }
 }

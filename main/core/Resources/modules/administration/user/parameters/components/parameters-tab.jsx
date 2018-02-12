@@ -112,8 +112,8 @@ const ParametersTab = () =>
             label: t('term_of_service_activation_message'),
             help: t('term_of_service_activation_help')
           }, { // todo should be hidden if not enabled
-            name: 'tos.content',
-            type: 'html', // todo : create a new localized content type
+            name: 'tos.text',
+            type: 'translated', // todo : create a new localized content type
             label: t('term_of_service')
           }
         ]

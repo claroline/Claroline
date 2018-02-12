@@ -37,11 +37,6 @@ class BookReferenceSerializer
         return 'Icap\BibliographyBundle\Entity\BookReference';
     }
 
-    public function getIdentifiers()
-    {
-        return ['id'];
-    }
-
     /**
      * Serializes a Book reference entity.
      *

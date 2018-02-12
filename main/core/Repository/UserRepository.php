@@ -48,6 +48,21 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         $this->platformConfigHandler = $platformConfigHandler;
     }
 
+    public function findOneBy(array $criteria = null, array $orderBy = null)
+    {
+        $trueFilter = [];
+
+        foreach ($criteria as $prop => $value) {
+            if ('email' === $prop) {
+                $trueFilter['mail'] = $value;
+            } else {
+                $trueFilter[$prop] = $value;
+            }
+        }
+
+        return parent::findOneBy($trueFilter, $orderBy);
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -846,7 +861,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function extract($params)
     {
         $search = $params['search'];
-        if ($search !== null) {
+        if (null !== $search) {
             $query = $this->findByName($search, false);
 
             return $query
@@ -1587,7 +1602,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     public function findAllUserBySearch($search)
     {
         $upperSearch = strtoupper(trim($search));
-        if ($search !== '') {
+        if ('' !== $search) {
             $dql = '
                 SELECT u
                 FROM Claroline\CoreBundle\Entity\User u
