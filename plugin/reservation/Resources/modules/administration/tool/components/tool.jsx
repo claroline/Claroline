@@ -3,14 +3,16 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
+import {navigate, matchPath, withRouter} from '#/main/core/router'
 import {
   PageActions,
   PageAction,
-  PageContent,
-  PageHeader,
-  RoutedPageContainer
+  PageHeader
 } from '#/main/core/layout/page'
+import {
+  RoutedPageContainer,
+  RoutedPageContent
+} from '#/main/core/layout/router'
 import {actions as listActions} from '#/main/core/data/list/actions'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
@@ -75,21 +77,21 @@ const Tool = props =>
     >
       <ToolPageActions {...props}/>
     </PageHeader>
-    <PageContent key="tool-page-content">
-      <Routes
-        routes={[
-          {
-            path: '/',
-            exact: true,
-            component: Resources
-          }, {
-            path: '/form/:id?',
-            component: ResourceForm,
-            onEnter: (params) => props.openForm(params.id || null)
-          }
-        ]}
-      />
-    </PageContent>
+
+    <RoutedPageContent
+      key="tool-page-content"
+      routes={[
+        {
+          path: '/',
+          exact: true,
+          component: Resources
+        }, {
+          path: '/form/:id?',
+          component: ResourceForm,
+          onEnter: (params) => props.openForm(params.id || null)
+        }
+      ]}
+    />
   </RoutedPageContainer>
 
 Tool.propTypes = {

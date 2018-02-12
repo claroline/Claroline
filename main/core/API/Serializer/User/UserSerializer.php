@@ -53,9 +53,6 @@ class UserSerializer
     /** @var ContainerInterface */
     private $container;
 
-    /** @var ContainerInterface */
-    private $container;
-
     /**
      * UserManager constructor.
      *
