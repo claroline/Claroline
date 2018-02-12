@@ -6,7 +6,6 @@
   "repository": "https://github.com/claroline/Claroline",
   "scripts": {
     "install": "php vendor/claroline/distribution/npm-install.php",
-    "bower": "node_modules/bower/bin/bower update --allow-root",
     "themes": "node vendor/claroline/distribution/main/core/Resources/server/themes/bin build",
     "old-themes": "node vendor/claroline/distribution/main/core/Resources/server/scripts/build-old-themes",
     "uglify": "for f in web/dist/*.js; do echo \"Uglifying ${f}...\" && ./node_modules/.bin/uglifyjs $f -o $f; done",
@@ -20,8 +19,6 @@
   },
   "dependencies": {
     "claroline-distribution": "file:./vendor/claroline/distribution",
-    "filesystem-bower-resolver": "*",
-    "bower-resolve-webpack-plugin": "*",
     "webpack": "^3",
     "webpack-dev-server": "^2",
     "webpack-notifier": "*",
@@ -50,8 +47,5 @@
     "raw-loader": "^0.5.1",
     "redux-mock-store": "^1.1.4",
     "shelljs": "^0.5.3"
-  },
-  "devDependencies": {
-    "bower": "^1.7.7"
   }
 }
