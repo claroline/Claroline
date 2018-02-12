@@ -303,7 +303,7 @@ class AdminSupportController extends Controller
                 'id' => $user->getId(),
                 'firstName' => $user->getFirstName(),
                 'lastName' => $user->getLastName(),
-                'mail' => $user->getMail(),
+                'email' => $user->getEmail(),
             ];
         }
 
@@ -1127,7 +1127,7 @@ class AdminSupportController extends Controller
     {
         $this->checkOfficialSupportAccess();
         $ticket = new Ticket();
-        $ticket->setContactMail($user->getMail());
+        $ticket->setContactMail($user->getEmail());
         $ticket->setContactPhone($user->getPhone());
         $form = $this->formFactory->create(new AdminTicketType(), $ticket);
 
@@ -1150,7 +1150,7 @@ class AdminSupportController extends Controller
             $this->platformConfigHandler->getParameter('support_platform_url') :
             '';
         $ticket = new Ticket();
-        $ticket->setContactMail($user->getMail());
+        $ticket->setContactMail($user->getEmail());
         $ticket->setContactPhone($user->getPhone());
         $form = $this->formFactory->create(new AdminTicketType(), $ticket);
         $form->handleRequest($this->request);
@@ -1217,7 +1217,7 @@ class AdminSupportController extends Controller
         $this->checkOfficialSupportAccess();
         $forwardedTicket = new Ticket();
         $forwardedTicket->setTitle($ticket->getTitle());
-        $forwardedTicket->setContactMail($user->getMail());
+        $forwardedTicket->setContactMail($user->getEmail());
         $forwardedTicket->setContactPhone($user->getPhone());
         $forwardedTicket->setDescription($ticket->getDescription());
         $forwardedTicket->setType($ticket->getType());
@@ -1243,7 +1243,7 @@ class AdminSupportController extends Controller
             '';
         $forwardedTicket = new Ticket();
         $forwardedTicket->setTitle($ticket->getTitle());
-        $forwardedTicket->setContactMail($user->getMail());
+        $forwardedTicket->setContactMail($user->getEmail());
         $forwardedTicket->setContactPhone($user->getPhone());
         $forwardedTicket->setDescription($ticket->getDescription());
         $forwardedTicket->setType($ticket->getType());

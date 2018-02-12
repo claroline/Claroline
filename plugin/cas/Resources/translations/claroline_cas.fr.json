@@ -11,5 +11,5 @@
   "cas_validation_url": "URL de validation",
   "create_new_cas_account":"Créer un nouveau compte",
   "link_cas_to_account":"Lier à un compte existant",
-  "link_cas_to_account_mail":"Lier au compte : \"%mail%\""
+  "link_cas_to_account_mail":"Lier au compte : \"%email%\""
 }

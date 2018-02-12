@@ -129,7 +129,7 @@ class RemoteUserSynchronizationController extends Controller
                             $user->setUsername($username);
                             $user->setFirstName($firstName);
                             $user->setLastName($lastName);
-                            $user->setMail($email);
+                            $user->setEmail($email);
                             if (!empty($password)) {
                                 $user->setPlainPassword($password);
                             }
@@ -145,7 +145,7 @@ class RemoteUserSynchronizationController extends Controller
                                 $user->setUsername($username);
                                 $user->setFirstName($firstName);
                                 $user->setLastName($lastName);
-                                $user->setMail($email);
+                                $user->setEmail($email);
                                 $user->setPlainPassword($password);
                                 $this->userManager->createUser($user);
                                 $user->setIsMailValidated(true);
@@ -153,7 +153,7 @@ class RemoteUserSynchronizationController extends Controller
                                 $user->setUsername($username);
                                 $user->setFirstName($firstName);
                                 $user->setLastName($lastName);
-                                $user->setMail($email);
+                                $user->setEmail($email);
 
                                 if (!empty($password)) {
                                     $user->setPlainPassword($password);

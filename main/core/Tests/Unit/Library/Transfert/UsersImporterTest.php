@@ -52,97 +52,97 @@ class UsersImporterTest extends MockeryTestCase
 
     public function validateProvider()
     {
-        return array(
+        return [
             //valid
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/users01.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => false,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
-            ),
+            ],
             //username is already in the database
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/users01.yml',
-                'usernames' => array(array('username' => 'user1')),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [['username' => 'user1']],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => true,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
-            ),
+            ],
             //email is already in the database
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/users01.yml',
-                'usernames' => array(),
-                'emails' => array(array('mail' => 'mail1@gmail.com')),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [['email' => 'mail1@gmail.com']],
+                'codes' => [],
                 'isExceptionThrow' => true,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
-            ),
+            ],
             //code is already in the database
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/users01.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(array('code' => 'USER01')),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [['code' => 'USER01']],
                 'isExceptionThrow' => true,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
-            ),
+            ],
             //username found twice in the configuration
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/users/existing_username.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => true,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
-            ),
+            ],
             //email found twice in the configuration
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/users/existing_email.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => true,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
-            ),
+            ],
             //code found twice in the configuration
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/users/existing_code.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => true,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
-            ),
+            ],
             //role not found in the configuration
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/users/unknown_role.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => true,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
-            ),
+            ],
             //owner is included in the user list
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/users/owner_in_user_list.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => true,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/manifest.yml',
-            ),
+            ],
             //email is invalid
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/users/invalid_email.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => true,
                 'manifest' => __DIR__.'/../../../Stub/transfert/valid/full/manifest.yml',
-            ),
-        );
+            ],
+        ];
     }
 }

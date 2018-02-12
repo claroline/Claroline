@@ -153,7 +153,7 @@ class ConnexionController extends Controller
     {
         $session = $request->getSession();
         $service = $session->get('icap.oauth.resource_owner');
-        $username = $session->get('icap.oauth.user')['mail'];
+        $username = $session->get('icap.oauth.user')['email'];
         $this->get('translator')->setLocale($request->getLocale());
 
         return $this->get('icap.oauth.manager')->linkAccount($request, $service, $username);

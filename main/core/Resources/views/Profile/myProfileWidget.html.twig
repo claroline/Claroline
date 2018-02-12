@@ -36,7 +36,7 @@
         </aside>
         <div class="col-md-10 profile_informations">
             <h3>{{ user.getLastName() ~ ' ' ~ user.getFirstName() }}</h3>
-            {% if publicProfilePreferences['mail'] %}
+            {% if publicProfilePreferences['email'] %}
                 <p><span class="fa fa-envelope"> <a href="mailto:{{ user.getmail() }}" title="{{ user.getmail() }}">{{ user.getmail() }}</a></span></p>
             {% endif %}
             {% if publicProfilePreferences['phone'] and  user.getPhone() is not null%}

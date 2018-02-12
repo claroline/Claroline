@@ -39,7 +39,7 @@ class Persister extends ClarolinePersister
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPassword($username);
-        $user->setMail($username.'@mail.com');
+        $user->setEmail($username.'@email.com');
         $user->setPublicUrl($username);
         $user->setIsMailValidated(true);
         $this->om->persist($user);

@@ -308,7 +308,7 @@ class SupportManager
                         $ticket->getTitle();
                     $content = $ticket->getDescription().
                         '<br><br>'.
-                        $this->translator->trans('mail', [], 'platform').
+                        $this->translator->trans('email', [], 'platform').
                         ' : '.
                         $ticket->getContactMail().
                         '<br>'.
@@ -340,7 +340,7 @@ class SupportManager
                         $ticket->getTitle();
                     $content = $ticket->getDescription().
                         '<br><br>'.
-                        $this->translator->trans('mail', [], 'platform').
+                        $this->translator->trans('email', [], 'platform').
                         ' : '.
                         $ticket->getContactMail().
                         '<br>'.
@@ -409,7 +409,7 @@ class SupportManager
                         $ticket->getTitle();
                     $content = $comment->getContent().
                         '<br><br>'.
-                        $this->translator->trans('mail', [], 'platform').
+                        $this->translator->trans('email', [], 'platform').
                         ' : '.
                         $ticket->getContactMail().
                         '<br>'.

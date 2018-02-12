@@ -62,7 +62,7 @@
                            checked
                        {%  endif %}
                     >
-                        {{ 'get_mail_notifications'|trans({'%adress%': app.user.getMail() }, 'platform') }}
+                        {{ 'get_mail_notifications'|trans({'%adress%': app.user.getEmail() }, 'platform') }}
                     </input>
                 </div>
             {% endif %}

@@ -207,8 +207,8 @@
                 
                 {% if showMail == '1' %}
                     <th>
-                        <a href="{{ sortUrl(search, max, 'mail', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas)|trim }}">
-                            {{ 'mail'|trans({}, 'platform') }}
+                        <a href="{{ sortUrl(search, max, 'email', order, mode, showAllUsers, showId, showPicture, showUsername, showMail, showCode, showGroups, showPlatformRoles, attachName, filterAdminOrgas)|trim }}">
+                            {{ 'email'|trans({}, 'platform') }}
                         </a>
                     </th>
                 {% endif %}
@@ -337,8 +337,8 @@
                             <span class="picker-user-select pointer-hand"
                                   data-user-id="{{ userId }}"
                             >
-                                {% if profilePreferences['mail'] %}
-                                    {{ user.getMail() }}
+                                {% if profilePreferences['email'] %}
+                                    {{ user.getEmail() }}
                                 {% else %}
                                     -
                                 {% endif %}

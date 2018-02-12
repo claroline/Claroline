@@ -31,7 +31,7 @@
             </div>
             <div class="list-group">
                 {% if claroUser is not empty %}
-                <a href="{{ path('claro_cas_link_account_mail') }}" class="list-group-item claroline-cas-choice-btn"><i class="fa fa-at"></i> {{ 'link_cas_to_account_mail'|trans({ '%mail%': claroUser.mail },'claroline_cas') }}</a>
+                <a href="{{ path('claro_cas_link_account_mail') }}" class="list-group-item claroline-cas-choice-btn"><i class="fa fa-at"></i> {{ 'link_cas_to_account_mail'|trans({ '%email%': claroUser.email },'claroline_cas') }}</a>
                 {% endif %}
                 <a href="{{ path('claro_cas_login_link') }}" class="list-group-item claroline-cas-choice-btn"><i class="fa fa-chain"></i> {{ 'link_cas_to_account'|trans({},'claroline_cas') }}</a>
                 {% if selfRegistration == true %}

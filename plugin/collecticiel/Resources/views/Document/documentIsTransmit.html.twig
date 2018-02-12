@@ -5,7 +5,7 @@
 
 {% if recordOrTransmitNotation == 0  %}
     <a href="#" data-target="#transmit-modal_{{document.id}}" data-toggle="modal" data-dropzone_id="{{ dropzone.id }}" data-document_id="{{ document.id }}" id="document_id_{{ document.id }}" name="document_id_{{ document.id }}" class="document_validate" >
-        <i data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Not Transmitted review'|trans({},'innova_collecticiel') }}" class="fa fa-mail-forward">
+        <i data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Not Transmitted review'|trans({},'innova_collecticiel') }}" class="fa fa-email-forward">
         </i>
     </a>
 {% endif %}

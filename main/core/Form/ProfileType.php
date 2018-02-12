@@ -71,7 +71,7 @@ class ProfileType extends AbstractType
                 'text',
                 ['required' => false, 'read_only' => !$this->accesses['administrativeCode'], 'disabled' => !$this->accesses['administrativeCode'], 'label' => 'administrative_code']
             )
-            ->add('mail', 'email', ['required' => false, 'label' => 'email', 'read_only' => !$this->accesses['email'], 'disabled' => !$this->accesses['email']])
+            ->add('email', 'email', ['required' => false, 'label' => 'email', 'read_only' => !$this->accesses['email'], 'disabled' => !$this->accesses['email']])
             ->add('phone', 'text', ['required' => false, 'label' => 'phone', 'read_only' => !$this->accesses['phone'], 'disabled' => !$this->accesses['phone']])
             ->add('locale', 'choice', ['choices' => $this->langs, 'required' => false, 'label' => 'language'])
             ->add(
@@ -112,7 +112,7 @@ class ProfileType extends AbstractType
                 ->add('lastName', 'text', ['label' => 'last_name'])
                 ->add('username', 'text', ['label' => 'username'])
                 ->add('administrativeCode', 'text', ['required' => false, 'label' => 'administrative_code'])
-                ->add('mail', 'email', ['required' => false, 'label' => 'email'])
+                ->add('email', 'email', ['required' => false, 'label' => 'email'])
                 ->add('phone', 'text', ['required' => false, 'label' => 'phone'])
                 ->add('locale', 'choice', ['choices' => $this->langs, 'required' => false, 'label' => 'language'])
                 ->add(

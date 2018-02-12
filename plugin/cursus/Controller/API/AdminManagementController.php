@@ -2746,13 +2746,13 @@ class AdminManagementController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/api/cursus/document/model/certificate/mail/retrieve",
+     *     "/api/cursus/document/model/certificate/email/retrieve",
      *     name="api_get_cursus_certificate_mail_document_model",
      *     options = {"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
-     * Returns the document model for the mail sent for certificate
+     * Returns the document model for the email sent for certificate
      *
      * @param User $user
      *

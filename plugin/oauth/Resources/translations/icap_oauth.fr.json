@@ -16,7 +16,7 @@
     "facebook": "Facebook",
     "google": "Google",
     "link_oauth_to_account": "Lier à un compte existant",
-    "link_oauth_to_account_mail": "Lier au compte : \"%mail%\"",
+    "link_oauth_to_account_mail": "Lier au compte : \"%email%\"",
     "linkedin": "LinkedIn",
     "oauth_check_connexion_info": "Souhaitez-vous créer un nouveau compte sur la plateforme, ou lier à un compte déjà existant?",
     "office_365": "Office 365",

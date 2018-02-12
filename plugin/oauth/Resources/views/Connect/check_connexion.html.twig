@@ -31,7 +31,7 @@
             </div>
             <div class="list-group">
                 {% if oauthUser is defined and oauthUser.platformMail is defined and oauthUser.platformMail is not empty %}
-                <a href="{{ path('icap_oauth_link_account_mail') }}" class="list-group-item icap-oauth-choice-btn"><i class="fa fa-at"></i> {{ 'link_oauth_to_account_mail'|trans({ '%mail%': oauthUser.platformMail },'icap_oauth') }}</a>
+                <a href="{{ path('icap_oauth_link_account_mail') }}" class="list-group-item icap-oauth-choice-btn"><i class="fa fa-at"></i> {{ 'link_oauth_to_account_mail'|trans({ '%email%': oauthUser.platformMail },'icap_oauth') }}</a>
                 {% endif %}
                 <a href="{{ path('icap_oauth_login') }}" class="list-group-item icap-oauth-choice-btn"><i class="fa fa-chain"></i> {{ 'link_oauth_to_account'|trans({},'icap_oauth') }}</a>
                 {% if selfRegistration == true %}

@@ -67,7 +67,7 @@ profile_form_creation[administrativeCode]:
   * required: false
   * description: administrative_code
 
-profile_form_creation[mail]:
+profile_form_creation[email]:
 
   * type: string
   * required: true
@@ -154,7 +154,7 @@ profile_form[administrativeCode]:
   * required: false
   * description: administrative_code
 
-profile_form[mail]:
+profile_form[email]:
 
   * type: string
   * required: false

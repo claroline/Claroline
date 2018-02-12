@@ -83,7 +83,7 @@ const VisibleUsersComponent = props =>
       {
         name: 'email',
         type: 'string',
-        label: t('mail'),
+        label: t('email'),
         displayed: props.options.data.show_mail
       },
       {

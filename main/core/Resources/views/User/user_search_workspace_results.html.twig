@@ -1,7 +1,7 @@
 {% macro userList(users) %}
     {% if users|length > 0 %}
         {% for user in users %}
-            <li><a class="user-picker-result" href="#" data-user="{{ user.firstName~' '~user.lastName }}" data-id="{{ user.id }}" data-url="{{ path('claro_user_profile', {'user':user.getPublicUrl()}) }}">{{ user.firstName~" "~user.lastName~" ("~user.mail~")" }}</a></li>
+            <li><a class="user-picker-result" href="#" data-user="{{ user.firstName~' '~user.lastName }}" data-id="{{ user.id }}" data-url="{{ path('claro_user_profile', {'user':user.getPublicUrl()}) }}">{{ user.firstName~" "~user.lastName~" ("~user.email~")" }}</a></li>
         {% endfor %}
     {% else %}
         <li>{{ 'no_search_results' | trans({}, 'platform') }}</li>

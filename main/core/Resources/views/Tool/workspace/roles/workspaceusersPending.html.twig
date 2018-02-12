@@ -53,7 +53,7 @@
                         <th> {{'username'|trans({}, 'platform') }} </th>
                         <th> {{'last_name'|trans({}, 'platform') }} </th>
                         <th> {{'first_name'|trans({}, 'platform') }} </th>
-                        <th> {{'mail'|trans({}, 'platform') }} </th>
+                        <th> {{'email'|trans({}, 'platform') }} </th>
                         <th> {{'validation'|trans({}, 'platform') }} </th>
                     </tr>
                 </thead>
@@ -66,7 +66,7 @@
                             </td>
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>
-                            <td>{{ user.getMail() }}</td>
+                            <td>{{ user.getEmail() }}</td>
                             <td>
                                 <a href="{{ path(
                                         'claro_users_pending_validation',

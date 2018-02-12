@@ -1,10 +1,10 @@
 {
-    "activate_global_notifications": "Activate mail notifications",
+    "activate_global_notifications": "Activate email notifications",
     "answer_message": "Reply",
     "author": "Author",
     "category": "Category",
     "category_form_name": "Category",
-    "disable_global_notifications": "Disable mail notifications",
+    "disable_global_notifications": "Disable email notifications",
     "edit_message": "Edit a message",
     "fast_reply": "Fast reply",
     "field_content_required": "Content field is required.",
@@ -53,11 +53,11 @@
     "subject": "Topic",
     "subjects": "Topics",
     "subjets_per_page": "Subjects per page",
-    "subscribe_mail_list": "Subscribe to mail notifications",
+    "subscribe_mail_list": "Subscribe to email notifications",
     "title_form_last_messages": "Display messages",
     "title_option_form_last_messages": "Only display the latest messages I have contributed to.",
     "unstick": "Unpin",
-    "unsubscribe_mail_list": "Unsubscribe from mail notifications",
+    "unsubscribe_mail_list": "Unsubscribe from email notifications",
     "widget_forum_field_info": "If no forum is selected, the widget will retrieve the latest messages from all the forums you are allowed to access.",
     "yes": "Yes"
 }

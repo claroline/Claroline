@@ -678,7 +678,7 @@
     "logout": "Déconnexion",
     "logs": "suivi",
     "logs_error_location": "En cas d'erreur, les logs se trouvent dans le dossier app/log/update-xxx.log.",
-    "mail": "Mail",
+    "email": "Mail",
     "mail_click": "Cliquez sur ce lien pour réinitialiser votre mot de passe.",
     "mail_config_problem": "Veuillez contacter l'administrateur pour réinitialiser votre mot de passe.",
     "mail_invalid": "Le format de votre courriel n'est pas valide",

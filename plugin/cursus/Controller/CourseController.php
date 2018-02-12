@@ -96,7 +96,7 @@ class CourseController extends Controller
 
     /**
      * @EXT\Route(
-     *     "cursus/course/session/{session}/user/{user}/confirmation/mail/send",
+     *     "cursus/course/session/{session}/user/{user}/confirmation/email/send",
      *     name="claro_cursus_course_session_user_confirmation_mail_send",
      *     options = {"expose"=true}
      * )

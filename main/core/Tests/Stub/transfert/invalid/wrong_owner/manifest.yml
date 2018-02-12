@@ -13,7 +13,7 @@ members:
         last_name: sdfsd
         username: 'owned'
         password: enclair
-        mail: moi@moi.com
+        email: moi@moi.com
         code: USER01
         roles:
           - name: 'ROLE_1'

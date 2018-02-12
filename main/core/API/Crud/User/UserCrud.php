@@ -117,7 +117,7 @@ class UserCrud
 
         //soft delete~
         $user->setIsRemoved(true);
-        $user->setMail('mail#'.$user->getId());
+        $user->setEmail('email#'.$user->getId());
         $user->setFirstName('firstname#'.$user->getId());
         $user->setLastName('lastname#'.$user->getId());
         $user->setPlainPassword(uniqid());

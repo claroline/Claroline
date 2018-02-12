@@ -4,19 +4,19 @@ users:
         last_name: aaaa
         username: ezs
         password: aaaa
-        mail: mail1@gmail.com
+        email: mail1@gmail.com
         code: USER01
     - user:
         first_name: bbbb
         last_name: bbbb
         username: user2
         password: bbbb
-        mail: mail2@gmail.com
+        email: mail2@gmail.com
         code: USER02
     - user:
         first_name: aaaa
         last_name: aaaa
         username: user1
         password: aaaa
-        mail: mail3.@gmail.com
+        email: mail3.@gmail.com
         code: USER03

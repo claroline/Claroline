@@ -47,7 +47,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
- * @DoctrineAssert\UniqueEntity("mail")
+ * @DoctrineAssert\UniqueEntity("email")
  * @Assert\Callback(methods={"isPublicUrlValid"})
  * @ClaroAssert\Username()
  * @ClaroAssert\UserAdministrativeCode()
@@ -142,13 +142,13 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     /**
      * @var string
      *
-     * @ORM\Column(unique=true)
+     * @ORM\Column(unique=true, name="mail")
      * @Assert\NotBlank()
      * @Assert\Email(strict = true)
      * @Groups({"api_user", "api_user_min"})
      * @SerializedName("mail")
      */
-    protected $mail;
+    protected $email;
 
     /**
      * @var string
@@ -731,9 +731,9 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     /**
      * @return string
      */
-    public function getMail()
+    public function getEmail()
     {
-        return $this->mail;
+        return $this->email;
     }
 
     /**
@@ -741,9 +741,9 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      *
      * @return User
      */
-    public function setMail($mail)
+    public function setEmail($email)
     {
-        $this->mail = $mail;
+        $this->email = $email;
 
         return $this;
     }

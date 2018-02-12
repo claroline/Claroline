@@ -155,7 +155,7 @@ class Manager
     }
 
     /**
-     * Subscribe a user to a forum. A mail will be sent to the user each time
+     * Subscribe a user to a forum. A email will be sent to the user each time
      * a message is posted.
      *
      * @param \Claroline\ForumBundle\Entity\Forum $forum

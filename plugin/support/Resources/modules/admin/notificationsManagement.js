@@ -60,7 +60,7 @@ const addContact = function (user) {
             ${user['lastName']}
         </td>
         <td>
-            ${user['mail']}
+            ${user['email']}
         </td>
         <td>
             <span class="btn btn-danger btn-sm remove-support-contact-btn"

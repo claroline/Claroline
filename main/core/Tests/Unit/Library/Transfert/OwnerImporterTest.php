@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library;
 
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\OwnerImporter;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\OwnerImporter;
 use Symfony\Component\Yaml\Yaml;
 
 class OwnerImporterTest extends MockeryTestCase
@@ -52,47 +52,47 @@ class OwnerImporterTest extends MockeryTestCase
 
     public function validateProvider()
     {
-        return array(
+        return [
             //valid
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/manifest.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => false,
-            ),
+            ],
             //username exists
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/manifest.yml',
-                'usernames' => array(array('username' => 'ezs')),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [['username' => 'ezs']],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => true,
-            ),
+            ],
             //email exists
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/manifest.yml',
-                'usernames' => array(),
-                'emails' => array(array('mail' => 'owner@owner.com')),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [['email' => 'owner@owner.com']],
+                'codes' => [],
                 'isExceptionThrow' => true,
-            ),
+            ],
             //code exists
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/manifest.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(array('code' => 'OWNER')),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [['code' => 'OWNER']],
                 'isExceptionThrow' => true,
-            ),
+            ],
             //code exists
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/invalid_owner_mail.yml',
-                'usernames' => array(),
-                'emails' => array(),
-                'codes' => array(),
+                'usernames' => [],
+                'emails' => [],
+                'codes' => [],
                 'isExceptionThrow' => true,
-            ),
-        );
+            ],
+        ];
     }
 }

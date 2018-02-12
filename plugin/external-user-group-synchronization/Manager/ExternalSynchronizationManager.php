@@ -313,7 +313,7 @@ class ExternalSynchronizationManager
                 },
                 $alreadyImportedUsers
             );
-            // Get already existing users by username or mail in platform
+            // Get already existing users by username or email in platform
             $existingPlatformUsers = $this
                 ->userManager
                 ->getUsersByUsernamesOrMails($externalSourceUserUsernames, $externalSourceUserEmails, true);
@@ -325,7 +325,7 @@ class ExternalSynchronizationManager
             );
             $existingPlatformUserMails = array_map(
                 function (User $user) {
-                    return strtoupper($user->getMail());
+                    return strtoupper($user->getEmail());
                 },
                 $existingPlatformUsers
             );
@@ -416,7 +416,7 @@ class ExternalSynchronizationManager
                         $updateReferenceUsers
                     );
                 }
-                // If user mail exists already in platform then link with this account
+                // If user email exists already in platform then link with this account
                 if (
                     is_null($alreadyImportedUser) &&
                     !empty($existingPlatformUserMails) &&
@@ -450,7 +450,7 @@ class ExternalSynchronizationManager
                 // Update or set user values
                 $user->setFirstName($this->utilities->stringToUtf8($externalSourceUser['first_name']));
                 $user->setLastName($this->utilities->stringToUtf8($externalSourceUser['last_name']));
-                $user->setMail($externalSourceUser['email']);
+                $user->setEmail($externalSourceUser['email']);
                 if (!empty($externalSourceUser['code'])) {
                     $user->setAdministrativeCode($this->utilities->stringToUtf8($externalSourceUser['code']));
                 }

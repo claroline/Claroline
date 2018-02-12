@@ -50,8 +50,6 @@ class Updater030000 extends Updater
 
         //if there is no primary resource, then we are using the old activities
         if (!array_key_exists('primaryresource_id', $columns)) {
-            $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
-                ->findOneByName('activity');
             $this->log('removing old activities...');
             //find old nodes
             $rows = $conn->query("SELECT id from claro_resource_type rt WHERE rt.name = 'activity'");
@@ -116,7 +114,7 @@ class Updater030000 extends Updater
         $path = 'bundles/clarolinecore/images/resources/icons/';
 
         $icon = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceIcon')
-                ->findOneBy(array('mimeType' => 'custom/activity'));
+                ->findOneBy(['mimeType' => 'custom/activity']);
         $icon->setRelativeUrl($path.'res_activity.png');
         $this->om->persist($icon);
 
@@ -153,7 +151,7 @@ class Updater030000 extends Updater
         $conn = $this->om->getConnection();
         $sm = $conn->getSchemaManager();
 
-        if ($sm->tablesExist(array('claro_user_public_profile_preferences')) == true) {
+        if (true === $sm->tablesExist(['claro_user_public_profile_preferences'])) {
             $fromSchema = $sm->createSchema();
             $toSchema = clone $fromSchema;
             $toSchema->dropTable('claro_user_public_profile_preferences');
@@ -166,7 +164,7 @@ class Updater030000 extends Updater
 
     private function setIcons()
     {
-        return array(
+        return [
             'icon-adjust' => 'adjust',
             'icon-adn' => 'adn',
             'icon-align-center' => 'align-center',
@@ -384,9 +382,9 @@ class Updater030000 extends Updater
             'icon-long-arrow-up' => 'long-arrow-up',
             'icon-magic' => 'magic',
             'icon-magnet' => 'magnet',
-            'icon-mail-forward' => 'mail-forward',
-            'icon-mail-reply-all' => 'mail-reply-all',
-            'icon-mail-reply' => 'mail-reply',
+            'icon-email-forward' => 'email-forward',
+            'icon-email-reply-all' => 'email-reply-all',
+            'icon-email-reply' => 'email-reply',
             'icon-male' => 'male',
             'icon-map-marker' => 'map-marker',
             'icon-maxcdn' => 'maxcdn',
@@ -553,6 +551,6 @@ class Updater030000 extends Updater
             'icon-youtube' => 'youtube',
             'icon-zoom-in' => 'search-plus',
             'icon-zoom-out' => 'search-minus',
-        );
+        ];
     }
 }

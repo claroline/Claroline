@@ -73,8 +73,8 @@ class ContactFinder implements FinderInterface
                     $qb->setParameter($shortFilterName, '%'.strtoupper($filterValue).'%');
                     break;
                 case 'data.email':
-                    $qb->andWhere('UPPER(c.mail) LIKE :mail');
-                    $qb->setParameter('mail', '%'.strtoupper($filterValue).'%');
+                    $qb->andWhere('UPPER(c.email) LIKE :email');
+                    $qb->setParameter('email', '%'.strtoupper($filterValue).'%');
                     break;
             }
         }
@@ -91,7 +91,7 @@ class ContactFinder implements FinderInterface
                     $qb->orderBy("c.{$shortProperty}", $sortByDirection);
                     break;
                 case 'data.email':
-                    $qb->orderBy('c.mail', $sortByDirection);
+                    $qb->orderBy('c.email', $sortByDirection);
                     break;
             }
         }

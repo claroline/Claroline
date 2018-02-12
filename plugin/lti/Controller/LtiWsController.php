@@ -68,7 +68,7 @@ class LtiWsController extends Controller
             'lis_person_name_full' => $user->getFirstname().' '.$user->getLastname(),
             'lis_person_name_family' => $user->getLastname(),
             'lis_person_name_given' => $user->getFirstname(),
-            'lis_person_contact_email_primary' => $user->getMail(),
+            'lis_person_contact_email_primary' => $user->getEmail(),
             'lis_person_sourcedid' => $user->getUsername(),
             'context_id' => $ws->getId(),
             'context_title' => $ws->getName(),

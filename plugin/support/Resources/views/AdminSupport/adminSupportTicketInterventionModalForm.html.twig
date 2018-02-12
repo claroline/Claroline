@@ -28,12 +28,12 @@
                 </div>
             </div>
             <div class="form-group row">
-                <label class="control-label col-md-3" for="input-ticket-mail">
+                <label class="control-label col-md-3" for="input-ticket-email">
                     {{ 'contact_email'|trans({}, 'support') }}
                 </label>
                 <div class="col-md-9">
                     <input type="text"
-                           id="input-ticket-mail"
+                           id="input-ticket-email"
                            class="form-control"
                            readonly="readonly"
                            value="{{ ticket.getContactMail() }}"

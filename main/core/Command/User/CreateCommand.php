@@ -100,7 +100,7 @@ class CreateCommand extends ContainerAwareCommand
         $email = $input->getArgument('user_email');
         $email = filter_var($email, FILTER_VALIDATE_EMAIL) ?
             $email : $email.'@debug.net';
-        $user->setMail($email);
+        $user->setEmail($email);
 
         if ($input->getOption('admin')) {
             $roleName = PlatformRoles::ADMIN;

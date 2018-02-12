@@ -28,17 +28,17 @@
                     </div>
                 </div>
             </div>
-            <div id="mail-form-group" class="form-group row">
-                <label class="control-label col-md-3" for="input-ticket-mail">
+            <div id="email-form-group" class="form-group row">
+                <label class="control-label col-md-3" for="input-ticket-email">
                     {{ 'email'|trans({}, 'platform') }}
                 </label>
                 <div class="col-md-9">
                     <input type="email"
-                           id="input-ticket-mail"
+                           id="input-ticket-email"
                            class="form-control"
-                           value="{{ user.getMail() }}"
+                           value="{{ user.getEmail() }}"
                     >
-                    <div id="mail-help-block" class="help-block field-error hidden">
+                    <div id="email-help-block" class="help-block field-error hidden">
                         {{ 'form_not_blank_error'|trans({}, 'support') }}
                     </div>
                 </div>
@@ -164,7 +164,7 @@
         $('#modal-ticket-create-form').on('click', '#create-btn', function () {
           let hasErrors = false
           const title = $('#input-ticket-title').val()
-          const mail = $('#input-ticket-mail').val()
+          const email = $('#input-ticket-email').val()
           const phone = $('#input-ticket-phone').val()
           const description = $('#textarea-ticket-description').val()
 
@@ -177,13 +177,13 @@
             $('#title-help-block').addClass('hidden')
           }
 
-          if (mail === undefined || mail === null || mail === '') {
-            $('#mail-form-group').addClass('has-error')
-            $('#mail-help-block').removeClass('hidden')
+          if (email === undefined || email === null || email === '') {
+            $('#email-form-group').addClass('has-error')
+            $('#email-help-block').removeClass('hidden')
             hasErrors = true
           } else {
-            $('#mail-form-group').removeClass('has-error')
-            $('#mail-help-block').addClass('hidden')
+            $('#email-form-group').removeClass('has-error')
+            $('#email-help-block').addClass('hidden')
           }
 
           if ((message === undefined || message === null || message === '') &&
@@ -202,7 +202,7 @@
               type: 'POST',
               data: {
                 title: title,
-                mail: mail,
+                email: email,
                 phone: phone,
                 description: description,
                 infos: exceptionInfo

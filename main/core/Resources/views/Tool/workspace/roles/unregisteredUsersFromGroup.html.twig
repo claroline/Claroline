@@ -176,8 +176,8 @@
 
                             {% if showMail %}
                                 <th>
-                                    <a href="{{ sortUrl(group.getId(), workspace.getId(), max, 'mail', order, search) }}">
-                                        {{ 'mail'|trans({}, 'platform') }}
+                                    <a href="{{ sortUrl(group.getId(), workspace.getId(), max, 'email', order, search) }}">
+                                        {{ 'email'|trans({}, 'platform') }}
                                     </a>
                                 </th>
                             {% endif %}
@@ -208,7 +208,7 @@
                                 <td>{{ user.getFirstName() }}</td>
 
                                 {% if showMail %}
-                                    <td>{{ user.getMail() }}</td>
+                                    <td>{{ user.getEmail() }}</td>
                                 {% endif %}
                                 <td>
                                     {% for role in user.getEntityRoles(false) %}

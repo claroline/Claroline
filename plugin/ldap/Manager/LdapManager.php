@@ -111,7 +111,7 @@ class LdapManager
                 if ($isAuthentication && $this->connect && $user && $password) {
                     $user = $this->findDnFromUserName($server, $user);
 
-                    return ($user === false) ? $user : ldap_bind($this->connect, $user, $password);
+                    return (false === $user) ? $user : ldap_bind($this->connect, $user, $password);
                 } elseif ($this->connect) {
                     return ldap_bind($this->connect);
                 }
@@ -137,7 +137,7 @@ class LdapManager
             $claroUser->setUsername($userName);
             $claroUser->setFirstName($user['first_name']);
             $claroUser->setLastName($user['last_name']);
-            $claroUser->setMail($user['email']);
+            $claroUser->setEmail($user['email']);
             $claroUser->setPassword($user['password']);
         }
 
@@ -149,7 +149,7 @@ class LdapManager
         $server = $this->get($server);
         $this->connect($server);
         $filter = '(&(objectClass='.$server['objectClass'].'))';
-        if (($user = $this->findDnFromUserName($server, $user)) === false) {
+        if (false === ($user = $this->findDnFromUserName($server, $user))) {
             return [];
         }
         $search = ldap_search(
@@ -185,7 +185,7 @@ class LdapManager
      *
      * @param server An array containing LDAP informations as host, port or dn
      * @param filter Simple or advanced ldap filter
-     * @param attributes An array of the required attributes, e.g. array("mail", "sn", "cn")
+     * @param attributes An array of the required attributes, e.g. array("email", "sn", "cn")
      *
      * @return Returns a search result identifier or FALSE on error
      */
@@ -469,7 +469,7 @@ class LdapManager
     {
         $verifyPassword = false;
         $password = null;
-        if ($username === null) {
+        if (null === $username) {
             $verifyPassword = true;
             $username = $request->get('_username');
             $password = $request->get('_password');
@@ -496,7 +496,7 @@ class LdapManager
     public function userMapping($server)
     {
         foreach (['userName', 'firstName', 'lastName', 'email'] as $field) {
-            if (!(isset($server[$field]) && $server[$field] !== '')) {
+            if (!(isset($server[$field]) && '' !== $server[$field])) {
                 return false;
             }
         }
@@ -536,12 +536,12 @@ class LdapManager
             $this->connect($server, $this->prepareUsername($server, $username), $password, true)
         ) {
             $ldapUser = $this->ldapUserRepo->findOneBy(['serverName' => $server, 'ldapId' => $username]);
-            if ($ldapUser !== null) {
+            if (null !== $ldapUser) {
                 return $this->registrationManager->loginUser($ldapUser->getUser(), $request);
             }
             if ($this->platformConfigHandler->getParameter('direct_third_party_authentication')) {
                 $user = $this->userManager->getUserByUsername($username);
-                if ($user === null) {
+                if (null === $user) {
                     throw $this->getUsernameNotFoundException($username);
                 }
                 $this->createLdapUser($serverName, $username, $user);
@@ -588,16 +588,16 @@ class LdapManager
     private function findDnFromUserName($server, $user)
     {
         if (isset($server['append_dn']) && !$server['append_dn'] && isset($server['userName'])) {
-            $ldap_cursor = ldap_search($this->connect, $server['dn'],  $server['userName'].'='.$user);
-            if ($ldap_cursor === false) {
+            $ldap_cursor = ldap_search($this->connect, $server['dn'], $server['userName'].'='.$user);
+            if (false === $ldap_cursor) {
                 ldap_set_option($this->connect, LDAP_OPT_REFERRALS, 0);
-                $ldap_cursor = ldap_search($this->connect, $server['dn'],  $server['userName'].'='.$user);
+                $ldap_cursor = ldap_search($this->connect, $server['dn'], $server['userName'].'='.$user);
             }
-            if ($ldap_cursor === false) {
+            if (false === $ldap_cursor) {
                 return false;
             }
             $ret = ldap_first_entry($this->connect, $ldap_cursor);
-            if ($ret === false) {
+            if (false === $ret) {
                 return false;
             }
             $user = ldap_get_dn($this->connect, $ret);
@@ -613,7 +613,7 @@ class LdapManager
         $server['userName'] = 'uid';
         $server['firstName'] = 'givenname';
         $server['lastName'] = 'displayname';
-        $server['email'] = 'mail';
+        $server['email'] = 'email';
         $server['code'] = '';
         $server['locale'] = '';
 

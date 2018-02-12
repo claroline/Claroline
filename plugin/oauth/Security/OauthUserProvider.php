@@ -53,7 +53,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
         return $this->em->getRepository('ClarolineCoreBundle:User')->loadUserByUsername($username);
     }
 
-    public function loadUserByServiceAndId($service, $id, $mail = null)
+    public function loadUserByServiceAndId($service, $id, $email = null)
     {
         $oauthUser = $this->em->getRepository('IcapOAuthBundle:OauthUser')->findOneBy(
             ['service' => $service, 'oauthId' => $id]
@@ -64,7 +64,7 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
         }
 
         if ($this->platformConfigHandler->getParameter('direct_third_party_authentication')) {
-            $username = !empty($mail) ? $mail : $id;
+            $username = !empty($email) ? $email : $id;
             $user = $this->loadUserByUsername($username);
             $oauthUser = new OauthUser();
             $oauthUser->setUser($user);
@@ -114,11 +114,11 @@ class OauthUserProvider implements OAuthAwareUserProviderInterface, UserProvider
             $user['firstName'] = $firstName;
             $user['lastName'] = $lastName;
             $user['username'] = $this->createUsername($response->getNickname());
-            $user['mail'] = $response->getEmail();
-            // Check if an account with the same mail already exists
+            $user['email'] = $response->getEmail();
+            // Check if an account with the same email already exists
             try {
-                $this->loadUserByUsername($user['mail']);
-                $user['platformMail'] = $user['mail'];
+                $this->loadUserByUsername($user['email']);
+                $user['platformMail'] = $user['email'];
             } catch (UsernameNotFoundException $e) {
                 $user['platformMail'] = null;
             }

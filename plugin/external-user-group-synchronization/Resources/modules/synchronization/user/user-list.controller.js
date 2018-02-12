@@ -21,7 +21,7 @@ export class UserListController {
     this.configured = true
     this.totalExternalUsers = 0
     this.syncInProgress = false
-    this.fieldNames = [ 'username', 'firstName', 'lastName', 'mail', 'administrativeCode' ]
+    this.fieldNames = [ 'username', 'firstName', 'lastName', 'email', 'administrativeCode' ]
     this.getUsers()
     this.getTotalExternalUsers()
     this.getPlatformRoles()

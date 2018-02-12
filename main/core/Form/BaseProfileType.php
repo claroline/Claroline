@@ -11,14 +11,14 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Entity\Content;
+use Claroline\CoreBundle\Form\Profile\ProfileFacetFieldsType;
+use Claroline\CoreBundle\Manager\LocaleManager;
+use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Manager\LocaleManager;
-use Claroline\CoreBundle\Manager\TermsOfServiceManager;
-use Claroline\CoreBundle\Entity\Content;
 use Symfony\Component\Translation\TranslatorInterface;
-use Claroline\CoreBundle\Form\Profile\ProfileFacetFieldsType;
 
 class BaseProfileType extends AbstractType
 {
@@ -31,7 +31,7 @@ class BaseProfileType extends AbstractType
         LocaleManager $localeManager,
         TermsOfServiceManager $termsOfService,
         TranslatorInterface $translator,
-        array $facets = array()
+        array $facets = []
     ) {
         $this->langs = $localeManager->retrieveAvailableLocales();
         $this->termsOfService = $termsOfService;
@@ -41,30 +41,30 @@ class BaseProfileType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('firstName', 'text', array('label' => 'first_name'))
-            ->add('lastName', 'text', array('label' => 'last_name'))
-            ->add('username', 'text', array(
+        $builder->add('firstName', 'text', ['label' => 'first_name'])
+            ->add('lastName', 'text', ['label' => 'last_name'])
+            ->add('username', 'text', [
                 'label' => 'username',
-                'attr' => array(
+                'attr' => [
                     'placeholder' => 'your_platform_id',
-                ),
-            ))
+                ],
+            ])
             ->add(
                 'plainPassword',
                 'repeated',
-                array(
+                [
                     'type' => 'password',
-                    'first_options' => array('label' => 'password'),
-                    'second_options' => array(
+                    'first_options' => ['label' => 'password'],
+                    'second_options' => [
                         'label' => 'verification',
-                        'attr' => array(
+                        'attr' => [
                             'placeholder' => 'verify_your_password',
-                        ),
-                    ),
-                )
+                        ],
+                    ],
+                ]
             )
-            ->add('mail', 'email', array('label' => 'email'))
-            ->add('locale', 'choice', array('choices' => $this->langs, 'required' => false, 'label' => 'language'));
+            ->add('email', 'email', ['label' => 'email'])
+            ->add('locale', 'choice', ['choices' => $this->langs, 'required' => false, 'label' => 'language']);
 
         $content = $this->termsOfService->getTermsOfService(false);
 
@@ -72,12 +72,12 @@ class BaseProfileType extends AbstractType
             $builder->add(
                 'scroll',
                 'scroll',
-                array(
+                [
                     'label' => 'term_of_service',
                     'data' => $content->getContent(),
-                )
+                ]
             )
-            ->add('accepted_terms', 'checkbox', array('label' => 'terms_of_service_acceptance'));
+            ->add('accepted_terms', 'checkbox', ['label' => 'terms_of_service_acceptance']);
         }
 
         foreach ($this->facets as $facet) {
@@ -95,10 +95,10 @@ class BaseProfileType extends AbstractType
     {
         $resolver
         ->setDefaults(
-            array(
+            [
                 'translation_domain' => 'platform',
-                'validation_groups' => array('registration', 'Default'),
-            )
+                'validation_groups' => ['registration', 'Default'],
+            ]
         );
     }
 }

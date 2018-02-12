@@ -49,7 +49,7 @@ class UserValidator implements ValidatorInterface
             ];
         }
 
-        if ($this->exists('mail', $data['email'], isset($data['id']) ? $data['id'] : null)) {
+        if ($this->exists('email', $data['email'], isset($data['id']) ? $data['id'] : null)) {
             $errors[] = [
                 'path' => 'email',
                 'message' => 'The email '.$data['email'].' already exists.',
@@ -99,7 +99,7 @@ class UserValidator implements ValidatorInterface
     {
         return [
             'username' => 'username',
-            'email' => 'mail',
+            'email' => 'email',
         ];
     }
 }

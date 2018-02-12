@@ -83,7 +83,6 @@ class ImportCsvManager
             $nbLineDatas = count($lineDatas);
 
             switch ($action) {
-
                 case 'claro_create_user':
 
                     if ($nbLineDatas >= 6 && $nbLineDatas < 10) {
@@ -93,11 +92,11 @@ class ImportCsvManager
                         $infos[] = trim($lineDatas[3]);
                         $infos[] = trim($lineDatas[4]);
 
-                        if ($nbLineDatas === 7) {
+                        if (7 === $nbLineDatas) {
                             $infos[] = trim($lineDatas[5]);
-                        } elseif ($nbLineDatas === 8) {
+                        } elseif (8 === $nbLineDatas) {
                             $infos[] = trim($lineDatas[6]);
-                        } elseif ($nbLineDatas === 9) {
+                        } elseif (9 === $nbLineDatas) {
                             $infos[] = trim($lineDatas[7]);
                         }
                     } else {
@@ -119,7 +118,7 @@ class ImportCsvManager
                         $infos[] = trim($lineDatas[5]);
                         $infos[] = trim($lineDatas[6]);
 
-                        if ($nbLineDatas === 9) {
+                        if (9 === $nbLineDatas) {
                             $infos[] = trim($lineDatas[7]);
                         }
                     } else {
@@ -132,7 +131,7 @@ class ImportCsvManager
                 case 'claro_delete_group':
                 case 'claro_empty_group':
 
-                    if ($nbLineDatas === 2) {
+                    if (2 === $nbLineDatas) {
                         $infos['name'] = trim($lineDatas[0]);
                     } else {
                         $infos['error'] = "[$lineNum] $invalidSyntaxMsg";
@@ -142,7 +141,7 @@ class ImportCsvManager
                 case 'claro_register_to_group':
                 case 'claro_unregister_from_group':
 
-                    if ($nbLineDatas === 3) {
+                    if (3 === $nbLineDatas) {
                         $infos['username'] = trim($lineDatas[0]);
                         $infos['group_name'] = trim($lineDatas[1]);
                     } else {
@@ -153,7 +152,7 @@ class ImportCsvManager
                 case 'claro_create_workspace_role':
                 case 'claro_delete_workspace_role':
 
-                    if ($nbLineDatas === 3) {
+                    if (3 === $nbLineDatas) {
                         $infos['ws_code'] = trim($lineDatas[0]);
                         $infos['role_name'] = trim($lineDatas[1]);
                     } else {
@@ -166,7 +165,7 @@ class ImportCsvManager
                 case 'claro_register_group_to_workspace':
                 case 'claro_unregister_group_from_workspace':
 
-                    if ($nbLineDatas === 4) {
+                    if (4 === $nbLineDatas) {
                         $infos['name'] = trim($lineDatas[0]);
                         $infos['ws_code'] = trim($lineDatas[1]);
                         $infos['role_name'] = trim($lineDatas[2]);
@@ -959,7 +958,7 @@ class ImportCsvManager
         $users = [];
         $userTxt = $this->translator->trans('user', [], 'platform');
         $usernameTxt = $this->translator->trans('username', [], 'platform');
-        $mailTxt = $this->translator->trans('mail', [], 'platform');
+        $mailTxt = $this->translator->trans('email', [], 'platform');
         $usedTxt = $this->translator->trans(
             'is_already_in_use',
             [],
@@ -976,16 +975,16 @@ class ImportCsvManager
                 $logs[] = $lineDatas['error'];
             } else {
                 $username = $lineDatas[2];
-                $mail = $lineDatas[4];
+                $email = $lineDatas[4];
                 $code = $lineDatas[5];
                 $user = $this->userManager
-                    ->getUserByUsernameOrMailOrCode($username, $mail, $code);
+                    ->getUserByUsernameOrMailOrCode($username, $email, $code);
 
                 if (is_null($user)) {
                     $users[] = $lineDatas;
                     $logs[] = "$userTxt [$username] : $creatingTxt...";
                 } else {
-                    $logs[] = "[$lineNb] $usernameTxt [$username] | $mailTxt [$mail] $usedTxt";
+                    $logs[] = "[$lineNb] $usernameTxt [$username] | $mailTxt [$email] $usedTxt";
                 }
             }
         }

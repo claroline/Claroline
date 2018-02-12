@@ -20,7 +20,7 @@
     "ldap_error_conexion": "Kan geen verbinding maken met LDAP-server.",
     "ldap_group_class": "Klasse van een groep",
     "ldap_save_groups_settings_error": "Om de instellingen op te slaan, moet u de naam en de code vermelden.",
-    "ldap_save_users_settings_error": "Om de instellingen op te slaan, moet u de gebruikersnaam, naam, achternaam, en e-mail vermelden.",
+    "ldap_save_users_settings_error": "Om de instellingen op te slaan, moet u de gebruikersnaam, naam, achternaam, en e-email vermelden.",
     "ldap_user_class": "Gebruikersklasse",
     "name": "Naam",
     "password": "Wachtwoord",

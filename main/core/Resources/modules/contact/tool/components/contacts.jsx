@@ -93,7 +93,7 @@ const ContactsComponent = props =>
       }, {
         name: 'data.email',
         type: 'string',
-        label: t('mail'),
+        label: t('email'),
         displayed: props.options.data.show_mail
       }, {
         name: 'data.phone',

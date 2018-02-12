@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
 
-{% block title %}{{ parent() ~ ' - ' ~ 'mail' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+{% block title %}{{ parent() ~ ' - ' ~ 'email' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block breadcrumb %}
     {{
@@ -15,7 +15,7 @@
                 'href': path('claro_admin_parameters_index')
             },
             {
-                'name': 'mail'|trans({}, 'platform'),
+                'name': 'email'|trans({}, 'platform'),
                 'href': ''
             }
         ])
@@ -24,7 +24,7 @@
 
 {% block section_content %}
     <div class="panel-heading">
-        <h3 class="panel-title">{{ 'mail'|trans({}, 'platform') }}</h3>
+        <h3 class="panel-title">{{ 'email'|trans({}, 'platform') }}</h3>
     </div>
     <div class="list-group">
         <a class="list-group-item" href="{{ path('claro_admin_parameters_mail_server') }}">

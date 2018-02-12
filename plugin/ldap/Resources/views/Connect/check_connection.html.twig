@@ -26,7 +26,7 @@
             </div>
             <div class="list-group">
                 {% if claroUser is not empty %}
-                    <a href="{{ path('claro_ldap_link_account_mail', {'name': serverName}) }}" class="list-group-item claroline-ldap-choice-btn"><i class="fa fa-at"></i> {{ 'link_cas_to_account_mail'|trans({ '%mail%': claroUser.mail },'claroline_cas') }}</a>
+                    <a href="{{ path('claro_ldap_link_account_mail', {'name': serverName}) }}" class="list-group-item claroline-ldap-choice-btn"><i class="fa fa-at"></i> {{ 'link_cas_to_account_mail'|trans({ '%email%': claroUser.email },'claroline_cas') }}</a>
                 {% endif %}
                 <a href="{{ path('claro_ldap_login_link', {'name': serverName}) }}" class="list-group-item claroline-ldap-choice-btn"><i class="fa fa-chain"></i> {{ 'link_cas_to_account'|trans({},'claroline_cas') }}</a>
                 {% if selfRegistration == true %}

@@ -158,7 +158,7 @@ class UserManager
      * @todo REMOVE ME (caution: this is used to create users in Command\User\CreateCommand)
      *
      * @param User      $user
-     * @param bool      $sendMail               do we need to mail the new user ?
+     * @param bool      $sendMail               do we need to email the new user ?
      * @param array     $rolesToAdd
      * @param Workspace $model                  a model to create workspace
      * @param string    $publicUrl
@@ -204,7 +204,7 @@ class UserManager
             $additionalRoles[] = is_string($roleToAdd) ? $this->roleManager->getRoleByName($roleToAdd) : $roleToAdd;
         }
 
-        if (count($organizations) === 0 && count($user->getOrganizations()) === 0) {
+        if (0 === count($organizations) && 0 === count($user->getOrganizations())) {
             $organizations = [$this->organizationManager->getDefault(true)];
             $user->setOrganizations($organizations);
         }
@@ -259,7 +259,7 @@ class UserManager
                 ++$i;
             }
 
-            if ($i % 50 === 0) {
+            if (0 === $i % 50) {
                 $this->objectManager->forceFlush();
             }
         }
@@ -290,7 +290,7 @@ class UserManager
 
             ++$i;
 
-            if ($i % 100 === 0) {
+            if (0 === $i % 100) {
                 $this->objectManager->forceFlush();
                 $this->objectManager->clear();
             }
@@ -380,7 +380,7 @@ class UserManager
      * @throws \Claroline\CoreBundle\Persistence\NoFlushSuiteStartedException
      *
      * @internal param string $authentication an authentication source
-     * @internal param bool $mail do the users need to be mailed
+     * @internal param bool $email do the users need to be mailed
 
      *
      * @todo use api transfer instead
@@ -450,42 +450,42 @@ class UserManager
             $email = trim($user[4]);
 
             if (isset($user[5])) {
-                $code = trim($user[5]) === '' ? null : $user[5];
+                $code = '' === trim($user[5]) ? null : $user[5];
             } else {
                 $code = null;
             }
 
             if (isset($user[6])) {
-                $phone = trim($user[6]) === '' ? null : $user[6];
+                $phone = '' === trim($user[6]) ? null : $user[6];
             } else {
                 $phone = null;
             }
 
             if (isset($user[7])) {
-                $authentication = trim($user[7]) === '' ? null : $user[7];
+                $authentication = '' === trim($user[7]) ? null : $user[7];
             } else {
                 $authentication = null;
             }
 
             if (isset($user[8])) {
-                $modelName = trim($user[8]) === '' ? null : $user[8];
+                $modelName = '' === trim($user[8]) ? null : $user[8];
             } else {
                 $modelName = null;
             }
 
             if (isset($user[9])) {
-                $groupName = trim($user[9]) === '' ? null : $user[9];
+                $groupName = '' === trim($user[9]) ? null : $user[9];
             } else {
                 $groupName = null;
             }
 
             if (isset($user[10])) {
-                $organizationName = trim($user[10]) === '' ? null : $user[10];
+                $organizationName = '' === trim($user[10]) ? null : $user[10];
             } else {
                 $organizationName = null;
             }
 
-            $hasPersonalWorkspace = (isset($user[11]) && !is_null($user[11]) && trim($user[11]) !== '') ?
+            $hasPersonalWorkspace = (isset($user[11]) && !is_null($user[11]) && '' !== trim($user[11])) ?
                 (bool) $user[11] : null;
             $isMailValidated = isset($user[12]) ? (bool) $user[12] : false;
             $isMailNotified = isset($user[13]) ? (bool) $user[13] : $enableEmailNotifaction;
@@ -546,7 +546,7 @@ class UserManager
             }
 
             $userEntity->setUsername($username);
-            $userEntity->setMail($email);
+            $userEntity->setEmail($email);
             $userEntity->setFirstName($firstName);
             $userEntity->setLastName($lastName);
             $userEntity->setAdministrativeCode($code);
@@ -610,7 +610,7 @@ class UserManager
             ++$i;
             ++$j;
 
-            if ($i % self::MAX_USER_BATCH_SIZE === 0) {
+            if (0 === $i % self::MAX_USER_BATCH_SIZE) {
                 if ($logger) {
                     $logger(' [UOW size: '.$this->objectManager->getUnitOfWork()->size().']');
                 }
@@ -701,7 +701,7 @@ class UserManager
 
         foreach ($users as $user) {
             if (isset($user[5])) {
-                $code = trim($user[5]) === '' ? null : $user[5];
+                $code = '' === trim($user[5]) ? null : $user[5];
             } else {
                 $code = null;
             }
@@ -976,9 +976,9 @@ class UserManager
         $usersInRoles['user_accounts'] = 0;
         foreach ($roles as $role) {
             $restrictionRoleNames = null;
-            if ($role->getName() === 'ROLE_USER') {
+            if ('ROLE_USER' === $role->getName()) {
                 $restrictionRoleNames = ['ROLE_WS_CREATOR', 'ROLE_ADMIN'];
-            } elseif ($role->getName() === 'ROLE_WS_CREATOR') {
+            } elseif ('ROLE_WS_CREATOR' === $role->getName()) {
                 $restrictionRoleNames = ['ROLE_ADMIN'];
             }
             $usersInRoles[$role->getTranslationKey()] = intval(
@@ -1138,7 +1138,7 @@ class UserManager
      */
     public function getUserByEmail($email)
     {
-        return $this->userRepo->findOneBy(['mail' => $email]);
+        return $this->userRepo->findOneBy(['email' => $email]);
     }
 
     /**
@@ -1231,7 +1231,7 @@ class UserManager
                 $userArray = [];
                 $userArray['id'] = $user->getId();
                 $userArray['name'] = $user->getFirstName().' '.$user->getLastName();
-                $userArray['mail'] = $user->getMail();
+                $userArray['email'] = $user->getEmail();
                 $userArray['avatar'] = $user->getPicture();
                 array_push($resultArray['users'], $userArray);
             }
@@ -1274,7 +1274,7 @@ class UserManager
         $expirationDate = new \DateTime();
         $expirationYear = (strtotime('2100-01-01')) ? 2100 : 2038;
 
-        ($accountDuration === null) ?
+        (null === $accountDuration) ?
             $expirationDate->setDate($expirationYear, 1, 1) :
             $expirationDate->add(new \DateInterval('P'.$accountDuration.'D'));
 
@@ -1370,11 +1370,11 @@ class UserManager
         return $this->userRepo->findOneUserByUsername($username, $executeQuery);
     }
 
-    public function getUserByUsernameOrMail($username, $mail, $executeQuery = true)
+    public function getUserByUsernameOrMail($username, $email, $executeQuery = true)
     {
         return $this->userRepo->findUserByUsernameOrMail(
             $username,
-            $mail,
+            $email,
             $executeQuery
         );
     }
@@ -1384,20 +1384,20 @@ class UserManager
         return $this->userRepo->findUsersByUsernamesOrMails($usernames, $mails, $executeQuery);
     }
 
-    public function getUserByUsernameOrMailOrCode($username, $mail, $code)
+    public function getUserByUsernameOrMailOrCode($username, $email, $code)
     {
         if (empty($code) || !$this->platformConfigHandler->getParameter('is_user_admin_code_unique')) {
-            return $this->getUserByUsernameOrMail($username, $mail, true);
+            return $this->getUserByUsernameOrMail($username, $email, true);
         }
 
-        return $this->userRepo->findUserByUsernameOrMailOrCode($username, $mail, $code);
+        return $this->userRepo->findUserByUsernameOrMailOrCode($username, $email, $code);
     }
 
-    public function getUserByUsernameAndMail($username, $mail, $executeQuery = true)
+    public function getUserByUsernameAndMail($username, $email, $executeQuery = true)
     {
         return $this->userRepo->findUserByUsernameAndMail(
             $username,
-            $mail,
+            $email,
             $executeQuery
         );
     }
@@ -1510,7 +1510,7 @@ class UserManager
         $options = $this->getUserOptions($user);
         $mode = $options->getDesktopMode();
 
-        if ($mode === UserOptions::READ_ONLY_MODE) {
+        if (UserOptions::READ_ONLY_MODE === $mode) {
             $options->setDesktopMode(UserOptions::EDITION_MODE);
         } else {
             $options->setDesktopMode(UserOptions::READ_ONLY_MODE);
@@ -1696,13 +1696,13 @@ class UserManager
             $users = $this->userRepo->findBy([], null, $limit, $offset);
 
             foreach ($users as $user) {
-                if (count($user->getOrganizations()) === 0) {
+                if (0 === count($user->getOrganizations())) {
                     ++$i;
                     $this->log('Add default organization for user '.$user->getUsername());
                     $user->addOrganization($default);
                     $this->objectManager->persist($user);
 
-                    if ($i % 250 === 0) {
+                    if (0 === $i % 250) {
                         $this->log("Flushing... [UOW = {$this->objectManager->getUnitOfWork()->size()}]");
                         $this->objectManager->forceFlush();
                     }
@@ -1799,6 +1799,7 @@ class UserManager
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
+
     /**
      * @param \Claroline\CoreBundle\Entity\Group $group
      * @param int                                $page
@@ -1820,7 +1821,7 @@ class UserManager
         $displayMode = 'default';
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user !== 'anon.') {
+        if ('anon.' !== $user) {
             $options = $this->getUserOptions($user);
             $details = $options->getDetails();
 
@@ -1876,7 +1877,7 @@ class UserManager
             $user->setUsername('claroline-connect');
             $user->setFirstName('claroline-connect');
             $user->setLastName('claroline-connect');
-            $user->setMail('claroline-connect');
+            $user->setEmail('claroline-connect');
             $user->setPlainPassword(uniqid('', true));
             $user->disable();
             $user->remove();
@@ -1900,7 +1901,7 @@ class UserManager
             $this->restoreUserMailParameter($user);
             $this->log("{$i}/{$count} user done...");
 
-            if ($i % 500 === 0) {
+            if (0 === $i % 500) {
                 $this->objectManager->forceFlush();
                 $this->log('Flushing...');
             }
@@ -1943,7 +1944,7 @@ class UserManager
                 $flushed = false;
                 $this->checkPersonalWorkspaceIntegrityForUser($user, $i, $cntUsers);
 
-                if ($i % $flushSize === 0) {
+                if (0 === $i % $flushSize) {
                     $this->log('Flushing, this may be very long for large databases');
                     $this->objectManager->forceFlush();
                     $flushed = true;

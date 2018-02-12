@@ -88,7 +88,7 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
                 $user->setPlainPassword(uniqid());
                 $user->setLastName($data['last_name']);
                 $user->setUsername($data['username']);
-                $user->setMail($data['email']);
+                $user->setEmail($data['email']);
                 $user->setAuthentication($driver);
                 $user = $this->userManager->createUser($user, false);
 

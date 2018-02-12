@@ -11,5 +11,5 @@
   "cas_validation_url": "Validation URL",
   "create_new_cas_account":"Create new account",
   "link_cas_to_account":"Link to existing account",
-  "link_cas_to_account_mail":"Link to account: \"%mail%\""
+  "link_cas_to_account_mail":"Link to account: \"%email%\""
 }

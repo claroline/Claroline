@@ -66,7 +66,7 @@ class Persister
         $user->setLastName($username);
         $user->setUsername($username);
         $user->setPlainPassword($username);
-        $user->setMail($username.'@mail.com');
+        $user->setEmail($username.'@email.com');
         $user->addRole($roleUser);
         $user->setPublicUrl($username);
         $user->setCreationDate(new \DateTime());

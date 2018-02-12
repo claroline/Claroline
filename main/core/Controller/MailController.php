@@ -78,7 +78,7 @@ class MailController extends Controller
      * )
      * @EXT\Template()
      *
-     * Displays the mail form.
+     * Displays the email form.
      *
      * @param User $user
      *
@@ -104,7 +104,7 @@ class MailController extends Controller
      * )
      * @EXT\Template("ClarolineCoreBundle:Mail:form.html.twig")
      *
-     * Handles the mail form submission (sends a mail).
+     * Handles the email form submission (sends a email).
      *
      * @param User $user
      *

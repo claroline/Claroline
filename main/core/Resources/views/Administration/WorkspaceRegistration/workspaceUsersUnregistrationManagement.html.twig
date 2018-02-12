@@ -165,8 +165,8 @@
                             </a>
                         </th>
                         <th>
-                            <a href="{{ sortUrl(workspace.getId(), search, max, 'mail', order) }}">
-                                {{ 'mail'|trans({}, 'platform') }}
+                            <a href="{{ sortUrl(workspace.getId(), search, max, 'email', order) }}">
+                                {{ 'email'|trans({}, 'platform') }}
                             </a>
                         </th>
                         <th>{{ 'role'|trans({}, 'platform') }}</th>
@@ -188,7 +188,7 @@
                             <td>{{ user.getUsername() }}</td>
                             <td>{{ user.getLastName() }}</td>
                             <td>{{ user.getFirstName() }}</td>
-                            <td>{{ user.getMail() }}</td>
+                            <td>{{ user.getEmail() }}</td>
                             <td>
                                 {% for role in user.getEntityRoles(false) %}
 

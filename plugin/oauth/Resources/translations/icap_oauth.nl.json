@@ -9,7 +9,7 @@
     "facebook": "Facebook",
     "google": "Google",
     "link_oauth_to_account": "Link naar bestaand account",
-    "link_oauth_to_account_mail": "Link naar account: \"%mail%\"",
+    "link_oauth_to_account_mail": "Link naar account: \"%email%\"",
     "linkedin": "LinkedIn",
     "oauth_check_connexion_info": "Wilt u een nieuw account of een link naar een bestaand account maken?",
     "office_365": "Office 365",

@@ -4,7 +4,7 @@ users:
         last_name: sdfsd
         username: user1
         password: enclair
-        mail: mail1@gmail.com
+        email: mail1@gmail.com
         code: USER01
         roles:
           - name: 'UNKNOWN_ROLE_1'

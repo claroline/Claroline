@@ -16,7 +16,7 @@ members:
         last_name: sdfsd
         username: 'ezs'
         password: enclair
-        mail: owner@owner.com
+        email: owner@owner.com
         code: OWNER
         roles:
           - name: 'ROLE_1'
@@ -28,7 +28,7 @@ members:
             last_name: sdfsd
             username: user1
             password: enclair
-            mail: mail1@gmail.com
+            email: mail1@gmail.com
             code: USER01
             roles:
               - name: 'ROLE_1'
@@ -39,7 +39,7 @@ members:
             last_name: ddsd
             username: user1
             password: enclair
-            mail: mail2@gmail.com
+            email: mail2@gmail.com
             code: USER02
 
     groups:

@@ -21,13 +21,13 @@ class EmailType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'mail',
             'email',
-            array(
+            'email',
+            [
                 'required' => true,
                 'constraints' => new Email(),
                 'label' => 'email',
-            )
+            ]
         );
     }
 
@@ -38,6 +38,6 @@ class EmailType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(['translation_domain' => 'platform']);
     }
 }

@@ -15,7 +15,7 @@
 [cf4b2f3](https://github.com/claroline/Distribution/commit/cf4b2f3) - Fixed to point to local php-cs-fixer inside vendor/bin [#2565](https://github.com/claroline/Distribution/pull/2565)  
 [15bef6e](https://github.com/claroline/Distribution/commit/15bef6e) - [PathBundle] fixes some issues [#2564](https://github.com/claroline/Distribution/pull/2564)  
 [0e97ca9](https://github.com/claroline/Distribution/commit/0e97ca9) - [ExoBundle] fixes migrations [#2563](https://github.com/claroline/Distribution/pull/2563)  
-[6d30c1d](https://github.com/claroline/Distribution/commit/6d30c1d) - Disabled mail notification on external user sync [#2561](https://github.com/claroline/Distribution/pull/2561)  
+[6d30c1d](https://github.com/claroline/Distribution/commit/6d30c1d) - Disabled email notification on external user sync [#2561](https://github.com/claroline/Distribution/pull/2561)  
 [dc45057](https://github.com/claroline/Distribution/commit/dc45057) - [BlogBundle] Remove unnecessary widgets when blog is deleted [#2558](https://github.com/claroline/Distribution/pull/2558)  
 [19d485e](https://github.com/claroline/Distribution/commit/19d485e) - Fixed minor issue in resource icons uuid migration [#2560](https://github.com/claroline/Distribution/pull/2560)  
 [ee8829f](https://github.com/claroline/Distribution/commit/ee8829f) - Fixed small interface sync issue [#2559](https://github.com/claroline/Distribution/pull/2559)  

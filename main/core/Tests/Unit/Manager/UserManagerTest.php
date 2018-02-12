@@ -159,7 +159,7 @@ class UserManagerTest extends MockeryTestCase
         $user->shouldReceive('setPlainPassword')
             ->with('pwd_2')
             ->once();
-        $user->shouldReceive('setMail')
+        $user->shouldReceive('setEmail')
             ->with('email_2')
             ->once();
         $user->shouldReceive('setAdministrativeCode')

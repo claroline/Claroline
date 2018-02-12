@@ -9,7 +9,7 @@
     "facebook": "Facebook",
     "google": "Google",
     "link_oauth_to_account": "Enlace a una cuenta existente",
-    "link_oauth_to_account_mail": "Enlace a la cuenta: \"%mail%\"",
+    "link_oauth_to_account_mail": "Enlace a la cuenta: \"%email%\"",
     "linkedin": "LinkedIn",
     "oauth_check_connexion_info": "¿Desea crear una nueva cuenta en la plataforma, o enlazar a una cuenta existente?",
     "office_365": "Office 365",

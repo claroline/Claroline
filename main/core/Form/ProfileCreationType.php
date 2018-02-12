@@ -75,7 +75,7 @@ class ProfileCreationType extends AbstractType
                     'required' => false, 'label' => 'administrative_code',
                 ]
             )
-            ->add('mail', 'email', ['required' => true, 'label' => 'email'])
+            ->add('email', 'email', ['required' => true, 'label' => 'email'])
             ->add('phone', 'text', ['required' => false, 'label' => 'phone'])
             ->add('locale', 'choice', ['choices' => $this->langs, 'required' => false, 'label' => 'language'])
             ->add(

@@ -4,12 +4,12 @@ users:
         last_name: aaaa
         username: user1
         password: aaaa
-        mail: mail1@gmail.com
+        email: mail1@gmail.com
         code: USER01
     - user:
         first_name: bbbb
         last_name: bbbb
         username: user2
         password: bbbb
-        mail: invalidmail.troll.mail
+        email: invalidmail.troll.email
         code: USER03

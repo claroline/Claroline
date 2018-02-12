@@ -11,7 +11,7 @@
 {% if widget.birthDate is not null %}<p><span class="fa fa-birthday-cake"></span> {{ widget.birthDate|date('date_format'|trans({}, 'platform')) }}</p>{% endif %}
 {% if widget.city is not null %}<p><span class="fa fa-map-marker"></span> {{ widget.city }}</p>{% endif %}
 {% if widget.isShowMail %}
-<p><span class="fa fa-envelope"></span> {{ widget.user.mail }}</p>
+<p><span class="fa fa-envelope"></span> {{ widget.user.email }}</p>
 {% endif %}
 {% if widget.showPhone %}
 <p><span class="fa fa-phone"></span> {{ widget.user.phone }}</p>

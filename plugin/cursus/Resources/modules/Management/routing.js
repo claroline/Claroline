@@ -141,7 +141,7 @@ export default function ($stateProvider, $urlRouterProvider) {
       }
     })
     .state ('certificate_mail_edition', {
-      url: '/configuration/certificate/mail',
+      url: '/configuration/certificate/email',
       template: certificateMailEditionTemplate,
       controller: 'CertificateMailEditionCtrl',
       controllerAs: 'cmc',

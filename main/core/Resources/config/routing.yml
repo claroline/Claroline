@@ -192,7 +192,7 @@ claro_widget:
 
 claro_mail:
     resource: "@ClarolineCoreBundle/Controller/MailController.php"
-    prefix: mail
+    prefix: email
     type: annotation
 
 claro_activity:

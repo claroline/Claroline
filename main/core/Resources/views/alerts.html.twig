@@ -35,7 +35,7 @@
 {% if app.user != null and app.user.isMailValidated == false and app.user.hideMailWarning == false and is_mailer_available() and app.user.emailValidationHash %}
     <div class="alert-email-confirm">
         <h4 class="label label-warning">
-            {{ 'email_not_activated_part_1'|trans({'%email%': app.user.mail}, 'platform') }}
+            {{ 'email_not_activated_part_1'|trans({'%email%': app.user.email}, 'platform') }}
             <a href="{{ path('claro_security_validate_email_send', {'hash': app.user.emailValidationHash}) }}" class="confirm-email"> {{ 'email_not_activated_part_2'|trans({}, 'platform') }}</a>
             {{ 'email_not_activated_part_3'|trans({}, 'platform') }}
             <i

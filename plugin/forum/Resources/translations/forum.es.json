@@ -34,7 +34,7 @@
     "new_subject": "Nuevo tema",
     "no": "no",
     "notifications": "Notificaciones",
-    "notifications_explanation": "Cuando se agrega un mensaje, la activación de las notificaciones globales conlleva el envío de un mail a los usuarios que tienen acceso al foro.",
+    "notifications_explanation": "Cuando se agrega un mensaje, la activación de las notificaciones globales conlleva el envío de un email a los usuarios que tienen acceso al foro.",
     "posted_by": "Iniciado por %author% el %date%",
     "posts": "Respuestas",
     "quote": "quote",

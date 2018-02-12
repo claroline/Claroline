@@ -111,7 +111,7 @@ class UserSerializer
             'lastName' => $user->getLastName(),
             'username' => $user->getUsername(),
             'picture' => $this->serializePicture($user),
-            'email' => $user->getMail(),
+            'email' => $user->getEmail(),
             'administrativeCode' => $user->getAdministrativeCode(),
             'phone' => $user->getPhone(),
         ];
@@ -256,13 +256,13 @@ class UserSerializer
                       $publicUser['description'] = $user->getDescription();
                       break;
                   case 'email':
-                      $publicUser['mail'] = $user->getMail();
+                      $publicUser['email'] = $user->getEmail();
                       break;
                   case 'phone':
                       $publicUser['phone'] = $user->getPhone();
                       break;
                   case 'sendMail':
-                      $publicUser['mail'] = $user->getMail();
+                      $publicUser['email'] = $user->getEmail();
                       $publicUser['allowSendMail'] = true;
                       break;
                   case 'sendMessage':
@@ -297,7 +297,7 @@ class UserSerializer
         // remove this later (with the Trait)
         $object = $this->genericSerializer->deserialize($data, $user, $options);
 
-        $this->sipe('email', 'setMail', $data, $object);
+        $this->sipe('email', 'setEmail', $data, $object);
         $this->sipe('plainPassword', 'setPlainPassword', $data, $object);
         $this->sipe('meta.enabled', 'setIsEnabled', $data, $object);
         $this->sipe('meta.locale', 'setLocale', $data, $object);

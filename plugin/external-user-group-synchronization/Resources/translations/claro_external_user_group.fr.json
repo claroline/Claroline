@@ -7,7 +7,7 @@
   "code_field_name": "Nom du champ \"Code\"",
   "connection_table_name": "Nom de la table de connexion",
   "count_field_name": "Nom du champ \"Effectif\"",
-  "email_field_name": "Nom du champ \"E-mail\"",
+  "email_field_name": "Nom du champ \"E-email\"",
   "enable_cas_sync": "Activer la synchronisation des comptes CAS",
   "external_group_list": "Liste des groupes externes",
   "external_groups_registration_in_workspace": "Import de groupes externes dans l'espace de travail",

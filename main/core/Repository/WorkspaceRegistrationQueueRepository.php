@@ -68,7 +68,7 @@ class WorkspaceRegistrationQueueRepository extends EntityRepository
                 UPPER(u.username) LIKE :search
                 OR UPPER(u.firstName) LIKE :search
                 OR UPPER(u.lastName) LIKE :search
-                OR UPPER(u.mail) LIKE :search
+                OR UPPER(u.email) LIKE :search
             )
         ";
         $query = $this->_em->createQuery($dql);

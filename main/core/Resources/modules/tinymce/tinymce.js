@@ -202,7 +202,7 @@ tinymce.claroline.mentionsItem = function (item) {
   return '<li>' +
   '<a href="javascript:;"><span class="user-picker-dropdown-avatar">' + avatar + '</span>' +
   '<span class="user-picker-dropdown-name">' + item.name + '</span>' +
-  '<small class="user-picker-avatar-mail text-muted">(' + item.mail + ')</small></a>' +
+  '<small class="user-picker-avatar-email text-muted">(' + item.email + ')</small></a>' +
   '</li>'
 }
 

@@ -196,7 +196,7 @@ class MessageManager
                 $mailNotifiedUsers[] = $filteredUser;
             }
         }
-        $replyToMail = !empty($message->getSender()) ? $message->getSender()->getMail() : null;
+        $replyToMail = !empty($message->getSender()) ? $message->getSender()->getEmail() : null;
 
         if ($sendMail) {
             $this->mailManager->send(

@@ -68,7 +68,7 @@ class ExternalUserRepository extends EntityRepository
                     $qb->expr()->like('UPPER(user.username)', ':search'),
                     $qb->expr()->like('UPPER(user.firstName)', ':search'),
                     $qb->expr()->like('UPPER(user.lastName)', ':search'),
-                    $qb->expr()->like('UPPER(user.mail)', ':search')
+                    $qb->expr()->like('UPPER(user.email)', ':search')
                 ))
                 ->setParameter('search', '%'.strtoupper($search).'%');
         }
@@ -88,7 +88,7 @@ class ExternalUserRepository extends EntityRepository
 
         $qb = $this->createQueryBuilder('ext_user')
             ->innerJoin('ext_user.user', 'user')
-            ->select('user.username, user.firstName, user.lastName, user.mail, user.administrativeCode')
+            ->select('user.username, user.firstName, user.lastName, user.email, user.administrativeCode')
             ->where('ext_user.sourceSlug = :source')
             ->setMaxResults($max)
             ->setFirstResult($max * $page)
@@ -100,7 +100,7 @@ class ExternalUserRepository extends EntityRepository
                     $qb->expr()->like('UPPER(user.username)', ':search'),
                     $qb->expr()->like('UPPER(user.firstName)', ':search'),
                     $qb->expr()->like('UPPER(user.lastName)', ':search'),
-                    $qb->expr()->like('UPPER(user.mail)', ':search')
+                    $qb->expr()->like('UPPER(user.email)', ':search')
                 ))
                 ->setParameter('search', '%'.strtoupper($search).'%');
         }

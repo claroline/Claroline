@@ -930,7 +930,7 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/courses/widget/{widgetInstance}/session/{session}/informations/workspace/{withWorkspace}/mail/{withMail}/type/{type}",
+     *     "/courses/widget/{widgetInstance}/session/{session}/informations/workspace/{withWorkspace}/email/{withMail}/type/{type}",
      *     name="claro_courses_widget_session_informations",
      *     defaults={"withWorkspace"=1, "withMail"=1, "type"=0},
      *     options={"expose"=true}
@@ -988,7 +988,7 @@ class CursusController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/courses/widget/session/event/{sessionEvent}/informations/mail/{withMail}",
+     *     "/courses/widget/session/event/{sessionEvent}/informations/email/{withMail}",
      *     name="claro_courses_widget_session_event_informations",
      *     defaults={"withMail"=1},
      *     options={"expose"=true}

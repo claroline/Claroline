@@ -51,7 +51,7 @@ class MediaCenterUserRepository
             $query->bindValue(1, $user->getUsername());
             $query->bindValue(2, $user->getFirstName());
             $query->bindValue(3, $user->getLastName());
-            $query->bindValue(4, $user->getMail());
+            $query->bindValue(4, $user->getEmail());
             $query->bindValue(5, $user->getPlatformRole()->getName());
             $query->bindValue(6, $token);
             $query->bindValue(7, date('Y-m-d H:i:s'));

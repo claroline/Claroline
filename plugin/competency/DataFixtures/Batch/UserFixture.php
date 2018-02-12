@@ -49,7 +49,7 @@ class UserFixture extends DataFixture
         $user->setLastName($lastName);
         $user->setUsername($username = strtolower($firstName.$lastName));
         $user->setPassword($username);
-        $user->setMail("{$username}@mail.com");
+        $user->setEmail("{$username}@email.com");
 
         return $user;
     }

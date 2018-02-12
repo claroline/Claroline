@@ -193,20 +193,20 @@ class CsvUserValidator extends ConstraintValidator
                 if (!is_null($existingUser)) {
                     // For an update, we will validate user with a fake username and email
                     $upperExistingUsername = strtoupper(trim($existingUser->getUsername()));
-                    $upperExistingMail = strtoupper(trim($existingUser->getMail()));
+                    $upperExistingMail = strtoupper(trim($existingUser->getEmail()));
                     $upperUsername = strtoupper(trim($username));
                     $upperMail = strtoupper(trim($email));
 
                     if ($upperExistingUsername === $upperUsername &&
                         $upperExistingMail === $upperMail) {
                         $existingUser->setUsername($fakeUsername);
-                        $existingUser->setMail($fakeMail);
+                        $existingUser->setEmail($fakeMail);
                     } elseif ($upperExistingUsername === $upperUsername) {
                         $existingUser->setUsername($fakeUsername);
-                        $existingUser->setMail($email);
+                        $existingUser->setEmail($email);
                     } else {
                         $existingUser->setUsername($username);
-                        $existingUser->setMail($fakeMail);
+                        $existingUser->setEmail($fakeMail);
                     }
 
                     $existingUser->setFirstName($firstName);
@@ -222,7 +222,7 @@ class CsvUserValidator extends ConstraintValidator
                         ['registration', 'Default']
                     );
                     $existingUser->setUsername($username);
-                    $existingUser->setMail($email);
+                    $existingUser->setEmail($email);
                 } else {
                     ++$newUserCount;
                     $newUser = new User();
@@ -230,7 +230,7 @@ class CsvUserValidator extends ConstraintValidator
                     $newUser->setLastName($lastName);
                     $newUser->setUsername($username);
                     $newUser->setPlainPassword($pwd);
-                    $newUser->setMail($email);
+                    $newUser->setEmail($email);
                     $newUser->setAdministrativeCode($code);
                     $newUser->setPhone($phone);
                     $errors = $this->validator->validate($newUser, ['registration', 'Default']);
@@ -296,11 +296,11 @@ class CsvUserValidator extends ConstraintValidator
             }
         }
 
-        foreach ($mails as $mail => $lines) {
+        foreach ($mails as $email => $lines) {
             if (count($lines) > 1) {
                 $msg = $this->translator->trans(
                     'email_found_at',
-                    ['%email%' => $mail, '%lines%' => $this->getLines($lines)],
+                    ['%email%' => $email, '%lines%' => $this->getLines($lines)],
                     'platform'
                 ).' ';
                 $this->context->addViolation($msg);

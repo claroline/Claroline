@@ -187,7 +187,7 @@ class MailManager
 
             $layout = $this->contentManager->getTranslatedContent(['type' => 'claro_mail_layout']);
             $fromEmail = $this->ch->hasParameter('mailer_sender_from') && $this->ch->getParameter('mailer_sender_from') && !is_null($from) && !is_null($replyToMail) ?
-                $from->getMail() :
+                $from->getEmail() :
                 $this->getMailerFrom();
             $locale = count($users) === 1 ? $users[0]->getLocale() : $this->ch->getParameter('locale_language');
 
@@ -208,19 +208,19 @@ class MailManager
             }
 
             foreach ($users as $user) {
-                $mail = $user->getMail();
+                $email = $user->getEmail();
 
                 if ($user->isMailValidated() || $force) {
-                    if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-                        $to[] = $mail;
+                    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        $to[] = $email;
                     }
                 }
             }
 
             if (isset($extra['to'])) {
-                foreach ($extra['to'] as $mail) {
-                    if (filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-                        $to[] = $mail;
+                foreach ($extra['to'] as $email) {
+                    if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                        $to[] = $email;
                     }
                 }
             }
@@ -230,8 +230,8 @@ class MailManager
             $message->from($fromEmail);
             $message->body($body);
 
-            ($from !== null && filter_var($from->getMail(), FILTER_VALIDATE_EMAIL)) ?
-                $message->replyTo($from->getMail()) :
+            ($from !== null && filter_var($from->getEmail(), FILTER_VALIDATE_EMAIL)) ?
+                $message->replyTo($from->getEmail()) :
                 $message->replyTo($replyToMail);
 
             if (count($to) > 1) {

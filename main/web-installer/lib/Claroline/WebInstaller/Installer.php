@@ -111,11 +111,11 @@ class Installer
         /** @var \Claroline\CoreBundle\Library\Installation\PlatformInstaller $installer */
         $installer = $container->get('claroline.installation.platform_installer');
         $installer->setOutput($output);
-        $verbosityLevelMap = array(
+        $verbosityLevelMap = [
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
-        );
+        ];
         $logger = new ConsoleLogger($output, $verbosityLevelMap);
         $installer->setLogger($logger);
         $output->writeln('Installing the platform from composer...');
@@ -140,8 +140,8 @@ class Installer
         $user->setLastName($this->adminSettings->getLastName());
         $user->setUsername($this->adminSettings->getUsername());
         $user->setPlainPassword($this->adminSettings->getPassword());
-        $user->setMail($this->adminSettings->getEmail());
+        $user->setEmail($this->adminSettings->getEmail());
         $roleAdmin = $container->get('claroline.manager.role_manager')->getRoleByName('ROLE_ADMIN');
-        $userManager->createUser($user, false, array($roleAdmin));
+        $userManager->createUser($user, false, [$roleAdmin]);
     }
 }

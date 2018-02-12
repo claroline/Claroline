@@ -239,7 +239,7 @@ class AnnouncementManager
     }
 
     /**
-     * Sends an Announcement by mail to Users that can access it.
+     * Sends an Announcement by email to Users that can access it.
      *
      * @param Announcement $announcement
      * @param array        $roles

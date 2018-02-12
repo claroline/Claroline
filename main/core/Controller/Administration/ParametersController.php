@@ -330,7 +330,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/mail", name="claro_admin_parameters_mail_index")
+     * @EXT\Route("/email", name="claro_admin_parameters_mail_index")
      * @EXT\Template
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
@@ -342,7 +342,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/mail/server", name="claro_admin_parameters_mail_server")
+     * @EXT\Route("/email/server", name="claro_admin_parameters_mail_server")
      * @EXT\Template
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
@@ -363,7 +363,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/mail/server/submit", name="claro_admin_edit_parameters_mail_server")
+     * @EXT\Route("/email/server/submit", name="claro_admin_edit_parameters_mail_server")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:mailServerForm.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
@@ -427,10 +427,10 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/mail/server/reset", name="claro_admin_reset_mail_server")
+     * @EXT\Route("/email/server/reset", name="claro_admin_reset_mail_server")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
-     * Reset the mail settings.
+     * Reset the email settings.
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      */
@@ -455,7 +455,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/mail/registration", name="claro_admin_mail_registration")
+     * @EXT\Route("/email/registration", name="claro_admin_mail_registration")
      * @EXT\Template
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
@@ -472,7 +472,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/mail/registration/submit", name="claro_admin_edit_mail_registration")
+     * @EXT\Route("/email/registration/submit", name="claro_admin_edit_mail_registration")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:registrationMailForm.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
@@ -493,7 +493,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/mail/layout", name="claro_admin_mail_layout")
+     * @EXT\Route("/email/layout", name="claro_admin_mail_layout")
      * @EXT\Template
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
@@ -510,7 +510,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/mail/layout/submit", name="claro_admin_edit_mail_layout")
+     * @EXT\Route("/email/layout/submit", name="claro_admin_edit_mail_layout")
      * @EXT\Method("POST")
      * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:mailLayoutForm.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
@@ -531,7 +531,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/mail/layout/option/form", name="claro_admin_mail_option_form")
+     * @EXT\Route("/email/layout/option/form", name="claro_admin_mail_option_form")
      * @EXT\Template
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
@@ -547,7 +547,7 @@ class ParametersController extends Controller
     }
 
     /**
-     * @EXT\Route("/mail/layout/option/submit", name="claro_admin_mail_submit_form")
+     * @EXT\Route("/email/layout/option/submit", name="claro_admin_mail_submit_form")
      * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:optionMailForm.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
