@@ -2,11 +2,12 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import has from 'lodash/has'
 
+import {trans} from '#/main/core/translation'
 import {asset} from '#/main/core/scaffolding/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 import {actions} from '#/main/core/api/actions'
-import {FileThumbnail} from '#/main/core/layout/form/components/field/file-thumbnail.jsx'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
 // todo : merge with file type
 
@@ -39,22 +40,32 @@ class Image extends Component {
         }
 
         {has(this.props.value, 'id') &&
-          <img
-            src={asset(this.props.value.url)}
-            className="img-thumbnail"
-            style={{
-              maxWidth: this.props.size[0] + 'px',
-              maxHeight: this.props.size[1] + 'px'
-            }}
-          />
+          <div className="img-preview">
+            <img
+              className="img-thumbnail"
+              src={asset(this.props.value.url)}
+              style={{
+                maxWidth: this.props.size[0] + 'px',
+                maxHeight: this.props.size[1] + 'px'
+              }}
+            />
+
+            <TooltipButton
+              id={`${this.props.id}-delete`}
+              className="btn btn-danger"
+              title={trans('delete')}
+              position="left"
+              onClick={() => this.props.deleteFile(this.props.value.id, this.props.onChange)}
+            >
+              <span className="fa fa-fw fa-trash-o" />
+            </TooltipButton>
+          </div>
         }
 
       </fieldset>
     )
   }
 }
-
-// this.props.deleteFile(this.props.value.id, this.props.onChange)
 
 implementPropTypes(Image, FormFieldTypes, {
   value: T.object,
