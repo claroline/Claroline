@@ -10,7 +10,7 @@
  */
 
 import angular from 'angular/index'
-import {} from 'angular-bootstrap'
+import {} from 'angular-ui-bootstrap'
 import {} from 'angular-route'
 import '#/main/core/services/module'
 import '#/main/core/form/module'

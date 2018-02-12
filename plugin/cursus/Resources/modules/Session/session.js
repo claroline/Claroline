@@ -9,9 +9,9 @@
 
 import angular from 'angular/index'
 
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-bootstrap-colorpicker'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 import 'angular-ui-tinymce'
 
 import SessionService from './Service/SessionService'

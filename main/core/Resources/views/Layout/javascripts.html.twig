@@ -79,10 +79,7 @@
 
 {# TODO: remove this when custom js builds are available #}
 {% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
-    'packages/jquery-ui/ui/core.js'
-    'packages/jquery-ui/ui/widget.js'
-    'packages/jquery-ui/ui/mouse.js'
-    'packages/jquery-ui/ui/sortable.js'
+    'packages/jquery-ui-dist/jquery-ui.min.js'
 %}
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}

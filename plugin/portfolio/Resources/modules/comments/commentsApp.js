@@ -1,5 +1,5 @@
 import angular from 'angular/index'
-import 'angular-toArrayFilter/toArrayFilter'
+import 'angular-toarrayfilter/toArrayFilter'
 import 'angular-sanitize'
 import 'angular-resource'
 import 'angular-animate'

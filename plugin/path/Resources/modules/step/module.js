@@ -3,7 +3,7 @@
  */
 
 import angular from 'angular/index'
-import 'angular-ui-resource-picker/angular-resource-picker'
+import '#/main/core/innova/angular-resource-picker'
 import 'angular-ui-tinymce/src/tinymce'
 
 import '#/main/core/api/router/module'

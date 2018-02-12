@@ -1,6 +1,6 @@
 import angular from 'angular/index'
 
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 import CheckListDirective from './CheckListDirective'
 import CheckboxesDirective from './CheckboxesDirective'
 

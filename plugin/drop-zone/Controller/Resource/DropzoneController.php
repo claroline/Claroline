@@ -85,7 +85,6 @@ class DropzoneController extends Controller
         $finishedPeerDrops = [];
         $errorMessage = null;
         $teamId = null;
-        $teamName = null;
 
         if (!$dropzone->getDropClosed() && $dropzone->getAutoCloseDropsAtDropEndDate() && !$dropzone->getManualPlanning()) {
             $dropEndDate = $dropzone->getDropEndDate();
@@ -118,14 +117,14 @@ class DropzoneController extends Controller
                         $drops[] = $teamDrop;
                     }
                 }
-                if (count($drops) === 0) {
+                if (0 === count($drops)) {
                     /* Checks if there are unfinished drops from teams he belongs but not associated to him */
                     $unfinishedTeamsDrops = $this->manager->getTeamsUnfinishedDrops($dropzone, $teamsIds);
 
                     if (count($unfinishedTeamsDrops) > 0) {
                         $errorMessage = $this->translator->trans('existing_unfinished_team_drop_error', [], 'dropzone');
                     }
-                } elseif (count($drops) === 1) {
+                } elseif (1 === count($drops)) {
                     $myDrop = $drops[0];
                 } else {
                     $errorMessage = $this->translator->trans('more_than_one_drop_error', [], 'dropzone');

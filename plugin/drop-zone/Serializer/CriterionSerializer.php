@@ -39,7 +39,7 @@ class CriterionSerializer
     {
         return [
             'id' => $criterion->getUuid(),
-            'instruction' => $criterion->getInstruction()
+            'instruction' => $criterion->getInstruction(),
         ];
     }
 

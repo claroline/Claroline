@@ -12,9 +12,9 @@
     {{ parent() }}
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.min.css') }}'/>
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.print.css') }}' media='print' />
-    <link 
-        rel='stylesheet' 
-        type='text/css' 
+    <link
+        rel='stylesheet'
+        type='text/css'
         href="{{ asset('packages/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css') }}"
     />
     <style>
@@ -77,6 +77,5 @@
     <script type='text/javascript' src='{{ asset(calendarPath ~ 'fullcalendar.min.js') }}' ></script>
     <script type='text/javascript' src='{{ asset('bundles/formalibrereservation/js/calendar.js') }}'></script>
     <script type="text/javascript" src="{{ asset('packages/eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('packages/jquery-ui/ui/minified/draggable.min.js') }}"> </script>
-    <script type="text/javascript" src="{{ asset('packages/jquery-ui/ui/minified/resizable.min.js') }}"> </script>
+    <script type="text/javascript" src="{{ asset('packages/jquery-ui-dist/jquery-ui.min.js') }}"> </script>
 {% endblock javascripts %}

@@ -1,6 +1,7 @@
 <?php
 
 // src/AppBundle/Routing/ExtraLoader.php
+
 namespace Claroline\CoreBundle\Routing;
 
 use Claroline\CoreBundle\Annotations\ApiMeta;
@@ -103,7 +104,6 @@ class ApiLoader extends Loader
                     $ignore = [];
 
                     foreach ($this->reader->getClassAnnotations($refClass) as $annotation) {
-
                         //If we defined api meta, we get all the free stuff fro the api
                         if ($annotation instanceof ApiMeta) {
                             $found = true;

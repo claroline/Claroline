@@ -86,9 +86,9 @@ class BaseController extends FOSRestController
 
         for ($maskPosition = 0, $entreTableau = 0; $maskPosition < strlen($mask); $maskPosition += 2, $entreTableau++) {
             $orderPanelsTable[] = [
-                'nameTemplate' => $panelInfo[$mask{$maskPosition}],
-                'visibility' => (int) $mask{$maskPosition + 1},
-                'id' => (int) $mask{$maskPosition},
+                'nameTemplate' => $panelInfo[$mask[$maskPosition]],
+                'visibility' => (int) $mask[$maskPosition + 1],
+                'id' => (int) $mask[$maskPosition],
             ];
         }
 

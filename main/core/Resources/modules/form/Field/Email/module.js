@@ -1,7 +1,7 @@
 import angular from 'angular/index'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 import EmailDirective from './EmailDirective'
 import '../../HelpBlock/module'
 

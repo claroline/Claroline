@@ -9,7 +9,6 @@
 
 (function () {
     'use strict';
-
     window.Claroline = window.Claroline || {};
     var calendar = window.Claroline.Calendar = {};
     var workspacePermissions;
@@ -18,6 +17,18 @@
     var isDesktop;
     var $calendarElement = $('#calendar');
     var isFormShown = false;
+
+    function t(key) {
+        if (typeof key === 'object') {
+            var transWords = [];
+            for (var i = 0; i < key.length; i++) {
+                transWords.push(Translator.trans(key[i], {}, 'agenda'));
+            }
+            return transWords;
+        }
+
+        return Translator.trans(key, {}, 'agenda');
+    }
 
     calendar.initialize = function (
         context,
@@ -56,11 +67,6 @@
                 left: 'prev,next, today',
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay'
-            },
-            columnFormat: {
-                month: 'ddd',
-                week: 'ddd D/M',
-                day: 'dddd D/M'
             },
             buttonText: {
                 prev: t('prev'),
@@ -541,17 +547,6 @@
         });
 
         return workspaceIds;
-    }
-
-    function t(key) {
-        if (typeof key === 'object') {
-            var transWords = [];
-            for (var i = 0; i < key.length; i++) {
-                transWords.push(Translator.trans(key[i], {}, 'agenda'));
-            }
-            return transWords;
-        }
-        return Translator.trans(key, {}, 'agenda');
     }
 
     function onBodyClick()

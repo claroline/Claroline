@@ -1,6 +1,6 @@
 import $ from 'jquery'
 import 'jquery'
-import 'select2'
+import 'Select2'
 
 /* global ZenstruckFormHelper */
 

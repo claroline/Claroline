@@ -272,7 +272,7 @@ class ExportManager
             'font-awesome.css' => 'packages/font-awesome/css/font-awesome.min.css',
             'claroline-reset.css' => 'vendor/clarolinescorm/claroline-reset.css',
             'jquery.min.js' => 'packages/jquery/dist/jquery.min.js',
-            'jquery-ui.min.js' => 'packages/jquery-ui/jquery-ui.min.js',
+            'jquery-ui.min.js' => 'packages/jquery-ui-dist/jquery-ui.min.js',
             'bootstrap.min.js' => 'packages/bootstrap/dist/js/bootstrap.min.js',
             'translator.js' => 'bundles/bazingajstranslation/js/translator.min.js',
             'router.js' => 'bundles/fosjsrouting/js/router.js',

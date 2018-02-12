@@ -286,7 +286,6 @@ class ApiController extends FOSRestController
                 'response' => 'moved',
             ]);
         } catch (Exception $e) {
-
             // Something went wrong, send the last known version of the sections to the client
             $isAdmin = $this->isUserGranted('EDIT', $wiki);
 

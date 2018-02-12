@@ -50,16 +50,16 @@
 {% block javascripts %}
     <script type="text/javascript" src='{{ asset('bundles/icapbadge/js/list.js') }}'></script>
     {% if parameters.badges_per_user is defined and parameters.badges_per_user is not empty and parameters.totalBadges > 0 %}
-        <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/excanvas.min.js') }}"></script><![endif]-->
-        <script type="text/javascript" src="{{ asset('bundles/frontend/jqPlot/src/jquery.jqplot.js') }}"></script>
+        <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('packages/jqplot/src/excanvas.min.js') }}"></script><![endif]-->
+        <script type="text/javascript" src="{{ asset('packages/jqplot/src/jquery.jqplot.js') }}"></script>
         {% javascripts debug=false filter='jsmin' output='js/icapbadge/jqplot.plugins.min.js'
-        'bundles/frontend/jqPlot/src/plugins/jqplot.pieRenderer.js'
-        'bundles/frontend/jqPlot/src/plugins/jqplot.donutRenderer.js'
-        'bundles/frontend/jqPlot/src/plugins/jqplot.barRenderer.js'
-        'bundles/frontend/jqPlot/src/plugins/jqplot.categoryAxisRenderer.js'
-        'bundles/frontend/jqPlot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
-        'bundles/frontend/jqPlot/src/plugins/jqplot.canvasTextRenderer.js'
-        'bundles/frontend/jqPlot/src/plugins/jqplot.pointLabels.js'
+        'packages/jqplot/src/plugins/jqplot.pieRenderer.js'
+        'packages/jqplot/src/plugins/jqplot.donutRenderer.js'
+        'packages/jqplot/src/plugins/jqplot.barRenderer.js'
+        'packages/jqplot/src/plugins/jqplot.categoryAxisRenderer.js'
+        'packages/jqplot/src/plugins/jqplot.canvasAxisLabelRenderer.js'
+        'packages/jqplot/src/plugins/jqplot.canvasTextRenderer.js'
+        'packages/jqplot/src/plugins/jqplot.pointLabels.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
         {% endjavascripts %}

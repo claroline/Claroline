@@ -107,7 +107,6 @@ class BibliographyListener
                 $event->setParent($bookReferenceInWorkspace->getResourceNode());
                 $event->setResources([$resourceShortcut]);
             } else {
-
                 // Create book as a new resource
                 $event->setResources([$bookResource]);
             }

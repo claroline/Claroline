@@ -25,8 +25,8 @@ import '../modules/urlInterpolator'
 import '../modules/appDirectives/appDirectives'
 
 import 'angular-strap'
-import 'angular-ui-resource-picker/angular-resource-picker'
-import 'angular-bootstrap'
+import '#/main/core/innova/angular-resource-picker'
+import 'angular-ui-bootstrap'
 import 'confirm-bootstrap/confirm-bootstrap.js'
 
 import {} from 'checklist-model'

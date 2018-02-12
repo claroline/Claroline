@@ -1,7 +1,7 @@
 import angular from 'angular/index'
 import {} from 'angular-loading-bar'
 import {} from 'ng-file-upload'
-import {} from 'angular-ui-translation/angular-translation'
+import {} from '#/main/core/innova/angular-translation'
 
 import {} from '#/main/core/modal/module'
 import {} from '#/main/core/api/router/module'

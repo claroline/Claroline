@@ -62,10 +62,10 @@
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ url('bazinga_jstranslation_js', { 'domain': 'icap_badge' }) }}"></script>
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery-ui/ui/minified/effect.min.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery-ui/ui/minified/effect-highlight.min.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery-ui/ui/minified/droppable.min.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/frontend/jquery-ui/ui/minified/draggable.min.js') }}'></script>
-    <script type="text/javascript" src='{{ asset('bundles/frontend/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/effect.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/effect-highlight.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/droppable.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('packages/jquery-ui/ui/minified/draggable.min.js') }}'></script>
+    <script type="text/javascript" src='{{ asset('packages/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/icapbadge/js/profile.js') }}'></script>
 {% endblock %}

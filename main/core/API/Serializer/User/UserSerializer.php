@@ -34,6 +34,9 @@ class UserSerializer
     /** @var FinderProvider */
     private $finder;
 
+    /** @var ContainerInterface */
+    private $container;
+
     /**
      * UserManager constructor.
      *

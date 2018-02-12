@@ -9,9 +9,9 @@
 
 import angular from 'angular/index'
 
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-bootstrap-colorpicker'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 
 import '../../../../../main/core/Resources/modules/services/module'
 import '../../../../../main/core/Resources/modules/form/module'

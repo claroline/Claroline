@@ -552,7 +552,6 @@ class WorkspaceManager
     }
 
     /**
-
      * @param User     $user
      * @param string[] $roleNames
      *

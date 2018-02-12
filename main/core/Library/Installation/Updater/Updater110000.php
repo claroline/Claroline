@@ -31,6 +31,7 @@ class Updater110000 extends Updater
     {
         //old compatibility for pictures
         $this->lnPictureDirectory();
+        $this->lnPackageDirectory();
     }
 
     public function lnPictureDirectory()
@@ -41,6 +42,21 @@ class Updater110000 extends Updater
         if (!$fileSystem->exists($webDir.'/uploads/pictures/data')) {
             $this->log('Creating symlink to '.$webDir.'/uploads/pictures/data');
             $fileSystem->symlink($webDir.'/data', $webDir.'/uploads/pictures/data');
+        }
+    }
+
+    public function lnPackageDirectory()
+    {
+        $fileSystem = $this->container->get('filesystem');
+        $webDir = $this->container->getParameter('claroline.param.web_directory');
+
+        if (!$fileSystem->exists($webDir.'/packages')) {
+            $this->log('Creating symlink to '.$webDir.'/packages');
+            $fileSystem->symlink($webDir.'/../node_modules', $webDir.'/packages');
+        } else {
+            if (!is_link($webDir.'/packages')) {
+                $this->log('Couldn\'t create symlink to from node_modules to web/packages. You must remove web/packages or create the link manually');
+            }
         }
     }
 }

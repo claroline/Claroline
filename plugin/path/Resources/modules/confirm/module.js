@@ -3,7 +3,7 @@
  */
 
 import angular from 'angular/index'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 
 import ConfirmService from './Service/ConfirmService'
 import ConfirmModalCtrl from './Controller/ConfirmModalCtrl'

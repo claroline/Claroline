@@ -323,21 +323,21 @@
 
 {% block stylesheets %}
     {{ parent() }}
-    <link rel="stylesheet" href="{{ asset('bundles/frontend/select2/select2.css') }}" screen="media"/>
+    <link rel="stylesheet" href="{{ asset('packages/select2/select2.css') }}" screen="media"/>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/zenstruckform/js/helper.js') }}"></script>
-    <script type="text/javascript" src="{{ asset('bundles/frontend/select2/select2.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('packages/select2/select2.min.js') }}"></script>
     {% if 'en' != app.request.locale %}
         <script type="text/javascript"
-                src="{{ asset('bundles/frontend/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
+                src="{{ asset('packages/select2/select2_locale_' ~ app.request.locale ~ '.js') }}"></script>
     {% endif %}
     <script type="text/javascript"
-            src="{{ asset('bundles/frontend/jquery-option-tree/jquery.optionTree.js') }}"></script>
+            src="{{ asset('packages/jquery-option-tree/jquery.optionTree.js') }}"></script>
     <script type="text/javascript"
-            src='{{ asset('bundles/frontend/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
+            src='{{ asset('packages/confirm-bootstrap/confirm-bootstrap.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/icapbadge/js/edit.js') }}'></script>
     <script type="text/javascript" src='{{ asset('bundles/icapbadge/js/rules.js') }}'></script>
 {% endblock %}

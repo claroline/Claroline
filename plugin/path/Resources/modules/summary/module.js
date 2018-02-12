@@ -3,7 +3,7 @@
  */
 
 import angular from 'angular/index'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-ui-tree/dist/angular-ui-tree.min'
 
 import '#/main/core/translation/module'

@@ -27,11 +27,10 @@ set -o pipefail
 DIST=../$TRAVIS_REPO_SLUG
 
 # Each set of dependencies is identified by a checksum of the files that
-# describe those dependencies (composer.json for composer, bower.json for bower,
-# etc.). Any change in these files will lead to a cache miss.
+# describe those dependencies (composer.json for composer, npm).
+#Any change in these files will lead to a cache miss.
 COMPOSER_SUM=`cat composer.json $DIST/composer.json | md5sum | cut -c -32`
 NPM_SUM=`cat package.json npm-shrinkwrap.json $DIST/package.json | md5sum | cut -c -32`
-BOWER_SUM=`cat bower.json $DIST/bower.json | md5sum | cut -c -32`
 
 # Fetches the dependencies managed by a given package manager. If a cache
 # version is available, uses it, otherwise resolves the dependencies and sends
@@ -94,5 +93,3 @@ composer bundles
 # Removes the shrinkwrap to allow a PR to update dependencies
 # After installation, a new shrinkwrap is generated
 fetch npm $NPM_SUM "rm -f npm-shrinkwrap.json && npm install && npm shrinkwrap" node_modules
-
-fetch bower $BOWER_SUM "npm run bower" web/packages

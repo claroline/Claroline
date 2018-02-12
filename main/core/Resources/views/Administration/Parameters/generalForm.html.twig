@@ -89,7 +89,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet"
-          href="{{ asset('packages/jquery-ui/themes/base/jquery-ui.min.css') }}"
+          href="{{ asset('packages/jquery-ui-dist/jquery-ui.min.css') }}"
           type="text/css"
     />
 {% endblock %}
@@ -113,7 +113,7 @@
         })(jQuery);
     </script>
     <script type="text/javascript"
-            src="{{ asset('packages/jquery-ui/jquery-ui.min.js') }}"
+            src="{{ asset('packages/jquery-ui-dist/jquery-ui.min.js') }}"
     >
     </script>
     <script type="text/javascript">

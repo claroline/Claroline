@@ -137,7 +137,6 @@ class LessonController extends Controller
         $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
 
         if ($chapter !== null) {
-
             //get complete chapter tree for this lesson
             $tmp_tree = $chapterRepository->getChapterTree($lesson->getRoot());
             $tree = $tmp_tree[0];

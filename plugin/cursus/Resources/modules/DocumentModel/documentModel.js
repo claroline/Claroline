@@ -8,8 +8,8 @@
  */
 
 import angular from 'angular/index'
-import 'angular-bootstrap'
-import 'angular-ui-translation/angular-translation'
+import 'angular-ui-bootstrap'
+import '#/main/core/innova/angular-translation'
 import DocumentModelService from './Service/DocumentModelService'
 import DocumentModelSelectionModalCtrl from './Controller/DocumentModelSelectionModalCtrl'
 

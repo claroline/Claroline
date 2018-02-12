@@ -105,7 +105,7 @@ class DropzoneSerializer
     {
         return [
             'dropType' => $dropzone->getDropType(),
-            'reviewType' => $dropzone->isPeerReview() ? 'peer':'manager',
+            'reviewType' => $dropzone->isPeerReview() ? 'peer' : 'manager',
             'documents' => $dropzone->getAllowedDocuments(),
             'expectedCorrectionTotal' => $dropzone->getExpectedCorrectionTotal(),
             'scoreMax' => $dropzone->getScoreMax(),
@@ -174,7 +174,7 @@ class DropzoneSerializer
                 'type' => 'auto',
                 'drop' => [
                     DateNormalizer::normalize($dropzone->getDropStartDate()),
-                    DateNormalizer::normalize($dropzone->getDropEndDate())
+                    DateNormalizer::normalize($dropzone->getDropEndDate()),
                 ],
                 'review' => [
                     DateNormalizer::normalize($dropzone->getReviewStartDate()),
@@ -230,7 +230,7 @@ class DropzoneSerializer
 
     private function serializeCriteria(Dropzone $dropzone)
     {
-        return array_map(function(Criterion $criterion) {
+        return array_map(function (Criterion $criterion) {
             return $this->criterionSerializer->serialize($criterion);
         }, $dropzone->getCriteria());
     }

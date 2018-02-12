@@ -112,7 +112,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         $this->router = $router;
         $this->userManager = $userManager;
         $this->requestStack = $requestStack;
-        $this->logger = FileLogger::get($kernelRootDir.'/logs/login.log',  'claroline.login.logger');
+        $this->logger = FileLogger::get($kernelRootDir.'/logs/login.log', 'claroline.login.logger');
     }
 
     /**

@@ -10,9 +10,9 @@
 import angular from 'angular/index'
 
 import 'angular-ui-router'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-animate'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 import 'angular-breadcrumb'
 import 'angular-loading-bar'
 

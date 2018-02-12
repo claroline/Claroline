@@ -1,11 +1,11 @@
 import angular from 'angular/index'
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-route'
 import 'angular-ui-tinymce'
 import 'angular-ui-tree'
 import 'angular-loading-bar'
 import 'angular-animate'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 
 import tinyMceConfig from './tinymce/tinymce.config'
 

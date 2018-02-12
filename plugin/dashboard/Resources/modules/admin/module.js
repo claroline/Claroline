@@ -1,9 +1,9 @@
 
 import angular from 'angular/index'
 
-import 'angular-bootstrap'
+import 'angular-ui-bootstrap'
 import 'angular-strap'
-import 'angular-ui-translation/angular-translation'
+import '#/main/core/innova/angular-translation'
 import '#/main/core/modal/module'
 import '#/main/core/api/router/module'
 
