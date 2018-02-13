@@ -19,7 +19,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FacetRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\FacetRepository")
  * @ORM\Table(name="claro_facet")
  * @UniqueEntity("name")
  */

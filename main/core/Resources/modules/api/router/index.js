@@ -66,7 +66,7 @@ function getQueryString(queryParams = {}, prefix = null) {
 
 
     if (0 !== params.length) {
-      return '?' + params.join('&')
+      return params.join('&')
     }
   }
 
@@ -82,7 +82,13 @@ function getQueryString(queryParams = {}, prefix = null) {
  * @return {string}
  */
 function url(target, queryParams = {}) {
-  return getUrl(target) + getQueryString(queryParams)
+  const queryString = getQueryString(queryParams)
+
+  if (queryString) {
+    return getUrl(target) + '?' + queryString
+  }
+
+  return getUrl(target)
 }
 
 export {

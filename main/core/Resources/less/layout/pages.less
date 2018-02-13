@@ -50,6 +50,8 @@
 
         > small {
             display: block; // todo this may have broken some things
+            margin-top: 5px;
+            font-size: 50%;
         }
     }
 
@@ -148,43 +150,73 @@
     }
 }
 
+.tabbed-page {
+    .page-header {
+        > div {
+            flex: 1;
+        }
+    }
+
+    .page-title {
+        margin-bottom: 5px;
+    }
+}
+
 .page-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: stretch;
+    align-items: stretch;
     padding: 0 floor(@grid-gutter-width / 2);
+    font-family: @headings-font-family;
+    margin: 0 -1px;
+
     a {
-        color: #777;
+        flex: 1;
+        font-size: @font-size-small;
+        height: floor((@font-size-small * @line-height-small))*2 + 8px + 4px;
         display: inline-flex;
-        text-align: center;
-        padding: 5px;
-        background: #ededed;
-        font-size: 10px;
-        width: 90px;
-        flex-direction: column;
-        justify-content: center;
+        flex-direction: row;
+        justify-content: flex-start;
         align-items: center;
-        border-bottom: 4px solid transparent;
-        border-top: 4px solid transparent;
-        margin-right: 5px;
+        padding: 4px 12px;
+        color: #666666;
+        background: #EDEDED;
+        border: 2px solid #EDEDED;
+        border-right: 1px solid transparent;
+        border-left: 1px solid transparent;
+        background-clip: padding-box;
+
+        &.only-icon {
+            margin-left: auto;
+            flex: 0;
+        }
 
         &:last-child {
             margin-right: 0;
         }
 
         &:hover {
-            background: white;
-            border-bottom-color: #777;
+            color: @brand-primary;
         }
 
         &.active {
             color: @brand-primary;
             background: white;
+            border-top: 2px solid white;
             border-bottom-color: @brand-primary;
         }
     }
 
     .page-tabs-icon {
-        font-size: 32px;
-        display: block;
-        margin-bottom: 5px;
+        font-size: 24px;
+    }
+
+    .page-tab-label {
+        margin-left: 10px;
+        overflow: hidden;
+        max-height: 100%;
     }
 }
 

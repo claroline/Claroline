@@ -35,6 +35,7 @@ import {ListHeader} from '#/main/core/data/list/components/header.jsx'
 
 const DataTreeItemContent = props =>
   <div className={classes('data-tree-item', props.computedData.className, {
+    'expanded': props.expanded,
     'selected': props.selected,
     'data-tree-leaf': !props.hasChildren
   })}>

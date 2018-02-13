@@ -6,7 +6,7 @@ import {Route, Switch, withRouter} from 'react-router-dom'
 import {trans} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
 
-import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
@@ -44,7 +44,7 @@ function getHome(type) {
 }
 
 const Resource = props =>
-  <ResourceContainer
+  <ResourcePageContainer
     editor={{
       opened: '/edit' === props.location.pathname,
       open: '#/edit',
@@ -115,7 +115,7 @@ const Resource = props =>
       <Route path="/entry/:id/edit" component={EntryEditForm} />
       <Route path="/entry/:id/view" component={EntryView} />
     </Switch>
-  </ResourceContainer>
+  </ResourcePageContainer>
 
 Resource.propTypes = {
   location: T.shape({

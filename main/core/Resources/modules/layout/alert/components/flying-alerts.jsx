@@ -4,6 +4,8 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {Alert as AlertTypes} from '#/main/core/layout/alert/prop-types'
 import {constants as actionConstants} from '#/main/core/layout/action/constants'
+import {Expire} from '#/main/core/layout/components/expire.jsx'
+
 import {constants} from '#/main/core/layout/alert/constants'
 
 // todo handle auto hide
@@ -54,10 +56,33 @@ implementPropTypes(FlyingAlert, AlertTypes, {
   removeAlert: T.func.isRequired
 })
 
+const FlyingAlertContainer = props => {
+  const status = constants.ALERT_STATUS[props.status]
+
+  if (status.timeout) {
+    return (
+      <Expire
+        delay={status.timeout}
+        onExpire={() => props.removeAlert(props.id)}
+      >
+        <FlyingAlert {...props} />
+      </Expire>
+    )
+  }
+
+  return (
+    <FlyingAlert {...props} />
+  )
+}
+
+implementPropTypes(FlyingAlertContainer, AlertTypes, {
+  removeAlert: T.func.isRequired
+})
+
 const FlyingAlerts = props =>
   <ul className="flying-alerts">
     {props.alerts.map((alert, alertIndex) =>
-      <FlyingAlert
+      <FlyingAlertContainer
         {...alert}
 
         key={alertIndex}

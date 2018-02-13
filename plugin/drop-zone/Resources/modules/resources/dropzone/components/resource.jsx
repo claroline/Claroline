@@ -8,7 +8,7 @@ import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {Routes} from '#/main/core/router/components/router.jsx'
-import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
@@ -25,7 +25,7 @@ import {Drop} from '#/plugin/drop-zone/resources/dropzone/correction/components/
 import {PeerDrop} from '#/plugin/drop-zone/resources/dropzone/player/components/peer-drop.jsx'
 
 const Resource = props =>
-  <ResourceContainer
+  <ResourcePageContainer
     editor={{
       opened: props.editorOpened,
       open: '#/edit',
@@ -102,7 +102,7 @@ const Resource = props =>
         }
       ]}
     />
-  </ResourceContainer>
+  </ResourcePageContainer>
 
 Resource.propTypes = {
   canEdit: T.bool.isRequired,

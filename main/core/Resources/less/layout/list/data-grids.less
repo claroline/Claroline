@@ -49,10 +49,16 @@
     border: 1px solid transparent;
     margin-bottom: @data-grid-gutter;
 
+    // mimic checkboxes for proper alignment with "select all" checkbox
     .list-selected-label {
-        padding: @data-grid-gutter 0 @data-grid-gutter @data-grid-gutter;
+        position: relative;
+        padding: @data-grid-gutter @data-grid-gutter @data-grid-gutter @data-grid-gutter + 20px;
+
         .fa {
-            margin-right: @data-grid-gutter;
+            position: absolute;
+            margin-left: -20px;
+            margin-top: 3px; // arbitrary
+            width: 16px;
         }
     }
 

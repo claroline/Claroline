@@ -4,7 +4,8 @@ import classes from 'classnames'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
-import {RoutedPage, PageContent} from '#/main/core/layout/page'
+import {PageContent} from '#/main/core/layout/page'
+import {RoutedPage} from '#/main/core/layout/router'
 
 import {UserPageActions} from '#/main/core/user/components/page-actions.jsx'
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
@@ -30,7 +31,9 @@ const UserPageHeader = props =>
 
 UserPageHeader.propTypes = {
   className: T.string,
-  picture: T.string,
+  picture: T.shape({
+    url: T.string.isRequired
+  }),
   title: T.string.isRequired,
   subtitle: T.string,
   children: T.node.isRequired

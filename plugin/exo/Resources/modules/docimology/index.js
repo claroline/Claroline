@@ -7,7 +7,7 @@ bootstrap(
   // app DOM container (also holds initial app data as data attributes)
   '.docimology-container',
 
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  // app main component
   Docimology,
 
   // app store configuration

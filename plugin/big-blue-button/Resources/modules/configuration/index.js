@@ -13,7 +13,7 @@ bootstrap(
   // app DOM container (also holds initial app data as data attributes)
   '.bbb-config-container',
 
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  // app main component
   () =>  React.createElement(BBBConfigForm),
 
   // app store configuration

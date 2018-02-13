@@ -23,7 +23,7 @@ bootstrap(
   // app DOM container (also holds initial app data as data attributes)
   '.bbb-container',
 
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  // app main component
   () => React.createElement(Router, {
     history: history
   }, React.createElement(BBBResource)),

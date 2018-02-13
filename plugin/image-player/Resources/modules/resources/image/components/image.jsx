@@ -4,13 +4,13 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 import {copyToClipboard} from '#/main/core/copy-text-to-clipboard'
-import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
 import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {select} from './../selectors'
 
 const Image = props =>
-  <ResourceContainer
+  <ResourcePageContainer
     customActions={[
       {
         icon: 'fa fa-fw fa-clipboard',
@@ -22,7 +22,7 @@ const Image = props =>
     <div className="text-center">
       <img src={props.url} alt={props.hashName} onContextMenu={(e)=>{checkDownload(e, props.exportable)}}/>
     </div>
-  </ResourceContainer>
+  </ResourcePageContainer>
 
 Image.propTypes = {
   url: T.string.isRequired,

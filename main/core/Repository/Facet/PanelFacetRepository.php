@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Repository;
+namespace Claroline\CoreBundle\Repository\Facet;
 
 use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Facet\PanelFacet;

@@ -19,14 +19,12 @@ const DataPicker = props =>
     className="data-picker-modal"
     bsSize="lg"
   >
-    <div className="modal-body">
-      <DataListContainer
-        name={props.name}
-        fetch={props.fetch}
-        definition={props.definition}
-        card={props.card}
-      />
-    </div>
+    <DataListContainer
+      name={props.name}
+      fetch={props.fetch}
+      definition={props.definition}
+      card={props.card}
+    />
 
     <button
       className="modal-btn btn btn-primary"

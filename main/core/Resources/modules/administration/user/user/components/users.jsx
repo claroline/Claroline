@@ -11,6 +11,7 @@ import Configuration from '#/main/core/library/Configuration/Configuration'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_CHANGE_PASSWORD} from '#/main/core/user/modals/components/change-password.jsx'
 import {MODAL_URL} from '#/main/core/layout/modal'
+import {actions as userActions} from '#/main/core/user/actions'
 
 import {actions} from '#/main/core/administration/user/user/actions'
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
@@ -53,13 +54,13 @@ const UsersList = props =>
         icon: 'fa fa-fw fa-check-circle-o',
         label: t('enable_user'),
         context: 'row', // todo should be a selection action too
-        displayed: (rows) => !rows[0].meta.enabled,
+        displayed: (rows) => rows[0].restrictions.disabled,
         action: (rows) => props.enable(rows[0])
       }, {
         icon: 'fa fa-fw fa-times-circle-o',
         label: t('disable_user'),
         context: 'row', // todo should be a selection action too
-        displayed: (rows) => rows[0].meta.enabled,
+        displayed: (rows) => !rows[0].restrictions.disabled,
         action: (rows) => props.disable(rows[0]),
         dangerous: true
       }, {
@@ -98,7 +99,8 @@ UsersList.propTypes = {
   enable: T.func.isRequired,
   disable: T.func.isRequired,
   createWorkspace: T.func.isRequired,
-  deleteWorkspace: T.func.isRequired
+  deleteWorkspace: T.func.isRequired,
+  updatePassword: T.func.isRequired
 }
 
 const Users = connect(
@@ -119,7 +121,7 @@ const Users = connect(
     updatePassword(user) {
       dispatch(
         modalActions.showModal(MODAL_CHANGE_PASSWORD, {
-          changePassword: (password) => dispatch(actions.changePassword(user, password))
+          changePassword: (password) => dispatch(userActions.changePassword(user, password))
         })
       )
     }

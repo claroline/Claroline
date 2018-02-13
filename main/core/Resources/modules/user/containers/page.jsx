@@ -1,11 +1,7 @@
-import React from 'react'
-import {PropTypes as T} from 'prop-types'
-
 import {connectPage} from '#/main/core/layout/page/connect'
 
 import {actions} from '#/main/core/administration/user/user/actions'
-
-import {UserPage as UserPageComponent} from '#/main/core/user/components/page.jsx'
+import {UserPage} from '#/main/core/user/components/page.jsx'
 
 /**
  * Connected container for users.
@@ -15,28 +11,9 @@ import {UserPage as UserPageComponent} from '#/main/core/user/components/page.js
  *
  * Requires the following reducers to be registered in your store (@see makePageReducer) :
  *   - modal
- *   - alerts [optional]
+ *   - alerts
  *   - user
- *
- * @param props
- * @constructor
  */
-const UserPage = props =>
-  <UserPageComponent
-    {...props}
-  >
-    {props.children}
-  </UserPageComponent>
-
-UserPage.propTypes = {
-  user: T.object,
-
-  /**
-   * Application of the user.
-   */
-  children: T.element.isRequired
-}
-
 const UserPageContainer = connectPage(
   (state, ownProps) => ownProps.user ? ({
     user: ownProps.user

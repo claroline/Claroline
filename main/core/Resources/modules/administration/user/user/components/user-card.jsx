@@ -12,7 +12,7 @@ const UserCard = (row) => ({
   contentText: row.meta.description,
   flags: [
     row.meta.personalWorkspace && ['fa fa-book', t('has_personal_workspace')],
-    row.meta.enabled           && ['fa fa-check-circle-o', t('user_enabled')]
+    !row.restrictions.disabled && ['fa fa-check-circle-o', t('user_enabled')] // todo also checks accessibility dates
   ].filter(flag => !!flag),
   footer:
     row.meta.lastLogin &&

@@ -22,7 +22,7 @@ bootstrap(
   // app DOM container (also holds initial app data as data attributes)
   '.question-bank-container',
 
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
+  // app main component
   Questions,
 
   // app store configuration

@@ -1,12 +1,13 @@
 import React from 'react'
 
-import {t} from '#/main/core/translation'
-import {TabbedPageContainer} from '#/main/core/layout/page/containers/tabbed-page.jsx'
+import {trans} from '#/main/core/translation'
+import {TabbedPageContainer} from '#/main/core/layout/tabs'
 
 import {WorkspaceTab, WorkspaceTabActions} from '#/main/core/administration/workspace/workspace/components/workspace-tab.jsx'
 
 const Tool = () =>
   <TabbedPageContainer
+    title={trans('workspace_management', {}, 'tools')}
     redirect={[
       {from: '/', exact: true, to: '/workspaces'}
     ]}
@@ -14,7 +15,7 @@ const Tool = () =>
     tabs={[
       {
         icon: 'fa fa-book',
-        title: t('workspaces'),
+        title: trans('workspaces'),
         path: '/workspaces',
         actions: WorkspaceTabActions,
         content: WorkspaceTab

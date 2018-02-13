@@ -6,7 +6,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import isEmpty from 'lodash/isEmpty'
 import set from 'lodash/set'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {Form} from '#/main/core/data/form/components/form.jsx'
 import {cleanErrors} from '#/main/core/data/form/utils'
@@ -62,7 +62,7 @@ class DataFormModal extends Component {
     return (
       <BaseModal
         {...this.props}
-        className={classes('form-modal', this.props.className)}
+        className={classes('data-form-modal', this.props.className)}
       >
         <Form
           level={5}
@@ -104,8 +104,8 @@ DataFormModal.propTypes = {
 
 DataFormModal.defaultProps = {
   icon: 'fa fa-fw fa-pencil',
-  title: t('edit'),
-  saveButtonText: t('save'),
+  title: trans('edit'),
+  saveButtonText: trans('save'),
   data: {}
 }
 

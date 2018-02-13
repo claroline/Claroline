@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\FieldFacetRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\FieldFacetRepository")
  * @ORM\Table(name="claro_field_facet")
  */
 class FieldFacet
@@ -314,6 +314,7 @@ class FieldFacet
             default: return 'error';
         }
     }
+
     /**
      * @deprecated
      *

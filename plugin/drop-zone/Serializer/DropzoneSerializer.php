@@ -3,7 +3,7 @@
 namespace Claroline\DropZoneBundle\Serializer;
 
 use Claroline\CoreBundle\API\Serializer\SerializerTrait;
-use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Dropzone;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -172,14 +172,8 @@ class DropzoneSerializer
         } else {
             return [
                 'type' => 'auto',
-                'drop' => [
-                    DateNormalizer::normalize($dropzone->getDropStartDate()),
-                    DateNormalizer::normalize($dropzone->getDropEndDate()),
-                ],
-                'review' => [
-                    DateNormalizer::normalize($dropzone->getReviewStartDate()),
-                    DateNormalizer::normalize($dropzone->getReviewEndDate()),
-                ],
+                'drop' => DateRangeNormalizer::normalize($dropzone->getDropStartDate(), $dropzone->getDropEndDate()),
+                'review' => DateRangeNormalizer::normalize($dropzone->getReviewStartDate(), $dropzone->getReviewEndDate()),
             ];
         }
     }
@@ -200,11 +194,13 @@ class DropzoneSerializer
             $dropzone->setReviewStartDate(null);
             $dropzone->setReviewEndDate(null);
         } else {
-            $dropzone->setDropStartDate(DateNormalizer::denormalize($planningData['drop'][0]));
-            $dropzone->setDropEndDate(DateNormalizer::denormalize($planningData['drop'][1]));
+            $dropRange = DateRangeNormalizer::denormalize($planningData['drop']);
+            $dropzone->setDropStartDate($dropRange[0]);
+            $dropzone->setDropEndDate($dropRange[1]);
 
-            $dropzone->setReviewStartDate(DateNormalizer::denormalize($planningData['review'][0]));
-            $dropzone->setReviewEndDate(DateNormalizer::denormalize($planningData['review'][1]));
+            $reviewRange = DateRangeNormalizer::denormalize($planningData['review']);
+            $dropzone->setReviewStartDate($reviewRange[0]);
+            $dropzone->setReviewEndDate($reviewRange[1]);
         }
     }
 

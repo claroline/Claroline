@@ -8,6 +8,7 @@ import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
+import {actions as formActions} from '#/main/core/data/form/actions'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 
@@ -53,14 +54,33 @@ const UserForm = props =>
             label: t('password'),
             displayed: props.new,
             required: true
-          }, {
+          }
+        ]
+      }, {
+        id: 'information',
+        icon: 'fa fa-fw fa-info',
+        title: t('information'),
+        fields: [
+          {
             name: 'administrativeCode',
             type: 'string',
             label: t('administrativeCode')
           }, {
+            name: 'meta.description',
+            type: 'html',
+            label: t('description')
+          }
+        ]
+      }, {
+        id: 'display_parameters',
+        icon: 'fa fa-fw fa-desktop',
+        title: t('display_parameters'),
+        fields: [
+          {
             name: 'meta.locale',
             type: 'locale',
-            label: t('default_language'),
+            label: t('language'),
+            required: true,
             options: {
               onlyEnabled: true
             }
@@ -70,19 +90,41 @@ const UserForm = props =>
             label: t('picture')
           }
         ]
-      },
-      {
+      }, {
         id: 'restrictions',
         icon: 'fa fa-fw fa-key',
         title: t('access_restrictions'),
-        fields: [{
-          name: 'restrictions.accessibleUntil',
-          type: 'date',
-          label: t('expiration_date'),
-          options: {
-            time: true
+        fields: [
+          {
+            name: 'restrictions.disabled',
+            type: 'boolean',
+            label: t('disable_user')
+          }, {
+            name: 'restrictions.enableDates',
+            type: 'boolean',
+            label: t('restrict_by_dates'),
+            calculated: props.user.restrictions && 0!== props.user.restrictions.dates.length,
+            onChange: activated => {
+              if (!activated) {
+                props.updateProp('restrictions.dates', [])
+              } else {
+                props.updateProp('restrictions.dates', [null, null])
+              }
+            },
+            linked: [
+              {
+                name: 'restrictions.dates',
+                type: 'date-range',
+                label: t('access_dates'),
+                displayed: props.user.restrictions && 0!== props.user.restrictions.dates.length,
+                required: true,
+                options: {
+                  time: true
+                }
+              }
+            ]
           }
-        }]
+        ]
       }
     ]}
   >
@@ -91,6 +133,7 @@ const UserForm = props =>
     >
       <FormSection
         id="user-groups"
+        className="embedded-list-section"
         icon="fa fa-fw fa-users"
         title={t('groups')}
         disabled={props.new}
@@ -119,6 +162,7 @@ const UserForm = props =>
 
       <FormSection
         id="group-organizations"
+        className="embedded-list-section"
         icon="fa fa-fw fa-building"
         title={t('organizations')}
         disabled={props.new}
@@ -147,6 +191,7 @@ const UserForm = props =>
 
       <FormSection
         id="user-roles"
+        className="embedded-list-section"
         icon="fa fa-fw fa-id-badge"
         title={t('roles')}
         disabled={props.new}
@@ -178,8 +223,12 @@ const UserForm = props =>
 UserForm.propTypes = {
   new: T.bool.isRequired,
   user: T.shape({
-    id: T.string
+    id: T.string,
+    restrictions: T.shape({
+      dates: T.arrayOf(T.string).isRequired
+    })
   }).isRequired,
+  updateProp: T.func.isRequired,
   pickGroups: T.func.isRequired,
   pickOrganizations: T.func.isRequired,
   pickRoles: T.func.isRequired
@@ -191,6 +240,9 @@ const User = connect(
     user: formSelect.data(formSelect.form(state, 'users.current'))
   }),
   dispatch => ({
+    updateProp(propName, propValue) {
+      dispatch(formActions.updateProp('users.current', propName, propValue))
+    },
     pickGroups(userId) {
       dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
         icon: 'fa fa-fw fa-users',
@@ -208,7 +260,7 @@ const User = connect(
     },
     pickOrganizations(userId) {
       dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
-        icon: 'fa fa-fw fa-buildings',
+        icon: 'fa fa-fw fa-building',
         title: t('add_organizations'),
         confirmText: t('add'),
         name: 'organizations.picker',

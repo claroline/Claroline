@@ -2,13 +2,15 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {registerModals} from '#/main/core/layout/modal'
-import {RoutedPage, PageHeader, PageContent} from '#/main/core/layout/page/components/page.jsx'
-import {ResourceActions} from '#/main/core/resource/components/resource-actions.jsx'
+import {PageHeader, PageContent} from '#/main/core/layout/page'
+import {RoutedPage} from '#/main/core/layout/router'
+import {t_res} from '#/main/core/resource/translation'
+import {ResourcePageActions} from '#/main/core/resource/components/page-actions.jsx'
 
 import {MODAL_RESOURCE_PROPERTIES, EditPropertiesModal} from '#/main/core/resource/components/modal/edit-properties.jsx'
 import {MODAL_RESOURCE_RIGHTS,     EditRightsModal}     from '#/main/core/resource/components/modal/edit-rights.jsx'
 
-class Resource extends Component {
+class ResourcePage extends Component {
   constructor(props) {
     super(props)
 
@@ -47,8 +49,9 @@ class Resource extends Component {
         <PageHeader
           className="resource-header"
           title={this.props.resourceNode.name}
+          subtitle={t_res(this.props.resourceNode.meta.type)}
         >
-          <ResourceActions
+          <ResourcePageActions
             resourceNode={this.props.resourceNode}
             editor={this.props.editor}
             customActions={this.props.customActions}
@@ -68,7 +71,7 @@ class Resource extends Component {
   }
 }
 
-Resource.propTypes = {
+ResourcePage.propTypes = {
   resourceNode: T.shape({
     name: T.string.isRequired,
     parameters: T.shape({
@@ -114,8 +117,10 @@ Resource.propTypes = {
   removeAlert: T.func
 }
 
-Resource.defaultProps = {
+ResourcePage.defaultProps = {
   embedded: false
 }
 
-export {Resource}
+export {
+  ResourcePage
+}

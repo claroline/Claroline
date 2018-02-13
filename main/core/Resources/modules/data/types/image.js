@@ -4,7 +4,7 @@ import {ImageGroup} from '#/main/core/layout/form/components/group/image-group.j
 
 const IMAGE_TYPE = 'image'
 
-// todo implement
+// todo finish implementation
 
 const imageDefinition = {
   meta: {

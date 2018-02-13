@@ -183,7 +183,7 @@ class EntryComments extends Component {
 
 EntryComments.propTypes = {
   user: T.shape({
-    id: T.number,
+    id: T.string,
     firstName: T.string,
     lastName: T.string
   }),

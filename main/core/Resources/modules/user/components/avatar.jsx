@@ -20,7 +20,9 @@ const UserAvatar = props =>
 
 UserAvatar.propTypes = {
   className: T.string,
-  picture: T.string,
+  picture: T.shape({
+    url: T.string.isRequired
+  }),
   alt: T.bool
 }
 

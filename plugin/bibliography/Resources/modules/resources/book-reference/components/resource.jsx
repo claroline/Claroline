@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {Routes} from '#/main/core/router'
-import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
 
@@ -11,7 +11,7 @@ import {Player} from './player.jsx'
 import {Editor} from './editor.jsx'
 
 const Resource = props =>
-  <ResourceContainer
+  <ResourcePageContainer
     editor={{
       path: '/edit',
       save: {
@@ -32,7 +32,7 @@ const Resource = props =>
         }
       ]}
     />
-  </ResourceContainer>
+  </ResourcePageContainer>
 
 Resource.propTypes = {
   id: T.number.isRequired,

@@ -8,7 +8,7 @@
     "learning_outcomes": "Competentieframework",
     "learning_profil": "Leerprofiel",
     "logs": "Logs",
-    "my_contacts": "Mijn contactpersonen",
+    "my_contacts": "Contactpersonen",
     "organization_management": "De organisaties beheren",
     "parameters": "Instellingen",
     "platform_analytics": "Statistieken van het platform",
@@ -21,5 +21,6 @@
     "user_management": "De gebruikers beheren",
     "users": "Gebruikers",
     "widgets_management": "De widgets beheren",
-    "workspace_management": "De werkruimten beheren"
+    "workspace_management": "De werkruimten beheren",
+    "users_management": "De gebruikers beheersen"
 }

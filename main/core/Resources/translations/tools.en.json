@@ -23,5 +23,6 @@
     "users": "Users",
     "widgets_management": "Widgets management",
     "workspace_management": "Workspaces management",
-    "data_transfer": "Data import/export"
+    "data_transfer": "Data import/export",
+    "users_management": "Users management"
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
+import times from 'lodash/times'
 import {DropdownButton, MenuItem} from 'react-bootstrap'
 
 import {t, transChoice} from '#/main/core/translation'
@@ -133,7 +134,7 @@ const Pagination = props => {
           disabled={1 === pages}
         >
           <MenuItem header>{t('pages')}</MenuItem>
-          {[...Array(pages)].map((u, page) =>
+          {times(pages, (page) =>
             <MenuItem
               key={`page-${page}`}
               onClick={() => page !== props.current ? props.changePage(page) : false}

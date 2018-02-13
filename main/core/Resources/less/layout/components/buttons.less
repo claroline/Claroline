@@ -4,8 +4,13 @@
 
 
 /* CHROME HACK FOR OUTLINED BUTTON WHEN FOCUSED */
-.btn:focus {
-    outline: none;
+.btn:focus,
+.btn:active:focus,
+.btn.active:focus,
+.btn.focus,
+.btn:active.focus,
+.btn.active.focus {
+    outline: none !important;
 }
 
 .btn-link-danger {

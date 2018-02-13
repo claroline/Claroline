@@ -198,7 +198,7 @@ Form.propTypes = {
   updateProp: T.func.isRequired,
   className: T.string,
   disabled: T.bool,
-  children: T.any
+  children: T.node
 }
 
 Form.defaultProps = {

@@ -8,7 +8,9 @@ const UserType = {
     firstName: T.string.isRequired,
     lastName: T.string.isRequired,
     username: T.string.isRequired,
-    picture: T.string,
+    picture: T.shape({
+      url: T.string.isRequired
+    }),
     email: T.string.isRequired,
     meta: T.shape({
       publicUrl: T.string

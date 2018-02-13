@@ -2,14 +2,14 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import {Route, Switch, withRouter} from 'react-router-dom'
-import {ResourceContainer} from '#/main/core/resource/containers/resource.jsx'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 import {trans} from '#/main/core/translation'
 import {actions} from '../actions'
 import {BBBContent} from './bbb-content.jsx'
 import {BBBConfig} from './bbb-config.jsx'
 
 const BBBResource = props =>
-  <ResourceContainer
+  <ResourcePageContainer
     editor={{
       opened: '/edit' === props.location.pathname,
       open: '#/edit',
@@ -24,7 +24,7 @@ const BBBResource = props =>
       <Route path="/" component={BBBContent} exact={true} />
       <Route path="/edit" component={BBBConfig} />
     </Switch>
-  </ResourceContainer>
+  </ResourcePageContainer>
 
 BBBResource.propTypes = {
   location: T.shape({

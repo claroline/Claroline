@@ -19,7 +19,7 @@ use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\PanelFacetRepository")
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Facet\PanelFacetRepository")
  * @ORM\Table(name="claro_panel_facet")
  */
 class PanelFacet

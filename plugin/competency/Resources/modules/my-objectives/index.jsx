@@ -1,25 +1,20 @@
 import {bootstrap} from '#/main/core/scaffolding/bootstrap'
-import {routedApp} from '#/main/core/router'
 import {reducer as modalReducer}    from '#/main/core/layout/modal/reducer'
+
 import {
   objectivesReducers,
   competenciesReducers,
   competencyReducers
 } from './reducers'
-import {MainView} from './components/main-view.jsx'
-import {CompetencyView} from './components/competency-view.jsx'
+import {MyObjectivesTool} from './components/tool.jsx'
 
 // mount the react application
 bootstrap(
   // app DOM container (also holds initial app data as data attributes)
   '.my-objectives-tool-container',
 
-  // app main component (accepts either a `routedApp` or a `ReactComponent`)
-
-  routedApp([
-    {path: '/', component: MainView, exact: true},
-    {path: '/:oId/competency/:cId', component: CompetencyView}
-  ]),
+  // app main component
+  MyObjectivesTool,
 
   // app store configuration
   {

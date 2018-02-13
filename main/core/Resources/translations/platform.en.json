@@ -1319,7 +1319,6 @@
     "users_from_group_registration": "Users from group registration",
     "users_import": "Users import",
     "users_list": "Users list",
-    "users_management": "Users management",
     "users_minimum_requirement_msg": "Users validation has the following requirements: 3 chars username, 4 chars password, valid email.",
     "users_per_page": "Users per page",
     "users_registration_in_workspace": "Users registration in workspace",
@@ -1458,7 +1457,8 @@
     "last_modified_at": "modified on %date%",
     "not_published": "not published",
     "access_restrictions": "Access Restrictions",
-    "access_dates": "Restrict by dates",
+    "access_dates": "Access period",
+    "restrict_by_dates": "Restrict by dates",
     "rich_text_tools": "Rich text tools",
     "minimize": "Minimize",
     "display_parameters": "Display parameters",
@@ -1555,5 +1555,6 @@
     "now": "Now",
     "task": "Task",
     "submit": "Submit",
+    "user_disabled": "Disabled",
     "workspace_awaiting_validation": "An administrator must accept your registration to the workspace."
 }
