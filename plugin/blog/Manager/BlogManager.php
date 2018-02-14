@@ -241,7 +241,7 @@ class BlogManager
      */
     protected function retrieveUser($email, User $owner)
     {
-        $user = $this->objectManager->getRepository('ClarolineCoreBundle:User')->findOneByMail($email);
+        $user = $this->objectManager->getRepository('ClarolineCoreBundle:User')->findOneByEmail($email);
 
         if (null === $user) {
             $user = $owner;
