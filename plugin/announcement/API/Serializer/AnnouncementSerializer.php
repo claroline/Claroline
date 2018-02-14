@@ -79,7 +79,7 @@ class AnnouncementSerializer
                 'visibleUntil' => $announce->getVisibleUntil() ? $announce->getVisibleUntil()->format('Y-m-d\TH:i:s') : null,
             ],
             'roles' => array_map(function (Role $role) {
-                return $role->getId();
+                return $role->getUuid();
             }, $announce->getRoles()),
         ];
     }
@@ -137,8 +137,8 @@ class AnnouncementSerializer
         $announce->emptyRoles();
 
         if (!empty($data['roles'])) {
-            foreach ($data['roles'] as $roleId) {
-                $role = $this->roleRepo->findOneById($roleId);
+            foreach ($data['roles'] as $roleUuid) {
+                $role = $this->roleRepo->findOneByUuid($roleUuid);
 
                 if (!empty($role)) {
                     $announce->addRole($role);

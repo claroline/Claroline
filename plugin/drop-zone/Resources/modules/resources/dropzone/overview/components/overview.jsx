@@ -59,7 +59,7 @@ const OverviewComponent = props =>
       {
         icon: 'fa fa-fw fa-upload icon-with-text-right',
         label: trans(!props.myDrop ? 'start_evaluation' : (!props.myDrop.finished ? 'continue_evaluation' : 'show_evaluation'), {}, 'dropzone'),
-        action: !props.myDrop ? () => props.startDrop(props.dropzone.parameters.dropType, props.teams) : '#/my/drop',
+        action: !props.myDrop ? () => props.startDrop(props.dropzone.id, props.dropzone.parameters.dropType, props.teams) : '#/my/drop',
         primary: !props.myDrop || !props.myDrop.finished,
         disabled: !props.dropEnabled,
         disabledMessages: props.dropDisabledMessages
