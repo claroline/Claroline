@@ -91,6 +91,11 @@ class UserFinder implements FinderInterface
                     $qb->andWhere('g.uuid IN (:groupIds)');
                     $qb->setParameter('groupIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
+                case 'scheduledtask':
+                    $qb->leftJoin('obj.scheduledTasks', 'st');
+                    $qb->andWhere('st.id IN (:scheduledTasks)');
+                    $qb->setParameter('scheduledTasks', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    break;
                 case 'role':
                     $qb->leftJoin('obj.roles', 'r');
                     $qb->andWhere('r.uuid IN (:roleIds)');

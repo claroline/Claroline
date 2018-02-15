@@ -17,6 +17,7 @@ use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Validator\Constraints as ClaroAssert;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -436,6 +437,17 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
      */
     protected $locations;
 
+    /**
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Task\ScheduledTask",
+     *     inversedBy="users"
+     * )
+     * @ORM\JoinTable(name="claro_scheduled_task_users")
+     *
+     * @var ArrayCollection
+     */
+    private $scheduledTasks;
+
     public function __construct()
     {
         parent::__construct();
@@ -448,6 +460,7 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
         $this->fieldsFacetValue = new ArrayCollection();
         $this->organizations = new ArrayCollection();
         $this->events = new ArrayCollection();
+        $this->scheduledTasks = new ArrayCollection();
         $this->administratedOrganizations = new ArrayCollection();
         $this->refreshUuid();
         $this->setEmailValidationHash(uniqid('', true));
@@ -1266,5 +1279,15 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function getLocations()
     {
         return $this->locations;
+    }
+
+    public function addScheduledTask(ScheduledTask $task)
+    {
+        $this->scheduledTasks->add($task);
+    }
+
+    public function removeScheduledTask(ScheduledTask $task)
+    {
+        $this->scheduledTasks->removeElement($task);
     }
 }

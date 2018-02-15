@@ -75,10 +75,13 @@ class ScheduledTask
     private $data;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
+     * @ORM\ManyToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\User",
+     *     mappedBy="scheduledTasks"
+     * )
      * @ORM\JoinTable(name="claro_scheduled_task_users")
      *
-     * @var User[]
+     * @var ArrayCollection[]
      */
     private $users;
 
@@ -185,6 +188,7 @@ class ScheduledTask
     {
         if (!$this->users->contains($user)) {
             $this->users->add($user);
+            $user->addScheduledTask($this);
         }
 
         return $this;
@@ -194,6 +198,7 @@ class ScheduledTask
     {
         if ($this->users->contains($user)) {
             $this->users->removeElement($user);
+            $user->removeScheduledTask($this);
         }
 
         return $this;
