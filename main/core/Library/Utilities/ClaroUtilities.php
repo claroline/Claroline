@@ -180,22 +180,22 @@ class ClaroUtilities
         $validUnits = ['KB', 'MB', 'GB', 'TB'];
         $value = str_replace(' ', '', $fileSize);
 
-        $pattern = '/(\d+)/';
-        $data = preg_grep($pattern, [$value]);
+        $pattern = '/\d+/';
+        preg_match($pattern, $value, $match);
 
         foreach ($validUnits as $unit) {
             if (strpos($fileSize, $unit)) {
                 switch ($unit) {
                     case 'B':
-                        return $data[0] * pow(1024, 0);
+                        return $match[0] * pow(1024, 0);
                     case 'KB':
-                        return $data[0] * pow(1024, 1);
+                        return $match[0] * pow(1024, 1);
                     case 'MB':
-                        return $data[0] * pow(1024, 2);
+                        return $match[0] * pow(1024, 2);
                     case 'GB':
-                        return $data[0] * pow(1024, 3);
+                        return $match[0] * pow(1024, 3);
                     case 'TB':
-                        return $data[0] * pow(1024, 4);
+                        return $match[0] * pow(1024, 4);
                 }
             }
         }
