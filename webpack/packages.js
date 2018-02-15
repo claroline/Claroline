@@ -101,7 +101,7 @@ function getMetaEntries (targetDir) {
 }
 
 function isMetaPackage(rootDir) {
-  return fs.existsSync(rootDir + '/main')
+  return fs.existsSync(rootDir + '/main') || fs.existsSync(rootDir + '/plugin')
 }
 
 function getMetaBundles(targetDir) {
