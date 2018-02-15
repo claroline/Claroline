@@ -19,6 +19,14 @@
     }
 </script>
 
+{# TODO: remove this when custom js builds are available #}
+{# ATTENTION : it must be loaded before Bootstrap to override `.tooltip()` method #}
+{% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
+    'packages/jquery-ui-dist/jquery-ui.min.js'
+%}
+    <script src="{{ asset_url }}"></script>
+{% endjavascripts %}
+
 {% javascripts debug=false filter='jsmin' output='vendor/twitter/bootstrap/js/bootstrap.js'
     'packages/bootstrap/js/transition.js'
     'packages/bootstrap/js/alert.js'
@@ -73,13 +81,6 @@
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/groupRow.html.twig"
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/resourceElement.html.twig"
     "@ClarolineCoreBundle/Resources/views/Tool/workspace/parameters/model/tabElement.html.twig"
-%}
-    <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
-
-{# TODO: remove this when custom js builds are available #}
-{% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
-    'packages/jquery-ui-dist/jquery-ui.min.js'
 %}
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
