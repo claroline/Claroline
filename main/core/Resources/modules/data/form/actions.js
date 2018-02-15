@@ -82,7 +82,7 @@ actions.saveForm = (formName, target) => (dispatch, getState) => {
             })
 
             // inject errors in form
-            dispatch(actions.submitFormError(formErrors))
+            dispatch(actions.submitFormError(formName, formErrors))
             dispatch(actions.setErrors(formName, formErrors))
           }
         }
