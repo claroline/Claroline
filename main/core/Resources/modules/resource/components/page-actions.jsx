@@ -222,15 +222,19 @@ function getMoreActions(resourceNode, props) {
 const ManagementGroup = props => {
   let editorOpened = false
   let editorOpen
-  if (props.editor.path) {
-    // routed editor
-    editorOpened = !!matchPath(props.location.pathname, {path: props.editor.path})
-    editorOpen = '#'+props.editor.path
-  } else {
-    // for retro compatibility (all resource editor should be routed)
-    editorOpened = props.editor.opened
-    editorOpen = props.editor.open
+
+  if (props.editor) {
+    if (props.editor.path) {
+      // routed editor
+      editorOpened = !!matchPath(props.location.pathname, {path: props.editor.path})
+      editorOpen = '#'+props.editor.path
+    } else {
+      // for retro compatibility (all resource editor should be routed)
+      editorOpened = props.editor.opened
+      editorOpen = props.editor.open
+    }
   }
+
 
   return (
     <PageGroupActions>
