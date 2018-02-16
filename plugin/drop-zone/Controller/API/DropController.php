@@ -14,6 +14,7 @@ namespace Claroline\DropZoneBundle\Controller\API;
 use Claroline\CoreBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
+use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Security\PermissionCheckerTrait;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
@@ -25,6 +26,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -34,6 +36,9 @@ class DropController
 {
     use PermissionCheckerTrait;
 
+    /** @var ApiManager */
+    private $apiManager;
+
     /** @var FinderProvider */
     private $finder;
 
@@ -41,18 +46,24 @@ class DropController
     private $manager;
 
     /**
-     * DropzoneController constructor.
+     * DropController constructor.
      *
      * @DI\InjectParams({
-     *     "finder"  = @DI\Inject("claroline.api.finder"),
-     *     "manager" = @DI\Inject("claroline.manager.dropzone_manager")
+     *     "apiManager" = @DI\Inject("claroline.manager.api_manager"),
+     *     "finder"     = @DI\Inject("claroline.api.finder"),
+     *     "manager"    = @DI\Inject("claroline.manager.dropzone_manager")
      * })
      *
+     * @param ApiManager      $apiManager
      * @param FinderProvider  $finder
      * @param DropzoneManager $manager
      */
-    public function __construct(FinderProvider $finder, DropzoneManager $manager)
-    {
+    public function __construct(
+        ApiManager $apiManager,
+        FinderProvider $finder,
+        DropzoneManager $manager
+    ) {
+        $this->apiManager = $apiManager;
         $this->finder = $finder;
         $this->manager = $manager;
     }
@@ -382,6 +393,39 @@ class DropController
         } catch (\Exception $e) {
             return new JsonResponse($e->getMessage(), 422);
         }
+    }
+
+    /**
+     * @EXT\Route("/drops/download", name="claro_dropzone_drops_download")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter("user", converter="current_user")
+     *
+     * Downloads drops documents into a ZIP archive
+     *
+     * @return StreamedResponse
+     */
+    public function dropsDownloadAction()
+    {
+        $drops = $this->apiManager->getParametersByUuid('ids', 'Claroline\DropZoneBundle\Entity\Drop');
+        $dropzone = $drops[0]->getDropzone();
+        $this->checkPermission('EDIT', $dropzone->getResourceNode(), [], true);
+        $fileName = $dropzone->getResourceNode()->getName();
+
+        $archive = $this->manager->generateArchiveForDrops($drops);
+
+        $response = new StreamedResponse();
+        $response->setCallBack(
+            function () use ($archive) {
+                readfile($archive);
+            }
+        );
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName.'.zip'));
+        $response->headers->set('Content-Type', 'application/zip; charset=utf-8');
+        $response->headers->set('Connection', 'close');
+
+        return $response->send();
     }
 
     private function checkDropEdition(Drop $drop, User $user)

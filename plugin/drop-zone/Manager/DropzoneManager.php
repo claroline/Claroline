@@ -15,6 +15,7 @@ use Claroline\CoreBundle\API\Crud;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\DropZoneBundle\Entity\Correction;
@@ -72,6 +73,9 @@ class DropzoneManager
      */
     private $resourceEvalManager;
 
+    private $archiveDir;
+    private $configHandler;
+
     /** @var DropRepository */
     private $dropRepo;
 
@@ -93,19 +97,23 @@ class DropzoneManager
      *     "fileSystem"             = @DI\Inject("filesystem"),
      *     "filesDir"               = @DI\Inject("%claroline.param.files_directory%"),
      *     "om"                     = @DI\Inject("claroline.persistence.object_manager"),
-     *     "resourceEvalManager"    = @DI\Inject("claroline.manager.resource_evaluation_manager")
+     *     "resourceEvalManager"    = @DI\Inject("claroline.manager.resource_evaluation_manager"),
+     *     "archiveDir"             = @DI\Inject("%claroline.param.platform_generated_archive_path%"),
+     *     "configHandler"          = @DI\Inject("claroline.config.platform_config_handler")
      * })
      *
-     * @param Crud                      $crud
-     * @param DropzoneSerializer        $dropzoneSerializer
-     * @param DropSerializer            $dropSerializer
-     * @param DocumentSerializer        $documentSerializer
-     * @param CorrectionSerializer      $correctionSerializer
-     * @param DropzoneToolSerializer    $dropzoneToolSerializer
-     * @param Filesystem                $fileSystem
-     * @param string                    $filesDir
-     * @param ObjectManager             $om
-     * @param ResourceEvaluationManager $resourceEvalManager
+     * @param Crud                         $crud
+     * @param DropzoneSerializer           $dropzoneSerializer
+     * @param DropSerializer               $dropSerializer
+     * @param DocumentSerializer           $documentSerializer
+     * @param CorrectionSerializer         $correctionSerializer
+     * @param DropzoneToolSerializer       $dropzoneToolSerializer
+     * @param Filesystem                   $fileSystem
+     * @param string                       $filesDir
+     * @param ObjectManager                $om
+     * @param ResourceEvaluationManager    $resourceEvalManager
+     * @param string                       $archiveDir
+     * @param PlatformConfigurationHandler $configHandler
      */
     public function __construct(
         Crud $crud,
@@ -117,7 +125,9 @@ class DropzoneManager
         Filesystem $fileSystem,
         $filesDir,
         ObjectManager $om,
-        ResourceEvaluationManager $resourceEvalManager
+        ResourceEvaluationManager $resourceEvalManager,
+        $archiveDir,
+        PlatformConfigurationHandler $configHandler
     ) {
         $this->crud = $crud;
         $this->dropzoneSerializer = $dropzoneSerializer;
@@ -129,6 +139,8 @@ class DropzoneManager
         $this->filesDir = $filesDir;
         $this->om = $om;
         $this->resourceEvalManager = $resourceEvalManager;
+        $this->archiveDir = $archiveDir;
+        $this->configHandler = $configHandler;
 
         $this->dropRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Drop');
         $this->correctionRepo = $om->getRepository('Claroline\DropZoneBundle\Entity\Correction');
@@ -1228,6 +1240,67 @@ class DropzoneManager
         }
 
         return $data;
+    }
+
+    /**
+     * @param array $drops
+     *
+     * @return string
+     */
+    public function generateArchiveForDrops(array $drops)
+    {
+        $ds = DIRECTORY_SEPARATOR;
+        $archive = new \ZipArchive();
+        $pathArch = $this->configHandler->getParameter('tmp_dir').$ds.Uuid::uuid4()->toString().'.zip';
+        $archive->open($pathArch, \ZipArchive::CREATE);
+
+        foreach ($drops as $drop) {
+            $date = $drop->isFinished() && !empty($drop->getDropDate()) ?
+                $drop->getDropDate()->format('d-m-Y H:i:s') :
+                '';
+            $dirName = $drop->getTeamName() ?
+                strtolower($drop->getTeamName()) :
+                strtolower($drop->getUser()->getFirstName().' '.$drop->getUser()->getLastName().' - '.$drop->getUser()->getUsername());
+
+            if ($date !== '') {
+                $dirName .= ' '.$date;
+            }
+
+            foreach ($drop->getDocuments() as $document) {
+                switch ($document->getType()) {
+                    case Document::DOCUMENT_TYPE_FILE:
+                        $data = $document->getData();
+                        $filePath = $this->filesDir.$ds.$data['url'];
+                        $archive->addFile(
+                            $filePath,
+                            $dirName.$ds.$data['name']
+                        );
+                        break;
+                    case Document::DOCUMENT_TYPE_TEXT:
+                        $name = 'text_'.Uuid::uuid4()->toString().'.html';
+                        $textPath = $this->configHandler->getParameter('tmp_dir').$ds.$name;
+                        file_put_contents($textPath, $document->getData());
+                        $archive->addFile(
+                            $textPath,
+                            $dirName.$ds.$name
+                        );
+                        break;
+                    case Document::DOCUMENT_TYPE_URL:
+                        $name = 'url_'.Uuid::uuid4()->toString();
+                        $textPath = $this->configHandler->getParameter('tmp_dir').$ds.$name;
+                        file_put_contents($textPath, $document->getData());
+                        $archive->addFile(
+                            $textPath,
+                            $dirName.$ds.$name
+                        );
+                        break;
+                }
+            }
+        }
+        $archive->close();
+        file_put_contents($this->archiveDir, $pathArch."\n", FILE_APPEND);
+
+        return $pathArch;
     }
 
     private function getDropWithTheLeastCorrections(array $drops)

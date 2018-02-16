@@ -97,6 +97,10 @@ const DropsList = props =>
           displayed: (rows) => rows[0].finished,
           action: (rows) => props.cancelDrop(rows[0].id),
           context: 'row' // todo should be selection action too
+        }, {
+          icon: 'fa fa-fw fa-download',
+          label: trans('download', {}, 'platform'),
+          action: (rows) => props.downloadDrops(rows)
         }
       ]}
       card={(row) => ({
@@ -117,7 +121,8 @@ DropsList.propTypes = {
     DropzoneType.propTypes
   ).isRequired,
   unlockDrop: T.func.isRequired,
-  cancelDrop: T.func.isRequired
+  cancelDrop: T.func.isRequired,
+  downloadDrops: T.func.isRequired
 }
 
 const Drops = connect(
@@ -126,7 +131,8 @@ const Drops = connect(
   }),
   (dispatch) => ({
     unlockDrop: (dropId) => dispatch(actions.unlockDrop(dropId)),
-    cancelDrop: (dropId) => dispatch(actions.cancelDropSubmission(dropId))
+    cancelDrop: (dropId) => dispatch(actions.cancelDropSubmission(dropId)),
+    downloadDrops: (drops) => dispatch(actions.downloadDrops(drops))
   })
 )(DropsList)
 
