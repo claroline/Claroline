@@ -246,7 +246,7 @@ class ExerciseListener
         // Add template required files
         $webpack = $this->container->get('claroline.extension.webpack');
         $event->addAsset('ujm-exo.css', 'vendor/ujmexo/ujm-exo.css');
-        $event->addAsset('jsPlumb-2.1.3-min.js', 'packages/jsPlumb/dist/js/jsPlumb-2.1.3-min.js');
+        $event->addAsset('jsPlumb-2.1.3-min.js', 'packages/jsplumb/dist/js/jsPlumb-2.1.3-min.js');
         $event->addAsset('claroline-distribution-plugin-exo-app.js', $webpack->hotAsset('dist/claroline-distribution-plugin-exo-app.js', true));
 
         // Set translations
