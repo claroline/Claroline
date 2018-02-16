@@ -169,13 +169,24 @@ class ConvertDropzoneCommand extends ContainerAwareCommand
                 $newDropzone->setPeerReview($dropzone->getPeerReview());
                 $newDropzone->setReviewEndDate($dropzone->getEndReview());
                 $newDropzone->setReviewStartDate($dropzone->getStartReview());
-                $newDropzone->setRichTextEnabled($dropzone->getAllowRichText());
                 $newDropzone->setScoreMax(20);
                 $newDropzone->setScoreToPass($dropzone->getMinimumScoreToPass());
                 $newDropzone->setSuccessMessage($dropzone->getSuccessMessage());
-                $newDropzone->setUploadEnabled($dropzone->getAllowUpload());
-                $newDropzone->setUrlEnabled($dropzone->getAllowUrl());
-                $newDropzone->setWorkspaceResourceEnabled($dropzone->getAllowWorkspaceResource());
+                $allowedDocuments = [];
+
+                if ($dropzone->getAllowRichText()) {
+                    $allowedDocuments[] = 'html';
+                }
+                if ($dropzone->getAllowUpload()) {
+                    $allowedDocuments[] = 'file';
+                }
+                if ($dropzone->getAllowUrl()) {
+                    $allowedDocuments[] = 'url';
+                }
+                if ($dropzone->getAllowWorkspaceResource()) {
+                    $allowedDocuments[] = 'resource';
+                }
+                $newDropzone->setAllowedDocuments($allowedDocuments);
 
                 $output->writeln('<info>      Copying criteria...</info>');
 
