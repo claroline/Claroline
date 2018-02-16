@@ -4,7 +4,6 @@ import classes from 'classnames'
 
 import {generateUrl} from '#/main/core/api/router'
 import {trans} from '#/main/core/translation'
-import {asset} from '#/main/core/scaffolding/asset'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 
@@ -60,7 +59,7 @@ const DocumentRow = props =>
 
     <td className="document-data">
       {props.document.type === constants.DOCUMENT_TYPE_FILE &&
-        <a href={asset(props.document.data.url)} download={props.document.data.name}>
+        <a href={generateUrl('claro_dropzone_document_download', {document: props.document.id})}>
           {props.document.data.name}
         </a>
       }

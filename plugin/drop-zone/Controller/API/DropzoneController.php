@@ -26,6 +26,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -41,21 +42,26 @@ class DropzoneController
     /** @var DropzoneManager */
     private $manager;
 
+    private $filesDir;
+
     /**
      * DropzoneController constructor.
      *
      * @DI\InjectParams({
-     *     "finder"  = @DI\Inject("claroline.api.finder"),
-     *     "manager" = @DI\Inject("claroline.manager.dropzone_manager")
+     *     "finder"   = @DI\Inject("claroline.api.finder"),
+     *     "manager"  = @DI\Inject("claroline.manager.dropzone_manager"),
+     *     "filesDir" = @DI\Inject("%claroline.param.files_directory%")
      * })
      *
      * @param FinderProvider  $finder
      * @param DropzoneManager $manager
+     * @param string          $filesDir
      */
-    public function __construct(FinderProvider $finder, DropzoneManager $manager)
+    public function __construct(FinderProvider $finder, DropzoneManager $manager, $filesDir)
     {
         $this->finder = $finder;
         $this->manager = $manager;
+        $this->filesDir = $filesDir;
     }
 
     /**
@@ -375,6 +381,42 @@ class DropzoneController
         }
     }
 
+    /**
+     * Downloads a document.
+     *
+     * @EXT\Route("/{document}/download", name="claro_dropzone_document_download")
+     * @EXT\Method("GET")
+     * @EXT\ParamConverter(
+     *     "document",
+     *     class="ClarolineDropZoneBundle:Document",
+     *     options={"mapping": {"document": "uuid"}}
+     * )
+     *
+     * @param Document $document
+     *
+     * @return StreamedResponse
+     */
+    public function downloadAction(Document $document)
+    {
+        $this->checkDocumentAccess($document);
+        $data = $document->getData();
+
+        $response = new StreamedResponse();
+        $path = $this->filesDir.DIRECTORY_SEPARATOR.$data['url'];
+        $response->setCallBack(
+            function () use ($path) {
+                readfile($path);
+            }
+        );
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$data['name']);
+        $response->headers->set('Content-Type', $data['mimeType']);
+        $response->headers->set('Connection', 'close');
+
+        return $response->send();
+    }
+
     private function checkCorrectionEdition(Correction $correction, User $user, $teamId = null)
     {
         $dropzone = $correction->getDrop()->getDropzone();
@@ -411,6 +453,16 @@ class DropzoneController
     private function checkTeamUser(Team $team, User $user)
     {
         if (!in_array($user, $team->getUsers())) {
+            throw new AccessDeniedException();
+        }
+    }
+
+    private function checkDocumentAccess(Document $document)
+    {
+        $dropzone = $document->getDrop()->getDropzone();
+        $collection = new ResourceCollection([$dropzone->getResourceNode()]);
+
+        if (!$this->authorization->isGranted('OPEN', $collection)) {
             throw new AccessDeniedException();
         }
     }

@@ -12,7 +12,7 @@ import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 
 const EditorComponent = props =>
   <section className="resource-section">
-    <h2 className="h-first">{trans('dropzone_configuration', {}, 'dropzone')}</h2>
+    <h2 className="h-first">{trans('configuration', {}, 'platform')}</h2>
     <FormContainer
       level={3}
       name="dropzoneForm"

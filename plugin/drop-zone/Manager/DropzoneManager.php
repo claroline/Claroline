@@ -1259,7 +1259,7 @@ class DropzoneManager
         return [
             'name' => $file->getClientOriginalName(),
             'mimeType' => $file->getClientMimeType(),
-            'url' => '../files/dropzone'.$ds.$dropzone->getUuid().$ds.$fileName,
+            'url' => 'dropzone'.$ds.$dropzone->getUuid().$ds.$fileName,
         ];
     }
 }
