@@ -256,11 +256,11 @@ class TransferManager
     ) {
         $data = $this->reorderData($data);
 
-        if ($workspace->getCode() === null && isset($data['parameters'])) {
+        if (null === $workspace->getCode() && isset($data['parameters'])) {
             $workspace->setCode($data['parameters']['code']);
         }
 
-        if ($workspace->getName() === null && isset($data['parameters'])) {
+        if (null === $workspace->getName() && isset($data['parameters'])) {
             $workspace->setName($data['parameters']['name']);
         }
 
@@ -424,7 +424,7 @@ class TransferManager
         $archive = new \ZipArchive();
         $success = $archive->open($archPath, \ZipArchive::CREATE);
 
-        if ($success === true) {
+        if (true === $success) {
             $archive->addFile($manifestPath, 'manifest.yml');
 
             foreach ($files as $uid => $file) {
@@ -485,7 +485,7 @@ class TransferManager
         $archive = new \ZipArchive();
         $success = $archive->open($archPath, \ZipArchive::CREATE);
 
-        if ($success === true) {
+        if (true === $success) {
             $archive->addFile($manifestPath, 'manifest.yml');
 
             foreach ($files as $uid => $file) {
@@ -570,7 +570,13 @@ class TransferManager
         $data = $this->reorderData($data);
         $workspace = $directory->getWorkspace();
         $this->om->startFlushSuite();
-        $this->setImporters($template, $workspace->getCreator(), $data);
+
+        $creator = $workspace->getCreator();
+        if (!$creator) {
+            $creator = $this->container->get('security.token_storage')->getToken()->getUser();
+        }
+
+        $this->setImporters($template, $creator, $data);
 
         $resourceImporter = $this->container->get('claroline.tool.resource_manager_importer');
 
@@ -578,7 +584,7 @@ class TransferManager
             foreach ($data['tools'] as $dataTool) {
                 $tool = $dataTool['tool'];
 
-                if ($tool['type'] === 'resource_manager') {
+                if ('resource_manager' === $tool['type']) {
                     $resourceNodes = $resourceImporter->import(
                         $tool,
                         $workspace,

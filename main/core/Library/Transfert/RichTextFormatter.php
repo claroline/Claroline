@@ -180,7 +180,7 @@ class RichTextFormatter
             $ext = pathinfo($file, PATHINFO_EXTENSION);
             $newFile = $file;
 
-            if ($ext === 'txt') {
+            if ('txt' === $ext) {
                 $text = $this->setPlaceHolder($file, $_data, $formattedFiles);
                 $newFile = $this->config->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid().'txt';
                 file_put_contents($newFile, $text);
@@ -636,6 +636,26 @@ class RichTextFormatter
             'name' => 'ROLE_USER',
             'rights' => $this->maskManager->decodeMask(7, $this->resourceManager->getResourceTypeByName('directory')),
         ]];
+
+        //if root doesn't exist, we create it
+        if (!isset($_data['data']['root'])) {
+            $root = [
+              'uid' => 'root',
+              'role' => [
+                'name' => 'ROLE_WS_COLLABORATOR',
+                'rights' => [
+                  'open' => true,
+                  'copy' => false,
+                  'export' => true,
+                  'delete' => false,
+                  'edit' => false,
+                  'administrate' => false,
+                ],
+              ],
+            ];
+
+            $_data['data']['root'] = $root;
+        }
 
         $parentId = $_data['data']['root']['uid'];
 
