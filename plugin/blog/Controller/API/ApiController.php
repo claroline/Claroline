@@ -206,7 +206,11 @@ class ApiController extends BaseController
     {
         $this->checkAccess('OPEN', $blog);
 
-        return $this->get('icap.blog.manager.post')->getPostsPaged($blog, $paramFetcher->get('page'));
+        return $this->get('icap.blog.manager.post')->getPostsPaged(
+            $blog,
+            $paramFetcher->get('page'),
+            $this->get('security.authorization_checker')->isGranted('ADMIN', $blog)
+        );
     }
 
     /**

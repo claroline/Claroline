@@ -39,12 +39,13 @@ class PostManager
     /**
      * @param Blog $blog
      * @param int  $page
+     * @param bool $isAdmin
      *
      * @return array
      */
-    public function getPostsPaged(Blog $blog, $page = 1)
+    public function getPostsPaged(Blog $blog, $page = 1, $isAdmin = false)
     {
-        $query = $this->repo->getByDateDesc($blog, false);
+        $query = $this->repo->getByDateDesc($blog, false, $isAdmin);
 
         return $this->setPager($query, $page, $blog->getOptions()->getPostPerPage());
     }

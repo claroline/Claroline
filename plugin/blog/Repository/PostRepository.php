@@ -13,16 +13,22 @@ use Icap\BlogBundle\Exception\TooMuchResultException;
 
 class PostRepository extends EntityRepository
 {
-    public function getByDateDesc(Blog $blog, $executeQuery = true)
+    public function getByDateDesc(Blog $blog, $executeQuery = true, $forAdmin = false)
     {
         $query = $this->createQueryBuilder('post')
             ->select(['post'])
             ->andWhere('post.blog = :blogId')
             ->setParameter('blogId', $blog->getId())
-            ->orderBy('post.publicationDate', 'DESC')
-            ->getQuery();
+            ->orderBy('post.publicationDate', 'DESC');
 
-        return $executeQuery ? $query->getResult() : $query;
+        // User requesting post list is not an admin of the blog, post list displays only published posts
+        if (!$forAdmin) {
+            $query
+                ->andWhere('post.status = :postStatus')
+                ->setParameter('postStatus', true);
+        }
+
+        return $executeQuery ? $query->getQuery()->getResult() : $query;
     }
 
     /**
