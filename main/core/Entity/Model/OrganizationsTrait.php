@@ -22,7 +22,7 @@ trait OrganizationsTrait
     /**
      * Removes an organization.
      */
-    public function removeOrganization()
+    public function removeOrganization($organization)
     {
         $this->hasOrganizationsProperty();
 

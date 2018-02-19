@@ -1556,5 +1556,7 @@
     "task": "Task",
     "submit": "Submit",
     "user_disabled": "Disabled",
-    "workspace_awaiting_validation": "An administrator must accept your registration to the workspace."
+    "workspace_awaiting_validation": "An administrator must accept your registration to the workspace.",
+    "main_organization": "Main organization",
+    "vat_number": "Vat number"
 }

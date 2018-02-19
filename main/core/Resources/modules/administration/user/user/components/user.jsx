@@ -54,6 +54,11 @@ const UserForm = props =>
             label: t('password'),
             displayed: props.new,
             required: true
+          },
+          {
+            name: 'mainOrganization',
+            type: 'organization',
+            label: t('main_organization')
           }
         ]
       }, {

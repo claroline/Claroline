@@ -21,6 +21,10 @@ class Crud
     const COLLECTION_ADD = 'add';
     /** @var string */
     const COLLECTION_REMOVE = 'remove';
+    /** @var string */
+    const PROPERTY_SET = 'set';
+    /** @var string */
+    const NO_VALIDATE = 'no_validate';
 
     /** @var ObjectManager */
     private $om;
@@ -73,10 +77,12 @@ class Crud
     public function create($class, $data, array $options = [])
     {
         // validates submitted data.
-        $errors = $this->validate($class, $data, ValidatorProvider::CREATE);
+        if (!in_array(self::NO_VALIDATE, $options)) {
+            $errors = $this->validate($class, $data, ValidatorProvider::CREATE);
 
-        if (count($errors) > 0) {
-            return $errors;
+            if (count($errors) > 0) {
+                return $errors;
+            }
         }
 
         // gets entity from raw data.
@@ -105,7 +111,14 @@ class Crud
     public function update($class, $data, array $options = [])
     {
         // validates submitted data.
-        $this->validate($class, $data, ValidatorProvider::UPDATE);
+        if (!in_array(self::NO_VALIDATE, $options)) {
+            $errors = $this->validate($class, $data, ValidatorProvider::UPDATE);
+
+            if (count($errors) > 0) {
+                return $errors;
+            }
+        }
+
         // gets entity from raw data.
         $object = $this->serializer->deserialize($class, $data, $options);
 
@@ -224,13 +237,13 @@ class Crud
         $this->checkPermission('PATCH', $object, ['collection' => new ObjectCollection($elements)], true);
         //we'll need to pass the $action and $data here aswell later
 
-        if ($this->dispatch('patch', 'pre', [$object, $options])) {
+        if ($this->dispatch('patch', 'pre', [$object, $options, $property, $elements, $action])) {
             foreach ($elements as $element) {
                 $object->$methodName($element);
             }
 
             $this->om->save($object);
-            $this->dispatch('patch', 'post', [$object, $options]);
+            $this->dispatch('patch', 'post', [$object, $options, $property, $elements, $action]);
         }
     }
 
@@ -241,7 +254,6 @@ class Crud
      * @param string $property - the property to update
      * @param mixed  $data     - the data that must be set
      * @param array  $options  - an array of options
-
      */
     public function replace($object, $property, $data, array $options = [])
     {
@@ -256,11 +268,11 @@ class Crud
         //add the options to pass on here
         $this->checkPermission('PATCH', $object, [], true);
         //we'll need to pass the $action and $data here aswell later
-        if ($this->dispatch('patch', 'pre', [$object, $options])) {
+        if ($this->dispatch('patch', 'pre', [$object, $options, $property, $data, self::PROPERTY_SET])) {
             $object->$methodName($data);
 
             $this->om->save($object);
-            $this->dispatch('patch', 'post', [$object, $options]);
+            $this->dispatch('patch', 'post', [$object, $options, $property, $data, self::PROPERTY_SET]);
         }
     }
 
@@ -273,14 +285,7 @@ class Crud
      */
     public function validate($class, $data, $mode)
     {
-        $errors = [];
-
-        if ($this->validator->has($class)) {
-            // calls the validator for class. It will throw exception on error
-            $errors = $this->validator->validate($class, $data, $mode, true);
-        }
-
-        return $errors;
+        return $this->validator->validate($class, $data, $mode, true);
     }
 
     /**

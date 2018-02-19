@@ -147,6 +147,10 @@ abstract class AbstractCrudController extends AbstractApiController
             $this->options['create']
         );
 
+        if (is_array($object)) {
+            return new JsonResponse($object, 400);
+        }
+
         return new JsonResponse(
             $this->serializer->serialize($object, $this->options['get']),
             201
@@ -167,6 +171,10 @@ abstract class AbstractCrudController extends AbstractApiController
             $this->decodeRequest($request),
             $this->options['update']
         );
+
+        if (is_array($object)) {
+            return new JsonResponse($object, 400);
+        }
 
         return new JsonResponse(
             $this->serializer->serialize($object, $this->options['get'])

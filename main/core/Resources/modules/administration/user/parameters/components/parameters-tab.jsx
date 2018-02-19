@@ -36,7 +36,12 @@ const Parameters = () =>
             name: 'registration.self',
             type: 'boolean',
             label: trans('activate_self_registration')
-          }, { // todo should be hidden if registration.auto === false
+          },
+          {
+            name: 'registration.force_organization_creation',
+            type: 'boolean',
+            label: trans('force_organization_creation')
+          },{ // todo should be hidden if registration.auto === false
             name: 'registration.register_button_at_login',
             type: 'boolean',
             label: trans('show_register_button_in_login_page')

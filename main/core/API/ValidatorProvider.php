@@ -125,32 +125,20 @@ class ValidatorProvider
             $validator = $this->get($class);
         } catch (\Exception $e) {
             //no custom validator
-            return [];
+            $uniqueFields = [];
+            $identifiers = $this->serializer->getIdentifiers($class);
+
+            foreach ($identifiers as $identifier) {
+                $uniqueFields[$identifier] = $identifier;
+            }
+
+            return $this->validateUnique($uniqueFields, $data, $mode, $class);
         }
+
         //can be deduced from the mapping, but we won't know
         //wich field is related to wich data prop in that case
         $uniqueFields = $validator->getUniqueFields();
-        $errors = [];
-
-        foreach ($uniqueFields as $dataProp => $entityProp) {
-            $qb = $this->om->createQueryBuilder();
-
-            $qb->select('DISTINCT o')
-             ->from($class, 'o')
-             ->where("o.{$entityProp} LIKE :{$entityProp}")
-             ->setParameter($entityProp, $data[$dataProp]);
-
-            if ($mode === self::UPDATE) {
-                $qb->setParameter('uuid', $data['id'])
-                 ->andWhere('o.uuid != :uuid');
-            }
-
-            $objects = $qb->getQuery()->getResult();
-
-            if (count($objects) > 0) {
-                $errors[] = ['path' => $dataProp, 'message' => "{$entityProp} already exists and should be unique"];
-            }
-        }
+        $errors = $this->validateUnique($uniqueFields, $data, $mode, $class);
 
         //custom validation
         $errors = array_merge($errors, $validator->validate($data));
@@ -173,5 +161,35 @@ class ValidatorProvider
     public function toObject(array $data)
     {
         return json_decode(json_encode($data));
+    }
+
+    //only if uniqueFields in data
+    private function validateUnique(array $uniqueFields, array $data, $mode, $class)
+    {
+        $errors = [];
+
+        foreach ($uniqueFields as $dataProp => $entityProp) {
+            if (isset($data[$dataProp])) {
+                $qb = $this->om->createQueryBuilder();
+
+                $qb->select('DISTINCT o')
+               ->from($class, 'o')
+               ->where("o.{$entityProp} LIKE :{$entityProp}")
+               ->setParameter($entityProp, $data[$dataProp]);
+
+                if (self::UPDATE === $mode) {
+                    $qb->setParameter('uuid', $data['id'])
+                   ->andWhere('o.uuid != :uuid');
+                }
+
+                $objects = $qb->getQuery()->getResult();
+
+                if (count($objects) > 0) {
+                    $errors[] = ['path' => $dataProp, 'message' => "{$entityProp} already exists and should be unique"];
+                }
+            }
+        }
+
+        return $errors;
     }
 }

@@ -78,12 +78,67 @@ class UserController extends AbstractCrudController
         //there is a little bit of computation involved here (ie, do we need to validate the account or stuff like this)
         //but keep it easy for now because an other route could be relevant
         $selfLog = true;
+        $autoOrganization = $this->container
+            ->get('claroline.config.platform_config_handler')
+            ->getParameter('force_organization_creation');
 
-        if ($selfLog && $this->container->get('security.token_storage')->getToken()->getUser() === 'anon.') {
+        $organizationRepository = $this->container->get('claroline.persistence.object_manager')
+            ->getRepository('ClarolineCoreBundle:Organization\Organization');
+
+        //step one: creation the organization if it's here. If it exists, we fetch it.
+        $data = $this->decodeRequest($request);
+
+        if ($selfLog && 'anon.' === $this->container->get('security.token_storage')->getToken()->getUser()) {
             $this->options['create'][] = Options::USER_SELF_LOG;
         }
 
-        return parent::createAction($request, 'Claroline\CoreBundle\Entity\User');
+        $organization = null;
+
+        if ($autoOrganization) {
+            //try to find orga first
+            //first find by vat
+            if (isset($data['mainOrganization'])) {
+                if (isset($data['mainOrganization']['vat']) && $data['mainOrganization']['vat'] !== null) {
+                    $organization = $organizationRepository
+                      ->findOneByVat($data['mainOrganization']['vat']);
+                //then by code
+                } else {
+                    $organization = $organizationRepository
+                      ->findOneByCode($data['mainOrganization']['code']);
+                }
+            }
+
+            if (!$organization && isset($data['mainOrganization'])) {
+                $organization = $this->crud->create(
+                    'Claroline\CoreBundle\Entity\Organization\Organization',
+                    $data['mainOrganization']
+                );
+            }
+
+            //error handling
+            if (is_array($organization)) {
+                return new JsonResponse($organization, 400);
+            }
+        }
+
+        $user = $this->crud->create(
+           'Claroline\CoreBundle\Entity\User',
+            $this->decodeRequest($request)
+        );
+
+        //error handling
+        if (is_array($user)) {
+            return new JsonResponse($user, 400);
+        }
+
+        if ($organization) {
+            $this->crud->replace($user, 'mainOrganization', $organization);
+        }
+
+        return new JsonResponse(
+            $this->serializer->serialize($user, $this->options['get']),
+            201
+        );
     }
 
     public function getOptions()

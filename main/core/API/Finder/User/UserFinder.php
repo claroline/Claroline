@@ -71,7 +71,8 @@ class UserFinder implements FinderInterface
         } elseif (!$this->authChecker->isGranted('ROLE_ADMIN')) {
             /** @var User $currentUser */
             $currentUser = $this->tokenStorage->getToken()->getUser();
-            $qb->leftJoin('obj.organizations', 'uo');
+            $qb->leftJoin('obj.userOrganizationReferences', 'oaref');
+            $qb->leftJoin('oaref.organization', 'uo');
             $qb->leftJoin('uo.administrators', 'ua');
             $qb->andWhere('ua.id = :userId');
             $qb->setParameter('userId', $currentUser->getId());
@@ -102,7 +103,8 @@ class UserFinder implements FinderInterface
                     $qb->setParameter('roleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'organization':
-                    $qb->leftJoin('obj.organizations', 'o');
+                    $qb->leftJoin('obj.userOrganizationReferences', 'oref');
+                    $qb->leftJoin('oref.organization', 'o');
                     $qb->andWhere('o.uuid IN (:organizationIds)');
                     $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;

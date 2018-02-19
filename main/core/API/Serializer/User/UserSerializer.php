@@ -167,6 +167,10 @@ class UserSerializer
                     ];
                 }, $user->getGroups()->toArray()),
             ]);
+
+            if ($user->getMainOrganization()) {
+                $serialized['mainOrganization'] = $this->container->get('claroline.api.serializer')->serialize($user->getMainOrganization());
+            }
         }
 
         if (in_array(Options::SERIALIZE_FACET, $options)) {
@@ -372,12 +376,19 @@ class UserSerializer
             $this->deserializeRestrictions($data['restrictions'], $user);
         }
 
-        if (!empty($data['plainPassword'])) {
+        if (isset($data['plainPassword'])) {
             $this->deserializePassword($data['plainPassword'], $user);
         }
 
         //avoid recursive dependencies
         $serializer = $this->container->get('claroline.api.serializer');
+
+        if (isset($data['mainOrganization'])) {
+            $user->setMainOrganization($serializer->deserialize(
+                'Claroline\CoreBundle\Entity\Organization\Organization',
+                $data['mainOrganization']
+            ));
+        }
 
         $fieldFacets = $this->om
             ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacet')

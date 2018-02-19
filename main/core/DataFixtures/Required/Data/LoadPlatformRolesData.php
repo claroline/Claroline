@@ -38,6 +38,7 @@ class LoadPlatformRolesData implements RequiredFixture
         $roleManager->createBaseRole(PlatformRoles::ADMIN, 'admin');
         $roleManager->createBaseRole(PlatformRoles::ANONYMOUS, 'anonymous');
         $roleManager->createBaseRole('ROLE_HOME_MANAGER', 'home_manager');
+        $roleManager->createBaseRole('ROLE_ADMIN_ORGANIZATION', 'admin_organization');
 
         $manager->endFlushSuite();
     }

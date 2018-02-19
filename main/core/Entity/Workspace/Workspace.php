@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
-use Claroline\CoreBundle\Entity\Calendar\Event;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -299,17 +298,6 @@ class Workspace
     protected $options;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Calendar\Event",
-     *     mappedBy="workspace",
-     *     cascade={"persist"}
-     * )
-     *
-     * @var Event[]|ArrayCollection
-     */
-    protected $events;
-
-    /**
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     mappedBy="personalWorkspace",
@@ -337,7 +325,6 @@ class Workspace
     {
         $this->roles = new ArrayCollection();
         $this->orderedTools = new ArrayCollection();
-        $this->events = new ArrayCollection();
         $this->organizations = new ArrayCollection();
     }
 
@@ -763,7 +750,7 @@ class Workspace
     public function getManagerRole()
     {
         foreach ($this->roles as $role) {
-            if (strpos('_'.$role->getName(), 'ROLE_WS_MANAGER') === 1) {
+            if (1 === strpos('_'.$role->getName(), 'ROLE_WS_MANAGER')) {
                 return $role;
             }
         }

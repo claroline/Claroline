@@ -1,0 +1,26 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The organization id"
+    },
+    "name": {
+      "type": "string",
+      "description": "The organization name",
+      "minLength": 1
+    },
+    "name": {
+      "type": "string",
+      "description": "The organization code",
+      "minLength": 1
+    },
+    "email": {
+      "type": "string",
+      "description": "The organization email",
+      "minLength": 1
+    }
+  },
+  "claroIds": ["id", "code", "email"]
+}

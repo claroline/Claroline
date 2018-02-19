@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
@@ -23,27 +23,41 @@ const OrganizationForm = props =>
     sections={[
       {
         id: 'general',
-        title: t('general'),
+        title: trans('general'),
         primary: true,
         fields: [
           {
             name: 'name',
             type: 'string',
-            label: t('name'),
+            label: trans('name'),
             required: true
           }, {
             name: 'code',
             type: 'string',
-            label: t('code'),
+            label: trans('code'),
             required: true
+          }, {
+            name: 'type',
+            type: 'enum',
+            label: trans('type'),
+            required: true,
+            options: {choices: {
+              'external': 'external',
+              'internal': 'internal'
+            }}
+          }, {
+            name: 'vat',
+            label: trans('vat_number'),
+            type: 'string',
+            required: false
           }, {
             name: 'parent',
             type: 'organization',
-            label: t('parent')
+            label: trans('parent')
           },  {
             name: 'email',
             type: 'email',
-            label: t('email')
+            label: trans('email')
           }
         ]
       }
@@ -55,12 +69,12 @@ const OrganizationForm = props =>
       <FormSection
         id="organization-workspaces"
         icon="fa fa-fw fa-book"
-        title={t('workspaces')}
+        title={trans('workspaces')}
         disabled={props.new}
         actions={[
           {
             icon: 'fa fa-fw fa-plus',
-            label: t('add_workspace'),
+            label: trans('add_workspace'),
             action: () => props.pickWorkspaces(props.organization.id)
           }
         ]}
@@ -83,12 +97,12 @@ const OrganizationForm = props =>
       <FormSection
         id="organization-users"
         icon="fa fa-fw fa-user"
-        title={t('users')}
+        title={trans('users')}
         disabled={props.new}
         actions={[
           {
             icon: 'fa fa-fw fa-plus',
-            label: t('add_user'),
+            label: trans('add_user'),
             action: () => props.pickUsers(props.organization.id)
           }
         ]}
@@ -111,12 +125,12 @@ const OrganizationForm = props =>
       <FormSection
         id="organization-groups"
         icon="fa fa-fw fa-users"
-        title={t('groups')}
+        title={trans('groups')}
         disabled={props.new}
         actions={[
           {
             icon: 'fa fa-fw fa-plus',
-            label: t('add_group'),
+            label: trans('add_group'),
             action: () => props.pickGroups(props.organization.id)
           }
         ]}
@@ -139,12 +153,12 @@ const OrganizationForm = props =>
       <FormSection
         id="organization-managers"
         icon="fa fa-fw fa-users"
-        title={t('managers')}
+        title={trans('managers')}
         disabled={props.new}
         actions={[
           {
             icon: 'fa fa-fw fa-plus',
-            label: t('add_managers'),
+            label: trans('add_managers'),
             action: () => props.pickManagers(props.organization.id)
           }
         ]}
@@ -186,8 +200,8 @@ const Organization = connect(
     pickUsers(organizationId) {
       dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
         icon: 'fa fa-fw fa-user',
-        title: t('add_users'),
-        confirmText: t('add'),
+        title: trans('add_users'),
+        confirmText: trans('add'),
         name: 'users.picker',
         definition: UserList.definition,
         card: UserList.card,
@@ -201,8 +215,8 @@ const Organization = connect(
     pickManagers(organizationId) {
       dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
         icon: 'fa fa-fw fa-user',
-        title: t('add_managers'),
-        confirmText: t('add'),
+        title: trans('add_managers'),
+        confirmText: trans('add'),
         name: 'users.picker',
         definition: UserList.definition,
         card: UserList.card,
@@ -216,8 +230,8 @@ const Organization = connect(
     pickGroups(organizationId) {
       dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
         icon: 'fa fa-fw fa-users',
-        title: t('add_groups'),
-        confirmText: t('add'),
+        title: trans('add_groups'),
+        confirmText: trans('add'),
         name: 'groups.picker',
         definition: GroupList.definition,
         card: GroupList.card,
@@ -231,8 +245,8 @@ const Organization = connect(
     pickWorkspaces(organizationId) {
       dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
         icon: 'fa fa-fw fa-books',
-        title: t('add_workspaces'),
-        confirmText: t('add'),
+        title: trans('add_workspaces'),
+        confirmText: trans('add'),
         name: 'workspaces.picker',
         definition: WorkspaceList.definition,
         card: WorkspaceList.card,

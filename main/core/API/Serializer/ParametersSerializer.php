@@ -421,6 +421,7 @@ class ParametersSerializer
             $this->buildParameter('authentication.redirect_after_login_url', 'redirect_after_login_url', $parameters, $data);
             $this->buildParameter('authentication.login_target_route', 'login_target_route', $parameters, $data);
             $this->buildParameter('authentication.direct_third_party', 'direct_third_party_authentication', $parameters, $data);
+            $this->buildParameter('authentication.force_organization_creation', 'force_organization_creation', $parameters, $data);
         }
     }
 

@@ -34,12 +34,14 @@ class UserVoter extends AbstractVoter
      */
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
+        $collection = isset($options['collection']) ? $options['collection'] : null;
+
         switch ($attributes[0]) {
             case self::VIEW:   return $this->checkView($token, $object);
             case self::CREATE: return $this->checkCreation();
             case self::EDIT:   return $this->checkEdit($token, $object);
             case self::DELETE: return $this->checkDelete($token, $object);
-            case self::PATCH:  return $this->checkPatch($token, $object, $options['collection']);
+            case self::PATCH:  return $this->checkPatch($token, $object, $collection);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
@@ -114,8 +116,13 @@ class UserVoter extends AbstractVoter
      *
      * @return int
      */
-    private function checkPatch(TokenInterface $token, User $user, ObjectCollection $collection)
+    private function checkPatch(TokenInterface $token, User $user, ObjectCollection $collection = null)
     {
+        //single property: no check now
+        if (!$collection) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
         if ($this->isOrganizationManager($token, $user)) {
             return VoterInterface::ACCESS_GRANTED;
         }

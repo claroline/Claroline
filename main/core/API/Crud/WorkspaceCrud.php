@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Event\Crud\DeleteEvent;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service("claroline.crud.workspace")
@@ -20,14 +21,16 @@ class WorkspaceCrud
      * WorkspaceCrud constructor.
      *
      * @DI\InjectParams({
-     *     "manager" = @DI\Inject("claroline.manager.workspace_manager")
+     *     "manager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "tokenStorage" = @DI\Inject("security.token_storage")
      * })
      *
      * @param WorkspaceManager $manager
      */
-    public function __construct(WorkspaceManager $manager)
+    public function __construct(WorkspaceManager $manager, TokenStorageInterface $tokenStorage)
     {
         $this->manager = $manager;
+        $this->tokenStorage = $tokenStorage;
     }
 
     /**
@@ -48,6 +51,12 @@ class WorkspaceCrud
     public function preCreate(CreateEvent $event)
     {
         $workspace = $this->manager->createWorkspace($event->getObject());
+
+        $user = $this->tokenStorage->getToken()->getUser();
+
+        if ($user instanceof User) {
+            $workspace->addOrganization($user->getMainOrganization());
+        }
 
         return $this->manager->copy($this->manager->getDefaultModel(), $workspace, false);
     }

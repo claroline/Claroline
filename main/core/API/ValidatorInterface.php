@@ -24,6 +24,8 @@ interface ValidatorInterface
      * the provider so the validate method is easier)
      * with the format [$dataPropName => $entityPropName].
      *
+     * @todo fetch default from json-schema
+     *
      * @return array
      */
     public function getUniqueFields();
