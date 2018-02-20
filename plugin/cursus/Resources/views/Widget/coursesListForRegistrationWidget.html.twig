@@ -196,7 +196,7 @@
                                                     <span class="label label-warning">
                                                         {{ 'pending'|trans({}, 'platform') }}
                                                     </span>
-                                                {% elseif session.getPublicRegistration() and not hideSessionRegistrationButton %}
+                                                {% elseif session.getPublicRegistration() and not hideSessionRegistrationButton and (date(session.getEndDate()) > date()) %}
                                                     &nbsp;
                                                     <span class="btn btn-default btn-sm session-register-btn"
                                                           data-session-id="{{ sessionId }}"
@@ -235,63 +235,68 @@
                                                             {% for event in session.getEvents() %}
                                                                 {% set eventId = event.getId() %}
                                                                 {% set location = event.getLocation() %}
-                                                                <tr>
-                                                                    <td>
-                                                                        <a href="" class="event-info-link" data-event-id="{{ eventId }}">
-                                                                            {{ event.getName() }}
-                                                                        </a>
-                                                                    </td>
-                                                                    <td>
-                                                                        {{ event.getStartDate()|intl_date_format }}
-                                                                        <i class="fa fa-long-arrow-right"></i>
-                                                                        {{ event.getEndDate()|intl_date_format }}
-                                                                    </td>
-                                                                    <td>
-                                                                        {% if location is not empty %}
-                                                                            {{ location.getTown() }}
-                                                                        {% else %}
-                                                                            {{ 'location_to_specify'|trans({}, 'cursus') }}
-                                                                        {% endif %}
-                                                                    </td>
-                                                                    {% if not disableSessionEventRegistration %}
-                                                                        <td class="text-center">
-                                                                            {% if sessionEventUsersStatus[eventId] is defined %}
-                                                                                {% if sessionEventUsersStatus[eventId] == constant('Claroline\\CursusBundle\\Entity\\SessionEventUser::REGISTERED') %}
-                                                                                    <span class="label label-success">
-                                                                                        {{ 'registered'|trans({}, 'platform') }}
-                                                                                    </span>
-                                                                                {% elseif sessionEventUsersStatus[eventId] == constant('Claroline\\CursusBundle\\Entity\\SessionEventUser::PENDING') %}
-                                                                                    <span class="label label-warning">
-                                                                                        {{ 'pending'|trans({}, 'platform') }}
-                                                                                    </span>
-                                                                                {% endif %}
-                                                                            {% elseif (session.getPublicRegistration() or registeredSessions[sessionId] is defined) and
-                                                                                      (event.getRegistrationType() == constant('Claroline\\CursusBundle\\Entity\\CourseSession::REGISTRATION_PUBLIC'))
-                                                                            %}
-                                                                                {% if event.getEventSet() is empty %}
-                                                                                    <span id="session-event-registration-btn-{{ eventId }}">
-                                                                                        <button class="btn btn-default btn-sm register-to-session-event-btn"
-                                                                                                data-session-event-id="{{ eventId }}"
-                                                                                        >
-                                                                                            {{ 'self_register_to_session_event'|trans({}, 'cursus') }}
-                                                                                        </button>
-                                                                                    </span>
-                                                                                {% else %}
-                                                                                    {% set eventSet = event.getEventSet() %}
-                                                                                    <button class="btn btn-default btn-sm register-to-session-event-set-btn"
-                                                                                            data-session-event-set-id="{{ eventSet.getId() }}"
-                                                                                    >
-                                                                                        <span class="label label-info">
-                                                                                            {{ eventSet.getName() }}
-                                                                                        </span>
-                                                                                        &nbsp;
-                                                                                        {{ 'self_register_to_session_event_set'|trans({}, 'cursus') }}
-                                                                                    </button>
-                                                                                {% endif %}
+                                                                {% set eventEndDate = date(event.getEndDate()) %}
+                                                                {% set currentDate = date() %}
+
+                                                                {% if eventEndDate > currentDate %}
+                                                                    <tr>
+                                                                        <td>
+                                                                            <a href="" class="event-info-link" data-event-id="{{ eventId }}">
+                                                                                {{ event.getName() }}
+                                                                            </a>
+                                                                        </td>
+                                                                        <td>
+                                                                            {{ event.getStartDate()|intl_date_format }}
+                                                                            <i class="fa fa-long-arrow-right"></i>
+                                                                            {{ event.getEndDate()|intl_date_format }}
+                                                                        </td>
+                                                                        <td>
+                                                                            {% if location is not empty %}
+                                                                                {{ location.getTown() }}
+                                                                            {% else %}
+                                                                                {{ 'location_to_specify'|trans({}, 'cursus') }}
                                                                             {% endif %}
                                                                         </td>
-                                                                    {% endif %}
-                                                                </tr>
+                                                                        {% if not disableSessionEventRegistration %}
+                                                                            <td class="text-center">
+                                                                                {% if sessionEventUsersStatus[eventId] is defined %}
+                                                                                    {% if sessionEventUsersStatus[eventId] == constant('Claroline\\CursusBundle\\Entity\\SessionEventUser::REGISTERED') %}
+                                                                                        <span class="label label-success">
+                                                                                            {{ 'registered'|trans({}, 'platform') }}
+                                                                                        </span>
+                                                                                    {% elseif sessionEventUsersStatus[eventId] == constant('Claroline\\CursusBundle\\Entity\\SessionEventUser::PENDING') %}
+                                                                                        <span class="label label-warning">
+                                                                                            {{ 'pending'|trans({}, 'platform') }}
+                                                                                        </span>
+                                                                                    {% endif %}
+                                                                                {% elseif (session.getPublicRegistration() or registeredSessions[sessionId] is defined) and
+                                                                                          (event.getRegistrationType() == constant('Claroline\\CursusBundle\\Entity\\CourseSession::REGISTRATION_PUBLIC'))
+                                                                                %}
+                                                                                    {% if event.getEventSet() is empty %}
+                                                                                        <span id="session-event-registration-btn-{{ eventId }}">
+                                                                                            <button class="btn btn-default btn-sm register-to-session-event-btn"
+                                                                                                    data-session-event-id="{{ eventId }}"
+                                                                                            >
+                                                                                                {{ 'self_register_to_session_event'|trans({}, 'cursus') }}
+                                                                                            </button>
+                                                                                        </span>
+                                                                                    {% else %}
+                                                                                        {% set eventSet = event.getEventSet() %}
+                                                                                        <button class="btn btn-default btn-sm register-to-session-event-set-btn"
+                                                                                                data-session-event-set-id="{{ eventSet.getId() }}"
+                                                                                        >
+                                                                                            <span class="label label-info">
+                                                                                                {{ eventSet.getName() }}
+                                                                                            </span>
+                                                                                            &nbsp;
+                                                                                            {{ 'self_register_to_session_event_set'|trans({}, 'cursus') }}
+                                                                                        </button>
+                                                                                    {% endif %}
+                                                                                {% endif %}
+                                                                            </td>
+                                                                        {% endif %}
+                                                                    </tr>
+                                                                {% endif %}
                                                             {% endfor %}
                                                         </table>
                                                     </div>

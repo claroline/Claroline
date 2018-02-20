@@ -390,7 +390,7 @@
                 eventsElement += `
                   <span class="label label-warning pull-right">${Translator.trans('pending', {}, 'platform')}</span>
                 `
-              } else if (e['registrationType'] === 2 && (event['publicRegistration'] || registeredSessions[event['id']])) {
+              } else if (e['registrationType'] === 2 && (event['publicRegistration'] || registeredSessions[event['id']]) && moment(e['endDate']) > moment()) {
                 if (!e.eventSet) {
                   eventsElement += `
                     <span id="session-event-registration-btn-${event['id']}">
