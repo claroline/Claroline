@@ -52,7 +52,12 @@ class Updater110200 extends Updater
                     $user->setMainOrganization($administratedOrganizations[0]);
                 } else {
                     $organizations = $user->getOrganizations();
-                    $user->setMainOrganization($organizations[0]);
+                    if (count($organizations) > 0) {
+                        $user->setMainOrganization($organizations[0]);
+                    } else {
+                        $default = $this->container->get('claroline.manager.organization.organization_manager')->getDefault();
+                        $user->setMainOrganization($default);
+                    }
                 }
 
                 $this->om->persist($user);
