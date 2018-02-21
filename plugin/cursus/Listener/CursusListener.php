@@ -11,13 +11,13 @@
 
 namespace Claroline\CursusBundle\Listener;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\FacetManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Manager\CursusManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
@@ -173,10 +173,10 @@ class CursusListener
         $type = $data['type'];
         $sessionEvents = [];
 
-        if ($type === 'workspace') {
+        if ('workspace' === $type) {
             $workspace = $data['workspace'];
             $sessionEvents = $this->cursusManager->getSessionEventsByWorkspace($workspace);
-        } elseif ($type === 'desktop') {
+        } elseif ('desktop' === $type) {
             $user = $data['user'];
             $sessionEvents = $this->configHandler->getParameter('cursus_display_user_events_in_desktop_agenda') ?
                 $this->cursusManager->getSessionEventsByUser($user) :

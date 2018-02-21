@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
-use Claroline\CoreBundle\Annotations\ApiMeta;
-use Claroline\CoreBundle\API\Options;
+use Claroline\AppBundle\Annotations\ApiMeta;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -37,7 +38,7 @@ class WorkspaceController extends AbstractCrudController
     public function copyBulkAction(Request $request, $class)
     {
         //add params for the copy here
-        $this->options['copyBulk'] = (int) $request->query->get('model') === 1 || $request->query->get('model') === 'true' ?
+        $this->options['copyBulk'] = 1 === (int) $request->query->get('model') || 'true' === $request->query->get('model') ?
           [Options::WORKSPACE_MODEL] : [];
 
         return parent::copyBulkAction($request, $class);

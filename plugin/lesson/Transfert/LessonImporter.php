@@ -11,10 +11,10 @@
 
 namespace Icap\LessonBundle\Transfert;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\LessonBundle\Manager\LessonManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -110,12 +110,12 @@ class LessonImporter extends Importer implements ConfigurationInterface, RichTex
     {
         foreach ($data['chapters'] as $chapter) {
             //look for the text with the exact same content (it's really bad I know but at least it works
-             $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$chapter['path']);
+            $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$chapter['path']);
             $chapters = $this->om->getRepository('Icap\LessonBundle\Entity\Chapter')->findByText($text);
 
             foreach ($chapters as $entity) {
                 //avoid circulary dependency
-                 $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
+                $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
                 $entity->setText($text);
                 $this->om->persist($entity);
             }

@@ -13,6 +13,7 @@
 
 namespace Claroline\CasBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CasBundle\Entity\CasUser;
 use Claroline\CasBundle\Form\CasServerConfigurationType;
 use Claroline\CasBundle\Library\Configuration\CasServerConfiguration;
@@ -22,7 +23,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Claroline\CoreBundle\Manager\RegistrationManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -173,7 +173,7 @@ class CasManager
     {
         $verifyPassword = false;
         $password = null;
-        if ($username === null) {
+        if (null === $username) {
             $verifyPassword = true;
             $username = $request->get('_username');
             $password = $request->get('_password');

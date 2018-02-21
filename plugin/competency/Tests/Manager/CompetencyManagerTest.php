@@ -22,7 +22,7 @@ class CompetencyManagerTest extends UnitTestCase
 
     protected function setUp()
     {
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->translator = $this->mock('Symfony\Component\Translation\TranslatorInterface');
         $this->converter = $this->mock('HeVinci\CompetencyBundle\Transfer\Converter');
         $this->competencyRepo = $this->mock('HeVinci\CompetencyBundle\Repository\CompetencyRepository');

@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\Tool\ToolMaskDecoder;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -96,7 +96,7 @@ class ToolMaskDecoderManager
     public function decodeMask($mask, Tool $tool)
     {
         $decoders = $this->maskRepo->findMaskDecodersByTool($tool);
-        $perms = array();
+        $perms = [];
 
         foreach ($decoders as $decoder) {
             $perms[$decoder->getName()] = ($mask & $decoder->getValue()) ?
@@ -109,7 +109,7 @@ class ToolMaskDecoderManager
 
     public function decodeMaskWithDecoders($mask, array $decoders)
     {
-        $perms = array();
+        $perms = [];
 
         foreach ($decoders as $decoder) {
             $perms[$decoder->getName()] = ($mask & $decoder->getValue()) ?

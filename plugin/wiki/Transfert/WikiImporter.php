@@ -11,10 +11,10 @@
 
 namespace Icap\WikiBundle\Transfert;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\WikiBundle\Manager\WikiManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -144,7 +144,7 @@ class WikiImporter extends Importer implements ConfigurationInterface, RichTextI
                         //look for the text with the exact same content (it's really bad I know but at least it works
                         $text = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$contribution['contribution']['path']);
                         $entities = $this->om->getRepository('Icap\WikiBundle\Entity\Contribution')->findByText($text);
-                         //avoid circulary dependency
+                        //avoid circulary dependency
                         $text = $this->container->get('claroline.importer.rich_text_formatter')->format($text);
 
                         foreach ($entities as $entity) {

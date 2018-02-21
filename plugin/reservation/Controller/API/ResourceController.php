@@ -11,12 +11,12 @@
 
 namespace FormaLibre\ReservationBundle\Controller\API;
 
-use Claroline\CoreBundle\Annotations\ApiMeta;
-use Claroline\CoreBundle\Controller\APINew\AbstractCrudController;
+use Claroline\AppBundle\Annotations\ApiMeta;
+use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Manager\ApiManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;

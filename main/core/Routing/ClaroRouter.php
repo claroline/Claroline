@@ -54,7 +54,7 @@ class ClaroRouter extends Router
     {
         $context->setScheme($this->scheme);
 
-        if ($this->host && trim($this->host) !== '') {
+        if ($this->host && '' !== trim($this->host)) {
             $context->setHost($this->host);
         }
 

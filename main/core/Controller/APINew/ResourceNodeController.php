@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
+use Claroline\AppBundle\Controller\AbstractCrudController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

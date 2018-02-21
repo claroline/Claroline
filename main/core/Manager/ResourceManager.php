@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\Directory;
@@ -20,7 +22,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
@@ -31,7 +32,6 @@ use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\ResourceTypeNotFoundException;
 use Claroline\CoreBundle\Manager\Exception\RightsException;
 use Claroline\CoreBundle\Manager\Exception\WrongClassException;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\DirectoryRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
@@ -201,7 +201,7 @@ class ResourceManager
         $node->setResourceType($resourceType);
         $node->setPublished($isPublished);
         $node->setGuid($this->container->get('claroline.utilities.misc')->generateGuid());
-        $mimeType = ($resource->getMimeType() === null) ?
+        $mimeType = (null === $resource->getMimeType()) ?
             'custom/'.$resourceType->getName() :
             $resource->getMimeType();
 
@@ -240,7 +240,7 @@ class ResourceManager
         $this->om->persist($node);
         $this->om->persist($resource);
 
-        if ($icon === null) {
+        if (null === $icon) {
             $icon = $this->iconManager->getIcon($resource, $workspace);
         }
 
@@ -254,9 +254,9 @@ class ResourceManager
         $node->setIcon($icon);
 
         //if it's an activity, initialize the permissions for its linked resources;
-        if ($resourceType->getName() === 'activity') {
+        if ('activity' === $resourceType->getName()) {
             //care if it's a shortcut
-            if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            if ('Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === $node->getClass()) {
                 $target = $resource->getTarget();
                 $roles = [];
                 $rights = $node->getRights();
@@ -379,7 +379,7 @@ class ResourceManager
     {
         $shortcut->setName($target->getName());
 
-        if (get_class($target) !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+        if ('Claroline\CoreBundle\Entity\Resource\ResourceShortcut' !== get_class($target)) {
             $shortcut->setTarget($target);
         } else {
             $shortcut->setTarget($target->getTarget());
@@ -418,7 +418,7 @@ class ResourceManager
         ResourceNode $parent = null,
         array $rights = []
     ) {
-        if (count($rights) === 0 && $parent !== null) {
+        if (0 === count($rights) && null !== $parent) {
             $node = $this->rightsManager->copy($parent, $node);
         } else {
             $this->createRights($node, $rights);
@@ -499,11 +499,11 @@ class ResourceManager
         $stringErrors = '';
 
         //null or '' shouldn't be valid
-        if ($resource->getName() === null) {
+        if (null === $resource->getName()) {
             $stringErrors .= 'The resource name is missing'.PHP_EOL;
         }
 
-        if ($stringErrors !== '') {
+        if ('' !== $stringErrors) {
             throw new MissingResourceNameException($stringErrors);
         }
     }
@@ -526,7 +526,7 @@ class ResourceManager
         foreach ($resourceTypes as $type) {
             //@todo write findByNames method.
             $rt = $this->resourceTypeRepo->findOneByName($type['name']);
-            if ($rt === null) {
+            if (null === $rt) {
                 $unknownTypes[] = $type['name'];
             } else {
                 $validTypes[] = $rt;
@@ -747,7 +747,7 @@ class ResourceManager
         array_pop($ancestors);
 
         foreach ($ancestors as $ancestor) {
-            if ($ancestor->getResourceType()->getName() !== 'directory') {
+            if ('directory' !== $ancestor->getResourceType()->getName()) {
                 return false;
             }
         }
@@ -816,7 +816,7 @@ class ResourceManager
             $copy->setResourceNode($newNode);
         } else {
             if (!$resource) {
-                if ($env === 'dev') {
+                if ('dev' === $env) {
                     $message = 'The resource '.$node->getName().' was not found (node id is '.$node->getId().')';
                     $this->container->get('logger')->error($message);
 
@@ -840,7 +840,7 @@ class ResourceManager
 
             $copy->setResourceNode($newNode);
 
-            if ($node->getResourceType()->getName() === 'directory' &&
+            if ('directory' === $node->getResourceType()->getName() &&
                 $withDirectoryContent) {
                 $i = 1;
 
@@ -911,7 +911,7 @@ class ResourceManager
         $resourceArray = [];
         $resourceArray['id'] = $node->getId();
         $resourceArray['name'] = $node->getName();
-        $resourceArray['parent_id'] = ($node->getParent() !== null) ? $node->getParent()->getId() : null;
+        $resourceArray['parent_id'] = (null !== $node->getParent()) ? $node->getParent()->getId() : null;
         $resourceArray['creator_username'] = $node->getCreator()->getUsername();
         $resourceArray['creator_id'] = $node->getCreator()->getId();
         $resourceArray['type'] = $node->getResourceType()->getName();
@@ -929,12 +929,12 @@ class ResourceManager
         $roles = $this->roleManager->getStringRolesFromToken($token);
 
         foreach ($roles as $role) {
-            if ($role === 'ROLE_ADMIN') {
+            if ('ROLE_ADMIN' === $role) {
                 $isAdmin = true;
             }
         }
 
-        if ($isAdmin || ($token->getUser() !== 'anon.' && $node->getCreator()->getUsername() === $token->getUser()->getUsername())) {
+        if ($isAdmin || ('anon.' !== $token->getUser() && $node->getCreator()->getUsername() === $token->getUser()->getUsername())) {
             $resourceArray['mask'] = 1023;
         } else {
             $resourceArray['mask'] = $this->resourceRightsRepo->findMaximumRights($roles, $node);
@@ -953,8 +953,8 @@ class ResourceManager
             }
         }
 
-        if ($node->getResourceType()->getName() === 'file') {
-            if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+        if ('file' === $node->getResourceType()->getName()) {
+            if ('Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === $node->getClass()) {
                 $shortcut = $this->getResourceFromNode($node);
                 $realNode = $shortcut->getTarget();
             } else {
@@ -980,7 +980,7 @@ class ResourceManager
     {
         $this->log('Removing '.$resourceNode->getName().'['.$resourceNode->getResourceType()->getName().':id:'.$resourceNode->getId().']');
 
-        if ($resourceNode->getParent() === null && !$force) {
+        if (null === $resourceNode->getParent() && !$force) {
             throw new \LogicException('Root directory cannot be removed');
         }
 
@@ -1000,8 +1000,8 @@ class ResourceManager
              * resChild can be null if a shortcut was removed
              * @todo: fix shortcut delete. If a target is removed, every link to the target should be removed too.
              */
-            if ($resource !== null) {
-                if ($node->getClass() !== 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+            if (null !== $resource) {
+                if ('Claroline\CoreBundle\Entity\Resource\ResourceShortcut' !== $node->getClass()) {
                     // Dispatch DeleteResourceEvent only when soft delete is not enabled
                     if (!$softDelete) {
                         $event = $this->dispatcher->dispatch(
@@ -1018,7 +1018,7 @@ class ResourceManager
                                     $file
                                 );
 
-                                if (count($parts) === 2) {
+                                if (2 === count($parts)) {
                                     $deleteDir = $this->filesDirectory.
                                         DIRECTORY_SEPARATOR.
                                         'DELETED_FILES';
@@ -1111,7 +1111,7 @@ class ResourceManager
     {
         $data = [];
 
-        if (count($elements) === 0) {
+        if (0 === count($elements)) {
             throw new ExportResourceException('No resources were selected.');
         }
 
@@ -1121,7 +1121,7 @@ class ResourceManager
         $archive->open($pathArch, \ZipArchive::CREATE);
         $nodes = $this->expandResources($elements);
 
-        if (!$forceArchive && count($nodes) === 1) {
+        if (!$forceArchive && 1 === count($nodes)) {
             $event = $this->dispatcher->dispatch(
                 "download_{$nodes[0]->getResourceType()->getName()}",
                 'DownloadResource',
@@ -1133,7 +1133,7 @@ class ResourceManager
                 $nodes[0]->getName().'.'.$extension;
             $data['file'] = $event->getItem();
             $guesser = ExtensionGuesser::getInstance();
-            $data['mimeType'] = $guesser->guess($nodes[0]->getMimeType()) !== null ? $nodes[0]->getMimeType() : null;
+            $data['mimeType'] = null !== $guesser->guess($nodes[0]->getMimeType()) ? $nodes[0]->getMimeType() : null;
 
             return $data;
         }
@@ -1151,7 +1151,7 @@ class ResourceManager
                 $resource = $this->getResourceFromNode($node);
 
                 if ($resource) {
-                    if (get_class($resource) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+                    if ('Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === get_class($resource)) {
                         $node = $resource->getTarget();
                     }
 
@@ -1159,14 +1159,14 @@ class ResourceManager
                     $resource = $this->getResourceFromNode($node);
 
                     //if it's a file, we may have to add the extension back in case someone removed it from the name
-                    if ($node->getResourceType()->getName() === 'file') {
+                    if ('file' === $node->getResourceType()->getName()) {
                         $extension = '.'.pathinfo($resource->getHashName(), PATHINFO_EXTENSION);
                         if (!preg_match("#$extension#", $filename)) {
                             $filename .= $extension;
                         }
                     }
 
-                    if ($node->getResourceType()->getName() !== 'directory') {
+                    if ('directory' !== $node->getResourceType()->getName()) {
                         $event = $this->dispatcher->dispatch(
                             "download_{$node->getResourceType()->getName()}",
                             'DownloadResource',
@@ -1175,7 +1175,7 @@ class ResourceManager
 
                         $obj = $event->getItem();
 
-                        if ($obj !== null) {
+                        if (null !== $obj) {
                             $archive->addFile($obj, iconv($this->ut->detectEncoding($filename), $this->getEncoding(), $filename));
                         } else {
                             $archive->addFromString(iconv($this->ut->detectEncoding($filename), $this->getEncoding(), $filename), '');
@@ -1217,7 +1217,7 @@ class ResourceManager
 
         foreach ($nodes as $node) {
             $resourceTypeName = $node->getResourceType()->getName();
-            ($resourceTypeName === 'directory') ? $dirs[] = $node : $ress[] = $node;
+            ('directory' === $resourceTypeName) ? $dirs[] = $node : $ress[] = $node;
         }
 
         foreach ($dirs as $dir) {
@@ -1225,7 +1225,7 @@ class ResourceManager
 
             foreach ($children as $child) {
                 if ($child->isActive() &&
-                    $child->getResourceType()->getName() !== 'directory') {
+                    'directory' !== $child->getResourceType()->getName()) {
                     $toAppend[] = $child;
                 }
             }
@@ -1246,7 +1246,7 @@ class ResourceManager
      */
     private function getRelativePath(ResourceNode $root, ResourceNode $node, $path = '')
     {
-        if ($node->getParent() !== $root->getParent() && $node->getParent() !== null) {
+        if ($node->getParent() !== $root->getParent() && null !== $node->getParent()) {
             $path = $node->getParent()->getName().DIRECTORY_SEPARATOR.$path;
             $path = $this->getRelativePath($root, $node->getParent(), $path);
         }
@@ -1623,7 +1623,7 @@ class ResourceManager
         if ($withRights) {
             //if everything happens inside the same workspace and no specific rights have been given,
             //rights are copied
-            if ($newParent->getWorkspace() === $node->getWorkspace() && count($rights) === 0) {
+            if ($newParent->getWorkspace() === $node->getWorkspace() && 0 === count($rights)) {
                 $this->rightsManager->copy($node, $newNode);
             } else {
                 //otherwise we use the parent rights or the given rights if not empty
@@ -1681,7 +1681,7 @@ class ResourceManager
         $accessibleFrom,
         $accessibleUntil
     ) {
-        if ($node->getResourceType()->getName() === 'directory') {
+        if ('directory' === $node->getResourceType()->getName()) {
             $descendants = $this->resourceNodeRepo->findDescendants($node);
 
             /** @var ResourceNode $descendant */
@@ -1712,7 +1712,7 @@ class ResourceManager
 
         if ($resourceType) {
             //first, directories can be downloaded even if there is no listener attached to it
-            if ($resourceType->getName() === 'directory' && $actionName === 'download') {
+            if ('directory' === $resourceType->getName() && 'download' === $actionName) {
                 return true;
             }
 
@@ -1736,7 +1736,7 @@ class ResourceManager
 
         if ($dirHandle) {
             while ($file = readdir($dirHandle)) {
-                if ($file !== '.' && $file !== '..') {
+                if ('.' !== $file && '..' !== $file) {
                     $files[] = $file;
                     break;
                 }
@@ -1744,7 +1744,7 @@ class ResourceManager
             closedir($dirHandle);
         }
 
-        return count($files) === 0;
+        return 0 === count($files);
     }
 
     private function updateWorkspace(ResourceNode $node, Workspace $workspace)
@@ -1753,7 +1753,7 @@ class ResourceManager
         $node->setWorkspace($workspace);
         $this->om->persist($node);
 
-        if ($node->getResourceType()->getName() === 'directory') {
+        if ('directory' === $node->getResourceType()->getName()) {
             $children = $this->resourceNodeRepo->getChildren($node);
 
             foreach ($children as $child) {
@@ -1845,7 +1845,7 @@ class ResourceManager
         $res = null;
 
         foreach ($scheduledForInsert as $entity) {
-            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Resource\ResourceNode') {
+            if ('Claroline\CoreBundle\Entity\Resource\ResourceNode' === get_class($entity)) {
                 if ($entity->getWorkspace()->getCode() === $workspace->getCode() &&
                     $entity->getName() === $name &&
                     $entity->getParent() === $parent) {
@@ -1898,7 +1898,7 @@ class ResourceManager
     public function getDefaultUploadDestinations()
     {
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
-        if ($user === 'anon.') {
+        if ('anon.' === $user) {
             return [];
         }
 
@@ -1951,9 +1951,9 @@ class ResourceManager
 
     public function getRealTarget(ResourceNode $node, $throwException = true)
     {
-        if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+        if ('Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === $node->getClass()) {
             $resource = $this->getResourceFromNode($node);
-            if ($resource === null) {
+            if (null === $resource) {
                 if ($throwException) {
                     throw new \Exception('The resource was removed.');
                 }
@@ -1961,7 +1961,7 @@ class ResourceManager
                 return;
             }
             $node = $resource->getTarget();
-            if ($node === null) {
+            if (null === $node) {
                 if ($throwException) {
                     throw new \Exception('The node target was removed.');
                 }
@@ -1987,11 +1987,11 @@ class ResourceManager
                 $this->log('Resource '.$resource->getName().' not found. Removing...');
                 $this->om->remove($resource);
             } else {
-                if ($resource->getWorkspace() === null && $parent = $resource->getParent()) {
+                if (null === $resource->getWorkspace() && $parent = $resource->getParent()) {
                     if ($workspace = $parent->getWorkspace()) {
                         $resource->setWorkspace($workspace);
                         $this->om->persist($workspace);
-                        if ($batchSize % $i === 0) {
+                        if (0 === $batchSize % $i) {
                             $this->om->flush();
                         }
                     }
@@ -2031,7 +2031,7 @@ class ResourceManager
                 $this->log("Directory {$name} already exists for workspace {$code}");
             }
 
-            if ($i % 100 === 0) {
+            if (0 === $i % 100) {
                 $this->om->forceFlush();
                 $this->om->clear();
                 $resourceType = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findOneByName('directory');

@@ -16,8 +16,8 @@ use Claroline\AgendaBundle\Entity\EventInvitation;
 use Claroline\AgendaBundle\Form\EventInvitationType;
 use Claroline\AgendaBundle\Form\ImportAgendaType;
 use Claroline\AgendaBundle\Manager\AgendaManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -131,7 +131,7 @@ class DesktopAgendaController extends Controller
         if ($form->isValid()) {
             $event = $form->getData();
             $users = $form->get('users')->getData();
-            $data = $this->agendaManager->addEvent($event,  $event->getWorkspace(), $users);
+            $data = $this->agendaManager->addEvent($event, $event->getWorkspace(), $users);
 
             return new JsonResponse([$data], 200);
         }

@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
-use Claroline\CoreBundle\Annotations\ApiMeta;
-use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Annotations\ApiMeta;
+use Claroline\AppBundle\Controller\AbstractCrudController;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;

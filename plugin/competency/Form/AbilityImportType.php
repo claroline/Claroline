@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Form;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Form\DataTransformer\AbilityImportTransformer;

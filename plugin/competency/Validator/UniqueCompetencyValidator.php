@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Validator;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Validator\Constraint;

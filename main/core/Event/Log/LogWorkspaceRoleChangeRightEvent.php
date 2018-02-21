@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Event\Log;
 
-use Claroline\CoreBundle\Event\MandatoryEventInterface;
+use Claroline\AppBundle\Event\MandatoryEventInterface;
 
 class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements MandatoryEventInterface, NotifiableInterface
 {
@@ -35,21 +35,21 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
     {
         $this->role = $role;
         $this->changeSet = $changeSet;
-        $this->details = array(
-            'role' => array(
+        $this->details = [
+            'role' => [
                 'name' => $role->getTranslationKey(),
                 'changeSet' => $changeSet,
-            ),
-            'workspace' => array(
+            ],
+            'workspace' => [
                 'name' => $resource->getWorkspace() ? $resource->getWorkspace()->getName() : ' - ',
-            ),
-            'resource' => array(
+            ],
+            'resource' => [
                 'name' => $resource->getName(),
                 'path' => $resource->getPathForDisplay(),
                 'id' => $resource->getId(),
                 'resourceType' => $resource->getResourceType()->getName(),
-            ),
-        );
+            ],
+        ];
 
         parent::__construct(
             self::ACTION,
@@ -87,7 +87,7 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
      */
     public function getIncludeUserIds()
     {
-        $userIds = array();
+        $userIds = [];
         $roleUsers = $this->role->getUsers();
         foreach ($roleUsers as $user) {
             array_push($userIds, $user->getId());
@@ -108,7 +108,7 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
      */
     public function getExcludeUserIds()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -141,14 +141,14 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
         if (!$this->changeSet || !isset($this->changeSet['mask'])) {
             return false;
         }
-        if ($this->role->getName() === 'ROLE_ANONYMOUS' || $this->role->getName() === 'ROLE_USER') {
+        if ('ROLE_ANONYMOUS' === $this->role->getName() || 'ROLE_USER' === $this->role->getName()) {
             return false;
         }
 
         $oldState = $this->changeSet['mask'][0];
         $newState = $this->changeSet['mask'][1];
 
-        return $oldState % 2 === 0 && $newState % 2 === 1;
+        return 0 === $oldState % 2 && 1 === $newState % 2;
     }
 
     /**
@@ -158,7 +158,7 @@ class LogWorkspaceRoleChangeRightEvent extends LogGenericEvent implements Mandat
      */
     public function getNotificationDetails()
     {
-        $notificationDetails = array_merge($this->details, array());
+        $notificationDetails = array_merge($this->details, []);
 
         return $notificationDetails;
     }

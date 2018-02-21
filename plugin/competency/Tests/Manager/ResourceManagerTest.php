@@ -16,7 +16,7 @@ class ResourceManagerTest extends UnitTestCase
 
     protected function setUp()
     {
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->competencyRepo = $this->mock('HeVinci\CompetencyBundle\Repository\CompetencyRepository');
         $this->abilityRepo = $this->mock('HeVinci\CompetencyBundle\Repository\AbilityRepository');
         $this->om->expects($this->exactly(2))

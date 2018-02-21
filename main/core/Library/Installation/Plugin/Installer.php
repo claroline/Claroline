@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Manager\PluginManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;

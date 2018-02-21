@@ -11,8 +11,8 @@
 
 namespace Icap\WikiBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\WikiBundle\Entity\Contribution;
 use Icap\WikiBundle\Entity\Section;
 use Icap\WikiBundle\Entity\Wiki;
@@ -24,7 +24,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class WikiManager
 {
     /**
-     * @var \Claroline\CoreBundle\Persistence\ObjectManager
+     * @var \Claroline\AppBundle\Persistence\ObjectManager
      */
     private $om;
 
@@ -119,18 +119,18 @@ class WikiManager
                 $entitySection = new Section();
                 $entitySection->setWiki($wiki);
                 $entitySection->setDeleted($section['deleted']);
-                $entitySection->setDeletionDate(($section['deletion_date'] !== null) ? new \DateTime('@'.$section['deletion_date']) : null);
-                $entitySection->setCreationDate(($section['creation_date'] !== null) ? new \DateTime('@'.$section['creation_date']) : null);
+                $entitySection->setDeletionDate((null !== $section['deletion_date']) ? new \DateTime('@'.$section['deletion_date']) : null);
+                $entitySection->setCreationDate((null !== $section['creation_date']) ? new \DateTime('@'.$section['creation_date']) : null);
                 $author = null;
-                if ($section['author'] !== null) {
+                if (null !== $section['author']) {
                     $author = $this->userRepository->findOneByUsername($section['author']);
                 }
-                if ($author === null) {
+                if (null === $author) {
                     $author = $loggedUser;
                 }
                 $entitySection->setAuthor($author);
                 $parentSection = null;
-                if ($section['parent_id'] !== null) {
+                if (null !== $section['parent_id']) {
                     $parentSection = $sectionsMap[$section['parent_id']];
                     $entitySection->setParent($parentSection);
                 }
@@ -144,12 +144,12 @@ class WikiManager
                     $entityContribution = new Contribution();
                     $entityContribution->setSection($entitySection);
                     $entityContribution->setTitle($contributionData['title']);
-                    $entityContribution->setCreationDate(($contributionData['creation_date'] !== null) ? new \DateTime('@'.$contributionData['creation_date']) : null);
+                    $entityContribution->setCreationDate((null !== $contributionData['creation_date']) ? new \DateTime('@'.$contributionData['creation_date']) : null);
                     $contributor = null;
-                    if ($contributionData['contributor'] !== null) {
+                    if (null !== $contributionData['contributor']) {
                         $contributor = $this->userRepository->findOneByUsername($contributionData['contributor']);
                     }
-                    if ($contributor === null) {
+                    if (null === $contributor) {
                         $contributor = $loggedUser;
                     }
                     $entityContribution->setContributor($contributor);
@@ -159,7 +159,7 @@ class WikiManager
                     $entityContribution->setText($text);
                     if ($contributionData['is_active']) {
                         $entitySection->setActiveContribution($entityContribution);
-                        if ($parentSection !== null) {
+                        if (null !== $parentSection) {
                             $this->sectionRepository->persistAsLastChildOf($entitySection, $parentSection);
                         } else {
                             $this->sectionRepository->persistAsFirstChild($entitySection);
@@ -192,7 +192,6 @@ class WikiManager
         array_unshift($sections, $rootSection);
         $sectionsArray = [];
         foreach ($sections as $section) {
-
             //Getting all contributions and building contributions array
             $activeContribution = $section->getActiveContribution();
             $contributions = $this->contributionRepository->findAllButActiveForSection($section);
@@ -216,7 +215,7 @@ class WikiManager
             }
             $sectionArray = [
                 'id' => $section->getId(),
-                'parent_id' => ($section->getParent() !== null) ? $section->getParent()->getId() : null,
+                'parent_id' => (null !== $section->getParent()) ? $section->getParent()->getId() : null,
                 'is_root' => $section->isRoot(),
                 'visible' => $section->getVisible(),
                 'creation_date' => $section->getCreationDate(),

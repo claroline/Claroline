@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\API\FinderProvider;
+use Claroline\AppBundle\API\FinderProvider;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializerBuilder;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;

@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Manager\Item;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Exercise;
@@ -354,7 +354,7 @@ class ItemManager
         // get the number of good answers among all
         $nbGoodAnswers = 0;
         foreach ($correctedAnswers as $corrected) {
-            if ($corrected instanceof CorrectedAnswer && count($corrected->getMissing()) === 0 && count($corrected->getUnexpected()) === 0) {
+            if ($corrected instanceof CorrectedAnswer && 0 === count($corrected->getMissing()) && 0 === count($corrected->getUnexpected())) {
                 ++$nbGoodAnswers;
             }
         }

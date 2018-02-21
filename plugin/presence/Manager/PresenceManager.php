@@ -2,11 +2,11 @@
 
 namespace FormaLibre\PresenceBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\RoleManager;
 use FormaLibre\PresenceBundle\Entity\PresenceRights;
-use Claroline\CoreBundle\Entity\User;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
@@ -42,7 +42,7 @@ class PresenceManager
         $allRights = $this->rightsRepo->findAll();
         $rolesPlateforme = $this->roleManager->getAllPlatformRoles();
 
-        $existentRights = array();
+        $existentRights = [];
         foreach ($allRights as $oneRight) {
             $role = $oneRight->getRole();
             $existentRights[$role->getId()] = $oneRight;
@@ -84,7 +84,7 @@ class PresenceManager
                 $user,
                 $sessions
             ) :
-            array();
+            [];
     }
 
     public function getPresencesByUserAndSessionAndStatusName(
@@ -98,6 +98,6 @@ class PresenceManager
                 $sessions,
                 $statusName
             ) :
-            array();
+            [];
     }
 }

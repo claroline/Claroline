@@ -2,7 +2,7 @@
 
 namespace Icap\OAuthBundle\API;
 
-use Claroline\CoreBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

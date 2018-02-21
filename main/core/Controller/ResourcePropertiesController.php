@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Form\ResourceIconType;
 use Claroline\CoreBundle\Form\ResourceNameType;
@@ -148,7 +148,7 @@ class ResourcePropertiesController extends Controller
         $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
         $username = $node->getCreator()->getUsername();
-        $isDir = $node->getResourceType()->getName() === 'directory';
+        $isDir = 'directory' === $node->getResourceType()->getName();
 
         $form = $this->formFactory->create(
             new ResourcePropertiesType($username, $this->translator),
@@ -231,7 +231,7 @@ class ResourcePropertiesController extends Controller
             return new JsonResponse($arrayNode);
         }
 
-        $isDir = $node->getResourceType()->getName() === 'directory';
+        $isDir = 'directory' === $node->getResourceType()->getName();
 
         return [
             'form' => $form->createView(),
@@ -259,7 +259,7 @@ class ResourcePropertiesController extends Controller
         $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
         $username = $node->getCreator()->getUsername();
-        $isDir = $node->getResourceType()->getName() === 'directory';
+        $isDir = 'directory' === $node->getResourceType()->getName();
 
         $form = $this->formFactory->create(
             new ResourceIconType($username),
@@ -312,7 +312,7 @@ class ResourcePropertiesController extends Controller
 
             return new JsonResponse($arrayNode);
         }
-        $isDir = $node->getResourceType()->getName() === 'directory';
+        $isDir = 'directory' === $node->getResourceType()->getName();
 
         return [
             'form' => $form->createView(),

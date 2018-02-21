@@ -2,12 +2,12 @@
 
 namespace Claroline\CoreBundle\API\Serializer\User;
 
-use Claroline\CoreBundle\API\Options;
-use Claroline\CoreBundle\API\Serializer\SerializerTrait;
-use Claroline\CoreBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -65,7 +65,7 @@ class RoleSerializer
                 $serialized['workspace'] = $this->serializer->serialize($workspace, [Options::SERIALIZE_MINIMAL]);
             }
 
-            if ($role->getType() === Role::USER_ROLE) {
+            if (Role::USER_ROLE === $role->getType()) {
                 $serialized['user'] = $this->serializer->serialize($role->getUsers()->toArray()[0], [Options::SERIALIZE_MINIMAL]);
             }
 
@@ -99,8 +99,8 @@ class RoleSerializer
            'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
        ];
 
-        if (in_array(Options::SERIALIZE_COUNT_USER, $options) && $role->getType() !== Role::USER_ROLE) {
-            if ($role->getType() !== Role::USER_ROLE) {
+        if (in_array(Options::SERIALIZE_COUNT_USER, $options) && Role::USER_ROLE !== $role->getType()) {
+            if (Role::USER_ROLE !== $role->getType()) {
                 $meta['users'] = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
             } else {
                 $meta['users'] = 1;

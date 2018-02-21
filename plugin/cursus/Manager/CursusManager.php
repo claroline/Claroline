@@ -11,6 +11,7 @@
 
 namespace Claroline\CursusBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
@@ -27,7 +28,6 @@ use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CursusBundle\Entity\Course;
 use Claroline\CursusBundle\Entity\CourseRegistrationQueue;
 use Claroline\CursusBundle\Entity\CourseSession;
@@ -136,34 +136,34 @@ class CursusManager
     private $fu;
     private $locationRepo;
 
-/**
- * @DI\InjectParams({
- *     "authorization"         = @DI\Inject("security.authorization_checker"),
- *     "container"             = @DI\Inject("service_container"),
- *     "contentManager"        = @DI\Inject("claroline.manager.content_manager"),
- *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
- *     "clarolineDispatcher"   = @DI\Inject("claroline.event.event_dispatcher"),
- *     "mailManager"           = @DI\Inject("claroline.manager.mail_manager"),
- *     "messageManager"        = @DI\Inject("claroline.manager.message_manager"),
- *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
- *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
- *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
- *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
- *     "router"                = @DI\Inject("router"),
- *     "serializer"            = @DI\Inject("jms_serializer"),
- *     "defaultTemplate"       = @DI\Inject("%claroline.param.default_template%"),
- *     "templating"            = @DI\Inject("templating"),
- *     "tokenStorage"          = @DI\Inject("security.token_storage"),
- *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
- *     "translator"            = @DI\Inject("translator"),
- *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
- *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
- *     "utils"                 = @DI\Inject("claroline.security.utilities"),
- *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager"),
- *     "pdfManager"            = @DI\Inject("claroline.manager.pdf_manager"),
- *     "fu"                    = @DI\Inject("claroline.utilities.file")
- * })
- */
+    /**
+     * @DI\InjectParams({
+     *     "authorization"         = @DI\Inject("security.authorization_checker"),
+     *     "container"             = @DI\Inject("service_container"),
+     *     "contentManager"        = @DI\Inject("claroline.manager.content_manager"),
+     *     "eventDispatcher"       = @DI\Inject("event_dispatcher"),
+     *     "clarolineDispatcher"   = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "mailManager"           = @DI\Inject("claroline.manager.mail_manager"),
+     *     "messageManager"        = @DI\Inject("claroline.manager.message_manager"),
+     *     "om"                    = @DI\Inject("claroline.persistence.object_manager"),
+     *     "pagerFactory"          = @DI\Inject("claroline.pager.pager_factory"),
+     *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
+     *     "router"                = @DI\Inject("router"),
+     *     "serializer"            = @DI\Inject("jms_serializer"),
+     *     "defaultTemplate"       = @DI\Inject("%claroline.param.default_template%"),
+     *     "templating"            = @DI\Inject("templating"),
+     *     "tokenStorage"          = @DI\Inject("security.token_storage"),
+     *     "toolManager"           = @DI\Inject("claroline.manager.tool_manager"),
+     *     "translator"            = @DI\Inject("translator"),
+     *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
+     *     "ut"                    = @DI\Inject("claroline.utilities.misc"),
+     *     "utils"                 = @DI\Inject("claroline.security.utilities"),
+     *     "workspaceManager"      = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "pdfManager"            = @DI\Inject("claroline.manager.pdf_manager"),
+     *     "fu"                    = @DI\Inject("claroline.utilities.file")
+     * })
+     */
     // why no claroline dispatcher ?
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -961,7 +961,7 @@ class CursusManager
             $sessionUsers = $this->getSessionUsersBySession($session);
 
             foreach ($sessionUsers as $sessionUser) {
-                if ($sessionUser->getUserType() === CourseSessionUser::LEARNER || $sessionUser->getUserType() === CourseSessionUser::PENDING_LEARNER) {
+                if (CourseSessionUser::LEARNER === $sessionUser->getUserType() || CourseSessionUser::PENDING_LEARNER === $sessionUser->getUserType()) {
                     --$remaingPlace;
                 }
             }
@@ -975,7 +975,7 @@ class CursusManager
         $results = ['status' => 'success', 'datas' => [], 'sessionUsers' => '[]'];
         $registrationDate = new \DateTime();
         $course = $session->getCourse();
-        $remainingPlaces = (intval($type) === CourseSessionUser::LEARNER) ?
+        $remainingPlaces = (CourseSessionUser::LEARNER === intval($type)) ?
             $this->getSessionRemainingPlace($session) :
             null;
 
@@ -1004,14 +1004,14 @@ class CursusManager
                     $this->om->persist($sessionUser);
                     $sessionUsers[] = $sessionUser;
 
-                    if (intval($type) === CourseSessionUser::LEARNER) {
+                    if (CourseSessionUser::LEARNER === intval($type)) {
                         $this->sendSessionRegistrationConfirmationMessage($user, $session, 'registered');
 
                         if ($cascadeEvent) {
                             $this->registerPendingSessionEventUsers($user, $session);
                         }
                         $this->registerUserToAllAutomaticSessionEvent($user, $session);
-                    } elseif (intval($type) === CourseSessionUser::PENDING_LEARNER) {
+                    } elseif (CourseSessionUser::PENDING_LEARNER === intval($type)) {
                         $this->sendSessionRegistrationConfirmationMessage($user, $session, 'pending');
                     }
                     $event = new LogCourseSessionUserRegistrationEvent($session, $user);
@@ -1020,9 +1020,9 @@ class CursusManager
             }
             $role = null;
 
-            if (intval($type) === 0) {
+            if (0 === intval($type)) {
                 $role = $session->getLearnerRole();
-            } elseif (intval($type) === 1) {
+            } elseif (1 === intval($type)) {
                 $role = $session->getTutorRole();
             }
 
@@ -1061,7 +1061,7 @@ class CursusManager
     {
         $results = ['status' => 'success', 'datas' => []];
 
-        if (intval($type) === CourseSessionUser::LEARNER) {
+        if (CourseSessionUser::LEARNER === intval($type)) {
             foreach ($sessions as $session) {
                 $course = $session->getCourse();
                 $remainingPlaces = $this->getSessionRemainingPlace($session);
@@ -1080,7 +1080,7 @@ class CursusManager
             }
         }
 
-        if ($results['status'] === 'success') {
+        if ('success' === $results['status']) {
             $this->om->startFlushSuite();
             $registrationDate = new \DateTime();
 
@@ -1104,9 +1104,9 @@ class CursusManager
                         $sessionUser->setRegistrationDate($registrationDate);
                         $this->om->persist($sessionUser);
 
-                        if ($type === CourseSessionUser::LEARNER) {
+                        if (CourseSessionUser::LEARNER === $type) {
                             $this->sendSessionRegistrationConfirmationMessage($user, $session, 'registered');
-                        } elseif ($type === CourseSessionUser::PENDING_LEARNER) {
+                        } elseif (CourseSessionUser::PENDING_LEARNER === $type) {
                             $this->sendSessionRegistrationConfirmationMessage($user, $session, 'pending');
                         }
                         $event = new LogCourseSessionUserRegistrationEvent($session, $user);
@@ -1116,9 +1116,9 @@ class CursusManager
                 }
                 $role = null;
 
-                if (intval($type) === 0) {
+                if (0 === intval($type)) {
                     $role = $session->getLearnerRole();
-                } elseif (intval($type) === 1) {
+                } elseif (1 === intval($type)) {
                     $role = $session->getTutorRole();
                 }
 
@@ -1142,9 +1142,9 @@ class CursusManager
             $userType = $sessionUser->getUserType();
             $role = null;
 
-            if ($userType === 0) {
+            if (0 === $userType) {
                 $role = $session->getLearnerRole();
-            } elseif ($userType === 1) {
+            } elseif (1 === $userType) {
                 $role = $session->getTutorRole();
             }
 
@@ -1155,7 +1155,7 @@ class CursusManager
             $this->eventDispatcher->dispatch('log', $event);
             $this->om->remove($sessionUser);
 
-            if ($userType === CourseSessionUser::LEARNER) {
+            if (CourseSessionUser::LEARNER === $userType) {
                 $sessionEventUsers = $this->getSessionEventUsersByUserAndSession($user, $session);
                 $this->unregisterUsersFromSessionEvent($sessionEventUsers);
             }
@@ -1168,7 +1168,7 @@ class CursusManager
         $users = $group->getUsers()->toArray();
         $results = ['status' => 'success', 'datas' => [], 'sessionUsers' => '[]', 'sessionGroup' => null];
 
-        if (intval($type) === CourseSessionUser::LEARNER) {
+        if (CourseSessionUser::LEARNER === intval($type)) {
             $course = $session->getCourse();
             $remainingPlaces = $this->getSessionRemainingPlace($session);
 
@@ -1184,7 +1184,7 @@ class CursusManager
             }
         }
 
-        if ($results['status'] === 'success') {
+        if ('success' === $results['status']) {
             $this->om->startFlushSuite();
             $sessionUsers = [];
             $registrationDate = new \DateTime();
@@ -1223,9 +1223,9 @@ class CursusManager
             }
             $role = null;
 
-            if (intval($type) === 0) {
+            if (0 === intval($type)) {
                 $role = $session->getLearnerRole();
-            } elseif (intval($type) === 1) {
+            } elseif (1 === intval($type)) {
                 $role = $session->getTutorRole();
             }
 
@@ -1253,7 +1253,7 @@ class CursusManager
         $users = $group->getUsers()->toArray();
         $results = ['status' => 'success', 'datas' => []];
 
-        if (intval($type) === CourseSessionUser::LEARNER) {
+        if (CourseSessionUser::LEARNER === intval($type)) {
             foreach ($sessions as $session) {
                 $course = $session->getCourse();
                 $remainingPlaces = $this->getSessionRemainingPlace($session);
@@ -1272,7 +1272,7 @@ class CursusManager
             }
         }
 
-        if ($results['status'] === 'success') {
+        if ('success' === $results['status']) {
             $this->om->startFlushSuite();
             $registrationDate = new \DateTime();
 
@@ -1310,9 +1310,9 @@ class CursusManager
                 }
                 $role = null;
 
-                if (intval($type) === 0) {
+                if (0 === intval($type)) {
                     $role = $session->getLearnerRole();
-                } elseif (intval($type) === 1) {
+                } elseif (1 === intval($type)) {
                     $role = $session->getTutorRole();
                 }
 
@@ -1335,9 +1335,9 @@ class CursusManager
         $role = null;
         $users = $group->getUsers()->toArray();
 
-        if ($groupType === 0) {
+        if (0 === $groupType) {
             $role = $session->getLearnerRole();
-        } elseif ($groupType === 1) {
+        } elseif (1 === $groupType) {
             $role = $session->getTutorRole();
         }
 
@@ -1564,7 +1564,7 @@ class CursusManager
         $event = new LogSessionEventCreateEvent($sessionEvent);
         $this->eventDispatcher->dispatch('log', $event);
 
-        if ($sessionEvent->getRegistrationType() === CourseSession::REGISTRATION_AUTO) {
+        if (CourseSession::REGISTRATION_AUTO === $sessionEvent->getRegistrationType()) {
             $this->registerSessionUsersToSessionEvent($sessionEvent);
         }
 
@@ -1712,7 +1712,7 @@ class CursusManager
                     $this->persistSessionEvent($newSessionEvent);
                     $createdSessionEvents[] = $newSessionEvent;
 
-                    if ($index % 300 === 0) {
+                    if (0 === $index % 300) {
                         $this->om->forceFlush();
                     }
                 }
@@ -1799,7 +1799,7 @@ class CursusManager
     public function generateRoleForSession(Workspace $workspace, $roleName, $type)
     {
         if (empty($roleName)) {
-            if ($type === 1) {
+            if (1 === $type) {
                 $role = $this->roleManager->getManagerRole($workspace);
             } else {
                 $role = $this->roleManager->getCollaboratorRole($workspace);
@@ -1944,7 +1944,7 @@ class CursusManager
                 $this->eventDispatcher->dispatch('log', $event);
                 $this->sendSessionRegistrationConfirmationMessage($user, $session, 'pending');
 
-                if (($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER) {
+                if (CourseRegistrationQueue::WAITING_USER === ($status & CourseRegistrationQueue::WAITING_USER)) {
                     $this->sendSessionQueueRequestConfirmationMail($queue);
                 }
             }
@@ -2017,7 +2017,7 @@ class CursusManager
             $event = new LogCourseQueueCreateEvent($queue);
             $this->eventDispatcher->dispatch('log', $event);
 
-            if (($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER) {
+            if (CourseRegistrationQueue::WAITING_USER === ($status & CourseRegistrationQueue::WAITING_USER)) {
                 $this->sendCourseQueueRequestConfirmationMail($queue);
             }
         }
@@ -2104,7 +2104,7 @@ class CursusManager
         $this->om->startFlushSuite();
         $results = $this->registerUsersToSession($session, [$user], 0);
 
-        if ($results['status'] === 'success') {
+        if ('success' === $results['status']) {
             $event = new LogCourseQueueTransferEvent($queue, $session);
             $this->eventDispatcher->dispatch('log', $event);
             $this->om->remove($queue);
@@ -2221,9 +2221,9 @@ class CursusManager
         $pathArch = $this->platformConfigHandler->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$this->ut->generateGuid().'.zip';
         $archive->open($pathArch, \ZipArchive::CREATE);
 
-        if ($type === 'cursus') {
+        if ('cursus' === $type) {
             $this->zipCursus($datas, $archive);
-        } elseif ($type === 'course') {
+        } elseif ('course' === $type) {
             $this->zipCourses($datas, $archive);
         }
         $archive->close();
@@ -2309,7 +2309,7 @@ class CursusManager
             }
             ++$i;
 
-            if ($i % 50 === 0) {
+            if (0 === $i % 50) {
                 $this->om->forceFlush();
             }
         }
@@ -2328,7 +2328,7 @@ class CursusManager
             $lvl = $cursus['lvl'];
             $id = $cursus['id'];
 
-            if ($lvl === 0) {
+            if (0 === $lvl) {
                 $roots[$id] = [
                     'id' => $id,
                     'code' => isset($cursus['code']) ? $cursus['code'] : null,
@@ -2453,7 +2453,7 @@ class CursusManager
             $createdCursus[$root['id']] = $cursus;
             ++$index;
 
-            if ($index % 50 === 0) {
+            if (0 === $index % 50) {
                 $this->om->forceFlush();
             }
 
@@ -2513,7 +2513,7 @@ class CursusManager
                 $createdCursus[$child['id']] = $cursus;
                 ++$index;
 
-                if ($index % 50 === 0) {
+                if (0 === $index % 50) {
                     $this->om->forceFlush();
                 }
 
@@ -2860,7 +2860,7 @@ class CursusManager
         }
 
         foreach ($sessions as $session) {
-            if ($session->getSessionStatus() !== 2) {
+            if (2 !== $session->getSessionStatus()) {
                 $courseId = $session->getCourse()->getId();
 
                 $sessionsInfos[$courseId]['sessions'][] = [
@@ -2935,7 +2935,7 @@ class CursusManager
         }
         $results = $this->registerGroupToSessions($sessions, $group);
 
-        if ($results['status'] === 'success') {
+        if ('success' === $results['status']) {
             $this->registerGroupToMultipleCursus($multipleCursus, $group);
         }
 
@@ -3007,7 +3007,7 @@ class CursusManager
         }
         $results = $this->registerUsersToSessions($sessions, $users);
 
-        if ($results['status'] === 'success') {
+        if ('success' === $results['status']) {
             $this->registerUsersToMultipleCursus($multipleCursus, $users);
         }
 
@@ -3035,7 +3035,7 @@ class CursusManager
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
         $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
 
-        if ($authenticatedUser !== 'anon.') {
+        if ('anon.' !== $authenticatedUser) {
             if ($isAdmin) {
                 $coursesQueues = empty($search) ?
                     $this->getAllUnvalidatedCourseQueues() :
@@ -3465,11 +3465,11 @@ class CursusManager
             $course = $queue->getCourse();
             $user = $queue->getUser();
             $userValidation =
-                ($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER;
+                CourseRegistrationQueue::WAITING_USER === ($status & CourseRegistrationQueue::WAITING_USER);
             $validatorValidation =
-                ($status & CourseRegistrationQueue::WAITING_VALIDATOR) === CourseRegistrationQueue::WAITING_VALIDATOR;
+                CourseRegistrationQueue::WAITING_VALIDATOR === ($status & CourseRegistrationQueue::WAITING_VALIDATOR);
             $organizationValidation =
-                ($status & CourseRegistrationQueue::WAITING_ORGANIZATION) === CourseRegistrationQueue::WAITING_ORGANIZATION;
+                CourseRegistrationQueue::WAITING_ORGANIZATION === ($status & CourseRegistrationQueue::WAITING_ORGANIZATION);
             $isValidator = $this->isCourseValidator($authenticatedUser, $course);
             $isOrganizationAdmin = $this->isUserOrganizationAdmin($authenticatedUser, $user);
 
@@ -3496,11 +3496,11 @@ class CursusManager
             $session = $queue->getSession();
             $user = $queue->getUser();
             $userValidation =
-                ($status & CourseRegistrationQueue::WAITING_USER) === CourseRegistrationQueue::WAITING_USER;
+                CourseRegistrationQueue::WAITING_USER === ($status & CourseRegistrationQueue::WAITING_USER);
             $validatorValidation =
-                ($status & CourseRegistrationQueue::WAITING_VALIDATOR) === CourseRegistrationQueue::WAITING_VALIDATOR;
+                CourseRegistrationQueue::WAITING_VALIDATOR === ($status & CourseRegistrationQueue::WAITING_VALIDATOR);
             $organizationValidation =
-                ($status & CourseRegistrationQueue::WAITING_ORGANIZATION) === CourseRegistrationQueue::WAITING_ORGANIZATION;
+                CourseRegistrationQueue::WAITING_ORGANIZATION === ($status & CourseRegistrationQueue::WAITING_ORGANIZATION);
             $isValidator = $this->isSessionValidator($authenticatedUser, $session);
             $isOrganizationAdmin = $this->isUserOrganizationAdmin($authenticatedUser, $user);
 
@@ -3573,7 +3573,7 @@ class CursusManager
         if ($status & CourseRegistrationQueue::WAITING_USER) {
             $status -= CourseRegistrationQueue::WAITING_USER;
 
-            if ($status === 0) {
+            if (0 === $status) {
                 $status = CourseRegistrationQueue::WAITING;
             }
             $queue->setStatus($status);
@@ -3602,10 +3602,10 @@ class CursusManager
             $this->eventDispatcher->dispatch('log', $event);
         }
 
-        if ($queue->getStatus() === 0) {
+        if (0 === $queue->getStatus()) {
             $results = $this->registerUsersToSession($session, [$user], CourseSessionUser::LEARNER);
 
-            if ($results['status'] === 'success') {
+            if ('success' === $results['status']) {
                 $this->deleteSessionQueue($queue);
                 $this->sendSessionRegistrationConfirmationMessage($user, $session, 'validated');
             } else {
@@ -3638,7 +3638,7 @@ class CursusManager
             $status = $queue->getStatus();
             $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
 
-            if ($status !== CourseRegistrationQueue::WAITING) {
+            if (CourseRegistrationQueue::WAITING !== $status) {
                 $authenticatedUser = $this->tokenStorage->getToken()->getUser();
                 $isWaitingOrganization = $status & CourseRegistrationQueue::WAITING_ORGANIZATION;
                 $isWaitingValidator = $status & CourseRegistrationQueue::WAITING_VALIDATOR;
@@ -3700,7 +3700,7 @@ class CursusManager
                 }
             }
 
-            if ($queue->getStatus() === 0) {
+            if (0 === $queue->getStatus()) {
                 $queue->setStatus(CourseRegistrationQueue::WAITING);
                 $this->persistCourseRegistrationQueue($queue);
                 $queueDatas['queueStatus'] = $queue->getStatus();
@@ -3735,7 +3735,7 @@ class CursusManager
         if ($canValidate) {
             $status = $queue->getStatus();
 
-            if ($status === CourseRegistrationQueue::WAITING) {
+            if (CourseRegistrationQueue::WAITING === $status) {
                 $queue->setStatus(0);
             } elseif ($status > 0) {
                 $isAdmin = $this->authorization->isGranted('ROLE_ADMIN');
@@ -3780,10 +3780,10 @@ class CursusManager
                 }
             }
 
-            if ($queue->getStatus() === 0) {
+            if (0 === $queue->getStatus()) {
                 $results = $this->registerUsersToSession($session, [$user], 0, true);
 
-                if ($results['status'] === 'success') {
+                if ('success' === $results['status']) {
                     $this->deleteSessionQueue($queue);
                     $this->sendSessionRegistrationConfirmationMessage($user, $session, 'validated');
                     $queueDatas['type'] = 'registered';
@@ -4317,7 +4317,7 @@ class CursusManager
         $this->om->startFlushSuite();
 
         foreach ($sessionEventUsers as $sessionEventUser) {
-            if ($sessionEventUser->getRegistrationStatus() === SessionEventUser::REGISTERED) {
+            if (SessionEventUser::REGISTERED === $sessionEventUser->getRegistrationStatus()) {
                 $event = new LogSessionEventUserUnregistrationEvent($sessionEventUser);
                 $this->eventDispatcher->dispatch('log', $event);
             }
@@ -4331,7 +4331,7 @@ class CursusManager
         $results = [];
         $sessionRegistrationStatus = null;
 
-        if ($sessionEvent->getRegistrationType() === CourseSession::REGISTRATION_PUBLIC) {
+        if (CourseSession::REGISTRATION_PUBLIC === $sessionEvent->getRegistrationType()) {
             $session = $sessionEvent->getSession();
             $sessionUser = $this->getOneSessionUserBySessionAndUserAndTypes(
                 $session,
@@ -4350,16 +4350,16 @@ class CursusManager
                         } else {
                             $sessionDatas = $this->registerUsersToSession($session, [$user], CourseSessionUser::LEARNER);
 
-                            if ($sessionDatas['status'] === 'success') {
+                            if ('success' === $sessionDatas['status']) {
                                 $sessionRegistrationStatus = 'registered';
                             } else {
                                 $this->sendEventRegistrationConfirmationMessage($user, $sessionEvent, 'failed');
                             }
                         }
-                        if ($sessionRegistrationStatus === 'registered') {
+                        if ('registered' === $sessionRegistrationStatus) {
                             $eventDatas = $this->registerUsersToSessionEvent($sessionEvent, [$user]);
 
-                            if ($eventDatas['status'] === 'failed') {
+                            if ('failed' === $eventDatas['status']) {
                                 $eventUser = $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
                                 $results['sessionEventUsers'] = $this->serializer->serialize(
                                     [$eventUser],
@@ -4370,7 +4370,7 @@ class CursusManager
                                 $results['sessionEventUsers'] = $eventDatas['sessionEventUsers'];
                             }
                             $this->sendEventRegistrationConfirmationMessage($user, $sessionEvent, 'success', $eventDatas['status']);
-                        } elseif ($sessionRegistrationStatus === 'pending') {
+                        } elseif ('pending' === $sessionRegistrationStatus) {
                             $eventUser = $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
                             $this->sendEventRegistrationConfirmationMessage($user, $sessionEvent, 'pending', 'failed');
                             $results['sessionEventUsers'] = $this->serializer->serialize(
@@ -4383,7 +4383,7 @@ class CursusManager
                 } elseif (!is_null($sessionUser)) {
                     $eventDatas = $this->registerUsersToSessionEvent($sessionEvent, [$user]);
 
-                    if ($eventDatas['status'] === 'failed') {
+                    if ('failed' === $eventDatas['status']) {
                         $eventUser = $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::PENDING, null, new \DateTime());
                         $results['sessionEventUsers'] = $this->serializer->serialize(
                             [$eventUser],
@@ -4419,7 +4419,7 @@ class CursusManager
             $eventUsers = $sessionEvent->getSessionEventUsers();
 
             foreach ($eventUsers as $eventUser) {
-                if ($eventUser->getRegistrationStatus() === SessionEventUser::REGISTERED) {
+                if (SessionEventUser::REGISTERED === $eventUser->getRegistrationStatus()) {
                     --$remainingPlaces;
                 }
             }
@@ -4478,7 +4478,7 @@ class CursusManager
     public function forceRegisterUsersWithTypeToSessionEvent(SessionEvent $sessionEvent, array $users, $registrationStatus)
     {
         $sessionEventUsers = [];
-        $registrationDate = $registrationStatus === SessionEventUser::REGISTERED ? new \DateTime() : null;
+        $registrationDate = SessionEventUser::REGISTERED === $registrationStatus ? new \DateTime() : null;
         $this->om->startFlushSuite();
 
         foreach ($users as $user) {
@@ -4538,7 +4538,7 @@ class CursusManager
 
             if (is_null($sessionEventUser)) {
                 $this->createSessionEventUser($user, $sessionEvent, SessionEventUser::REGISTERED, $registrationDate);
-            } elseif ($sessionEventUser->getRegistrationStatus() === SessionEventUser::PENDING) {
+            } elseif (SessionEventUser::PENDING === $sessionEventUser->getRegistrationStatus()) {
                 $sessionEventUser->getRegistrationStatus(SessionEventUser::REGISTERED);
                 $sessionEventUser->setRegistrationDate($registrationDate);
                 $this->om->persist($sessionEventUser);
@@ -4563,7 +4563,7 @@ class CursusManager
         $this->om->persist($sessionEventUser);
         $this->om->flush();
 
-        if ($registrationStatus === SessionEventUser::REGISTERED) {
+        if (SessionEventUser::REGISTERED === $registrationStatus) {
             $event = new LogSessionEventUserRegistrationEvent($sessionEvent, $user);
             $this->eventDispatcher->dispatch('log', $event);
         }
@@ -4716,8 +4716,8 @@ class CursusManager
 
         switch ($sessionStatus) {
             case 'success':
-                $object = $sessionEventStatus === 'success' ? $successObject : $pendingObject;
-                $content = $sessionEventStatus === 'success' ?
+                $object = 'success' === $sessionEventStatus ? $successObject : $pendingObject;
+                $content = 'success' === $sessionEventStatus ?
                     $this->translator->trans(
                         'session_and_event_registration_success_msg',
                         [
@@ -5157,7 +5157,7 @@ class CursusManager
         $groups = [];
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user !== 'anon.') {
+        if ('anon.' !== $user) {
             $this->checkCursusAccess($user, $cursus);
 
             if ($this->authorization->isGranted('ROLE_ADMIN')) {
@@ -5359,14 +5359,14 @@ class CursusManager
 
     public function getSessionUsersByUser(User $user, $search = '', $executeQuery = true)
     {
-        return $search === '' ?
+        return '' === $search ?
             $this->sessionUserRepo->findSessionUsersByUser($user, $executeQuery) :
             $this->sessionUserRepo->findSessionUsersByUserAndSearch($user, $search, $executeQuery);
     }
 
     public function getSessionUsersByUserFromCoursesList(User $user, array $coursesList = [], $search = '', $executeQuery = true)
     {
-        return $search === '' ?
+        return '' === $search ?
             $this->sessionUserRepo->findSessionUsersByUserFromCoursesList($user, $coursesList, $executeQuery) :
             $this->sessionUserRepo->findSessionUsersByUserAndSearchFromCoursesList($user, $coursesList, $search, $executeQuery);
     }
@@ -5826,7 +5826,7 @@ class CursusManager
 
     public function checkAccess(User $user)
     {
-        if (!$this->authorization->isGranted('ROLE_ADMIN') && count($user->getAdministratedOrganizations()->toArray()) === 0) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN') && 0 === count($user->getAdministratedOrganizations()->toArray())) {
             throw new AccessDeniedException();
         }
     }
@@ -5836,7 +5836,7 @@ class CursusManager
         $userOrgas = $this->extractOrganizationsIds($user->getAdministratedOrganizations()->toArray());
         $cursusOrgas = $this->extractOrganizationsIds($cursus->getOrganizations());
 
-        if (!$this->authorization->isGranted('ROLE_ADMIN') && count(array_intersect($userOrgas, $cursusOrgas)) === 0) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN') && 0 === count(array_intersect($userOrgas, $cursusOrgas))) {
             throw new AccessDeniedException();
         }
     }
@@ -5846,7 +5846,7 @@ class CursusManager
         $userOrgas = $this->extractOrganizationsIds($user->getAdministratedOrganizations()->toArray());
         $courseOrgas = $this->extractOrganizationsIds($this->getOrganizationsByCourse($course));
 
-        if (!$this->authorization->isGranted('ROLE_ADMIN') && count(array_intersect($userOrgas, $courseOrgas)) === 0) {
+        if (!$this->authorization->isGranted('ROLE_ADMIN') && 0 === count(array_intersect($userOrgas, $courseOrgas))) {
             throw new AccessDeniedException();
         }
     }

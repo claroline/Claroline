@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Installation\Updater;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\DBAL\Connection;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Entity\Attempt\Paper;
@@ -148,7 +148,7 @@ class Updater090000
             SELECT q.mime_type, a.id AS answerId, a.response AS data, a.question_id
             FROM ujm_response AS a
             LEFT JOIN ujm_question AS q ON (a.question_id = q.uuid)
-            WHERE a.response IS NOT NULL 
+            WHERE a.response IS NOT NULL
               AND a.response != ""
               AND q.mime_type != "application/x.open+json"
               AND q.mime_type != "application/x.words+json"
@@ -315,7 +315,7 @@ class Updater090000
 
             // Update answer data
             $sth = $this->connection->prepare('
-                UPDATE ujm_response SET `response` = :data WHERE id = :id 
+                UPDATE ujm_response SET `response` = :data WHERE id = :id
             ');
 
             $insertData = null;
@@ -332,7 +332,7 @@ class Updater090000
                 'data' => $insertData,
             ]);
 
-            if ($index % 200 === 0) {
+            if (0 === $index % 200) {
                 $this->log('200 answers processed.');
             }
         }
@@ -370,11 +370,11 @@ class Updater090000
         // Delete old questions
         $sth = $this->connection->prepare('
             SET FOREIGN_KEY_CHECKS = false;
-            
+
             DELETE m FROM ujm_interaction_matching AS m
             JOIN ujm_question AS q ON (m.question_id = q.id)
             WHERE q.mime_type = "application/x.pair+json";
-            
+
             SET FOREIGN_KEY_CHECKS = true;
         ');
         $sth->execute();
@@ -382,11 +382,11 @@ class Updater090000
         // Delete old labels
         $sth = $this->connection->prepare('
             SET FOREIGN_KEY_CHECKS = false;
-            
+
             DELETE l FROM ujm_label AS l
             LEFT JOIN ujm_interaction_matching AS m ON (l.interaction_matching_id = m.id)
             WHERE m.id IS NULL;
-            
+
             SET FOREIGN_KEY_CHECKS = true;
         ');
         $sth->execute();
@@ -394,11 +394,11 @@ class Updater090000
         // Delete old proposals
         $sth = $this->connection->prepare('
             SET FOREIGN_KEY_CHECKS = false;
-            
+
             DELETE l FROM ujm_proposal AS p
             LEFT JOIN ujm_interaction_matching AS m ON (p.interaction_matching_id = m.id)
             WHERE m.id IS NULL;
-            
+
             SET FOREIGN_KEY_CHECKS = true;
         ');
         $sth->execute();
@@ -406,13 +406,13 @@ class Updater090000
         // Delete old labels/proposals association
         $sth = $this->connection->prepare('
             SET FOREIGN_KEY_CHECKS = false;
-            
+
             DELETE l FROM ujm_proposal_label AS pl
             LEFT JOIN ujm_proposal AS p ON (pl.proposal_id = p.id)
             LEFT JOIN ujm_label AS l ON (pl.label_id = l.id)
-            WHERE p.id IS NULL 
+            WHERE p.id IS NULL
                OR l.id IS NULL;
-                
+
             SET FOREIGN_KEY_CHECKS = true;
         ');
         $sth->execute();
@@ -445,7 +445,7 @@ class Updater090000
         foreach ($papers as $i => $paper) {
             // Checks the format of the structure to know if it has already been transformed
             $structure = $paper->getStructure();
-            if (substr($structure, 0, 1) !== '{') {
+            if ('{' !== substr($structure, 0, 1)) {
                 // The structure is not a JSON (this is a little bit hacky)
                 // Update structure
                 $this->updatePaperStructure($paper, $questions, $decodedQuestions);
@@ -456,7 +456,7 @@ class Updater090000
                 $this->om->persist($paper);
             }
 
-            if ($i % 200 === 0) {
+            if (0 === $i % 200) {
                 $this->om->forceFlush();
                 $this->log('200 papers processed.');
             }
@@ -573,7 +573,7 @@ class Updater090000
             // Replace selects
 
             $sth = $this->connection->prepare('
-                UPDATE ujm_interaction_hole 
+                UPDATE ujm_interaction_hole
                 SET htmlWithoutValue = :text, originalText = :originalText
                 WHERE question_id = :id
             ');

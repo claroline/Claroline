@@ -11,8 +11,8 @@
 
 namespace Claroline\PdfGeneratorBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\PdfGeneratorBundle\Entity\Pdf;
 use JMS\DiExtraBundle\Annotation as DI;
 use Knp\Bundle\SnappyBundle\Snappy\LoggableGenerator;

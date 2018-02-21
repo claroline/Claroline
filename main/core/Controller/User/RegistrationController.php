@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\User;
 
-use Claroline\CoreBundle\API\Options;
+use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;

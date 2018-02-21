@@ -11,10 +11,10 @@
 
 namespace Claroline\SurveyBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\SurveyBundle\Entity\Answer\MultipleChoiceQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\OpenEndedQuestionAnswer;
 use Claroline\SurveyBundle\Entity\Answer\QuestionAnswer;
@@ -195,7 +195,7 @@ class SurveyManager
         $max = 20,
         $executeQuery = true
     ) {
-        if (count($exclusions) === 0) {
+        if (0 === count($exclusions)) {
             return $this->getQuestionsByWorkspace(
                 $workspace,
                 $orderedBy,
@@ -302,7 +302,6 @@ class SurveyManager
         $details = [];
 
         switch ($questionType) {
-
             case 'multiple_choice_single':
             case 'multiple_choice_multiple':
                 $choiceQuestion =
@@ -826,7 +825,7 @@ class SurveyManager
             $question_type = $question->getType();
 
             $multiple_choices = [];
-            if ($question_type === 'multiple_choice_single' || $question_type === 'multiple_choice_multiple') {
+            if ('multiple_choice_single' === $question_type || 'multiple_choice_multiple' === $question_type) {
                 $multipleChoiceQuestion = $this->getMultipleChoiceQuestionByQuestion($question);
 
                 $multiple_choices['horizontal'] = $multipleChoiceQuestion->getHorizontal();
@@ -876,10 +875,10 @@ class SurveyManager
             $survey->setClosed($surveyData['closed']);
             $survey->setHasPublicResult($surveyData['hasPublicResult']);
             $survey->setAllowAnswerEdition($surveyData['allowAnswerEdition']);
-            if ($surveyData['startDate'] !== null) {
+            if (null !== $surveyData['startDate']) {
                 $survey->setStartDate(new \DateTime($surveyData['startDate']));
             }
-            if ($surveyData['endDate'] !== null) {
+            if (null !== $surveyData['endDate']) {
                 $survey->setEndDate(new \DateTime($surveyData['endDate']));
             }
 
@@ -896,7 +895,7 @@ class SurveyManager
 
                 $this->om->persist($question);
 
-                if ($questionData['type'] === 'multiple_choice_single' || $questionData['type'] === 'multiple_choice_multiple') {
+                if ('multiple_choice_single' === $questionData['type'] || 'multiple_choice_multiple' === $questionData['type']) {
                     $multipleQuestion = new MultipleChoiceQuestion();
                     $multipleQuestion->setHorizontal($questionData['multiple_choices']['horizontal']);
                     $multipleQuestion->setQuestion($question);

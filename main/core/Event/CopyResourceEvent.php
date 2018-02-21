@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Event;
 
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Symfony\Component\EventDispatcher\Event;

@@ -51,7 +51,7 @@ class Scorm12
             // No default organization is defined
             if (is_null($defaultOrganization)) {
                 while (!is_null($organization)
-                    && $organization->nodeName !== 'organization') {
+                    && 'organization' !== $organization->nodeName) {
                     $organization = $organization->nextSibling;
                 }
 
@@ -63,7 +63,7 @@ class Scorm12
             // Look for it
             else {
                 while (!is_null($organization)
-                    && ($organization->nodeName !== 'organization'
+                    && ('organization' !== $organization->nodeName
                         || is_null($organization->attributes->getNamedItem('identifier'))
                         || $organization->attributes->getNamedItem('identifier')->nodeValue !== $defaultOrganization)) {
                     $organization = $organization->nextSibling;
@@ -94,10 +94,10 @@ class Scorm12
         Scorm12Sco $parentSco = null
     ) {
         $item = $source->firstChild;
-        $scos = array();
+        $scos = [];
 
         while (!is_null($item)) {
-            if ($item->nodeName === 'item') {
+            if ('item' === $item->nodeName) {
                 $sco = new Scorm12Sco();
                 $scos[] = $sco;
                 $sco->setScoParent($parentSco);
@@ -141,7 +141,7 @@ class Scorm12
         $sco->setIdentifier($identifier->nodeValue);
 
         // visible is true by default
-        if (!is_null($isVisible) && $isVisible === 'false') {
+        if (!is_null($isVisible) && 'false' === $isVisible) {
             $sco->setVisible(false);
         } else {
             $sco->setVisible(true);
@@ -218,10 +218,10 @@ class Scorm12
                 case 'adlcp:timelimitaction':
                     $action = strtolower($item->nodeValue);
 
-                    if ($action === 'exit,message'
-                        || $action === 'exit,no message'
-                        || $action === 'continue,message'
-                        || $action === 'continue,no message') {
+                    if ('exit,message' === $action
+                        || 'exit,no message' === $action
+                        || 'continue,message' === $action
+                        || 'continue,no message' === $action) {
                         $sco->setTimeLimitAction($action);
                     }
                     break;

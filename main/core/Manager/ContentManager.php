@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Entity\ContentTranslation;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Bundle\DoctrineBundle\Registry;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class ContentManager
 {
     /**
-     * @var \Claroline\CoreBundle\Persistence\ObjectManager
+     * @var \Claroline\AppBundle\Persistence\ObjectManager
      */
     private $manager;
 
@@ -105,7 +105,7 @@ class ContentManager
      * @param array  $translatedContent array('en' => array('content' => 'foo', 'title' => 'foo'))
      * @param string $type              A type of content
      *
-     * @return int The id of the new content.
+     * @return int the id of the new content
      */
     public function createContent(array $translatedContent, $type = null)
     {
@@ -147,10 +147,10 @@ class ContentManager
      */
     public function deleteTranslation($locale, $id)
     {
-        if ($locale === 'en') {
-            $content = $this->content->findOneBy(array('id' => $id));
+        if ('en' === $locale) {
+            $content = $this->content->findOneBy(['id' => $id]);
         } else {
-            $content = $this->translations->findOneBy(array('foreignKey' => $id, 'locale' => $locale));
+            $content = $this->translations->findOneBy(['foreignKey' => $id, 'locale' => $locale]);
         }
 
         if ($content instanceof ContentTranslation || $content instanceof Content) {
@@ -213,7 +213,7 @@ class ContentManager
      */
     private function setDefault(array $translatedContent, $field, $locale)
     {
-        if ($locale !== 'en') {
+        if ('en' !== $locale) {
             if (isset($translatedContent['en'][$field]) && !strlen($translatedContent['en'][$field]) &&
                 isset($translatedContent[$locale][$field]) && strlen($translatedContent[$locale][$field])) {
                 $translatedContent['en'][$field] = $translatedContent[$locale][$field];

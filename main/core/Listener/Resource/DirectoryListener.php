@@ -11,23 +11,23 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\StreamedResponse;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Form\DirectoryType;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Resource\Directory;
+use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
-use Claroline\CoreBundle\Event\CopyResourceEvent;
-use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Form\DirectoryType;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\RightsManager;
+use Claroline\CoreBundle\Manager\RoleManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 /**
  * @DI\Service
@@ -85,10 +85,10 @@ class DirectoryListener
         $form = $this->formFactory->create(new DirectoryType(), new Directory());
         $response = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'resourceType' => 'directory',
-            )
+            ]
         );
         $event->setResponseContent($response);
         $event->stopPropagation();
@@ -108,7 +108,7 @@ class DirectoryListener
         if ($form->isValid()) {
             $published = $form->get('published')->getData();
             $event->setPublished($published);
-            $event->setResources(array($form->getData()));
+            $event->setResources([$form->getData()]);
             $event->stopPropagation();
 
             return;
@@ -116,10 +116,10 @@ class DirectoryListener
 
         $content = $this->templating->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig',
-            array(
+            [
                 'form' => $form->createView(),
                 'resourceType' => 'directory',
-            )
+            ]
         );
         $event->setErrorFormContent($content);
         $event->stopPropagation();
@@ -133,7 +133,7 @@ class DirectoryListener
     public function onOpen(OpenResourceEvent $event)
     {
         $dir = $event->getResourceNode();
-        $file = $this->resourceManager->download(array($dir));
+        $file = $this->resourceManager->download([$dir]);
         $response = new StreamedResponse();
 
         $response->setCallBack(
@@ -155,9 +155,9 @@ class DirectoryListener
     /**
      * @DI\Observe("delete_directory")
      *
-     * @param DeleteResourceEvent $event
+     * @param deleteResourceEvent $event
      *
-     * Removes a directory.
+     * Removes a directory
      */
     public function delete(DeleteResourceEvent $event)
     {
@@ -167,9 +167,9 @@ class DirectoryListener
     /**
      * @DI\Observe("copy_directory")
      *
-     * @param CopyResourceEvent $event
+     * @param copyResourceEvent $event
      *
-     * Copy a directory.
+     * Copy a directory
      */
     public function copy(CopyResourceEvent $event)
     {

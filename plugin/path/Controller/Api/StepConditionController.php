@@ -2,10 +2,10 @@
 
 namespace Innova\PathBundle\Controller\Api;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Activity;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\GroupManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\TeamBundle\Manager\TeamManager;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
@@ -155,7 +155,7 @@ class StepConditionController extends Controller
         $statuses = [];
         foreach ($const as $k => $v) {
             // Only get constants beginning with STATUS
-            if (strpos($k, 'STATUS') !== false) {
+            if (false !== strpos($k, 'STATUS')) {
                 $statuses[] = $v;
             }
         }

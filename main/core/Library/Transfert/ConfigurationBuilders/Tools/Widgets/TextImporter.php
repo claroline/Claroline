@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Widget\SimpleTextConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -29,6 +29,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
 {
     private $om;
     private $container;
+
     /**
      * @DI\InjectParams({
      *      "om"        = @DI\Inject("claroline.persistence.object_manager"),
@@ -52,7 +53,7 @@ class TextImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function supports($type)
     {
-        return $type === 'yml' ? true : false;
+        return 'yml' === $type ? true : false;
     }
 
     public function validate(array $data)

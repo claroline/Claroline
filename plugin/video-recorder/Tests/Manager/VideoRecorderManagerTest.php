@@ -2,13 +2,13 @@
 
 namespace Innova\VideoRecorderBundle\Manager;
 
-use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Innova\VideoRecorderBundle\Testing\Persister;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Innova\VideoRecorderBundle\Testing\Persister;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 
 class VideoRecorderManagerTest extends TransactionalTestCase
 {
@@ -81,7 +81,7 @@ class VideoRecorderManagerTest extends TransactionalTestCase
     public function testGetBaseFileHashWithoutWorkspace()
     {
         $firewall = 'secured_area';
-        $token = new UsernamePasswordToken('bill', null, $firewall, array('ROLE_USER'));
+        $token = new UsernamePasswordToken('bill', null, $firewall, ['ROLE_USER']);
         $this->container->get('security.token_storage')->setToken($token);
 
         $uniqueBaseName = 'video_recorder_test_unique_name';

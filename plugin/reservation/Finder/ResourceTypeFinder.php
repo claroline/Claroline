@@ -11,7 +11,7 @@
 
 namespace FormaLibre\ReservationBundle\Finder;
 
-use Claroline\CoreBundle\API\FinderInterface;
+use Claroline\AppBundle\API\FinderInterface;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 

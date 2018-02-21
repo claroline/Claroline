@@ -7,8 +7,8 @@
 
 namespace Icap\DropzoneBundle\Controller;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Drop;
@@ -74,7 +74,7 @@ class DropController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $dropRepo = $em->getRepository('IcapDropzoneBundle:Drop');
 
-        if ($dropRepo->findOneBy(['dropzone' => $dropzone, 'user' => $user, 'finished' => true]) !== null) {
+        if (null !== $dropRepo->findOneBy(['dropzone' => $dropzone, 'user' => $user, 'finished' => true])) {
             $request->getSession()->getFlashBag()->add(
                 'error',
                 $this->get('translator')->trans('You ve already made your copy for this review', [], 'icap_dropzone')
@@ -91,7 +91,7 @@ class DropController extends DropzoneBaseController
         }
 
         $notFinishedDrop = $dropRepo->findOneBy(['dropzone' => $dropzone, 'user' => $user, 'finished' => false]);
-        if ($notFinishedDrop === null) {
+        if (null === $notFinishedDrop) {
             $notFinishedDrop = new Drop();
             $number = ($dropRepo->getLastNumber($dropzone) + 1);
             $notFinishedDrop->setNumber($number);
@@ -118,7 +118,7 @@ class DropController extends DropzoneBaseController
         if ($request->isMethod('POST')) {
             $form->handleRequest($request);
 
-            if (count($notFinishedDrop->getDocuments()) === 0) {
+            if (0 === count($notFinishedDrop->getDocuments())) {
                 $form->addError(new FormError('Add at least one document'));
             }
 
@@ -282,7 +282,7 @@ class DropController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
         $dropRepo = $this->getDoctrine()->getManager()->getRepository('IcapDropzoneBundle:Drop');
         $drop = $dropRepo->getDropByUser($dropzone->getId(), $userId);
-        if ($drop !== null) {
+        if (null !== $drop) {
             $drop->setUnlockedUser(true);
         }
         $em = $this->getDoctrine()->getManager();
@@ -676,9 +676,9 @@ class DropController extends DropzoneBaseController
         $form = $this->createForm(new DropType(), $drop);
 
         $previousPath = 'icap_dropzone_drops_by_user_paginated';
-        if ($tab === 1) {
+        if (1 === $tab) {
             $previousPath = 'icap_dropzone_drops_by_date_paginated';
-        } elseif ($tab === 2) {
+        } elseif (2 === $tab) {
             $previousPath = 'icap_dropzone_drops_awaiting_paginated';
         }
 
@@ -687,7 +687,7 @@ class DropController extends DropzoneBaseController
             //It can be uncommented once a true fix is found.
             //$form->handleRequest($request);
             //if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
+            $em = $this->getDoctrine()->getManager();
             $em->remove($drop);
             $em->flush();
 
@@ -699,7 +699,6 @@ class DropController extends DropzoneBaseController
                             'page' => $page,
                         ]
                     )
-
                 );
             //}
         }
@@ -788,7 +787,7 @@ class DropController extends DropzoneBaseController
             ->getDropAndValidEndedCorrectionsAndDocumentsByUser($dropzone, $drop->getId(), $userId);
 
         // if there is no result ( user is not the owner, or the drop has not ended Corrections , show 404)
-        if (count($dropSecure) === 0) {
+        if (0 === count($dropSecure)) {
             if ($drop->getUser()->getId() !== $userId) {
                 throw new AccessDeniedException();
             }
@@ -892,7 +891,7 @@ class DropController extends DropzoneBaseController
             throw new AccessDeniedException();
         }
 
-        if ($curent_user_correction === null || $curent_user_correction->getId() !== $correction->getId()) {
+        if (null === $curent_user_correction || $curent_user_correction->getId() !== $correction->getId()) {
             throw new AccessDeniedException();
         }
         $form = $this->createForm(new CorrectionReportType(), $correction);
@@ -969,7 +968,7 @@ class DropController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $correction->setReporter(false);
 
-        if ($invalidate === 1) {
+        if (1 === $invalidate) {
             $correction->setValid(false);
         }
 
@@ -977,7 +976,7 @@ class DropController extends DropzoneBaseController
         $em->flush();
 
         $correctionRepo = $this->getDoctrine()->getRepository('IcapDropzoneBundle:Correction');
-        if ($correctionRepo->countReporter($dropzone, $drop) === 0) {
+        if (0 === $correctionRepo->countReporter($dropzone, $drop)) {
             $drop->setReported(false);
             $em->persist($drop);
             $em->flush();

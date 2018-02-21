@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
@@ -23,7 +24,6 @@ use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -88,7 +88,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public function supports($type)
     {
-        return $type === 'yml' ? true : false;
+        return 'yml' === $type ? true : false;
     }
 
     public function validate(array $data)
@@ -101,7 +101,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             foreach ($data['data']['items'] as $item) {
                 $importer = $this->getImporterByName($item['item']['type']);
 
-                if (!$importer && $this->env === 'dev') {
+                if (!$importer && 'dev' === $this->env) {
                     throw new InvalidConfigurationException('The importer '.$item['item']['type'].' does not exist');
                 }
 
@@ -345,7 +345,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
             $resourceNodes = $this->resourceManager->getByWorkspaceAndResourceType($workspace, $directory);
 
             foreach ($resourceNodes as $resourceNode) {
-                if ($resourceNode->getParent() !== null) {
+                if (null !== $resourceNode->getParent()) {
                     $_data['directories'][] = $this->getDirectoryElement($resourceNode, $_files);
                 }
             }
@@ -354,7 +354,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $children = $resourceNode->getChildren();
 
                 foreach ($children as $child) {
-                    if ($child && $child->getResourceType()->getName() !== 'directory') {
+                    if ($child && 'directory' !== $child->getResourceType()->getName()) {
                         $item = $this->getResourceElement($child, $workspace, $_files, $_data);
                         if (!empty($item)) {
                             $_data['items'][] = $item;
@@ -377,7 +377,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         foreach ($resourceNodes as $resourceNode) {
             $resourceTypeName = $resourceNode->getResourceType()->getName();
 
-            if ($resourceTypeName === 'directory') {
+            if ('directory' === $resourceTypeName) {
                 $_data['directories'][] = $this->getDirectoryElement($resourceNode, $_files, true);
                 $this->exportChildrenResources(
                     $workspace,
@@ -404,7 +404,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         foreach ($children as $child) {
             $resourceTypeName = $child->getResourceType()->getName();
 
-            if ($resourceTypeName === 'directory') {
+            if ('directory' === $resourceTypeName) {
                 $_data['directories'][] = $this->getDirectoryElement($child, $_files);
                 $this->exportChildrenResources(
                     $workspace,
@@ -682,7 +682,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
     public static function creatorExists($v, $creators)
     {
-        if ($v === null) {
+        if (null === $v) {
             return false;
         }
 
@@ -703,7 +703,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     {
         $creations = [];
 
-        if ($rights !== null) {
+        if (null !== $rights) {
             foreach ($rights as $el) {
                 $creations[] = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')
                     ->findOneByName($el['name']);
@@ -723,7 +723,6 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
 
             //we only keep workspace in the current workspace and platform roles
             if ($right->getRole()->getWorkspace() === $node->getWorkspace() /*|| $right->getRole()->getWorkspace() === null*/) {
-
                 //creation rights are missing here but w/e
                 $name = $this->roleManager->getWorkspaceRoleBaseName($right->getRole());
 
@@ -754,13 +753,13 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         );
 
         //is it already on the database ?
-        if ($createdRights === null) {
+        if (null === $createdRights) {
             $createdRights = $this->rightManager
                 ->getOneByRoleAndResource($entityRole, $resourceEntity->getResourceNode());
         }
 
         //There is no ResourceRight in the IdentityMap so we must create it
-        if ($createdRights === null) {
+        if (null === $createdRights) {
             $this->rightManager->create(
                 $role['role']['rights'],
                 $entityRole,
@@ -768,7 +767,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 false,
                 $creations
             );
-            //We use the ResourceRight from the IdentityMap
+        //We use the ResourceRight from the IdentityMap
         } else {
             $createdRights->setMask($this->maskManager->encodeMask(
                     $role['role']['rights'],
@@ -785,7 +784,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
         if (isset($data['data']['items'])) {
             foreach ($data['data']['items'] as $item) {
                 foreach ($this->getListImporters() as $importer) {
-                    if ($importer->getName() === $item['item']['type']) {
+                    if ($item['item']['type'] === $importer->getName()) {
                         $resourceImporter = $importer;
                         $resourceImporter->setWorkspace($this->getWorkspace());
                     }
@@ -878,7 +877,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
     private function getIcon(ResourceNode $resourceNode, &$_files)
     {
         $icon = $resourceNode->getIcon();
-        if ($icon->getMimeType() !== 'custom') {
+        if ('custom' !== $icon->getMimeType()) {
             return;
         }
         $iconPath = $this->container->getParameter('claroline.param.web_directory').'/'.$icon->getRelativeUrl();

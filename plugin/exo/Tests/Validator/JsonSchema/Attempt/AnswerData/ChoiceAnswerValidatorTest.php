@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Tests\Validator\JsonSchema\Attempt\AnswerData;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\ItemType\ChoiceQuestion;
 use UJM\ExoBundle\Library\Options\Validation;

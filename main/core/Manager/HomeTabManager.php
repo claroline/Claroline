@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
@@ -18,7 +19,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -127,7 +127,7 @@ class HomeTabManager
                 $this->log("Tab {$name} already exists for workspace {$code}");
             }
 
-            if ($i % 100 === 0) {
+            if (0 === $i % 100) {
                 $this->om->forceFlush();
                 $this->om->clear();
             }
@@ -167,7 +167,7 @@ class HomeTabManager
         $res = [];
 
         foreach ($scheduledForInsert as $entity) {
-            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Home\HomeTab') {
+            if ('Claroline\CoreBundle\Entity\Home\HomeTab' === get_class($entity)) {
                 if ($entity->getWorkspace()->getCode() === $workspace->getCode()) {
                     $res[] = $entity;
                 }
@@ -241,7 +241,7 @@ class HomeTabManager
 
     public function reorderAdminHomeTabConfigs($homeTabType, HomeTabConfig $homeTabConfig, $nextHTCId)
     {
-        $htcs = ($homeTabType === 'desktop') ?
+        $htcs = ('desktop' === $homeTabType) ?
             $this->homeTabConfigRepo->findAdminDesktopHomeTabConfigs() :
             $this->homeTabConfigRepo->findAdminWorkspaceHomeTabConfigs();
         $nextId = intval($nextHTCId);
@@ -510,7 +510,7 @@ class HomeTabManager
     {
         $homeTabConfig = $this->homeTabConfigRepo->checkHomeTabVisibilityByIdAndWorkspace($homeTabId, $workspace);
 
-        if (is_null($homeTabConfig) || count($homeTabConfig) !== 1) {
+        if (is_null($homeTabConfig) || 1 !== count($homeTabConfig)) {
             return false;
         }
 
@@ -811,7 +811,7 @@ class HomeTabManager
 
     public function getUserAdminWidgetHomeTabConfig(HomeTab $homeTab, WidgetInstance $widgetInstance, User $user)
     {
-        return $this->widgetHomeTabConfigRepo->findUserAdminWidgetHomeTabConfig($homeTab,  $widgetInstance, $user);
+        return $this->widgetHomeTabConfigRepo->findUserAdminWidgetHomeTabConfig($homeTab, $widgetInstance, $user);
     }
 
     public function getWidgetHomeTabConfigsByHomeTabAndType(HomeTab $homeTab, $type)

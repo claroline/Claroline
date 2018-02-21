@@ -11,6 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Controller;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\ClacoFormBundle\API\Serializer\CommentSerializer;
 use Claroline\ClacoFormBundle\API\Serializer\EntrySerializer;
 use Claroline\ClacoFormBundle\API\Serializer\FieldSerializer;
@@ -21,7 +22,6 @@ use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
-use Claroline\CoreBundle\API\FinderProvider;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
@@ -119,7 +119,7 @@ class ClacoFormController extends Controller
     {
         $this->clacoFormManager->checkRight($clacoForm, 'OPEN');
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = $user === 'anon.';
+        $isAnon = 'anon.' === $user;
         $fields = $this->clacoFormManager->getFieldsByClacoForm($clacoForm);
         $myEntries = $isAnon ? [] : $this->clacoFormManager->getUserEntries($clacoForm, $user);
         $canGeneratePdf = !$isAnon &&
@@ -147,7 +147,7 @@ class ClacoFormController extends Controller
             $roles[] = $this->roleSerializer->serialize($workspaceRole);
         }
         $currentUser = $this->tokenStorage->getToken()->getUser();
-        $myRoles = $currentUser === 'anon.' ? [$roleAnonymous->getName()] : $currentUser->getRoles();
+        $myRoles = 'anon.' === $currentUser ? [$roleAnonymous->getName()] : $currentUser->getRoles();
 
         return [
             'user' => $user,
@@ -225,7 +225,7 @@ class ClacoFormController extends Controller
         $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
         $template = $this->request->request->get('template', false);
         $useTemplate = $this->request->request->get('useTemplate', false);
-        $useTemplate = $useTemplate && intval($useTemplate) === 1;
+        $useTemplate = $useTemplate && 1 === intval($useTemplate);
         $clacoFormTemplate = $this->clacoFormManager->saveClacoFormTemplate($clacoForm, $template, $useTemplate);
 
         return new JsonResponse(['template' => $clacoFormTemplate, 'useTemplate' => $clacoForm->getUseTemplate()], 200);
@@ -259,7 +259,7 @@ class ClacoFormController extends Controller
             $choiceChildrenData = json_decode($choiceChildrenData, true);
         }
         $choices = $choicesData ? $choicesData : [];
-        $choicesChildren = $fieldData['type'] === FieldFacet::SELECT_TYPE && $choiceChildrenData ?
+        $choicesChildren = FieldFacet::SELECT_TYPE === $fieldData['type'] && $choiceChildrenData ?
             $choiceChildrenData :
             [];
 
@@ -267,13 +267,13 @@ class ClacoFormController extends Controller
             $categoryId = isset($choice['category']) ? $choice['category'] : null;
             $choices[$key]['categoryId'] = $categoryId;
         }
-        $required = is_bool($fieldData['required']) ? $fieldData['required'] : $fieldData['required'] === 'true';
-        $isMetadata = is_bool($fieldData['isMetadata']) ? $fieldData['isMetadata'] : $fieldData['isMetadata'] === 'true';
-        $locked = is_bool($fieldData['locked']) ? $fieldData['locked'] : $fieldData['locked'] === 'true';
+        $required = is_bool($fieldData['required']) ? $fieldData['required'] : 'true' === $fieldData['required'];
+        $isMetadata = is_bool($fieldData['isMetadata']) ? $fieldData['isMetadata'] : 'true' === $fieldData['isMetadata'];
+        $locked = is_bool($fieldData['locked']) ? $fieldData['locked'] : 'true' === $fieldData['locked'];
         $lockedEditionOnly = is_bool($fieldData['lockedEditionOnly']) ?
             $fieldData['lockedEditionOnly'] :
-            $fieldData['lockedEditionOnly'] === 'true';
-        $hidden = is_bool($fieldData['hidden']) ? $fieldData['hidden'] : $fieldData['hidden'] === 'true';
+            'true' === $fieldData['lockedEditionOnly'];
+        $hidden = is_bool($fieldData['hidden']) ? $fieldData['hidden'] : 'true' === $fieldData['hidden'];
         $details = isset($fieldData['details']) && is_array($fieldData['details']) ?
             $fieldData['details'] :
             ['file_types' => [], 'nb_files_max' => 1];
@@ -331,7 +331,7 @@ class ClacoFormController extends Controller
             $choiceChildrenData = json_decode($choiceChildrenData, true);
         }
         $choices = $choicesData ? $choicesData : [];
-        $choicesChildren = $fieldData['type'] === FieldFacet::SELECT_TYPE && $choiceChildrenData ?
+        $choicesChildren = FieldFacet::SELECT_TYPE === $fieldData['type'] && $choiceChildrenData ?
             $choiceChildrenData :
             [];
 
@@ -339,13 +339,13 @@ class ClacoFormController extends Controller
             $categoryId = isset($choice['category']) ? $choice['category'] : null;
             $choices[$key]['categoryId'] = $categoryId;
         }
-        $required = is_bool($fieldData['required']) ? $fieldData['required'] : $fieldData['required'] === 'true';
-        $isMetadata = is_bool($fieldData['isMetadata']) ? $fieldData['isMetadata'] : $fieldData['isMetadata'] === 'true';
-        $locked = is_bool($fieldData['locked']) ? $fieldData['locked'] : $fieldData['locked'] === 'true';
+        $required = is_bool($fieldData['required']) ? $fieldData['required'] : 'true' === $fieldData['required'];
+        $isMetadata = is_bool($fieldData['isMetadata']) ? $fieldData['isMetadata'] : 'true' === $fieldData['isMetadata'];
+        $locked = is_bool($fieldData['locked']) ? $fieldData['locked'] : 'true' === $fieldData['locked'];
         $lockedEditionOnly = is_bool($fieldData['lockedEditionOnly']) ?
             $fieldData['lockedEditionOnly'] :
-            $fieldData['lockedEditionOnly'] === 'true';
-        $hidden = is_bool($fieldData['hidden']) ? $fieldData['hidden'] : $fieldData['hidden'] === 'true';
+            'true' === $fieldData['lockedEditionOnly'];
+        $hidden = is_bool($fieldData['hidden']) ? $fieldData['hidden'] : 'true' === $fieldData['hidden'];
         $details = isset($fieldData['details']) && is_array($fieldData['details']) ?
             $fieldData['details'] :
             ['file_types' => [], 'nb_files_max' => 1];
@@ -469,16 +469,16 @@ class ClacoFormController extends Controller
         }
         $notifyAddition = is_bool($categoryData['notifyAddition']) ?
             $categoryData['notifyAddition'] :
-            $categoryData['notifyAddition'] === 'true';
+            'true' === $categoryData['notifyAddition'];
         $notifyEdition = is_bool($categoryData['notifyEdition']) ?
             $categoryData['notifyEdition'] :
-            $categoryData['notifyEdition'] === 'true';
+            'true' === $categoryData['notifyEdition'];
         $notifyRemoval = is_bool($categoryData['notifyRemoval']) ?
             $categoryData['notifyRemoval'] :
-            $categoryData['notifyRemoval'] === 'true';
+            'true' === $categoryData['notifyRemoval'];
         $notifyPendingComment = is_bool($categoryData['notifyPendingComment']) ?
             $categoryData['notifyPendingComment'] :
-            $categoryData['notifyPendingComment'] === 'true';
+            'true' === $categoryData['notifyPendingComment'];
         $managers = isset($categoryData['managers']) && count($categoryData['managers']) > 0 ?
             $this->userManager->getUsersByIds($categoryData['managers']) :
             [];
@@ -523,16 +523,16 @@ class ClacoFormController extends Controller
         }
         $notifyAddition = is_bool($categoryData['notifyAddition']) ?
             $categoryData['notifyAddition'] :
-            $categoryData['notifyAddition'] === 'true';
+            'true' === $categoryData['notifyAddition'];
         $notifyEdition = is_bool($categoryData['notifyEdition']) ?
             $categoryData['notifyEdition'] :
-            $categoryData['notifyEdition'] === 'true';
+            'true' === $categoryData['notifyEdition'];
         $notifyRemoval = is_bool($categoryData['notifyRemoval']) ?
             $categoryData['notifyRemoval'] :
-            $categoryData['notifyRemoval'] === 'true';
+            'true' === $categoryData['notifyRemoval'];
         $notifyPendingComment = is_bool($categoryData['notifyPendingComment']) ?
             $categoryData['notifyPendingComment'] :
-            $categoryData['notifyPendingComment'] === 'true';
+            'true' === $categoryData['notifyPendingComment'];
         $managers = isset($categoryData['managers']) && count($categoryData['managers']) > 0 ?
             $this->userManager->getUsersByIds($categoryData['managers']) :
             [];
@@ -722,7 +722,7 @@ class ClacoFormController extends Controller
     {
         $this->clacoFormManager->checkRight($clacoForm, 'OPEN');
         $currentUser = $this->tokenStorage->getToken()->getUser();
-        $user = $currentUser === 'anon.' ? null : $currentUser;
+        $user = 'anon.' === $currentUser ? null : $currentUser;
         $entries = $this->clacoFormManager->getEntriesForUser($clacoForm, $user);
         $serializedEntries = $this->serializer->serialize(
             $entries,
@@ -748,7 +748,7 @@ class ClacoFormController extends Controller
     {
         $this->clacoFormManager->checkRight($clacoForm, 'OPEN');
         $user = $this->tokenStorage->getToken()->getUser();
-        $entryUser = $user === 'anon.' ? null : $user;
+        $entryUser = 'anon.' === $user ? null : $user;
         $entryData = $this->request->request->get('entryData', false);
         $title = $this->request->request->get('titleData', false);
         $keywordsData = $this->request->request->get('keywordsData', false);
@@ -958,7 +958,7 @@ class ClacoFormController extends Controller
         $this->clacoFormManager->checkEntryAccess($entry);
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user === 'anon.') {
+        if ('anon.' === $user) {
             $comments = $this->clacoFormManager->getCommentsByEntryAndStatus($entry, Comment::VALIDATED);
         } elseif ($this->clacoFormManager->hasEntryModerationRight($entry)) {
             $comments = $this->clacoFormManager->getCommentsByEntry($entry);
@@ -990,7 +990,7 @@ class ClacoFormController extends Controller
         $this->clacoFormManager->checkCommentCreationRight($entry);
         $content = $this->request->request->get('commentData', false);
         $authenticatedUser = $this->tokenStorage->getToken()->getUser();
-        $user = $authenticatedUser !== 'anon.' ? $authenticatedUser : null;
+        $user = 'anon.' !== $authenticatedUser ? $authenticatedUser : null;
         $comment = $this->clacoFormManager->createComment($entry, $content, $user);
         $serializedComment = $this->commentSerializer->serialize($comment);
 
@@ -1448,7 +1448,7 @@ class ClacoFormController extends Controller
             $this->clacoFormManager->checkRight($clacoForm, 'ADMINISTRATE');
         }
 
-        $updatedEntries = $this->clacoFormManager->switchEntriesLock($entries, intval($locked) === 1);
+        $updatedEntries = $this->clacoFormManager->switchEntriesLock($entries, 1 === intval($locked));
         $serializedEntries = [];
 
         foreach ($updatedEntries as $entry) {

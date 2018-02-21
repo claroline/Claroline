@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Plugin;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Action\AdditionalAction;
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
@@ -31,7 +32,6 @@ use Claroline\CoreBundle\Manager\IconSetManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\ToolMaskDecoderManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -87,7 +87,7 @@ class DatabaseWriter
         $this->mm = $mm;
         $this->fileSystem = $fileSystem;
         $this->kernelRootDir = $kernel->getRootDir();
-        $this->modifyTemplate = $kernel->getEnvironment() !== 'test';
+        $this->modifyTemplate = 'test' !== $kernel->getEnvironment();
         $this->toolManager = $toolManager;
         $this->toolMaskManager = $toolMaskManager;
         $this->iconSetManager = $iconSetManager;
@@ -178,7 +178,7 @@ class DatabaseWriter
      */
     public function isSaved(PluginBundle $plugin)
     {
-        if ($this->getPluginByFqcn(get_class($plugin)) !== null) {
+        if (null !== $this->getPluginByFqcn(get_class($plugin))) {
             return true;
         }
 
@@ -335,7 +335,7 @@ class DatabaseWriter
         $tool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')
             ->findOneByName($toolConfiguration['name']);
 
-        if ($tool === null) {
+        if (null === $tool) {
             $tool = new Tool();
         }
 
@@ -649,7 +649,7 @@ class DatabaseWriter
      */
     private function setResourceTypeDefaultMask(array $rightsName, ResourceType $resourceType)
     {
-        $mask = count($rightsName) === 0 ? 1 : 0;
+        $mask = 0 === count($rightsName) ? 1 : 0;
         $permMap = $this->mm->getPermissionMap($resourceType);
 
         foreach ($rightsName as $rights) {
@@ -769,7 +769,7 @@ class DatabaseWriter
         $theme = $this->em->getRepository('ClarolineCoreBundle:Theme\Theme')
             ->findOneByName($themeConfiguration['name']);
 
-        if ($theme === null) {
+        if (null === $theme) {
             $theme = new Theme();
         }
 
@@ -821,7 +821,7 @@ class DatabaseWriter
         $adminTool = $this->em->getRepository('ClarolineCoreBundle:Tool\AdminTool')
             ->findOneByName($adminToolConfiguration['name']);
 
-        if ($adminTool === null) {
+        if (null === $adminTool) {
             $adminTool = new AdminTool();
         }
 

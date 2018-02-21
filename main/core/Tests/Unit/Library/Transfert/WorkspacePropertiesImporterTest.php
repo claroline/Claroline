@@ -12,9 +12,9 @@ namespace Claroline\CoreBundle\Library;
  */
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\WorkspacePropertiesImporter;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Mockery as m;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\WorkspacePropertiesImporter;
 use Symfony\Component\Yaml\Yaml;
 
 class WorkspacePropertiesImporterTest extends MockeryTestCase
@@ -26,7 +26,7 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->importer = new WorkspacePropertiesImporter($this->om);
     }
 
@@ -84,55 +84,55 @@ class WorkspacePropertiesImporterTest extends MockeryTestCase
     {
         //isFull = with owner section
 
-        return array(
+        return [
             //full correct configuration, everything is the config file
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full',
                 'isExceptionExpected' => false,
                 'isUserInDatabase' => false,
                 'isFull' => true,
                 'codeExists' => false,
-            ),
+            ],
             //full correct configuration, owner is already in the database
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full',
                 'isExceptionExpected' => false,
                 'isUserInDatabase' => true,
                 'isFull' => true,
                 'codeExists' => false,
-            ),
+            ],
             //minimal correct configuration, owner is already in the database
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
                 'isExceptionExpected' => false,
                 'isUserInDatabase' => true,
                 'isFull' => false,
                 'codeExists' => false,
-            ),
+            ],
             //minimal configuration, no owner section, owner not in database
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
                 'isExceptionExpected' => true,
                 'isUserInDatabase' => false,
                 'isFull' => false,
                 'codeExists' => false,
-            ),
+            ],
             //full configuration, workspace owner and member owner missmatch
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/wrong_owner',
                 'isExceptionExpected' => true,
                 'isUserInDatabase' => true,
                 'isFull' => true,
                 'codeExists' => false,
-            ),
+            ],
             //minimal configuration, workspace code already exists
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/minimal',
                 'isExceptionExpected' => true,
                 'isUserInDatabase' => true,
                 'isFull' => false,
                 'codeExists' => true,
-            ),
-        );
+            ],
+        ];
     }
 }

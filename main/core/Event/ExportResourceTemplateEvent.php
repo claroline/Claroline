@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
+use Symfony\Component\EventDispatcher\Event;
 
 class ExportResourceTemplateEvent extends Event implements DataConveyorEventInterface
 {
@@ -24,7 +25,7 @@ class ExportResourceTemplateEvent extends Event implements DataConveyorEventInte
     public function __construct(AbstractResource $resource)
     {
         $this->resource = $resource;
-        $this->files = array();
+        $this->files = [];
     }
 
     public function getResource()

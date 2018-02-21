@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\ToolRights;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -95,21 +95,21 @@ class ToolRightsManager
          * the resource manager is a special case. If we grant/remove access, we might aswell
          * grant/remove access to the root directory
          */
-         if ($tool->getName() === 'resource_manager') {
-             $workspace = $orderedTool->getWorkspace();
-             //obviously we need a workspace
-             if ($workspace) {
-                 $root = $this->resourceManager->getWorkspaceRoot($workspace);
-                 //and also a root otherwise it won't work
-                 if (!$root) {
-                     return;
-                 }
+        if ('resource_manager' === $tool->getName()) {
+            $workspace = $orderedTool->getWorkspace();
+            //obviously we need a workspace
+            if ($workspace) {
+                $root = $this->resourceManager->getWorkspaceRoot($workspace);
+                //and also a root otherwise it won't work
+                if (!$root) {
+                    return;
+                }
 
-                 if ($rightsMask) {
-                     $this->rightsManager->editPerms($rightsMask, $role, $root, false, [], true);
-                 }
-             }
-         }
+                if ($rightsMask) {
+                    $this->rightsManager->editPerms($rightsMask, $role, $root, false, [], true);
+                }
+            }
+        }
     }
 
     /***** ToolRightsRepository access methods *****/

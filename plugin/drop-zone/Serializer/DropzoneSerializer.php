@@ -2,7 +2,7 @@
 
 namespace Claroline\DropZoneBundle\Serializer;
 
-use Claroline\CoreBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\DropZoneBundle\Entity\Criterion;
 use Claroline\DropZoneBundle\Entity\Dropzone;

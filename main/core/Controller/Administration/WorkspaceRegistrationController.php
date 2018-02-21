@@ -93,11 +93,11 @@ class WorkspaceRegistrationController extends Controller
      */
     public function registrationManagementAction($search = '', $max = 20)
     {
-        if ($search === '') {
+        if ('' === $search) {
             $datas = $this->workspaceTagManager
                 ->getDatasForWorkspaceList(false, $search, $max);
 
-            return array(
+            return [
                 'workspaces' => $datas['workspaces'],
                 'tags' => $datas['tags'],
                 'tagWorkspaces' => $datas['tagWorkspaces'],
@@ -108,11 +108,11 @@ class WorkspaceRegistrationController extends Controller
                 'personalWs' => $datas['personalWs'],
                 'search' => '',
                 'max' => $max,
-            );
+            ];
         } else {
             $pager = $this->workspaceManager->getDisplayableWorkspacesBySearchPager($search, 1);
 
-            return array('workspaces' => $pager, 'search' => $search);
+            return ['workspaces' => $pager, 'search' => $search];
         }
     }
 
@@ -138,7 +138,7 @@ class WorkspaceRegistrationController extends Controller
     {
         $pager = $this->userManager->getAllUsers(1);
 
-        return array('workspaces' => $workspaces, 'users' => $pager, 'search' => '');
+        return ['workspaces' => $workspaces, 'users' => $pager, 'search' => ''];
     }
 
     /**
@@ -163,7 +163,7 @@ class WorkspaceRegistrationController extends Controller
     {
         $pager = $this->groupManager->getGroups(1);
 
-        return array('workspaces' => $workspaces, 'groups' => $pager, 'search' => '');
+        return ['workspaces' => $workspaces, 'groups' => $pager, 'search' => ''];
     }
 
     /**
@@ -190,11 +190,11 @@ class WorkspaceRegistrationController extends Controller
      */
     public function userListPagerAction($page, $search)
     {
-        $pager = $search === '' ?
+        $pager = '' === $search ?
             $this->userManager->getAllUsers($page) :
             $this->userManager->getUsersByName($search, $page);
 
-        return array('users' => $pager, 'search' => $search);
+        return ['users' => $pager, 'search' => $search];
     }
 
     /**
@@ -221,11 +221,11 @@ class WorkspaceRegistrationController extends Controller
      */
     public function groupListPagerAction($page, $search)
     {
-        $pager = $search === '' ?
+        $pager = '' === $search ?
             $this->groupManager->getGroups($page) :
             $this->groupManager->getGroupsByName($search, $page);
 
-        return array('groups' => $pager, 'search' => $search);
+        return ['groups' => $pager, 'search' => $search];
     }
 
     /**
@@ -271,13 +271,13 @@ class WorkspaceRegistrationController extends Controller
             $msg .= $user->getFirstName().' '.$user->getLastName().' ';
             $msg .= $this->translator->trans(
                 'has_been_suscribed_with_role',
-                array(),
+                [],
                 'platform'
             );
             $msg .= ' "'.
                 $this->translator->trans(
                     $roleKey,
-                    array(),
+                    [],
                     'platform'
                 ).
                 '"-;-';
@@ -329,13 +329,13 @@ class WorkspaceRegistrationController extends Controller
             $msg .= '"'.$group->getName().'" ';
             $msg .= $this->translator->trans(
                 'has_been_suscribed_with_role_group',
-                array(),
+                [],
                 'platform'
             );
             $msg .= ' "'.
                 $this->translator->trans(
                     $roleKey,
-                    array(),
+                    [],
                     'platform'
                 ).
                 '"-;-';
@@ -379,13 +379,13 @@ class WorkspaceRegistrationController extends Controller
                 $msg .= $user->getFirstName().' '.$user->getLastName().' ';
                 $msg .= $this->translator->trans(
                     'has_been_suscribed_with_role',
-                    array(),
+                    [],
                     'platform'
                 );
                 $msg .= ' "'.
                     $this->translator->trans(
                         $role->getTranslationKey(),
-                        array(),
+                        [],
                         'platform'
                     ).
                     '"-;-';
@@ -430,13 +430,13 @@ class WorkspaceRegistrationController extends Controller
                 $msg .= '"'.$group->getName().'" ';
                 $msg .= $this->translator->trans(
                     'has_been_suscribed_with_role_group',
-                    array(),
+                    [],
                     'platform'
                 );
                 $msg .= ' "'.
                     $this->translator->trans(
                         $role->getTranslationKey(),
-                        array(),
+                        [],
                         'platform'
                     ).
                     '"-;-';
@@ -473,7 +473,7 @@ class WorkspaceRegistrationController extends Controller
         $order = 'ASC'
     ) {
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
-        $pager = $search === '' ?
+        $pager = '' === $search ?
             $this->userManager->getByRolesIncludingGroups(
                 $wsRoles,
                 $page,
@@ -490,14 +490,14 @@ class WorkspaceRegistrationController extends Controller
                 $order
             );
 
-        return array(
+        return [
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-        );
+        ];
     }
 
     /**
@@ -527,7 +527,7 @@ class WorkspaceRegistrationController extends Controller
         $order = 'ASC'
     ) {
         $wsRoles = $this->roleManager->getRolesByWorkspace($workspace);
-        $pager = ($search === '') ?
+        $pager = ('' === $search) ?
             $this->groupManager->getGroupsByRoles(
                 $wsRoles,
                 $page,
@@ -544,14 +544,14 @@ class WorkspaceRegistrationController extends Controller
                 $order
             );
 
-        return array(
+        return [
             'workspace' => $workspace,
             'pager' => $pager,
             'search' => $search,
             'max' => $max,
             'orderedBy' => $orderedBy,
             'order' => $order,
-        );
+        ];
     }
 
     /**
@@ -582,7 +582,7 @@ class WorkspaceRegistrationController extends Controller
             $msg = $user->getFirstName().' '.$user->getLastName().' ';
             $msg .= $this->translator->trans(
                 'has_been_unregistered_from_workspace',
-                array(),
+                [],
                 'platform'
             );
             $sessionFlashBag->add('success', $msg);
@@ -619,7 +619,7 @@ class WorkspaceRegistrationController extends Controller
             $msg = $group->getName().' ';
             $msg .= $this->translator->trans(
                 'has_been_unregistered_from_workspace',
-                array(),
+                [],
                 'platform'
             );
             $sessionFlashBag->add('success', $msg);

@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\API\Transfer\Action\User;
 
-use Claroline\CoreBundle\API\Crud;
-use Claroline\CoreBundle\API\Transfer\Action\AbstractAction;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

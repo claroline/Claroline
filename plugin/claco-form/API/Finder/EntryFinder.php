@@ -11,13 +11,13 @@
 
 namespace Claroline\ClacoFormBundle\API\Finder;
 
+use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
-use Claroline\CoreBundle\API\FinderInterface;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -92,7 +92,7 @@ class EntryFinder implements FinderInterface
     {
         $currentUser = $this->tokenStorage->getToken()->getUser();
 
-        $isAnon = $currentUser === 'anon.';
+        $isAnon = 'anon.' === $currentUser;
         $clacoForm = $this->clacoFormRepo->findOneById($searches['clacoForm']);
         $canEdit = $this->hasRight($clacoForm, 'EDIT');
         $isCategoryManager = !$isAnon && $this->isCategoryManager($clacoForm, $currentUser);
@@ -229,7 +229,7 @@ class EntryFinder implements FinderInterface
 
         if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
             $sortByProperty = $sortBy['property'];
-            $sortByDirection = $sortBy['direction'] === 1 ? 'ASC' : 'DESC';
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
 
             switch ($sortByProperty) {
                 case 'creationDate':

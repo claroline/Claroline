@@ -2,11 +2,11 @@
 
 namespace Claroline\CoreBundle\API\Crud\User;
 
-use Claroline\CoreBundle\API\Options;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Crud\CreateEvent;
-use Claroline\CoreBundle\Event\Crud\DeleteEvent;
-use Claroline\CoreBundle\Event\Crud\UpdateEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;

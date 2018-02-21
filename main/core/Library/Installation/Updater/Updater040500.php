@@ -10,13 +10,13 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Updater\Updater;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class Updater040500 extends Updater
 {
-    /** @var ContainerInterface  */
+    /** @var ContainerInterface */
     private $container;
 
     /** @var ObjectManager */
@@ -94,7 +94,7 @@ class Updater040500 extends Updater
 
     public function convert($size)
     {
-        $unit = array('b', 'kb', 'mb', 'gb', 'tb', 'pb');
+        $unit = ['b', 'kb', 'mb', 'gb', 'tb', 'pb'];
 
         return @round($size / pow(1024, ($i = floor(log($size, 1024)))), 2).' '.$unit[$i];
     }

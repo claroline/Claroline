@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceRights;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
 use Claroline\CoreBundle\Repository\ResourceTypeRepository;
@@ -107,7 +107,7 @@ class RightsManager
     ) {
         $rights = $this->rightsRepo->findBy(['role' => $role, 'resourceNode' => $node]);
 
-        if (count($rights) === 0) {
+        if (0 === count($rights)) {
             $isRecursive ?
                 $this->recursiveCreation($permissions, $role, $node, $creations) :
                 $this->nonRecursiveCreation($permissions, $role, $node, $creations);
@@ -175,7 +175,7 @@ class RightsManager
         }
 
         //exception for activities
-        if ($node->getResourceType()->getName() === 'activity') {
+        if ('activity' === $node->getResourceType()->getName()) {
             $resource = $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($node);
             $this->container->get('claroline.manager.activity_manager')->initializePermissions($resource);
         }
@@ -365,7 +365,7 @@ class RightsManager
         $creatableTypes = [];
         $creationRights = $this->rightsRepo->findCreationRights($roles, $node);
 
-        if (count($creationRights) !== 0) {
+        if (0 !== count($creationRights)) {
             foreach ($creationRights as $type) {
                 $creatableTypes[$type['name']] = $this->translator->trans($type['name'], [], 'resource');
             }
@@ -523,7 +523,7 @@ class RightsManager
 
         foreach ($node->getRights() as $right) {
             //if not ROLE_ANONYMOUS nor ROLE_USER because they're added automatically in ResourceManager::createRights
-            if ($right->getRole()->getName() !== 'ROLE_ANONYMOUS' && $right->getRole()->getName() !== 'ROLE_USER') {
+            if ('ROLE_ANONYMOUS' !== $right->getRole()->getName() && 'ROLE_USER' !== $right->getRole()->getName()) {
                 $rolePerms = $this->maskManager->decodeMask($right->getMask(), $node->getResourceType());
                 $perms[$right->getRole()->getName()] = $rolePerms;
                 $perms[$right->getRole()->getName()]['role'] = $right->getRole();
@@ -579,7 +579,7 @@ class RightsManager
         $res = null;
 
         foreach ($scheduledForInsert as $entity) {
-            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Resource\ResourceRights') {
+            if ('Claroline\CoreBundle\Entity\Resource\ResourceRights' === get_class($entity)) {
                 if ($entity->getRole()->getName() === $roleName &&
                     $entity->getResourceNode() === $resourceNode) {
                     return $res = $entity;
@@ -648,7 +648,7 @@ class RightsManager
                     $this->editPerms(5, $collaboratorRole, $root, true, [], true);
                     ++$i;
 
-                    if ($i % 3 === 0) {
+                    if (0 === $i % 3) {
                         $this->log('flushing...');
                         $this->om->forceFlush();
                         $this->om->clear();
@@ -665,7 +665,7 @@ class RightsManager
         $token = $this->container->get('security.token_storage')->getToken();
 
         // if user is anonymous return false
-        if ($token === 'anon.') {
+        if ('anon.' === $token) {
             return false;
         }
 

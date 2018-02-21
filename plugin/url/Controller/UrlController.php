@@ -2,16 +2,16 @@
 
 namespace HeVinci\UrlBundle\Controller;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\UrlBundle\Form\UrlChangeType;
 use HeVinci\UrlBundle\Manager\UrlManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RequestStack;
-use JMS\DiExtraBundle\Annotation as DI;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class UrlController extends Controller
@@ -57,7 +57,7 @@ class UrlController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $url = $em->getRepository('HeVinciUrlBundle:Url')
-            ->findOneBy(array('resourceNode' => $node->getId()));
+            ->findOneBy(['resourceNode' => $node->getId()]);
 
         if (!$url) {
             throw new \Exception("This resource doesn't exist.");
@@ -73,6 +73,6 @@ class UrlController extends Controller
             return new JsonResponse();
         }
 
-        return array('form' => $form->createView(), 'node' => $node->getId());
+        return ['form' => $form->createView(), 'node' => $node->getId()];
     }
 }

@@ -11,8 +11,12 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Mockery as m;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Claroline\CoreBundle\Entity\Resource\ResourceRights;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Mockery as m;
 
 class RightsManagerTest extends MockeryTestCase
 {
@@ -38,7 +42,7 @@ class RightsManagerTest extends MockeryTestCase
         $this->resourceTypeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
         $this->translator = $this->mock('Symfony\Component\Translation\Translator');
         $this->dispatcher = $this->mock('Claroline\CoreBundle\Event\StrictDispatcher');
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
     }
 
     public function testUpdateRightsTree()
@@ -61,13 +65,13 @@ class RightsManagerTest extends MockeryTestCase
             ->shouldReceive('findRecursiveByResourceAndRole')
             ->once()
             ->with($node, $role)
-            ->andReturn(array($rightsParent, $rightsDescendantB));
+            ->andReturn([$rightsParent, $rightsDescendantB]);
 
         $this->resourceNodeRepo
             ->shouldReceive('findDescendants')
             ->once()
             ->with($node, true)
-            ->andReturn(array($node, $descendantA, $descendantB));
+            ->andReturn([$node, $descendantA, $descendantB]);
 
         $this->om->shouldReceive('factory')->once()->andReturn($rightsDescendantA);
         $rightsDescendantA->shouldReceive('setRole')->once()->with($role);
@@ -81,26 +85,26 @@ class RightsManagerTest extends MockeryTestCase
 
     public function testNonRecursiveCreate()
     {
-        $manager = $this->getManager(array('getEntity', 'setPermissions'));
+        $manager = $this->getManager(['getEntity', 'setPermissions']);
 
-        $perms = array(
+        $perms = [
             'copy' => true,
             'open' => false,
             'delete' => true,
             'edit' => false,
             'export' => true,
-        );
+        ];
 
-        $types = array(
-            new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
-            new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
-            new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
-        );
+        $types = [
+            new ResourceType(),
+            new ResourceType(),
+            new ResourceType(),
+        ];
         $newRights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $this->om->shouldReceive('factory')->with('Claroline\CoreBundle\Entity\Resource\ResourceRights')
             ->andReturn($newRights);
-        $node = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
-        $role = new \Claroline\CoreBundle\Entity\Role();
+        $node = new ResourceNode();
+        $role = new Role();
         $newRights->shouldReceive('setRole')->once()->with($role);
         $newRights->shouldReceive('setResourceNode')->once()->with($node);
         $newRights->shouldReceive('setCreatableResourceTypes')->once()->with($types);
@@ -112,15 +116,15 @@ class RightsManagerTest extends MockeryTestCase
 
     public function testEditPerms()
     {
-        $manager = $this->getManager(array('getOneByRoleAndResource', 'setPermissions', 'logChangeSet'));
+        $manager = $this->getManager(['getOneByRoleAndResource', 'setPermissions', 'logChangeSet']);
 
-        $perms = array(
+        $perms = [
             'copy' => true,
             'open' => false,
             'delete' => true,
             'edit' => false,
             'export' => true,
-        );
+        ];
 
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $rights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
@@ -135,14 +139,14 @@ class RightsManagerTest extends MockeryTestCase
 
     public function testEditCreationRights()
     {
-        $manager = $this->getManager(array('getOneByRoleAndResource', 'setPermissions', 'logChangeSet'));
+        $manager = $this->getManager(['getOneByRoleAndResource', 'setPermissions', 'logChangeSet']);
 
-        $types = array(
-            new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
-            new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
-            new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
-            new \Claroline\CoreBundle\Entity\Resource\ResourceType(),
-        );
+        $types = [
+            new ResourceType(),
+            new ResourceType(),
+            new ResourceType(),
+            new ResourceType(),
+        ];
 
         $node = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $rights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
@@ -159,29 +163,20 @@ class RightsManagerTest extends MockeryTestCase
 
     public function testCopy()
     {
-        $manager = $this->getManager(array('create'));
+        $manager = $this->getManager(['create']);
         $originalRights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $newRights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $original = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
         $resource = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceNode');
-        $role = new \Claroline\CoreBundle\Entity\Role();
-
-        $perms = array(
-            'copy' => true,
-            'open' => false,
-            'delete' => true,
-            'edit' => false,
-            'export' => true,
-        );
-
+        $role = new Role();
         $this->rightsRepo
             ->shouldReceive('findBy')
             ->once()
-            ->with(array('resourceNode' => $original))
-            ->andReturn(array($originalRights));
+            ->with(['resourceNode' => $original])
+            ->andReturn([$originalRights]);
 
         m::getConfiguration()->allowMockingNonExistentMethods(true);
-        $originalRights->shouldReceive('getCreatableResourceTypes->toArray')->once()->andReturn(array());
+        $originalRights->shouldReceive('getCreatableResourceTypes->toArray')->once()->andReturn([]);
         $originalRights->shouldReceive('getRole')->once()->andReturn($role);
         $originalRights->shouldReceive('getMask')->once()->andReturn(123);
         $this->om->shouldReceive('factory')->once()->with('Claroline\CoreBundle\Entity\Resource\ResourceRights')
@@ -189,7 +184,7 @@ class RightsManagerTest extends MockeryTestCase
         $newRights->shouldReceive('setResourceNode')->once()->with($resource);
         $newRights->shouldReceive('setRole')->once()->with($role);
         $newRights->shouldReceive('setMask')->once()->with(123);
-        $newRights->shouldReceive('setCreatableResourceTypes')->once()->with(array());
+        $newRights->shouldReceive('setCreatableResourceTypes')->once()->with([]);
         $this->om->shouldReceive('persist')->once()->with($newRights);
         $this->om->shouldReceive('startFlushSuite')->once();
         $this->om->shouldReceive('endFlushSuite')->once();
@@ -200,17 +195,17 @@ class RightsManagerTest extends MockeryTestCase
     public function testSetPermissions()
     {
         m::getConfiguration()->allowMockingNonExistentMethods(true);
-        $type = new \Claroline\CoreBundle\Entity\Resource\ResourceType();
+        $type = new ResourceType();
         $rights = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
         $rights->shouldReceive('getResourceNode->getResourceType')->once()->andReturn($type);
 
-        $perms = array(
+        $perms = [
             'copy' => true,
             'open' => false,
             'delete' => true,
             'edit' => false,
             'export' => true,
-        );
+        ];
 
         $this->maskManager->shouldReceive('encodeMask')->once()->with($perms, $type)->andReturn(123);
         $rights->shouldReceive('setMask')->once()->with(123);
@@ -221,27 +216,27 @@ class RightsManagerTest extends MockeryTestCase
     public function testAddRolesToPermsArray()
     {
         $role = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $baseRoles = array($role);
-        $perms = array(
-            'ROLE_WS_MANAGER' => array('perms' => 'perms'),
-        );
+        $baseRoles = [$role];
+        $perms = [
+            'ROLE_WS_MANAGER' => ['perms' => 'perms'],
+        ];
 
         $this->roleManager->shouldReceive('getRoleBaseName')
             ->with('ROLE_WS_MANAGER_GUID')
             ->andReturn('ROLE_WS_MANAGER');
         $role->shouldReceive('getName')->andReturn('ROLE_WS_MANAGER_GUID');
 
-        $result = array('ROLE_WS_MANAGER' => array('perms' => 'perms', 'role' => $role));
+        $result = ['ROLE_WS_MANAGER' => ['perms' => 'perms', 'role' => $role]];
         $this->assertEquals($result, $this->getManager()->addRolesToPermsArray($baseRoles, $perms));
     }
 
     public function testGetOneExistingByRoleAndResource()
     {
-        $role = new \Claroline\CoreBundle\Entity\Role();
-        $node = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
-        $rr = new \Claroline\CoreBundle\Entity\Resource\ResourceRights();
+        $role = new Role();
+        $node = new ResourceNode();
+        $rr = new ResourceRights();
 
-        $this->rightsRepo->shouldReceive('findOneBy')->with(array('resourceNode' => $node, 'role' => $role))
+        $this->rightsRepo->shouldReceive('findOneBy')->with(['resourceNode' => $node, 'role' => $role])
             ->once()->andReturn($rr);
 
         $this->assertEquals($rr, $this->getManager()->getOneByRoleAndResource($role, $node));
@@ -249,11 +244,11 @@ class RightsManagerTest extends MockeryTestCase
 
     public function testGetOneFictiveByRoleAndResource()
     {
-        $role = new \Claroline\CoreBundle\Entity\Role();
-        $resource = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
+        $role = new Role();
+        $resource = new ResourceNode();
         $rr = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
 
-        $this->rightsRepo->shouldReceive('findOneBy')->with(array('resourceNode' => $resource, 'role' => $role))
+        $this->rightsRepo->shouldReceive('findOneBy')->with(['resourceNode' => $resource, 'role' => $role])
             ->once()->andReturn(null);
 
         $this->om->shouldReceive('factory')->once()
@@ -269,88 +264,88 @@ class RightsManagerTest extends MockeryTestCase
     public function testGetCreatableTypes()
     {
         $role = $this->mock('Claroline\CoreBundle\Entity\Role');
-        $roles = array($role);
-        $node = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
-        $types = array(array('name' => 'directory'));
+        $roles = [$role];
+        $node = new ResourceNode();
+        $types = [['name' => 'directory']];
         $this->rightsRepo->shouldReceive('findCreationRights')->once()
             ->with($roles, $node)->andReturn($types);
 
-        $this->translator->shouldReceive('trans')->once()->with('directory', array(), 'resource')
+        $this->translator->shouldReceive('trans')->once()->with('directory', [], 'resource')
             ->andReturn('dossier');
 
-        $res = array('directory' => 'dossier');
+        $res = ['directory' => 'dossier'];
 
         $this->assertEquals($res, $this->getManager()->getCreatableTypes($roles, $node));
     }
 
     public function testRecursiveCreation()
     {
-        $manager = $this->getManager(array('updateRightsTree', 'setPermissions'));
-        $role = new \Claroline\CoreBundle\Entity\Role();
-        $node = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
+        $manager = $this->getManager(['updateRightsTree', 'setPermissions']);
+        $role = new Role();
+        $node = new ResourceNode();
         $rr = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
-        $resourceRights = array($rr);
+        $resourceRights = [$rr];
 
         $this->om->shouldReceive('startFlushSuite')->once();
         $manager->shouldReceive('updateRightsTree')->once()->with($role, $node)->andReturn($resourceRights);
-        $manager->shouldReceive('setPermissions')->once()->with($rr, array());
-        $rr->shouldReceive('setCreatableResourceTypes')->once()->with(array());
+        $manager->shouldReceive('setPermissions')->once()->with($rr, []);
+        $rr->shouldReceive('setCreatableResourceTypes')->once()->with([]);
         $this->om->shouldReceive('persist')->once()->with($rr);
         $this->om->shouldReceive('endFlushSuite')->once();
 
-        $manager->recursiveCreation(array(), $role, $node, array());
+        $manager->recursiveCreation([], $role, $node, []);
     }
 
     public function testLogChangeSet()
     {
         $uow = $this->mock('Doctrine\ORM\UnitOfWork');
         $rr = $this->mock('Claroline\CoreBundle\Entity\Resource\ResourceRights');
-        $role = new \Claroline\CoreBundle\Entity\Role();
-        $node = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
+        $role = new Role();
+        $node = new ResourceNode();
         $rr->shouldReceive('getRole')->once()->andReturn($role);
         $rr->shouldReceive('getResourceNode')->once()->andReturn($node);
         $this->om->shouldReceive('getUnitOfWork')->andReturn($uow);
         $uow->shouldReceive('computeChangeSets')->once();
-        $uow->shouldReceive('getEntityChangeSet')->once()->with($rr)->andReturn(array());
+        $uow->shouldReceive('getEntityChangeSet')->once()->with($rr)->andReturn([]);
         $this->dispatcher->shouldReceive('dispatch')->once()
-            ->with('log', 'Log\LogWorkspaceRoleChangeRight', array($role, $node, array()));
+            ->with('log', 'Log\LogWorkspaceRoleChangeRight', [$role, $node, []]);
         $this->getManager()->logChangeSet($rr);
     }
 
     public function testGetNonAdminRights()
     {
-        $node = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
-        $this->rightsRepo->shouldReceive('findNonAdminRights')->once()->with($node)->andReturn(array());
-        $this->assertEquals(array(), $this->getManager()->getNonAdminRights($node));
+        $node = new ResourceNode();
+        $this->rightsRepo->shouldReceive('findNonAdminRights')->once()->with($node)->andReturn([]);
+        $this->assertEquals([], $this->getManager()->getNonAdminRights($node));
     }
 
     public function testGetResourceTypes()
     {
-        $this->resourceTypeRepo->shouldReceive('findAll')->once()->andReturn(array());
-        $this->assertEquals(array(), $this->getManager()->getResourceTypes());
+        $this->resourceTypeRepo->shouldReceive('findAll')->once()->andReturn([]);
+        $this->assertEquals([], $this->getManager()->getResourceTypes());
     }
 
     public function testGetMaximumRights()
     {
-        $node = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
-        $role = new \Claroline\CoreBundle\Entity\Role();
-        $roles = array($role);
+        $node = new ResourceNode();
+        $role = new Role();
+        $roles = [$role];
 
-        $this->rightsRepo->shouldReceive('findMaximumRights')->once()->with($roles, $node)->andReturn(array());
-        $this->assertEquals(array(), $this->getManager()->getMaximumRights($roles, $node));
+        $this->rightsRepo->shouldReceive('findMaximumRights')->once()->with($roles, $node)->andReturn([]);
+        $this->assertEquals([], $this->getManager()->getMaximumRights($roles, $node));
     }
 
     public function testGetCreationRights()
     {
-        $node = new \Claroline\CoreBundle\Entity\Resource\ResourceNode();
-        $role = new \Claroline\CoreBundle\Entity\Role();
-        $roles = array($role);
+        $node = new ResourceNode();
+        $role = new Role();
+        $roles = [$role];
 
-        $this->rightsRepo->shouldReceive('findCreationRights')->once()->with($roles, $node)->andReturn(array());
-        $this->assertEquals(array(), $this->getManager()->getCreationRights($roles, $node));
+        $this->rightsRepo->shouldReceive('findCreationRights')->once()->with($roles, $node)->andReturn([]);
+        $this->assertEquals([], $this->getManager()->getCreationRights($roles, $node));
     }
 
-    private function getManager(array $mockedMethods = array())
+    private function getManager(array $mockedMethods = [])
     {
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceRights')
             ->andReturn($this->rightsRepo);
@@ -361,7 +356,7 @@ class RightsManagerTest extends MockeryTestCase
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:Resource\ResourceType')
             ->andReturn($this->resourceTypeRepo);
 
-        if (count($mockedMethods) === 0) {
+        if (0 === count($mockedMethods)) {
             return new RightsManager(
                 $this->translator,
                 $this->om,
@@ -381,13 +376,13 @@ class RightsManagerTest extends MockeryTestCase
 
             return $this->mock(
                 'Claroline\CoreBundle\Manager\RightsManager'.$stringMocked,
-                array(
+                [
                     $this->translator,
                     $this->om,
                     $this->dispatcher,
                     $this->roleManager,
                     $this->maskManager,
-                )
+                ]
             );
         }
     }

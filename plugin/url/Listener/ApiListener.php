@@ -2,8 +2,8 @@
 
 namespace HeVinci\UrlBundle\Listener;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -33,7 +33,7 @@ class ApiListener
     {
         // Restrict listener to Url resources only
         $resourceNode = $event->getResourceNode();
-        if ($resourceNode->getResourceType()->getName() === 'hevinci_url') {
+        if ('hevinci_url' === $resourceNode->getResourceType()->getName()) {
             $isYoutube = false;
             $embedYoutubeUrl = null;
 
@@ -41,11 +41,11 @@ class ApiListener
 
             // Is it a youtube video ?
             $youtubeId = $this->getYoutubeId($resource->getUrl());
-            if ($youtubeId !== false) {
+            if (false !== $youtubeId) {
                 $isYoutube = true;
 
                 // Only add remote youTube thumbnail if no local resource node thumbnail is defined
-                if ($resourceNode->getThumbnail() === null) {
+                if (null === $resourceNode->getThumbnail()) {
                     $embedYoutubeUrl = 'https://www.youtube.com/embed/'.$youtubeId;
                     $thumbnailUrl = 'http://img.youtube.com/vi/'.$youtubeId.'/hqdefault.jpg';
                     $event->add('poster', $thumbnailUrl);

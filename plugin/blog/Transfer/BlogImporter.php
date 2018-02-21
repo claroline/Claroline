@@ -2,10 +2,10 @@
 
 namespace Icap\BlogBundle\Transfer;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\BlogBundle\Manager\BlogManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -164,7 +164,7 @@ class BlogImporter extends Importer implements ConfigurationInterface, RichTextI
                 if (isset($post['comments']) && !empty($post['comments'])) {
                     foreach ($post['comments'] as $comment) {
                         $textCom = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$comment['message']);
-                        if ($textCom !== '') {
+                        if ('' !== $textCom) {
                             $commentEntities = $this->om->getRepository('Icap\BlogBundle\Entity\Comment')->findByMessage($textCom);
                             foreach ($commentEntities as $commentEntity) {
                                 $textCom = $this->container->get('claroline.importer.rich_text_formatter')->format($textCom);

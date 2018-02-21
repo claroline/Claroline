@@ -2,8 +2,8 @@
 
 namespace Claroline\CoreBundle\API\Validator;
 
-use Claroline\CoreBundle\API\ValidatorInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\API\ValidatorInterface;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

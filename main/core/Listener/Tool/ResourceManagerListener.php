@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Listener\Tool;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\ConfigureWorkspaceToolEvent;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -138,7 +138,7 @@ class ResourceManagerListener
 
         $breadcrumbsIds = $this->request->query->get('_breadcrumbs');
 
-        if ($breadcrumbsIds !== null) {
+        if (null !== $breadcrumbsIds) {
             $ancestors = $this->resourceManager->getByIdsLevelOrder($breadcrumbsIds);
 
             if (!$this->resourceManager->isPathValid($ancestors)) {

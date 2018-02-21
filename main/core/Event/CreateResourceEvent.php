@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
+use Symfony\Component\EventDispatcher\Event;
 
 /**
  * Event dispatched by the resource controller when a resource creation is asked.
@@ -32,7 +33,7 @@ class CreateResourceEvent extends Event implements DataConveyorEventInterface
     {
         $this->parent = $parent;
         $this->resourceType = $resourceType;
-        $this->resources = array();
+        $this->resources = [];
         $this->encoding = $encoding;
     }
 

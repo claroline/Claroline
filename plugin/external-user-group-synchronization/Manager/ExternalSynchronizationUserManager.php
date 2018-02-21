@@ -12,9 +12,9 @@
 
 namespace Claroline\ExternalSynchronizationBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ExternalSynchronizationBundle\Entity\ExternalUser;
 use Claroline\ExternalSynchronizationBundle\Repository\ExternalUserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -101,7 +101,7 @@ class ExternalSynchronizationUserManager
         $referenceUsers
     ) {
         // Check if user's external reference has been updated, if so update it.
-        if (($key = array_search($user->getId(), $referenceUserIds)) !== false) {
+        if (false !== ($key = array_search($user->getId(), $referenceUserIds))) {
             $externalUser = $referenceUsers[$key];
             $externalUser->setExternalUserId($externalId);
             $externalUser->setSourceSlug($sourceSlug);

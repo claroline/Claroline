@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\User;
 
-use Claroline\CoreBundle\API\Crud;
-use Claroline\CoreBundle\API\Options;
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Controller\AbstractApiController;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
-use Claroline\CoreBundle\Controller\APINew\AbstractApiController;
 use Claroline\CoreBundle\Entity\Facet\Facet;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\JsonResponse;

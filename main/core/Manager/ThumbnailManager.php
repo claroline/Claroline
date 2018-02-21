@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceThumbnail;
@@ -18,7 +19,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\ResourceIconRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\File\File;
@@ -144,7 +144,7 @@ class ThumbnailManager
 
         $thumbnailPath = null;
 
-        if ($baseMime === 'video') {
+        if ('video' === $baseMime) {
             try {
                 $thumbnailPath = $this->creator->fromVideo($filePath, $newPath, 400, 250);
             } catch (\Exception $e) {
@@ -153,7 +153,7 @@ class ThumbnailManager
             }
         }
 
-        if ($baseMime === 'image') {
+        if ('image' === $baseMime) {
             try {
                 $thumbnailPath = $this->creator->fromImage($filePath, $newPath, 400, 250);
             } catch (\Exception $e) {

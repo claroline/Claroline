@@ -2,9 +2,9 @@
 
 namespace Innova\PathBundle\Installation\Updater;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Manager\MaskManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Updater\Updater;
 
 class Updater110000 extends Updater

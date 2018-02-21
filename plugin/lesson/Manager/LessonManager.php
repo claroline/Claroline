@@ -2,9 +2,9 @@
 
 namespace Icap\LessonBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\LessonBundle\Entity\Chapter;
 use Icap\LessonBundle\Entity\Lesson;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -15,7 +15,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 class LessonManager
 {
     /**
-     * @var \Claroline\CoreBundle\Persistence\ObjectManager
+     * @var \Claroline\AppBundle\Persistence\ObjectManager
      */
     private $om;
     private $ch;
@@ -62,7 +62,7 @@ class LessonManager
                     $lesson->setRoot($entityChapter);
                 }
                 $parentChapter = null;
-                if ($chapter['parent_id'] !== null) {
+                if (null !== $chapter['parent_id']) {
                     $parentChapter = $chaptersMap[$chapter['parent_id']];
                     $entityChapter->setParent($parentChapter);
                     $this->chapterRepository->persistAsLastChildOf($entityChapter, $parentChapter);
@@ -102,7 +102,7 @@ class LessonManager
 
             $chapterArray = [
                 'id' => $chapter->getId(),
-                'parent_id' => ($chapter->getParent() !== null) ? $chapter->getParent()->getId() : null,
+                'parent_id' => (null !== $chapter->getParent()) ? $chapter->getParent()->getId() : null,
                 'is_root' => $chapter->getId() === $rootChapter->getId(),
                 'title' => $chapter->getTitle(),
                 'path' => $uid,

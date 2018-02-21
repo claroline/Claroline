@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
-use Claroline\CoreBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\ToolManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;

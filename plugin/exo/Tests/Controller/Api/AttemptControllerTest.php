@@ -2,10 +2,10 @@
 
 namespace UJM\ExoBundle\Tests\Controller\Api;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\RequestTrait;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Hint;
 use UJM\ExoBundle\Entity\Item\Item;
@@ -228,7 +228,7 @@ class AttemptControllerTest extends TransactionalTestCase
 
         // Check if the Paper has been correctly updated
         $this->assertFalse($pa1->isInterrupted());
-        $this->assertTrue($pa1->getEnd() !== null);
+        $this->assertTrue(null !== $pa1->getEnd());
 
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
 

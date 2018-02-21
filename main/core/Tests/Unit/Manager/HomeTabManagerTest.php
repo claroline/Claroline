@@ -31,7 +31,7 @@ class HomeTabManagerTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->homeTabRepo =
             $this->mock('Claroline\CoreBundle\Repository\HomeTabRepository');
         $this->homeTabConfigRepo =
@@ -171,10 +171,10 @@ class HomeTabManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')->once()->with(
             m::on(
                 function (HomeTabConfig $newHomeTabConfig) {
-                    return $newHomeTabConfig->getType() === 'admin_workspace'
+                    return 'admin_workspace' === $newHomeTabConfig->getType()
                         && $newHomeTabConfig->isVisible()
                         && !$newHomeTabConfig->isLocked()
-                        && $newHomeTabConfig->getTabOrder() === 1;
+                        && 1 === $newHomeTabConfig->getTabOrder();
                 }
             )
         );
@@ -208,10 +208,10 @@ class HomeTabManagerTest extends MockeryTestCase
         $this->om->shouldReceive('persist')->once()->with(
             m::on(
                 function (HomeTabConfig $newHomeTabConfig) {
-                    return $newHomeTabConfig->getType() === 'admin_desktop'
+                    return 'admin_desktop' === $newHomeTabConfig->getType()
                         && $newHomeTabConfig->isVisible()
                         && !$newHomeTabConfig->isLocked()
-                        && $newHomeTabConfig->getTabOrder() === 1;
+                        && 1 === $newHomeTabConfig->getTabOrder();
                 }
             )
         );
@@ -1111,7 +1111,7 @@ class HomeTabManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($this->widgetDisplayConfigRepo);
 
-        if (count($mockedMethods) === 0) {
+        if (0 === count($mockedMethods)) {
             return new HomeTabManager($this->om);
         }
 

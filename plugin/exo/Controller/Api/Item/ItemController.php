@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Controller\Api\Item;
 
-use Claroline\CoreBundle\API\FinderProvider;
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;

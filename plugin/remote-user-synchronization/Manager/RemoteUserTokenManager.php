@@ -11,9 +11,9 @@
 
 namespace Claroline\RemoteUserSynchronizationBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\RemoteUserSynchronizationBundle\Entity\RemoteUserToken;
 use JMS\DiExtraBundle\Annotation as DI;
 

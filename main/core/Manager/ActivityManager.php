@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Activity\AbstractEvaluation;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Activity\ActivityRule;
@@ -22,8 +24,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -194,7 +194,7 @@ class ActivityManager
         $ruleScore = null;
         $ruleScoreMax = null;
 
-        if ($evaluationType === AbstractEvaluation::TYPE_AUTOMATIC
+        if (AbstractEvaluation::TYPE_AUTOMATIC === $evaluationType
             && count($activityParams->getRules()) > 0) {
             $rule = $activityParams->getRules()->first();
             $ruleScore = $rule->getResult();
@@ -208,8 +208,8 @@ class ActivityManager
 
         $nbAttempts = $isFirstEvaluation ? 0 : count($pastEvals);
         $totalTime = $isFirstEvaluation ? null : $evaluation->getAttemptsDuration();
-        $pastStatus = $activityStatus === AbstractEvaluation::STATUS_INCOMPLETE
-            || $activityStatus === AbstractEvaluation::STATUS_FAILED ?
+        $pastStatus = AbstractEvaluation::STATUS_INCOMPLETE === $activityStatus
+            || AbstractEvaluation::STATUS_FAILED === $activityStatus ?
             $activityStatus :
             AbstractEvaluation::STATUS_UNKNOWN;
         $previousStatus = $evaluation ?
@@ -306,8 +306,8 @@ class ActivityManager
         $pastEval->setScoreMax($scoreMax);
         $pastEval->setDuration($duration);
 
-        if (($activityStatus === AbstractEvaluation::STATUS_COMPLETED
-            || $activityStatus === AbstractEvaluation::STATUS_PASSED)
+        if ((AbstractEvaluation::STATUS_COMPLETED === $activityStatus
+            || AbstractEvaluation::STATUS_PASSED === $activityStatus)
             && !is_null($score)
             && !is_null($ruleScore)) {
             $realStatus = $this->hasPassingScore($ruleScore, $ruleScoreMax, $score, $scoreMax) ?
@@ -421,7 +421,7 @@ class ActivityManager
         $status = null;
         $nbAttempts = null;
 
-        if ($evaluationType === AbstractEvaluation::TYPE_AUTOMATIC) {
+        if (AbstractEvaluation::TYPE_AUTOMATIC === $evaluationType) {
             $status = AbstractEvaluation::STATUS_NOT_ATTEMPTED;
             $nbAttempts = 0;
         }
@@ -581,7 +581,7 @@ class ActivityManager
             );
         }
 
-        return array();
+        return [];
     }
 
     /*********************************************
@@ -668,7 +668,7 @@ class ActivityManager
             );
         }
 
-        return array();
+        return [];
     }
 
     public function getEvaluationsByUsersAndActivityParams(
@@ -684,7 +684,7 @@ class ActivityManager
             );
         }
 
-        return array();
+        return [];
     }
 
     /**********************************************
@@ -730,7 +730,7 @@ class ActivityManager
         $secondaries = [];
         $nodes = [];
         $token = $this->tokenStorage->getToken();
-        $user = $token === null ? $activity->getResourceNode()->getCreator() : $token->getUser();
+        $user = null === $token ? $activity->getResourceNode()->getCreator() : $token->getUser();
 
         if ($primary) {
             $nodes[] = $primary;

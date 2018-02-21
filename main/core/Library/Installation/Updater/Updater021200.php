@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\UserPublicProfilePreferences;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Updater\Updater;
 
 class Updater021200 extends Updater

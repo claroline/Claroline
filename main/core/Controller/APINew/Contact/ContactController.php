@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Contact;
 
-use Claroline\CoreBundle\Annotations\ApiMeta;
-use Claroline\CoreBundle\API\FinderProvider;
+use Claroline\AppBundle\Annotations\ApiMeta;
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\API\Serializer\Contact\ContactSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
-use Claroline\CoreBundle\Controller\APINew\AbstractCrudController;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\ContactManager;
@@ -89,7 +89,7 @@ class ContactController extends AbstractCrudController
         $user = $this->tokenStorage->getToken()->getUser();
 
         return [
-            'user' => $user !== 'anon.' ? $user->getId() : null,
+            'user' => 'anon.' !== $user ? $user->getId() : null,
         ];
     }
 

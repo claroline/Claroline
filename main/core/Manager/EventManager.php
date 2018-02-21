@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.event.manager")
@@ -56,7 +56,7 @@ class EventManager
         $suffixLogPath = '/Event/Log';
         $suffixLogNamespace = '\Event\Log';
         $bundles = $this->kernel->getBundles();
-        $events = array();
+        $events = [];
 
         foreach ($bundles as $bundle) {
             $bundleEventLogDirectory = $bundle->getPath().$suffixLogPath;
@@ -86,7 +86,7 @@ class EventManager
         $suffixLogPath = '/Event/Log';
         $suffixLogNamespace = '\Event\Log';
         $bundles = $this->kernel->getBundles();
-        $events = array();
+        $events = [];
 
         foreach ($bundles as $bundle) {
             if (0 === strpos($resourceClass, $bundle->getNamespace())
@@ -119,7 +119,7 @@ class EventManager
      */
     protected function getEventsByBundle(Finder $finder, $bundleNamespace, $suffixLogNamespace, $restriction)
     {
-        $events = array();
+        $events = [];
 
         /** @var \Symfony\Component\Finder\SplFileInfo $file */
         foreach ($finder as $file) {
@@ -144,15 +144,15 @@ class EventManager
      */
     protected function getActionConstantsForClass($classNamespace, $restriction)
     {
-        $constants = array();
+        $constants = [];
         /** @var \Claroline\CoreBundle\Event\Log\LogGenericEvent $reflectionClass */
         $reflectionClass = new \ReflectionClass($classNamespace);
 
         if (!$reflectionClass->isAbstract()) {
             if ($restriction
                 && ($restrictions = $classNamespace::getRestriction())
-                && count($restrictions) === 1
-                && $restrictions[0] === LogGenericEvent::DISPLAYED_ADMIN
+                && 1 === count($restrictions)
+                && LogGenericEvent::DISPLAYED_ADMIN === $restrictions[0]
                 && $restriction !== $restrictions[0]) {
                 return $constants; // event is admin only
             }
@@ -177,44 +177,44 @@ class EventManager
     public function getSortedEventsForFilter($restriction = null)
     {
         $textEvents = $this->getEvents($restriction);
-        $allTranslatedText = $this->translator->trans('all', array(), 'log');
-        $sortedEvents = array();
-        $genericResourceEvents = array();
+        $allTranslatedText = $this->translator->trans('all', [], 'log');
+        $sortedEvents = [];
+        $genericResourceEvents = [];
         $genericResourceEvents['all'] = 'all';
         $sortedEvents[$allTranslatedText] = 'all';
-        $tempResourceEvents = array();
+        $tempResourceEvents = [];
 
         foreach ($textEvents as $textEvent) {
             $explodeTextEvents = explode('-', $textEvent);
             $shortTextEvent = $explodeTextEvents[0].'-'.$explodeTextEvents[1];
-            $eventTrans = $this->translator->trans($explodeTextEvents[0], array(), 'log');
+            $eventTrans = $this->translator->trans($explodeTextEvents[0], [], 'log');
 
-            if ($explodeTextEvents[0] === 'resource') {
+            if ('resource' === $explodeTextEvents[0]) {
                 $tempResourceEvents['all'][$allTranslatedText] = $explodeTextEvents[0];
             } else {
                 $sortedEvents[$eventTrans][$explodeTextEvents[0].': '.$allTranslatedText] = $explodeTextEvents[0];
             }
 
-            if ($explodeTextEvents[0] === 'resource') {
+            if ('resource' === $explodeTextEvents[0]) {
                 if (isset($explodeTextEvents[2])) {
                     $tempResourceEvents[$explodeTextEvents[1]][$this->translator->trans(
-                        'log_'.$textEvent.'_filter', array(), 'log'
+                        'log_'.$textEvent.'_filter', [], 'log'
                     )] = $textEvent;
                 } else {
                     $genericResourceEvents[$explodeTextEvents[1]] = $shortTextEvent;
                 }
             } elseif (isset($explodeTextEvents[2])) {
                 $sortedEvents[$eventTrans][$this->translator->trans(
-                    'log_'.$textEvent.'_filter', array(), 'log'
+                    'log_'.$textEvent.'_filter', [], 'log'
                 )] = $textEvent;
             } else {
                 $sortedEvents[$eventTrans][$this->translator->trans(
-                    'log_'.$shortTextEvent.'_filter', array(), 'log'
+                    'log_'.$shortTextEvent.'_filter', [], 'log'
                 )] = $shortTextEvent;
             }
         }
 
-        $resourceTrans = $this->translator->trans('resource', array(), 'platform');
+        $resourceTrans = $this->translator->trans('resource', [], 'platform');
 
         // adding resource types that don't define specific event classes
         $remainingTypes = $this->om
@@ -222,29 +222,29 @@ class EventManager
             ->findTypeNamesNotIn(array_keys($tempResourceEvents));
 
         foreach ($remainingTypes as $type) {
-            $tempResourceEvents[$type['name']] = array();
+            $tempResourceEvents[$type['name']] = [];
         }
 
-        foreach ($tempResourceEvents as $sortedKey => $sortedEvent) {
-            $keyTrans = $this->translator->trans($sortedKey, array(), 'resource');
+        foreach (array_keys($tempResourceEvents) as $sortedKey) {
+            $keyTrans = $this->translator->trans($sortedKey, [], 'resource');
 
             foreach ($genericResourceEvents as $genericEvent) {
                 $logTrans = $this->translator->trans(
-                    $genericEvent === 'all' ? $genericEvent : 'log_'.$genericEvent.'_filter',
-                        array(),
+                    'all' === $genericEvent ? $genericEvent : 'log_'.$genericEvent.'_filter',
+                        [],
                         'log'
                     );
 
                 $genericEvent = ('all' === $genericEvent) ? 'resource' : $genericEvent;
 
-                if ($sortedKey !== 'all') {
+                if ('all' !== $sortedKey) {
                     $sortedEvents[$resourceTrans][$keyTrans][$keyTrans.': '.$logTrans] = '[['.$sortedKey.']]'.$genericEvent;
                 } else {
                     $sortedEvents[$resourceTrans][$allTranslatedText]['resource: '.$logTrans] = $genericEvent;
                 }
             }
 
-            if ($sortedKey !== 'all') {
+            if ('all' !== $sortedKey) {
                 foreach ($tempResourceEvents[$sortedKey] as $resourceEventKey => $resourceEventValue) {
                     $sortedEvents[$resourceTrans][$keyTrans][$resourceEventKey] = $resourceEventValue;
                 }
@@ -263,10 +263,10 @@ class EventManager
     public function getResourceEventsForFilter($restriction = null, $resourceClass = null)
     {
         $textEvents = $this->getEventsForBundle($restriction, $resourceClass);
-        $sortedEvents = array();
+        $sortedEvents = [];
         $sortedEvents['all'] = 'all';
         foreach ($textEvents as $textEvent) {
-            if ($textEvent === null) {
+            if (null === $textEvent) {
                 $sortedEvents['null'] = null;
             } elseif (0 === strpos($textEvent, 'resource')) {
                 $sortedEvents[$textEvent] = 'log_'.$textEvent.'_filter';
@@ -283,7 +283,7 @@ class EventManager
      */
     public function getSortedEventsForConfigForm($restriction = null)
     {
-        $events = array();
+        $events = [];
 
         foreach ($this->getEvents($restriction) as $event) {
             $events[$event] = 'log_'.$event.'_title';

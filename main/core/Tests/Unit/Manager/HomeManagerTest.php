@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\Home\Type;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class HomeManagerTest extends MockeryTestCase
 {
@@ -36,7 +36,7 @@ class HomeManagerTest extends MockeryTestCase
         parent::setUp();
 
         $this->graph = $this->mock('Claroline\CoreBundle\Library\Home\GraphService');
-        $this->manager = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->manager = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->registry = $this->mock('Doctrine\Bundle\DoctrineBundle\Registry');
         $this->homeService = $this->mock('Claroline\CoreBundle\Library\Home\HomeService');
         $this->repository = $this->mock('Doctrine\ORM\EntityRepository');
@@ -61,7 +61,7 @@ class HomeManagerTest extends MockeryTestCase
         $this->type->shouldReceive('getName')->once();
         $this->contentType->shouldReceive('getSize')->once();
         $this->assertEquals(
-            array('type' => null, 'size' => null, 'content' => $this->content),
+            ['type' => null, 'size' => null, 'content' => $this->content],
             $this->homeManager->getContent($this->content, $this->type, null)
         );
     }
@@ -76,8 +76,8 @@ class HomeManagerTest extends MockeryTestCase
         $this->subContent->shouldReceive('getContent')->once()->andReturn($this->content);
         $this->subContent->shouldReceive('getSize')->once();
         $this->subContent->shouldReceive('getNext')->once();
-        $this->homeService->shouldReceive('isDefinedPush')->times(4)->andReturn(array());
-        $this->assertEquals(array(), $this->homeManager->contentLayout('home', 1, 'left'));
+        $this->homeService->shouldReceive('isDefinedPush')->times(4)->andReturn([]);
+        $this->assertEquals([], $this->homeManager->contentLayout('home', 1, 'left'));
     }
 
     public function testGetContentByType()
@@ -90,14 +90,14 @@ class HomeManagerTest extends MockeryTestCase
         $this->subContent->shouldReceive('getContent')->once()->andReturn($this->content);
         $this->subContent->shouldReceive('getSize')->once();
         $this->subContent->shouldReceive('getNext')->once();
-        $this->homeService->shouldReceive('isDefinedPush')->times(2)->andReturn(array());
-        $this->assertEquals(array(array()), $this->homeManager->getContentByType('home', 1, 'left'));
+        $this->homeService->shouldReceive('isDefinedPush')->times(2)->andReturn([]);
+        $this->assertEquals([[]], $this->homeManager->getContentByType('home', 1, 'left'));
     }
 
     public function testGetRegionContents()
     {
         $this->repository->shouldReceive('findAll')->once()->andReturn($this->region);
-        $this->assertEquals(array(), $this->homeManager->getRegionContents());
+        $this->assertEquals([], $this->homeManager->getRegionContents());
     }
 
     public function testGetTypes()
@@ -108,7 +108,7 @@ class HomeManagerTest extends MockeryTestCase
 
     public function testGetGraph()
     {
-        $array = array('type' => 'video');
+        $array = ['type' => 'video'];
         $this->graph->shouldReceive('get')->once()->andReturn($array);
         $this->assertEquals($array, $this->homeManager->getGraph('http://youtu.be/tmauTTi7awA'));
     }
@@ -186,28 +186,23 @@ class HomeManagerTest extends MockeryTestCase
     public function testDeleNodeEntity()
     {
         $this->repository->shouldReceive('findBy')->once()->andReturn($this->contentType);
-        $this->assertEquals(null, $this->homeManager->deleNodeEntity($this->repository, array('id' => 1), null));
+        $this->assertEquals(null, $this->homeManager->deleNodeEntity($this->repository, ['id' => 1], null));
     }
 
     public function testContentToRegion()
     {
         $this->markTestSkipped();
-        //$this->repository->shouldReceive('findOneBy')->once()->andReturn($this->contentRegion);
-        //$this->manager->shouldReceive('persist')->once();
-        //$this->manager->shouldReceive('flush')->once();
-        //$this->contentRegion->shouldReceive('setBack')->once();
-        //$this->assertEquals(null, $this->homeManager->contentToRegion($this->region, $this->content));
     }
 
     public function testGetCreator()
     {
-        $this->homeService->shouldReceive('isDefinedPush')->once()->andReturn(array());
-        $this->assertEquals(array(), $this->homeManager->getCreator('home', null, null, null));
+        $this->homeService->shouldReceive('isDefinedPush')->once()->andReturn([]);
+        $this->assertEquals([], $this->homeManager->getCreator('home', null, null, null));
     }
 
     public function testGetMenu()
     {
-        $this->homeService->shouldReceive('isDefinedPush')->once()->andReturn(array());
-        $this->assertEquals(array(), $this->homeManager->getMenu(1, 'col-lg-12', 'home', null));
+        $this->homeService->shouldReceive('isDefinedPush')->once()->andReturn([]);
+        $this->assertEquals([], $this->homeManager->getMenu(1, 'col-lg-12', 'home', null));
     }
 }

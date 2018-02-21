@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Command\API;
 
+use Claroline\AppBundle\Routing\ApiRoute;
 use Claroline\CoreBundle\Command\Traits\BaseCommandTrait;
-use Claroline\CoreBundle\Routing\ApiRoute;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Bundle\FrameworkBundle\Console\Helper\DescriptorHelper;
 use Symfony\Component\Console\Input\InputArgument;

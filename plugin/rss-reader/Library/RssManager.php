@@ -11,9 +11,9 @@
 
 namespace Claroline\RssReaderBundle\Library;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.rss_manager")
@@ -36,6 +36,6 @@ class RssManager
     {
         return $this->om
             ->getRepository('ClarolineRssReaderBundle:Config')
-            ->findOneBy(array('widgetInstance' => $config));
+            ->findOneBy(['widgetInstance' => $config]);
     }
 }

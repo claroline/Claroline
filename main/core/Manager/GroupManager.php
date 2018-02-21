@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -449,7 +449,7 @@ class GroupManager
         $scheduledForInsert = $this->om->getUnitOfWork()->getScheduledEntityInsertions();
 
         foreach ($scheduledForInsert as $entity) {
-            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Group') {
+            if ('Claroline\CoreBundle\Entity\Group' === get_class($entity)) {
                 if ($entity->getName() === $name) {
                     return $entity;
                 }
@@ -480,7 +480,7 @@ class GroupManager
 
         //Admin can see everything, but the others... well they can only see their own organizations.
         //Cli always win aswell
-        if (php_sapi_name() !== 'cli' || $this->container->get('kernel')->getEnvironment() === 'test') {
+        if ('cli' !== php_sapi_name() || 'test' === $this->container->get('kernel')->getEnvironment()) {
             if (!$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
                 $currentUser = $this->container->get('security.token_storage')->getToken()->getUser();
                 $qb->join('g.organizations', 'go');
@@ -506,7 +506,7 @@ class GroupManager
 
         $query = $qb->getQuery();
 
-        if ($page !== null && $limit !== null && !$count) {
+        if (null !== $page && null !== $limit && !$count) {
             $query->setMaxResults($limit);
             $query->setFirstResult($page * $limit);
         }
@@ -550,6 +550,7 @@ class GroupManager
 
         return $content;
     }
+
     /**
      * @param int $page
      * @param int $max
@@ -562,6 +563,7 @@ class GroupManager
 
         return $this->pagerFactory->createPager($query, $page, $max);
     }
+
     /**
      * @param int    $page
      * @param string $search
@@ -575,6 +577,7 @@ class GroupManager
 
         return $this->pagerFactory->createPagerFromArray($query, $page, $max);
     }
+
     /**
      * @param string[] $names
      *

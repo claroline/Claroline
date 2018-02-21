@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\API\Finder\Contact;
 
-use Claroline\CoreBundle\API\FinderInterface;
+use Claroline\AppBundle\API\FinderInterface;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -80,7 +80,7 @@ class ContactFinder implements FinderInterface
         }
         if (!is_null($sortBy) && isset($sortBy['property']) && isset($sortBy['direction'])) {
             $sortByProperty = $sortBy['property'];
-            $sortByDirection = $sortBy['direction'] === 1 ? 'ASC' : 'DESC';
+            $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
 
             switch ($sortByProperty) {
                 case 'data.username':

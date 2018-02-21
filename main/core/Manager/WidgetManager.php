@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\User;
@@ -20,7 +21,6 @@ use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetHomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -186,7 +186,7 @@ class WidgetManager
      */
     public function getAdminDesktopWidgetInstance(array $excludedWidgetInstances)
     {
-        if (count($excludedWidgetInstances) === 0) {
+        if (0 === count($excludedWidgetInstances)) {
             return $this->widgetInstanceRepo->findBy(
                 [
                     'isAdmin' => true,
@@ -208,7 +208,7 @@ class WidgetManager
      */
     public function getAdminWorkspaceWidgetInstance(array $excludedWidgetInstances)
     {
-        if (count($excludedWidgetInstances) === 0) {
+        if (0 === count($excludedWidgetInstances)) {
             return $this->widgetInstanceRepo->findBy(
                 [
                     'isAdmin' => true,
@@ -233,7 +233,7 @@ class WidgetManager
         User $user,
         array $excludedWidgetInstances
     ) {
-        if (count($excludedWidgetInstances) === 0) {
+        if (0 === count($excludedWidgetInstances)) {
             return $this->widgetInstanceRepo->findBy(
                 [
                     'user' => $user,
@@ -257,7 +257,7 @@ class WidgetManager
      */
     public function getWorkspaceWidgetInstance(Workspace $workspace, array $excludedWidgetInstances)
     {
-        if (count($excludedWidgetInstances) === 0) {
+        if (0 === count($excludedWidgetInstances)) {
             return $this->widgetInstanceRepo->findBy(
                 [
                     'workspace' => $workspace,
@@ -302,7 +302,7 @@ class WidgetManager
             $widgetInstance = $whtc->getWidgetInstance();
             $widgetInstances[] = $widgetInstance;
 
-            if ($whtc->getType() === 'admin') {
+            if ('admin' === $whtc->getType()) {
                 $mappedWHTCs[$widgetInstance->getId()] = $whtc;
             }
         }
@@ -615,7 +615,7 @@ class WidgetManager
 
             ++$i;
 
-            if ($i % 100 === 0) {
+            if (0 === $i % 100) {
                 $this->om->forceFlush();
                 $this->om->clear();
                 $textWidget = $this->om->getRepository('ClarolineCoreBundle:Widget\Widget')->findOneByName('simple_text');

@@ -11,13 +11,13 @@
 
 namespace Claroline\DropZoneBundle\Manager;
 
-use Claroline\CoreBundle\API\Crud;
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\DropZoneBundle\Entity\Correction;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
@@ -379,10 +379,10 @@ class DropzoneManager
     {
         $teamId = null;
 
-        if ($dropzone->getDropType() === Dropzone::DROP_TYPE_TEAM) {
+        if (Dropzone::DROP_TYPE_TEAM === $dropzone->getDropType()) {
             $teamDrops = $this->getTeamDrops($dropzone, $user);
 
-            if (count($teamDrops) === 1) {
+            if (1 === count($teamDrops)) {
                 $teamId = $teamDrops[0]->getTeamId();
             }
         }
@@ -460,7 +460,7 @@ class DropzoneManager
      */
     public function deleteDocument(Document $document)
     {
-        if ($document->getType() === Document::DOCUMENT_TYPE_FILE) {
+        if (Document::DOCUMENT_TYPE_FILE === $document->getType()) {
             $data = $document->getFile();
 
             if (isset($data['url'])) {
@@ -669,7 +669,7 @@ class DropzoneManager
             case Dropzone::DROP_TYPE_TEAM:
                 $teamDrops = $this->getTeamDrops($dropzone, $user);
 
-                if (count($teamDrops) === 1) {
+                if (1 === count($teamDrops)) {
                     $users = $teamDrops[0]->getUsers();
                 }
                 break;
@@ -1030,7 +1030,7 @@ class DropzoneManager
      */
     public function executeTool(DropzoneTool $tool, Document $document)
     {
-        if ($tool->getType() === DropzoneTool::COMPILATIO && $document->getType() === Document::DOCUMENT_TYPE_FILE) {
+        if (DropzoneTool::COMPILATIO === $tool->getType() && Document::DOCUMENT_TYPE_FILE === $document->getType()) {
             $toolDocument = $this->dropzoneToolDocumentRepo->findOneBy(['tool' => $tool, 'document' => $document]);
             $toolData = $tool->getData();
             $compilatio = new \SoapClient($toolData['url']);
@@ -1130,7 +1130,7 @@ class DropzoneManager
         $dropzone = $drop->getDropzone();
         $users = [$drop->getUser()];
 
-        if ($dropzone->getDropType() === Dropzone::DROP_TYPE_TEAM) {
+        if (Dropzone::DROP_TYPE_TEAM === $dropzone->getDropType()) {
             $users = $drop->getUsers();
         }
         $computeStatus = $drop->isFinished() && (!$dropzone->isPeerReview() || $drop->isUnlockedDrop());
@@ -1262,7 +1262,7 @@ class DropzoneManager
                 strtolower($drop->getTeamName()) :
                 strtolower($drop->getUser()->getFirstName().' '.$drop->getUser()->getLastName().' - '.$drop->getUser()->getUsername());
 
-            if ($date !== '') {
+            if ('' !== $date) {
                 $dirName .= ' '.$date;
             }
 

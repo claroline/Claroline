@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 use Claroline\CoreBundle\Library\Installation\Updater\Updater100000;
 use Claroline\CoreBundle\Library\Installation\Updater\Updater110000;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 
 class CreatePublicFilesData implements RequiredFixture
 {

@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Tests\Serializer\Misc;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Misc\Keyword;
 use UJM\ExoBundle\Library\Testing\Json\JsonDataTestCase;
 use UJM\ExoBundle\Serializer\Misc\KeywordSerializer;

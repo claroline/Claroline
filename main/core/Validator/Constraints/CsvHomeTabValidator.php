@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Validator\Constraints;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraint;
@@ -53,7 +53,7 @@ class CsvHomeTabValidator extends ConstraintValidator
             $linesTab = explode(';', $line);
             $nbElements = count($linesTab);
 
-            if (trim($line) !== '') {
+            if ('' !== trim($line)) {
                 if ($nbElements < 2) {
                     $this->context->addViolation($constraint->message);
 

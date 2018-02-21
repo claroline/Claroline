@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager\Organization;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
@@ -39,7 +39,7 @@ class OrganizationManager
     public function getDefault($createIfEmpty = false)
     {
         $defaultOrganization = $this->repo->findOneByDefault(true);
-        if ($createIfEmpty && $defaultOrganization === null) {
+        if ($createIfEmpty && null === $defaultOrganization) {
             $defaultOrganization = $this->createDefault(true);
         }
 

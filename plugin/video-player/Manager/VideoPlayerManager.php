@@ -11,13 +11,13 @@
 
 namespace Claroline\VideoPlayerBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Manager\FileManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\VideoPlayerBundle\Entity\Track;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @DI\Service("claroline.manager.video_player_manager")

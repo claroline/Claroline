@@ -2,10 +2,10 @@
 
 namespace Claroline\DropZoneBundle\Serializer;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\DropZoneBundle\Entity\Document;
 use Claroline\DropZoneBundle\Entity\Drop;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -70,7 +70,7 @@ class DocumentSerializer
         return [
             'id' => $document->getUuid(),
             'type' => $document->getType(),
-            'data' => $document->getType() === Document::DOCUMENT_TYPE_RESOURCE ?
+            'data' => Document::DOCUMENT_TYPE_RESOURCE === $document->getType() ?
                 $this->resourceSerializer->serialize($document->getData()) :
                 $document->getData(),
             'drop' => $document->getDrop()->getUuid(),
@@ -119,7 +119,7 @@ class DocumentSerializer
             $document->setType($data['type']);
 
             if (isset($data['data'])) {
-                $documentData = $document->getType() === Document::DOCUMENT_TYPE_RESOURCE ?
+                $documentData = Document::DOCUMENT_TYPE_RESOURCE === $document->getType() ?
                     $this->resourceNodeRepo->findOneBy(['uuid' => $data['data']]) :
                     $data['data'];
                 $document->setData($documentData);

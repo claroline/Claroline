@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Library\PluginBundle;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\KernelBundle\Manager\BundleManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpKernel\KernelInterface;
@@ -59,7 +59,7 @@ class PluginManager
     public function getDistributionVersion()
     {
         foreach ($this->bundleManager->getActiveBundles(true) as $bundle) {
-            if ($bundle['instance']->getName() === 'ClarolineCoreBundle') {
+            if ('ClarolineCoreBundle' === $bundle['instance']->getName()) {
                 return $bundle['instance']->getVersion();
             }
         }
@@ -278,7 +278,7 @@ class PluginManager
             + count($errors['plugins'])
             + count($errors['extras']);
 
-        return $errorCount === 0;
+        return 0 === $errorCount;
     }
 
     /**
@@ -396,6 +396,6 @@ class PluginManager
 
         $parts = explode('\\', $name);
 
-        return count($parts) === 3 ? $parts[2] : $name;
+        return 3 === count($parts) ? $parts[2] : $name;
     }
 }

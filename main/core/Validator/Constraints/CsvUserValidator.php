@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Validator\Constraints;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
@@ -18,7 +19,6 @@ use Claroline\CoreBundle\Manager\AuthenticationManager;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\ORM\NonUniqueResultException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -87,7 +87,7 @@ class CsvUserValidator extends ConstraintValidator
             $linesTab = explode(';', $line);
             $nbElements = count($linesTab);
 
-            if (trim($line) !== '') {
+            if ('' !== trim($line)) {
                 if ($nbElements < 5) {
                     $this->context->addViolation($constraint->message);
 
@@ -100,7 +100,7 @@ class CsvUserValidator extends ConstraintValidator
         $mails = [];
         $codes = [];
 
-        if ($mode === 1) {
+        if (1 === $mode) {
             $currentDate = new \DateTime();
             $timestamp = $currentDate->getTimestamp();
             $fakeUsername = '@@@fake_username_'.$timestamp.'@@@';
@@ -112,7 +112,7 @@ class CsvUserValidator extends ConstraintValidator
         }
 
         foreach ($lines as $i => $line) {
-            if (trim($line) !== '') {
+            if ('' !== trim($line)) {
                 $user = explode(';', $line);
                 $firstName = $user[0];
                 $lastName = $user[1];
@@ -121,31 +121,31 @@ class CsvUserValidator extends ConstraintValidator
                 $email = trim($user[4]);
 
                 if (isset($user[5])) {
-                    $code = trim($user[5]) === '' ? null : $user[5];
+                    $code = '' === trim($user[5]) ? null : $user[5];
                 } else {
                     $code = null;
                 }
 
                 if (isset($user[6])) {
-                    $phone = trim($user[6]) === '' ? null : $user[6];
+                    $phone = '' === trim($user[6]) ? null : $user[6];
                 } else {
                     $phone = null;
                 }
 
                 if (isset($user[7])) {
-                    $authentication = trim($user[7]) === '' ? null : $user[7];
+                    $authentication = '' === trim($user[7]) ? null : $user[7];
                 } else {
                     $authentication = null;
                 }
 
                 if (isset($user[8])) {
-                    $modelName = trim($user[8]) === '' ? null : $user[8];
+                    $modelName = '' === trim($user[8]) ? null : $user[8];
                 } else {
                     $modelName = null;
                 }
 
                 if (isset($user[10])) {
-                    $organizationName = trim($user[10]) === '' ? null : $user[10];
+                    $organizationName = '' === trim($user[10]) ? null : $user[10];
                 } else {
                     $organizationName = null;
                 }
@@ -164,7 +164,7 @@ class CsvUserValidator extends ConstraintValidator
 
                 $existingUser = null;
 
-                if ($mode === 1) {
+                if (1 === $mode) {
                     try {
                         $existingUser = $this->userManager->getUserByUsernameOrMailOrCode(
                             $username,

@@ -11,12 +11,12 @@
 
 namespace Claroline\LdapBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Claroline\CoreBundle\Manager\RegistrationManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\LdapBundle\Entity\LdapUser;
 use Claroline\LdapBundle\Exception\InvalidLdapCredentialsException;
 use JMS\DiExtraBundle\Annotation\Inject;

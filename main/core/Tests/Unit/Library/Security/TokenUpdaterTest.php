@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Library\Security;
 
-use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 
 class TokenUpdaterTest extends MockeryTestCase
 {
@@ -23,14 +23,14 @@ class TokenUpdaterTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->sc = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
     }
 
     public function testUpdateNormal()
     {
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\AbstractToken');
-        $token->shouldReceive('getRoles')->once()->andReturn(array());
+        $token->shouldReceive('getRoles')->once()->andReturn([]);
         $user = new User();
         $token->shouldReceive('getUser')->once()->andReturn($user);
         $this->sc->shouldReceive('setToken')->once()
@@ -49,9 +49,9 @@ class TokenUpdaterTest extends MockeryTestCase
         $this->getUpdater()->cancelUsurpation($token);
     }
 
-    private function getUpdater(array $mockedMethods = array())
+    private function getUpdater(array $mockedMethods = [])
     {
-        if (count($mockedMethods) === 0) {
+        if (0 === count($mockedMethods)) {
             return new TokenUpdater($this->sc, $this->om);
         }
 
@@ -66,7 +66,7 @@ class TokenUpdaterTest extends MockeryTestCase
 
         return $this->mock(
             'Claroline\CoreBundle\Controller\AdministrationController'.$stringMocked,
-            array($this->sc, $this->om)
+            [$this->sc, $this->om]
         );
     }
 }

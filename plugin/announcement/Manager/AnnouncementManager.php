@@ -16,13 +16,13 @@ use Claroline\AnnouncementBundle\Entity\Announcement;
 use Claroline\AnnouncementBundle\Entity\AnnouncementAggregate;
 use Claroline\AnnouncementBundle\Entity\AnnouncementsWidgetConfig;
 use Claroline\AnnouncementBundle\Repository\AnnouncementRepository;
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\Task\ScheduledTaskManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -367,7 +367,7 @@ class AnnouncementManager
 
         $rights = $node->getRights();
 
-        if (count($roles) === 0) {
+        if (0 === count($roles)) {
             foreach ($rights as $right) {
                 //1 is the default "open" mask
                 if ($right->getMask() & 1) {

@@ -2,13 +2,13 @@
 
 namespace Claroline\CoreBundle\API\Crud\User;
 
-use Claroline\CoreBundle\API\Crud;
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\Event\Crud\CreateEvent;
+use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\AppBundle\Event\Crud\PatchEvent;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Crud\CreateEvent;
-use Claroline\CoreBundle\Event\Crud\DeleteEvent;
-use Claroline\CoreBundle\Event\Crud\PatchEvent;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

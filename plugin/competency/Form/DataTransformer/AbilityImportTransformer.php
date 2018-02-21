@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Form\DataTransformer;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use Symfony\Component\Form\DataTransformerInterface;
 

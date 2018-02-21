@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\HomeManager;
@@ -214,7 +214,7 @@ class LayoutController extends Controller
             'workspaces' => $workspaces,
             'personalWs' => $personalWs,
             'isImpersonated' => $this->isImpersonated(),
-            'isInAWorkspace' => $workspace !== null,
+            'isInAWorkspace' => null !== $workspace,
             'currentWorkspace' => $workspace,
             'canAdministrate' => $canAdministrate,
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
@@ -253,7 +253,7 @@ class LayoutController extends Controller
                     $impersonatedRole = $role;
                 }
             }
-            if ($impersonatedRole === null) {
+            if (null === $impersonatedRole) {
                 $roleName = 'ROLE_ANONYMOUS';
             } else {
                 $guid = substr($impersonatedRole, strripos($impersonatedRole, '_') + 1);

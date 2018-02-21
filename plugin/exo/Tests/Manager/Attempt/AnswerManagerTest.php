@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Tests\Manager\Attempt;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Attempt\Answer;
 use UJM\ExoBundle\Manager\Attempt\AnswerManager;
 use UJM\ExoBundle\Serializer\Attempt\AnswerSerializer;
@@ -24,7 +24,7 @@ class AnswerManagerTest extends TransactionalTestCase
     {
         parent::setUp();
 
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->validator = $this->mock('UJM\ExoBundle\Validator\JsonSchema\Attempt\AnswerValidator');
         $this->serializer = $this->mock('UJM\ExoBundle\Serializer\Attempt\AnswerSerializer');
 

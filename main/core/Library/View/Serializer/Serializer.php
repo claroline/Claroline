@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\View\Serializer;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -55,7 +55,7 @@ class Serializer
         //objects is passed by reference
         $class = $this->getClass($array, $objects);
 
-        if ($class === 'Claroline\CoreBundle\Entity\User') {
+        if ('Claroline\CoreBundle\Entity\User' === $class) {
             //this could be something we could make extendable.
             return $this->exportUsers($objects, $format);
         }
@@ -158,7 +158,7 @@ class Serializer
     private function formatValue($value)
     {
         //the only object support is DateTime for now
-        if (gettype($value) === 'object') {
+        if ('object' === gettype($value)) {
             return $value->format($this->trans->trans('date_range.format.with_hours', [], 'platform'));
         }
 

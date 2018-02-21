@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Widget\ResourcesWidgetConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Library\Security\Utilities;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -109,7 +109,7 @@ class ResourcesWidgetManager
         $nodes = $event->getResponse();
 
         foreach ($nodes as $node) {
-            $isDirectory = $node->getResourceType()->getName() === 'directory';
+            $isDirectory = 'directory' === $node->getResourceType()->getName();
 
             if (!$isDirectory && (is_null($workspaceId) || $node->getWorkspace()->getId() === $workspaceId)) {
                 $resourceNodes[] = $node;
@@ -136,7 +136,7 @@ class ResourcesWidgetManager
             foreach ($resourceNodes as $resourceNode) {
                 $managerRoleName = $resourceNode->getWorkspace()->getManagerRole()->getName();
 
-                if ($user !== 'anon.' &&
+                if ('anon.' !== $user &&
                    ($user->getId() === $resourceNode->getCreator()->getId() || in_array($managerRoleName, $roles))
                 ) {
                     $resources[] = [
@@ -169,7 +169,7 @@ class ResourcesWidgetManager
         $directories = [];
 
         foreach ($children as $child) {
-            if ($child['type'] === 'directory') {
+            if ('directory' === $child['type']) {
                 $directories[] = $child;
             } else {
                 $resources[] = $child;

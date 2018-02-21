@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Event\Log;
 
-use Claroline\CoreBundle\Event\MandatoryEventInterface;
+use Claroline\AppBundle\Event\MandatoryEventInterface;
 
 class LogGroupUpdateEvent extends LogGenericEvent implements MandatoryEventInterface
 {
@@ -32,12 +32,12 @@ class LogGroupUpdateEvent extends LogGenericEvent implements MandatoryEventInter
     {
         parent::__construct(
             self::ACTION,
-            array(
-                'receiverGroup' => array(
+            [
+                'receiverGroup' => [
                     'name' => $receiverGroup->getName(),
                     'changeSet' => $changeSet,
-                ),
-            ),
+                ],
+            ],
             null,
             $receiverGroup
         );
@@ -48,6 +48,6 @@ class LogGroupUpdateEvent extends LogGenericEvent implements MandatoryEventInter
      */
     public static function getRestriction()
     {
-        return array(self::DISPLAYED_ADMIN);
+        return [self::DISPLAYED_ADMIN];
     }
 }

@@ -2,10 +2,10 @@
 
 namespace UJM\ExoBundle\Tests\Controller\Api\Item;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Testing\RequestTrait;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Item\Category;
 use UJM\ExoBundle\Library\Testing\Persister;
 

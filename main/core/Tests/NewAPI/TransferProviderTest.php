@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Tests\NewAPI;
 
-use Claroline\CoreBundle\API\TransferProvider;
+use Claroline\AppBundle\API\TransferProvider;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
 
 class TransferProviderTest extends TransactionalTestCase
@@ -31,7 +31,7 @@ class TransferProviderTest extends TransactionalTestCase
             foreach ($class as $action) {
                 //we just check here the return is not null
                 //(so json_decode worked and nothing crashed due to a bad schema)
-                $this->assertTrue($action !== null);
+                $this->assertTrue(null !== $action);
             }
         }
     }

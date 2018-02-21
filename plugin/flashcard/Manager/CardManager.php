@@ -11,8 +11,8 @@
 
 namespace Claroline\FlashCardBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\FlashCardBundle\Entity\Card;
 use Claroline\FlashCardBundle\Entity\Deck;
 use JMS\DiExtraBundle\Annotation as DI;

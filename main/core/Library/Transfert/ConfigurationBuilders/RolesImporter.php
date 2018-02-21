@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -136,7 +136,7 @@ class RolesImporter extends Importer implements ConfigurationInterface
 
             if (!$role['role']['is_base_role']) {
                 //check if the role exists in case we're importing everything in an existing workspace
-                if (count($this->roleManager->getRolesByName("{$role['role']['name']}_{$workspace->getGuid()}")) === 0) {
+                if (0 === count($this->roleManager->getRolesByName("{$role['role']['name']}_{$workspace->getGuid()}"))) {
                     $roleEntity = $this->roleManager->createWorkspaceRole(
                         "{$role['role']['name']}_{$workspace->getGuid()}",
                         $role['role']['translation'],

@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Facet;
 
-use Claroline\CoreBundle\API\Options;
+use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;

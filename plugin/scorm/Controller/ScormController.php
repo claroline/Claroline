@@ -11,9 +11,9 @@
 
 namespace Claroline\ScormBundle\Controller;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
 use Claroline\ScormBundle\Entity\Scorm2004Resource;
@@ -100,7 +100,7 @@ class ScormController extends Controller
         $this->checkAccess('OPEN', $scorm);
         $canEdit = $this->hasScorm12Right($scorm, 'EDIT');
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = ($user === 'anon.');
+        $isAnon = ('anon.' === $user);
         $rootScos = [];
         $trackings = [];
         $scos = $scorm->getScos();
@@ -132,7 +132,7 @@ class ScormController extends Controller
             }
         }
 
-        if ($mode === 0 && $nbActiveScos === 1) {
+        if (0 === $mode && 1 === $nbActiveScos) {
             return $this->forward('ClarolineScormBundle:Scorm:renderScorm12Sco', ['scoId' => $lastActiveSco->getId()]);
         } else {
             return [
@@ -170,7 +170,7 @@ class ScormController extends Controller
         $scorm = $scorm12Sco->getScormResource();
         $canEdit = $this->hasScorm12Right($scorm, 'EDIT');
         $this->checkAccess('OPEN', $scorm);
-        $isAnon = ($user === 'anon.');
+        $isAnon = ('anon.' === $user);
 
         $scos = $scorm->getScos();
         $entryUrl = $scorm12Sco->getEntryUrl();
@@ -241,7 +241,7 @@ class ScormController extends Controller
         $scorm = $scorm12Sco->getScormResource();
         $this->checkAccess('OPEN', $scorm);
 
-        if ($user === 'anon.') {
+        if ('anon.' === $user) {
             return new Response('', '204');
         }
 
@@ -280,7 +280,7 @@ class ScormController extends Controller
         $scoTracking->setSessionTime($sessionTimeInHundredth);
         $scoTracking->setSuspendData($suspendData);
 
-        if ($mode === 'log') {
+        if ('log' === $mode) {
             // Compute total time
             $totalTimeInHundredth = $this->convertTimeInHundredth($totalTime);
             $totalTimeInHundredth += $sessionTimeInHundredth;
@@ -302,12 +302,12 @@ class ScormController extends Controller
             // - current best status = 'failed'
             //   and current status = 'passed' or 'completed'
             if ($lessonStatus !== $bestStatus
-                && $bestStatus !== 'passed'
-                && $bestStatus !== 'completed') {
-                if (($bestStatus === 'not attempted' && !empty($lessonStatus))
-                    || (($bestStatus === 'browsed' || $bestStatus === 'incomplete')
-                        && ($lessonStatus === 'failed' || $lessonStatus === 'passed' || $lessonStatus === 'completed'))
-                    || ($bestStatus === 'failed' && ($lessonStatus === 'passed' || $lessonStatus === 'completed'))) {
+                && 'passed' !== $bestStatus
+                && 'completed' !== $bestStatus) {
+                if (('not attempted' === $bestStatus && !empty($lessonStatus))
+                    || (('browsed' === $bestStatus || 'incomplete' === $bestStatus)
+                        && ('failed' === $lessonStatus || 'passed' === $lessonStatus || 'completed' === $lessonStatus))
+                    || ('failed' === $bestStatus && ('passed' === $lessonStatus || 'completed' === $lessonStatus))) {
                     $scoTracking->setBestLessonStatus($lessonStatus);
                     $bestStatus = $lessonStatus;
                 }
@@ -405,7 +405,7 @@ class ScormController extends Controller
         $this->checkScorm2004ResourceAccess('OPEN', $scorm);
         $canEdit = $this->hasScorm2004Right($scorm, 'EDIT');
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = ($user === 'anon.');
+        $isAnon = ('anon.' === $user);
         $rootScos = [];
         $trackings = [];
         $scos = $scorm->getScos();
@@ -437,7 +437,7 @@ class ScormController extends Controller
             }
         }
 
-        if ($mode === 0 && $nbActiveScos === 1) {
+        if (0 === $mode && 1 === $nbActiveScos) {
             return $this->forward('ClarolineScormBundle:Scorm:renderScorm2004Sco', ['scoId' => $lastActiveSco->getId()]);
         } else {
             return [
@@ -475,7 +475,7 @@ class ScormController extends Controller
         $scorm = $scorm2004Sco->getScormResource();
         $this->checkScorm2004ResourceAccess('OPEN', $scorm);
         $canEdit = $this->hasScorm2004Right($scorm, 'EDIT');
-        $isAnon = ($user === 'anon.');
+        $isAnon = ('anon.' === $user);
 
         $scos = $scorm->getScos();
         $entryUrl = $scorm2004Sco->getEntryUrl();
@@ -565,7 +565,7 @@ class ScormController extends Controller
         $scorm = $scorm2004Sco->getScormResource();
         $this->checkScorm2004ResourceAccess('OPEN', $scorm);
 
-        if ($user === 'anon.') {
+        if ('anon.' === $user) {
             return new Response('', '204');
         }
         $datas = $this->request->request->all();
@@ -581,7 +581,7 @@ class ScormController extends Controller
             $scoTracking = $this->scormManager->createScorm2004ScoTracking($user, $scorm2004Sco);
         }
 
-        if ($mode === 'log') {
+        if ('log' === $mode) {
             $dataSessionTime = isset($datas['cmi.session_time']) ?
                 $this->scormManager->formatSessionTime($datas['cmi.session_time']) :
                 'PT0S';
@@ -621,14 +621,14 @@ class ScormController extends Controller
             // Update best success status and completion status
             $currentCompletionStatus = $scoTracking->getCompletionStatus();
             $currentSuccessStatus = $scoTracking->getSuccessStatus();
-            $conditionCA = ($currentCompletionStatus === 'unknown') &&
-                ($completionStatus === 'completed' ||
-                $completionStatus === 'incomplete' ||
-                $completionStatus === 'not_attempted');
-            $conditionCB = ($currentCompletionStatus === 'not_attempted') && ($completionStatus === 'completed' || $completionStatus === 'incomplete');
-            $conditionCC = ($currentCompletionStatus === 'incomplete') && ($completionStatus === 'completed');
-            $conditionSA = ($currentSuccessStatus === 'unknown') && ($successStatus === 'passed' || $successStatus === 'failed');
-            $conditionSB = ($currentSuccessStatus === 'failed') && ($successStatus === 'passed');
+            $conditionCA = ('unknown' === $currentCompletionStatus) &&
+                ('completed' === $completionStatus ||
+                'incomplete' === $completionStatus ||
+                'not_attempted' === $completionStatus);
+            $conditionCB = ('not_attempted' === $currentCompletionStatus) && ('completed' === $completionStatus || 'incomplete' === $completionStatus);
+            $conditionCC = ('incomplete' === $currentCompletionStatus) && ('completed' === $completionStatus);
+            $conditionSA = ('unknown' === $currentSuccessStatus) && ('passed' === $successStatus || 'failed' === $successStatus);
+            $conditionSB = ('failed' === $currentSuccessStatus) && ('passed' === $successStatus);
 
             if (is_null($currentCompletionStatus) || $conditionCA || $conditionCB || $conditionCC) {
                 $scoTracking->setCompletionStatus($completionStatus);
@@ -778,7 +778,7 @@ class ScormController extends Controller
         $timeInHundredth = 0;
 
         if (isset($timeInArraySec[1])) {
-            if (strlen($timeInArraySec[1]) === 1) {
+            if (1 === strlen($timeInArraySec[1])) {
                 $timeInArraySec[1] .= '0';
             }
             $timeInHundredth = intval($timeInArraySec[1]);

@@ -11,6 +11,7 @@
 
 namespace Claroline\ScormBundle\Listener;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
@@ -21,7 +22,6 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm2004Resource;
 use Claroline\ScormBundle\Entity\Scorm2004Sco;
 use Claroline\ScormBundle\Form\ScormType;
@@ -206,7 +206,7 @@ class Scorm2004Listener
 
         $nbScorm = (int) ($this->scormResourceRepo->getNbScormWithHashName($hashName));
 
-        if ($nbScorm === 1) {
+        if (1 === $nbScorm) {
             if (file_exists($scormArchiveFile)) {
                 $event->setFiles([$scormArchiveFile]);
             }
@@ -382,7 +382,7 @@ class Scorm2004Listener
         $zip = new \ZipArchive();
         $openValue = $zip->open($file);
 
-        $isScormArchive = ($openValue === true)
+        $isScormArchive = (true === $openValue)
             && $zip->getStream('imsmanifest.xml');
 
         if (!$isScormArchive) {
@@ -450,7 +450,7 @@ class Scorm2004Listener
         $scos = [];
 
         while (!is_null($item)) {
-            if ($item->nodeName === 'item') {
+            if ('item' === $item->nodeName) {
                 $sco = new Scorm2004Sco();
                 $scos[] = $sco;
                 $sco->setScoParent($parentSco);
@@ -494,7 +494,7 @@ class Scorm2004Listener
         $sco->setIdentifier($identifier->nodeValue);
 
         // visible is true by default
-        if (!is_null($isVisible) && $isVisible === 'false') {
+        if (!is_null($isVisible) && 'false' === $isVisible) {
             $sco->setVisible(false);
         } else {
             $sco->setVisible(true);
@@ -533,10 +533,10 @@ class Scorm2004Listener
                 case 'adlcp:timeLimitAction':
                     $action = strtolower($item->nodeValue);
 
-                    if ($action === 'exit,message'
-                        || $action === 'exit,no message'
-                        || $action === 'continue,message'
-                        || $action === 'continue,no message') {
+                    if ('exit,message' === $action
+                        || 'exit,no message' === $action
+                        || 'continue,message' === $action
+                        || 'continue,no message' === $action) {
                         $sco->setTimeLimitAction($action);
                     }
                     break;

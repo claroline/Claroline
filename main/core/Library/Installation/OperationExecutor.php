@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Installation\Plugin\Installer;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
 use Claroline\CoreBundle\Manager\VersionManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Manager\InstallationManager;
 use Doctrine\DBAL\Exception\TableNotFoundException;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -125,7 +125,6 @@ class OperationExecutor
                 });
 
                 foreach ($bundles as $bundle) {
-
                     //if the corebundle is already installed, we can do database checks to be sure a plugin is already installed
                     //and not simply set to false in bundles.ini in previous versions.
                     $foundBundle = $this->isBundleAlreadyInstalled($bundle);
@@ -133,7 +132,7 @@ class OperationExecutor
                     $previousPackage = $this->findPreviousPackage($bundle);
 
                     if ($foundBundle && $previousPackage) {
-                        $isDistribution = $currentPackage->getName() === 'claroline/distribution';
+                        $isDistribution = 'claroline/distribution' === $currentPackage->getName();
                         $fromVersionEntity = $this->versionManager->getLatestUpgraded($bundle);
                         $toVersion = $this->versionManager->getCurrent();
 
@@ -248,13 +247,13 @@ class OperationExecutor
         $bundles = $this->getBundlesByFqcn();
 
         foreach ($operations as $operation) {
-            $installer = $operation->getBundleFqcn() === 'Claroline\CoreBundle\ClarolineCoreBundle' ?
+            $installer = 'Claroline\CoreBundle\ClarolineCoreBundle' === $operation->getBundleFqcn() ?
                 $this->baseInstaller :
                 $this->pluginInstaller;
 
-            if ($operation->getType() === Operation::INSTALL) {
+            if (Operation::INSTALL === $operation->getType()) {
                 $installer->install($bundles[$operation->getBundleFqcn()]);
-            } elseif ($operation->getType() === Operation::UPDATE) {
+            } elseif (Operation::UPDATE === $operation->getType()) {
                 if (array_key_exists($operation->getBundleFqcn(), $bundles)) {
                     $installer->update(
                       $bundles[$operation->getBundleFqcn()],
@@ -320,8 +319,8 @@ class OperationExecutor
                 foreach ($extra['bundles'] as $installedBundle) {
                     if ($installedBundle === $bundle ||
                         (
-                            $bundle === 'Icap\InwicastBundle\IcapInwicastBundle' &&
-                            $installedBundle === 'Inwicast\ClarolinePluginBundle\InwicastClarolinePluginBundle'
+                            'Icap\InwicastBundle\IcapInwicastBundle' === $bundle &&
+                            'Inwicast\ClarolinePluginBundle\InwicastClarolinePluginBundle' === $installedBundle
                         )
                     ) {
                         return $package;
@@ -335,8 +334,8 @@ class OperationExecutor
                 $bundlePrettyName = strtolower($bundleParts[2]);
                 if ($packagePrettyName === $bundlePrettyName ||
                     (
-                        $bundlePrettyName === 'icapinwicastbundle' &&
-                        $packagePrettyName === 'inwicastclarolinepluginbundle'
+                        'icapinwicastbundle' === $bundlePrettyName &&
+                        'inwicastclarolinepluginbundle' === $packagePrettyName
                     )
                 ) {
                     return $package;
@@ -363,12 +362,12 @@ class OperationExecutor
 
     private function isBundleAlreadyInstalled($bundleFqcn, $checkCoreBundle = true)
     {
-        if ($bundleFqcn === 'Claroline\CoreBundle\ClarolineCoreBundle' && !$checkCoreBundle) {
+        if ('Claroline\CoreBundle\ClarolineCoreBundle' === $bundleFqcn && !$checkCoreBundle) {
             return true;
         }
 
         try {
-            return $bundleFqcn === 'Icap\InwicastBundle\IcapInwicastBundle' ?
+            return 'Icap\InwicastBundle\IcapInwicastBundle' === $bundleFqcn ?
               $this->verifyInwicastBundleInstallation() :
               $this->om->getRepository('ClarolineCoreBundle:Plugin')->findOneByBundleFQCN($bundleFqcn);
         } catch (TableNotFoundException $e) {

@@ -11,7 +11,7 @@
 
 namespace Claroline\FlashCardBundle\Manager;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\FlashCardBundle\Entity\Deck;
 use Claroline\FlashCardBundle\Entity\Note;
 use Claroline\FlashCardBundle\Entity\NoteType;

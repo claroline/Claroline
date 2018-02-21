@@ -11,8 +11,10 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Symfony\Component\HttpFoundation\Response;
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
+use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Symfony\Component\EventDispatcher\Event;
+use Symfony\Component\HttpFoundation\Response;
 
 class OpenAdministrationToolEvent extends Event implements DataConveyorEventInterface, MandatoryEventInterface
 {

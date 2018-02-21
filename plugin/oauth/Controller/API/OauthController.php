@@ -11,8 +11,8 @@
 
 namespace Icap\OAuthBundle\Controller\API;
 
-use Claroline\CoreBundle\Annotations\ApiMeta;
-use Claroline\CoreBundle\Controller\APINew\AbstractCrudController;
+use Claroline\AppBundle\Annotations\ApiMeta;
+use Claroline\AppBundle\Controller\AbstractCrudController;
 use FOS\RestBundle\Controller\Annotations\View;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 

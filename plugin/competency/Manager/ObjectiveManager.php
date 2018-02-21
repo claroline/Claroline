@@ -2,11 +2,11 @@
 
 namespace HeVinci\CompetencyBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Adapter\OrmArrayAdapter;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\Level;
@@ -460,11 +460,11 @@ class ObjectiveManager
             $nbValidResources = 0;
 
             foreach ($resources as $resource) {
-                if ($resource->getResourceType()->getName() === 'ujm_exercise') {
+                if ('ujm_exercise' === $resource->getResourceType()->getName()) {
                     ++$nbValidResources;
                 }
             }
-            if ($target === 0 || $nbValidResources < $target) {
+            if (0 === $target || $nbValidResources < $target) {
                 $challengeError = $this->translator->trans('objective.invalid_challenge_msg', [], 'competency');
             }
         }
@@ -494,7 +494,7 @@ class ObjectiveManager
                 if ($this->isValidResource($resource)) {
                     $allResources[$resource->getId()] = $resource;
 
-                    if ($abilityProgress->getStatus() === AbilityProgress::STATUS_ACQUIRED ||
+                    if (AbilityProgress::STATUS_ACQUIRED === $abilityProgress->getStatus() ||
                         $abilityProgress->hasPassedResource($resource)
                     ) {
                         $passedResources[$resource->getId()] = $resource;
@@ -524,6 +524,6 @@ class ObjectiveManager
     {
         $type = $resource->getResourceType()->getName();
 
-        return $type === 'ujm_exercise';
+        return 'ujm_exercise' === $type;
     }
 }

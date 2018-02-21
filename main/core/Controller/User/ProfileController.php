@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Controller\User;
 
-use Claroline\CoreBundle\API\Options;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Doctrine\ORM\NoResultException;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -117,7 +117,7 @@ class ProfileController extends Controller
     private function checkAccess()
     {
         $isAccessibleForAnon = $this->configHandler->getParameter('anonymous_public_profile');
-        if (!$isAccessibleForAnon && $this->tokenStorage->getToken()->getUser() === 'anon.') {
+        if (!$isAccessibleForAnon && 'anon.' === $this->tokenStorage->getToken()->getUser()) {
             throw new AccessDeniedHttpException();
         }
     }

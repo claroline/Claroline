@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\API\FinderProvider;
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\CoreBundle\Manager\Theme\ThemeManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;

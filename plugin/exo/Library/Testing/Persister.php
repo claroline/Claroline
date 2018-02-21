@@ -2,13 +2,13 @@
 
 namespace UJM\ExoBundle\Library\Testing;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Item\Category;
 use UJM\ExoBundle\Entity\Item\Hint;
@@ -146,7 +146,7 @@ class Persister
         $proposal = new Proposal();
         $proposal->setData($text);
         $proposal->setUuid(uniqid('', true));
-        if ($label !== null) {
+        if (null !== $label) {
             $proposal->addExpectedLabel($label);
         }
         $this->om->persist($proposal);

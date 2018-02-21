@@ -2,10 +2,10 @@
 
 namespace HeVinci\CompetencyBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
 use HeVinci\CompetencyBundle\Entity\Objective;
@@ -75,7 +75,7 @@ class ProgressManager
             if ($evaluation->isSuccessful()) {
                 $progress->addPassedResource($resource);
 
-                if ($progress->getStatus() !== AbilityProgress::STATUS_ACQUIRED) {
+                if (AbilityProgress::STATUS_ACQUIRED !== $progress->getStatus()) {
                     if ($progress->getPassedResourceCount() >= $ability->getMinResourceCount()) {
                         $progress->setStatus(AbilityProgress::STATUS_ACQUIRED);
                         $this->om->forceFlush();
@@ -314,7 +314,7 @@ class ProgressManager
         $root = null;
 
         foreach ($related as $competency) {
-            if ($competency->getLevel() === 0) {
+            if (0 === $competency->getLevel()) {
                 $root = $competency;
                 break;
             }

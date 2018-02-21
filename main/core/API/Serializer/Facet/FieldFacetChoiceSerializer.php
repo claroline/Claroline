@@ -2,8 +2,8 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Facet;
 
-use Claroline\CoreBundle\API\Options;
-use Claroline\CoreBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
 use JMS\DiExtraBundle\Annotation as DI;
 

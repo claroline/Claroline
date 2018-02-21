@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Persistence;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Doctrine\ORM\Query;
 
@@ -27,7 +28,7 @@ class ObjectManagerTest extends MockeryTestCase
 
     /**
      * @dataProvider        wrappedManagerDependentMethodProvider
-     * @expectedException   \Claroline\CoreBundle\Persistence\UnsupportedMethodException
+     * @expectedException   \Claroline\AppBundle\Persistence\UnsupportedMethodException
      */
     public function testWrappedManagerDependentMethodsThrowAnExceptionOnUnsupportedMethods($method)
     {
@@ -65,7 +66,7 @@ class ObjectManagerTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException \Claroline\CoreBundle\Persistence\NoFlushSuiteStartedException
+     * @expectedException \Claroline\AppBundle\Persistence\NoFlushSuiteStartedException
      */
     public function testEndFlushSuiteThrowsAnExceptionIfNoSuiteHasBeenStarted()
     {
@@ -107,7 +108,7 @@ class ObjectManagerTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException \Claroline\CoreBundle\Persistence\MissingObjectException
+     * @expectedException \Claroline\AppBundle\Persistence\MissingObjectException
      */
     public function testFindByIdsThrowsAnExceptionIfSomeEntitiesCannotBeRetreived()
     {

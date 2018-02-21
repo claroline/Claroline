@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\EmailType;
 use Claroline\CoreBundle\Form\ResetPasswordType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
@@ -20,7 +21,6 @@ use Claroline\CoreBundle\Library\HttpFoundation\XmlResponse;
 use Claroline\CoreBundle\Library\Security\Authenticator;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
@@ -358,11 +358,11 @@ class AuthenticationController
         $username = $request->request->get('username');
         $password = $request->request->get('password');
         $status = $this->authenticator->authenticate($username, $password) ? 200 : 403;
-        $content = ($status === 403) ?
+        $content = (403 === $status) ?
             ['message' => $this->translator->trans('login_failure', [], 'platform')] :
             [];
 
-        return $format === 'json' ?
+        return 'json' === $format ?
             new JsonResponse($content, $status) :
             new XmlResponse($content, $status);
     }

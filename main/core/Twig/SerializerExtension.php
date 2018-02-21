@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use Claroline\CoreBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\SerializerProvider;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;

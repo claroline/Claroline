@@ -126,7 +126,7 @@ class DesktopHomeController extends Controller
     {
         $options = $this->userManager->getUserOptions($user);
         $desktopOptions = [];
-        $desktopOptions['editionMode'] = $options->getDesktopMode() === 1;
+        $desktopOptions['editionMode'] = 1 === $options->getDesktopMode();
         $desktopOptions['isHomeLocked'] = $this->roleManager->isHomeLocked($user);
 
         return new JsonResponse($desktopOptions, 200);
@@ -152,7 +152,7 @@ class DesktopHomeController extends Controller
             'tabsUser' => [],
             'tabsWorkspace' => [],
         ];
-        $desktopHomeDatas['editionMode'] = $options->getDesktopMode() === 1;
+        $desktopHomeDatas['editionMode'] = 1 === $options->getDesktopMode();
         $desktopHomeDatas['isHomeLocked'] = $this->roleManager->isHomeLocked($user);
         $userHomeTabConfigs = [];
         $roleNames = $this->utils->getRoles($this->tokenStorage->getToken());
@@ -533,7 +533,7 @@ class DesktopHomeController extends Controller
         ];
 
         if ($isVisibleHomeTab) {
-            if ($homeTab->getType() === 'admin_desktop') {
+            if ('admin_desktop' === $homeTab->getType()) {
                 $adminConfigs = $this->homeTabManager->getAdminWidgetConfigs($homeTab);
 
                 if ($isLockedHomeTab || $isHomeLocked) {
@@ -579,9 +579,9 @@ class DesktopHomeController extends Controller
                         $configs[] = $userWidgetsConfig;
                     }
                 }
-            } elseif ($homeTab->getType() === 'desktop') {
+            } elseif ('desktop' === $homeTab->getType()) {
                 $configs = $this->homeTabManager->getWidgetConfigsByUser($homeTab, $user);
-            } elseif ($homeTab->getType() === 'workspace') {
+            } elseif ('workspace' === $homeTab->getType()) {
                 $workspace = $homeTab->getWorkspace();
                 $widgetsDatas['isLockedHomeTab'] = true;
                 $isWorkspace = true;
@@ -770,7 +770,7 @@ class DesktopHomeController extends Controller
             $widgetDatas = [
                 'config' => $this->serializer->serialize($widgetHomeTabConfig, 'json', SerializationContext::create()->setGroups(['api_widget'])),
                 'display' => $this->serializer->serialize($widgetDisplayConfig, 'json', SerializationContext::create()->setGroups(['api_widget'])),
-                'configurable' => $widgetHomeTabConfig->isLocked() !== true && $widget->isConfigurable(),
+                'configurable' => true !== $widgetHomeTabConfig->isLocked() && $widget->isConfigurable(),
             ];
 
             return new JsonResponse($widgetDatas, 200);
@@ -946,7 +946,7 @@ class DesktopHomeController extends Controller
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user === '.anon' || $this->roleManager->isHomeLocked($user)) {
+        if ('.anon' === $user || $this->roleManager->isHomeLocked($user)) {
             throw new AccessDeniedException();
         }
     }
@@ -966,7 +966,7 @@ class DesktopHomeController extends Controller
         $homeTabUser = $homeTab->getUser();
         $homeTabType = $homeTab->getType();
 
-        if ($homeTabType !== 'desktop' || $user !== $homeTabUser) {
+        if ('desktop' !== $homeTabType || $user !== $homeTabUser) {
             throw new AccessDeniedException();
         }
     }
@@ -1007,9 +1007,9 @@ class DesktopHomeController extends Controller
         $visible = $htc->isVisible();
         $canCreate = $visible &&
             !$locked &&
-            (($type === 'desktop' && $homeTabUser === $user) || ($type === 'admin_desktop' && $visible && !$locked));
+            (('desktop' === $type && $homeTabUser === $user) || ('admin_desktop' === $type && $visible && !$locked));
 
-        if ($user === '.anon' || $this->roleManager->isHomeLocked($user) || !$canCreate) {
+        if ('.anon' === $user || $this->roleManager->isHomeLocked($user) || !$canCreate) {
             throw new AccessDeniedException();
         }
     }

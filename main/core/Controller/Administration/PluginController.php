@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 
 /**
  * @DI\Tag("security.secure_service")
@@ -24,6 +24,7 @@ use Claroline\CoreBundle\Event\StrictDispatcher;
 class PluginController extends Controller
 {
     private $eventDispatcher;
+
     /**
      * @DI\InjectParams({
      *      "eventDispatcher" = @DI\Inject("claroline.event.event_dispatcher")
@@ -45,7 +46,7 @@ class PluginController extends Controller
      */
     public function indexAction()
     {
-        return array();
+        return [];
     }
 
     /**
@@ -58,7 +59,7 @@ class PluginController extends Controller
     public function pluginParametersAction($pluginShortName)
     {
         $eventName = strtolower("plugin_options_{$pluginShortName}");
-        $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', array());
+        $event = $this->eventDispatcher->dispatch($eventName, 'PluginOptions', []);
 
         return $event->getResponse();
     }

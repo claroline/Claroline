@@ -11,10 +11,10 @@
 
 namespace Claroline\ResultBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Entity\Mark;
 use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Event\Log\LogResultsDeleteMarkEvent;
@@ -278,7 +278,7 @@ class ResultManager
         $fileData = $this->utils->formatCsvOutput($fileData);
         $lines = str_getcsv($fileData, PHP_EOL);
 
-        if (count($lines) === 1 && $lines[0] === null) {
+        if (1 === count($lines) && null === $lines[0]) {
             $data['errors'][] = [
                 'code' => self::ERROR_EMPTY_CSV,
                 'message' => 'errors.csv_empty',
@@ -288,7 +288,7 @@ class ResultManager
             return $data;
         }
 
-        $countRowEl = $importType === 'fullname' ? 3 : 2;
+        $countRowEl = 'fullname' === $importType ? 3 : 2;
 
         foreach (file($csvFile->getPathname()) as $index => $line) {
             $values = array_map('trim', str_getcsv($line, ';'));
@@ -322,11 +322,13 @@ class ResultManager
                                 $matchedUser = $user;
                                 break 2;
                             }
+                            // no break
                         case 'code':
                             if ($user->getAdministrativeCode() === $values[0]) {
                                 $matchedUser = $user;
                                 break 2;
                             }
+                            // no break
                         case 'username':
                             if ($user->getUsername() === $values[0]) {
                                 $matchedUser = $user;

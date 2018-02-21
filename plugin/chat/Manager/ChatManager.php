@@ -11,6 +11,7 @@
 
 namespace Claroline\ChatBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\ChatBundle\Entity\ChatRoom;
 use Claroline\ChatBundle\Entity\ChatRoomMessage;
@@ -23,7 +24,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\CurlManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Fabiang\Xmpp\Client;
 use Fabiang\Xmpp\Options;
 use Fabiang\Xmpp\Protocol\Message;
@@ -183,7 +183,7 @@ class ChatManager
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
-        if ($code !== 200) {
+        if (200 !== $code) {
             $errors[] = $this->translator->trans('invalid_bosh', ['%url%' => $url], 'chat');
         }
 
@@ -203,7 +203,7 @@ class ChatManager
                 $this->configHandler->getParameter('chat_ssl')
             );
 
-            return count($errors) === 0;
+            return 0 === count($errors);
         } catch (\Exception $e) {
             return false;
         }

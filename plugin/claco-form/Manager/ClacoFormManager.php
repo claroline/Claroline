@@ -11,6 +11,7 @@
 
 namespace Claroline\ClacoFormBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ClacoFormBundle\Entity\Category;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\ClacoFormWidgetConfig;
@@ -53,7 +54,6 @@ use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\FacetManager;
 use Claroline\CoreBundle\Manager\Organization\LocationManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\MessageBundle\Manager\MessageManager;
 use Claroline\PdfGeneratorBundle\Manager\PdfManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -397,7 +397,7 @@ class ClacoFormManager
         $field->setLockedEditionOnly($lockedEditionOnly);
         $field->setHidden($hidden);
         $field->setDetails($details);
-        $facetType = $type === FieldFacet::SELECT_TYPE && count($choicesChildren) > 0 ?
+        $facetType = FieldFacet::SELECT_TYPE === $type && count($choicesChildren) > 0 ?
             FieldFacet::CASCADE_SELECT_TYPE :
             $type;
         $fieldFacet = $this->facetManager->createField($name, $required, $facetType, $clacoForm->getResourceNode());
@@ -458,7 +458,7 @@ class ClacoFormManager
         $field->setHidden($hidden);
         $field->setDetails($details);
         $fieldFacet = $field->getFieldFacet();
-        $facetType = $type === FieldFacet::SELECT_TYPE && count($choicesChildren) > 0 ?
+        $facetType = FieldFacet::SELECT_TYPE === $type && count($choicesChildren) > 0 ?
             FieldFacet::CASCADE_SELECT_TYPE :
             $type;
         $this->facetManager->editField($fieldFacet, $name, $required, $facetType);
@@ -697,10 +697,10 @@ class ClacoFormManager
             $maxEntries = $clacoForm->getMaxEntries();
 
             if (is_null($user)) {
-                $canCreate = $clacoForm->isCreationEnabled() && ($maxEntries === 0);
+                $canCreate = $clacoForm->isCreationEnabled() && (0 === $maxEntries);
             } else {
                 $userEntries = $this->getEntriesByUser($clacoForm, $user);
-                $canCreate = $clacoForm->isCreationEnabled() && (($maxEntries === 0) || ($maxEntries > count($userEntries)));
+                $canCreate = $clacoForm->isCreationEnabled() && ((0 === $maxEntries) || ($maxEntries > count($userEntries)));
             }
         }
 
@@ -764,13 +764,13 @@ class ClacoFormManager
         $entry->setCreationDate($now);
         $categories = [];
 
-        if ($status === Entry::PUBLISHED) {
+        if (Entry::PUBLISHED === $status) {
             $entry->setPublicationDate($now);
         }
         foreach ($entryData as $key => $value) {
             $field = $this->getFieldByClacoFormAndId($clacoForm, $key);
 
-            if (!is_null($field) && $value !== '') {
+            if (!is_null($field) && '' !== $value) {
                 $type = $field->getType();
 
                 if ($this->facetManager->isFileType($type)) {
@@ -846,7 +846,7 @@ class ClacoFormManager
             $fieldValue = $this->getFieldValueByEntryAndFieldId($entry, $key);
 
             if (is_null($fieldValue)) {
-                if ($value !== '') {
+                if ('' !== $value) {
                     $field = $this->getFieldByClacoFormAndId($clacoForm, $key);
 
                     if (!is_null($field)) {
@@ -945,7 +945,7 @@ class ClacoFormManager
         $choiceCategories = [];
         $values = is_array($value) ? $value : [$value];
 
-        if ($fieldFacet->getType() === FieldFacet::CASCADE_SELECT_TYPE) {
+        if (FieldFacet::CASCADE_SELECT_TYPE === $fieldFacet->getType()) {
             $choice = null;
 
             foreach ($values as $val) {
@@ -1064,6 +1064,7 @@ class ClacoFormManager
         switch ($status) {
             case Entry::PENDING:
                 $entry->setPublicationDate(new \DateTime());
+                // no break
             case Entry::UNPUBLISHED:
                 $entry->setStatus(Entry::PUBLISHED);
                 break;
@@ -1085,7 +1086,7 @@ class ClacoFormManager
         $this->om->startFlushSuite();
 
         foreach ($entries as $entry) {
-            if ($status === Entry::PUBLISHED) {
+            if (Entry::PUBLISHED === $status) {
                 $entry->setPublicationDate(new \DateTime());
             }
             $entry->setStatus($status);
@@ -1326,7 +1327,7 @@ class ClacoFormManager
                 $fieldFacetValue->setDateValue($date);
                 break;
             case FieldFacet::FLOAT_TYPE:
-                $floatValue = $value === '' ? null : $value;
+                $floatValue = '' === $value ? null : $value;
                 $fieldFacetValue->setFloatValue($floatValue);
                 break;
             case FieldFacet::CHECKBOXES_TYPE:
@@ -1375,7 +1376,7 @@ class ClacoFormManager
         $event = new LogCommentCreateEvent($comment);
         $this->eventDispatcher->dispatch('log', $event);
 
-        if ($comment->getStatus() === Comment::VALIDATED) {
+        if (Comment::VALIDATED === $comment->getStatus()) {
             $this->notifyUsers($entry, 'comment', $content);
         } else {
             $this->notifyPendingComment($entry, $comment);
@@ -1392,7 +1393,7 @@ class ClacoFormManager
         $event = new LogCommentEditEvent($comment);
         $this->eventDispatcher->dispatch('log', $event);
 
-        if ($comment->getStatus() === Comment::VALIDATED) {
+        if (Comment::VALIDATED === $comment->getStatus()) {
             $this->notifyUsers($comment->getEntry(), 'comment', $content);
         }
 
@@ -1406,7 +1407,7 @@ class ClacoFormManager
         $event = new LogCommentStatusChangeEvent($comment);
         $this->eventDispatcher->dispatch('log', $event);
 
-        if ($comment->getStatus() === Comment::VALIDATED) {
+        if (Comment::VALIDATED === $comment->getStatus()) {
             $this->notifyUsers($comment->getEntry(), 'comment', $comment->getContent());
         }
 
@@ -1620,7 +1621,7 @@ class ClacoFormManager
         $fields = $clacoForm->getFields();
 
         foreach ($fields as $field) {
-            if ($field->getType() === FieldFacet::FILE_TYPE) {
+            if (FieldFacet::FILE_TYPE === $field->getType()) {
                 $hasFiles = true;
                 break;
             }
@@ -1676,7 +1677,6 @@ class ClacoFormManager
                         break;
                     default:
                         $value = $val;
-
                 }
                 $data[$field->getId()] = $value;
             }
@@ -1708,7 +1708,7 @@ class ClacoFormManager
                 $field = $fiedValue->getField();
                 $fieldFacetValue = $fiedValue->getFieldFacetValue();
 
-                if ($field->getType() === FieldFacet::FILE_TYPE) {
+                if (FieldFacet::FILE_TYPE === $field->getType()) {
                     $files = $fieldFacetValue->getValue();
                     foreach ($files as $file) {
                         $filePath = $this->filesDir.DIRECTORY_SEPARATOR.$file['url'];
@@ -1742,8 +1742,8 @@ class ClacoFormManager
         $template = $clacoForm->getTemplate();
         $useTemplate = $clacoForm->getUseTemplate();
         $displayMeta = $clacoForm->getDisplayMetadata();
-        $isEntryManager = $user !== 'anon.' && $this->isEntryManager($entry, $user);
-        $withMeta = $canEdit || $displayMeta === 'all' || ($displayMeta === 'manager' && $isEntryManager);
+        $isEntryManager = 'anon.' !== $user && $this->isEntryManager($entry, $user);
+        $withMeta = $canEdit || 'all' === $displayMeta || ('manager' === $displayMeta && $isEntryManager);
         $countries = $this->locationManager->getCountries();
 
         if (!empty($template) && $useTemplate) {
@@ -1789,7 +1789,7 @@ class ClacoFormManager
             $entryComments = $entry->getComments();
 
             foreach ($entryComments as $comment) {
-                if ($comment->getStatus() === Comment::VALIDATED) {
+                if (Comment::VALIDATED === $comment->getStatus()) {
                     $comments[] = $comment;
                 }
             }
@@ -2447,7 +2447,7 @@ class ClacoFormManager
     {
         $clacoForm = $entry->getClacoForm();
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = $user === 'anon.';
+        $isAnon = 'anon.' === $user;
         $canOpen = $this->hasRight($clacoForm, 'OPEN');
         $canEdit = $this->hasRight($clacoForm, 'EDIT');
 
@@ -2455,7 +2455,7 @@ class ClacoFormManager
             $canOpen && (
                ($entry->getUser() === $user) ||
                (!$isAnon && $this->isEntryManager($entry, $user)) ||
-               (($entry->getStatus() === Entry::PUBLISHED) && $clacoForm->getSearchEnabled()) ||
+               ((Entry::PUBLISHED === $entry->getStatus()) && $clacoForm->getSearchEnabled()) ||
                (!$isAnon && $this->isEntryShared($entry, $user))
             )
         );
@@ -2468,7 +2468,7 @@ class ClacoFormManager
         $canOpen = $this->hasRight($clacoForm, 'OPEN');
         $canEdit = $this->hasRight($clacoForm, 'EDIT');
         $editionEnabled = $clacoForm->isEditionEnabled();
-        $isAnon = $user === 'anon.';
+        $isAnon = 'anon.' === $user;
         $isEntryShared = $isAnon ? false : $this->isEntryShared($entry, $user);
 
         return $canEdit || (
@@ -2486,7 +2486,7 @@ class ClacoFormManager
         $canOpen = $this->hasRight($clacoForm, 'OPEN');
         $canEdit = $this->hasRight($clacoForm, 'EDIT');
 
-        return $canEdit || ($canOpen && ($user !== 'anon.') && $this->isEntryManager($entry, $user));
+        return $canEdit || ($canOpen && ('anon.' !== $user) && $this->isEntryManager($entry, $user));
     }
 
     public function checkEntryAccess(Entry $entry)
@@ -2518,7 +2518,7 @@ class ClacoFormManager
             throw new AccessDeniedException();
         }
         $user = $this->tokenStorage->getToken()->getUser();
-        $userRoles = $user === 'anon.' ? ['ROLE_ANONYMOUS'] : $user->getRoles();
+        $userRoles = 'anon.' === $user ? ['ROLE_ANONYMOUS'] : $user->getRoles();
         $commentsRoles = $clacoForm->getCommentsRoles();
 
         foreach ($commentsRoles as $commentsRole) {
@@ -2560,7 +2560,7 @@ class ClacoFormManager
     public function hasEntryOwnership(Entry $entry)
     {
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = $user === 'anon.';
+        $isAnon = 'anon.' === $user;
         $isOwner = !empty($entry->getUser()) && !$isAnon && $entry->getUser()->getId() === $user->getId();
         $isShared = $isAnon ? false : $this->isEntryShared($entry, $user);
 
@@ -2580,7 +2580,7 @@ class ClacoFormManager
 
         if ($clacoForm->getDisplayComments()) {
             $user = $this->tokenStorage->getToken()->getUser();
-            $userRoles = $user === 'anon.' ? ['ROLE_ANONYMOUS'] : $user->getRoles();
+            $userRoles = 'anon.' === $user ? ['ROLE_ANONYMOUS'] : $user->getRoles();
             $commentsDisplayRoles = $clacoForm->getCommentsDisplayRoles();
 
             foreach ($commentsDisplayRoles as $commentsDisplayRole) {

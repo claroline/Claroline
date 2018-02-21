@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Converter;
 
-use Claroline\CoreBundle\Persistence\MissingObjectException;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\MissingObjectException;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Request\ParamConverter\ParamConverterInterface;
@@ -87,7 +87,7 @@ class MultipleIdsConverter implements ParamConverterInterface
     {
         $options = $configuration->getOptions();
 
-        if (isset($options['multipleIds']) && $options['multipleIds'] === true) {
+        if (isset($options['multipleIds']) && true === $options['multipleIds']) {
             return true;
         }
 

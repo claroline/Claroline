@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Event;
 
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
+use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Symfony\Component\EventDispatcher\Event;

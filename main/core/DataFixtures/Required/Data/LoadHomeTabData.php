@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * Platform Home tabs data fixture.
@@ -29,7 +29,7 @@ class LoadHomeTabData implements RequiredFixture
     public function load(ObjectManager $manager)
     {
         $translator = $this->container->get('translator');
-        $infoName = $translator->trans('informations', array(), 'platform');
+        $infoName = $translator->trans('informations', [], 'platform');
 
         $desktopHomeTab = new HomeTab();
         $desktopHomeTab->setType('admin_desktop');

@@ -2,8 +2,8 @@
 
 namespace FormaLibre\ReservationBundle\Controller;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use FormaLibre\ReservationBundle\Entity\ResourceType;
 use FormaLibre\ReservationBundle\Serializer\ResourceTypeSerializer;
 use JMS\DiExtraBundle\Annotation as DI;

@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
@@ -19,7 +20,6 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\ResourceIconRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
@@ -107,7 +107,7 @@ class IconManager
         $mimeElements = explode('/', $node->getMimeType());
         $ds = DIRECTORY_SEPARATOR;
         // if video or img => generate the thumbnail, otherwise find an existing one.
-        if (($mimeElements[0] === 'video' || $mimeElements[0] === 'image')) {
+        if (('video' === $mimeElements[0] || 'image' === $mimeElements[0])) {
             $this->om->startFlushSuite();
             $publicFile = $this->createFromFile(
                 $this->fileDir.$ds.$resource->getHashName(),
@@ -162,10 +162,10 @@ class IconManager
 
         $icon = $this->repo->findOneByMimeType($mimeType);
 
-        if ($icon === null) {
+        if (null === $icon) {
             $icon = $this->repo->findOneByMimeType($mimeElements[0]);
 
-            if ($icon === null) {
+            if (null === $icon) {
                 $icon = $this->repo->findOneByMimeType('custom/default');
             }
         }
@@ -256,7 +256,7 @@ class IconManager
 
         $thumbnailPath = null;
 
-        if ($baseMime === 'video') {
+        if ('video' === $baseMime) {
             try {
                 $thumbnailPath = $this->creator->fromVideo($filePath, $newPath, 100, 100);
             } catch (\Exception $e) {
@@ -265,7 +265,7 @@ class IconManager
             }
         }
 
-        if ($baseMime === 'image') {
+        if ('image' === $baseMime) {
             try {
                 $thumbnailPath = $this->creator->fromImage($filePath, $newPath, 100, 100);
             } catch (\Exception $e) {
@@ -284,12 +284,12 @@ class IconManager
      */
     public function delete(ResourceIcon $icon, Workspace $workspace = null)
     {
-        if ($icon->getMimeType() === 'custom') {
+        if ('custom' === $icon->getMimeType()) {
             //search if this icon is used elsewhere (ie copy)
             $res = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                 ->findBy(['icon' => $icon]);
 
-            if (count($res) <= 1 && $icon->isShortcut() === false) {
+            if (count($res) <= 1 && false === $icon->isShortcut()) {
                 $shortcut = $icon->getShortcutIcon();
                 $this->om->remove($shortcut);
                 $this->om->remove($icon);

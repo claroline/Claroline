@@ -8,14 +8,14 @@
 
 namespace Icap\WebsiteBundle\Manager;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
+use Icap\WebsiteBundle\Entity\Website;
+use Icap\WebsiteBundle\Entity\WebsitePage;
 use Icap\WebsiteBundle\Form\WebsitePageType;
+use Icap\WebsiteBundle\Repository\WebsitePageRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\Serializer;
-use Icap\WebsiteBundle\Entity\Website;
-use Icap\WebsiteBundle\Entity\WebsitePage;
-use Icap\WebsiteBundle\Repository\WebsitePageRepository;
 use Symfony\Component\Form\FormFactory;
 
 /**
@@ -79,7 +79,7 @@ class WebsitePageManager
     public function getPages(Website $website, $pageIds, $isAdmin, $isAPI)
     {
         if (!is_array($pageIds)) {
-            $pageIds = array($pageIds);
+            $pageIds = [$pageIds];
         }
         $pages = $this->pageRepository->findPages($website, $pageIds, $isAdmin, $isAPI);
 
@@ -100,7 +100,7 @@ class WebsitePageManager
 
     public function processForm(Website $website, WebsitePage $page, array $parameters, $method = 'PUT')
     {
-        $form = $this->formFactory->create(new WebsitePageType(), $page, array('method' => $method));
+        $form = $this->formFactory->create(new WebsitePageType(), $page, ['method' => $method]);
         $form->submit($parameters, 'PATCH' !== $method);
         if ($form->isValid()) {
             $page = $form->getData();
@@ -109,7 +109,7 @@ class WebsitePageManager
              * Test if richText is set, set resourceNode and url to null
              * Test if resourceNode is set, set url to null
             */
-            if ($method == 'POST' && $website->getHomePage() === null) {
+            if ('POST' === $method && null === $website->getHomePage()) {
                 $this->setHomepage($website, $page);
             } else {
                 $this->objectManager->persist($page);
@@ -132,7 +132,7 @@ class WebsitePageManager
     {
         $oldHomepage = $website->getHomePage();
 
-        if ($oldHomepage !== null) {
+        if (null !== $oldHomepage) {
             $oldHomepage->setIsHomepage(false);
             $this->objectManager->persist($oldHomepage);
         }
@@ -154,11 +154,11 @@ class WebsitePageManager
         $pages = $this->getPages($website, $pageIds, true, false);
         $page = $newParentPage = $previousSiblingPage = null;
         foreach ($pages as $currentPage) {
-            if ($currentPage->getId() == $pageIds['pageId']) {
+            if ($currentPage->getId() === $pageIds['pageId']) {
                 $page = $currentPage;
-            } elseif ($currentPage->getId() == $pageIds['newParentId']) {
+            } elseif ($currentPage->getId() === $pageIds['newParentId']) {
                 $newParentPage = $currentPage;
-            } elseif ($pageIds['previousSiblingId'] != 0 && $currentPage->getId() == $pageIds['previousSiblingId']) {
+            } elseif (0 !== $pageIds['previousSiblingId'] && $currentPage->getId() === $pageIds['previousSiblingId']) {
                 $previousSiblingPage = $currentPage;
             }
         }
@@ -167,7 +167,7 @@ class WebsitePageManager
 
     public function movePage($page, $newParentPage, $previousSiblingPage = null)
     {
-        if ($previousSiblingPage !== null) {
+        if (null !== $previousSiblingPage) {
             $this->pageRepository->persistAsNextSiblingOf($page, $previousSiblingPage);
         } else {
             $this->pageRepository->persistAsFirstChildOf($page, $newParentPage);

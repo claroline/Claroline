@@ -2,9 +2,9 @@
 
 namespace Icap\BlogBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use Icap\BlogBundle\Entity\Blog;
 use Icap\BlogBundle\Entity\BlogOptions;
@@ -158,7 +158,7 @@ class BlogManager
             ->setTagCloud($optionsData['tag_cloud']);
 
         $blog = new Blog();
-        if (isset($blogDatas['infos_path']) && $blogDatas['infos_path'] !== null) {
+        if (isset($blogDatas['infos_path']) && null !== $blogDatas['infos_path']) {
             $infos = file_get_contents(
                 $rootPath.DIRECTORY_SEPARATOR.$blogDatas['infos_path']
             );
@@ -170,7 +170,7 @@ class BlogManager
         $this->objectManager->forceFlush();
 
         //Copy banner bg image to web folder
-        if (isset($optionsData['banner_background_image']) && $optionsData['banner_background_image'] !== null && !filter_var($optionsData['banner_background_image'], FILTER_VALIDATE_URL)) {
+        if (isset($optionsData['banner_background_image']) && null !== $optionsData['banner_background_image'] && !filter_var($optionsData['banner_background_image'], FILTER_VALIDATE_URL)) {
             $this->createUploadFolder(DIRECTORY_SEPARATOR.$this->uploadDir);
             $uniqid = uniqid();
             copy(
@@ -291,7 +291,7 @@ class BlogManager
         $scheduledForInsert = $this->objectManager->getUnitOfWork()->getScheduledEntityInsertions();
 
         foreach ($scheduledForInsert as $entity) {
-            if (get_class($entity) === 'Icap\BlogBundle\Entity\Tag') {
+            if ('Icap\BlogBundle\Entity\Tag' === get_class($entity)) {
                 if (strtoupper(iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $entity->getName())) === strtoupper(iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $name))) {
                     return $entity;
                 }
@@ -327,7 +327,7 @@ class BlogManager
     {
         $ds = DIRECTORY_SEPARATOR;
 
-        if (file_exists($this->uploadDir.$ds.$options->getBannerBackgroundImage()) || $file === null) {
+        if (file_exists($this->uploadDir.$ds.$options->getBannerBackgroundImage()) || null === $file) {
             @unlink($this->uploadDir.$ds.$options->getBannerBackgroundImage());
         }
 

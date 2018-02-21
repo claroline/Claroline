@@ -2,6 +2,7 @@
 
 namespace HeVinci\UrlBundle\Listener;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
@@ -10,7 +11,6 @@ use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use HeVinci\UrlBundle\Entity\Url;
 use HeVinci\UrlBundle\Form\UrlChangeType;
 use HeVinci\UrlBundle\Form\UrlType;
@@ -133,7 +133,7 @@ class UrlListener
         } else {
             if ($isIframe) {
                 $headers = get_headers($url->getUrl(), 1);
-                if (isset($headers['X-Frame-Options']) && $headers['X-Frame-Options'] === 'SAMEORIGIN') {
+                if (isset($headers['X-Frame-Options']) && 'SAMEORIGIN' === $headers['X-Frame-Options']) {
                     $href = "<a href='{$url->getUrl()}'>{$url->getUrl()}</a>";
                     $response = new Response($href);
                     $event->setResponse($response);
@@ -181,7 +181,7 @@ class UrlListener
      */
     public function onChangeAction(CustomActionResourceEvent $event)
     {
-        $resource = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
+        $resource = 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === get_class($event->getResource()) ?
             $this->manager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
             $event->getResource();
         $form = $this->formFactory->create(new UrlChangeType(), $resource);

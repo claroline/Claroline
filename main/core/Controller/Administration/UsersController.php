@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller\Administration;
 
-use Claroline\CoreBundle\API\FinderProvider;
-use Claroline\CoreBundle\API\Options;
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\Action\AdditionalAction;
@@ -20,7 +21,6 @@ use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\Administration\ProfilePicsImportType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\AuthenticationManager;
@@ -78,6 +78,7 @@ class UsersController extends Controller
     private $finder;
     private $parametersSerializer;
     private $profileSerializer;
+
     /**
      * @DI\InjectParams({
      *     "authenticationManager"  = @DI\Inject("claroline.common.authentication_manager"),

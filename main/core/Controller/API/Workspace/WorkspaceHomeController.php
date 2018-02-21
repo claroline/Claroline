@@ -742,7 +742,7 @@ class WorkspaceHomeController extends Controller
         $this->checkToolAccess($workspace);
         $canEdit = $this->hasWorkspaceEditionAccess($workspace);
         $homeTabRoles = $homeTab->getRoles();
-        $hasAccess = $canEdit || count($homeTabRoles) === 0;
+        $hasAccess = $canEdit || 0 === count($homeTabRoles);
 
         if (!$hasAccess) {
             $userRoleNames = $this->utils->getRoles($this->tokenStorage->getToken());

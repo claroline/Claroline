@@ -2,10 +2,10 @@
 
 namespace Claroline\ChatBundle\Testing;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ChatBundle\Entity\ChatRoom;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;

@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Manager\Task;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Task\ScheduledTaskSerializer;
 use Claroline\CoreBundle\Entity\Task\ScheduledTask;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Validation\Exception\InvalidDataException;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\Task\ScheduledTaskRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 

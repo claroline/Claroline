@@ -11,9 +11,9 @@
 
 namespace Claroline\ResultBundle\Controller;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Testing\RequestTrait;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Testing\Persister;
 
 class ResultControllerTest extends TransactionalTestCase

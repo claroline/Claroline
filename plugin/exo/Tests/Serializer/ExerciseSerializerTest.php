@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Tests\Serializer;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Testing\Json\JsonDataTestCase;

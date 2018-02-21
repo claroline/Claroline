@@ -12,7 +12,6 @@
 namespace Claroline\CoreBundle;
 
 use Bazinga\Bundle\JsTranslationBundle\BazingaJsTranslationBundle;
-use Claroline\CoreBundle\DependencyInjection\Compiler\ApiConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DoctrineEntityListenerPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\DynamicConfigPass;
 use Claroline\CoreBundle\DependencyInjection\Compiler\ImportersConfigPass;
@@ -47,7 +46,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
         $container->addCompilerPass(new DoctrineEntityListenerPass());
         $container->addCompilerPass(new RuleConstraintsConfigPass());
         $container->addCompilerPass(new RouterPass());
-        $container->addCompilerPass(new ApiConfigPass());
         $container->addCompilerPass(new MailingConfigPass());
 
         $extension = $container->getExtension('security');
@@ -62,8 +60,8 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
     public function getConfiguration($environment)
     {
         $config = new ConfigurationBuilder();
-        $configFile = $environment === 'test' ? 'config_test.yml' : 'config.yml';
-        $routingFile = $environment === 'test' ? 'routing_test.yml' : 'routing.yml';
+        $configFile = 'test' === $environment ? 'config_test.yml' : 'config.yml';
+        $routingFile = 'test' === $environment ? 'routing_test.yml' : 'routing.yml';
 
         return $config
             ->addContainerResource(__DIR__."/Resources/config/app/{$configFile}")

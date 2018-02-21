@@ -11,6 +11,7 @@
 
 namespace Claroline\ChatBundle\Listener;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\ChatBundle\Entity\ChatRoom;
 use Claroline\ChatBundle\Form\ChatRoomType;
 use Claroline\ChatBundle\Manager\ChatManager;
@@ -20,7 +21,6 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;

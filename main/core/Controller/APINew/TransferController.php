@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Controller\APINew;
 
-use Claroline\CoreBundle\API\FinderProvider;
-use Claroline\CoreBundle\API\SerializerProvider;
-use Claroline\CoreBundle\API\TransferProvider;
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\TransferProvider;
 use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;

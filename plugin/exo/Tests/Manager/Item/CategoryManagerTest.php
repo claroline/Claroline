@@ -2,8 +2,8 @@
 
 namespace UJM\ExoBundle\Tests\Manager\Item;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Item\Category;
 use UJM\ExoBundle\Manager\Item\CategoryManager;
 use UJM\ExoBundle\Serializer\Item\CategorySerializer;
@@ -24,7 +24,7 @@ class CategoryManagerTest extends TransactionalTestCase
     {
         parent::setUp();
 
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->validator = $this->mock('UJM\ExoBundle\Validator\JsonSchema\Item\CategoryValidator');
         $this->serializer = $this->mock('UJM\ExoBundle\Serializer\Item\CategorySerializer');
 

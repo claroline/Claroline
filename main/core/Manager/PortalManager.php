@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Utilities\PaginatedCollectionRepresentation;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\PortalRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -39,15 +39,15 @@ class PortalManager
 
     private $visibleResourceTypes = 6;
 
-    /** @var ObjectManager  */
+    /** @var ObjectManager */
     private $om;
-    /** @var TranslatorInterface  */
+    /** @var TranslatorInterface */
     private $translator;
-    /** @var PlatformConfigurationHandler  */
+    /** @var PlatformConfigurationHandler */
     private $configHandler;
-    /** @var PortalRepository  */
+    /** @var PortalRepository */
     private $portalRepo;
-    /** @var PluginManager  */
+    /** @var PluginManager */
     private $pluginManager;
 
     /**
@@ -84,8 +84,8 @@ class PortalManager
     public function getAllResourceTypesAsChoices()
     {
         $resourceTypes = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAllTypeNames();
-        $resourceTypes[] = array('name' => 'workspace');
-        $excludeTypes = array('directory');
+        $resourceTypes[] = ['name' => 'workspace'];
+        $excludeTypes = ['directory'];
 
         return $this->sortAlphabeticallyResourceTypesForChoices($resourceTypes, $excludeTypes);
     }
@@ -104,11 +104,11 @@ class PortalManager
     {
         $resourceTypes = $this->getPortalEnabledResourceTypes();
         if (empty($resourceTypes)) {
-            return array();
+            return [];
         }
-        $sortedTypes = array('all');
+        $sortedTypes = ['all'];
         foreach ($this->searchTypesOrder as $type) {
-            if (($idx = array_search($type, $resourceTypes)) !== false) {
+            if (false !== ($idx = array_search($type, $resourceTypes))) {
                 unset($resourceTypes[$idx]);
                 $sortedTypes[] = $type;
             }
@@ -116,13 +116,13 @@ class PortalManager
         sort($resourceTypes);
 
         $resourceTypes = array_merge($sortedTypes, $resourceTypes);
-        $more = array();
+        $more = [];
         if (count($resourceTypes) > $this->visibleResourceTypes) {
             $more = array_slice($resourceTypes, $this->visibleResourceTypes - 1);
             $resourceTypes = array_slice($resourceTypes, 0, $this->visibleResourceTypes - 1);
         }
 
-        return array('visible' => $resourceTypes, 'more' => $more);
+        return ['visible' => $resourceTypes, 'more' => $more];
     }
 
     public function setPortalEnabledResourceTypes($resourceTypes)
@@ -133,16 +133,16 @@ class PortalManager
     public function getLastPublishedResourcesForEnabledTypes($limit = 5)
     {
         $resources = $this->portalRepo->findLastResourcesForTypes($this->getPortalEnabledResourceTypes(), $limit);
-        $resultResources = array();
+        $resultResources = [];
         $previousType = null;
         $key = null;
-        $images = isset($resources['image']) ? $resources['image'] : array();
+        $images = isset($resources['image']) ? $resources['image'] : [];
         foreach ($resources['resources'] as $resource) {
             $type = $resource['resourceType'];
-            if ($type != $previousType || $key === null) {
-                $key = $this->translator->trans($resource['resourceType'], array(), 'resource');
+            if ($type !== $previousType || null === $key) {
+                $key = $this->translator->trans($resource['resourceType'], [], 'resource');
                 if (!isset($resultResources[$key])) {
-                    $resultResources[$key] = array('type' => $type, 'list' => array());
+                    $resultResources[$key] = ['type' => $type, 'list' => []];
                 }
             }
             array_push($resultResources[$key]['list'], $resource);
@@ -151,21 +151,21 @@ class PortalManager
         unset($resources['image']);
         foreach ($resources as $type => $items) {
             if (!empty($items)) {
-                $key = $this->translator->trans($type, array(), 'resource');
-                $resultResources[$key] = array('type' => $type, 'list' => $resources[$type]);
+                $key = $this->translator->trans($type, [], 'resource');
+                $resultResources[$key] = ['type' => $type, 'list' => $resources[$type]];
             }
         }
         ksort($resultResources);
 
-        return array('lastResources' => $resultResources, 'images' => $images);
+        return ['lastResources' => $resultResources, 'images' => $images];
     }
 
     public function searchResourcesByType($query, $page = 1, $resourceType = null)
     {
-        if ($resourceType === null || $resourceType == 'all') {
+        if (null === $resourceType || 'all' === $resourceType) {
             $resourceTypes = $this->getPortalEnabledResourceTypes();
         } else {
-            $resourceTypes = array($resourceType);
+            $resourceTypes = [$resourceType];
         }
         $isTagEnabled = $this->pluginManager->isLoaded('ClarolineTagBundle');
         $totalItems = $this
@@ -188,10 +188,10 @@ class PortalManager
     private function sortAlphabeticallyResourceTypesForChoices($resourceTypes, $excludeTypes)
     {
         //Sort choices alphabetically
-        $choices = array();
+        $choices = [];
         foreach ($resourceTypes as $type) {
             if (!in_array($type['name'], $excludeTypes)) {
-                $key = $this->translator->trans($type['name'], array(), 'resource');
+                $key = $this->translator->trans($type['name'], [], 'resource');
                 $choices[$key] = $type['name'];
             }
         }

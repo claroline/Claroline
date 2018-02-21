@@ -20,15 +20,15 @@ class ClientController extends FOSRestController
 {
     private $oauthManager;
 
-   /**
-    * @DI\InjectParams({
-    *     "oauthManager" = @DI\Inject("claroline.manager.oauth_manager")
-    * })
-    */
-   public function _construct(OauthManager $oauthManager)
-   {
-       $this->oauthManager = $oauthManager;
-   }
+    /**
+     * @DI\InjectParams({
+     *     "oauthManager" = @DI\Inject("claroline.manager.oauth_manager")
+     * })
+     */
+    public function _construct(OauthManager $oauthManager)
+    {
+        $this->oauthManager = $oauthManager;
+    }
 
     /**
      * Get the client id and the client secret.

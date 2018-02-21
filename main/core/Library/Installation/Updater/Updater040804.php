@@ -18,7 +18,7 @@ class Updater040804 extends Updater
 {
     private $container;
 
-    /** @var \Claroline\CoreBundle\Persistence\ObjectManager */
+    /** @var \Claroline\AppBundle\Persistence\ObjectManager */
     private $om;
 
     public function __construct(ContainerInterface $container)

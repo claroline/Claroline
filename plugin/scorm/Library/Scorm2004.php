@@ -12,9 +12,9 @@
 
 namespace Claroline\ScormBundle\Library;
 
+use Claroline\ScormBundle\Entity\Scorm2004Sco;
 use Claroline\ScormBundle\Listener\Exception\InvalidScormArchiveException;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\ScormBundle\Entity\Scorm2004Sco;
 
 /**
  * @DI\Service("claroline.library.scorm_2004")
@@ -49,7 +49,7 @@ class Scorm2004
             // No default organization is defined
             if (is_null($defaultOrganization)) {
                 while (!is_null($organization)
-                    && $organization->nodeName !== 'organization') {
+                    && 'organization' !== $organization->nodeName) {
                     $organization = $organization->nextSibling;
                 }
 
@@ -61,7 +61,7 @@ class Scorm2004
             // Look for it
             else {
                 while (!is_null($organization)
-                    && ($organization->nodeName !== 'organization'
+                    && ('organization' !== $organization->nodeName
                         || is_null($organization->attributes->getNamedItem('identifier'))
                         || $organization->attributes->getNamedItem('identifier')->nodeValue !== $defaultOrganization)) {
                     $organization = $organization->nextSibling;
@@ -92,10 +92,10 @@ class Scorm2004
         Scorm2004Sco $parentSco = null
     ) {
         $item = $source->firstChild;
-        $scos = array();
+        $scos = [];
 
         while (!is_null($item)) {
-            if ($item->nodeName === 'item') {
+            if ('item' === $item->nodeName) {
                 $sco = new Scorm2004Sco();
                 $scos[] = $sco;
                 $sco->setScoParent($parentSco);
@@ -114,7 +114,7 @@ class Scorm2004
 
     private function parseResourceNodes(\DOMNodeList $resources)
     {
-        $scos = array();
+        $scos = [];
 
         foreach ($resources as $resource) {
             if (!is_null($resource->attributes)) {
@@ -123,7 +123,7 @@ class Scorm2004
                     'scormType'
                 );
 
-                if (!is_null($scormType) && $scormType->nodeValue === 'sco') {
+                if (!is_null($scormType) && 'sco' === $scormType->nodeValue) {
                     $identifier = $resource->attributes->getNamedItem('identifier');
                     $href = $resource->attributes->getNamedItem('href');
 
@@ -174,7 +174,7 @@ class Scorm2004
         $sco->setIdentifier($identifier->nodeValue);
 
         // visible is true by default
-        if (!is_null($isVisible) && $isVisible === 'false') {
+        if (!is_null($isVisible) && 'false' === $isVisible) {
             $sco->setVisible(false);
         } else {
             $sco->setVisible(true);
@@ -213,10 +213,10 @@ class Scorm2004
                 case 'adlcp:timeLimitAction':
                     $action = strtolower($item->nodeValue);
 
-                    if ($action === 'exit,message'
-                        || $action === 'exit,no message'
-                        || $action === 'continue,message'
-                        || $action === 'continue,no message') {
+                    if ('exit,message' === $action
+                        || 'exit,no message' === $action
+                        || 'continue,message' === $action
+                        || 'continue,no message' === $action) {
                         $sco->setTimeLimitAction($action);
                     }
                     break;

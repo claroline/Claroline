@@ -11,8 +11,9 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Tool\Tool;
+use Symfony\Component\EventDispatcher\Event;
 
 class ConfigureDesktopToolEvent extends Event implements DataConveyorEventInterface
 {

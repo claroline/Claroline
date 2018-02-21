@@ -12,6 +12,7 @@
 
 namespace Claroline\ExternalSynchronizationBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -20,7 +21,6 @@ use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ExternalSynchronizationBundle\Entity\ExternalGroup;
 use Claroline\ExternalSynchronizationBundle\Entity\ExternalUser;
 use Claroline\ExternalSynchronizationBundle\Repository\ExternalResourceSynchronizationRepository;
@@ -394,16 +394,16 @@ class ExternalSynchronizationManager
                 $alreadyImportedUser = null;
                 $casAccount = null;
                 // Test if user already imported
-                if (($key = array_search($externalSourceUser['id'], $alreadyImportedUserIds)) !== false) {
+                if (false !== ($key = array_search($externalSourceUser['id'], $alreadyImportedUserIds))) {
                     $alreadyImportedUser = $alreadyImportedUsers[$key];
                 }
                 // If user not already imported test if a CAS account is connected to it
                 if (
                     is_null($alreadyImportedUser) &&
                     !empty($existingCasUsers) &&
-                    ($key = array_search(
+                    false !== ($key = array_search(
                         strtoupper($externalSourceUser[$casSynchronizedField]), $existingCasIds)
-                    ) !== false
+                    )
                 ) {
                     $casAccount = $existingCasUsers[$key];
                     // Check if an existing user's reference has been updated, if so update reference
@@ -420,7 +420,7 @@ class ExternalSynchronizationManager
                 if (
                     is_null($alreadyImportedUser) &&
                     !empty($existingPlatformUserMails) &&
-                    ($key = array_search(strtoupper($externalSourceUser['email']), $existingPlatformUserMails)) !== false
+                    false !== ($key = array_search(strtoupper($externalSourceUser['email']), $existingPlatformUserMails))
                 ) {
                     $platformUser = $existingPlatformUsers[$key];
                     // Check if an existing user's reference has been updated, if so update reference
@@ -465,7 +465,7 @@ class ExternalSynchronizationManager
                         $user
                     );
                 } else {
-                    if ($additionalRole !== null && !$user->hasRole($additionalRole->getName())) {
+                    if (null !== $additionalRole && !$user->hasRole($additionalRole->getName())) {
                         $user->addRole($additionalRole);
                     }
                     $this->externalUserManager->updateExternalUserDate($alreadyImportedUser);

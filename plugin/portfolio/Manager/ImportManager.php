@@ -2,8 +2,8 @@
 
 namespace Icap\PortfolioBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\user;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\PortfolioBundle\Importer\Importer;
 use Icap\PortfolioBundle\Importer\Leap2aImporter;
 use JMS\DiExtraBundle\Annotation as DI;

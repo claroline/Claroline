@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -149,7 +149,7 @@ class UsersImporter extends Importer implements ConfigurationInterface
             $userEntities = $this->om->getRepository('ClarolineCoreBundle:User')
                 ->findBy(['username' => $user['user']['username']]);
 
-            if (isset($user['user']['roles']) && count($userEntities) === 1) {
+            if (isset($user['user']['roles']) && 1 === count($userEntities)) {
                 foreach ($user['user']['roles'] as $role) {
                     $userEntities[0]->addRole($entityRoles[$role['name']]);
                 }

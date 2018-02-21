@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceIcon;
 use Claroline\InstallationBundle\Updater\Updater;
 
@@ -25,10 +25,10 @@ class Updater021201 extends Updater
     {
         $coreIconWebDirRelativePath = 'bundles/clarolinecore/images/resources/icons/';
 
-        $images = array(
-            array('res_mspowerpoint.png', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'),
-            array('res_msword.png', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'),
-        );
+        $images = [
+            ['res_mspowerpoint.png', 'application/vnd.openxmlformats-officedocument.presentationml.presentation'],
+            ['res_msword.png', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+        ];
 
         $this->log('Adding new resource icons...');
 

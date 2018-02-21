@@ -2,7 +2,7 @@
 
 namespace UJM\ExoBundle\Tests\Serializer\Item;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Entity\Item\Hint;
 use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Options\Validation;

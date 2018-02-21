@@ -11,9 +11,10 @@
 
 namespace Claroline\CoreBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Widget\Widget;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Symfony\Component\EventDispatcher\Event;
 
 class ExportWidgetConfigEvent extends Event implements DataConveyorEventInterface
 {

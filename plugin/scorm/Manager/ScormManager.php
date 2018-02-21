@@ -12,10 +12,10 @@
 
 namespace Claroline\ScormBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
 use Claroline\ScormBundle\Entity\Scorm12ScoTracking;
@@ -95,7 +95,7 @@ class ScormManager
     public function createScorm($tmpFile, $name, $version)
     {
         //use the workspace as a prefix tor the uploadpath later
-        $scormResource = ($version === '1.2') ? new Scorm12Resource() : new Scorm2004Resource();
+        $scormResource = ('1.2' === $version) ? new Scorm12Resource() : new Scorm2004Resource();
         $scormResource->setName($name);
         $hashName = $this->container->get('claroline.utilities.misc')->generateGuid().'.zip';
         $scormResource->setHashName($hashName);
@@ -209,7 +209,7 @@ class ScormManager
         $generalPattern = '/^P([0-9]+Y)?([0-9]+M)?([0-9]+D)?T([0-9]+H)?([0-9]+M)?([0-9]+S)?$/';
         $decimalPattern = '/^P([0-9]+Y)?([0-9]+M)?([0-9]+D)?T([0-9]+H)?([0-9]+M)?[0-9]+\.[0-9]{1,2}S$/';
 
-        if ($sessionTime !== 'PT') {
+        if ('PT' !== $sessionTime) {
             if (preg_match($generalPattern, $sessionTime)) {
                 $formattedValue = $sessionTime;
             } elseif (preg_match($decimalPattern, $sessionTime)) {
@@ -359,7 +359,7 @@ class ScormManager
 
     public function generateScosFromScormArchive(\SplFileInfo $file, $version)
     {
-        return $version === '1.2' ? $this->generateScos12FromScormArchive($file) : $this->generateScos2004FromScormArchive($file);
+        return '1.2' === $version ? $this->generateScos12FromScormArchive($file) : $this->generateScos2004FromScormArchive($file);
     }
 
     /***********************************
@@ -439,7 +439,7 @@ class ScormManager
         $scormVersionElements = $dom->getElementsByTagName('schemaversion');
 
         if ($scormVersionElements->length > 0
-            && $scormVersionElements->item(0)->textContent !== '1.2') {
+            && '1.2' !== $scormVersionElements->item(0)->textContent) {
             throw new InvalidScormArchiveException('invalid_scorm_version_12_message');
         }
 
@@ -471,9 +471,9 @@ class ScormManager
         }
         $scormVersionElements = $dom->getElementsByTagName('schemaversion');
         if ($scormVersionElements->length > 0
-            && $scormVersionElements->item(0)->textContent !== 'CAM 1.3'
-            && $scormVersionElements->item(0)->textContent !== '2004 3rd Edition'
-            && $scormVersionElements->item(0)->textContent !== '2004 4th Edition') {
+            && 'CAM 1.3' !== $scormVersionElements->item(0)->textContent
+            && '2004 3rd Edition' !== $scormVersionElements->item(0)->textContent
+            && '2004 4th Edition' !== $scormVersionElements->item(0)->textContent) {
             throw new InvalidScormArchiveException('invalid_scorm_version_2004_message');
         }
 

@@ -16,7 +16,7 @@ class UniqueCompetencyValidatorTest extends UnitTestCase
     {
         $this->repo = $this->mock('HeVinci\CompetencyBundle\Repository\CompetencyRepository');
         $this->context = $this->mock('Symfony\Component\Validator\ExecutionContextInterface');
-        $om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $om->expects($this->any())
             ->method('getRepository')
             ->with('HeVinciCompetencyBundle:Competency')

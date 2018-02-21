@@ -2,9 +2,9 @@
 
 namespace UJM\ExoBundle\Tests\Controller\Tool;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Testing\RequestTrait;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use UJM\ExoBundle\Library\Testing\Persister;
 
 class QuestionBankControllerTest extends TransactionalTestCase

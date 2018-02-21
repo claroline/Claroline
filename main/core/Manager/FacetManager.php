@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Facet\Facet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetChoice;
@@ -21,7 +22,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Security\Collection\FieldFacetCollection;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
@@ -164,7 +164,7 @@ class FacetManager
         $fieldFacetValue = $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetValue')
             ->findOneBy(['user' => $user, 'fieldFacet' => $field]);
 
-        if ($fieldFacetValue === null) {
+        if (null === $fieldFacetValue) {
             $fieldFacetValue = new FieldFacetValue();
             $fieldFacetValue->setUser($user);
             $fieldFacetValue->setFieldFacet($field);
@@ -287,7 +287,7 @@ class FacetManager
         $profilePref = $this->om->getRepository('ClarolineCoreBundle:Facet\GeneralFacetPreference')
             ->findOneByRole($role);
 
-        $profilePref = $profilePref === null ? new GeneralFacetPreference() : $profilePref;
+        $profilePref = null === $profilePref ? new GeneralFacetPreference() : $profilePref;
         $profilePref->setBaseData($baseData);
         $profilePref->setEmail($email);
         $profilePref->setPhone($phone);
@@ -423,7 +423,7 @@ class FacetManager
      */
     public function isFileType($type)
     {
-        return $type === FieldFacet::FILE_TYPE;
+        return FieldFacet::FILE_TYPE === $type;
     }
 
     /**

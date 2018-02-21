@@ -12,9 +12,9 @@
 namespace Claroline\CoreBundle\Library;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
+use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\ResourceManagerImporter;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Doctrine\Common\Collections\ArrayCollection;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\ResourceManagerImporter;
 use Symfony\Component\Yaml\Yaml;
 
 class ResourceManagerImporterTest extends MockeryTestCase
@@ -29,7 +29,7 @@ class ResourceManagerImporterTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->importer = new ResourceManagerImporter($this->om);
         $this->fileImporter = $this->mock('Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Resources\FileImporter');
         $this->fileImporter->shouldReceive('getName')->andReturn('file');
@@ -66,42 +66,42 @@ class ResourceManagerImporterTest extends MockeryTestCase
     /* @todo add validations */
     public function validateProvider()
     {
-        return array(
+        return [
             //correct
-            array(
+            [
                 'basePath' => __DIR__.'/../../../Stub/transfert/valid/full',
                 'isExceptionExpected' => false,
                 'rolefile' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
                 'managerPath' => 'tools/resource_manager.yml',
-            ),
+            ],
             //roles don't exist
-            array(
+            [
                 'basePath' => __DIR__.'/../../../Stub/transfert/valid/full',
                 'isExceptionExpected' => true,
                 'rolefile' => __DIR__.'/../../../Stub/transfert/valid/full/roles02.yml',
                 'managerPath' => 'tools/resource_manager.yml',
-            ),
+            ],
             //unknown resource
-            array(
+            [
                 'basePath' => __DIR__.'/../../../Stub/transfert/invalid',
                 'isExceptionExpected' => true,
                 'rolefile' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
                 'managerPath' => 'tools/unknown_resources.yml',
-            ),
+            ],
             //parent don't exist
-            array(
+            [
                 'basePath' => __DIR__.'/../../../Stub/transfert/invalid',
                 'isExceptionExpected' => true,
                 'rolefile' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
                 'managerPath' => 'tools/missing_parent.yml',
-            ),
+            ],
             //parent element is missing
-            array(
+            [
                 'basePath' => __DIR__.'/../../../Stub/transfert/invalid',
                 'isExceptionExpected' => true,
                 'rolefile' => __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml',
                 'managerPath' => 'tools/missing_root.yml',
-            ),
-        );
+            ],
+        ];
     }
 }

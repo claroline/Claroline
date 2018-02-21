@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 
 /**

@@ -12,6 +12,7 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Icon\IconItem;
 use Claroline\CoreBundle\Entity\Icon\IconSet;
@@ -22,7 +23,6 @@ use Claroline\CoreBundle\Library\Icon\ResourceIconSetIconItemList;
 use Claroline\CoreBundle\Library\Utilities\ExtensionNotSupportedException;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Library\Utilities\ThumbnailCreator;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\Icon\IconItemRepository;
 use Claroline\CoreBundle\Repository\Icon\IconSetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -130,7 +130,7 @@ class IconSetManager
     public function getIconSetIconsByType(IconSet $iconSet = null, $includeDefault = true)
     {
         $iconSetIconsList = new ResourceIconSetIconItemList();
-        if ($iconSet !== null) {
+        if (null !== $iconSet) {
             $iconSetIcons = $iconSet->getIcons()->toArray();
             $iconSetIconsList->addSetIcons($iconSetIcons);
         }
@@ -152,7 +152,7 @@ class IconSetManager
      */
     public function getIconSetById($id)
     {
-        if ($id === null) {
+        if (null === $id) {
             return null;
         }
 
@@ -184,7 +184,7 @@ class IconSetManager
      */
     public function getResourceIconSetIconNamesForMimeTypes($iconSetId = null)
     {
-        if ($iconSetId !== null) {
+        if (null !== $iconSetId) {
             $icons = $this->iconItemRepo->findByIconSet($iconSetId);
         } else {
             $icons = $this->iconItemRepo->findIconsForResourceIconSetByMimeTypes();
@@ -272,7 +272,7 @@ class IconSetManager
 
     public function getResourceIconSetStampIcon(IconSet $iconSet = null)
     {
-        if ($iconSet === null) {
+        if (null === $iconSet) {
             $iconSet = new IconSet();
         }
         if (!empty($iconSet->getResourceStampIcon())) {
@@ -298,7 +298,7 @@ class IconSetManager
 
         // Set all ResourceIcons to default set's icons (this way we make sure that even if some icons
         // don't exist in this set they will be replaced by default icons and not by last active theme's icons)
-        if (!$newActiveSet->isDefault() || !$newActiveSet->getCname() === 'claroline') {
+        if (!$newActiveSet->isDefault() || 'claroline' === !$newActiveSet->getCname()) {
             $this->iconItemRepo->updateResourceIconsByIconSetIcons($this->getDefaultResourceIconSet());
         }
         // Then update with new set icons
@@ -335,7 +335,7 @@ class IconSetManager
         }
         // On shortcut stamp remove, then delete it from icon set and regenerate shortcut thumbnails for all the
         // icons on the set using default icon
-        if ($filename === 'shortcut') {
+        if ('shortcut' === $filename) {
             $this->fs->remove($this->getAbsolutePathForResourceIcon($iconSet->getResourceStampIcon()));
             $iconSet->setResourceStampIcon(null);
             // If icon set is active, regenerate shortcut for all resource icons
@@ -399,7 +399,7 @@ class IconSetManager
         $newIconPath = $iconSetDir.DIRECTORY_SEPARATOR.$newIconFilename;
         $iconItemFilenameList = $this->getResourceIconSetIconNamesForMimeTypes($iconSet->getId());
         // If submitted icon is stamp icon, then set new stamp icon to icon set and regenerate all thumbnails
-        if ($filename === 'shortcut') {
+        if ('shortcut' === $filename) {
             $relativeStampIcon = $this->getRelativePathForResourceIcon($newIconPath);
             $iconSet->setResourceStampIcon($relativeStampIcon);
             $this->om->persist($iconSet);
@@ -538,7 +538,7 @@ class IconSetManager
         $iconSetDir = $this->iconSetsWebDir.$ds.$cname;
         if (!empty($zipFile)) {
             $zipArchive = new \ZipArchive();
-            if ($zipArchive->open($zipFile) === true) {
+            if (true === $zipArchive->open($zipFile)) {
                 //Test to see if a resource stamp icon is present in zip file
                 $resourceStamp = $this->extractResourceStampIconFromZip($zipArchive, $iconSetDir);
                 if (!empty($resourceStamp)) {
@@ -669,7 +669,7 @@ class IconSetManager
             $file = $zip->getNameIndex($i);
             $fileinfo = pathinfo($file);
             $filename = $fileinfo['filename'];
-            if ($filename === 'shortcut') {
+            if ('shortcut' === $filename) {
                 $zip->extractTo($iconSetDir, [$file]);
 
                 return $this->getRelativePathForResourceIcon($iconSetDir.DIRECTORY_SEPARATOR.$fileinfo['basename']);
@@ -755,7 +755,7 @@ class IconSetManager
                 $name = pathinfo($archive->getFilename(), PATHINFO_FILENAME);
 
                 //_claroline always first item because they are the default icon set
-                if ($name === '_claroline') {
+                if ('_claroline' === $name) {
                     $name = 'claroline';
                 }
 
@@ -769,7 +769,7 @@ class IconSetManager
                     $new = true;
                 }
 
-                if ($name === 'claroline') {
+                if ('claroline' === $name) {
                     $iconSet->setDefault(true);
                 }
 

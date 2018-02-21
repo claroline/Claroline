@@ -11,19 +11,19 @@
 
 namespace Claroline\CoreBundle\Controller\API\Resource;
 
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\View;
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\HttpFoundation\Request;
-use Claroline\CoreBundle\Event\StrictDispatcher;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Claroline\CoreBundle\Entity\Resource\ResourceNode;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
+use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\Controller\FOSRestController;
+use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
  * @NamePrefix("api_")
@@ -74,14 +74,8 @@ class ResourceController extends FOSRestController
         $user = $this->tokenStorage->getToken()->getUser();
         $parent = (int) $parent;
 
-        //uncomment for debug via oauth
-        /*
-        if ($user === 'anon.' || $user === null) {
-            $user = $this->container->get('claroline.manager.user_manager')->getUserByUsername('root');
-        }*/
-
         //not strict because it could be a string '0'
-        $parent = $parent === 0 ?
+        $parent = 0 === $parent ?
             /*
              * carreful, it won't work every time because not every user has a personal workspace.
              * we'll have to handle taht case later
@@ -91,14 +85,8 @@ class ResourceController extends FOSRestController
 
         //be sure we can create resources
         //these lines won't work for oauth
-        $collection = new ResourceCollection(array($parent));
-        $collection->setAttributes(array('type' => $resourceType));
-
-        if (!$this->authorization->isGranted('CREATE', $collection)) {
-            $errors = $collection->getErrors();
-            //gotta think about error handling later
-        }
-        //end of oauth not working
+        $collection = new ResourceCollection([$parent]);
+        $collection->setAttributes(['type' => $resourceType]);
 
         //maybe init this from the form. I don't know. It could be removed imo.
         $isPublished = true;
@@ -106,7 +94,7 @@ class ResourceController extends FOSRestController
 
         //Handles the resource creation for any type because I'm lazy and it's better like this anyway.
         //@See FileListener for implementation
-        $event = $this->dispatcher->dispatch('create_api_'.$resourceType, 'CreateResource', array($parent, $resourceType, $encoding));
+        $event = $this->dispatcher->dispatch('create_api_'.$resourceType, 'CreateResource', [$parent, $resourceType, $encoding]);
 
         if (count($event->getResources()) > 0) {
             //Foreach is here because when we unzip a resource, we may add a crapton of stuff at one here.
@@ -120,13 +108,13 @@ class ResourceController extends FOSRestController
                         $parent->getWorkspace(),
                         $parent,
                         null,
-                        array(),
+                        [],
                         $isPublished
                     );
                     $this->dispatcher->dispatch(
                         'resource_created_'.$resourceType,
                         'ResourceCreated',
-                        array($createdResource->getResourceNode())
+                        [$createdResource->getResourceNode()]
                     );
                     $nodes[] = $createdResource->getResourceNode();
                 }
@@ -143,7 +131,7 @@ class ResourceController extends FOSRestController
      */
     public function getResourceNodeAction(ResourceNode $resourceNode)
     {
-        $collection = new ResourceCollection(array($resourceNode));
+        $collection = new ResourceCollection([$resourceNode]);
         $this->checkAccess('OPEN', $collection);
 
         return $resourceNode;

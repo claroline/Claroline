@@ -132,6 +132,7 @@
     "autoload": {
         "psr-4": {
             "Claroline\\CoreBundle\\": "main/core/",
+            "Claroline\\AppBundle\\": "main/app/",
             "Claroline\\BundleRecorder\\": "main/recorder/",
             "Claroline\\InstallationBundle\\": "main/installation/",
             "Claroline\\MigrationBundle\\": "main/migration/",
@@ -200,6 +201,7 @@
             "Claroline\\MigrationBundle\\ClarolineMigrationBundle",
             "Claroline\\KernelBundle\\ClarolineKernelBundle",
             "Claroline\\CoreBundle\\ClarolineCoreBundle",
+            "Claroline\\AppBundle\\ClarolineAppBundle",
             "Claroline\\AgendaBundle\\ClarolineAgendaBundle",
             "FormaLibre\\ReservationBundle\\FormaLibreReservationBundle",
             "Claroline\\ImagePlayerBundle\\ClarolineImagePlayerBundle",

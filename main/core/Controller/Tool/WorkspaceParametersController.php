@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\WorkspaceEditType;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\GroupManager;
@@ -278,7 +278,7 @@ class WorkspaceParametersController extends Controller
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user === 'anon.') {
+        if ('anon.' === $user) {
             return $this->redirect(
                 $this->generateUrl(
                     'claro_workspace_subscription_url_generate_anonymous',

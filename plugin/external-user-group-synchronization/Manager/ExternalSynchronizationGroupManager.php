@@ -12,10 +12,10 @@
 
 namespace Claroline\ExternalSynchronizationBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\ExternalSynchronizationBundle\Entity\ExternalGroup;
 use Claroline\ExternalSynchronizationBundle\Repository\ExternalGroupRepository;

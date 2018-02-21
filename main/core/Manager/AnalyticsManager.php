@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Event\Log\LogResourceExportEvent;
 use Claroline\CoreBundle\Event\Log\LogResourceReadEvent;
 use Claroline\CoreBundle\Event\Log\LogUserLoginEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceToolReadEvent;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\AbstractResourceRepository;
 use Claroline\CoreBundle\Repository\Log\LogRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -87,11 +87,11 @@ class AnalyticsManager
         $unique = false,
         $workspaceIds = null
     ) {
-        if ($action === null) {
+        if (null === $action) {
             $action = '';
         }
 
-        if ($range === null) {
+        if (null === $range) {
             $range = $this->getDefaultRange();
         }
 
@@ -111,7 +111,7 @@ class AnalyticsManager
 
     public function getTopByCriteria($range = null, $topType = null, $max = 30)
     {
-        if ($topType === null) {
+        if (null === $topType) {
             $topType = 'top_users_connections';
         }
         $listData = [];
@@ -151,11 +151,11 @@ class AnalyticsManager
 
     public function topWSByAction($range = null, $action = null, $max = -1)
     {
-        if ($range === null) {
+        if (null === $range) {
             $range = $this->getYesterdayRange();
         }
 
-        if ($action === null) {
+        if (null === $action) {
             $action = LogWorkspaceToolReadEvent::ACTION;
         }
 
@@ -166,11 +166,11 @@ class AnalyticsManager
 
     public function topMediaByAction($range = null, $action = null, $max = -1)
     {
-        if ($range === null) {
+        if (null === $range) {
             $range = $this->getYesterdayRange();
         }
 
-        if ($action === null) {
+        if (null === $action) {
             $action = LogResourceReadEvent::ACTION;
         }
 
@@ -181,11 +181,11 @@ class AnalyticsManager
 
     public function topResourcesByAction($range = null, $action = null, $max = -1)
     {
-        if ($range === null) {
+        if (null === $range) {
             $range = $this->getYesterdayRange();
         }
 
-        if ($action === null) {
+        if (null === $action) {
             $action = LogResourceReadEvent::ACTION;
         }
 
@@ -196,11 +196,11 @@ class AnalyticsManager
 
     public function topUsersByAction($range = null, $action = null, $max = -1)
     {
-        if ($range === null) {
+        if (null === $range) {
             $range = $this->getYesterdayRange();
         }
 
-        if ($action === null) {
+        if (null === $action) {
             $action = LogUserLoginEvent::ACTION;
         }
 

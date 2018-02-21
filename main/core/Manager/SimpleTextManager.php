@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.manager.simple_text_manager")
@@ -41,6 +41,6 @@ class SimpleTextManager
     {
         return $this->om
             ->getRepository('ClarolineCoreBundle:Widget\SimpleTextConfig')
-            ->findOneBy(array('widgetInstance' => $config));
+            ->findOneBy(['widgetInstance' => $config]);
     }
 }

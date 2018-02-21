@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
 use Claroline\CoreBundle\Event\Profile\ProfileLinksEvent;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\ProfileType;
 use Claroline\CoreBundle\Form\ResetPasswordType;
 use Claroline\CoreBundle\Form\UserPublicProfileUrlType;
@@ -141,7 +141,7 @@ class ProfileController extends Controller
     {
         $isAccessibleForAnon = $this->ch->getParameter('anonymous_public_profile');
 
-        if (!$isAccessibleForAnon && $this->tokenStorage->getToken()->getUser() === 'anon.') {
+        if (!$isAccessibleForAnon && 'anon.' === $this->tokenStorage->getToken()->getUser()) {
             throw new AccessDeniedException();
         }
 
@@ -167,7 +167,7 @@ class ProfileController extends Controller
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user === 'anon.') {
+        if ('anon.' === $user) {
             return ['isAnon' => true];
         } else {
             $facets = $this->facetManager->getVisibleFacets();
@@ -201,7 +201,7 @@ class ProfileController extends Controller
                 }
             }
 
-            $completion = $totalVisibleFields === 0 ? null : round($totalFilledVisibleFields / $totalVisibleFields * 100);
+            $completion = 0 === $totalVisibleFields ? null : round($totalFilledVisibleFields / $totalVisibleFields * 100);
             $links = $profileLinksEvent->getLinks();
 
             return [
@@ -274,7 +274,7 @@ class ProfileController extends Controller
         $form->handleRequest($this->request);
         $unavailableRoles = [];
 
-        if ($this->get('request')->getMethod() === 'POST') {
+        if ('POST' === $this->get('request')->getMethod()) {
             $roles = ($isAdmin || $isGrantedUserAdmin) ?
                 $form->get('platformRoles')->getData() :
                 [$this->roleManager->getRoleByName('ROLE_USER')];
@@ -291,7 +291,7 @@ class ProfileController extends Controller
             }
         }
 
-        if ($form->isValid() && count($unavailableRoles) === 0) {
+        if ($form->isValid() && 0 === count($unavailableRoles)) {
             /** @var \Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface $sessionFlashBag */
             $sessionFlashBag = $this->get('session')->getFlashBag();
             /** @var \Symfony\Component\Translation\TranslatorInterface $translator */
@@ -343,7 +343,7 @@ class ProfileController extends Controller
                 $changeSet['roles'] = $rolesChangeSet;
             }
 
-            if ($this->userManager->uploadAvatar($user) === false) {
+            if (false === $this->userManager->uploadAvatar($user)) {
                 $sessionFlashBag->add('error', $errorRight);
             }
 

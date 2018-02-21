@@ -11,6 +11,7 @@
 
 namespace Claroline\ScormBundle\Listener;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
@@ -21,7 +22,6 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ScormBundle\Entity\Scorm12Resource;
 use Claroline\ScormBundle\Entity\Scorm12Sco;
 use Claroline\ScormBundle\Form\ScormType;
@@ -206,7 +206,7 @@ class Scorm12Listener
 
         $nbScorm = (int) ($this->scormResourceRepo->getNbScormWithHashName($hashName));
 
-        if ($nbScorm === 1) {
+        if (1 === $nbScorm) {
             if (file_exists($scormArchiveFile)) {
                 $event->setFiles([$scormArchiveFile]);
             }
@@ -362,7 +362,7 @@ class Scorm12Listener
         $zip = new \ZipArchive();
         $openValue = $zip->open($file);
 
-        $isScormArchive = ($openValue === true)
+        $isScormArchive = (true === $openValue)
             && $zip->getStream('imsmanifest.xml');
 
         if (!$isScormArchive) {

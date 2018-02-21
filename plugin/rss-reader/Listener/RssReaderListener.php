@@ -11,10 +11,10 @@
 
 namespace Claroline\RssReaderBundle\Listener;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\CopyWidgetConfigurationEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\RssReaderBundle\Entity\Config;
 use Claroline\RssReaderBundle\Form\ConfigType;
 use Claroline\RssReaderBundle\Library\ReaderProvider;
@@ -83,7 +83,7 @@ class RssReaderListener
         $instance = $event->getInstance();
         $config = $this->rssManager->getConfig($instance);
 
-        if ($config === null) {
+        if (null === $config) {
             $config = new Config();
         }
 
@@ -106,11 +106,11 @@ class RssReaderListener
         $data = file_get_contents($rssConfig->getUrl());
         $content = strstr($data, '<?xml');
 
-        if (!$content && strpos($data, '<rss') === 0) {
+        if (!$content && 0 === strpos($data, '<rss')) {
             $content = $data;
         }
 
-        if ($content === false) {
+        if (false === $content) {
             return $this->templating->render('ClarolineRssReaderBundle::invalid.html.twig');
         }
 

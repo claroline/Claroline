@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
@@ -19,11 +21,9 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\RoleOptions;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Exception\LastManagerDeleteException;
 use Claroline\CoreBundle\Manager\Exception\RoleReadOnlyException;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\GroupRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\UserRepository;
@@ -223,7 +223,7 @@ class RoleManager
             throw new Exception\AddRoleException();
         }
 
-        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group' && $role->getName() === 'ROLE_USER') {
+        if ('Claroline\CoreBundle\Entity\Group' === get_class($ars) && 'ROLE_USER' === $role->getName()) {
             throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
         }
 
@@ -257,7 +257,7 @@ class RoleManager
             throw new Exception\AddRoleException('Role cannot be added');
         }
 
-        if (get_class($ars) === 'Claroline\CoreBundle\Entity\Group' && $role->getName() === 'ROLE_USER') {
+        if ('Claroline\CoreBundle\Entity\Group' === get_class($ars) && 'ROLE_USER' === $role->getName()) {
             throw new Exception\AddRoleException('ROLE_USER cannot be added to groups');
         }
 
@@ -721,7 +721,7 @@ class RoleManager
      */
     public function getRoleBaseName($roleName)
     {
-        if ($roleName === 'ROLE_ANONYMOUS') {
+        if ('ROLE_ANONYMOUS' === $roleName) {
             return $roleName;
         }
 
@@ -798,13 +798,13 @@ class RoleManager
         $total = $this->countUsersByRoleIncludingGroup($role);
 
         //cli always win!
-        if ($role->getName() === 'ROLE_ADMIN' && php_sapi_name() === 'cli' ||
+        if ('ROLE_ADMIN' === $role->getName() && 'cli' === php_sapi_name() ||
             //web installer too
-            $this->container->get('security.token_storage')->getToken() === null) {
+            null === $this->container->get('security.token_storage')->getToken()) {
             return true;
         }
 
-        if ($role->getName() === 'ROLE_ADMIN' && !$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
+        if ('ROLE_ADMIN' === $role->getName() && !$this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN')) {
             return false;
         }
 
@@ -813,7 +813,7 @@ class RoleManager
             return true;
         }
 
-        if ($role->getMaxUsers() === null) {
+        if (null === $role->getMaxUsers()) {
             return true;
         }
 
@@ -965,7 +965,7 @@ class RoleManager
 
     public function getUserRolesByTranslationKeys(array $keys, $executeQuery = true)
     {
-        return count($keys) === 0 ?
+        return 0 === count($keys) ?
             [] :
             $this->roleRepo->findUserRolesByTranslationKeys($keys, $executeQuery);
     }
@@ -1029,7 +1029,7 @@ class RoleManager
                 $this->associateRoles($user, $roles);
             }
 
-            if ($i % 100 === 0) {
+            if (0 === $i % 100) {
                 $this->om->forceFlush();
             }
             ++$i;
@@ -1116,7 +1116,7 @@ class RoleManager
                     ++$j;
                 }
 
-                if ($j % $flushSize === 0) {
+                if (0 === $j % $flushSize) {
                     $this->log('Flushing, this may be very long for large databases');
                     $this->om->forceFlush();
                     $j = 1;
@@ -1153,7 +1153,7 @@ class RoleManager
                     ++$j;
                 }
 
-                if ($j % $flushSize === 0) {
+                if (0 === $j % $flushSize) {
                     $this->log('Flushing, this may be very long for large databases');
                     $this->om->forceFlush();
                     $j = 1;
@@ -1233,7 +1233,7 @@ class RoleManager
 
     public function emptyRole(Role $role, $mode)
     {
-        if ($mode === self::EMPTY_USERS) {
+        if (self::EMPTY_USERS === $mode) {
             $users = $role->getUsers();
 
             foreach ($users as $user) {
@@ -1241,7 +1241,7 @@ class RoleManager
                 $this->om->persist($user);
             }
         }
-        if ($mode === self::EMPTY_GROUPS) {
+        if (self::EMPTY_GROUPS === $mode) {
             $groups = $role->getGroups();
 
             foreach ($groups as $group) {
@@ -1268,7 +1268,7 @@ class RoleManager
                 foreach ($roles as $role) {
                     $hasRole = false;
                     foreach ($root->getRights() as $perm) {
-                        if ($perm->getRole() === $role || $role->getTranslationKey() === 'manager') {
+                        if ($perm->getRole() === $role || 'manager' === $role->getTranslationKey()) {
                             $hasRole = true;
                         }
                     }

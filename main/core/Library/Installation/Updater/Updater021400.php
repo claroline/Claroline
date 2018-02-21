@@ -2,7 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\InstallationBundle\Updater\Updater;
 
@@ -39,23 +39,23 @@ class Updater021400 extends Updater
 
         $this->log('Creating admin tools...');
 
-        $tools = array(
-            array('platform_parameters', 'icon-cog'),
-            array('user_management', 'icon-user'),
-            array('workspace_management', 'icon-book'),
-            array('badges_management', 'icon-trophy'),
-            array('registration_to_workspace', 'icon-book'),
-            array('platform_plugins', 'icon-wrench'),
-            array('home_tabs', 'icon-th-large'),
-            array('desktop_tools', 'icon-pencil'),
-            array('platform_logs', 'icon-reorder'),
-            array('platform_analytics', 'icon-bar-chart'),
-            array('roles_management', 'icon-group'),
-        );
+        $tools = [
+            ['platform_parameters', 'icon-cog'],
+            ['user_management', 'icon-user'],
+            ['workspace_management', 'icon-book'],
+            ['badges_management', 'icon-trophy'],
+            ['registration_to_workspace', 'icon-book'],
+            ['platform_plugins', 'icon-wrench'],
+            ['home_tabs', 'icon-th-large'],
+            ['desktop_tools', 'icon-pencil'],
+            ['platform_logs', 'icon-reorder'],
+            ['platform_analytics', 'icon-bar-chart'],
+            ['roles_management', 'icon-group'],
+        ];
 
         $existingTools = $this->objectManager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();
 
-        if (count($existingTools) === 0) {
+        if (0 === count($existingTools)) {
             foreach ($tools as $tool) {
                 $entity = new AdminTool();
                 $entity->setName($tool[0]);

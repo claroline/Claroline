@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Event\Analytics;
 
-use Claroline\CoreBundle\Event\DataConveyorEventInterface;
-use Claroline\CoreBundle\Event\MandatoryEventInterface;
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
+use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 class PlatformContentItemDetailsEvent extends Event implements DataConveyorEventInterface, MandatoryEventInterface

@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Event\GenericDataEvent;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Exception\ResourceAccessException;
 use Claroline\CoreBundle\Form\ImportResourcesType;
 use Claroline\CoreBundle\Form\Resource\UnlockType;
@@ -197,7 +197,7 @@ class ResourceController extends Controller
         }
 
         $event = $this->dispatcher->dispatch('create_'.$resourceType, 'CreateResource', [$parent, $resourceType]);
-        $isPublished = intval($published) === 1 ? true : $event->isPublished();
+        $isPublished = 1 === intval($published) ? true : $event->isPublished();
 
         if (count($event->getResources()) > 0) {
             $nodesArray = [];
@@ -286,7 +286,7 @@ class ResourceController extends Controller
         //If it's a link, the resource will be its target.
         $node = $this->getRealTarget($node);
         $this->checkAccess('OPEN', $collection);
-        if ($resourceType === null) {
+        if (null === $resourceType) {
             $resourceType = $node->getResourceType()->getName();
         }
         $event = $this->dispatcher->dispatch(
@@ -474,7 +474,7 @@ class ResourceController extends Controller
 
         $collection = new ResourceCollection([$node]);
 
-        if ($menuAction->getResourceType() === null) {
+        if (null === $menuAction->getResourceType()) {
             if (!$this->authorization->isGranted('ROLE_USER')) {
                 throw new AccessDeniedException('You must be log in to execute this action !');
             }
@@ -717,7 +717,7 @@ class ResourceController extends Controller
         $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
         $response->headers->set('Content-Type', 'application/force-download');
         $response->headers->set('Content-Disposition', 'attachment; filename='.urlencode($fileName));
-        if ($mimeType !== null) {
+        if (null !== $mimeType) {
             $response->headers->set('Content-Type', $mimeType);
         }
         $response->headers->set('Connection', 'close');
@@ -764,7 +764,7 @@ class ResourceController extends Controller
         $canChangePosition = false;
         $nodesWithCreatorPerms = [];
 
-        if ($node === null) {
+        if (null === $node) {
             $nodes = $this->resourceManager->getRoots($user);
             $isRoot = true;
             $workspaceId = 0;
@@ -785,7 +785,7 @@ class ResourceController extends Controller
             $this->checkAccess('OPEN', $collection);
             $canAdministrate = $this->authorization->isGranted('ADMINISTRATE', $node);
 
-            if ($user !== 'anon.') {
+            if ('anon.' !== $user) {
                 if ($user === $node->getCreator() || $this->authorization->isGranted('ROLE_ADMIN')
                     || $canAdministrate
                 ) {
@@ -818,7 +818,7 @@ class ResourceController extends Controller
 
             foreach ($nodes as $el) {
                 $item = $el;
-                if ($user !== 'anon.') {
+                if ('anon.' !== $user) {
                     if ($item['creator_username'] === $user->getUsername()
                         && !$this->isUsurpatingWorkspaceRole($this->tokenStorage->getToken())) {
                         $item['mask'] = 32767;
@@ -1081,7 +1081,7 @@ class ResourceController extends Controller
         //this trick will never work with shortcuts to directory
         //we don't support directory links anymore
         $nodeFromSession = $this->request->getSession()->get('current_resource_node');
-        $node = $nodeFromSession !== null ? $nodeFromSession : $node;
+        $node = null !== $nodeFromSession ? $nodeFromSession : $node;
         $workspace = $node->getWorkspace();
         $ancestors = $this->resourceManager->getAncestors($node);
 
@@ -1122,13 +1122,13 @@ class ResourceController extends Controller
 
     private function getRealTarget(ResourceNode $node)
     {
-        if ($node->getClass() === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut') {
+        if ('Claroline\CoreBundle\Entity\Resource\ResourceShortcut' === $node->getClass()) {
             $resource = $this->resourceManager->getResourceFromNode($node);
-            if ($resource === null) {
+            if (null === $resource) {
                 throw new \Exception('The resource was removed.');
             }
             $node = $resource->getTarget();
-            if ($node === null) {
+            if (null === $node) {
                 throw new \Exception('The node target was removed.');
             }
         }
@@ -1205,7 +1205,7 @@ class ResourceController extends Controller
                     'resource' => $this->resourceManager->getResourceFromNode($node),
                     'type' => $type,
                     'extension' => $extension,
-                    'openInNewTab' => $openInNewTab !== '0',
+                    'openInNewTab' => '0' !== $openInNewTab,
                 ]
             )
         );
@@ -1247,7 +1247,7 @@ class ResourceController extends Controller
      */
     public function exportAction(array $nodes)
     {
-        if (count($nodes) === 0) {
+        if (0 === count($nodes)) {
             throw new \Exception('No resource to export');
         }
 
@@ -1337,6 +1337,7 @@ class ResourceController extends Controller
     }
 
     //this method is not routed and called from the Resource/layout.html.twig file
+
     /**
      * @EXT\Template("ClarolineCoreBundle:Resource:unlockCodeForm.html.twig")
      */
@@ -1372,7 +1373,7 @@ class ResourceController extends Controller
     private function isUsurpatingWorkspaceRole(TokenInterface $token)
     {
         foreach ($token->getRoles() as $role) {
-            if ($role->getRole() === 'ROLE_USURPATE_WORKSPACE_ROLE') {
+            if ('ROLE_USURPATE_WORKSPACE_ROLE' === $role->getRole()) {
                 return true;
             }
         }

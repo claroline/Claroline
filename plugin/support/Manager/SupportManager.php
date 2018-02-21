@@ -2,11 +2,11 @@
 
 namespace FormaLibre\SupportBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\MessageBundle\Manager\MessageManager;
 use FormaLibre\SupportBundle\Entity\Comment;
 use FormaLibre\SupportBundle\Entity\Configuration;
@@ -715,7 +715,7 @@ class SupportManager
     {
         $tickets = $this->ticketRepo->findBy(['forwarded' => true, 'officialUuid' => $uuid]);
 
-        return count($tickets) === 1 ? $tickets[0] : null;
+        return 1 === count($tickets) ? $tickets[0] : null;
     }
 
     /************************************

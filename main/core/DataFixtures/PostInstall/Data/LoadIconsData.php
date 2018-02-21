@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\DataFixtures\PostInstall\Data;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 
 class LoadIconsData implements RequiredFixture
 {

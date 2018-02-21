@@ -2,7 +2,6 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Model;
 
-use Claroline\CoreBundle\API\Crud;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;

@@ -2,12 +2,12 @@
 
 namespace Claroline\CoreBundle\Listener\Transfer;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Event\RichTextFormatEvent;
 use Claroline\CoreBundle\Library\Transfert\RichTextFormatter;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
@@ -73,7 +73,7 @@ class ImgFormatListener
                     $this->formatter->createDataFolder($_data);
                     $node = $this->resourceManager->getNode($match[1]);
 
-                    if ($node && $node->getResourceType()->getName() === 'file') {
+                    if ($node && 'file' === $node->getResourceType()->getName()) {
                         $el = $this->formatter->getImporterByName('resource_manager')->getResourceElement(
                             $node,
                             $node->getWorkspace(),
@@ -168,13 +168,13 @@ class ImgFormatListener
         $url = $this->router->generate('claro_file_get_media', ['node' => $node->getId()], UrlGeneratorInterface::ABSOLUTE_URL);
         $img = '<img ';
 
-        if ($width !== '') {
+        if ('' !== $width) {
             $img .= "width='{$width}' ";
         }
-        if ($height !== '') {
+        if ('' !== $height) {
             $img .= "height='{$height}' ";
         }
-        if ($style !== '') {
+        if ('' !== $style) {
             $img .= "style='{$style}' ";
         }
 

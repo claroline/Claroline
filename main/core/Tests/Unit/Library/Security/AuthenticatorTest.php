@@ -25,7 +25,7 @@ class AuthenticatorTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->userRepo = $this->mock('Claroline\CoreBundle\Repository\UserRepository');
         $this->om->shouldReceive('getRepository')->with('ClarolineCoreBundle:User')->andReturn($this->userRepo);
         $this->sc = $this->mock('Symfony\Component\Security\Core\SecurityContextInterface');
@@ -56,7 +56,7 @@ class AuthenticatorTest extends MockeryTestCase
         $user = $this->mock('Claroline\CoreBundle\Entity\User');
         $user->shouldReceive('getSalt')->once()->andReturn('salt');
         $user->shouldReceive('getPassword')->once()->andReturn('trueEncodedPw');
-        $user->shouldReceive('getRoles')->once()->andReturn(array());
+        $user->shouldReceive('getRoles')->once()->andReturn([]);
         $encoder = $this->mock('Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface');
         $this->userRepo->shouldReceive('loadUserByUsername')->once()->with('name')->andReturn($user);
         $this->encoderFactory->shouldReceive('getEncoder')->andReturn($encoder);

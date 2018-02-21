@@ -11,6 +11,7 @@
 
 namespace Claroline\TeamBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
@@ -20,7 +21,6 @@ use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\TeamBundle\API\Serializer\TeamSerializer;
 use Claroline\TeamBundle\Entity\Team;
 use Claroline\TeamBundle\Entity\WorkspaceTeamParameters;
@@ -369,7 +369,7 @@ class TeamManager
                     --$nbFreeSpaces;
                 }
 
-                if (count($users) === 0) {
+                if (0 === count($users)) {
                     break;
                 }
             }
@@ -492,7 +492,7 @@ class TeamManager
 
     private function computeValidTeamName(Workspace $workspace, $teamName, $index)
     {
-        $name = $index === 0 ? $teamName : $teamName.' '.$index;
+        $name = 0 === $index ? $teamName : $teamName.' '.$index;
 
         $teams = $this->teamRepo->findTeamsByWorkspaceAndName($workspace, $name);
 
@@ -549,7 +549,7 @@ class TeamManager
             $decoderName = $decoder->getName();
             $rights[$teamManagerRoleName][$decoderName] = true;
 
-            if ($decoderName !== 'administrate' && $decoderName !== 'delete') {
+            if ('administrate' !== $decoderName && 'delete' !== $decoderName) {
                 $rights[$teamRoleName][$decoderName] = true;
             }
         }
@@ -597,7 +597,7 @@ class TeamManager
         $this->om->startFlushSuite();
         $this->resourceManager->createRights($node, $rights);
 
-        if ($node->getResourceType()->getName() === 'directory') {
+        if ('directory' === $node->getResourceType()->getName()) {
             foreach ($node->getChildren() as $child) {
                 $this->applyRightsToResources($child, $rights);
             }

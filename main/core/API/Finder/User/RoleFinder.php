@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\API\Finder\User;
 
-use Claroline\CoreBundle\API\FinderInterface;
+use Claroline\AppBundle\API\FinderInterface;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -72,7 +72,6 @@ class RoleFinder implements FinderInterface
                         case 'platform':
                             $filterValue = Role::PLATFORM_ROLE;
                             break;
-
                     }
                     $qb->andWhere("obj.{$filterName} = :{$filterName}");
                     $qb->setParameter($filterName, $filterValue);

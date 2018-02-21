@@ -2,7 +2,7 @@
 
 namespace FormaLibre\ReservationBundle\Validator;
 
-use Claroline\CoreBundle\API\ValidatorInterface;
+use Claroline\AppBundle\API\ValidatorInterface;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

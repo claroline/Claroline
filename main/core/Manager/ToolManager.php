@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
@@ -18,11 +20,9 @@ use Claroline\CoreBundle\Entity\Tool\PwsToolConfig;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\Exception\ToolPositionAlreadyOccupiedException;
 use Claroline\CoreBundle\Manager\Exception\UnremovableToolException;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\RoleRepository;
 use Claroline\CoreBundle\Repository\ToolRepository;
@@ -135,7 +135,7 @@ class ToolManager
         }
 
         // At the workspace creation, the workspace id is still null because we only flush once at the very end.
-        if ($workspace->getId() !== null) {
+        if (null !== $workspace->getId()) {
             $switchTool = $this->orderedToolRepo->findOneBy(
                 ['workspace' => $workspace, 'order' => $position, 'type' => $orderedToolType]
             );
@@ -171,7 +171,7 @@ class ToolManager
         $type = 0,
         array $excludedTools = []
     ) {
-        return count($excludedTools) === 0 ?
+        return 0 === count($excludedTools) ?
             $this->toolRepo->findDesktopDisplayedToolsByUser($user, $type) :
             $this->toolRepo->findDesktopDisplayedToolsWithExclusionByUser(
                 $user,
@@ -382,7 +382,7 @@ class ToolManager
     {
         $undisplayedTools = $this->toolRepo->findUndisplayedToolsByWorkspace($workspace, $type);
 
-        if (count($undisplayedTools) === 0) {
+        if (0 === count($undisplayedTools)) {
             return;
         }
 
@@ -398,7 +398,7 @@ class ToolManager
             );
 
             //create a WorkspaceOrderedTool for each Tool that hasn't already one
-            if ($wot === null) {
+            if (null === $wot) {
                 $this->setWorkspaceTool(
                     $undisplayedTool,
                     $initPos,
@@ -438,7 +438,7 @@ class ToolManager
      */
     public function removeDesktopTool(Tool $tool, User $user, $type = 0)
     {
-        if ($tool->getName() === 'parameters') {
+        if ('parameters' === $tool->getName()) {
             throw new UnremovableToolException('You cannot remove the parameter tool from the desktop.');
         }
 
@@ -943,7 +943,7 @@ class ToolManager
             $data[$role->getId()] = [];
             $perms = $this->pwsToolConfigRepo->findByRole($role);
 
-            if ($perms === [] || $perms === null) {
+            if ($perms === [] || null === $perms) {
                 foreach ($availableTools as $availableTool) {
                     $data[$role->getId()][$availableTool->getId()] = [
                         'toolId' => $availableTool->getId(),
@@ -1076,7 +1076,7 @@ class ToolManager
     ) {
         $excludedToolNames[] = 'home';
 
-        if ($type === 1) {
+        if (1 === $type) {
             $excludedToolNames[] = 'parameters';
         }
 
@@ -1095,7 +1095,7 @@ class ToolManager
     ) {
         $excludedToolNames[] = 'home';
 
-        if ($type === 1) {
+        if (1 === $type) {
             $excludedToolNames[] = 'parameters';
         }
 
@@ -1113,7 +1113,7 @@ class ToolManager
     ) {
         $excludedToolNames[] = 'home';
 
-        if ($type === 1) {
+        if (1 === $type) {
             $excludedToolNames[] = 'parameters';
         }
 
@@ -1156,7 +1156,7 @@ class ToolManager
                 $type
             );
 
-            if (count($orderedTools) === 0) {
+            if (0 === count($orderedTools)) {
                 $orderedTool = new OrderedTool();
                 $orderedTool->setName($toolName);
                 $orderedTool->setTool($tool);
@@ -1167,7 +1167,7 @@ class ToolManager
                 $this->om->persist($orderedTool);
                 ++$index;
 
-                if ($index % 100 === 0) {
+                if (0 === $index % 100) {
                     $this->om->forceFlush();
                     $this->om->clear($orderedTool);
                     $logger->info(sprintf('    %d users checked.', 100));
@@ -1180,7 +1180,7 @@ class ToolManager
                     $this->om->persist($orderedTool);
                     ++$index;
 
-                    if ($index % 100 === 0) {
+                    if (0 === $index % 100) {
                         $this->om->forceFlush();
                         $this->om->clear($orderedTool);
                         $logger->info(sprintf('    %d users checked.', 100));
@@ -1188,7 +1188,7 @@ class ToolManager
                 }
             }
         }
-        if ($index % 100 !== 0) {
+        if (0 !== $index % 100) {
             $logger->info(sprintf('    %d users checked.', (100 - $index)));
         }
         $this->om->endFlushSuite();

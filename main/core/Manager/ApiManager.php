@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Oauth\FriendRequest;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use FOS\RestBundle\View\View;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\Serializer\SerializationContext;
@@ -75,7 +75,7 @@ class ApiManager
     private function adminQuery(FriendRequest $request, $url, $payload = null, $type = 'GET')
     {
         $access = $request->getClarolineAccess();
-        if ($access === null) {
+        if (null === $access) {
             throw new \Exception('The oauth tokens were lost. Please ask for a new authentication.');
         }
         $firstTry = $request->getHost().'/'.$url.'?access_token='.$access->getAccessToken();
@@ -84,7 +84,7 @@ class ApiManager
 
         if ($json) {
             if (array_key_exists('error', $json)) {
-                if ($json['error'] === 'access_denied' || $json['error'] === 'invalid_grant') {
+                if ('access_denied' === $json['error'] || 'invalid_grant' === $json['error']) {
                     $access = $this->oauthManager->connect($request->getHost(), $access->getRandomId(), $access->getSecret(), $access->getFriendRequest());
                     $secondTry = $request->getHost().'/'.$url.'?access_token='.$access->getAccessToken();
                     $serverOutput = $this->curlManager->exec($secondTry, $payload, $type);
@@ -140,7 +140,7 @@ class ApiManager
     {
         $context = new SerializationContext();
         $format = $this->container->get('request')->getRequestFormat();
-        $format = $format === 'html' ? 'json' : $format;
+        $format = 'html' === $format ? 'json' : $format;
         $context->setGroups($serializerGroup);
         $content = $this->container->get('serializer')->serialize($data, $format, $context);
         $response = new Response($content);

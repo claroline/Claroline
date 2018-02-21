@@ -11,6 +11,7 @@
 
 namespace Claroline\ForumBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
@@ -24,7 +25,6 @@ use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ForumBundle\Entity\Category;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Entity\Message;
@@ -311,7 +311,7 @@ class Manager
     {
         $notify = $this->notificationRepo->findBy(['user' => $user, 'forum' => $forum]);
 
-        return count($notify) === 1 ? true : false;
+        return 1 === count($notify) ? true : false;
     }
 
     /**
@@ -763,7 +763,7 @@ class Manager
     {
         $lastMessageWidgetConfig = $this->lastMessageWidgetConfigRepo->findOneOrNullByWidgetInstance($widgetInstance);
 
-        if ($lastMessageWidgetConfig === null) {
+        if (null === $lastMessageWidgetConfig) {
             $lastMessageWidgetConfig = new LastMessageWidgetConfig();
             $lastMessageWidgetConfig->setWidgetInstance($widgetInstance);
         }

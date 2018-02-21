@@ -8,8 +8,8 @@
 
 namespace Icap\WebsiteBundle\Tests;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsitePageTypeEnum;
 use Icap\WebsiteBundle\Manager\WebsitePageManager;
@@ -21,12 +21,12 @@ class WebsitePageManagerTest extends TransactionalTestCase
     private $om;
     /** @var Persister */
     private $persist;
-    /** @var  WebsitePageManager */
+    /** @var WebsitePageManager */
     private $manager;
 
     private $websitePageParams;
 
-    /** @var  Website */
+    /** @var Website */
     private $website;
 
     private $webDir;
@@ -41,14 +41,14 @@ class WebsitePageManagerTest extends TransactionalTestCase
         $this->persist = new Persister($this->om);
         $user = $this->persist->user('john');
         $this->website = $this->persist->website('Test Website', $user);
-        $this->websitePageParams = array(
+        $this->websitePageParams = [
             'title' => 'Test page',
             'type' => WebsitePageTypeEnum::BLANK_PAGE,
             'description' => 'Test description',
             'visible' => true,
             'isSection' => false,
             'richText' => '<div>this is a test page</div>',
-        );
+        ];
     }
 
     public function testCreateAndDelete()
@@ -81,7 +81,7 @@ class WebsitePageManagerTest extends TransactionalTestCase
         $page2 = $this->manager->createEmptyPage($this->website, $this->website->getRoot());
         $this->manager->processForm($this->website, $page1, $this->websitePageParams, 'POST');
         $this->manager->processForm($this->website, $page2, $this->websitePageParams, 'POST');
-        $this->manager->handleMovePage($this->website, array('pageId' => $page2->getId(), 'newParentId' => $page1->getId()));
+        $this->manager->handleMovePage($this->website, ['pageId' => $page2->getId(), 'newParentId' => $page1->getId()]);
         $pages = $repo->findBy([], ['creationDate' => 'ASC']);
         $this->assertEquals($page1->getId(), $pages[2]->getParent()->getId(), 'Verify correct WebsitePage move');
     }

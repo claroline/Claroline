@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -118,7 +118,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
             }
             //count
             foreach ($iterator as $pathinfo) {
-                if ($pathinfo->isFile() && $pathinfo->getExtension() === 'zip') {
+                if ($pathinfo->isFile() && 'zip' === $pathinfo->getExtension()) {
                     ++$total;
                 }
             }
@@ -130,7 +130,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
                     ++$i;
                 }
             }
-        //import one specific workspace
+            //import one specific workspace
         } else {
             if ($uncompressed) {
                 $this->importUncompressedWorkspace($dirPath, $username, $output, $workspaceManager, $om, 1, 1, $skip);
@@ -152,11 +152,11 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
             $workspace = $this->getWorkspaceFromCode(pathinfo($file->getFileName(), PATHINFO_FILENAME), $output, $om);
         }
 
-        if ($workspace === null) {
+        if (null === $workspace) {
             $output->writeln('<comment> Clearing object manager... </comment>');
             $om->clear();
             $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsernameOrMail($username, $username);
-            if ($user === null) {
+            if (null === $user) {
                 throw new \Exception('User not found : '.$username);
             }
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
@@ -177,11 +177,11 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
             $workspace = $this->getWorkspaceFromCode(basename($dir), $output, $om);
         }
 
-        if ($workspace === null) {
+        if (null === $workspace) {
             $output->writeln('<comment> Clearing object manager... </comment>');
             $om->clear();
             $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsernameOrMail($username, $username);
-            if ($user === null) {
+            if (null === $user) {
                 throw new \Exception('User not found : '.$username);
             }
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());

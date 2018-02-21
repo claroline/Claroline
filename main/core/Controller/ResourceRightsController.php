@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Entity\Role;
@@ -21,7 +22,6 @@ use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -103,7 +103,7 @@ class ResourceRightsController extends Controller
     {
         $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
-        $isDir = $node->getResourceType()->getName() === 'directory';
+        $isDir = 'directory' === $node->getResourceType()->getName();
 
         if (!$role) {
             $data = $this->wsTagManager->getDatasForWorkspaceList(true);
@@ -250,7 +250,7 @@ class ResourceRightsController extends Controller
         $this->checkAccess('ADMINISTRATE', $collection);
         $isRecursive = $this->request->getCurrentRequest()->request->get('isRecursive');
         $ids = $this->request->getCurrentRequest()->request->get('resourceTypes');
-        $resourceTypes = $ids === null ?
+        $resourceTypes = null === $ids ?
             [] :
             $this->om->findByIds('ClarolineCoreBundle:Resource\ResourceType', array_keys($ids));
         $this->rightsManager->editCreationRights($resourceTypes, $role, $node, $isRecursive);
@@ -288,7 +288,7 @@ class ResourceRightsController extends Controller
     ) {
         $collection = new ResourceCollection([$node]);
         $this->checkAccess('ADMINISTRATE', $collection);
-        $isDir = $node->getResourceType()->getName() === 'directory';
+        $isDir = 'directory' === $node->getResourceType()->getName();
         $resourceType = $node->getResourceType();
         $mask = $this->maskManager
             ->decodeMask($resourceType->getDefaultMask(), $resourceType);

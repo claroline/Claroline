@@ -2,9 +2,9 @@
 
 namespace Claroline\SurveyBundle\Transfert;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\SurveyBundle\Manager\SurveyManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -155,7 +155,7 @@ class SurveyImporter extends Importer implements ConfigurationInterface, RichTex
                 $entity->setCommentLabel($formattedCommentLabelText);
                 $this->om->persist($entity);
 
-                if ($question['type'] === 'multiple_choice_single' || $question['type'] === 'multiple_choice_multiple') {
+                if ('multiple_choice_single' === $question['type'] || 'multiple_choice_multiple' === $question['type']) {
                     foreach ($question['multiple_choices']['choices'] as $choice) {
                         $choiceText = file_get_contents($this->getRootPath().DIRECTORY_SEPARATOR.$choice['contentPath']);
                         $entity = $this->om->getRepository('Claroline\SurveyBundle\Entity\Choice')->findOneByContent($choiceText);

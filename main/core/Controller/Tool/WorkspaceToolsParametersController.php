@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\Tool\OrderedTool;
 use Claroline\CoreBundle\Entity\Tool\Tool;
@@ -23,7 +24,6 @@ use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\ToolManager;
 use Claroline\CoreBundle\Manager\ToolRightsManager;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Form\FormFactory;
@@ -205,13 +205,13 @@ class WorkspaceToolsParametersController extends AbstractParametersController
             $order = $orderedTool->getOrder();
             $otherOrder = $otherOrderedTool->getOrder();
 
-            if ($mode === 'previous') {
+            if ('previous' === $mode) {
                 if ($otherOrder > $order) {
                     $newOrder = $otherOrder;
                 } else {
                     $newOrder = $otherOrder + 1;
                 }
-            } elseif ($mode === 'next') {
+            } elseif ('next' === $mode) {
                 if ($otherOrder > $order) {
                     $newOrder = $otherOrder - 1;
                 } else {

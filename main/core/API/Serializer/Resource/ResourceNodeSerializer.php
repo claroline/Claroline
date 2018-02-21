@@ -2,18 +2,18 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\BreadcrumbManager;
 use Claroline\CoreBundle\Manager\MaskManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceMenuManager;
 use Claroline\CoreBundle\Manager\RightsManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -144,7 +144,7 @@ class ResourceNodeSerializer
         $unauthorizedKeys = array_keys($serializedNode);
 
         // 'poster' is a key that can be overridden by another plugin. For example: UrlBundle
-        if (($key = array_search('poster', $unauthorizedKeys)) !== false) {
+        if (false !== ($key = array_search('poster', $unauthorizedKeys))) {
             unset($unauthorizedKeys[$key]);
         }
 

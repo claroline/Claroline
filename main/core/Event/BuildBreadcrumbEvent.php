@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Event;
 
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
+use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 class BuildBreadcrumbEvent extends Event implements MandatoryEventInterface, DataConveyorEventInterface

@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\User;
 
-use Claroline\CoreBundle\Annotations\ApiMeta;
-use Claroline\CoreBundle\API\Crud;
-use Claroline\CoreBundle\API\Options;
-use Claroline\CoreBundle\Controller\APINew\AbstractCrudController;
+use Claroline\AppBundle\Annotations\ApiMeta;
+use Claroline\AppBundle\API\Crud;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasParentTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasUsersTrait;

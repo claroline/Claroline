@@ -11,16 +11,16 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Form\TermsOfServiceType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Library\Logger\FileLogger;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Claroline\CoreBundle\Manager\UserManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LogLevel;
 use Symfony\Component\Form\FormFactory;
@@ -122,7 +122,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user->getInitDate() === null) {
+        if (null === $user->getInitDate()) {
             $this->userManager->setUserInitDate($user);
         }
 
@@ -280,9 +280,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private function getUser(Request $request)
     {
         if ($this->configurationHandler->getParameter('terms_of_service')
-            && $request->get('_route') !== 'claroline_locale_change'
-            && $request->get('_route') !== 'claroline_locale_select'
-            && $request->get('_route') !== 'bazinga_exposetranslation_js'
+            && 'claroline_locale_change' !== $request->get('_route')
+            && 'claroline_locale_select' !== $request->get('_route')
+            && 'bazinga_exposetranslation_js' !== $request->get('_route')
             && ($token = $this->tokenStorage->getToken())
             && ($user = $token->getUser())
             && $user instanceof User

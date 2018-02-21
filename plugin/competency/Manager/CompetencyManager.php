@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Manager;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Doctrine\Common\Collections\ArrayCollection;
 use HeVinci\CompetencyBundle\Entity\Ability;
 use HeVinci\CompetencyBundle\Entity\Competency;
@@ -364,7 +364,7 @@ class CompetencyManager
         $link = $this->competencyAbilityRepo->findOneByTerms($parent, $ability);
         $this->om->remove($link);
 
-        if ($linkCount === 1) {
+        if (1 === $linkCount) {
             $this->om->remove($ability);
         }
 

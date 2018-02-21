@@ -17,7 +17,7 @@ class ExistingAbilityValidatorTest extends UnitTestCase
     {
         $this->context = $this->mock('Symfony\Component\Validator\ExecutionContextInterface');
         $this->repo = $this->mock('HeVinci\CompetencyBundle\Repository\AbilityRepository');
-        $om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $om->expects($this->any())
             ->method('getRepository')
             ->with('HeVinciCompetencyBundle:Ability')

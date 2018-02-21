@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Widget\WidgetDisplayConfig;
@@ -19,7 +20,6 @@ use Claroline\CoreBundle\Entity\Widget\WidgetInstance;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -33,6 +33,7 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
 {
     private $om;
     private $container;
+
     /**
      * @DI\InjectParams({
      *      "om"        = @DI\Inject("claroline.persistence.object_manager"),
@@ -95,7 +96,7 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
 
     public function supports($type)
     {
-        return $type === 'yml' ? true : false;
+        return 'yml' === $type ? true : false;
     }
 
     public function validate(array $data)
@@ -110,7 +111,7 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                 if (isset($widgets['widgets'])) {
                     foreach ($widgets['widgets'] as $widget) {
                         foreach ($this->getListImporters() as $importer) {
-                            if ($importer->getName() === $widget['widget']['type']) {
+                            if ($widget['widget']['type'] === $importer->getName()) {
                                 $toolImporter = $importer;
                             }
                         }
@@ -261,7 +262,7 @@ class HomeImporter extends Importer implements ConfigurationInterface, RichTextI
                 $widgetImporter = null;
 
                 foreach ($this->getListImporters() as $importer) {
-                    if ($importer->getName() === $widget['widget']['type']) {
+                    if ($widget['widget']['type'] === $importer->getName()) {
                         $widgetImporter = $importer;
                     }
                 }

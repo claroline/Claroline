@@ -2,10 +2,10 @@
 
 namespace UJM\ExoBundle\Manager\Attempt;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use UJM\ExoBundle\Entity\Attempt\Paper;
@@ -321,9 +321,9 @@ class PaperManager
         $scores = $this->getPapersScores($papers, $scoreOn);
 
         $result = new \stdClass();
-        $result->min = count($scores) === 0 ? 0 : min($scores);
-        $result->max = count($scores) === 0 ? 0 : max($scores);
-        $average = count($scores) === 0 ? 0 : array_sum($scores) / count($scores);
+        $result->min = 0 === count($scores) ? 0 : min($scores);
+        $result->max = 0 === count($scores) ? 0 : max($scores);
+        $average = 0 === count($scores) ? 0 : array_sum($scores) / count($scores);
         $result->avg = $average !== floor($average) ? floatval(number_format($average, 2)) : $average;
 
         return $result;
@@ -451,7 +451,7 @@ class PaperManager
             if (is_null($successScore)) {
                 $status = AbstractResourceEvaluation::STATUS_COMPLETED;
             } else {
-                $percentScore = $totalScoreOn === 100 ? $score : $this->calculateScore($paper, 100);
+                $percentScore = 100 === $totalScoreOn ? $score : $this->calculateScore($paper, 100);
                 $status = $percentScore >= $successScore ?
                     AbstractResourceEvaluation::STATUS_PASSED :
                     AbstractResourceEvaluation::STATUS_FAILED;

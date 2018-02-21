@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\API\Finder;
 
-use Claroline\CoreBundle\API\FinderInterface;
+use Claroline\AppBundle\API\FinderInterface;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\QueryBuilder;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -56,7 +56,7 @@ class WorkspaceFinder implements FinderInterface
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
-        if (php_sapi_name() !== 'cli' && !$this->authChecker->isGranted('ROLE_ADMIN')) {
+        if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN')) {
             /** @var User $currentUser */
             $currentUser = $this->tokenStorage->getToken()->getUser();
             $qb->leftJoin('obj.organizations', 'uo');
@@ -73,11 +73,11 @@ class WorkspaceFinder implements FinderInterface
 
         foreach ($searches as $filterName => $filterValue) {
             //remap some filters...
-            if ($filterName === 'meta.personal') {
+            if ('meta.personal' === $filterName) {
                 $filterName = 'personal';
             }
 
-            if ($filterName === 'meta.model') {
+            if ('meta.model' === $filterName) {
                 $filterName = 'model';
             }
 

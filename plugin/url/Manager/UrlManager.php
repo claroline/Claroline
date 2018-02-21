@@ -2,7 +2,7 @@
 
 namespace HeVinci\UrlBundle\Manager;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use HeVinci\UrlBundle\Entity\Url;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
@@ -36,7 +36,7 @@ class UrlManager
         $baseUrl = null;
         $url->setInternalUrl(false);
 
-        if ($this->request->getCurrentRequest() !== null) {
+        if (null !== $this->request->getCurrentRequest()) {
             $baseUrl = $this->request->getCurrentRequest()->getSchemeAndHttpHost().$this->request->getCurrentRequest()->getScriptName();
             $baseUrlEscapeQuote = preg_quote($baseUrl);
 

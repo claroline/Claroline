@@ -11,9 +11,9 @@
 
 namespace Claroline\CoreBundle\DataFixtures\Required\Data;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\DataFixtures\Required\RequiredFixture;
 use Claroline\CoreBundle\Entity\Activity\ActivityRuleAction;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 
 /**
  * Resource types data fixture.

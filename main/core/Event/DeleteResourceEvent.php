@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Event;
 
+use Claroline\AppBundle\Event\MandatoryEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Symfony\Component\EventDispatcher\Event;
 

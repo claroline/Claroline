@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener\Log;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\Log;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
@@ -25,7 +26,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Claroline\CoreBundle\Manager\Resource\ResourceNodeManager;
 use Claroline\CoreBundle\Manager\RoleManager;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -85,13 +85,13 @@ class LogListener
         $doerType = null;
 
         //Event can override the doer
-        if ($event->getDoer() === null) {
+        if (null === $event->getDoer()) {
             $token = $this->tokenStorage->getToken();
-            if ($token === null) {
+            if (null === $token) {
                 $doer = null;
                 $doerType = Log::doerTypePlatform;
             } else {
-                if ($token->getUser() === 'anon.') {
+                if ('anon.' === $token->getUser()) {
                     $doer = null;
                     $doerType = Log::doerTypeAnonymous;
                 } else {
@@ -126,7 +126,7 @@ class LogListener
 
         //Object properties
         $log->setOwner($event->getOwner());
-        if (!($event->getAction() === LogUserDeleteEvent::ACTION && $event->getReceiver() === $doer)) {
+        if (!(LogUserDeleteEvent::ACTION === $event->getAction() && $event->getReceiver() === $doer)) {
             //Prevent self delete case
             //Sometimes, the entity manager has been cleared, so we must merge the doer.
             if ($doer) {
@@ -138,11 +138,11 @@ class LogListener
 
         $log->setDoerIp($doerIp);
         $log->setDoerSessionId($doerSessionId);
-        if ($event->getAction() !== LogUserDeleteEvent::ACTION) {
+        if (LogUserDeleteEvent::ACTION !== $event->getAction()) {
             //Prevent user delete case
             $log->setReceiver($event->getReceiver());
         }
-        if ($event->getAction() !== LogGroupDeleteEvent::ACTION) {
+        if (LogGroupDeleteEvent::ACTION !== $event->getAction()) {
             if ($receiverGroup = $event->getReceiverGroup()) {
                 $this->om->merge($receiverGroup);
             }
@@ -150,30 +150,30 @@ class LogListener
         }
         if (
             !(
-                $event->getAction() === LogResourceDeleteEvent::ACTION &&
+                LogResourceDeleteEvent::ACTION === $event->getAction() &&
                 $event->getResource() === $event->getWorkspace()
             )
         ) {
             //Prevent delete workspace case
             $log->setWorkspace($event->getWorkspace());
         }
-        if ($event->getAction() !== LogResourceDeleteEvent::ACTION) {
+        if (LogResourceDeleteEvent::ACTION !== $event->getAction()) {
             //Prevent delete resource case
             $log->setResourceNode($event->getResource());
         }
-        if ($event->getAction() !== LogWorkspaceRoleDeleteEvent::ACTION) {
+        if (LogWorkspaceRoleDeleteEvent::ACTION !== $event->getAction()) {
             //Prevent delete role case
             $log->setRole($event->getRole());
         }
 
-        if ($doer !== null) {
+        if (null !== $doer) {
             $platformRoles = $this->roleManager->getPlatformRoles($doer);
 
             foreach ($platformRoles as $platformRole) {
                 $log->addDoerPlatformRole($platformRole);
             }
 
-            if ($event->getWorkspace() !== null) {
+            if (null !== $event->getWorkspace()) {
                 $workspaceRoles = $this->roleManager->getWorkspaceRolesForUser($doer, $event->getWorkspace());
 
                 foreach ($workspaceRoles as $workspaceRole) {
@@ -181,18 +181,18 @@ class LogListener
                 }
             }
         }
-        if ($event->getResource() !== null) {
+        if (null !== $event->getResource()) {
             $log->setResourceType($event->getResource()->getResourceType());
         }
 
         //Json_array properties
         $details = $event->getDetails();
 
-        if ($details === null) {
+        if (null === $details) {
             $details = [];
         }
 
-        if ($doer !== null) {
+        if (null !== $doer) {
             $details['doer'] = [
                 'firstName' => $doer->getFirstName(),
                 'lastName' => $doer->getLastName(),
@@ -228,7 +228,7 @@ class LogListener
      */
     public function isARepeat(LogGenericEvent $event)
     {
-        if ($this->tokenStorage->getToken() === null) {
+        if (null === $this->tokenStorage->getToken()) {
             //Only if have a user session;
             return false;
         }
@@ -242,7 +242,7 @@ class LogListener
             $now = time();
 
             //if ($session->get($event->getAction()) != null) {
-            if ($session->get($event->getLogSignature()) !== null) {
+            if (null !== $session->get($event->getLogSignature())) {
                 $oldArray = json_decode($session->get($event->getLogSignature()));
                 $oldSignature = $oldArray->logSignature;
                 $oldTime = $oldArray->time;
@@ -303,7 +303,7 @@ class LogListener
             if (is_null($user) || is_string($user) || $user !== $event->getResource()->getCreator()) {
                 $this->resourceNodeManager->addView($event->getResource());
             }
-            if ($logCreated && !empty($user) && $user !== 'anon.' && $event->getResource()->getResourceType()->getName() !== 'directory') {
+            if ($logCreated && !empty($user) && 'anon.' !== $user && 'directory' !== $event->getResource()->getResourceType()->getName()) {
                 $this->resourceEvalManager->updateResourceUserEvaluationData(
                     $event->getResource(),
                     $user,

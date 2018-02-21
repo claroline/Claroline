@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use Claroline\CoreBundle\API\FinderProvider;
+use Claroline\AppBundle\API\FinderProvider;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

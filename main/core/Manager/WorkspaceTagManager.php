@@ -11,13 +11,13 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\RelWorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTagHierarchy;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\RelWorkspaceTagRepository;
 use Claroline\CoreBundle\Repository\WorkspaceRepository;
 use Claroline\CoreBundle\Repository\WorkspaceTagHierarchyRepository;
@@ -439,7 +439,7 @@ class WorkspaceTagManager
 
         // create an array : tagId => [direct_children_id]
         foreach ($tagsHierarchy as $tagHierarchy) {
-            if ($tagHierarchy->getLevel() === 1) {
+            if (1 === $tagHierarchy->getLevel()) {
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
                     $hierarchy[$tagHierarchy->getParent()->getId()] = [];
@@ -519,7 +519,7 @@ class WorkspaceTagManager
 
         // create an array : tagId => [direct_children_id]
         foreach ($tagsHierarchy as $tagHierarchy) {
-            if ($tagHierarchy->getLevel() === 1) {
+            if (1 === $tagHierarchy->getLevel()) {
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
                     $hierarchy[$tagHierarchy->getParent()->getId()] = [];
@@ -598,7 +598,7 @@ class WorkspaceTagManager
 
         // create an array : tagId => [direct_children_id]
         foreach ($tagsHierarchy as $tagHierarchy) {
-            if ($tagHierarchy->getLevel() === 1) {
+            if (1 === $tagHierarchy->getLevel()) {
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
                     $hierarchy[$tagHierarchy->getParent()->getId()] = [];

@@ -23,7 +23,7 @@ class AnnouncementManagerTest extends MockeryTestCase
     public function setUp()
     {
         parent::setUp();
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->announcementRepo = $this->mock('Claroline\AnnouncementBundle\Repository\AnnouncementRepository');
     }
 
@@ -102,7 +102,7 @@ class AnnouncementManagerTest extends MockeryTestCase
             ->once()
             ->andReturn($this->announcementRepo);
 
-        if (count($mockedMethods) === 0) {
+        if (0 === count($mockedMethods)) {
             return new AnnouncementManager($this->om);
         }
 

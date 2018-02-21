@@ -11,12 +11,12 @@
 
 namespace Claroline\MessageBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\MailManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\MessageBundle\Entity\Message;
 use Claroline\MessageBundle\Entity\UserMessage;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -104,7 +104,7 @@ class MessageManager
         $setAsSent = true,
         $sendMail = true
     ) {
-        if (substr($receiversString = $message->getTo(), -1, 1) === ';') {
+        if (';' === substr($receiversString = $message->getTo(), -1, 1)) {
             $receiversString = substr_replace($receiversString, '', -1);
         }
 
@@ -118,10 +118,10 @@ class MessageManager
 
         //split the string of target into different array.
         foreach ($receiversNames as $receiverName) {
-            if (substr($receiverName, 0, 1) === '{') {
+            if ('{' === substr($receiverName, 0, 1)) {
                 $groupNames[] = trim($receiverName, '{}');
             } else {
-                if (substr($receiverName, 0, 1) === '[') {
+                if ('[' === substr($receiverName, 0, 1)) {
                     $workspaceCodes[] = trim($receiverName, '[]');
                 } else {
                     $usernames[] = $receiverName;
@@ -226,7 +226,7 @@ class MessageManager
      */
     public function getReceivedMessagesPager(User $receiver, $search = '', $page = 1)
     {
-        $query = $search === '' ?
+        $query = '' === $search ?
             $this->userMessageRepo->findReceived($receiver, false) :
             $this->userMessageRepo->findReceivedByObjectOrSender($receiver, $search, false);
 
@@ -235,7 +235,7 @@ class MessageManager
 
     public function getReceivedMessages(User $receiver, $search = '')
     {
-        $query = $search === '' ?
+        $query = '' === $search ?
         $this->userMessageRepo->findReceived($receiver, false) :
         $this->userMessageRepo->findReceivedByObjectOrSender($receiver, $search, false);
 
@@ -251,7 +251,7 @@ class MessageManager
      */
     public function getSentMessagesPager(User $sender, $search = '', $page = 1)
     {
-        $query = $search === '' ?
+        $query = '' === $search ?
             $this->userMessageRepo->findSent($sender, false) :
             $this->userMessageRepo->findSentByObject($sender, $search, false);
 
@@ -260,7 +260,7 @@ class MessageManager
 
     public function getSentMessages(User $sender, $search = '', $page = 1)
     {
-        $query = $search === '' ?
+        $query = '' === $search ?
         $this->userMessageRepo->findSent($sender, false) :
         $this->userMessageRepo->findSentByObject($sender, $search, false);
 
@@ -276,7 +276,7 @@ class MessageManager
      */
     public function getRemovedMessagesPager(User $user, $search = '', $page = 1)
     {
-        $query = $search === '' ?
+        $query = '' === $search ?
             $this->userMessageRepo->findRemoved($user, false) :
             $this->userMessageRepo->findRemovedByObjectOrSender($user, $search, false);
 
@@ -285,7 +285,7 @@ class MessageManager
 
     public function getRemovedMessages(User $user, $search = '', $page = 1)
     {
-        $query = $search === '' ?
+        $query = '' === $search ?
         $this->userMessageRepo->findRemoved($user, false) :
         $this->userMessageRepo->findRemovedByObjectOrSender($user, $search, false);
 
@@ -373,12 +373,12 @@ class MessageManager
 
         foreach ($groups as $group) {
             $el = '{'.$group->getName().'}';
-            $string .= $string === '' ? $el : ';'.$el;
+            $string .= '' === $string ? $el : ';'.$el;
         }
 
         foreach ($workspaces as $workspace) {
             $el = '['.$workspace->getCode().']';
-            $string .= $string === '' ? $el : ';'.$el;
+            $string .= '' === $string ? $el : ';'.$el;
         }
 
         return $string;

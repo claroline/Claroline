@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Event;
 
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 class EncodeFileEvent extends Event implements DataConveyorEventInterface

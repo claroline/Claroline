@@ -11,6 +11,7 @@
 
 namespace Claroline\BigBlueButtonBundle\Listener;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BigBlueButtonBundle\Entity\BBB;
 use Claroline\BigBlueButtonBundle\Form\BBBType;
 use Claroline\BigBlueButtonBundle\Manager\BBBManager;
@@ -22,7 +23,6 @@ use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
 use Symfony\Component\Form\FormFactory;
@@ -196,7 +196,7 @@ class BBBListener
         $data = $event->getData();
         $type = $data['type'];
 
-        if ($type === 'workspace') {
+        if ('workspace' === $type) {
             $workspace = $data['workspace'];
             $bbbList = $this->bbbManager->getBBBWithDatesByWorkspace($workspace);
 

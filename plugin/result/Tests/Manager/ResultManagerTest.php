@@ -11,8 +11,8 @@
 
 namespace Claroline\ResultBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\ResultBundle\Entity\Result;
 use Claroline\ResultBundle\Testing\Persister;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

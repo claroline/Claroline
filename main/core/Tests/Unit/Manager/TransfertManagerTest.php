@@ -13,10 +13,9 @@ namespace Claroline\CoreBundle\Manager;
 
 use Claroline\CoreBundle\Library\Testing\MockeryTestCase;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\HomeImporter;
-use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets\TextImporter;
 use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\ResourceManagerImporter;
+use Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\Tools\Widgets\TextImporter;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
-use Symfony\Component\Yaml\Yaml;
 
 class TransfertManagerTest extends MockeryTestCase
 {
@@ -27,48 +26,48 @@ class TransfertManagerTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
 
         //workspace properties
         $this->workspacePropertiesImporter = $this
             ->mock(
                 'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\WorkspacePropertiesImporter',
-                array($this->om)
+                [$this->om]
             );
 
         //users importer
         $this->usersImporter = $this
             ->mock(
                 'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\UsersImporter',
-                array($this->om)
+                [$this->om]
             );
 
         //groups importer
         $this->groupsImporter = $this
             ->mock(
                 'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\GroupsImporter',
-                array($this->om)
+                [$this->om]
             );
 
         //roles importer
         $this->rolesImporter = $this
             ->mock(
                 'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\RolesImporter',
-                array($this->om)
+                [$this->om]
             );
 
         //roles importer
         $this->toolsImporter = $this
             ->mock(
                 'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\ToolsImporter',
-                array($this->om)
+                [$this->om]
             );
 
         //roles importer
         $this->ownerImporter = $this
             ->mock(
                 'Claroline\CoreBundle\Library\Transfert\ConfigurationBuilders\OwnerImporter',
-                array($this->om)
+                [$this->om]
             );
 
         $this->manager = new TransferManager();
@@ -90,11 +89,9 @@ class TransfertManagerTest extends MockeryTestCase
     public function testValidateGoesWell()
     {
         //@todo mock merger
-//        $ds = DIRECTORY_SEPARATOR;
         $path = __DIR__.'/../../Stub/transfert/valid/full';
         $resolver = new Resolver($path);
         $data = $resolver->resolve();
-//        $data = Yaml::parse(file_get_contents($path . $ds . 'manifest.yml'));
 
         //workspace properties
         $properties['properties'] = $data['properties'];

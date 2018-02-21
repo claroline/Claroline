@@ -2,7 +2,7 @@
 
 namespace HeVinci\CompetencyBundle\Transfer\Validator;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

@@ -24,7 +24,7 @@ class GroupsImporterTest extends MockeryTestCase
     {
         parent::setUp();
 
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->importer = new GroupsImporter($this->om);
     }
 
@@ -36,7 +36,7 @@ class GroupsImporterTest extends MockeryTestCase
         //stub manifest
         $rolefile = __DIR__.'/../../../Stub/transfert/valid/full/roles01.yml';
         $roles = Yaml::parse(file_get_contents($rolefile));
-        $this->importer->setConfiguration(['members' => ['users' => array()], 'roles' => $roles['roles']]);
+        $this->importer->setConfiguration(['members' => ['users' => []], 'roles' => $roles['roles']]);
 
         if ($isExceptionExpected) {
             $this->setExpectedException('Symfony\Component\Config\Definition\Exception\InvalidConfigurationException');
@@ -57,42 +57,42 @@ class GroupsImporterTest extends MockeryTestCase
 
     public function validateProvider()
     {
-        return array(
+        return [
             //valid
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/groups01.yml',
                 'isExceptionExpected' => false,
-                'databaseUsernames' => array(array('username' => 'user1'), array('username' => 'user2'), array('username' => 'user3')),
-                'names' => array(),
-            ),
+                'databaseUsernames' => [['username' => 'user1'], ['username' => 'user2'], ['username' => 'user3']],
+                'names' => [],
+            ],
             //name name1 exists in the config file
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/groups/existing_name.yml',
                 'isExceptionExpected' => true,
-                'databaseUsernames' => array(array('username' => 'user1'), array('username' => 'user2'), array('username' => 'user3')),
-                'names' => array(),
-            ),
+                'databaseUsernames' => [['username' => 'user1'], ['username' => 'user2'], ['username' => 'user3']],
+                'names' => [],
+            ],
             //group name already exist in the database
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/groups01.yml',
                 'isExceptionExpected' => true,
-                'databaseUsernames' => array(array('username' => 'user1'), array('username' => 'user2'), array('username' => 'user3')),
-                'names' => array('name1'),
-            ),
+                'databaseUsernames' => [['username' => 'user1'], ['username' => 'user2'], ['username' => 'user3']],
+                'names' => ['name1'],
+            ],
             //username (user1) does not exists
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/valid/full/groups01.yml',
                 'isExceptionExpected' => true,
-                'databaseUsernames' => array(array('username' => 'user2'), array('username' => 'user3')),
-                'names' => array(),
-            ),
+                'databaseUsernames' => [['username' => 'user2'], ['username' => 'user3']],
+                'names' => [],
+            ],
             //the role does not exists
-            array(
+            [
                 'path' => __DIR__.'/../../../Stub/transfert/invalid/groups/unknown_role.yml',
                 'isExceptionExpected' => true,
-                'databaseUsernames' => array(array('username' => 'user1'), array('username' => 'user2'), array('username' => 'user3')),
-                'names' => array(),
-            ),
-        );
+                'databaseUsernames' => [['username' => 'user1'], ['username' => 'user2'], ['username' => 'user3']],
+                'names' => [],
+            ],
+        ];
     }
 }

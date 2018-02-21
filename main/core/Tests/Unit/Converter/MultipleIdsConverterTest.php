@@ -26,7 +26,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
     {
         $this->request = $this->mock('Symfony\Component\HttpFoundation\Request');
         $this->configuration = $this->mock('Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter');
-        $this->om = $this->mock('Claroline\CoreBundle\Persistence\ObjectManager');
+        $this->om = $this->mock('Claroline\AppBundle\Persistence\ObjectManager');
         $this->converter = new MultipleIdsConverter($this->om);
     }
 
@@ -44,7 +44,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException       Claroline\CoreBundle\Converter\InvalidConfigurationException
+     * @expectedException       \Claroline\CoreBundle\Converter\InvalidConfigurationException
      * @expectedExceptionCode   1
      */
     public function testApplyThrowsAnExceptionIfTheNameParameterIsMissing()
@@ -54,7 +54,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException       Claroline\CoreBundle\Converter\InvalidConfigurationException
+     * @expectedException       \Claroline\CoreBundle\Converter\InvalidConfigurationException
      * @expectedExceptionCode   2
      */
     public function testApplyThrowsAnExceptionIfTheClassParameterIsMissing()
@@ -76,7 +76,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\BadRequestHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\BadRequestHttpException
      */
     public function testApplyThrowsAnExceptionIfTheIdsParameterIsNotAnArray()
     {
@@ -89,7 +89,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
     }
 
     /**
-     * @expectedException Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @expectedException \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public function testApplyThrowsAnExceptionIfSomeEntitiesCannotBeRetreived()
     {
@@ -100,7 +100,7 @@ class MultipleIdsConverterTest extends MockeryTestCase
         $this->request->query->set('ids', [1, 2]);
         $this->om->shouldReceive('findByIds')
             ->once()
-            ->andThrow('Claroline\CoreBundle\Persistence\MissingObjectException');
+            ->andThrow('Claroline\AppBundle\Persistence\MissingObjectException');
         $this->converter->apply($this->request, $this->configuration);
     }
 

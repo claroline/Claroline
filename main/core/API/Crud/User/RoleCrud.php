@@ -2,8 +2,8 @@
 
 namespace Claroline\CoreBundle\API\Crud\User;
 
+use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Entity\Role;
-use Claroline\CoreBundle\Event\Crud\CreateEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

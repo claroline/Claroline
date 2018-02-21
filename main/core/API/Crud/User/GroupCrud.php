@@ -2,9 +2,9 @@
 
 namespace Claroline\CoreBundle\API\Crud\User;
 
+use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
-use Claroline\CoreBundle\Event\Crud\CreateEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 

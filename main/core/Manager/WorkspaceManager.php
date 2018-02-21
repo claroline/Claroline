@@ -11,6 +11,9 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Event\NotPopulatedEventException;
+use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
@@ -28,13 +31,10 @@ use Claroline\CoreBundle\Entity\Workspace\WorkspaceFavourite;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRecent;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue;
-use Claroline\CoreBundle\Event\NotPopulatedEventException;
-use Claroline\CoreBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Library\Transfert\Resolver;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Pager\PagerFactory;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\OrderedToolRepository;
 use Claroline\CoreBundle\Repository\ResourceNodeRepository;
 use Claroline\CoreBundle\Repository\ResourceRightsRepository;
@@ -227,7 +227,7 @@ class WorkspaceManager
 
     public function createWorkspace(Workspace $workspace)
     {
-        if (count($workspace->getOrganizations()) === 0) {
+        if (0 === count($workspace->getOrganizations())) {
             $organizationManager = $this->container->get('claroline.manager.organization.organization_manager');
             $default = $organizationManager->getDefault();
             $workspace->addOrganization($default);
@@ -773,7 +773,7 @@ class WorkspaceManager
     {
         $user = $this->userRepo->findBy(['personalWorkspace' => $workspace]);
 
-        return (count($user) === 1) ? $user[0] : null;
+        return (1 === count($user)) ? $user[0] : null;
     }
 
     public function addUserQueue(Workspace $workspace, User $user)
@@ -812,7 +812,7 @@ class WorkspaceManager
         $role = $this->roleManager->getCollaboratorRole($workspace);
         $userRoles = $this->roleManager->getWorkspaceRolesForUser($user, $workspace);
 
-        if (count($userRoles) === 0) {
+        if (0 === count($userRoles)) {
             $this->roleManager->associateRole($user, $role);
             $this->dispatcher->dispatch(
                 'claroline_workspace_register_user',
@@ -864,7 +864,7 @@ class WorkspaceManager
             $registrationValidation = $workspace[4];
             $selfUnregistration = $workspace[5];
 
-            if (isset($workspace[6]) && trim($workspace[6]) !== '') {
+            if (isset($workspace[6]) && '' !== trim($workspace[6])) {
                 $user = $this->om
                     ->getRepository('ClarolineCoreBundle:User')
                     ->findOneBy([
@@ -953,7 +953,7 @@ class WorkspaceManager
                 $logger('UOW: '.$this->om->getUnitOfWork()->size());
             }
 
-            if ($i % 100 === 0) {
+            if (0 === $i % 100) {
                 $this->om->forceFlush();
                 $user = $this->om->getRepository('ClarolineCoreBundle:User')->find($user->getId());
                 $this->om->merge($user);
@@ -974,7 +974,7 @@ class WorkspaceManager
         $max = 50,
         $search = ''
     ) {
-        $workspaces = $search === '' ?
+        $workspaces = '' === $search ?
             $this->workspaceRepo->findDisplayableNonPersonalWorkspaces() :
             $this->workspaceRepo->findDisplayableNonPersonalWorkspacesBySearch($search);
 
@@ -986,7 +986,7 @@ class WorkspaceManager
         $max = 50,
         $search = ''
     ) {
-        $workspaces = $search === '' ?
+        $workspaces = '' === $search ?
             $this->workspaceRepo->findDisplayablePersonalWorkspaces() :
             $this->workspaceRepo->findDisplayablePersonalWorkspacesBySearch($search);
 
@@ -1000,7 +1000,7 @@ class WorkspaceManager
         $orderedBy = 'name',
         $order = 'ASC'
     ) {
-        $workspaces = $search === '' ?
+        $workspaces = '' === $search ?
             $this->workspaceRepo
                 ->findAllNonPersonalWorkspaces(
                     $orderedBy,
@@ -1238,7 +1238,7 @@ class WorkspaceManager
             $this->om->merge($default);
 
             foreach ($workspaces as $workspace) {
-                if (count($workspace->getOrganizations()) === 0) {
+                if (0 === count($workspace->getOrganizations())) {
                     $this->log('Add default organization for workspace '.$workspace->getCode());
                     $workspace->addOrganization($default);
                     $this->om->persist($workspace);
@@ -1335,7 +1335,7 @@ class WorkspaceManager
         $user = $newWorkspace->getCreator();
 
         if (!$user) {
-            $user = (!$user && $token && $token->getUser() !== 'anon.') ?
+            $user = (!$user && $token && 'anon.' !== $token->getUser()) ?
               $this->container->get('security.token_storage')->getToken()->getUser() :
               $this->container->get('claroline.manager.user_manager')->getDefaultUser();
         }
@@ -1352,7 +1352,7 @@ class WorkspaceManager
         }
 
         foreach ($resourceNodes as $resourceNode) {
-            if ($resourceNode->getResourceType()->getName() === 'activity' && $this->resourceManager->getResourceFromNode($resourceNode)) {
+            if ('activity' === $resourceNode->getResourceType()->getName() && $this->resourceManager->getResourceFromNode($resourceNode)) {
                 $primRes = $this->resourceManager->getResourceFromNode($resourceNode)->getPrimaryResource();
                 $parameters = $this->resourceManager->getResourceFromNode($resourceNode)->getParameters();
                 if ($primRes) {
@@ -1582,7 +1582,7 @@ class WorkspaceManager
             foreach ($rights as $right) {
                 $role = $right->getRole();
 
-                if ($role->getType() === 1) {
+                if (1 === $role->getType()) {
                     $this->container->get('claroline.manager.tool_rights_manager')->setToolRights(
                         $workspaceOrderedTool,
                         $role,
@@ -1770,7 +1770,7 @@ class WorkspaceManager
 
             $this->om->persist($createdRole);
 
-            if ($roleName === 'ROLE_WS_MANAGER') {
+            if ('ROLE_WS_MANAGER' === $roleName) {
                 $this->log('Adding role manager to user '.$user->getUsername());
                 $user->addRole($createdRole);
                 $this->om->persist($user);
@@ -1814,7 +1814,7 @@ class WorkspaceManager
         $scheduledForInsert = $uow->getScheduledEntityInsertions();
 
         foreach ($scheduledForInsert as $entity) {
-            if (get_class($entity) === 'Claroline\CoreBundle\Entity\Role') {
+            if ('Claroline\CoreBundle\Entity\Role' === get_class($entity)) {
                 if ($entity->getWorkspace()) {
                     if ($entity->getWorkspace()->getGuid() === $workspace->getGuid()) {
                         $wRoles[] = $entity;

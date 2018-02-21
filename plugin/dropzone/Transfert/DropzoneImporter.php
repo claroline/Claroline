@@ -2,10 +2,10 @@
 
 namespace Icap\DropzoneBundle\Transfert;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\RichTextInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\DropzoneBundle\Entity\Dropzone;
 use Icap\DropzoneBundle\Manager\DropzoneManager;
 use JMS\DiExtraBundle\Annotation as DI;

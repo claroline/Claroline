@@ -2,8 +2,8 @@
 
 namespace Claroline\CoreBundle\API\Serializer;
 
-use Claroline\CoreBundle\API\FinderProvider;
-use Claroline\CoreBundle\API\SerializerProvider;
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfiguration;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;

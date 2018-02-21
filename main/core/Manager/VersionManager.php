@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\Update\Version;
 use Claroline\CoreBundle\Library\PluginBundleInterface;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\VersionRepository;
 use Claroline\InstallationBundle\Bundle\InstallableInterface;
 use Composer\Json\JsonFile;
@@ -149,8 +149,8 @@ class VersionManager
 
         if ($filter) {
             foreach ($repo->getPackages() as $package) {
-                if ($package->getType() !== 'claroline-core'
-                    && $package->getType() !== 'claroline-plugin') {
+                if ('claroline-core' !== $package->getType()
+                    && 'claroline-plugin' !== $package->getType()) {
                     $repo->removePackage($package);
                 }
             }
@@ -179,19 +179,19 @@ class VersionManager
 
             if ($extra && array_key_exists('bundles', $extra)) {
                 //Otherwise convert the name in a dirty little way
-              //If it's a metapackage, check in the bundle list
-              foreach ($extra['bundles'] as $installedBundle) {
-                  if ($installedBundle === $bundle) {
-                      return new Package($package->getName(), $package->getVersion());
-                  }
-              }
+                //If it's a metapackage, check in the bundle list
+                foreach ($extra['bundles'] as $installedBundle) {
+                    if ($installedBundle === $bundle) {
+                        return new Package($package->getName(), $package->getVersion());
+                    }
+                }
             } else {
                 $bundleParts = explode('\\', $bundle);
 
-              //magic !
-              if (preg_replace('/[^A-Za-z0-9]/', '', $package->getPrettyName()) === strtolower($bundleParts[2])) {
-                  return new Package($package->getName(), $package->getVersion());
-              }
+                //magic !
+                if (preg_replace('/[^A-Za-z0-9]/', '', $package->getPrettyName()) === strtolower($bundleParts[2])) {
+                    return new Package($package->getName(), $package->getVersion());
+                }
             }
         }
     }

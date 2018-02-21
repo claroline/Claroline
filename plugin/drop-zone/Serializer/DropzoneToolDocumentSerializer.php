@@ -2,7 +2,7 @@
 
 namespace Claroline\DropZoneBundle\Serializer;
 
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\DropZoneBundle\Entity\DropzoneToolDocument;
 use JMS\DiExtraBundle\Annotation as DI;
 

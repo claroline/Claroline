@@ -11,10 +11,10 @@
 
 namespace Icap\WebsiteBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
-use Claroline\CoreBundle\Persistence\ObjectManager;
 use Icap\WebsiteBundle\Entity\Website;
 use Icap\WebsiteBundle\Entity\WebsiteOptions;
 use Icap\WebsiteBundle\Entity\WebsitePage;
@@ -138,7 +138,7 @@ class WebsiteManager
                 $entityWebsitePage->setWebsite($website);
 
                 //resource link case, need no map manifest IDs to matching resource
-                if ($websitePage['type'] === WebsitePageTypeEnum::RESOURCE_PAGE) {
+                if (WebsitePageTypeEnum::RESOURCE_PAGE === $websitePage['type']) {
                     $resource_node = null;
                     //full workspace import, external resource ID, search matching resource amongst other imported resources
                     if (isset($resourcesCreated) && isset($websitePage['resource_node_id']) && isset($resourcesCreated[$websitePage['resource_node_id']])) {
@@ -146,12 +146,12 @@ class WebsiteManager
                         if (isset($resourcesCreated[$websitePage['resource_node_id']])) {
                             $resource_node = $resourcesCreated[$websitePage['resource_node_id']]->getResourceNode();
                         }
-                    //standalone website import, ID references existing entity
+                        //standalone website import, ID references existing entity
                     } elseif (isset($websitePage['resource_node_id'])) {
                         $resource_node = $this->om->getRepository('ClarolineCoreBundle:Resource\ResourceNode')
                             ->findOneBy(['id' => $websitePage['resource_node_id']]);
                     }
-                    if ($resource_node !== null) {
+                    if (null !== $resource_node) {
                         $websitePage['resource_node'] = $resource_node;
                     }
                 }

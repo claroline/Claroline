@@ -11,18 +11,18 @@
 
 namespace  Claroline\CoreBundle\Listener\Log;
 
-use Claroline\CoreBundle\Manager\LogManager;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\Form\FormFactory;
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
-use Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType;
-use Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Log\LogWidgetConfig;
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\CopyWidgetConfigurationEvent;
-use Claroline\CoreBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Form\Log\LogDesktopWidgetConfigType;
+use Claroline\CoreBundle\Form\Log\LogWorkspaceWidgetConfigType;
+use Claroline\CoreBundle\Manager\LogManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\Form\FormFactory;
 
 /**
  * @DI\Service
@@ -46,7 +46,7 @@ class LogWidgetListener
     private $logWorkspaceWidgetConfigForm;
 
     /**
-     * @var \Claroline\CoreBundle\Persistence\ObjectManager
+     * @var \Claroline\AppBundle\Persistence\ObjectManager
      */
     private $om;
 
@@ -87,7 +87,7 @@ class LogWidgetListener
         $params = ($instance->isDesktop()) ?
             $this->logManager->getDesktopWidgetList($instance) :
             $this->logManager->getWorkspaceWidgetList($instance);
-        $view = $this->twig->render('ClarolineCoreBundle:Log:no_action_found.html.twig', array());
+        $view = $this->twig->render('ClarolineCoreBundle:Log:no_action_found.html.twig', []);
 
         if ($params && count($params['logs']) > 0) {
             $view = $this->twig->render(
@@ -110,18 +110,18 @@ class LogWidgetListener
         $instance = $event->getInstance();
         $config = $this->logManager->getLogConfig($instance);
 
-        if ($config === null) {
+        if (null === $config) {
             $config = new LogWidgetConfig();
             $config->setWidgetInstance($instance);
         }
 
         if ($instance->isDesktop()) {
-            $workspaces = array();
-            $workspacesVisibility = array();
+            $workspaces = [];
+            $workspacesVisibility = [];
             if (!$instance->isAdmin()) {
                 $workspaces = $this->workspaceManager->getWorkspacesByUserAndRoleNames(
                     $instance->getUser(),
-                    array('ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER')
+                    ['ROLE_WS_COLLABORATOR', 'ROLE_WS_MANAGER']
                 );
                 $workspacesVisibility = $this
                     ->logManager
@@ -135,23 +135,23 @@ class LogWidgetListener
                 ->create(
                     new LogDesktopWidgetConfigType(),
                     $workspacesVisibility,
-                    array('workspaces' => $workspaces)
+                    ['workspaces' => $workspaces]
                 );
             $content = $this->twig->render(
                 'ClarolineCoreBundle:Log:config_desktop_widget_form.html.twig',
-                array(
+                [
                     'form' => $form->createView(),
                     'instance' => $instance,
-                )
+                ]
             );
         } else {
             $form = $this->formFactory->create($this->logWorkspaceWidgetConfigForm, $config);
             $content = $this->twig->render(
                 'ClarolineCoreBundle:Log:config_workspace_widget_form.html.twig',
-                array(
+                [
                     'form' => $form->createView(),
                     'instance' => $instance,
-                )
+                ]
             );
         }
 
