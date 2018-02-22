@@ -328,7 +328,7 @@ class WorkspaceRepository extends EntityRepository
      */
     public function findByUserAndRoleNamesNotIn(User $user, array $roleNames, array $restrictionIds = null)
     {
-        if ($restrictionIds === null || count($restrictionIds) === 0) {
+        if (null === $restrictionIds || 0 === count($restrictionIds)) {
             return $this->findByUserAndRoleNames($user, $roleNames);
         }
 

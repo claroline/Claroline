@@ -36,6 +36,10 @@
                 {{ url }}
             </div>
             {% endif %}
+            <h3 class="panel-title">{{ 'open_url'|trans({}, 'platform') }}</h3> <br />
+            <div class="alert alert-info">
+                {{ url('claro_workspace_open_slug', {'slug': workspace.getSlug()}) }}
+            </div>
         </div>
         <div class="panel-footer text-right">
             {% if is_granted('DELETE', workspace) and workspace != user.personalWorkspace %}

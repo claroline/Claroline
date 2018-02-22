@@ -89,6 +89,12 @@ class Workspace
     protected $code;
 
     /**
+     * @Gedmo\Slug(fields={"code"})
+     * @ORM\Column(length=128, unique=true)
+     */
+    private $slug;
+
+    /**
      * @ORM\Column(type="string", nullable=false)
      *
      * @Serializer\Groups({"api_workspace", "api_workspace_min"})
@@ -797,5 +803,15 @@ class Workspace
     public function setDisabledNotifications($disabledNotifications)
     {
         $this->disabledNotifications = $disabledNotifications;
+    }
+
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 }
