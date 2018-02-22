@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Security;
 
+use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
