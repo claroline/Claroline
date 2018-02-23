@@ -14,7 +14,6 @@ namespace Claroline\DevBundle\Command;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Yaml\Yaml;
 
 class TranslationIntegrityCommand extends ContainerAwareCommand
 {
@@ -61,7 +60,7 @@ class TranslationIntegrityCommand extends ContainerAwareCommand
         $duplicates = [];
 
         foreach ($translationFiles as $translationFile) {
-            $translations = Yaml::parse($translationFile);
+            $translations = json_decode(file_get_contents($translationFile), true);
             $line = 0;
 
             if (!$translations) {
