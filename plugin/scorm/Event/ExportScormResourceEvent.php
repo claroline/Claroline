@@ -2,8 +2,8 @@
 
 namespace Claroline\ScormBundle\Event;
 
+use Claroline\AppBundle\Event\DataConveyorEventInterface;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
-use Claroline\CoreBundle\Event\DataConveyorEventInterface;
 use Symfony\Component\EventDispatcher\Event;
 
 class ExportScormResourceEvent extends Event implements DataConveyorEventInterface
