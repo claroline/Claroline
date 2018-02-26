@@ -98,6 +98,11 @@ class CursusRegistrationController extends Controller
      *     name="claro_cursus_user_sessions_management",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "user",
+     *     class="ClarolineCoreBundle:User",
+     *     options={"mapping": {"user": "uuid"}}
+     * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
      * @EXT\Template()
      */
@@ -304,7 +309,7 @@ class CursusRegistrationController extends Controller
         }
 
         return new RedirectResponse(
-            $this->router->generate('claro_cursus_user_sessions_management', ['user' => $user->getId()])
+            $this->router->generate('claro_cursus_user_sessions_management', ['user' => $user->getUuid()])
         );
     }
 

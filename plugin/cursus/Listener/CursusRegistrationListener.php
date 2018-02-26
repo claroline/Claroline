@@ -161,7 +161,7 @@ class CursusRegistrationListener
         $user = $event->getUser();
         $url = $this->router->generate(
             'claro_cursus_user_sessions_management',
-            ['user' => $user->getId()]
+            ['user' => $user->getUuid()]
         );
 
         $menu = $event->getMenu();

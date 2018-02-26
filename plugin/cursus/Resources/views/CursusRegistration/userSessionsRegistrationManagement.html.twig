@@ -25,7 +25,7 @@
         macros.breadcrumbs([
             {
                 'name': 'user_sessions_management'|trans({}, 'cursus'),
-                'href': path('claro_cursus_user_sessions_management', {'user': user.getId()})
+                'href': path('claro_cursus_user_sessions_management', {'user': user.getUuid()})
             },
             {
                 'name': pageTitle,
@@ -85,7 +85,7 @@
         >
             {{ 'ok'|trans({}, 'platform') }}
         </button>
-        <a href="{{ path('claro_cursus_user_sessions_management', {'user': user.getId()}) }}"
+        <a href="{{ path('claro_cursus_user_sessions_management', {'user': user.getUuid()}) }}"
            class="btn btn-default"
         >
             {{ 'cancel'|trans({}, 'platform') }}
