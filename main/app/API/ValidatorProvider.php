@@ -160,7 +160,13 @@ class ValidatorProvider
      */
     public function toObject(array $data)
     {
-        return json_decode(json_encode($data));
+        $data = json_decode(json_encode($data));
+
+        if ($data === []) {
+            $data = new \StdClass();
+        }
+
+        return $data;
     }
 
     //only if uniqueFields in data
