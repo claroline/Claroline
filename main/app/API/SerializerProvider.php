@@ -181,8 +181,8 @@ class SerializerProvider
     {
         $schema = $this->getSchema($class);
 
-        if (isset($schema->claroIds)) {
-            return $schema->claroIds;
+        if (isset($schema->claroline)) {
+            return $schema->claroline->ids;
         }
 
         return [];
@@ -203,7 +203,7 @@ class SerializerProvider
             $url = $serializer->getSchema();
             $path = explode('/', $url);
             $absolutePath = $this->rootDir.'/vendor/claroline/distribution/'
-            .$path[1].'/'.$path[2].'/Resources/schema/'.$path[3];
+            .$path[1].'/'.$path[2].'/Resources/schemas/'.$path[3];
 
             return $this->loadSchema($absolutePath);
         }

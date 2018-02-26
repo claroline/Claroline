@@ -166,9 +166,15 @@ abstract class AbstractCrudController extends AbstractApiController
      */
     public function updateAction($id, Request $request, $class)
     {
+        $data = $this->decodeRequest($request);
+
+        if (!isset($data['id'])) {
+            $data['id'] = $id;
+        }
+
         $object = $this->crud->update(
             $class,
-            $this->decodeRequest($request),
+            $data,
             $this->options['update']
         );
 

@@ -37,6 +37,11 @@ class Create extends AbstractAction
         return ['$root' => 'Claroline\CoreBundle\Entity\User'];
     }
 
+    public function getMode()
+    {
+        return self::MODE_CREATE;
+    }
+
     /**
      * return an array with the following element:
      * - section

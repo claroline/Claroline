@@ -31,7 +31,7 @@ interface AdapterInterface
      *
      * @return array
      */
-    public function explainSchema(\stdClass $json);
+    public function explainSchema(\stdClass $json, $mode);
 
     /**
      * Explain how to build the schema when using an identifier from schema.

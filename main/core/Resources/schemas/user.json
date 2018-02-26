@@ -37,11 +37,14 @@
       "items": {
         "oneOf": [
           {
-              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schema/group.json"
+              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/group.json"
           }
         ]
       }
     }
   },
-  "claroIds": ["id", "email", "username"]
+  "claroline": {
+    "requiredAtCreation": ["email", "firstName", "lastName", "username", "plainPassword"],
+    "ids": ["id", "email", "username"]
+  }
 }

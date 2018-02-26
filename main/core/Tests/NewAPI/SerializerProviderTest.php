@@ -61,9 +61,14 @@ class SerializerProviderTest extends TransactionalTestCase
                     $object = $this->provider->deserialize($class, json_decode($data, true));
                     //can we serialize it ?
                     $data = $this->provider->serialize($object);
+
+                    if ('Claroline\CoreBundle\Entity\User' === $class) {
+                        $data['plainPassword'] = '123';
+                    }
                     //is the result... valid ?
                     $errors = $this->validator->validate($class, $data, ValidatorProvider::CREATE);
-                    $this->assertTrue(0 === count($errors)/*, print_r([$this->validator->toObject($data), $errors], true)*/);
+
+                    $this->assertTrue(0 === count($errors));
                 }
             }
         } else {

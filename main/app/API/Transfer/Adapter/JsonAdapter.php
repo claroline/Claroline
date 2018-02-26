@@ -21,7 +21,7 @@ class JsonAdapter implements AdapterInterface
         return ['application/json', 'json'];
     }
 
-    public function explainSchema(\stdClass $schema)
+    public function explainSchema(\stdClass $schema, $mode)
     {
         return $schema;
     }

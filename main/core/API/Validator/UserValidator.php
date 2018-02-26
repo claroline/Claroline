@@ -76,9 +76,8 @@ class UserValidator implements ValidatorInterface
             ->setParameter('value', $propValue);
 
         if (isset($userId)) {
-            $qb
-                ->andWhere('user.uuid != :uuid')
-                ->setParameter('uuid', $userId);
+            $parameter = is_numeric($userId) ? 'id' : 'uuid';
+            $qb->andWhere("user.{$parameter} != :{$parameter}")->setParameter($parameter, $userId);
         }
 
         return 0 < $qb->getQuery()->getSingleScalarResult();

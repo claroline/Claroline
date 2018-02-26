@@ -149,6 +149,9 @@
       }
     }
   },
-  "claroIds": ["id", "code"],
+  "claroline": {
+    "requiredAtCreation": ["code", "name"],
+    "ids": ["id", "code"]
+  },
   "required": ["code"]
 }

@@ -4,9 +4,10 @@ namespace Claroline\AppBundle\API\Transfer\Adapter\Explain\Csv;
 
 class Explanation
 {
-    public function __construct(array $properties = [])
+    public function __construct(array $properties = [], array $identifiers = [])
     {
         $this->properties = $properties;
+        $this->identifiers = $identifiers;
     }
 
     public function addProperty($name, $type, $description, $required, $isArray = false)
@@ -17,6 +18,11 @@ class Explanation
     public function getProperties()
     {
         return $this->properties;
+    }
+
+    public function setIdentifiers($identifiers)
+    {
+        $this->identifiers = $identifiers;
     }
 
     public function getProperty($name)

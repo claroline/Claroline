@@ -4,8 +4,13 @@ namespace Claroline\AppBundle\API\Transfer\Adapter\Explain\Csv;
 
 class Property
 {
-    public function __construct($name, $type, $description, $required, $isArray = false)
-    {
+    public function __construct(
+        $name,
+        $type,
+        $description,
+        $required,
+        $isArray = false
+    ) {
         $this->name = $name;
         $this->type = $type;
         $this->description = $description;

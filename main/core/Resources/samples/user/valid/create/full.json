@@ -4,6 +4,7 @@
     "firstName": "Homer",
     "lastName": "Simpson",
     "username": "Elorfin",
+    "plainPassword": "1234",
     "picture": {
       "url": "../../data\\aaaaaaaaaaaaaaaaaaaa\\c51f7ee7-4ec6-462c-b394-278d0e359207.tmp"
     },

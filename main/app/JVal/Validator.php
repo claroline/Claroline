@@ -9,16 +9,16 @@
 
 namespace Claroline\AppBundle\JVal;
 
+use Claroline\AppBundle\JVal\Constraint\ClarolineConstraint;
 use Closure;
-use JVal\Registry;
+use JVal\Context;
 use JVal\Resolver;
-use JVal\Validator as JValValidator;
-use JVal\Walker;
+use JVal\Uri;
 
 /**
  * JSON Schema validation entry point.
  */
-class Validator extends JValValidator
+class Validator
 {
     /**
      * @var Walker
@@ -35,9 +35,9 @@ class Validator extends JValValidator
      *
      * @return Validator
      */
-    public static function buildDefault(Closure $preFetchHook = null)
+    public static function build(Closure $preFetchHook = null, array $constraints = [])
     {
-        $registry = new Registry();
+        $registry = new Registry($constraints);
         $resolver = new Resolver();
 
         if ($preFetchHook) {
@@ -47,5 +47,48 @@ class Validator extends JValValidator
         $walker = new Walker($registry, $resolver);
 
         return new self($walker);
+    }
+
+    public static function buildDefault(Closure $preFetchHook = null)
+    {
+        $constraints = [
+            new ClarolineConstraint(),
+        ];
+
+        return self::build($preFetchHook, $constraints);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param Walker $walker
+     */
+    public function __construct(Walker $walker)
+    {
+        $this->walker = $walker;
+    }
+
+    /**
+     * Validates an instance against a given schema and returns a list
+     * of violations, if any. If the schema contains relative remote
+     * references, its (absolute) URI must be passed as argument.
+     *
+     * @param mixed    $instance
+     * @param stdClass $schema
+     * @param string   $schemaUri
+     * @param array    $options
+     *
+     * @return array
+     */
+    public function validate($instance, \stdClass $schema, $schemaUri = '', array $options = [])
+    {
+        $parseContext = new Context();
+        $constraintContext = new Context();
+        // todo: keep ref of already resolved/parsed schemas
+        $schema = $this->walker->resolveReferences($schema, new Uri($schemaUri));
+        $schema = $this->walker->parseSchema($schema, $parseContext);
+        $this->walker->applyConstraints($instance, $schema, $constraintContext, $options);
+
+        return $constraintContext->getViolations();
     }
 }

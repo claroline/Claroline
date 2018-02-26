@@ -7,6 +7,10 @@ use Claroline\BundleRecorder\Log\LoggableTrait;
 
 abstract class AbstractAction
 {
+    const MODE_CREATE = 'create';
+    const MODE_UPDATE = 'update';
+    const MODE_DEFAULT = 'default';
+
     use LoggableTrait;
 
     abstract public function execute(array $data);
@@ -45,6 +49,11 @@ abstract class AbstractAction
     public function setLogger($logger)
     {
         $this->logger = $logger;
+    }
+
+    public function getMode()
+    {
+        return self::MODE_DEFAULT;
     }
 
     public function export()

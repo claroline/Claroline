@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Command\API;
+namespace Claroline\AppBundle\Command;
 
 use Claroline\AppBundle\Routing\ApiRoute;
 use Claroline\CoreBundle\Command\Traits\BaseCommandTrait;

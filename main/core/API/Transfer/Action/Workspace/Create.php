@@ -43,9 +43,9 @@ class Create extends AbstractAction
         return ['workspace', 'create'];
     }
 
-    public function getBatchSize()
+    public function getMode()
     {
-        return 250;
+        return self::MODE_CREATE;
     }
 
     public function clear(ObjectManager $om)

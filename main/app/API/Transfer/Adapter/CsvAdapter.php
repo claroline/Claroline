@@ -119,9 +119,9 @@ class CsvAdapter implements AdapterInterface
         $this->arrayUtils->set($object, $propertyName, $value);
     }
 
-    public function explainSchema(\stdClass $data)
+    public function explainSchema(\stdClass $data, $mode)
     {
-        $builder = new ExplanationBuilder($this->translator);
+        $builder = new ExplanationBuilder($this->translator, $mode);
 
         return $builder->explainSchema($data);
     }

@@ -2,11 +2,11 @@
 
 namespace Claroline\AppBundle\API;
 
-use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
 use Claroline\AppBundle\API\Transfer\Adapter\AdapterInterface;
-use Claroline\CoreBundle\Library\Logger\FileLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\Library\Logger\FileLogger;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -199,7 +199,7 @@ class TransferProvider
             $jsonSchema = $this->serializer->getSchema($schema['$root']);
 
             if ($jsonSchema) {
-                return $adapter->explainSchema($jsonSchema);
+                return $adapter->explainSchema($jsonSchema, $action->getMode());
             }
         }
 

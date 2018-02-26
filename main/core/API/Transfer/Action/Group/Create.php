@@ -43,6 +43,11 @@ class Create extends AbstractAction
         return ['group', 'create'];
     }
 
+    public function getMode()
+    {
+        return self::MODE_CREATE;
+    }
+
     public function getBatchSize()
     {
         return 250;

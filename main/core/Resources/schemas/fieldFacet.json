@@ -24,5 +24,7 @@
     }
   },
   "required": ["name"],
-  "claroIds": ["id"]
+  "claroline": {
+    "ids": ["id"]
+  }
 }

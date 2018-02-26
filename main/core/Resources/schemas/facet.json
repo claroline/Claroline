@@ -36,9 +36,11 @@
       "type": "array",
       "description": "The panel list",
       "uniqueItems": true,
-      "items": { "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schema/panelFacet.json" }
+      "items": { "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/panelFacet.json" }
     }
   },
   "required": ["name"],
-  "claroIds": ["id"]
+  "claroline": {
+    "ids": ["id"]
+  }
 }
