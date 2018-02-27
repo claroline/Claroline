@@ -13,6 +13,10 @@ claro_index:
     resource: "@ClarolineCoreBundle/Controller/HomeController.php"
     type: annotation
 
+claro_redirect:
+    resource: "@ClarolineCoreBundle/Controller/RedirectController.php"
+    type: annotation
+
 claro_locale:
     resource: "@ClarolineCoreBundle/Controller/LocaleController.php"
     type: annotation
