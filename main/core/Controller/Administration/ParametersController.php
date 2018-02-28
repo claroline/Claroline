@@ -273,7 +273,7 @@ class ParametersController extends Controller
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
             new AdminForm\AppearanceType(
-                $this->themeManager->listThemeNames(),
+                $this->themeManager->listThemeNames(true),
                 $this->iconSetManager->listIconSetNamesByType(IconSetTypeEnum::RESOURCE_ICON_SET),
                 $this->configHandler->getLockedParamaters()
             ),

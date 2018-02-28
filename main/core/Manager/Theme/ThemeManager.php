@@ -16,6 +16,7 @@ use Claroline\CoreBundle\API\Serializer\ThemeSerializer;
 use Claroline\CoreBundle\Entity\Theme\Theme;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
+use Claroline\CoreBundle\Manager\PluginManager;
 use Claroline\CoreBundle\Repository\Theme\ThemeRepository;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -41,6 +42,8 @@ class ThemeManager
     private $themeDir;
     /** @var Theme */
     private $currentTheme;
+    /** @var PluginManager */
+    private $pm;
 
     /**
      * ThemeManager constructor.
@@ -50,7 +53,8 @@ class ThemeManager
      *     "authorization" = @DI\Inject("security.authorization_checker"),
      *     "config"        = @DI\Inject("claroline.config.platform_config_handler"),
      *     "kernelDir"     = @DI\Inject("%kernel.root_dir%"),
-     *     "serializer"    = @DI\Inject("claroline.serializer.theme")
+     *     "serializer"    = @DI\Inject("claroline.serializer.theme"),
+     *     "pm"            = @DI\Inject("claroline.manager.plugin_manager")
      * })
      *
      * @param ObjectManager                 $om
@@ -64,7 +68,8 @@ class ThemeManager
         AuthorizationCheckerInterface $authorization,
         PlatformConfigurationHandler $config,
         $kernelDir,
-        ThemeSerializer $serializer
+        ThemeSerializer $serializer,
+        PluginManager $pm
     ) {
         $this->om = $om;
         $this->repository = $this->om->getRepository('ClarolineCoreBundle:Theme\Theme');
@@ -72,6 +77,7 @@ class ThemeManager
         $this->config = $config;
         $this->themeDir = $kernelDir.'/../web/themes';
         $this->serializer = $serializer;
+        $this->pm = $pm;
     }
 
     /**
@@ -274,7 +280,22 @@ class ThemeManager
      */
     public function all($onlyEnabled = false)
     {
-        return $this->repository->findBy($onlyEnabled ? ['enabled' => true] : []);
+        $themes = $this->repository->findAll();
+
+        if ($onlyEnabled) {
+            $themes = array_filter($themes, function ($theme) {
+                return $theme->isEnabled();
+            });
+
+            $pm = $this->pm;
+            //then according to plugins
+
+            $themes = array_filter($themes, function ($theme) use ($pm) {
+                return $pm->isLoaded($theme->getPlugin());
+            });
+        }
+
+        return $themes;
     }
 
     /**
