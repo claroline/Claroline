@@ -7,19 +7,18 @@
       "description": "The organization id"
     },
     "name": {
-      "type": "string",
+      "type": ["null", "string"],
       "description": "The organization name",
       "minLength": 1
     },
-    "name": {
+    "code": {
       "type": "string",
       "description": "The organization code",
       "minLength": 1
     },
     "email": {
-      "type": "string",
-      "description": "The organization email",
-      "minLength": 1
+      "type": ["null", "string"],
+      "description": "The organization email"
     }
   },
   "claroline": {

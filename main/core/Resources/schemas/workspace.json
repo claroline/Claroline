@@ -30,7 +30,7 @@
           "description": "Is it a personal workspace"
         },
         "description": {
-          "type": ["string"],
+          "type": ["string", "null"],
           "description": "The workspace description"
         },
         "created": {
