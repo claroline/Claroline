@@ -1,6 +1,6 @@
 import {connectPage} from '#/main/core/layout/page/connect'
 
-import {actions} from '#/main/core/administration/user/user/actions'
+import {actions} from '#/main/core/user/actions'
 import {UserPage} from '#/main/core/user/components/page.jsx'
 
 /**
