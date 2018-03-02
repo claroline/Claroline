@@ -59,11 +59,17 @@ class PublicFile
         $options = $event->getOptions();
         $tmpFile = $options['file'];
 
-        $fileName = $tmpFile->getFilename();
+        $fileName = empty($tmpFile->getClientOriginalName()) ?
+            $tmpFile->getFileName() :
+            $tmpFile->getClientOriginalName();
         $directoryName = $this->fileUtils->getActiveDirectoryName();
         $size = filesize($tmpFile);
-        $mimeType = $tmpFile->getMimeType();
-        $extension = pathinfo($fileName, PATHINFO_EXTENSION);
+        $mimeType = empty($tmpFile->getClientMimeType()) ?
+            $tmpFile->getMimeType() :
+            $tmpFile->getClientMimeType();
+        $extension = empty($tmpFile->getClientOriginalExtension()) ?
+            $tmpFile->guessExtension() :
+            $tmpFile->getClientOriginalExtension();
         $hashName = Uuid::uuid4()->toString().'.'.$extension;
         $prefix = 'data'.DIRECTORY_SEPARATOR.$directoryName;
         $url = $prefix.DIRECTORY_SEPARATOR.$hashName;
