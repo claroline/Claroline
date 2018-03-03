@@ -204,6 +204,6 @@ class CsvAdapter implements AdapterInterface
 
     public function getMimeTypes()
     {
-        return ['text/csv', 'csv', 'text/plain'];
+        return ['text/csv', 'csv', 'text/plain', 'application/vnd.ms-excel', 'text/x-csv'];
     }
 }
