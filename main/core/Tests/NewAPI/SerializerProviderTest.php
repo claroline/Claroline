@@ -52,7 +52,7 @@ class SerializerProviderTest extends TransactionalTestCase
     {
         //login
         if ($this->provider->hasSchema($class) && $this->provider->getSampleDirectory($class)) {
-            $iterator = new \DirectoryIterator($this->provider->getSampleDirectory($class).'/valid/create');
+            $iterator = new \DirectoryIterator($this->provider->getSampleDirectory($class).'/json/valid/create');
 
             foreach ($iterator as $file) {
                 if ($file->isFile()) {

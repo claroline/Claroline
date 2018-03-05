@@ -41,6 +41,17 @@
           }
         ]
       }
+    },
+    "roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/role.json"
+          }
+        ]
+      }
     }
   },
   "claroline": {

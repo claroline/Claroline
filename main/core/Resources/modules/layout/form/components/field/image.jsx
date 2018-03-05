@@ -34,8 +34,7 @@ class Image extends Component {
                   this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
                 }
               }
-            }
-            }
+            }}
           />
         }
 
