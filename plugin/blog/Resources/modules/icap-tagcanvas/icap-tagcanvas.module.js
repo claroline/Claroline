@@ -1,6 +1,6 @@
 import angular from 'angular/index'
 import $ from 'jquery'
-import 'jquery-tagcanvas/jquery.tagcanvas.min.js'
+import '#/main/core/jquery/tag-canvas/jquery.tagcanvas.min.js'
 
 angular
   .module('icap.tagcanvas', [])

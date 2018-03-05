@@ -1,0 +1,23 @@
+{
+  "name": "tagcanvas",
+  "version": "2.9.0",
+  "title": "TagCanvas HTML5 canvas tag cloud",
+  "description": "Displays tags as a 3D rotating tag cloud using an HTML5 canvas",
+  "keywords": [ "html5", "canvas", "animation", "tag", "cloud" ],
+  "homepage": "http://www.goat1000.com/tagcanvas.php",
+  "docs": "http://www.goat1000.com/tagcanvas-install.php",
+  "download": "http://www.goat1000.com/tagcanvas.php#links",
+  "author": {
+    "name": "Graham Breach",
+    "email": "graham@goat1000.com"
+  },
+  "licenses": [
+    {
+      "type": "LGPLv3",
+      "url": "http://www.gnu.org/licenses/lgpl-3.0.html"
+    }
+  ],
+  "dependencies": {
+    "jquery": ">=1.1"
+  }
+}

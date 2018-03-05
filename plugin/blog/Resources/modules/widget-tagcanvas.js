@@ -3,7 +3,7 @@
  */
 
 import jQuery from 'jquery'
-import 'jquery-tagcanvas/jquery.tagcanvas.min.js'
+import '#/main/core/jquery/tag-canvas/jquery.tagcanvas.min.js'
 
 (function ($) {
   $(function () {
