@@ -23,7 +23,7 @@ class DomainNameValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         //null is perfectly valid: the system will find it itself.
-        if ($value === '' || $value === null) {
+        if ('' === $value || null === $value) {
             return;
         }
 
@@ -52,13 +52,14 @@ class DomainNameValidator extends ConstraintValidator
     {
         $found = false;
         $handle = curl_init($url);
-        curl_setopt($handle,  CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($handle, CURLOPT_FOLLOWLOCATION, true);
         curl_exec($handle);
 
         /* Check for 404 (file not found). */
         $httpCode = curl_getinfo($handle, CURLINFO_HTTP_CODE);
 
-        if ($httpCode === 200) {
+        if (200 === $httpCode) {
             $found = true;
         }
 
