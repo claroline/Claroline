@@ -20,7 +20,7 @@ TooltipElement.propTypes = {
   id: T.string.isRequired,
   tip: T.string.isRequired,
   disabled: T.bool,
-  children: T.node.isRequired,
+  children: T.element.isRequired,
   position: T.oneOf(['top', 'right', 'bottom', 'left'])
 }
 

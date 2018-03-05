@@ -1,6 +1,9 @@
 {# todo : this needs to be removed and be managed server side #}
 <script src='{{ asset('bundles/clarolinecore/js/iframe/iframe.js') }}'></script>
 
+{# Base libraries #}
+<script src="{{ hotAsset('dist/scaffolding_dll.js') }}"></script>
+
 {# React/Redux & related libraries #}
 <script src="{{ hotAsset('dist/react_dll.js') }}"></script>
 
@@ -21,11 +24,7 @@
 
 {# TODO: remove this when custom js builds are available #}
 {# ATTENTION : it must be loaded before Bootstrap to override `.tooltip()` method #}
-{% javascripts debug=false filter='jsmin' output='vendor/jquery/ui/jqueryui.js'
-    'packages/jquery-ui-dist/jquery-ui.min.js'
-%}
-    <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
+<script src="{{ asset('packages/jquery-ui-dist/jquery-ui.min.js') }}"></script>
 
 {% javascripts debug=false filter='jsmin' output='vendor/twitter/bootstrap/js/bootstrap.js'
     'packages/bootstrap/js/transition.js'
@@ -43,7 +42,7 @@
     %}<script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
-{% javascripts debug=false  output='vendor/jms/twig-js/twig.js'
+{% javascripts debug=false output='vendor/jms/twig-js/twig.js'
     '../vendor/jms/twig-js/twig.js'
 %}
     <script src="{{ asset_url }}"></script>

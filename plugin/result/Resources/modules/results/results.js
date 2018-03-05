@@ -1,8 +1,8 @@
-/*global Translator*/
+/* global Translator */
 
 import angular from 'angular/index'
-import {} from 'angular-ui-bootstrap'
-import {} from 'ng-file-upload'
+import 'angular-ui-bootstrap'
+import 'ng-file-upload'
 import listTemplate from './list.component.html'
 import controller from './list.component.js'
 import service from './results.service.js'
@@ -38,15 +38,15 @@ angular
     require: 'ngModel',
     link: (scope, elm, attrs, ctrl) => {
       ctrl.$validators.validUser = modelValue =>
-        ctrl.$isEmpty(modelValue) ||
-        service.getUsers().some(user => user.name === modelValue)
+      ctrl.$isEmpty(modelValue) ||
+      service.getUsers().some(user => user.name === modelValue)
     }
   })])
   .directive('validMark', ['resultService', service => ({
     require: 'ngModel',
     link: (scope, elm, attrs, ctrl) => {
       ctrl.$validators.validMark = modelValue =>
-        ctrl.$isEmpty(modelValue) || service.getMaximumMark() >= service.formatMark(modelValue)
+      ctrl.$isEmpty(modelValue) || service.getMaximumMark() >= service.formatMark(modelValue)
     }
   })])
   .filter('trans', () => (string, domain = 'platform') =>

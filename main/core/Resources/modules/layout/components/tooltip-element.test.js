@@ -20,7 +20,7 @@ describeComponent('TooltipElement', TooltipElement,
     id: 123,
     tip: {},
     position: 'bla',
-    children: {toto: 'TOTO'}
+    children: {}
   },
   // valid props
   {

@@ -1,51 +1,64 @@
-// webpack.config.js
-var Encore = require('@symfony/webpack-encore')
+/**
+ * Webpack configuration for PROD environments.
+ */
+
+const Encore = require('@symfony/webpack-encore')
 
 const entries = require('./webpack/entries')
-const libraries = require('./webpack/libraries')
-const webpack = require('webpack')
 const plugins = require('./webpack/plugins')
 const paths = require('./webpack/paths')
 const shared = require('./webpack/shared')
-const collectedEntries = entries.collectEntries()
 
 Encore
-    .setOutputPath(paths.output())
-    .setPublicPath('/dist')
-    .autoProvidejQuery()
-    .enableReactPreset()
-    .setManifestKeyPrefix('/dist')
-    .enableSourceMaps(false)
-    //.cleanupOutputBeforeBuild()
-    .enableBuildNotifications()
-    .enableVersioning(true)
-    .configureManifestPlugin(options => options.fileName = 'manifest.lib.json')
-    .addPlugin(plugins.distributionShortcut())
-    .addPlugin(plugins.assetsInfoFile())
-    .addPlugin(plugins.reactDllReference())
-    .addPlugin(plugins.angularDllReference())
-    .addPlugin(plugins.configShortcut())
-    .addPlugin(plugins.commonsChunk())
-    //fixes performance issues
-    .configureUglifyJsPlugin(uglifyJsPluginOptionsCallback = (options) => {
-        options.compress = true
-        options.beautify = true
-    })
-    .configureBabel(babelConfig => {
-        babelConfig.compact = true
-    })
+  .configureRuntimeEnvironment('dev') // todo : find why we need to use the dev env
+  .setOutputPath(paths.output())
+  .setPublicPath('/dist')
+  .autoProvidejQuery()
+  .setManifestKeyPrefix('/dist')
+  .enableSourceMaps(false)
+  //.cleanupOutputBeforeBuild()
+  .enableBuildNotifications()
+  // enables files versioning for browser cache busting
+  .enableVersioning(true)
 
-Encore.addLoader({test: /\.html$/, loader: 'html-loader'})
+  // Plugins
+  .configureManifestPlugin(options => {
+    options.fileName = 'manifest.lib.json'
+  })
+  .configureUglifyJsPlugin(options => {
+    options.compress = true
+    options.beautify = true
+  })
+  .addPlugin(plugins.nodeEnvironment('production'))
+  .addPlugin(plugins.distributionShortcut())
+  .addPlugin(plugins.assetsInfoFile())
+  .addPlugin(plugins.scaffoldingDllReference())
+  .addPlugin(plugins.reactDllReference())
+  .addPlugin(plugins.angularDllReference())
+  .addPlugin(plugins.configShortcut())
+  .addPlugin(plugins.commonsChunk())
 
+  // Babel configuration
+  .configureBabel(babelConfig => {
+    babelConfig.compact = true
+  })
+  .enableReactPreset()
+
+  // todo : this loader will no longer be required when angular will be fully removed
+  .addLoader({
+    test: /\.html$/,
+    loader: 'html-loader'
+  })
+
+// grab plugins entries
+const collectedEntries = entries.collectEntries()
 Object.keys(collectedEntries).forEach(key => Encore.addEntry(key, collectedEntries[key]))
 
-config = Encore.getWebpackConfig()
+const config = Encore.getWebpackConfig()
 
 config.resolve.modules = ['./node_modules', './web/packages']
 //in that order it solves some issues... if we start with bower.json, many packages don't work
 config.resolve.descriptionFiles = ['package.json', '.bower.json', 'bower.json']
-config.resolve.mainFields = ['main', 'browser']
-config.resolve.aliasFields = ['browser']
 config.resolve.alias = shared.aliases()
 config.externals = shared.externals()
 

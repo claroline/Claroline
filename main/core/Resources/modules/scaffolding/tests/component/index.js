@@ -1,4 +1,12 @@
 import React from 'react'
+
+// todo : find a better place to initialize enzyme config
+import Enzyme from 'enzyme'
+import Adapter from 'enzyme-adapter-react-15'
+Enzyme.configure({
+  adapter: new Adapter()
+})
+
 import {shallow, mount} from 'enzyme'
 
 import {propTypesOk, missingProps, invalidProps} from '#/main/core/scaffolding/tests/assert'

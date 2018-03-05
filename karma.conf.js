@@ -6,10 +6,6 @@ module.exports = config => {
     basePath: '',
     frameworks: ['mocha', 'sinon'],
     files: [
-      {
-        pattern: 'main/core/Resources/modules/scaffolding/shim/index.js',
-        watched: false
-      },
       '*/*/Resources/modules/**/*\.test.js'
     ],
     preprocessors: {
@@ -47,8 +43,8 @@ module.exports = config => {
     failOnEmptyTestSuite: false,
     concurrency: Infinity,
     webpack: webpackConfig,
-    webpackServer: {
-      quiet: true
+    webpackMiddleware: {
+      stats: 'errors-only'
     }
   }
 

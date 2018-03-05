@@ -1,53 +1,68 @@
-// webpack.config.js
-var Encore = require('@symfony/webpack-encore')
+/**
+ * Webpack configuration for TEST environments.
+ */
+
+const Encore = require('@symfony/webpack-encore')
 
 const entries = require('./webpack/entries')
-const libraries = require('./webpack/libraries')
-const webpack = require('webpack')
 const plugins = require('./webpack/plugins')
 const paths = require('./webpack/paths')
 const shared = require('./webpack/shared')
-const collectedEntries = entries.collectEntries()
-const manifests = shared.dllManifests()
 
 Encore
-    .configureRuntimeEnvironment('dev')
-    .setOutputPath(paths.output())
-    .setPublicPath(paths.output())
-    .autoProvidejQuery()
-    .enableReactPreset()
-    .setManifestKeyPrefix('/dist')
-    .enableSourceMaps(false)
-    //.cleanupOutputBeforeBuild()
-    .enableBuildNotifications()
-    //.enableVersioning(true)
-    //.configureManifestPlugin(options => options.fileName = 'manifest.lib.json')
-    .addPlugin(plugins.distributionShortcut())
-    //.addPlugin(plugins.assetsInfoFile())
-    .addPlugin(plugins.reactDllReference())
-    .addPlugin(plugins.angularDllReference())
-    .addPlugin(plugins.configShortcut())
-    //.addPlugin(plugins.commonsChunk())
-    //fixes performance issues
-    .configureUglifyJsPlugin(uglifyJsPluginOptionsCallback = (options) => {
-        options.compress = false
-        options.beautify = false
-    })
-    .configureBabel(babelConfig => {
-        babelConfig.compact = false
-    })
+  .configureRuntimeEnvironment('dev')
+  .setOutputPath(paths.output())
+  .setPublicPath('/dist')
+  .autoProvidejQuery()
+  .setManifestKeyPrefix('/dist')
+  .enableSourceMaps(false)
+  //.cleanupOutputBeforeBuild()
+  .enableBuildNotifications()
+  .enableVersioning(false)
 
-Encore.addLoader({test: /\.html$/, loader: 'html-loader'})
+  // Plugins
+  .configureManifestPlugin(options => {
+    options.fileName = 'manifest.lib.json'
+  })
+  .configureUglifyJsPlugin(options => {
+    options.compress = false
+    options.beautify = false
+  })
+  .addPlugin(plugins.nodeEnvironment('development'))
+  .addPlugin(plugins.distributionShortcut())
+  .addPlugin(plugins.configShortcut())
+  .addPlugin(plugins.rethrowCompilationErrors())
+  // we can not use CommonChunksPlugin (nor DLLs) in test env
+  // @see https://github.com/webpack-contrib/karma-webpack/issues/24
+  // (I keep the commented line to avoid someone adding it by mistake)
+  //.addPlugin(plugins.commonsChunk())
 
+  // Babel configuration
+  .configureBabel(babelConfig => {
+    babelConfig.compact = false
+  })
+  .enableReactPreset()
+
+  // todo : this loader will no longer be required when angular will be fully removed
+  .addLoader({
+    test: /\.html$/,
+    loader: 'html-loader'
+  })
+
+// grab plugins entries
+const collectedEntries = entries.collectEntries()
 Object.keys(collectedEntries).forEach(key => Encore.addEntry(key, collectedEntries[key]))
 
-config = Encore.getWebpackConfig()
+const config = Encore.getWebpackConfig()
+
+config.watchOptions = {
+  poll: 2000,
+  ignored: /web\/packages|node_modules/
+}
 
 config.resolve.modules = ['./node_modules', './web/packages']
 //in that order it solves some issues... if we start with bower.json, many packages don't work
 config.resolve.descriptionFiles = ['package.json', '.bower.json', 'bower.json']
-config.resolve.mainFields = ['main', 'browser']
-config.resolve.aliasFields = ['browser']
 config.resolve.alias = shared.aliases()
 config.externals = shared.externals()
 

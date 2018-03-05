@@ -1,4 +1,11 @@
 module.exports = {
+  'scaffolding_dll': [
+    'classnames',
+    'invariant',
+    'lodash',
+    'moment',
+    'reselect'
+  ],
   'react_dll': [
     'react',
     'redux',
@@ -6,11 +13,7 @@ module.exports = {
     'react-dom',
     'react-redux',
     'react-router-dom',
-    'reselect',
-    'prop-types',
-    'invariant',
-    'classnames',
-    'moment'
+    'prop-types'
   ],
   'angular_dll': [
     'angular',

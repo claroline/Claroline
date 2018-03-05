@@ -1,12 +1,7 @@
-import React from 'react'
-import {
-  hashHistory as history,
-  HashRouter as Router
-} from 'react-router-dom'
-
 import {bootstrap} from '#/main/core/scaffolding/bootstrap'
 import {registerModals} from '#/main/core/layout/modal'
 import {makeResourceReducer} from '#/main/core/resource/reducer'
+
 import {
   resourceReducers,
   mainReducers,
@@ -39,9 +34,7 @@ bootstrap(
   '.claco-form-container',
 
   // app main component
-  () => React.createElement(Router, {
-    history: history
-  }, React.createElement(ClacoFormResource)),
+  ClacoFormResource,
 
   // app store configuration
   makeResourceReducer({}, {
