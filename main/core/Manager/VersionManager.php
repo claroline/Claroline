@@ -120,7 +120,7 @@ class VersionManager
 
     public function getDistributionVersion()
     {
-        return $this->getVersionFile()[0];
+        return trim($this->getVersionFile()[0]);
     }
 
     public function getDistributionVersionFilePAth()

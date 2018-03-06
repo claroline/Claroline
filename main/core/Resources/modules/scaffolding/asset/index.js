@@ -11,6 +11,16 @@ function asset(assetName) {
   return Asset.path(assetName)
 }
 
+/**
+ * Get the path of the main theme file.
+ *
+ * @return {string}
+ */
+function theme() {
+  return Asset.theme()
+}
+
 export {
-  asset
+  asset,
+  theme
 }

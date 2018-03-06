@@ -6,11 +6,11 @@ import {} from '#/main/core/innova/angular-translation'
 import {} from '#/main/core/api/router/module'
 import {} from '#/main/core/scaffolding/asset/module'
 import {} from '#/main/core/html-truster/module'
-import register from '#/main/core/register/register'
+import Register from '#/main/core/utilities/register'
 import externalSourceList from './list.directive'
 import externalSourceListService from './list.service'
 
-let externalSourceListApp =  new register(
+let externalSourceListApp =  new Register(
   'externalSourceListApp',
   [
     'angular-loading-bar',

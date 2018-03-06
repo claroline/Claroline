@@ -5,11 +5,11 @@ import {} from '#/main/core/innova/angular-translation'
 import {} from '#/main/core/api/router/module'
 import {} from '#/main/core/scaffolding/asset/module'
 import {} from '#/main/core/html-truster/module'
-import register from '#/main/core/register/register'
+import Register from '#/main/core/utilities/register'
 import externalSourceGroupConfig from './groupconfig.directive'
 import externalSourceGroupConfigService from './groupconfig.service'
 
-let externalSourceGroupConfigApp =  new register(
+let externalSourceGroupConfigApp =  new Register(
   'externalSourceGroupConfigApp',
   [
     'angular-loading-bar',

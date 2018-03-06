@@ -53,7 +53,7 @@ class PlatformConfigurationHandler
     /**
      * @param string $parameter
      *
-     * @return string
+     * @return mixed
      */
     public function getParameter($parameter)
     {

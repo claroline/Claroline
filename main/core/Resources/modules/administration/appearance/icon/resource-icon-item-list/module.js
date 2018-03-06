@@ -7,7 +7,7 @@ import {} from '#/main/core/modal/module'
 import {} from '#/main/core/api/router/module'
 import {} from '#/main/core/scaffolding/asset/module'
 import {} from '#/main/core/html-truster/module'
-import Register from '#/main/core/register/register'
+import Register from '#/main/core/utilities/register'
 import resourceIconItemList from './resource-icon-item-list.directive'
 import resourceIconItemService from './resource-icon-item-list.service'
 

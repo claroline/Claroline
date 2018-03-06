@@ -21,7 +21,24 @@ const Asset = {
     }
 
     return basePath.trim() + assetName
+  },
+
+  /**
+   * Get the path of the main theme file.
+   *
+   * @return {string}
+   */
+  theme() {
+    const element = document.getElementById('homeTheme')
+
+    let basePath = ''
+    if (element) {
+      basePath = element.innerHTML
+    }
+
+    return basePath.trim()
   }
+
 }
 
 export {

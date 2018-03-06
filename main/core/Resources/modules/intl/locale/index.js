@@ -1,10 +1,22 @@
+/**
+ *
+ * @deprecated use `locale()` instead.
+ */
+function getLocale() {
+  return locale()
+}
 
-export function getLocale() {
-  const locale = document.querySelector('#homeLocale')
+function locale() {
+  const current = document.querySelector('#homeLocale')
 
-  if (locale) {
-    return locale.innerHTML.trim()
+  if (current) {
+    return current.innerHTML.trim()
   }
 
   return 'en'
+}
+
+export {
+  getLocale,
+  locale
 }
