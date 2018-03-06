@@ -120,7 +120,10 @@ const DataGridSort = props =>
     {t('list_sort_by')}
     <DropdownButton
       id="data-grid-sort-menu"
-      title={props.current.property ? getPropDefinition(props.current.property, props.available).label : t('none')}
+      title={props.current.property && getPropDefinition(props.current.property, props.available) ?
+        getPropDefinition(props.current.property, props.available).label :
+        t('none')
+      }
       bsStyle="link"
       noCaret={true}
       pullRight={true}
