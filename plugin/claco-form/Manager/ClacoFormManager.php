@@ -1585,12 +1585,18 @@ class ClacoFormManager
                 break;
             case 'comment':
                 $sendMessage = $clacoForm->getDisplayComments();
+                $commentsRoles = $clacoForm->getCommentsDisplayRoles();
 
-                if ($sendMessage) {
+                if ($sendMessage && count($commentsRoles) > 0) {
                     $entryUsers = $this->entryUserRepo->findBy(['entry' => $entry, 'notifyComment' => true]);
 
                     foreach ($entryUsers as $entryUser) {
-                        $receivers[] = $entryUser->getUser();
+                        $user = $entryUser->getUser();
+                        $roles = array_intersect($commentsRoles, $user->getRoles());
+
+                        if (count($roles) > 0) {
+                            $receivers[] = $user;
+                        }
                     }
                     if (count($receivers) > 0) {
                         $subject = '['.

@@ -56,6 +56,7 @@ class ClacoFormWidgetConfig
     {
         $this->fields = new ArrayCollection();
     }
+
     public function getId()
     {
         return $this->id;
