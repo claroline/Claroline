@@ -19,7 +19,7 @@ function load() {
 
   invariant(userEl, 'Can not find current user.')
 
-  user = userEl.dataset.user || null
+  user = JSON.parse(userEl.dataset.user) || null
   userLoaded = true
 }
 
