@@ -144,6 +144,10 @@ class DropzoneListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
+        $dropzone = $event->getResource();
+        $copy = $this->dropzoneManager->copyDropzone($dropzone);
+
+        $event->setCopy($copy);
         $event->stopPropagation();
     }
 
