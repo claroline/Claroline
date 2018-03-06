@@ -69,6 +69,7 @@ class OrganizationGroup extends Component {
 
               return choices
             }, {})}
+            filterChoices={this.props.filterChoices}
             value={this.props.value ? this.props.value.id : ''}
             onChange={(value) => this.props.onChange({
               id: value,
@@ -86,9 +87,11 @@ implementPropTypes(OrganizationGroup, FormGroupWithFieldTypes, {
   value: T.shape({
     id: T.string.isRequired,
     name: T.string.isRequired
-  })
+  }),
+  filterChoices: T.func
 }, {
-  label: t('organization')
+  label: t('organization'),
+  filterChoices: () => true
 })
 
 export {

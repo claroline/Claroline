@@ -1,9 +1,9 @@
 import React from 'react'
 
-import {t} from '#/main/core/translation'
-
+import {trans} from '#/main/core/translation'
 import {DataTreeContainer} from '#/main/core/data/list/containers/data-tree.jsx'
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'
+import {navigate} from '#/main/core/router'
 
 const Organizations = () =>
   <DataTreeContainer
@@ -21,10 +21,10 @@ const Organizations = () =>
     actions={[
       {
         icon: 'fa fa-fw fa-plus',
-        label: t('add_sub_organization'),
+        label: trans('add_sub_organization'),
         context: 'row',
-        action: () => {
-          // todo open orga form
+        action: (row) => {
+          navigate('organizations/form/parent/' + row[0].id)
         }
       }
     ]}

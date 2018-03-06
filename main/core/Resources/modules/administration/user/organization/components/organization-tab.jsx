@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
 
 import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
@@ -11,6 +11,7 @@ import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-ac
 import {Organization}  from '#/main/core/administration/user/organization/components/organization.jsx'
 import {Organizations} from '#/main/core/administration/user/organization/components/organizations.jsx'
 import {actions}       from '#/main/core/administration/user/organization/actions'
+import {select}        from '#/main/core/administration/user/organization/selectors'
 
 const OrganizationTabActionsComponent = props =>
   <PageActions>
@@ -23,7 +24,7 @@ const OrganizationTabActionsComponent = props =>
       opened={!!matchPath(props.location.pathname, {path: '/organizations/form'})}
       open={{
         icon: 'fa fa-plus',
-        label: t('add_organization'),
+        label: trans('add_organization'),
         action: '#/organizations/form'
       }}
       cancel={{
@@ -50,20 +51,35 @@ const OrganizationTabComponent = props =>
       }, {
         path: '/organizations/form/:id?',
         onEnter: (params) => props.openForm(params.id),
+        exact: true,
+        component: Organization
+      }, {
+        path: '/organizations/form/parent/:parent',
+        onEnter: (params) => {
+          const parent = props.organizations.find(organization => organization.id === params.parent)
+          props.openForm(null, parent)
+        },
         component: Organization
       }
     ]}
   />
 
 OrganizationTabComponent.propTypes = {
-  openForm: T.func.isRequired
+  openForm: T.func.isRequired,
+  organizations: T.array.isRequired
 }
 
 const OrganizationTab = connect(
-  null,
+  state => ({
+    organizations: select.flattenedOrganizations(state)
+  }),
   dispatch => ({
-    openForm(id = null) {
-      dispatch(actions.open('organizations.current', id))
+    openForm(id = null, parent = null) {
+      const defaultProps = {}
+      if (parent) {
+        defaultProps.parent = parent
+      }
+      dispatch(actions.open('organizations.current', id, defaultProps))
     }
   })
 )(OrganizationTabComponent)

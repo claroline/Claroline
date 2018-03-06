@@ -65,6 +65,7 @@ export const FormField = props => {
             label={props.label}
             hideLabel={props.noLabel}
             choices={props.choices || {}}
+            filterChoices={props.filterChoices}
             value={props.value || ''}
             disabled={props.disabled}
             error={props.error}
@@ -171,6 +172,7 @@ FormField.propTypes = {
   label: T.string.isRequired,
   value: T.any,
   choices: T.array,
+  filterChoices: T.func,
   noLabel: T.bool.isRequired,
   disabled: T.bool.isRequired,
   error: T.string,

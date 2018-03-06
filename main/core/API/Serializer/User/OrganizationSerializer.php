@@ -50,6 +50,7 @@ class OrganizationSerializer
             'name' => $organization->getName(),
             'code' => $organization->getCode(),
             'email' => $organization->getEmail(),
+            'type' => $organization->getType(),
             'parent' => !empty($organization->getParent()) ? [
                 'id' => $organization->getParent()->getUuid(),
                 'name' => $organization->getParent()->getName(),

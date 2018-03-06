@@ -18,7 +18,7 @@ import {SCORE_TYPE,       scoreDefinition}       from '#/main/core/data/types/sc
 import {STRING_TYPE,      stringDefinition}      from '#/main/core/data/types/string'
 import {TRANSLATION_TYPE, translationDefinition} from '#/main/core/data/types/translation'
 import {USERNAME_TYPE,    usernameDefinition}    from '#/main/core/data/types/username'
-import {TRANSLATED_TYPE, translatedDefinition}   from '#/main/core/data/types/translated'
+import {TRANSLATED_TYPE,  translatedDefinition}   from '#/main/core/data/types/translated'
 
 // the list of registered data types
 const dataTypes = {}

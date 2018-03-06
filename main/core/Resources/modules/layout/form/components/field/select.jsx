@@ -1,5 +1,7 @@
 import React from 'react'
 
+import pickBy from 'lodash/pickBy'
+
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
@@ -27,7 +29,7 @@ const Select = props =>
     {!props.multiple && !props.noEmpty &&
       <option value=""/>
     }
-    {Object.keys(props.choices).map(option =>
+    {Object.keys(pickBy(props.choices, props.filterChoices)).map(option =>
       <option key={option} value={option}>
         {props.choices[option]}
       </option>
@@ -36,13 +38,15 @@ const Select = props =>
 
 implementPropTypes(Select, FormFieldTypes, {
   choices: T.object.isRequired,
+  filterChoices: T.func,
   value: T.oneOfType([T.string, T.number, T.array]),
   multiple: T.bool,
   noEmpty: T.bool
 }, {
   value: '',
   multiple: false,
-  noEmpty: false
+  noEmpty: false,
+  filterChoices: () => true
 })
 
 export {

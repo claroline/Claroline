@@ -42,8 +42,8 @@ const OrganizationForm = props =>
             label: trans('type'),
             required: true,
             options: {choices: {
-              'external': 'external',
-              'internal': 'internal'
+              'external': trans('external'),
+              'internal': trans('internal')
             }}
           }, {
             name: 'vat',
@@ -53,7 +53,10 @@ const OrganizationForm = props =>
           }, {
             name: 'parent',
             type: 'organization',
-            label: trans('parent')
+            label: trans('parent'),
+            options: {
+              filterChoices: (value, key) => props.organization.id !== key
+            }
           },  {
             name: 'email',
             type: 'email',

@@ -1,14 +1,17 @@
+import merge from 'lodash/merge'
+
 import {generateUrl} from '#/main/core/api/router'
 
 import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {actions as listActions} from '#/main/core/data/list/actions'
 
+
 import {Organization as OrganizationTypes} from '#/main/core/administration/user/organization/prop-types'
 
 export const actions = {}
 
-actions.open = (formName, id = null) => (dispatch) => {
+actions.open = (formName, id = null, defaultProps = {}) => (dispatch) => {
   if (id) {
     dispatch({
       [API_REQUEST]: {
@@ -19,7 +22,8 @@ actions.open = (formName, id = null) => (dispatch) => {
       }
     })
   } else {
-    dispatch(formActions.resetForm(formName, OrganizationTypes.defaultProps, true))
+    defaultProps = merge(defaultProps, OrganizationTypes)
+    dispatch(formActions.resetForm(formName, defaultProps, true))
   }
 }
 

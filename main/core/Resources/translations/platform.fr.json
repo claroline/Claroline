@@ -1585,5 +1585,8 @@
     "workspace_awaiting_validation": "Un administrateur doit valider votre inscription à l'espace d'activité",
     "main_organization": "Organization principale",
     "vat_number": "Numéro de TVA",
-    "open_url": "Url d'ouverture"
+    "open_url": "Url d'ouverture",
+    "external": "Externe",
+    "internal": "Interne",
+    "force_organization_creation": "Forcer l'ajout d'une organization à l'utilisateur lors de l'inscription"
 }
