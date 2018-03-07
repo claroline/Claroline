@@ -30,4 +30,12 @@
 <div id="homeAsset">{{ protocol ~ '://' ~ host ~ app.request.getBasePath() ~ '/' }}</div>
 <div id="baseAsset">{{ asset('') }}</div>
 <div id="homeTheme">{{ themeAsset('bootstrap.css') }}</div>
-<div id="homeLocale">{{ app.request.locale }}</div>
+<div id="homeLocale">{% spaceless %}
+    {% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
+        {{ app.request.locale }}
+    {% elseif asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ "_" ~ app.request.locale | upper ~ ".js") %}
+        {{ app.request.locale ~ '_' ~ app.request.locale | upper }}
+    {% else %}
+        en
+    {% endif %}
+{% endspaceless %}</div>
