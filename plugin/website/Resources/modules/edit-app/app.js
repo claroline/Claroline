@@ -1,4 +1,6 @@
 import angular from 'angular/index'
+
+import '#/main/core/innova/angular-resource-picker'
 import register from '../utils/register'
 import {} from 'bootstrap-colorpicker/dist/js/bootstrap-colorpicker'
 import {} from 'ng-file-upload/dist/ng-file-upload-shim'
