@@ -14,8 +14,6 @@
   },
   "dependencies": {
     "claroline-distribution": "file:./vendor/claroline/distribution",
-    "filesystem-bower-resolver": "*",
-    "bower-resolve-webpack-plugin": "*",
     "webpack": "^3",
     "webpack-notifier": "^1.5.1",
     "babel-preset-es2015": "^6.24.1",
