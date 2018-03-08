@@ -37,14 +37,12 @@
         ],
         "fetch": [
             "composer install --prefer-dist --no-dev --optimize-autoloader",
-            "npm install",
-            "npm run bower"
+            "npm install"
         ],
         "fetch-dev": [
             "composer install --prefer-source",
             "npm install",
-            "npm install fullcalendar",
-            "npm run bower"
+            "npm install fullcalendar"
         ],
         "build": [
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
