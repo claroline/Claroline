@@ -5,6 +5,7 @@
     "claroline-core": "./vendor/claroline/distribution"
   },
   "resolutions": {
-    "angular": ">=1.4.0"
+    "angular": ">=1.4.0",
+    "moment": ">=2.9.0"
   }
 }
