@@ -11,10 +11,9 @@
 
 namespace Claroline\CoreBundle\Security\Voter;
 
-use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Group;
-use Claroline\CoreBundle\Library\Security\Collection\GroupCollection;
-use Claroline\CoreBundle\Manager\GroupManager;
+use Claroline\CoreBundle\Security\AbstractVoter;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -23,42 +22,18 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  * @DI\Service
  * @DI\Tag("security.voter")
  */
-class GroupVoter implements VoterInterface
+class GroupVoter extends AbstractVoter
 {
-    const CREATE = 'create';
-    const EDIT = 'edit';
-    const DELETE = 'delete';
-    const VIEW = 'view';
-
-    /**
-     * @DI\InjectParams({
-     *     "om"           = @DI\Inject("claroline.persistence.object_manager"),
-     *     "groupManager" = @DI\Inject("claroline.manager.group_manager")
-     * })
-     */
-    public function __construct(
-        ObjectManager $om,
-        GroupManager $groupManager
-    ) {
-        $this->om = $om;
-        $this->groupManager = $groupManager;
-    }
-
-    //ROLE_ADMIN can always do anything, so we don't have to check that.
-    public function vote(TokenInterface $token, $object, array $attributes)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        if (!$object instanceof Group && !$object instanceof GroupCollection) {
-            return VoterInterface::ACCESS_ABSTAIN;
-        }
+        $collection = isset($options['collection']) ? $options['collection'] : null;
 
-        $groups = $object instanceof GroupCollection ? $object->getGroups() : [$object];
-        $action = strtolower($attributes[0]);
-
-        switch ($action) {
+        switch ($attributes[0]) {
             case self::CREATE: return $this->checkCreation($token);
-            case self::EDIT:   return $this->checkEdit($token, $groups);
-            case self::DELETE: return $this->checkDelete($token, $groups);
-            case self::VIEW:   return $this->checkView($token, $groups);
+            case self::EDIT:   return $this->checkEdit($token, $object);
+            case self::DELETE: return $this->checkDelete($token, $object);
+            case self::VIEW:   return $this->checkView($token, $object);
+            case self::PATCH:  return $this->checkPatch($token, $object, $collection);
         }
 
         return VoterInterface::ACCESS_ABSTAIN;
@@ -66,27 +41,15 @@ class GroupVoter implements VoterInterface
 
     private function checkCreation(TokenInterface $token)
     {
-        $tool = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')
-            ->findOneBy(['name' => 'user_management']);
-
-        $roles = $tool->getRoles();
-        $tokenRoles = $token->getRoles();
-
-        foreach ($tokenRoles as $tokenRole) {
-            foreach ($roles as $role) {
-                if ($role->getRole() === $tokenRole->getRole()) {
-                    return VoterInterface::ACCESS_GRANTED;
-                }
-            }
-        }
-
-        return VoterInterface::ACCESS_DENIED;
+        return $this->hasAdminToolAccess($token, 'user_management') ?
+             VoterInterface::ACCESS_GRANTED :
+             VoterInterface::ACCESS_DENIED;
     }
 
     private function checkEdit($token, $groups)
     {
         foreach ($groups as $group) {
-            if (!$this->isOrganizationManager($token, $group)) {
+            if (!$this->isGroupManaged($token, $group)) {
                 return VoterInterface::ACCESS_DENIED;
             }
         }
@@ -97,7 +60,7 @@ class GroupVoter implements VoterInterface
     private function checkDelete($token, $groups)
     {
         foreach ($groups as $group) {
-            if (!$this->isOrganizationManager($token, $group)) {
+            if (!$this->isGroupManaged($token, $group)) {
                 return VoterInterface::ACCESS_DENIED;
             }
         }
@@ -108,7 +71,7 @@ class GroupVoter implements VoterInterface
     private function checkView($token, $groups)
     {
         foreach ($groups as $group) {
-            if (!$this->isOrganizationManager($token, $group)) {
+            if (!$this->isGroupManaged($token, $group)) {
                 return VoterInterface::ACCESS_DENIED;
             }
         }
@@ -116,7 +79,33 @@ class GroupVoter implements VoterInterface
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function isOrganizationManager(TokenInterface $token, Group $group)
+    /**
+     * This is not done yet but later a user might be able to edit its roles/groups himself
+     * and it should be checked here.
+     *
+     * @param TokenInterface   $token
+     * @param User             $user
+     * @param ObjectCollection $collection
+     *
+     * @return int
+     */
+    private function checkPatch(TokenInterface $token, Group $group, ObjectCollection $collection = null)
+    {
+        //single property: no check now
+        if (!$collection) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        if ($this->isGroupManaged($token, $group)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        //maybe do something more complicated later
+        return $this->isGranted(self::EDIT, $collection) ?
+            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+    }
+
+    private function isGroupManaged(TokenInterface $token, Group $group)
     {
         $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
         $groupOrganizations = $group->getOrganizations();
@@ -132,13 +121,19 @@ class GroupVoter implements VoterInterface
         return false;
     }
 
-    public function supportsAttribute($attribute)
+    /**
+     * @return string
+     */
+    public function getClass()
     {
-        return true;
+        return 'Claroline\CoreBundle\Entity\Group';
     }
 
-    public function supportsClass($class)
+    /**
+     * @return array
+     */
+    public function getSupportedActions()
     {
-        return true;
+        return[self::CREATE, self::EDIT, self::DELETE, self::PATCH];
     }
 }
