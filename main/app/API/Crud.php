@@ -303,7 +303,8 @@ class Crud
         $name = 'crud_'.$when.'_'.$action.'_object';
         $eventClass = ucfirst($action);
         $generic = $this->dispatcher->dispatch($name, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
-        $serializedName = $name.'_'.strtolower(str_replace('\\', '_', get_class($args[0])));
+        $className = $this->om->getMetadataFactory()->getMetadataFor(get_class($args[0]))->getName();
+        $serializedName = $name.'_'.strtolower(str_replace('\\', '_', $className));
         $specific = $this->dispatcher->dispatch($serializedName, 'Claroline\\AppBundle\\Event\\Crud\\'.$eventClass.'Event', $args);
 
         return $generic->isAllowed() && $specific->isAllowed();
