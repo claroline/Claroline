@@ -13,21 +13,19 @@
     "coverage": "npm run karma -- --single-run --reporters=coverage"
   },
   "dependencies": {
-    "claroline-distribution": "file:./vendor/claroline/distribution",
-    "filesystem-bower-resolver": "*",
-    "bower-resolve-webpack-plugin": "*",
-    "webpack": "^3",
-    "webpack-notifier": "^1.5.1",
-    "babel-preset-es2015": "^6.24.1",
-    "babel-preset-react": "^6.23.0",
-    "postcss-cli": "^2.5.0",
-    "autoprefixer": "*",
-    "html-loader": "*",
     "@symfony/webpack-encore": "*",
     "assets-webpack-plugin": "*",
+    "autoprefixer": "*",
+    "babel-plugin-syntax-dynamic-import": "^6.18.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.23.0",
+    "claroline-distribution": "file:./vendor/claroline/distribution",
+    "html-loader": "*",
     "less": "*",
-    "yarn": "*",
-    "shelljs": "^0.5.3"
+    "postcss-cli": "^2.5.0",
+    "shelljs": "^0.5.3",
+    "webpack": "^3",
+    "webpack-notifier": "^1.5.1"
   },
   "devDependencies": {
     "assert": "^1.4.1",
