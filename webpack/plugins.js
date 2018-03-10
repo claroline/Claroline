@@ -41,19 +41,6 @@ const configShortcut = () => {
 }
 
 /**
- * Allows to freely define variables inside built files. Here it is used to set
- * the node environment variable to "production", so that libraries that make
- * use of that flag for debug purposes are silent.
- */
-const nodeEnvironment = (env = 'production') => {
-  return new webpack.DefinePlugin({
-    'process.env': {
-      NODE_ENV: JSON.stringify(env)
-    }
-  })
-}
-
-/**
  * Bundles entries in separate DLLs to improve build performance.
  */
 const dlls = () => {
@@ -158,6 +145,5 @@ module.exports = {
   assetsInfoFile,
   reactDllReference,
   angularDllReference,
-  scaffoldingDllReference,
-  nodeEnvironment
+  scaffoldingDllReference
 }

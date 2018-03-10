@@ -17,10 +17,14 @@ Encore
   .enableSourceMaps(false)
 
   // Plugins
+  .configureDefinePlugin(options => {
+    options['process.env'] = {
+      NODE_ENV: JSON.stringify('production')
+    }
+  })
   .configureManifestPlugin(options => {
     options.fileName = 'manifest.dll.json'
   })
-  .addPlugin(plugins.nodeEnvironment('production'))
   .addPlugin(plugins.dlls())
   .addPlugin(plugins.assetsInfoFile('webpack-dlls.json'))
   .addPlugin(plugins.clarolineConfiguration())

@@ -22,6 +22,11 @@ Encore
   .enableVersioning(true)
 
   // Plugins
+  .configureDefinePlugin(options => {
+    options['process.env'] = {
+      NODE_ENV: JSON.stringify('production')
+    }
+  })
   .configureManifestPlugin(options => {
     options.fileName = 'manifest.lib.json'
   })
@@ -29,7 +34,6 @@ Encore
     options.compress = true
     options.beautify = true
   })
-  .addPlugin(plugins.nodeEnvironment('production'))
   .addPlugin(plugins.distributionShortcut())
   .addPlugin(plugins.assetsInfoFile())
   .addPlugin(plugins.scaffoldingDllReference())
