@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@symfony/webpack-encore": "*",
+    "ajv": "^6.0.0",
     "assets-webpack-plugin": "*",
     "autoprefixer": "*",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
