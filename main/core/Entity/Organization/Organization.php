@@ -200,10 +200,14 @@ class Organization
     protected $type;
 
     /**
-     * @ORM\OneToMany(targetEntity="Claroline\CoreBundle\Entity\Organization\UserOrganizationReference", mappedBy="organization")
+     * @ORM\OneToMany(
+     *     targetEntity="Claroline\CoreBundle\Entity\Organization\UserOrganizationReference",
+     *     mappedBy="organization",
+     *     cascade={"persist"}
+     * )
      * @ORM\JoinColumn(name="organization_id", nullable=false)
      */
-    private $userOrganizationReference;
+    private $userOrganizationReferences;
 
     public function __construct()
     {
@@ -391,5 +395,28 @@ class Organization
     public function getType()
     {
         return $this->type;
+    }
+
+    public function addUser(User $user)
+    {
+        $ref = new UserOrganizationReference();
+        $ref->setOrganization($this);
+        $ref->setUser($user);
+        $this->userOrganizationReferences->add($ref);
+    }
+
+    public function removeUser(User $user)
+    {
+        $found = null;
+
+        foreach ($this->userOrganizationReferences as $ref) {
+            if ($ref->getUser()->getId() === $user->getId()) {
+                $found = $ref;
+            }
+        }
+
+        if ($found) {
+            $this->userOrganizationReferences->removeElement($found);
+        }
     }
 }
