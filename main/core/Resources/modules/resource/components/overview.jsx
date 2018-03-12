@@ -74,7 +74,7 @@ const UserFeedback = props => {
       evaluationConstants.EVALUATION_STATUS_PASSED,
       evaluationConstants.EVALUATION_STATUS_FAILED,
       evaluationConstants.EVALUATION_STATUS_COMPLETED
-    ].inArray(props.status) // Evaluation is finished
+    ].indexOf(props.status) > -1 // Evaluation is finished
 
   if (displayed) {
     let alertType
