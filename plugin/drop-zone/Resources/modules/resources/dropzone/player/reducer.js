@@ -76,7 +76,7 @@ const nbCorrectionsReducer = makeReducer({}, {
   }
 })
 
-const peerDropReducer = makeReducer({}, {
+const peerDropReducer = makeReducer(null, {
   [CORRECTION_UPDATE]: (state, action) => {
     if (state && state.id === action.correction.drop) {
       const corrections = cloneDeep(state.corrections)
