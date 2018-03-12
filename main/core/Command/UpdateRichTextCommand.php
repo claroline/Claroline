@@ -128,7 +128,7 @@ class UpdateRichTextCommand extends ContainerAwareCommand
                 $helper = $this->getHelper('question');
                 $question = new ChoiceQuestion('Edit ?', ['yes', 'no']);
                 $answer = $helper->ask($input, $output, $question);
-                if ($answer === 'yes') {
+                if ('yes' === $answer) {
                     $continue = true;
                 }
             }
@@ -150,6 +150,7 @@ class UpdateRichTextCommand extends ContainerAwareCommand
     private function getParsableEntities()
     {
         return [
+            'Claroline\CoreBundle\Entity\Content' => 'content',
             'Claroline\CoreBundle\Entity\Resource\Revision' => 'content',
             'Claroline\AgendaBundle\Entity\Event' => 'description',
             'Claroline\CoreBundle\Entity\Resource\Activity' => 'description',
