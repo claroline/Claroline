@@ -112,6 +112,10 @@
       "title": "Suppression réussie",
       "message": "Vos données ont correctement été supprimée."
     },
+    "warning": {
+      "title": "Avertissement sur la suppression",
+      "message": "Ils se peut que certaines données n'aient pas été supprimées."
+    },
     "error": {
       "title": "Echec de la suppression",
       "message": "Nous n'avons pas réussi à supprimer vos données."

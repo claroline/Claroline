@@ -3,6 +3,9 @@ import {generateUrl} from '#/main/core/api/router'
 import {actions as listActions} from '#/main/core/data/list/actions'
 import {getDataQueryString} from '#/main/core/data/list/utils'
 import {actions as formActions} from '#/main/core/data/form/actions'
+import {actions as alertActions} from '#/main/core/layout/alert/actions'
+import {constants as alertConstants} from '#/main/core/layout/alert/constants'
+import {constants as actionConstants} from '#/main/core/layout/action/constants'
 
 import {Workspace as WorkspaceTypes} from '#/main/core/administration/workspace/workspace/prop-types'
 
@@ -60,6 +63,31 @@ actions.addManagers = (id, users, roleId) => ({
     success: (data, dispatch) => {
       dispatch(listActions.invalidateData('workspaces.list'))
       dispatch(listActions.invalidateData('workspaces.current.managers'))
+    }
+  }
+})
+
+actions.deleteWorkspaces = (workspaces) => ({
+  [API_REQUEST]: {
+    url: generateUrl('apiv2_workspace_delete_bulk_override') + '?' +  workspaces.map(w => 'ids[]=' + w.uuid).join('&'),
+    request: {
+      method: 'DELETE'
+    },
+    success: (data, dispatch) => {
+      dispatch(listActions.invalidateData('workspaces.list'))
+    },
+    error: (data, dispatch) => {
+      if (data['errors']) {
+        Object.values(data['errors']).forEach(message => dispatch(alertActions.addAlert(
+          'workspace-deletion',
+          alertConstants.ALERT_STATUS_WARNING,
+          actionConstants.ACTION_DELETE,
+          null,
+          message
+        )))
+
+      }
+      dispatch(listActions.invalidateData('workspaces.list'))
     }
   }
 })

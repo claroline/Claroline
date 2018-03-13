@@ -99,6 +99,7 @@ class Paper
      * @var Exercise
      *
      * @ORM\ManyToOne(targetEntity="UJM\ExoBundle\Entity\Exercise")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $exercise;
 

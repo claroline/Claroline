@@ -10,6 +10,7 @@
         data-path="{{ node.path_for_display }}"
         data-allow-select="{{ isSelectionAllowed}}"
         data-mask="{{ node.mask }}"
+        data-deletable="{% if node.deletable %}1{% else %}0{% endif %}"
         {% if isSelectionAllowed == false %}style="visibility: collapse;"{% endif %}
         />
 </div>

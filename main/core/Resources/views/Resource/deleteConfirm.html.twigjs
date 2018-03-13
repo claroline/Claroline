@@ -9,7 +9,15 @@
 
     <ul>
         {% for key, node in nodes %}
-            <li>  {{ nodes[key][3] }} </li>
+            <li>
+                {{ nodes[key][3] }}
+                {% if not nodes[key][6] %}
+                    <span class="label label-danger">
+                        <i class="fa fa-exclamation-triangle"/>
+                        {{ 'not_deletable'|trans({}, 'platform') }}
+                    </span>
+                {% endif %}
+            </li>
         {% endfor %}
     </ul>
 </div>

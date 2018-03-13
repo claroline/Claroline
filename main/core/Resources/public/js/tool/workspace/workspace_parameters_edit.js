@@ -22,6 +22,11 @@
             type: 'DELETE',
             success: function () {
                 window.location = Routing.generate('claro_desktop_open_tool', {'toolName': 'home'});
+            },
+            error: function (xhr) {
+                if (xhr.status === 403) {
+                  window.location.reload();
+                }
             }
         });
     });

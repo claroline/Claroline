@@ -919,6 +919,7 @@ class ResourceManager
         $resourceArray['path_for_display'] = $node->getPathForDisplay();
         $resourceArray['mime_type'] = $node->getMimeType();
         $resourceArray['published'] = $node->isPublished();
+        $resourceArray['deletable'] = $node->isDeletable();
         $resourceArray['index_dir'] = $node->getIndex();
         $resourceArray['creation_date'] = $node->getCreationDate()->format($this->translator->trans('date_range.format.with_hours', [], 'platform'));
         $resourceArray['modification_date'] = $node->getModificationDate()->format($this->translator->trans('date_range.format.with_hours', [], 'platform'));
@@ -1615,6 +1616,7 @@ class ResourceManager
         $newNode->setAccessibleFrom($node->getAccessibleFrom());
         $newNode->setAccessibleUntil($node->getAccessibleUntil());
         $newNode->setPublished($node->isPublished());
+        $newNode->setDeletable($node->isDeletable());
         $newNode->setLicense($node->getLicense());
         $newNode->setAuthor($node->getAuthor());
         $newNode->setIndex($index);
@@ -2062,5 +2064,10 @@ class ResourceManager
         $target = $this->getRealTarget($node);
 
         return $this->getResourceFromNode($target);
+    }
+
+    public function getNotDeletableResourcesByWorkspace(Workspace $workspace)
+    {
+        return $this->resourceNodeRepo->findBy(['workspace' => $workspace, 'deletable' => false]);
     }
 }

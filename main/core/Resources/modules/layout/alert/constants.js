@@ -181,6 +181,10 @@ const ALERT_ACTIONS = {
       title: trans('delete.success.title', {}, 'alerts'),
       message: trans('delete.success.message', {}, 'alerts')
     },
+    [ALERT_STATUS_WARNING]: {
+      title: trans('delete.warning.title', {}, 'alerts'),
+      message: trans('delete.warning.message', {}, 'alerts')
+    },
     [ALERT_STATUS_ERROR]: {
       title: trans('delete.error.title', {}, 'alerts'),
       message: trans('delete.error.message', {}, 'alerts')

@@ -324,6 +324,13 @@ class ResourceNode
      */
     protected $viewsCount = 0;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default": 1})
+     */
+    protected $deletable = true;
+
     public function __construct()
     {
         $this->guid = Uuid::uuid4()->toString();
@@ -1049,5 +1056,25 @@ class ResourceNode
         ++$this->viewsCount;
 
         return $this;
+    }
+
+    /**
+     * Checks if the resource node can be deleted.
+     *
+     * @return bool
+     */
+    public function isDeletable()
+    {
+        return $this->deletable;
+    }
+
+    /**
+     * Sets the deletable option.
+     *
+     * @param bool $deletable
+     */
+    public function setDeletable($deletable)
+    {
+        $this->deletable = $deletable;
     }
 }

@@ -96,6 +96,10 @@
                 'style',
                 'background-image:url("' + this.parameters.webPath + '/' + event.large_icon + '");'
             );
+            this.$('#node-element-' + event.id).prev('.checkbox-left').children('.node-chk-main').attr(
+                'data-deletable',
+                event.deletable ? '1' : '0'
+            );
         },
         removeNodes: function (event) {
             var ids = event.ids || [event.nodeId];
@@ -145,7 +149,8 @@
                     type: event.currentTarget.getAttribute('data-type'),
                     mimeType: event.currentTarget.getAttribute('data-mime-type'),
                     path: event.currentTarget.getAttribute('data-path'),
-                    mask: event.currentTarget.getAttribute('data-mask')
+                    mask: event.currentTarget.getAttribute('data-mask'),
+                    deletable: event.currentTarget.getAttribute('data-deletable') !== '0'
                 },
                 isChecked: event.currentTarget.checked,
                 isPickerMode: this.parameters.isPickerMode

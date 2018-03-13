@@ -96,15 +96,21 @@
     'delete': function (event) {
       if (!this.$(event.currentTarget).hasClass('disabled')) {
         var body = Twig.render(
-                    ResourceDeleteConfirmMessage,
-                    {'nodes': this.checkedNodes.nodes}
-                )
+            ResourceDeleteConfirmMessage,
+            {'nodes': this.checkedNodes.nodes}
+        )
         this.dispatcher.trigger('confirm', {
           header: Translator.trans('delete', {}, 'platform'),
           body: body,
           callback: _.bind(function () {
+            var deletableNodesIds = []
+            this.checkedNodes.nodes.forEach((n, index) => {
+              if (n[6]) {
+                deletableNodesIds.push(index)
+              }
+            })
             this.dispatcher.trigger('delete', {
-              ids: _.keys(this.checkedNodes.nodes),
+              ids: deletableNodesIds,
               view: this.parameters.viewName
             })
           }, this)
@@ -258,7 +264,8 @@
           event.node.mimeType,
           event.node.path,
           event.node.id,
-          event.node.mask
+          event.node.mask,
+          event.node.deletable
         ]
       }
 
@@ -271,14 +278,18 @@
       this.isCutMode = isCutMode
       this.cutCpyNodes = this.checkedNodes.nodes
       this.setButtonEnabledState(
-                this.$('a.paste'),
-                isReadyToPaste && (!this.isCutMode || this.checkedNodes.directoryId !== this.currentDirectoryId)
-            )
+        this.$('a.paste'),
+        isReadyToPaste && (!this.isCutMode || this.checkedNodes.directoryId !== this.currentDirectoryId)
+      )
     },
     setInitialState: function () {
-            //initialized each time we changed directory
-      this.checkedNodes.nodes = {}
-            //initialized each time we click on Cut/Copy
+      //initialized each time we changed directory
+      _.each($('input[type=checkbox].node-chk-main:checked'), function (checkbox) {
+        checkbox.checked = false;
+      })
+      this.checkedNodes.nodes = []
+
+      //initialized each time we click on Cut/Copy
       this.cutCpyNodes = []
       this.isReadyToPaste = false
       this.isCutMode = false

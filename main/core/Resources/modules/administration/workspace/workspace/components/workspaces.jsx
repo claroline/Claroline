@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import Configuration from '#/main/core/library/Configuration/Configuration'
-import {t, transChoice, Translator} from '#/main/core/translation'
+import {trans, transChoice, Translator} from '#/main/core/translation'
 
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_CONFIRM, MODAL_URL} from '#/main/core/layout/modal'
@@ -19,11 +19,6 @@ const WorkspacesList = props =>
     fetch={{
       url: ['apiv2_workspace_list'],
       autoload: true
-    }}
-    delete={{
-      url: ['apiv2_workspace_delete_bulk'],
-      displayed: (workspaces) =>
-        0 < workspaces.filter(workspace => workspace.code !== 'default_personal' && workspace.code !== 'default_workspace' ).length
     }}
     definition={WorkspaceList.definition}
 
@@ -42,17 +37,24 @@ const WorkspacesList = props =>
         context: 'row'
       }), {
         icon: 'fa fa-fw fa-copy',
-        label: t('duplicate'),
+        label: trans('duplicate'),
         action: (rows) => props.copyWorkspaces(rows, false)
       }, {
         icon: 'fa fa-fw fa-clone',
-        label: t('duplicate_model'),
+        label: trans('duplicate_model'),
         action: (rows) => props.copyWorkspaces(rows, true)
       },
       {
         icon: 'fa fa-fw fa-book',
-        label: t('edit'),
+        label: trans('edit'),
         action: (rows) => window.location.href = `#/workspaces/form/${rows[0].uuid}`
+      },
+      {
+        icon: 'fa fa-fw fa-trash-o',
+        label: trans('delete'),
+        dangerous: true,
+        displayed: (rows) => 0 < rows.filter(w => w.code !== 'default_personal' && w.code !== 'default_workspace').length,
+        action: (rows) => props.deleteWorkspaces(rows)
       }
     ]}
 
@@ -61,6 +63,7 @@ const WorkspacesList = props =>
 
 WorkspacesList.propTypes = {
   copyWorkspaces: T.func.isRequired,
+  deleteWorkspaces: T.func.isRequired,
   showModal: T.func.isRequired
 }
 
@@ -71,7 +74,7 @@ const Workspaces = connect(
       dispatch(
         modalActions.showModal(MODAL_CONFIRM, {
           title: transChoice(asModel ? 'copy_model_workspaces' : 'copy_workspaces', workspaces.length, {count: workspaces.length}, 'platform'),
-          question: t(asModel ? 'copy_model_workspaces_confirm' : 'copy_workspaces_confirm', {
+          question: trans(asModel ? 'copy_model_workspaces_confirm' : 'copy_workspaces_confirm', {
             workspace_list: workspaces.map(workspace => workspace.name).join(', ')
           }),
           handleConfirm: () => dispatch(actions.copyWorkspaces(workspaces, asModel))
@@ -81,6 +84,17 @@ const Workspaces = connect(
 
     showModal(type, props) {
       dispatch(modalActions.showModal(type, props))
+    },
+
+    deleteWorkspaces(workspaces) {
+      dispatch(
+        modalActions.showModal(MODAL_CONFIRM, {
+          title: trans('objects_delete_title'),
+          question: transChoice('objects_delete_question', workspaces.length, {'count': workspaces.length}, 'platform'),
+          dangerous: true,
+          handleConfirm: () => dispatch(actions.deleteWorkspaces(workspaces))
+        })
+      )
     }
   })
 )(WorkspacesList)

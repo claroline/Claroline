@@ -10,7 +10,7 @@ export const ALERT_REMOVE = 'ALERT_REMOVE'
 
 export const actions = {}
 
-actions.addAlert = (id, status, action = constants.ACTION_GENERIC, title = null, message = null) => {
+actions.addAlert = (id, status, action = actionConstants.ACTION_GENERIC, title = null, message = null) => {
   // validates params
   invariant(id, 'id is required')
   invariant(status, 'status is required')

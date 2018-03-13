@@ -125,7 +125,8 @@ class ResourceQueryBuilder
             "    node.modificationDate as modification_date,{$eol}".
             "    node.published as published,{$eol}".
             "    node.accessibleFrom as accessible_from,{$eol}".
-            "    node.accessibleUntil as accessible_until{$eol}";
+            "    node.accessibleUntil as accessible_until,{$eol}".
+            "    node.deletable as deletable{$eol}";
 
         if ($withMaxPermissions) {
             $this->leftJoinRights = true;

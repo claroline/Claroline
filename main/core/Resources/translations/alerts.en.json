@@ -108,6 +108,10 @@
       "title": "Successful deletion",
       "message": "Your data has been deleted correctly."
     },
+    "warning": {
+      "title": "Deletion warning",
+      "message": "Some data might not have been deleted."
+    },
     "error": {
       "title": "Deletion failure",
       "message": "We were unable to delete your data."

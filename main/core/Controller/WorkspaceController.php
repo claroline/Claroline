@@ -401,22 +401,41 @@ class WorkspaceController extends Controller
     public function deleteAction(Workspace $workspace)
     {
         $this->assertIsGranted('DELETE', $workspace);
-        $this->eventDispatcher->dispatch('log', new LogWorkspaceDeleteEvent($workspace));
-        $this->workspaceManager->deleteWorkspace($workspace);
-
-        $this->tokenUpdater->cancelUsurpation($this->tokenStorage->getToken());
-
+        $notDeletableNodes = $this->resourceManager->getNotDeletableResourcesByWorkspace($workspace);
         $sessionFlashBag = $this->session->getFlashBag();
-        $sessionFlashBag->add(
-            'success',
-            $this->translator->trans(
-                'workspace_delete_success_message',
-                ['%workspaceName%' => $workspace->getName()],
-                'platform'
-            )
-        );
 
-        return new Response('success', 204);
+        if (count($notDeletableNodes) === 0) {
+            $this->eventDispatcher->dispatch('log', new LogWorkspaceDeleteEvent($workspace));
+            $this->workspaceManager->deleteWorkspace($workspace);
+
+            $this->tokenUpdater->cancelUsurpation($this->tokenStorage->getToken());
+
+            $sessionFlashBag->add(
+                'success',
+                $this->translator->trans(
+                    'workspace_delete_success_message',
+                    ['%workspaceName%' => $workspace->getName()],
+                    'platform'
+                )
+            );
+
+            return new Response('success', 204);
+        } else {
+            $sessionFlashBag->add(
+                'error',
+                $this->translator->trans(
+                    'workspace_not_deletable_resources_error_message',
+                    ['%workspaceName%' => $workspace->getName()],
+                    'platform'
+                )
+            );
+
+            foreach ($notDeletableNodes as $node) {
+                $sessionFlashBag->add('error', $node->getPathForDisplay());
+            }
+
+            return new Response('error', 403);
+        }
     }
 
     /**

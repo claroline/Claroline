@@ -1401,6 +1401,7 @@ class ResourceController extends Controller
                     'published' => $node->isPublished(),
                     'accessible_from' => $node->getAccessibleFrom(),
                     'accessible_until' => $node->getAccessibleUntil(),
+                    'deletable' => $node->isDeletable(),
                 ];
                 $parent = $node->getParent();
                 $icon = $node->getIcon();

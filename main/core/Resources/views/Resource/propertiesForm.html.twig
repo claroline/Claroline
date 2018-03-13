@@ -27,6 +27,19 @@
             </div>
             {{ form_row(form.accessibleFrom) }}
             {{ form_row(form.accessibleUntil) }}
+            <div class="form-group row">
+                {{ form_label(form.deletable) }}
+                <div class="col-md-3">
+                    {{ form_widget(form.deletable) }}
+                    <i class="fa fa-question-circle text-info"
+                       data-toggle="tooltip"
+                       data-placement="top"
+                       style="font-size: 1.4em; cursor: help;"
+                       title="{{ 'deletable_resource_message'|trans({}, 'platform') }}"
+                    >
+                    </i>
+                </div>
+            </div>
             <hr>
             {{ form_rest(form) }}
 

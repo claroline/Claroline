@@ -19,7 +19,10 @@
         )
     }}
 {% endblock %}
+
+
 {% block section_content %}
+    {{ macros.flashBox() }}
 
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'general'|trans({}, 'platform') }}</h3>
