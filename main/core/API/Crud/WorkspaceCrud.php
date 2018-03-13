@@ -6,6 +6,7 @@ use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\Crud\CopyEvent;
 use Claroline\AppBundle\Event\Crud\CreateEvent;
 use Claroline\AppBundle\Event\Crud\DeleteEvent;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -51,14 +52,15 @@ class WorkspaceCrud
     public function preCreate(CreateEvent $event)
     {
         $workspace = $this->manager->createWorkspace($event->getObject());
-
         $user = $this->tokenStorage->getToken()->getUser();
+        $workspace = $this->manager->copy($this->manager->getDefaultModel(), $workspace, false);
 
         if ($user instanceof User) {
+            $workspace->setCreator($user);
             $workspace->addOrganization($user->getMainOrganization());
         }
 
-        return $this->manager->copy($this->manager->getDefaultModel(), $workspace, false);
+        return $workspace;
     }
 
     /**
