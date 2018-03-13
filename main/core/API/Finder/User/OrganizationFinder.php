@@ -80,7 +80,7 @@ class OrganizationFinder implements FinderInterface
                     }
                     break;
                 case 'user':
-                    $qb->leftJoin('obj.userOrganizationReference', 'ur');
+                    $qb->leftJoin('obj.userOrganizationReferences', 'ur');
                     $qb->leftJoin('ur.user', 'u');
                     $qb->andWhere('u.uuid IN (:userIds)');
                     $qb->setParameter('userIds', is_array($filterValue) ? $filterValue : [$filterValue]);
