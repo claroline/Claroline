@@ -13,7 +13,7 @@ use UJM\LtiBundle\Form\AppType;
 
 /**
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("canOpenAdminTool('administration_tool_lti')")
+ * @SEC\PreAuthorize("canOpenAdminTool('lti')")
  */
 class LtiController extends Controller
 {
