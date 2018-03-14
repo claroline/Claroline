@@ -49,6 +49,8 @@ const WorkspacesList = props =>
         label: trans('edit'),
         action: (rows) => window.location.href = `#/workspaces/form/${rows[0].uuid}`
       },
+      // TODO / FIXME : Uses component delete option.
+      // Not possible for the moment because it is not possible to display an alert message if the workspace contains not deletable resources.
       {
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete'),

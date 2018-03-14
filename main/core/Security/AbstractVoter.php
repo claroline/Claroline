@@ -137,7 +137,7 @@ abstract class AbstractVoter implements ClarolineVoterInterface, VoterInterface
     private function supports($object)
     {
         if ($object instanceof ObjectCollection) {
-            return $object->instanceof($this->getClass());
+            return $object->isInstanceOf($this->getClass());
         } else {
             //doctrine sends proxy so we have to do the check with the instanceof operator
             $rc = new \ReflectionClass($this->getClass());

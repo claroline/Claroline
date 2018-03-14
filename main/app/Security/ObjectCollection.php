@@ -55,7 +55,7 @@ class ObjectCollection extends ArrayCollection
         return $this->class;
     }
 
-    public function instanceof($class)
+    public function isInstanceOf($class)
     {
         //doctrine sends proxy so we have to do the check with the instanceof operator
         $rc = new \ReflectionClass($class);

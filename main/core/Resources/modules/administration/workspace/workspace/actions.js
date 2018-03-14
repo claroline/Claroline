@@ -69,7 +69,7 @@ actions.addManagers = (id, users, roleId) => ({
 
 actions.deleteWorkspaces = (workspaces) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_workspace_delete_bulk_override') + '?' +  workspaces.map(w => 'ids[]=' + w.uuid).join('&'),
+    url: generateUrl('apiv2_workspace_delete_bulk') + '?' +  workspaces.map(w => 'ids[]=' + w.uuid).join('&'),
     request: {
       method: 'DELETE'
     },
