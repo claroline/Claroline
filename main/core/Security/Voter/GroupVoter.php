@@ -46,34 +46,28 @@ class GroupVoter extends AbstractVoter
              VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkEdit($token, $groups)
+    private function checkEdit($token, Group $group)
     {
-        foreach ($groups as $group) {
-            if (!$this->isGroupManaged($token, $group)) {
-                return VoterInterface::ACCESS_DENIED;
-            }
+        if (!$this->isGroupManaged($token, $group)) {
+            return VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function checkDelete($token, $groups)
+    private function checkDelete($token, Group $group)
     {
-        foreach ($groups as $group) {
-            if (!$this->isGroupManaged($token, $group)) {
-                return VoterInterface::ACCESS_DENIED;
-            }
+        if (!$this->isGroupManaged($token, $group)) {
+            return VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function checkView($token, $groups)
+    private function checkView($token, Group $group)
     {
-        foreach ($groups as $group) {
-            if (!$this->isGroupManaged($token, $group)) {
-                return VoterInterface::ACCESS_DENIED;
-            }
+        if (!$this->isGroupManaged($token, $group)) {
+            return VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_GRANTED;

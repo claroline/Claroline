@@ -73,34 +73,28 @@ class WorkspaceVoter extends AbstractVoter
              VoterInterface::ACCESS_DENIED;
     }
 
-    private function checkEdit($token, $workspaces)
+    private function checkEdit($token, Workspace $workspace)
     {
-        foreach ($workspaces as $workspace) {
-            if (!$this->isWorkspaceManaged($token, $workspace)) {
-                return VoterInterface::ACCESS_DENIED;
-            }
+        if (!$this->isWorkspaceManaged($token, $workspace)) {
+            return VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function checkDelete($token, $workspaces)
+    private function checkDelete($token, Workspace $workspace)
     {
-        foreach ($workspaces as $workspace) {
-            if (!$this->isWorkspaceManaged($token, $workspace)) {
-                return VoterInterface::ACCESS_DENIED;
-            }
+        if (!$this->isWorkspaceManaged($token, $workspace)) {
+            return VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_GRANTED;
     }
 
-    private function checkView($token, $workspaces)
+    private function checkView($token, Workspace $workspace)
     {
-        foreach ($workspaces as $workspace) {
-            if (!$this->isWorkspaceManaged($token, $workspace)) {
-                return VoterInterface::ACCESS_DENIED;
-            }
+        if (!$this->isWorkspaceManaged($token, $workspace)) {
+            return VoterInterface::ACCESS_DENIED;
         }
 
         return VoterInterface::ACCESS_GRANTED;
