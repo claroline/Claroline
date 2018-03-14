@@ -10,6 +10,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * @DI\Service("claroline.serializer.workspace")
@@ -25,12 +26,16 @@ class WorkspaceSerializer
     /** @var WorkspaceManager */
     private $workspaceManager;
 
+    /** @var ContainerInterface */
+    private $container;
+
     /**
      * WorkspaceSerializer constructor.
      *
      * @DI\InjectParams({
      *     "userSerializer"   = @DI\Inject("claroline.serializer.user"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "container"        = @DI\Inject("service_container")
      * })
      *
      * @param UserSerializer   $userSerializer
@@ -38,10 +43,12 @@ class WorkspaceSerializer
      */
     public function __construct(
         UserSerializer $userSerializer,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        ContainerInterface $container
     ) {
         $this->userSerializer = $userSerializer;
         $this->workspaceManager = $workspaceManager;
+        $this->container = $container;
     }
 
     /**
@@ -63,6 +70,7 @@ class WorkspaceSerializer
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
+            $serializer = $this->container->get('claroline.api.serializer');
             $serialized = array_merge($serialized, [
                 'poster' => '', // todo : add as Workspace prop
                 'meta' => $this->getMeta($workspace),
@@ -70,11 +78,18 @@ class WorkspaceSerializer
                 'restrictions' => $this->getRestrictions($workspace),
                 'registration' => $this->getRegistration($workspace),
                 'roles' => array_map(function (Role $role) {
-                    return ['id' => $role->getId(), 'name' => $role->getName()];
+                    return [
+                        'id' => $role->getUuid(),
+                        'name' => $role->getName(),
+                        'translationKey' => $role->getTranslationKey(),
+                    ];
                 }, $workspace->getRoles()->toArray()),
                 'managers' => array_map(function (User $manager) {
                     return $this->userSerializer->serialize($manager, [Options::SERIALIZE_MINIMAL]);
                 }, $this->workspaceManager->getManagers($workspace)),
+                'organizations' => array_map(function ($organization) use ($serializer) {
+                    return $serializer->serialize($organization);
+                }, $workspace->getOrganizations()->toArray()),
             ]);
         }
 

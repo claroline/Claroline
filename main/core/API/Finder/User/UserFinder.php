@@ -119,6 +119,11 @@ class UserFinder implements FinderInterface
                     $qb->setParameter('administratedOrganizations', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'contactable':
+                case 'workspace':
+                    $qb->leftJoin('obj.roles', 'wsuroles');
+                    $qb->leftJoin('wsuroles.workspace', 'rws');
+                    $qb->andWhere('rws.uuid = (:workspaceId)');
+                    $qb->setParameter('workspaceId', $filterValue);
                     break;
                 case 'blacklist':
                     $qb->andWhere("obj.uuid NOT IN (:{$filterName})");

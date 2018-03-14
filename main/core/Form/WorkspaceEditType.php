@@ -109,10 +109,7 @@ class WorkspaceEditType extends AbstractType
         } else {
             $builder->add('description', 'tinymce', ['required' => false, 'label' => 'description']);
         }
-        $builder->add('displayable', 'checkbox', ['required' => false, 'label' => 'displayable_in_workspace_list']);
-        $builder->add('selfRegistration', 'checkbox', ['required' => false, 'label' => 'public_registration']);
-        $builder->add('registrationValidation', 'checkbox', ['required' => false, 'label' => 'registration_validation']);
-        $builder->add('selfUnregistration', 'checkbox', ['required' => false, 'label' => 'public_unregistration']);
+
         $builder->add('disabledNotifications', 'checkbox', ['required' => false, 'label' => 'disable_workspace_notifications']);
 
         if (!$this->isAdmin) {
@@ -130,13 +127,6 @@ class WorkspaceEditType extends AbstractType
         }
 
         $builder->add('countResources', 'text', ['mapped' => false, 'disabled' => 'disabled', 'label' => 'count_resources', 'data' => $this->countResources]);
-
-        if (!$this->isAdmin) {
-            $builder->add('maxUsers', 'text', ['disabled' => 'disabled', 'label' => 'workspace_max_users']);
-        } else {
-            $builder->add('maxUsers', 'text', ['label' => 'workspace_max_users']);
-        }
-
         $builder->add('number', 'text', ['disabled' => 'disabled', 'data' => $this->number, 'mapped' => false, 'label' => 'registered_user_amount']);
     }
 

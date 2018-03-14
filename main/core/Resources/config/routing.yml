@@ -122,11 +122,6 @@ claro_workspace_tool_tools_properties:
     prefix: workspaces/tool/properties
     type: annotation
 
-claro_workspace_roles:
-    resource: "@ClarolineCoreBundle/Controller/Tool/RolesController.php"
-    prefix: workspaces/tools/roles/
-    type: annotation
-
 claro_workspace_analytics:
     prefix: workspace/analytics
     resource: "@ClarolineCoreBundle/Controller/WorkspaceAnalyticsController.php"

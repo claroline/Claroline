@@ -217,6 +217,27 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * @EXT\Template()
+     *
+     * Renders the registered workspace list for a user.
+     *
+     * @return Response
+     */
+    public function usersManagementAction(Workspace $workspace)
+    {
+        return [
+            'workspace' => $workspace,
+            'restrictions' => [
+                'hasUserManagementAccess' => $this->authorization->isGranted(
+                    'OPEN', $this->container->get('claroline.persistence.object_manager')
+                      ->getRepository('ClarolineCoreBundle:Tool\AdminTool')
+                      ->findOneByName('user_management')
+                ),
+            ],
+        ];
+    }
+
+    /**
      * @EXT\Route(
      *     "/user/picker",
      *     name="claro_workspace_by_user_picker",
@@ -682,19 +703,6 @@ class WorkspaceController extends Controller
                 ]
             )
         );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/slug/{slug}/open",
-     *     name="claro_workspace_open_slug",
-     *     options={"expose"=true}
-     * )
-     * @EXT\ParamConverter("workspace",  options={"mapping": {"slug": "slug"}})
-     */
-    public function openSlugAction(Workspace $workspace)
-    {
-        return $this->openAction($workspace);
     }
 
     /**

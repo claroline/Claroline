@@ -47,8 +47,20 @@ class ObjectCollection extends ArrayCollection
         $this->options = $options;
     }
 
+    /**
+     * Be carreful as it can returns the doctrine proxy class name.
+     */
     public function getClass()
     {
         return $this->class;
+    }
+
+    public function instanceof($class)
+    {
+        //doctrine sends proxy so we have to do the check with the instanceof operator
+        $rc = new \ReflectionClass($class);
+        $toCheck = $rc->newInstanceWithoutConstructor();
+
+        return $this->first() instanceof $toCheck;
     }
 }

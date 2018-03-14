@@ -1565,5 +1565,6 @@
     "open_url": "Open url",
     "external": "External",
     "internal": "Internal",
-    "force_organization_creation": "Force the organization creation at the user registration"
+    "force_organization_creation": "Force the organization creation at the user registration",
+        "workspace_user_register_validation_message": "Do you really want to register the following users: [%users%] ?"
 }

@@ -21,7 +21,8 @@
       "user-registration": "user/registration",
       "user-profile": "user/profile",
       "user-tracking": "user/tracking",
-      "contacts-tool": "contact/tool"
+      "contacts-tool": "contact/tool",
+      "workspace-user-management": "workspace/user"
     }
   },
 

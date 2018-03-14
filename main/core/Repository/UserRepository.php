@@ -225,42 +225,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
     }
 
     /**
-     * Returns the users of a group whose first name, last name or username match
-     * a given search string.
-     *
-     * @param string $search
-     * @param Group  $group
-     * @param bool   $executeQuery
-     * @param string $orderedBy
-     *
-     * @return User[]|Query
-     */
-    public function findByNameAndGroup(
-        $search,
-        Group $group,
-        $executeQuery = true,
-        $orderedBy = 'id',
-        $order = 'ASC'
-    ) {
-        $dql = "
-            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
-            JOIN u.groups g
-            WHERE g.id = :groupId
-            AND (UPPER(u.username) LIKE :search
-            OR UPPER(u.lastName) LIKE :search
-            OR UPPER(u.firstName) LIKE :search)
-            AND u.isRemoved = false
-            ORDER BY u.{$orderedBy} {$order}
-        ";
-        $upperSearch = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('search', "%{$upperSearch}%");
-        $query->setParameter('groupId', $group->getId());
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
      * Returns the users who are members of one of the given workspaces. Users's groups are not
      * taken into account.
      *
@@ -998,27 +962,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         return $executeQuery ? $query->getResult() : $query;
     }
 
-    public function findUsersWithoutUserRole($executeQuery = true)
-    {
-        $dql = '
-            SELECT u
-            FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isRemoved = false
-            AND NOT EXISTS
-            (
-                SELECT r
-                FROM Claroline\CoreBundle\Entity\Role r
-                WHERE r.type = :type
-                AND r.translationKey = u.username
-            )
-        ';
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('type', Role::USER_ROLE);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
     public function findUsersWithRights(
         ResourceNode $node,
         $orderedBy = 'firstName',
@@ -1030,45 +973,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
             FROM Claroline\CoreBundle\Entity\User u
             WHERE u.isRemoved = false
             AND EXISTS
-            (
-                SELECT rr
-                FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rr
-                JOIN rr.resourceNode rn
-                JOIN rr.role r
-                LEFT JOIN rr.resourceTypes rt
-                WHERE rn = :resourceNode
-                AND r.translationKey = u.username
-                AND
-                (
-                    rr.mask > 0
-                    OR EXISTS
-                    (
-                        SELECT rt2
-                        FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt2
-                        WHERE rt2 = rt
-                    )
-                )
-            )
-            ORDER BY u.{$orderedBy} {$order}
-        ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('resourceNode', $node);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function findUsersWithoutRights(
-        ResourceNode $node,
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        $dql = "
-            SELECT u
-            FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isRemoved = false
-            AND NOT EXISTS
             (
                 SELECT rr
                 FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rr
@@ -1115,54 +1019,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 OR UPPER(u.username) LIKE :search
             )
             AND EXISTS
-            (
-                SELECT rr
-                FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rr
-                JOIN rr.resourceNode rn
-                JOIN rr.role r
-                LEFT JOIN rr.resourceTypes rt
-                WHERE rn = :resourceNode
-                AND r.translationKey = u.username
-                AND
-                (
-                    rr.mask > 0
-                    OR EXISTS
-                    (
-                        SELECT rt2
-                        FROM Claroline\CoreBundle\Entity\Resource\ResourceType rt2
-                        WHERE rt2 = rt
-                    )
-                )
-            )
-            ORDER BY u.{$orderedBy} {$order}
-        ";
-
-        $upperSearch = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('resourceNode', $node);
-        $query->setParameter('search', "%{$upperSearch}%");
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    public function findSearchedUsersWithoutRights(
-        ResourceNode $node,
-        $search = '',
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $executeQuery = true
-    ) {
-        $dql = "
-            SELECT u
-            FROM Claroline\CoreBundle\Entity\User u
-            WHERE u.isRemoved = false
-            AND
-            (
-                UPPER(u.firstName) LIKE :search
-                OR UPPER(u.lastName) LIKE :search
-                OR UPPER(u.username) LIKE :search
-            )
-            AND NOT EXISTS
             (
                 SELECT rr
                 FROM Claroline\CoreBundle\Entity\Resource\ResourceRights rr
@@ -1618,73 +1474,6 @@ class UserRepository extends EntityRepository implements UserProviderInterface
         }
 
         return parent::findAll();
-    }
-
-    /**
-     * Returns the users who are not members of a group.
-     *
-     * @param Group  $group
-     * @param bool   $executeQuery
-     * @param string $orderedBy
-     *
-     * @return User[]|Query
-     *
-     * @todo Find out why the join on profile preferences is necessary
-     */
-    public function findGroupOutsiders(Group $group, $executeQuery = true, $orderedBy = 'id')
-    {
-        $dql = "
-            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE u NOT IN (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.groups gs
-                WHERE gs.id = :groupId
-            )
-            AND u.isRemoved = false
-            ORDER BY u.{$orderedBy}
-        ";
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('groupId', $group->getId());
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
-     * Returns the users who are not members of a group and whose first name, last
-     * name or username match a given search string.
-     *
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param string                             $search
-     * @param bool                               $executeQuery
-     * @param string                             $orderedBy
-     *
-     * @return User[]|Query
-     *
-     * @todo Find out why the join on profile preferences is necessary
-     */
-    public function findGroupOutsidersByName(Group $group, $search, $executeQuery = true, $orderedBy = 'id')
-    {
-        $dql = "
-            SELECT DISTINCT u FROM Claroline\CoreBundle\Entity\User u
-            WHERE (
-                UPPER(u.lastName) LIKE :search
-                OR UPPER(u.firstName) LIKE :search
-                OR UPPER(u.lastName) LIKE :search
-            )
-            AND u NOT IN (
-                SELECT us FROM Claroline\CoreBundle\Entity\User us
-                JOIN us.groups gr
-                WHERE gr.id = :groupId
-            )
-            AND u.isRemoved = false
-            ORDER BY u.{$orderedBy}
-        ";
-        $search = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('groupId', $group->getId());
-        $query->setParameter('search', "%{$search}%");
-
-        return $executeQuery ? $query->getResult() : $query;
     }
 
     /**

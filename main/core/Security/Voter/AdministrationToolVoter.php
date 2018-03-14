@@ -11,8 +11,7 @@
 
 namespace Claroline\CoreBundle\Security\Voter;
 
-use Claroline\CoreBundle\Entity\Tool\AdminTool;
-use Doctrine\ORM\EntityManager;
+use Claroline\CoreBundle\Security\AbstractVoter;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -21,43 +20,32 @@ use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
  * @DI\Service
  * @DI\Tag("security.voter")
  */
-class AdministrationToolVoter implements VoterInterface
+class AdministrationToolVoter extends AbstractVoter implements VoterInterface
 {
-    /**
-     * @DI\InjectParams({"em" = @DI\Inject("doctrine.orm.entity_manager")})
-     */
-    public function __construct(EntityManager $em)
+    public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        $this->em = $em;
-    }
+        $roles = $object->getRoles();
+        $tokenRoles = $token->getRoles();
 
-    public function vote(TokenInterface $token, $object, array $attributes)
-    {
-        if ($object instanceof AdminTool) {
-            $roles = $object->getRoles();
-            $tokenRoles = $token->getRoles();
-
-            foreach ($tokenRoles as $tokenRole) {
-                foreach ($roles as $role) {
-                    if ($role->getRole() === $tokenRole->getRole()) {
-                        return VoterInterface::ACCESS_GRANTED;
-                    }
+        foreach ($tokenRoles as $tokenRole) {
+            foreach ($roles as $role) {
+                if ($role->getRole() === $tokenRole->getRole()) {
+                    return VoterInterface::ACCESS_GRANTED;
                 }
             }
-
-            return VoterInterface::ACCESS_DENIED;
         }
 
-        return VoterInterface::ACCESS_ABSTAIN;
+        return VoterInterface::ACCESS_DENIED;
     }
 
-    public function supportsAttribute($attribute)
+    public function getClass()
     {
-        return true;
+        return 'Claroline\CoreBundle\Entity\Tool\AdminTool';
     }
 
-    public function supportsClass($class)
+    public function getSupportedActions()
     {
-        return true;
+        //atm, null means "everything is supported... implement this later"
+        return null;
     }
 }

@@ -12,7 +12,6 @@
 namespace Claroline\DropZoneBundle\Security\Voter;
 
 use Claroline\CoreBundle\Security\AbstractVoter;
-use Claroline\DropZoneBundle\Entity\Dropzone;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
@@ -24,9 +23,7 @@ class DropzoneVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        if ($object instanceof Dropzone) {
-            return $this->checkPermission($token, $object->getResourceNode(), $attributes, $options);
-        }
+        return $this->isGranted($attributes, $object->getResourceNode());
     }
 
     public function getClass()

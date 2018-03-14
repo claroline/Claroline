@@ -147,6 +147,16 @@ class RoleSerializer
 
         $this->sipe('meta.personalWorkspaceCreationEnabled', 'setPersonalWorkspaceCreationEnabled', $data, $role);
         $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $role);
+        $this->sipe('type', 'setType', $data, $role);
+
+        if (isset($data['workspace'])) {
+            if (empty($data['workspace'])) {
+                $role->setWorkspace(null);
+            } else {
+                $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneBy(['uuid' => $data['workspace']['uuid']]);
+                $role->setWorkspace($workspace);
+            }
+        }
 
         if (isset($data['adminTools'])) {
             $adminTools = $this->om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findAll();

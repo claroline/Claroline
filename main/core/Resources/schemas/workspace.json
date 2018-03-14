@@ -102,22 +102,7 @@
       "items": {
         "oneOf": [
           {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string"
-              }
-            },
-            "required": ["name"]
-          },
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              }
-            },
-            "required": ["id"]
+              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/role.json"
           }
         ]
       }
@@ -128,22 +113,7 @@
       "items": {
         "oneOf": [
           {
-            "type": "object",
-            "properties": {
-              "username": {
-                "type": "string"
-              }
-            },
-            "required": ["username"]
-          },
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string"
-              }
-            },
-            "required": ["id"]
+              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/user.json"
           }
         ]
       }

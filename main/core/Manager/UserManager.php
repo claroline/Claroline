@@ -866,62 +866,6 @@ class UserManager
     }
 
     /**
-     * @param Group  $group
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     * @param string $order
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return Pagerfanta
-     */
-    public function getUsersByGroup(
-        Group $group,
-        $page,
-        $max = 20,
-        $orderedBy = 'id',
-        $order = 'ASC'
-    ) {
-        $query = $this->userRepo->findByGroup($group, false, $orderedBy, $order);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param string $search
-     * @param Group  $group
-     * @param int    $page
-     * @param int    $max
-     * @param string $orderedBy
-     * @param string $order
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return Pagerfanta
-     */
-    public function getUsersByNameAndGroup(
-        $search,
-        Group $group,
-        $page,
-        $max = 20,
-        $orderedBy = 'id',
-        $order = 'ASC'
-    ) {
-        $query = $this->userRepo->findByNameAndGroup(
-            $search,
-            $group,
-            false,
-            $orderedBy,
-            $order
-        );
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
      * @param Workspace[] $workspaces
      * @param int         $page
      * @param int         $max
@@ -993,24 +937,13 @@ class UserManager
     /**
      * @param int[] $ids
      *
+     * @deprecated ObjectManager can handle it
+     *
      * @return User[]
      */
     public function getUsersByIds(array $ids)
     {
         return $this->objectManager->findByIds('Claroline\CoreBundle\Entity\User', $ids);
-    }
-
-    /**
-     * @param string $guid
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return Workspace
-     */
-    public function getOneByGuid($guid)
-    {
-        return $this->userRepo->findOneBy(['guid' => $guid]);
     }
 
     /**
@@ -1109,36 +1042,6 @@ class UserManager
         $res = $this->userRepo->findByRolesAndNameIncludingGroups($roles, $search, true, $orderedBy, $direction);
 
         return $this->pagerFactory->createPager($res, $page, $max);
-    }
-
-    /**
-     * @param Role[] $roles
-     * @param int    $page
-     * @param int    $max
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getUsersByRoles(array $roles, $page = 1, $max = 20)
-    {
-        $res = $this->userRepo->findByRoles($roles, true);
-
-        return $this->pagerFactory->createPager($res, $page, $max);
-    }
-
-    /**
-     * @param string $email
-     *
-     * @todo use finder instead
-     * @todo REMOVE ME
-     *
-     * @return User
-     */
-    public function getUserByEmail($email)
-    {
-        return $this->userRepo->findOneBy(['email' => $email]);
     }
 
     /**
@@ -1284,11 +1187,6 @@ class UserManager
         $this->objectManager->flush();
     }
 
-    public function getUsersWithoutUserRole($executeQuery = true)
-    {
-        return $this->userRepo->findUsersWithoutUserRole($executeQuery);
-    }
-
     public function getUsersWithRights(
         ResourceNode $node,
         $orderedBy = 'firstName',
@@ -1305,22 +1203,6 @@ class UserManager
             $this->pagerFactory->createPager($users, $page, $max);
     }
 
-    public function getUsersWithoutRights(
-        ResourceNode $node,
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $page = 1,
-        $max = 50,
-        $executeQuery = true
-    ) {
-        $users = $this->userRepo
-            ->findUsersWithoutRights($node, $orderedBy, $order, $executeQuery);
-
-        return $executeQuery ?
-            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
-            $this->pagerFactory->createPager($users, $page, $max);
-    }
-
     public function getSearchedUsersWithRights(
         ResourceNode $node,
         $search = '',
@@ -1331,28 +1213,6 @@ class UserManager
         $executeQuery = true
     ) {
         $users = $this->userRepo->findSearchedUsersWithRights(
-            $node,
-            $search,
-            $orderedBy,
-            $order,
-            $executeQuery
-        );
-
-        return $executeQuery ?
-            $this->pagerFactory->createPagerFromArray($users, $page, $max) :
-            $this->pagerFactory->createPager($users, $page, $max);
-    }
-
-    public function getSearchedUsersWithoutRights(
-        ResourceNode $node,
-        $search = '',
-        $orderedBy = 'firstName',
-        $order = 'ASC',
-        $page = 1,
-        $max = 50,
-        $executeQuery = true
-    ) {
-        $users = $this->userRepo->findSearchedUsersWithoutRights(
             $node,
             $search,
             $orderedBy,
@@ -1391,15 +1251,6 @@ class UserManager
         }
 
         return $this->userRepo->findUserByUsernameOrMailOrCode($username, $email, $code);
-    }
-
-    public function getUserByUsernameAndMail($username, $email, $executeQuery = true)
-    {
-        return $this->userRepo->findUserByUsernameAndMail(
-            $username,
-            $email,
-            $executeQuery
-        );
     }
 
     public function getCountAllEnabledUsers($executeQuery = true)
@@ -1746,26 +1597,6 @@ class UserManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     *
-     * @return User[]
-     */
-    public function getUsersByGroupWithoutPager(Group $group)
-    {
-        return $this->userRepo->findByGroup($group);
-    }
-
-    /**
-     * @param Workspace $workspace
-     *
-     * @return User[]
-     */
-    public function getByWorkspaceWithUsersFromGroup(Workspace $workspace)
-    {
-        return $this->userRepo->findByWorkspaceWithUsersFromGroup($workspace);
-    }
-
-    /**
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace[] $workspaces
      * @param int                                                $page
      * @param string                                             $search
@@ -1783,37 +1614,6 @@ class UserManager
             ->findUsersByWorkspacesAndSearch($workspaces, $search);
 
         return $this->pagerFactory->createPagerFromArray($users, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param int                                $page
-     * @param int                                $max
-     * @param string                             $orderedBy
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getGroupOutsiders(Group $group, $page, $max = 20, $orderedBy = 'id')
-    {
-        $query = $this->userRepo->findGroupOutsiders($group, false, $orderedBy);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\Group $group
-     * @param int                                $page
-     * @param string                             $search
-     * @param int                                $max
-     * @param string                             $orderedBy
-     *
-     * @return \Pagerfanta\Pagerfanta
-     */
-    public function getGroupOutsidersByName(Group $group, $page, $search, $max = 20, $orderedBy = 'id')
-    {
-        $query = $this->userRepo->findGroupOutsidersByName($group, $search, false, $orderedBy);
-
-        return $this->pagerFactory->createPager($query, $page, $max);
     }
 
     public function getResourceManagerDisplayMode($index)

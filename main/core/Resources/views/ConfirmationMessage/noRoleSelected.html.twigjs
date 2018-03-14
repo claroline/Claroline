@@ -1,3 +1,0 @@
-{% twig_js name="noRoleSelected" %}
-
-{{ 'no_role_selected_message'|trans({}, 'platform') }}

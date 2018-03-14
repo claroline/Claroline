@@ -2,7 +2,9 @@
 
 namespace Claroline\CoreBundle\API\Serializer\User;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\API\SerializerProvider;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\Role;
@@ -14,18 +16,22 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class GroupSerializer
 {
+    use SerializerTrait;
+
     /**
      * GroupSerializer constructor.
      *
      * @DI\InjectParams({
-     *     "serializer" = @DI\Inject("claroline.api.serializer")
+     *     "serializer" = @DI\Inject("claroline.api.serializer"),
+     *     "om"         = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param SerializerProvider $serializer
      */
-    public function __construct(SerializerProvider $serializer)
+    public function __construct(SerializerProvider $serializer, ObjectManager $om)
     {
         $this->serializer = $serializer;
+        $this->om = $om;
     }
 
     public function getClass()
@@ -66,9 +72,7 @@ class GroupSerializer
      */
     public function deserialize($data, Group $group = null, array $options = [])
     {
-        if (isset($data['name'])) {
-            $group->setName($data['name']);
-        }
+        $this->sipe('name', 'setName', $data, $group);
 
         if (isset($data['organizations'])) {
             $group->setOrganizations(
@@ -80,6 +84,17 @@ class GroupSerializer
                     );
                 }, $data['organizations'])
             );
+        }
+
+        //only add role here. If we want to remove them, use the crud remove method instead
+        //it's usefull if we want to create a user with a list of roles
+        if (isset($data['roles'])) {
+            foreach ($data['roles'] as $role) {
+                $role = $this->om
+                  ->getRepository('Claroline\CoreBundle\Entity\Role')
+                  ->findOneBy(['id' => $role['id']]);
+                $group->addRole($role);
+            }
         }
 
         return $group;

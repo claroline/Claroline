@@ -1,9 +1,0 @@
-{% twig_js name="roleUserLabel" %}
-
-<span class="label label-success" id="label-{{ roleId }}-{{ userId}}">
-{{ roleName }}
-<i class="fa fa-times-circle pointer-hand remove-role-button"
-   href="{{ path('apiv2_role_remove_users', {'uuid': roleId } ) }}?ids[]={{ userId }}"
->
-</i>
-</span>

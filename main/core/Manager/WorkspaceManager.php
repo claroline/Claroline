@@ -15,6 +15,7 @@ use Claroline\AppBundle\Event\NotPopulatedEventException;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
+use Claroline\CoreBundle\Entity\AbstractRoleSubject;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
@@ -1889,5 +1890,16 @@ class WorkspaceManager
         $this->log('Cleaning recent workspaces entries that are older than six months');
         $recentWorkspaceRepo = $this->om->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRecent');
         $recentWorkspaceRepo->removeAllEntriesBefore(new \DateTime('-6 months'));
+    }
+
+    public function unregister(AbstractRoleSubject $subject, Workspace $workspace)
+    {
+        $rolesToRemove = array_filter($workspace->getRoles()->toArray(), function ($role) use ($workspace) {
+            return $role->getWorkspace()->getId() === $workspace->getId();
+        });
+
+        foreach ($rolesToRemove as $role) {
+            $this->roleManager->dissociateRole($subject, $role);
+        }
     }
 }

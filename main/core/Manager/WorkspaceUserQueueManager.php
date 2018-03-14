@@ -57,17 +57,6 @@ class WorkspaceUserQueueManager
         $this->wksQrepo = $this->objectManager->getRepository('ClarolineCoreBundle:Workspace\WorkspaceRegistrationQueue');
     }
 
-    public function getAll(Workspace $workspace, $page = 1, $max = 50, $search = '')
-    {
-        if (empty($search)) {
-            $query = $this->wksQrepo->findByWorkspace($workspace);
-        } else {
-            $query = $this->wksQrepo->findByWorkspaceAndSearch($workspace, $search);
-        }
-
-        return $this->pagerFactory->createPagerFromArray($query, $page, $max);
-    }
-
     public function validateRegistration(WorkspaceRegistrationQueue $wksqrq)
     {
         $this->roleManager->associateRolesToSubjects(

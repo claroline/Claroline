@@ -11,7 +11,10 @@
 
 namespace Claroline\CoreBundle\Security\Voter;
 
+use Claroline\AppBundle\Security\ObjectCollection;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\AbstractVoter;
+use Claroline\CoreBundle\Security\PlatformRoles;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
@@ -28,6 +31,17 @@ class WorkspaceVoter extends AbstractVoter
             return VoterInterface::ACCESS_GRANTED;
         }
 
+        $collection = isset($options['collection']) ? $options['collection'] : null;
+
+        //crud actions
+        switch ($attributes[0]) {
+            case self::VIEW:   return $this->checkView($token, $object);
+            case self::CREATE: return $this->checkCreation();
+            case self::EDIT:   return $this->checkEdit($token, $object);
+            case self::DELETE: return $this->checkDelete($token, $object);
+            case self::PATCH:  return $this->checkPatch($token, $object, $collection);
+        }
+
         //check the expiration date first
         $now = new \DateTime();
         if ($object->getEndDate()) {
@@ -37,18 +51,101 @@ class WorkspaceVoter extends AbstractVoter
         }
 
         //then we do all the rest
-        $toolName = isset($attributes[0]) && $attributes[0] !== 'OPEN' ?
-                $attributes[0] :
-                null;
+        $toolName = isset($attributes[0]) && 'OPEN' !== $attributes[0] ?
+            $attributes[0] :
+            null;
 
         $wm = $this->getContainer()->get('claroline.manager.workspace_manager');
 
         $action = isset($attributes[1]) ? strtolower($attributes[1]) : 'open';
         $accesses = $wm->getAccesses($token, [$object], $toolName, $action);
-
-        return isset($accesses[$object->getId()]) && $accesses[$object->getId()] === true ?
+        //this is for the tools, probably change it later
+        return isset($accesses[$object->getId()]) && true === $accesses[$object->getId()] ?
             VoterInterface::ACCESS_GRANTED :
             VoterInterface::ACCESS_DENIED;
+    }
+
+    //workspace creator handling ?
+    private function checkCreation(TokenInterface $token)
+    {
+        return $this->hasAdminToolAccess($token, 'workspace_management') || $this->isWorkspaceCreator($token) ?
+             VoterInterface::ACCESS_GRANTED :
+             VoterInterface::ACCESS_DENIED;
+    }
+
+    private function checkEdit($token, $workspaces)
+    {
+        foreach ($workspaces as $workspace) {
+            if (!$this->isWorkspaceManaged($token, $workspace)) {
+                return VoterInterface::ACCESS_DENIED;
+            }
+        }
+
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    private function checkDelete($token, $workspaces)
+    {
+        foreach ($workspaces as $workspace) {
+            if (!$this->isWorkspaceManaged($token, $workspace)) {
+                return VoterInterface::ACCESS_DENIED;
+            }
+        }
+
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    private function checkView($token, $workspaces)
+    {
+        foreach ($workspaces as $workspace) {
+            if (!$this->isWorkspaceManaged($token, $workspace)) {
+                return VoterInterface::ACCESS_DENIED;
+            }
+        }
+
+        return VoterInterface::ACCESS_GRANTED;
+    }
+
+    /**
+     * This is not done yet but later a user might be able to edit its roles/groups himself
+     * and it should be checked here.
+     *
+     * @param TokenInterface   $token
+     * @param User             $user
+     * @param ObjectCollection $collection
+     *
+     * @return int
+     */
+    private function checkPatch(TokenInterface $token, Workspace $workspace, ObjectCollection $collection = null)
+    {
+        //single property: no check now
+        if (!$collection) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        if ($this->isWorkspaceManaged($token, $workspace)) {
+            return VoterInterface::ACCESS_GRANTED;
+        }
+
+        //maybe do something more complicated later
+        return $this->isGranted(self::EDIT, $collection) ?
+            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+    }
+
+    private function isWorkspaceManaged(TokenInterface $token, Workspace $workspace)
+    {
+        $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
+        $workspaceOrganizations = $workspace->getOrganizations();
+
+        foreach ($adminOrganizations as $adminOrganization) {
+            foreach ($workspaceOrganizations as $workspaceOrganization) {
+                if ($workspaceOrganization === $adminOrganization) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     public function getClass()
@@ -60,5 +157,16 @@ class WorkspaceVoter extends AbstractVoter
     {
         //atm, null means "everything is supported... implement this later"
         return null;
+    }
+
+    protected function isWorkspaceCreator(TokenInterface $token)
+    {
+        foreach ($token->getRoles() as $role) {
+            if (PlatformRoles::WS_CREATOR === $role->getRole()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

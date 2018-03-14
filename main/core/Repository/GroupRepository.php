@@ -20,73 +20,6 @@ use Doctrine\ORM\EntityRepository;
 class GroupRepository extends EntityRepository
 {
     /**
-     * Returns the groups which are not member of a workspace.
-     *
-     * @param Workspace $workspace
-     * @param bool      $executeQuery
-     *
-     * @return array[Group]|Query
-     */
-    public function findWorkspaceOutsiders(Workspace $workspace, $executeQuery = true)
-    {
-        $dql = '
-            SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
-            LEFT JOIN g.roles r
-            WHERE g NOT IN
-            (
-                SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                LEFT JOIN gr.roles wr WITH wr IN (
-                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = :type
-                )
-                JOIN wr.workspace w
-                WHERE w.id = :id
-            )
-            ORDER BY g.id
-       ';
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('id', $workspace->getId());
-        $query->setParameter('type', Role::WS_ROLE);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
-     * Returns the groups which are not member of a workspace, filtered by a search on
-     * their name.
-     *
-     * @param Workspace $workspace
-     * @param string    $search
-     * @param bool      $executeQuery
-     *
-     * @return array[Group]|Query
-     */
-    public function findWorkspaceOutsidersByName(Workspace $workspace, $search, $executeQuery = true)
-    {
-        $dql = '
-            SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
-            LEFT JOIN g.roles r
-            WHERE UPPER(g.name) LIKE :search
-            AND g NOT IN
-            (
-                SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                JOIN gr.roles wr WITH wr IN (
-                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = :type
-                )
-                JOIN wr.workspace w
-                WHERE w.id = :id
-            )
-            ORDER BY g.id
-        ';
-        $search = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('id', $workspace->getId());
-        $query->setParameter('search', "%{$search}%");
-        $query->setParameter('type', Role::WS_ROLE);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
      * Returns the groups which are member of a workspace.
      *
      * @param Workspace $workspace
@@ -173,42 +106,6 @@ class GroupRepository extends EntityRepository
     }
 
     /**
-     * Returns the groups which are member of a workspace, filtered by a search on
-     * their name.
-     *
-     * @param Workspace $workspace
-     * @param string    $search
-     * @param bool      $executeQuery
-     *
-     * @return array[Group]|Query
-     */
-    public function findByWorkspaceAndName(Workspace $workspace, $search, $executeQuery = true)
-    {
-        $dql = '
-            SELECT g, r FROM Claroline\CoreBundle\Entity\Group g
-            LEFT JOIN g.roles r
-            WHERE UPPER(g.name) LIKE :search
-            AND g IN
-            (
-                SELECT gr FROM Claroline\CoreBundle\Entity\Group gr
-                JOIN gr.roles wr WITH wr IN (
-                    SELECT pr from Claroline\CoreBundle\Entity\Role pr WHERE pr.type = :type
-                )
-                JOIN wr.workspace w
-                WHERE w.id = :id
-            )
-            ORDER BY g.id
-        ';
-        $search = strtoupper($search);
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('id', $workspace->getId());
-        $query->setParameter('search', "%{$search}%");
-        $query->setParameter('type', Role::WS_ROLE);
-
-        return $executeQuery ? $query->getResult() : $query;
-    }
-
-    /**
      * Returns all the groups.
      *
      * @param bool   $executeQuery
@@ -241,7 +138,7 @@ class GroupRepository extends EntityRepository
     {
         $upperSearch = strtoupper(trim($search));
 
-        if ($search !== '') {
+        if ('' !== $search) {
             $dql = '
                 SELECT g
                 FROM Claroline\CoreBundle\Entity\Group g
@@ -313,7 +210,7 @@ class GroupRepository extends EntityRepository
     public function extract($params)
     {
         $search = $params['search'];
-        if ($search !== null) {
+        if (null !== $search) {
             $query = $this->findByName($search, false);
 
             return $query
@@ -358,74 +255,6 @@ class GroupRepository extends EntityRepository
         $query->setParameter('search', "%{$search}%");
 
         return ($getQuery) ? $query : $query->getResult();
-    }
-
-    /**
-     * This method should be renamed.
-     * Find groups who are outside the workspace and users whose role are in $roles.
-     */
-    public function findOutsidersByWorkspaceRoles(array $roles, Workspace $workspace, $getQuery = false)
-    {
-        //feel free to make this request easier if you can
-
-        $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\Group u
-            WHERE u NOT IN (
-                SELECT u2 FROM Claroline\CoreBundle\Entity\Group u2
-                JOIN u2.roles r WHERE r IN (:roles) AND
-                u2 NOT IN (
-                    SELECT u3 FROM Claroline\CoreBundle\Entity\Group u3
-                    JOIN u3.roles r2
-                    JOIN r2.workspace ws
-                    WHERE r2 NOT IN (:roles)
-                    AND ws = :wsId
-                )
-            )
-            ORDER BY u.name
-            ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roles', $roles);
-        $query->setParameter('wsId', $workspace);
-
-        return $getQuery ? $query : $query->getResult();
-    }
-
-    /**
-     * This method should be renamed.
-     * Find groups who are outside the workspace and users whose role are in $roles.
-     */
-    public function findOutsidersByWorkspaceRolesAndName(
-        array $roles,
-        $name,
-        Workspace $workspace,
-        $getQuery = false
-    ) {
-        //feel free to make this request easier if you can
-        $search = strtoupper($name);
-
-        $dql = "
-            SELECT u FROM Claroline\CoreBundle\Entity\Group u
-            WHERE u NOT IN (
-                SELECT u2 FROM Claroline\CoreBundle\Entity\Group u2
-                JOIN u2.roles r WHERE r IN (:roles) AND
-                u2 NOT IN (
-                    SELECT u3 FROM Claroline\CoreBundle\Entity\Group u3
-                    JOIN u3.roles r2
-                    JOIN r2.workspace ws
-                    WHERE r2 NOT IN (:roles)
-                    AND ws = :wsId
-                )
-            )
-            AND UPPER(u.name) LIKE :search
-            ";
-
-        $query = $this->_em->createQuery($dql);
-        $query->setParameter('roles', $roles);
-        $query->setParameter('wsId', $workspace);
-        $query->setParameter('search', "%{$search}%");
-
-        return $getQuery ? $query : $query->getResult();
     }
 
     /**
@@ -485,19 +314,6 @@ class GroupRepository extends EntityRepository
         $query->setParameter('name', $name);
 
         return $executeQuery ? $query->getOneOrNullResult() : $query;
-    }
-
-    public function findAllGroups($orderedBy = 'id', $order = 'ASC', $executeQuery = true)
-    {
-        $dql = "
-            SELECT g
-            FROM Claroline\CoreBundle\Entity\Group g
-            ORDER BY g.{$orderedBy} {$order}
-        ";
-
-        $query = $this->_em->createQuery($dql);
-
-        return $executeQuery ? $query->getResult() : $query;
     }
 
     public function countGroupsByRole(Role $role)

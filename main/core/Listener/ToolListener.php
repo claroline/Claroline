@@ -153,7 +153,7 @@ class ToolListener
         foreach ($desktopTools as $desktopTool) {
             $toolName = $desktopTool->getName();
 
-            if ($toolName !== 'home' && $toolName !== 'parameters') {
+            if ('home' !== $toolName && 'parameters' !== $toolName) {
                 $tools[] = $desktopTool;
             }
         }
@@ -203,6 +203,27 @@ class ToolListener
     }
 
     /**
+     * @DI\Observe("open_tool_workspace_users")
+     *
+     * @param DisplayToolEvent $event
+     *
+     * @throws \Claroline\CoreBundle\Listener\NoHttpRequestException
+     */
+    public function onDisplay(DisplayToolEvent $event)
+    {
+        $subRequest = $this->container->get('request')->duplicate(
+            [], null,
+            [
+                '_controller' => 'ClarolineCoreBundle:Workspace:usersManagement',
+                'workspace' => $event->getWorkspace(),
+            ]
+        );
+
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setContent($response->getContent());
+    }
+
+    /**
      * @DI\Observe("claroline_top_bar_left_menu_configure_desktop_tool")
      *
      * @param \Acme\DemoBundle\Event\ConfigureMenuEvent $event
@@ -212,7 +233,7 @@ class ToolListener
         $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
-        if ($user !== 'anon.' && !is_null($tool)) {
+        if ('anon.' !== $user && !is_null($tool)) {
             $toolName = $tool->getName();
             $translatedName = $this->translator->trans($toolName, [], 'tools');
             $route = $this->router->generate(
@@ -241,7 +262,7 @@ class ToolListener
         $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
-        if ($user !== 'anon.' && !is_null($tool)) {
+        if ('anon.' !== $user && !is_null($tool)) {
             $toolName = $tool->getName();
             $translatedName = $this->translator->trans($toolName, [], 'tools');
             $menu = $event->getMenu();
@@ -269,7 +290,7 @@ class ToolListener
         $user = $this->tokenStorage->getToken()->getUser();
         $tool = $event->getTool();
 
-        if ($user !== 'anon.') {
+        if ('anon.' !== $user) {
             $parametersTitle = $this->translator->trans(
                 'preferences',
                 [],

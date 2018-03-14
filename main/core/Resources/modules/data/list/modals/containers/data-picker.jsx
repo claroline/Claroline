@@ -31,9 +31,9 @@ const DataPicker = props =>
       disabled={0 === props.selected.length}
       onClick={() => {
         if (0 <props.selected.length) {
+          props.fadeModal()
           props.handleSelect(props.selected)
           props.resetSelect()
-          props.fadeModal()
         }
       }}
     >

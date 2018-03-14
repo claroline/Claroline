@@ -1,9 +1,0 @@
-{% twig_js name="roleGroupLabel" %}
-
-<span class="label label-success" id="label-{{ roleId }}-{{ groupId }}">
-{{ roleName }}
-<i class="fa fa-times-circle pointer-hand remove-role-button"
-   href="{{ path('claro_workspace_remove_role_from_group', {'workspace': workspaceId, 'group': groupId, 'role': roleId } ) }}"
->
-</i>
-</span>
