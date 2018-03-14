@@ -1,11 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {Route, Switch, withRouter} from 'react-router-dom'
 
 import {trans} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
 
+import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
@@ -46,8 +46,7 @@ function getHome(type) {
 const Resource = props =>
   <ResourcePageContainer
     editor={{
-      opened: '/edit' === props.location.pathname,
-      open: '#/edit',
+      path: '/edit',
       save: {
         disabled: false,
         action: props.saveParameters
@@ -102,25 +101,50 @@ const Resource = props =>
       }
     ]}
   >
-    <Switch>
-      <Route path="/" component={getHome(props.defaultHome)} exact={true} />
-      <Route path="/menu" component={ClacoFormMainMenu} exact={true} />
-      <Route path="/edit" component={ClacoFormConfig} />
-      <Route path="/categories" component={Categories} />
-      <Route path="/keywords" component={Keywords} />
-      <Route path="/fields" component={Fields} />
-      <Route path="/template" component={TemplateForm} />
-      <Route path="/entries" component={Entries} />
-      <Route path="/entry/create" component={EntryCreateForm} />
-      <Route path="/entry/:id/edit" component={EntryEditForm} />
-      <Route path="/entry/:id/view" component={EntryView} />
-    </Switch>
+    <RoutedPageContent
+      headerSpacer={false}
+      redirect={[]}
+      routes={[
+        {
+          path: '/',
+          component: getHome(props.defaultHome),
+          exact: true
+        }, {
+          path: '/menu',
+          component: ClacoFormMainMenu
+        }, {
+          path: '/edit',
+          component: ClacoFormConfig
+        }, {
+          path: '/categories',
+          component: Categories
+        }, {
+          path: '/keywords',
+          component: Keywords
+        }, {
+          path: '/fields',
+          component: Fields
+        }, {
+          path: '/template',
+          component: TemplateForm
+        }, {
+          path: '/entries',
+          component: Entries
+        }, {
+          path: '/entry/create',
+          component: EntryCreateForm
+        }, {
+          path: '/entry/:id/edit',
+          component: EntryEditForm
+        }, {
+          path: '/entry/:id/view',
+          component: EntryView
+        }
+      ]}
+    />
   </ResourcePageContainer>
 
 Resource.propTypes = {
-  location: T.shape({
-    pathname: T.string.isRequired
-  }).isRequired,
   resource: T.shape({
     id: T.number.isRequired
   }).isRequired,
@@ -158,7 +182,7 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-const ConnectedClacoFormResource = withRouter(connect(mapStateToProps, mapDispatchToProps)(Resource))
+const ConnectedClacoFormResource = connect(mapStateToProps, mapDispatchToProps)(Resource)
 
 export {
   ConnectedClacoFormResource as ClacoFormResource
