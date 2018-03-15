@@ -54,9 +54,10 @@ class FileComponent extends Component {
           onChange={() => {
             if (this.input.files[0]) {
               const file = this.input.files[0]
-
               if (this.props.autoUpload) {
                 this.props.uploadFile(file, this.props.uploadUrl, this.props.onChange)
+              } else {
+                this.props.onChange(file)
               }
             }}
           }
