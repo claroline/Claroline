@@ -47,6 +47,7 @@ const Tool = (props) => {
     {
       icon: 'fa fa-cog',
       title: trans('parameters'),
+      onlyIcon: true,
       path: '/parameters',
       content: ParametersTab,
       actions: ParametersTabActions

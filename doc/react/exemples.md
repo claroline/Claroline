@@ -41,3 +41,40 @@ const roleReducer = combineReducers({
     }
   }
 ```
+
+Ajouter des property par défaut dans un form:
+----------------------------------------------
+
+```
+actions.open = (formName, id = null, defaultValue) => (dispatch) => {
+  if (id) {
+    dispatch({
+      [API_REQUEST]: {
+        url: ['apiv2_role_get', {id}],
+        success: (response, dispatch) => {
+          dispatch(formActions.resetForm(formName, response, false))
+        }
+      }
+    })
+  } else {
+    dispatch(formActions.resetForm(formName, defaultValue, true))
+  }
+}
+```
+
+```
+const UserTab = connect(
+  ...
+  dispatch => ({
+    openForm(id = null, workspace, restrictions, collaboratorRole) {
+
+      const defaultValue = {
+        organization: null, //retreive it with axel stuff
+        roles: [collaboratorRole]
+      }
+
+      dispatch(actions.open('users.current', id, defaultValue))
+    }
+  })
+)(UserTabComponent)
+```

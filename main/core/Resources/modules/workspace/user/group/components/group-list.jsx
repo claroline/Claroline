@@ -4,7 +4,7 @@ import {trans} from '#/main/core/translation'
 import {GroupCard} from '#/main/core/administration/user/group/components/group-card.jsx'
 
 function getRoles(user) {
-  return user.roles.map(role => role.translationKey).join(',')
+  return user.roles.map(role => trans(role.translationKey)).join(', ')
 }
 
 function getWorkspaceRoles(workspace) {

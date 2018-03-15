@@ -90,10 +90,10 @@ class GroupSerializer
         //it's usefull if we want to create a user with a list of roles
         if (isset($data['roles'])) {
             foreach ($data['roles'] as $role) {
-                $role = $this->om
-                  ->getRepository('Claroline\CoreBundle\Entity\Role')
-                  ->findOneBy(['id' => $role['id']]);
-                $group->addRole($role);
+                $role = $this->serializer->deserialize('Claroline\CoreBundle\Entity\Role', $role);
+                if ($role && $role->getId()) {
+                    $group->addRole($role);
+                }
             }
         }
 

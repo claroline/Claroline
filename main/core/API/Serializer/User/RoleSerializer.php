@@ -136,13 +136,14 @@ class RoleSerializer
     public function deserialize($data, Role $role, array $options = [])
     {
         // todo set readOnly based on role type
+        $this->sipe('name', 'setName', $data, $role);
 
         if (isset($data['translationKey'])) {
             $role->setTranslationKey($data['translationKey']);
-            //2 roles can have the same translationKey while the name is unique, for now we only allow to create
-            //platform roles so it's not an issue but it's going to need improvements
-            //when workspaces and custom roles will be supported
-            $role->setName('ROLE_'.str_replace(' ', '_', strtoupper($data['translationKey'])));
+            //this is if it's not a workspace and we send the translationKey role
+            if (null === $role->getName() && !isset($data['workspace'])) {
+                $role->setName('ROLE_'.str_replace(' ', '_', strtoupper($data['translationKey'])));
+            }
         }
 
         $this->sipe('meta.personalWorkspaceCreationEnabled', 'setPersonalWorkspaceCreationEnabled', $data, $role);
@@ -153,8 +154,14 @@ class RoleSerializer
             if (empty($data['workspace'])) {
                 $role->setWorkspace(null);
             } else {
-                $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')->findOneBy(['uuid' => $data['workspace']['uuid']]);
+                $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
+                    ->findOneBy(['uuid' => $data['workspace']['uuid']]);
                 $role->setWorkspace($workspace);
+
+                //this is if it's a workspace and we send the translationKey role
+                if (isset($data['translationKey']) && (null === $role->getName())) {
+                    $role->setName('ROLE_WS_'.str_replace(' ', '_', strtoupper($data['translationKey'])).'_'.$workspace->getUuid());
+                }
             }
         }
 
@@ -180,5 +187,13 @@ class RoleSerializer
     public function getClass()
     {
         return 'Claroline\CoreBundle\Entity\Role';
+    }
+
+    /**
+     * @return string
+     */
+    public function getSchema()
+    {
+        return '#/main/core/role.json';
     }
 }

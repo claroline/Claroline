@@ -16,6 +16,14 @@ const RolesList = props =>
       autoload: true
     }}
     actions={[]}
+    delete={{
+      url: ['apiv2_role_delete_bulk'],
+      disabled: (rows) => rows.find(row => {
+        if (row.name) {
+          return row.name.indexOf('COLLABORATOR') > -1 || row.name.indexOf('MANAGER') > -1
+        }
+      })
+    }}
     definition={RoleList.definition}
     card={RoleList.card}
   />
