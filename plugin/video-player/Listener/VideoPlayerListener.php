@@ -6,19 +6,20 @@ use Claroline\CoreBundle\Event\InjectJavascriptEvent;
 use Claroline\CoreBundle\Event\PlayFileEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
+use Claroline\VideoPlayerBundle\Entity\Track;
+use Claroline\VideoPlayerBundle\Manager\VideoPlayerManager;
+use Claroline\VideoPlayerBundle\Serializer\TrackSerializer;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bridge\Twig\TwigEngine;
-use Symfony\Component\DependencyInjection\ContainerAware;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
  * @DI\Service("claroline.listener.video_player_listener")
  */
-class VideoPlayerListener extends ContainerAware
+class VideoPlayerListener
 {
     /**
      * @var PlatformConfigurationHandler
@@ -36,26 +37,62 @@ class VideoPlayerListener extends ContainerAware
     private $templating;
 
     /**
+     * @var HttpKernelInterface
+     */
+    private $httpKernel;
+
+    /**
+     * @var RequestStack
+     */
+    private $request;
+
+    /**
+     * @var TrackSerializer
+     */
+    private $trackSerializer;
+
+    /**
+     * @var VideoPlayerManager
+     */
+    private $manager;
+
+    /**
      * VideoPlayerListener constructor.
      *
      * @DI\InjectParams({
-     *     "fileDir"    = @DI\Inject("%claroline.param.files_directory%"),
-     *     "templating" = @DI\Inject("templating"),
-     *     "ch"         = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "container"  = @DI\Inject("service_container")
+     *     "fileDir"         = @DI\Inject("%claroline.param.files_directory%"),
+     *     "templating"      = @DI\Inject("templating"),
+     *     "ch"              = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "httpKernel"      = @DI\Inject("http_kernel"),
+     *     "requestStack"    = @DI\Inject("request_stack"),
+     *     "trackSerializer" = @DI\Inject("claroline.serializer.video.track"),
+     *     "manager"         = @DI\Inject("claroline.manager.video_player_manager")
      * })
      *
      * @param string                       $fileDir
      * @param TwigEngine                   $templating
      * @param PlatformConfigurationHandler $ch
-     * @param ContainerInterface           $container
+     * @param HttpKernelInterface          $httpKernel
+     * @param RequestStack                 $requestStack
+     * @param TrackSerializer              $trackSerializer
+     * @param VideoPlayerManager           $manager
      */
-    public function __construct($fileDir, $templating, $ch, ContainerInterface $container)
-    {
+    public function __construct(
+        $fileDir,
+        TwigEngine $templating,
+        PlatformConfigurationHandler $ch,
+        HttpKernelInterface $httpKernel,
+        RequestStack $requestStack,
+        TrackSerializer $trackSerializer,
+        VideoPlayerManager $manager
+    ) {
         $this->fileDir = $fileDir;
         $this->templating = $templating;
         $this->ch = $ch;
-        $this->container = $container;
+        $this->httpKernel = $httpKernel;
+        $this->request = $requestStack->getCurrentRequest();
+        $this->trackSerializer = $trackSerializer;
+        $this->manager = $manager;
     }
 
     /**
@@ -66,19 +103,16 @@ class VideoPlayerListener extends ContainerAware
      */
     public function onOpenVideo(PlayFileEvent $event)
     {
-        $authorization = $this->container->get('security.authorization_checker');
-        $collection = new ResourceCollection([$event->getResource()->getResourceNode()]);
-        $canExport = $authorization->isGranted('EXPORT', $collection);
-        $path = $this->fileDir.DIRECTORY_SEPARATOR.$event->getResource()->getHashName();
+        $tracks = $this->manager->getTracksByVideo($event->getResource());
+
         $content = $this->templating->render(
             'ClarolineVideoPlayerBundle::video.html.twig',
             [
                 'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
-                'path' => $path,
-                'video' => $event->getResource(),
                 '_resource' => $event->getResource(),
-                'tracks' => $this->container->get('claroline.manager.video_player_manager')->getTracksByVideo($event->getResource()),
-                'canExport' => $canExport,
+                'tracks' => array_map(function (Track $track) {
+                    return $this->trackSerializer->serialize($track);
+                }, $tracks),
             ]
         );
 
@@ -93,12 +127,9 @@ class VideoPlayerListener extends ContainerAware
      */
     public function onOpenAdministration(PluginOptionsEvent $event)
     {
-        $requestStack = $this->container->get('request_stack');
-        $httpKernel = $this->container->get('http_kernel');
-        $request = $requestStack->getCurrentRequest();
         $params = ['_controller' => 'ClarolineVideoPlayerBundle:VideoPlayer:AdminOpen'];
-        $subRequest = $request->duplicate([], null, $params);
-        $response = $httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $subRequest = $this->request->duplicate([], null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         $event->setResponse($response);
         $event->stopPropagation();
@@ -126,10 +157,10 @@ class VideoPlayerListener extends ContainerAware
     {
         $resource = $event->getResource();
 
-        $template = $this->container->get('templating')->render(
+        $template = $this->templating->render(
             'ClarolineVideoPlayerBundle:Scorm:export.html.twig', [
                 '_resource' => $resource,
-                'tracks' => $this->container->get('claroline.manager.video_player_manager')->getTracksByVideo($resource),
+                'tracks' => $this->manager->getTracksByVideo($resource),
             ]
         );
 

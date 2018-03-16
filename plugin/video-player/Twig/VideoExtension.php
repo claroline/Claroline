@@ -12,8 +12,8 @@
 namespace Claroline\VideoPlayerBundle\Twig;
 
 use Claroline\CoreBundle\Entity\Resource\File;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\VideoPlayerBundle\Manager\VideoPlayerManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
@@ -35,9 +35,9 @@ class VideoExtension extends \Twig_Extension
 
     public function getFunctions()
     {
-        return array(
+        return [
             'get_video_tracks' => new \Twig_Function_Method($this, 'getVideoTracks'),
-        );
+        ];
     }
 
     public function getName()

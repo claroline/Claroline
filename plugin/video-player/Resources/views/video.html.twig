@@ -1,61 +1,24 @@
-{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Resource:layout.html.twig" %}
 
-{% if isDesktop() %}
-    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
-{% endif %}
+{% block stylesheets %}
+    {{ parent() }}
 
-{% extends layout %}
-
-{% set tag = 'video' %}
-{% if "audio" in _resource.resourceNode.mimeType %}
-    {% set tag = 'audio' %}
-{% endif %}
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-video-player-subtitles.css') }}" />
+{% endblock %}
 
 {% block content %}
-    <div class="page-container">
-        <main class="page">
-            <header class="page-header">
-                <h1>{{ _resource.resourceNode.name }}</h1>
-
-                <nav class="page-actions">
-                    {% if canExport %}
-                        <a class="btn btn-link" href="{{ path('claro_resource_download') }}?ids[]={{ video.getResourceNode().getId() }}">
-                            <i class="fa fa-fw fa-download"></i> {{ 'download'|trans({}, 'platform') }}
-                        </a>
-                        <a id="copy-permalink-to-clipboard" class="btn btn-link" href="{{ url('claro_file_get_media', {'node': video.resourceNode.id}) }}">
-                            <i class="fa fa-fw fa-clipboard"></i> {{ 'copy_permalink_to_clipboard'|trans({}, 'platform') }}
-                        </a>
-                    {% endif %}
-
-                    <video-tracks data-ng-app="TrackButton"></video-tracks>
-                </nav>
-            </header>
-
-            <div class="page-content">
-                {# the extra container is required because the `display: flex` on .page-content breaks videoJS display #}
-                <div class="video-container">
-                    {% include "ClarolineVideoPlayerBundle::player.html.twig" with {video: _resource, noExplain: true} %}
-                </div>
-            </div>
-        </main>
+    <div
+        class="page-container video-player-container"
+        data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
+        data-video="{{ _resource | api_serialize | json_encode | raw | escape }}"
+        data-url="{{ url('claro_file_get_media', {'node': _resource.resourceNode.id}) | json_encode | raw | escape }}"
+        data-tracks="{{ tracks | json_encode | raw | escape }}"
+    >
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
-    <script>
-        window.videoId = {{ video.getId() }}
-        window.nodeId = {{ video.getResourceNode().getId() }}
-        window.tracks = {{ tracks|json_serialize('api_resource')|raw }}
-    </script>
-    <script src="{{ hotAsset('dist/claroline-distribution-plugin-video-player-track-management.js') | raw }}"></script>
-
-    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-core-copy-text-to-clipboard.js') }}" ></script>
-    <script>
-        document.querySelector('a#copy-permalink-to-clipboard').addEventListener('click', function(event) {
-            event.preventDefault();
-            copyTextToClipboard($(this).attr('href'));
-        });
-    </script>
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-video-player-resource.js') }}"></script>
 {% endblock %}

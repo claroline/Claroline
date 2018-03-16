@@ -11,8 +11,8 @@
 
 namespace Claroline\VideoPlayerBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Doctrine\ORM\EntityRepository;
 
 class TrackRepository extends EntityRepository
 {

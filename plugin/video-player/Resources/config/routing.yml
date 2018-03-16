@@ -5,3 +5,10 @@ claro_video_api:
     defaults: {_format: json}
     options:
         expose: true
+
+claro_video_api_new:
+    resource: "@ClarolineVideoPlayerBundle/Controller/APINew/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

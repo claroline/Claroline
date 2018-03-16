@@ -2,10 +2,11 @@
 
 namespace Claroline\VideoPlayerBundle\Tests\API;
 
-use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
-use Claroline\CoreBundle\Library\Testing\Persister;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Claroline\CoreBundle\Library\Testing\Persister;
+use Claroline\CoreBundle\Library\Testing\TransactionalTestCase;
+use Ramsey\Uuid\Uuid;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class VideoControllerTest extends TransactionalTestCase
 {
@@ -15,66 +16,19 @@ class VideoControllerTest extends TransactionalTestCase
         $this->persister = $this->client->getContainer()->get('claroline.library.testing.persister');
     }
 
-    public function testPostTrackAction()
-    {
-        $manager = $this->createManager();
-        $file = $this->persister->file('video', 'video/mp4', true, $manager);
-        $this->persister->flush();
-        //we log before because we need the securty context for the resource creation
-        $this->login($manager);
-        $subtitles = new UploadedFile(tempnam(sys_get_temp_dir(), 'tmp'), 'subtitles.vtt');
-        $form = ['track' => ['default' => true, 'lang' => 'en', 'label' => 'English']];
-        $files = ['track' => ['track' => $subtitles]];
-        $this->client->request('POST', "/video-player/api/video/{$file->getId()}/track", $form, $files);
-        $data = $this->client->getResponse()->getContent();
-        $data = json_decode($data, true);
-        $this->assertEquals('subtitles', $data['kind']);
-    }
-
     public function testGetTracksAction()
     {
         $manager = $this->createManager();
         //we log before because we need the securty context for the resource creation
         $this->login($manager);
         $file = $this->persister->file('video', 'video/mp4', true, $manager);
-        $this->createTrack($file, 'en');
-        $this->createTrack($file, 'fr');
-        $this->createTrack($file, 'es');
+        $this->createTrack($file, 'en', 'English', false);
+        $this->createTrack($file, 'fr', 'Français', false);
+        $this->createTrack($file, 'es', 'español, castellano', false);
         $this->client->request('GET', "/video-player/api/video/{$file->getId()}/tracks");
         $data = $this->client->getResponse()->getContent();
         $data = json_decode($data, true);
         $this->assertEquals(3, count($data));
-    }
-
-    public function testDeleteTrackAction()
-    {
-        $manager = $this->createManager();
-        //we log before because we need the securty context for the resource creation
-        $this->login($manager);
-        $file = $this->persister->file('video', 'video/mp4', true, $manager);
-        $toRemove = $this->createTrack($file, 'en');
-        $this->createTrack($file, 'fr');
-        $this->createTrack($file, 'es');
-        $this->client->request('DELETE', "/video-player/api/video/track/{$toRemove->getId()}");
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->client->request('GET', "/video-player/api/video/{$file->getId()}/tracks");
-        $data = $this->client->getResponse()->getContent();
-        $data = json_decode($data, true);
-        $this->assertEquals(2, count($data));
-    }
-
-    public function testPutTrackAction()
-    {
-        $manager = $this->createManager();
-        //we log before because we need the securty context for the resource creation
-        $this->login($manager);
-        $file = $this->persister->file('video', 'video/mp4', true, $manager);
-        $toEdit = $this->createTrack($file, 'en');
-        $form = ['track' => ['default' => true, 'lang' => 'fr', 'label' => 'Français']];
-        $this->client->request('PUT', "/video-player/api/video/track/{$toEdit->getId()}", $form);
-        $data = $this->client->getResponse()->getContent();
-        $data = json_decode($data, true);
-        $this->assertEquals('fr', $data['lang']);
     }
 
     /**
@@ -87,7 +41,7 @@ class VideoControllerTest extends TransactionalTestCase
         //we log before because we need the securty context for the resource creation
         $this->login($manager);
         $file = $this->persister->file('video', 'video/mp4', true, $manager);
-        $track = $this->createTrack($file, 'en');
+        $track = $this->createTrack($file, 'en', 'English', false);
         $this->client->request('GET', "/video-player/api/video/track/{$track->getId()}/stream");
         //this is a bad check but it's better than nothing
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
@@ -109,9 +63,9 @@ class VideoControllerTest extends TransactionalTestCase
         $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
     }
 
-    private function createTrack(File $video, $lang)
+    private function createTrack(File $video, $lang, $label = 'English', $isDefault = false)
     {
-        $trackData = new UploadedFile(
+        $file = new UploadedFile(
             tempnam(sys_get_temp_dir(), 'tmp'),
             'subtitles.vtt',
             null,
@@ -119,12 +73,23 @@ class VideoControllerTest extends TransactionalTestCase
             null,
             true //test mode
         );
+        $trackData = [
+            'id' => Uuid::uuid4()->toString(),
+            'video' => [
+                'id' => $video->getId(),
+            ],
+            'meta' => [
+                'label' => $label,
+                'lang' => $lang,
+                'kind' => 'subtitles',
+                'default' => $isDefault,
+            ],
+            'file' => $file,
+        ];
 
-        return $this->client->getContainer()->get('claroline.manager.video_player_manager')->createTrack(
-            $video,
-            $trackData,
-            $lang,
-            'langlabel'
+        return $this->client->getContainer()->get('claroline.api.crud')->create(
+            'Claroline\VideoPlayerBundle\Entity\Track',
+            $trackData
         );
     }
 

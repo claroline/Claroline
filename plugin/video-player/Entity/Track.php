@@ -11,8 +11,9 @@
 
 namespace Claroline\VideoPlayerBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\File;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 
 /**
@@ -21,6 +22,8 @@ use JMS\Serializer\Annotation\Groups;
  */
 class Track
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")

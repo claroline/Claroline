@@ -15,11 +15,8 @@ use Claroline\CoreBundle\Entity\Resource\File;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\VideoPlayerBundle\Entity\Track;
 use Claroline\VideoPlayerBundle\Manager\VideoPlayerManager;
-use FOS\RestBundle\Controller\Annotations\Delete;
 use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\NamePrefix;
-use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -55,34 +52,6 @@ class VideoController extends FOSRestController
     }
 
     /**
-     * @Post("/video/{video}/track", name="post_video_track", options={ "method_prefix" = false })
-     * @View(serializerGroups={"api_resource"})
-     */
-    public function postTrackAction(File $video)
-    {
-        $this->throwExceptionIfNotGranted($video, 'EDIT');
-
-        $track = $this->request->request->get('track');
-        $isDefault = isset($track['is_default']) ? $track['is_default'] : false;
-        $fileBag = $this->request->files->get('track');
-
-        return $this->videoManager->createTrack($video, $fileBag['track'], $track['lang'], $track['label'], $isDefault);
-    }
-
-    /**
-     * @Put("/video/track/{track}", name="put_video_track", options={ "method_prefix" = false })
-     * @View(serializerGroups={"api_resource"})
-     */
-    public function putTrackAction(Track $track)
-    {
-        $this->throwExceptionIfNotGranted($track->getVideo(), 'EDIT');
-        $data = $this->request->request->get('track');
-        $isDefault = isset($data['is_default']) ? $data['is_default'] : false;
-
-        return $this->videoManager->editTrack($track,  $data['lang'], $data['label'], $isDefault);
-    }
-
-    /**
      * @Get("/video/{video}/tracks", name="get_video_tracks", options={ "method_prefix" = false })
      * @View(serializerGroups={"api_resource"})
      */
@@ -91,19 +60,6 @@ class VideoController extends FOSRestController
         $this->throwExceptionIfNotGranted($video, 'OPEN');
 
         return $this->videoManager->getTracksByVideo($video);
-    }
-
-    /**
-     * @Delete("/video/track/{track}", name="delete_video_track", options={ "method_prefix" = false })
-     * @View(serializerGroups={"api_video"})
-     */
-    public function deleteTrackAction(Track $track)
-    {
-        $this->throwExceptionIfNotGranted($track->getVideo(), 'EDIT');
-
-        $this->videoManager->removeTrack($track);
-
-        return [];
     }
 
     /**
