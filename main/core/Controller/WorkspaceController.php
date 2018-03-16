@@ -425,7 +425,7 @@ class WorkspaceController extends Controller
         $notDeletableNodes = $this->resourceManager->getNotDeletableResourcesByWorkspace($workspace);
         $sessionFlashBag = $this->session->getFlashBag();
 
-        if (count($notDeletableNodes) === 0) {
+        if (0 === count($notDeletableNodes)) {
             $this->eventDispatcher->dispatch('log', new LogWorkspaceDeleteEvent($workspace));
             $this->workspaceManager->deleteWorkspace($workspace);
 
@@ -749,20 +749,18 @@ class WorkspaceController extends Controller
         }
 
         $tool = $this->workspaceManager->getFirstOpenableTool($workspace);
+        //small hack for administrators otherwise they can't open it
+        $toolName = $tool ? $tool->getName() : 'home';
 
-        if ($tool) {
-            $route = $this->router->generate(
-                'claro_workspace_open_tool',
-                [
-                    'workspaceId' => $workspace->getId(),
-                    'toolName' => $tool->getName(),
-                ]
-            );
+        $route = $this->router->generate(
+            'claro_workspace_open_tool',
+            [
+                'workspaceId' => $workspace->getId(),
+                'toolName' => $toolName,
+            ]
+        );
 
-            return new RedirectResponse($route);
-        }
-
-        $this->throwWorkspaceDeniedException($workspace);
+        return new RedirectResponse($route);
     }
 
     /**

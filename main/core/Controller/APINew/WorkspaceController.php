@@ -243,4 +243,23 @@ class WorkspaceController extends AbstractCrudController
             [Options::IS_RECURSIVE]
         ));
     }
+
+    /**
+     * @Route(
+     *    "/list/registerable",
+     *    name="apiv2_workspace_list_registerable"
+     * )
+     * @Method("GET")
+     *
+     * @param Workspace $workspace
+     *
+     * @return JsonResponse
+     */
+    public function listRegisterableAction()
+    {
+        return new JsonResponse($this->finder->search(
+            'Claroline\CoreBundle\Entity\Workspace\Workspace',
+            ['hiddenFilters' => ['displayable' => true, 'selfRegistration' => true]]
+        ));
+    }
 }

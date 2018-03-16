@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\Tool;
 
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
@@ -30,7 +31,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -150,7 +150,7 @@ class WorkspaceParametersController extends Controller
         if ($workspace->getSelfRegistration()) {
             $url = $this->router->generate(
                 'claro_workspace_subscription_url_generate',
-                ['workspace' => $workspace->getId()],
+                ['slug' => $workspace->getSlug()],
                 true
             );
         } else {
@@ -221,20 +221,9 @@ class WorkspaceParametersController extends Controller
 
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($workspace->getSelfRegistration()) {
-            $url = $this->router->generate(
-                'claro_workspace_subscription_url_generate',
-                ['workspace' => $workspace->getId()],
-                true
-            );
-        } else {
-            $url = '';
-        }
-
         return [
             'form' => $form->createView(),
             'workspace' => $workspace,
-            'url' => $url,
             'user' => $user,
         ];
     }
@@ -264,44 +253,6 @@ class WorkspaceParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/{workspace}/subscription/url/generate",
-     *     name="claro_workspace_subscription_url_generate"
-     * )
-     *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription.html.twig")
-     *
-     * @param Workspace $workspace
-     *
-     * @return Response
-     */
-    public function urlSubscriptionGenerateAction(Workspace $workspace)
-    {
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        if ('anon.' === $user) {
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_subscription_url_generate_anonymous',
-                    [
-                        'workspace' => $workspace->getId(),
-                        'toolName' => 'home',
-                    ]
-                )
-            );
-        } else {
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_subscription_url_generate_user',
-                    [
-                        'workspace' => $workspace->getId(),
-                    ]
-                )
-            );
-        }
-    }
-
-    /**
-     * @EXT\Route(
      *     "/{workspace}/subscription/url/generate/anonymous",
      *     name="claro_workspace_subscription_url_generate_anonymous"
      * )
@@ -315,43 +266,50 @@ class WorkspaceParametersController extends Controller
      */
     public function anonymousSubscriptionAction(Request $request, Workspace $workspace)
     {
-        if (!$workspace->getSelfRegistration()) {
-            throw new AccessDeniedHttpException();
+        $configHandler = $this->container->get('claroline.config.platform_config_handler');
+        $profilerSerializer = $this->container->get('claroline.serializer.profile');
+        $tosManager = $this->container->get('claroline.common.terms_of_service_manager');
+        $finder = $this->container->get('claroline.api.finder');
+
+        $allowWorkspace = $configHandler->getParameter('allow_workspace_at_registration');
+
+        $data = [
+          'facets' => $profilerSerializer->serialize([Options::REGISTRATION]),
+          'termOfService' => $configHandler->getParameter('terms_of_service') ?
+              $tosManager->getTermsOfService() : null,
+          'options' => [
+              'autoLog' => $configHandler->getParameter('auto_logging'),
+              'localeLanguage' => $configHandler->getParameter('locale_language'),
+              'defaultRole' => $configHandler->getParameter('default_role'),
+              'redirectAfterLoginOption' => $configHandler->getParameter('redirect_after_login_option'),
+              'redirectAfterLoginUrl' => $configHandler->getParameter('redirect_after_login_url'),
+              'userNameRegex' => $configHandler->getParameter('username_regex'),
+              'forceOrganizationCreation' => $configHandler->getParameter('force_organization_creation'),
+              'allowWorkspace' => $allowWorkspace,
+          ],
+      ];
+
+        if ($allowWorkspace) {
+            $data['workspaces'] = $finder->search('Claroline\CoreBundle\Entity\Workspace\Workspace', [
+              'filters' => [
+                  'displayable' => true,
+                  'selfRegistration' => true,
+              ],
+          ])['data'];
+        } else {
+            $data['workspaces'] = [];
         }
 
-        $form = $this->get('claroline.manager.registration_manager')->getRegistrationForm(new User());
-        $form->handleRequest($this->request);
+        $data['workspace'] = $workspace;
 
-        if ($form->isValid()) {
-            $user = $form->getData();
-            $this->userManager->createUser($user);
-            if ($workspace->getRegistrationValidation()) {
-                $this->workspaceManager->addUserQueue($workspace, $user);
-                $flashBag = $request->getSession()->getFlashBag();
-                $translator = $this->get('translator');
-                $flashBag->set('warning', $translator->trans('account_created_awaiting_validation', [], 'platform'));
-            } else {
-                $this->workspaceManager->addUserAction($workspace, $user);
-            }
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_open',
-                    ['workspaceId' => $workspace->getId()]
-                )
-            );
-        }
-
-        return [
-            'form' => $form->createView(),
-            'workspace' => $workspace,
-        ];
+        return $data;
     }
 
     /**
      * @EXT\Route(
      *     "/user/subscribe/workspace/{workspace}",
-     *     name="claro_workspace_subscription_url_generate_user"
+     *     name="claro_workspace_subscription_url_generate_user",
+     *     options={"expose"=true}
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:url_subscription_user_login.html.twig")

@@ -138,7 +138,9 @@ const DataTable = props =>
               <input
                 type="checkbox"
                 checked={0 < props.selection.current.length}
-                onChange={() => props.selection.toggleAll(props.data)}
+                onChange={(val) => {
+                  val.target.checked ? props.selection.toggleAll(props.data): props.selection.toggleAll([])
+                }}
               />
             </TooltipElement>
           </TableHeaderCell>
@@ -182,7 +184,11 @@ const DataTable = props =>
           primaryAction={props.primaryAction}
           actions={getRowActions(props.actions)}
           selected={isRowSelected(row, props.selection ? props.selection.current : [])}
-          onSelect={props.selection ? () => props.selection.toggle(row) : null}
+          onSelect={
+            props.selection ? () => {
+              props.selection.toggle(row, !isRowSelected(row, props.selection ? props.selection.current : []))
+            }: null
+          }
         />
       )}
     </tbody>

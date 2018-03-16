@@ -1566,5 +1566,7 @@
     "external": "External",
     "internal": "Internal",
     "force_organization_creation": "Force the organization creation at the user registration",
-        "workspace_user_register_validation_message": "Do you really want to register the following users: [%users%] ?"
+    "workspace_user_register_validation_message": "Do you really want to register the following users: [%users%] ?",
+    "allow_workspace_registration": "Allow workspace registration at registration",
+    "following_workspace_registration": "Registration to the following workspaces"
 }

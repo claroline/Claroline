@@ -136,6 +136,8 @@ class PlatformDefaults implements ParameterProviderInterface
             ],
             'default_root_anon_id' => null,
             'is_cron_configured' => false,
+            'force_organization_creation' => false,
+            'allow_workspace_at_registration' => false,
         ];
     }
 }

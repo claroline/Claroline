@@ -31,14 +31,6 @@
         <div class="panel-body">
             {{ form_widget(form) }}
             <hr />
-            <h3 class="panel-title">{{ 'generate_url'|trans({}, 'platform') }}</h3> <br />
-            {% if url is empty %}
-                <div class="alert alert-danger">  {{ 'generate_url_subscription_fail'|trans({}, 'platform') }} </div>
-            {% else %}
-            <div class="alert alert-info">
-                {{ url }}
-            </div>
-            {% endif %}
             <h3 class="panel-title">{{ 'open_url'|trans({}, 'platform') }}</h3> <br />
             <div class="alert alert-info">
                 {{ url('claroline_core_redirect_openworkspaceslug', {'slug': workspace.getSlug()}) }}

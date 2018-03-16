@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Controller\User;
 
+use Claroline\AppBundle\API\FinderProvider;
 use Claroline\AppBundle\API\Options;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\Entity\User;
@@ -21,6 +22,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -49,6 +51,8 @@ class RegistrationController extends Controller
     private $userManager;
     /** @var TermsOfServiceManager */
     private $tosManager;
+    /** @var FinderProvider */
+    private $finder;
 
     /**
      * RegistrationController constructor.
@@ -60,7 +64,8 @@ class RegistrationController extends Controller
      *     "configHandler"     = @DI\Inject("claroline.config.platform_config_handler"),
      *     "profileSerializer" = @DI\Inject("claroline.serializer.profile"),
      *     "userManager"       = @DI\Inject("claroline.manager.user_manager"),
-     *     "tosManager"        = @DI\Inject("claroline.common.terms_of_service_manager")
+     *     "tosManager"        = @DI\Inject("claroline.common.terms_of_service_manager"),
+     *     "finder"            = @DI\Inject("claroline.api.finder")
      * })
      *
      * @param TokenStorageInterface        $tokenStorage
@@ -70,6 +75,7 @@ class RegistrationController extends Controller
      * @param ProfileSerializer            $profileSerializer
      * @param UserManager                  $userManager
      * @param TermsOfServiceManager        $tosManager
+     * @param FinderProvider               $finder
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
@@ -78,7 +84,8 @@ class RegistrationController extends Controller
         PlatformConfigurationHandler $configHandler,
         ProfileSerializer $profileSerializer,
         UserManager $userManager,
-        TermsOfServiceManager $tosManager
+        TermsOfServiceManager $tosManager,
+        FinderProvider $finder
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->session = $session;
@@ -87,6 +94,7 @@ class RegistrationController extends Controller
         $this->profileSerializer = $profileSerializer;
         $this->userManager = $userManager;
         $this->tosManager = $tosManager;
+        $this->finder = $finder;
     }
 
     /**
@@ -97,11 +105,13 @@ class RegistrationController extends Controller
      *
      * @return array
      */
-    public function indexAction()
+    public function indexAction(Request $resquest)
     {
         $this->checkAccess();
 
-        return [
+        $allowWorkspace = $this->configHandler->getParameter('allow_workspace_at_registration');
+
+        $data = [
             'facets' => $this->profileSerializer->serialize([Options::REGISTRATION]),
             'termOfService' => $this->configHandler->getParameter('terms_of_service') ?
                 $this->tosManager->getTermsOfService() : null,
@@ -113,8 +123,22 @@ class RegistrationController extends Controller
                 'redirectAfterLoginUrl' => $this->configHandler->getParameter('redirect_after_login_url'),
                 'userNameRegex' => $this->configHandler->getParameter('username_regex'),
                 'forceOrganizationCreation' => $this->configHandler->getParameter('force_organization_creation'),
+                'allowWorkspace' => $allowWorkspace,
             ],
         ];
+
+        if ($allowWorkspace) {
+            $data['workspaces'] = $this->finder->search('Claroline\CoreBundle\Entity\Workspace\Workspace', [
+                'filters' => [
+                    'displayable' => true,
+                    'selfRegistration' => true,
+                ],
+            ])['data'];
+        } else {
+            $data['workspaces'] = [];
+        }
+
+        return $data;
     }
 
     /**

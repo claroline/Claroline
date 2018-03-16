@@ -97,8 +97,8 @@ function mapDispatchToProps(dispatch, ownProps) {
     },
 
     // selection
-    toggleSelect(id) {
-      dispatch(listActions.toggleSelect(ownProps.name, id))
+    toggleSelect(id, action = 'select') {
+      dispatch(listActions.toggleSelect(ownProps.name, id, action))
     },
     toggleSelectAll(items) {
       dispatch(listActions.toggleSelectAll(ownProps.name, items))

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\ObjectCollection;
+use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Security\AbstractVoter;
 use Claroline\CoreBundle\Security\PlatformRoles;
@@ -27,7 +28,7 @@ class WorkspaceVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
-        if ($object->getCreator() === $token->getUser()) {
+        if ($object->getCreator() === $token->getUser() || $this->isWorkspaceManaged($token, $object)) {
             return VoterInterface::ACCESS_GRANTED;
         }
 
@@ -128,6 +129,10 @@ class WorkspaceVoter extends AbstractVoter
 
     private function isWorkspaceManaged(TokenInterface $token, Workspace $workspace)
     {
+        if (!$token->getUser() instanceof User) {
+            return false;
+        }
+
         $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
         $workspaceOrganizations = $workspace->getOrganizations();
 

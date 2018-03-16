@@ -30,4 +30,44 @@ class RedirectController extends Controller
     {
         return $this->redirectToRoute('claro_workspace_open', ['workspaceId' => $workspace->getId()]);
     }
+
+    /**
+     * @EXT\Route(
+     *     "ws/{slug}/subscription",
+     *     name="claro_workspace_subscription_url_generate",
+     *     options={"expose"=true}
+     * )
+     * @EXT\ParamConverter("workspace",  options={"mapping": {"slug": "slug"}})
+     *
+     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription.html.twig")
+     *
+     * @param Workspace $workspace
+     *
+     * @return Response
+     */
+    public function urlSubscriptionGenerateAction(Workspace $workspace)
+    {
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        if ('anon.' === $user) {
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_workspace_subscription_url_generate_anonymous',
+                    [
+                        'workspace' => $workspace->getId(),
+                        'toolName' => 'home',
+                    ]
+                )
+            );
+        } else {
+            return $this->redirect(
+                $this->generateUrl(
+                    'claro_workspace_subscription_url_generate_user',
+                    [
+                        'workspace' => $workspace->getId(),
+                    ]
+                )
+            );
+        }
+    }
 }

@@ -104,6 +104,7 @@ class WorkspaceSerializer
     private function getMeta(Workspace $workspace)
     {
         return [
+            'slug' => $workspace->getSlug(),
             'model' => $workspace->isModel(),
             'personal' => $workspace->isPersonal(),
             'description' => $workspace->getDescription(),

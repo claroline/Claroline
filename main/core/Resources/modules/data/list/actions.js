@@ -27,7 +27,7 @@ export const LIST_TOGGLE_SELECT     = 'LIST_TOGGLE_SELECT'
 export const LIST_TOGGLE_SELECT_ALL = 'LIST_TOGGLE_SELECT_ALL'
 
 actions.resetSelect     = makeInstanceActionCreator(LIST_RESET_SELECT)
-actions.toggleSelect    = makeInstanceActionCreator(LIST_TOGGLE_SELECT, 'row')
+actions.toggleSelect    = makeInstanceActionCreator(LIST_TOGGLE_SELECT, 'row', 'selected')
 actions.toggleSelectAll = makeInstanceActionCreator(LIST_TOGGLE_SELECT_ALL, 'rows')
 
 

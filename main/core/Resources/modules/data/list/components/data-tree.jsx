@@ -337,7 +337,9 @@ class DataTree extends Component {
                   label={t('list_select_all')}
                   labelChecked={t('list_deselect_all')}
                   checked={0 < this.props.selection.current.length}
-                  onChange={() => this.props.selection.toggleAll(this.props.data)}
+                  onChange={(val) => {
+                    val.target.checked ? this.props.selection.toggleAll(this.props.data): this.props.selection.toggleAll([])
+                  }}
                 />
               }
             </div>
@@ -358,7 +360,11 @@ class DataTree extends Component {
                   actions={getRowActions(actions)}
                   primaryAction={this.props.primaryAction}
                   selected={this.props.selection ? this.props.selection.current : []}
-                  onSelect={this.props.selection ? this.props.selection.toggle : undefined}
+                  onSelect={
+                    this.props.selection ? () => {
+                      this.props.selection.toggle(row, !isRowSelected(row, this.props.selection ? this.props.selection.current : []))
+                    }: undefined
+                  }
                   card={this.props.card}
 
                   onDrop={() => {

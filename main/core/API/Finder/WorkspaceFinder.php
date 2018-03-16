@@ -56,7 +56,7 @@ class WorkspaceFinder implements FinderInterface
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
-        if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN')) {
+        if ('cli' !== php_sapi_name() && !$this->authChecker->isGranted('ROLE_ADMIN') && !$this->authChecker->isGranted('ROLE_ANONYMOUS')) {
             /** @var User $currentUser */
             $currentUser = $this->tokenStorage->getToken()->getUser();
             $qb->leftJoin('obj.organizations', 'uo');
