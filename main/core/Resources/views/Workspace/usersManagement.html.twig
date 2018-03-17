@@ -23,7 +23,7 @@
 {% block content %}
     <div
       class="page-container workspaces-container"
-      data-workspace="{{ workspace | api_serialize | json_encode | raw | escape }}"
+      data-workspace="{{ workspace | api_serialize(['workspace_fetch_groups']) | json_encode | raw | escape }}"
       data-restrictions="{{ restrictions | json_encode | raw | escape }}"
     >
     </div>

@@ -122,7 +122,13 @@ class UserFinder implements FinderInterface
                 case 'workspace':
                     $qb->leftJoin('obj.roles', 'wsuroles');
                     $qb->leftJoin('wsuroles.workspace', 'rws');
-                    $qb->andWhere('rws.uuid = (:workspaceId)');
+                    $qb->leftJoin('obj.groups', 'wsugrps');
+                    $qb->leftJoin('wsugrps.roles', 'guroles');
+                    $qb->leftJoin('guroles.workspace', 'grws');
+                    $qb->andWhere($qb->expr()->orX(
+                        $qb->expr()->eq('rws.uuid', ':workspaceId'),
+                        $qb->expr()->eq('grws.uuid', ':workspaceId')
+                    ));
                     $qb->setParameter('workspaceId', $filterValue);
                     break;
                 case 'blacklist':

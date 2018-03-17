@@ -63,6 +63,7 @@ final class Options
 
     //for workspace
     const WORKSPACE_MODEL = 'workspace_model';
+    const WORKSPACE_FETCH_GROUPS = 'workspace_fetch_groups';
 
     //for role
     const SERIALIZE_COUNT_USER = 'serialize_count_user';

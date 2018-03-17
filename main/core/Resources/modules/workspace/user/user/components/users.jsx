@@ -25,7 +25,10 @@ const UsersList = props =>
       icon: 'fa fa-fw fa-trash-o',
       label: trans('unregister'),
       action: (rows) => props.unregister(rows, props.workspace),
-      dangerous: true
+      dangerous: true,
+      disabled: (rows) => rows.find(row => {
+        return row.groups.length > 0
+      })
     }]}
     definition={getUserList(props.workspace).definition}
     card={getUserList(props.workspace).card}
