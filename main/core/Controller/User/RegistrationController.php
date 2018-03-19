@@ -127,17 +127,6 @@ class RegistrationController extends Controller
             ],
         ];
 
-        if ($allowWorkspace) {
-            $data['workspaces'] = $this->finder->search('Claroline\CoreBundle\Entity\Workspace\Workspace', [
-                'filters' => [
-                    'displayable' => true,
-                    'selfRegistration' => true,
-                ],
-            ])['data'];
-        } else {
-            $data['workspaces'] = [];
-        }
-
         return $data;
     }
 
