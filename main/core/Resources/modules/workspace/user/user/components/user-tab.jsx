@@ -36,7 +36,7 @@ const UserTabActionsComponent = props => {
           opened={!!matchPath(props.location.pathname, {path: '/users/form'})}
           open={{
             icon: 'fa fa-plus',
-            label: trans('add_user'),
+            label: trans('create_user'),
             action: '#/users/form'
           }}
           cancel={{
@@ -46,7 +46,7 @@ const UserTabActionsComponent = props => {
       }
       <PageAction
         id='add-role'
-        title={trans('add_role')}
+        title={trans('register_users')}
         icon={'fa fa-id-badge'}
         disabled={false}
         action={() => props.register(props.workspace)}
@@ -77,7 +77,7 @@ const ConnectedActions = connect(
         definition: GroupList.definition,
         card: GroupList.card,
         fetch: {
-          url: ['apiv2_user_list'],
+          url: ['apiv2_user_list_registerable'],
           autoload: true
         },
         handleSelect: (users) => {

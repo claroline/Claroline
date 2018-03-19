@@ -8,7 +8,7 @@ const Groups = () =>
     name="groups.list"
     open={GroupList.open}
     fetch={{
-      url: ['apiv2_group_list'],
+      url: ['apiv2_group_list_managed'],
       autoload: true
     }}
     delete={{

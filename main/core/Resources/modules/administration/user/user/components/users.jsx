@@ -21,7 +21,7 @@ const UsersList = props =>
     name="users.list"
     open={UserList.open}
     fetch={{
-      url: ['apiv2_user_list'],
+      url: ['apiv2_user_list_managed'],
       autoload: true
     }}
     delete={{

@@ -33,7 +33,7 @@ const GroupTabActionsComponent = props =>
         opened={!!matchPath(props.location.pathname, {path: '/groups/form'})}
         open={{
           icon: 'fa fa-plus',
-          label: t('add_group'),
+          label: t('create_group'),
           action: '#/groups/form'
         }}
         cancel={{
@@ -43,7 +43,7 @@ const GroupTabActionsComponent = props =>
     }
     <PageAction
       id='add-role'
-      title={trans('add_role')}
+      title={trans('register_groups')}
       icon={'fa fa-id-badge'}
       disabled={false}
       action={() => props.register(props.workspace)}
@@ -71,7 +71,7 @@ const ConnectedActions = connect(
         definition: GroupList.definition,
         card: GroupList.card,
         fetch: {
-          url: ['apiv2_group_list'],
+          url: ['apiv2_group_list_registerable'],
           autoload: true
         },
         handleSelect: (groups) => {

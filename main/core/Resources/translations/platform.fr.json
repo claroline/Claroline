@@ -1594,5 +1594,7 @@
     "force_organization_creation": "Forcer l'ajout d'une organization à l'utilisateur lors de l'inscription",
     "allow_workspace_registration": "Permettre l'inscription aux workspaces lors de l'inscription",
     "workspace_user_register_validation_message": "Voulez-vous vraiment inscrire les utilisateurs suivants: [%users%] ?",
-    "following_workspace_registration": "Inscription aux espaces d'activités suivant"
+    "following_workspace_registration": "Inscription aux espaces d'activités suivant",
+    "register_users": "inscrire des utilisateurs",
+    "register_groups": "inscrire des groupes"
 }

@@ -1188,22 +1188,12 @@ class RoleManager
     public function checkWorkspaceIntegrity(Workspace $workspace, $i = 1, $totalWs = 1)
     {
         $this->log('Checking roles integrity for workspace '.$workspace->getCode()." ($i/$totalWs)");
-
         $this->log('Setting workspace to roles for uuid '.$workspace->getUuid().'...');
 
-        $roles = $this->container->get('claroline.api.finder')->fetch('Claroline\CoreBundle\Entity\Role', 0, -1, ['name' => $workspace->getUuid()]);
-
-        foreach ($roles as $role) {
-            if (!$role->getWorkspace()) {
-                $role->setWorkspace($workspace);
-                $this->log('Restoring workspace link for role . '.$role->getName().'...', LogLevel::ERROR);
-                $operationExecuted = true;
-            }
-        }
+        $operationExecuted = false;
 
         $collaborator = $this->getCollaboratorRole($workspace);
         $manager = $this->getManagerRole($workspace);
-        $operationExecuted = false;
 
         if (!$collaborator) {
             // Create collaborator role
@@ -1234,6 +1224,16 @@ class RoleManager
 
         if ($creator = $workspace->getCreator()) {
             $creator->addRole($manager);
+        }
+
+        $roles = $this->container->get('claroline.api.finder')->fetch('Claroline\CoreBundle\Entity\Role', 0, -1, ['name' => $workspace->getUuid()]);
+
+        foreach ($roles as $role) {
+            if (!$role->getWorkspace()) {
+                $role->setWorkspace($workspace);
+                $this->log('Restoring workspace link for role . '.$role->getName().'...', LogLevel::ERROR);
+                $operationExecuted = true;
+            }
         }
 
         return $operationExecuted;

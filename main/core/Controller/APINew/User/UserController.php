@@ -17,6 +17,7 @@ use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Controller\APINew\Model\HasGroupsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
+use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -175,6 +176,56 @@ class UserController extends AbstractCrudController
             'Claroline\CoreBundle\Entity\Workspace\Workspace',
             ['filters' => ['user' => $user->getUuid()]],
             $this->options['list']
+        ));
+    }
+
+    /**
+     * @Route(
+     *    "/list/registerable",
+     *    name="apiv2_user_list_registerable"
+     * )
+     * @Method("GET")
+     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @param Workspace $workspace
+     *
+     * @return JsonResponse
+     */
+    public function listRegisterableAction(User $user, Request $request)
+    {
+        return new JsonResponse($this->finder->search(
+            'Claroline\CoreBundle\Entity\User',
+            array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['organization' => array_map(function (Organization $organization) {
+                    return $organization->getUuid();
+                }, $user->getOrganizations())]]
+            )
+        ));
+    }
+
+    /**
+     * @Route(
+     *    "/list/managed",
+     *    name="apiv2_user_list_managed"
+     * )
+     * @Method("GET")
+     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @param Workspace $workspace
+     *
+     * @return JsonResponse
+     */
+    public function listManagedAction(User $user, Request $request)
+    {
+        return new JsonResponse($this->finder->search(
+            'Claroline\CoreBundle\Entity\User',
+            array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['organization' => array_map(function (Organization $organization) {
+                    return $organization->getUuid();
+                }, $user->getAdministratedOrganizations()->toArray())]]
+            )
         ));
     }
 }

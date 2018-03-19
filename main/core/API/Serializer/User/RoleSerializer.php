@@ -152,7 +152,7 @@ class RoleSerializer
 
         if (isset($data['workspace'])) {
             if (empty($data['workspace'])) {
-                $role->setWorkspace(null);
+                //don't set workspace to null here or some bad things will happen
             } else {
                 $workspace = $this->om->getRepository('ClarolineCoreBundle:Workspace\Workspace')
                     ->findOneBy(['uuid' => $data['workspace']['uuid']]);

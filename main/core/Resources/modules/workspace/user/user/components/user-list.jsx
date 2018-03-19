@@ -1,4 +1,5 @@
 import {trans} from '#/main/core/translation'
+import {generateUrl} from '#/main/core/api/router'
 
 import {UserCard} from '#/main/core/administration/user/user/components/user-card.jsx'
 
@@ -34,7 +35,7 @@ function getUserList(workspace)
 {
   return {
     open: {
-      action: (row) => `#/users/form/${row.id}`
+      action: (row) => generateUrl('claro_user_profile', {publicUrl: row.meta.publicUrl})
     },
     definition: [
       {
