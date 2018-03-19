@@ -36,6 +36,7 @@ class RoleIntegrityCheckerCommand extends ContainerAwareCommand
         $roleManager->setLogger($consoleLogger);
         $userId = $input->getOption('user');
         $workspaceCode = $input->getOption('workspace');
+
         if (!empty($userId)) {
             $user = $this
                 ->getContainer()
@@ -63,6 +64,7 @@ class RoleIntegrityCheckerCommand extends ContainerAwareCommand
 
             return;
         }
+
         $userIdx = $input->getOption('user_index');
         $workspaceIdx = $input->getOption('workspace_index');
         $roleManager->checkIntegrity($workspaceIdx, $userIdx);

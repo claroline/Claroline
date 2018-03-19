@@ -272,8 +272,7 @@ class RoleRepository extends EntityRepository
         $dql = "
             SELECT r FROM Claroline\CoreBundle\Entity\Role r
             JOIN r.workspace ws
-            WHERE r.name LIKE '%ROLE_WS_{$roleType}%'
-            AND ws.uuid = '{$workspace->getUuid()}'
+            WHERE r.name LIKE '%ROLE_WS_{$roleType}_{$workspace->getUuid()}%'
         ";
         $query = $this->_em->createQuery($dql);
 

@@ -56,15 +56,6 @@ class GroupFinder implements FinderInterface
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
-        if (!$this->authChecker->isGranted('ROLE_ADMIN')) {
-            /** @var User $currentUser */
-            $currentUser = $this->tokenStorage->getToken()->getUser();
-            $qb->leftJoin('obj.organizations', 'uo');
-            $qb->leftJoin('uo.administrators', 'ua');
-            $qb->andWhere('ua.id = :userId');
-            $qb->setParameter('userId', $currentUser->getId());
-        }
-
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'organization':
