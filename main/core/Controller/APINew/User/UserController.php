@@ -193,14 +193,15 @@ class UserController extends AbstractCrudController
      */
     public function listRegisterableAction(User $user, Request $request)
     {
+        $filters = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ?
+          [] :
+          ['organization' => array_map(function (Organization $organization) {
+              return $organization->getUuid();
+          }, $user->getOrganizations())];
+
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\User',
-            array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => ['organization' => array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $user->getOrganizations())]]
-            )
+            array_merge($request->query->all(), ['hiddenFilters' => $filters])
         ));
     }
 
@@ -218,14 +219,15 @@ class UserController extends AbstractCrudController
      */
     public function listManagedAction(User $user, Request $request)
     {
+        $filters = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ?
+          [] :
+          ['organization' => array_map(function (Organization $organization) {
+              return $organization->getUuid();
+          }, $user->getAdministratedOrganizations()->toArray())];
+
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\User',
-            array_merge(
-                $request->query->all(),
-                ['hiddenFilters' => ['organization' => array_map(function (Organization $organization) {
-                    return $organization->getUuid();
-                }, $user->getAdministratedOrganizations()->toArray())]]
-            )
+            array_merge($request->query->all(), $filters)
         ));
     }
 }
