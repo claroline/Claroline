@@ -14,10 +14,11 @@ interface ValidatorInterface
      * (usually the result of `json_decode` of the Request content).
      *
      * @param mixed $data - the data to validate
+     * @param mixed $mode - the validation mode
      *
      * @return array - the list of found errors (should used prop names as keys)
      */
-    public function validate($data);
+    public function validate($data, $mode);
 
     /**
      * A list of unique properties you want to check (they will be checked by

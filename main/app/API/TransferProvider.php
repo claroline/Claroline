@@ -7,6 +7,7 @@ use Claroline\AppBundle\API\Transfer\Adapter\AdapterInterface;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Library\Logger\FileLogger;
+use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -101,7 +102,7 @@ class TransferProvider
 
         if (array_key_exists('$root', $schema)) {
             $jsonSchema = $this->serializer->getSchema($schema['$root']);
-            $explanation = $adapter->explainSchema($jsonSchema);
+            $explanation = $adapter->explainSchema($jsonSchema, $executor->getMode());
             $data = $adapter->decodeSchema($data, $explanation);
         } else {
             foreach ($schema as $prop => $value) {
@@ -124,7 +125,12 @@ class TransferProvider
         foreach ($data as $data) {
             ++$i;
             $this->log("{$i}/{$total}: ".$this->getActionName($executor));
-            $executor->execute($data);
+
+            try {
+                $executor->execute($data);
+            } catch (InvalidDataException $e) {
+                $this->log($e->getMessage());
+            }
 
             if (0 === $i % $executor->getBatchSize()) {
                 $this->om->forceFlush();

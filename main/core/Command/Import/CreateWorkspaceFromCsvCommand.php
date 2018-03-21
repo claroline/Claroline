@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Command\Import;
 
-use Claroline\CoreBundle\Command\Traits\BaseCommandTrait;
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Listener\DoctrineDebug;
 use Claroline\CoreBundle\Validator\Constraints\CsvWorkspace;
@@ -84,7 +84,7 @@ class CreateWorkspaceFromCsvCommand extends ContainerAwareCommand
         }
 
         foreach ($lines as $line) {
-            if (trim($line) !== '') {
+            if ('' !== trim($line)) {
                 $workspaces[] = str_getcsv($line, ';');
             }
         }

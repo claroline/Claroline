@@ -95,7 +95,6 @@ class CsvAdapter implements AdapterInterface
     private function addPropertyToObject(Property $property, array &$object, $value)
     {
         $propertyName = $property->getName();
-
         if ($property->isArray()) {
             $keys = explode('.', $propertyName);
             $objectProp = array_pop($keys);

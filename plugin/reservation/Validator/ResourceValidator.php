@@ -11,7 +11,7 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class ResourceValidator implements ValidatorInterface
 {
-    public function validate($data)
+    public function validate($data, $mode)
     {
         $errors = [];
 

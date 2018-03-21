@@ -34,10 +34,10 @@ class Delete extends AbstractAction
     {
         $user = $this->serializer->deserialize(
             'Claroline\CoreBundle\Entity\User',
-            $data->user[0]
+            $data['user']
         );
 
-        $this->crud->delete('Claroline\CoreBundle\Entity\User', $user);
+        $this->crud->delete($user);
     }
 
     public function getSchema()

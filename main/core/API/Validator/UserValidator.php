@@ -3,6 +3,7 @@
 namespace Claroline\CoreBundle\API\Validator;
 
 use Claroline\AppBundle\API\ValidatorInterface;
+use Claroline\AppBundle\API\ValidatorProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Repository\UserRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -34,13 +35,18 @@ class UserValidator implements ValidatorInterface
         $this->repo = $this->om->getRepository('Claroline\CoreBundle\Entity\User');
     }
 
-    public function validate($data)
+    public function validate($data, $mode)
     {
-        // todo validate Facet values
+        $errors = [];
 
+        //implments something cleaner later
+        if (ValidatorProvider::UPDATE === $mode && !isset($data['id'])) {
+            return $errors;
+        }
+
+        // todo validate Facet values
         //the big chunk of code allows us to know if the identifiers are already taken
         //and prohibits the use of an already used address email in a username field
-        $errors = [];
 
         if ($this->exists('username', $data['username'], isset($data['id']) ? $data['id'] : null)) {
             $errors[] = [
@@ -63,7 +69,8 @@ class UserValidator implements ValidatorInterface
      * @param string      $propName
      * @param string      $propValue
      * @param string|null $userId
-     *                               Check if a user exists with the given data
+     *
+     * Check if a user exists with the given data
      */
     private function exists($propName, $propValue, $userId = null)
     {

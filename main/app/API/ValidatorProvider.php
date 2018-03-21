@@ -141,7 +141,7 @@ class ValidatorProvider
         $errors = $this->validateUnique($uniqueFields, $data, $mode, $class);
 
         //custom validation
-        $errors = array_merge($errors, $validator->validate($data));
+        $errors = array_merge($errors, $validator->validate($data, $mode));
 
         if (!empty($errors) && $throwException) {
             throw new InvalidDataException(
@@ -183,7 +183,7 @@ class ValidatorProvider
                ->where("o.{$entityProp} LIKE :{$entityProp}")
                ->setParameter($entityProp, $data[$dataProp]);
 
-                if (self::UPDATE === $mode) {
+                if (self::UPDATE === $mode && isset($data['id'])) {
                     $parameter = is_numeric($data['id']) ? 'id' : 'uuid';
                     $value = is_numeric($data['id']) ? (int) $data['id'] : $data['id'];
                     $qb->setParameter($parameter, $value)->andWhere("o.{$parameter} != :{$parameter}");
@@ -191,8 +191,14 @@ class ValidatorProvider
 
                 $objects = $qb->getQuery()->getResult();
 
-                if (count($objects) > 0) {
-                    $errors[] = ['path' => $dataProp, 'message' => "{$entityProp} already exists and should be unique"];
+                if ((self::UPDATE === $mode && isset($data['id'])) || self::CREATE === $mode) {
+                    if (count($objects) > 0) {
+                        $errors[] = ['path' => $dataProp, 'message' => "{$entityProp} already exists and should be unique"];
+                    }
+                } else {
+                    if (count($objects) > 1) {
+                        $errors[] = ['path' => $dataProp, 'message' => "{$entityProp} already exists and should be unique"];
+                    }
                 }
             }
         }
