@@ -1596,5 +1596,6 @@
     "workspace_user_register_validation_message": "Voulez-vous vraiment inscrire les utilisateurs suivants: [%users%] ?",
     "following_workspace_registration": "Inscription aux espaces d'activités suivant",
     "register_users": "inscrire des utilisateurs",
-    "register_groups": "inscrire des groupes"
+    "register_groups": "inscrire des groupes",
+    "add_workspaces": "Ajouter des espaces d'activités"
 }

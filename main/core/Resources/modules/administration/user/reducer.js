@@ -1,4 +1,6 @@
 import {makePageReducer} from '#/main/core/layout/page/reducer'
+import {makeListReducer} from '#/main/core/data/list/reducer'
+import {combineReducers} from '#/main/core/scaffolding/reducer'
 
 import {reducer as parametersReducer} from '#/main/core/administration/user/parameters/reducer'
 import {reducer as usersReducer} from '#/main/core/administration/user/user/reducer'
@@ -15,7 +17,10 @@ const reducer = makePageReducer({}, {
   roles: rolesReducer,
   locations: locationReducer,
   profile: profileReducer,
-  organizations: organizationReducer
+  organizations: organizationReducer,
+  workspaces: combineReducers({
+    picker: makeListReducer('workspaces.picker')
+  })
 })
 
 export {

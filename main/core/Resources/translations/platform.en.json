@@ -1570,5 +1570,6 @@
     "allow_workspace_registration": "Allow workspace registration at registration",
     "following_workspace_registration": "Registration to the following workspaces",
     "register_users": "Register users",
-    "register_groups": "Register groups"
+    "register_groups": "Register groups",
+    "add_workspaces": "Add workspaces"
 }
