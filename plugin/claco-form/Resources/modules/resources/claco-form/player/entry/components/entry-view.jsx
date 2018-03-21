@@ -239,8 +239,8 @@ class EntryView extends Component {
           method: 'GET' ,
           credentials: 'include'
         })
-        .then(response => response.json())
-        .then(entryUser => this.setState({entryUser: JSON.parse(entryUser)}))
+          .then(response => response.json())
+          .then(entryUser => this.setState({entryUser: JSON.parse(entryUser)}))
       }
     } else if (this.props.randomEnabled) {
       this.goToRandomEntry()
@@ -254,14 +254,14 @@ class EntryView extends Component {
       method: 'GET' ,
       credentials: 'include'
     })
-    .then(response => response.json())
-    .then(entryId => {
-      if (entryId > 0) {
-        this.props.history.push(`/entry/${entryId}/view`)
-      } else {
-        this.props.history.push('/menu')
-      }
-    })
+      .then(response => response.json())
+      .then(entryId => {
+        if (entryId > 0) {
+          this.props.history.push(`/entry/${entryId}/view`)
+        } else {
+          this.props.history.push('/menu')
+        }
+      })
   }
 
   updateState(property, value) {
@@ -320,19 +320,19 @@ class EntryView extends Component {
       method: 'GET' ,
       credentials: 'include'
     })
-    .then(response => response.json())
-    .then(data => {
-      this.props.showModal(
-        'MODAL_USER_PICKER',
-        {
-          title: trans('select_users_to_share', {}, 'clacoform'),
-          help: trans('share_entry_msg', {}, 'clacoform'),
-          handleRemove: (user) => this.props.unshareEntry(this.props.entryId, user.id),
-          handleSelect: (user) => this.props.shareEntry(this.props.entryId, user.id),
-          selected: JSON.parse(data.users)
-        }
-      )
-    })
+      .then(response => response.json())
+      .then(data => {
+        this.props.showModal(
+          'MODAL_USER_PICKER',
+          {
+            title: trans('select_users_to_share', {}, 'clacoform'),
+            help: trans('share_entry_msg', {}, 'clacoform'),
+            handleRemove: (user) => this.props.unshareEntry(this.props.entryId, user.id),
+            handleSelect: (user) => this.props.shareEntry(this.props.entryId, user.id),
+            selected: JSON.parse(data.users)
+          }
+        )
+      })
   }
 
   showOwnerForm() {
@@ -620,8 +620,8 @@ EntryView.propTypes = {
       name: T.string.isRequired,
       type: T.number.isRequired,
       field_facet_choices: T.arrayOf(T.shape({
-        id: T.number.isRequired,
-        label: T.string.isRequired,
+        id: T.string.isRequired,
+        name: T.string.isRequired,
         parent: T.shape({
           id: T.number.isRequired,
           label: T.string.isRequired

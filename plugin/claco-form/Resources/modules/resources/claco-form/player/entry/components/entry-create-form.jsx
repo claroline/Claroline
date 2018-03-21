@@ -18,15 +18,15 @@ const InfosList = props =>
   <span className="entry-form-infos-list">
     {props.infos.map(info =>
       <div key={info} className="btn-group margin-right-sm margin-bottom-sm">
-          <button className="btn btn-default">
-            {info}
-          </button>
-          <button
-            className="btn btn-danger"
-            onClick={() => props.removeInfo(info)}
-          >
-              <span className="fa fa-times-circle"></span>
-          </button>
+        <button className="btn btn-default">
+          {info}
+        </button>
+        <button
+          className="btn btn-danger"
+          onClick={() => props.removeInfo(info)}
+        >
+          <span className="fa fa-times-circle"></span>
+        </button>
       </div>
     )}
   </span>
@@ -111,7 +111,7 @@ class EntryCreateForm extends Component {
               disabled={this.isFieldLocked(f)}
               noLabel={true}
               choices={f.fieldFacet ?
-                f.fieldFacet.field_facet_choices.map(ffc => Object.assign({}, ffc, {value: ffc.label})) :
+                f.fieldFacet.field_facet_choices.map(ffc => Object.assign({}, ffc, {label: ffc.name})) :
                 []
               }
               value={this.state.entry[f.id]}
@@ -231,8 +231,8 @@ class EntryCreateForm extends Component {
                   error={this.state.errors.entry_title}
                   onChange={value => this.updateEntryValue('entry_title', value)}
                 />
-                {this.props.fields.map(f =>
-                  <FormField
+                {this.props.fields.map(f => {
+                  return (<FormField
                     key={`field-${f.id}`}
                     controlId={`field-${f.id}`}
                     type={getFieldType(f.type).name}
@@ -240,7 +240,7 @@ class EntryCreateForm extends Component {
                     disabled={this.isFieldLocked(f)}
                     noLabel={false}
                     choices={f.fieldFacet ?
-                      f.fieldFacet.field_facet_choices.map(ffc => Object.assign({}, ffc, {value: ffc.label})) :
+                      f.fieldFacet.field_facet_choices.map(ffc => Object.assign({}, ffc, {label: ffc.name})) :
                       []
                     }
                     value={this.state.entry[f.id]}
@@ -248,8 +248,8 @@ class EntryCreateForm extends Component {
                     max={f.details && !isNaN(f.details.nb_files_max) ? parseInt(f.details.nb_files_max) : undefined}
                     types={f.details && f.details.file_types ? f.details.file_types : []}
                     onChange={value => this.updateEntryValue(f.id, value)}
-                  />
-                )}
+                  />)
+                })}
               </div>
             }
             {this.props.isKeywordsEnabled &&
@@ -282,7 +282,7 @@ class EntryCreateForm extends Component {
                     className="btn btn-default margin-bottom-sm"
                     onClick={() => this.setState({showKeywordForm: true, currentKeyword: ''})}
                   >
-                      <span className="fa fa-fw fa-plus" />
+                    <span className="fa fa-fw fa-plus" />
                   </button>
                 }
               </div>
@@ -323,8 +323,8 @@ EntryCreateForm.propTypes = {
       name: T.string.isRequired,
       type: T.number.isRequired,
       field_facet_choices: T.arrayOf(T.shape({
-        id: T.number.isRequired,
-        label: T.string.isRequired,
+        id: T.string.isRequired,
+        name: T.string.isRequired,
         parent: T.shape({
           id: T.number.isRequired,
           label: T.string.isRequired

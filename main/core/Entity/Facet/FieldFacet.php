@@ -48,7 +48,7 @@ class FieldFacet
     /** @var int */
     const FILE_TYPE = 11;
     /** @var array */
-    private static $types = [
+    public static $types = [
         'string' => self::STRING_TYPE,
         'float' => self::FLOAT_TYPE,
         'date' => self::DATE_TYPE,

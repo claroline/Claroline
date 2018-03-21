@@ -132,7 +132,7 @@ class ClacoFormController extends Controller
             'Claroline\ClacoFormBundle\Entity\Entry',
             [
                 'limit' => 20,
-                'filters' => ['clacoForm' => $clacoForm->getId()],
+                'hiddenFilters' => ['clacoForm' => $clacoForm->getId()],
                 'sortBy' => 'creationDate',
             ]
         );
@@ -178,10 +178,10 @@ class ClacoFormController extends Controller
         $this->clacoFormManager->checkRight($clacoForm, 'OPEN');
         $params = $this->request->query->all();
 
-        if (!isset($params['filters'])) {
-            $params['filters'] = [];
+        if (!isset($params['hiddenFilters'])) {
+            $params['hiddenFilters'] = [];
         }
-        $params['filters']['clacoForm'] = $clacoForm->getId();
+        $params['hiddenFilters']['clacoForm'] = $clacoForm->getId();
 
         $data = $this->finder->search(
             'Claroline\ClacoFormBundle\Entity\Entry',

@@ -26,7 +26,7 @@ actions.createField = (fieldData) => (dispatch, getState) => {
         body: formData
       },
       success: (data, dispatch) => {
-        dispatch(actions.addField(JSON.parse(data)))
+        dispatch(actions.addField(data))
       }
     }
   })
@@ -46,12 +46,10 @@ actions.editField = (fieldData) => (dispatch) => {
         body: formData
       },
       success: (data, dispatch) => {
-        const field = JSON.parse(data)
-
-        if (field.fieldFacet && field.fieldFacet.field_facet_choices) {
-          field.fieldFacet.field_facet_choices = Object.values(field.fieldFacet.field_facet_choices)
+        if (data.fieldFacet && data.fieldFacet.field_facet_choices) {
+          data.fieldFacet.field_facet_choices = Object.values(data.fieldFacet.field_facet_choices)
         }
-        dispatch(actions.updateField(field))
+        dispatch(actions.updateField(data))
       }
     }
   })

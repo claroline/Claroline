@@ -6,7 +6,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {trans, t} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
-import {generateUrl} from '#/main/core/api/router'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 
@@ -89,15 +88,15 @@ class Entries extends Component {
     const columns = []
 
     if (!this.props.isAnon) {
-      const options = []
+      const options = {}
 
       if (this.props.canEdit || this.props.searchEnabled) {
-        options.push(trans('all_entries', {}, 'clacoform'))
+        options['all_entries'] = trans('all_entries', {}, 'clacoform')
       }
       if (this.props.isCategoryManager) {
-        options.push(trans('manager_entries', {}, 'clacoform'))
+        options['manager_entries'] = trans('manager_entries', {}, 'clacoform')
       }
-      options.push(trans('my_entries', {}, 'clacoform'))
+      options['my_entries'] = trans('my_entries', {}, 'clacoform')
 
       if (this.props.canEdit || this.props.searchEnabled || this.props.isCategoryManager) {
         columns.push({
@@ -428,7 +427,8 @@ class Entries extends Component {
               }}
               name="entries"
               fetch={{
-                url: generateUrl('claro_claco_form_entries_search', {clacoForm: this.props.resourceId})
+                url: ['claro_claco_form_entries_search', {clacoForm: this.props.resourceId}],
+                autoload: true
               }}
               definition={this.generateColumns()}
               filterColumns={this.props.searchColumnEnabled}
