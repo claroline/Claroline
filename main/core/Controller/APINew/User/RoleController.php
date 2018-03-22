@@ -46,7 +46,7 @@ class RoleController extends AbstractCrudController
     /**
      * List platform roles.
      *
-     * @Route("platform/roles", name="apiv2_platform_roles_list")
+     * @Route("platform", name="apiv2_role_platform_list")
      * @Method("GET")
      *
      * @param Request $request
@@ -59,6 +59,26 @@ class RoleController extends AbstractCrudController
             $this->finder->search('Claroline\CoreBundle\Entity\Role', array_merge(
                 $request->query->all(),
                 ['hiddenFilters' => ['type' => 1]]
+            ))
+        );
+    }
+
+    /**
+     * List platform roles.
+     *
+     * @Route("platform/grantable", name="apiv2_role_platform_grantable_list")
+     * @Method("GET")
+     *
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function listPlatformRolesGrantableAction(Request $request)
+    {
+        return new JsonResponse(
+            $this->finder->search('Claroline\CoreBundle\Entity\Role', array_merge(
+                $request->query->all(),
+                ['hiddenFilters' => ['type' => 1, 'grantable' => true]]
             ))
         );
     }

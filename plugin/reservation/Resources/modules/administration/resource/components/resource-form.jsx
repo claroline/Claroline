@@ -249,7 +249,7 @@ const ResourceForm = connect(
           subtitle: ''
         }),
         fetch: {
-          url: ['apiv2_platform_roles_list'],
+          url: ['apiv2_role_platform_list'],
           autoload: true
         },
         handleSelect: (selected) => dispatch(actions.addRoles(resourceId, resourceRights, selected))

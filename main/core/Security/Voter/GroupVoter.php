@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\ObjectCollection;
 use Claroline\CoreBundle\Entity\Group;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Security\AbstractVoter;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -88,6 +89,20 @@ class GroupVoter extends AbstractVoter
         //single property: no check now
         if (!$collection) {
             return VoterInterface::ACCESS_GRANTED;
+        }
+
+        //we can only add platform roles to users if we have that platform role
+        //require dedicated unit test imo
+        if ($collection->isInstanceOf('Claroline\CoreBundle\Entity\Role')) {
+            $currentRoles = array_map(function ($role) {
+                return $role->getRole();
+            }, $token->getRoles());
+
+            if (count(array_filter((array) $collection, function ($role) use ($currentRoles) {
+                return Role::PLATFORM_ROLE === $role && !in_array($role->getName(), $currentRoles);
+            })) > 0) {
+                return VoterInterface::ACCESS_DENIED;
+            }
         }
 
         if ($this->isGroupManaged($token, $group)) {

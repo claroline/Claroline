@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\AppBundle\Security\ObjectCollection;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Security\AbstractVoter;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -70,8 +71,7 @@ class UserVoter extends AbstractVoter
     private function checkEdit(TokenInterface $token, User $user)
     {
         //the user can edit himself too.
-        //He just can add roles and stuff but it's not handled atm (I think)
-        //note: be carefull for group/organizations/roles later
+        //He just can add roles and stuff and this should be checked later
         if ($token->getUser() === $user) {
             return true;
         }
@@ -121,6 +121,20 @@ class UserVoter extends AbstractVoter
         //single property: no check now
         if (!$collection) {
             return VoterInterface::ACCESS_GRANTED;
+        }
+
+        //we can only add platform roles to users if we have that platform role
+        //require dedicated unit test imo
+        if ($collection->isInstanceOf('Claroline\CoreBundle\Entity\Role')) {
+            $currentRoles = array_map(function ($role) {
+                return $role->getRole();
+            }, $token->getRoles());
+
+            if (count(array_filter((array) $collection, function ($role) use ($currentRoles) {
+                return Role::PLATFORM_ROLE === $role && !in_array($role->getName(), $currentRoles);
+            })) > 0) {
+                return VoterInterface::ACCESS_DENIED;
+            }
         }
 
         if ($this->isOrganizationManager($token, $user)) {

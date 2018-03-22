@@ -9,7 +9,7 @@ import {PLATFORM_ROLE} from '#/main/core/user/role/constants'
 
 const reducer = combineReducers({
   picker: makeListReducer('roles.picker', {
-    filters: [{property: 'type', value: PLATFORM_ROLE}]
+    filters: []
   }),
   list: makeListReducer('roles.list', {
     filters: [{property: 'type', value: PLATFORM_ROLE}]

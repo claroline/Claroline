@@ -11,6 +11,8 @@
 
 namespace Claroline\CoreBundle\Security\Voter;
 
+use Claroline\AppBundle\Security\ObjectCollection;
+use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Security\AbstractVoter;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -24,9 +26,35 @@ class RoleVoter extends AbstractVoter
 {
     public function checkPermission(TokenInterface $token, $object, array $attributes, array $options)
     {
+        $collection = isset($options['collection']) ? $options['collection'] : null;
+
+        switch ($attributes[0]) {
+            case self::CREATE: return $this->check($token, $object);
+            case self::EDIT:   return $this->check($token, $object);
+            case self::DELETE: return $this->check($token, $object);
+            case self::PATCH:  return $this->checkPatch($token, $object, $collection);
+        }
+
+        return VoterInterface::ACCESS_ABSTAIN;
+    }
+
+    public function checkPatch(TokenInterface $token, Role $role, $collection)
+    {
+        if ($collection->isInstanceOf('Claroline\CoreBundle\Entity\User') || $collection->isInstanceOf('Claroline\CoreBundle\Entity\Group')) {
+            foreach ($collection as $object) {
+                return $this->isGranted(self::PATCH, new ObjectCollection([$object], ['collection' => new ObjectCollection([$role])]));
+            }
+        }
+
+        return $this->check($token, $role);
+    }
+
+    public function check(TokenInterface $token, Role $object)
+    {
+        //probably do the check from the UserVoter or a security issue will arise
         if (!$object->getWorkspace()) {
             return $this->hasAdminToolAccess($token, 'user_management') ?
-            VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
+              VoterInterface::ACCESS_GRANTED : VoterInterface::ACCESS_DENIED;
         }
 
         //if it's a workspace role, we must be able be granted the edit perm on the workspace users tool
