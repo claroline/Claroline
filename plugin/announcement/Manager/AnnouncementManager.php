@@ -146,7 +146,7 @@ class AnnouncementManager
         $this->serializer->deserialize($data, $announcement);
         $this->om->persist($announcement);
 
-        $roles = isset($data['roles']) && count($data['roles']) > 0 ? $this->roleRepo->findRolesByIds($data['roles']) : [];
+        $roles = isset($data['roles']) && count($data['roles']) > 0 ? $this->om->findList('Claroline\CoreBundle\Entity\Role', 'uuid', $data['roles']) : [];
 
         // send message if needed
         switch ($data['meta']['notifyUsers']) {
