@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a192380dc0e35986226d812dc1cb355a",
+    "hash": "c386914653be84b4199f1a8e399b47f1",
     "content-hash": "1c356148315018a044a20a552f4e102c",
     "packages": [
         {
@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "aa72dbe728af726c9e012e03c49d2863ffd1db1e"
+                "reference": "30be5f7e1a525f9928951c908df591166a619f01"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/aa72dbe728af726c9e012e03c49d2863ffd1db1e",
-                "reference": "aa72dbe728af726c9e012e03c49d2863ffd1db1e",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/30be5f7e1a525f9928951c908df591166a619f01",
+                "reference": "30be5f7e1a525f9928951c908df591166a619f01",
                 "shasum": ""
             },
             "require": {
@@ -159,8 +159,6 @@
                 "hwi/oauth-bundle": "0.5.2",
                 "icap/html-diff": "1.1.0",
                 "idci/exporter-bundle": "1.0.0",
-                "innova/angular-js-bundle": "5.1.0",
-                "innova/angular-ui-resource-picker-bundle": "6.0.0",
                 "innova/angular-ui-tinymce-bundle": "5.1.1",
                 "jdorn/sql-formatter": "1.2.17",
                 "jms/di-extra-bundle": "1.5.0",
@@ -399,7 +397,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-03-10 08:32:49"
+            "time": "2018-03-22 07:52:37"
         },
         {
             "name": "cocur/slugify",
@@ -1400,33 +1398,33 @@
         },
         {
             "name": "doctrine/inflector",
-            "version": "v1.2.0",
+            "version": "v1.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/inflector.git",
-                "reference": "e11d84c6e018beedd929cff5220969a3c6d1d462"
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/inflector/zipball/e11d84c6e018beedd929cff5220969a3c6d1d462",
-                "reference": "e11d84c6e018beedd929cff5220969a3c6d1d462",
+                "url": "https://api.github.com/repos/doctrine/inflector/zipball/90b2128806bfde671b6952ab8bea493942c1fdae",
+                "reference": "90b2128806bfde671b6952ab8bea493942c1fdae",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0"
+                "php": ">=5.3.2"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6.2"
+                "phpunit/phpunit": "4.*"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.2.x-dev"
+                    "dev-master": "1.1.x-dev"
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Doctrine\\Common\\Inflector\\": "lib/Doctrine/Common/Inflector"
+                "psr-0": {
+                    "Doctrine\\Common\\Inflector\\": "lib/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1463,7 +1461,7 @@
                 "singularize",
                 "string"
             ],
-            "time": "2017-07-22 12:18:28"
+            "time": "2015-11-06 14:35:42"
         },
         {
             "name": "doctrine/instantiator",
@@ -2850,65 +2848,6 @@
             "time": "2015-06-09 14:59:11"
         },
         {
-            "name": "innova/angular-ui-resource-picker-bundle",
-            "version": "6.0.0",
-            "target-dir": "Innova/AngularUIResourcePickerBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularUIResourcePickerBundle.git",
-                "reference": "1d17ef474767b8e3e8935c57789c544e290e229b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularUIResourcePickerBundle/zipball/1d17ef474767b8e3e8935c57789c544e290e229b",
-                "reference": "1d17ef474767b8e3e8935c57789c544e290e229b",
-                "shasum": ""
-            },
-            "require": {
-                "innova/angular-js-bundle": "~5.0",
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularUIResourcePickerBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "Integrate Claroline resource picker into Angular JS",
-            "homepage": "http://github.com/InnovaLangues/AngularUIResourcePickerBundle",
-            "keywords": [
-                "Claroline",
-                "Symfony2",
-                "angular",
-                "picker",
-                "resource"
-            ],
-            "time": "2015-05-22 14:02:35"
-        },
-        {
             "name": "innova/angular-ui-tinymce-bundle",
             "version": "5.1.1",
             "target-dir": "Innova/AngularUITinyMCEBundle",
@@ -3970,16 +3909,16 @@
         },
         {
             "name": "kriswallsmith/buzz",
-            "version": "v0.16.0",
+            "version": "v0.16.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/kriswallsmith/Buzz.git",
-                "reference": "bd3299b7b6be3eeeb7a2842e677685031b93aa26"
+                "reference": "4977b7d44dbef49cdc641f14be6512fdcfe32f12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/bd3299b7b6be3eeeb7a2842e677685031b93aa26",
-                "reference": "bd3299b7b6be3eeeb7a2842e677685031b93aa26",
+                "url": "https://api.github.com/repos/kriswallsmith/Buzz/zipball/4977b7d44dbef49cdc641f14be6512fdcfe32f12",
+                "reference": "4977b7d44dbef49cdc641f14be6512fdcfe32f12",
                 "shasum": ""
             },
             "require": {
@@ -4016,7 +3955,7 @@
                 "curl",
                 "http client"
             ],
-            "time": "2018-02-03 19:40:45"
+            "time": "2018-03-19 10:34:40"
         },
         {
             "name": "meyfa/php-svg",
@@ -6543,16 +6482,16 @@
     "packages-dev": [
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.2.18",
+            "version": "v2.2.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "44f73c3e881805da5957ebd16ea87da9270cd5f3"
+                "reference": "2de0ac9c1d0d48a9b969814f43698223c6e03d6d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/44f73c3e881805da5957ebd16ea87da9270cd5f3",
-                "reference": "44f73c3e881805da5957ebd16ea87da9270cd5f3",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/2de0ac9c1d0d48a9b969814f43698223c6e03d6d",
+                "reference": "2de0ac9c1d0d48a9b969814f43698223c6e03d6d",
                 "shasum": ""
             },
             "require": {
@@ -6625,7 +6564,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2018-03-08 11:07:46"
+            "time": "2018-03-20 18:04:00"
         },
         {
             "name": "hamcrest/hamcrest-php",
@@ -6972,35 +6911,29 @@
         },
         {
             "name": "phpdocumentor/reflection-docblock",
-            "version": "4.3.0",
+            "version": "3.3.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/ReflectionDocBlock.git",
-                "reference": "94fd0001232e47129dd3504189fa1c7225010d08"
+                "reference": "bf329f6c1aadea3299f08ee804682b7c45b326a2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/94fd0001232e47129dd3504189fa1c7225010d08",
-                "reference": "94fd0001232e47129dd3504189fa1c7225010d08",
+                "url": "https://api.github.com/repos/phpDocumentor/ReflectionDocBlock/zipball/bf329f6c1aadea3299f08ee804682b7c45b326a2",
+                "reference": "bf329f6c1aadea3299f08ee804682b7c45b326a2",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.0",
+                "php": "^5.6 || ^7.0",
                 "phpdocumentor/reflection-common": "^1.0.0",
                 "phpdocumentor/type-resolver": "^0.4.0",
                 "webmozart/assert": "^1.0"
             },
             "require-dev": {
-                "doctrine/instantiator": "~1.0.5",
-                "mockery/mockery": "^1.0",
-                "phpunit/phpunit": "^6.4"
+                "mockery/mockery": "^0.9.4",
+                "phpunit/phpunit": "^4.4"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "phpDocumentor\\Reflection\\": [
@@ -7019,7 +6952,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2017-11-30 07:14:17"
+            "time": "2017-11-10 14:09:06"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -7994,12 +7927,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "cb78c3487fbb6120a57707e7f53f00226c1dfac0"
+                "reference": "1db1ac45bec3b87740c09a5ac8960ab81b6b3482"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/cb78c3487fbb6120a57707e7f53f00226c1dfac0",
-                "reference": "cb78c3487fbb6120a57707e7f53f00226c1dfac0",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/1db1ac45bec3b87740c09a5ac8960ab81b6b3482",
+                "reference": "1db1ac45bec3b87740c09a5ac8960ab81b6b3482",
                 "shasum": ""
             },
             "require": {
@@ -8052,7 +7985,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-02-15 07:57:58"
+            "time": "2018-03-19 17:34:12"
         },
         {
             "name": "symfony/polyfill-php54",
