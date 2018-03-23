@@ -27,7 +27,7 @@ const Select = props =>
     {!props.multiple && !props.noEmpty &&
       <option value=""/>
     }
-    {Object.keys(props.choices, props.filterChoices).map(option =>
+    {Object.keys(props.choices).map(option =>
       <option key={option} value={option}>
         {props.choices[option]}
       </option>

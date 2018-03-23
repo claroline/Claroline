@@ -59,12 +59,18 @@ export const FormField = props => {
           />
         )
       } else {
+        const choices = Array.isArray(props.choices) ? {} : props.choices
+
+        if (Array.isArray(props.choices)) {
+          props.choices.forEach(choice => choices[choice.value] = choice.label)
+        }
+
         return (
           <SelectGroup
             id={props.controlId}
             label={props.label}
             hideLabel={props.noLabel}
-            choices={props.choices || {}}
+            choices={choices || {}}
             filterChoices={props.filterChoices}
             value={props.value || ''}
             disabled={props.disabled}
