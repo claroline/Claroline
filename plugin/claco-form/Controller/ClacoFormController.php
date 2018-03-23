@@ -183,6 +183,28 @@ class ClacoFormController extends Controller
         }
         $params['hiddenFilters']['clacoForm'] = $clacoForm->getId();
 
+        if (isset($params['filters'])) {
+            $filters = [];
+            $excludedFilters = [
+                'clacoForm',
+                'type',
+                'title',
+                'status',
+                'locked',
+                'user',
+                'createdAfter',
+                'createdBefore',
+                'categories',
+                'keywords',
+            ];
+
+            foreach ($params['filters'] as $key => $value) {
+                if (!in_array($key, $excludedFilters)) {
+                    $filters['field_'.$key] = $value;
+                }
+            }
+            $params['filters'] = $filters;
+        }
         $data = $this->finder->search(
             'Claroline\ClacoFormBundle\Entity\Entry',
             $params

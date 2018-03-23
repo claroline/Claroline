@@ -174,6 +174,7 @@ class EntryFinder implements FinderInterface
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'clacoForm':
+                case 'type':
                     break;
                 case 'title':
                     $qb->andWhere('UPPER(obj.title) LIKE :title');
@@ -222,8 +223,9 @@ class EntryFinder implements FinderInterface
                     $this->usedJoin['keywords'] = true;
                     break;
                 default:
-                    $field = $this->fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'id' => $filterName]);
-                    $this->filterField($qb, $filterName, $filterValue, $field);
+                    $fieldId = intval(str_replace('field_', '', $filterName));
+                    $field = $this->fieldRepo->findOneBy(['clacoForm' => $clacoForm, 'id' => $fieldId]);
+                    $this->filterField($qb, $fieldId, $filterValue, $field);
             }
         }
 
