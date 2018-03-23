@@ -27,21 +27,29 @@ class Updater110300 extends Updater
 
     private function updateWorkspaceSlugs()
     {
-        $workspaces = $this->om->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace')->findAll();
-        $count = count($workspaces);
+        $this->log('Initializing workspace slug...');
+        $offset = 0;
         $i = 0;
+        $total = intval($this->om
+            ->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace')
+            ->countWorkspaces());
 
-        foreach ($workspaces as $workspace) {
-            ++$i;
-            $this->log('Update workspace slug for '.$workspace->getCode().' '.$i.'/'.$count);
-            $workspace->setSlug(null);
-            $this->om->persist($workspace);
-
-            if (0 === $i % self::BATCH_SIZE) {
-                $this->om->flush();
+        while ($i < $total) {
+            $workspaces = $this->om
+                ->getRepository('Claroline\CoreBundle\Entity\Workspace\Workspace')
+                ->findBy([], [], self::BATCH_SIZE, $offset);
+            $offset += self::BATCH_SIZE;
+            foreach ($workspaces as $workspace) {
+                ++$i;
+                $this->log('Update workspace slug for '.$workspace->getCode().' '.$i.'/'.$total);
+                $workspace->setSlug(null);
+                $this->om->persist($workspace);
             }
+
+            $this->om->flush();
+            $this->om->clear();
         }
 
-        $this->om->flush();
+        $this->log('Workspace slugs initialized!');
     }
 }

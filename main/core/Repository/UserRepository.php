@@ -1622,4 +1622,23 @@ class UserRepository extends EntityRepository implements UserProviderInterface
 
         return $execute ? $query->getResult() : $query;
     }
+
+    public function findUsersWithoutMainOrganization($count = false, $limit = -1, $offset = -1)
+    {
+        $selectUsr = $count ? 'COUNT(usr.id)' : 'usr';
+        $query = $this->getEntityManager()
+            ->createQuery('
+                SELECT '.$selectUsr.' FROM Claroline\CoreBundle\Entity\User usr
+                WHERE usr.id NOT IN (
+                  SELECT IDENTITY(uo.user) FROM Claroline\CoreBundle\Entity\Organization\UserOrganizationReference uo
+                  WHERE uo.isMain = :main
+                )                
+            ')
+            ->setParameter('main', true);
+        if (!$count && $limit > 0 && $offset > -1) {
+            $query->setMaxResults($limit)->setFirstResult($offset);
+        }
+
+        return $count ? $query->getSingleScalarResult() : $query->getResult();
+    }
 }

@@ -8,6 +8,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -17,6 +18,7 @@ class Updater110200 extends Updater
 
     private $container;
     protected $logger;
+    /** @var ObjectManager */
     private $om;
 
     public function __construct(ContainerInterface $container, $logger = null)
@@ -34,43 +36,43 @@ class Updater110200 extends Updater
 
     public function setMainOrganizations()
     {
-        $users = $this->om->getRepository('ClarolineCoreBundle:User')->findAll();
-        $count = count($users);
-        $i = 0;
-
         $this->log('Setting user main organization...');
+        $total = intval($this->om
+            ->getRepository('ClarolineCoreBundle:User')
+            ->findUsersWithoutMainOrganization(true));
+        $i = 0;
+        while ($i < $total) {
+            $defaultOrganization = $this->container->get('claroline.manager.organization.organization_manager')->getDefault();
+            $users = $this->om
+                ->getRepository('ClarolineCoreBundle:User')
+                ->findUsersWithoutMainOrganization(false, self::BATCH_SIZE, 0);
+            foreach ($users as $user) {
+                ++$i;
 
-        foreach ($users as $user) {
-            ++$i;
+                $administratedOrganizations = $user->getAdministratedOrganizations()->toArray();
 
-            $administratedOrganizations = $user->getAdministratedOrganizations()->toArray();
+                if (!$user->getMainOrganization()) {
+                    $this->log("Set {$user->getUsername()} main organization {$i}/{$total}");
 
-            if (!$user->getMainOrganization()) {
-                $this->log("Set {$user->getUsername()} main organization {$i}/{$count}");
-
-                if (count($administratedOrganizations) > 0) {
-                    $user->setMainOrganization($administratedOrganizations[0]);
-                } else {
-                    $organizations = $user->getOrganizations();
-                    if (count($organizations) > 0) {
-                        $user->setMainOrganization($organizations[0]);
+                    if (count($administratedOrganizations) > 0) {
+                        $user->setMainOrganization($administratedOrganizations[0]);
                     } else {
-                        $default = $this->container->get('claroline.manager.organization.organization_manager')->getDefault();
-                        $user->setMainOrganization($default);
+                        $organizations = $user->getOrganizations();
+                        if (count($organizations) > 0) {
+                            $user->setMainOrganization($organizations[0]);
+                        } else {
+                            $user->setMainOrganization($defaultOrganization);
+                        }
                     }
+
+                    $this->om->persist($user);
                 }
-
-                $this->om->persist($user);
             }
 
-            if (0 === $i % self::BATCH_SIZE) {
-                $this->log('Flushing...');
-                $this->om->flush();
-            }
+            $this->log('Flushing...');
+            $this->om->flush();
+            $this->om->clear();
         }
-
-        $this->log('Flushing...');
-        $this->om->flush();
     }
 
     public function createRoleAdminOrga()
@@ -90,5 +92,7 @@ class Updater110200 extends Updater
             $this->om->persist($workspacemanagement);
             $this->om->flush();
         }
+
+        $this->log('Role admin organization created!');
     }
 }
