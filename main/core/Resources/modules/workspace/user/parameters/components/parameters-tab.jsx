@@ -2,14 +2,17 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/core/api/router'
 import {trans} from '#/main/core/translation'
 
 import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
+import {actions as formActions} from '#/main/core/data/form/actions'
 import {select as formSelect} from '#/main/core/data/form/selectors'
+
+import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 const ParametersTabActions = () =>
   <PageActions>
@@ -20,61 +23,105 @@ const ParametersTabActions = () =>
     />
   </PageActions>
 
-//todo: maybe rename form name: parameters is missleading
+/**
+ * Manages Workspace parameters related to users.
+ *
+ * @todo: maybe rename form name: parameters is misleading
+ *
+ * @param props
+ * @constructor
+ */
 const Parameters = props =>
-  <div>
-    <FormContainer
-      level={3}
-      name="parameters"
-      sections={[{
-        id: 'general',
-        title: trans('general'),
-        primary: true,
+  <FormContainer
+    level={3}
+    name="parameters"
+    sections={[
+      {
+        id: 'registration',
+        icon: 'fa fa-fw fa-user-plus',
+        title: trans('registration'),
+        defaultOpened: true,
         fields: [
           {
-            name: 'registration.validation',
-            type: 'boolean',
-            label: trans('registration_validation')
+            name: 'registration.url',
+            type: 'url',
+            label: trans('registration_url'),
+            calculated: url(['claro_workspace_subscription_url_generate', {slug: props.workspace.meta.slug}, true]),
+            required: true,
+            disabled: true
           }, {
             name: 'registration.selfRegistration',
             type: 'boolean',
-            label: trans('public_registration')
+            label: trans('activate_self_registration'),
+            help: trans('self_registration_workspace_help'),
+            linked: [
+              {
+                name: 'registration.validation',
+                type: 'boolean',
+                label: trans('validate_registration'),
+                help: trans('validate_registration_help'),
+                displayed: props.workspace.registration && props.workspace.registration.selfRegistration
+              }
+            ]
           }, {
             name: 'registration.selfUnregistration',
             type: 'boolean',
-            label: trans('public_unregistration')
-          }, {
-            name: 'display.displayable',
-            type: 'boolean',
-            label: trans('displayable_in_workspace_list')
-          },
-          {
-            name: 'restrictions.maxUsers',
-            type: 'number',
-            label: trans('workspace_max_users')
+            label: trans('activate_self_unregistration'),
+            help: trans('self_unregistration_workspace_help')
           }
         ]
-      }]}
-    />
-    <div className="panel panel-body">
-      <h4 className="panel-title">{trans('generate_url')}</h4> <br />
-      <div className="alert alert-info">
-        {generateUrl('claro_workspace_subscription_url_generate', {slug: props.workspace.meta.slug}, true)}
-      </div>
-    </div>
-  </div>
+      }, {
+        id: 'restrictions',
+        icon: 'fa fa-fw fa-key',
+        title: trans('access_restrictions'),
+        fields: [
+          {
+            name: 'access_max_users',
+            type: 'boolean',
+            label: trans('access_max_users'),
+            calculated: props.workspace.restrictions && null !== props.workspace.restrictions.maxUsers && '' !== props.workspace.restrictions.maxUsers,
+            onChange: checked => {
+              if (checked) {
+                // initialize with the current nb of users with the role
+                props.updateProp('restrictions.maxUsers', 0)
+              } else {
+                // reset max users field
+                props.updateProp('restrictions.maxUsers', null)
+              }
+            },
+            linked: [
+              {
+                name: 'restrictions.maxUsers',
+                type: 'number',
+                label: trans('maxUsers'),
+                displayed: props.workspace.restrictions && null !== props.workspace.restrictions.maxUsers && '' !== props.workspace.restrictions.maxUsers,
+                required: true,
+                options: {
+                  min: 0
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]}
+  />
 
 Parameters.propTypes = {
-  workspace: T.shape({
-    meta: T.shape({
-      slug: T.bool.isRequired
-    }).isRequired
-  }).isRequired
+  workspace: T.shape(
+    WorkspaceTypes.propTypes
+  ).isRequired,
+  updateProp: T.func.isRequired
 }
 
 const ParametersTab = connect(
   (state) => ({
     workspace: formSelect.data(formSelect.form(state, 'parameters'))
+  }),
+  (dispatch) => ({
+    updateProp(propName, propValue) {
+      dispatch(formActions.updateProp('parameters', propName, propValue))
+    }
   })
 )(Parameters)
 

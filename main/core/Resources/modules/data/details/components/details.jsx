@@ -24,10 +24,11 @@ const DataDetailsField = props => {
 
       <div id={props.name}>
         {!props.data &&
-        <span className="data-details-empty">{t('empty_value')}</span>
+          <span className="data-details-empty">{t('empty_value')}</span>
         }
+
         {props.data &&
-        (typeDef.components.details ?
+          (typeDef.components.details ?
             React.createElement(typeDef.components.details, merge({}, props.options, {
               id: props.name,
               label: props.label,
@@ -36,7 +37,7 @@ const DataDetailsField = props => {
             }))
             :
             typeDef.render ? typeDef.render(props.data, props.options || {}) : props.data
-        )
+          )
         }
       </div>
     </div>

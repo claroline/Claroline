@@ -20,7 +20,7 @@ function load() {
   invariant(platformConfig, 'Can not find platform configuration.')
   invariant(platformConfig.dataset.parameters, 'Can not find platform configuration parameters.')
 
-  config = platformConfig.dataset.parameters
+  config = JSON.parse(platformConfig.dataset.parameters) || {}
 }
 
 /**
@@ -39,7 +39,7 @@ function platformConfig(param) {
     return config
   }
 
-  return get(param, config)
+  return get(config, param)
 }
 
 export {

@@ -1,7 +1,6 @@
-
 import React from 'react'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {enumRole} from '#/main/core/user/role/constants'
 import {RoleCard} from '#/main/core/administration/user/role/components/role-card.jsx'
@@ -16,37 +15,32 @@ const RoleList = {
     {
       name: 'name',
       type: 'string',
-      label: t('code'),
+      label: trans('code'),
       displayed: false,
       primary: true
     }, {
       name: 'translationKey',
       type: 'translation',
-      label: t('name'),
+      label: trans('name'),
       displayed: true
     }, {
       name: 'meta.type',
       alias: 'type',
       type: 'enum',
-      label: t('type'),
+      label: trans('type'),
       options: {
         choices: enumRole
       },
       displayed: true
     }, {
-      name: 'meta.users',
-      type: 'number',
-      label: t('count_users'),
-      displayed: false
-    },  {
       name: 'restrictions.maxUsers',
       type: 'number',
-      label: t('max_users'),
+      label: trans('maxUsers'),
       displayed: false
     }, {
       name: 'workspace.name',
       type: 'string',
-      label: t('workspace'),
+      label: trans('workspace'),
       displayed: true,
       filterable: false,
       renderer: (rowData) => {

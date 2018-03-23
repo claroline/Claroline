@@ -23,7 +23,7 @@ const UsersList = props =>
     }}
     actions={[{
       icon: 'fa fa-fw fa-trash-o',
-      label: trans('unregister'),
+      label: trans('unregister', {}, 'actions'),
       action: (rows) => props.unregister(rows, props.workspace),
       dangerous: true,
       disabled: (rows) => rows.find(row => {
@@ -40,7 +40,9 @@ UsersList.propTypes = {
 }
 
 const Users = connect(
-  state => ({workspace: select.workspace(state)}),
+  state => ({
+    workspace: select.workspace(state)
+  }),
   dispatch => ({
     unregister(users, workspace) {
       dispatch(

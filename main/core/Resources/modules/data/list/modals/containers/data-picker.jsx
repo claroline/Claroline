@@ -30,7 +30,7 @@ const DataPicker = props =>
       className="modal-btn btn btn-primary"
       disabled={0 === props.selected.length}
       onClick={() => {
-        if (0 <props.selected.length) {
+        if (0 < props.selected.length) {
           props.fadeModal()
           props.handleSelect(props.selected)
           props.resetSelect()

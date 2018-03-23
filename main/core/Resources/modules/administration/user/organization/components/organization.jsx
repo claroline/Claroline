@@ -71,6 +71,7 @@ const OrganizationForm = props =>
     >
       <FormSection
         id="organization-workspaces"
+        className="embedded-list-section"
         icon="fa fa-fw fa-book"
         title={trans('workspaces')}
         disabled={props.new}
@@ -99,6 +100,7 @@ const OrganizationForm = props =>
 
       <FormSection
         id="organization-users"
+        className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={trans('users')}
         disabled={props.new}
@@ -128,6 +130,7 @@ const OrganizationForm = props =>
       <FormSection
         id="organization-groups"
         icon="fa fa-fw fa-users"
+        className="embedded-list-section"
         title={trans('groups')}
         disabled={props.new}
         actions={[
@@ -155,6 +158,7 @@ const OrganizationForm = props =>
 
       <FormSection
         id="organization-managers"
+        className="embedded-list-section"
         icon="fa fa-fw fa-users"
         title={trans('managers')}
         disabled={props.new}

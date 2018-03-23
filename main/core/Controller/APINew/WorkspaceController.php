@@ -72,21 +72,22 @@ class WorkspaceController extends AbstractCrudController
 
     /**
      * @Route(
-     *    "/{id}/pending",
+     *    "/{id}/user/pending",
      *    name="apiv2_workspace_list_pending"
      * )
      * @Method("GET")
      * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
+     * @param Request   $request
      * @param Workspace $workspace
      *
      * @return JsonResponse
      */
-    public function pendingListAction(Request $request, Workspace $workspace)
+    public function listPendingAction(Request $request, Workspace $workspace)
     {
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\Workspace\WorkspaceRegistrationQueue',
-            ['hiddenFilters' => ['workspace' => $workspace->getUuid()]]
+            array_merge($request->query->all(), ['hiddenFilters' => ['workspace' => $workspace->getUuid()]])
         ));
     }
 
@@ -98,6 +99,7 @@ class WorkspaceController extends AbstractCrudController
      * @Method("PATCH")
      * @ParamConverter("workspace", options={"mapping": {"id": "uuid"}})
      *
+     * @param Request   $request
      * @param Workspace $workspace
      *
      * @return JsonResponse

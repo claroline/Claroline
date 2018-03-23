@@ -1571,5 +1571,20 @@
     "following_workspace_registration": "Registration to the following workspaces",
     "register_users": "Register users",
     "register_groups": "Register groups",
-    "add_workspaces": "Add workspaces"
+    "add_workspaces": "Add workspaces",
+    "pending_registrations": "Pending registrations",
+    "hide_in_workspace_list": "Hide in the list of workspaces",
+
+    "self_registration_platform_help": "Users will be able to register themselves on the platform.",
+    "self_registration_workspace_help": "Users will be able to register themselves in the workspace.",
+    "activate_self_unregistration": "Enable self-unregistrations",
+    "self_unregistration_platform_help": "Users will be able to unregister themselves from the platform.",
+    "self_unregistration_workspace_help": "Users will be able to unregister themselves from the workspace.",
+    "validate_registration": "Validate self-registrations",
+    "validate_registration_help": "Registrations must be validated by a manager before users have access to the workspace.",
+    "registration_url": "Registration URL",
+    "workspace_register_select_users": "1. Select users to register",
+    "workspace_register_select_groups": "1. Select groups to register",
+    "workspace_register_select_roles": "2. Select roles to assign",
+    "clipboard_copy": "Copy to clipboard"
 }

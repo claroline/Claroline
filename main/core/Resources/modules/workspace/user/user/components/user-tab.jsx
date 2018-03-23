@@ -5,64 +5,64 @@ import {connect} from 'react-redux'
 import {trans} from '#/main/core/translation'
 import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
 import {currentUser} from '#/main/core/user/current'
-import {ADMIN, getPermissionLevel} from  '#/main/core/workspace/user/restrictions'
 
+import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
+import {actions as modalActions} from '#/main/core/layout/modal/actions'
+import {PageActions, PageAction} from '#/main/core/layout/page'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
 import {User}    from '#/main/core/administration/user/user/components/user.jsx'
 import {Users}   from '#/main/core/workspace/user/user/components/users.jsx'
 
 import {actions} from '#/main/core/workspace/user/user/actions'
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
-import {PageAction} from '#/main/core/layout/page'
+import {ADMIN, getPermissionLevel} from  '#/main/core/workspace/user/restrictions'
 import {select}  from '#/main/core/workspace/user/selectors'
 import {getModalDefinition} from '#/main/core/workspace/user/role/modal'
-//we have an issue because we a have to use the same definition for both selection modal.
-//grouplist only displays name so it's ok as a workaround
-import {GroupList} from '#/main/core/administration/user/group/components/group-list.jsx'
-import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
 
-const UserTabActionsComponent = props => {
-  return(
-    <PageActions>
-      {getPermissionLevel(currentUser(), props.workspace) === ADMIN &&
-        <FormPageActionsContainer
-          formName="users.current"
-          target={(user, isNew) => isNew ?
-            ['apiv2_user_create'] :
-            ['apiv2_user_update', {id: user.id}]
-          }
-          opened={!!matchPath(props.location.pathname, {path: '/users/form'})}
-          open={{
-            icon: 'fa fa-plus',
-            label: trans('create_user'),
-            action: '#/users/form'
-          }}
-          cancel={{
-            action: () => navigate('/users')
-          }}
-        />
-      }
-      <PageAction
-        id='add-role'
-        title={trans('register_users')}
-        icon={'fa fa-id-badge'}
-        disabled={false}
-        action={() => props.register(props.workspace)}
-        primary={false}
+import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
+import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
+
+const UserTabActionsComponent = props =>
+  <PageActions>
+    {getPermissionLevel(currentUser(), props.workspace) === ADMIN &&
+      <FormPageActionsContainer
+        formName="users.current"
+        target={(user, isNew) => isNew ?
+          ['apiv2_user_create'] :
+          ['apiv2_user_update', {id: user.id}]
+        }
+        opened={!!matchPath(props.location.pathname, {path: '/users/form'})}
+        open={{
+          label: trans('create_user'),
+          action: '#/users/form',
+          primary: false
+        }}
+        cancel={{
+          action: () => navigate('/users')
+        }}
       />
-    </PageActions>
-  )
-}
+    }
+
+    {!matchPath(props.location.pathname, {path: '/users/form'}) &&
+      <PageAction
+        id="add-role"
+        title={trans('register_users')}
+        icon="fa fa-plus"
+        action={() => props.register(props.workspace)}
+        primary={true}
+      />
+    }
+  </PageActions>
 
 UserTabActionsComponent.propTypes = {
-  workspace: T.object,
+  workspace: T.shape(
+    WorkspaceTypes.propTypes
+  ).isRequired,
   location: T.object,
   register: T.func
 }
 
-const ConnectedActions = connect(
+const UserTabActions = withRouter(connect(
   state => ({
     workspace: select.workspace(state)
   }),
@@ -70,18 +70,20 @@ const ConnectedActions = connect(
     register(workspace) {
       dispatch(modalActions.showModal(MODAL_DATA_PICKER, {
         icon: 'fa fa-fw fa-user',
-        title: trans('add_user'),
-        confirmText: trans('add'),
+        title: trans('register_users'),
+        subtitle: trans('workspace_register_select_users'),
+        confirmText: trans('select', {}, 'actions'),
         name: 'users.picker',
-        //only the name goes here
-        definition: GroupList.definition,
-        card: GroupList.card,
+        definition: UserList.definition,
+        card: UserList.card,
         fetch: {
           url: ['apiv2_user_list_registerable'],
           autoload: true
         },
         handleSelect: (users) => {
           dispatch(modalActions.showModal(MODAL_DATA_PICKER, getModalDefinition(
+            'fa fa-fw fa-user',
+            trans('register_users'),
             workspace,
             (roles) => roles.forEach(role => dispatch(actions.addUsersToRole(role, users)))
           )))
@@ -89,9 +91,7 @@ const ConnectedActions = connect(
       }))
     }
   })
-)(UserTabActionsComponent)
-
-const UserTabActions = withRouter(ConnectedActions)
+)(UserTabActionsComponent))
 
 const UserTabComponent = props =>
   <Routes
@@ -103,38 +103,26 @@ const UserTabComponent = props =>
       }, {
         path: '/users/form/:id?',
         component: User,
-        onEnter: (params) => props.openForm(
-          params.id || null,
-          props.workspace,
-          props.restrictions,
-          props.collaboratorRole
-        )
+        onEnter: (params) => props.openForm(params.id || null, props.collaboratorRole)
       }
     ]}
   />
 
 UserTabComponent.propTypes = {
   openForm: T.func.isRequired,
-  workspace: T.object,
-  restrictions: T.object,
   collaboratorRole: T.object
 }
 
 const UserTab = connect(
   state => ({
-    workspace: select.workspace(state),
-    restrictions: select.restrictions(state),
     collaboratorRole: select.collaboratorRole(state)
   }),
   dispatch => ({
-    openForm(id = null, workspace, restrictions, collaboratorRole) {
-
-      const defaultValue = {
-        organization: null, //retreive it with axel stuff
+    openForm(id = null, collaboratorRole) {
+      dispatch(actions.open('users.current', id, {
+        organization: null, // retrieve it with axel stuff
         roles: [collaboratorRole]
-      }
-
-      dispatch(actions.open('users.current', id, defaultValue))
+      }))
     }
   })
 )(UserTabComponent)

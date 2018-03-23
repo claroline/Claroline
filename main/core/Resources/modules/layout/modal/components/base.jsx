@@ -20,6 +20,12 @@ const BaseModal = props =>
           }
 
           {props.title}
+
+          {props.subtitle &&
+            <small className={classes({
+              'with-icon': !!props.icon
+            })}>{props.subtitle}</small>
+          }
         </Modal.Title>
       </Modal.Header>
     }
@@ -34,6 +40,7 @@ BaseModal.propTypes = {
   show: T.bool.isRequired,
   icon: T.string,
   title: T.string,
+  subtitle: T.string,
   className: T.string,
   children: T.node.isRequired
 }

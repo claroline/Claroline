@@ -525,6 +525,8 @@ class Workspace
      * Set displayable.
      *
      * @param bool $displayable
+     *
+     * @deprecated use `setHidden()`
      */
     public function setDisplayable($displayable)
     {
@@ -534,11 +536,33 @@ class Workspace
     /**
      * Is displayable ?
      *
+     * @deprecated use `isHidden()`
+     *
      * @return bool
      */
     public function isDisplayable()
     {
         return $this->displayable;
+    }
+
+    /**
+     * Is hidden ?
+     *
+     * @return bool
+     */
+    public function isHidden()
+    {
+        return !$this->displayable;
+    }
+
+    /**
+     * Set hidden.
+     *
+     * @param bool $hidden
+     */
+    public function setHidden($hidden)
+    {
+        $this->displayable = !$hidden;
     }
 
     public function setSelfRegistration($selfRegistration)

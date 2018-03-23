@@ -59,6 +59,7 @@ const LocationForm = props =>
     >
       <FormSection
         id="location-users"
+        className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={t('users')}
         disabled={props.new}
@@ -87,6 +88,7 @@ const LocationForm = props =>
 
       <FormSection
         id="location-groups"
+        className="embedded-list-section"
         icon="fa fa-fw fa-users"
         title={t('groups')}
         disabled={props.new}
@@ -115,6 +117,7 @@ const LocationForm = props =>
 
       <FormSection
         id="location-organizations"
+        className="embedded-list-section"
         icon="fa fa-fw fa-building"
         title={t('organizations')}
         disabled={props.new}

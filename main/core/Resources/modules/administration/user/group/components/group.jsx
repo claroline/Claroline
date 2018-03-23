@@ -42,6 +42,7 @@ const GroupForm = props =>
     >
       <FormSection
         id="group-users"
+        className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={t('users')}
         disabled={props.new}
@@ -70,6 +71,7 @@ const GroupForm = props =>
 
       <FormSection
         id="group-roles"
+        className="embedded-list-section"
         icon="fa fa-fw fa-id-badge"
         title={t('roles')}
         disabled={props.new}
@@ -98,6 +100,7 @@ const GroupForm = props =>
 
       <FormSection
         id="group-organizations"
+        className="embedded-list-section"
         icon="fa fa-fw fa-building"
         title={t('organizations')}
         disabled={props.new}

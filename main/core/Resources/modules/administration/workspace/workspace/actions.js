@@ -1,4 +1,5 @@
 import {generateUrl} from '#/main/core/api/router'
+import {API_REQUEST} from '#/main/core/api/actions'
 
 import {actions as listActions} from '#/main/core/data/list/actions'
 import {getDataQueryString} from '#/main/core/data/list/utils'
@@ -7,27 +8,22 @@ import {actions as alertActions} from '#/main/core/layout/alert/actions'
 import {constants as alertConstants} from '#/main/core/layout/alert/constants'
 import {constants as actionConstants} from '#/main/core/layout/action/constants'
 
-import {Workspace as WorkspaceTypes} from '#/main/core/administration/workspace/workspace/prop-types'
-
-import {API_REQUEST} from '#/main/core/api/actions'
-
-export const WORKSPACE_ADD_MANAGER = 'WORKSPACE_ADD_MANAGER'
-export const WORKSPACE_REMOVE_MANAGER = 'WORKSPACE_REMOVE_MANAGER'
+import {Workspace as WorkspaceTypes} from '#/main/core/workspace/prop-types'
 
 export const actions = {}
 
-actions.open = (formName, id = null) => (dispatch) => {
+actions.open = (formName, id = null) => {
   if (id) {
-    dispatch({
+    return {
       [API_REQUEST]: {
         url: ['apiv2_workspace_get', {id}],
         success: (response, dispatch) => {
           dispatch(formActions.resetForm(formName, response, false))
         }
       }
-    })
+    }
   } else {
-    dispatch(formActions.resetForm(formName, WorkspaceTypes.defaultProps, true))
+    return formActions.resetForm(formName, WorkspaceTypes.defaultProps, true)
   }
 }
 

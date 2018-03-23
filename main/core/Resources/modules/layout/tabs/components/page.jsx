@@ -50,33 +50,41 @@ PageHeader.propTypes = {
 
 // todo add H1 (page title) and H2 (current tab)
 
-const TabbedPage = props =>
-  <RoutedPage {...props} className="tabbed-page">
-    <PageHeader
-      title={props.title}
-      tabs={props.tabs}
-    >
-      <Switch>
-        {props.tabs.map((tab, tabIndex) => tab.actions &&
-          <Route
-            {...tab}
-            key={`tab-actions-${tabIndex}`}
-            component={tab.actions}
-          />
-        )}
-      </Switch>
-    </PageHeader>
+const TabbedPage = props => {
+  const displayedTabs = props.tabs.filter(tab => undefined === tab.displayed || tab.displayed)
 
-    <RoutedPageContent
-      className="page-tab"
-      routes={props.tabs.map((tab) => ({
-        path: tab.path,
-        exact: tab.exact,
-        component: tab.content
-      }))}
-      redirect={props.redirect}
-    />
-  </RoutedPage>
+  return (
+    <RoutedPage {...props} className="tabbed-page">
+      <PageHeader
+        title={props.title}
+        tabs={displayedTabs}
+      >
+        <Switch>
+          {displayedTabs
+            .filter(tab => !!tab.actions)
+            .map((tab, tabIndex) =>
+              <Route
+                {...tab}
+                key={`tab-actions-${tabIndex}`}
+                component={tab.actions}
+              />
+            )
+          }
+        </Switch>
+      </PageHeader>
+
+      <RoutedPageContent
+        className="page-tab"
+        routes={displayedTabs.map((tab) => ({
+          path: tab.path,
+          exact: tab.exact,
+          component: tab.content
+        }))}
+        redirect={props.redirect}
+      />
+    </RoutedPage>
+  )
+}
 
 implementPropTypes(TabbedPage, PageTypes, {
   title: T.string.isRequired,
@@ -84,7 +92,9 @@ implementPropTypes(TabbedPage, PageTypes, {
     path: T.string.isRequired,
     exact: T.bool,
     icon: T.string.isRequired,
-    title: T.string.isRequired
+    title: T.string.isRequired,
+    displayed: T.bool,
+    actions: T.any
   })).isRequired,
   redirect: T.arrayOf(T.shape({
     exact: T.bool,

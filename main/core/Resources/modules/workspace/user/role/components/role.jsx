@@ -41,6 +41,7 @@ const RoleForm = props =>
     <FormSections level={3}>
       <FormSection
         id="role-users"
+        className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={trans('users')}
         disabled={props.new}
@@ -70,6 +71,7 @@ const RoleForm = props =>
 
       <FormSection
         id="role-groups"
+        className="embedded-list-section"
         icon="fa fa-fw fa-id-badge"
         title={trans('groups')}
         disabled={props.new}

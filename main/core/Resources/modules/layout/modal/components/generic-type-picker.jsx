@@ -35,7 +35,7 @@ class GenericTypePicker extends Component {
             {this.props.types.map((type, index) =>
               <div
                 key={`type-${index}`}
-                className={classes('type-entry', {'selected': this.state.currentType === type})}
+                className={classes('type-entry', {selected: this.state.currentType === type})}
                 role="option"
                 onMouseOver={() => this.handleItemMouseOver(type)}
                 onClick={() => {

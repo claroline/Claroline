@@ -29,7 +29,7 @@ const TranslatedGroup = props =>
 
 implementPropTypes(TranslatedGroup, FormGroupWithFieldTypes, {
   // more precise value type
-  value: T.string,
+  value: T.object,
   // custom props
   minRows: T.number,
   onSelect: T.func,

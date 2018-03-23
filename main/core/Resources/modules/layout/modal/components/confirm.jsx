@@ -38,6 +38,7 @@ ConfirmModal.propTypes = {
 }
 
 ConfirmModal.defaultProps = {
+  dangerous: false,
   isHtml: false
 }
 

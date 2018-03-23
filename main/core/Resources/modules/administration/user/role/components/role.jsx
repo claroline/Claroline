@@ -120,6 +120,7 @@ const RoleForm = props =>
 
       <FormSection
         id="role-users"
+        className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={t('users')}
         disabled={props.new}
@@ -149,6 +150,7 @@ const RoleForm = props =>
 
       <FormSection
         id="role-groups"
+        className="embedded-list-section"
         icon="fa fa-fw fa-id-badge"
         title={t('groups')}
         disabled={props.new}

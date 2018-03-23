@@ -1,5 +1,7 @@
 import {Asset} from './asset'
 
+// todo : move inside platform module
+
 /**
  * Get the path to an asset file.
  *

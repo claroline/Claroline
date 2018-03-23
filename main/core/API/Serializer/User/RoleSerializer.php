@@ -99,7 +99,7 @@ class RoleSerializer
            'personalWorkspaceCreationEnabled' => $role->getPersonalWorkspaceCreationEnabled(),
        ];
 
-        if (in_array(Options::SERIALIZE_COUNT_USER, $options) && Role::USER_ROLE !== $role->getType()) {
+        if (in_array(Options::SERIALIZE_COUNT_USER, $options)) {
             if (Role::USER_ROLE !== $role->getType()) {
                 $meta['users'] = $this->om->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
             } else {

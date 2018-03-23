@@ -130,7 +130,7 @@ class WorkspaceSerializer
     private function getDisplay(Workspace $workspace)
     {
         return [
-            'displayable' => $workspace->isDisplayable(),
+            'displayable' => $workspace->isDisplayable(), // deprecated
         ];
     }
 
@@ -142,6 +142,7 @@ class WorkspaceSerializer
     private function getRestrictions(Workspace $workspace)
     {
         return [
+            'hidden' => $workspace->isHidden(),
             'accessibleFrom' => $workspace->getStartDate() ? $workspace->getStartDate()->format('Y-m-d\TH:i:s') : null,
             'accessibleUntil' => $workspace->getEndDate() ? $workspace->getEndDate()->format('Y-m-d\TH:i:s') : null,
             'maxUsers' => $workspace->getMaxUsers(),
@@ -165,9 +166,13 @@ class WorkspaceSerializer
     }
 
     /**
+     * Deserializes Workspace data into entities.
+     *
      * @param array     $data
      * @param Workspace $workspace
      * @param array     $options
+     *
+     * @return Workspace
      */
     public function deserialize(array $data, Workspace $workspace, array $options = [])
     {
@@ -178,8 +183,7 @@ class WorkspaceSerializer
         $this->sipe('meta.model', 'setIsModel', $data, $workspace);
         $this->sipe('meta.description', 'setDescription', $data, $workspace);
 
-        $this->sipe('display.displayable', 'setDisplayable', $data, $workspace);
-
+        $this->sipe('restrictions.hidden', 'setHidden', $data, $workspace);
         $this->sipe('restrictions.accessibleFrom', 'setStartDate', $data, $workspace);
         $this->sipe('restrictions.accessibleUntil', 'setEndDate', $data, $workspace);
         $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $workspace);

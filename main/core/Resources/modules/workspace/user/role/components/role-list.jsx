@@ -1,42 +1,34 @@
-import React from 'react'
-import {PropTypes as T} from 'prop-types'
-import {connect} from 'react-redux'
+import {trans} from '#/main/core/translation'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {RoleCard} from '#/main/core/administration/user/role/components/role-card'
 
-import {select} from '#/main/core/workspace/user/selectors'
-import {RoleList} from '#/main/core/administration/user/role/components/role-list.jsx'
+const RoleList = {
+  open: {
+    action: (row) => `#/roles/form/${row.id}`
+  },
+  definition: [
+    {
+      name: 'name',
+      type: 'string',
+      label: trans('code'),
+      displayed: false,
+      primary: true
+    }, {
+      name: 'translationKey',
+      type: 'translation',
+      label: trans('name'),
+      displayed: true
+    }, {
+      name: 'restrictions.maxUsers',
+      type: 'number',
+      label: trans('maxUsers'),
+      displayed: false
+    }
+  ],
 
-const RolesList = props =>
-  <DataListContainer
-    name="roles.list"
-    open={RoleList.open}
-    fetch={{
-      url: ['apiv2_workspace_list_roles', {id: props.workspace.uuid}],
-      autoload: true
-    }}
-    actions={[]}
-    delete={{
-      url: ['apiv2_role_delete_bulk'],
-      disabled: (rows) => rows.find(row => {
-        if (row.name) {
-          return row.name.indexOf('COLLABORATOR') > -1 || row.name.indexOf('MANAGER') > -1
-        }
-      })
-    }}
-    definition={RoleList.definition}
-    card={RoleList.card}
-  />
-
-RolesList.propTypes = {
-  workspace: T.object
+  card: RoleCard
 }
 
-const Roles = connect(
-  state => ({workspace: select.workspace(state)}),
-  null
-)(RolesList)
-
 export {
-  Roles
+  RoleList
 }

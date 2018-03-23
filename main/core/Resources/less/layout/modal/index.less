@@ -15,10 +15,25 @@
     justify-content: space-between;
     align-items: center;
 
-    // sometimes `modal-title` class is missing
-    // so we need to grab rules from it
     h4 {
+        // sometimes `modal-title` class is missing
+        // so we need to grab rules from it
+        // it will no longer be needed when app will be full react
         &:extend(.modal-title);
+
+        small {
+            // same than page header
+            display: block;
+            margin-top: 5px;
+
+            &.with-icon:before {
+                content: " ";
+                display: inline-block;
+                // same as .modal-icon
+                width: 20px;
+                margin-right: 10px;
+            }
+        }
     }
 
     .close {
@@ -30,6 +45,7 @@
 }
 
 .modal-icon {
+    width: 20px !important; // removes .fa-fw form HTML to avoid the !important
     margin-right: 10px;
 }
 

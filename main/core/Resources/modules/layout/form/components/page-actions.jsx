@@ -11,20 +11,22 @@ const OpenAction = props =>
     icon={props.icon}
     disabled={props.disabled}
     action={props.action}
-    primary={true}
+    primary={props.primary}
   />
 
 OpenAction.propTypes = {
   icon: T.string,
   label: T.string,
   disabled: T.bool,
+  primary: T.bool,
   action: T.oneOfType([T.string, T.func]).isRequired
 }
 
 OpenAction.defaultProps = {
   icon: 'fa fa-pencil',
   label: trans('edit'),
-  disabled: false
+  disabled: false,
+  primary: true
 }
 
 const SaveAction = props =>
@@ -112,7 +114,8 @@ FormPageActions.propTypes = {
     label: T.string,
     icon: T.string,
     action: T.oneOfType([T.string, T.func]),
-    disabled: T.bool
+    disabled: T.bool,
+    primary: T.bool
   }),
 
   save: T.shape({

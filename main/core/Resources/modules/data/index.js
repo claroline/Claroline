@@ -17,8 +17,9 @@ import {PASSWORD_TYPE,    passwordDefinition}    from '#/main/core/data/types/pa
 import {SCORE_TYPE,       scoreDefinition}       from '#/main/core/data/types/score'
 import {STRING_TYPE,      stringDefinition}      from '#/main/core/data/types/string'
 import {TRANSLATION_TYPE, translationDefinition} from '#/main/core/data/types/translation'
+import {TRANSLATED_TYPE,  translatedDefinition}  from '#/main/core/data/types/translated'
+import {URL_TYPE,         urlDefinition}         from '#/main/core/data/types/url'
 import {USERNAME_TYPE,    usernameDefinition}    from '#/main/core/data/types/username'
-import {TRANSLATED_TYPE,  translatedDefinition}   from '#/main/core/data/types/translated'
 
 // the list of registered data types
 const dataTypes = {}
@@ -42,6 +43,7 @@ registerType(SCORE_TYPE,       scoreDefinition)
 registerType(STRING_TYPE,      stringDefinition)
 registerType(TRANSLATION_TYPE, translationDefinition)
 registerType(TRANSLATED_TYPE,  translatedDefinition)
+registerType(URL_TYPE,         urlDefinition)
 registerType(USERNAME_TYPE,    usernameDefinition)
 
 /**

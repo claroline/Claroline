@@ -1,7 +1,9 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
+
 import {trans} from '#/main/core/translation'
+import {url} from '#/main/core/api/router'
 
 import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
@@ -19,7 +21,7 @@ const ParametersTabActions = () =>
     />
   </PageActions>
 
-const Parameters = () =>
+const Parameters = (props) =>
   <FormContainer
     level={3}
     name="parameters"
@@ -33,21 +35,35 @@ const Parameters = () =>
           // todo auto_logging
           // todo self unregistration
           {
+            name: 'registration.url',
+            type: 'url',
+            label: trans('registration_url'),
+            calculated: url(['claro_user_registration', {}, true]),
+            required: true,
+            disabled: true
+          }, {
             name: 'registration.self',
             type: 'boolean',
-            label: trans('activate_self_registration')
-          }, {
-            name: 'registration.force_organization_creation',
-            type: 'boolean',
-            label: trans('force_organization_creation')
-          }, {
-            name: 'registration.allow_workspace',
-            type: 'boolean',
-            label: trans('allow_workspace_registration')
-          }, { // todo should be hidden if registration.auto === false
-            name: 'registration.register_button_at_login',
-            type: 'boolean',
-            label: trans('show_register_button_in_login_page')
+            label: trans('activate_self_registration'),
+            help: trans('self_registration_platform_help'),
+            linked: [
+              {
+                name: 'registration.register_button_at_login',
+                type: 'boolean',
+                label: trans('show_register_button_in_login_page'),
+                displayed: props.parameters.registration && props.parameters.registration.self
+              }, {
+                name: 'registration.force_organization_creation',
+                type: 'boolean',
+                label: trans('force_organization_creation'),
+                displayed: props.parameters.registration && props.parameters.registration.self
+              }, {
+                name: 'registration.allow_workspace',
+                type: 'boolean',
+                label: trans('allow_workspace_registration'),
+                displayed: props.parameters.registration && props.parameters.registration.self
+              }
+            ]
           }, {
             name: 'registration.default_role',
             type: 'enum',
@@ -120,11 +136,15 @@ const Parameters = () =>
             name: 'tos.enabled',
             type: 'boolean',
             label: trans('term_of_service_activation_message'),
-            help: trans('term_of_service_activation_help')
-          }, { // todo should be hidden if not enabled
-            name: 'tos.text',
-            type: 'translated', // todo : create a new localized content type
-            label: trans('term_of_service')
+            help: trans('term_of_service_activation_help'),
+            linked: [
+              {
+                name: 'tos.text',
+                type: 'translated',
+                label: trans('term_of_service'),
+                displayed: props.parameters.tos.enabled
+              }
+            ]
           }
         ]
       }
@@ -133,6 +153,9 @@ const Parameters = () =>
 
 Parameters.propTypes = {
   parameters: T.shape({
+    registration: T.shape({
+      self: T.bool
+    }),
     tos: T.shape({
       enabled: T.bool.isRequired
     }).isRequired

@@ -1,0 +1,11 @@
+{
+  "enable": "Activer",
+  "delete": "Supprimer",
+  "disable": "Désactiver",
+  "publish": "Publier",
+  "register": "Inscrire",
+  "select": "Sélectionner",
+  "unpublish": "Dépublier",
+  "unregister": "Désinscrire",
+  "deselect": "Déselectionner"
+}

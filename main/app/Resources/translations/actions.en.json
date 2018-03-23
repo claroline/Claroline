@@ -1,0 +1,11 @@
+{
+  "enable": "Enable",
+  "delete": "Delete",
+  "disable": "Disable",
+  "publish": "Publish",
+  "register": "Register",
+  "select": "Select",
+  "unpublish": "Unpublish",
+  "unregister": "Unregister",
+  "deselect": "Deselect"
+}
