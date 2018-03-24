@@ -1376,9 +1376,9 @@
       }
     },
     "chokidar": {
-      "version": "2.0.2",
+      "version": "2.0.3",
       "from": "chokidar@>=2.0.2 <3.0.0",
-      "resolved": "https://registry.npmjs.org/chokidar/-/chokidar-2.0.2.tgz"
+      "resolved": "https://registry.npmjs.org/chokidar/-/chokidar-2.0.3.tgz"
     },
     "cipher-base": {
       "version": "1.0.4",
