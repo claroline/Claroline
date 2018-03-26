@@ -48,15 +48,19 @@ class Mailer
         if (empty($message->getAttribute('to')) && empty($message->getAttribute('bcc'))) {
             $logger->error('To field is either empty or invalid');
 
-            return;
+            return false;
         }
         $to = count($message->getAttribute('to')) > 0 ? $message->getAttribute('to')[0] : $message->getAttribute('bcc')[0];
 
         try {
             $client->send($message);
             $logger->info('Email sent to '.$to);
+
+            return true;
         } catch (\Exception $e) {
             $logger->error('Fail to send email to '.$to);
+
+            return false;
         }
     }
 
