@@ -1717,9 +1717,9 @@
       "resolved": "https://registry.npmjs.org/copy-descriptor/-/copy-descriptor-0.1.1.tgz"
     },
     "core-js": {
-      "version": "2.5.3",
+      "version": "2.5.4",
       "from": "core-js@>=2.4.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.5.3.tgz"
+      "resolved": "https://registry.npmjs.org/core-js/-/core-js-2.5.4.tgz"
     },
     "core-util-is": {
       "version": "1.0.2",
@@ -2310,9 +2310,9 @@
       "resolved": "https://registry.npmjs.org/ee-first/-/ee-first-1.1.1.tgz"
     },
     "electron-to-chromium": {
-      "version": "1.3.40",
+      "version": "1.3.41",
       "from": "electron-to-chromium@>=1.3.30 <2.0.0",
-      "resolved": "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.40.tgz"
+      "resolved": "https://registry.npmjs.org/electron-to-chromium/-/electron-to-chromium-1.3.41.tgz"
     },
     "elliptic": {
       "version": "6.4.0",
@@ -4238,9 +4238,9 @@
       "resolved": "https://registry.npmjs.org/lodash-compat/-/lodash-compat-3.10.2.tgz"
     },
     "lodash-es": {
-      "version": "4.17.7",
+      "version": "4.17.8",
       "from": "lodash-es@>=4.2.1 <5.0.0",
-      "resolved": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.7.tgz"
+      "resolved": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.8.tgz"
     },
     "lodash._arraycopy": {
       "version": "3.0.0",
