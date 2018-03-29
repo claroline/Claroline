@@ -10,17 +10,15 @@ import {makeDraggable, makeDroppable} from './../../utils/dragAndDrop'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {PairItemDragPreview} from './pair-item-drag-preview.jsx'
 
-let DropBox = props => {
-  return props.connectDropTarget (
-     <div className={classes(
-       'pair-item-placeholder drop-placeholder placeholder-hover',
-       {'hover': props.isOver}
-     )}>
-       <span className="fa fa-fw fa-share fa-rotate-90" />
-       {tex('set_drop_item')}
-     </div>
-   )
-}
+let DropBox = props => props.connectDropTarget (
+  <div className={classes(
+    'pair-item-placeholder drop-placeholder placeholder-md placeholder-hover',
+    {'hover': props.isOver}
+  )}>
+    <span className="fa fa-fw fa-share fa-rotate-90" />
+    {tex('set_drop_item')}
+  </div>
+)
 
 DropBox.propTypes = {
   connectDropTarget: T.func.isRequired,
@@ -182,16 +180,16 @@ class PairPlayer extends Component {
     return (
       <div className="pair-player row">
         <div className="col-md-5 col-sm-5 items-col">
-            <ItemList items={this.state.items} />
+          <ItemList items={this.state.items} />
         </div>
 
         <div className="col-md-7 col-sm-7 pairs-col">
-            <PairRowList
-              rows={this.props.item.rows}
-              answerItems={this.state.answerItems}
-              onItemDrop={(source, target) => this.handleItemDrop(source, target)}
-              onItemRemove={(itemId) => this.handleItemRemove(itemId)}
-            />
+          <PairRowList
+            rows={this.props.item.rows}
+            answerItems={this.state.answerItems}
+            onItemDrop={(source, target) => this.handleItemDrop(source, target)}
+            onItemRemove={(itemId) => this.handleItemRemove(itemId)}
+          />
         </div>
       </div>
     )

@@ -8,8 +8,6 @@ import {Expire} from '#/main/core/layout/components/expire.jsx'
 
 import {constants} from '#/main/core/layout/alert/constants'
 
-// todo handle auto hide
-
 const FlyingAlertIcon = props => props.showSecondary ?
   <span className={classes('flying-alert-icon fa fa-fw')}>
     <span className={classes('flying-alert-icon-primary fa fa-fw', props.primaryIcon)} />

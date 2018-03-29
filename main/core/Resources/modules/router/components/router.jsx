@@ -54,6 +54,7 @@ class Route extends Component {
         path={this.props.path}
         exact={this.props.exact}
         component={this.props.component}
+        render={this.props.render}
       />
     )
   }

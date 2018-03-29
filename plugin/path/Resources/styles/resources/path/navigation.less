@@ -1,0 +1,23 @@
+/*
+ * Styles navigation buttons between steps.
+ */
+
+.path-navigation {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+
+    .btn {
+        flex: 1;
+
+        &:first-child {
+            text-align: left;
+            margin-right: floor(@path-grid-spacing-x / 2);
+        }
+
+        &:last-child {
+            text-align: right;
+            margin-left: floor(@path-grid-spacing-x / 2);
+        }
+    }
+}

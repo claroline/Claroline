@@ -1,6 +1,6 @@
 import {t} from '#/main/core/translation'
 
-import {OrganizationCard} from '#/main/core/administration/user/organization/components/organization-card.jsx'
+import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
 
 const OrganizationList = {
   open: {

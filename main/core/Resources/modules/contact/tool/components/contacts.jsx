@@ -4,8 +4,8 @@ import {PropTypes as T} from 'prop-types'
 
 import {t} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
+import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {UserCard} from '#/main/core/user/data/components/user-card'
 import {constants as listConst} from '#/main/core/data/list/constants'
 
 import {select} from '#/main/core/contact/tool/selectors'
@@ -67,24 +67,18 @@ const ContactsComponent = props =>
         displayed: props.options.data.show_phone
       }
     ]}
-    card={row => ({
-      icon: <UserAvatar picture={row.data.picture} alt={true}/>,
-      title: row.data.username,
-      subtitle: row.data.firstName + ' ' + row.data.lastName
-    })}
+    card={UserCard}
   />
 
 ContactsComponent.propTypes = {
   options: T.shape(OptionsType.propTypes)
 }
 
-function mapStateToProps(state) {
-  return {
+const Contacts = connect(
+  (state) => ({
     options: select.options(state)
-  }
-}
-
-const Contacts = connect(mapStateToProps, {})(ContactsComponent)
+  })
+)(ContactsComponent)
 
 export {
   Contacts

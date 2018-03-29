@@ -18,6 +18,7 @@ const UserPageHeader = props =>
         picture={props.picture}
       />
     </div>
+
     <div className="page-header-content">
       <h1 className="page-title">
         {props.title}

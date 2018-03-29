@@ -20,7 +20,10 @@ use Doctrine\ORM\Mapping as ORM;
 class ResourceEvaluation extends AbstractResourceEvaluation
 {
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation")
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation",
+     *     inversedBy="evaluations"
+     * )
      * @ORM\JoinColumn(name="resource_user_evaluation", onDelete="CASCADE")
      */
     protected $resourceUserEvaluation;

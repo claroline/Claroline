@@ -1,0 +1,121 @@
+
+.resource-rights-simple {
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+
+    .simple-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: floor(@grid-gutter-width / 2);
+        color: #777;
+        border: none;
+        border-radius: @border-radius-base;
+        background: @modal-content-bg;
+
+        &:focus,
+        &:hover,
+        &:active {
+            color: #777;
+            background: #f5f5f5;
+            box-shadow: none;
+        }
+
+        &.selected {
+            font-weight: bold;
+            background: #f5f5f5;
+        }
+
+        & + .simple-right {
+            margin-left: 5px;
+        }
+    }
+
+    .simple-right-icon {
+        padding: 10px;
+        margin-bottom: floor(@grid-gutter-width / 2);
+        font-size: 40px;
+        width: 64px;
+        height: 64px;
+        border: 2px solid #777;
+        border-radius: @border-radius-base;
+    }
+
+    .simple-right-label {
+        font-size: @font-size-small;
+        display: block;
+        white-space: normal;
+        max-width: 100%;
+    }
+}
+
+.resource-custom-rules-info {
+    color: @brand-danger;
+    margin-top: @component-margin-bottom;
+    margin-bottom: 0;
+
+    .fa {
+        margin-right: @icon-text-spacer;
+    }
+}
+
+.resource-rights-advanced {
+    thead {
+        overflow: hidden;
+    }
+
+    th[scope=row] {
+        font-weight: normal;
+    }
+
+    th[scope=col] {
+        height: 140px;
+        white-space: nowrap;
+        position: relative;
+        text-align: right;
+        vertical-align: bottom;
+
+        &:first-child {
+            text-align: left;
+        }
+    }
+
+    & > tbody td:first-child,
+    & > tbody th:first-child {
+        border-left: none;
+    }
+
+    & > tbody td:last-child,
+    & > tbody th:last-child {
+        border-right: none;
+    }
+
+    .permission-name-container {
+        transform: translate(-20px, -105px) rotate(60deg);
+        position: absolute;
+        bottom: 0;
+        top: 0;
+        left: 0;
+    }
+
+    .permission-name {
+        border-bottom: 1px solid @table-border-color;
+        padding: @table-cell-padding;
+        position: absolute;
+        bottom: 0;
+        width: 162px;
+    }
+
+    .create-cell {
+        text-align: center;
+        width: 60px;
+
+        .btn {
+            margin-left: 5px;
+            vertical-align: top;
+            padding: 0;
+        }
+    }
+}

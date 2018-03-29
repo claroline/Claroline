@@ -2,9 +2,9 @@
 <table class="table table-striped" style="margin-bottom: 0;">
     <thead class="sr-only">
         <tr>
-            <th scope="col">{{ 'path_status'|trans({}, 'path_wizards') }}</th>
-            <th scope="col">{{ 'path_name'|trans({}, 'path_wizards') }}</th>
-            <th scope="col">{{ 'path_description'|trans({}, 'path_wizards') }}</th>
+            <th scope="col">{{ 'path_status'|trans({}, 'path') }}</th>
+            <th scope="col">{{ 'path_name'|trans({}, 'path') }}</th>
+            <th scope="col">{{ 'path_description'|trans({}, 'path') }}</th>
             <th scope="col"></th>
         </tr>
     </thead>
@@ -15,11 +15,11 @@
             {# Status of the Path #}
             <td>
                 {% if not path.entity.published %}
-                <span class="text-danger">[{{ 'draft'|trans({}, 'path_wizards') }}]</span>
+                <span class="text-danger">[{{ 'draft'|trans({}, 'path') }}]</span>
                 {% elseif path.entity.published and not path.entity.modified %}
-                <span class="text-success">[{{ 'published'|trans({}, 'path_wizards') }}]</span>
+                <span class="text-success">[{{ 'published'|trans({}, 'path') }}]</span>
                 {% elseif path.entity.published and path.entity.modified %}
-                <span class="text-warning">[{{ 'published'|trans({}, 'path_wizards') }} {{ 'modified'|trans({}, 'path_wizards') }}]</span>
+                <span class="text-warning">[{{ 'published'|trans({}, 'path') }} {{ 'modified'|trans({}, 'path') }}]</span>
                 {% endif %}
             </td>
 
@@ -37,12 +37,12 @@
                 {% if path.canEdit %}
                 <a href="{{ path('innova_path_publish', { id: path.entity.id }) }}" class="btn btn-default btn-xs">
                     <span class="fa fa-share-square-o"></span>
-                    {{ 'publish'|trans({}, 'innova_tools') }}
+                    {{ 'publish'|trans({}, 'platform') }}
                 </a>
 
                 <a href="{{ path('innova_path_editor_wizard', { id: path.entity.id }) }}" class="btn btn-default btn-xs">
                     <span class="fa fa-pencil"></span>
-                    {{ 'edit'|trans({}, 'innova_tools') }}
+                    {{ 'edit'|trans({}, 'platform') }}
                 </a>
                 {% endif %}
             </td>
@@ -51,5 +51,5 @@
     </tbody>
 </table>
 {% else %}
-<em style="display: block;margin-top: 15px;" class="text-center">{{ 'no_path'|trans({}, 'innova_tools') }}</em>
+<em style="display: block;margin-top: 15px;" class="text-center">{{ 'empty'|trans({}, 'platform') }}</em>
 {% endif %}

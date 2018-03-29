@@ -1,3 +1,4 @@
+import {t_res}        from '#/main/core/resource/translation'
 
 const RESOURCE_GROUP_GENERIC    = 'generic'
 const RESOURCE_GROUP_EVALUATION = 'evaluation'
@@ -23,18 +24,21 @@ const RESOURCE_GROUPS = {
   }
 }
 
-export const RESOURCE_CLOSE_WS = 0
-export const RESOURCE_CLOSE_DESKTOP = 1
+const RESOURCE_CLOSE_WS = 0
+const RESOURCE_CLOSE_DESKTOP = 1
 
-export const closeTargets = [
-  [RESOURCE_CLOSE_WS, 'close_redirect_workspace'],
-  [RESOURCE_CLOSE_DESKTOP, 'close_redirect_desktop']
-]
+const RESOURCE_CLOSE_TARGETS = {
+  [RESOURCE_CLOSE_WS]: t_res('close_redirect_workspace'),
+  [RESOURCE_CLOSE_DESKTOP]: t_res('close_redirect_desktop')
+}
 
 export const constants = {
-  RESOURCE_GROUPS,
   RESOURCE_GROUP_GENERIC,
   RESOURCE_GROUP_EVALUATION,
   RESOURCE_GROUP_COMMUNITY,
-  RESOURCE_GROUP_CONTENT
+  RESOURCE_GROUP_CONTENT,
+  RESOURCE_GROUPS,
+  RESOURCE_CLOSE_WS,
+  RESOURCE_CLOSE_DESKTOP,
+  RESOURCE_CLOSE_TARGETS
 }

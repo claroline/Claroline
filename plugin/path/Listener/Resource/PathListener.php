@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Listener\Resource;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
@@ -11,14 +12,16 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Form\ResourceNameType;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
+use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
-use Innova\PathBundle\Form\Type\PathType;
+use Innova\PathBundle\Entity\SecondaryResource;
+use Innova\PathBundle\Entity\Step;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -29,6 +32,9 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
 class PathListener
 {
     private $container;
+
+    /* @var ObjectManager */
+    private $om;
 
     /**
      * PathListener constructor.
@@ -42,6 +48,7 @@ class PathListener
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->om = $container->get('claroline.persistence.object_manager');
     }
 
     /**
@@ -98,7 +105,7 @@ class PathListener
     public function onCreateForm(CreateFormResourceEvent $event)
     {
         /** @var FormInterface $form */
-        $form = $this->container->get('form.factory')->create(new PathType(), new Path());
+        $form = $this->container->get('form.factory')->create(new ResourceNameType(true), new Path());
 
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Resource:createForm.html.twig', [
@@ -121,27 +128,18 @@ class PathListener
     public function onCreate(CreateResourceEvent $event)
     {
         /** @var FormInterface $form */
-        $form = $this->container->get('form.factory')->create(new PathType(), new Path());
+        $form = $this->container->get('form.factory')->create(new ResourceNameType(true), new Path());
 
         // Try to process the form data
         $form->handleRequest($this->container->get('request'));
         if ($form->isValid()) {
-            $path = $form->getData();
+            $event->setPublished(
+                $form->get('published')->getData()
+            );
 
-            $published = $form->get('published')->getData();
-            $event->setPublished($published);
-
-            $path->setStructure('');
-
-            // We need to force the save of the Path to get its ID
-            $this->container->get('claroline.persistence.object_manager')->persist($path);
-            $this->container->get('claroline.persistence.object_manager')->flush();
-
-            // Initialize JSON structure for the Path
-            $path->initializeStructure();
-
-            // Send new path to dispatcher through event object
-            $event->setResources([$path]);
+            $event->setResources(
+                [$form->getData()]
+            );
         } else {
             $content = $this->container->get('templating')->render(
                 'ClarolineCoreBundle:Resource:createForm.html.twig', [
@@ -179,11 +177,23 @@ class PathListener
      */
     public function onCopy(CopyResourceEvent $event)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
         // Start the transaction. We'll copy every resource in one go that way.
-        $om->startFlushSuite();
+        $this->om->startFlushSuite();
 
+        $parent = $event->getParent();
         $pathToCopy = $this->getPathFromEvent($event->getResource());
+        $pathNodes = [];
+        $nodesCopy = [];
+
+        foreach ($pathToCopy->getSteps() as $step) {
+            $this->retrieveStepNodes($step, $pathNodes);
+        }
+        if (count($pathNodes) > 0) {
+            $resourcesCopyDir = $this->createResourcesCopyDirectory($parent, $pathToCopy->getResourceNode()->getName());
+            // A forced flush is required for rights purpose on the copied resources
+            $this->om->forceFlush();
+            $nodesCopy = $this->copyResources($pathNodes, $resourcesCopyDir->getResourceNode());
+        }
 
         // Create new Path
         $path = new Path();
@@ -191,74 +201,24 @@ class PathListener
         // Set up new Path properties
         $path->setName($pathToCopy->getName());
         $path->setDescription($pathToCopy->getDescription());
+        $path->setShowOverview($pathToCopy->getShowOverview());
+        $path->setShowSummary($pathToCopy->getShowSummary());
+        $path->setSummaryDisplayed($pathToCopy->isSummaryDisplayed());
+        $path->setNumbering($pathToCopy->getNumbering());
+        $path->setStructure('');
 
-        // we set the old structure to be able to insert the path in DB tp have its ID
-        $path->setStructure($pathToCopy->getStructure());
+        $stepsMapping = [];
 
-        $parent = $event->getParent();
-        $structure = json_decode($pathToCopy->getStructure());
-
-        // Process steps
-        $processedNodes = [];
-        foreach ($structure->steps as $step) {
-            $processedNodes = $this->copyStepContent($step, $parent, $processedNodes);
+        foreach ($pathToCopy->getRootSteps() as $step) {
+            $this->copyStep($step, $path, $nodesCopy, $stepsMapping);
         }
 
-        $om->persist($path);
+        $this->om->persist($path);
 
         // End the transaction
-        $om->endFlushSuite();
-        // We need the resources ids
-        $om->forceFlush();
-
-        // update the structure tree
-        foreach ($structure->steps as $step) {
-            $this->updateStep($step, $processedNodes);
-        }
-
-        // Replace the Path ID by the new one
-        $structure->id = $path->getId();
-
-        $path->setStructure(json_encode($structure));
+        $this->om->endFlushSuite();
         $event->setCopy($path);
 
-        // Force the unpublished state (the publication will recreate the correct links, and create new Activities)
-        // If we directly copy all the published Entities we can't remap some relations
-        $event->setPublish(false);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("unlock_innova_path")
-     *
-     * @param CustomActionResourceEvent $event
-     */
-    public function onUnlock(CustomActionResourceEvent $event)
-    {
-        $path = $this->getPathFromEvent($event->getResource());
-
-        $route = $this->container->get('router')->generate('innova_path_unlock_management', [
-            'id' => $path->getId(),
-        ]);
-
-        $event->setResponse(new RedirectResponse($route));
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("manage_results_innova_path")
-     *
-     * @param CustomActionResourceEvent $event
-     */
-    public function onManageResults(CustomActionResourceEvent $event)
-    {
-        $path = $this->getPathFromEvent($event->getResource());
-
-        $route = $this->container->get('router')->generate('innova_path_manage_results', [
-            'id' => $path->getId(),
-        ]);
-
-        $event->setResponse(new RedirectResponse($route));
         $event->stopPropagation();
     }
 
@@ -303,7 +263,7 @@ class PathListener
         $event->setTemplate($template);
 
         // Set translations
-        $event->addTranslationDomain('path_wizards');
+        $event->addTranslationDomain('path');
 
         // Add template required files
         $webpack = $this->container->get('claroline.extension.webpack');
@@ -363,140 +323,6 @@ class PathListener
         return $resource;
     }
 
-    private function copyStepContent(\stdClass $step, ResourceNode $newParent, array $processedNodes = [])
-    {
-        // Remove reference to Step Entity
-        $step->resourceId = null;
-
-        // Remove references to Activity
-        $step->activityId = null;
-
-        // Duplicate primary resources
-        if (!empty($step->primaryResource) && !empty($step->primaryResource[0])) {
-            $processedNodes = $this->copyResource($step->primaryResource[0], $newParent, $processedNodes);
-        }
-
-        // Duplicate secondary resources
-        if (!empty($step->resources)) {
-            foreach ($step->resources as $resource) {
-                $processedNodes = $this->copyResource($resource, $newParent, $processedNodes);
-            }
-        }
-
-        // Process step children
-        if (!empty($step->children)) {
-            foreach ($step->children as $child) {
-                $processedNodes = $this->copyStepContent($child, $newParent, $processedNodes);
-            }
-        }
-
-        return $processedNodes;
-    }
-
-    private function copyResource(\stdClass $resource, ResourceNode $newParent, array $processedNodes = [])
-    {
-        // Get current User
-        $user = $this->container->get('security.token_storage')->getToken()->getUser();
-
-        /** @var ResourceManager $manager */
-        $manager = $this->container->get('claroline.manager.resource_manager');
-
-        $resourceNode = $manager->getNode($resource->resourceId);
-        if ($resourceNode) {
-            // Check if Node is in a subdirectory
-            $wsRoot = $manager->getWorkspaceRoot($resourceNode->getWorkspace());
-            if ($wsRoot->getId() !== $resourceNode->getParent()->getId()) {
-                // ResourceNode is not stored in WS root => create subdirectories tree
-                $ancestors = $manager->getAncestors($resourceNode);
-
-                foreach ($ancestors as $ancestor) {
-                    if ($wsRoot->getId() !== $ancestor['id'] && $resourceNode->getId() !== $ancestor['id']) {
-                        // Current node is not the WS Root and not the Node which want to duplicate
-                        $parentNode = $manager->getNode($ancestor['id']);
-                        if ($parentNode) {
-                            if (empty($processedNodes[$parentNode->getId()])) {
-                                // Current Node has not been processed => create a copy
-                                $directoryRes = $manager->createResource('Claroline\CoreBundle\Entity\Resource\Directory', $parentNode->getName());
-                                $directory = $manager->create(
-                                    $directoryRes,
-                                    $parentNode->getResourceType(),
-                                    $user,
-                                    $newParent->getWorkspace(),
-                                    $newParent,
-                                    $parentNode->getIcon()
-                                );
-
-                                $newParent = $directory->getResourceNode();
-                                $processedNodes[$parentNode->getId()] = $newParent;
-                            } else {
-                                // Current has already been processed => get copy
-                                $newParent = $processedNodes[$parentNode->getId()];
-                            }
-                        }
-                    }
-                }
-            }
-
-            //we add the processed node
-            if (empty($processedNodes[$resourceNode->getId()])) {
-                // Current Node has not been processed => create a copy
-                // Duplicate Node
-                $copy = $manager->copy($resourceNode, $newParent, $user);
-                $copyNode = $copy->getResourceNode();
-                $processedNodes[$resourceNode->getId()] = $copyNode;
-            }
-        }
-
-        return $processedNodes;
-    }
-
-    private function updateStep(\stdClass $step, array $processedNodes = [])
-    {
-        if (!empty($step->primaryResource) && !empty($step->primaryResource[0])) {
-            $primaryFound = $this->replaceResourceId($step->primaryResource[0], $processedNodes);
-            if (!$primaryFound) {
-                unset($step->primaryResource[0]);
-            }
-        }
-
-        if (!empty($step->resources)) {
-            foreach ($step->resources as $index => $resource) {
-                $resourceFound = $this->replaceResourceId($resource, $processedNodes);
-                if (!$resourceFound) {
-                    unset($step->resources[$index]);
-                }
-            }
-        }
-
-        // Process step children
-        if (!empty($step->children)) {
-            foreach ($step->children as $child) {
-                $this->updateStep($child, $processedNodes);
-            }
-        }
-    }
-
-    /**
-     * @param \stdClass      $resource
-     * @param ResourceNode[] $processedNodes
-     *
-     * @return bool
-     */
-    private function replaceResourceId(\stdClass $resource, array $processedNodes)
-    {
-        /** @var ResourceManager $manager */
-        $manager = $this->container->get('claroline.manager.resource_manager');
-        $resourceNode = $manager->getNode($resource->resourceId);
-
-        $found = false;
-        if ($resourceNode) {
-            $resource->resourceId = $processedNodes[$resourceNode->getId()]->getId();
-            $found = true;
-        }
-
-        return $found;
-    }
-
     /**
      * @param AbstractResource $convoyedResource
      *
@@ -511,5 +337,147 @@ class PathListener
         }
 
         return null;
+    }
+
+    /**
+     * Store in given array all resource nodes present in step.
+     *
+     * @param Step  $step
+     * @param array $nodes
+     */
+    private function retrieveStepNodes(Step $step, array &$nodes)
+    {
+        $primaryResource = $step->getResource();
+        $secondaryResources = $step->getSecondaryResources();
+
+        if (!empty($primaryResource)) {
+            $nodes[$primaryResource->getGuid()] = $primaryResource;
+        }
+        foreach ($secondaryResources as $secondaryResource) {
+            $node = $secondaryResource->getResource();
+            $nodes[$node->getGuid()] = $node;
+        }
+        foreach ($step->getChildren() as $child) {
+            $this->retrieveStepNodes($child, $nodes);
+        }
+    }
+
+    /**
+     * Create directory to store copies of resources.
+     *
+     * @param ResourceNode $dest
+     * @param string       $pathName
+     *
+     * @return array $resourcesCopy
+     */
+    private function createResourcesCopyDirectory(ResourceNode $dest, $pathName)
+    {
+        // Get current User
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        /** @var ResourceManager $manager */
+        $manager = $this->container->get('claroline.manager.resource_manager');
+        $translator = $this->container->get('translator');
+
+        $resourcesDir = $manager->createResource(
+            'Claroline\CoreBundle\Entity\Resource\Directory',
+            $pathName.' ('.$translator->trans('resources', [], 'platform').')'
+        );
+
+        return $manager->create(
+            $resourcesDir,
+            $dest->getResourceType(),
+            $user,
+            $dest->getWorkspace(),
+            $dest
+        );
+    }
+
+    /**
+     * Copy all given resources nodes.
+     *
+     * @param array        $resources
+     * @param ResourceNode $newParent
+     *
+     * @return array $resourcesCopy
+     */
+    private function copyResources(array $resources, ResourceNode $newParent)
+    {
+        $resourcesCopy = [];
+
+        // Get current User
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        /** @var ResourceManager $manager */
+        $manager = $this->container->get('claroline.manager.resource_manager');
+
+        foreach ($resources as $resourceNode) {
+            $copy = $manager->copy($resourceNode, $newParent, $user);
+            $resourcesCopy[$resourceNode->getGuid()] = $copy->getResourceNode();
+        }
+
+        return $resourcesCopy;
+    }
+
+    /**
+     * Copy a step.
+     *
+     * @param Step  $step         The step to copy
+     * @param Path  $pathCopy     The copied path
+     * @param array $nodesCopy    The list of all copied resources nodes
+     * @param array $stepsMapping The mapping between uuid of old steps and uuid of new ones. Useful for InheritedResources.
+     * @param Step  $parent       The step parent of the copy
+     */
+    private function copyStep(Step $step, Path $pathCopy, array $nodesCopy, array &$stepsMapping, Step $parent = null)
+    {
+        $stepCopy = new Step();
+        $stepCopy->setParent($parent);
+        $stepCopy->setPath($pathCopy);
+        $stepCopy->setTitle($step->getTitle());
+        $stepCopy->setDescription($step->getDescription());
+        $stepCopy->setPoster($step->getPoster());
+        $stepCopy->setNumbering($step->getNumbering());
+        $stepCopy->setLvl($step->getLvl());
+        $stepCopy->setOrder($step->getOrder());
+
+        $stepsMapping[$step->getUuid()] = $stepCopy->getUuid();
+
+        $primaryResource = $step->getResource();
+
+        if (!empty($primaryResource) && isset($nodesCopy[$primaryResource->getGuid()])) {
+            $stepCopy->setResource($nodesCopy[$primaryResource->getGuid()]);
+        }
+        foreach ($step->getSecondaryResources() as $secondaryResource) {
+            $resource = $secondaryResource->getResource();
+
+            if (isset($nodesCopy[$resource->getGuid()])) {
+                $secondaryResourceCopy = new SecondaryResource();
+                $secondaryResourceCopy->setStep($stepCopy);
+                $secondaryResourceCopy->setResource($nodesCopy[$resource->getGuid()]);
+                $secondaryResourceCopy->setOrder($secondaryResource->getOrder());
+                $secondaryResourceCopy->setInheritanceEnabled($secondaryResource->isInheritanceEnabled());
+                $this->om->persist($secondaryResourceCopy);
+            }
+        }
+        foreach ($step->getInheritedResources() as $inheritedResource) {
+            $resource = $inheritedResource->getResource();
+
+            if (isset($nodesCopy[$resource->getGuid()])) {
+                $inheritedResourceCopy = new InheritedResource();
+                $inheritedResourceCopy->setStep($stepCopy);
+                $inheritedResourceCopy->setResource($nodesCopy[$resource->getGuid()]);
+                $inheritedResourceCopy->setOrder($inheritedResource->getOrder());
+                $inheritedResourceCopy->setLvl($inheritedResource->getLvl());
+
+                if (isset($stepsMapping[$inheritedResource->getSourceUuid()])) {
+                    $inheritedResource->setSourceUuid($stepsMapping[$inheritedResource->getSourceUuid()]);
+                }
+                $this->om->persist($inheritedResourceCopy);
+            }
+        }
+        foreach ($step->getChildren() as $child) {
+            $this->copyStep($child, $pathCopy, $nodesCopy, $stepsMapping, $stepCopy);
+        }
+        $this->om->persist($stepCopy);
     }
 }

@@ -48,7 +48,7 @@ class ApiListener
                 if (null === $resourceNode->getThumbnail()) {
                     $embedYoutubeUrl = 'https://www.youtube.com/embed/'.$youtubeId;
                     $thumbnailUrl = 'http://img.youtube.com/vi/'.$youtubeId.'/hqdefault.jpg';
-                    $event->add('poster', $thumbnailUrl);
+                    $event->add('thumbnail', $thumbnailUrl);
                 }
             }
 

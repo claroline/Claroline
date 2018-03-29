@@ -2,13 +2,17 @@
 
 namespace Claroline\CoreBundle\API\Serializer\Resource;
 
+use Claroline\AppBundle\API\Serializer\SerializerTrait;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\File\PublicFileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Resource\MaskDecoder;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Event\Resource\DecorateResourceNodeEvent;
+use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\BreadcrumbManager;
 use Claroline\CoreBundle\Manager\MaskManager;
@@ -18,11 +22,15 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
+ * @todo : grab deserialization from Claroline\CoreBundle\Manager\Resource\ResourceNodeManager
+ *
  * @DI\Service("claroline.serializer.resource_node")
  * @DI\Tag("claroline.serializer")
  */
 class ResourceNodeSerializer
 {
+    use SerializerTrait;
+
     /** @var ObjectManager */
     private $om;
 
@@ -31,6 +39,9 @@ class ResourceNodeSerializer
 
     /** @var StrictDispatcher */
     private $eventDispatcher;
+
+    /** @var PublicFileSerializer */
+    private $fileSerializer;
 
     /** @var UserSerializer */
     private $userSerializer;
@@ -54,6 +65,7 @@ class ResourceNodeSerializer
      *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
      *     "authorization"     = @DI\Inject("security.authorization_checker"),
      *     "eventDispatcher"   = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "fileSerializer"    = @DI\Inject("claroline.serializer.public_file"),
      *     "userSerializer"    = @DI\Inject("claroline.serializer.user"),
      *     "maskManager"       = @DI\Inject("claroline.manager.mask_manager"),
      *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager"),
@@ -64,6 +76,7 @@ class ResourceNodeSerializer
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
      * @param StrictDispatcher              $eventDispatcher
+     * @param PublicFileSerializer          $fileSerializer
      * @param UserSerializer                $userSerializer
      * @param MaskManager                   $maskManager
      * @param BreadcrumbManager             $breadcrumbManager
@@ -74,6 +87,7 @@ class ResourceNodeSerializer
         ObjectManager $om,
         AuthorizationCheckerInterface $authorization,
         StrictDispatcher $eventDispatcher,
+        PublicFileSerializer $fileSerializer,
         UserSerializer $userSerializer,
         MaskManager $maskManager,
         BreadcrumbManager $breadcrumbManager,
@@ -83,6 +97,7 @@ class ResourceNodeSerializer
         $this->om = $om;
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
+        $this->fileSerializer = $fileSerializer;
         $this->userSerializer = $userSerializer;
         $this->maskManager = $maskManager;
         $this->breadcrumbManager = $breadcrumbManager;
@@ -100,14 +115,15 @@ class ResourceNodeSerializer
     public function serialize(ResourceNode $resourceNode)
     {
         $serializedNode = [
-            'autoId' => $resourceNode->getId(),
             'id' => $resourceNode->getGuid(),
+            'autoId' => $resourceNode->getId(),
             'actualId' => $resourceNode->getId(),
             'name' => $resourceNode->getName(),
-            'poster' => $resourceNode->getThumbnail() ? '/'.$resourceNode->getThumbnail()->getRelativeUrl() : null, // todo : add as ResourceNode prop
-            'thumbnail' => null,
-            'meta' => $this->getMeta($resourceNode),
-            'parameters' => $this->getParameters($resourceNode),
+            'thumbnail' => $resourceNode->getThumbnail() ? '/'.$resourceNode->getThumbnail()->getRelativeUrl() : null, // todo : add as ResourceNode prop
+            'poster' => $this->serializePoster($resourceNode),
+            'meta' => $this->serializeMeta($resourceNode),
+            'display' => $this->serializeDisplay($resourceNode),
+            'restrictions' => $this->getRestrictions($resourceNode),
             'rights' => [
                 'current' => $this->getCurrentPermissions($resourceNode),
             ],
@@ -144,7 +160,7 @@ class ResourceNodeSerializer
         $unauthorizedKeys = array_keys($serializedNode);
 
         // 'poster' is a key that can be overridden by another plugin. For example: UrlBundle
-        if (false !== ($key = array_search('poster', $unauthorizedKeys))) {
+        if (false !== ($key = array_search('thumbnail', $unauthorizedKeys))) {
             unset($unauthorizedKeys[$key]);
         }
 
@@ -164,12 +180,35 @@ class ResourceNodeSerializer
         );
     }
 
-    private function getMeta(ResourceNode $resourceNode)
+    /**
+     * Serialize the resource poster.
+     *
+     * @param ResourceNode $resourceNode
+     *
+     * @return array|null
+     */
+    private function serializePoster(ResourceNode $resourceNode)
+    {
+        if (!empty($resourceNode->getPoster())) {
+            /** @var PublicFile $file */
+            $file = $this->om
+                ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
+                ->findOneBy(['url' => $resourceNode->getPoster()]);
+
+            if ($file) {
+                return $this->fileSerializer->serialize($file);
+            }
+        }
+
+        return null;
+    }
+
+    private function serializeMeta(ResourceNode $resourceNode)
     {
         return [
             'type' => $resourceNode->getResourceType()->getName(),
             'mimeType' => $resourceNode->getMimeType(),
-            'description' => $resourceNode->getDescription(), // todo : migrate custom descriptions (Path, Quiz, etc.)
+            'description' => $resourceNode->getDescription(),
             'created' => $resourceNode->getCreationDate()->format('Y-m-d\TH:i:s'),
             'updated' => $resourceNode->getModificationDate()->format('Y-m-d\TH:i:s'),
             'license' => $resourceNode->getLicense(),
@@ -179,9 +218,12 @@ class ResourceNodeSerializer
             'isManager' => $this->rightsManager->isManager($resourceNode), // todo : data about current user should not be here (should be in `rights` section)
             'creator' => $resourceNode->getCreator() ? $this->userSerializer->serialize($resourceNode->getCreator()) : null,
             'actions' => $this->getActions($resourceNode),
-            'accesses' => $resourceNode->getAccesses(),
             'views' => $resourceNode->getViewsCount(),
             'icon' => $resourceNode->getIcon() ? '/'.$resourceNode->getIcon()->getRelativeUrl() : null,
+            'parent' => $resourceNode->getParent() ? [
+                'id' => $resourceNode->getParent()->getGuid(),
+                'name' => $resourceNode->getParent()->getName(),
+            ] : null,
         ];
     }
 
@@ -190,15 +232,24 @@ class ResourceNodeSerializer
         return $this->rightsManager->getCurrentPermissionArray($resourceNode);
     }
 
-    private function getParameters(ResourceNode $resourceNode)
+    private function serializeDisplay(ResourceNode $resourceNode)
     {
         return [
-            // todo : move accessibility dates into `resourceNode.restrictions` with access code and ip
-            'accessibleFrom' => $resourceNode->getAccessibleFrom() ? $resourceNode->getAccessibleFrom()->format('Y-m-d\TH:i:s') : null,
-            'accessibleUntil' => $resourceNode->getAccessibleUntil() ? $resourceNode->getAccessibleUntil()->format('Y-m-d\TH:i:s') : null,
             'fullscreen' => $resourceNode->isFullscreen(),
             'closable' => $resourceNode->isClosable(),
             'closeTarget' => $resourceNode->getCloseTarget(),
+        ];
+    }
+
+    private function getRestrictions(ResourceNode $resourceNode)
+    {
+        return [
+            'dates' => DateRangeNormalizer::normalize(
+                $resourceNode->getAccessibleFrom(),
+                $resourceNode->getAccessibleUntil()
+            ),
+            'code' => $resourceNode->getAccessCode(),
+            'allowedIps' => $resourceNode->getAllowedIps(),
         ];
     }
 

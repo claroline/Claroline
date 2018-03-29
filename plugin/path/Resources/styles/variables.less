@@ -16,25 +16,11 @@
 @path-grid-spacing-v: @component-margin-bottom;
 @path-grid-spacing-x: @grid-gutter-width;
 
-@lvl-gray:        #7B7B7B;
-@lvl-blue:        #4790aD;
-@lvl-purple:      #8C6796;
-@lvl-red:         #d86178;
-@lvl-orange:      #FF7A40;
-@lvl-yellow:      #FDBE3E;
-@lvl-light-green: #b8d855;
-@lvl-green:       #47aD90;
-@lvl-light-blue:  #91deea;
-
-
-// -
-// Breadcrumb
-// ---
-
 
 // -
 // Summary
 // ---
+
 // their is no sizing for xs because it's always 100% in this case
 @path-summary-width-sm:             percentage((6 / @grid-columns));
 @path-summary-width-md:             percentage((5 / @grid-columns));
@@ -51,7 +37,6 @@
 @path-summary-lvl-indent:           20px; // indent children of a step in the summary
 
 // Header
-@path-summary-header-margin-bottom: @component-margin-bottom;
 @path-summary-title-color:          @path-summary-color;
 
 // Controls (open/close, pin buttons)
@@ -73,38 +58,24 @@
 
 
 // -
-// Current step
+// Step
 // ---
-@current-step-bg:              transparent;
-@current-step-content-padding: @panel-body-padding;
 
+@step-poster-border-radius:   8px;
 
-// -
-// Progression
-// ---
-@path-progression-color:      @brand-secondary; // color to use when we display the progression gauge
+@step-numbering-padding:       2px 6px;
+@step-numbering-bg:            @brand-secondary;
+@step-numbering-color:         white;
+@step-numbering-font:          100%;
+@step-numbering-weight:        bold;
+@step-numbering-border-radius: 0;
+@step-numbering-box-shadow:    @box-shadow-base;
+@step-numbering-separator:     "."; // separator between numbering levels
 
-// size of the gauge
-@path-progression-size:       100px;
-@path-progression-size-sm:    50px;
-
-@step-status-size:            10px; // size of the dot status in the summary
-
+@step-status-size:            10px; // size of the dot status
 // colors for each progression status
 @step-status-unseen-color:    @text-muted;
-@step-status-seen-color:      @path-progression-color;
+@step-status-seen-color:      @brand-secondary;
 @step-status-to_do-color:     @brand-warning;
 @step-status-done-color:      @brand-success;
 @step-status-to_review-color: @brand-danger;
-
-
-// -
-// Resources
-// ---
-@resource-icon-size:     26px;
-@resource-icon-size-sm:  18px;
-
-
-// -
-// Secondary resources
-// ---

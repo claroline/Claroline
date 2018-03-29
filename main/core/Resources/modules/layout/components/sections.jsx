@@ -6,7 +6,7 @@ import omit from 'lodash/omit'
 import Panel      from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
-import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
+import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
 
 /**
@@ -17,7 +17,7 @@ import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action
  */
 const Section = props =>
   <Panel
-    {...omit(props, ['level', 'title', 'icon', 'actions', 'children'])}
+    {...omit(props, ['level', 'displayLevel', 'title', 'icon', 'actions', 'children'])}
     collapsible={true}
     expanded={props.disabled ? false : props.expanded}
     className={classes(props.className, {
@@ -25,7 +25,7 @@ const Section = props =>
     })}
     header={
       React.createElement('h'+props.level, {
-        className: classes({
+        className: classes(props.displayLevel && `h${props.displayLevel}`,{
           opened: !props.disabled && props.expanded
         })
       }, [
@@ -63,6 +63,7 @@ Section.propTypes = {
   className: T.string,
   id: T.string.isRequired,
   level: T.number.isRequired,
+  displayLevel: T.number,
   icon: T.string,
   title: T.node.isRequired,
   expanded: T.bool,
@@ -88,7 +89,8 @@ const Sections = props =>
       React.cloneElement(child, {
         key: child.props.id,
         eventKey: child.props.id,
-        level: props.level
+        level: props.level,
+        displayLevel: props.displayLevel
       })
     )}
   </PanelGroup>
@@ -97,6 +99,7 @@ Sections.propTypes = {
   className: T.string,
   accordion: T.bool,
   level: T.number, // level for panel headings
+  displayLevel: T.number, // modifier for headings level (used when some headings levels are hidden in the page)
   defaultOpened: T.string,
   children: T.node.isRequired
 }

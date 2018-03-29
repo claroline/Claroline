@@ -1,6 +1,6 @@
 import {trans} from '#/main/core/translation'
 
-import {RoleCard} from '#/main/core/administration/user/role/components/role-card'
+import {RoleCard} from '#/main/core/user/data/components/role-card'
 
 const RoleList = {
   open: {

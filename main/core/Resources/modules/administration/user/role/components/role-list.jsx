@@ -3,7 +3,7 @@ import React from 'react'
 import {trans} from '#/main/core/translation'
 
 import {enumRole} from '#/main/core/user/role/constants'
-import {RoleCard} from '#/main/core/administration/user/role/components/role-card.jsx'
+import {RoleCard} from '#/main/core/user/data/components/role-card'
 
 import {generateUrl} from '#/main/core/api/router'
 

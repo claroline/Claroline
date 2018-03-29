@@ -2,7 +2,7 @@ import React from 'react'
 import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
-import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
+import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link.jsx'

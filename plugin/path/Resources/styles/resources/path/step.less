@@ -1,0 +1,69 @@
+
+.step-poster,
+.step-title {
+    margin-top: @line-height-computed - 4px; // 4px is to absorb progress bar height
+}
+
+.step-poster {
+    border-radius: @step-poster-border-radius;
+
+    + .step-title {
+        margin-top: @line-height-computed; // restore default margin
+    }
+}
+
+.step-title {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+}
+
+.step-numbering {
+    display: block;
+    font-size: @step-numbering-font;
+    font-weight: @step-numbering-weight;
+    padding: @step-numbering-padding;
+    margin-right: 10px;
+    background: @step-numbering-bg;
+    color: @step-numbering-color;
+    border-radius: @step-numbering-border-radius;
+    .box-shadow(@step-numbering-box-shadow);
+
+    &:after {
+        content: @step-numbering-separator;
+    }
+}
+
+.step-manual-progression {
+    margin-left: auto;
+
+    // fixes v-align
+    display: flex;
+    align-items: center;
+    line-height: @line-height-computed;
+
+    // remove title styles
+    font-family: @font-family-base;
+    font-size: @font-size-base;
+
+    .dropdown-toggle {
+        font-weight: bold;
+
+        &.unseen    { color: @step-status-unseen-color; }
+        &.seen      { color: @step-status-seen-color; }
+        &.to_do     { color: @step-status-to_do-color; }
+        &.done      { color: @step-status-done-color; }
+        &.to_review { color: @step-status-to_review-color; }
+    }
+}
+
+.step-primary-resource,
+.step-secondary-resources {
+    margin-bottom: @component-margin-bottom;
+}
+
+.btn-primary-resource {
+    margin-top: 10px;
+    padding: @padding-large-vertical @padding-large-horizontal;
+}

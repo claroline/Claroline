@@ -27,14 +27,12 @@ class PublicFileSerializer
      */
     public function serialize(PublicFile $file, array $options = [])
     {
-        $creator = [];
-
         return [
             'id' => $file->getId(),
             'size' => $file->getSize(),
             'filename' => $file->getFilename(),
             'directory' => $file->getDirectoryName(),
-            'creator' => $creator,
+            'creator' => [],
             'mimeType' => $file->getMimeType(),
             'sourceType' => $file->getSourceType(),
             'url' => $file->getUrl(),

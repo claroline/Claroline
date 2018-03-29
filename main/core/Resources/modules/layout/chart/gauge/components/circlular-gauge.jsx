@@ -18,20 +18,20 @@ class CircularGauge extends Component {
       >
         <g
           transform={`translate(${ this.props.width / 2 }, ${ this.props.width / 2 })`}
-          alignmentBaseline={'middle'}
+          alignmentBaseline="middle"
         >
           <text
             strokeWidth={1}
-            textAnchor={'middle'}
+            textAnchor="middle"
           >
             {this.props.label}
           </text>
 
           <text
-            fontSize="24"
+            fontSize={24}
             stroke={this.props.color}
             fill={this.props.color}
-            textAnchor={'middle'}
+            textAnchor="middle"
             y={24}
           >
             {this.props.value}

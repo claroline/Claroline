@@ -11,7 +11,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\Step;
-use Innova\PathBundle\Manager\Condition\StepConditionManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -49,27 +48,23 @@ class StepManager
      *     "session"              = @DI\Inject("session"),
      *     "translator"           = @DI\Inject("translator"),
      *     "resourceManager"      = @DI\Inject("claroline.manager.resource_manager"),
-     *     "stepConditionManager" = @DI\Inject("innova_path.manager.condition")
      * })
      *
-     * @param ObjectManager        $om
-     * @param SessionInterface     $session
-     * @param TranslatorInterface  $translator
-     * @param ResourceManager      $resourceManager
-     * @param StepConditionManager $stepConditionManager
+     * @param ObjectManager       $om
+     * @param SessionInterface    $session
+     * @param TranslatorInterface $translator
+     * @param ResourceManager     $resourceManager
      */
     public function __construct(
         ObjectManager        $om,
         SessionInterface     $session,
         TranslatorInterface  $translator,
-        ResourceManager      $resourceManager,
-        StepConditionManager $stepConditionManager)
+        ResourceManager      $resourceManager)
     {
         $this->om = $om;
         $this->session = $session;
         $this->translator = $translator;
         $this->resourceManager = $resourceManager;
-        $this->stepConditionManager = $stepConditionManager;
     }
 
     /**
@@ -129,41 +124,10 @@ class StepManager
         $this->updateParameters($step, $stepStructure);
         $this->updateActivity($step, $stepStructure);
 
-        // Manages Access condition for the next Step
-        $this->updateCondition($step, $stepStructure);
-
         // Save modifications
         $this->om->persist($step);
 
         return $step;
-    }
-
-    /**
-     * Update or create Access condition.
-     *
-     * @param Step      $step
-     * @param \stdClass $stepStructure
-     */
-    public function updateCondition(Step $step, \stdClass $stepStructure)
-    {
-        $condition = null;
-        $oldCondition = $step->getCondition();
-        if (!empty($stepStructure->condition)) {
-            // Create or Update the Condition
-            if (empty($stepStructure->condition->scid) || (!empty($oldCondition) && $stepStructure->condition->scid !== $oldCondition->getId())) {
-                // Condition has never been published or has been replaced by a new one
-                $condition = $this->stepConditionManager->create($step, $stepStructure->condition);
-            } elseif ($oldCondition) {
-                // Update existing condition
-                $condition = $this->stepConditionManager->edit($step, $oldCondition, $stepStructure->condition);
-            }
-        }
-
-        // Remove the old condition if needed
-        if (!empty($oldCondition) && (empty($condition) || $condition->getId() !== $oldCondition->getId())) {
-            $oldCondition->setStep(null);
-            $this->om->remove($oldCondition);
-        }
     }
 
     /**
@@ -199,7 +163,7 @@ class StepManager
             $name = $stepStructure->name;
         } else {
             // Create a default name
-            $name = Step::DEFAULT_NAME.' '.$step->getOrder();
+            $name = 'Step '.$step->getOrder();
         }
         $activity->setName($name);
         $activity->setTitle($name);
@@ -213,7 +177,7 @@ class StepManager
             if (!empty($resource)) {
                 $activity->setPrimaryResource($resource);
             } else {
-                $warning = $this->translator->trans('warning_primary_resource_deleted', ['resourceId' => $stepStructure->primaryResource[0]->resourceId, 'resourceName' => $stepStructure->primaryResource[0]->name], 'innova_tools');
+                $warning = $this->translator->trans('warning_primary_resource_deleted', ['resourceId' => $stepStructure->primaryResource[0]->resourceId, 'resourceName' => $stepStructure->primaryResource[0]->name]);
                 $this->session->getFlashBag()->add('warning', $warning);
                 $stepStructure->primaryResource = [];
             }
@@ -321,7 +285,7 @@ class StepManager
                     $publishedResources[] = $resourceNode;
                 } else {
                     // Resource has been deleted => remove the reference in path
-                    $warning = $this->translator->trans('warning_compl_resource_deleted', ['resourceId' => $resource->resourceId, 'resourceName' => $resource->name], 'innova_tools');
+                    $warning = $this->translator->trans('warning_compl_resource_deleted', ['resourceId' => $resource->resourceId, 'resourceName' => $resource->name]);
                     $this->session->getFlashBag()->add('warning', $warning);
 
                     unset($stepStructure->resources[$index]);

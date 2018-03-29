@@ -1,7 +1,7 @@
 import {t} from '#/main/core/translation'
 
 import {locationTypes} from '#/main/core/administration/user/location/constants'
-import {LocationCard} from '#/main/core/administration/user/location/components/location-card.jsx'
+import {LocationCard} from '#/main/core/user/data/components/location-card'
 
 const LocationList = {
   open: {

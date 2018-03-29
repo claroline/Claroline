@@ -5,6 +5,8 @@ import {DataTreeContainer} from '#/main/core/data/list/containers/data-tree.jsx'
 import {OrganizationList} from '#/main/core/administration/user/organization/components/organization-list.jsx'
 import {navigate} from '#/main/core/router'
 
+// TODO : upgrade to DataCard format
+
 const Organizations = () =>
   <DataTreeContainer
     name="organizations.list"
@@ -23,12 +25,17 @@ const Organizations = () =>
         icon: 'fa fa-fw fa-plus',
         label: trans('add_sub_organization'),
         context: 'row',
-        action: (row) => {
-          navigate('organizations/form/parent/' + row[0].id)
-        }
+        action: (row) => navigate('organizations/form/parent/' + row[0].id)
       }
     ]}
-    card={OrganizationList.card}
+    card={(row) => ({
+      icon: 'fa fa-building',
+      title: row.name,
+      subtitle: row.code,
+      flags: [
+        row.meta.default && ['fa fa-check', trans('default')]
+      ].filter(flag => !!flag)
+    })}
   />
 
 export {

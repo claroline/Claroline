@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 
 import {tex} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
+import {PageContent} from '#/main/core/layout/page'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 import {viewComponents} from './../views'
 import {select as resourceSelect} from '#/main/core/resource/selectors'
@@ -26,7 +27,9 @@ const Quiz = props =>
     }}
     customActions={customActions(props)}
   >
-    {React.createElement(viewComponents[props.viewMode], props)}
+    <PageContent>
+      {React.createElement(viewComponents[props.viewMode], props)}
+    </PageContent>
   </ResourcePageContainer>
 
 Quiz.propTypes = {

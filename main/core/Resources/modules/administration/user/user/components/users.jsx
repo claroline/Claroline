@@ -35,7 +35,7 @@ const UsersList = props =>
         context: 'row'
       },
       {
-        icon: 'fa fa-fw fa-pencil',
+        icon: 'fa fa-fw fa-lock',
         label: t('change_password'),
         context: 'row',
         action: (rows) => props.updatePassword(rows[0]),
@@ -46,7 +46,7 @@ const UsersList = props =>
         action: (rows) => window.location = generateUrl('claro_user_tracking', {publicUrl: rows[0].meta.publicUrl}),
         context: 'row'
       }, {
-        icon: 'fa fa-fw fa-eye',
+        icon: 'fa fa-fw fa-user-secret',
         label: t('show_as'),
         action: (rows) => window.location = generateUrl('claro_desktop_open', {_switch: rows[0].username}),
         context: 'row'

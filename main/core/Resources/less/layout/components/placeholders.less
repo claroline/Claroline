@@ -1,93 +1,87 @@
+.placeholder-icon {
+    color: #bbb; // todo : use a var
+    margin-right: floor(@grid-gutter-width / 2);
+
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.5); // todo use a var
+    border-radius: 50%;
+}
+
+.placeholder-body {
+    flex: 1;
+    border-width: 0;
+    border-color: @placeholder-border-color;
+    border-style: solid;
+    padding-left: floor(@grid-gutter-width / 2);
+    text-align: center;
+}
+
+.placeholder-title {
+    display: block;
+    font-weight: bold;
+}
+
 // ATTENTION : never create a .placeholder class as bootstrap already define a mixin with that name.
 .empty-placeholder {
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: @component-margin-bottom;
-    text-align: left;
+
     color: @placeholder-color;
-    min-height: @input-height-base;
-    line-height: @line-height-computed;
-
-    .placeholder-variant(
-        @placeholder-font-size,
-        @placeholder-padding,
-        @placeholder-border-radius,
-        @placeholder-border,
-        @placeholder-border
-    );
-
-    &.placeholder-lg {
-        min-height: @input-height-large;
-        line-height: @line-height-large;
-
-        .placeholder-variant(
-            @placeholder-lg-font-size,
-            @placeholder-lg-padding,
-            @placeholder-lg-border-radius,
-            @placeholder-lg-border,
-            @placeholder-lg-border
-        );
-    }
-
-    .placeholder-icon {
-        margin-right: floor(@grid-gutter-width / 2);
-    }
-
-    .placeholder-title {
-        display: block;
-        font-weight: bold;
-    }
+    background: @placeholder-bg;
+    border-color: @placeholder-border-color;
+    border-style: dashed;
 }
 
 .drop-placeholder {
     color: @placeholder-color;
+    background: @placeholder-bg;
+    border-color: @placeholder-border-color;
+    border-style: dashed;
+}
+
+.placeholder-hover {
+    &.hover,
+    &:hover {
+        border-color: @placeholder-hover-border-color;
+    }
+}
+
+.placeholder-sm {
+    min-height: @input-height-small;
+    line-height: @line-height-small;
+
+    .placeholder-variant(
+        @placeholder-sm-font-size,
+        @placeholder-sm-padding,
+        @placeholder-sm-border-radius,
+        @placeholder-sm-border-size
+    );
+}
+
+.placeholder-md {
     min-height: @input-height-base;
     line-height: @line-height-computed;
-
-    .fa {
-        opacity: .5;
-        margin-right: @icon-text-spacer; // todo: find a better way to do this
-    }
-
-    &.placeholder-hover {
-        &.hover,
-        &:hover {
-            color: @placeholder-hover-color;
-        }
-    }
 
     .placeholder-variant(
         @placeholder-font-size,
         @placeholder-padding,
         @placeholder-border-radius,
-        @placeholder-border,
-        @placeholder-hover-border
+        @placeholder-border-size
     );
+}
 
-    &.placeholder-sm {
-        min-height: @input-height-base;
-        line-height: @line-height-small;
+.placeholder-lg {
+    min-height: @input-height-large;
+    line-height: @line-height-large;
 
-        .placeholder-variant(
-            @placeholder-sm-font-size,
-            @placeholder-sm-padding,
-            @placeholder-sm-border-radius,
-            @placeholder-sm-border,
-            @placeholder-sm-hover-border
-        );
-    }
-
-    &.placeholder-lg {
-        min-height: @input-height-large;
-        line-height: @line-height-large;
-
-        .placeholder-variant(
-            @placeholder-lg-font-size,
-            @placeholder-lg-padding,
-            @placeholder-lg-border-radius,
-            @placeholder-lg-border,
-            @placeholder-lg-hover-border
-        );
-    }
+    .placeholder-variant(
+        @placeholder-lg-font-size,
+        @placeholder-lg-padding,
+        @placeholder-lg-border-radius,
+        @placeholder-lg-border-size
+    );
 }

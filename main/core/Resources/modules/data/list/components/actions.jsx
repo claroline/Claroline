@@ -1,12 +1,10 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import {DropdownButton, MenuItem} from 'react-bootstrap'
 
-import {t, transChoice} from '#/main/core/translation'
-import {MenuItemAction} from '#/main/core/layout/components/dropdown.jsx'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
+import {transChoice} from '#/main/core/translation'
+import {ActionDropdownButton} from '#/main/core/layout/action/components/dropdown'
+import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action'
 
 import {DataListAction as DataListActionTypes} from '#/main/core/data/list/prop-types'
 
@@ -62,59 +60,19 @@ ListPrimaryAction.defaultProps = {
  * @param props
  * @constructor
  */
-const ListActions = props => {
-  const displayedActions = props.actions.filter(
-    action => !action.displayed || action.displayed([props.item])
-  )
-
-  const actions          = displayedActions.filter(action => !action.dangerous)
-  const dangerousActions = displayedActions.filter(action =>  action.dangerous)
-
-  // only display button if there are actions
-  return (0 !== displayedActions.length) && (
-    <TooltipElement
-      id={`${props.id}-tip`}
-      tip={t('actions')}
-      position="left"
-    >
-      <DropdownButton
-        id={`${props.id}-btn`}
-        title={<span className="fa fa-fw fa-ellipsis-v" />}
-        className="data-actions-btn btn-link-default"
-        bsStyle="link"
-        noCaret={true}
-        pullRight={true}
-      >
-        <MenuItem header>{t('actions')}</MenuItem>
-
-        {actions.map((action, actionIndex) =>
-          <MenuItemAction
-            key={`${props.id}-action-${actionIndex}`}
-            icon={action.icon}
-            label={action.label}
-            disabled={action.disabled ? action.disabled([props.item]) : false}
-            action={typeof action.action === 'function' ? () => action.action([props.item]) : action.action}
-          />
-        )}
-
-        {(0 !== actions.length && 0 !== dangerousActions.length) &&
-          <MenuItem divider />
-        }
-
-        {dangerousActions.map((action, actionIndex) =>
-          <MenuItemAction
-            key={`${props.id}-action-dangerous-${actionIndex}`}
-            icon={action.icon}
-            label={action.label}
-            disabled={action.disabled ? action.disabled([props.item]) : false}
-            action={typeof action.action === 'function' ? () => action.action([props.item]) : action.action}
-            dangerous={true}
-          />
-        )}
-      </DropdownButton>
-    </TooltipElement>
-  )
-}
+const ListActions = props =>
+  <ActionDropdownButton
+    id={`${props.id}-btn`}
+    className="data-actions-btn btn-link-default"
+    bsStyle="link"
+    noCaret={true}
+    pullRight={true}
+    actions={props.actions.map(action => Object.assign({}, action, {
+      displayed: !action.displayed || action.displayed([props.item]),
+      disabled: action.disabled ? action.disabled([props.item]) : false,
+      action: typeof action.action === 'function' ? () => action.action([props.item]) : action.action
+    }))}
+  />
 
 ListActions.propTypes = {
   id: T.string.isRequired,

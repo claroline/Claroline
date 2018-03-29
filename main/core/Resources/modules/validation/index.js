@@ -3,6 +3,7 @@ import set from 'lodash/set'
 import moment from 'moment'
 
 import {trans, tval} from '#/main/core/translation'
+import {IPv4} from '#/main/core/scaffolding/ip'
 
 function notEmpty(value) {
   if (
@@ -117,7 +118,11 @@ function lengthInRange(value, options) {
 }
 
 function ip(value) {
-  if (!match(value, {regex: /^([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])\.([0-9]{1,3}|[\\*])$/g})) {
+  if (string(value)) {
+    return string(value)
+  }
+
+  if (!IPv4.isValid(value)) {
     return tval('This value should be a valid IPv4.')
   }
 }

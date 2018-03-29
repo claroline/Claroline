@@ -8,6 +8,7 @@ import set from 'lodash/set'
 
 import {trans} from '#/main/core/translation'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
+import {DataFormSection as DataFormSectionTypes} from '#/main/core/data/form/prop-types'
 import {Form} from '#/main/core/data/form/components/form.jsx'
 import {cleanErrors} from '#/main/core/data/form/utils'
 
@@ -27,6 +28,14 @@ class DataFormModal extends Component {
     this.save       = this.save.bind(this)
     this.setErrors  = this.setErrors.bind(this)
     this.updateProp = this.updateProp.bind(this)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.data !== this.props.data) {
+      this.setState({
+        data: cloneDeep(nextProps.data)
+      })
+    }
   }
 
   save() {
@@ -56,6 +65,10 @@ class DataFormModal extends Component {
       pendingChanges: true,
       data: newData
     })
+
+    if (this.props.onChange) {
+      this.props.onChange(newData)
+    }
   }
 
   render() {
@@ -97,10 +110,11 @@ DataFormModal.propTypes = {
 
   // form configuration
   data: T.any,
-  sections: T.arrayOf(T.shape({
-
-  })).isRequired,
-  save: T.func.isRequired
+  sections: T.arrayOf(T.shape(
+    DataFormSectionTypes.propTypes
+  )).isRequired,
+  save: T.func.isRequired,
+  onChange: T.func
 }
 
 DataFormModal.defaultProps = {

@@ -1,101 +1,47 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import {DropdownButton, MenuItem} from 'react-bootstrap'
 
-import {t} from '#/main/core/translation'
-import {getPlainText} from '#/main/core/data/types/html/utils'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
-import {Checkbox} from '#/main/core/layout/form/components/field/checkbox.jsx'
-import {DataListAction, DataCard, DataListProperty, DataListView} from '#/main/core/data/list/prop-types'
+import {trans} from '#/main/core/translation'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'
+import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
+
+import {DataListAction, DataListProperty, DataListView} from '#/main/core/data/list/prop-types'
 import {getBulkActions, getRowActions, getPropDefinition, getSortableProps, isRowSelected} from '#/main/core/data/list/utils'
-import {ListActions, ListPrimaryAction, ListBulkActions} from '#/main/core/data/list/components/actions.jsx'
+import {ListBulkActions} from '#/main/core/data/list/components/actions'
 
 const DataGridItem = props =>
-  <div className={classes('data-grid-item', props.data.className, {selected: props.selected})}>
+  <li className="data-grid-item-container">
     {props.onSelect &&
       <input
         type="checkbox"
-        className="item-select"
+        className="data-grid-item-select"
         checked={props.selected}
         onChange={props.onSelect}
       />
     }
 
-    <div className="item-header" style={{
-      backgroundImage: 'url(' + props.data.poster + ')',
-      backgroundSize: 'cover',
-      backgroundPosition: 'center'
-    }}>
-      <span className="item-icon-container">
-        {typeof props.data.icon === 'string' ?
-          <span className={props.data.icon} />: props.data.icon
-        }
-      </span>
-
-      {props.data.flags &&
-        <div className="item-flags">
-          {props.data.flags.map((flag, flagIndex) => flag &&
-            <TooltipElement
-              key={flagIndex}
-              id={`item-${props.index}-flag-${flagIndex}`}
-              tip={flag[1]}
-            >
-              <span className={classes('item-flag', flag[0])} />
-            </TooltipElement>
-          )}
-        </div>
-      }
-    </div>
-
-    <ListPrimaryAction
-      item={props.row}
-      action={props.primaryAction}
-      className="item-content"
-      disabledWrapper="div"
-    >
-      <h2 key="item-title" className="item-title">
-        {props.data.title}
-        {props.data.subtitle &&
-          <small>{props.data.subtitle}</small>
-        }
-      </h2>
-
-      {'sm' !== props.size && props.data.contentText &&
-        <div key="item-description" className="item-description">
-          {getPlainText(props.data.contentText)}
-        </div>
-      }
-
-      {props.data.footer &&
-        <div key="item-footer" className="item-footer">
-          {'sm' !== props.size && props.data.footerLong ?
-            props.data.footerLong : props.data.footer
-          }
-        </div>
-      }
-    </ListPrimaryAction>
-
-    {props.actions &&
-      <ListActions
-        id={`data-grid-item-${props.index}-actions`}
-        item={props.row}
-        actions={props.actions}
-      />
-    }
-  </div>
+    {React.createElement(props.card, {
+      className: classes({selected: props.selected}),
+      size: props.size,
+      orientation: props.orientation,
+      data: props.row,
+      primaryAction: props.primaryAction ? {
+        disabled: props.primaryAction.disabled ? props.primaryAction.disabled(props.row) : false,
+        action: props.primaryAction.action(props.row)
+      } : undefined,
+      actions: props.actions.map(action => Object.assign({}, action, {
+        displayed: !action.displayed || action.displayed([props.row]),
+        disabled: action.disabled ? action.disabled([props.row]) : false,
+        action: typeof action.action === 'function' ? () => action.action([props.row]) : action.action
+      }))
+    })}
+  </li>
 
 DataGridItem.propTypes = {
-  index: T.number.isRequired,
   size: T.string.isRequired,
+  orientation: T.string.isRequired,
   row: T.object.isRequired,
-
-  /**
-   * Computed card data from row.
-   */
-  data: T.shape(
-    DataCard.propTypes
-  ).isRequired,
 
   primaryAction: T.shape({
     disabled: T.func,
@@ -105,6 +51,8 @@ DataGridItem.propTypes = {
   actions: T.arrayOf(
     T.shape(DataListAction.propTypes)
   ),
+
+  card: T.func.isRequired, // It must be a react component.
   selected: T.bool,
   onSelect: T.func
 }
@@ -115,18 +63,18 @@ DataGridItem.defaultProps = {
 
 const DataGridSort = props =>
   <div className="data-grid-sort">
-    {t('list_sort_by')}
+    {trans('list_sort_by')}
     <DropdownButton
       id="data-grid-sort-menu"
       title={props.current.property && getPropDefinition(props.current.property, props.available) ?
         getPropDefinition(props.current.property, props.available).label :
-        t('none')
+        trans('none')
       }
       bsStyle="link"
       noCaret={true}
       pullRight={true}
     >
-      <MenuItem header>{t('list_columns')}</MenuItem>
+      <MenuItem header>{trans('list_columns')}</MenuItem>
       {props.available.map(column =>
         <MenuItem
           key={`sort-by-${column.name}`}
@@ -164,16 +112,16 @@ DataGridSort.propTypes = {
 }
 
 const DataGrid = props =>
-  <div className={`data-grid data-grid-${props.size}`}>
+  <div className={`data-grid data-grid-${props.size} data-grid-${props.orientation}`}>
     <div className="data-grid-header">
       {props.selection &&
         <Checkbox
           id="data-grid-select"
-          label={t('list_select_all')}
-          labelChecked={t('list_deselect_all')}
+          label={trans('list_select_all')}
+          labelChecked={trans('list_deselect_all')}
           checked={0 < props.selection.current.length}
-          onChange={(val) => {
-            val.target.checked ? props.selection.toggleAll(props.data): props.selection.toggleAll([])
+          onChange={() => {
+            0 === props.selection.current.length ? props.selection.toggleAll(props.data): props.selection.toggleAll([])
           }}
         />
       }
@@ -196,28 +144,30 @@ const DataGrid = props =>
 
     <ul className="data-grid-content">
       {props.data.map((row, rowIndex) =>
-        <li className="data-grid-item-container" key={`data-item-${rowIndex}`}>
-          <DataGridItem
-            index={rowIndex}
-            size={props.size}
-            row={row}
-            data={props.card(row, props.size)}
-            primaryAction={props.primaryAction}
-            actions={getRowActions(props.actions)}
-            selected={isRowSelected(row, props.selection ? props.selection.current : [])}
-            onSelect={
-              props.selection ? () => {
-                props.selection.toggle(row, !isRowSelected(row, props.selection ? props.selection.current : []))
-              }: null
-            }
-          />
-        </li>
+        <DataGridItem
+          key={`data-item-${rowIndex}`}
+          size={props.size}
+          orientation={props.orientation}
+          row={row}
+          card={props.card}
+          primaryAction={props.primaryAction}
+          actions={getRowActions(props.actions)}
+          selected={isRowSelected(row, props.selection ? props.selection.current : [])}
+          onSelect={
+            props.selection ? () => {
+              props.selection.toggle(row, !isRowSelected(row, props.selection ? props.selection.current : []))
+            } : null
+          }
+        />
       )}
     </ul>
   </div>
 
-DataGrid.propTypes    = DataListView.propTypes
-DataGrid.defaultProps = DataListView.defaultProps
+implementPropTypes(DataGrid, DataListView, {
+  size: T.oneOf(['sm', 'lg']).isRequired,
+  orientation: T.oneOf(['col', 'row']).isRequired,
+  card: T.func.isRequired // It must be a react component.
+})
 
 export {
   DataGrid

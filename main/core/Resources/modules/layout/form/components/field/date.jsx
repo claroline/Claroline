@@ -34,6 +34,7 @@ const Date = props => {
       <input
         id={props.id}
         type="text"
+        autoComplete="date"
         className="form-control"
         placeholder={displayFormat}
         value={displayValue}

@@ -26,6 +26,8 @@ const EmptyPlaceholder = props =>
       {props.help &&
         <span className="placeholder-help">{props.help}</span>
       }
+
+      {props.children}
     </div>
   </PlaceholderWrapper>
 
@@ -33,7 +35,8 @@ EmptyPlaceholder.propTypes = {
   icon: T.string,
   title: T.string.isRequired,
   help: T.string,
-  size: T.oneOf(['sm', 'lg'])
+  size: T.oneOf(['sm', 'lg']),
+  children: T.element
 }
 
 EmptyPlaceholder.defaultProps = {

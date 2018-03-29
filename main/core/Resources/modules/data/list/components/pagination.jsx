@@ -2,9 +2,10 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import times from 'lodash/times'
-import {DropdownButton, MenuItem} from 'react-bootstrap'
 
 import {t, transChoice} from '#/main/core/translation'
+import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'
+
 import {constants} from '#/main/core/data/list/constants'
 import {countPages} from '#/main/core/data/list/utils'
 

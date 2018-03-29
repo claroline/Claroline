@@ -5,7 +5,7 @@ import merge from 'lodash/merge'
 
 import {trans} from '#/main/core/translation'
 import {t_res} from '#/main/core/resource/translation'
-import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
+import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 import {constants as evaluationConstants} from '#/main/core/resource/evaluation/constants'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {Action} from '#/main/core/layout/button/components/action.jsx'
@@ -15,7 +15,7 @@ import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge.j
 
 const UserProgression = props =>
   <section className="user-progression">
-    <h3 className="h2 h-first">{t_res('resource_overview_progression')}</h3>
+    <h3 className="h2">{t_res('resource_overview_progression')}</h3>
 
     <div className="panel panel-default">
       <div className="panel-body">
@@ -168,7 +168,7 @@ const ResourceOverview = props =>
 
         {props.contentText &&
           <section className="resource-info">
-            <h3 className="h2 h-first">{t_res('resource_overview_info')}</h3>
+            <h3 className="h2">{t_res('resource_overview_info')}</h3>
 
             <div className="panel panel-default">
               {typeof props.contentText === 'string' ?

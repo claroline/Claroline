@@ -5,7 +5,7 @@ import classes from 'classnames'
 import {t} from '#/main/core/translation'
 import {NavLink} from '#/main/core/router'
 
-import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
+import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
 
 const ProfileNav = props =>

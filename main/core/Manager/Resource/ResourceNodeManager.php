@@ -7,6 +7,7 @@ use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\API\Serializer\Resource\ResourceNodeSerializer;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Library\Normalizer\DateRangeNormalizer;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\CoreBundle\Manager\RightsManager;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
@@ -68,6 +69,7 @@ class ResourceNodeManager
      * @param ResourceNodeSerializer        $resourceNodeSerializer
      * @param RightsManager                 $rightsManager
      * @param ResourceManager               $resourceManager
+     * @param SessionInterface              $session
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -121,11 +123,16 @@ class ResourceNodeManager
             $this->resourceManager->rename($resourceNode, $data['name'], true);
         }
 
-        //why no unserialize from serializer ?
-        //@todo ask Axel
+        if (isset($data['poster'])) {
+            $resourceNode->setPoster($data['poster']['url']);
+        }
+
+        //why no deserialize from serializer ?
+        //@todo move in serializer
 
         $this->updateMeta($data['meta'], $resourceNode);
-        $this->updateParameters($data['parameters'], $resourceNode);
+        $this->updateDisplay($data['display'], $resourceNode);
+        $this->updateRestrictions($data['restrictions'], $resourceNode);
         $this->updateRights($data['rights']['all']['permissions'], $resourceNode);
         $this->om->persist($resourceNode);
         $this->om->flush();
@@ -152,27 +159,31 @@ class ResourceNodeManager
         if (isset($meta['authors'])) {
             $resourceNode->setAuthor($meta['authors']);
         }
-
-        if (isset($meta['accesses'])) {
-            $resourceNode->setAccesses($meta['accesses']);
-        }
     }
 
-    private function updateParameters(array $parameters, ResourceNode $resourceNode)
+    private function updateDisplay(array $parameters, ResourceNode $resourceNode)
     {
-        if (!empty($parameters['accessibleFrom'])) {
-            $accessibleFrom = \DateTime::createFromFormat('Y-m-d\TH:i:s', $parameters['accessibleFrom']);
-            $resourceNode->setAccessibleFrom($accessibleFrom);
-        }
-
-        if (!empty($parameters['accessibleUntil'])) {
-            $accessibleUntil = \DateTime::createFromFormat('Y-m-d\TH:i:s', $parameters['accessibleUntil']);
-            $resourceNode->setAccessibleUntil($accessibleUntil);
-        }
-
         $resourceNode->setFullscreen($parameters['fullscreen']);
         $resourceNode->setClosable($parameters['closable']);
         $resourceNode->setCloseTarget($parameters['closeTarget']);
+    }
+
+    private function updateRestrictions(array $restrictions, ResourceNode $resourceNode)
+    {
+        if (isset($restrictions['dates'])) {
+            $dateRange = DateRangeNormalizer::denormalize($restrictions['dates']);
+
+            $resourceNode->setAccessibleFrom($dateRange[0]);
+            $resourceNode->setAccessibleUntil($dateRange[1]);
+        }
+
+        if (isset($restrictions['code'])) {
+            $resourceNode->setAccessCode($restrictions['code']);
+        }
+
+        if (isset($restrictions['ips'])) {
+            $resourceNode->setAllowedIps($restrictions['ips']);
+        }
     }
 
     private function updateRights(array $rights, ResourceNode $resourceNode)
@@ -269,13 +280,7 @@ class ResourceNodeManager
 
     public function isCodeProtected(ResourceNode $resourceNode)
     {
-        $access = $resourceNode->getAccesses();
-
-        if (!empty($access['code'])) {
-            return $access['code'] ? true : false;
-        }
-
-        return false;
+        return !empty($resourceNode->getAccessCode());
     }
 
     public function requiresUnlock(ResourceNode $resourceNode)

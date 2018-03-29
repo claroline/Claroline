@@ -13,6 +13,8 @@ import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {getCorrectionKey} from '#/plugin/drop-zone/resources/dropzone/utils'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 
+// TODO : restore list grid display
+
 class Correctors extends Component {
   generateColumns(props) {
     const columns = []
@@ -22,11 +24,7 @@ class Correctors extends Component {
         name: 'user',
         label: trans('user', {}, 'platform'),
         displayed: true,
-        renderer: (rowData) => {
-          const link = <a href={`#/corrector/${rowData.id}`}>{rowData.user.firstName} {rowData.user.lastName}</a>
-
-          return link
-        }
+        primary: true
       })
     }
     if (props.dropzone.parameters.dropType === constants.DROP_TYPE_TEAM) {
@@ -34,13 +32,10 @@ class Correctors extends Component {
         name: 'teamName',
         label: trans('team', {}, 'team'),
         displayed: true,
-        renderer: (rowData) => {
-          const link = <a href={`#/corrector/${rowData.id}`}>{trans(rowData.teamName, {}, 'platform')}</a>
-
-          return link
-        }
+        primary: true
       })
     }
+
     columns.push({
       name: 'nbCorrections',
       label: trans('started_corrections', {}, 'dropzone'),
@@ -116,29 +111,19 @@ class Correctors extends Component {
       <div id="correctors-list">
         <h2>{trans('correctors_list', {}, 'dropzone')}</h2>
         {!this.props.corrections ?
-          <span className="fa fa-fw fa-circle-o-notch fa-spin"></span> :
+          <span className="fa fa-fw fa-circle-o-notch fa-spin" /> :
           <DataListContainer
             name="drops"
             fetch={{
               url: generateUrl('claro_dropzone_drops_search', {id: this.props.dropzone.id}),
               autoload: true
             }}
+            open={{
+              action: (row) => `#/corrector/${row.id}`
+            }}
             definition={this.generateColumns(this.props)}
             filterColumns={true}
             actions={this.generateActions(this.props)}
-            card={(row) => ({
-              onClick: `#/drop/${row.id}/view`,
-              poster: null,
-              icon: null,
-              title: '',
-              subtitle: '',
-              contentText: '',
-              flags: [].filter(flag => !!flag),
-              footer:
-                <span></span>,
-              footerLong:
-                <span></span>
-            })}
           />
         }
       </div>
@@ -153,20 +138,17 @@ Correctors.propTypes = {
   unlockUser: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const ConnectedCorrectors = connect(
+  state => ({
     dropzone: select.dropzone(state),
     drops: select.drops(state),
     corrections: select.corrections(state)
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
+  }),
+  dispatch => ({
     unlockUser: (dropId) => dispatch(actions.unlockDropUser(dropId))
-  }
+  })
+)(Correctors)
+
+export {
+  ConnectedCorrectors as Correctors
 }
-
-const ConnectedCorrectors = connect(mapStateToProps, mapDispatchToProps)(Correctors)
-
-export {ConnectedCorrectors as Correctors}

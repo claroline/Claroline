@@ -7,6 +7,63 @@
 @secondary-color:    lighten(@brand-secondary, 50%);
 @bg-color:           @body-bg;
 
+
+.liquid-gauge {
+    margin: 0 15px 10px; // todo : temp
+
+    .gauge-text,
+    .gauge-liquid-text {
+        font-weight: 900;
+    }
+}
+
+// generates variants
+.liquid-gauge-default {
+    .liquid-gauge-variant(@gray);
+}
+.liquid-gauge-primary {
+    .liquid-gauge-variant(@brand-primary);
+}
+.liquid-gauge-success {
+    .liquid-gauge-variant(@brand-success);
+}
+.liquid-gauge-warning {
+    .liquid-gauge-variant(@brand-warning);
+}
+.liquid-gauge-danger {
+    .liquid-gauge-variant(@brand-danger);
+}
+.liquid-gauge-info {
+    .liquid-gauge-variant(@brand-info);
+}
+.liquid-gauge-user {
+    .liquid-gauge-variant(@brand-secondary);
+}
+
+// mixin
+.liquid-gauge-variant(@color, @liquid-opacity: .3) {
+    .gauge-border      { fill: @color; }
+    .gauge-text        { fill: @color; }
+    .gauge-liquid      { fill: @color; fill-opacity: @liquid-opacity; }
+    .gauge-liquid-text { fill: @color; }
+}
+
+.gauge-progression {
+    .progression-value {
+        line-height: 1;
+    }
+
+    .progression-filled {
+        fill: @primary-color;
+    }
+
+    .progression-remaining {
+        fill: @secondary-color;
+    }
+}
+
+// old
+
 // classes 2 extend
 .rect-auto {
     clip: rect(auto, auto, auto, auto);

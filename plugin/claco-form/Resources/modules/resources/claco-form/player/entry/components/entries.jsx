@@ -1,15 +1,15 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
-import classes from 'classnames'
 import {PropTypes as T} from 'prop-types'
 
-import {trans, t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {DataListContainer} from '#/main/core/data/list/containers/data-list'
+import {DataCard} from '#/main/core/data/components/data-card'
 import {constants as listConstants} from '#/main/core/data/list/constants'
 import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 
@@ -101,7 +101,7 @@ class Entries extends Component {
       if (this.props.canEdit || this.props.searchEnabled || this.props.isCategoryManager) {
         columns.push({
           name: 'type',
-          label: t('type'),
+          label: trans('type'),
           displayable: false,
           displayed: false,
           type: 'enum',
@@ -113,7 +113,7 @@ class Entries extends Component {
     }
     columns.push({
       name: 'clacoForm',
-      label: t('resource'),
+      label: trans('resource'),
       displayed: false,
       displayable: false,
       filterable: true,
@@ -122,47 +122,28 @@ class Entries extends Component {
 
     columns.push({
       name: 'status',
-      label: t('published'),
+      label: trans('published'),
       displayed: true,
-      type: 'boolean',
-      renderer: (rowData) => {
-        const publishedCell = <span className={classes('fa fa-fw', {
-          'fa-check true': rowData.status === 1,
-          'fa-times false': rowData.status !== 1
-        })}/>
-
-        return publishedCell
-      }
+      type: 'boolean'
     })
     columns.push({
       name: 'locked',
-      label: t('locked'),
+      label: trans('locked'),
       displayed: false,
-      type: 'boolean',
-      renderer: (rowData) => {
-        const lockCell = <span className={classes('fa fa-fw', {
-          'fa-lock true': rowData.locked,
-          'fa-unlock false': !rowData.locked
-        })}/>
-
-        return lockCell
-      }
+      type: 'boolean'
     })
     columns.push({
       name: 'title',
-      label: t('title'),
+      label: trans('title'),
       displayed: this.isDisplayedField('title'),
-      renderer: (rowData) => {
-        const viewLink = <a href={`#/entry/${rowData.id}/view`}>{rowData.title}</a>
-
-        return viewLink
-      }
+      primary: true,
+      type: 'string'
     })
 
     if (this.canViewMetadata()) {
       columns.push({
         name: 'creationDate',
-        label: t('date'),
+        label: trans('date'),
         type: 'date',
         filterable: false,
         displayed: this.isDisplayedField('creationDateString'),
@@ -170,21 +151,19 @@ class Entries extends Component {
       })
       columns.push({
         name: 'createdAfter',
-        label: t('created_after'),
+        label: trans('created_after'),
         type: 'date',
         displayable: false
       })
       columns.push({
         name: 'createdBefore',
-        label: t('created_before'),
+        label: trans('created_before'),
         type: 'date',
         displayable: false
       })
-    }
-    if (this.canViewMetadata()) {
       columns.push({
         name: 'user',
-        label: t('user'),
+        label: trans('user'),
         displayed: this.isDisplayedField('userString'),
         renderer: (rowData) => rowData.user && this.canViewEntryMetadata(rowData) ?
           `${rowData.user.firstName} ${rowData.user.lastName}` :
@@ -194,7 +173,7 @@ class Entries extends Component {
     if (this.props.displayCategories) {
       columns.push({
         name: 'categories',
-        label: t('categories'),
+        label: trans('categories'),
         displayed: this.isDisplayedField('categoriesString'),
         renderer: (rowData) => rowData.categories ? rowData.categories.map(c => c.name).join(', ') : ''
       })
@@ -207,34 +186,24 @@ class Entries extends Component {
         renderer: (rowData) => rowData.keywords ? rowData.keywords.map(k => k.name).join(', ') : ''
       })
     }
-    this.props.fields.filter(f => !f.hidden && (!f.isMetadata || this.canViewMetadata())).forEach(f => {
-      columns.push({
-        name: `${f.id}`,
-        label: f.name,
-        type: this.getDataType(f),
-        displayed: this.isDisplayedField(`${f.id}`),
-        filterable: getFieldType(f.type).name !== 'date',
-        renderer: (rowData) => {
-          const fieldValue = rowData.fieldValues.find(fv => fv.field.id === f.id)
+    this.props.fields
+      .filter(f => !f.hidden && (!f.isMetadata || this.canViewMetadata()))
+      .map(f => {
+        columns.push({
+          name: `${f.id}`,
+          label: f.name,
+          type: this.getDataType(f),
+          displayed: this.isDisplayedField(`${f.id}`),
+          filterable: getFieldType(f.type).name !== 'date',
+          calculated: (rowData) => {
+            const fieldValue = rowData.fieldValues.find(fv => fv.field.id === f.id)
 
-          if (getFieldType(f.type).name === 'rich_text') {
-            const value = fieldValue && fieldValue.fieldFacetValue && fieldValue.fieldFacetValue.value ?
-              <span
-                className="fa fa-fw fa-exclamation-circle"
-                data-toggle="tooltip"
-                title={trans('rich_text_field_info', {}, 'clacoform')}
-              /> :
-              ''
-
-            return value
-          } else {
             return fieldValue && fieldValue.fieldFacetValue && fieldValue.fieldFacetValue.value ?
               this.formatFieldValue(rowData, f, fieldValue.fieldFacetValue.value) :
               ''
           }
-        }
+        })
       })
-    })
 
     return columns
   }
@@ -263,21 +232,21 @@ class Entries extends Component {
     }
     dataListActions.push({
       icon: 'fa fa-fw fa-pencil',
-      label: t('edit'),
+      label: trans('edit'),
       action: (rows) => this.navigateTo(`/entry/${rows[0].id}/edit`),
       displayed: (rows) => !rows[0].locked && this.canEditEntry(rows[0]),
       context: 'row'
     })
     dataListActions.push({
       icon: 'fa fa-fw fa-eye',
-      label: t('publish'),
+      label: trans('publish'),
       action: (rows) => this.props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
       displayed: (rows) => rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length &&
         rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length
     })
     dataListActions.push({
       icon: 'fa fa-fw fa-eye-slash',
-      label: t('unpublish'),
+      label: trans('unpublish'),
       action: (rows) => this.props.switchEntriesStatus(rows, constants.ENTRY_STATUS_UNPUBLISHED),
       displayed: (rows) => rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length &&
         rows.filter(e => e.status !== constants.ENTRY_STATUS_PUBLISHED).length !== rows.length
@@ -286,20 +255,20 @@ class Entries extends Component {
     if (this.props.canAdministrate) {
       dataListActions.push({
         icon: 'fa fa-w fa-lock',
-        label: t('lock'),
+        label: trans('lock'),
         action: (rows) => this.props.switchEntriesLock(rows, true),
         displayed: (rows) => rows.filter(e => e.locked).length !== rows.length
       })
       dataListActions.push({
         icon: 'fa fa-w fa-unlock',
-        label: t('unlock'),
+        label: trans('unlock'),
         action: (rows) => this.props.switchEntriesLock(rows, false),
         displayed: (rows) => rows.filter(e => !e.locked).length !== rows.length
       })
     }
     dataListActions.push({
       icon: 'fa fa-fw fa-trash',
-      label: t('delete'),
+      label: trans('delete'),
       action: (rows) => this.deleteEntry(rows[0]),
       displayed: (rows) => !rows[0].locked && this.canManageEntry(rows[0]),
       dangerous: true,
@@ -307,7 +276,7 @@ class Entries extends Component {
     })
     dataListActions.push({
       icon: 'fa fa-w fa-trash',
-      label: t('delete'),
+      label: trans('delete'),
       action: (rows) => this.deleteEntries(rows),
       displayed: (rows) => rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length,
       dangerous: true,
@@ -324,10 +293,14 @@ class Entries extends Component {
       case 'date':
         type = 'date'
         break
+      case 'file':
+        type = 'file'
+        break
       case 'number':
         type = 'number'
         break
       case 'rich_text':
+      case 'html':
         type = 'html'
         break
     }
@@ -394,7 +367,7 @@ class Entries extends Component {
           value = row.creationDate
           break
         case 'user':
-          value = row.user ? `${row.user.firstName} ${row.user.lastName}` : t('anonymous')
+          value = row.user ? `${row.user.firstName} ${row.user.lastName}` : trans('anonymous')
           break
         case 'categories':
           value = row.categories ? row.categories.map(c => c.name).join(', ') : ''
@@ -417,34 +390,37 @@ class Entries extends Component {
     return (
       <div>
         <h2>{trans('entries_list', {}, 'clacoform')}</h2>
-        <br/>
+
         {this.props.canSearchEntry ?
-          <div>
-            <DataListContainer
-              display={{
-                current: this.props.defaultDisplayMode || listConstants.DISPLAY_TABLE,
-                available: Object.keys(listConstants.DISPLAY_MODES)
-              }}
-              name="entries"
-              fetch={{
-                url: ['claro_claco_form_entries_search', {clacoForm: this.props.resourceId}],
-                autoload: true
-              }}
-              definition={this.generateColumns()}
-              filterColumns={this.props.searchColumnEnabled}
-              actions={this.generateActions()}
-              card={(row) => ({
-                onClick: `#/entry/${row.id}/view`,
-                poster: null,
-                icon: <UserAvatar picture={row.user ? row.user.picture : undefined} alt={true} />,
-                title: this.getCardValue(row, 'title'),
-                subtitle: this.getCardValue(row, 'subtitle'),
-                contentText: this.getCardValue(row, 'content')
-              })}
-            />
-          </div> :
+          <DataListContainer
+            display={{
+              current: this.props.defaultDisplayMode || listConstants.DISPLAY_TABLE,
+              available: Object.keys(listConstants.DISPLAY_MODES)
+            }}
+            name="entries"
+            open={{
+              action: (row) => `#/entry/${row.id}/view`
+            }}
+            fetch={{
+              url: ['claro_claco_form_entries_search', {clacoForm: this.props.resourceId}],
+              autoload: true
+            }}
+            definition={this.generateColumns()}
+            filterColumns={this.props.searchColumnEnabled}
+            actions={this.generateActions()}
+            card={(props) =>
+              <DataCard
+                {...props}
+                id={props.data.id}
+                icon={<UserAvatar picture={props.data.user ? props.data.user.picture : undefined} alt={true}/>}
+                title={this.getCardValue(props.data, 'title')}
+                subtitle={this.getCardValue(props.data, 'subtitle')}
+                contentText={this.getCardValue(props.data, 'content')}
+              />
+            }
+          /> :
           <div className="alert alert-danger">
-            {t('unauthorized')}
+            {trans('unauthorized')}
           </div>
         }
       </div>

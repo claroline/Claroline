@@ -1,7 +1,7 @@
 
 import {trans} from '#/main/core/translation'
 
-import {GroupCard} from '#/main/core/administration/user/group/components/group-card.jsx'
+import {GroupCard} from '#/main/core/user/data/components/group-card'
 
 function getRoles(user) {
   return user.roles.map(role => trans(role.translationKey)).join(', ')

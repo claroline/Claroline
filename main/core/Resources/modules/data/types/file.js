@@ -1,10 +1,11 @@
 import {trans} from '#/main/core/translation'
 
-import {FileGroup} from '#/main/core/layout/form/components/group/file-group.jsx'
+import {DownloadLink} from '#/main/core/layout/button/components/download-link'
+import {FileGroup} from '#/main/core/layout/form/components/group/file-group'
 
 const FILE_TYPE = 'file'
 
-// todo implement
+// todo finish implement
 
 const fileDefinition = {
   meta: {
@@ -14,8 +15,9 @@ const fileDefinition = {
     label: trans('file'),
     description: trans('file_desc')
   },
-  validate: () => {},
   components: {
+    table: DownloadLink,
+    details: DownloadLink,
     form: FileGroup
   }
 }

@@ -1,19 +1,24 @@
-{% extends "InnovaPathBundle:Path:layout.html.twig" %}
+{% extends "ClarolineCoreBundle:Resource:layout.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link rel="stylesheet" type="text/css" href="{{ themeAsset('claroline-distribution-plugin-path-path-resource.css') }}" />
+{% endblock %}
 
 {% block content %}
-    <div data-ng-cloak="" data-ng-app="PathPlayerApp" class="page-container path-container">
-        {# Path Player (convert Path Entity into a JSON object to make it understandable by AngularJS) #}
-        <path-show
-            data-path="{{ _resource | json_encode }}"
-            data-user-progression="{{ userProgression | json_encode }}"
-            data-edit-enabled="{{ editEnabled }}"
-            data-total-progression="{{ totalProgression }}">
-        </path-show>
+    <div
+        class="page-container path-container"
+        data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
+        data-path="{{ _resource | api_serialize | json_encode | raw | escape }}"
+        data-resource-types="{{ resourceTypes | json_encode | raw | escape }}"
+        data-evaluation="{{ userEvaluation | api_serialize | json_encode | raw | escape }}"
+    >
     </div>
 {% endblock %}
 
 {% block javascripts %}
     {{ parent() }}
 
-    <script src="{{ hotAsset('dist/claroline-distribution-plugin-path-player.js') }}"></script>
+    <script src="{{ hotAsset('dist/claroline-distribution-plugin-path-resource.js') }}"></script>
 {% endblock %}

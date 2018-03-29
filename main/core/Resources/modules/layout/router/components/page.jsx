@@ -19,12 +19,16 @@ implementPropTypes(RoutedPage, PageTypes, {
 })
 
 const RoutedPageContent = props =>
-  <PageContent className={props.className}>
+  <PageContent
+    headerSpacer={props.headerSpacer}
+    className={props.className}
+  >
     <Routes {...props} />
   </PageContent>
 
 RoutedPageContent.propTypes = {
   className: T.string,
+  headerSpacer: T.bool,
 
   // todo : reuse propTypes from Routes
   path: T.string,

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 
@@ -24,6 +24,7 @@ const DataPicker = props =>
       fetch={props.fetch}
       definition={props.definition}
       card={props.card}
+      display={props.display}
     />
 
     <button
@@ -32,7 +33,8 @@ const DataPicker = props =>
       onClick={() => {
         if (0 < props.selected.length) {
           props.fadeModal()
-          props.handleSelect(props.selected)
+          
+          props.handleSelect(props.onlyId ? props.selected : props.selectedFull)
           props.resetSelect()
         }
       }}
@@ -47,7 +49,9 @@ DataPicker.propTypes = {
   title: T.string,
   confirmText: T.string,
   fetch: T.object,
-  card: T.func.isRequired,
+  card: T.func, // It must be a react component.
+  onlyId: T.bool,
+  display: T.object,
 
   /**
    * Definition of the data properties.
@@ -60,18 +64,21 @@ DataPicker.propTypes = {
   fadeModal: T.func.isRequired,
   // retrieved from store
   selected: T.array.isRequired,
+  selectedFull: T.arrayOf(T.object).isRequired,
   resetSelect: T.func.isRequired
 }
 
 DataPicker.defaultProps = {
-  title: t('objects_select_title'),
-  confirmText: t('objects_select_confirm'),
-  icon: 'fa fa-fw fa-hand-pointer-o'
+  title: trans('objects_select_title'),
+  confirmText: trans('objects_select_confirm'),
+  icon: 'fa fa-fw fa-hand-pointer-o',
+  onlyId: true
 }
 
 const DataPickerModal = connect(
   (state, ownProps) => ({
-    selected: listSelect.selected(listSelect.list(state, ownProps.name))
+    selected: listSelect.selected(listSelect.list(state, ownProps.name)),
+    selectedFull: ownProps.onlyId ? [] : listSelect.selectedFull(listSelect.list(state, ownProps.name))
   }),
   (dispatch, ownProps) => ({
     resetSelect() {

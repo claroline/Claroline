@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+import {createSelector} from 'reselect'
 
 // retrieves a list instance in the store
 const list = (state, listName) => get(state, listName)
@@ -53,6 +54,11 @@ function queryString(listState) {
   return '?' + queryParams.join('&')
 }
 
+const selectedFull = createSelector(
+  [data, selected],
+  (data, selected) => data.filter(d => selected.indexOf(d.id) > -1)
+)
+
 export const select = {
   list,
   isFilterable,
@@ -68,5 +74,6 @@ export const select = {
   selected,
   currentPage,
   pageSize,
-  queryString
+  queryString,
+  selectedFull
 }

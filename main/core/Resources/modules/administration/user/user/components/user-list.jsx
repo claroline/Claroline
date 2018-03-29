@@ -1,6 +1,6 @@
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
-import {UserCard} from '#/main/core/administration/user/user/components/user-card.jsx'
+import {UserCard} from '#/main/core/user/data/components/user-card'
 
 const UserList = {
   open: {
@@ -10,50 +10,49 @@ const UserList = {
     {
       name: 'username',
       type: 'username',
-      label: t('username'),
+      label: trans('username'),
       displayed: true,
       primary: true
     }, {
       name: 'lastName',
       type: 'string',
-      label: t('last_name'),
+      label: trans('last_name'),
       displayed: true
     }, {
       name: 'firstName',
       type: 'string',
-      label: t('first_name'),
+      label: trans('first_name'),
       displayed: true
     }, {
       name: 'email',
       type: 'email',
-      label: t('email'),
+      label: trans('email'),
       displayed: true
     }, {
       name: 'administrativeCode',
       type: 'string',
-      label: t('code')
+      label: trans('code')
     }, {
       name: 'meta.personalWorkspace',
       alias: 'hasPersonalWorkspace',
       type: 'boolean',
-      label: t('has_personal_workspace')
+      label: trans('has_personal_workspace')
     }, {
       name: 'restrictions.disabled',
       alias: 'isDisabled',
       type: 'boolean',
-      label: t('user_disabled'),
+      label: trans('user_disabled'),
       displayed: true
     }, {
       name: 'meta.created',
       type: 'date',
       alias: 'created',
-      label: t('creation_date')
-    },
-    {
+      label: trans('creation_date')
+    }, {
       name: 'meta.lastLogin',
       type: 'date',
       alias: 'lastLogin',
-      label: t('last_login'),
+      label: trans('last_login'),
       displayed: true,
       options: {
         time: true

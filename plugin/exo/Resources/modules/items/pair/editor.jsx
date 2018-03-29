@@ -14,17 +14,15 @@ import {actions} from './editor'
 import {utils} from './utils/utils'
 import {PairItemDragPreview} from './pair-item-drag-preview.jsx'
 
-let DropBox = props => {
-  return props.connectDropTarget (
-     <div className={classes(
-       'pair-item-placeholder drop-placeholder placeholder-hover',
-       {hover: props.isOver}
-     )}>
-       <span className="fa fa-fw fa-share fa-rotate-90" />
-       {tex('set_drop_item')}
-     </div>
-   )
-}
+let DropBox = props => props.connectDropTarget(
+  <div className={classes(
+    'pair-item-placeholder drop-placeholder placeholder-md placeholder-hover',
+    {hover: props.isOver}
+  )}>
+    <span className="fa fa-fw fa-share fa-rotate-90" />
+    {tex('set_drop_item')}
+  </div>
+)
 
 DropBox.propTypes = {
   connectDropTarget: T.func.isRequired,
@@ -126,7 +124,7 @@ class Pair extends Component {
                   actions.updatePair(this.props.index, 'ordered', e.target.checked)
                 )}
               />
-            {tex('pair_is_ordered')}
+              {tex('pair_is_ordered')}
             </label>
           </div>
         </div>
@@ -214,7 +212,7 @@ class PairList extends Component {
               checked={this.state.pinIsAllowed}
               onChange={(e) => this.handlePinnableChange(e.target.checked)}
             />
-          {tex('pair_allow_pin_function')}
+            {tex('pair_allow_pin_function')}
           </label>
         </div>
         <hr />
@@ -369,7 +367,7 @@ let Item = props => {
           title={t('delete')}
           disabled={!props.item._deletable}
           onClick={() => props.onChange(
-             actions.removeItem(props.item.id, false)
+            actions.removeItem(props.item.id, false)
           )}
         >
           <span className="fa fa-fw fa-trash-o" />
@@ -456,7 +454,7 @@ const PairForm = (props) => {
           type="number"
           min="0"
           onChange={e => props.onChange(
-             actions.updateProperty('penalty', e.target.value)
+            actions.updateProperty('penalty', e.target.value)
           )}
         />
       </div>

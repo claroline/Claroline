@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {Routes} from '#/main/core/router'
+import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
@@ -20,7 +20,7 @@ const Resource = props =>
       }
     }}
   >
-    <Routes
+    <RoutedPageContent
       routes={[
         {
           path: '/',

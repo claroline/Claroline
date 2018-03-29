@@ -6,8 +6,7 @@ import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {actions as listActions} from '#/main/core/data/list/actions'
 
-
-import {Organization as OrganizationTypes} from '#/main/core/administration/user/organization/prop-types'
+import {Organization as OrganizationTypes} from '#/main/core/user/prop-types'
 
 export const actions = {}
 

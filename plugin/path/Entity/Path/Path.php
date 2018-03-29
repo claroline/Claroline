@@ -2,6 +2,7 @@
 
 namespace Innova\PathBundle\Entity\Path;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,6 +18,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Path extends AbstractResource implements \JsonSerializable
 {
+    use UuidTrait;
+
     /**
      * Name of the path (only for forms).
      *
@@ -58,8 +61,11 @@ class Path extends AbstractResource implements \JsonSerializable
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", indexBy="id", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"lvl" = "ASC", "order" = "ASC"})
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", cascade={"persist", "remove"})
+     * @ORM\OrderBy({
+     *     "lvl" = "ASC",
+     *     "order" = "ASC"
+     * })
      */
     protected $steps;
 
@@ -69,6 +75,15 @@ class Path extends AbstractResource implements \JsonSerializable
      * @ORM\Column(name="modified", type="boolean")
      */
     protected $modified;
+
+    /**
+     * Numbering of the steps.
+     *
+     * @var string
+     *
+     * @ORM\Column
+     */
+    protected $numbering = 'none';
 
     /**
      * Description of the path.
@@ -98,10 +113,29 @@ class Path extends AbstractResource implements \JsonSerializable
     protected $manualProgressionAllowed;
 
     /**
+     * Show overview to users or directly start the path.
+     *
+     * @ORM\Column(name="show_overview", type="boolean", options={"default" = 1})
+     *
+     * @var bool
+     */
+    private $showOverview = true;
+
+    /**
+     * Show summary.
+     *
+     * @ORM\Column(name="show_summary", type="boolean", options={"default" = 1})
+     *
+     * @var bool
+     */
+    private $showSummary = true;
+
+    /**
      * Class constructor.
      */
     public function __construct()
     {
+        $this->refreshUuid();
         $this->steps = new ArrayCollection();
         $this->modified = false;
         $this->completeBlockingCondition = true;
@@ -192,7 +226,7 @@ class Path extends AbstractResource implements \JsonSerializable
      *
      * @param bool $displayed
      *
-     * @return \Innova\PathBundle\Entity\Path\Path
+     * @return Path
      */
     public function setSummaryDisplayed($displayed)
     {
@@ -214,9 +248,9 @@ class Path extends AbstractResource implements \JsonSerializable
     /**
      * Add step.
      *
-     * @param \Innova\PathBundle\Entity\Step $step
+     * @param Step $step
      *
-     * @return \Innova\PathBundle\Entity\Path\Path
+     * @return Path
      */
     public function addStep(Step $step)
     {
@@ -232,13 +266,25 @@ class Path extends AbstractResource implements \JsonSerializable
      *
      * @param \Innova\PathBundle\Entity\Step $step
      *
-     * @return \Innova\PathBundle\Entity\Path\Path
+     * @return Path
      */
     public function removeStep(Step $step)
     {
         if ($this->steps->contains($step)) {
             $this->steps->removeElement($step);
         }
+
+        return $this;
+    }
+
+    /**
+     * Remove all steps.
+     *
+     * @return Path
+     */
+    public function emptySteps()
+    {
+        $this->steps->clear();
 
         return $this;
     }
@@ -251,6 +297,30 @@ class Path extends AbstractResource implements \JsonSerializable
     public function getSteps()
     {
         return $this->steps;
+    }
+
+    /**
+     * Get numbering.
+     *
+     * @return string
+     */
+    public function getNumbering()
+    {
+        return $this->numbering;
+    }
+
+    /**
+     * Set numbering.
+     *
+     * @param string $numbering
+     *
+     * @return Path
+     */
+    public function setNumbering($numbering)
+    {
+        $this->numbering = $numbering;
+
+        return $this;
     }
 
     /**
@@ -268,7 +338,7 @@ class Path extends AbstractResource implements \JsonSerializable
      *
      * @param string $description
      *
-     * @return \Innova\PathBundle\Entity\Path\Path
+     * @return Path
      */
     public function setDescription($description)
     {
@@ -282,7 +352,7 @@ class Path extends AbstractResource implements \JsonSerializable
      *
      * @param bool $breadcrumbs
      *
-     * @return \Innova\PathBundle\Entity\Path\AbstractPath
+     * @return Path
      */
     public function setBreadcrumbs($breadcrumbs)
     {
@@ -352,25 +422,22 @@ class Path extends AbstractResource implements \JsonSerializable
     /**
      * Get root step of the path.
      *
-     * @throws \Exception
-     *
-     * @return \Innova\PathBundle\Entity\Step
+     * @return Step[]
      */
-    public function getRootStep()
+    public function getRootSteps()
     {
-        $root = null;
+        $roots = [];
 
-        if ($this->isPublished() && !empty($this->steps)) {
+        if (!empty($this->steps)) {
             foreach ($this->steps as $step) {
                 if (null === $step->getParent()) {
                     // Root step found
-                    $root = $step;
-                    break;
+                    $roots[] = $step;
                 }
             }
         }
 
-        return $root;
+        return $roots;
     }
 
     /**
@@ -428,12 +495,7 @@ class Path extends AbstractResource implements \JsonSerializable
 
     public function jsonSerialize()
     {
-        $steps = [];
-
-        $rootStep = $this->getRootStep();
-        if (!empty($rootStep)) {
-            $steps[] = $rootStep;
-        }
+        $steps = $this->getRootSteps();
 
         return [
             'id' => $this->id,
@@ -445,5 +507,45 @@ class Path extends AbstractResource implements \JsonSerializable
             'manualProgressionAllowed' => $this->manualProgressionAllowed,
             'steps' => $steps,
         ];
+    }
+
+    /**
+     * Set show overview.
+     *
+     * @param bool $showOverview
+     */
+    public function setShowOverview($showOverview)
+    {
+        $this->showOverview = $showOverview;
+    }
+
+    /**
+     * Is overview shown ?
+     *
+     * @return bool
+     */
+    public function getShowOverview()
+    {
+        return $this->showOverview;
+    }
+
+    /**
+     * Set show summary.
+     *
+     * @param bool $showSummary
+     */
+    public function setShowSummary($showSummary)
+    {
+        $this->showSummary = $showSummary;
+    }
+
+    /**
+     * Is summary shown ?
+     *
+     * @return bool
+     */
+    public function getShowSummary()
+    {
+        return $this->showSummary;
     }
 }

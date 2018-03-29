@@ -2,9 +2,10 @@
 
 namespace Innova\PathBundle\Manager;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
-use Doctrine\Common\Persistence\ObjectManager;
+use Claroline\CoreBundle\Manager\RightsManager;
 use Innova\PathBundle\Entity\Path\Path;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -37,30 +38,39 @@ class PathManager
     private $platformConfig;
 
     /**
+     * @var RightsManager
+     */
+    protected $rightsManager;
+
+    /**
      * PathManager constructor.
      *
      * @DI\InjectParams({
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "authorization"  = @DI\Inject("security.authorization_checker"),
      *     "stepManager"    = @DI\Inject("innova_path.manager.step"),
-     *     "platformConfig" = @DI\Inject("claroline.config.platform_config_handler")
+     *     "platformConfig" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "rightsManager"  = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
      * @param ObjectManager                 $om
      * @param AuthorizationCheckerInterface $authorization
      * @param StepManager                   $stepManager
      * @param PlatformConfigurationHandler  $platformConfig
+     * @param RightsManager                 $rightsManager
      */
     public function __construct(
-        ObjectManager                 $om,
+        ObjectManager $om,
         AuthorizationCheckerInterface $authorization,
-        StepManager                   $stepManager,
-        PlatformConfigurationHandler  $platformConfig)
-    {
+        StepManager $stepManager,
+        PlatformConfigurationHandler $platformConfig,
+        RightsManager $rightsManager
+    ) {
         $this->om = $om;
         $this->authorization = $authorization;
         $this->stepManager = $stepManager;
         $this->platformConfig = $platformConfig;
+        $this->rightsManager = $rightsManager;
     }
 
     public function canEdit(Path $path)
@@ -211,5 +221,39 @@ class PathManager
             ->findByPathAndLockedStep($path);
 
         return $results;
+    }
+
+    /**
+     * Check that all resources have at least the same rights than the path.
+     *
+     * @param Path $path
+     */
+    public function updateResourcesRights(Path $path)
+    {
+        $resourceNodes = [];
+
+        foreach ($path->getSteps() as $step) {
+            $primaryResource = $step->getResource();
+
+            if ($primaryResource) {
+                $resourceNodes[$primaryResource->getGuid()] = $primaryResource;
+            }
+            foreach ($step->getSecondaryResources() as $secondaryResource) {
+                $resource = $secondaryResource->getResource();
+                $resourceNodes[$resource->getGuid()] = $resource;
+            }
+        }
+        $pathRights = $path->getResourceNode()->getRights();
+
+        $this->om->startFlushSuite();
+
+        foreach ($resourceNodes as $resourceNode) {
+            foreach ($pathRights as $rights) {
+                if ($rights->getMask() & 1) {
+                    $this->rightsManager->editPerms($rights->getMask(), $rights->getRole(), $resourceNode, true, [], true);
+                }
+            }
+        }
+        $this->om->endFlushSuite();
     }
 }

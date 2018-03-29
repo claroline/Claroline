@@ -1,7 +1,7 @@
 import {trans} from '#/main/core/translation'
 import {url} from '#/main/core/api/router'
 
-import {UserCard} from '#/main/core/administration/user/user/components/user-card.jsx'
+import {UserCard} from '#/main/core/user/data/components/user-card'
 
 function getRoles(user, workspace) {
   return user.roles.filter(role => role.workspace && role.workspace.id === workspace.uuid).map(role => trans(role.translationKey)).join(', ')

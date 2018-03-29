@@ -3,11 +3,10 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {t} from '#/main/core/translation'
-import DropdownButton from 'react-bootstrap/lib/DropdownButton'
-import MenuItem from 'react-bootstrap/lib/MenuItem'
+import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'
+import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
 
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
-import {ListSearch} from '#/main/core/data/list/components/search.jsx'
+import {ListSearch} from '#/main/core/data/list/components/search'
 import {constants} from '#/main/core/data/list/constants'
 import {DataListProperty} from '#/main/core/data/list/prop-types'
 

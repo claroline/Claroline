@@ -4,6 +4,7 @@ import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
 import {copyToClipboard} from '#/main/core/copy-text-to-clipboard'
+import {PageContent} from '#/main/core/layout/page'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
 import {select as resourceSelect} from '#/main/core/resource/selectors'
@@ -19,9 +20,9 @@ const Image = props =>
       }
     ]}
   >
-    <div className="text-center">
+    <PageContent className="text-center">
       <img src={props.url} alt={props.hashName} onContextMenu={(e)=>{checkDownload(e, props.exportable)}}/>
-    </div>
+    </PageContent>
   </ResourcePageContainer>
 
 Image.propTypes = {

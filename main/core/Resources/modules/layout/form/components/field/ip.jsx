@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
-import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {ipDefinition} from '#/main/core/data/types/ip'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
-// TODO : implement IP v6 input
+import {IPv4} from '#/main/core/scaffolding/ip'
 
 /**
  * Renders an input for a part of an IP address.
@@ -53,20 +53,20 @@ IpPartInput.propTypes = {
  */
 class Ip extends Component {
   updatePart(index, partValue) {
-    const valueParts = ipDefinition.parse(this.props.value)
+    const valueParts = IPv4.parse(this.props.value)
 
     // update part
     valueParts[index] = partValue
 
-    const newIp = ipDefinition.format(valueParts)
+    const newIp = IPv4.format(valueParts)
 
     // dispatch change to parent
     this.props.onChange(newIp)
   }
 
   render() {
-    const placeholderParts = ipDefinition.parse(this.props.placeholder)
-    const valueParts = ipDefinition.parse(this.props.value)
+    const placeholderParts = IPv4.parse(this.props.placeholder)
+    const valueParts = IPv4.parse(this.props.value)
 
     return (
       <div id={this.props.id} className="ip-control">
@@ -116,20 +116,14 @@ class Ip extends Component {
   }
 }
 
-Ip.propTypes = {
-  id: T.string.isRequired,
-  placeholder: T.string,
+implementPropTypes(Ip, FormFieldTypes, {
   value: T.string,
-  disabled: T.bool,
-  onChange: T.func.isRequired,
+  placeholder: T.string,
   size: T.string
-}
-
-Ip.defaultProps = {
-  disabled: false,
-  placeholder: '127.0.0.1',
-  value: ''
-}
+}, {
+  value: '',
+  placeholder: '127.0.0.1'
+})
 
 export {
   Ip

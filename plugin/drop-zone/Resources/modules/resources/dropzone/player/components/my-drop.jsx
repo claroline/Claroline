@@ -30,36 +30,39 @@ const Corrections = props =>
       </tr>
     </thead>
     <tbody>
-    {props.corrections.filter(c => c.finished).map((c, idx) =>
-      <tr key={`correction-row-${c.id}`}>
-        <td>
-          {c.correctionDenied &&
-            <span className="fa fa-fw fa-exclamation-triangle" />
-          }
-        </td>
-        <td>
-          <a
-            className="pointer-hand"
-            onClick={() => {
-              props.showModal('MODAL_CORRECTION', {
-                title: trans('correction_n', {number: idx + 1}, 'dropzone'),
-                correction: c,
-                dropzone: props.dropzone,
-                showDenialBox: props.dropzone.parameters.correctionDenialEnabled,
-                denyCorrection: (correctionId, comment) => props.denyCorrection(correctionId, comment)
-              })
-            }}
-          >
-            {trans('correction_n', {number: idx + 1}, 'dropzone')}
-          </a>
-        </td>
-        <td>{c.startDate}</td>
-        <td>{c.endDate}</td>
-        {props.dropzone.display.showScore &&
-          <td>{c.score} / {props.dropzone.parameters.scoreMax}</td>
-        }
-      </tr>
-    )}
+      {props.corrections
+        .filter(c => c.finished)
+        .map((c, idx) =>
+          <tr key={`correction-row-${c.id}`}>
+            <td>
+              {c.correctionDenied &&
+                <span className="fa fa-fw fa-exclamation-triangle" />
+              }
+            </td>
+            <td>
+              <a
+                className="pointer-hand"
+                onClick={() => {
+                  props.showModal('MODAL_CORRECTION', {
+                    title: trans('correction_n', {number: idx + 1}, 'dropzone'),
+                    correction: c,
+                    dropzone: props.dropzone,
+                    showDenialBox: props.dropzone.parameters.correctionDenialEnabled,
+                    denyCorrection: (correctionId, comment) => props.denyCorrection(correctionId, comment)
+                  })
+                }}
+              >
+                {trans('correction_n', {number: idx + 1}, 'dropzone')}
+              </a>
+            </td>
+            <td>{c.startDate}</td>
+            <td>{c.endDate}</td>
+            {props.dropzone.display.showScore &&
+              <td>{c.score} / {props.dropzone.parameters.scoreMax}</td>
+            }
+          </tr>
+        )
+      }
     </tbody>
   </table>
 
@@ -72,7 +75,7 @@ Corrections.propTypes = {
 
 const MyDropComponent = props =>
   <section className="resource-section drop-panel">
-    <h2 className="h-first">{trans('my_drop', {}, 'dropzone')}</h2>
+    <h2>{trans('my_drop', {}, 'dropzone')}</h2>
 
     <HtmlText>{props.dropzone.instruction}</HtmlText>
 

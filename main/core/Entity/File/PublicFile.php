@@ -134,6 +134,12 @@ class PublicFile
 
     public function setUrl($url)
     {
+        // normalize the URL
+        // we should remove \ from window envs because it requires additional
+        // escaping when used in UI.
+
+        $url = str_replace('\\', '/', $url);
+
         $this->url = $url;
     }
 

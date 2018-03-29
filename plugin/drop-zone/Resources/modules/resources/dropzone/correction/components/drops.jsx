@@ -4,16 +4,17 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 
 import {DropzoneType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
 import {constants} from '#/plugin/drop-zone/resources/dropzone/constants'
 import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 
+// TODO : restore list grid display
+
 const DropsList = props =>
   <section className="resource-section">
-    <h2 className="h-first">{trans('corrections_management', {}, 'dropzone')}</h2>
+    <h2>{trans('corrections_management', {}, 'dropzone')}</h2>
 
     <DataListContainer
       name="drops"
@@ -103,16 +104,6 @@ const DropsList = props =>
           action: (rows) => props.downloadDrops(rows)
         }
       ]}
-      card={(row) => ({
-        icon: 'fa fa-upload',
-        title: '',
-        subtitle: '',
-        footer: // todo : use score gauge in header instead
-          <ScoreBox
-            score={row.score}
-            scoreMax={props.dropzone.parameters.scoreMax}
-          />
-      })}
     />
   </section>
 

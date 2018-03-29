@@ -138,8 +138,8 @@ const DataTable = props =>
               <input
                 type="checkbox"
                 checked={0 < props.selection.current.length}
-                onChange={(val) => {
-                  val.target.checked ? props.selection.toggleAll(props.data): props.selection.toggleAll([])
+                onChange={() => {
+                  0 === props.selection.current.length ? props.selection.toggleAll(props.data): props.selection.toggleAll([])
                 }}
               />
             </TooltipElement>

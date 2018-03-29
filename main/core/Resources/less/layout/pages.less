@@ -36,14 +36,12 @@
     flex-shrink: 0;
     flex-wrap: nowrap;
 
-    margin-top: 0;
     padding: @page-header-padding;
-
-    margin-right: floor(-@grid-gutter-width / 2);
-    margin-left: floor(-@grid-gutter-width / 2);
+    margin: 0 floor(-@grid-gutter-width / 2);
     border-bottom: 1px solid @page-header-border-color;
 
     .page-title {
+        order: 1;
         margin: 0;
         margin-bottom: floor(@grid-gutter-width / 2);
         padding: 0 floor(@grid-gutter-width / 2);
@@ -52,6 +50,7 @@
             display: block; // todo this may have broken some things
             margin-top: 5px;
             font-size: 50%;
+            font-style: italic;
         }
     }
 
@@ -70,6 +69,25 @@
         margin-bottom: -40px;
         padding: 0 floor(@grid-gutter-width / 2);
     }
+
+    + .page-content-shift {
+        margin-top: @component-margin-bottom;
+    }
+}
+
+.page-header-poster {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    min-height: 300px;
+    border-bottom: none;
+
+    // use movie subtitles styles to make title always readable
+    // maybe one day add a background checker
+    .page-title,
+    .page-title > small {
+        .text-movie-subtitles();
+    }
 }
 
 .page-title {
@@ -79,6 +97,7 @@
 }
 
 .page-actions {
+    order: 2;
     margin-left: auto;
     margin-bottom: floor(@grid-gutter-width / 2);
     padding: 0 floor(@grid-gutter-width / 2);

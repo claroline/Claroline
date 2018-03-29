@@ -252,13 +252,15 @@ class UserSerializer
      */
     private function serializePicture(User $user)
     {
-        /** @var PublicFile $file */
-        $file = $this->om
-            ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
-            ->findOneBy(['url' => $user->getPicture()]);
+        if (!empty($user->getPicture())) {
+            /** @var PublicFile $file */
+            $file = $this->om
+                ->getRepository('Claroline\CoreBundle\Entity\File\PublicFile')
+                ->findOneBy(['url' => $user->getPicture()]);
 
-        if ($file) {
-            return $this->fileSerializer->serialize($file);
+            if ($file) {
+                return $this->fileSerializer->serialize($file);
+            }
         }
 
         return null;

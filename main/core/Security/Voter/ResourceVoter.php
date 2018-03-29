@@ -449,10 +449,11 @@ class ResourceVoter implements VoterInterface
             $nodes = $object instanceof AbstractResource ? [$object->getResourceNode()] : $object->getResources();
         }
 
+        /** @var ResourceNode $node */
         foreach ($nodes as $node) {
-            $data = $node->getIPData();
+            $ips = $node->getAllowedIps();
 
-            if ($data['activateFilters'] && !$this->validateIP($data['ips'], $_SERVER['REMOTE_ADDR'])) {
+            if (!empty($ips) && !$this->validateIP($ips, $_SERVER['REMOTE_ADDR'])) {
                 return false;
             }
 

@@ -10,15 +10,23 @@ const DataFormProperty = {
     /**
      * The calculated value for virtual properties.
      *
-     * @type {mixed} - The value. Type depends on the data type.
+     * @param {object} row - The full row data.
+     *
+     * @type {mixed} - The computed value. Type depends on the data type.
      */
-    calculated : T.any,
+    calculated : T.func,
 
     // form configuration
     help: T.string,
     hideLabel: T.bool,
-    displayed: T.bool,
-    disabled: T.bool,
+    displayed: T.oneOfType([
+      T.bool,
+      T.func // a function that receives the whole form data and returns the new state
+    ]),
+    disabled: T.oneOfType([
+      T.bool,
+      T.func // a function that receives the whole form data and returns the new state
+    ]),
     readOnly: T.bool,
     options: T.object,
     required: T.bool,

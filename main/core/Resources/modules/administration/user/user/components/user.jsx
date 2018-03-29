@@ -108,7 +108,7 @@ const UserForm = props =>
             name: 'restrictions.enableDates',
             type: 'boolean',
             label: t('restrict_by_dates'),
-            calculated: props.user.restrictions && 0!== props.user.restrictions.dates.length,
+            calculated: (user) => user.restrictions && 0!== user.restrictions.dates.length,
             onChange: activated => {
               if (!activated) {
                 props.updateProp('restrictions.dates', [])

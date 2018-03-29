@@ -2,8 +2,12 @@
 
 namespace Innova\PathBundle\Entity;
 
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\CoreBundle\Entity\Activity\ActivityParameters;
 use Claroline\CoreBundle\Entity\Resource\Activity;
+use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,18 +19,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Step implements \JsonSerializable
 {
-    const DEFAULT_NAME = 'Step';
-
-    /**
-     * Unique identifier of the step.
-     *
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
+    use Poster;
 
     /**
      * Activity of this step.
@@ -35,6 +30,8 @@ class Step implements \JsonSerializable
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\Activity", cascade={"persist"})
      * @ORM\JoinColumn(name="activity_id", referencedColumnName="id", onDelete="SET NULL")
+     *
+     * @deprecated
      */
     protected $activity;
 
@@ -45,6 +42,8 @@ class Step implements \JsonSerializable
      *
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Activity\ActivityParameters", cascade={"all"})
      * @ORM\JoinColumn(name="parameters_id", referencedColumnName="id", onDelete="SET NULL")
+     *
+     * @deprecated
      */
     protected $parameters;
 
@@ -53,7 +52,9 @@ class Step implements \JsonSerializable
      *
      * @var int
      *
-     * @ORM\Column(name="activity_height", type="integer")
+     * @ORM\Column(name="activity_height", type="integer", nullable=true)
+     *
+     * @deprecated
      */
     protected $activityHeight;
 
@@ -90,7 +91,7 @@ class Step implements \JsonSerializable
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Step", mappedBy="parent", indexBy="id", cascade={"persist", "remove"})
+     * @ORM\OneToMany(targetEntity="Step", mappedBy="parent", cascade={"persist", "remove"})
      * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $children;
@@ -110,6 +111,8 @@ class Step implements \JsonSerializable
      * @var \Innova\PathBundle\Entity\StepCondition
      *
      * @ORM\OneToOne(targetEntity="Innova\PathBundle\Entity\StepCondition", mappedBy="step", cascade={"persist", "remove"})
+     *
+     * @deprecated
      */
     protected $condition;
 
@@ -118,33 +121,66 @@ class Step implements \JsonSerializable
      *
      * @var \Doctrine\Common\Collections\ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\InheritedResource", mappedBy="step", indexBy="id", cascade={"persist", "remove"})
-     * @ORM\OrderBy({"lvl" = "ASC"})
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\InheritedResource", mappedBy="step", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $inheritedResources;
+
+    /**
+     * Title of the step.
+     *
+     * @var string
+     *
+     * @ORM\Column(name="title", nullable=true)
+     */
+    protected $title;
+
+    /**
+     * Description of the step.
+     *
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text", nullable=true)
+     */
+    protected $description;
+
+    /**
+     * The number of the step (either a number, a literal or a custom label).
+     *
+     * @var string
+     *
+     * @ORM\Column(nullable=true)
+     */
+    protected $numbering;
+
+    /**
+     * @var \Claroline\CoreBundle\Entity\Resource\ResourceNode
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Resource\ResourceNode")
+     * @ORM\JoinColumn(name="resource_id", nullable=true, onDelete="SET NULL")
+     */
+    protected $resource;
+
+    /**
+     * Secondary resources.
+     *
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\SecondaryResource", mappedBy="step", cascade={"persist", "remove"})
+     * @ORM\OrderBy({"order" = "ASC"})
+     */
+    protected $secondaryResources;
 
     /**
      * Class constructor.
      */
     public function __construct()
     {
+        $this->refreshUuid();
+
         $this->children = new ArrayCollection();
         $this->inheritedResources = new ArrayCollection();
-    }
-
-    public function __toString()
-    {
-        return $this->getId().' - '.$this->getName();
-    }
-
-    /**
-     * Get id.
-     *
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
+        $this->secondaryResources = new ArrayCollection();
     }
 
     /**
@@ -354,6 +390,18 @@ class Step implements \JsonSerializable
     }
 
     /**
+     * Empty a step from children.
+     *
+     * @return \Innova\PathBundle\Entity\Step
+     */
+    public function emptyChildren()
+    {
+        $this->children->clear();
+
+        return $this;
+    }
+
+    /**
      * Wrapper to access workspace of the Step.
      *
      * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
@@ -377,20 +425,6 @@ class Step implements \JsonSerializable
     {
         if (!empty($this->activity)) {
             return $this->activity->getResourceNode()->getName();
-        }
-
-        return '';
-    }
-
-    /**
-     * Wrapper to access Activity description.
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        if (!empty($this->activity) && ' ' !== $this->activity->getDescription()) {
-            return $this->activity->getDescription();
         }
 
         return '';
@@ -459,6 +493,18 @@ class Step implements \JsonSerializable
     }
 
     /**
+     * Removes all inherited resources.
+     *
+     * @return Step
+     */
+    public function emptyInheritedResources()
+    {
+        $this->inheritedResources->clear();
+
+        return $this;
+    }
+
+    /**
      * Add an inherited resource.
      *
      * @param InheritedResource $inheritedResource
@@ -469,9 +515,8 @@ class Step implements \JsonSerializable
     {
         if (!$this->inheritedResources->contains($inheritedResource)) {
             $this->inheritedResources->add($inheritedResource);
+            $inheritedResource->setStep($this);
         }
-
-        $inheritedResource->setStep($this);
 
         return $this;
     }
@@ -487,9 +532,8 @@ class Step implements \JsonSerializable
     {
         if ($this->inheritedResources->contains($inheritedResource)) {
             $this->inheritedResources->removeElement($inheritedResource);
+            $inheritedResource->setStep(null);
         }
-
-        $inheritedResource->setStep(null);
 
         return $this;
     }
@@ -745,5 +789,126 @@ class Step implements \JsonSerializable
         }
 
         return $jsonArray;
+    }
+
+    /**
+     * Get title of the step.
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * Set title.
+     *
+     * @param string $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * Get description of the step.
+     *
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    /**
+     * Set description.
+     *
+     * @param string $description
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
+    public function getNumbering()
+    {
+        return $this->numbering;
+    }
+
+    public function setNumbering($numbering)
+    {
+        $this->numbering = $numbering;
+    }
+
+    /**
+     * @return ResourceNode
+     */
+    public function getResource()
+    {
+        return $this->resource;
+    }
+
+    /**
+     * @param ResourceNode $resource
+     */
+    public function setResource(ResourceNode $resource = null)
+    {
+        $this->resource = $resource;
+    }
+
+    /**
+     * Get secondary resources.
+     *
+     * @return ArrayCollection
+     */
+    public function getSecondaryResources()
+    {
+        return $this->secondaryResources;
+    }
+
+    /**
+     * Removes all secondary resources.
+     *
+     * @return Step
+     */
+    public function emptySecondaryResources()
+    {
+        $this->secondaryResources->clear();
+
+        return $this;
+    }
+
+    /**
+     * Add a secondary resource.
+     *
+     * @param SecondaryResource $secondaryResource
+     *
+     * @return Step
+     */
+    public function addSecondaryResource(SecondaryResource $secondaryResource)
+    {
+        if (!$this->secondaryResources->contains($secondaryResource)) {
+            $this->secondaryResources->add($secondaryResource);
+            $secondaryResource->setStep($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove a secondary resource.
+     *
+     * @param SecondaryResource $secondaryResource
+     *
+     * @return Step
+     */
+    public function removeSecondaryResource(SecondaryResource $secondaryResource)
+    {
+        if ($this->secondaryResources->contains($secondaryResource)) {
+            $this->secondaryResources->removeElement($secondaryResource);
+        }
+
+        return $this;
     }
 }

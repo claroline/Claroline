@@ -38,7 +38,7 @@ const Parameters = (props) =>
             name: 'registration.url',
             type: 'url',
             label: trans('registration_url'),
-            calculated: url(['claro_user_registration', {}, true]),
+            calculated: () => url(['claro_user_registration', {}, true]),
             required: true,
             disabled: true
           }, {

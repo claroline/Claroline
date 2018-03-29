@@ -1,74 +1,12 @@
-import React from 'react'
-import {PropTypes as T} from 'prop-types'
-import classes from 'classnames'
-import {MenuItem} from 'react-bootstrap'
-
-const MenuItemAction = props => {
-  // construct action prop
-  const action = {}
-  if (typeof props.action === 'function') {
-    action.onClick = (e) => {
-      if (!props.disabled) {
-        props.action(e)
-      }
-
-      e.preventDefault()
-      e.stopPropagation()
-
-      e.target.blur()
-    }
-  } else {
-    action.href = !props.disabled ? props.action : ''
-  }
-
-  return (
-    <MenuItem
-      eventKey={props.eventKey}
-      className={classes({
-        'dropdown-link-danger': props.dangerous
-      })}
-      disabled={props.disabled}
-      onSelect={props.onSelect}
-      {...action}
-    >
-      {props.icon &&
-        <span className={props.icon} aria-hidden="true" role="presentation"/>
-      }
-      {props.label}
-    </MenuItem>
-  )
-}
-
-MenuItemAction.propTypes = {
-  /**
-   * An optional icon associated to the action
-   */
-  icon: T.string,
-
-  /**
-   * The translated name of the action.
-   */
-  label: T.string.isRequired,
-
-  /**
-   * The action to execute.
-   * Either a URL to follow or a function to call.
-   */
-  action: T.oneOfType([T.string, T.func]),
-
-  disabled: T.bool,
-  dangerous: T.bool,
-
-  // From MenuItem
-  eventKey: T.any,
-  onSelect: T.func
-}
-
-MenuItemAction.defaultProps = {
-  disabled: false,
-  dangerous: false
-}
+import Dropdown from 'react-bootstrap/lib/Dropdown'
+import DropdownButton from 'react-bootstrap/lib/DropdownButton'
+import MenuItem from 'react-bootstrap/lib/MenuItem'
 
 export {
-  MenuItemAction
+  // reexport react-bootstrap components
+  Dropdown,
+  DropdownButton,
+  MenuItem
+
+  // export custom components
 }

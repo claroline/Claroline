@@ -1,13 +1,12 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import DropdownButton from 'react-bootstrap/lib/DropdownButton'
-import MenuItem from 'react-bootstrap/lib/MenuItem'
 
 import {t} from '#/main/core/translation'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
-import {MenuItemAction} from '#/main/core/layout/components/dropdown.jsx'
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
+import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
+import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown' // todo reuse ActionDropdownButton
+import {ActionMenuItem} from '#/main/core/layout/action/components/dropdown'
+import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action'
 
 /**
  * Base component for each page actions.
@@ -114,7 +113,7 @@ const MoreAction = props => {
       <DropdownButton
         id="page-more"
         title={<span className="action-icon fa fa-ellipsis-v" />}
-        className="btn page-action-btn page-action-default"
+        className="page-action-btn page-action-default"
         noCaret={true}
         pullRight={true}
       >
@@ -123,7 +122,7 @@ const MoreAction = props => {
         }
 
         {unclassifiedActions.map((action, actionIndex) =>
-          <MenuItemAction
+          <ActionMenuItem
             key={`page-more-${actionIndex}`}
             {...action}
           />
@@ -132,7 +131,7 @@ const MoreAction = props => {
         {Object.keys(groupActions).map((group, groupIndex) => [
           <MenuItem key={`page-more-group-${groupIndex}`} header={true}>{group}</MenuItem>,
           ...groupActions[group].map((action, actionIndex) =>
-            <MenuItemAction
+            <ActionMenuItem
               key={`page-more-group-action${actionIndex}`}
               {...action}
             />
@@ -144,7 +143,7 @@ const MoreAction = props => {
         }
 
         {dangerousActions.map((action, actionIndex) =>
-          <MenuItemAction
+          <ActionMenuItem
             key={`page-more-dangerous-${actionIndex}`}
             {...action}
           />

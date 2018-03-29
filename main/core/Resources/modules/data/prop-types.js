@@ -69,25 +69,48 @@ const DataSearch = {
   defaultProps: {}
 }
 
-const DataForm = {
+/**
+ * Definition of card data.
+ *
+ * @type {object}
+ */
+const DataCard = {
   propTypes: {
-    name: T.string.isRequired,
-    type: T.string,
-    label: T.string.isRequired,
-    help: T.string,
-    hideLabel: T.bool,
-    disabled: T.bool,
-    error: T.string,
-    value: T.any,
-    onChange: T.func.isRequired
+    id: T.string.isRequired,
+    size: T.oneOf(['sm', 'lg']),
+    orientation: T.oneOf(['col', 'row']),
+    className: T.string,
+    poster: T.string,
+    icon: T.oneOfType([T.string, T.element]).isRequired,
+    title: T.string.isRequired,
+    subtitle: T.string,
+    contentText: T.string,
+    flags: T.arrayOf(
+      T.arrayOf(T.oneOfType([T.string, T.number]))
+    ),
+    primaryAction: T.shape({
+      action: T.oneOfType([T.string, T.func]).isRequired,
+      disabled: T.bool
+    }),
+    actions: T.arrayOf(T.shape({
+
+    })),
+
+    footer: T.node
   },
-  defaultProps: {}
+  defaultProps: {
+    size: 'sm',
+    orientation: 'row',
+    level: 2,
+    actions: [],
+    flags: []
+  }
 }
 
 export {
   DataProperty,
   DataCell,
   DataDetails,
-  DataForm,
+  DataCard,
   DataSearch
 }

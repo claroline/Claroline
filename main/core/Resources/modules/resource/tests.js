@@ -8,7 +8,7 @@ function resourceNodeFixture() {
     meta: {
       published: false
     },
-    parameters: {
+    display: {
       fullscreen: false
     }
   })

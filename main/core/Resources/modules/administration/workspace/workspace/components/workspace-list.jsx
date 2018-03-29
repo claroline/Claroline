@@ -1,7 +1,7 @@
 import {t} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
 
-import {WorkspaceCard} from '#/main/core/administration/workspace/workspace/components/workspace-card.jsx'
+import {WorkspaceCard} from '#/main/core/workspace/data/components/workspace-card'
 
 const WorkspaceList = {
   open: {

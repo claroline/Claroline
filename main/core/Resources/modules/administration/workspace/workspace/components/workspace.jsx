@@ -19,7 +19,7 @@ import {OrganizationList} from '#/main/core/administration/user/organization/com
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
 
 const WorkspaceForm = (props) => {
-  const roleId = props.workspace.roles !== undefined ?
+  const roleId = props.workspace.roles !== undefined && 0 !== props.workspace.roles.length ?
     props.workspace.roles.find(role => role.name.indexOf('ROLE_WS_MANAGER') > -1).id:
     null
 
@@ -54,7 +54,7 @@ const WorkspaceForm = (props) => {
               name: 'registration.url',
               type: 'url',
               label: trans('registration_url'),
-              calculated: url(['claro_workspace_subscription_url_generate', {slug: props.workspace.meta ? props.workspace.meta.slug : ''}, true]),
+              calculated: () => url(['claro_workspace_subscription_url_generate', {slug: props.workspace.meta ? props.workspace.meta.slug : ''}, true]),
               required: true,
               disabled: true,
               displayed: !props.new

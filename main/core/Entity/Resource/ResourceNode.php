@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Resource;
 
+use Claroline\AppBundle\Entity\Meta\Poster;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -30,6 +31,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ResourceNode
 {
+    use Poster;
+
     /**
      * @var string
      */
@@ -314,6 +317,8 @@ class ResourceNode
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
+     *
+     * @todo split IPS & access code into 2 props.
      */
     protected $accesses = [];
 
@@ -981,54 +986,25 @@ class ResourceNode
 
     public function setAllowedIps($ips)
     {
-        $this->accesses['ips'] = $ips;
+        $this->accesses['ip'] = [
+            'activateFilters' => !empty($ips),
+            'ips' => $ips,
+        ];
     }
 
     public function getAllowedIps()
     {
-        return $this->accesses['ips'];
-    }
-
-    public function getAccesses()
-    {
-        //todo
-        //maybe remove the code from the front end
-        if (!$this->accesses) {
-            return $this->getDefaultAccesses();
-        }
-
-        return $this->accesses;
-    }
-
-    public function setAccesses($accesses)
-    {
-        $this->accesses = $accesses;
-    }
-
-    public function getDefaultAccesses()
-    {
-        return [
-            'ip' => [
-                'ips' => [],
-                'activateFilters' => false,
-            ],
-            'code' => null,
-        ];
-    }
-
-    public function getIPData()
-    {
-        return $this->getAccesses()['ip'];
+        return isset($this->accesses['ip']) ? $this->accesses['ip']['ips'] : [];
     }
 
     public function getAccessCode()
     {
-        if (
-            !empty($this->getAccesses()['code']) &&
-            trim($this->getAccesses()['code'], ' ') !== ''
-        ) {
-            return $this->getAccesses()['code'];
-        }
+        return isset($this->accesses['code']) ? $this->accesses['code'] : null;
+    }
+
+    public function setAccessCode($code)
+    {
+        $this->accesses['code'] = $code;
     }
 
     public function getLogs()

@@ -2,7 +2,7 @@ import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
 import {DataProperty} from '#/main/core/data/prop-types'
-import {Action} from '#/main/core/layout/button/prop-types'
+import {Action} from '#/main/core/layout/action/prop-types'
 
 /**
  * Action available for data in the list.
@@ -121,7 +121,6 @@ const DataListProperty = {
  */
 const DataListView = {
   propTypes: {
-    size: T.oneOf(['sm', 'md', 'lg']).isRequired,
     data: T.arrayOf(T.object).isRequired,
     count: T.number.isRequired,
     columns: T.arrayOf(
@@ -150,42 +149,11 @@ const DataListView = {
 
     actions: T.arrayOf(
       T.shape(DataListAction.propTypes)
-    ),
-
-    /**
-     * A function to normalize data for card display.
-     * - the data row is passed as argument
-     * - the func MUST return an object respecting `DataCard.propTypes`.
-     *
-     * It's required to enable cards based display modes.
-     */
-    card: T.func.isRequired
+    )
   },
 
   defaultProps: {
     actions: []
-  }
-}
-
-/**
- * Definition of grid card data.
- *
- * @type {object}
- */
-const DataCard = {
-  propTypes: {
-    // onClick: T.oneOfType([T.string, T.func]), // either a url or a custom func to execute
-    className: T.string,
-    poster: T.string,
-    icon: T.oneOfType([T.string, T.element]).isRequired,
-    title: T.string.isRequired,
-    subtitle: T.string,
-    contentText: T.string,
-    flags: T.arrayOf(
-      T.arrayOf(T.string)
-    ),
-    footer: T.node,
-    footerLong: T.node
   }
 }
 
@@ -235,7 +203,6 @@ const DataListPagination = {
 export {
   DataListAction,
   DataListProperty,
-  DataCard,
   DataListView,
   DataListSelection,
   DataListSearch,

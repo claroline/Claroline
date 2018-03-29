@@ -306,6 +306,7 @@ class EntryView extends Component {
             displayDate(value.date) :
             value ? displayDate(value) : ''
         case 'rich_text':
+        case 'html':
           return (<div dangerouslySetInnerHTML={{ __html: value}}/>)
         case 'file':
           return (<FilesThumbnails files={value}/>)

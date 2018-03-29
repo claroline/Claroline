@@ -11,6 +11,8 @@ import {actions as listActions} from '#/main/core/data/list/actions'
 import {select as listSelect} from '#/main/core/data/list/selectors'
 import {DataList} from '#/main/core/data/list/components/data-list.jsx'
 
+// todo upgrade data list
+
 class UserView extends Component {
   constructor(props) {
     super(props)

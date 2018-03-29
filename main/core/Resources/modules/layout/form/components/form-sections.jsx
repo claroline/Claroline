@@ -35,6 +35,7 @@ const FormSections = props =>
   <Sections
     className="form-sections"
     level={props.level}
+    displayLevel={props.displayLevel}
     accordion={props.accordion}
     defaultOpened={props.defaultOpened}
   >
@@ -44,6 +45,7 @@ const FormSections = props =>
 FormSections.propTypes = {
   accordion: T.bool,
   level: T.number, // level for panel headings
+  displayLevel: T.number, // modifier for headings level (used when some headings levels are hidden in the page)
   defaultOpened: T.string,
   children: T.node.isRequired
 }

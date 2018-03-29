@@ -18,8 +18,8 @@ class PublishCommand extends AbstractPublishCommand
             ->setDescription('Publish selected paths')
 
             ->addOption('workspace', 'w', InputOption::VALUE_OPTIONAL, 'Workspace ID. Publish only Paths for this Workspace.')
-            ->addOption('path',      'p', InputOption::VALUE_OPTIONAL, 'Path ID. Publish only this Path.')
-            ->addOption('force',     'f', InputOption::VALUE_NONE,     'Force publish Paths which are not flagged to publish.')
+            ->addOption('path', 'p', InputOption::VALUE_OPTIONAL, 'Path ID. Publish only this Path.')
+            ->addOption('force', 'f', InputOption::VALUE_NONE, 'Force publish Paths which are not flagged to publish.')
         ;
     }
 

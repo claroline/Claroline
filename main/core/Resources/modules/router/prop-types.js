@@ -3,7 +3,8 @@ import {PropTypes as T} from 'prop-types'
 const Route = {
   propTypes: {
     path: T.string.isRequired,
-    component: T.any.isRequired, // todo find better typing
+    component: T.any, // todo find better typing
+    render: T.func,
     exact: T.bool,
     canEnter: T.func,
     onEnter: T.func,

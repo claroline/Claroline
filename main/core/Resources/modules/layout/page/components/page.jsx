@@ -2,6 +2,7 @@ import React from 'react'
 import get from 'lodash/get'
 import classes from 'classnames'
 
+import {asset} from '#/main/core/scaffolding/asset'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {makeModal} from '#/main/core/layout/modal'
 import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
@@ -28,9 +29,6 @@ PageWrapper.propTypes = {
  * For now, modals are managed here.
  * In future version, when the layout will be in React,
  * it'll be moved in higher level.
- *
- * @param props
- * @constructor
  */
 const Page = props =>
   <PageWrapper
@@ -40,7 +38,7 @@ const Page = props =>
       embedded: props.embedded
     })}
   >
-    {props.alerts &&
+    {props.alerts && 0 !== props.alerts.length &&
       <FlyingAlerts alerts={props.alerts} removeAlert={props.removeAlert}/>
     }
 
@@ -60,23 +58,60 @@ implementPropTypes(Page, PageTypes, {
 })
 
 /**
+ * Title of the current page.
+ */
+const PageTitle = props =>
+  <h1 className="page-title">
+    {props.title}
+    {props.subtitle &&
+      <small>{props.subtitle}</small>
+    }
+  </h1>
+
+PageTitle.propTypes = {
+  /**
+   * The title of the current page.
+   */
+  title: T.string.isRequired,
+
+  /**
+   * An optional sub title.
+   *
+   * Mostly used when the current page has sub-sections
+   * example : in quizzes, we have edit/play/papers/etc. sections
+   */
+  subtitle: T.string
+}
+
+/**
  * Header of the current page.
  *
- * Contains title and actions.
- *
- * @param props
- * @constructor
+ * Contains title, actions and an optional poster image.
  */
-const PageHeader = props =>
-  <header className={classes('page-header', props.className)}>
-    <h1 className="page-title">
-      {props.title}
-      &nbsp;
-      {props.subtitle && <small>{props.subtitle}</small>}
-    </h1>
+const PageHeader = props => {
+  let styles
+  if (props.poster) {
+    styles = {
+      backgroundImage: `url("${asset(props.poster)}")`
+    }
+  }
 
-    {props.children}
-  </header>
+  return (
+    <header
+      style={styles}
+      className={classes('page-header', props.className, {
+        'page-header-poster': !!props.poster
+      })}
+    >
+      <PageTitle
+        title={props.title}
+        subtitle={props.subtitle}
+      />
+
+      {props.children}
+    </header>
+  )
+}
 
 PageHeader.propTypes = {
   /**
@@ -92,6 +127,8 @@ PageHeader.propTypes = {
    */
   subtitle: T.string,
 
+  poster: T.string,
+
   /**
    * Additional classes to add to the header tag.
    */
@@ -105,32 +142,28 @@ PageHeader.propTypes = {
   children: T.node
 }
 
-PageHeader.defaultTypes = {
-  subtitle: null
-}
-
 /**
  * Content of the current page.
- *
- * Displays the passed content or an empty message if none provided.
- *
- * @param props
- * @constructor
  */
 const PageContent = props =>
-  <div className={classes('page-content', props.className)}>
-    {props.children ?
-      props.children :
-      <div className="placeholder">This page has no content for now.</div>
-    }
+  <div className={classes('page-content', props.className, {
+    'page-content-shift': props.headerSpacer
+  })}>
+    {props.children}
   </div>
 
 PageContent.propTypes = {
   className: T.string,
+  headerSpacer: T.bool,
+
   /**
    * Content to display in the page.
    */
-  children: T.node
+  children: T.node.isRequired
+}
+
+PageContent.defaultProps = {
+  headerSpacer: true
 }
 
 export {

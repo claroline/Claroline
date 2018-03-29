@@ -93,8 +93,8 @@ class Form extends Component {
         <FormField
           {...field}
           key={field.name}
-          value={undefined !== field.calculated ? field.calculated : get(this.props.data, field.name)}
-          disabled={this.props.disabled || field.disabled}
+          value={field.calculated ? field.calculated(this.props.data) : get(this.props.data, field.name)}
+          disabled={this.props.disabled || (typeof field.disabled === 'function' ? field.disabled(this.props.data) : field.disabled)}
           validating={this.props.validating}
           error={get(this.props.errors, field.name)}
           updateProp={this.props.updateProp}
@@ -116,7 +116,12 @@ class Form extends Component {
 
   render() {
     const hLevel = this.props.level + (this.props.title ? 1 : 0)
-    const sections = createFormDefinition(this.props.sections)
+    let hDisplay
+    if (this.props.displayLevel) {
+      hDisplay = this.props.displayLevel + (this.props.title ? 1 : 0)
+    }
+
+    const sections = createFormDefinition(this.props.sections, this.props.data)
 
     const primarySection = 1 === sections.length ? sections[0] : sections.find(section => section.primary)
     const otherSections = sections.filter(section => section !== primarySection)
@@ -125,7 +130,9 @@ class Form extends Component {
     return (
       <FormWrapper embedded={this.props.embedded} className={this.props.className}>
         {this.props.title &&
-          React.createElement('h'+this.props.level, {}, this.props.title)
+          React.createElement('h'+this.props.level, {
+            className: classes(this.props.displayLevel && `h${this.props.displayLevel}`)
+          }, this.props.title)
         }
 
         {primarySection &&
@@ -147,6 +154,7 @@ class Form extends Component {
         {0 !== otherSections.length &&
           <FormSections
             level={hLevel}
+            displayLevel={hDisplay}
             defaultOpened={openedSection ? openedSection.id : undefined}
           >
             {otherSections.map(section =>
@@ -186,6 +194,7 @@ Form.propTypes = {
    */
   embedded: T.bool,
   level: T.number,
+  displayLevel: T.number,
   title: T.string,
   data: T.object,
   errors: T.object,

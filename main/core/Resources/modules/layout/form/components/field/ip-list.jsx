@@ -1,12 +1,14 @@
 import React, {Component} from 'react'
-import {PropTypes as T} from 'prop-types'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {HelpBlock} from '#/main/core/layout/form/components/help-block.jsx'
 import {Ip} from '#/main/core/layout/form/components/field/ip.jsx'
-import {ipDefinition} from '#/main/core/data/types/ip'
+
+import {IPv4} from '#/main/core/scaffolding/ip'
 
 class IpList extends Component {
   constructor(props) {
@@ -75,16 +77,16 @@ class IpList extends Component {
 
           <TooltipButton
             id={`${this.props.id}-add-btn`}
-            title={t('add')}
+            title={trans('add')}
             className="btn-link"
-            disabled={this.props.disabled || !ipDefinition.validate(this.state.pendingIp)}
+            disabled={this.props.disabled || !IPv4.isValid(this.state.pendingIp)}
             onClick={this.addIp}
           >
             <span className="fa fa-fw fa-plus" />
           </TooltipButton>
         </div>
 
-        <HelpBlock help={t('ip_input_help')} />
+        <HelpBlock help={trans('ip_input_help')} />
 
         {0 !== this.props.value.length &&
           <button
@@ -93,7 +95,7 @@ class IpList extends Component {
             disabled={this.props.disabled}
             onClick={!this.props.disabled && this.removeAll}
           >
-            {t('delete_all')}
+            {trans('delete_all')}
           </button>
         }
 
@@ -112,7 +114,7 @@ class IpList extends Component {
 
                 <TooltipButton
                   id={`${this.props.id}-auth-${index}-delete`}
-                  title={t('delete')}
+                  title={trans('delete')}
                   className="btn-link-danger"
                   disabled={this.props.disabled}
                   onClick={() => this.removeIp(index)}
@@ -132,18 +134,13 @@ class IpList extends Component {
   }
 }
 
-IpList.propTypes = {
-  id: T.string.isRequired,
-  value: T.arrayOf(T.string).isRequired,
-  disabled: T.bool,
-  onChange: T.func.isRequired,
+implementPropTypes(IpList, FormFieldTypes, {
+  value: T.arrayOf(T.string),
   placeholder: T.string
-}
-
-IpList.defaultProps = {
-  disabled: false,
-  placeholder: t('no_ip')
-}
+}, {
+  value: [],
+  placeholder: trans('no_ip')
+})
 
 export {
   IpList

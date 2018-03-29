@@ -2,10 +2,14 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {registerModals} from '#/main/core/layout/modal'
-import {PageHeader, PageContent} from '#/main/core/layout/page'
+import {PageHeader} from '#/main/core/layout/page'
 import {RoutedPage} from '#/main/core/layout/router'
+
 import {t_res} from '#/main/core/resource/translation'
 import {ResourcePageActions} from '#/main/core/resource/components/page-actions.jsx'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
+import {ProgressionGauge} from '#/main/core/resource/evaluation/components/progression-gauge.jsx'
+import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/evaluation/prop-types'
 
 import {MODAL_RESOURCE_PROPERTIES, EditPropertiesModal} from '#/main/core/resource/components/modal/edit-properties.jsx'
 import {MODAL_RESOURCE_RIGHTS,     EditRightsModal}     from '#/main/core/resource/components/modal/edit-rights.jsx'
@@ -22,7 +26,7 @@ class ResourcePage extends Component {
 
     // open resource in fullscreen if configured
     this.state = {
-      fullscreen: this.props.resourceNode.parameters.fullscreen
+      fullscreen: this.props.resourceNode.display.fullscreen
     }
 
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
@@ -50,7 +54,16 @@ class ResourcePage extends Component {
           className="resource-header"
           title={this.props.resourceNode.name}
           subtitle={t_res(this.props.resourceNode.meta.type)}
+          poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
         >
+          {this.props.userEvaluation &&
+            <ProgressionGauge
+              userEvaluation={this.props.userEvaluation}
+              width={70}
+              height={70}
+            />
+          }
+
           <ResourcePageActions
             resourceNode={this.props.resourceNode}
             editor={this.props.editor}
@@ -63,21 +76,27 @@ class ResourcePage extends Component {
           />
         </PageHeader>
 
-        <PageContent>
-          {this.props.children}
-        </PageContent>
+        {this.props.children}
       </RoutedPage>
     )
   }
 }
 
 ResourcePage.propTypes = {
-  resourceNode: T.shape({
-    name: T.string.isRequired,
-    parameters: T.shape({
-      fullscreen: T.bool.isRequired
-    }).isRequired
-  }).isRequired,
+  /**
+   * The current resource node.
+   */
+  resourceNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ).isRequired,
+
+  /**
+   * The current user evaluation.
+   */
+  userEvaluation: T.shape(
+    UserEvaluationTypes.propTypes
+  ),
+
   customActions: T.array,
 
   /**

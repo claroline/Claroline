@@ -15,3 +15,11 @@ innova_path_widgets:
     resource: "@InnovaPathBundle/Controller/Widget/"
     type:     annotation
     prefix:   /
+
+# JSON API
+innova_path_api_new:
+    resource: "@InnovaPathBundle/Controller/APINew/"
+    prefix: apiv2
+    type: api
+    options:
+        expose: true

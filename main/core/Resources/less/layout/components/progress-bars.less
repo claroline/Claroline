@@ -1,0 +1,24 @@
+/*
+ * Progress bars styles.
+ */
+
+.progress {
+    .box-shadow(@progress-box-shadow);
+}
+
+.progress-bar {
+    .box-shadow(@progress-bar-box-shadow);
+}
+
+// creates a user progression variant
+.progress-bar-user {
+    .progress-bar-variant(@brand-secondary);
+}
+
+.progress-xs {
+    height: 4px; // todo : use var
+    border-radius: 0;
+    background-color: transparent;
+    box-shadow: none;
+    margin: 0;
+}

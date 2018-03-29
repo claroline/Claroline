@@ -6,9 +6,6 @@ plugin:
     - class: Innova\PathBundle\Entity\Path\Path
       name: innova_path
       is_exportable: true
-      actions:
-        - name:      manage_results
-          menu_name: manage_results
 
   widgets:
      - name:                        innova_path_widget

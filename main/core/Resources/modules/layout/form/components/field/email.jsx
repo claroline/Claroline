@@ -7,6 +7,7 @@ const Email = props =>
   <input
     id={props.id}
     type="email"
+    autoComplete="email"
     className="form-control"
     value={props.value || ''}
     disabled={props.disabled}

@@ -1,9 +1,13 @@
 {
+  "add": "Ajouter",
+  "copy": "Copier",
   "enable": "Activer",
   "delete": "Supprimer",
   "disable": "Désactiver",
+  "paste": "Coller",
   "publish": "Publier",
   "register": "Inscrire",
+  "replace": "Remplacer",
   "select": "Sélectionner",
   "unpublish": "Dépublier",
   "unregister": "Désinscrire",

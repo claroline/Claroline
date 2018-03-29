@@ -1,7 +1,7 @@
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
-import {GroupCard} from '#/main/core/administration/user/group/components/group-card.jsx'
+import {GroupCard} from '#/main/core/user/data/components/group-card'
 
 const GroupList = {
   open: {
@@ -11,7 +11,7 @@ const GroupList = {
     {
       name: 'name',
       type: 'string',
-      label: t('name'),
+      label: trans('name'),
       displayed: true,
       primary: true
     }

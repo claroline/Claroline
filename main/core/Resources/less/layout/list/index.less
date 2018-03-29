@@ -62,21 +62,31 @@
 }
 
 .embedded-list-variant() {
-    .data-table,
-    .data-grid {
-        margin-bottom: 0;
+    .data-list {
+        overflow: hidden; // avoid box-shadow overflow the parent modal/panel content
+    }
+
+    .data-table {
+        margin-bottom: -1px; // merge last row and footer borders
     }
 
     .data-grid {
         margin-bottom: @data-grid-gutter;
-
         .data-grid-header,
         .list-selected-label {
             margin-left: @data-grid-gutter;
         }
+    }
 
+    .data-grid-col {
         .data-grid-content {
             margin: -@data-grid-gutter 0;
+        }
+    }
+
+    .data-grid-row {
+        .data-grid-content {
+            margin: -@data-grid-gutter/2 0;
         }
     }
 

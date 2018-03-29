@@ -1,7 +1,7 @@
 import React from 'react'
 
 import {implementPropTypes} from '#/main/core/scaffolding/prop-types'
-import {Action as ActionTypes} from '#/main/core/layout/button/prop-types'
+import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 
 import {Button} from '#/main/core/layout/button/components/button.jsx'
 import {Link} from '#/main/core/layout/button/components/link.jsx'

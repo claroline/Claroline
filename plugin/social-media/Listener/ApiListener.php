@@ -17,9 +17,13 @@ class ApiListener
     private $om;
 
     /**
+     * ApiListener constructor.
+     *
      * @DI\InjectParams({
      *     "om" = @DI\Inject("claroline.persistence.object_manager")
      * })
+     *
+     * @param ObjectManager $om
      */
     public function __construct(ObjectManager $om)
     {
@@ -30,6 +34,8 @@ class ApiListener
      * Add like count to serialized resource node when requested through API.
      *
      * @DI\Observe("serialize_resource_node")
+     *
+     * @param DecorateResourceNodeEvent $event
      */
     public function onSerialize(DecorateResourceNodeEvent $event)
     {

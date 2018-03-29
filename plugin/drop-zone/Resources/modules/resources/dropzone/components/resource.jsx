@@ -7,7 +7,7 @@ import {trans} from '#/main/core/translation'
 import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as formActions} from '#/main/core/data/form/actions'
-import {Routes} from '#/main/core/router/components/router.jsx'
+import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
@@ -58,7 +58,8 @@ const Resource = props =>
       }
     ]}
   >
-    <Routes
+    <RoutedPageContent
+      headerSpacer={false}
       routes={[
         {
           path: '/',

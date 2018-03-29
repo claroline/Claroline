@@ -1,9 +1,11 @@
 import React from 'react'
-import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {Route, Switch, withRouter} from 'react-router-dom'
-import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+import {connect} from 'react-redux'
+
 import {trans} from '#/main/core/translation'
+import {RoutedPageContent} from '#/main/core/layout/router'
+import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
+
 import {actions} from '../actions'
 import {BBBContent} from './bbb-content.jsx'
 import {BBBConfig} from './bbb-config.jsx'
@@ -11,8 +13,7 @@ import {BBBConfig} from './bbb-config.jsx'
 const BBBResource = props =>
   <ResourcePageContainer
     editor={{
-      opened: '/edit' === props.location.pathname,
-      open: '#/edit',
+      path: '/edit',
       save: {
         disabled: false,
         action: props.validateForm
@@ -20,10 +21,18 @@ const BBBResource = props =>
     }}
     customActions={customActions(props)}
   >
-    <Switch>
-      <Route path="/" component={BBBContent} exact={true} />
-      <Route path="/edit" component={BBBConfig} />
-    </Switch>
+    <RoutedPageContent
+      routes={[
+        {
+          path: '/',
+          exact: true,
+          component: BBBContent
+        }, {
+          path: '/edit',
+          component: BBBConfig
+        }
+      ]}
+    />
   </ResourcePageContainer>
 
 BBBResource.propTypes = {
@@ -54,19 +63,16 @@ function customActions(props) {
   return actions
 }
 
-function mapStateToProps(state) {
-  return {
+const ConnectedBBBResource = connect(
+  state => ({
     canEdit: state.canEdit
-  }
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
+  }),
+  dispatch => ({
     validateForm: () => dispatch(actions.validateResourceForm()),
     endBBB: () => dispatch(actions.endBBB())
-  }
+  })
+)(BBBResource)
+
+export {
+  ConnectedBBBResource as BBBResource
 }
-
-const ConnectedBBBResource = withRouter(connect(mapStateToProps, mapDispatchToProps)(BBBResource))
-
-export {ConnectedBBBResource as BBBResource}

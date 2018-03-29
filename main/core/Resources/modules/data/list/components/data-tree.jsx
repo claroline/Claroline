@@ -16,9 +16,9 @@ import {
   getFilterableProps,
   isRowSelected
 } from '#/main/core/data/list/utils'
+import {DataCard as DataCardTypes} from '#/main/core/data/prop-types'
 import {
   DataListAction as DataListActionTypes,
-  DataCard as DataCardTypes,
   DataListProperty as DataListPropertyTypes,
   DataListSelection as DataListSelectionTypes,
   DataListSearch as DataListSearchTypes
@@ -32,6 +32,7 @@ import {ListHeader} from '#/main/core/data/list/components/header.jsx'
 
 // todo there are some big c/c from data-list
 // todo maybe make it a list view
+// todo reuse DataCard for display
 
 const DataTreeItemContent = props =>
   <div className={classes('data-tree-item', props.computedData.className, {

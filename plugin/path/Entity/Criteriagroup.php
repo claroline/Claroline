@@ -121,6 +121,7 @@ class Criteriagroup implements \JsonSerializable
     {
         return $this->lvl;
     }
+
     /**
      * Set parent.
      *

@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import {t} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
-import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
+import {UserCard} from '#/main/core/user/data/components/user-card'
 import {constants as listConst} from '#/main/core/data/list/constants'
 
 import {actions} from '#/main/core/contact/tool/actions'
@@ -73,11 +73,7 @@ const VisibleUsersComponent = props =>
         displayed: props.options.data.show_phone
       }
     ]}
-    card={(row) => ({
-      icon: <UserAvatar picture={row.picture} alt={true} />,
-      title: row.username,
-      subtitle: row.firstName + ' ' + row.lastName
-    })}
+    card={UserCard}
   />
 
 VisibleUsersComponent.propTypes = {

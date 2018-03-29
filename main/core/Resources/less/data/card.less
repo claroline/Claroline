@@ -1,0 +1,198 @@
+/*
+ * Data card.
+ */
+
+.data-card {
+    display: flex;
+    position: relative; // constrain actions btn
+    border: 1px solid @data-card-border;
+    color: @data-card-color;
+    background: @data-card-bg;
+    font-size: @data-card-font;
+
+    .border-radius(@data-card-border-radius);
+    .box-shadow(@data-card-box-shadow);
+
+    // item actions dropdown
+    // (I can not add a better selector because of `react-bootstrap`)
+    > .dropdown {
+        position: absolute;
+        top: -1px; // absorb btn border
+        right: -1px; // absorb btn border
+
+        .btn {
+            padding: @data-grid-gutter;
+        }
+
+        &.open {
+            .btn {
+                position: relative;
+                background: #eee;
+                border-color: @dropdown-border;
+                border-bottom-color: @dropdown-bg;
+                box-shadow: @dropdown-menu-box-shadow;
+                background-clip: padding-box;
+            }
+        }
+
+        .dropdown-menu {
+            margin-top: -1px;
+        }
+    }
+}
+
+.data-card-header {
+    position: relative; // constrain flags
+    text-align: center;
+    background: @data-card-header-bg;
+
+    .border-radius(@data-card-border-radius @data-card-border-radius 0 0);
+}
+
+.data-card-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    //margin: 30px;
+    background: rgba(255, 255, 255, .6);
+    border-radius: 50%;
+    line-height: 0;
+
+    // for FA icons
+    color: rgba(0, 0, 0, 0.5) !important;
+
+    // for SVG icons
+    fill: rgba(0, 0, 0, 0.5) !important;
+    stroke: rgba(0, 0, 0, 0.5) !important;
+}
+
+.data-card-flags {
+    cursor: help;
+    position: absolute;
+    bottom: @data-grid-gutter;
+    right: @data-grid-gutter;
+
+    .data-card-flag + .data-card-flag {
+        margin-left: floor(@data-grid-gutter / 2);
+    }
+}
+
+.data-card-title {
+    margin: @data-card-padding;
+    padding: 0;
+    font-size: @data-card-font;
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    > small {
+        margin-top: 5px;
+        display: block;
+    }
+}
+
+.data-card-content {
+    color: @data-card-color; // reset color when card is clickable (uses a <a> tag)
+    display: flex;
+    flex-direction: column;
+
+    .border-radius(0 0 @data-card-border-radius @data-card-border-radius);
+}
+
+.data-card-description {
+    margin-bottom: @data-card-padding;
+    font-size: @data-card-content-font;
+    line-height: @line-height-base;
+    text-align: justify;
+    padding: 0 @data-card-padding;
+    max-height: @line-height-base * 5em;
+    overflow: hidden;
+}
+
+.data-card-footer {
+    margin-top: auto; // ensure footer is always at the bottom
+    font-size: @data-card-content-font;
+    text-align: right;
+    padding: 0 @data-card-padding @data-card-padding;
+    color: @data-card-color-muted;
+    font-style: italic;
+}
+
+
+// -
+// Sizing variants
+// ---
+
+.data-card-sm {
+    .data-card-size-variant(@data-card-icon-sm-size, @data-card-title-sm-font, 10px);
+}
+.data-card-lg {
+    .data-card-size-variant(@data-card-icon-lg-size, @data-card-title-lg-font, 30px);
+}
+
+// mixins
+.data-card-size-variant(@icon-size, @title-size, @icon-spacer) {
+    .data-card-header {
+        min-height: @icon-size + @icon-spacer*2; // icon margin + height
+    }
+
+    .data-card-icon {
+        font-size: floor(@icon-size / 2); // for FA icons
+        width: @icon-size;
+        height: @icon-size;
+        margin: @icon-spacer;
+
+        img.icon {
+            max-width: floor(@icon-size / 2);
+            max-height: floor(@icon-size / 2);
+        }
+    }
+
+    .data-card-title {
+        font-size: @title-size;
+    }
+}
+
+
+// -
+// Orientation variants
+// ---
+
+.data-card-col {
+    .data-card-vertical-variant();
+}
+.data-card-row {
+    .data-card-horizontal-variant();
+}
+
+// mixins
+.data-card-vertical-variant() {
+    flex-direction: column;
+
+    .data-card-header {
+        border-bottom: 1px solid @data-card-inner-border;
+    }
+
+    .data-card-content {
+        flex: 1 0 auto;
+    }
+
+    .data-card-description {
+        margin-left: @data-card-padding;
+        margin-right: @data-card-padding;
+    }
+}
+
+.data-card-horizontal-variant() {
+    width: 100%; // fill container
+    flex-direction: row;
+
+    .data-card-header {
+        min-width: 40%;
+        border-right: 1px solid @data-card-inner-border;
+    }
+
+    .data-card-content {
+        flex: 1 0 0;
+    }
+}

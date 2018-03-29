@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
 
-import {Routes} from '#/main/core/router'
+import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
 import {Announces} from './announces.jsx'
@@ -37,7 +37,7 @@ const Resource = props =>
       }
     ]}
   >
-    <Routes
+    <RoutedPageContent
       routes={[
         {
           path: '/',

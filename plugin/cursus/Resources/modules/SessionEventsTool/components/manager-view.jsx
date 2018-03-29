@@ -1,7 +1,7 @@
 import {connect} from 'react-redux'
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
-import moment from 'moment'
+
 import {trans, t} from '#/main/core/translation'
 import {makeModal, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {selectors} from '../selectors'
@@ -10,6 +10,8 @@ import {registrationTypes} from '../enums'
 import {actions as listActions} from '#/main/core/data/list/actions'
 import {select as listSelect} from '#/main/core/data/list/selectors'
 import {DataList} from '#/main/core/data/list/components/data-list.jsx'
+
+// todo upgrade data list
 
 class ManagerView extends Component {
   constructor(props) {
@@ -159,33 +161,42 @@ class ManagerView extends Component {
           <DataList
             data={this.props.events}
             totalResults={this.props.total}
+            primaryAction={{
+              action: (rowData) => `#event/${rowData.id}`
+            }}
             definition={[
               {
                 name: 'name',
                 type: 'string',
                 label: t('name'),
-                renderer: (rowData) => <a href={`#event/${rowData.id}`}>{rowData.name}</a>
-              },
-              {
+                primary: true,
+                displayed: true
+              }, {
                 name: 'startDate',
                 type: 'date',
                 label: t('start_date'),
-                renderer: (rowData) => moment(rowData.startDate).format('DD/MM/YYYY HH:mm')
-              },
-              {
+                displayed: true,
+                options: {
+                  time: true
+                }
+              }, {
                 name: 'endDate',
                 type: 'date',
                 label: t('end_date'),
-                renderer: (rowData) => moment(rowData.endDate).format('DD/MM/YYYY HH:mm')
-              },
-              {name: 'maxUsers', type: 'number', label: trans('max_users', {}, 'cursus')},
-              {
+                displayed: true,
+                options: {
+                  time: true
+                }
+              }, {
+                name: 'maxUsers',
+                type: 'number',
+                label: trans('max_users', {}, 'cursus')
+              },  {
                 name: 'registrationType',
                 type: 'number',
                 label: t('registration'),
                 renderer: (rowData) => registrationTypes[rowData.registrationType]
-              },
-              {
+              }, {
                 name: 'eventSet',
                 type: 'string',
                 label: t('group'),
@@ -201,18 +212,15 @@ class ManagerView extends Component {
                 icon: 'fa fa-fw fa-edit',
                 label: t('edit'),
                 action: (row) => this.showEventEditionForm(row)
-              },
-              {
+              }, {
                 icon: 'fa fa-fw fa-info',
                 label: trans('informations_management', {}, 'cursus'),
                 action: (row) => this.showEventCommentsManagement(row)
-              },
-              {
+              }, {
                 icon: 'fa fa-fw fa-files-o',
                 label: trans('repeat_session_event', {}, 'cursus'),
                 action: (row) => this.showEventRepeatForm(row)
-              },
-              {
+              }, {
                 icon: 'fa fa-fw fa-trash-o',
                 label: t('delete'),
                 action: (row) => this.deleteSessionEvent(row),

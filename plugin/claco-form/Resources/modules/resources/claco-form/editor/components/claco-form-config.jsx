@@ -510,9 +510,9 @@ function makePanel(Section, title, key, props, withCategories = false, withField
 
   const Header =
     <div className="editor-panel-title"
-         onClick={() => props.updateParameters('activePanelKey', keyValue)}
+      onClick={() => props.updateParameters('activePanelKey', keyValue)}
     >
-      <span className={classes('fa fa-fw', caretIcon)}/>
+      <span className={classes('fa fa-fw', caretIcon)} />
       &nbsp;{title}
     </div>
 
@@ -587,7 +587,7 @@ class ClacoFormConfig extends Component {
   render() {
     return (
       <div>
-        <h2 className="h-first">
+        <h2>
           {trans('general_configuration', {}, 'clacoform')}
         </h2>
         {this.props.canEdit ?
@@ -661,7 +661,6 @@ ClacoFormConfig.propTypes = {
   roles: T.array,
   initializeParameters: T.func.isRequired,
   updateParameters: T.func.isRequired,
-  deleteAllEntries: T.func.isRequired,
   showModal: T.func.isRequired
 }
 
@@ -679,7 +678,6 @@ function mapDispatchToProps(dispatch) {
   return {
     initializeParameters: () => dispatch(actions.initializeParameters()),
     updateParameters: (property, value) => dispatch(actions.updateParameters(property, value)),
-    deleteAllEntries: () => dispatch(actions.deleteAllEntries()),
     showModal: (type, props) => dispatch(modalActions.showModal(type, props))
   }
 }
