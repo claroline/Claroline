@@ -76,4 +76,7 @@ final class Options
     const TEMPORARY_FILE = 'temporary_file';
     const PUBLIC_FILE = 'public_file';
     const PRIVATE_FILE = 'private_file';
+
+    //for resource node
+    const SKIP_RESOURCE_NOTIFICATION = 'skip_resource_notification';
 }

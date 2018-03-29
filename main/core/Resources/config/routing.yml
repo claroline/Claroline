@@ -179,11 +179,6 @@ claro_tool_resoure_manager:
     prefix: resource
     type: annotation
 
-claro_text:
-    resource: "@ClarolineCoreBundle/Controller/TextController.php"
-    prefix: text
-    type: annotation
-
 claro_widget:
     resource: "@ClarolineCoreBundle/Controller/Widget"
     prefix: widget

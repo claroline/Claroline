@@ -11,14 +11,20 @@
 
 namespace Claroline\CoreBundle\Controller\APINew\Resource;
 
+use Claroline\AppBundle\Annotations\ApiMeta;
+use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\CoreBundle\Entity\Resource\Text;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * @EXT\Route("resource/text")
+ * @ApiMeta(
+ *     class="Claroline\CoreBundle\Entity\Resource\Text",
+ *     ignore={"create", "exist", "list", "copyBulk", "deleteBulk", "schema", "find", "get"}
+ * )
+ * @EXT\Route("resource_text")
  */
-class TextController
+class TextController extends AbstractCrudController
 {
     /**
      * @EXT\Route(
@@ -35,5 +41,10 @@ class TextController
         return new Response(
             $text->getContent()
         );
+    }
+
+    public function getName()
+    {
+        return 'resource_text';
     }
 }

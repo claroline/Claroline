@@ -7,10 +7,10 @@
 
 namespace Icap\NotificationBundle\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
 class FollowerResourceController extends Controller
@@ -32,18 +32,19 @@ class FollowerResourceController extends Controller
             $hasActiveNotifications = true;
         }
 
-        return array(
+        return [
             'hasActiveNotifications' => $hasActiveNotifications,
             'resourceId' => $resourceId,
             'resourceClass' => base64_encode($resourceClass),
             'userId' => $user->getId(),
-        );
+        ];
     }
 
     /**
      * @Route(
-     * "/enableResourceNotification/{resourceId}/{resourceClass}",
-     * name="icap_notification_resource_enable"
+     *     "/enableResourceNotification/{resourceId}/{resourceClass}",
+     *     name="icap_notification_resource_enable",
+     *     options={"expose"=true}
      * )
      * @Template()
      * @ParamConverter("user", options={"authenticatedUser" = true})
@@ -58,8 +59,9 @@ class FollowerResourceController extends Controller
 
     /**
      * @Route(
-     * "/disableResourceNotification/{resourceId}/{resourceClass}",
-     * name="icap_notification_resource_disable"
+     *     "/disableResourceNotification/{resourceId}/{resourceClass}",
+     *     name="icap_notification_resource_disable",
+     *     options={"expose"=true}
      * )
      * @Template()
      * @ParamConverter("user", options={"authenticatedUser" = true})

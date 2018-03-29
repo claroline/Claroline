@@ -19,7 +19,6 @@ use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Form\TextType;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
@@ -154,16 +153,11 @@ class TextListener implements ContainerAwareInterface
     public function onOpen(OpenResourceEvent $event)
     {
         $text = $event->getResource();
-        $collection = new ResourceCollection([$text->getResourceNode()]);
-        $isGranted = $this->container->get('security.authorization_checker')->isGranted('EDIT', $collection);
-        $revisionRepo = $this->container->get('doctrine.orm.entity_manager')
-            ->getRepository('ClarolineCoreBundle:Resource\Revision');
         $content = $this->container->get('templating')->render(
             'ClarolineCoreBundle:Text:index.html.twig',
             [
-                'text' => $revisionRepo->getLastRevision($text)->getContent(),
+                'text' => $text,
                 '_resource' => $text,
-                'isEditGranted' => $isGranted,
             ]
         );
         $response = new Response($content);

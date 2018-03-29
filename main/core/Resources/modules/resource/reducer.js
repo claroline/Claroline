@@ -8,7 +8,8 @@ import {reducer as evaluationReducer} from '#/main/core/resource/evaluation/redu
 
 import {
   RESOURCE_UPDATE_PUBLICATION,
-  RESOURCE_UPDATE_NODE
+  RESOURCE_UPDATE_NODE,
+  RESOURCE_UPDATE_NOTIFICATIONS
 } from './actions'
 
 const reducer = makeReducer({}, {
@@ -27,7 +28,16 @@ const reducer = makeReducer({}, {
    * @param {object} state  - the current node data.
    * @param {object} action - the action. New node data is stored in `resourceNode`
    */
-  [RESOURCE_UPDATE_NODE]: (state, action) => merge({}, state, action.resourceNode)
+  [RESOURCE_UPDATE_NODE]: (state, action) => merge({}, state, action.resourceNode),
+
+  /**
+   * Toggles the notifications status of a ResourceNode.
+   */
+  [RESOURCE_UPDATE_NOTIFICATIONS]: (state) => merge({}, state, {
+    notifications: {
+      enabled: !state.notifications.enabled
+    }
+  })
 })
 
 /**

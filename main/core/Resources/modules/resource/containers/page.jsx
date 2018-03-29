@@ -30,6 +30,9 @@ const ResourcePageContainer = connectPage(
     },
     togglePublication(resourceNode) {
       dispatch(resourceActions.togglePublication(resourceNode))
+    },
+    toggleNotifications(resourceNode) {
+      dispatch(resourceActions.toggleNotifications(resourceNode))
     }
   })
 )(ResourcePage)

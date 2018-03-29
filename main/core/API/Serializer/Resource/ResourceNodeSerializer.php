@@ -109,10 +109,11 @@ class ResourceNodeSerializer
      * Serializes a ResourceNode entity for the JSON api.
      *
      * @param ResourceNode $resourceNode - the node to serialize
+     * @param array        $options
      *
      * @return array - the serialized representation of the node
      */
-    public function serialize(ResourceNode $resourceNode)
+    public function serialize(ResourceNode $resourceNode, array $options = [])
     {
         $serializedNode = [
             'id' => $resourceNode->getGuid(),
@@ -143,7 +144,7 @@ class ResourceNodeSerializer
             $serializedNode['rights']['all'] = $this->getRights($resourceNode);
         }
 
-        return $this->decorate($resourceNode, $serializedNode);
+        return $this->decorate($resourceNode, $serializedNode, $options);
     }
 
     /**
@@ -152,10 +153,11 @@ class ResourceNodeSerializer
      *
      * @param ResourceNode $resourceNode   - the original node entity
      * @param array        $serializedNode - the serialized version of the node
+     * @param array        $options
      *
      * @return array - the decorated node
      */
-    private function decorate(ResourceNode $resourceNode, array $serializedNode)
+    private function decorate(ResourceNode $resourceNode, array $serializedNode, array $options = [])
     {
         $unauthorizedKeys = array_keys($serializedNode);
 
@@ -171,6 +173,7 @@ class ResourceNodeSerializer
             [
                 $resourceNode,
                 $unauthorizedKeys,
+                $options,
             ]
         );
 
@@ -220,6 +223,7 @@ class ResourceNodeSerializer
             'actions' => $this->getActions($resourceNode),
             'views' => $resourceNode->getViewsCount(),
             'icon' => $resourceNode->getIcon() ? '/'.$resourceNode->getIcon()->getRelativeUrl() : null,
+            'class' => $resourceNode->getClass(),
             'parent' => $resourceNode->getParent() ? [
                 'id' => $resourceNode->getParent()->getGuid(),
                 'name' => $resourceNode->getParent()->getName(),

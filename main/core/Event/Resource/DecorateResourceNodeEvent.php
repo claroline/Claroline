@@ -46,17 +46,27 @@ class DecorateResourceNodeEvent extends Event
     private $injectedData = [];
 
     /**
+     * A list of additional options.
+     *
+     * @var array
+     */
+    private $options = [];
+
+    /**
      * DecorateResourceNodeEvent constructor.
      *
      * @param ResourceNode $resourceNode     - the resource node being serialized
      * @param array        $unauthorizedKeys
+     * @param array        $options
      */
     public function __construct(
         ResourceNode $resourceNode,
-        array $unauthorizedKeys = [])
+        array $unauthorizedKeys = [],
+        array $options = [])
     {
         $this->resourceNode = $resourceNode;
         $this->unauthorizedKeys = $unauthorizedKeys;
+        $this->options = $options;
     }
 
     /**
@@ -77,6 +87,16 @@ class DecorateResourceNodeEvent extends Event
     public function getInjectedData()
     {
         return $this->injectedData;
+    }
+
+    /**
+     * Gets the list of options.
+     *
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
     /**
