@@ -46,7 +46,6 @@
 - werkint/jsmin
 - natxet/CssMin : minification des CSS / sera remplacé par un gestionnaire de tâche JS (Gulp, Grunt)
 - white-october/pagerfanta-bundle : système de pagination 
-- stfalcon/tinymce-bundle
 - jms/twig-js-bundle
 - symfony/assetic-bundle
 - twig/extensions

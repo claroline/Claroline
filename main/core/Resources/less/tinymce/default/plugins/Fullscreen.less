@@ -1,0 +1,20 @@
+
+.@{prefix}-i-fullscreen:before { content: @fa-var-expand; }
+
+.@{prefix}-fullscreen {
+    // overlaps claroline top bar
+    &.@{prefix}-container {
+        z-index: (@zindex-navbar-fixed + 1) !important;
+    }
+
+    // fixes Fullscreen mode when TinyMCE is embed inside a Bootstrap modal.
+    // todo : find a way to avoid blinking. it's getting the full modal height, then the full page
+    .modal-dialog {
+        -webkit-transform: none !important;
+        -ms-transform: none !important;
+        -o-transform: none !important;
+        transform: none !important;
+    }
+
+    .@{prefix}-i-fullscreen:before { content: @fa-var-compress; }
+}

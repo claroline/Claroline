@@ -68,7 +68,7 @@ $(document).ready(function () {
         event.preventDefault();
 
         $('.disabled-during-edition').attr('disabled', 'disabled');
-        tinyMCE.get('icap_dropzone_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
+        tinymce.get('icap_dropzone_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
         //$('.icap_dropzone_criteria_form_correctionInstruction').attr('disabled','disabled');
         $('.criteria-form-button').attr('disabled', 'disabled');
 
@@ -99,7 +99,6 @@ $(document).ready(function () {
                         $('.new-criteria-zone > .template-criteria-zone .form-buttons').hide();
 
                         $('.add-remove-column').show();
-                        initTinyMCE(stfalcon_tinymce_config);
 
                         var top = $('#new-criteria').offset().top;
                         top = top - 50;

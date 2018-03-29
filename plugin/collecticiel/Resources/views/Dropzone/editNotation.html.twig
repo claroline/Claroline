@@ -94,7 +94,7 @@
                 </div>
             </div>
         </div>
-
+    </form>
     {% endblock %}
 
     {% block stylesheets %}
@@ -105,9 +105,6 @@
     {% block javascripts %}
         {{ parent() }}
 
-        {{ tinymce_init() }}
-        <script>
-        </script>
         <script src="{{ asset('bundles/innovacollecticiel/js/editNotationForm.js') }}"></script>
 
     {% endblock %}

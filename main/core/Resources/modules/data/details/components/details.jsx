@@ -27,18 +27,16 @@ const DataDetailsField = props => {
           <span className="data-details-empty">{t('empty_value')}</span>
         }
 
-        {props.data &&
-          (typeDef.components.details ?
-            React.createElement(typeDef.components.details, merge({}, props.options, {
-              id: props.name,
-              label: props.label,
-              hideLabel: props.hideLabel,
-              data: props.data
-            }))
-            :
-            typeDef.render ? typeDef.render(props.data, props.options || {}) : props.data
-          )
-        }
+        {props.data && (typeDef.components.details ?
+          React.createElement(typeDef.components.details, merge({}, props.options, {
+            id: props.name,
+            label: props.label,
+            hideLabel: props.hideLabel,
+            data: props.data
+          }))
+          :
+          typeDef.render ? typeDef.render(props.data, props.options || {}) : props.data
+        )}
       </div>
     </div>
   )
@@ -57,14 +55,14 @@ DataDetailsField.propTypes = {
 const DataDetails = props => {
   const sections = createDetailsDefinition(props.sections)
 
-  const primarySection = 1 === sections.length ? sections[0] : sections.find(section => section.primary)
-  const otherSections = sections.filter(section => section !== primarySection)
+  const primarySections = 1 === sections.length ? [sections[0]] : sections.filter(section => section.primary)
+  const otherSections = 1 !== sections.length ? sections.filter(section => !section.primary) : []
   const openedSection = otherSections.find(section => section.defaultOpened)
 
   return (
     <div className={classes('data-details', props.className)}>
-      {primarySection &&
-        <div className="panel panel-default">
+      {primarySections.map(primarySection =>
+        <div key={primarySection.id} className="panel panel-default">
           <div className="panel-body">
             {primarySection.fields.map(field =>
               <DataDetailsField
@@ -75,7 +73,7 @@ const DataDetails = props => {
             )}
           </div>
         </div>
-      }
+      )}
 
       {0 !== otherSections.length &&
         <Sections

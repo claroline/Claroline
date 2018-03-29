@@ -3,7 +3,7 @@ $('#add-criterion-button-innova2').on('click', function(event) {
     event.preventDefault();
 
     $('.disabled-during-edition').attr('disabled', 'disabled');
-    tinyMCE.get('innova_collecticiel_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
+    tinymce.get('innova_collecticiel_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
     //$('.icap_dropzone_criteria_form_correctionInstruction').attr('disabled','disabled');
     $('.criteria-form-button').attr('disabled', 'disabled');
 
@@ -34,7 +34,6 @@ $('#add-criterion-button-innova2').on('click', function(event) {
                     $('.new-criteria-zone > .template-criteria-zone .form-buttons').hide();
 
                     $('.add-remove-column').show();
-                    initTinyMCE(stfalcon_tinymce_config);
 
                     var top = $('#new-criteria').offset().top;
                     top = top - 50;
@@ -871,7 +870,7 @@ $(document).ready(function() {
         }
 
         // Textarea
-        var doc = tinyMCE.get('innova_collecticiel_document_file_form_document').getContent();
+        var doc = tinymce.get('innova_collecticiel_document_file_form_document').getContent();
         var translation_doc_id = document.getElementById('translation_doc_id').value;
 
         if (doc.length == 0) {

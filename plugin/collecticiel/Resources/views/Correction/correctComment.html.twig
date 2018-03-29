@@ -95,9 +95,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {{ tinymce_init() }}
     <script>
-        tinymce.claroline.configuration.toolbar1 = 'bold italic strikethrough | alignleft aligncenter alignright alignjustify | ';
         $(document).on('ready', function () {
             $('#innova_collecticiel_correct_comment_form_goBack').val(0);
             $('.back-button').on('click', function (event) {

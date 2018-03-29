@@ -31,7 +31,10 @@ function getDetailsDefaultSection() {
       }, {
         name: 'meta.description',
         type: 'html',
-        label: t('description')
+        label: t('description'),
+        options: {
+          minRows: 5
+        }
       }
     ]
   }
@@ -73,7 +76,10 @@ function getFormDefaultSection(userData, isNew = false) {
       }, {
         name: 'meta.description',
         type: 'html',
-        label: t('description')
+        label: t('description'),
+        options: {
+          minRows: 5
+        }
       }, {
         name: 'picture',
         type: 'image',

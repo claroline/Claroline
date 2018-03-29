@@ -27,10 +27,15 @@ class PlatformConfigurationHandler
     private $lockedParameters;
 
     /**
+     * PlatformConfigurationHandler constructor.
+     *
      * @DI\InjectParams({
      *     "configFile"       = @DI\Inject("%claroline.param.platform_options_file%"),
      *     "lockedConfigFile" = @DI\Inject("%claroline.param.locked_platform_options_file%")
      * })
+     *
+     * @param string $configFile
+     * @param string $lockedConfigFile
      */
     public function __construct($configFile, $lockedConfigFile)
     {
@@ -60,6 +65,8 @@ class PlatformConfigurationHandler
         if ($this->hasParameter($parameter)) {
             return $this->parameters[$parameter];
         }
+
+        return null;
     }
 
     public function getParameters()
@@ -116,7 +123,7 @@ class PlatformConfigurationHandler
         $newDefault = $config->getDefaultParameters();
         $newDefaultClass = get_class($config);
 
-        //check if the parameter already exists to avoid overiding stuff by mistake
+        //check if the parameter already exists to avoid overriding stuff by mistake
         foreach ($this->defaultConfigs as $defaultConfig) {
             $duplicates = array_intersect_key($defaultConfig, $newDefault);
 
@@ -174,7 +181,7 @@ class PlatformConfigurationHandler
         }
     }
 
-    public function getLockedParamaters()
+    public function getLockedParameters()
     {
         return $this->lockedParameters;
     }

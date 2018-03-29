@@ -15,16 +15,24 @@
 }
 
 .box-shadow(@shadow) when (@enable-box-shadow = true) {
+    -webkit-box-shadow: @shadow;
+    -moz-box-shadow: @shadow;
     box-shadow: @shadow;
 }
 .box-shadow(@shadow) when (@enable-box-shadow = false) {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
     box-shadow: none;
 }
 
 .border-radius(@border-radius) when (@enable-border-radius = true) {
+    -webkit-border-radius: @border-radius;
+    -moz-border-radius: @border-radius;
     border-radius: @border-radius;
 }
 .border-radius(@border-radius) when (@enable-border-radius = false) {
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
     border-radius: 0;
 }
 
@@ -36,6 +44,12 @@
     border: none;
 }
 
+.opacity(@opacity) {
+    opacity: @opacity;
+    @opacityie: @opacity * 100;
+    filter: ~"alpha(opacity=@{opacityie})";
+    zoom: 1;
+}
 
 // -
 // Typography

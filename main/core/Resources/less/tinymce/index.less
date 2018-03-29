@@ -1,0 +1,90 @@
+
+@import "default/Skin";
+@import "default/Content"; // TODO : find a way to also have Inline styles
+
+@import "default/plugins/AdvancedToolbar";
+@import "default/plugins/FileUpload";
+@import "default/plugins/Fullscreen";
+@import "default/plugins/Mentions";
+@import "default/plugins/ResourcePicker";
+
+// make some overrides for Claroline Integration
+// mimic FontAwesome icons
+.mce-ico {
+    display: inline-block;
+    font: normal normal normal @fa-font-size-base/@fa-line-height-base FontAwesome; // shortening font declaration
+    font-size: inherit; // can't have font-size inherit on line above, so need to override
+    text-rendering: auto; // optimizelegibility throws things off #1094
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-shadow: none !important;
+    vertical-align: middle;
+
+    // mimic fa-fw
+    width: (18em / 14);
+    text-align: center;
+
+    &.mce-i-remove:before         { content: @fa-var-times; }
+    &.mce-i-insert:before         { content: @fa-var-plus; }
+    &.mce-i-save:before           { content: @fa-var-floppy-o; }
+    &.mce-i-newdocument:before    { content: "\f15b"; }
+    &.mce-i-alignleft:before      { content: "\f036"; }
+    &.mce-i-aligncenter:before    { content: "\f037"; }
+    &.mce-i-alignright:before     { content: "\f038"; }
+    &.mce-i-alignjustify:before   { content: "\f039"; }
+    &.mce-i-cut:before            { content: "\f0c4"; }
+    &.mce-i-searchreplace:before  { content: "\f002"; }
+    &.mce-i-bullist:before        { content: "\f0ca"; }
+    &.mce-i-numlist:before        { content: "\f0cb"; }
+    &.mce-i-indent:before         { content: @fa-var-indent; }
+    &.mce-i-outdent:before        { content: @fa-var-outdent; }
+    &.mce-i-blockquote:before     { content: @fa-var-quote-left; }
+    &.mce-i-undo:before           { content: @fa-var-undo; }
+    &.mce-i-redo:before           { content: @fa-var-repeat; }
+    &.mce-i-link:before           { content: @fa-var-link; }
+    &.mce-i-unlink:before         { content: @fa-var-unlink; }
+    &.mce-i-anchor:before         { content: @fa-var-anchor; }
+    &.mce-i-image:before          { content: @fa-var-picture-o; }
+    &.mce-i-media:before          { content: "\f008"; }
+    &.mce-i-help:before           { content: "\f059"; }
+    &.mce-i-code:before           { content: "\f121"; }
+    &.mce-i-preview:before        { content: "\f06e"; }
+    &.mce-i-forecolor:before      { content: "\f031"; }
+    &.mce-i-backcolor:before      { content: "\f031"; }
+    &.mce-i-table:before          { content: "\f0ce"; }
+    &.mce-i-hr:before             { content: "\f068"; }
+    &.mce-i-removeformat:before   { content: "\f12d"; }
+    &.mce-i-subscript:before      { content: "\f12c"; }
+    &.mce-i-superscript:before    { content: "\f12b"; }
+    &.mce-i-charmap:before        { content: "\f153"; }
+    &.mce-i-emoticons:before      { content: "\f118"; }
+    &.mce-i-print:before          { content: "\f02f"; }
+    &.mce-i-fullscreen:before     { content: @fa-var-expand; }
+    &.mce-i-spellchecker:before   { content: "\f15d"; }
+    &.mce-i-template:before       { content: "\f022"; }
+    &.mce-i-bold:before           { content: "\f032"; }
+    &.mce-i-italic:before         { content: "\f033"; }
+    &.mce-i-underline:before      { content: "\f0cd"; }
+    &.mce-i-strikethrough:before  { content: "\f0cc"; }
+    &.mce-i-copy:before           { content: "\f0c5"; }
+    &.mce-i-browse:before         { content: "\f002"; }
+
+    &.mce-i-paste:before          { content: @fa-var-clipboard; }
+    &.mce-i-pastetext:before      { content: @fa-var-clipboard; }
+    &.mce-i-inserttime:before     { content: @fa-var-clock-o; }
+    &.mce-i-date:before           { content: @fa-var-calendar-o; }
+    &.mce-i-checkbox:before       { content: @fa-var-check-square-o; }
+    &.mce-i-selected:before       { content: @fa-var-check; }
+
+    /*.mce-i-visualblocks,
+    .mce-i-ltr,
+    .mce-i-rtl,
+    .mce-i-resize,
+    .mce-i-nonbreaking,
+    .mce-i-restoredraft,
+    .mce-i-pagebreak,
+    .mce-i-untitled,
+    .mce-i-visualchars {
+        font-family: 'tinymce', Arial !important;
+    }*/
+}

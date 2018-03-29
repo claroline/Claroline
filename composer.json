@@ -55,7 +55,6 @@
         "sensio/distribution-bundle": "2.3.22",
         "sensio/framework-extra-bundle": "3.0.12",
         "stefk/jval": "dev-master",
-        "stfalcon/tinymce-bundle": "0.3.8",
         "stof/doctrine-extensions-bundle": "1.1.0",
         "symfony/assetic-bundle": "2.8.0",
         "symfony/monolog-bundle": "2.12.0",
@@ -69,7 +68,6 @@
         "zendframework/zend-crypt": "2.6.0",
         "zendframework/zend-stdlib": "2.7.7",
         "zenstruck/form-bundle": "1.5.1",
-        "innova/angular-ui-tinymce-bundle": "5.1.1",
         "ocramius/proxy-manager": "1.0.2",
         "ramsey/uuid": "~3.5",
         "postal/postal": "*"

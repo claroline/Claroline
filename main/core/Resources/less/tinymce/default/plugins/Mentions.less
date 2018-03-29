@@ -1,0 +1,40 @@
+.user-mention {
+    color: @text-color;
+    font-weight: bold;
+}
+
+.user-mentions-menu {
+    .user-mention-item {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        .highlight-search {
+            text-decoration: underline;
+        }
+
+        .user-avatar {
+            margin-right: @icon-dropdown-spacer;
+
+            // same values than .user-micro
+            // for picture
+            max-height: 30px;
+            // for .fa when no picture
+            font-size: 30px;
+        }
+
+        small {
+            color: @text-muted;
+        }
+    }
+
+    .active .user-mention-item {
+        .user-avatar {
+            color: fadeOut(#fff, 50%); // only affect .fa
+        }
+
+        small {
+            color: fadeOut(#fff, 25%);
+        }
+    }
+}

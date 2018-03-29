@@ -30,7 +30,7 @@ class FieldFacetValueFinder implements FinderInterface
     private $tokenStorage;
 
     /**
-     * WorkspaceFinder constructor.
+     * FieldFacetValueFinder constructor.
      *
      * @DI\InjectParams({
      *     "authChecker"  = @DI\Inject("security.authorization_checker"),

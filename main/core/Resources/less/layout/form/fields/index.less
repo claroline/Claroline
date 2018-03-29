@@ -1,10 +1,19 @@
 
 @import "color-picker";
+@import "editor";
 @import "field";
 @import "file";
 @import "ip";
 @import "select";
 @import "text";
+
+// adds some var to configure form controls
+.form-control {
+    padding: @input-padding; // adds a semantic var
+
+    .box-shadow(@input-box-shadow);
+    .transition(@input-transition);
+}
 
 input[type=checkbox] {
     cursor: pointer;

@@ -45,12 +45,7 @@
         },
         render: function () {
             if (!this.isAppended) {
-                //this.parameters.parentElement.append(this.$el);
                 this.wrapper.append(this.tabPanes.resources.el);
-
-                if (this.parameters.isTinyMce) {
-                    this.wrapper.append(this.tabPanes.widgets.el);
-                }
                 this.isAppended = true;
             }
         }

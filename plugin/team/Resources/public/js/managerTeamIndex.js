@@ -215,7 +215,6 @@
     };
 
     var refreshPage = function () {
-        window.tinymce.claroline.disableBeforeUnload = true;
         window.location.reload();
     };
 

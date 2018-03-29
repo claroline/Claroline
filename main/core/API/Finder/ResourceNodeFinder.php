@@ -32,7 +32,7 @@ class ResourceNodeFinder implements FinderInterface
     private $usedJoin = [];
 
     /**
-     * WorkspaceFinder constructor.
+     * ResourceNodeFinder constructor.
      *
      * @DI\InjectParams({
      *     "authChecker"  = @DI\Inject("security.authorization_checker"),

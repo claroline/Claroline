@@ -10,6 +10,10 @@
 // Import bootstrap
 @import "../../../../../../../web/packages/bootstrap/less/bootstrap";
 
+// Import font-awesome
+@import "../../../../../../../web/packages/font-awesome/less/font-awesome";
+@fa-font-path: "../../../web/packages/font-awesome/fonts";
+
 // Import claroline layout
 @import "mixins";
 @import "scaffolding";
@@ -18,10 +22,11 @@
 @import "data/index";
 @import "libraries/index";
 @import "layout/index";
-@import "widgets/index";
-@import "tools/index";
 @import "resources/index";
+@import "tinymce/index";
+@import "tools/index";
 @import "users/index";
+@import "widgets/index";
 
 @media (min-width: @screen-sm) {
     body.left-bar-push {
@@ -429,13 +434,6 @@ ul.desktop-parameters-menu {
 
 .region-header {
     padding-bottom: 10px;
-}
-
-.creator {
-    .mce-tinymce.mce-container.mce-panel, .mce-edit-area.mce-container.mce-panel.mce-stack-layout-item {
-        .border-bottom-radius(0);
-        border-bottom: none;
-    }
 }
 
 .datepicker {

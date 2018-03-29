@@ -70,7 +70,7 @@ $(document).ready(function () {
 
 
         $('.disabled-during-edition').attr('disabled', 'disabled');
-        tinyMCE.get('innova_collecticiel_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
+        tinymce.get('innova_collecticiel_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', false);
         //$('.innova_collecticiel_criteria_form_correctionInstruction').attr('disabled','disabled');
         $('.criteria-form-button').attr('disabled', 'disabled');
 
@@ -101,7 +101,6 @@ $(document).ready(function () {
                         $('.new-criteria-zone > .template-criteria-zone .form-buttons').hide();
 
                         $('.add-remove-column').show();
-                        initTinyMCE(stfalcon_tinymce_config);
 
                         var top = $('#new-criteria').offset().top;
                         top = top - 50;
@@ -166,7 +165,6 @@ $(document).ready(function () {
 
                         $('#' + criterionId + ' .criterion-edit  .template-criteria-zone .form-buttons').hide();
 
-                        initTinyMCE(stfalcon_tinymce_config);
                         setSaveListener();
                     })
                 ;
@@ -220,6 +218,6 @@ function setSaveListener() {
 
         $('.disabled-during-edition').attr('disabled', null);
         $('.criteria-form-button').attr('disabled', null);
-        tinyMCE.get('innova_collecticiel_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', true);
+        tinymce.get('innova_collecticiel_criteria_form_correctionInstruction').getBody().setAttribute('contenteditable', true);
     });
 }

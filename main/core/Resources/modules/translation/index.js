@@ -1,3 +1,4 @@
+/* global window */
 
 const DEFAULT_DOMAIN    = 'message'
 const PLATFORM_DOMAIN   = 'platform'

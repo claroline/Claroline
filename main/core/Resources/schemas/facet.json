@@ -6,9 +6,9 @@
       "type": "string",
       "description": "The facet id"
     },
-    "name": {
+    "title": {
       "type": "string",
-      "description": "The facet name"
+      "description": "The facet title"
     },
     "position": {
       "type": "integer",
@@ -39,7 +39,7 @@
       "items": { "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/panelFacet.json" }
     }
   },
-  "required": ["name"],
+  "required": ["title"],
   "claroline": {
     "ids": ["id"]
   }

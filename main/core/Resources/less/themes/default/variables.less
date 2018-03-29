@@ -226,6 +226,11 @@
 @help-block-color:          @brand-info;
 @help-block-font-size:      12px;
 
+// Controls
+@input-box-shadow:          inset 0 1px 1px rgba(0,0,0,.075);
+@input-transition:          "border-color ease-in-out .15s, box-shadow ease-in-out .15s";
+@input-padding:             @padding-base-vertical @padding-base-horizontal;
+
 // Labels
 @input-label-color:         @text-color;
 @input-success-label-color: @text-color; // default bootstrap behavior : @state-success-text
@@ -359,8 +364,10 @@
 // Tooltip
 // ---
 
+@tooltip-font-size:     @font-size-small;
 @tooltip-border-radius: 0;
 @tooltip-padding:       5px 10px;
+@tooltip-box-shadow:    none;
 
 
 // -

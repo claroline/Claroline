@@ -420,7 +420,6 @@
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/innovacollecticiel/js/popup.js') }}"></script>
-    {{ tinymce_init() }}
     <script>
         var totalColumn = {{ dropzone.totalCriteriaColumn }};
         var comment =

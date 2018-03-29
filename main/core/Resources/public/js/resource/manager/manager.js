@@ -228,7 +228,7 @@
             isPickerMultiSelectAllowed: isDefault || parameters.isPickerMultiSelectAllowed || false,
             isDirectorySelectionAllowed: allowDirectorySelection,
             currentDirectoryId: null,
-            isTinyMce: parameters.isTinyMce || false,
+            isTinyMce: parameters.isTinyMce || false, // this was used to add the widget tags in picker (this is no longer interpreted)
             currentUsername: fetchedParameters.currentUsername,
             currentUserId: fetchedParameters.currentUserId,
             displayMode: parameters.displayMode || 'default',

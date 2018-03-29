@@ -31,7 +31,7 @@ class RoleFinder implements FinderInterface
     private $tokenStorage;
 
     /**
-     * WorkspaceFinder constructor.
+     * RoleFinder constructor.
      *
      * @DI\InjectParams({
      *     "authChecker"  = @DI\Inject("security.authorization_checker"),

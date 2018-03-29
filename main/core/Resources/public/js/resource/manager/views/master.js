@@ -64,10 +64,6 @@
                 this.subViews.rights = new views.Rights(this.dispatcher);
                 this.subViews.confirm = new views.Confirm(this.dispatcher);
             }
-
-            if (this.parameters.isTinyMce) {
-                this.subViews.tabs = new views.Tabs(this.parameters, this.dispatcher);
-            }
         },
         openAsPicker: function () {
             this.dispatcher.trigger('open-directory', {
@@ -84,10 +80,6 @@
         render: function () {
             if (!this.isAppended) {
                 this.parameters.parentElement.append(this.$el);
-
-                if (this.parameters.isTinyMce) {
-                    this.wrapper.append(this.subViews.tabs.el);
-                }
 
                 this.wrapper.append(this.subViews.tabpanes.el);
 

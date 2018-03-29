@@ -622,13 +622,15 @@ class WorkspaceController extends Controller
     }
 
     /**
+     * Returns the html iframe to embed a widget.
+     *
      * @EXT\Route(
      *     "/{workspaceId}/tab/{homeTabId}/widget/{widgetId}/embed",
-     *     name="claro_workspace_home_tab_widget_embed_picker",
+     *     name="claro_widget_embed",
      *     options={"expose"=true}
      * )
      *
-     * Returns the html iframe to embed a widget
+     * @todo simplify route params
      *
      * @param int $workspaceId
      * @param int $homeTabId
@@ -636,11 +638,8 @@ class WorkspaceController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function embedWidgetForPickerAction(
-        $workspaceId,
-        $homeTabId,
-        $widgetId
-    ) {
+    public function embedWidgetAction($workspaceId, $homeTabId, $widgetId)
+    {
         return new Response(
             $this->templating->render(
                 'ClarolineCoreBundle:Widget:embed/iframe.html.twig',

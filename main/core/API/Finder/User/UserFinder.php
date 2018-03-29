@@ -68,10 +68,15 @@ class UserFinder implements FinderInterface
     {
         if (isset($searches['contactable'])) {
             $qb = $this->getContactableUsers($qb);
+            unset($searches['contactable']);
         }
 
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
+                case 'name':
+                    $qb->andWhere('UPPER(obj.username) LIKE :name OR UPPER(CONCAT(obj.firstName, \' \', obj.lastName)) LIKE :name');
+                    $qb->setParameter('name', '%'.strtoupper($filterValue).'%');
+                    break;
                 case 'isDisabled':
                     $qb->andWhere('obj.isEnabled = :isEnabled');
                     $qb->setParameter('isEnabled', !$filterValue);
@@ -110,7 +115,7 @@ class UserFinder implements FinderInterface
                     $qb->andWhere('ao.uuid IN (:administratedOrganizations)');
                     $qb->setParameter('administratedOrganizations', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
-                case 'contactable':
+                //case 'contactable':
                 case 'workspace':
                     $qb->leftJoin('obj.roles', 'wsuroles');
                     $qb->leftJoin('wsuroles.workspace', 'rws');
@@ -142,8 +147,16 @@ class UserFinder implements FinderInterface
             $qb->andWhere('obj.isRemoved = FALSE');
         }
 
-        if (!empty($sortBy) && 'isDisabled' === $sortBy['property'] && 0 !== $sortBy['direction']) {
-            $qb->orderBy('obj.isEnabled ', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+        // manages custom sort properties
+        if (!empty($sortBy) && 0 !== $sortBy['direction']) {
+            switch ($sortBy['property']) {
+                case 'name':
+                    $qb->orderBy('obj.lastName', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                    break;
+                case 'isDisabled':
+                    $qb->orderBy('obj.isEnabled', 1 === $sortBy['direction'] ? 'ASC' : 'DESC');
+                    break;
+            }
         }
 
         return $qb;
@@ -159,17 +172,22 @@ class UserFinder implements FinderInterface
             return $workspace->getUuid();
         }, $this->workspaceManager->getWorkspacesByUser($currentUser));
 
-        $qb->leftJoin('obj.organizations', 'uo');
-        $qb->orWhere('uo.uuid IN (:orgaIds)');
-        $qb->setParameter('orgaIds', $organizationsIds);
+        // same organizations
+        $qb->leftJoin('obj.userOrganizationReferences', 'oref');
+        $qb->leftJoin('oref.organization', 'o');
+        $qb->orWhere('o.uuid IN (:organizationIds)');
+        $qb->setParameter('organizationIds', $organizationsIds);
 
+        // same workspaces
         $qb->leftJoin('obj.roles', 'ur');
         $qb->leftJoin('obj.groups', 'ug');
         $qb->leftJoin('ug.roles', 'ugr');
         $qb->leftJoin('ur.workspace', 'urw');
         $qb->leftJoin('ugr.workspace', 'ugrw');
-        $qb->orWhere('urw.uuid IN (:workspacesIds)');
-        $qb->orWhere('ugrw.uuid IN (:workspacesIds)');
+        $qb->orWhere($qb->expr()->orX(
+            $qb->expr()->in('urw.uuid', ':workspacesIds'),
+            $qb->expr()->in('ugrw.uuid', ':workspacesIds')
+        ));
         $qb->setParameter('workspacesIds', $workspacesIds);
 
         return $qb;

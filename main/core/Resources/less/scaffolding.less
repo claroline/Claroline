@@ -8,14 +8,20 @@ html.claroline-app-container {
     padding-top: @top-bar-height;
 }
 
-body.claroline-app {
-    height: 100%;
+body {
+    background: transparent; // removes bootstrap default
 
-    // Get the scroll bar
-    // Using `scroll` is not really aesthetic because it adds an empty one if no scroll
-    // but this is the only way to avoid content to move when the scroll appears in `auto` mode
-    // todo : try https://aykevl.nl/2014/09/fix-jumping-scrollbar
-    overflow-y: scroll;
+    &.claroline-app {
+        height: 100%;
+        // only put body bg for claroline apps (avoids modifying TinyMCE content bg)
+        background: @body-bg;
+
+        // Get the scroll bar
+        // Using `scroll` is not really aesthetic because it adds an empty one if no scroll
+        // but this is the only way to avoid content to move when the scroll appears in `auto` mode
+        // todo : try https://aykevl.nl/2014/09/fix-jumping-scrollbar
+        overflow-y: scroll;
+    }
 }
 
 .app-content {

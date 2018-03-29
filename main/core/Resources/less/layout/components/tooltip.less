@@ -1,5 +1,13 @@
-// add more theme options on tooltips
+.tooltip {
+    font-size: @tooltip-font-size;
+}
+
 .tooltip-inner {
+    min-width: 180px;
+    max-width: none !important;
+    // add more theme options on tooltips
     padding: @tooltip-padding;
     border-radius: @tooltip-border-radius;
+
+    .box-shadow(@tooltip-box-shadow);
 }

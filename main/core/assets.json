@@ -3,6 +3,7 @@
     "entry": {
       "polyfills": "scaffolding/shim",
       "translator": "translation/browser",
+      "tinymce": "tinymce/browser",
       "organization-field": "symfony/form/organization/index",
       "user-management": "administration/user",
       "workspace-management": "administration/workspace",
@@ -10,7 +11,6 @@
       "transfer-management": "administration/transfer",
       "plugin-management": "administration/plugins/module",
       "portal": "resource/portal",
-      "tinymce": "tinymce/tinymce",
       "desktop-home": "desktopHome/desktopHome",
       "admin-home-tabs-config": "adminHomeTabsConfig/adminHomeTabsConfig",
       "workspace-home": "workspace/tools/home/workspaceHome",

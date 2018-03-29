@@ -645,7 +645,6 @@
     "logout": "Zich uitloggen",
     "logs": "Toezicht",
     "logs_error_location": "De logs bevinden zich in app/log/update-xxx.log.",
-    "email": "E-email",
     "mail_click": "Klik op deze link om uw wachtwoord opnieuw in te stellen",
     "mail_config_problem": "Gelieve contact op te nemen met de sitebeheerder om uw wachtwoord te resetten.",
     "mail_invalid": "Het formaat van uw e-email is niet geldig.",

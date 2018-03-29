@@ -1,19 +1,25 @@
 import React, {Component} from 'react'
 import classes from 'classnames'
 
-import {t} from '#/main/core/translation'
+import {tinymce} from '#/main/core/tinymce'
+import {config} from '#/main/core/tinymce/config'
+
+import {trans} from '#/main/core/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
+import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 
 import {getOffsets} from '#/main/core/scaffolding/text/selection'
 
 // see https://github.com/lovasoa/react-contenteditable
 export class ContentEditable extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
+
+    this.state = {}
+
     this.emitChange = this.emitChange.bind(this)
     this.getSelection = this.getSelection.bind(this)
-    this.state = {}
   }
 
   getSelection() {
@@ -50,24 +56,6 @@ export class ContentEditable extends Component {
     }
   }
 
-  render() {
-    return (
-      <div
-        id={this.props.id}
-        ref={el => this.el = el}
-        onInput={this.emitChange}
-        onBlur={this.emitChange}
-        dangerouslySetInnerHTML={{__html: this.props.content}}
-        contentEditable={!this.props.disabled}
-        role="textbox"
-        className="form-control"
-        aria-multiline={true}
-        style={{minHeight: `${this.props.minRows * 32}px`}}
-        onMouseUp={this.getSelection}
-      />
-    )
-  }
-
   componentDidMount() {
     this.el.onclick = e => {
       this.props.onClick(e.target)
@@ -102,8 +90,29 @@ export class ContentEditable extends Component {
 
     this.lastContent = content
   }
+
+  render() {
+    return (
+      <div
+        id={this.props.id}
+        ref={el => this.el = el}
+        onInput={this.emitChange}
+        onBlur={this.emitChange}
+        dangerouslySetInnerHTML={{__html: this.props.content}}
+        contentEditable={!this.props.disabled}
+        role="textbox"
+        className={classes('form-control', {
+          disabled: this.props.disabled
+        })}
+        aria-multiline={true}
+        style={{minHeight: `${this.props.minRows * 32}px`}}
+        onMouseUp={this.getSelection}
+      />
+    )
+  }
 }
 
+// TODO : manage max height like TinyMCE and CodeMirror
 ContentEditable.propTypes = {
   id: T.string.isRequired,
   minRows: T.number.isRequired,
@@ -124,41 +133,52 @@ ContentEditable.defaultProps = {
 export class Tinymce extends Component {
   constructor(props) {
     super(props)
+
     this.editor = null
   }
 
   componentDidMount() {
-    const interval = setInterval(() => {
-      const editor = window.tinymce.get(this.props.id)
+    tinymce.init(
+      Object.assign({}, config, {
+        target: this.textarea,
+        ui_container: `#${this.props.id}-container`
+      })
+    )
 
-      if (editor) {
-        this.editor = editor
-        this.editor.on('mouseup', () => {
-          this.getSelection()
-        })
-        this.editor.on('change', e => {
-          const tinyContent = this.editor.getContent()
-          const tmp = document.createElement('div')
-          tmp.innerHTML = tinyContent
+    this.editor = tinymce.get(this.props.id)
+    tinymce.activeEditor = this.editor
+    this.editor.on('mouseup', () => {
+      this.getSelection()
+    })
+    this.editor.on('change', () => {
+      const tinyContent = this.editor.getContent()
+      const tmp = document.createElement('div')
+      tmp.innerHTML = tinyContent
 
-          const offsets = getOffsets(tmp, this.editor.selection.getSel())
-          this.props.onChange(e.target.getContent(), offsets)
-        })
-        this.editor.on('click', e => {
-          this.props.onClick(e.target)
-        })
+      const offsets = getOffsets(tmp, this.editor.selection.getSel())
+      this.props.onChange(tinyContent, offsets)
+    })
 
-        clearInterval(interval)
-      }
-    }, 100)
+    this.editor.on('click', e => {
+      this.props.onClick(e.target)
+    })
   }
 
   componentWillReceiveProps(nextProps) {
-    this.editor.setContent(nextProps.content)
+    if ((nextProps.content !== this.editor.getContent()
+      && nextProps.content !== this.props.content)) {
+      this.editor.setContent(nextProps.content)
+    }
+  }
+
+  shouldComponentUpdate(nextProps) {
+    return (nextProps.content !== this.editor.getContent()
+      && nextProps.content !== this.props.content)
   }
 
   componentWillUnmount() {
     this.editor.destroy()
+    this.editor = null
   }
 
   updateText() {
@@ -176,7 +196,6 @@ export class Tinymce extends Component {
       endContainer: rng.endContainer,
       collapsed: rng.collapsed,
       commonAncestorContainer: rng.commonAncestorContainer
-
     })
 
     const offsets = getOffsets(this.editor.dom.getRoot(), this.editor.selection.getSel())
@@ -187,7 +206,8 @@ export class Tinymce extends Component {
     return (
       <textarea
         id={this.props.id}
-        className="form-control claroline-tiny-mce hide"
+        ref={(el) => this.textarea = el}
+        className="form-control"
         defaultValue={this.props.content}
       />
     )
@@ -238,20 +258,25 @@ class Textarea extends Component {
 
   render() {
     return (
-      <div className={classes('text-editor', {'minimal': this.state.minimal === true})}>
-        <span
-          role="button"
-          title={t(this.state.minimal ? 'rich_text_tools' : 'minimize')}
-          className={classes(
-            'toolbar-toggle',
-            'fa',
-            this.state.minimal ? 'fa-plus-circle' : 'fa-minus-circle'
-          )}
+      <div id={`${this.props.id}-container`} className={classes('editor-control text-editor', {
+        minimal: this.state.minimal
+      })}>
+        <TooltipButton
+          id={`${this.props.id}-editor-toggle`}
+          title={trans(this.state.minimal ? 'show_editor_toolbar' : 'hide_editor_toolbar')}
+          position="left"
+          className="toolbar-toggle"
           onClick={() => {
             this.setState({minimal: !this.state.minimal})
             this.props.onChangeMode({minimal: !this.state.minimal})
           }}
-        />
+        >
+          <span className={classes('fa', {
+            'fa-plus-circle': this.state.minimal,
+            'fa-minus-circle': !this.state.minimal
+          })} />
+        </TooltipButton>
+
         {this.state.minimal ?
           this.makeMinimalEditor() :
           this.makeFullEditor()

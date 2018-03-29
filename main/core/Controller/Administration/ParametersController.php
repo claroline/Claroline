@@ -195,7 +195,7 @@ class ParametersController extends Controller
                 $descriptions,
                 $this->translator->trans('date_form_format', [], 'platform'),
                 $this->localeManager->getUserLocale($request),
-                $this->configHandler->getLockedParamaters(),
+                $this->configHandler->getLockedParameters(),
                 $targetLoginUrls
             ),
             $platformConfig
@@ -275,7 +275,7 @@ class ParametersController extends Controller
             new AdminForm\AppearanceType(
                 $this->themeManager->listThemeNames(true),
                 $this->iconSetManager->listIconSetNamesByType(IconSetTypeEnum::RESOURCE_ICON_SET),
-                $this->configHandler->getLockedParamaters()
+                $this->configHandler->getLockedParameters()
             ),
             $platformConfig
         );
@@ -354,7 +354,7 @@ class ParametersController extends Controller
         $form = $this->formFactory->create(
             new AdminForm\MailServerType(
                 $platformConfig->getMailerTransport(),
-                $this->configHandler->getLockedParamaters()
+                $this->configHandler->getLockedParameters()
             ),
             $platformConfig
         );
@@ -378,7 +378,7 @@ class ParametersController extends Controller
         $form = $this->formFactory->create(
             new AdminForm\MailServerType(
                 $platformConfig->getMailerTransport(),
-                $this->configHandler->getLockedParamaters()
+                $this->configHandler->getLockedParameters()
             ),
             $platformConfig
         );
@@ -583,7 +583,7 @@ class ParametersController extends Controller
         $form = $this->formFactory->create(
             new AdminForm\TermsOfServiceType(
                 $this->configHandler->getParameter('terms_of_service'),
-                $this->configHandler->getLockedParamaters()
+                $this->configHandler->getLockedParameters()
             ),
             $this->termsOfService->getTermsOfService(false)
         );
@@ -604,7 +604,7 @@ class ParametersController extends Controller
         $form = $this->formFactory->create(
             new AdminForm\TermsOfServiceType(
                 $this->configHandler->getParameter('terms_of_service'),
-                $this->configHandler->getLockedParamaters()
+                $this->configHandler->getLockedParameters()
             ),
             $this->termsOfService->getTermsOfService(false)
         );
@@ -637,7 +637,7 @@ class ParametersController extends Controller
     public function indexingFormAction()
     {
         $form = $this->formFactory->create(
-            new AdminForm\IndexingType($this->configHandler->getLockedParamaters()),
+            new AdminForm\IndexingType($this->configHandler->getLockedParameters()),
             $this->configHandler->getPlatformConfig()
         );
 
@@ -670,7 +670,7 @@ class ParametersController extends Controller
             new AdminForm\SessionType(
                 $config->getSessionStorageType(),
                 $config,
-                $this->configHandler->getLockedParamaters()
+                $this->configHandler->getLockedParameters()
             )
         );
 
@@ -695,7 +695,7 @@ class ParametersController extends Controller
             new AdminForm\SessionType(
                 $storageType,
                 null,
-                $this->configHandler->getLockedParamaters()
+                $this->configHandler->getLockedParameters()
             ),
             $this->configHandler->getPlatformConfig()
         );

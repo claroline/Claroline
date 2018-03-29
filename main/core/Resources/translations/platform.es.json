@@ -548,7 +548,6 @@
     "logout": "Cerrar sesión",
     "logs": "Rastreo",
     "logs_error_location": "",
-    "email": "Correo",
     "mail_click": "Haga clic en este enlace para restablecer tu contraseña",
     "mail_config_problem": "Por favor, póngase en contacto con el administrador de la plataforma para reiniciar su contraseña.",
     "mail_invalid": "Formato de correo electrónico invalido",

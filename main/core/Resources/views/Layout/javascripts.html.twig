@@ -77,7 +77,6 @@
 
 {# We have replaced WillDurand by our own to be able to lazy load trans domains #}
 <script src="{{ hotAsset('dist/claroline-distribution-main-core-translator.js') }}"></script>
-
 {# Load some default translation domains #}
 {% javascripts debug=false
     'js/translations/resource/*.js'
@@ -136,26 +135,7 @@
     <script src="{{ asset_url }}"></script>
 {% endjavascripts %}
 
-{# TinyMCE #}
-<script src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/tinymce.jquery.min.js') }}"></script>
-<script src="{{ asset('bundles/stfalcontinymce/vendor/tinymce/jquery.tinymce.min.js') }}"></script>
-
-{% if asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") %}
-    <script src="{{ asset("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ ".js") }}"></script>
-{% elseif asset_exists("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ "_" ~ app.request.locale | upper ~ ".js") %}
-    <script src="{{ asset("bundles/stfalcontinymce/vendor/tinymce/langs/" ~ app.request.locale ~ "_" ~ app.request.locale | upper ~ ".js") }}"></script>
-{% else %}
-    <script src="{{ asset("bundles/stfalcontinymce/vendor/tinymce/langs/en_GB.js") }}"></script>
-{% endif %}
-
 <script src="{{ hotAsset('dist/claroline-distribution-main-core-tinymce.js') }}"></script>
-{% javascripts debug=false filter='jsmin' output='vendor/claroline/js/tinymce.js'
-    '@ClarolineCoreBundle/Resources/public/js/tinymce/resource_picker_button.js'
-    '@ClarolineCoreBundle/Resources/public/js/tinymce/resource_picker.js'
-    '@ClarolineCoreBundle/Resources/public/js/tinymce/resource_upload_button.js'
-%}
-    <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
 
 <script>
     $('body').tooltip({

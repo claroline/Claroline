@@ -138,7 +138,7 @@
             </div>
         </div>
         <!-- /#MODALS -->
-
+    </form>
     {% endblock %}
 
     {% block stylesheets %}
@@ -149,7 +149,6 @@
     {% block javascripts %}
         {{ parent() }}
 
-        {{ tinymce_init() }}
         <script>
             var totalColumn = {{ dropzone.totalCriteriaColumn }};
             var comment = {{ dropzone.allowCommentInCorrection ? 1 : 0 }}
