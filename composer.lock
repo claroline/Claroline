@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "5a31f0368116e5e5ced58b44b83e5d8e506cacba"
+                "reference": "59a7cc2367289810c18e1be0673cbcf33af7e439"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/5a31f0368116e5e5ced58b44b83e5d8e506cacba",
-                "reference": "5a31f0368116e5e5ced58b44b83e5d8e506cacba",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/59a7cc2367289810c18e1be0673cbcf33af7e439",
+                "reference": "59a7cc2367289810c18e1be0673cbcf33af7e439",
                 "shasum": ""
             },
             "require": {
@@ -159,7 +159,6 @@
                 "hwi/oauth-bundle": "0.5.2",
                 "icap/html-diff": "1.1.0",
                 "idci/exporter-bundle": "1.0.0",
-                "innova/angular-ui-tinymce-bundle": "5.1.1",
                 "jdorn/sql-formatter": "1.2.17",
                 "jms/di-extra-bundle": "1.5.0",
                 "jms/security-extra-bundle": "1.5.1",
@@ -180,7 +179,6 @@
                 "sensio/distribution-bundle": "2.3.22",
                 "sensio/framework-extra-bundle": "3.0.12",
                 "stefk/jval": "dev-master",
-                "stfalcon/tinymce-bundle": "0.3.8",
                 "stof/doctrine-extensions-bundle": "1.1.0",
                 "symfony/assetic-bundle": "2.8.0",
                 "symfony/monolog-bundle": "2.12.0",
@@ -397,7 +395,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-03-28 05:47:24"
+            "time": "2018-03-29 09:03:20"
         },
         {
             "name": "cocur/slugify",
@@ -464,16 +462,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "943b2c4fcad1ef178d16a713c2468bf7e579c288"
+                "reference": "d2c0a83b7533d6912e8d516756ebd34f893e9169"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/943b2c4fcad1ef178d16a713c2468bf7e579c288",
-                "reference": "943b2c4fcad1ef178d16a713c2468bf7e579c288",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/d2c0a83b7533d6912e8d516756ebd34f893e9169",
+                "reference": "d2c0a83b7533d6912e8d516756ebd34f893e9169",
                 "shasum": ""
             },
             "require": {
@@ -482,7 +480,7 @@
                 "php": "^5.3.2 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35",
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5",
                 "psr/log": "^1.0",
                 "symfony/process": "^2.5 || ^3.0 || ^4.0"
             },
@@ -516,7 +514,7 @@
                 "ssl",
                 "tls"
             ],
-            "time": "2017-11-29 09:37:33"
+            "time": "2018-03-29 19:57:20"
         },
         {
             "name": "composer/composer",
@@ -2793,118 +2791,6 @@
             "time": "2013-08-29 17:06:25"
         },
         {
-            "name": "innova/angular-js-bundle",
-            "version": "5.1.0",
-            "target-dir": "Innova/AngularJSBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularJSBundle.git",
-                "reference": "a225b207f427110997ec4b2ed8cb547ae0ebc1c3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularJSBundle/zipball/a225b207f427110997ec4b2ed8cb547ae0ebc1c3",
-                "reference": "a225b207f427110997ec4b2ed8cb547ae0ebc1c3",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularJSBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "Angular JS compiled files for Symfony 2 applications",
-            "homepage": "http://github.com/InnovaLangues/AngularJSBundle",
-            "keywords": [
-                "Symfony2",
-                "angular"
-            ],
-            "time": "2015-06-09 14:59:11"
-        },
-        {
-            "name": "innova/angular-ui-tinymce-bundle",
-            "version": "5.1.1",
-            "target-dir": "Innova/AngularUITinyMCEBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/InnovaLangues/AngularUITinyMCEBundle.git",
-                "reference": "2d8e5299284d6be36907158bed2a799aa8865cbd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/InnovaLangues/AngularUITinyMCEBundle/zipball/2d8e5299284d6be36907158bed2a799aa8865cbd",
-                "reference": "2d8e5299284d6be36907158bed2a799aa8865cbd",
-                "shasum": ""
-            },
-            "require": {
-                "innova/angular-js-bundle": "~5.0",
-                "php": ">=5.3.0",
-                "symfony/symfony": "2.*"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "Innova\\AngularUITinyMCEBundle": "."
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Arnaud Bey",
-                    "email": "arnaud.bey@u-grenoble3.fr"
-                },
-                {
-                    "name": "Axel Penin",
-                    "email": "axel.penin@u-grenoble3.fr"
-                },
-                {
-                    "name": "Eric Vincent",
-                    "email": "eric.vincent@u-grenoble3.fr"
-                },
-                {
-                    "name": "Donovan Tengblad",
-                    "email": "donovan.tengblad@u-grenoble3.fr"
-                }
-            ],
-            "description": "Symfony 2 bundle which provides Angular JS directive to integrate TinyMCE",
-            "homepage": "http://github.com/InnovaLangues/AngularUITinyMCEBundle",
-            "keywords": [
-                "Symfony2",
-                "angular",
-                "tinymce"
-            ],
-            "time": "2015-09-03 13:13:32"
-        },
-        {
             "name": "jdorn/sql-formatter",
             "version": "v1.2.17",
             "source": {
@@ -5053,64 +4939,6 @@
                 "validation"
             ],
             "time": "2016-09-25 10:45:09"
-        },
-        {
-            "name": "stfalcon/tinymce-bundle",
-            "version": "v0.3.8",
-            "target-dir": "Stfalcon/Bundle/TinymceBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/stfalcon/TinymceBundle.git",
-                "reference": "773cc577f4f0770c2f6dd25928e0f08576b7f2d5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/stfalcon/TinymceBundle/zipball/773cc577f4f0770c2f6dd25928e0f08576b7f2d5",
-                "reference": "773cc577f4f0770c2f6dd25928e0f08576b7f2d5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0",
-                "symfony/symfony": ">=2.1"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "0.3.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Stfalcon\\Bundle\\TinymceBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Stepan Tanasiychuk",
-                    "email": "ceo@stfalcon.com",
-                    "homepage": "http://blog.stfalcon.com"
-                },
-                {
-                    "name": "Igor Negrutsa",
-                    "email": "progi2007@gmail.com",
-                    "homepage": "http://igor-negrutsa.info"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://github.com/stfalcon/TinymceBundle/contributors"
-                }
-            ],
-            "description": "This Bundle integrates TinyMCE WYSIWYG editor into a Symfony2 project.",
-            "keywords": [
-                "editor",
-                "tinymce",
-                "wysiwyg"
-            ],
-            "time": "2014-09-08 12:54:20"
         },
         {
             "name": "stof/doctrine-extensions-bundle",

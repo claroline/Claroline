@@ -1412,11 +1412,6 @@
       "from": "vendor/claroline/distribution",
       "resolved": "file:vendor/claroline/distribution"
     },
-    "claroline-tinymce-mention": {
-      "version": "1.0.0",
-      "from": "git://github.com/iCAPLyon1/tinymceMentionPlugin.git#9baea090feca3c53dd3019adefda2a37932c97d6",
-      "resolved": "git://github.com/iCAPLyon1/tinymceMentionPlugin.git#9baea090feca3c53dd3019adefda2a37932c97d6"
-    },
     "class-utils": {
       "version": "0.3.6",
       "from": "class-utils@>=0.3.5 <0.4.0",
@@ -1524,6 +1519,11 @@
       "version": "1.1.0",
       "from": "code-point-at@>=1.0.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/code-point-at/-/code-point-at-1.1.0.tgz"
+    },
+    "codemirror": {
+      "version": "5.36.0",
+      "from": "codemirror@>=5.34.0 <6.0.0",
+      "resolved": "https://registry.npmjs.org/codemirror/-/codemirror-5.36.0.tgz"
     },
     "collection-visit": {
       "version": "1.0.0",
@@ -3361,21 +3361,9 @@
       "resolved": "https://registry.npmjs.org/http-deceiver/-/http-deceiver-1.2.7.tgz"
     },
     "http-errors": {
-      "version": "1.6.2",
+      "version": "1.6.3",
       "from": "http-errors@>=1.6.2 <1.7.0",
-      "resolved": "https://registry.npmjs.org/http-errors/-/http-errors-1.6.2.tgz",
-      "dependencies": {
-        "depd": {
-          "version": "1.1.1",
-          "from": "depd@1.1.1",
-          "resolved": "https://registry.npmjs.org/depd/-/depd-1.1.1.tgz"
-        },
-        "setprototypeof": {
-          "version": "1.0.3",
-          "from": "setprototypeof@1.0.3",
-          "resolved": "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.0.3.tgz"
-        }
-      }
+      "resolved": "https://registry.npmjs.org/http-errors/-/http-errors-1.6.3.tgz"
     },
     "http-parser-js": {
       "version": "0.4.11",
@@ -6189,7 +6177,24 @@
     "raw-body": {
       "version": "2.3.2",
       "from": "raw-body@2.3.2",
-      "resolved": "https://registry.npmjs.org/raw-body/-/raw-body-2.3.2.tgz"
+      "resolved": "https://registry.npmjs.org/raw-body/-/raw-body-2.3.2.tgz",
+      "dependencies": {
+        "depd": {
+          "version": "1.1.1",
+          "from": "depd@1.1.1",
+          "resolved": "https://registry.npmjs.org/depd/-/depd-1.1.1.tgz"
+        },
+        "http-errors": {
+          "version": "1.6.2",
+          "from": "http-errors@1.6.2",
+          "resolved": "https://registry.npmjs.org/http-errors/-/http-errors-1.6.2.tgz"
+        },
+        "setprototypeof": {
+          "version": "1.0.3",
+          "from": "setprototypeof@1.0.3",
+          "resolved": "https://registry.npmjs.org/setprototypeof/-/setprototypeof-1.0.3.tgz"
+        }
+      }
     },
     "react": {
       "version": "15.6.2",
@@ -7472,6 +7477,11 @@
       "version": "1.4.1",
       "from": "tinycolor2@>=1.4.1 <2.0.0",
       "resolved": "https://registry.npmjs.org/tinycolor2/-/tinycolor2-1.4.1.tgz"
+    },
+    "tinymce": {
+      "version": "4.7.9",
+      "from": "tinymce@>=4.7.6 <5.0.0",
+      "resolved": "https://registry.npmjs.org/tinymce/-/tinymce-4.7.9.tgz"
     },
     "tinymce-codemirror": {
       "version": "1.0.0",
