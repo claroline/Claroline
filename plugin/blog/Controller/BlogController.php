@@ -112,7 +112,7 @@ class BlogController extends BaseController
      */
     public function viewPdfAction(Blog $blog)
     {
-        $this->checkAccess('OPEN', $blog);
+        $this->checkAccess('EXPORT', $blog);
 
         /** @var \Icap\BlogBundle\Repository\PostRepository $postRepository */
         $postRepository = $this->get('icap.blog.post_repository');

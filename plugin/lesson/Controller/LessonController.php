@@ -69,7 +69,7 @@ class LessonController extends Controller
      */
     public function viewLessonPdfAction(Lesson $lesson)
     {
-        $this->checkAccess('OPEN', $lesson);
+        $this->checkAccess('EXPORT', $lesson);
         $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
         $tree = $chapterRepository->buildChapterTree($lesson->getRoot());
         $content = $this->renderView(
