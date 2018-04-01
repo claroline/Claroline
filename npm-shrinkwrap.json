@@ -3322,9 +3322,9 @@
       "resolved": "https://registry.npmjs.org/html-loader/-/html-loader-0.5.5.tgz"
     },
     "html-minifier": {
-      "version": "3.5.12",
+      "version": "3.5.13",
       "from": "html-minifier@>=3.5.8 <4.0.0",
-      "resolved": "https://registry.npmjs.org/html-minifier/-/html-minifier-3.5.12.tgz",
+      "resolved": "https://registry.npmjs.org/html-minifier/-/html-minifier-3.5.13.tgz",
       "dependencies": {
         "source-map": {
           "version": "0.6.1",
@@ -3332,9 +3332,9 @@
           "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz"
         },
         "uglify-js": {
-          "version": "3.3.16",
+          "version": "3.3.17",
           "from": "uglify-js@>=3.3.0 <3.4.0",
-          "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.3.16.tgz"
+          "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.3.17.tgz"
         }
       }
     },
@@ -4868,11 +4868,6 @@
       "version": "1.4.0",
       "from": "natural-compare@>=1.4.0 <2.0.0",
       "resolved": "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
-    },
-    "ncname": {
-      "version": "1.0.0",
-      "from": "ncname@>=1.0.0 <1.1.0",
-      "resolved": "https://registry.npmjs.org/ncname/-/ncname-1.0.0.tgz"
     },
     "nearley": {
       "version": "2.13.0",
@@ -8159,11 +8154,6 @@
           "resolved": "https://registry.npmjs.org/once/-/once-1.1.1.tgz"
         }
       }
-    },
-    "xml-char-classes": {
-      "version": "1.0.0",
-      "from": "xml-char-classes@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/xml-char-classes/-/xml-char-classes-1.0.0.tgz"
     },
     "xmlhttprequest": {
       "version": "1.8.0",
