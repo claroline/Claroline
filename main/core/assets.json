@@ -23,6 +23,7 @@
       "user-tracking": "user/tracking",
       "contacts-tool": "contact/tool",
       "workspace-user-management": "workspace/user",
+      "workspace-parameters-management": "workspace/parameters",
       "text-resource": "resources/text"
     }
   },

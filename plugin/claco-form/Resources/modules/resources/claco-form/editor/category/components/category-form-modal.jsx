@@ -114,7 +114,7 @@ export class CategoryFormModal  extends Component {
               <ColorPicker
                 id="category-color"
                 value={this.state.color}
-                onChange={(e) => {this.updateCategoryProps('color', e.hex)}}
+                onChange={(e) => {this.updateCategoryProps('color', e)}}
                 autoOpen={false}
               />
             </div>
@@ -145,7 +145,7 @@ export class CategoryFormModal  extends Component {
           </div>
           <hr/>
           <div>
-              <u><b>{t('notifications')} :</b></u>
+            <u><b>{t('notifications')} :</b></u>
           </div>
           <br/>
           <CheckGroup

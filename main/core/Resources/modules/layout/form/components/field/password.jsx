@@ -33,10 +33,10 @@ class Password extends Component {
           id={this.props.id}
           type={this.state.visible ? 'text':'password'}
           className="form-control"
-          autoComplete="new-password"
           value={this.props.value || ''}
           disabled={this.props.disabled}
           onChange={(e) => this.props.onChange(e.target.value)}
+          autoComplete={this.props.autoComplete || null}
         />
 
         <span className="input-group-btn">

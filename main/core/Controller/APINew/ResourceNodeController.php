@@ -72,7 +72,7 @@ class ResourceNodeController extends AbstractCrudController
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user === 'anon.') {
+        if ('anon.' === $user) {
             throw new AccessDeniedException();
         }
         $options = $request->query->all();

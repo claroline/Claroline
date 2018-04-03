@@ -33,7 +33,6 @@ const DataPicker = props =>
       onClick={() => {
         if (0 < props.selected.length) {
           props.fadeModal()
-
           props.handleSelect(props.onlyId ? props.selected : props.selectedFull)
           props.resetSelect()
         }

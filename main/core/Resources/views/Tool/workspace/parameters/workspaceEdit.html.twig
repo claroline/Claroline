@@ -20,61 +20,15 @@
     }}
 {% endblock %}
 
-
-{% block section_content %}
-    {{ macros.flashBox() }}
-
-    <div class="panel-heading">
-        <h3 class="panel-title">{{ 'general'|trans({}, 'platform') }}</h3>
+{% block content %}
+    <div
+      class="page-container workspaces-container"
+      data-workspace="{{ workspace | api_serialize | json_encode | raw | escape }}"
+    >
     </div>
-    <form role="form" class="form-horizontal" action="{{ path('claro_workspace_edit', {'workspace': workspace.getId()}) }}" method="post" {{ form_enctype(form) }}>
-        <div class="panel-body">
-            {{ form_widget(form) }}
-            <hr />
-            <h3 class="panel-title">{{ 'open_url'|trans({}, 'platform') }}</h3> <br />
-            <div class="alert alert-info">
-                {{ url('claroline_core_redirect_openworkspaceslug', {'slug': workspace.getSlug()}) }}
-            </div>
-        </div>
-        <div class="panel-footer text-right">
-            {% if is_granted('DELETE', workspace) and workspace != user.personalWorkspace %}
-                <a href="#" class="workspace-delete-confirmation btn btn-default">
-                    <i class="fa fa-trash-o"></i> {{ 'workspace_delete'|trans({}, 'platform') }}
-                </a>
-            {% endif %}
-
-            <a href="{{ path('claro_workspace_export', {'workspace': workspace.getId() }) }}" class='btn btn-default' role="button">
-                <i class="fa fa-floppy-o"></i> {{ 'save_as_template'|trans({}, 'platform') }}
-            </a>
-
-            <a class="btn btn-default" href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}">
-                 {{ 'cancel'|trans({}, 'platform') }}
-            </a>
-            <button type="submit" class="btn btn-primary">{{ 'ok'|trans({}, 'platform') }}</button>
-        </div>
-    </form>
-    <div id="delete-ws-validation-box" class="modal fade" role="dialog" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4>{{ 'workspace_delete_confirm_title'|trans({}, 'platform') }}</h4>
-                </div>
-                <div class="modal-body">
-                    <p>{{ 'workspace_delete_confirm_message'|trans({}, 'platform') }}</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" id="delete-confirm-ok" class="btn btn-primary" value="{{ 'ok'|trans({}, 'platform') }}"/> {{ 'ok'|trans({}, 'platform') }} </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" value="{{ 'cancel'|trans({}, 'platform') }}"/> {{ 'cancel'|trans({}, 'platform') }} </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="twig-workspace-id" data-workspaceId="{{workspace.getId()}}">
-    </div>
-
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
-    <script src='{{ asset('bundles/clarolinecore/js/tool/workspace/workspace_parameters_edit.js') }}' type="text/javascript"></script>
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-workspace-parameters-management.js') }}"></script>
 {% endblock %}
