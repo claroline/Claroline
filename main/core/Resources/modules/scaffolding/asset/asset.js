@@ -13,7 +13,7 @@ const Asset = {
    * @returns {string}
    */
   path(assetName) {
-    const element = document.getElementById('baseAsset')
+    const element = document.getElementById('homeAsset')
 
     let basePath = ''
     if (element) {

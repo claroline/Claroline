@@ -7,6 +7,8 @@ import {platformConfig} from '#/main/core/platform'
 import {asset, theme} from '#/main/core/scaffolding/asset'
 
 const config = {
+  //TODO: this is for retro comp purpose
+  setup: (editor) => editor.on('change', () => editor.save()),
   language: locale(),
   theme: 'modern',
   skin: false, // we provide it through theme system

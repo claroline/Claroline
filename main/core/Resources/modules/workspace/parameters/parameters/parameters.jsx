@@ -2,8 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import get from 'lodash/get'
-
 import {trans} from '#/main/core/translation'
 
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
@@ -26,12 +24,7 @@ const Actions = () =>
     />
   </PageActions>
 
-const Parameters = (props) => {
-  const roleEnum = {}
-  props.workspace.roles.forEach(role => {
-    roleEnum[role.id] = trans(role.translationKey)
-  })
-
+const Parameters = () => {
   return (
     <div>
       <FormContainer
@@ -39,22 +32,12 @@ const Parameters = (props) => {
         name="parameters"
         sections={[
           {
-            id: 'general',
-            title: trans('general'),
-            primary: true,
+            id: 'information',
+            icon: 'fa fa-question',
+            title: trans('information'),
+            defaultOpened: false,
+            primary: false,
             fields: [
-              {
-                name: 'name',
-                type: 'string',
-                label: trans('name'),
-                required: true
-              },
-              {
-                name: 'code',
-                type: 'string',
-                label: trans('code'),
-                required: true
-              },
               {
                 name: 'meta.created',
                 type: 'date',
@@ -68,22 +51,6 @@ const Parameters = (props) => {
                 label: trans('creator'),
                 required: true,
                 readOnly: true
-              },
-              {
-                name: 'meta.description',
-                type: 'html',
-                label: trans('description'),
-                required: false
-              },
-              {
-                name: 'thumbnail',
-                type: 'image',
-                label: trans('thumbnail')
-              },
-              {
-                name: 'notifications',
-                type: 'boolean',
-                label: trans('notifications')
               },
               {
                 name: 'meta.usedStorage',
@@ -106,48 +73,38 @@ const Parameters = (props) => {
             ]
           },
           {
-            id: 'registration',
-            title: trans('registration'),
-            primary: true,
+            id: 'properties',
+            title: trans('properties'),
+            primary: false,
+            defaultOpened: true,
             fields: [
               {
-                name: 'registration.validation',
-                type: 'boolean',
-                label: trans('registration_validation')
+                name: 'name',
+                type: 'string',
+                label: trans('name'),
+                required: true
               },
               {
-                name: 'registration.selfRegistration',
-                type: 'boolean',
-                label: trans('public_registration')
+                name: 'code',
+                type: 'string',
+                label: trans('code'),
+                required: true
               },
               {
-                name: 'registration.selfUnregistration',
-                type: 'boolean',
-                label: trans('public_unregistration')
+                name: 'meta.description',
+                type: 'html',
+                label: trans('description'),
+                required: false
               },
               {
-                name: 'registration.defaultRole',
-                type: 'enum',
-                label: trans('default_role'),
-                options: {
-                  choices: roleEnum
-                },
-                onChange: (roleId) => props.updateProp(
-                  'registration.defaultRole',
-                  props.workspace.roles.find(role => role.id === roleId)
-                ),
-                calculated: () => get(props.workspace, 'registration.defaultRole.id', null)
-              }
-            ]
-          },
-          {
-            id: 'display',
-            title: trans('display'),
-            fields: [
+                name: 'thumbnail',
+                type: 'image',
+                label: trans('thumbnail')
+              },
               {
-                name: 'display.displayable',
+                name: 'notifications',
                 type: 'boolean',
-                label: trans('displayable_in_workspace_list')
+                label: trans('notifications')
               }
             ]
           },
@@ -169,11 +126,6 @@ const Parameters = (props) => {
                 name: 'restrictions.maxStorage',
                 type: 'string',
                 label: trans('max_storage_size')
-              },
-              {
-                name: 'restrictions.maxUsers',
-                type: 'integer',
-                label: trans('maxUsers')
               },
               {
                 name: 'restrictions.maxResources',
