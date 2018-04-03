@@ -9,7 +9,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
- * @DI\Service("claroline.crud.role")
+ * @DI\Service("claroline.crud.group")
  * @DI\Tag("claroline.crud")
  */
 class GroupCrud

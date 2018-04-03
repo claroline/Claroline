@@ -26,7 +26,7 @@ use Claroline\DropZoneBundle\Entity\Dropzone;
 use Claroline\DropZoneBundle\Entity\DropzoneTool;
 use Claroline\DropZoneBundle\Entity\DropzoneToolDocument;
 use Claroline\DropZoneBundle\Repository\CorrectionRepository;
-use Claroline\DropZoneBundle\Repository\DropRepository;
+use Claroline\DropZoneBundle\Repository\PlannedNotificationRepository;
 use Claroline\DropZoneBundle\Serializer\CorrectionSerializer;
 use Claroline\DropZoneBundle\Serializer\DocumentSerializer;
 use Claroline\DropZoneBundle\Serializer\DropSerializer;
@@ -77,7 +77,7 @@ class DropzoneManager
     private $archiveDir;
     private $configHandler;
 
-    /** @var DropRepository */
+    /** @var PlannedNotificationRepository */
     private $dropRepo;
 
     /** @var CorrectionRepository */
