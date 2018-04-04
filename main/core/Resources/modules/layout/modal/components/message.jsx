@@ -1,42 +1,36 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
-import Alert from 'react-bootstrap/lib/Alert'
+
 import Modal from 'react-bootstrap/lib/Modal'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {BaseModal} from './base.jsx'
 
 const MessageModal = props =>
-  <BaseModal {...props}>
+  <BaseModal
+    {...props}
+    icon={classes('fa fa-fw', {
+      'fa-info-circle':          props.type === 'info',
+      'fa-check-circle':         props.type === 'success',
+      'fa-exclamation-triangle': props.type === 'warning',
+      'fa-minus-circle':         props.type === 'danger'
+    })}
+  >
     <Modal.Body>
-      <Alert bsStyle={props.bsStyle}>
-        <span className={classes('fa fa-fw',
-          {'fa-info-circle': props.bsStyle === 'info'},
-          {'fa-check-circle': props.bsStyle === 'success'},
-          {'fa-warning': props.bsStyle === 'warning'},
-          {'fa-warning': props.bsStyle === 'danger'}
-        )}/>
-        &nbsp;
-        {props.message}
-      </Alert>
+      {props.message}
     </Modal.Body>
-    <button
-      className="modal-btn btn btn-primary"
-      onClick={() => props.fadeModal()}
-    >
-      {t('Ok')}
-    </button>
   </BaseModal>
 
 MessageModal.propTypes = {
-  bsStyle: T.oneOf(['info', 'warning', 'success', 'danger']).isRequired,
-  message: T.string.isRequired,
-  fadeModal: T.func.isRequired
+  type: T.oneOf(['info', 'warning', 'success', 'danger']).isRequired,
+  message: T.string.isRequired
 }
 
 MessageModal.defaultProps = {
-  bsStyle: 'info'
+  type: 'info'
 }
 
-export {MessageModal}
+export {
+  MessageModal
+}

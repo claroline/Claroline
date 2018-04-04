@@ -14,7 +14,7 @@ import 'angular-ui-bootstrap'
 import '#/main/core/innova/angular-translation'
 
 import '../homeTabs/homeTabs'
-import '../widgets/widgets'
+import '../widgets-old/widgets'
 import Routing from './routing.js'
 import AdminHomeTabsConfigCtrl from './Controller/AdminHomeTabsConfigCtrl'
 

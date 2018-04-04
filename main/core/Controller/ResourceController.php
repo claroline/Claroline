@@ -21,7 +21,7 @@ use Claroline\CoreBundle\Form\ImportResourcesType;
 use Claroline\CoreBundle\Form\Resource\UnlockType;
 use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\Exception\ResourceMoveException;
-use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundExcetion;
+use Claroline\CoreBundle\Manager\Exception\ResourceNotFoundException;
 use Claroline\CoreBundle\Manager\FileManager;
 use Claroline\CoreBundle\Manager\LogManager;
 use Claroline\CoreBundle\Manager\MaskManager;
@@ -949,7 +949,7 @@ class ResourceController extends Controller
                 );
                 ++$i;
             }
-        } catch (ResourceNotFoundExcetion $e) {
+        } catch (ResourceNotFoundException $e) {
             $errors = [$e->getMessage()];
             $content = $this->templating->render(
                 'ClarolineCoreBundle:Resource:errors.html.twig',

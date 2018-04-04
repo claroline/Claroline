@@ -14,7 +14,7 @@ import 'angular-bootstrap-colorpicker'
 import '#/main/core/innova/angular-translation'
 
 import '../services/module'
-import '../widgets/widgets'
+import '../widgets-old/widgets'
 import UserHomeTabCreationModalCtrl from './Controller/UserHomeTabCreationModalCtrl'
 import UserHomeTabEditionModalCtrl from './Controller/UserHomeTabEditionModalCtrl'
 import AdminHomeTabCreationModalCtrl from './Controller/AdminHomeTabCreationModalCtrl'

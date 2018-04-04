@@ -101,7 +101,7 @@ class VideoPlayerListener
      *
      * @param PlayFileEvent $event
      */
-    public function onOpenVideo(PlayFileEvent $event)
+    public function onOpen(PlayFileEvent $event)
     {
         $tracks = $this->manager->getTracksByVideo($event->getResource());
 

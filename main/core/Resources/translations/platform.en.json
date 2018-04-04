@@ -1376,7 +1376,7 @@
     "workspace_creator": "Creator of the workspace",
     "workspace_delete": "Delete the workspace",
     "workspace_delete_confirm_message": "Are you sure you want to delete this workspace?",
-    "workspace_delete_confirm_title": "Delete Confirm",
+    "workspace_delete_confirm_title": "Delete workspace",
     "workspace_delete_success_message": "Workspace \"%workspaceName%\" has been deleted.",
     "workspace_display": "Display",
     "workspace_home_tab_creation": "Workspace Home tab creation",
@@ -1606,5 +1606,10 @@
     "workspace_register_select_users": "1. Select users to register",
     "workspace_register_select_groups": "1. Select groups to register",
     "workspace_register_select_roles": "2. Select roles to assign",
-    "clipboard_copy": "Copy to clipboard"
+    "clipboard_copy": "Copy to clipboard",
+    "image": "Image",
+    "textColor": "Text color",
+    "background": "Background",
+    "backgroundColor": "Background color",
+    "backgroundImage": "Background image"
 }

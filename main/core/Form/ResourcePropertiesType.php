@@ -83,6 +83,11 @@ class ResourcePropertiesType extends AbstractType
             'checkbox',
             ['required' => false, 'label' => 'published_to_portal']
         );
+        $builder->add(
+            'hidden',
+            'checkbox',
+            ['label' => 'hidden']
+        );
         $builder->add('description', 'textarea', [
             'label' => 'description',
             'attr' => [

@@ -8,7 +8,6 @@ plugin:
       is_exportable: false
       icon: icap_bibliography_icon.png
 
-  widgets:
-    - name: book_reference_list
-      is_configurable: false
-
+  #widgets:
+  #  - name: book_reference_list
+  #    is_configurable: false

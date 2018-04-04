@@ -12,11 +12,9 @@
 namespace Claroline\CoreBundle\Listener\Tool;
 
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Manager\HomeTabManager;
-use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
 /**
@@ -24,63 +22,62 @@ use Symfony\Component\HttpKernel\HttpKernelInterface;
  */
 class HomeListener
 {
-    private $container;
+    /** @var HttpKernelInterface */
     private $httpKernel;
-    private $homeTabManager;
-    private $templating;
-    private $workspaceManager;
+    /** @var Request */
+    private $request;
 
     /**
+     * HomeListener constructor.
+     *
      * @DI\InjectParams({
-     *     "container"          = @DI\Inject("service_container"),
-     *     "httpKernel"         = @DI\Inject("http_kernel"),
-     *     "homeTabManager"     = @DI\Inject("claroline.manager.home_tab_manager"),
-     *     "templating"         = @DI\Inject("templating"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager")
+     *     "httpKernel"   = @DI\Inject("http_kernel"),
+     *     "requestStack" = @DI\Inject("request_stack")
      * })
+     *
+     * @param HttpKernelInterface $httpKernel
+     * @param RequestStack        $requestStack
      */
     public function __construct(
-        ContainerInterface $container,
         HttpKernelInterface $httpKernel,
-        HomeTabManager $homeTabManager,
-        TwigEngine $templating,
-        WorkspaceManager $workspaceManager
+        RequestStack $requestStack
     ) {
-        $this->container = $container;
         $this->httpKernel = $httpKernel;
-        $this->homeTabManager = $homeTabManager;
-        $this->templating = $templating;
-        $this->workspaceManager = $workspaceManager;
+        $this->request = $requestStack->getCurrentRequest();
     }
 
     /**
+     * Displays home on Desktop.
+     *
      * @DI\Observe("open_tool_desktop_home")
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayDesktopHome(DisplayToolEvent $event)
+    public function onDisplayDesktop(DisplayToolEvent $event)
     {
-        $params = ['_controller' => 'ClarolineCoreBundle:Tool\Home:desktopHomeDisplay'];
-        $subRequest = $this->container->get('request')->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $subRequest = $this->request->duplicate([], null, [
+            '_controller' => 'ClarolineCoreBundle:Tool\Home:displayDesktop',
+        ]);
 
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
     }
 
     /**
+     * Displays home on Workspace.
+     *
      * @DI\Observe("open_tool_workspace_home")
      *
      * @param DisplayToolEvent $event
      */
-    public function onDisplayWorkspaceHome(DisplayToolEvent $event)
+    public function onDisplayWorkspace(DisplayToolEvent $event)
     {
-        $params = [
-            '_controller' => 'ClarolineCoreBundle:Tool\Home:workspaceHomeDisplay',
+        $subRequest = $this->request->duplicate([], null, [
+            '_controller' => 'ClarolineCoreBundle:Tool\Home:displayWorkspace',
             'workspace' => $event->getWorkspace()->getId(),
-        ];
-        $subRequest = $this->container->get('request')->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        ]);
 
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setContent($response->getContent());
     }
 }

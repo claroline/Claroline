@@ -1,7 +1,5 @@
 <?php
 
-//MzBhZWJiNTI4ZTM0ZWY3ZGEzYTU5YWE5ZjIzYjliNTc1YTRkMmI1NWI1ODEyMTMxNDYzNjhiYTVhZGFiMWQ1NA
-
 /*
  * This file is part of the Claroline Connect package.
  *
@@ -13,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Listener\Resource;
 
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
 use Claroline\CoreBundle\Entity\Resource\Directory;
 use Claroline\CoreBundle\Entity\Resource\File;
@@ -25,32 +24,49 @@ use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\DownloadResourceEvent;
 use Claroline\CoreBundle\Event\GenericDataEvent;
+use Claroline\CoreBundle\Event\LoadFileEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Form\FileType;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Claroline\CoreBundle\Library\Utilities\ZipArchive;
 use Claroline\CoreBundle\Listener\NoHttpRequestException;
+use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
+use Claroline\CoreBundle\Manager\ResourceManager;
+use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File as SfFile;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpKernel\KernelInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
 /**
  * @DI\Service("claroline.listener.file_listener")
  */
 class FileListener implements ContainerAwareInterface
 {
+    /** @var ContainerInterface */
     private $container;
-    private $resourceManager;
-    private $workspaceManager;
-    private $om;
+    /** @var RequestStack */
     private $request;
+    /** @var KernelInterface */
     private $httpKernel;
-    private $filesDir;
+    /** @var TokenStorageInterface */
     private $tokenStorage;
+    /** @var ObjectManager */
+    private $om;
+    /** @var ResourceManager */
+    private $resourceManager;
+    /** @var WorkspaceManager */
+    private $workspaceManager;
+    /** @var string */
+    private $filesDir;
+    /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
 
     /**
@@ -182,6 +198,48 @@ class FileListener implements ContainerAwareInterface
                 ->getParameter('claroline.param.files_directory').DIRECTORY_SEPARATOR.$hash
         );
         $event->stopPropagation();
+    }
+
+    /**
+     * @DI\Observe("load_file")
+     *
+     * @param LoadResourceEvent $event
+     */
+    public function onLoad(LoadResourceEvent $event)
+    {
+        $resource = $event->getResource();
+        $additionalFileData = [];
+
+        /** @var LoadFileEvent $loadEvent */
+        $loadEvent = $this->container->get('claroline.event.event_dispatcher')
+            ->dispatch(
+                $this->generateEventName($resource->getResourceNode(), 'load_file_'),
+                'Resource\File\LoadFile',
+                [$resource]
+            );
+
+        // with this method, file types that does not require additional data
+        // will dispatch standard event + fallback event
+        if (!empty($loadEvent->getAdditionalData())) {
+            $additionalFileData = $loadEvent->getAdditionalData();
+        } else {
+            // no additional data, try to dispatch the fallback event
+            /** @var LoadFileEvent $fallBackEvent */
+            $fallBackEvent = $this->container->get('claroline.event.event_dispatcher')->dispatch(
+                $this->generateEventName($resource->getResourceNode(), 'play_file_', true),
+                'Resource\File\LoadFile',
+                [$resource]
+            );
+
+            if (!empty($fallBackEvent->getAdditionalData())) {
+                $additionalFileData = $fallBackEvent->getAdditionalData();
+            }
+        }
+
+        $event->setAdditionalData(array_merge([
+            // common file data
+            'file' => $this->container->get('claroline.serializer.file')->serialize($resource),
+        ], $additionalFileData));
     }
 
     /**

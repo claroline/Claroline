@@ -64,6 +64,7 @@ DataGridItem.defaultProps = {
 const DataGridSort = props =>
   <div className="data-grid-sort">
     {trans('list_sort_by')}
+
     <DropdownButton
       id="data-grid-sort-menu"
       title={props.current.property && getPropDefinition(props.current.property, props.available) ?
@@ -113,26 +114,28 @@ DataGridSort.propTypes = {
 
 const DataGrid = props =>
   <div className={`data-grid data-grid-${props.size} data-grid-${props.orientation}`}>
-    <div className="data-grid-header">
-      {props.selection &&
-        <Checkbox
-          id="data-grid-select"
-          label={trans('list_select_all')}
-          labelChecked={trans('list_deselect_all')}
-          checked={0 < props.selection.current.length}
-          onChange={() => {
-            0 === props.selection.current.length ? props.selection.toggleAll(props.data): props.selection.toggleAll([])
-          }}
-        />
-      }
+    {(props.selection || props.sorting) &&
+      <div className="data-grid-header">
+        {props.selection &&
+          <Checkbox
+            id="data-grid-select"
+            label={trans('list_select_all')}
+            labelChecked={trans('list_deselect_all')}
+            checked={0 < props.selection.current.length}
+            onChange={() => {
+              0 === props.selection.current.length ? props.selection.toggleAll(props.data): props.selection.toggleAll([])
+            }}
+          />
+        }
 
-      {1 < props.count && props.sorting &&
-        <DataGridSort
-          {...props.sorting}
-          available={getSortableProps(props.columns)}
-        />
-      }
-    </div>
+        {1 < props.count && props.sorting &&
+          <DataGridSort
+            {...props.sorting}
+            available={getSortableProps(props.columns)}
+          />
+        }
+      </div>
+    }
 
     {props.selection && 0 < props.selection.current.length &&
       <ListBulkActions

@@ -7,21 +7,21 @@ plugin:
       name: innova_path
       is_exportable: true
 
-  widgets:
-     - name:                        innova_path_widget
-       is_configurable:             true
-       is_displayable_in_desktop:   true
-       is_displayable_in_workspace: true
-       is_exportable:               false
+  #widgets:
+  #   - name:                        innova_path_widget
+  #     is_configurable:             true
+  #     is_displayable_in_desktop:   true
+  #     is_displayable_in_workspace: true
+  #     is_exportable:               false
 
-     - name:                        innova_path_slideshow
-       is_configurable:             true
-       is_displayable_in_desktop:   true
-       is_displayable_in_workspace: true
-       is_exportable:               false
+  #   - name:                        innova_path_slideshow
+  #     is_configurable:             true
+  #     is_displayable_in_desktop:   true
+  #     is_displayable_in_workspace: true
+  #     is_exportable:               false
 
-     - name:                        innova_path_progression
-       is_configurable:             true
-       is_displayable_in_desktop:   true
-       is_displayable_in_workspace: true
-       is_exportable:               false
+  #   - name:                        innova_path_progression
+  #     is_configurable:             true
+  #     is_displayable_in_desktop:   true
+  #     is_displayable_in_workspace: true
+  #     is_exportable:               false

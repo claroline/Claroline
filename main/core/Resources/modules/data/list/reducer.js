@@ -232,7 +232,7 @@ const baseReducer = {
  *
  * Example to add a custom reducer to `data`:
  *   customReducers = {
- *      data: handlers
+ *      data: makeReducer(initialState, handlers)
  *   }
  *
  * @param {string} listName      - the name of the list.

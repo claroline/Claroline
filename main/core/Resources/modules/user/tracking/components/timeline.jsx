@@ -31,7 +31,7 @@ const EventWrapper = props =>
 
       <div className="timeline-event-block">
         <div className="timeline-event-header">
-          <a href={generateUrl('claro_resource_open_short', {'node': props.resource.autoId})}>
+          <a href={generateUrl('claro_resource_open', {node: props.resource.autoId, resourceType: props.resource.meta.type})}>
             <img
               src={props.resource.thumbnail ? asset(props.resource.thumbnail) : asset(props.resource.meta.icon)}
               alt="resource_icon"

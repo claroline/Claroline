@@ -65,6 +65,13 @@ class ConfigureFieldModal extends Component {
             primary: true,
             fields: [
               {
+                name: 'type',
+                type: 'string',
+                label: t('type'),
+                readOnly: true,
+                hideLabel: true,
+                calculated: () => typeDef.meta.label
+              }, {
                 name: 'label',
                 type: 'string',
                 label: t('name'),

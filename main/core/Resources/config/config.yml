@@ -115,30 +115,59 @@ plugin:
           class: exchange
 
     widgets:
-        - name: core_resource_logger
-          is_configurable: true
-          is_displayable_in_desktop: true
-          is_displayable_in_workspace: true
-        - name: simple_text
-          is_configurable: true
-          is_displayable_in_desktop: true
-          is_displayable_in_workspace: true
-        - name: my_workspaces
-          is_configurable: false
-          is_displayable_in_desktop: true
-          is_displayable_in_workspace: false
-        - name: my_profile
-          is_configurable: false
-          is_displayable_in_desktop: true
-          is_displayable_in_workspace: false
-        - name: resources_widget
-          is_configurable: true
-          is_displayable_in_desktop: true
-          is_displayable_in_workspace: true
-        - name: resource_text
-          is_configurable: true
-          is_displayable_in_desktop: true
-          is_displayable_in_workspace: true
+        #- name: core_resource_logger
+        #  is_configurable: true
+        #  is_displayable_in_desktop: true
+        #  is_displayable_in_workspace: true
+        #- name: simple_text
+        #  is_configurable: true
+        #  is_displayable_in_desktop: true
+        #  is_displayable_in_workspace: true
+        #- name: my_workspaces
+        #  is_configurable: false
+        #  is_displayable_in_desktop: true
+        #  is_displayable_in_workspace: false
+        #- name: my_profile
+        #  is_configurable: false
+        #  is_displayable_in_desktop: true
+        #  is_displayable_in_workspace: false
+        #- name: resources_widget
+        #  is_configurable: true
+        #  is_displayable_in_desktop: true
+        #  is_displayable_in_workspace: true
+        #- name: resource_text
+        #  is_configurable: true
+        #  is_displayable_in_desktop: true
+        #  is_displayable_in_workspace: true
+
+        - name: simple
+          class: Claroline\CoreBundle\Entity\Widget\Type\SimpleWidget
+          context: [workspace, desktop]
+          tags: [content]
+
+        - name: list
+          class: Claroline\CoreBundle\Entity\Widget\Type\ListWidget
+          abstract: true
+
+        - name: profile
+          class: Claroline\CoreBundle\Entity\Widget\Type\ProfileWidget
+          context: [workspace, desktop]
+          tags: [users]
+
+        - name: resource-list
+          parent: list
+          context: [workspace, desktop]
+          tags: [resources]
+
+        - name: user-list
+          parent: list
+          context: [workspace, desktop]
+          tags: [users]
+
+        - name: workspace-list
+          parent: list
+          context: [desktop]
+          tags: [workspaces]
 
     tools:
         - name: home

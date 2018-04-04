@@ -1,11 +1,3 @@
 {
-    "core_resource_logger": "Overzicht van de recente activiteiten",
-    "my_profile": "Mijn profiel",
-    "my_workspaces": "Mijn werkruimten",
-    "simple_text": "Tekst",
-    "type": "Soort",
-    "widget_configuration_copy_warning": "Er is een fout opgetreden tijdens het kopiëren van de instellingen van de widget <%widgetInstanceName%>",
-    "widget_instance_form_name": "Naam",
-    "widget_instance_form_widget": "Type",
-    "resources_widget": "Lijst van de bronnen"
+
 }

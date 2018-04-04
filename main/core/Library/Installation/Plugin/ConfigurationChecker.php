@@ -24,14 +24,24 @@ use Symfony\Component\Yaml\Parser;
  */
 class ConfigurationChecker implements CheckerInterface
 {
-    private $processedConfiguration;
+    /** @var Parser */
+    private $yamlParser;
+
+    /** @var EntityManager */
     private $em;
 
+    private $processedConfiguration;
+
     /**
+     * ConfigurationChecker constructor.
+     *
      * @DI\InjectParams({
      *     "yamlParser" = @DI\Inject("claroline.symfony_yaml"),
      *     "em"         = @DI\Inject("doctrine.orm.entity_manager")
      * })
+     *
+     * @param Parser        $yamlParser
+     * @param EntityManager $em
      */
     public function __construct(Parser $yamlParser, EntityManager $em)
     {
@@ -60,7 +70,9 @@ class ConfigurationChecker implements CheckerInterface
 
         //required for update to claroline v10 because database not updated yet from older version
         try {
-            $listResource = $this->em->getRepository('ClarolineCoreBundle:Resource\ResourceType')->findAll();
+            $listResource = $this->em
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findAll();
         } catch (\Exception $e) {
             $listResource = [];
         }
@@ -71,7 +83,9 @@ class ConfigurationChecker implements CheckerInterface
 
         $tools = [];
         /** @var \Claroline\CoreBundle\Entity\Tool\Tool[] $listTool */
-        $listTool = $this->em->getRepository('ClarolineCoreBundle:Tool\Tool')->findAllWithPlugin();
+        $listTool = $this->em
+            ->getRepository('ClarolineCoreBundle:Tool\Tool')
+            ->findAll();
 
         foreach ($listTool as $tool) {
             $toolPlugin = $tool->getPlugin();
@@ -83,7 +97,9 @@ class ConfigurationChecker implements CheckerInterface
 
         //required for update to claroline v10 because database not updated yet from older version
         try {
-            $listResourceActions = $this->em->getRepository('ClarolineCoreBundle:Resource\MenuAction')->findBy(['resourceType' => null, 'isCustom' => true]);
+            $listResourceActions = $this->em
+                ->getRepository('ClarolineCoreBundle:Resource\MenuAction')
+                ->findBy(['resourceType' => null, 'isCustom' => true]);
         } catch (\Exception $e) {
             $listResourceActions = [];
         }
@@ -94,7 +110,9 @@ class ConfigurationChecker implements CheckerInterface
 
         $widgets = [];
         /** @var \Claroline\CoreBundle\Entity\Widget\Widget[] $listWidget */
-        $listWidget = $this->em->getRepository('ClarolineCoreBundle:Widget\Widget')->findAllWithPlugin();
+        $listWidget = $this->em
+            ->getRepository('ClarolineCoreBundle:Widget\Widget')
+            ->findAll();
 
         foreach ($listWidget as $widget) {
             $widgetPlugin = $widget->getPlugin();

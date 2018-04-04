@@ -1,12 +1,15 @@
 {
-    "core_resource_logger": "Overview of recent activities",
-    "my_profile": "My profile",
-    "my_workspaces": "My workspaces",
-    "resources_widget": "Resources list",
-    "resource_text": "Display a resource text",
-    "simple_text": "Text",
-    "type": "Type",
-    "widget_configuration_copy_warning": "An error occured while copying configuration of widget <%widgetInstanceName%>",
-    "widget_instance_form_name": "Name",
-    "widget_instance_form_widget": "Type"
+    "widget": "Widget",
+    "add_widget": "Add a widget",
+    "edit_widget": "Edit widget",
+    "add_widget_before": "Insert a widget",
+    "widget_delete_confirm_title": "Delete widget",
+    "widget_delete_confirm_message": "Are you sure you want to delete this widget ?",
+
+    "simple": "Simple content",
+    "list": "Data list",
+    "profile": "User profile",
+    "resource-list": "Resources list",
+    "user-list": "Users list",
+    "workspace-list": "Workspaces list"
 }

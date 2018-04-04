@@ -11,215 +11,270 @@
 
 namespace Claroline\CoreBundle\Entity\Widget;
 
-use Claroline\CoreBundle\Entity\Role;
-use Doctrine\Common\Collections\ArrayCollection;
+use Claroline\AppBundle\Entity\Identifier\Id;
+use Claroline\AppBundle\Entity\Identifier\Uuid;
+use Claroline\CoreBundle\Entity\Plugin;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
- * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\WidgetRepository")
- * @ORM\Table(
- *      name="claro_widget",
- *      uniqueConstraints={@ORM\UniqueConstraint(name="widget_plugin_unique",columns={"name", "plugin_id"})}
- * )
+ * Widget entity.
+ *
+ * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\Widget\WidgetRepository")
+ * @ORM\Table(name="claro_widget", uniqueConstraints={
+ *     @ORM\UniqueConstraint(name="widget_plugin_unique", columns={"name", "plugin_id"})
+ * })
  */
 class Widget
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_widget"})
-     * @SerializedName("id")
-     */
-    protected $id;
+    use Id;
+    use Uuid;
+
+    const CONTEXT_DESKTOP   = 'desktop';
+    const CONTEXT_WORKSPACE = 'workspace';
 
     /**
-     * @ORM\ManyToOne(
-     *     targetEntity="Claroline\CoreBundle\Entity\Plugin",
-     *     cascade={"persist"}
-     * )
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
-    protected $plugin;
-
-    /**
+     * The name of the widget.
+     *
      * @ORM\Column()
-     * @Groups({"api_widget"})
-     * @SerializedName("name")
+     *
+     * @var string
      */
-    protected $name;
+    private $name;
 
     /**
-     * @ORM\Column(name="is_configurable", type="boolean")
-     * @Groups({"api_widget"})
-     * @SerializedName("isConfigurable")
+     * The plugin that have introduced the widget.
+     *
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Plugin")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @var Plugin
      */
-    protected $isConfigurable;
+    private $plugin;
+
+    /**
+     * The class that holds the widget custom configuration if any.
+     *
+     * @ORM\Column(nullable=true)
+     *
+     * @var string
+     */
+    private $class = null;
+
+    /**
+     * Abstract widgets require to be implemented by another widget
+     * to be displayed.
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $abstract = false;
+
+    /**
+     * The abstract widget which is implemented if any.
+     *
+     * @var Widget
+     */
+    private $parent = null;
+
+    /**
+     * The rendering context of the widget (workspace, desktop).
+     *
+     * @ORM\Column(type="json_array")
+     *
+     * @var array
+     */
+    private $context = [
+        self::CONTEXT_DESKTOP,
+        self::CONTEXT_WORKSPACE,
+    ];
 
     /**
      * @ORM\Column(name="is_exportable", type="boolean")
-     * @Groups({"api_widget"})
-     * @SerializedName("isExportable")
+     *
+     * @var boolean
      */
-    protected $isExportable;
+    private $exportable;
 
     /**
-     * @ORM\Column(name="is_displayable_in_workspace", type="boolean")
-     * @Groups({"api_widget"})
-     * @SerializedName("isDisplayableInWorkspace")
+     * A list of tags to group similar widgets.
+     *
+     * @ORM\Column(type="json_array")
+     *
+     * @var array
      */
-    protected $isDisplayableInWorkspace = true;
+    private $tags = [];
 
     /**
-     * @ORM\Column(name="is_displayable_in_desktop", type="boolean")
-     * @Groups({"api_widget"})
-     * @SerializedName("isDisplayableInDesktop")
+     * Widget constructor.
      */
-    protected $isDisplayableInDesktop = true;
-
-    /**
-     * @ORM\Column(name="default_width", type="integer", options={"default":4})
-     * @Groups({"api_widget"})
-     * @SerializedName("defaultWidth")
-     */
-    protected $defaultWidth = 4;
-
-    /**
-     * @ORM\Column(name="default_height", type="integer", options={"default":3})
-     * @Groups({"api_widget"})
-     * @SerializedName("defaultHeight")
-     */
-    protected $defaultHeight = 3;
-
-    /**
-     * @ORM\ManyToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\Role"
-     * )
-     * @ORM\JoinTable(name="claro_widget_roles")
-     */
-    protected $roles;
-
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
+        $this->refreshUuid();
     }
 
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function setPlugin($plugin)
-    {
-        $this->plugin = $plugin;
-    }
-
-    public function getPlugin()
-    {
-        return $this->plugin;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
+    /**
+     * Get name.
+     *
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
-    public function isConfigurable()
+    /**
+     * Set name.
+     *
+     * @param $name
+     */
+    public function setName($name)
     {
-        return $this->isConfigurable;
+        $this->name = $name;
     }
 
-    public function setConfigurable($bool)
+    /**
+     * Get plugin.
+     *
+     * @return Plugin
+     */
+    public function getPlugin()
     {
-        $this->isConfigurable = $bool;
+        return $this->plugin;
     }
 
-    public function setExportable($isExportable)
+    /**
+     * Set plugin.
+     *
+     * @param Plugin $plugin
+     */
+    public function setPlugin(Plugin $plugin)
     {
-        $this->isExportable = $isExportable;
+        $this->plugin = $plugin;
     }
 
+    /**
+     * Get widget class or the one from the parent if any.
+     *
+     * @return string
+     */
+    public function getClass()
+    {
+        if (!empty($this->class)) {
+            return $this->class;
+        }
+
+        if (!empty($this->parent)) {
+            return $this->parent->getClass();
+        }
+
+        return null;
+    }
+
+    /**
+     * Set class.
+     *
+     * @param string $class
+     */
+    public function setClass($class)
+    {
+        $this->class = $class;
+    }
+
+    /**
+     * Is it an abstract widget ?
+     *
+     * @return bool
+     */
+    public function isAbstract()
+    {
+        return $this->abstract;
+    }
+
+    /**
+     * @param $abstract
+     */
+    public function setAbstract($abstract)
+    {
+        $this->abstract = $abstract;
+    }
+
+    /**
+     * Get parent.
+     *
+     * @return Widget
+     */
+    public function getParent()
+    {
+        return $this->parent;
+    }
+
+    public function setParent(Widget $widget = null)
+    {
+        $this->parent = $widget;
+    }
+
+    /**
+     * Get the rendering context of the widget (workspace, desktop).
+     *
+     * @return array
+     */
+    public function getContext()
+    {
+        return $this->context;
+    }
+
+    /**
+     * Set context.
+     *
+     * @param array $context
+     */
+    public function setContext(array $context)
+    {
+        $this->context = $context;
+    }
+
+    /**
+     * Is widget exportable ?
+     *
+     * @return bool
+     */
     public function isExportable()
     {
-        return $this->isExportable;
+        return $this->exportable;
     }
 
-    public function isDisplayableInWorkspace()
+    /**
+     * Set exportable.
+     *
+     * @param $exportable
+     */
+    public function setExportable($exportable)
     {
-        return $this->isDisplayableInWorkspace;
+        $this->exportable = $exportable;
     }
 
-    public function setDisplayableInWorkspace($bool)
+    /**
+     * Get widget tags and the one from its parent if any.
+     *
+     * @return array
+     */
+    public function getTags()
     {
-        $this->isDisplayableInWorkspace = $bool;
-    }
-
-    public function setIsDisplayableInWorkspace($bool)
-    {
-        $this->isDisplayableInWorkspace = $bool;
-    }
-
-    public function isDisplayableInDesktop()
-    {
-        return $this->isDisplayableInDesktop;
-    }
-
-    public function setDisplayableInDesktop($bool)
-    {
-        $this->isDisplayableInDesktop = $bool;
-    }
-
-    public function setIsDisplayableInDesktop($bool)
-    {
-        $this->isDisplayableInDesktop = $bool;
-    }
-
-    public function getDefaultWidth()
-    {
-        return $this->defaultWidth;
-    }
-
-    public function setDefaultWidth($defaultWidth)
-    {
-        $this->defaultWidth = $defaultWidth;
-    }
-
-    public function getDefaultHeight()
-    {
-        return $this->defaultHeight;
-    }
-
-    public function setDefaultHeight($defaultHeight)
-    {
-        $this->defaultHeight = $defaultHeight;
-    }
-
-    public function __toString()
-    {
-        return $this->name;
-    }
-
-    public function getRoles()
-    {
-        return $this->roles->toArray();
-    }
-
-    public function addRole(Role $role)
-    {
-        if (!$this->roles->contains($role)) {
-            $this->roles->add($role);
+        if (!empty($this->parent)) {
+            return array_merge($this->parent->getTags(), $this->tags);
         }
+
+        return $this->tags;
     }
 
-    public function removeRole(Role $role)
+    /**
+     * Set tags.
+     *
+     * @param array $tags
+     */
+    public function setTags(array $tags)
     {
-        $this->roles->removeElement($role);
+        $this->tags = $tags;
     }
 }

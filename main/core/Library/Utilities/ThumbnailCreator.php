@@ -143,7 +143,10 @@ class ThumbnailCreator
         $oldX = imagesx($srcImg);
         $oldY = imagesy($srcImg);
 
-        if ($oldX > $oldY) {
+        $thumbWidth = $newWidth;
+        $thumbHeight = $newHeight;
+
+        /*if ($oldX > $oldY) {
             $thumbWidth = $newWidth;
             $thumbHeight = $oldY * ($newHeight / $oldX);
         } else {
@@ -151,7 +154,7 @@ class ThumbnailCreator
                 $thumbWidth = $oldX * ($newWidth / $oldY);
                 $thumbHeight = $newHeight;
             }
-        }
+        }*/
 
         //white background
         $dstImg = imagecreatetruecolor($thumbWidth, $thumbHeight);

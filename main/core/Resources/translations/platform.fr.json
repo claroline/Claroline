@@ -1395,7 +1395,7 @@
     "workspace_creator": "Créateur de l'espace",
     "workspace_delete": "Supprimer l'espace d'activités",
     "workspace_delete_confirm_message": "Etes-vous sûr de vouloir supprimer cet espace d'activités ?",
-    "workspace_delete_confirm_title": "Confirmation de suppression",
+    "workspace_delete_confirm_title": "Supprimer l'espace d'activité",
     "workspace_delete_success_message": "L'espace d'activités \"%workspaceName%\" été supprimé.",
     "workspace_display": "Affichage",
     "workspace_home_tab_creation": "Création d'un onglet pour les espaces d'activités",
@@ -1632,5 +1632,10 @@
     "workspace_register_select_users": "1. Sélectionner les utilisateurs à inscrire",
     "workspace_register_select_groups": "1. Sélectionner les groupes à inscrire",
     "workspace_register_select_roles": "2. Sélectionner les rôles à attribuer",
-    "clipboard_copy": "Copier dans le presse-papiers"
+    "clipboard_copy": "Copier dans le presse-papiers",
+    "image": "Image",
+    "textColor": "Couleur du texte",
+    "background": "Remplissage du fond",
+    "backgroundColor": "Couleur du fond",
+    "backgroundImage": "Image de fond"
 }

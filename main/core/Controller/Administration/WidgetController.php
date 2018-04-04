@@ -27,7 +27,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Tag("security.secure_service")
- * @SEC\PreAuthorize("canOpenAdminTool('roles_management')")
+ * @SEC\PreAuthorize("canOpenAdminTool('widgets_management')")
  */
 class WidgetController extends Controller
 {

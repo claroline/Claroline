@@ -19,7 +19,7 @@
       "copy-text-to-clipboard": "copy-text-to-clipboard/copy-text-to-clipboard",
       "scheduled-task-management": "administration/scheduled-task",
       "user-registration": "user/registration",
-      "user-profile": "user/profile",
+      "home-tool": "tools/home",
       "user-tracking": "user/tracking",
       "contacts-tool": "contact/tool",
       "workspace-user-management": "workspace/user",
@@ -31,6 +31,7 @@
   "styles": {
     "entry": {
       "home": "tools/home.less",
+      "home-tool": "tools/home.less",
       "theme-management": "tools/theme-management.less",
       "portal": "portal/portal.less"
     }

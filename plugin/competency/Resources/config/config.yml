@@ -13,9 +13,9 @@ plugin:
           is_displayable_in_workspace: false
           is_displayable_in_desktop: true
 
-    widgets:
-         - name: my-learning-objectives
-           is_configurable: false
+    #widgets:
+    #     - name: my-learning-objectives
+    #       is_configurable: false
 
     resource_actions:
         - name: manage_competencies
