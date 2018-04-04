@@ -161,7 +161,11 @@ class WorkspaceSerializer
                ['id' => $options['workspace_opening_resource']]
             );
 
-            $options['opened_resource'] = $this->serializer->serialize($resource);
+            if ($resource->getName()) {
+                $options['opened_resource'] = $this->serializer->serialize($resource);
+            } else {
+                $options['opened_resource'] = null;
+            }
         }
 
         return $options;
