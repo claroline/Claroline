@@ -170,11 +170,13 @@ const Step = props =>
             </div>
           }
 
-          <PrimaryResource
-            id={props.primaryResource.autoId}
-            type={props.primaryResource.meta.type}
-            height={props.display.height}
-          />
+          {props.primaryResource &&
+            <PrimaryResource
+              id={props.primaryResource.autoId}
+              type={props.primaryResource.meta.type}
+              height={props.display.height}
+            />
+          }
         </div>
       }
 
