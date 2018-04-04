@@ -1,17 +1,16 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import invariant from 'invariant'
 import merge from 'lodash/merge'
 
 import {getTypeOrDefault} from '#/main/core/data'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
 
 import {validateProp} from '#/main/core/data/form/validator'
 
-class FormField extends Component {
-  render() {
-    const typeDef = getTypeOrDefault(this.props.type)
-    invariant(typeDef.components.form, `form component cannot be found for '${this.props.type}'`)
+const FormField = props => {
+  const typeDef = getTypeOrDefault(props.type)
+  invariant(typeDef.components.form, `form component cannot be found for '${props.type}'`)
 
     if (this.props.readOnly) {
       return (
@@ -45,8 +44,11 @@ class FormField extends Component {
 
           this.props.setErrors(validateProp(this.props, value))
         }
-      }))
-    }
+
+        props.updateProp(props.name, value) // todo : maybe disable for calculated value
+        props.setErrors(validateProp(props, value))
+      }
+    }))
   }
 }
 

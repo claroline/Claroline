@@ -48,7 +48,7 @@ const Resource = props => {
       customActions={customActions}
     >
       <RoutedPageContent
-        headerSpacer={false}
+        headerSpacer={true}
         redirect={redirect}
         routes={routes}
       />

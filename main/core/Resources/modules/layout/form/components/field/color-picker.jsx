@@ -6,6 +6,8 @@ import {TwitterPicker} from 'react-color'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
+// TODO : rewrite me without external dependency
+
 class ColorPicker extends Component {
   constructor(props) {
     super(props)

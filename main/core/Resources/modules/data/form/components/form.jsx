@@ -131,7 +131,7 @@ class Form extends Component {
       <FormWrapper embedded={this.props.embedded} className={this.props.className}>
         {this.props.title &&
           React.createElement('h'+this.props.level, {
-            className: classes(this.props.displayLevel && `h${this.props.displayLevel}`)
+            className: classes('form-title', this.props.displayLevel && `h${this.props.displayLevel}`)
           }, this.props.title)
         }
 

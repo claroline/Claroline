@@ -223,8 +223,6 @@ class Configuration implements ConfigurationInterface
         $widgets = $this->listWidgets;
         $plugin = $this->plugin;
         $pluginFqcn = get_class($plugin);
-        $imgFolder = $plugin->getImgFolder();
-        $ds = DIRECTORY_SEPARATOR;
         $updateMode = $this->isInUpdateMode();
 
         $pluginSection
@@ -245,24 +243,17 @@ class Configuration implements ConfigurationInterface
                                 ->thenInvalid($pluginFqcn.' : the widget name already exists')
                             ->end()
                         ->end()
-                        ->booleanNode('is_configurable')->isRequired()->end()
-                        ->scalarNode('is_exportable')->defaultValue(false)->end()
-                        ->scalarNode('default_width')->defaultValue(4)->end()
-                        ->scalarNode('default_height')->defaultValue(3)->end()
-                        ->scalarNode('is_displayable_in_workspace')->defaultValue(true)->end()
-                        ->scalarNode('is_displayable_in_desktop')->defaultValue(true)->end()
-                        ->scalarNode('icon')
-                            ->validate()
-                            ->ifTrue(
-                                function ($v) use ($plugin) {
-                                    return !call_user_func_array(
-                                        __CLASS__.'::isIconValid',
-                                        [$v, $plugin]
-                                    );
-                                }
-                            )
-                            ->thenInvalid($pluginFqcn." : this file was not found ({$imgFolder}{$ds}%s)")
-                            ->end()
+                        ->scalarNode('class')->defaultValue(null)->end()
+                        ->booleanNode('abstract')->defaultFalse()->end()
+                        ->scalarNode('parent')->defaultValue(null)->end()
+                        ->booleanNode('exportable')->defaultFalse()->end()
+                        ->arrayNode('context')
+                            ->prototype('scalar')->end()
+                            ->defaultValue(['desktop', 'workspace'])
+                        ->end()
+                        ->arrayNode('tags')
+                            ->prototype('scalar')->end()
+                            ->defaultValue([])
                         ->end()
                     ->end()
                 ->end()

@@ -190,7 +190,7 @@ actions.save = () => {
       dispatch(modalActions.showModal(MODAL_MESSAGE, {
         title: tex('editor_invalid_no_save'),
         message: tex('editor_invalid_no_save_desc'),
-        bsStyle: 'warning'
+        type: 'warning'
       }))
     } else {
       const denormalized = denormalize(state.quiz, state.steps, state.items)

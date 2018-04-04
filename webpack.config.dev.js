@@ -45,6 +45,9 @@ Encore
   // Babel configuration
   .configureBabel(babelConfig => {
     babelConfig.compact = false
+
+    // for webpack dynamic import (compile `import()` and generate targeted chunks)
+    babelConfig.plugins.push('syntax-dynamic-import')
   })
   .enableReactPreset()
 
@@ -70,6 +73,11 @@ config.resolve.modules = ['./node_modules', './web/packages']
 config.resolve.descriptionFiles = ['package.json', '.bower.json', 'bower.json']
 config.resolve.alias = shared.aliases()
 config.externals = shared.externals()
+
+// for webpack dynamic import
+// override name for non entry chunk files
+// todo : find a way to use versioning
+config.output.chunkFilename = '[name].js'
 
 // export the final configuration
 module.exports = config

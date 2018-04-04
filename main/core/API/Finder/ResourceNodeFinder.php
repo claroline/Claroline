@@ -87,6 +87,14 @@ class ResourceNodeFinder implements FinderInterface
                     $qb->setParameter('parent', '%'.strtoupper($filterValue).'%');
                     $this->usedJoin['parent'] = true;
                     break;
+                case 'parent':
+                    if (is_null($filterValue)) {
+                        $qb->andWhere('obj.parent IS NULL');
+                    } else {
+                        $qb->andWhere('obj.parent = :parent');
+                        $qb->setParameter('parent', $filterValue);
+                    }
+                    break;
                 case 'roles':
                     $managerRoles = [];
                     $otherRoles = [];

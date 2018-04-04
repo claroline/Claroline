@@ -135,6 +135,16 @@ class ResourceNode
     protected $name;
 
     /**
+     * Permits to hide resources.
+     * For now it's only used in widgets. It should be think more globally.
+     *
+     * @ORM\Column(type="boolean")
+     *
+     * @var bool
+     */
+    private $hidden = false;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="description", type="text", nullable=true)
@@ -381,6 +391,16 @@ class ResourceNode
     public function setId($id)
     {
         $this->id = $id;
+    }
+
+    public function isHidden()
+    {
+        return $this->hidden;
+    }
+
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
     }
 
     /**

@@ -21,7 +21,7 @@ function collect(rootDir) {
 
 function getDefinitions(rootDir) {
   const file = `${rootDir}/vendor/composer/installed.json`
-  var data
+  let data
 
   try {
     data = fs.readFileSync(file, 'utf8')
@@ -52,7 +52,7 @@ function extractPackageInfo(rootDir) {
       assets: false,
       meta: false
     }
-    var data
+    let data
 
     if (isMetaPackage(path)) {
       newDef.assets = getMetaEntries(path)
@@ -69,8 +69,8 @@ function extractPackageInfo(rootDir) {
 }
 
 function getMetaEntries (targetDir) {
-  var data
-  var assets = {}
+  let data
+  const assets = {}
 
   getMetaBundles(targetDir).forEach(bundle => {
     try {
@@ -78,7 +78,7 @@ function getMetaEntries (targetDir) {
 
       Object.keys(data).forEach(assetType => {
         Object.keys(data[assetType].entry).forEach(entry => {
-          var parts = bundle.split('/')
+          const parts = bundle.split('/')
           const bundleName = parts.pop()
           const lastDir = parts[parts.length - 1]
 
@@ -105,11 +105,11 @@ function isMetaPackage(rootDir) {
 }
 
 function getMetaBundles(targetDir) {
-  var bundles = []
+  let bundles = []
   const src = ['main', 'plugin']
 
   src.filter(dir => fs.existsSync(targetDir + '/' + dir)).forEach(el => {
-    var dir = targetDir + '/' + el
+    const dir = targetDir + '/' + el
     bundles = bundles.concat(fs.readdirSync(dir).map(el => {
       return dir + '/' + el}))
   })
@@ -136,7 +136,7 @@ function normalizeNames(packages) {
  * @returns {*}
  */
 function normalizeName(name) {
-  var parts = name.split(/\/|\-/)
+  const parts = name.split(/\/|\-/)
 
   if (parts[parts.length - 1] === 'bundle') {
     parts.pop()

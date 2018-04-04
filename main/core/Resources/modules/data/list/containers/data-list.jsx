@@ -71,6 +71,10 @@ class DataList extends Component {
 }
 
 DataList.propTypes = {
+  level: T.number,
+  displayLevel: T.number,
+  title: T.string,
+
   /**
    * The name of the data in the list.
    *
@@ -161,10 +165,6 @@ DataList.propTypes = {
   pagination: T.object,
   selection: T.object,
   fetchData: T.func
-}
-
-DataList.defaultProps = {
-  actions: []
 }
 
 // connect list to redux

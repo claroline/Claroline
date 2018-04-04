@@ -16,11 +16,24 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 
 class WorkspaceAccessDeniedException extends AccessDeniedException
 {
+    /** @var Workspace */
+    private $workspace;
+
+    /**
+     * Set workspace.
+     *
+     * @param Workspace $workspace
+     */
     public function setWorkspace(Workspace $workspace)
     {
         $this->workspace = $workspace;
     }
 
+    /**
+     * Get workspace.
+     *
+     * @return Workspace
+     */
     public function getWorkspace()
     {
         return $this->workspace;

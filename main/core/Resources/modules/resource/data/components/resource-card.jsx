@@ -30,6 +30,24 @@ ResourceCard.propTypes = {
   ).isRequired
 }
 
+// used in widgets
+// todo : remove when card will become configurable in widget UI
+const ResourceCardMinimal = props =>
+  <DataCard
+    {...props}
+    id={props.data.id}
+    poster={props.data.thumbnail ? asset(props.data.thumbnail) : null}
+    title={props.data.name}
+    contentText={props.data.meta.description}
+  />
+
+ResourceCardMinimal.propTypes = {
+  data: T.shape(
+    ResourceNodeTypes.propTypes
+  ).isRequired
+}
+
 export {
-  ResourceCard
+  ResourceCard,
+  ResourceCardMinimal
 }

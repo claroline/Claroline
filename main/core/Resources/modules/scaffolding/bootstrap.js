@@ -1,6 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Provider} from 'react-redux'
+import invariant from 'invariant'
+
+// todo : find where I must put it
+// I put it here for now because it's the root of all apps
+import {asset} from '#/main/core/scaffolding/asset'
+__webpack_public_path__ = asset('dist/')
 
 import {createStore} from '#/main/core/scaffolding/store'
 import {combineReducers} from '#/main/core/scaffolding/reducer'
@@ -35,30 +41,43 @@ function getInitialData(container) {
  * @param {object|function} reducers          - an object containing the reducers of the app.
  * @param {function}        transformData     - a function to transform data before adding them to the store.
  */
-export function bootstrap(containerSelector, rootComponent, reducers, transformData = (data) => data) {
+function bootstrap(containerSelector, rootComponent, reducers = null, transformData = (data) => data) {
   // Retrieve app container
   const container = getContainer(containerSelector)
 
   // Get initial data from container data attributes
   const initialData = getInitialData(container)
 
-  // Create store
-  const store = createStore(
-    // register reducer
-    typeof reducers === 'function' ? reducers : combineReducers(reducers),
-    // register initial state
-    transformData(initialData)
-  )
+  let appRoot
+  if (reducers) {
+    // Create store
+    const store = createStore(
+      // register reducer
+      typeof reducers === 'function' ? reducers : combineReducers(reducers),
+      // register initial state
+      transformData(initialData)
+    )
 
-  // Render app
-  ReactDOM.render(
-    React.createElement(
-      Provider,
-      {
+    appRoot = React.createElement(
+      Provider, {
         store: store
       },
       React.createElement(rootComponent)
-    ),
-    container
-  )
+    )
+  } else {
+    appRoot = React.createElement(rootComponent)
+  }
+
+  // Render app
+  try {
+    ReactDOM.render(appRoot, container)
+  } catch (error) {
+    // rethrow errors (in some case they are swallowed)
+    console.log(error)
+    throw error
+  }
+}
+
+export {
+  bootstrap
 }

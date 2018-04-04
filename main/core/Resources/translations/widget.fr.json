@@ -1,12 +1,15 @@
 {
-    "core_resource_logger": "Aperçu des activités récentes",
-    "my_profile": "Mon profil",
-    "my_workspaces": "Mes espaces d'activités",
-    "resources_widget": "Liste des ressources",
-    "resource_text": "Afficher une ressource de type texte",
-    "simple_text": "Texte",
-    "type": "Type",
-    "widget_configuration_copy_warning": "Une erreur est survenue lors de la copie de la configuration du widget <%widgetInstanceName%>",
-    "widget_instance_form_name": "Nom",
-    "widget_instance_form_widget": "Type"
+    "widget": "Widget",
+    "add_widget": "Ajouter un widget",
+    "edit_widget": "Editer le widget",
+    "add_widget_before": "Insérer un widget",
+    "widget_delete_confirm_title": "Supprimer le widget",
+    "widget_delete_confirm_message": "Êtes-vous sûr de vouloir supprimer ce widget ?",
+
+    "simple": "Contenu simple",
+    "list": "Liste de données",
+    "profile": "Profil d'un utilisateur",
+    "resource-list": "Liste de ressources",
+    "user-list": "Liste d'utilisateurs",
+    "workspace-list": "Liste d'espaces d'activités"
 }

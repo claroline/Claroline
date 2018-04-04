@@ -120,7 +120,7 @@ class ResourceNodeSerializer
             'autoId' => $resourceNode->getId(),
             'actualId' => $resourceNode->getId(),
             'name' => $resourceNode->getName(),
-            'thumbnail' => $resourceNode->getThumbnail() ? '/'.$resourceNode->getThumbnail()->getRelativeUrl() : null, // todo : add as ResourceNode prop
+            'thumbnail' => $resourceNode->getThumbnail() ? $resourceNode->getThumbnail()->getRelativeUrl() : null,
             'poster' => $this->serializePoster($resourceNode),
             'meta' => $this->serializeMeta($resourceNode),
             'display' => $this->serializeDisplay($resourceNode),

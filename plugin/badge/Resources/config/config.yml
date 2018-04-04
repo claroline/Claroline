@@ -1,12 +1,12 @@
 plugin:
     has_options: false
 
-    widgets:
-      - name: badge_usage
-        is_configurable: true
-        is_exportable: false
-        is_displayable_in_workspace: true
-        is_displayable_in_desktop: false
+    #widgets:
+    #  - name: badge_usage
+    #    is_configurable: true
+    #    is_exportable: false
+    #    is_displayable_in_workspace: true
+    #    is_displayable_in_desktop: false
 
     tools:
       - name: badges

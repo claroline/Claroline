@@ -1,6 +1,5 @@
 import moment from 'moment'
 
-import {t} from '#/main/core/translation'
 import {getLocale} from '#/main/core/intl/locale'
 
 // configure moment

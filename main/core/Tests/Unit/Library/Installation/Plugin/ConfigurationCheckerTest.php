@@ -28,11 +28,11 @@ class ConfigurationCheckerTest extends MockeryTestCase
         $resourceTypeRepo = $this->mock('Claroline\CoreBundle\Repository\ResourceTypeRepository');
         $resourceTypeRepo->shouldReceive('findAll')->andReturn([]);
         $toolRepo = $this->mock('Claroline\CoreBundle\Repository\ToolRepository');
-        $toolRepo->shouldReceive('findAllWithPlugin')->andReturn([]);
+        $toolRepo->shouldReceive('findAll')->andReturn([]);
         $menuActionRepo = $this->mock('Doctrine\ORM\EntityRepository');
         $menuActionRepo->shouldReceive('findBy')->with(['resourceType' => null, 'isCustom' => true])->andReturn([]);
-        $widgetRepo = $this->mock('Claroline\CoreBundle\Repository\WidgetRepository');
-        $widgetRepo->shouldReceive('findAllWithPlugin')->andReturn([]);
+        $widgetRepo = $this->mock('Claroline\CoreBundle\Repository\Widget\WidgetRepository');
+        $widgetRepo->shouldReceive('findAll')->andReturn([]);
         $em = $this->mock('Doctrine\ORM\EntityManager');
         $em->shouldReceive('getRepository')
             ->with('ClarolineCoreBundle:Resource\ResourceType')

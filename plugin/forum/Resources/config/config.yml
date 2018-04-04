@@ -19,6 +19,6 @@ plugin:
         - action: resource-read
         - action: resource-claroline_forum-create_message
 
-  widgets:
-     - name: claroline_forum_widget
-       is_configurable: true
+  #widgets:
+  #   - name: claroline_forum_widget
+  #     is_configurable: true

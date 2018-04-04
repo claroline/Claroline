@@ -5,6 +5,6 @@ plugin:
     - class: Claroline\AnnouncementBundle\Entity\AnnouncementAggregate
       name: claroline_announcement_aggregate
 
-  widgets:
-    - name: claroline_announcement_widget
-      is_configurable: true
+  #widgets:
+  #  - name: claroline_announcement_widget
+  #    is_configurable: true

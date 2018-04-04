@@ -157,6 +157,9 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
   }
 
   const props = {
+    level:         ownProps.level,
+    displayLevel:  ownProps.displayLevel,
+    title:         ownProps.title,
     name:          ownProps.name,
     fetch:         ownProps.fetch,
     definition:    ownProps.definition,
