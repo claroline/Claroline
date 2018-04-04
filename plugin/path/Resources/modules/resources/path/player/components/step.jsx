@@ -165,10 +165,12 @@ const Step = props =>
             </div>
           }
 
-          <PrimaryResource
-            id={props.primaryResource.autoId}
-            type={props.primaryResource.meta.type}
-          />
+          {props.primaryResource &&
+            <PrimaryResource
+              id={props.primaryResource.autoId}
+              type={props.primaryResource.meta.type}
+            />
+          }
         </div>
       }
 
