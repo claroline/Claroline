@@ -77,7 +77,7 @@ class GridCell extends Component {
               id={`cell-${this.props.cell.id}-font`}
               className="btn-link-default"
               value={this.props.cell.color}
-              onChange={color => this.props.update('color', color.hex)}
+              onChange={color => this.props.update('color', color)}
               forFontColor={true}
             />
 
@@ -85,18 +85,18 @@ class GridCell extends Component {
               id={`cell-${this.props.cell.id}-bg`}
               className="btn-link-default"
               value={this.props.cell.background}
-              onChange={color => this.props.update('background', color.hex)}
+              onChange={color => this.props.update('background', color)}
             />
           </div>
 
-          <div className="cell-actions" ref="cellHeader">
+          <div className='cell-actions' ref={element => this.refCellHeader = element}>
             {this.props.solution &&
               <Overlay
-                container={this.refs.cellHeader}
+                container={this.refCellHeader}
                 placement="bottom"
                 show={this.props.solutionOpened}
                 rootClose={isEmpty(this.props._errors)}
-                target={this.refs.popoverToggle}
+                target={this.refPopover}
                 onHide={this.props.closeSolution}
               >
                 <GridCellPopover
@@ -117,7 +117,7 @@ class GridCell extends Component {
             }
 
             <TooltipButton
-              ref="popoverToggle"
+              ref={element => this.refPopover = element}
               id={`cell-${this.props.cell.id}-solution`}
               title={undefined !== this.props.solution ? tex('grid_edit_solution') : tex('grid_create_solution')}
               className="btn-link-default"
@@ -532,7 +532,7 @@ const Grid = props =>
             className="btn-default"
             value={props.item.border.color}
             onChange={color => props.onChange(
-              actions.updateProperty('borderColor', color.hex)
+              actions.updateProperty('borderColor', color)
             )}
           />
         </span>

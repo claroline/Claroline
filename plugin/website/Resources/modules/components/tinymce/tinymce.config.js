@@ -1,6 +1,10 @@
+import {config} from '#/main/core/tinymce/config'
+
+/* global WeakMap */
 let _tinymce = new WeakMap()
+
 export default class tinyMceConfig {
-  constructor () {
+  constructor() {
     _tinymce.set(this, window.tinymce)
     _tinymce.get(this).claroline.init = _tinymce.get(this).claroline.init || {}
     _tinymce.get(this).claroline.plugins = _tinymce.get(this).claroline.plugins || {}
@@ -12,7 +16,7 @@ export default class tinyMceConfig {
     }
   }
 
-  _setPluginsToolbarAndFormat () {
+  _setPluginsToolbarAndFormat() {
     let plugins = [
       'autoresize advlist autolink lists link image charmap print preview hr anchor pagebreak',
       'searchreplace wordcount visualblocks visualchars fullscreen',
@@ -35,8 +39,7 @@ export default class tinyMceConfig {
     this.toolbar1 = toolbar1
   }
 
-  _setFromTinymceConfiguration () {
-    let config = _tinymce.get(this).claroline.configuration
+  _setFromTinymceConfiguration() {
     for (let prop of Object.getOwnPropertyNames(config)) {
       this[ prop ] = config[ prop ]
     }

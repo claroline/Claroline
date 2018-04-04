@@ -57,7 +57,7 @@ export class AreaPopover extends Component {
               id="popover-color-picker"
               className="btn-default"
               value={this.props.color}
-              onChange={color => this.props.onPickColor(color.hex)}
+              onChange={color => this.props.onPickColor(color)}
             />
           </div>
 

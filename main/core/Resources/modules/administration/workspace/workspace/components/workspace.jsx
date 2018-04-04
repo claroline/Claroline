@@ -19,7 +19,7 @@ import {OrganizationList} from '#/main/core/administration/user/organization/com
 import {UserList} from '#/main/core/administration/user/user/components/user-list.jsx'
 
 const WorkspaceForm = (props) => {
-  const roleId = props.workspace.roles !== undefined && 0 !== props.workspace.roles.length ?
+  const roleId = props.workspace.roles !== undefined && props.workspace.roles.length > 0 ?
     props.workspace.roles.find(role => role.name.indexOf('ROLE_WS_MANAGER') > -1).id:
     null
 
@@ -43,6 +43,10 @@ const WorkspaceForm = (props) => {
               type: 'string',
               label: trans('code'),
               required: true
+            }, {
+              name: 'meta.description',
+              type: 'html',
+              label: trans('description')
             }
           ]
         }, {
@@ -92,7 +96,7 @@ const WorkspaceForm = (props) => {
               name: 'access_max_users',
               type: 'boolean',
               label: trans('access_max_users'),
-              calculated: props.workspace.restrictions && null !== props.workspace.restrictions.maxUsers && '' !== props.workspace.restrictions.maxUsers,
+              calculated: () => props.workspace.restrictions && null !== props.workspace.restrictions.maxUsers && '' !== props.workspace.restrictions.maxUsers,
               onChange: checked => {
                 if (checked) {
                   // initialize with the current nb of users with the role

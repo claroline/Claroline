@@ -3,8 +3,8 @@
   "type": "object",
   "properties": {
     "id": {
-      "type": "string",
-      "format": "string",
+      "type": "integer",
+      "format": "integer",
       "description": "The public file id"
     }
   }

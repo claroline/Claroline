@@ -37,11 +37,12 @@ class FormField extends Component {
         optional: !this.props.required,
         value: this.props.value,
         onChange: (value) => {
+          this.props.updateProp(this.props.name, value) // todo : maybe disable for calculated value
+          
           if (this.props.onChange) {
             this.props.onChange(value)
           }
 
-          this.props.updateProp(this.props.name, value) // todo : maybe disable for calculated value
           this.props.setErrors(validateProp(this.props, value))
         }
       }))

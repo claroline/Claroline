@@ -1,3 +1,7 @@
+import angular from 'angular/index'
+import {config} from '#/main/core/tinymce/config'
+
+/* global WeakMap */
 let _tinymce = new WeakMap()
 let _lessonData = new WeakMap()
 
@@ -7,7 +11,7 @@ export default class tinyMceConfig {
     _tinymce.get(this).claroline.init = _tinymce.get(this).claroline.init || {}
     _tinymce.get(this).claroline.plugins = _tinymce.get(this).claroline.plugins || {}
     _lessonData.set(this, lessonData)
-    this._setFromTinymceConfiguration(_tinymce.get(this).claroline.configuration)
+    this._setFromTinymceConfiguration()
     this._setPluginsToolbarAndFormat()
     this._configurationOverrides()
     this._hacks()
@@ -36,7 +40,7 @@ export default class tinyMceConfig {
 
   }
 
-  _setFromTinymceConfiguration(config) {
+  _setFromTinymceConfiguration() {
     angular.forEach(config, (value, key) => {
       this[key] = value
     })
@@ -54,12 +58,12 @@ export default class tinyMceConfig {
     // Since v4, tinyMce's textcolor plugin doesn't fire an ExecCommand anymore when changing text color
     // The ExecCommand is fired manually in order to be catchable by angular-ui-tinymce and
     // ensure the model is updated right after color change
-    this.setup = function(ed) {
-      ed.on('init', function(event) {
-        let oldApply = ed.formatter.apply;
+    this.setup = function (ed) {
+      ed.on('init', function () {
+        let oldApply = ed.formatter.apply
         ed.formatter.apply = function apply(name, vars, node) {
-          oldApply(name, vars, node);
-          ed.fire('ExecCommand', {name: name, vars: vars});
+          oldApply(name, vars, node)
+          ed.fire('ExecCommand', {name: name, vars: vars})
         }
       })
     }

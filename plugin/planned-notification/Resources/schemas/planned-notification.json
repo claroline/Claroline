@@ -1,0 +1,72 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string",
+      "description": "The uuid of the planned notification"
+    },
+    "parameters": {
+      "type": "object",
+      "description": "List of parameters for the planned notification",
+      "properties": {
+        "action": {
+          "type": "string",
+          "description": "The action that will trigger the creation of the planned notification"
+        },
+        "interval": {
+          "type": "integer",
+          "description": "The number of days after the action that are scheduled to send the notification"
+        },
+        "byMail": {
+          "type": "boolean",
+          "description": "Whether the planned notification will be sent by mail"
+        },
+        "byMessage": {
+          "type": "boolean",
+          "description": "Whether the planned notification will be sent by an internal message"
+        }
+      },
+      "required": ["action", "interval", "byMail", "byMessage"]
+    },
+    "message": {
+      "type": "object",
+      "description": "The message linked to the planned notification",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The uuid of the message"
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the message"
+        }
+      },
+      "required": ["id", "title"]
+    },
+    "workspace": {
+      "type": "object",
+      "description": "The workspace of the message",
+      "properties": {
+        "uuid": {
+          "type": "string",
+          "description": "The uuid of the workspace"
+        }
+      },
+      "required": ["uuid"]
+    },
+    "roles": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "oneOf": [
+          {
+              "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/role.json"
+          }
+        ]
+      }
+    }
+  },
+  "claroIds": ["id"],
+  "required": ["message", "parameters"]
+}

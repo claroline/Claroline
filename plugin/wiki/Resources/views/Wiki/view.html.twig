@@ -39,7 +39,7 @@
             displaySectionNumbers: {{ _resource.displaySectionNumbers ? 'true' : 'false' }},
             isLoggedIn: {{ user is not empty ? 'true' : 'false' }},
             isAdmin: {{ isAdmin ? 'true' : 'false' }},
-            isPDFExportActive: {{ config.getParameter('is_pdf_export_active') == true ? 'true' : 'false' }},
+            isPDFExportActive: {{ config.getParameter('is_pdf_export_active') == true and is_granted('EXPORT', _resource) ? 'true' : 'false' }},
             sections: {{ tree|json_encode(constant('JSON_PRETTY_PRINT'))|raw }},
             deletedSections: {{ deletedSections|json_encode(constant('JSON_PRETTY_PRINT'))|raw }},
             {% if user is not empty %}

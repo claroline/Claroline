@@ -11,10 +11,10 @@
 
 namespace Claroline\CoreBundle\Form;
 
+use Claroline\CoreBundle\Entity\Content;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Entity\Content;
 
 class HomeContentType extends AbstractType
 {
@@ -34,34 +34,34 @@ class HomeContentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($this->type === 'menu' && !$this->father) {
+        if ('menu' === $this->type && !$this->father) {
             $builder->add(
                 $this->name,
                 'content',
-                array(
+                [
                     'data' => $builder->getData(),
-                    'theme_options' => array(
+                    'theme_options' => [
                         'titlePlaceHolder' => 'menu_title',
                         'contentText' => false,
                         'tinymce' => false,
-                    ),
-                )
+                    ],
+                ]
             );
-        } elseif ($this->type === 'menu') {
+        } elseif ('menu' === $this->type) {
             $builder->add(
                 $this->name,
                 'content',
-                array(
+                [
                     'data' => $builder->getData(),
-                    'theme_options' => array(
+                    'theme_options' => [
                         'titlePlaceHolder' => 'link_title',
                         'textPlaceHolder' => 'link_address',
                         'tinymce' => false,
-                    ),
-                )
+                    ],
+                ]
             );
         } else {
-            $builder->add($this->name, 'content', array('data' => $builder->getData()));
+            $builder->add($this->name, 'content', ['data' => $builder->getData()]);
         }
     }
 
@@ -73,7 +73,7 @@ class HomeContentType extends AbstractType
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults(
-            array('translation_domain' => 'platform', 'validation_groups' => array('registration', 'Default'))
+            ['translation_domain' => 'platform', 'validation_groups' => ['registration', 'Default']]
         );
     }
 }

@@ -181,7 +181,7 @@ class AuthenticationController
 
         if ($form->isValid()) {
             $data = $form->getData();
-            $user = $this->userManager->getUserbyEmail($data['email']);
+            $user = $this->om->getRepository('ClarolineCoreBundle:User')->findOneByEmail($data['email']);
 
             if (!empty($user)) {
                 $user->setHashTime(time());

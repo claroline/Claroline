@@ -810,7 +810,7 @@ class WorkspaceManager
      */
     public function addUserAction(Workspace $workspace, User $user)
     {
-        $role = $this->roleManager->getCollaboratorRole($workspace);
+        $role = $workspace->getDefaultRole();
         $userRoles = $this->roleManager->getWorkspaceRolesForUser($user, $workspace);
 
         if (0 === count($userRoles)) {
@@ -1114,12 +1114,14 @@ class WorkspaceManager
             $details = [
                 'hide_tools_menu' => false,
                 'background_color' => null,
+                'hide_breadcrumb' => false,
+                'use_workspace_opening_resource' => false,
+                'workspace_opening_resource' => null,
             ];
             $workspaceOptions->setDetails($details);
             $workspace->setOptions($workspaceOptions);
             $this->om->persist($workspaceOptions);
             $this->om->persist($workspace);
-            $this->om->flush();
         }
 
         return $workspaceOptions;

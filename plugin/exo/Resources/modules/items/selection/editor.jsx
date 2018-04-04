@@ -72,45 +72,44 @@ class ChoiceItem extends Component {
   render() {
     return (
       <div className={classes(
-          'answer-item keyword-item',
-          {'expected-answer': this.props.score > 0},
-          {'unexpected-answer': this.props.score <= 0}
-        )
-      }>
-          {this.props.item.score.type === SCORE_SUM &&
-            <input
-              className="selection-score form-control"
-              type="number"
-              value={this.props.score}
-              step="0.5"
-              onChange={e => this.props.onChange(updateAnswer(Number(e.target.value), 'score', this.getSelectionId(), this.props.item.mode))}
-            />
-          }
-          {this.props.item.score.type === SCORE_FIXED &&
-            <span>
-              <input
-                type="checkbox"
-                id={'selection-chk-' + this.getSelectionId()}
-                checked={this.props.score > 0}
-                onChange={e => this.props.onChange(updateAnswer(e.target.checked ? 1 : 0, 'score', this.getSelectionId(), this.props.item.mode))}
-              />
-              {'\u00a0'}
-              <span>
-                {tex('correct_answer')}
-              </span>
-            </span>
-          }
-
+        'answer-item keyword-item',
+        {'expected-answer': this.props.score > 0},
+        {'unexpected-answer': this.props.score <= 0}
+      )}>
+        {this.props.item.score.type === SCORE_SUM &&
+          <input
+            className="selection-score form-control"
+            type="number"
+            value={this.props.score}
+            step="0.5"
+            onChange={e => this.props.onChange(updateAnswer(Number(e.target.value), 'score', this.getSelectionId(), this.props.item.mode))}
+          />
+        }
+        {this.props.item.score.type === SCORE_FIXED &&
           <span>
-            <TooltipButton
-              id={`choice-${this.getSelectionId()}-feedback-toggle`}
-              className="pull-right"
-              title={tex('choice_feedback_info')}
-              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-            >
-              <span className="fa fa-fw fa-comments-o" />
-            </TooltipButton>
+            <input
+              type="checkbox"
+              id={'selection-chk-' + this.getSelectionId()}
+              checked={this.props.score > 0}
+              onChange={e => this.props.onChange(updateAnswer(e.target.checked ? 1 : 0, 'score', this.getSelectionId(), this.props.item.mode))}
+            />
+            {'\u00a0'}
+            <span>
+              {tex('correct_answer')}
+            </span>
           </span>
+        }
+
+        <span>
+          <TooltipButton
+            id={`choice-${this.getSelectionId()}-feedback-toggle`}
+            className="pull-right"
+            title={tex('choice_feedback_info')}
+            onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+          >
+            <span className="fa fa-fw fa-comments-o" />
+          </TooltipButton>
+        </span>
         {this.state.showFeedback &&
           <div className="feedback-container selection-form-row">
             <Textarea
@@ -241,8 +240,7 @@ class SelectionForm extends Component {
               </TooltipButton>
             </div>
           </div>
-        }
-      >
+        }>
         {(this.props.item.mode === 'select' || this.props.item.mode === 'find') &&
           <ChoiceItem
             score={this.getSolution().score}
@@ -270,18 +268,18 @@ class SelectionForm extends Component {
           </button>
         }
 
-      {get(this.props, '_errors.solutions') &&
-        <ErrorBlock text={this.props._errors.solutions} warnOnly={!this.props.validating}/>
-      }
-      {this.state.showFeedback &&
-        <div className="feedback-container selection-form-row">
-          <Textarea
-            id={`choice-${this.props.item._selectionId}-feedback`}
-            value={this.props.item.feedback}
-            onChange={text => this.props.onChange(updateAnswer('feedback', text, this.props.item._selectionId, this.props.item.mode))}
-          />
-        </div>
-      }
+        {get(this.props, '_errors.solutions') &&
+          <ErrorBlock text={this.props._errors.solutions} warnOnly={!this.props.validating}/>
+        }
+        {this.state.showFeedback &&
+          <div className="feedback-container selection-form-row">
+            <Textarea
+              id={`choice-${this.props.item._selectionId}-feedback`}
+              value={this.props.item.feedback}
+              onChange={text => this.props.onChange(updateAnswer('feedback', text, this.props.item._selectionId, this.props.item.mode))}
+            />
+          </div>
+        }
       </Popover>
     )
   }
@@ -317,7 +315,7 @@ class ColorElement extends Component {
         <ColorPicker
           id={`color-${this.props.index}`}
           value={this.props.color.code}
-          onChange={(e) => {this.props.onChange(actions.highlightEditColor(this.props.color.id, e.hex))}}
+          onChange={(e) => {this.props.onChange(actions.highlightEditColor(this.props.color.id, e))}}
           autoOpen={this.props.autoOpen}
         />
         {'\u00a0'}
@@ -349,11 +347,10 @@ class HighlightAnswer extends Component {
 
     return (
       <div className={classes(
-          'answer-item keyword-item',
-          {'expected-answer': this.props.answer.score > 0},
-          {'unexpected-answer': this.props.answer.score <= 0}
-        )
-      }>
+        'answer-item keyword-item',
+        {'expected-answer': this.props.answer.score > 0},
+        {'unexpected-answer': this.props.answer.score <= 0}
+      )}>
         <div className='row'>
           <div className="col-xs-3">
             <select className="color-select checkbox"
@@ -361,26 +358,26 @@ class HighlightAnswer extends Component {
               onChange={e => this.props.onChange(actions.highlightUpdateAnswer('colorId', e.target.value, this.props.answer._answerId))}
               value={this.props.answer.colorId}
             >
-            {this.props.item.colors.map((color, key) => {
-              return <option
-                className="color-option"
-                key={key}
-                value={color.id}
-                style={{ backgroundColor: color.code, hover: color.code }}
-              >
-                {'\u00a0'}{'\u00a0'}{'\u00a0'}{'\u00a0'}{'\u00a0'}
-              </option>
-            })}
+              {this.props.item.colors.map((color, key) => {
+                return <option
+                  className="color-option"
+                  key={key}
+                  value={color.id}
+                  style={{ backgroundColor: color.code, hover: color.code }}
+                >
+                  {'\u00a0'}{'\u00a0'}{'\u00a0'}{'\u00a0'}{'\u00a0'}
+                </option>
+              })}
             </select>
           </div>
           <div className="col-xs-4">
             {this.props.item.score.type === SCORE_SUM &&
               <input
-                 type="number"
-                 step="0.5"
-                 onChange={e => this.props.onChange(actions.highlightUpdateAnswer('score', Number(e.target.value), this.props.answer._answerId))}
-                 value={this.props.answer.score}
-                 className="form-control keyword-score"
+                type="number"
+                step="0.5"
+                onChange={e => this.props.onChange(actions.highlightUpdateAnswer('score', Number(e.target.value), this.props.answer._answerId))}
+                value={this.props.answer.score}
+                className="form-control keyword-score"
               />
             }
             {this.props.item.score.type === SCORE_FIXED &&
@@ -391,30 +388,31 @@ class HighlightAnswer extends Component {
                 onChange={checked => this.props.onChange(actions.highlightUpdateAnswer('score', checked ? 1 : 0, this.props.answer._answerId))}
               />
             }
-         </div>
-         <div className="col-xs-2">
-           <TooltipButton
-             id={`choice-${this.props.answer._answerId}-feedback-toggle`}
-             title={tex('choice_feedback_info')}
-             onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
-           >
-             <span className="fa fa-fw fa-comments-o" />
-           </TooltipButton>
+          </div>
+          <div className="col-xs-2">
+            <TooltipButton
+              id={`choice-${this.props.answer._answerId}-feedback-toggle`}
+              title={tex('choice_feedback_info')}
+              onClick={() => this.setState({showFeedback: !this.state.showFeedback})}
+            >
+              <span className="fa fa-fw fa-comments-o" />
+            </TooltipButton>
+          </div>
+          <div className="col-xs-3">
+            <i onClick={() => this.props.onChange(actions.highlightRemoveAnswer(this.props.answer._answerId))} className="fa fa-trash-o pointer checkbox"></i>
+          </div>
         </div>
-        <div className="col-xs-3">
-          <i onClick={() => this.props.onChange(actions.highlightRemoveAnswer(this.props.answer._answerId))} className="fa fa-trash-o pointer checkbox"></i>
-        </div>
+        {this.state.showFeedback &&
+          <div className="feedback-container selection-form-row">
+            <Textarea
+              id={`choice-${this.props.answer._answerId}-feedback`}
+              onChange={text => this.props.onChange(actions.highlightUpdateAnswer('feedback', text, this.props.answer._answerId))}
+              value={this.props.answer.feedback}
+            />
+          </div>
+        }
       </div>
-      {this.state.showFeedback &&
-        <div className="feedback-container selection-form-row">
-          <Textarea
-            id={`choice-${this.props.answer._answerId}-feedback`}
-            onChange={text => this.props.onChange(actions.highlightUpdateAnswer('feedback', text, this.props.answer._answerId))}
-            value={this.props.answer.feedback}
-          />
-        </div>
-      }
-    </div>)
+    )
   }
 }
 
@@ -578,14 +576,14 @@ export class Selection extends Component {
             label={tex('global_penalty')}
             warnOnly={!this.props.validating}
           >
-          <input
-             className="form-control"
-             type="number"
-             min="0"
-             step="0.5"
-             onChange={e => this.props.onChange(actions.updateQuestion(Number(e.target.value), 'penalty', {}))}
-             value={this.props.item.penalty}
-           />
+            <input
+              className="form-control"
+              type="number"
+              min="0"
+              step="0.5"
+              onChange={e => this.props.onChange(actions.updateQuestion(Number(e.target.value), 'penalty', {}))}
+              value={this.props.item.penalty}
+            />
           </FormGroup>
         }
         {this.props.item.mode === 'highlight' &&
@@ -596,16 +594,16 @@ export class Selection extends Component {
                 return (<ColorElement key={'color' + index} index={index} color={color} onChange={this.props.onChange} autoOpen={color._autoOpen}/>)
               })
             }
-              {get(this.props.item, '_errors.colors') &&
-                <ErrorBlock text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
-              }
-              <button
-                type="button"
-                className="btn btn-default"
-                onClick={() => this.props.onChange(actions.highlightAddColor())}
-              >
-                <i className="fa fa-plus"/>{'\u00a0'}{tex('add_color')}
-              </button>
+            {get(this.props.item, '_errors.colors') &&
+              <ErrorBlock text={get(this.props.item, '_errors.colors')} warnOnly={!this.props.validating}/>
+            }
+            <button
+              type="button"
+              className="btn btn-default"
+              onClick={() => this.props.onChange(actions.highlightAddColor())}
+            >
+              <i className="fa fa-plus"/>{'\u00a0'}{tex('add_color')}
+            </button>
           </div>
         }
         <FormGroup

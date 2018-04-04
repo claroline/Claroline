@@ -15,11 +15,8 @@
       "description": "The workspace code",
       "minLength": 1
     },
-    "poster": {
-      "type": "string"
-    },
     "meta": {
-      "type": "object",
+      "type": ["object"],
       "properties": {
         "model": {
           "type": "boolean",
@@ -69,7 +66,7 @@
           "description": "The workspace closing date"
         },
         "maxUsers": {
-          "type": "integer",
+          "type": ["integer", "null"],
           "description": "The maximum amount of users the workspace can have"
         },
         "maxStorage": {
@@ -103,6 +100,9 @@
         "oneOf": [
           {
               "$ref": "https://github.com/claroline/Distribution/tree/master/main/core/Resources/schemas/role.json"
+          },
+          {
+              "type": "null"
           }
         ]
       }

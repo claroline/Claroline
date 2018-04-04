@@ -4,10 +4,13 @@ namespace Claroline\CoreBundle\API\Serializer\Workspace;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\API\Serializer\SerializerTrait;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
+use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -29,13 +32,18 @@ class WorkspaceSerializer
     /** @var ContainerInterface */
     private $container;
 
+    /** @var SerializerProvider */
+    private $serializer;
+
     /**
      * WorkspaceSerializer constructor.
      *
      * @DI\InjectParams({
      *     "userSerializer"   = @DI\Inject("claroline.serializer.user"),
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "container"        = @DI\Inject("service_container")
+     *     "container"        = @DI\Inject("service_container"),
+     *     "serializer"       = @DI\Inject("claroline.api.serializer"),
+     *     "ut"               = @DI\Inject("claroline.utilities.misc")
      * })
      *
      * @param UserSerializer   $userSerializer
@@ -44,11 +52,15 @@ class WorkspaceSerializer
     public function __construct(
         UserSerializer $userSerializer,
         WorkspaceManager $workspaceManager,
-        ContainerInterface $container
+        ContainerInterface $container,
+        SerializerProvider $serializer,
+        ClaroUtilities $ut
     ) {
         $this->userSerializer = $userSerializer;
         $this->workspaceManager = $workspaceManager;
         $this->container = $container;
+        $this->serializer = $serializer;
+        $this->ut = $ut;
     }
 
     /**
@@ -70,9 +82,9 @@ class WorkspaceSerializer
         ];
 
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
-            $serializer = $this->container->get('claroline.api.serializer');
+            $serializer = $this->serializer;
             $serialized = array_merge($serialized, [
-                'poster' => '', // todo : add as Workspace prop
+                'thumbnail' => $workspace->getThumbnail() ? $this->container->get('claroline.serializer.public_file')->serialize($workspace->getThumbnail()) : null,
                 'meta' => $this->getMeta($workspace),
                 'display' => $this->getDisplay($workspace),
                 'restrictions' => $this->getRestrictions($workspace),
@@ -90,6 +102,7 @@ class WorkspaceSerializer
                 'organizations' => array_map(function ($organization) use ($serializer) {
                     return $serializer->serialize($organization);
                 }, $workspace->getOrganizations()->toArray()),
+                'options' => $this->getOptions($workspace),
             ]);
         }
 
@@ -119,6 +132,10 @@ class WorkspaceSerializer
             'description' => $workspace->getDescription(),
             'created' => $workspace->getCreated()->format('Y-m-d\TH:i:s'),
             'creator' => $workspace->getCreator() ? $this->userSerializer->serialize($workspace->getCreator(), [Options::SERIALIZE_MINIMAL]) : null,
+            'usedStorage' => $this->ut->formatFileSize($this->workspaceManager->getUsedStorage($workspace)),
+            'totalUsers' => $this->workspaceManager->countUsers($workspace, true),
+            'totalResources' => $this->workspaceManager->countResources($workspace),
+            'notifications' => !$workspace->isDisabledNotifications(),
         ];
     }
 
@@ -132,6 +149,22 @@ class WorkspaceSerializer
         return [
             'displayable' => $workspace->isDisplayable(), // deprecated
         ];
+    }
+
+    private function getOptions(Workspace $workspace)
+    {
+        $options = $this->workspaceManager->getWorkspaceOptions($workspace)->getDetails();
+
+        if ($options['workspace_opening_resource']) {
+            $resource = $this->serializer->deserialize(
+              'Claroline\CoreBundle\Entity\Resource\ResourceNode',
+               ['id' => $options['workspace_opening_resource']]
+            );
+
+            $options['opened_resource'] = $this->serializer->serialize($resource);
+        }
+
+        return $options;
     }
 
     /**
@@ -162,6 +195,9 @@ class WorkspaceSerializer
             'validation' => $workspace->getRegistrationValidation(),
             'selfRegistration' => $workspace->getSelfRegistration(),
             'selfUnregistration' => $workspace->getSelfUnregistration(),
+            'defaultRole' => $workspace->getDefaultRole() ?
+              $this->serializer->serialize($workspace->getDefaultRole(), [Options::SERIALIZE_MINIMAL]) :
+              null,
         ];
     }
 
@@ -176,16 +212,34 @@ class WorkspaceSerializer
      */
     public function deserialize(array $data, Workspace $workspace, array $options = [])
     {
+        // remove this later (with the Trait)
+        //$this->genericSerializer->deserialize($data, $workspace, $options);
+
+        if (isset($data['thumbnail']) && isset($data['thumbnail']['id'])) {
+            $thumbnail = $this->serializer->deserialize(
+                'Claroline\CoreBundle\Entity\File\PublicFile',
+                $data['thumbnail']
+            );
+            $workspace->setThumbnail($thumbnail);
+        }
+
+        if (isset($data['registration']) && isset($data['registration']['defaultRole'])) {
+            $defaultRole = $this->serializer->deserialize(
+                'Claroline\CoreBundle\Entity\Role',
+                $data['registration']['defaultRole']
+            );
+            $workspace->setDefaultRole($defaultRole);
+        }
+
         $this->sipe('uuid', 'setUuid', $data, $workspace);
         $this->sipe('code', 'setCode', $data, $workspace);
         $this->sipe('name', 'setName', $data, $workspace);
+        $this->sipe('notifications', 'setNotifications', $data, $workspace);
 
         $this->sipe('meta.model', 'setIsModel', $data, $workspace);
         $this->sipe('meta.description', 'setDescription', $data, $workspace);
 
         $this->sipe('restrictions.hidden', 'setHidden', $data, $workspace);
-        $this->sipe('restrictions.accessibleFrom', 'setStartDate', $data, $workspace);
-        $this->sipe('restrictions.accessibleUntil', 'setEndDate', $data, $workspace);
         $this->sipe('restrictions.maxUsers', 'setMaxUsers', $data, $workspace);
         $this->sipe('restrictions.maxStorage', 'setMaxStorageSize', $data, $workspace);
         $this->sipe('restrictions.maxResources', 'setMaxUploadResources', $data, $workspace);
@@ -193,6 +247,19 @@ class WorkspaceSerializer
         $this->sipe('registration.validation', 'setRegistrationValidation', $data, $workspace);
         $this->sipe('registration.selfRegistration', 'setSelfRegistration', $data, $workspace);
         $this->sipe('registration.selfUnregistration', 'setSelfUnregistration', $data, $workspace);
+
+        if (isset($data['restrictions']) && isset($data['restrictions']['accessibleFrom'])) {
+            $workspace->setStartDate(DateNormalizer::denormalize($data['restrictions']['accessibleFrom']));
+        }
+
+        if (isset($data['restrictions']) && isset($data['restrictions']['accessibleUntil'])) {
+            $workspace->setEndDate(DateNormalizer::denormalize($data['restrictions']['accessibleUntil']));
+        }
+
+        if (isset($data['options'])) {
+            $workspaceOptions = $this->workspaceManager->getWorkspaceOptions($workspace);
+            $workspaceOptions->setDetails($data['options']);
+        }
 
         return $workspace;
     }

@@ -32,7 +32,7 @@
                 {% if is_granted('IS_AUTHENTICATED_FULLY') %}
                     {{ render(controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class})) }}
                 {% endif %}
-                {% if config.getParameter('is_pdf_export_active') == true %}
+                {% if config.getParameter('is_pdf_export_active') == true and is_granted('EXPORT', _resource) %}
                     <a href="{{ path('icap_blog_view_pdf', {'blogId':_resource.id}) }}" target="_blank" class="btn btn-default"><i class="fa fa-file-pdf-o text-danger"></i> {{ 'pdf_export'|trans({}, 'platform') }}</a>
                 {% endif %}
                 {% if is_granted('ROLE_ADMIN') %}

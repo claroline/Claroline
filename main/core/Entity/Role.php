@@ -325,10 +325,7 @@ class Role implements RoleInterface
     public function removeGroup(Group $group)
     {
         $this->groups->removeElement($group);
-
-        if ($group->hasRole($this)) {
-            $group->removeRole($this);
-        }
+        $group->removeRole($this);
     }
 
     public function initUsers()

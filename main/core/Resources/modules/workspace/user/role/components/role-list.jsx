@@ -8,16 +8,11 @@ const RoleList = {
   },
   definition: [
     {
-      name: 'name',
-      type: 'string',
-      label: trans('code'),
-      displayed: false,
-      primary: true
-    }, {
       name: 'translationKey',
       type: 'translation',
       label: trans('name'),
-      displayed: true
+      displayed: true,
+      primary: true
     }, {
       name: 'restrictions.maxUsers',
       type: 'number',

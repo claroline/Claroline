@@ -1,3 +1,4 @@
+import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
 
 const COLOR_TYPE = 'color'
 
@@ -9,7 +10,10 @@ const colorDefinition = {
   parse: (display) => display,
   // nothing special to do
   render: (raw) => raw,
-  validate: (value) => typeof value === 'string'
+  validate: (value) => typeof value === 'string',
+  components: {
+    form: ColorPicker
+  }
 }
 
 export {

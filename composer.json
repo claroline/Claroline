@@ -188,7 +188,8 @@
             "Claroline\\ExternalSynchronizationBundle\\": "plugin/external-user-group-synchronization",
             "Claroline\\BigBlueButtonBundle\\": "plugin/big-blue-button",
             "Icap\\InwicastBundle\\": "plugin/inwicast",
-            "Claroline\\DropZoneBundle\\": "plugin/drop-zone"
+            "Claroline\\DropZoneBundle\\": "plugin/drop-zone",
+            "Claroline\\PlannedNotificationBundle\\": "plugin/planned-notification"
         }
     },
     "extra": {
@@ -252,7 +253,8 @@
             "Claroline\\ExternalSynchronizationBundle\\ClarolineExternalSynchronizationBundle",
             "Claroline\\BigBlueButtonBundle\\ClarolineBigBlueButtonBundle",
             "Icap\\InwicastBundle\\IcapInwicastBundle",
-            "Claroline\\DropZoneBundle\\ClarolineDropZoneBundle"
+            "Claroline\\DropZoneBundle\\ClarolineDropZoneBundle",
+            "Claroline\\PlannedNotificationBundle\\ClarolinePlannedNotificationBundle"
         ]
     }
 }

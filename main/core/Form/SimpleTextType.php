@@ -36,6 +36,6 @@ class SimpleTextType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(['translation_domain' => 'platform', 'data_class' => 'Claroline\CoreBundle\Entity\Widget\SimpleTextConfig']);
     }
 }

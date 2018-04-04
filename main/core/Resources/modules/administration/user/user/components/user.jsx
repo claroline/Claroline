@@ -53,7 +53,10 @@ const UserForm = props =>
             type: 'password',
             label: t('password'),
             displayed: props.new,
-            required: true
+            required: true,
+            options: {
+              autoComplete: 'new-password'
+            }
           },
           {
             name: 'mainOrganization',

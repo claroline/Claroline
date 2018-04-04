@@ -418,6 +418,8 @@ class RightsManager
         is_int($permissions) ? $rights->setMask($permissions) : $this->setPermissions($rights, $permissions);
         $this->om->persist($rights);
         $this->om->flush();
+
+        return $rights;
     }
 
     /**
@@ -448,6 +450,32 @@ class RightsManager
      */
     public function getConfigurableRights(ResourceNode $node)
     {
+        $existing = $this->rightsRepo->findConfigurableRights($node);
+        $roles = $node->getWorkspace()->getRoles();
+        $missings = [];
+
+        foreach ($roles as $role) {
+            $found = false;
+            foreach ($existing as $right) {
+                if ($right->getRole()->getId() === $role->getId()) {
+                    $found = true;
+                }
+            }
+
+            if (!$found) {
+                $missings[] = $role;
+            }
+        }
+
+        if (0 === count($missings)) {
+            return $existing;
+        }
+
+        //might be slow on large datatrees
+        foreach ($missings as $missing) {
+            $this->create([], $missing, $node, true, []);
+        }
+
         return $this->rightsRepo->findConfigurableRights($node);
     }
 

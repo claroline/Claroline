@@ -28,9 +28,9 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundmaxUsersation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -257,27 +257,6 @@ class WorkspaceToolsParametersController extends AbstractParametersController
         $this->toolRightsManager->inverseActionValue($orderedTool, $role, $action);
 
         return new Response('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspace}/display/edit/form",
-     *     name="claro_workspace_display_edit_form"
-     * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceDisplayEditForm.html.twig")
-     *
-     * @param Workspace $workspace
-     */
-    public function workspaceDisplayEditFormAction(Workspace $workspace)
-    {
-        $this->checkAccess($workspace);
-        $workspaceOptions = $this->workspaceManager->getWorkspaceOptions($workspace);
-        $form = $this->formFactory->create(new WorkspaceOptionsType($workspaceOptions));
-
-        return [
-            'form' => $form->createView(),
-            'workspace' => $workspace,
-        ];
     }
 
     /**

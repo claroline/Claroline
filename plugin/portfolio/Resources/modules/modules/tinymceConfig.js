@@ -1,13 +1,16 @@
 import angular from 'angular/index'
+import {config} from '#/main/core/tinymce/config'
 
+/* global WeakMap */
 let _tinymce = new WeakMap()
+
 export default class tinyMceConfig {
   constructor() {
     _tinymce.set(this, window.tinymce)
     _tinymce.get(this).claroline.init = _tinymce.get(this).claroline.init || {}
     _tinymce.get(this).claroline.plugins = _tinymce.get(this).claroline.plugins || {}
 
-    this._setFromTinymceConfiguration(_tinymce.get(this).claroline.configuration)
+    this._setFromTinymceConfiguration()
     this._setPluginsToolbarAndFormat()
     this._configurationOverrides()
     this._hacks()
@@ -35,7 +38,7 @@ export default class tinyMceConfig {
     this.toolbar1 = toolbar1
   }
 
-  _setFromTinymceConfiguration(config) {
+  _setFromTinymceConfiguration() {
     for (let prop of Object.getOwnPropertyNames(config)) {
       this[ prop ] = config[ prop ]
     }
@@ -63,5 +66,3 @@ export default class tinyMceConfig {
 
 let appConfig = angular.module('app.config', [])
 appConfig.value('tinyMceConfig', new tinyMceConfig())
-
-

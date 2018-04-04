@@ -34,7 +34,7 @@ class Path extends AbstractResource implements \JsonSerializable
      *
      * @var string
      *
-     * @ORM\Column(name="structure", type="text")
+     * @ORM\Column(name="structure", type="text", nullable=true)
      */
     protected $structure;
 

@@ -16,7 +16,6 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\CoreBundle\Entity\Tool\Tool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
-use Claroline\CoreBundle\Form\WorkspaceEditType;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
 use Claroline\CoreBundle\Manager\GroupManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
@@ -115,117 +114,7 @@ class WorkspaceParametersController extends Controller
      */
     public function workspaceEditFormAction(Workspace $workspace)
     {
-        $user = $this->tokenStorage->getToken()->getUser();
-        $this->checkAccess($workspace);
-        $username = is_null($workspace->getCreator()) ? '' : $workspace->getCreator()->getUsername();
-        $creationDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
-            $workspace->getCreationDate()
-        );
-        $expDate = is_null($workspace->getEndDate()) ? null : $this->utilities->intlDateFormat(
-            $workspace->getEndDate()
-        );
-        $startDate = is_null($workspace->getEndDate()) ? null : $this->utilities->intlDateFormat(
-            $workspace->getEndDate()
-        );
-        $count = $this->workspaceManager->countUsers($workspace, true);
-        $storageUsed = $this->workspaceManager->getUsedStorage($workspace);
-        $storageUsed = $this->utilities->formatFileSize($storageUsed);
-        $countResources = $this->workspaceManager->countResources($workspace);
-        $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
-        $isAdmin = $this->authorization->isGranted('OPEN', $workspaceAdminTool);
-
-        $workspaceType = new WorkspaceEditType(
-            $username,
-            $creationDate,
-            $count,
-            $storageUsed,
-            $countResources,
-            $isAdmin,
-            $expDate,
-            $startDate
-        );
-
-        $form = $this->formFactory->create($workspaceType, $workspace);
-
-        if ($workspace->getSelfRegistration()) {
-            $url = $this->router->generate(
-                'claro_workspace_subscription_url_generate',
-                ['slug' => $workspace->getSlug()],
-                true
-            );
-        } else {
-            $url = '';
-        }
-
-        return [
-            'form' => $form->createView(),
-            'workspace' => $workspace,
-            'url' => $url,
-            'user' => $user,
-            'count' => $count,
-        ];
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspace}/edit",
-     *     name="claro_workspace_edit"
-     * )
-     * @EXT\Method("POST")
-     *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceEdit.html.twig")
-     *
-     * @param Workspace $workspace
-     *
-     * @return Response
-     */
-    public function workspaceEditAction(Workspace $workspace)
-    {
-        if (!$this->authorization->isGranted('parameters', $workspace)) {
-            throw new AccessDeniedException();
-        }
-
-        $wsRegisteredName = $workspace->getName();
-        $wsRegisteredDisplayable = $workspace->isDisplayable();
-        $workspaceAdminTool = $this->toolManager->getAdminToolByName('workspace_management');
-        $isAdmin = $this->authorization->isGranted('OPEN', $workspaceAdminTool);
-        $expDate = is_null($workspace->getCreationDate()) ? null : $this->utilities->intlDateFormat(
-            $workspace->getEndDate()
-        );
-
-        $workspaceType = new WorkspaceEditType(null, null, null, null, null, $isAdmin, $expDate);
-        $form = $this->formFactory->create($workspaceType, $workspace);
-        $form->handleRequest($this->request);
-
-        if ($form->isValid()) {
-            $this->workspaceManager->editWorkspace($workspace);
-            $this->workspaceManager->rename($workspace, $workspace->getName());
-            $displayable = $workspace->isDisplayable();
-
-            if (!$displayable && $displayable !== $wsRegisteredDisplayable) {
-                $this->workspaceTagManager->deleteAllAdminRelationsFromWorkspace($workspace);
-            }
-
-            return $this->redirect(
-                $this->generateUrl(
-                    'claro_workspace_open_tool',
-                    [
-                        'workspaceId' => $workspace->getId(),
-                        'toolName' => 'parameters',
-                    ]
-                )
-            );
-        } else {
-            $workspace->setName($wsRegisteredName);
-        }
-
-        $user = $this->tokenStorage->getToken()->getUser();
-
-        return [
-            'form' => $form->createView(),
-            'workspace' => $workspace,
-            'user' => $user,
-        ];
+        return ['workspace' => $workspace];
     }
 
     /**

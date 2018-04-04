@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Entity\Workspace;
 
+use Claroline\CoreBundle\Entity\File\PublicFile;
 use Claroline\CoreBundle\Entity\Model\OrganizationsTrait;
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
@@ -179,9 +180,19 @@ class Workspace
 
     /**
      * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\Role"
+     * )
+     * @ORM\JoinColumn(name="default_role_id", onDelete="SET NULL")
+     *
+     * @var User
+     */
+    protected $defaultRole;
+
+    /**
+     * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User"
      * )
-     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL")
+     * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
      *
      * @Serializer\SerializedName("creator")
      *
@@ -295,7 +306,8 @@ class Workspace
     /**
      * @ORM\OneToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\WorkspaceOptions",
-     *     inversedBy="workspace"
+     *     inversedBy="workspace",
+     *     cascade={"persist"}
      * )
      * @ORM\JoinColumn(name="options_id", onDelete="SET NULL", nullable=true)
      *
@@ -323,6 +335,16 @@ class Workspace
      * @var ArrayCollection
      */
     protected $organizations;
+
+    /**
+     * @ORM\ManyToOne(
+     *     targetEntity="Claroline\CoreBundle\Entity\File\PublicFile"
+     * )
+     * @ORM\JoinColumn(name="thumbnail_id", referencedColumnName="id", onDelete="SET NULL")
+     *
+     * @var PublicFile
+     */
+    protected $thumbnail;
 
     /**
      * Workspace constructor.
@@ -829,6 +851,11 @@ class Workspace
         $this->disabledNotifications = $disabledNotifications;
     }
 
+    public function setNotifications($notifications)
+    {
+        $this->disabledNotifications = !$notifications;
+    }
+
     public function getSlug()
     {
         return $this->slug;
@@ -837,5 +864,33 @@ class Workspace
     public function setSlug($slug)
     {
         $this->slug = $slug;
+    }
+
+    public function setThumbnail(PublicFile $file)
+    {
+        $this->thumbnail = $file;
+    }
+
+    public function getThumbnail()
+    {
+        return $this->thumbnail;
+    }
+
+    public function setDefaultRole(Role $role)
+    {
+        $this->defaultRole = $role;
+    }
+
+    public function getDefaultRole()
+    {
+        if (!$this->defaultRole) {
+            foreach ($this->roles as $role) {
+                if (strpos($role->getName(), 'COLLABORATOR')) {
+                    return $role;
+                }
+            }
+        }
+
+        return $this->defaultRole;
     }
 }

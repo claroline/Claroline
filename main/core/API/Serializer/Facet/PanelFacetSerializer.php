@@ -48,9 +48,11 @@ class PanelFacetSerializer
             'title' => $panel->getName(),
             'position' => $panel->getPosition(),
             'roles' => $this->serializeRoles($panel->getPanelFacetsRole()->toArray()),
+            //deprecated
             'display' => [
                 'collapsed' => $panel->isDefaultCollapsed(),
             ],
+            'defaultOpened' => true,
             'fields' => array_map(function (FieldFacet $fieldFacet) use ($options) { // todo check user rights
                 return $this->serializer->serialize($fieldFacet, $options);
             }, $panel->getFieldsFacet()->toArray()),

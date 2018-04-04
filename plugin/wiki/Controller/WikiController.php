@@ -23,13 +23,17 @@ class WikiController extends Controller
      */
     public function viewAction(Wiki $wiki, Request $request)
     {
-        $this->checkAccess('OPEN', $wiki);
+        $format = $request->get('_format');
+        if ($format === 'pdf') {
+            $this->checkAccess('EXPORT', $wiki);
+        } else {
+            $this->checkAccess('OPEN', $wiki);
+        }
         $isAdmin = $this->isUserGranted('EDIT', $wiki);
         $user = $this->getLoggedUser();
         $sectionRepository = $this->get('icap.wiki.section_repository');
         $tree = $sectionRepository->buildSectionTree($wiki, $isAdmin, $user);
         $deletedSections = $sectionRepository->findDeletedSections($wiki);
-        $format = $request->get('_format');
         $response = new Response();
         $this->render(sprintf('IcapWikiBundle:Wiki:view.%s.twig', $format), [
             '_resource' => $wiki,

@@ -2,6 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
+import get from 'lodash/get'
+
 import {url} from '#/main/core/api/router'
 import {trans} from '#/main/core/translation'
 
@@ -31,8 +33,14 @@ const ParametersTabActions = () =>
  * @param props
  * @constructor
  */
-const Parameters = props =>
-  <FormContainer
+const Parameters = props => {
+
+  const roleEnum = {}
+  props.workspace.roles.forEach(role => {
+    roleEnum[role.id] = trans(role.translationKey)
+  })
+
+  return (<FormContainer
     level={3}
     name="parameters"
     sections={[
@@ -46,7 +54,7 @@ const Parameters = props =>
             name: 'registration.url',
             type: 'url',
             label: trans('registration_url'),
-            calculated: url(['claro_workspace_subscription_url_generate', {slug: props.workspace.meta.slug}, true]),
+            calculated: () => url(['claro_workspace_subscription_url_generate', {slug: props.workspace.meta.slug}, true]),
             required: true,
             disabled: true
           }, {
@@ -68,6 +76,19 @@ const Parameters = props =>
             type: 'boolean',
             label: trans('activate_self_unregistration'),
             help: trans('self_unregistration_workspace_help')
+          },
+          {
+            name: 'registration.defaultRole',
+            type: 'enum',
+            label: trans('default_role'),
+            options: {
+              choices: roleEnum
+            },
+            onChange: (roleId) => props.updateProp(
+              'registration.defaultRole',
+              props.workspace.roles.find(role => role.id === roleId)
+            ),
+            calculated: () => get(props.workspace, 'registration.defaultRole.id', null)
           }
         ]
       }, {
@@ -79,7 +100,7 @@ const Parameters = props =>
             name: 'access_max_users',
             type: 'boolean',
             label: trans('access_max_users'),
-            calculated: props.workspace.restrictions && null !== props.workspace.restrictions.maxUsers && '' !== props.workspace.restrictions.maxUsers,
+            calculated: () => props.workspace.restrictions && null !== props.workspace.restrictions.maxUsers && '' !== props.workspace.restrictions.maxUsers,
             onChange: checked => {
               if (checked) {
                 // initialize with the current nb of users with the role
@@ -105,7 +126,8 @@ const Parameters = props =>
         ]
       }
     ]}
-  />
+  />)
+}
 
 Parameters.propTypes = {
   workspace: T.shape(

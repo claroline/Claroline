@@ -1,4 +1,4 @@
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {ImageGroup} from '#/main/core/layout/form/components/group/image-group.jsx'
 
@@ -11,8 +11,8 @@ const imageDefinition = {
     type: IMAGE_TYPE,
     creatable: false,
     icon: 'fa fa-fw fa-picture-o',
-    label: t('image'),
-    description: t('image_desc')
+    label: trans('image'),
+    description: trans('image_desc')
   },
   components: {
     form: ImageGroup
@@ -20,6 +20,6 @@ const imageDefinition = {
 }
 
 export {
-  IMAGE_TYPE ,
+  IMAGE_TYPE,
   imageDefinition
 }

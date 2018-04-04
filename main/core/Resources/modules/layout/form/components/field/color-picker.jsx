@@ -21,7 +21,7 @@ class ColorPicker extends Component {
           className={classes('btn', this.props.className)}
           role="button"
           type="button"
-          ref="target"
+          ref={element => this.refTarget = element}
           onClick={() => this.setState({open: !this.state.open})}
         >
           <span
@@ -43,7 +43,7 @@ class ColorPicker extends Component {
           onHide={() => this.setState({open: false})}
           placement="bottom"
           container={this}
-          target={this.refs.target}
+          target={this.refTarget}
           rootClose={true}
         >
           <TwitterPicker
@@ -51,7 +51,7 @@ class ColorPicker extends Component {
             colors={this.props.colors}
             onChangeComplete={color => {
               this.setState({open: false})
-              this.props.onChange(color)
+              this.props.onChange(color.hex)
             }}
           />
         </Overlay>

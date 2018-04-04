@@ -169,7 +169,9 @@ class SerializerProvider
             $object = new $class();
         }
 
-        $serializer->deserialize($data, $object, $options);
+        if (method_exists($serializer, 'deserialize')) {
+            $serializer->deserialize($data, $object, $options);
+        }
 
         return $object;
     }
