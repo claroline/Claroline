@@ -47,7 +47,7 @@ class DataList extends Component {
 
   componentWillReceiveProps(nextProps) {
     if (!isEqual(this.props.definition, nextProps.definition)
-      || isEqual(this.props.display, nextProps.display)) {
+      || !isEqual(this.props.display, nextProps.display)) {
       const definition = createListDefinition(nextProps.definition)
       const currentDisplay = this.computeDisplay(
         definition,
