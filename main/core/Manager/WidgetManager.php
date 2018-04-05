@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Widget\WidgetRepository;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -61,5 +62,19 @@ class WidgetManager
         $enabledPlugins = $this->pluginManager->getEnabled(true);
 
         return $this->widgetRepository->findAllAvailable($enabledPlugins, $context);
+    }
+
+    public function getWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
+        Workspace $workspace,
+        array $widgetHomeTabConfigs,
+        $executeQuery = true
+    ) {
+        return count($widgetHomeTabConfigs) > 0 ?
+        $this->widgetDisplayConfigRepo->findWidgetDisplayConfigsByWorkspaceAndWidgetHTCs(
+            $workspace,
+            $widgetHomeTabConfigs,
+            $executeQuery
+        ) :
+        [];
     }
 }
