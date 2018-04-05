@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "da3b24d0cce9834ca8ca4f8a60e1c4803946df17"
+                "reference": "fd835bc89e7c1613726beae461255b90754c006d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/da3b24d0cce9834ca8ca4f8a60e1c4803946df17",
-                "reference": "da3b24d0cce9834ca8ca4f8a60e1c4803946df17",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/fd835bc89e7c1613726beae461255b90754c006d",
+                "reference": "fd835bc89e7c1613726beae461255b90754c006d",
                 "shasum": ""
             },
             "require": {
@@ -397,7 +397,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-04-03 17:21:05"
+            "time": "2018-04-04 16:11:11"
         },
         {
             "name": "cocur/slugify",
@@ -4187,16 +4187,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.4.2",
+            "version": "v1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "965cdeb01fdcab7653253aa81d40441d261f1e66"
+                "reference": "9b3899e3c3ddde89016f576edb8c489708ad64cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/965cdeb01fdcab7653253aa81d40441d261f1e66",
-                "reference": "965cdeb01fdcab7653253aa81d40441d261f1e66",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/9b3899e3c3ddde89016f576edb8c489708ad64cd",
+                "reference": "9b3899e3c3ddde89016f576edb8c489708ad64cd",
                 "shasum": ""
             },
             "require": {
@@ -4231,7 +4231,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-03-13 16:22:52"
+            "time": "2018-04-04 21:48:54"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -7757,12 +7757,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "92a4b25dc8d602dc11498dc97c3b4a13ad84fd65"
+                "reference": "58978e7c06888c4111e19c4902e30b29506d6ea7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/92a4b25dc8d602dc11498dc97c3b4a13ad84fd65",
-                "reference": "92a4b25dc8d602dc11498dc97c3b4a13ad84fd65",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/58978e7c06888c4111e19c4902e30b29506d6ea7",
+                "reference": "58978e7c06888c4111e19c4902e30b29506d6ea7",
                 "shasum": ""
             },
             "require": {
@@ -7815,7 +7815,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-03-22 13:45:58"
+            "time": "2018-04-04 18:35:20"
         },
         {
             "name": "symfony/polyfill-php54",
