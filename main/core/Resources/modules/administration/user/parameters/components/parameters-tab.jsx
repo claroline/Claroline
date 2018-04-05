@@ -21,8 +21,14 @@ const ParametersTabActions = () =>
     />
   </PageActions>
 
-const Parameters = (props) =>
-  <FormContainer
+const Parameters = (props) => {
+
+  const roleEnum = {}
+  props.platformRoles.forEach(role => {
+    roleEnum[role.name] = trans(role.translationKey)
+  })
+
+  return(<FormContainer
     level={3}
     name="parameters"
     sections={[
@@ -71,7 +77,7 @@ const Parameters = (props) =>
             required: true,
             options: {
               noEmpty: true,
-              choices: {}
+              choices: roleEnum
             }
           }, {
             name: 'locales.default',
@@ -149,9 +155,11 @@ const Parameters = (props) =>
         ]
       }
     ]}
-  />
+  />)
+}
 
 Parameters.propTypes = {
+  platformRoles: T.array.isRequired,
   parameters: T.shape({
     registration: T.shape({
       self: T.bool
@@ -164,7 +172,8 @@ Parameters.propTypes = {
 
 const ParametersTab = connect(
   (state) => ({
-    parameters: formSelect.data(formSelect.form(state, 'parameters'))
+    parameters: formSelect.data(formSelect.form(state, 'parameters')),
+    platformRoles: state.platformRoles
   })
 )(Parameters)
 

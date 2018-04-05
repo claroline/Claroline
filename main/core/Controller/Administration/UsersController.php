@@ -172,6 +172,9 @@ class UsersController extends Controller
             // todo : put it in the async load of form
             'parameters' => $this->parametersSerializer->serialize(),
             'profile' => $this->profileSerializer->serialize(),
+            'platformRoles' => $this->finder->search('Claroline\CoreBundle\Entity\Role', [
+              'filters' => ['type' => Role::PLATFORM_ROLE],
+            ]),
         ];
     }
 

@@ -12,7 +12,7 @@ const Asset = {
    *
    * @returns {string}
    */
-  path(assetName) {
+  path(assetName = '') {
     const element = document.getElementById('homeAsset')
 
     let basePath = ''

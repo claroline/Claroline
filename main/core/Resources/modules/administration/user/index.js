@@ -49,7 +49,8 @@ bootstrap(
       profile: {
         data: profileFacets,
         originalData: profileFacets
-      }
+      },
+      platformRoles: initialData.platformRoles.data
     }
   }
 )
