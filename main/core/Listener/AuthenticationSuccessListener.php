@@ -132,6 +132,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     public function onAuthenticationSuccess(Request $request, TokenInterface $token)
     {
         $user = $this->tokenStorage->getToken()->getUser();
+        $request->setLocale($user->getLocale());
         $securityRoute = null;
         $securityUri = $request->getSession()->get('_security.main.target_path');
         // Get route name if security Uri present
