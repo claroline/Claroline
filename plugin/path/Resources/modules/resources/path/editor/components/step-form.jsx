@@ -161,6 +161,15 @@ const StepForm = props =>
             type: 'string',
             label: trans('step_numbering', {}, 'path'),
             displayed: props.customNumbering
+          }, {
+            name: 'display.height',
+            type: 'number',
+            label: trans('step_content_height', {}, 'path'),
+            options: {
+              min: 0,
+              unit: 'px',
+              help: trans('step_content_height_info', {}, 'path')
+            }
           }
         ]
       }

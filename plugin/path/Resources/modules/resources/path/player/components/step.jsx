@@ -74,11 +74,15 @@ class PrimaryResource extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener('message', this.resize)
+    if (!this.props.height) {
+      window.addEventListener('message', this.resize)
+    }
   }
 
   componentWillUnmount() {
-    window.removeEventListener('message', this.resize)
+    if (!this.props.height) {
+      window.removeEventListener('message', this.resize)
+    }
   }
 
   render() {
@@ -87,7 +91,7 @@ class PrimaryResource extends Component {
         className="step-primary-resource"
         id="embeddedActivity"
         ref={el => this.iframe = el}
-        height={0}
+        height={this.props.height}
         src={url(['claro_resource_open', {node: this.props.id, resourceType: this.props.type}], {iframe: 1})}
         allowFullScreen={true}
       />
@@ -97,7 +101,8 @@ class PrimaryResource extends Component {
 
 PrimaryResource.propTypes = {
   id: T.number.isRequired,
-  type: T.string.isRequired
+  type: T.string.isRequired,
+  height: T.number
 }
 
 const SecondaryResources = props =>
@@ -168,6 +173,7 @@ const Step = props =>
           <PrimaryResource
             id={props.primaryResource.autoId}
             type={props.primaryResource.meta.type}
+            height={props.display.height}
           />
         </div>
       }

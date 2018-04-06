@@ -23,6 +23,8 @@
     "step": "Étape",
     "step_add": "Ajouter une étape",
     "step_add_child": "Ajouter une sous-étape",
+    "step_content_height": "Taille pour le contenu de l'étape",
+    "step_content_height_info": "À utiliser que si le contenu de l'étape ne s'affiche pas correctement. (0 = désactivé)",
     "step_delete_confirm": "Êtes-vous sur de vouloir supprimer cette étape (ainsi que toutes les étapes enfants associées) ?",
     "step_delete_title": "Supprimer l'étape",
     "user_progression": "statut : ",
