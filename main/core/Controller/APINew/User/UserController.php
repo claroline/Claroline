@@ -227,7 +227,7 @@ class UserController extends AbstractCrudController
 
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\User',
-            array_merge($request->query->all(), $filters)
+            array_merge($request->query->all(), ['hiddenFilters' => $filters])
         ));
     }
 }
