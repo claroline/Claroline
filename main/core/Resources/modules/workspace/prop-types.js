@@ -21,7 +21,9 @@ const Workspace = {
     }).isRequired
   },
   defaultProps: {
-    meta: {},
+    meta: {
+      model: false
+    },
     roles: [],
     registration: {
       validation: false,
