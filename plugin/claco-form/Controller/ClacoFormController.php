@@ -20,6 +20,7 @@ use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\Field;
+use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
@@ -1478,5 +1479,47 @@ class ClacoFormController extends Controller
         }
 
         return new JsonResponse($serializedEntries, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/claco/form/field/{fieldValue}/file/download",
+     *     name="claro_claco_form_field_value_file_download",
+     *     options = {"expose"=true}
+     * )
+     *
+     * Downloads a file associated to a FieldValue.
+     *
+     * @param FieldValue $fieldValue
+     *
+     * @return StreamedResponse
+     */
+    public function downloadAction(FieldValue $fieldValue)
+    {
+        $field = $fieldValue->getField();
+
+        if ($field->getType() !== FieldFacet::FILE_TYPE) {
+            return new JsonResponse(null, 404);
+        }
+        $valueData = $fieldValue->getFieldFacetValue()->getValue();
+        $data = is_array($valueData) && count($valueData) > 0 ? $valueData[0] : null;
+
+        if (empty($data)) {
+            return new JsonResponse(null, 404);
+        }
+        $response = new StreamedResponse();
+        $path = $this->filesDir.DIRECTORY_SEPARATOR.$data['url'];
+        $response->setCallBack(
+            function () use ($path) {
+                readfile($path);
+            }
+        );
+        $response->headers->set('Content-Transfer-Encoding', 'octet-stream');
+        $response->headers->set('Content-Type', 'application/force-download');
+        $response->headers->set('Content-Disposition', 'attachment; filename='.$data['name']);
+        $response->headers->set('Content-Type', $data['mimeType']);
+        $response->headers->set('Connection', 'close');
+
+        return $response->send();
     }
 }

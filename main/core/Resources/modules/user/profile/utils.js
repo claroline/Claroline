@@ -81,6 +81,14 @@ function getFormDefaultSection(userData, isNew = false) {
           minRows: 5
         }
       }, {
+        name: 'meta.locale',
+        type: 'locale',
+        label: t('language'),
+        required: true,
+        options: {
+          onlyEnabled: true
+        }
+      }, {
         name: 'picture',
         type: 'image',
         label: t('picture')

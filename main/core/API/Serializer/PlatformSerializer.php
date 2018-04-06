@@ -67,7 +67,7 @@ class PlatformSerializer
     public function serialize()
     {
         $request = $this->requestStack->getCurrentRequest();
-        
+
         $currentUser = null;
         if (!empty($this->tokenStorage->getToken())) {
             $currentUser = $this->tokenStorage->getToken()->getUser();
@@ -98,7 +98,7 @@ class PlatformSerializer
             ],
             'locale' => [
                 'current' => $locale,
-                'available' => array_keys($this->config->getParameter('locales')),
+                'available' => $this->config->getParameter('locales'),
             ],
             'openGraph' => [
                 'enabled' => $this->config->getParameter('enable_opengraph'),

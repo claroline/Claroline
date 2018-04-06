@@ -155,7 +155,7 @@ class WorkspaceSerializer
     {
         $options = $this->workspaceManager->getWorkspaceOptions($workspace)->getDetails();
 
-        if ($options['workspace_opening_resource']) {
+        if (isset($options['workspace_opening_resource']) && $options['workspace_opening_resource']) {
             $resource = $this->serializer->deserialize(
               'Claroline\CoreBundle\Entity\Resource\ResourceNode',
                ['id' => $options['workspace_opening_resource']]

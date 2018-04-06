@@ -1,7 +1,5 @@
 import {ColorPicker} from '#/main/core/layout/form/components/field/color-picker.jsx'
 
-import {ColorGroup} from '#/main/core/layout/form/components/group/color-group'
-
 const COLOR_TYPE = 'color'
 
 const colorDefinition = {

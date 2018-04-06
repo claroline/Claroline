@@ -7,6 +7,7 @@ import {trans} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
+import {generateUrl} from '#/main/core/api/router'
 
 import {DataListContainer} from '#/main/core/data/list/containers/data-list'
 import {DataCard} from '#/main/core/data/components/data-card'
@@ -189,20 +190,49 @@ class Entries extends Component {
     this.props.fields
       .filter(f => !f.hidden && (!f.isMetadata || this.canViewMetadata()))
       .map(f => {
-        columns.push({
-          name: `${f.id}`,
-          label: f.name,
-          type: this.getDataType(f),
-          displayed: this.isDisplayedField(`${f.id}`),
-          filterable: getFieldType(f.type).name !== 'date',
-          calculated: (rowData) => {
-            const fieldValue = rowData.fieldValues.find(fv => fv.field.id === f.id)
+        if (this.getDataType(f) === 'file') {
+          columns.push({
+            name: `${f.id}`,
+            label: f.name,
+            type: 'file',
+            displayed: this.isDisplayedField(`${f.id}`),
+            filterable: false,
+            renderer: (rowData) => {
+              const fieldValue = rowData.fieldValues.find(fv => fv.field.id === f.id)
 
-            return fieldValue && fieldValue.fieldFacetValue && fieldValue.fieldFacetValue.value ?
-              this.formatFieldValue(rowData, f, fieldValue.fieldFacetValue.value) :
-              ''
-          }
-        })
+              if (fieldValue &&
+                fieldValue.fieldFacetValue &&
+                fieldValue.fieldFacetValue.value &&
+                fieldValue.fieldFacetValue.value[0] &&
+                fieldValue.fieldFacetValue.value[0]['url']
+              ) {
+                const link =
+                  <a href={generateUrl('claro_claco_form_field_value_file_download', {fieldValue: fieldValue.id})}>
+                    {fieldValue.fieldFacetValue.value[0]['name']}
+                  </a>
+
+                return link
+              } else {
+                return '-'
+              }
+            }
+          })
+        } else {
+          columns.push({
+            name: `${f.id}`,
+            label: f.name,
+            type: this.getDataType(f),
+            displayed: this.isDisplayedField(`${f.id}`),
+            filterable: getFieldType(f.type).name !== 'date',
+            calculated: (rowData) => {
+              const fieldValue = rowData.fieldValues.find(fv => fv.field.id === f.id)
+
+              return fieldValue && fieldValue.fieldFacetValue && fieldValue.fieldFacetValue.value ?
+                this.formatFieldValue(rowData, f, fieldValue.fieldFacetValue.value) :
+                ''
+            }
+          })
+        }
       })
 
     return columns
@@ -461,6 +491,7 @@ Entries.propTypes = {
   switchEntriesLock: T.func.isRequired,
   deleteEntry: T.func.isRequired,
   deleteEntries: T.func.isRequired,
+  downloadFieldValueFile: T.func.isRequired,
   showModal: T.func.isRequired,
   entries: T.shape({
     data: T.array,
@@ -510,6 +541,7 @@ function mapDispatchToProps(dispatch) {
     switchEntriesLock: (entries, locked) => dispatch(actions.switchEntriesLock(entries, locked)),
     deleteEntry: entryId => dispatch(actions.deleteEntry(entryId)),
     deleteEntries: entries => dispatch(actions.deleteEntries(entries)),
+    downloadFieldValueFile: fieldValueId => dispatch(actions.downloadFieldValueFile(fieldValueId)),
     showModal: (type, props) => dispatch(modalActions.showModal(type, props))
   }
 }

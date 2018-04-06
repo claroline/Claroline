@@ -9,7 +9,8 @@ const Step = {
       url: T.string
     }),
     display: T.shape({
-      numbering: T.string
+      numbering: T.string,
+      height: T.number
     }).isRequired,
     primaryResource: T.shape({
       autoId: T.number.isRequired,

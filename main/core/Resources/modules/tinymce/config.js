@@ -28,6 +28,10 @@ const config = {
   autoresize_min_height: 160,
   autoresize_max_height: 500,
 
+  //allow to fetch tinymce plugins
+  baseURL: asset('packages/tinymce'),
+  relative_urls : false,
+
   // plugin : paste
   paste_data_images: true,
   paste_preprocess: (plugin, args) => {
@@ -56,7 +60,6 @@ const config = {
   },
 
   extended_valid_elements: 'user[id], a[data-toggle|data-parent], span[*]',
-  relative_urls: false,
   remove_script_host: false,
   browser_spellcheck: true,
 

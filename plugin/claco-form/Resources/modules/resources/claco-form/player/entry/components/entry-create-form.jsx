@@ -199,12 +199,17 @@ class EntryCreateForm extends Component {
           if (!files[f.id]) {
             files[f.id] = []
           }
-
-          this.state.entry[f.id].forEach(file => {
-            if (!file.url) {
-              files[f.id].push(file)
+          if (Array.isArray(this.state.entry[f.id])) {
+            this.state.entry[f.id].forEach(file => {
+              if (!file.url) {
+                files[f.id].push(file)
+              }
+            })
+          } else {
+            if (!this.state.entry[f.id].url) {
+              files[f.id].push(this.state.entry[f.id])
             }
-          })
+          }
         }
       }
     })
@@ -247,6 +252,9 @@ class EntryCreateForm extends Component {
                     error={this.state.errors[f.id]}
                     max={f.details && !isNaN(f.details.nb_files_max) ? parseInt(f.details.nb_files_max) : undefined}
                     types={f.details && f.details.file_types ? f.details.file_types : []}
+                    options={{
+                      autoUpload: false
+                    }}
                     onChange={value => this.updateEntryValue(f.id, value)}
                   />)
                 })}
