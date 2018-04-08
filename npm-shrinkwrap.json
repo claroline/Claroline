@@ -542,9 +542,9 @@
       "resolved": "https://registry.npmjs.org/aws-sign2/-/aws-sign2-0.6.0.tgz"
     },
     "aws4": {
-      "version": "1.6.0",
+      "version": "1.7.0",
       "from": "aws4@>=1.2.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/aws4/-/aws4-1.6.0.tgz"
+      "resolved": "https://registry.npmjs.org/aws4/-/aws4-1.7.0.tgz"
     },
     "axios": {
       "version": "0.15.3",
@@ -3327,9 +3327,9 @@
       "resolved": "https://registry.npmjs.org/html-loader/-/html-loader-0.5.5.tgz"
     },
     "html-minifier": {
-      "version": "3.5.13",
+      "version": "3.5.14",
       "from": "html-minifier@>=3.5.8 <4.0.0",
-      "resolved": "https://registry.npmjs.org/html-minifier/-/html-minifier-3.5.13.tgz",
+      "resolved": "https://registry.npmjs.org/html-minifier/-/html-minifier-3.5.14.tgz",
       "dependencies": {
         "source-map": {
           "version": "0.6.1",
@@ -3337,9 +3337,9 @@
           "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz"
         },
         "uglify-js": {
-          "version": "3.3.18",
+          "version": "3.3.20",
           "from": "uglify-js@>=3.3.0 <3.4.0",
-          "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.3.18.tgz"
+          "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.3.20.tgz"
         }
       }
     },
@@ -6557,9 +6557,9 @@
       "resolved": "https://registry.npmjs.org/reselect/-/reselect-2.5.4.tgz"
     },
     "resolve": {
-      "version": "1.6.0",
+      "version": "1.7.0",
       "from": "resolve@>=1.1.6 <2.0.0",
-      "resolved": "https://registry.npmjs.org/resolve/-/resolve-1.6.0.tgz"
+      "resolved": "https://registry.npmjs.org/resolve/-/resolve-1.7.0.tgz"
     },
     "resolve-cwd": {
       "version": "2.0.0",

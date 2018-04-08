@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "06ab714d5623cacb80fff5f1c2cb9f5159d0facb"
+                "reference": "b16d617970cbcd8473a24cd3a6aedcbdb1ab2986"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/06ab714d5623cacb80fff5f1c2cb9f5159d0facb",
-                "reference": "06ab714d5623cacb80fff5f1c2cb9f5159d0facb",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b16d617970cbcd8473a24cd3a6aedcbdb1ab2986",
+                "reference": "b16d617970cbcd8473a24cd3a6aedcbdb1ab2986",
                 "shasum": ""
             },
             "require": {
@@ -397,7 +397,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-04-06 17:17:34"
+            "time": "2018-04-07 06:40:23"
         },
         {
             "name": "cocur/slugify",
@@ -6568,7 +6568,7 @@
             ],
             "authors": [
                 {
-                    "name": "Pádraic Brady",
+                    "name": "Padraic Brady",
                     "email": "padraic.brady@gmail.com",
                     "homepage": "http://blog.astrumfutura.com"
                 },
