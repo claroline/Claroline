@@ -128,7 +128,7 @@ export const FormField = props => {
           onChange={props.onChange}
         />
       )
-    case 'rich_text':
+    case 'html':
       return (
         <HtmlGroup
           id={props.controlId}

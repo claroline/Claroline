@@ -342,7 +342,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 'roles' => $this->getPermsArray($root),
             ];
             $directory = $this->resourceManager->getResourceTypeByName('directory');
-            $resourceNodes = $this->resourceManager->getByWorkspaceAndResourceType($workspace, $directory);
+            $resourceNodes = $this->resourceManager->getByWorkspaceAndResourceType($workspace, $directory, true);
 
             foreach ($resourceNodes as $resourceNode) {
                 if (null !== $resourceNode->getParent()) {
@@ -354,7 +354,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                 $children = $resourceNode->getChildren();
 
                 foreach ($children as $child) {
-                    if ($child && 'directory' !== $child->getResourceType()->getName()) {
+                    if ($child && $child->isActive() && 'directory' !== $child->getResourceType()->getName()) {
                         $item = $this->getResourceElement($child, $workspace, $_files, $_data);
                         if (!empty($item)) {
                             $_data['items'][] = $item;
