@@ -69,7 +69,7 @@ class InternationalizationController extends Controller
 
         $form->handleRequest($this->get('request'));
         if ($form->isValid()) {
-            $data = $form->get('locales')->getData();
+            $data = array_values($form->get('locales')->getData());
             $this->container->get('claroline.config.platform_config_handler')->setParameter('locales', $data);
 
             return new RedirectResponse($this->get('router')->generate('claro_admin_parameters_index'));
