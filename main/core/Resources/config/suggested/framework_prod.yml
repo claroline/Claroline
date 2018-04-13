@@ -11,3 +11,4 @@ framework:
     default_locale: %locale%
     session:
       save_path: %kernel.root_dir%/sessions
+      cookie_httponly: true
