@@ -13,9 +13,9 @@
       "resolved": "https://registry.npmjs.org/@symfony/webpack-encore/-/webpack-encore-0.19.0.tgz"
     },
     "@types/node": {
-      "version": "9.6.4",
+      "version": "9.6.5",
       "from": "@types/node@*",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-9.6.4.tgz"
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-9.6.5.tgz"
     },
     "@types/tapable": {
       "version": "0.2.5",
@@ -1336,14 +1336,14 @@
       }
     },
     "caniuse-db": {
-      "version": "1.0.30000827",
+      "version": "1.0.30000828",
       "from": "caniuse-db@>=1.0.30000634 <2.0.0",
-      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000827.tgz"
+      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000828.tgz"
     },
     "caniuse-lite": {
-      "version": "1.0.30000827",
+      "version": "1.0.30000828",
       "from": "caniuse-lite@>=1.0.30000792 <2.0.0",
-      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30000827.tgz"
+      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30000828.tgz"
     },
     "caseless": {
       "version": "0.12.0",
@@ -3321,9 +3321,9 @@
           "resolved": "https://registry.npmjs.org/source-map/-/source-map-0.6.1.tgz"
         },
         "uglify-js": {
-          "version": "3.3.20",
+          "version": "3.3.21",
           "from": "uglify-js@>=3.3.0 <3.4.0",
-          "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.3.20.tgz"
+          "resolved": "https://registry.npmjs.org/uglify-js/-/uglify-js-3.3.21.tgz"
         }
       }
     },
@@ -4319,9 +4319,9 @@
       "resolved": "https://registry.npmjs.org/log4js/-/log4js-2.5.3.tgz",
       "dependencies": {
         "circular-json": {
-          "version": "0.5.1",
+          "version": "0.5.3",
           "from": "circular-json@>=0.5.1 <0.6.0",
-          "resolved": "https://registry.npmjs.org/circular-json/-/circular-json-0.5.1.tgz"
+          "resolved": "https://registry.npmjs.org/circular-json/-/circular-json-0.5.3.tgz"
         },
         "debug": {
           "version": "3.1.0",
@@ -6498,9 +6498,9 @@
       "resolved": "https://registry.npmjs.org/reselect/-/reselect-2.5.4.tgz"
     },
     "resolve": {
-      "version": "1.7.0",
+      "version": "1.7.1",
       "from": "resolve@>=1.1.6 <2.0.0",
-      "resolved": "https://registry.npmjs.org/resolve/-/resolve-1.7.0.tgz"
+      "resolved": "https://registry.npmjs.org/resolve/-/resolve-1.7.1.tgz"
     },
     "resolve-cwd": {
       "version": "2.0.0",
