@@ -17,11 +17,15 @@
         <div class="wrapper">
             <header>
                 {% if site.logo %}
-                <img src="{{site.logo | relative_url}}" alt="Logo" />
+                <img src="{{ site.logo | relative_url }}" alt="Logo" />
                 {% endif %}
 
                 <h1><a href="{{ "/" | absolute_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
                 <p>{{ site.description | default: site.github.project_tagline }}</p>
+
+                {% if site.version %}
+                <p>Version : <b>{{ site.version }}</b></p>
+                {% endif %}
 
                 {% if site.show_downloads %}
                 <ul>
@@ -30,6 +34,8 @@
                     <li><a href="{{ site.github.tar_url }}">Download <strong>TAR Ball</strong></a></li>
                 </ul>
                 {% endif %}
+
+                {% include nav.html %}
             </header>
 
             <section>
@@ -47,12 +53,12 @@
         <script src="{{ "/assets/js/scale.fix.js" | relative_url }}"></script>
         {% if site.google_analytics %}
         <script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-        ga('create', '{{ site.google_analytics }}', 'auto');
-        ga('send', 'pageview');
+            (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+            })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+            ga('create', '{{ site.google_analytics }}', 'auto');
+            ga('send', 'pageview');
         </script>
         {% endif %}
     </body>

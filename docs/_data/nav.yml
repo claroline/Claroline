@@ -1,0 +1,17 @@
+- title: Getting started
+  docs:
+    - title: Requirements
+      doc: requirements
+
+    - title: Installation
+      doc: install
+
+- title: JSON API
+    - title: Schemas
+      doc: schemas
+
+    - title: Endpoints
+      doc: endpoints
+
+- title: Contributing
+  doc: contributing
