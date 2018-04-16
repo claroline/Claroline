@@ -3,13 +3,13 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {asset} from '#/main/core/scaffolding/asset'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {select as formSelect} from '#/main/core/data/form/selectors'
 
 import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
 import {FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
+import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
 
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
@@ -118,7 +118,7 @@ const Tab = (props) => {
 Tab.propTypes = {
   workspace: T.shape({
     options: T.shape({
-      opened_resource: T.bool.isRequired
+      opened_resource: T.object.isRequired
     })
   }).isRequired,
   pickResource: T.func.isRequired,
@@ -170,14 +170,7 @@ const ConnectedTab = connect(
             displayed: true
           }
         ],
-        card: (row) => ({
-          poster: asset(row.meta.icon),
-          icon: 'fa fa-folder-open',
-          title: row.name,
-          subtitle: trans(row.meta.type, {}, 'resource'),
-          footer:
-            <b>{row.workspace.name}</b>
-        }),
+        card: ResourceCard,
         fetch: {
           url: ['apiv2_resources_picker'],
           autoload: true
