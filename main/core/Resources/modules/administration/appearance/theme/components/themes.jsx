@@ -5,6 +5,7 @@ import {NavLink, withRouter} from 'react-router-dom'
 
 import {t, trans, transChoice} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
+import {DataCard} from '#/main/core/data/components/data-card'
 
 import {MODAL_CONFIRM, MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
@@ -58,16 +59,18 @@ const ThemesPage = props =>
           }
         ]}
 
-        card={(row) => ({
-          icon: 'fa fa-paint-brush',
-          title: row.name,
-          subtitle: row.meta.plugin || (row.meta.creator ? row.meta.creator.name : t('unknown')),
-          contentText: row.meta.description,
-          flags: [
-            row.current      && ['fa fa-check', t('theme_current')],
-            row.meta.enabled && ['fa fa-eye',   t('theme_enabled')]
-          ].filter(flag => !!flag)
-        })}
+        card={(row) =>
+          <DataCard
+            icon='fa fa-paint-brush'
+            title={row.data.name}
+            subtitle={row.data.meta.plugin || (row.data.meta.creator ? row.data.meta.creator.name : t('unknown'))}
+            contentText={row.data.meta.description}
+            flags={[
+              row.data.current      && ['fa fa-check', t('theme_current')],
+              row.data.meta.enabled && ['fa fa-eye',   t('theme_enabled')]
+            ].filter(flag => !!flag)}
+          />
+        }
       />
     </PageContent>
   </PageContainer>
