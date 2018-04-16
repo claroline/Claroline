@@ -1,7 +1,7 @@
 theme: jekyll-theme-minimal
 title: Claroline Connect
 description: Learning management system
-logo: _assets/logo.png
+logo: images/logo.png
 show_downloads: true
 version: 11.2.21 # TODO retrieve it
 
