@@ -7,11 +7,18 @@
       doc: install
 
 - title: JSON API
+  docs:
     - title: Schemas
       doc: schemas
 
     - title: Endpoints
       doc: endpoints
+
+- title: API
+  doc: api
+
+- title: User Interface
+  doc: ui
 
 - title: Contributing
   doc: contributing
