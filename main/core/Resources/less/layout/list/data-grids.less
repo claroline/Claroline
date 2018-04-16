@@ -136,30 +136,6 @@
 // Sizing
 // ---
 
-.data-grid-col {
-    .data-grid-content {
-        margin: -@data-grid-gutter; // absorb items margin
-    }
-
-    .data-grid-item-container {
-        padding: @data-grid-gutter;
-    }
-
-    .data-grid-item-select {
-        top: @data-grid-gutter * 2;
-    }
-
-    &.data-grid-sm .data-grid-item-container {
-        flex: 0 0 (100% / @data-grid-cols-sm);
-        max-width: 100% / @data-grid-cols-sm;
-    }
-
-    &.data-grid-lg .data-grid-item-container {
-        flex: 0 0 (100% / @data-grid-cols-lg);
-        max-width: 100% / @data-grid-cols-lg;
-    }
-}
-
 .data-grid-row {
     .data-grid-content {
         margin: -@data-grid-gutter/2 -@data-grid-gutter; // absorb items margin
@@ -173,5 +149,64 @@
 
     .data-grid-item-select {
         top: @data-grid-gutter + @data-grid-gutter/2;
+    }
+}
+
+.data-grid-col {
+    .data-grid-content {
+        margin: -@data-grid-gutter; // absorb items margin
+    }
+
+    .data-grid-item-container {
+        padding: @data-grid-gutter;
+    }
+
+    .data-grid-item-select {
+        top: @data-grid-gutter * 2;
+    }
+
+    // XS screens :
+    //   - small tiles : 2
+    //   - large tiles : 1
+    @media (max-width: @screen-xs-max) {
+        &.data-grid-sm .data-grid-item-container {
+            flex: 0 0 (100% / 2);
+            max-width: 100% / 2;
+        }
+
+        &.data-grid-lg .data-grid-item-container {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+
+    // SM screens :
+    //   - small tiles : 3
+    //   - large tiles : 2
+    @media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+        &.data-grid-sm .data-grid-item-container {
+            flex: 0 0 (100% / 3);
+            max-width: 100% / 3;
+        }
+
+        &.data-grid-lg .data-grid-item-container {
+            flex: 0 0 (100% / 2);
+            max-width: 100% / 2;
+        }
+    }
+
+    // MD & LG screens :
+    //   - small tiles : 5
+    //   - large tiles : 3
+    @media (min-width: @screen-sm-max) {
+        &.data-grid-sm .data-grid-item-container {
+            flex: 0 0 (100% / 5);
+            max-width: 100% / 5;
+        }
+
+        &.data-grid-lg .data-grid-item-container {
+            flex: 0 0 (100% / 3);
+            max-width: 100% / 3;
+        }
     }
 }

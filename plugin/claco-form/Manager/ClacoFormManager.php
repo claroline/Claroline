@@ -2267,7 +2267,7 @@ class ClacoFormManager
 
     public function getFieldsByClacoForm(ClacoForm $clacoForm)
     {
-        return $this->fieldRepo->findBy(['clacoForm' => $clacoForm], ['id' => 'ASC']);
+        return $this->fieldRepo->findBy(['clacoForm' => $clacoForm], ['order' => 'ASC']);
     }
 
     public function getFieldByNameExcludingId(ClacoForm $clacoForm, $name, $id)

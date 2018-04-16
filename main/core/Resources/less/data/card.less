@@ -64,6 +64,10 @@
     // for SVG icons
     fill: rgba(0, 0, 0, 0.5) !important;
     stroke: rgba(0, 0, 0, 0.5) !important;
+
+    img {
+        max-width: 100%;
+    }
 }
 
 .data-card-flags {
@@ -95,6 +99,15 @@
     color: @data-card-color; // reset color when card is clickable (uses a <a> tag)
     display: flex;
     flex-direction: column;
+    align-items: stretch;
+
+    // removes button styles
+    text-align: left;
+    padding: 0;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    outline: 0;
 
     .border-radius(0 0 @data-card-border-radius @data-card-border-radius);
 }
@@ -161,8 +174,26 @@
 .data-card-col {
     .data-card-vertical-variant();
 }
-.data-card-row {
-    .data-card-horizontal-variant();
+
+// XS screens :
+@media (max-width: @screen-xs-max) {
+    .data-card-row {
+        &.data-card-sm {
+            .data-card-horizontal-variant();
+        }
+
+        // even for row card, we switch on vertical display for better rendering
+        &.data-card-lg {
+            .data-card-vertical-variant();
+        }
+    }
+}
+
+// SM / MD / LG screens :
+@media (min-width: @screen-sm-min) {
+    .data-card-row {
+        .data-card-horizontal-variant();
+    }
 }
 
 // mixins

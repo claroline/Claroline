@@ -78,13 +78,17 @@ class PlannedNotificationListener
     {
         if ($event instanceof LogRoleSubscribeEvent) {
             $role = $event->getRole();
-            $this->manager->generateScheduledTasks(
-                $role->getWorkspace(),
-                $event->getActionKey(),
-                $event->getReceiver(),
-                $event->getReceiverGroup(),
-                $role
-            );
+            $workspace = $role->getWorkspace();
+
+            if (!empty($workspace)) {
+                $this->manager->generateScheduledTasks(
+                    $workspace,
+                    $event->getActionKey(),
+                    $event->getReceiver(),
+                    $event->getReceiverGroup(),
+                    $role
+                );
+            }
         }
     }
 }

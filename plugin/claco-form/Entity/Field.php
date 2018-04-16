@@ -14,8 +14,6 @@ namespace Claroline\ClacoFormBundle\Entity;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -35,8 +33,6 @@ class Field
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
-     * @SerializedName("id")
      */
     protected $id;
 
@@ -46,59 +42,43 @@ class Field
      *     inversedBy="fields"
      * )
      * @ORM\JoinColumn(name="claco_form_id", nullable=false, onDelete="CASCADE")
-     * @Groups({"api_claco_form"})
-     * @SerializedName("clacoForm")
      */
     protected $clacoForm;
 
     /**
      * @ORM\Column(name="field_name")
      * @Assert\NotBlank()
-     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
-     * @SerializedName("name")
      */
     protected $name;
 
     /**
      * @ORM\Column(name="field_type", type="integer")
-     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
-     * @SerializedName("type")
      */
     protected $type;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacet")
      * @ORM\JoinColumn(name="field_facet_id", onDelete="CASCADE")
-     * @Groups({"api_facet_admin"})
-     * @SerializedName("fieldFacet")
      */
     protected $fieldFacet;
 
     /**
      * @ORM\Column(name="required", type="boolean")
-     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
-     * @SerializedName("required")
      */
     protected $required = true;
 
     /**
      * @ORM\Column(name="is_metadata", type="boolean")
-     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
-     * @SerializedName("isMetadata")
      */
     protected $isMetadata = false;
 
     /**
      * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
-     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
-     * @SerializedName("locked")
      */
     protected $locked = false;
 
     /**
      * @ORM\Column(name="locked_edition", type="boolean", options={"default" = 0})
-     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
-     * @SerializedName("lockedEditionOnly")
      */
     protected $lockedEditionOnly = false;
 
@@ -112,17 +92,18 @@ class Field
 
     /**
      * @ORM\Column(name="hidden", type="boolean", options={"default" = 0})
-     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
-     * @SerializedName("hidden")
      */
     protected $hidden = false;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
-     * @Groups({"api_claco_form", "api_facet_admin", "api_user_min"})
-     * @SerializedName("details")
      */
     protected $details;
+
+    /**
+     * @ORM\Column(name="field_order", type="integer", options={"default" = 1000})
+     */
+    protected $order = 1000;
 
     public function __construct()
     {
@@ -245,6 +226,16 @@ class Field
     public function setDetails($details)
     {
         $this->details = $details;
+    }
+
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    public function setOrder($order)
+    {
+        $this->order = $order;
     }
 
     public function getFileTypes()
