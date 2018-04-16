@@ -3,13 +3,13 @@
         {% for section in site.data.nav %}
         <li>
             {% if section.doc %}
-            <a href="{{ site.baseurl }}/spec/{{ section.doc }}.html">{{ section.title }}</a>
+            <a href="{{ section.doc }}.html">{{ section.title }}</a>
             {% else %}
             {{ section.title }}
             <ol>
                 {% for subSection in section.docs %}
                 <li>
-                    <a href="{{ site.baseurl }}/spec/{{ subSection.doc }}.html">{{ subSection.title }}</a>
+                    <a href="{{ subSection.doc }}.html">{{ subSection.title }}</a>
                 </li>
                 {% endfor %}
             </ol>
