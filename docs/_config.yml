@@ -1,5 +1,5 @@
 theme: jekyll-theme-minimal
 title: Claroline Connect
 description: Learning management system
-logo: assets/logo.png
+logo: _assets/logo.png
 show_downloads: true
