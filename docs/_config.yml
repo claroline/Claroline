@@ -1,6 +1,5 @@
 title: Claroline Connect
 description: Learning management system
-logo: assets/img/logo.png
 version: 11.2.21 # TODO retrieve it
 
 collections:

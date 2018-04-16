@@ -8,33 +8,41 @@
 
         {% seo %}
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous" />
-        <link rel="stylesheet" href="{{ "/assets/css/styles.css?v=" | append: site.github.build_revision | relative_url }}">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous" />
+        <link rel="stylesheet" href="{{ "/assets/css/styles.css?v=" | append: site.github.build_revision | relative_url }}" />
     </head>
 
     <body class="container-fluid" >
-        <div class="row" role="presentation">
-            <header class="col-md-3" role="presentation">
-                {% if site.logo %}
-                <img src="{{ site.logo | relative_url }}" alt="Logo" />
-                {% endif %}
+        <header class="navbar navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="#">
+                <img src="{{ "/assets/img/logo-sm.png" | relative_url }}" width="30" height="30" class="d-inline-block align-top" alt="Claroline logo">
+                Technical documentation
+            </a>
 
-                <h1><a href="{{ "/" | absolute_url }}">{{ site.title | default: site.github.repository_name }}</a></h1>
-                <p>{{ site.description | default: site.github.project_tagline }}</p>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-                {% if site.show_downloads %}
-                <ul>
-                    <li><a href="{{ site.github.repository_url }}">View On <strong>GitHub</strong></a></li>
-                    <li><a href="{{ site.github.zip_url }}">Download <strong>ZIP File</strong></a></li>
-                    <li><a href="{{ site.github.tar_url }}">Download <strong>TAR Ball</strong></a></li>
-                </ul>
-                {% endif %}
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ site.github.repository_url }}">
+                        <span class="fa fa-fw fa-github"></span>
+                        <span class="sr-only">Show in GitHub</span>
+                    </a>
+                </li>
 
                 {% if site.version %}
-                <p>Version : <b>{{ site.version }}</b></p>
+                <li class="nav-item">
+                    <span class="navbar-text">v{{ site.version }}</span>
+                </li>
                 {% endif %}
+            </ul>
+        </header>
 
+        <div class="row" role="presentation">
+            <aside class="col-md-3" role="presentation">
                 {% include nav.html %}
-            </header>
+            </aside>
 
             <main class="col-md-9" role="presentation">
                 {{ content }}
@@ -43,8 +51,6 @@
 
         <footer>
             <p>This project is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-
-            <p><small>Hosted on GitHub Pages</small></p>
         </footer>
     </body>
 </html>
