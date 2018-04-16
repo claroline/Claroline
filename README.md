@@ -12,6 +12,8 @@ If you want to contribute or directly browse the sources of the project,
 check the [claroline/Distribution][distribution] repository, which gathers
 the standard modules and plugins of the platform.
 
+[Technical Documentation][https://claroline.github.io/Claroline/]
+
 Requirements
 ------------
 
