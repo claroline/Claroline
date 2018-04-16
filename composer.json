@@ -4,10 +4,10 @@
     "license": "GPL-3.0+",
     "require": {
         "php": ">=5.6",
-        "claroline/distribution": "dev-master"
+        "claroline/distribution": "11.x-dev"
     },
     "require-dev": {
-        "fabpot/php-cs-fixer": "1.13.1",
+        "friendsofphp/php-cs-fixer": "*",
         "mikey179/vfsStream": "1.6.4",
         "phpunit/phpunit": "4.8.35",
         "symfony/phpunit-bridge": "dev-master",
@@ -37,14 +37,12 @@
         ],
         "fetch": [
             "composer install --prefer-dist --no-dev --optimize-autoloader",
-            "npm install",
-            "npm run bower"
+            "npm install"
         ],
         "fetch-dev": [
             "composer install --prefer-source",
             "npm install",
-            "npm install fullcalendar",
-            "npm run bower"
+            "npm install fullcalendar"
         ],
         "build": [
             "Claroline\\CoreBundle\\Library\\Installation\\Refresher::deleteCache",
