@@ -174,8 +174,7 @@ Documentation
 
 For user documentation, see : http://doc.claroline.com.
 
-For development documentation, see
-[Claroline/CoreBundle/Resources/doc/index.md][dist-doc].
+For development documentation, see [Technical Documentation](https://claroline.github.io/Claroline/).
 
 
 [distribution]: https://github.com/claroline/Distribution
