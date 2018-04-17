@@ -1,16 +1,18 @@
 <aside class="app-nav">
+    <a href="{{ "/" | absolute_url }}">{{ section.title }}</a>
+
 {% for section in site.data.nav %}
     {% if section.doc %}
-    <a href="sections/{{ section.doc }}.html">{{ section.title }}</a>
+    <a href="{{ "/sections/" | append: section.doc | absolute_url }}.html">{{ section.title }}</a>
     {% else %}
     <nav>
         <header>
-            <a href="sections/{{ section.home }}.html">{{ section.title }}</a>
+            <a href="{{ "/sections/" | append: section.home | absolute_url }}.html">{{ section.title }}</a>
         </header>
         <ul>
             {% for subSection in section.docs %}
             <li>
-                <a href="sections/{{ subSection.doc }}.html">{{ subSection.title }}</a>
+                <a href="{{ "/sections/" | append: subSection.doc | absolute_url }}.html">{{ subSection.title }}</a>
             </li>
             {% endfor %}
         </ul>
