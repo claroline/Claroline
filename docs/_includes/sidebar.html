@@ -1,7 +1,7 @@
 <aside class="app-nav">
     <a href="{{ "/" | absolute_url }}">Home</a>
 
-{% for section in site.data.nav %}
+{% for section in site.data.sections %}
     {% if section.doc %}
     <a href="{{ "/sections/" | append: section.doc | absolute_url }}.html">{{ section.title }}</a>
     {% else %}

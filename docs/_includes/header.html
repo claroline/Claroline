@@ -5,7 +5,7 @@
 
     <h1 class="app-title">
         {{ site.title }}
-        <small>Technical documentation</small>
+        <small>Technical guide</small>
     </h1>
 
     {% if site.data.version.current %}
@@ -13,6 +13,11 @@
     {% endif %}
 
     <nav class="app-links">
+        <a href="{{ 'https://gitter.im/' | append : site.github.repository_nwo }}">
+            Need
+            <b>Help ?</b>
+        </a>
+
         <a href="{{ site.github.zip_url }}">
             Download
             <b>ZIP File</b>

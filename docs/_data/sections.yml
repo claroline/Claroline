@@ -13,8 +13,24 @@
     - title: Upgrade
       doc: getting-started/upgrade
 
+
+- title: Application
+  home: application/index
+  docs:
     - title: Dependencies
-      doc: getting-started/dependencies
+      doc: application/dependencies
+
+    - title: Commands
+      doc: application/commands
+
+    - title: Plugins
+      doc: application/plugins
+
+    - title: Tools
+      doc: application/tools
+
+    - title: Resources
+      doc: application/resources
 
 - title: JSON API
   home: json/index
@@ -25,6 +41,7 @@
     - title: Endpoints
       doc: json/endpoints
 
+
 - title: API
   home: api/index
   docs:
@@ -34,11 +51,15 @@
       - title: Finder
         doc: api/finder
 
+
 - title: User Interface
   home: user-interface/index
   docs:
       - title: Localization
         doc: user-interface/localization
+
+      - title: Pages
+        doc: user-interface/pages
 
       - title: Modal
         doc: user-interface/modal
@@ -49,8 +70,23 @@
       - title: Actions
         doc: user-interface/actions
 
+
 - title: Themes
   doc: themes
+
+
+- title: Plugins
+  home: plugins/index
+  docs:
+      - title: Core
+        doc: plugins/core
+
+      - title: Quiz
+        doc: plugins/quiz
+
+      - title: Path
+        doc: plugins/path
+
 
 - title: Contributing
   doc: contributing
