@@ -1,2 +1,12 @@
 title: Claroline Connect
 description: Learning management system
+
+# Configuration
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  auto_ids: true
+  syntax_highlighter: rouge
+  # Enable GitHub Flavored Markdown (fenced code blocks)
+  input: GFM
+  

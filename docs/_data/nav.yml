@@ -13,6 +13,9 @@
     - title: Upgrade
       doc: getting-started/upgrade
 
+    - title: Dependencies
+      doc: getting-started/dependencies
+
 - title: JSON API
   home: json/index
   docs:
