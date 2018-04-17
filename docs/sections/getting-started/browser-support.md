@@ -5,13 +5,24 @@ title: Browser support
 
 # Browser support
 
-We recommend to use Claroline Connect with the latest version of Mozila Firefox or Chromium.
+## Recommended
 
-We support :
-- Mozilla Firefox (latest version)
-- Chromium (latest version) and Google Chrome (latest version)
-- Microsoft Edge (latest version)
-- Microsoft Internet Explorer 11
-- Safari (latest version)
+| Browser                  | Version 
+| ------------------------ | ------- 
+| Mozilla Firefox          | latest  
+| Chromium                 | latest  
 
-For complete list : http://caniuse.com/#feat=mutationobserver
+
+## Supported
+
+| Browser                      | Version 
+| ---------------------------- | ------- 
+| Mozilla Firefox              | latest  
+| Chromium                     | latest
+| Google Chrome                | latest
+| Microsoft Internet Explorer  | >= 11  
+| Microsoft Internet Edge      | latest
+| Safari                       | latest
+
+
+> For the complete list of compatible browsers visit [CanIUse](http://caniuse.com/#feat=mutationobserver).

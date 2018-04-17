@@ -24,6 +24,7 @@ h4,
 h5,
 h6 {
     font-family: "Century Gothic", Arial, sans-serif;
+    margin: 30px 0 15px 0;
 }
 
 .anchorjs-link {
@@ -48,12 +49,14 @@ pre {
  */
 
 .app-header {
+    z-index: 2;
     display: flex;
     flex-direction: row;
     align-items: center;
     background: #262626;
     color: white;
     height: 60px;
+    box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.5);
 }
 
 .app-brand {
@@ -159,4 +162,8 @@ pre {
     width: 80%;
     padding: 30px 45px;
     text-align: justify;
+}
+.app-content h1 {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
 }
