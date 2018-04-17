@@ -9,4 +9,3 @@ kramdown:
   syntax_highlighter: rouge
   # Enable GitHub Flavored Markdown (fenced code blocks)
   input: GFM
-  
