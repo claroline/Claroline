@@ -2,6 +2,8 @@ title: Claroline Connect
 description: Learning management system
 version: 11.2.21 # TODO retrieve it
 
+highlighter: rouge
+
 collections:
   nav:
     output: true
