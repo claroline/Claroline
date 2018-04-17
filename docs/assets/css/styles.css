@@ -8,6 +8,7 @@ body {
     overflow: hidden;
     font-family: Arial, sans-serif;
     color: #333333;
+    line-height: 1.4;
 }
 
 body {
@@ -27,6 +28,19 @@ h6 {
 
 .anchorjs-link {
     color: #AAAAAA;
+}
+
+pre,
+code {
+    background-color: #f8f8f8;
+}
+code {
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+pre {
+    padding: 15px;
+    border-radius: 6px;
 }
 
 /**
@@ -113,7 +127,6 @@ h6 {
     box-sizing: border-box;
 }
 
-
 .app-nav {
     width: 20%;
     background: #f0f0f0;
@@ -135,12 +148,9 @@ h6 {
     padding: 0 0 0 15px;
     list-style: none;
 }
-.app-nav li {
-
-}
 .app-nav li a {
     display: block;
-    padding: 10px 15px;
+    padding: 5px 15px;
     color: #999;
     text-decoration: none;
 }
@@ -148,4 +158,5 @@ h6 {
 .app-content {
     width: 80%;
     padding: 30px 45px;
+    text-align: justify;
 }
