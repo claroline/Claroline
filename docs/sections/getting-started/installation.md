@@ -3,7 +3,12 @@ layout: default
 title: Installation
 ---
 
-### 1. From a pre-built archive
+# Installation
+
+You can choose one of the following method to install Claroline :
+
+
+## From a pre-built archive
 
 A tarball containing everything needed for development and testing
 (pre-fetched sources, database dump, etc.) is made available with every release
@@ -15,7 +20,7 @@ fastest way to get started:
     php scripts/configure.php
     composer fast-install
 
-### 2. From source
+## From source
 
 The raw installation procedure is comprised of several steps that need to be
 executed in order (fetching php sources, installing dev dependencies, building,
@@ -28,17 +33,8 @@ file. For an installation from scratch, the commands would be:
     php scripts/configure.php
     composer sync-dev
 
-### 3. From web installer
+## From web installer
 
 ``` curl packages.claroline.net/releases/latest/claroline-16.05.tar.gz | tar xzv ```
 
 Open /install.php from your webserver and follow the instructions.
-
-Upgrade
--------
-
-To update an existing development installation, just pull the latest changes
-(or a specific version) of this repository and use the `sync-dev` script:
-
-    git pull
-    composer sync-dev

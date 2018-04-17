@@ -1,24 +1,53 @@
 - title: Getting started
+  home: getting-started/index
   docs:
     - title: Requirements
-      doc: requirements
+      doc: getting-started/requirements
+
+    - title: Browser support
+      doc: getting-started/browser-support
 
     - title: Installation
-      doc: install
+      doc: getting-started/installation
+
+    - title: Upgrade
+      doc: getting-started/upgrade
 
 - title: JSON API
+  home: json/index
   docs:
     - title: Schemas
-      doc: schemas
+      doc: json/schemas
 
     - title: Endpoints
-      doc: endpoints
+      doc: json/endpoints
 
 - title: API
-  doc: api
+  home: api/index
+  docs:
+      - title: Serializer
+        doc: api/serializer
+
+      - title: Finder
+        doc: api/finder
 
 - title: User Interface
-  doc: ui
+  home: user-interface/index
+  docs:
+      - title: Localization
+        doc: user-interface/localization
+
+      - title: Modal
+        doc: user-interface/modal
+
+      - title: Data
+        doc: user-interface/data
+
+      - title: Actions
+        doc: user-interface/actions
+
+- title: Themes
+  doc: themes
 
 - title: Contributing
   doc: contributing

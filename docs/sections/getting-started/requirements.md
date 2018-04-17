@@ -3,6 +3,8 @@ layout: default
 title: Requirements
 ---
 
+# Requirements
+
 For a development installation, you'll need at least:
 
 - PHP >= 5.6 with the following extensions:
