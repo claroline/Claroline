@@ -5,7 +5,7 @@
     {% else %}
     <nav>
         <header>
-            <a href="sections/{{ section.home }}.html">Getting started</a>
+            <a href="sections/{{ section.home }}.html">{{ section.title }}</a>
         </header>
         <ul>
             {% for subSection in section.docs %}

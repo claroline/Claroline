@@ -108,6 +108,7 @@ h6 {
     background: #f0f0f0;
     padding: 20px 0;
 }
+.app-nav > a,
 .app-nav header a {
     display: block;
     padding: 10px 15px;
