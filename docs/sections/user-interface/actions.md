@@ -20,7 +20,7 @@ As a component, to render an agnostic button that will trigger the action.
 The button is rendered without any styles by default, so it can be rendered anywhere.
 If you want to add styles (like standard Bootstrap btn styles), you can add a `className`.
 
-```jsx harmony
+```JSX
 // ...
 import {Button} from '#/main/app/action/components/button'
 
