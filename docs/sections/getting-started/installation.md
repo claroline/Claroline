@@ -28,10 +28,26 @@ creating the database, etc.). Except for the configuration step, the whole proce
 is managed through composer scripts listed in the [composer.json](composer.json)
 file. For an installation from scratch, the commands would be:
 
-    git clone http://github.com/claroline/Claroline
+``` 
+    git clone -b 11.x http://github.com/claroline/Claroline
     cd Claroline
     php scripts/configure.php
-    composer sync-dev
+    composer update --prefer-dist --no-dev
+    php vendor/sensio/distribution-bundle/Sensio/Bundle/DistributionBundle/Resources/bin/build_bootstrap.php
+    npm install -g npm
+    npm install
+    npm run dll
+    npm run webpack
+    php app/console claroline:install
+    php app/console assetic:dump
+    php app/console claroline:theme:build
+    php app/console assets:install --symlink
+    chmod -R 0777 app/cache
+    chmod -R 0777 app/logs
+    chmod -R 0777 app/sessions
+    chmod -R 0777 files
+    chmod -R 0777 app/config/platform_options.yml
+```
 
 ## From web installer
 
