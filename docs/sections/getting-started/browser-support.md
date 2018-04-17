@@ -5,15 +5,17 @@ title: Browser support
 
 # Browser support
 
-## Recommended
+> For the complete list of compatible browsers visit [CanIUse](http://caniuse.com/#feat=mutationobserver).
 
-| Browser                  | Version 
-| ------------------------ | ------- 
-| Mozilla Firefox          | latest  
-| Chromium                 | latest  
+## Recommended browsers
+
+| Browser                  | Version |
+| ------------------------ | ------- |
+| Mozilla Firefox          | latest  | [download](https://www.mozilla.org/)
+| Chromium                 | latest  | [download](https://download-chromium.appspot.com)
 
 
-## Supported
+## Supported browsers
 
 | Browser                      | Version 
 | ---------------------------- | ------- 
@@ -23,6 +25,3 @@ title: Browser support
 | Microsoft Internet Explorer  | >= 11  
 | Microsoft Internet Edge      | latest
 | Safari                       | latest
-
-
-> For the complete list of compatible browsers visit [CanIUse](http://caniuse.com/#feat=mutationobserver).

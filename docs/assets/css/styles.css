@@ -44,6 +44,27 @@ pre {
     border-radius: 6px;
 }
 
+table {
+    border-collapse: collapse;
+}
+table tbody > tr:nth-of-type(odd) {
+    background-color: #f8f8f8;
+}
+th,
+td {
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+}
+
+blockquote {
+    color: #888;
+    border-left: 4px solid #ddd;
+    padding-left: 16px;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+
 /**
  * Header
  */
@@ -166,4 +187,13 @@ pre {
 .app-content h1 {
     border-bottom: 1px solid #ddd;
     padding-bottom: 15px;
+    margin-top: 0;
+}
+.app-content a {
+    color: #148ac7;
+    text-decoration: none;
+    font-weight: bold;
+}
+.app-content a:hover {
+    text-decoration: underline;
 }
