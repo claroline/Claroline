@@ -1,5 +1,13 @@
-.highlight table td { padding: 5px; }
-.highlight table pre { margin: 0; }
+.highlight table td { padding: 5px; border: none; }
+.highlight table code, .highlight table pre { margin: 0; padding: 0; }
+.highlight .rouge-gutter {
+    color: #999;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .highlight .cm {
     color: #999988;
     font-style: italic;

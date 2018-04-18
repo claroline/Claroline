@@ -7,11 +7,8 @@
     - title: Browser support
       doc: getting-started/browser-support
 
-    - title: Installation
+    - title: Installation & Upgrades
       doc: getting-started/installation
-
-    - title: Upgrade
-      doc: getting-started/upgrade
 
 
 - title: Application

@@ -28,7 +28,7 @@ h6 {
 }
 
 .anchorjs-link {
-    color: #AAAAAA;
+    color: #AAAAAA !important;
 }
 
 pre,
