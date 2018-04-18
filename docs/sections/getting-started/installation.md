@@ -14,13 +14,15 @@ You can choose one of the following method to install Claroline :
 
 A tarball containing everything needed for development and testing
 (pre-fetched sources, database dump, etc.) is made available with every release
-of the platform at [packages.claroline.net/releases][releases]. This is the
+of the platform at [Claroline releases](packages.claroline.net/releases). This is the
 fastest way to get started:
 
-    curl packages.claroline.net/releases/latest/claroline-16.05.tar.gz | tar xzv
-    cd claroline-16.05
-    php scripts/configure.php
-    composer fast-install
+```bash
+curl packages.claroline.net/releases/latest/claroline-10.0.1.tar.gz | tar xzv
+cd claroline-10.0.1
+php scripts/configure.php
+composer fast-install
+``` 
 
 
 ### From source
@@ -31,15 +33,19 @@ creating the database, etc.). Except for the configuration step, the whole proce
 is managed through composer scripts listed in the [composer.json](composer.json)
 file. For an installation from scratch, the commands would be:
 
-    git clone http://github.com/claroline/Claroline
-    cd Claroline
-    php scripts/configure.php
-    composer sync-dev
+```bash
+git clone http://github.com/claroline/Claroline
+cd Claroline
+php scripts/configure.php
+composer sync-dev
+``` 
 
 
-### From web installer
+### From web installer (deprecated)
 
-``` curl packages.claroline.net/releases/latest/claroline-16.05.tar.gz | tar xzv ```
+```bash
+curl packages.claroline.net/releases/latest/claroline-10.0.1.tar.gz | tar xzv 
+```
 
 Open `/install.php` from your webserver and follow the instructions.
 
@@ -49,6 +55,7 @@ Open `/install.php` from your webserver and follow the instructions.
 To update an existing development installation, just pull the latest changes
 (or a specific version) of this repository and use the `sync-dev` script:
 
-    git pull
-    composer sync-dev
-
+```bash
+git pull
+composer sync-dev
+``` 

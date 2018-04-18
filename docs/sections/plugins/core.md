@@ -48,5 +48,5 @@ base -> core::layout -> admin/desktop/workspace::layout -> ...
 
 ## Plugin system
 
-The [Claroline plugins](application/plugins.md) was designed as a modular system and they must be in
+The [Claroline plugins](/application/plugins.md) was designed as a modular system and they must be in
 heir own repositories.
