@@ -884,7 +884,7 @@ class ResourceManager
             $resource = $this->getResourceFromNode($node);
             $this->dispatcher->dispatch($eventName, 'PublicationChange', [$resource]);
 
-            $usersToNotify = $node->getWorkspace() ?
+            $usersToNotify = $node->getWorkspace() && !$node->getWorkspace()->isDisabledNotifications() ?
                 $this->container->get('claroline.manager.user_manager')->getUsersByWorkspaces([$node->getWorkspace()], null, null, false) :
                 [];
 
