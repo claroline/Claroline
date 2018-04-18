@@ -1,5 +1,10 @@
 .highlight table td { padding: 5px; border: none; }
-.highlight table code, .highlight table pre { margin: 0; padding: 0; }
+.highlight code,
+.highlight table code,
+.highlight table pre {
+    margin: 0;
+    padding: 0;
+}
 .highlight .rouge-gutter {
     color: #999;
     -webkit-user-select: none;

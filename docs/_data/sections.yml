@@ -10,6 +10,9 @@
     - title: Installation & Upgrades
       doc: getting-started/installation
 
+    - title: Core concepts
+      doc: getting-started/core-concepts
+
 
 - title: Application
   home: application/index
@@ -28,6 +31,7 @@
 
     - title: Resources
       doc: application/resources
+
 
 - title: JSON API
   home: json/index
@@ -48,10 +52,16 @@
       - title: Finder
         doc: api/finder
 
+      - title: CRUD
+        doc: api/crud
+
 
 - title: User Interface
   home: user-interface/index
   docs:
+      - title: Introduction
+        doc: user-interface/introduction
+
       - title: Localization
         doc: user-interface/localization
 
@@ -87,3 +97,7 @@
 
 - title: Contributing
   doc: contributing
+
+
+- title: Glossary
+  doc: glossary

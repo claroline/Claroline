@@ -8,7 +8,7 @@
 
         {% seo %}
 
-        <link rel="stylesheet" href="{{ "/assets/css/rouge.css" | relative_url }}" />
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" crossorigin="anonymous" />
         <link rel="stylesheet" href="{{ "/assets/css/styles.css?v=" | append: site.github.build_revision | relative_url }}" />
         <link rel="shortcut icon" href="{{ "/assets/img/favicon.ico" | relative_url }}" />
     </head>
@@ -25,6 +25,6 @@
         </div>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.1.0/anchor.min.js" integrity="sha256-lZaRhKri35AyJSypXXs4o6OPFTbTmUoltBbDCbdzegg=" crossorigin="anonymous"></script>
-        <script>anchors.add();</script>
+        <script src="{{ "/assets/js/main.js?v=" | append: site.github.build_revision | relative_url }}"></script>
     </body>
 </html>

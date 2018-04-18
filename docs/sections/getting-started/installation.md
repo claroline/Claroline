@@ -3,6 +3,8 @@ layout: default
 title: Installation & Upgrades
 ---
 
+# Installation and Upgrades
+
 ## Installation
 
 You can choose one of the following method to install Claroline :
@@ -20,6 +22,7 @@ fastest way to get started:
     php scripts/configure.php
     composer fast-install
 
+
 ### From source
 
 The raw installation procedure is comprised of several steps that need to be
@@ -32,6 +35,7 @@ file. For an installation from scratch, the commands would be:
     cd Claroline
     php scripts/configure.php
     composer sync-dev
+
 
 ### From web installer
 
