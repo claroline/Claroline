@@ -10,7 +10,9 @@
               role="form"
                 >
             <div class="modal-body">
-                {{ form_widget(form) }}
+              {{ form_row(form.title) }}
+              {{ form_row(form.description, { 'id': 'agenda_description_' ~ random(1000) }) }}
+              {{ form_widget(form) }}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{'cancel'|trans({}, 'agenda') }}</button>
