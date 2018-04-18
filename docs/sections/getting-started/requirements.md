@@ -25,10 +25,12 @@ For a development installation, you'll need at least:
 
 It's also highly recommended to develop on an UNIX-like OS.
 
-For mysql >= 5.7, there is an additonal step:
-
-```
-    mysql -u**** -p
-    set global sql_mode='';
-    exit;
-```
+> **For mysql >= 5.7**, there is an additional step.
+>  
+>  You have to go into your terminal and type the following commands.
+>
+> ```bash
+>     mysql -u**** -p
+>     set global sql_mode='';
+>     exit;
+> ```
