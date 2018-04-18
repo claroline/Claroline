@@ -36,14 +36,15 @@ Sections (controller + layout):
 base -> core::layout -> admin/desktop/workspace::layout -> ...
 ```
 
-## Model
 
+## Model
 
 - Workspace
 - User/Group
 - Resource
 - Roles/Permissions
 - Badge/Group
+
 
 ## Plugin system
 
