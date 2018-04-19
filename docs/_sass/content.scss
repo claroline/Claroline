@@ -4,7 +4,9 @@
 
 .app-content {
   width: 80%;
-  padding: 30px 45px;
+  padding: 30px 60px;
+  padding-right: 480px; // make some space for summary
+
   text-align: justify;
 
   h1 {

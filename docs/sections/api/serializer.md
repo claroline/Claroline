@@ -102,11 +102,11 @@ $serializedUser = [
     'email' => 'john.doe@claroline.com'
 ];
 
+// get a User entity from the serialized data
 $user = $this->serializerProvider->deserialize('Claroline\CoreBundle\Entity\User', $serializedUser); 
 
-echo $user instance of User; // true
+echo $user instanceof User; // true
 echo $user->getFirstName(); // John
-
 ```
 
 
