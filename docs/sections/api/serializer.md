@@ -9,6 +9,7 @@ title: Serializer
 ## Provider
 
 **Class :** `Claroline\AppBundle\API\SerializerProvider`
+
 **Dependency Injection ID :** `claroline.api.serializer`
 
 The `SerializerProvider` is responsible of the serialization/deserialization process of the 
@@ -114,11 +115,13 @@ echo $user->getFirstName(); // John
 ## Serializer instances
 
 **Namespace :** `MyVendor\MyBundle\Serializer\MySerializer`
+
 **Dependency Injection Tag :** `claroline.api.serializer`
 
 The `Serializer` is a service responsible of the serialization/deserialization of an Entity (and it's associations). 
 
 > **Note**
+> 
 > All entities in the application don't require their own serializer. In most cases, there is only one `Serializer`
 > for each objects exposed in the [JSON API](sections/json/index.md) (which includes a main Entity and it's associations).
 >
@@ -145,13 +148,14 @@ class MySerializer
 
 ### Methods
 
-Here is the list of the ser
+Here is the list of the standard serializer methods.
 
 #### getClass()
 
 Gets the full class name of the object managed by the serializer instance.
 
 > **Note**
+> 
 > If none is provided we will use the type hint of the `$object` argument of `serialize()` method. 
 
 ##### Arguments
@@ -195,7 +199,7 @@ use MyVendor\MyBundle\Entity\MyObject;
 
 class MySerializer
 {
-    public function serialize(_MyObject $object_, _array_ $options = [])
+    public function serialize(MyObject $object, array $options = [])
     {
         return [
             'name' => $object->getName(),
@@ -225,7 +229,7 @@ use MyVendor\MyBundle\Entity\MyObject;
 
 class MySerializer
 {
-    public function deserialize(_array_ $data, _MyObject $object_, _array_ $options = [])
+    public function deserialize(array $data, MyObject $object, array $options = [])
     {
         $object->setName($data['name']);
         
@@ -256,7 +260,7 @@ the input array. Each `.` in the string will go one level deeper in the array. F
 will returns `$data['meta']['description']`. 
 If `meta` doesn't exist it will return `null` without error. 
 
-This permits to avoid additional `isset()` checks in deserialize implementations.
+This permits to avoid additional `isset()` checks in `deserialize()` implementations.
 
 ##### Arguments
 
@@ -299,7 +303,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use MyVendor\MyBundle\Entity\MyObject;
 
 /**
- * @DI\Service('my_plugin.serializer.my_object')
+ * @DI\Service("my_plugin.serializer.my_object")
  * @DI\Tag("claroline.api.serializer")
  */
 class MySerializer
@@ -345,5 +349,5 @@ performances. If you need to add extra data, you should add on `Options` to togg
 
 **YOU MUST NOT `persist()` or `flush()` the ObjectManager.**
 
-Serialization is not only about persistence. We sometimes serialize/deserialize data for easier manipulation and
+Serialization is not only about persistence. We sometimes serialize/deserialize data for easier manipulations and
 we don't want the underlying entities to be modified.
