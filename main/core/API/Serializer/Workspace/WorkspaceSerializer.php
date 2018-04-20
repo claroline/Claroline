@@ -11,6 +11,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Normalizer\DateNormalizer;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -43,7 +44,8 @@ class WorkspaceSerializer
      *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
      *     "container"        = @DI\Inject("service_container"),
      *     "serializer"       = @DI\Inject("claroline.api.serializer"),
-     *     "ut"               = @DI\Inject("claroline.utilities.misc")
+     *     "ut"               = @DI\Inject("claroline.utilities.misc"),
+     *     "fileUt"           = @DI\Inject("claroline.utilities.file")
      * })
      *
      * @param UserSerializer   $userSerializer
@@ -54,13 +56,15 @@ class WorkspaceSerializer
         WorkspaceManager $workspaceManager,
         ContainerInterface $container,
         SerializerProvider $serializer,
-        ClaroUtilities $ut
+        ClaroUtilities $ut,
+        FileUtilities $fileUt
     ) {
         $this->userSerializer = $userSerializer;
         $this->workspaceManager = $workspaceManager;
         $this->container = $container;
         $this->serializer = $serializer;
         $this->ut = $ut;
+        $this->fileUt = $fileUt;
     }
 
     /**
@@ -225,6 +229,11 @@ class WorkspaceSerializer
                 $data['thumbnail']
             );
             $workspace->setThumbnail($thumbnail);
+            $this->fileUt->createFileUse(
+                $thumbnail,
+                'Claroline\CoreBundle\Entity\Workspace',
+                $workspace->getUuid()
+            );
         }
 
         if (isset($data['registration']) && isset($data['registration']['defaultRole'])) {

@@ -5,7 +5,7 @@ import {PropTypes as T} from 'prop-types'
 import {t} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list'
-import {UserCard} from '#/main/core/user/data/components/user-card'
+import {ContactCard} from '#/main/core/user/data/components/contact-card'
 import {constants as listConst} from '#/main/core/data/list/constants'
 
 import {select} from '#/main/core/contact/tool/selectors'
@@ -67,7 +67,7 @@ const ContactsComponent = props =>
         displayed: props.options.data.show_phone
       }
     ]}
-    card={UserCard}
+    card={ContactCard}
   />
 
 ContactsComponent.propTypes = {
