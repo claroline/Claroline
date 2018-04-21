@@ -8,9 +8,9 @@
       "resolved": "https://registry.npmjs.org/@sinonjs/formatio/-/formatio-2.0.0.tgz"
     },
     "@symfony/webpack-encore": {
-      "version": "0.20.0",
+      "version": "0.20.1",
       "from": "@symfony/webpack-encore@*",
-      "resolved": "https://registry.npmjs.org/@symfony/webpack-encore/-/webpack-encore-0.20.0.tgz"
+      "resolved": "https://registry.npmjs.org/@symfony/webpack-encore/-/webpack-encore-0.20.1.tgz"
     },
     "@types/node": {
       "version": "9.6.6",
@@ -517,7 +517,14 @@
     "axios": {
       "version": "0.15.3",
       "from": "axios@>=0.15.3 <0.16.0",
-      "resolved": "https://registry.npmjs.org/axios/-/axios-0.15.3.tgz"
+      "resolved": "https://registry.npmjs.org/axios/-/axios-0.15.3.tgz",
+      "dependencies": {
+        "follow-redirects": {
+          "version": "1.0.0",
+          "from": "follow-redirects@1.0.0",
+          "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.0.0.tgz"
+        }
+      }
     },
     "babel-code-frame": {
       "version": "6.26.0",
@@ -1372,9 +1379,9 @@
       "resolved": "https://registry.npmjs.org/code-point-at/-/code-point-at-1.1.0.tgz"
     },
     "codemirror": {
-      "version": "5.36.0",
+      "version": "5.37.0",
       "from": "codemirror@>=5.34.0 <6.0.0",
-      "resolved": "https://registry.npmjs.org/codemirror/-/codemirror-5.36.0.tgz"
+      "resolved": "https://registry.npmjs.org/codemirror/-/codemirror-5.37.0.tgz"
     },
     "collection-visit": {
       "version": "1.0.0",
@@ -2360,9 +2367,9 @@
       "resolved": "https://registry.npmjs.org/event-emitter/-/event-emitter-0.3.5.tgz"
     },
     "eventemitter3": {
-      "version": "1.2.0",
-      "from": "eventemitter3@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-1.2.0.tgz"
+      "version": "3.0.1",
+      "from": "eventemitter3@>=3.0.0 <4.0.0",
+      "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-3.0.1.tgz"
     },
     "events": {
       "version": "1.1.1",
@@ -2678,9 +2685,16 @@
       "resolved": "git://github.com/toddmotto/fluidvids.git#2c05563dde0ecda0133338727cb095afae044753"
     },
     "follow-redirects": {
-      "version": "1.0.0",
-      "from": "follow-redirects@1.0.0",
-      "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.0.0.tgz"
+      "version": "1.4.1",
+      "from": "follow-redirects@>=1.0.0 <2.0.0",
+      "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.4.1.tgz",
+      "dependencies": {
+        "debug": {
+          "version": "3.1.0",
+          "from": "debug@>=3.1.0 <4.0.0",
+          "resolved": "https://registry.npmjs.org/debug/-/debug-3.1.0.tgz"
+        }
+      }
     },
     "font-awesome": {
       "version": "4.7.0",
@@ -3176,9 +3190,9 @@
       "resolved": "https://registry.npmjs.org/http-parser-js/-/http-parser-js-0.4.11.tgz"
     },
     "http-proxy": {
-      "version": "1.16.2",
+      "version": "1.17.0",
       "from": "http-proxy@>=1.16.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/http-proxy/-/http-proxy-1.16.2.tgz"
+      "resolved": "https://registry.npmjs.org/http-proxy/-/http-proxy-1.17.0.tgz"
     },
     "http-proxy-agent": {
       "version": "1.0.0",
@@ -4557,11 +4571,6 @@
       "version": "0.0.7",
       "from": "mute-stream@0.0.7",
       "resolved": "https://registry.npmjs.org/mute-stream/-/mute-stream-0.0.7.tgz"
-    },
-    "mutexify": {
-      "version": "1.0.1",
-      "from": "mutexify@1.0.1",
-      "resolved": "https://registry.npmjs.org/mutexify/-/mutexify-1.0.1.tgz"
     },
     "nanomatch": {
       "version": "1.2.9",
@@ -7559,14 +7568,19 @@
       }
     },
     "webpack-manifest-plugin": {
-      "version": "2.0.0-rc.1",
-      "from": "webpack-manifest-plugin@2.0.0-rc.1",
-      "resolved": "https://registry.npmjs.org/webpack-manifest-plugin/-/webpack-manifest-plugin-2.0.0-rc.1.tgz",
+      "version": "2.0.1",
+      "from": "webpack-manifest-plugin@>=2.0.0 <3.0.0",
+      "resolved": "https://registry.npmjs.org/webpack-manifest-plugin/-/webpack-manifest-plugin-2.0.1.tgz",
       "dependencies": {
         "fs-extra": {
           "version": "0.30.0",
           "from": "fs-extra@>=0.30.0 <0.31.0",
           "resolved": "https://registry.npmjs.org/fs-extra/-/fs-extra-0.30.0.tgz"
+        },
+        "tapable": {
+          "version": "1.0.0",
+          "from": "tapable@>=1.0.0 <2.0.0",
+          "resolved": "https://registry.npmjs.org/tapable/-/tapable-1.0.0.tgz"
         }
       }
     },
