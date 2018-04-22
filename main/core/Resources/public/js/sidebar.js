@@ -159,7 +159,7 @@
         clearTimeout(sidebar.resizeWindow);
         sidebar.resizeWindow = setTimeout(sidebar.checkHeight, 500);
     })
-    .load(function () {
+    .on('load', function () {
         clearTimeout(sidebar.resizeWindow);
         sidebar.resizeWindow = setTimeout(sidebar.checkHeight, 500);
     });
