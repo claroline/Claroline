@@ -2,13 +2,14 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import merge from 'lodash/merge'
+import omit from 'lodash/omit'
 
 import {trans} from '#/main/core/translation'
 import {t_res} from '#/main/core/resource/translation'
-import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {constants as evaluationConstants} from '#/main/core/resource/evaluation/constants'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {Action} from '#/main/core/layout/button/components/action.jsx'
+import {Button} from '#/main/app/action/components/button'
 import {Alert} from '#/main/core/layout/alert/components/alert.jsx'
 import {AlertBlock} from '#/main/core/layout/alert/components/alert-block.jsx'
 import {ScoreGauge} from '#/main/core/layout/evaluation/components/score-gauge.jsx'
@@ -141,10 +142,10 @@ const ResourceOverview = props =>
             <h3 className="sr-only">{t_res('resource_overview_actions')}</h3>
 
             {props.actions.map((action, index) => !action.disabled ?
-              <Action
-                {...action}
+              <Button
+                {...omit(action, 'disabledMessages')}
                 key={index}
-                className={classes('btn-block', {
+                className={classes('btn btn-block', {
                   'btn-default': !action.primary && !action.dangerous,
                   'btn-primary': action.primary,
                   'btn-danger': action.dangerous

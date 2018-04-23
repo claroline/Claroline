@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {url} from '#/main/core/api/router'
 
 import {MODAL_IFRAME} from '#/main/core/layout/modal'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
@@ -25,12 +24,11 @@ const PortalPage = props =>
     <PageContent>
       <DataListContainer
         name="portal"
-        open={{
-          action: (row) => row.url && row.url.isYoutube ?
-            () => props.displayModalVideo(row.name, row.url.embedYoutubeUrl) // open a modal with the video in a iframe
-            :
-            url(['claro_resource_open', {node: row.id, resourceType: row.meta.type}]) // direct link to the resource
-        }}
+        primaryAction={(row) => ({
+          type: row.url && row.url.isYoutube ? 'callback' : 'url',
+          callback: () => props.displayModalVideo(row.name, row.url.embedYoutubeUrl), // open a modal with the video in a iframe
+          target: ['claro_resource_open', {node: row.id, resourceType: row.meta.type}] // direct link to the resource
+        })}
         fetch={{
           url: ['apiv2_portal_index']
         }}

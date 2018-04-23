@@ -16,15 +16,16 @@ import {select} from '#/main/core/workspace/user/selectors'
 const PendingList = props =>
   <DataListContainer
     name="pending.list"
-    open={UserList.open}
     fetch={{
       url: ['apiv2_workspace_list_pending', {id: props.workspace.uuid}],
       autoload: true
     }}
-    actions={[{
+    primaryAction={UserList.open}
+    actions={(rows) => [{
+      type: 'callback',
       icon: 'fa fa-fw fa-check',
       label: trans('validate'),
-      action: (rows) => props.register(rows, props.workspace)
+      action: () => props.register(rows, props.workspace)
     }]}
     definition={UserList.definition}
     card={UserList.card}

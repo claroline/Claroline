@@ -15,6 +15,7 @@ import {LOCALE_TYPE,      localeDefinition}      from '#/main/core/data/types/lo
 import {NUMBER_TYPE,      numberDefinition}      from '#/main/core/data/types/number'
 import {PASSWORD_TYPE,    passwordDefinition}    from '#/main/core/data/types/password'
 import {SCORE_TYPE,       scoreDefinition}       from '#/main/core/data/types/score'
+import {STORAGE_TYPE,     storageDefinition}     from '#/main/core/data/types/storage'
 import {STRING_TYPE,      stringDefinition}      from '#/main/core/data/types/string'
 import {TRANSLATION_TYPE, translationDefinition} from '#/main/core/data/types/translation'
 import {TRANSLATED_TYPE,  translatedDefinition}  from '#/main/core/data/types/translated'
@@ -40,6 +41,7 @@ registerType(LOCALE_TYPE,      localeDefinition)
 registerType(NUMBER_TYPE,      numberDefinition)
 registerType(PASSWORD_TYPE,    passwordDefinition)
 registerType(SCORE_TYPE,       scoreDefinition)
+registerType(STORAGE_TYPE,     storageDefinition)
 registerType(STRING_TYPE,      stringDefinition)
 registerType(TRANSLATION_TYPE, translationDefinition)
 registerType(TRANSLATED_TYPE,  translatedDefinition)

@@ -155,14 +155,16 @@ const Summary = props =>
 
     {(0 !== props.steps.length || props.add || props.parameters) &&
       <ul className="summary">
-        <li className="summary-link-container">
-          <div className="summary-link">
-            <NavLink to={`/${props.prefix}/parameters`}>
-              <span className="fa fa-cog" />
-              {props.opened && trans('parameters')}
-            </NavLink>
-          </div>
-        </li>
+        {props.parameters &&
+          <li className="summary-link-container">
+            <div className="summary-link">
+              <NavLink to={`/${props.prefix}/parameters`}>
+                <span className="fa fa-cog"/>
+                {props.opened && trans('parameters')}
+              </NavLink>
+            </div>
+          </li>
+        }
 
         {props.steps.map(step =>
           <SummaryLink
@@ -174,19 +176,21 @@ const Summary = props =>
           />
         )}
 
-        <li className="summary-link-container">
-          <div className="summary-link">
-            <button
-              type="button"
-              className="btn btn-link btn-add"
-              onClick={() => props.add(null)}
-            >
-              <span className="fa fa-plus" />
+        {props.add &&
+          <li className="summary-link-container">
+            <div className="summary-link">
+              <button
+                type="button"
+                className="btn btn-link btn-add"
+                onClick={() => props.add(null)}
+              >
+                <span className="fa fa-plus"/>
 
-              {props.opened && trans('step_add', {}, 'path')}
-            </button>
-          </div>
-        </li>
+                {props.opened && trans('step_add', {}, 'path')}
+              </button>
+            </div>
+          </li>
+        }
       </ul>
     }
   </aside>
@@ -228,6 +232,5 @@ const PathSummary = connect(
 )(Summary)
 
 export {
-  PathSummary,
-  SummaryLink as PathSummaryLink
+  PathSummary
 }

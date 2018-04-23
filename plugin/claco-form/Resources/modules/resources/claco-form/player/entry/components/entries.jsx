@@ -81,10 +81,6 @@ class Entries extends Component {
       (this.props.displayMetadata === 'manager' && this.isEntryManager(entry))
   }
 
-  navigateTo(url) {
-    this.props.history.push(url)
-  }
-
   generateColumns() {
     const columns = []
 
@@ -238,77 +234,87 @@ class Entries extends Component {
     return columns
   }
 
-  generateActions() {
+  generateActions(rows) {
     const dataListActions = [{
+      type: 'link',
       icon: 'fa fa-fw fa-eye',
       label: trans('view_entry', {}, 'clacoform'),
-      action: (rows) => this.navigateTo(`/entry/${rows[0].id}/view`),
+      target: `/entry/${rows[0].id}/view`,
       context: 'row'
     }]
 
     if (this.props.canGeneratePdf) {
       dataListActions.push({
+        type: 'callback',
         icon: 'fa fa-fw fa-print',
         label: trans('print_entry', {}, 'clacoform'),
-        action: (rows) => this.props.downloadEntryPdf(rows[0].id),
+        callback: () => this.props.downloadEntryPdf(rows[0].id),
         context: 'row'
       })
       dataListActions.push({
+        type: 'callback',
         icon: 'fa fa-w fa-print',
         label: trans('print_selected_entries', {}, 'clacoform'),
-        action: (rows) => this.props.downloadEntriesPdf(rows),
+        callback: () => this.props.downloadEntriesPdf(rows),
         context: 'selection'
       })
     }
     dataListActions.push({
+      type: 'link',
       icon: 'fa fa-fw fa-pencil',
       label: trans('edit'),
-      action: (rows) => this.navigateTo(`/entry/${rows[0].id}/edit`),
-      displayed: (rows) => !rows[0].locked && this.canEditEntry(rows[0]),
+      target: `/entry/${rows[0].id}/edit`,
+      displayed: !rows[0].locked && this.canEditEntry(rows[0]),
       context: 'row'
     })
     dataListActions.push({
+      type: 'callback',
       icon: 'fa fa-fw fa-eye',
       label: trans('publish'),
-      action: (rows) => this.props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
-      displayed: (rows) => rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length &&
+      callback: () => this.props.switchEntriesStatus(rows, constants.ENTRY_STATUS_PUBLISHED),
+      displayed: rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length &&
         rows.filter(e => e.status === constants.ENTRY_STATUS_PUBLISHED).length !== rows.length
     })
     dataListActions.push({
+      type: 'callback',
       icon: 'fa fa-fw fa-eye-slash',
       label: trans('unpublish'),
-      action: (rows) => this.props.switchEntriesStatus(rows, constants.ENTRY_STATUS_UNPUBLISHED),
-      displayed: (rows) => rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length &&
+      callback: () => this.props.switchEntriesStatus(rows, constants.ENTRY_STATUS_UNPUBLISHED),
+      displayed: rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length &&
         rows.filter(e => e.status !== constants.ENTRY_STATUS_PUBLISHED).length !== rows.length
     })
 
     if (this.props.canAdministrate) {
       dataListActions.push({
+        type: 'callback',
         icon: 'fa fa-w fa-lock',
         label: trans('lock'),
-        action: (rows) => this.props.switchEntriesLock(rows, true),
-        displayed: (rows) => rows.filter(e => e.locked).length !== rows.length
+        callback: () => this.props.switchEntriesLock(rows, true),
+        displayed: rows.filter(e => e.locked).length !== rows.length
       })
       dataListActions.push({
+        type: 'callback',
         icon: 'fa fa-w fa-unlock',
         label: trans('unlock'),
-        action: (rows) => this.props.switchEntriesLock(rows, false),
-        displayed: (rows) => rows.filter(e => !e.locked).length !== rows.length
+        callback: () => this.props.switchEntriesLock(rows, false),
+        displayed: rows.filter(e => !e.locked).length !== rows.length
       })
     }
     dataListActions.push({
+      type: 'callback',
       icon: 'fa fa-fw fa-trash',
       label: trans('delete'),
-      action: (rows) => this.deleteEntry(rows[0]),
-      displayed: (rows) => !rows[0].locked && this.canManageEntry(rows[0]),
+      callback: () => this.deleteEntry(rows[0]),
+      displayed: !rows[0].locked && this.canManageEntry(rows[0]),
       dangerous: true,
       context: 'row'
     })
     dataListActions.push({
+      type: 'callback',
       icon: 'fa fa-w fa-trash',
       label: trans('delete'),
-      action: (rows) => this.deleteEntries(rows),
-      displayed: (rows) => rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length,
+      callback: () => this.deleteEntries(rows),
+      displayed: rows.filter(e => !e.locked && this.canManageEntry(e)).length === rows.length,
       dangerous: true,
       context: 'selection'
     })
@@ -428,16 +434,17 @@ class Entries extends Component {
               available: Object.keys(listConstants.DISPLAY_MODES)
             }}
             name="entries"
-            open={{
-              action: (row) => `#/entry/${row.id}/view`
-            }}
+            primaryAction={(row) => ({
+              type: 'link',
+              target: `/entry/${row.id}/view`
+            })}
             fetch={{
               url: ['claro_claco_form_entries_search', {clacoForm: this.props.resourceId}],
               autoload: true
             }}
             definition={this.generateColumns()}
             filterColumns={this.props.searchColumnEnabled}
-            actions={this.generateActions()}
+            actions={this.generateActions.bind(this)}
             card={(props) =>
               <DataCard
                 {...props}

@@ -16,15 +16,14 @@
       "workspace-home": "workspace/tools/home/workspaceHome",
       "resource-icon-set-list": "administration/appearance/icon/resource-icon-set-list/module",
       "resource-icon-item-list": "administration/appearance/icon/resource-icon-item-list/module",
-      "copy-text-to-clipboard": "copy-text-to-clipboard/copy-text-to-clipboard",
       "scheduled-task-management": "administration/scheduled-task",
       "user-registration": "user/registration",
-      "user-profile": "user/profile",
       "user-tracking": "user/tracking",
-      "contacts-tool": "contact/tool",
+      "contacts-tool": "user/contact",
       "workspace-user-management": "workspace/user",
       "workspace-parameters-management": "workspace/parameters",
-      "text-resource": "resources/text"
+      "user-profile": "user/profile",
+      "text-resource": "resources/text/bootstrap"
     }
   },
 

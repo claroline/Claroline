@@ -92,11 +92,6 @@ claro_desktop:
     prefix: desktop
     type: annotation
 
-claro_desktop_tool_home:
-    resource: "@ClarolineCoreBundle/Controller/Tool/HomeController.php"
-    prefix: tool/home
-    type: annotation
-
 claro_desktop_tool_properties:
     resource: "@ClarolineCoreBundle/Controller/Tool/DesktopParametersController.php"
     prefix: desktop/tool/properties

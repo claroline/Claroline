@@ -2,27 +2,31 @@
 
 namespace Innova\PathBundle\Listener\Resource;
 
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
+use Claroline\CoreBundle\Entity\Resource\ResourceType;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Form\ResourceNameType;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
 use Innova\PathBundle\Entity\SecondaryResource;
 use Innova\PathBundle\Entity\Step;
+use Innova\PathBundle\Manager\UserProgressionManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Used to integrate Path to Claroline resource manager.
@@ -35,6 +39,12 @@ class PathListener
 
     /* @var ObjectManager */
     private $om;
+
+    /** @var SerializerProvider */
+    private $serializer;
+
+    /** @var UserProgressionManager */
+    private $userProgressionManager;
 
     /**
      * PathListener constructor.
@@ -49,6 +59,41 @@ class PathListener
     {
         $this->container = $container;
         $this->om = $container->get('claroline.persistence.object_manager');
+        $this->serializer = $container->get('claroline.api.serializer');
+        $this->userProgressionManager = $container->get('innova_path.manager.user_progression');
+    }
+
+    /**
+     * Loads the Path resource.
+     *
+     * @DI\Observe("load_innova_path")
+     *
+     * @param LoadResourceEvent $event
+     */
+    public function onLoad(LoadResourceEvent $event)
+    {
+        /** @var Path $path */
+        $path = $event->getResource();
+
+        $canEdit = $this->container
+            ->get('security.authorization_checker')
+            ->isGranted('EDIT', new ResourceCollection([$path->getResourceNode()]));
+
+        $resourceTypes = [];
+        if ($canEdit) {
+            $resourceTypes = $this->om
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findBy(['isEnabled' => true]);
+        }
+
+        $event->setAdditionalData([
+            'path' => $this->serializer->serialize($path),
+            'userEvaluation' => $this->userProgressionManager->getUpdatedResourceUserEvaluation($path),
+            'resourceTypes' => array_map(function (ResourceType $resourceType) {
+                return $this->serializer->serialize($resourceType);
+            }, $resourceTypes),
+        ]);
+        $event->stopPropagation();
     }
 
     /**
@@ -60,38 +105,32 @@ class PathListener
      */
     public function onOpen(OpenResourceEvent $event)
     {
-        $path = $this->getPathFromEvent($event->getResource());
+        /** @var Path $path */
+        $path = $event->getResource();
 
-        // Forward request to the Resource controller
-        $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate([], null, [
-            '_controller' => 'InnovaPathBundle:Resource\Path:open',
-            'id' => $path ? $path->getId() : null,
-        ]);
+        $canEdit = $this->container
+            ->get('security.authorization_checker')
+            ->isGranted('EDIT', new ResourceCollection([$path->getResourceNode()]));
 
-        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
+        $resourceTypes = [];
+        if ($canEdit) {
+            $resourceTypes = $this->om
+                ->getRepository('ClarolineCoreBundle:Resource\ResourceType')
+                ->findBy(['isEnabled' => true]);
+        }
 
-        $event->setResponse($response);
-        $event->stopPropagation();
-    }
+        $content = $this->container->get('templating')->render(
+            'InnovaPathBundle:Path:open.html.twig', [
+                '_resource' => $path,
+                'path' => $this->serializer->serialize($path),
+                'userEvaluation' => $this->userProgressionManager->getUpdatedResourceUserEvaluation($path),
+                'resourceTypes' => array_map(function (ResourceType $resourceType) {
+                    return $this->serializer->serialize($resourceType);
+                }, $resourceTypes),
+            ]
+        );
 
-    /**
-     * @DI\Observe("administrate_innova_path")
-     *
-     * @param CustomActionResourceEvent $event
-     */
-    public function onAdministrate(CustomActionResourceEvent $event)
-    {
-        $path = $this->getPathFromEvent($event->getResource());
-
-        // Forward request to the Resource controller
-        $subRequest = $this->container->get('request_stack')->getCurrentRequest()->duplicate([], null, [
-            '_controller' => 'InnovaPathBundle:Resource\Path:edit',
-            'id' => $path ? $path->getId() : null,
-        ]);
-
-        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
-
-        $event->setResponse($response);
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 
@@ -368,7 +407,7 @@ class PathListener
      * @param ResourceNode $dest
      * @param string       $pathName
      *
-     * @return array $resourcesCopy
+     * @return AbstractResource
      */
     private function createResourcesCopyDirectory(ResourceNode $dest, $pathName)
     {

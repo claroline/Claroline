@@ -16,7 +16,6 @@ const Optional = () =>
     name="user"
     sections={[
       {
-        id: 'general',
         title: t('general'),
         primary: true,
         fields: [

@@ -1,44 +1,43 @@
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {locationTypes} from '#/main/core/administration/user/location/constants'
 import {LocationCard} from '#/main/core/user/data/components/location-card'
 
 const LocationList = {
-  open: {
-    action: (row) => `#/locations/form/${row.id}`
-  },
+  open: (row) => ({
+    type: 'link',
+    target: `/locations/form/${row.id}`,
+    label: trans('edit', {}, 'actions')
+  }),
   definition: [
     {
       name: 'name',
       type: 'string',
-      label: t('name'),
+      label: trans('name'),
       displayed: true,
       primary: true
-    },
-    {
+    }, {
       name: 'meta.type',
       type: 'enum',
-      label: t('type'),
+      label: trans('type'),
       options: {
         choices: locationTypes
-      }},
-    {
+      }
+    }, {
       name: 'address',
       type: 'string',
-      label: t('address'),
+      label: trans('address'),
       renderer: (rowData) => getReadableAddress(rowData),
       displayed: true
-    },
-    {
+    }, {
       name: 'phone',
       type: 'string',
-      label: t('phone'),
+      label: trans('phone'),
       displayed: true
-    },
-    {
+    }, {
       name: 'coordinates',
       type: 'string',
-      label: t('coordinates'),
+      label: trans('coordinates'),
       filterable: false,
       renderer: (rowData) => getCoordinates(rowData)
     }

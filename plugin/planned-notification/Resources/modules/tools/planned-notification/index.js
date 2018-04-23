@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/core/scaffolding/bootstrap'
+import {bootstrap} from '#/main/app/bootstrap'
 
 import {reducer} from '#/plugin/planned-notification/tools/planned-notification/reducer'
 import {registerPlannedNotificationTypes} from '#/plugin/planned-notification/data/types'

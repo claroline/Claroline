@@ -4,7 +4,7 @@ import times from 'lodash/times'
 import moment from 'moment'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
-import {Button} from '#/main/core/layout/button/components/button.jsx'
+import {Button} from '#/main/app/action/components/button'
 
 import {CalendarView as CalendarViewTypes} from '#/main/core/layout/calendar/prop-types'
 import {CalendarLayout} from '#/main/core/layout/calendar/components/view/layout.jsx'
@@ -13,12 +13,13 @@ import {monthNum} from '#/main/core/layout/calendar/utils'
 
 const Month = props =>
   <Button
-    className={classes('btn-link-default month', {
+    type="callback"
+    className={classes('btn btn-link month', {
       now:      props.current.isSame(props.now, 'month'),
       selected: props.selected && props.current.isSame(props.selected, 'month')
     })}
     disabled={props.current.isBefore(props.calendarRange[0], 'month') || props.current.isAfter(props.calendarRange[1], 'month')}
-    onClick={props.onClick}
+    callback={props.onClick}
   >
     {props.current.format('MMM')}
   </Button>

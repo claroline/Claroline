@@ -19,11 +19,12 @@ const GroupsList = props =>
       url: ['apiv2_workspace_list_groups', {id: props.workspace.uuid}],
       autoload: true
     }}
-    actions={[
+    actions={(rows) => [
       {
+        type: 'callback',
         icon: 'fa fa-fw fa-trash-o',
         label: trans('unregister'),
-        action: (rows) => props.unregister(rows, props.workspace),
+        callback: () => props.unregister(rows, props.workspace),
         dangerous: true
       }]}
     definition={getGroupList(props.workspace).definition}

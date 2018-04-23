@@ -1,7 +1,7 @@
 {
   "webpack": {
     "entry": {
-      "resource": "resources/path"
+      "resource": "resources/path/bootstrap"
     }
   },
 

@@ -7,8 +7,7 @@ import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
 import {TooltipLink} from '#/main/core/layout/button/components/tooltip-link.jsx'
 
-// TODO : move in layout/action/components
-// TODO : merge TooltipButton/TooltipLink with ActionTypes to avoid remap
+// @deprecated use Button from `#/main/app/action`
 
 const TooltipAction = props => React.createElement(
   typeof props.action === 'function' ? TooltipButton : TooltipLink,

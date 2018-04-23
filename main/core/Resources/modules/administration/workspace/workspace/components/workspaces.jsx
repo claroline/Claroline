@@ -15,48 +15,53 @@ import {WorkspaceList} from '#/main/core/administration/workspace/workspace/comp
 const WorkspacesList = props =>
   <DataListContainer
     name="workspaces.list"
-    open={WorkspaceList.open}
     fetch={{
       url: ['apiv2_workspace_list'],
       autoload: true
     }}
     definition={WorkspaceList.definition}
 
-    actions={[
+    primaryAction={WorkspaceList.open}
+    actions={(rows) => [
       ...Configuration.getWorkspacesAdministrationActions().map(action => action.options.modal ? {
+        type: 'modal',
         icon: action.icon,
         label: action.name(Translator),
-        action: (rows) => props.showModal(MODAL_URL, {
+        modal: [MODAL_URL, {
           url: action.url(rows[0].id)
-        }),
+        }],
         context: 'row'
       } : {
+        type: 'url',
         icon: action.icon,
         label: action.name(Translator),
-        action: (rows) => action.url(rows[0].id),
+        target: action.url(rows[0].id),
         context: 'row'
       }), {
+        type: 'callback',
         icon: 'fa fa-fw fa-copy',
         label: trans('duplicate'),
-        action: (rows) => props.copyWorkspaces(rows, false)
+        callback: () => props.copyWorkspaces(rows, false)
       }, {
+        type: 'callback',
         icon: 'fa fa-fw fa-clone',
         label: trans('duplicate_model'),
-        action: (rows) => props.copyWorkspaces(rows, true)
-      },
-      {
+        callback: () => props.copyWorkspaces(rows, true)
+      }, {
+        type: 'link',
         icon: 'fa fa-fw fa-book',
         label: trans('edit'),
-        action: (rows) => window.location.href = `#/workspaces/form/${rows[0].uuid}`
+        target: `/workspaces/form/${rows[0].uuid}`
       },
       // TODO / FIXME : Uses component delete option.
       // Not possible for the moment because it is not possible to display an alert message if the workspace contains not deletable resources.
       {
+        type: 'callback',
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete'),
         dangerous: true,
-        displayed: (rows) => 0 < rows.filter(w => w.code !== 'default_personal' && w.code !== 'default_workspace').length,
-        action: (rows) => props.deleteWorkspaces(rows)
+        displayed: 0 < rows.filter(w => w.code !== 'default_personal' && w.code !== 'default_workspace').length,
+        callback: () => props.deleteWorkspaces(rows)
       }
     ]}
 

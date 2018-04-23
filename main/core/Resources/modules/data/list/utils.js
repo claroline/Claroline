@@ -26,25 +26,53 @@ function getPropDefinition(propName, dataProps) {
 }
 
 /**
- * Gets available actions for each data object.
+ * Gets primary action for each data object.
  *
- * @param {Array} actions - the whole set of available data actions
+ * @param {object}   item            - The current row data.
+ * @param {function} actionGenerator - A function to generate the primary action for a data row.
  *
  * @returns {Array}
  */
-function getRowActions(actions = []) {
-  return actions.filter(action => !action.context || 'row' === action.context)
+function getPrimaryAction(item, actionGenerator) {
+  if (actionGenerator) {
+    return actionGenerator(item)
+  }
+
+  return null
+}
+
+/**
+ * Gets available actions for each data object.
+ *
+ * @param {object}   item             - The current row data.
+ * @param {function} actionsGenerator - A function to generate the set of available actions for a data row.
+ *
+ * @returns {Array}
+ */
+function getRowActions(item, actionsGenerator) {
+  if (actionsGenerator) {
+    return actionsGenerator([item]) // generates actions
+      .filter(action => !action.context || 'row' === action.context)
+  }
+
+  return []
 }
 
 /**
  * Gets available actions for selected data objects.
  *
- * @param {Array} actions - the whole set of available data actions
+ * @param {Array}    selected         - The current selection.
+ * @param {function} actionsGenerator - A function to generate the set of available actions for a data selection.
  *
  * @returns {Array}
  */
-function getBulkActions(actions = []) {
-  return actions.filter(action => !action.context || 'selection' === action.context)
+function getBulkActions(selected, actionsGenerator) {
+  if (actionsGenerator) {
+    return actionsGenerator(selected) // generates actions
+      .filter(action => !action.context || 'selection' === action.context)
+  }
+
+  return []
 }
 
 /**
@@ -121,6 +149,15 @@ function countPages(totalResults, pageSize) {
   return nbPages + (rest > 0 ? 1 : 0)
 }
 
+/**
+ *
+ * @param dataObjects
+ * @return {string}
+ *
+ * @deprecated
+ *
+ * @todo replace in code and remove me (can be done with url() second param)
+ */
 function getDataQueryString(dataObjects) {
   return '?' + dataObjects.map(object => 'ids[]='+object.id).join('&')
 }
@@ -128,6 +165,7 @@ function getDataQueryString(dataObjects) {
 export {
   createListDefinition,
   getPropDefinition,
+  getPrimaryAction,
   getRowActions,
   getBulkActions,
   getDisplayableProps,

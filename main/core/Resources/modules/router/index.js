@@ -18,6 +18,10 @@ export {
 
 /**
  * Shortcut to navigate using the correct history.
+ *
+ * @deprecated we will no longer allow dev to navigate this way.
+ * Because we have 2 routes in UI know. They should retrieve the correct history in components
+ * using `withRouter` HOC.
  */
 export function navigate(url) {
   history.push(url)

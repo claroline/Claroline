@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/core/scaffolding/bootstrap'
+import {bootstrap} from '#/main/app/bootstrap'
 
 import {registerDefaultItemTypes} from '#/plugin/exo/items/item-types'
 import {registerModal} from '#/main/core/layout/modal'

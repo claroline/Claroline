@@ -7,6 +7,8 @@ import {
   SCORE_SUM
 } from './enums'
 
+// TODO : replace by PropTypes.defaultProps
+
 const quiz = {
   description: '',
   parameters: {

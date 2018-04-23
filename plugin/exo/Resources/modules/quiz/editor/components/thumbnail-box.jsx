@@ -44,6 +44,7 @@ Actions.propTypes = {
   connectDragSource: T.func.isRequired
 }
 
+// TODO : use `import {Button} from '#/main/app/action/components/button'`
 let Thumbnail = props => props.connectDropTarget(
   <span
     className={classes('thumbnail', {'active': props.active})}
@@ -53,12 +54,11 @@ let Thumbnail = props => props.connectDropTarget(
     {props.type === TYPE_QUIZ && <span className="step-actions"/>}
     {props.type === TYPE_STEP && <Actions {...props}/>}
 
-    <a
-      className={classes('step-title', {'type-quiz': props.type === TYPE_QUIZ})}
-      href="#editor"
+    <span
+      className={classes('step-label', {'type-quiz': props.type === TYPE_QUIZ})}
     >
       {props.title}
-    </a>
+    </span>
 
     <span className="step-bottom">
       {props.hasErrors &&

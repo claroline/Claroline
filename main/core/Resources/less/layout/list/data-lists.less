@@ -2,7 +2,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    /*width: 100%;*/
+    min-height: 100%; // to fill page if needed
 
     // Responsive table.
     //
@@ -216,6 +216,14 @@
     .list-selected-actions {
         white-space: nowrap; // avoids buttons to break on multi lines
     }
+}
+
+.list-primary-action {
+    .button-link-variant(@link-color, @link-hover-color, @link-hover-decoration);
+
+    display: block; // fill cell
+    text-align: left;
+    width: 100%;
 }
 
 .list-options {

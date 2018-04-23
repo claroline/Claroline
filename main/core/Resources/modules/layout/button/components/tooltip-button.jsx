@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
-// TODO : find why I can't use the custom Button component (tooltip is not triggered if used)
-/*import {Button} from '#/main/core/layout/button/components/button.jsx'*/
+
+// @deprecated use Button from `#/main/app/action`
 
 /**
  * Button with tooltip.

@@ -1,24 +1,26 @@
 import React from 'react'
 
 import {trans} from '#/main/core/translation'
-import {displayDate} from '#/main/core/scaffolding/date'
-import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
+import {DataListContainer} from '#/main/core/data/list/containers/data-list'
 
+import {ScheduledTaskCard} from '#/main/core/administration/scheduled-task/data/components/scheduled-task-card'
 import {constants} from '#/main/core/administration/scheduled-task/constants'
 
-const ScheduledTasks = props =>
+const ScheduledTasks = () =>
   <DataListContainer
     name="tasks"
     fetch={{
       url: ['apiv2_scheduledtask_list'],
       autoload: true
     }}
-    open={{
-      action: (row) => `#/form/${row.id}`
-    }}
-    delete={{
-      url: ['apiv2_scheduledtask_delete_bulk']
-    }}
+    primaryAction={(row) => ({
+      type: 'link',
+      target: `/form/${row.id}`
+    })}
+    deleteAction={() => ({
+      type: 'url',
+      target: ['apiv2_scheduledtask_delete_bulk']
+    })}
     definition={[
       {
         name: 'name',
@@ -53,16 +55,7 @@ const ScheduledTasks = props =>
       }
     ]}
 
-    card={(row) => ({
-      icon: 'fa fa-clock-o',
-      title: row.name,
-      subtitle: trans(row.type),
-      footer:
-        row.meta.lastExecution &&
-        <span>
-          executed at <b>{displayDate(row.meta.lastExecution, false, true)}</b>
-        </span>
-    })}
+    card={ScheduledTaskCard}
   />
 
 export {

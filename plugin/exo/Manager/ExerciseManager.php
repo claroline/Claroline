@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use UJM\ExoBundle\Entity\Attempt\Paper;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Library\Item\ItemDefinitionsCollection;
 use UJM\ExoBundle\Library\Options\Transfer;
@@ -12,6 +13,7 @@ use UJM\ExoBundle\Library\Validator\ValidationException;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Manager\Item\ItemManager;
 use UJM\ExoBundle\Repository\ExerciseRepository;
+use UJM\ExoBundle\Repository\PaperRepository;
 use UJM\ExoBundle\Serializer\ExerciseSerializer;
 use UJM\ExoBundle\Transfer\Parser\ContentParserInterface;
 use UJM\ExoBundle\Validator\JsonSchema\ExerciseValidator;
@@ -68,11 +70,12 @@ class ExerciseManager
      *     "definitions"  = @DI\Inject("ujm_exo.collection.item_definitions")
      * })
      *
-     * @param ObjectManager      $om
-     * @param ExerciseValidator  $validator
-     * @param ExerciseSerializer $serializer
-     * @param ItemManager        $itemManager
-     * @param PaperManager       $paperManager
+     * @param ObjectManager             $om
+     * @param ExerciseValidator         $validator
+     * @param ExerciseSerializer        $serializer
+     * @param ItemManager               $itemManager
+     * @param PaperManager              $paperManager
+     * @param ItemDefinitionsCollection $definitions
      */
     public function __construct(
         ObjectManager $om,
@@ -283,9 +286,6 @@ class ExerciseManager
     {
         /** @var PaperRepository $repo */
         $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
-        $papers = $repo->findBy([
-            'exercise' => $exercise,
-        ]);
 
         $handle = fopen('php://output', 'w+');
         $limit = 250;
@@ -360,7 +360,6 @@ class ExerciseManager
         fputcsv($fp, $flattenedTitles, ';');
 
         //this is the same reason why we use an array of array here
-        $repo = $this->om->getRepository('UJMExoBundle:Attempt\Paper');
         $limit = 250;
         $iteration = 0;
         $papers = [];
@@ -370,6 +369,7 @@ class ExerciseManager
             ++$iteration;
             $dataPapers = [];
 
+            /** @var Paper $paper */
             foreach ($papers as $paper) {
                 $structure = json_decode($paper->getStructure());
                 $totalScoreOn = $structure->parameters->totalScoreOn && floatval($structure->parameters->totalScoreOn) > 0 ? floatval($structure->parameters->totalScoreOn) : $this->paperManager->calculateTotal($paper);

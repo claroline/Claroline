@@ -221,6 +221,34 @@ const ALERT_ACTIONS = {
       title: trans('upload.error.title', {}, 'alerts'),
       message: trans('upload.error.message', {}, 'alerts')
     }
+  },
+  [actionConstants.ACTION_PUBLISH]: {
+    [ALERT_STATUS_PENDING]: {
+      title: trans('publish.pending.title', {}, 'alerts'),
+      message: trans('publish.pending.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_SUCCESS]: {
+      title: trans('publish.success.title', {}, 'alerts'),
+      message: trans('send.success.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_ERROR]: {
+      title: trans('publish.error.title', {}, 'alerts'),
+      message: trans('publish.error.message', {}, 'alerts')
+    }
+  },
+  [actionConstants.ACTION_UNPUBLISH]: {
+    [ALERT_STATUS_PENDING]: {
+      title: trans('unpublish.pending.title', {}, 'alerts'),
+      message: trans('unpublish.pending.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_SUCCESS]: {
+      title: trans('unpublish.success.title', {}, 'alerts'),
+      message: trans('unpublish.success.message', {}, 'alerts')
+    },
+    [ALERT_STATUS_ERROR]: {
+      title: trans('unpublish.error.title', {}, 'alerts'),
+      message: trans('unpublish.error.message', {}, 'alerts')
+    }
   }
 }
 

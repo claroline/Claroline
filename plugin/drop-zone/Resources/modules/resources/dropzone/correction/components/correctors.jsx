@@ -1,9 +1,8 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {generateUrl} from '#/main/core/api/router'
-import {navigate} from '#/main/core/router'
 import {trans} from '#/main/core/translation'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 
@@ -15,121 +14,99 @@ import {actions} from '#/plugin/drop-zone/resources/dropzone/correction/actions'
 
 // TODO : restore list grid display
 
-class Correctors extends Component {
-  generateColumns(props) {
-    const columns = []
+const Correctors = props =>
+  <div id="correctors-list">
+    <h2>{trans('correctors_list', {}, 'dropzone')}</h2>
+    {!props.corrections ?
+      <span className="fa fa-fw fa-circle-o-notch fa-spin" /> :
+      <DataListContainer
+        name="drops"
+        fetch={{
+          url: generateUrl('claro_dropzone_drops_search', {id: props.dropzone.id}),
+          autoload: true
+        }}
+        primaryAction={(row) => ({
+          type: 'link',
+          target: `/corrector/${row.id}`
+        })}
+        definition={[
+          {
+            name: 'user',
+            label: trans('user', {}, 'platform'),
+            displayed: props.dropzone.parameters.dropType === constants.DROP_TYPE_USER,
+            displayable: props.dropzone.parameters.dropType === constants.DROP_TYPE_USER,
+            primary: true
+          }, {
+            name: 'teamName',
+            label: trans('team', {}, 'team'),
+            displayed: props.dropzone.parameters.dropType === constants.DROP_TYPE_TEAM,
+            displayable: props.dropzone.parameters.dropType === constants.DROP_TYPE_TEAM,
+            primary: true
+          }, {
+            name: 'nbCorrections',
+            label: trans('started_corrections', {}, 'dropzone'),
+            displayed: true,
+            filterable: false,
+            sortable: false,
+            renderer: (rowData) => {
+              const key = getCorrectionKey(rowData, props.dropzone)
 
-    if (props.dropzone.parameters.dropType === constants.DROP_TYPE_USER) {
-      columns.push({
-        name: 'user',
-        label: trans('user', {}, 'platform'),
-        displayed: true,
-        primary: true
-      })
+              return props.corrections && props.corrections[key] ? props.corrections[key].length : 0
+            }
+          }, {
+            name: 'nbFinishedCorrections',
+            label: trans('finished_corrections', {}, 'dropzone'),
+            displayed: true,
+            filterable: false,
+            sortable: false,
+            renderer: (rowData) => {
+              const nbExpectedCorrections = props.dropzone.parameters.expectedCorrectionTotal
+              const key = getCorrectionKey(rowData, props.dropzone)
+              const nbCorrections = props.corrections && props.corrections[key] ?
+                props.corrections[key].filter(c => c.finished).length :
+                0
+
+              return `${nbCorrections} / ${nbExpectedCorrections}`
+            }
+          }, {
+            name: 'nbDeniedCorrections',
+            label: trans('denied_corrections', {}, 'dropzone'),
+            displayed: true,
+            filterable: false,
+            sortable: false,
+            renderer: (rowData) => {
+              const key = getCorrectionKey(rowData, props.dropzone)
+
+              return props.corrections && props.corrections[key] ?
+                props.corrections[key].filter(c => c.correctionDenied).length :
+                0
+            }
+          }, {
+            name: 'unlockedUser',
+            label: trans('unlocked', {}, 'dropzone'),
+            displayed: true,
+            type: 'boolean'
+          }
+        ]}
+        filterColumns={true}
+        actions={(rows) => [
+          {
+            type: 'link',
+            icon: 'fa fa-fw fa-eye',
+            label: trans('open', {}, 'platform'),
+            target: `/corrector/${rows[0].id}`,
+            context: 'row'
+          }, {
+            type: 'callback',
+            icon: 'fa fa-fw fa-unlock',
+            label: trans('unlock_corrector', {}, 'dropzone'),
+            callback: () => props.unlockUser(rows[0].id),
+            context: 'row'
+          }
+        ]}
+      />
     }
-    if (props.dropzone.parameters.dropType === constants.DROP_TYPE_TEAM) {
-      columns.push({
-        name: 'teamName',
-        label: trans('team', {}, 'team'),
-        displayed: true,
-        primary: true
-      })
-    }
-
-    columns.push({
-      name: 'nbCorrections',
-      label: trans('started_corrections', {}, 'dropzone'),
-      displayed: true,
-      filterable: false,
-      sortable: false,
-      renderer: (rowData) => {
-        const key = getCorrectionKey(rowData, props.dropzone)
-
-        return props.corrections && props.corrections[key] ? props.corrections[key].length : 0
-      }
-    })
-    columns.push({
-      name: 'nbFinishedCorrections',
-      label: trans('finished_corrections', {}, 'dropzone'),
-      displayed: true,
-      filterable: false,
-      sortable: false,
-      renderer: (rowData) => {
-        const nbExpectedCorrections = props.dropzone.parameters.expectedCorrectionTotal
-        const key = getCorrectionKey(rowData, props.dropzone)
-        const nbCorrections = props.corrections && props.corrections[key] ?
-          props.corrections[key].filter(c => c.finished).length :
-          0
-
-        return `${nbCorrections} / ${nbExpectedCorrections}`
-      }
-    })
-    columns.push({
-      name: 'nbDeniedCorrections',
-      label: trans('denied_corrections', {}, 'dropzone'),
-      displayed: true,
-      filterable: false,
-      sortable: false,
-      renderer: (rowData) => {
-        const key = getCorrectionKey(rowData, props.dropzone)
-
-        return props.corrections && props.corrections[key] ?
-          props.corrections[key].filter(c => c.correctionDenied).length :
-          0
-      }
-    })
-    columns.push({
-      name: 'unlockedUser',
-      label: trans('unlocked', {}, 'dropzone'),
-      displayed: true,
-      type: 'boolean'
-    })
-
-    return columns
-  }
-
-  generateActions(props) {
-    const actions = []
-    actions.push({
-      icon: 'fa fa-fw fa-eye',
-      label: trans('open', {}, 'platform'),
-      action: (rows) => navigate(`/corrector/${rows[0].id}`),
-      context: 'row'
-    })
-    actions.push({
-      icon: 'fa fa-fw fa-unlock',
-      label: trans('unlock_corrector', {}, 'dropzone'),
-      action: (rows) => props.unlockUser(rows[0].id),
-      context: 'row'
-    })
-
-    return actions
-  }
-
-  render() {
-    return (
-      <div id="correctors-list">
-        <h2>{trans('correctors_list', {}, 'dropzone')}</h2>
-        {!this.props.corrections ?
-          <span className="fa fa-fw fa-circle-o-notch fa-spin" /> :
-          <DataListContainer
-            name="drops"
-            fetch={{
-              url: generateUrl('claro_dropzone_drops_search', {id: this.props.dropzone.id}),
-              autoload: true
-            }}
-            open={{
-              action: (row) => `#/corrector/${row.id}`
-            }}
-            definition={this.generateColumns(this.props)}
-            filterColumns={true}
-            actions={this.generateActions(this.props)}
-          />
-        }
-      </div>
-    )
-  }
-}
+  </div>
 
 Correctors.propTypes = {
   dropzone: T.shape(DropzoneType.propTypes).isRequired,

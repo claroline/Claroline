@@ -10,7 +10,7 @@
 {% block content %}
     <div
       class="page-container quiz-container"
-      data-quiz="{{ exercise | json_encode | raw | escape }}"
+      data-quiz="{{ quiz | json_encode | raw | escape }}"
       data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
     >
     </div>
@@ -22,11 +22,14 @@
 
     <script>
         // adds custom styles to TinyMCE for cloze questions
-        window.tinymce.claroline.css = [window.Claroline.Home.asset + 'vendor/ujmexo/exercise.css']
+        {# TODO restore #}
+        /*window.tinymce.content_css.push(
+          window.Claroline.Home.asset + 'vendor/ujmexo/exercise.css'
+        )*/
     </script>
 
     {# Translations #}
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'quiz' }) }}"></script>
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'question_types' }) }}"></script>
 
     {# cannot use jsPlumb with webpack now (https://github.com/sporritt/jsPlumb/issues/314) #}

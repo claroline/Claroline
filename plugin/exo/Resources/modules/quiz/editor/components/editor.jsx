@@ -2,13 +2,15 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {ThumbnailBox} from './thumbnail-box.jsx'
-import {QuizEditor} from './quiz-editor.jsx'
-import {StepEditor} from './step-editor.jsx'
-import {actions} from './../actions'
+import {actions as modalActions} from '#/main/core/layout/modal/actions'
+
 import {TYPE_QUIZ, TYPE_STEP} from './../../enums'
-import select from './../selectors'
-import {CustomDragLayer} from './../../../utils/custom-drag-layer.jsx'
+
+import {actions} from '#/plugin/exo/quiz/editor/actions'
+import {select} from '#/plugin/exo/quiz/editor/selectors'
+import {ThumbnailBox} from '#/plugin/exo/quiz/editor/components/thumbnail-box'
+import {QuizEditor} from '#/plugin/exo/quiz/editor/components/quiz-editor'
+import {StepEditor} from '#/plugin/exo/quiz/editor/components/step-editor'
 
 let Editor = props =>
   <div className="quiz-editor">
@@ -21,10 +23,10 @@ let Editor = props =>
       onStepDeleteClick={props.deleteStepAndItems}
       showModal={props.showModal}
     />
+
     <div className="edit-zone user-select-disabled">
       {selectSubEditor(props)}
     </div>
-    <CustomDragLayer/>
   </div>
 
 Editor.propTypes = {
@@ -115,8 +117,8 @@ selectSubEditor.propTypes = {
   fadeModal: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+Editor = connect(
+  (state) => ({
     thumbnails: select.thumbnails(state),
     items: select.items(state),
     tags: select.tags(state),
@@ -126,9 +128,10 @@ function mapStateToProps(state) {
     activeStepPanel: select.stepOpenPanel(state),
     quizProperties: select.quiz(state),
     validating: select.validating(state)
-  }
+  }),
+  Object.assign({}, modalActions, actions) // todo : only grab needed actions
+)(Editor)
+
+export {
+  Editor
 }
-
-Editor = connect(mapStateToProps, actions)(Editor)
-
-export {Editor}

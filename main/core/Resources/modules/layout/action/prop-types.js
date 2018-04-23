@@ -25,9 +25,13 @@ const Action = {
     /**
      * The action itself (an URL or a function to call).
      *
-     * @type {string|function}
+     * @type {array|string|function}
      */
-    action: T.oneOfType([T.string, T.func]).isRequired, // todo should also accept url array
+    action: T.oneOfType([
+      T.string, // standard string URL
+      T.array, // symfony array route
+      T.func // click function
+    ]).isRequired,
 
     /**
      * Is the action displayed ?

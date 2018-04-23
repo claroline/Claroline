@@ -5,10 +5,10 @@ import {t} from '#/main/core/translation'
 const Action = () =>
   <PageActions>
     <PageAction
-      id="execute-action"
+      type="callback"
       icon="fa fa-download"
-      title={t('download')}
-      action="#"
+      label={t('download')}
+      callback={() => true}
     />
   </PageActions>
 

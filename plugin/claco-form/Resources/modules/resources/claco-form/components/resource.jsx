@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {trans} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/api/router'
 
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
@@ -54,49 +53,58 @@ const Resource = props =>
     }}
     customActions={[
       {
+        type: 'link',
         icon: 'fa fa-fw fa-home',
         label: trans('main_menu', {}, 'clacoform'),
-        action: '#/menu'
+        target: '/menu'
       }, {
+        type: 'link',
         icon: 'fa fa-fw fa-plus',
         label: trans('add_entry', {}, 'clacoform'),
         displayed: props.canAddEntry,
-        action: '#/entry/create'
+        target: '/entry/create'
       }, {
+        type: 'link',
         icon: 'fa fa-fw fa-search',
         label: trans('entries_list', {}, 'clacoform'),
         displayed: props.canSearchEntry,
-        action: '#/entries'
+        target: '/entries'
       }, {
+        type: 'link',
         icon: 'fa fa-fw fa-th-list',
         label: trans('fields_management', {}, 'clacoform'),
         displayed: props.canEdit,
-        action: '#/fields'
+        target: '/fields'
       }, {
+        type: 'link',
         icon: 'fa fa-fw fa-file-text-o',
         label: trans('template_management', {}, 'clacoform'),
         displayed: props.canEdit,
-        action: '#/template'
+        target: '/template'
       }, {
+        type: 'link',
         icon: 'fa fa-fw fa-table',
         label: trans('categories_management', {}, 'clacoform'),
         displayed: props.canEdit,
-        action: '#/categories'
+        target: '/categories'
       }, {
+        type: 'link',
         icon: 'fa fa-fw fa-font',
         label: trans('keywords_management', {}, 'clacoform'),
         displayed: props.canEdit,
-        action: '#/keywords'
+        target: '/keywords'
       }, {
+        type: 'url',
         icon: 'fa fa-fw fa-upload',
         label: trans('export_all_entries', {}, 'clacoform'),
         displayed: props.canEdit,
-        action: generateUrl('claro_claco_form_entries_export', {clacoForm: props.resource.id})
+        target: ['claro_claco_form_entries_export', {clacoForm: props.resource.id}]
       }, {
+        type: 'callback',
         icon: 'fa fa-fw fa-trash-o',
         label: trans('delete_all_entries', {}, 'clacoform'),
         displayed: props.canEdit,
-        action: props.deleteEntries,
+        callback: props.deleteEntries,
         dangerous: true
       }
     ]}

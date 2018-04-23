@@ -29,7 +29,30 @@
       "type": "array",
       "uniqueItems": true,
       "items": {
-        "$ref": "https://github.com/claroline/Distribution/tree/master/plugin/path/Resources/schemas/secondary-resource.json"
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The uuid of the secondary resource"
+          },
+          "inheritanceEnabled": {
+            "type": "boolean",
+            "description": "Wether the secondary resource is inherited by the step children or not"
+          },
+          "resource": {
+            "type": "object",
+            "description": "The resource node",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The uuid of the resource"
+              }
+            },
+            "required": ["id"]
+          }
+        },
+        "claroIds": ["id"],
+        "required": ["inheritanceEnabled", "resource"]
       }
     },
     "children": {

@@ -17,9 +17,9 @@ use Symfony\Component\EventDispatcher\Event;
 
 class DisplayToolEvent extends Event implements DataConveyorEventInterface
 {
-    protected $response;
-    protected $content;
-    protected $isPopulated = false;
+    private $workspace;
+    private $content;
+    private $isPopulated = false;
 
     public function __construct(Workspace $workspace = null)
     {

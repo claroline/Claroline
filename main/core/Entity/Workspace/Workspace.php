@@ -152,6 +152,8 @@ class Workspace
      * )
      *
      * @var ResourceNode[]|ArrayCollection
+     *
+     * @todo : relation should not be bi directional for performances.
      */
     protected $resources;
 

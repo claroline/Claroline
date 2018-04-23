@@ -240,6 +240,7 @@ class ResourceNodeSerializer
     {
         return [
             'fullscreen' => $resourceNode->isFullscreen(),
+            'showIcon' => $resourceNode->getShowIcon(),
             'closable' => $resourceNode->isClosable(),
             'closeTarget' => $resourceNode->getCloseTarget(),
         ];
@@ -248,6 +249,7 @@ class ResourceNodeSerializer
     private function getRestrictions(ResourceNode $resourceNode)
     {
         return [
+            //'hidden' => $resourceNode->isHidden(), // 12.x feature
             'dates' => DateRangeNormalizer::normalize(
                 $resourceNode->getAccessibleFrom(),
                 $resourceNode->getAccessibleUntil()

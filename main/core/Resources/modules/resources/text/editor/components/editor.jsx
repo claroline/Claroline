@@ -8,30 +8,27 @@ import {Text as TextTypes} from '#/main/core/resources/text/prop-types'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 
 const EditorComponent = () =>
-  <section className="resource-section">
-    <h2 className="h-first">{trans('configuration')}</h2>
-    <FormContainer
-      level={3}
-      name="textForm"
-      sections={[
-        {
-          id: 'general',
-          title: trans('general', {}, 'platform'),
-          primary: true,
-          fields: [
-            {
-              name: 'content',
-              type: 'html',
-              label: trans('text'),
-              options: {
-                minRows: 3
-              }
+  <FormContainer
+    name="textForm"
+    sections={[
+      {
+        title: trans('general', {}, 'platform'),
+        primary: true,
+        fields: [
+          {
+            name: 'content',
+            type: 'html',
+            label: trans('text'),
+            hideLabel: true,
+            required: true,
+            options: {
+              minRows: 3
             }
-          ]
-        }
-      ]}
-    />
-  </section>
+          }
+        ]
+      }
+    ]}
+  />
 
 EditorComponent.propTypes = {
   text: T.shape(TextTypes.propTypes).isRequired

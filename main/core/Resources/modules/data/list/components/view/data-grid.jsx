@@ -6,8 +6,16 @@ import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-t
 import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'
 import {Checkbox} from '#/main/core/layout/form/components/field/checkbox'
 
-import {DataListAction, DataListProperty, DataListView} from '#/main/core/data/list/prop-types'
-import {getBulkActions, getRowActions, getPropDefinition, getSortableProps, isRowSelected} from '#/main/core/data/list/utils'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {DataListProperty, DataListView} from '#/main/core/data/list/prop-types'
+import {
+  getPrimaryAction,
+  getBulkActions,
+  getRowActions,
+  getPropDefinition,
+  getSortableProps,
+  isRowSelected
+} from '#/main/core/data/list/utils'
 import {ListBulkActions} from '#/main/core/data/list/components/actions'
 
 const DataGridItem = props =>
@@ -26,15 +34,8 @@ const DataGridItem = props =>
       size: props.size,
       orientation: props.orientation,
       data: props.row,
-      primaryAction: props.primaryAction ? {
-        disabled: props.primaryAction.disabled ? props.primaryAction.disabled(props.row) : false,
-        action: props.primaryAction.action(props.row)
-      } : undefined,
-      actions: props.actions.map(action => Object.assign({}, action, {
-        displayed: !action.displayed || action.displayed([props.row]),
-        disabled: action.disabled ? action.disabled([props.row]) : false,
-        action: typeof action.action === 'function' ? () => action.action([props.row]) : action.action
-      }))
+      primaryAction: props.primaryAction,
+      actions: props.actions
     })}
   </li>
 
@@ -43,13 +44,12 @@ DataGridItem.propTypes = {
   orientation: T.string.isRequired,
   row: T.object.isRequired,
 
-  primaryAction: T.shape({
-    disabled: T.func,
-    action: T.oneOfType([T.string, T.func]).isRequired
-  }),
+  primaryAction: T.shape(
+    ActionTypes.propTypes
+  ),
 
   actions: T.arrayOf(
-    T.shape(DataListAction.propTypes)
+    T.shape(ActionTypes.propTypes)
   ),
 
   card: T.func.isRequired, // It must be a react component.
@@ -137,21 +137,23 @@ const DataGrid = props =>
     {props.selection && 0 < props.selection.current.length &&
       <ListBulkActions
         count={props.selection.current.length}
-        selectedItems={props.selection.current.map(id => props.data.find(row => id === row.id) || {id: id})}
-        actions={getBulkActions(props.actions)}
+        actions={getBulkActions(
+          props.selection.current.map(id => props.data.find(row => id === row.id) || {id: id}),
+          props.actions
+        )}
       />
     }
 
     <ul className="data-grid-content">
-      {props.data.map((row, rowIndex) =>
+      {props.data.map((row) =>
         <DataGridItem
-          key={`data-item-${rowIndex}`}
+          key={`data-item-${row.id}`}
           size={props.size}
           orientation={props.orientation}
           row={row}
           card={props.card}
-          primaryAction={props.primaryAction}
-          actions={getRowActions(props.actions)}
+          primaryAction={getPrimaryAction(row, props.primaryAction)}
+          actions={getRowActions(row, props.actions)}
           selected={isRowSelected(row, props.selection ? props.selection.current : [])}
           onSelect={
             props.selection ? () => {

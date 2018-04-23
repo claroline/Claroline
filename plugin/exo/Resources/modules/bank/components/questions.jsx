@@ -91,7 +91,7 @@ const QuestionsPage = props =>
           }
         ]}
 
-        actions={[
+        actions={(rows) => [
           /*{
             icon: 'fa fa-fw fa-copy',
             label: t('duplicate'),
@@ -102,13 +102,15 @@ const QuestionsPage = props =>
             action: (rows) => props.duplicateQuestions(rows, true)
           },*/ {
             // TODO : checks if the current user has the rights to share to enable the action
+            type: 'callback',
             icon: 'fa fa-fw fa-share',
             label: tex('question_share'),
-            action: (rows) => props.shareQuestions(rows)
+            callback: () => props.shareQuestions(rows)
           }, {
+            type: 'callback',
             icon: 'fa fa-fw fa-trash-o',
             label: t('delete'),
-            action: (rows) => props.removeQuestions(rows),
+            callback: () => props.removeQuestions(rows),
             dangerous: true
           }
         ]}
@@ -127,7 +129,7 @@ function mapDispatchToProps(dispatch) {
     removeQuestions(questions) {
       dispatch(
         modalActions.showModal(MODAL_DELETE_CONFIRM, {
-          title: transChoice('delete_items', questions.length, {count: questions.length}, 'ujm_exo'),
+          title: transChoice('delete_items', questions.length, {count: questions.length}, 'quiz'),
           question: tex('remove_questions_confirm', {
             question_list: questions.map(question => question.title || question.content.substr(0, 40)).join(', ')
           }),
@@ -139,7 +141,7 @@ function mapDispatchToProps(dispatch) {
     duplicateQuestions(questions, asModel = false) {
       dispatch(
         modalActions.showModal(MODAL_CONFIRM, {
-          title: transChoice(asModel ? 'copy_model_questions' : 'copy_questions', questions.length, {count: questions.length}, 'ujm_exo'),
+          title: transChoice(asModel ? 'copy_model_questions' : 'copy_questions', questions.length, {count: questions.length}, 'quiz'),
           question: tex(asModel ? 'copy_model_questions_confirm' : 'copy_questions_confirm', {
             workspace_list: questions.map(question => question.title || question.content.substr(0, 40)).join(', ')
           }),
@@ -150,7 +152,7 @@ function mapDispatchToProps(dispatch) {
 
     shareQuestions(questions) {
       dispatch(modalActions.showModal(MODAL_SHARE, {
-        title: transChoice('share_items', questions.length, {count: questions.length}, 'ujm_exo'),
+        title: transChoice('share_items', questions.length, {count: questions.length}, 'quiz'),
         handleShare: (users, adminRights) => {
           dispatch(modalActions.fadeModal())
           dispatch(actions.shareQuestions(questions, users, adminRights))

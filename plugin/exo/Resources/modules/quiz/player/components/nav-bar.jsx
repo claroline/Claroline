@@ -4,6 +4,8 @@ import {isQuestionType} from './../../../items/item-types'
 
 import {t, tex} from '#/main/core/translation'
 
+// TODO : replace all button by #/main/app/action/components/button
+
 const PreviousButton = props =>
   <button className="btn btn-previous btn-default" onClick={props.onClick}>
     <span className="fa fa-fw fa-angle-double-left" />
@@ -60,11 +62,11 @@ const canGoForward = (step, answers, mandatoryQuestions) => {
 
   items.forEach(item => {
     let hasAnswer = Boolean(answers[item.id] && answers[item.id].data)
-    let goForward = isQuestionType(item.type) ?
-      mandatoryQuestions ?
-      item.meta.mandatory ? true: hasAnswer:
-      item.meta.mandatory ? hasAnswer: true:
-      true
+
+    let goForward = true
+    if (isQuestionType(item.type)) {
+      goForward = mandatoryQuestions ? (item.meta.mandatory ? true : hasAnswer) : (item.meta.mandatory ? hasAnswer: true)
+    }
 
     if (!goForward) {
       canGoForward = false
@@ -74,28 +76,27 @@ const canGoForward = (step, answers, mandatoryQuestions) => {
   return canGoForward
 }
 
-const ForwardButton = props =>
-(canGoForward(props.step, props.answers, props.mandatoryQuestions)) ?
-    (props.next) ?
-      <NotLastQuestionButton
-        openFeedbackAndValidate={props.openFeedbackAndValidate}
-        navigateToAndValidate={props.navigateToAndValidate}
-        step={props.step}
-        next={props.next}
-        currentStepSend={props.currentStepSend}
-        feedbackEnabled={props.feedbackEnabled}
-        showFeedback={props.showFeedback}
-      />:
-      //no next section
-      <LastQuestionButton
-        openFeedbackAndValidate={props.openFeedbackAndValidate}
-        finish={props.finish}
-        currentStepSend={props.currentStepSend}
-        feedbackEnabled={props.feedbackEnabled}
-        showFeedback={props.showFeedback}
-        step={props.step}
-      />
-    :
+const ForwardButton = props => canGoForward(props.step, props.answers, props.mandatoryQuestions) ?
+  (props.next) ?
+    <NotLastQuestionButton
+      openFeedbackAndValidate={props.openFeedbackAndValidate}
+      navigateToAndValidate={props.navigateToAndValidate}
+      step={props.step}
+      next={props.next}
+      currentStepSend={props.currentStepSend}
+      feedbackEnabled={props.feedbackEnabled}
+      showFeedback={props.showFeedback}
+    /> :
+    //no next section
+    <LastQuestionButton
+      openFeedbackAndValidate={props.openFeedbackAndValidate}
+      finish={props.finish}
+      currentStepSend={props.currentStepSend}
+      feedbackEnabled={props.feedbackEnabled}
+      showFeedback={props.showFeedback}
+      step={props.step}
+    />
+  :
   <span/>
 
 ForwardButton.propTypes = {

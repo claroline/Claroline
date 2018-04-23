@@ -2,31 +2,34 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {Button} from '#/main/core/layout/button/components/button.jsx'
+import {Button} from '#/main/app/action/components/button'
 
 import {getNextView} from '#/main/core/layout/calendar/utils'
 
 const CalendarNav = props =>
   <div className="calendar-nav">
     <Button
-      className="btn-link-default calendar-previous"
+      type="callback"
+      className="btn btn-link calendar-previous"
       disabled={props.previousRange[1].isSameOrBefore(props.calendarRange[0])}
-      onClick={() => props.changeView(props.view, props.previousRange)}
+      callback={() => props.changeView(props.view, props.previousRange)}
     >
       <span className="fa fa-chevron-left" />
     </Button>
 
     <Button
-      className="btn-link-default calendar-current"
-      onClick={() => props.changeView(getNextView(props.view))}
+      type="callback"
+      className="btn btn-link calendar-current"
+      callback={() => props.changeView(getNextView(props.view))}
     >
       {props.title}
     </Button>
 
     <Button
-      className="btn-link-default calendar-next"
+      type="callback"
+      className="btn btn-link calendar-next"
       disabled={props.nextRange[0].isSameOrAfter(props.calendarRange[1])}
-      onClick={() => props.changeView(props.view, props.nextRange)}
+      callback={() => props.changeView(props.view, props.nextRange)}
     >
       <span className="fa fa-chevron-right" />
     </Button>

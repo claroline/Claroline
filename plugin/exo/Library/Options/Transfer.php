@@ -22,6 +22,13 @@ final class Transfer
     const INCLUDE_ADMIN_META = 'includeAdminMeta';
 
     /**
+     * Adds some metrics info in the serialized data.
+     *
+     * @var string
+     */
+    const INCLUDE_METRICS = 'includeMetrics';
+
+    /**
      * Adds solutions info in the serialized data.
      *
      * @var string

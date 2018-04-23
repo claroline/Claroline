@@ -10,9 +10,14 @@ import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-t
 import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown'
 import {HtmlText} from '#/main/core/layout/components/html-text'
 import {ResourceCard} from '#/main/core/resource/data/components/resource-card'
+//import {EmbeddedResource} from '#/main/core/resource/components/embedded'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
 import {constants} from '#/plugin/path/resources/path/constants'
+/*import {
+  STEP_ENABLE_NAVIGATION,
+  STEP_DISABLE_NAVIGATION
+} from '#/plugin/path/resources/path/player/actions'*/
 
 const ManualProgression = props =>
   <div className="step-manual-progression">
@@ -105,6 +110,12 @@ PrimaryResource.propTypes = {
   height: T.number
 }
 
+// temp
+// todo : replace by a better code later if we keep iFrame compatibility
+const AVAILABLE_EMBEDDED_RESOURCES = [
+
+]
+
 const SecondaryResources = props =>
   <div className={classes('step-secondary-resources', props.className)}>
     <h4 className="h3 h-first">En complément...</h4>
@@ -114,7 +125,9 @@ const SecondaryResources = props =>
         size="sm"
         orientation="row"
         primaryAction={{
-          action: url(['claro_resource_open', {node: resource.resource.autoId, resourceType: resource.resource.meta.type}])
+          type: 'url',
+          label: trans('open', {}, 'actions'),
+          target: ['claro_resource_open', {node: resource.resource.autoId, resourceType: resource.resource.meta.type}]
         }}
         data={resource.resource}
       />
@@ -170,12 +183,8 @@ const Step = props =>
             </div>
           }
 
-          {props.primaryResource &&
-            <PrimaryResource
-              id={props.primaryResource.autoId}
-              type={props.primaryResource.meta.type}
-              height={props.display.height}
-            />
+          {props.primaryResource && (-1 === AVAILABLE_EMBEDDED_RESOURCES.indexOf(props.primaryResource.meta.type)) &&
+            <PrimaryResource id={props.primaryResource.autoId} type={props.primaryResource.meta.type} height={props.display.height} />
           }
         </div>
       }
@@ -196,7 +205,9 @@ implementPropTypes(Step, StepTypes, {
   fullWidth: T.bool.isRequired,
   numbering: T.string,
   manualProgressionAllowed: T.bool.isRequired,
-  updateProgression: T.func.isRequired
+  updateProgression: T.func.isRequired,
+  enableNavigation: T.func.isRequired,
+  disableNavigation: T.func.isRequired
 })
 
 export {

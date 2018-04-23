@@ -32,11 +32,15 @@ const fullWidth = createSelector(
   (summaryPinned, summaryOpened) => !summaryOpened || !summaryPinned
 )
 
+// is step navigation enabled ?
+const navigationEnabled = state => state.navigationEnabled
+
 export const select = {
   path,
   steps,
   empty,
   summaryPinned,
   summaryOpened,
-  fullWidth
+  fullWidth,
+  navigationEnabled
 }

@@ -9,7 +9,6 @@ const Editor = () =>
     name="bookReference"
     sections={[
       {
-        id: 'general',
         title: t('general'),
         primary: true,
         fields: [

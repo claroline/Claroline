@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 
 export const ThumbnailDragPreview = props =>
   <span className="thumbnail">
-    <a className="step-title">
+    <a className="step-label">
       {props.title}
     </a>
   </span>

@@ -2,7 +2,7 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
 import {t} from '#/main/core/translation'
-import {navigate, withRouter, matchPath} from '#/main/core/router'
+import {withRouter, matchPath} from '#/main/core/router'
 
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {MODAL_CHANGE_PASSWORD, MODAL_SEND_MESSAGE} from '#/main/core/user/modals'
@@ -21,11 +21,14 @@ const EditGroupActionsComponent = props =>
       opened={!!matchPath(props.location.pathname, {path: '/edit'})}
       target={(user) => ['apiv2_user_update', {id: user.id}]}
       open={{
+        type: 'link',
         label: t('edit_profile'),
-        action: '#/edit'
+        target: '/edit'
       }}
       cancel={{
-        action: () => navigate('/show')
+        type: 'link',
+        target: '/show',
+        exact: true
       }}
     />
   </PageGroupActions>
@@ -41,18 +44,27 @@ const EditGroupActions = withRouter(EditGroupActionsComponent)
 const UserPageActions = props => {
   const moreActions = [].concat(props.customActions, [
     {
+      type: 'callback',
       icon: 'fa fa-fw fa-lock',
       label: t('change_password'),
       group: t('user_management'),
       displayed: props.user.rights.current.edit,
-      action: () => props.showModal(MODAL_CHANGE_PASSWORD, {
+      callback: () => props.showModal(MODAL_CHANGE_PASSWORD, {
         changePassword: (password) => props.updatePassword(props.user, password)
       })
     }, {
+      type: 'url',
+      icon: 'fa fa-fw fa-line-chart',
+      label: t('show_tracking'),
+      group: t('user_management'),
+      displayed: props.user.rights.current.edit,
+      target: ['claro_user_tracking', {publicUrl: props.user.meta.publicUrl}]
+    }, {
+      type: 'callback',
       icon: 'fa fa-fw fa-trash-o',
       label: t('delete'),
       displayed: props.user.rights.current.delete,
-      action: () =>  props.showModal(MODAL_DELETE_CONFIRM, {
+      callback: () =>  props.showModal(MODAL_DELETE_CONFIRM, {
 
       }),
       dangerous: true
@@ -69,15 +81,17 @@ const UserPageActions = props => {
         <PageGroupActions>
           <PageAction
             id="send-message"
-            title={t('send_message')}
+            type="callback"
+            label={t('send_message')}
             icon="fa fa-paper-plane-o"
-            action={() => props.showModal(MODAL_SEND_MESSAGE, {
+            callback={() => props.showModal(MODAL_SEND_MESSAGE, {
 
             })}
           />
           <PageAction
             id="add-contact"
-            title={t('add_contact')}
+            type="callback"
+            label={t('add_contact')}
             icon="fa fa-address-book-o"
             action={() => true}
           />
@@ -87,8 +101,7 @@ const UserPageActions = props => {
       {0 !== moreActions.length &&
         <PageGroupActions>
           <MoreAction
-            id="user-more"
-            title={t('user')}
+            menuLabel={t('user')}
             actions={moreActions}
           />
         </PageGroupActions>

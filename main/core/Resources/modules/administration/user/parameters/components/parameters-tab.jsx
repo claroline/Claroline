@@ -33,7 +33,6 @@ const Parameters = (props) => {
     name="parameters"
     sections={[
       {
-        id: 'registration',
         icon: 'fa fa-fw fa-user-plus',
         title: trans('registration'),
         defaultOpened: true,
@@ -99,7 +98,6 @@ const Parameters = (props) => {
           }
         ]
       }, {
-        id: 'login',
         icon: 'fa fa-fw fa-sign-in',
         title: trans('login'),
         fields: [
@@ -115,7 +113,6 @@ const Parameters = (props) => {
           }
         ]
       }, {
-        id: 'anonymous',
         icon: 'fa fa-fw fa-user-secret',
         title: trans('anonymous_users'),
         fields: [
@@ -134,7 +131,6 @@ const Parameters = (props) => {
           }
         ]
       }, {
-        id: 'term_of_services',
         icon: 'fa fa-fw fa-copyright',
         title: trans('term_of_service'),
         fields: [

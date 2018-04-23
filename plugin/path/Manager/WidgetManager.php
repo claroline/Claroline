@@ -139,7 +139,6 @@ class WidgetManager
         return array_map(function (Path $path) use ($user, $addProgression) {
             return [
                 'entity' => $path,
-                'canEdit' => $this->pathManager->canEdit($path),
                 'progression' => $addProgression ? $this->userProgressionManager->calculateUserProgression($user, [$path]) : null,
             ];
         }, $paths);

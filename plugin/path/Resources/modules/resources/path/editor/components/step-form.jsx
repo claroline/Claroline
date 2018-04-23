@@ -1,7 +1,6 @@
 import React from 'react'
 
 import {trans} from '#/main/core/translation'
-import {url} from '#/main/core/api/router'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormContainer} from '#/main/core/data/form/containers/form.jsx'
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
@@ -36,18 +35,22 @@ const PrimaryResourceSection = props =>
         size="lg"
         data={props.resource}
         primaryAction={{
-          action: url(['claro_resource_open', {node: props.resource.autoId, resourceType: props.resource.meta.type}])
+          type: 'url',
+          label: trans('open', {}, 'actions'),
+          target: ['claro_resource_open', {node: props.resource.autoId, resourceType: props.resource.meta.type}]
         }}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-folder-open',
             label: trans('replace', {}, 'actions'),
-            action: () => props.pickPrimaryResource(props.stepId)
+            callback: () => props.pickPrimaryResource(props.stepId)
           }, {
+            type: 'callback',
             icon: 'fa fa-fw fa-trash-o',
             label: trans('delete', {}, 'actions'),
             dangerous: true,
-            action: () => props.removePrimaryResource(props.stepId)
+            callback: () => props.removePrimaryResource(props.stepId)
           }
         ]}
       />
@@ -129,7 +132,16 @@ const StepForm = props =>
     dataPart={props.stepPath}
     sections={[
       {
-        id: 'info',
+        title: trans('information'),
+        primary: true,
+        fields: [
+          {
+            name: 'description',
+            type: 'html',
+            label: trans('content')
+          }
+        ]
+      }, {
         title: trans('information'),
         icon: 'fa fa-fw fa-info',
         fields: [
@@ -137,15 +149,13 @@ const StepForm = props =>
             name: 'title',
             type: 'string',
             label: trans('title'),
-            required: true
-          }, {
-            name: 'description',
-            type: 'html',
-            label: trans('description')
+            required: true,
+            options: {
+              long: true
+            }
           }
         ]
       }, {
-        id: 'display',
         icon: 'fa fa-fw fa-desktop',
         title: trans('display_parameters'),
         fields: [
@@ -184,7 +194,6 @@ const StepForm = props =>
 
     <FormSections level={3}>
       <FormSection
-        id="secondary-resources"
         className="embedded-list-section"
         icon="fa fa-fw fa-folder-open-o"
         title={trans('secondary_resources', {}, 'path')}
@@ -200,7 +209,6 @@ const StepForm = props =>
 
       {props.inheritedResources.length > 0 &&
         <FormSection
-          id="inherited-resources"
           className="embedded-list-section"
           icon="fa fa-fw fa-folder-open-o"
           title={trans('inherited_resources', {}, 'path')}

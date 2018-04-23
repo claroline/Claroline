@@ -1,7 +1,7 @@
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
-import {SelectGroup} from '#/main/core/layout/form/components/group/select-group.jsx'
-import {EnumSearch} from '#/main/core/data/types/enum/components/search.jsx'
+import {ChoiceGroup} from '#/main/core/layout/form/components/group/choice-group'
+import {EnumSearch} from '#/main/core/data/types/enum/components/search'
 
 const ENUM_TYPE = 'enum'
 
@@ -10,15 +10,15 @@ const enumDefinition = {
     type: ENUM_TYPE,
     creatable: true,
     icon: 'fa fa-fw fa fa-list',
-    label: t('enum'),
-    description: t('enum_desc')
+    label: trans('enum'),
+    description: trans('enum_desc')
   },
   parse: (display, options) => Object.keys(options.choices).find(enumValue => display === options.choices[enumValue]),
   render: (raw, options) => options.choices[raw],
   validate: (value, options) => !!options.choices[value],
   components: {
     search: EnumSearch,
-    form: SelectGroup
+    form: ChoiceGroup
   }
 }
 

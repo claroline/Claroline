@@ -3,6 +3,8 @@
 namespace Innova\PathBundle\Manager;
 
 use Claroline\CoreBundle\Entity\Resource\AbstractResourceEvaluation;
+use Claroline\CoreBundle\Entity\Resource\ResourceEvaluation;
+use Claroline\CoreBundle\Entity\Resource\ResourceUserEvaluation;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Manager\Resource\ResourceEvaluationManager;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -18,24 +20,16 @@ use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInt
  */
 class UserProgressionManager
 {
-    /**
-     * @var ObjectManager
-     */
-    protected $om;
+    /** @var ObjectManager */
+    private $om;
 
-    /**
-     * @var UserProgressionRepository
-     */
+    /** @var UserProgressionRepository */
     private $repository;
 
-    /**
-     * @var TokenStorageInterface
-     */
-    protected $tokenStorage;
+    /** @var TokenStorageInterface */
+    private $tokenStorage;
 
-    /**
-     * @var ResourceEvaluationManager
-     */
+    /** @var ResourceEvaluationManager */
     private $resourceEvalManager;
 
     /**
@@ -60,67 +54,6 @@ class UserProgressionManager
         $this->repository = $this->om->getRepository('InnovaPathBundle:UserProgression');
         $this->tokenStorage = $tokenStorage;
         $this->resourceEvalManager = $resourceEvalManager;
-    }
-
-    /**
-     * Calculates how many steps are seen or done in a path for a user,
-     * a measure to estimate total user progression over the path.
-     *
-     * @param Path        $path
-     * @param string|User $user
-     *
-     * @return int
-     */
-    public function calculateUserProgressionInPath(Path $path, $user = null)
-    {
-        if (empty($user)) {
-            // Load current logged User
-            $user = $this->tokenStorage->getToken()->getUser();
-        }
-
-        if ($user instanceof User) {
-            return $this->repository->countProgressionForUserInPath($path, $user);
-        }
-
-        return 0;
-    }
-
-    /**
-     * @param string|User $user
-     * @param array       $paths
-     *
-     * @return int
-     */
-    public function calculateUserProgression($user, array $paths)
-    {
-        if ($user instanceof User) {
-            return $this->repository->findUserProgression($user, $paths);
-        }
-
-        return 0;
-    }
-
-    /**
-     * Get progression of a User into a Path.
-     *
-     * @param Path        $path
-     * @param string|User $user
-     *
-     * @return array
-     */
-    public function getUserProgression(Path $path, $user = null)
-    {
-        if (empty($user)) {
-            // Get current authenticated User
-            $user = $this->tokenStorage->getToken()->getUser();
-        }
-
-        if ($user instanceof User) {
-            // We have a logged User => get its progression
-            return $this->repository->findByPathAndUser($path, $user);
-        }
-
-        return [];
     }
 
     /**
@@ -194,80 +127,47 @@ class UserProgressionManager
     }
 
     /**
-     * Update state of the lock for User Progression for a step.
+     * @param string|User $user
+     * @param array       $paths
      *
-     * @param User      $user
-     * @param Step      $step
-     * @param bool|null $lockedCall
-     * @param bool|null $lock
-     * @param bool|null $authorized
-     * @param string    $status
-     *
-     * @return UserProgression
+     * @return int
      */
-    public function updateLockedState(User $user, Step $step, $lockedCall = null, $lock = null, $authorized = null, $status = '')
+    public function calculateUserProgression($user, array $paths)
     {
-        // Retrieve the current progression for this step
-        $progression = $this->om->getRepository('InnovaPathBundle:UserProgression')
-            ->findOneBy([
-            'step' => $step,
-            'user' => $user,
-        ]);
-
-        if ($progression === null) {
-            $progression = new UserProgression();
-            $progression->setUser($user);
-            $progression->setStep($step);
-            $progression->setStatus($status);
-            $progression->setAuthorized(false);
+        if ($user instanceof User) {
+            return $this->repository->findUserProgression($user, $paths);
         }
 
-        // if unlock call has changed
-        if ($lockedCall !== null) {
-            $progression->setLockedcall($lockedCall);
-        }
-        //if lock state has changed
-        if ($lock !== null) {
-            $progression->setLocked($lock);
-        }
-        //if authorization has changed
-        if ($authorized !== null) {
-            $progression->setAuthorized($authorized);
-        }
-        //if status has changed
-        if ($status !== null) {
-            $progression->setStatus($status);
-        }
-
-        $this->om->persist($progression);
-        $this->om->flush();
-
-        return $progression;
+        return 0;
     }
 
     /**
      * Fetch resource user evaluation with up-to-date status.
      *
      * @param Path $path
-     * @param User $user
      *
      * @return ResourceUserEvaluation
      */
-    public function getUpdatedResourceUserEvaluation(Path $path, User $user)
+    public function getUpdatedResourceUserEvaluation(Path $path)
     {
-        $resourceUserEvaluation = $this->resourceEvalManager->getResourceUserEvaluation($path->getResourceNode(), $user);
-        $data = $this->computeResourceUserEvaluation($path, $user);
+        $resourceUserEvaluation = null;
 
-        if ($data['score'] !== $resourceUserEvaluation->getScore() ||
-           $data['scoreMax'] !== $resourceUserEvaluation->getScoreMax() ||
-           $data['status'] !== $resourceUserEvaluation->getStatus()
-        ) {
-            $resourceUserEvaluation->setScore($data['score']);
-            $resourceUserEvaluation->setScoreMax($data['scoreMax']);
-            $resourceUserEvaluation->setStatus($data['status']);
-            $resourceUserEvaluation->setDate(new \DateTime());
-            $this->om->persist($resourceUserEvaluation);
-            $this->om->flush();
+        $user = $this->tokenStorage->getToken()->getUser();
+        if ($user instanceof User) {
+            $resourceUserEvaluation = $this->resourceEvalManager->getResourceUserEvaluation($path->getResourceNode(), $user);
+            $data = $this->computeResourceUserEvaluation($path, $user);
+
+            if ($data['score'] !== $resourceUserEvaluation->getScore() ||
+                $data['scoreMax'] !== $resourceUserEvaluation->getScoreMax() ||
+                $data['status'] !== $resourceUserEvaluation->getStatus()
+            ) {
+                $resourceUserEvaluation->setScore($data['score']);
+                $resourceUserEvaluation->setScoreMax($data['scoreMax']);
+                $resourceUserEvaluation->setStatus($data['status']);
+                $resourceUserEvaluation->setDate(new \DateTime());
+                $this->om->persist($resourceUserEvaluation);
+                $this->om->flush();
+            }
         }
 
         return $resourceUserEvaluation;
@@ -293,7 +193,7 @@ class UserProgressionManager
      * @param User   $user
      * @param string $status
      *
-     * @return ResourceUserEvaluation
+     * @return ResourceEvaluation
      */
     public function generateResourceEvaluation(Step $step, User $user, $status)
     {
@@ -311,7 +211,7 @@ class UserProgressionManager
             'toDo' => $statusData['stepsToDo'],
         ];
 
-        $this->resourceEvalManager->createResourceEvaluation(
+        return $this->resourceEvalManager->createResourceEvaluation(
             $step->getPath()->getResourceNode(),
             $user,
             new \DateTime(),
@@ -346,6 +246,7 @@ class UserProgressionManager
         $score = 0;
         $scoreMax = count($steps);
 
+        /** @var ResourceEvaluation $evaluation */
         foreach ($evaluations as $evaluation) {
             $data = $evaluation->getData();
 

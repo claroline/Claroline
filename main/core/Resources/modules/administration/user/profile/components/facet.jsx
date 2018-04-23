@@ -24,9 +24,10 @@ const FacetSection = props =>
     className="embedded-form-section"
     actions={[
       {
+        type: 'callback',
         icon: 'fa fa-fw fa-trash-o',
         label: t('delete'),
-        action: props.remove,
+        callback: props.remove,
         dangerous: true
       }
     ]}
@@ -38,7 +39,6 @@ const FacetSection = props =>
       dataPart={`[${props.parentIndex}].sections[${props.index}]`}
       sections={[
         {
-          id: 'profile-facet-parameters',
           icon: 'fa fa-fw fa-cog',
           title: t('general'),
           primary: true,
@@ -79,7 +79,6 @@ const ProfileFacetComponent = props =>
     dataPart={`[${props.index}]`}
     sections={[
       {
-        id: 'profile-facet-parameters',
         icon: 'fa fa-fw fa-cog',
         title: t('parameters'),
         fields: [
@@ -96,7 +95,6 @@ const ProfileFacetComponent = props =>
           }
         ]
       }, {
-        id: 'profile-facet-restrictions',
         icon: 'fa fa-fw fa-key',
         title: t('access_restrictions'),
         fields: [

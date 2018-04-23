@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {navigate, matchPath, withRouter} from '#/main/core/router'
+import {matchPath, withRouter} from '#/main/core/router'
 import {
   PageActions,
   PageAction,
@@ -13,7 +13,6 @@ import {
   RoutedPageContainer,
   RoutedPageContent
 } from '#/main/core/layout/router'
-import {actions as listActions} from '#/main/core/data/list/actions'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
 
@@ -32,26 +31,24 @@ const ToolActions = props =>
       }
       opened={!!matchPath(props.location.pathname, {path: '/form'})}
       open={{
+        type: 'link',
         icon: 'fa fa-plus',
         label: trans('add_resource', {}, 'reservation'),
-        action: '#/form'
+        target: '/form'
       }}
       cancel={{
-        action: () => {
-          props.invalidateData('resources')
-          navigate('/')
-        }
+        type: 'link',
+        target: '/',
+        exact: true
       }}
     />
     {props.isAdmin &&
       <PageAction
         id="resources-types-list"
+        type="callback"
         icon="fa fa-bars"
-        title={trans('resource_types', {}, 'reservation')}
-        action={() => props.showModal(
-          MODAL_RESOURCE_TYPES,
-          {}
-        )}
+        label={trans('resource_types', {}, 'reservation')}
+        action={() => props.showModal(MODAL_RESOURCE_TYPES, {})}
       />
     }
   </PageActions>
@@ -61,8 +58,7 @@ ToolActions.propTypes = {
   location: T.shape({
     pathname: T.string
   }).isRequired,
-  showModal: T.func.isRequired,
-  invalidateData: T.func.isRequired
+  showModal: T.func.isRequired
 }
 
 const ToolPageActions = withRouter(ToolActions)
@@ -97,8 +93,7 @@ const Tool = props =>
 Tool.propTypes = {
   isAdmin: T.bool.isRequired,
   openForm: T.func.isRequired,
-  showModal: T.func.isRequired,
-  invalidateData: T.func.isRequired
+  showModal: T.func.isRequired
 }
 
 const ReservationTool = connect(
@@ -111,9 +106,6 @@ const ReservationTool = connect(
     },
     showModal(type, props) {
       dispatch(modalActions.showModal(type, props))
-    },
-    invalidateData(name) {
-      dispatch(listActions.invalidateData(name))
     }
   })
 )(Tool)

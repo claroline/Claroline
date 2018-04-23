@@ -6,7 +6,7 @@ import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-t
 import {copy} from '#/main/core/scaffolding/clipboard'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
 
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action'
+import {Button} from '#/main/app/action/components/button'
 
 const Url = props =>
   <div className="input-group">
@@ -21,12 +21,14 @@ const Url = props =>
     />
 
     <span className="input-group-btn">
-      <TooltipAction
-        id={`clipboard-props.id${props.id}`}
+      <Button
+        id={`clipboard-${props.id}`}
+        type="callback"
+        tooltip="left"
         label={trans('clipboard_copy')}
-        className="btn-default"
+        className="btn"
         icon="fa fa-fw fa-clipboard"
-        action={() => copy(props.value)}
+        callback={() => copy(props.value)}
       />
     </span>
   </div>

@@ -3,7 +3,8 @@
     .box-shadow(@dropdown-menu-box-shadow);
     border-radius: @dropdown-menu-border-radius;
 
-    > li > a {
+    > li > a,
+    > li > button {
         padding: @dropdown-link-padding;
     }
 
@@ -11,6 +12,7 @@
         label {
             white-space: nowrap;
             display: block;
+            line-height: @line-height-base;
             padding: @dropdown-link-padding;
             padding-left: 35px; // for the checkbox
         }
@@ -20,28 +22,6 @@
             label {
                 background: @dropdown-link-hover-bg;
             }
-        }
-    }
-
-    // creates contextual links
-    .dropdown-link-danger a {
-
-    }
-
-    .dropdown-link-danger {
-        a {
-            color: @brand-danger;
-
-            &:hover,
-            &:focus {
-                color: white;
-                background: @brand-danger;
-            }
-        }
-
-        &.disabled a {
-            color: #c57878;
-            background: transparent;
         }
     }
 
@@ -62,17 +42,93 @@
     padding: @dropdown-link-padding;
 }
 
-// todo : check why this is needed
-/*.dropdown-menu li label,
-.nav.nav-tabs .dropdown li i {
-    font-weight: normal !important;
-    display: block;
-    padding: 5px 15px;
-    margin: 0;
-    cursor: pointer;
+// allows buttons for better HTML semantics
+// Links within the dropdown menu
+.dropdown-menu > li > button {
+    // reset button
+    border: none;
+    background: transparent;
+    min-width: 100%;
+    text-align: left;
 
-    &:hover, &.active {
-        color:@dropdown-link-hover-color;
-        background:@dropdown-link-hover-bg;
+    // apply same styles than bootstrap
+    display: block;
+    clear: both;
+    font-weight: normal;
+    line-height: @line-height-base;
+    color: @dropdown-link-color;
+    white-space: nowrap; // prevent links from randomly breaking onto new lines
+
+    // Hover/Focus state
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        color: @dropdown-link-hover-color;
+        background-color: @dropdown-link-hover-bg;
     }
-}*/
+
+    // Active state
+    .active {
+        &,
+        &:hover,
+        &:focus {
+            color: @dropdown-link-active-color;
+            text-decoration: none;
+            outline: 0;
+            background-color: @dropdown-link-active-bg;
+        }
+    }
+}
+
+// creates contextual links
+// todo : replace by new action class
+.dropdown-menu > li > .dangerous {
+    color: @brand-danger;
+
+    &:hover,
+    &:focus {
+        color: white;
+        background: @brand-danger;
+    }
+
+    &.disabled {
+        color: #c57878;
+        background: transparent;
+    }
+}
+
+// reworks items states (because we put active classes on <a> not <li>)
+
+// Active state
+.dropdown-menu > li > .active {
+    &,
+    &:hover,
+    &:focus {
+        color: @dropdown-link-active-color;
+        text-decoration: none;
+        outline: 0;
+        background-color: @dropdown-link-active-bg;
+    }
+}
+
+// Disabled state
+//
+// Gray out text and ensure the hover/focus state remains gray
+
+.dropdown-menu > li > .disabled {
+    &,
+    &:hover,
+    &:focus {
+        color: @dropdown-link-disabled-color;
+    }
+
+    // Nuke hover/focus effects
+    &:hover,
+    &:focus {
+        text-decoration: none;
+        background-color: transparent;
+        background-image: none; // Remove CSS gradient
+        .reset-filter();
+        cursor: @cursor-disabled;
+    }
+}

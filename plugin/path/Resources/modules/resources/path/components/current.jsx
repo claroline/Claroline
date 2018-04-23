@@ -1,10 +1,11 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {ProgressBar} from '#/main/core/layout/components/progress-bar.jsx'
+import {trans} from '#/main/core/translation'
+import {LinkButton} from '#/main/app/button/components/link'
+import {ProgressBar} from '#/main/core/layout/components/progress-bar'
 
 import {Step as StepTypes} from '#/plugin/path/resources/path/prop-types'
-import {PathNavigation} from '#/plugin/path/resources/path/components/nav.jsx'
 
 // todo manage unknown steps
 const PathCurrent = props => {
@@ -30,17 +31,42 @@ const PathCurrent = props => {
 
       {props.children}
 
-      <PathNavigation
-        prefix={props.prefix}
-        previous={previous}
-        next={next}
-      />
+      {props.navigation &&
+        <nav className="path-navigation">
+          {previous &&
+            <LinkButton
+              className="btn-link btn-previous"
+              disabled={!previous}
+              primary={true}
+              size="lg"
+              target={previous ? `${props.prefix}/${previous.id}`:''}
+            >
+              <span className="fa fa-angle-double-left icon-with-text-right" />
+              {trans('previous')}
+            </LinkButton>
+          }
+
+          {next &&
+            <LinkButton
+              className="btn-link btn-next"
+              disabled={!next}
+              primary={true}
+              size="lg"
+              target={next ? `${props.prefix}/${next.id}`:''}
+            >
+              {trans('next')}
+              <span className="fa fa-angle-double-right icon-with-text-left" />
+            </LinkButton>
+          }
+        </nav>
+      }
     </div>
   )
 }
 
 PathCurrent.propTypes = {
   prefix: T.string.isRequired,
+  navigation: T.bool.isRequired,
   current: T.shape(
     StepTypes.propTypes
   ),

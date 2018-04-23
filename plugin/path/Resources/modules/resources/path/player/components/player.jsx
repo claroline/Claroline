@@ -20,7 +20,7 @@ const authenticatedUser = currentUser()
 
 // todo manage empty steps
 const PlayerComponent = props =>
-  <section>
+  <section className="summarized-content">
     <h2 className="sr-only">{trans('play')}</h2>
 
     {props.path.display.showSummary &&
@@ -49,6 +49,7 @@ const PlayerComponent = props =>
                 prefix="/play"
                 current={step}
                 all={props.steps}
+                navigation={props.navigationEnabled}
               >
                 <Step
                   {...step}
@@ -56,6 +57,8 @@ const PlayerComponent = props =>
                   numbering={getNumbering(props.path.display.numbering, props.path.steps, step)}
                   manualProgressionAllowed={props.path.display.manualProgressionAllowed}
                   updateProgression={props.updateProgression}
+                  enableNavigation={props.enableNavigation}
+                  disableNavigation={props.disableNavigation}
                 />
               </PathCurrent>
 
@@ -68,24 +71,34 @@ const PlayerComponent = props =>
 
 PlayerComponent.propTypes = {
   fullWidth: T.bool.isRequired,
+  navigationEnabled: T.bool.isRequired,
   path: T.shape(
     PathTypes.propTypes
   ).isRequired,
   steps: T.arrayOf(T.shape(
     StepTypes.propTypes
   )),
-  updateProgression: T.func.isRequired
+  updateProgression: T.func.isRequired,
+  enableNavigation: T.func.isRequired,
+  disableNavigation: T.func.isRequired
 }
 
 const Player = connect(
   state => ({
     path: select.path(state),
+    navigationEnabled: select.navigationEnabled(state),
     fullWidth: select.fullWidth(state),
     steps: flattenSteps(select.steps(state))
   }),
   dispatch => ({
     updateProgression(stepId, status = constants.STATUS_SEEN) {
       dispatch(actions.updateProgression(stepId, status))
+    },
+    enableNavigation() {
+      dispatch(actions.enableNavigation())
+    },
+    disableNavigation() {
+      dispatch(actions.disableNavigation())
     }
   })
 )(PlayerComponent)

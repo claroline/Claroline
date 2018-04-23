@@ -5,11 +5,8 @@ import {makeCancelable} from '#/main/core/api/utils'
 
 import {connectList} from '#/main/core/data/list/connect'
 
-import {
-  DataListAction as DataListActionTypes,
-  DataListProperty as DataListPropertyTypes
-} from '#/main/core/data/list/prop-types'
-import {DataList as DataListComponent} from '#/main/core/data/list/components/data-list.jsx'
+import {DataListProperty as DataListPropertyTypes} from '#/main/core/data/list/prop-types'
+import {DataList as DataListComponent} from '#/main/core/data/list/components/data-list'
 
 /**
  * Connected DataList.
@@ -80,33 +77,13 @@ DataList.propTypes = {
   name: T.string.isRequired,
 
   /**
-   * Open action generator for rows.
-   * It gets the current data row as first param.
-   *
-   * NB. It's called to generate the action (to be able to catch generated URL),
-   * so if your open action is a func, generator should return another function,
-   * not call it. Example : (row) => myFunc
-   */
-  open: T.shape({
-    action: T.oneOfType([T.func, T.string]),
-    disabled: T.func
-  }),
-
-  /**
    * Provides asynchronous data load.
+   *
+   * @todo : maybe also allow a CallbackAction
    */
   fetch: T.shape({
     url: T.oneOfType([T.string, T.array]).isRequired,
     autoload: T.bool
-  }),
-
-  /**
-   * Provides data delete.
-   */
-  delete: T.shape({
-    url: T.oneOfType([T.string, T.array]), // if provided, data delete will call server
-    disabled: T.func, // receives the list of rows (either the selected ones or the current one)
-    displayed: T.func // receives the list of rows (either the selected ones or the current one)
   }),
 
   /**
@@ -117,18 +94,31 @@ DataList.propTypes = {
   ).isRequired,
 
   /**
-   * A list of data related actions.
+   * Open action generator for rows.
+   * It gets the current data row as first param.
+   *
+   * NB. It's called to generate the action (to be able to catch generated URL),
+   * so if your open action is a func, generator should return another function,
+   * not call it. Example : (row) => myFunc
    */
-  actions: T.arrayOf(
-    T.shape(DataListActionTypes.propTypes)
-  ),
+  primaryAction: T.func,
 
   /**
-   * A function to normalize data for card display.
-   * - the data row is passed as argument
-   * - the func MUST return an object respecting `DataCard.propTypes`.
-   *
-   * It's required to enable cards based display modes.
+   * Provides data delete.
+   */
+  delete: T.shape({
+    url: T.oneOfType([T.string, T.array]).isRequired,
+    disabled: T.func, // receives the list of rows to delete
+    displayed: T.func // receives the list of rows to delete
+  }),
+
+  /**
+   * A list of data related actions.
+   */
+  actions: T.func,
+
+  /**
+   * The card component to render in grid modes.
    */
   card: T.func,
 
@@ -136,20 +126,6 @@ DataList.propTypes = {
    * Enables/Disables the feature to filter the displayed columns.
    */
   filterColumns: T.bool,
-
-  /**
-   * Override default list translations.
-   */
-  translations: T.shape({
-    domain: T.string,
-    keys: T.shape({
-      searchPlaceholder: T.string,
-      emptyPlaceholder: T.string,
-      countResults: T.string,
-      deleteConfirm: T.string,
-      deleteConfirmMessage: T.string
-    })
-  }),
 
   // calculated from redux store
   loaded: T.bool,
@@ -161,10 +137,6 @@ DataList.propTypes = {
   pagination: T.object,
   selection: T.object,
   fetchData: T.func
-}
-
-DataList.defaultProps = {
-  actions: []
 }
 
 // connect list to redux

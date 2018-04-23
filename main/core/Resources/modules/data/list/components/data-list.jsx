@@ -2,13 +2,9 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import invariant from 'invariant'
 import isEqual from 'lodash/isEqual'
-import merge from 'lodash/merge'
-
-import {trans, transChoice} from '#/main/core/translation'
 
 import {constants as listConst} from '#/main/core/data/list/constants'
 import {
-  DataListAction,
   DataListProperty,
   DataListSelection,
   DataListSearch,
@@ -21,9 +17,9 @@ import {
   getFilterableProps
 } from '#/main/core/data/list/utils'
 
-import {ListEmpty} from '#/main/core/data/list/components/empty.jsx'
-import {ListHeader} from '#/main/core/data/list/components/header.jsx'
-import {ListFooter} from '#/main/core/data/list/components/footer.jsx'
+import {ListEmpty} from '#/main/core/data/list/components/empty'
+import {ListHeader} from '#/main/core/data/list/components/header'
+import {ListFooter} from '#/main/core/data/list/components/footer'
 
 /**
  * Full data list with configured components (eg. search, pagination).
@@ -40,9 +36,6 @@ class DataList extends Component {
     this.state = Object.assign({}, currentDisplay, {
       definition: definition
     })
-
-    // fills missing translations with default ones
-    this.translations = merge({}, listConst.DEFAULT_TRANSLATIONS, this.props.translations)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -173,25 +166,6 @@ class DataList extends Component {
       })
     }
 
-    // calculate actions
-    let actions = this.props.actions.slice(0)
-    if (this.props.deleteAction) {
-      actions.push({
-        icon: 'fa fa-fw fa-trash-o',
-        label: trans('delete'),
-        dangerous: true,
-        displayed: this.props.deleteAction.displayed,
-        disabled: this.props.deleteAction.disabled,
-        action: typeof this.props.deleteAction.action === 'function' ?
-          (rows) => this.props.deleteAction.action(
-            rows,
-            trans(this.translations.keys.deleteConfirmTitle, {}, this.translations.domain),
-            transChoice(this.translations.keys.deleteConfirmQuestion, rows.length, {count: rows.length}, this.translations.domain)
-          ) :
-          this.props.deleteAction.action
-      })
-    }
-
     return (
       <div className="data-list">
         <ListHeader
@@ -211,7 +185,7 @@ class DataList extends Component {
               sorting:       this.props.sorting,
               selection:     this.props.selection,
               primaryAction: this.props.primaryAction,
-              actions:       actions,
+              actions:       this.props.actions,
               card:          this.props.card
             }
           ))
@@ -251,31 +225,15 @@ DataList.propTypes = {
   ).isRequired,
 
   /**
-   * Actions available for each data row and selected rows (if selection is enabled).
-   */
-  actions: T.arrayOf(
-    T.shape(DataListAction.propTypes)
-  ),
-
-  /**
    * Data primary action (aka open/edit action for rows in most cases).
    * Providing this object will automatically display the primary action (depending on the current view mode).
    */
-  primaryAction: T.shape({
-    disabled: T.func,
-    action: T.oneOfType([T.string, T.func]).isRequired
-  }),
+  primaryAction: T.func,
 
   /**
-   * Data delete action.
-   * Providing this object will automatically append the delete action to the actions list of rows and selection.
+   * Actions available for each data row and selected rows (if selection is enabled).
    */
-  deleteAction: T.shape({
-    disabled: T.func,
-    displayed: T.func,
-    // if a function is provided, it receive the `rows`, `confirmTitle`, `confirmQuestion` as param
-    action: T.oneOfType([T.string, T.func]).isRequired
-  }),
+  actions: T.func,
 
   /**
    * Display formats of the list.
@@ -287,12 +245,12 @@ DataList.propTypes = {
      */
     available: T.arrayOf(
       T.oneOf(Object.keys(listConst.DISPLAY_MODES))
-    ).isRequired,
+    ),
 
     /**
      * Current format.
      */
-    current: T.oneOf(Object.keys(listConst.DISPLAY_MODES)).isRequired
+    current: T.oneOf(Object.keys(listConst.DISPLAY_MODES))
   }),
 
   /**
@@ -343,31 +301,15 @@ DataList.propTypes = {
    *
    * It must be a react component.
    */
-  card: T.func,
-
-  /**
-   * Override default list translations.
-   */
-  translations: T.shape({
-    domain: T.string,
-    keys: T.shape({
-      searchPlaceholder: T.string,
-      emptyPlaceholder: T.string,
-      countResults: T.string,
-      deleteConfirmTitle: T.string,
-      deleteConfirmQuestion: T.string
-    })
-  })
+  card: T.func
 }
 
 DataList.defaultProps = {
-  actions: [],
   filterColumns: true,
   display: {
     available: Object.keys(listConst.DISPLAY_MODES),
     current: listConst.DEFAULT_DISPLAY_MODE
-  },
-  translations: listConst.DEFAULT_TRANSLATIONS
+  }
 }
 
 export {

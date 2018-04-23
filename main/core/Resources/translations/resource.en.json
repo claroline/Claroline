@@ -40,8 +40,6 @@
     "resource_fullscreen": "Display in fullscreen on open",
     "resource_license": "License",
     "resource_management": "Management",
-    "resource_meta": "Information",
-    "resource_name": "Name",
     "resource_name_form_name": "Resource name",
     "resource_no_allowed_ip": "No IP is allowed.",
     "resource_portal_help": "This option automatically allows anonymous users to access the resource. You have to remove the anonymous rights in resource's rights management section to restrict the access again.",
@@ -69,5 +67,8 @@
     "resource_overview": "Resource overview",
     "resource_overview_actions": "Available actions",
     "resource_overview_info": "Information",
-    "resource_overview_progression": "My progression"
+    "resource_overview_progression": "My progression",
+    "resource_notifications": "Notifications",
+    "resource_showIcon": "Display the resource icon in the header",
+    "resource_showIcon_help": "For evaluative resources, icon is replaced by a progression gauge."
 }

@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/core/translation'
-import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
+import {matchPath, Routes, withRouter} from '#/main/core/router'
 
 import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
 import {PageAction} from '#/main/core/layout/page'
@@ -25,12 +25,14 @@ const MessageTabEditActionsComponent = props =>
       }
       opened={!!matchPath(props.location.pathname, {path: '/messages/form'})}
       open={{
+        type: 'link',
         icon: 'fa fa-plus',
         label: trans('create_new_message', {}, 'planned_notification'),
-        action: '#/messages/form'
+        target: '/messages/form'
       }}
       cancel={{
-        action: () => navigate('/messages')
+        type: 'link',
+        target: '/messages'
       }}
     />
   </PageActions>

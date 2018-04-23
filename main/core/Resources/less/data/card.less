@@ -20,12 +20,12 @@
         top: -1px; // absorb btn border
         right: -1px; // absorb btn border
 
-        .btn {
+        .data-actions-btn {
             padding: @data-grid-gutter;
         }
 
         &.open {
-            .btn {
+            .data-actions-btn {
                 position: relative;
                 background: #eee;
                 border-color: @dropdown-border;
@@ -49,11 +49,16 @@
     .border-radius(@data-card-border-radius @data-card-border-radius 0 0);
 }
 
+.data-card-header-poster {
+    .data-card-flag {
+        .text-movie-subtitles();
+    }
+}
+
 .data-card-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    //margin: 30px;
     background: rgba(255, 255, 255, .6);
     border-radius: 50%;
     line-height: 0;
@@ -71,13 +76,18 @@
 }
 
 .data-card-flags {
-    cursor: help;
     position: absolute;
+    line-height: 1;
     bottom: @data-grid-gutter;
     right: @data-grid-gutter;
+}
 
-    .data-card-flag + .data-card-flag {
-        margin-left: floor(@data-grid-gutter / 2);
+.data-card-flag {
+    cursor: help;
+    font-weight: bold;
+
+    + .data-card-flag {
+        margin-left: 5px;
     }
 }
 
@@ -99,15 +109,7 @@
     color: @data-card-color; // reset color when card is clickable (uses a <a> tag)
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-
-    // removes button styles
     text-align: left;
-    padding: 0;
-    background: transparent;
-    border: none;
-    box-shadow: none;
-    outline: 0;
 
     .border-radius(0 0 @data-card-border-radius @data-card-border-radius);
 }
@@ -138,9 +140,27 @@
 
 .data-card-sm {
     .data-card-size-variant(@data-card-icon-sm-size, @data-card-title-sm-font, 10px);
+
+    .data-card-flags {
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .data-card-flag {
+        font-size: 75%;
+    }
 }
 .data-card-lg {
     .data-card-size-variant(@data-card-icon-lg-size, @data-card-title-lg-font, 30px);
+
+    .data-card-flags {
+        bottom: @data-card-padding;
+        right: @data-card-padding;
+    }
+
+    .data-card-flag {
+        font-size: 100%;
+    }
 }
 
 // mixins

@@ -271,9 +271,10 @@ const Docimology = props =>
       <PageActions>
         <PageAction
           id="back-to-exercise"
-          title={tex('back_to_the_quiz')}
+          type="url"
+          label={tex('back_to_the_quiz')}
           icon="fa fa-fw fa-sign-out"
-          action={generateUrl('ujm_exercise_open', {id: props.quiz.id})}
+          target={generateUrl('ujm_exercise_open', {id: props.quiz.id})}
         />
       </PageActions>
     </PageHeader>

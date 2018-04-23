@@ -10,7 +10,7 @@
     <div
         class="page-container path-container"
         data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
-        data-path="{{ _resource | api_serialize | json_encode | raw | escape }}"
+        data-path="{{ path | json_encode | raw | escape }}"
         data-resource-types="{{ resourceTypes | json_encode | raw | escape }}"
         data-evaluation="{{ userEvaluation | api_serialize | json_encode | raw | escape }}"
     >

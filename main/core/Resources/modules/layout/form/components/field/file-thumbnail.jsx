@@ -176,9 +176,5 @@ FileThumbnail.defaultProps = {
   canEdit: true,
   canDelete: true,
   canExpand: true,
-  canDownload: true,
-  handleEdit: () => {},
-  handleDelete: () => {},
-  handleExpand: () => {},
-  handleDownload: () => {}
+  canDownload: true
 }

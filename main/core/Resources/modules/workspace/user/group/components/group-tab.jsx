@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
+import {matchPath, Routes, withRouter} from '#/main/core/router'
 import {currentUser} from '#/main/core/user/current'
 
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
@@ -31,22 +31,26 @@ const GroupTabActionsComponent = props =>
         }
         opened={!!matchPath(props.location.pathname, {path: '/groups/form'})}
         open={{
+          type: 'link',
           label: trans('create_group'),
-          action: '#/groups/form',
+          target: '/groups/form',
           primary: false
         }}
         cancel={{
-          action: () => navigate('/groups')
+          type: 'link',
+          target: '/groups',
+          exact: true
         }}
       />
     }
 
     {!matchPath(props.location.pathname, {path: '/groups/form'}) &&
       <PageAction
-        id='add-role'
-        title={trans('register_groups')}
-        icon={'fa fa-plus'}
-        action={() => props.register(props.workspace)}
+        id="add-role"
+        type="callback"
+        label={trans('register_groups')}
+        icon="fa fa-plus"
+        callback={() => props.register(props.workspace)}
         primary={true}
       />
     }

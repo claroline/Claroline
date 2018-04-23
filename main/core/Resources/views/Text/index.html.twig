@@ -2,7 +2,7 @@
 
 {% block content %}
     <div
-        class="page-container text-resource-container"
+        class="page-container text-container"
         data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
         data-text="{{ text | api_serialize | json_encode | raw | escape }}"
     >

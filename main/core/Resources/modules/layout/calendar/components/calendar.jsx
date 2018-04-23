@@ -5,7 +5,7 @@ import padStart from 'lodash/padStart'
 import {trans} from '#/main/core/translation'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {isValidDate, getApiFormat} from '#/main/core/scaffolding/date'
-import {Button} from '#/main/core/layout/button/components/button.jsx'
+import {Button} from '#/main/app/action/components/button'
 
 import {Calendar as CalendarTypes} from '#/main/core/layout/calendar/prop-types'
 import {constants} from '#/main/core/layout/calendar/constants'
@@ -18,11 +18,10 @@ import {Years} from '#/main/core/layout/calendar/components/view/years.jsx'
 const TimeInput = props =>
   <div className="time-input">
     <Button
-      className="btn-sm btn-link-default"
+      type="callback"
+      className="btn btn-link btn-sm"
       disabled={props.max === props.value}
-      onClick={() => {
-        props.onChange(calculateTime(props.value + props.step, props.max))
-      }}
+      callback={() => props.onChange(calculateTime(props.value + props.step, props.max))}
     >
       <span className="fa fa-fw fa-caret-up" />
     </Button>
@@ -39,11 +38,10 @@ const TimeInput = props =>
     />
 
     <Button
-      className="btn-sm btn-link-default"
+      type="callback"
+      className="btn btn-link btn-sm"
       disabled={0 === props.value}
-      onClick={() => {
-        props.onChange(calculateTime(props.value - props.step, props.max))
-      }}
+      callback={() => props.onChange(calculateTime(props.value - props.step, props.max))}
     >
       <span className="fa fa-fw fa-caret-down" />
     </Button>
@@ -97,8 +95,9 @@ const CurrentDate = props =>
     }
 
     <Button
-      className="btn-block btn-sm btn-now"
-      onClick={props.today}
+      type="callback"
+      className="btn btn-now btn-block btn-sm"
+      callback={props.today}
     >
       {trans(props.time ? 'now': 'today')}
     </Button>
@@ -203,7 +202,7 @@ class Calendar extends Component {
     })
 
     if (this.props.onChange) {
-      this.props.onChange(newDate.utc().format('YYYY-MM-DD\THH:mm:ss'))
+      this.props.onChange(newDate.utc().format(getApiFormat()))
     }
   }
 

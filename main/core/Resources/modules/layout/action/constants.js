@@ -1,14 +1,16 @@
 
-const ACTION_GENERIC  = 'generic'
-const ACTION_LOAD     = 'load'
-const ACTION_REFRESH  = 'refresh'
-const ACTION_SAVE     = 'save'
-const ACTION_CREATE   = 'create'
-const ACTION_UPDATE   = 'update'
-const ACTION_DELETE   = 'delete'
-const ACTION_SEND     = 'send'
-const ACTION_UPLOAD   = 'upload'
-const ACTION_DOWNLOAD = 'download'
+const ACTION_GENERIC   = 'generic'
+const ACTION_LOAD      = 'load'
+const ACTION_REFRESH   = 'refresh'
+const ACTION_SAVE      = 'save'
+const ACTION_CREATE    = 'create'
+const ACTION_UPDATE    = 'update'
+const ACTION_DELETE    = 'delete'
+const ACTION_SEND      = 'send'
+const ACTION_UPLOAD    = 'upload'
+const ACTION_DOWNLOAD  = 'download'
+const ACTION_PUBLISH   = 'publish'
+const ACTION_UNPUBLISH = 'unpublish'
 
 const ACTIONS = {
   [ACTION_GENERIC]: {},
@@ -39,6 +41,12 @@ const ACTIONS = {
   },
   [ACTION_DOWNLOAD]: {
     icon: 'fa fa-download'
+  },
+  [ACTION_PUBLISH]: {
+    icon: 'fa fa-eye'
+  },
+  [ACTION_UNPUBLISH]: {
+    icon: 'fa fa-eye-slash'
   }
 }
 
@@ -65,5 +73,7 @@ export const constants = {
   ACTION_DELETE,
   ACTION_SEND,
   ACTION_UPLOAD,
-  ACTION_DOWNLOAD
+  ACTION_DOWNLOAD,
+  ACTION_PUBLISH,
+  ACTION_UNPUBLISH
 }
