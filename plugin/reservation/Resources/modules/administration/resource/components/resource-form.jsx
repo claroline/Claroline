@@ -135,10 +135,9 @@ const Resource = props =>
             url: ['apiv2_reservationresource_list_organizations', {id: props.resource.id}],
             autoload: props.resource.id && !props.new
           }}
-          deleteAction={() => ({
-            type: 'url',
-            target: ['apiv2_reservationresource_remove_organizations', {id: props.resource.id}]
-          })}
+          delete={{
+            url: ['apiv2_reservationresource_remove_organizations', {id: props.resource.id}]
+          }}
           definition={OrganizationList.definition}
           card={OrganizationList.card}
         />

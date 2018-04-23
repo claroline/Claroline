@@ -12,6 +12,16 @@ import {constants as listConst} from '#/main/core/data/list/constants'
 import {select} from '#/main/core/user/contact/selectors'
 import {OptionsType} from '#/main/core/user/contact/prop-types'
 
+const ContactCard = props =>
+  <UserCard
+    {...omit(props, 'data')}
+    {...props.data}
+  />
+
+ContactCard.propTypes = {
+  data: T.object.isRequired
+}
+
 const ContactsComponent = props =>
   <DataListContainer
     name="contacts"
@@ -27,10 +37,9 @@ const ContactsComponent = props =>
       type: 'url',
       target: ['claro_user_profile', {publicUrl: row.data.meta.publicUrl}]
     })}
-    deleteAction={() => ({
-      type: 'url',
-      target: ['apiv2_contact_delete_bulk']
-    })}
+    delete={{
+      url: ['apiv2_contact_delete_bulk']
+    }}
     actions={(rows) => [
       {
         type: 'url',
@@ -69,15 +78,7 @@ const ContactsComponent = props =>
         displayed: props.options.data.show_phone
       }
     ]}
-    card={(props) => {
-      const ContactCard =
-        <UserCard
-          {...omit(props, 'data')}
-          {...props.data}
-        />
-
-      return ContactCard
-    }}
+    card={ContactCard}
   />
 
 ContactsComponent.propTypes = {

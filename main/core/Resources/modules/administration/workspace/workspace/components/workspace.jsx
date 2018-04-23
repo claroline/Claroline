@@ -144,10 +144,9 @@ const WorkspaceForm = (props) => {
               autoload: props.workspace.uuid && !props.new
             }}
             primaryAction={OrganizationList.open}
-            deleteAction={() => ({
-              type: 'url',
-              target: ['apiv2_workspace_remove_organizations', {id: props.workspace.uuid}]
-            })}
+            delete={{
+              url: ['apiv2_workspace_remove_organizations', {id: props.workspace.uuid}]
+            }}
             definition={OrganizationList.definition}
             card={OrganizationList.card}
           />
@@ -174,10 +173,9 @@ const WorkspaceForm = (props) => {
               autoload: props.workspace.uuid && !props.new
             }}
             primaryAction={UserList.open}
-            deleteAction={() => ({
-              type: 'url',
-              target: ['apiv2_role_remove_users', {id: roleId}]
-            })}
+            delete={{
+              url: ['apiv2_role_remove_users', {id: roleId}]
+            }}
             definition={UserList.definition}
             card={UserList.card}
           />

@@ -23,10 +23,9 @@ const LocationsList = props =>
     }}
     definition={LocationList.definition}
     primaryAction={LocationList.open}
-    deleteAction={() => ({
-      type: 'url',
-      target: ['apiv2_location_delete_bulk']
-    })}
+    delete={{
+      url: ['apiv2_location_delete_bulk']
+    }}
     actions={(rows) => [{
       type: 'callback',
       icon: 'fa fa-fw fa-map-marker',
