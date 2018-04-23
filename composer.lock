@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "28fc46ecdc7e17576b1c13917015cfb45cfb16f5"
+                "reference": "b92c5cdbb99458cca2e8247923afc40e1df0a60d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/28fc46ecdc7e17576b1c13917015cfb45cfb16f5",
-                "reference": "28fc46ecdc7e17576b1c13917015cfb45cfb16f5",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/b92c5cdbb99458cca2e8247923afc40e1df0a60d",
+                "reference": "b92c5cdbb99458cca2e8247923afc40e1df0a60d",
                 "shasum": ""
             },
             "require": {
@@ -397,7 +397,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-04-19 12:47:28"
+            "time": "2018-04-22 15:35:02"
         },
         {
             "name": "cocur/slugify",
@@ -1875,7 +1875,7 @@
                     "homepage": "https://github.com/friendsofsymfony/FOSJsRoutingBundle/contributors"
                 },
                 {
-                    "name": "William DURAND",
+                    "name": "William Durand",
                     "email": "william.durand1@gmail.com"
                 }
             ],
