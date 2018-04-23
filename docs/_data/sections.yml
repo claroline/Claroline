@@ -1,11 +1,11 @@
 - title: Getting started
   home: getting-started/index
   docs:
-    - title: Requirements
-      doc: getting-started/requirements
-
     - title: Browser support
       doc: getting-started/browser-support
+
+    - title: Requirements
+      doc: getting-started/requirements
 
     - title: Installation & Upgrades
       doc: getting-started/installation

@@ -6,7 +6,7 @@ title: Serializer
 # Serializer
 
 
-## Provider
+## SerializerProvider
 
 **Class :** `Claroline\AppBundle\API\SerializerProvider`
 
@@ -131,7 +131,7 @@ The `Serializer` is a service responsible of the serialization/deserialization o
 
 ### Register into the `SerializerProvider`
 
-In order to be able to access a `Serializer` from the [`SerializerProvider`](#provider), you need to register it.
+In order to be able to access a `Serializer` from the [`SerializerProvider`](#serializerprovider), you need to register it.
 For this, we use the symfony [Tagged Services](https://symfony.com/doc/current/service_container/tags.html).
 
 ```php

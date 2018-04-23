@@ -25,6 +25,8 @@
 .app-body {
     flex: 1;
     width: 100%;
+    min-height: 100%;
+    overflow: hidden;
     display: flex;
     flex-direction: row;
     align-items: stretch;

@@ -9,13 +9,21 @@ title: Browser support
 
 ## Recommended browsers
 
+### Desktop
+
 | Browser                  | Version |
 | ------------------------ | ------- |
 | Mozilla Firefox          | latest  | [download](https://www.mozilla.org/)
 | Chromium                 | latest  | [download](https://download-chromium.appspot.com)
 
+### Mobile
+
+// TODO documentation
+
 
 ## Supported browsers
+
+### Desktop
 
 | Browser                      | Version 
 | ---------------------------- | ------- 
@@ -25,3 +33,7 @@ title: Browser support
 | Microsoft Internet Explorer  | >= 11  
 | Microsoft Internet Edge      | latest
 | Safari                       | latest
+
+### Mobile
+
+// TODO documentation
