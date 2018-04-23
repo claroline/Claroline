@@ -8,7 +8,7 @@ import {Page as PageTypes} from '#/main/core/layout/page/prop-types'
 import {Route as RouteTypes} from '#/main/core/router/prop-types'
 
 const RoutedPage = props =>
-  <Router>
+  <Router embedded={props.embedded}>
     <Page {...props}>
       {props.children}
     </Page>

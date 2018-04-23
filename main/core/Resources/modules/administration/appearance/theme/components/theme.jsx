@@ -122,7 +122,6 @@ GeneralSection.propTypes = {
 /*const TypoSection = props =>
   <FormSection
     {...props}
-    id="theme-typo"
     icon="fa fa-fw fa-font"
     title="Typo & fonts"
   >
@@ -158,7 +157,6 @@ TypoSection.propTypes = {
 const ColorsSection = props =>
   <FormSection
     {...props}
-    id="theme-colors"
     icon="fa fa-fw fa-tint"
     title="Color schemes"
   >
@@ -231,7 +229,6 @@ ColorsSection.propTypes = {
 const SizingSection = props =>
   <FormSection
     {...props}
-    id="theme-sizing"
     icon="fa fa-fw fa-arrows-h"
     title="Sizing"
   >
@@ -250,7 +247,6 @@ SizingSection.propTypes = {
 const ExtraSection = props =>
   <FormSection
     {...props}
-    id="theme-extra"
     icon="fa fa-fw fa-ellipsis-h"
     title="Extra features"
   >
@@ -335,25 +331,24 @@ class Theme extends Component {
           <PageActions>
             <PageGroupActions>
               <PageAction
-                id="theme-save"
-                title={trans('save_theme', {}, 'theme')}
+                type="link"
+                label={trans('save_theme', {}, 'theme')}
                 icon="fa fa-floppy-o"
                 primary={true}
                 disabled={!this.state.pendingChanges || (this.state.validating && !isEmpty(this.state.errors))}
-                action="#"
+                target="/"
               />
             </PageGroupActions>
 
             <PageGroupActions>
               <PageAction
-                id="themes-list"
-                title={trans('themes_list', {}, 'theme')}
+                type="link"
+                label={trans('themes_list', {}, 'theme')}
                 icon="fa fa-list"
-                action="#/"
+                target="/"
               />
 
               <MoreAction
-                id="theme-more"
                 actions={[
                   {
                     icon: 'fa fa-fw fa-refresh',

@@ -21,7 +21,7 @@ class Hint extends Component {
 
           {this.props.penalty > 0 &&
             <span className="hint-penalty">
-              {transChoice('hint_penalty', this.props.penalty, {count: this.props.penalty}, 'ujm_exo')}
+              {transChoice('hint_penalty', this.props.penalty, {count: this.props.penalty}, 'quiz')}
             </span>
           }
         </header>

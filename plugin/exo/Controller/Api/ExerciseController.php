@@ -24,15 +24,14 @@ use UJM\ExoBundle\Manager\JsonQuizManager;
  */
 class ExerciseController extends AbstractController
 {
-    /**
-     * @var AuthorizationCheckerInterface
-     */
+    /** @var AuthorizationCheckerInterface */
     private $authorization;
 
-    /**
-     * @var ExerciseManager
-     */
+    /** @var ExerciseManager */
     private $exerciseManager;
+
+    /** @var JsonQuizManager */
+    private $jsonQuizManager;
 
     /**
      * ExerciseController constructor.
@@ -45,6 +44,7 @@ class ExerciseController extends AbstractController
      *
      * @param AuthorizationCheckerInterface $authorization
      * @param ExerciseManager               $exerciseManager
+     * @param JsonQuizManager               $jsonQuizManager
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
@@ -160,27 +160,6 @@ class ExerciseController extends AbstractController
     }
 
     /**
-     * Get docimology data.
-     *
-     * @EXT\Route("/{id}/docimology", name="exercise_docimology")
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Exercise $exercise
-     *
-     * @return array
-     */
-    public function docimologyAction(Exercise $exercise)
-    {
-        $this->assertHasPermission('ADMINISTRATE', $exercise);
-
-        return new JsonResponse([
-                'exercise' => $this->exerciseManager->serialize($exercise, [Transfer::MINIMAL]),
-                'statistics' => $this->exerciseManager->getStatistics($exercise, 100),
-        ]);
-    }
-
-    /**
      * download json quiz.
      *
      * @EXT\Route("/{id}/export", name="exercise_export")
@@ -189,7 +168,7 @@ class ExerciseController extends AbstractController
      *
      * @param Exercise $exercise
      *
-     * @return array
+     * @return Response
      */
     public function exportAction(Exercise $exercise)
     {
@@ -213,22 +192,6 @@ class ExerciseController extends AbstractController
         $response->send();
 
         return new Response();
-    }
-
-    /**
-     * download json quiz.
-     *
-     * @EXT\Route("/{id}/import", name="exercise_import")
-     * @EXT\Method("GET")
-     * @EXT\ParamConverter("exercise", class="UJMExoBundle:Exercise", options={"mapping": {"id": "uuid"}})
-     *
-     * @param Exercise $exercise
-     *
-     * @return array
-     */
-    public function importAction(Excercise $exercise)
-    {
-        //do some stuff here
     }
 
     private function assertHasPermission($permission, Exercise $exercise)

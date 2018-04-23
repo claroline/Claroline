@@ -1,78 +1,47 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
+import merge from 'lodash/merge'
 
 import {trans} from '#/main/core/translation'
 import {PageAction} from '#/main/core/layout/page'
 
 const OpenAction = props =>
   <PageAction
-    id="form-open"
-    title={props.label}
-    icon={props.icon}
-    disabled={props.disabled}
-    action={props.action}
-    primary={props.primary}
+    {...props}
   />
 
-OpenAction.propTypes = {
-  icon: T.string,
-  label: T.string,
-  disabled: T.bool,
-  primary: T.bool,
-  action: T.oneOfType([T.string, T.func]).isRequired
-}
-
-OpenAction.defaultProps = {
+OpenAction.propTypes    = merge({}, PageAction.propTypes)
+OpenAction.defaultProps = merge({}, PageAction.defaultProps, {
   icon: 'fa fa-pencil',
   label: trans('edit'),
   disabled: false,
   primary: true
-}
+})
 
 const SaveAction = props =>
   <PageAction
-    id="form-save"
-    title={props.label}
-    icon={props.icon}
-    action={props.action}
-    disabled={props.disabled}
+    {...props}
     primary={true}
   />
 
-SaveAction.propTypes = {
-  icon: T.string,
-  label: T.string,
-  disabled: T.bool,
-  action: T.oneOfType([T.string, T.func]).isRequired
-}
-
-SaveAction.defaultProps = {
+SaveAction.propTypes    = merge({}, PageAction.propTypes)
+SaveAction.defaultProps = merge({}, PageAction.defaultProps, {
   icon: 'fa fa-floppy-o',
   label: trans('save'),
   disabled: false
-}
+})
 
 const CancelAction = props =>
   <PageAction
-    id="form-cancel"
-    title={props.label}
-    icon={props.icon}
-    action={props.action}
-    disabled={props.disabled}
+    {...props}
   />
 
-CancelAction.propTypes = {
-  icon: T.string,
-  label: T.string,
-  disabled: T.bool,
-  action: T.oneOfType([T.string, T.func]).isRequired
-}
-
-CancelAction.defaultProps = {
+CancelAction.propTypes    = merge({}, PageAction.propTypes)
+CancelAction.defaultProps = merge({}, PageAction.defaultProps, {
   icon: 'fa fa-times',
   label: trans('cancel'),
   disabled: false
-}
+})
 
 const OpenedPageActions = props =>
   <span>
@@ -110,27 +79,9 @@ const FormPageActions = props => props.opened ?
 
 FormPageActions.propTypes = {
   opened: T.bool,
-  open: T.shape({
-    label: T.string,
-    icon: T.string,
-    action: T.oneOfType([T.string, T.func]),
-    disabled: T.bool,
-    primary: T.bool
-  }),
-
-  save: T.shape({
-    label: T.string,
-    icon: T.string,
-    action: T.func,
-    disabled: T.bool
-  }).isRequired,
-
-  cancel: T.shape({
-    label: T.string,
-    icon: T.string,
-    action: T.func,
-    disabled: T.bool
-  })
+  open: T.object,
+  save: T.object.isRequired,
+  cancel: T.object
 }
 
 FormPageActions.defaultProps = {

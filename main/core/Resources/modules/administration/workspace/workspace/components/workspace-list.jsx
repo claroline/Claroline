@@ -1,12 +1,12 @@
 import {t} from '#/main/core/translation'
-import {generateUrl} from '#/main/core/api/router'
 
 import {WorkspaceCard} from '#/main/core/workspace/data/components/workspace-card'
 
 const WorkspaceList = {
-  open: {
-    action: (row) => generateUrl('claro_workspace_open', {workspaceId: row.id})
-  },
+  open: (row) => ({
+    type: 'url',
+    target: ['claro_workspace_open', {workspaceId: row.id}]
+  }),
   definition: [
     {
       name: 'name',

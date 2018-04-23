@@ -4,7 +4,7 @@ import times from 'lodash/times'
 import moment from 'moment'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
-import {Button} from '#/main/core/layout/button/components/button.jsx'
+import {Button} from '#/main/app/action/components/button'
 
 import {CalendarView as CalendarViewTypes} from '#/main/core/layout/calendar/prop-types'
 import {CalendarLayout} from '#/main/core/layout/calendar/components/view/layout.jsx'
@@ -13,13 +13,14 @@ import {yearNum} from '#/main/core/layout/calendar/utils'
 
 const Year = props =>
   <Button
-    className={classes('btn-link-default', {
+    type="callback"
+    className={classes('btn btn-link', {
       now:      props.current.isSame(props.now, 'year'),
       selected: props.selected && props.current.isSame(props.selected, 'year'),
       fill:     props.fill
     })}
     disabled={props.current.isBefore(props.calendarRange[0], 'year') || props.current.isAfter(props.calendarRange[1], 'year')}
-    onClick={props.onClick}
+    callback={props.onClick}
   >
     {props.current.format('YYYY')}
   </Button>

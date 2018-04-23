@@ -83,55 +83,53 @@ class FieldList extends Component {
     return (
       <div className="field-list-control">
         {0 !== this.props.value.length &&
-        <button
-          type="button"
-          className="btn btn-remove-all btn-sm btn-link-danger"
-          onClick={this.removeAll}
-        >
-          {t('delete_all')}
-        </button>
+          <button
+            type="button"
+            className="btn btn-remove-all btn-sm btn-link-danger"
+            onClick={this.removeAll}
+          >
+            {t('delete_all')}
+          </button>
         }
 
         {0 < this.props.value.length &&
-        <ul>
-          {this.props.value.map((field, fieldIndex) =>
-            <li key={fieldIndex} className="field-item">
+          <ul>
+            {this.props.value.map((field, fieldIndex) =>
+              <li key={fieldIndex} className="field-item">
                 <span className={classes('field-item-icon',
                   getCreatableTypes()[Object.keys(getCreatableTypes()).find(type => field.type === type)].meta.icon
                 )} />
 
-              <FieldPreview
-                {...field}
-              />
+                <FieldPreview {...field} />
 
-              <div className="field-item-actions">
-                <TooltipButton
-                  id={`${this.props.id}-${fieldIndex}-edit`}
-                  title={t('edit')}
-                  className="btn-link-default"
-                  onClick={() => this.open(field, (data) => {
-                    this.update(fieldIndex, data)
-                  })}
-                >
-                  <span className="fa fa-fw fa-pencil" />
-                </TooltipButton>
+                <div className="field-item-actions">
+                  <TooltipButton
+                    id={`${this.props.id}-${fieldIndex}-edit`}
+                    title={t('edit')}
+                    className="btn-link-default"
+                    onClick={() => this.open(field, (data) => {
+                      this.update(fieldIndex, data)
+                    })}
+                  >
+                    <span className="fa fa-fw fa-pencil" />
+                  </TooltipButton>
 
-                <TooltipButton
-                  id={`${this.props.id}-${fieldIndex}-delete`}
-                  title={t('delete')}
-                  className="btn-link-danger"
-                  onClick={() => this.remove(fieldIndex)}
-                >
-                  <span className="fa fa-fw fa-trash-o" />
-                </TooltipButton>
-              </div>
-            </li>
-          )}
-        </ul>
+                  <TooltipButton
+                    id={`${this.props.id}-${fieldIndex}-delete`}
+                    title={t('delete')}
+                    className="btn-link-danger"
+                    onClick={() => this.remove(fieldIndex)}
+                  >
+                    <span className="fa fa-fw fa-trash-o" />
+                  </TooltipButton>
+                </div>
+              </li>
+            )}
+          </ul>
         }
 
         {0 === this.props.value.length &&
-        <div className="no-field-info">{this.props.placeholder}</div>
+          <div className="no-field-info">{this.props.placeholder}</div>
         }
 
         <button

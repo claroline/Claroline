@@ -2,38 +2,6 @@ import {PropTypes as T} from 'prop-types'
 import merge from 'lodash/merge'
 
 import {DataProperty} from '#/main/core/data/prop-types'
-import {Action} from '#/main/core/layout/action/prop-types'
-
-/**
- * Action available for data in the list.
- * Bulk and Row actions uses the same interface.
- *
- * @type {object}
- */
-const DataListAction = {
-  propTypes: merge({}, Action.propTypes, {
-    /**
-     * A function to calculate if the action should be disabled.
-     * It receives the list of data objects as param.
-     */
-    disabled: T.func,
-
-    /**
-     * A function to calculate if the action should be displayed.
-     * It receives the list of data objects as param.
-     */
-    displayed: T.func,
-
-    /**
-     * Defines if the action is available as row action or bulk action.
-     * If not set, action will be available in both context
-     *
-     * @type {string}
-     */
-    context: T.oneOf(['row', 'selection'])
-  }),
-  defaultProps: merge({}, Action.defaultProps)
-}
 
 /**
  * Definition of a data object property.
@@ -142,18 +110,9 @@ const DataListView = {
     /**
      * Data primary action (aka open/edit action for rows in most cases).
      */
-    primaryAction: T.shape({
-      disabled: T.func,
-      action: T.oneOfType([T.string, T.func]).isRequired
-    }),
+    primaryAction: T.func,
 
-    actions: T.arrayOf(
-      T.shape(DataListAction.propTypes)
-    )
-  },
-
-  defaultProps: {
-    actions: []
+    actions: T.func
   }
 }
 
@@ -201,7 +160,6 @@ const DataListPagination = {
 }
 
 export {
-  DataListAction,
   DataListProperty,
   DataListView,
   DataListSelection,

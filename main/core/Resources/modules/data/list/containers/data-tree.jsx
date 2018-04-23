@@ -4,12 +4,8 @@ import {PropTypes as T} from 'prop-types'
 import {makeCancelable} from '#/main/core/api/utils'
 
 import {connectList} from '#/main/core/data/list/connect'
-
-import {
-  DataListAction as DataListActionTypes,
-  DataListProperty as DataListPropertyTypes
-} from '#/main/core/data/list/prop-types'
-import {DataTree as DataTreeComponent} from '#/main/core/data/list/components/data-tree.jsx'
+import {DataListProperty as DataListPropertyTypes} from '#/main/core/data/list/prop-types'
+import {DataTree as DataTreeComponent} from '#/main/core/data/list/components/data-tree'
 
 // todo there are big c/c from data-list
 
@@ -82,33 +78,11 @@ DataTree.propTypes = {
   name: T.string.isRequired,
 
   /**
-   * Open action generator for rows.
-   * It gets the current data row as first param.
-   *
-   * NB. It's called to generate the action (to be able to catch generated URL),
-   * so if your open action is a func, generator should return another function,
-   * not call it. Example : (row) => myFunc
-   */
-  open: T.shape({
-    action: T.oneOfType([T.func, T.string]),
-    disabled: T.func
-  }),
-
-  /**
    * Provides asynchronous data load.
    */
   fetch: T.shape({
     url: T.oneOfType([T.string, T.array]).isRequired,
     autoload: T.bool
-  }),
-
-  /**
-   * Provides data delete.
-   */
-  delete: T.shape({
-    url: T.oneOfType([T.string, T.array]), // if provided, data delete will call server
-    disabled: T.func, // receives the list of rows (either the selected ones or the current one)
-    displayed: T.func // receives the list of rows (either the selected ones or the current one)
   }),
 
   /**
@@ -119,11 +93,19 @@ DataTree.propTypes = {
   ).isRequired,
 
   /**
+   * Open action generator for rows.
+   * It gets the current data row as first param.
+   *
+   * NB. It's called to generate the action (to be able to catch generated URL),
+   * so if your open action is a func, generator should return another function,
+   * not call it. Example : (row) => myFunc
+   */
+  primaryAction: T.func,
+
+  /**
    * A list of data related actions.
    */
-  actions: T.arrayOf(
-    T.shape(DataListActionTypes.propTypes)
-  ),
+  actions: T.func,
 
   // calculated from redux store
   loaded: T.bool,

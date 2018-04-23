@@ -17,12 +17,14 @@ const ResourcesList = props =>
       url: ['apiv2_reservationresource_list'],
       autoload: true
     }}
-    open={{
-      action: (row) => `#/form/${row.id}`
-    }}
-    delete={{
-      url: ['apiv2_reservationresource_delete_bulk']
-    }}
+    primaryAction={(row) => ({
+      type: 'link',
+      target: `#/form/${row.id}`
+    })}
+    delete={() => ({
+      type: 'url',
+      target: ['apiv2_reservationresource_delete_bulk']
+    })}
     definition={[{
       name: 'name',
       label: trans('name', {}, 'platform'),
@@ -53,11 +55,12 @@ const ResourcesList = props =>
       type: 'string',
       displayed: true
     }]}
-    actions={[
+    actions={(rows) => [
       {
+        type: 'callback',
         icon: 'fa fa-w fa-sign-out',
         label: trans('export', {}, 'platform'),
-        action: (rows) => props.exportResources(rows)
+        callback: () => props.exportResources(rows)
       }
     ]}
   />

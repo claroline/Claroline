@@ -1,13 +1,15 @@
 import React from 'react'
 import invariant from 'invariant'
 
-import {MessageModal} from './components/message.jsx'
-import {ConfirmModal} from './components/confirm.jsx'
-import {DeleteConfirmModal} from './components/delete-confirm.jsx'
-import {UrlModal} from './components/url.jsx'
-import {UserPickerModal} from './components/user-picker.jsx'
-import {GenericTypePicker} from './components/generic-type-picker.jsx'
-import {IframeModal} from './components/iframe.jsx'
+import {withModal} from '#/main/core/layout/modal/withModal'
+
+import {MessageModal} from './components/message'
+import {ConfirmModal} from './components/confirm'
+import {DeleteConfirmModal} from './components/delete-confirm'
+import {UrlModal} from './components/url'
+import {UserPickerModal} from './components/user-picker'
+import {GenericTypePicker} from './components/generic-type-picker'
+import {IframeModal} from './components/iframe'
 
 export const MODAL_MESSAGE = 'MODAL_MESSAGE'
 export const MODAL_CONFIRM = 'MODAL_CONFIRM'
@@ -15,7 +17,7 @@ export const MODAL_DELETE_CONFIRM = 'MODAL_DELETE_CONFIRM'
 export const MODAL_GENERIC_TYPE_PICKER = 'MODAL_GENERIC_TYPE_PICKER'
 export const MODAL_URL = 'MODAL_URL' // only for use with old Twig modals, will be deleted
 export const MODAL_USER_PICKER = 'MODAL_USER_PICKER'
-export const MODAL_IFRAME = 'MODAL_IFRAME'
+export const MODAL_IFRAME = 'MODAL_IFRAME' // todo : delete me
 
 const modals = {
   [MODAL_MESSAGE]: MessageModal,
@@ -28,8 +30,9 @@ const modals = {
 }
 
 function registerModal(type, component) {
-  invariant(!modals[type], `Modal type ${type} is already registered`)
-  modals[type] = component
+  if (!modals[type]) {
+    modals[type] = component
+  }
 }
 
 function registerModals(types) {
@@ -62,6 +65,7 @@ function makeModalFromUrl(fading, hideCallback = () => true, url) {
 }
 
 export {
+  withModal,
   makeModal,
   makeModalFromUrl,
   registerModal,

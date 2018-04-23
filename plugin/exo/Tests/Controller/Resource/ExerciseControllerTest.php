@@ -43,60 +43,6 @@ class ExerciseControllerTest extends TransactionalTestCase
     }
 
     /**
-     * The exercise open action MUST throws an error to unauthorized users.
-     */
-    public function testOpenThrowsErrorToUnauthorizedUser()
-    {
-        // Try to open exercise with a "normal" user
-        $user = $this->persist->user('bob');
-        $this->om->flush();
-
-        $this->request('GET', "/exercises/{$this->exercise->getUuid()}", $user);
-
-        // The user must not have access to the exercise
-        $this->assertEquals(403, $this->client->getResponse()->getStatusCode());
-    }
-
-    /**
-     * The exercise open action MUST renders the HTML view without errors.
-     */
-    public function testOpenRendersViewToAuthorizedUser()
-    {
-        // add open permissions to all users
-        $rightsManager = $this->client->getContainer()->get('claroline.manager.rights_manager');
-        $roleManager = $this->client->getContainer()->get('claroline.manager.role_manager');
-        $rightsManager->editPerms(1, $roleManager->getRoleByName('ROLE_USER'), $this->exercise->getResourceNode());
-
-        // Try to open exercise with a "normal" user
-        $user = $this->persist->user('bob');
-        $this->om->flush();
-
-        $crawler = $this->request('GET', "/exercises/{$this->exercise->getUuid()}", $user);
-
-        // The user must have access to the exercise
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($crawler->filter('html')->count() > 0);
-    }
-
-    /**
-     * The exercise open action MUST renders the HTML view without errors.
-     */
-    public function testOpenRendersViewToAuthorizedAnonymous()
-    {
-        // add open permissions to all users including anonymous
-        $rightsManager = $this->client->getContainer()->get('claroline.manager.rights_manager');
-        $roleManager = $this->client->getContainer()->get('claroline.manager.role_manager');
-        $rightsManager->editPerms(1, $roleManager->getRoleByName('ROLE_ANONYMOUS'), $this->exercise->getResourceNode());
-        $this->om->flush();
-
-        $crawler = $this->request('GET', "/exercises/{$this->exercise->getUuid()}");
-
-        // The user must not have access to the exercise
-        $this->assertEquals(200, $this->client->getResponse()->getStatusCode());
-        $this->assertTrue($crawler->filter('html')->count() > 0);
-    }
-
-    /**
      * The exercise docimology action MUST be accessible to admins of the exercise.
      */
     public function testDocimologyRendersViewToAdmin()

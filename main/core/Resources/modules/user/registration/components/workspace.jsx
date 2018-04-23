@@ -12,7 +12,7 @@ import {WorkspaceList} from '#/main/core/administration/workspace/workspace/comp
 const Workspace = () =>
   <DataListContainer
     name="workspaces"
-    open={WorkspaceList.open}
+    primaryAction={WorkspaceList.open}
     fetch={{
       url: ['apiv2_workspace_list_registerable'],
       autoload: true

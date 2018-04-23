@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/core/scaffolding/bootstrap'
+import {bootstrap} from '#/main/app/bootstrap'
 
 import {reducer} from '#/main/core/resource/portal/reducer'
 import {Portal} from '#/main/core/resource/portal/components/portal.jsx'

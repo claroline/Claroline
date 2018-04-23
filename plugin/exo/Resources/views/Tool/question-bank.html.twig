@@ -7,7 +7,7 @@
 {% endblock %}
 
 {# Title of the Page #}
-{% block title %}{{ 'bank_of_questions' | trans({}, 'ujm_exo') }}{% endblock %}
+{% block title %}{{ 'bank_of_questions' | trans({}, 'quiz') }}{% endblock %}
 
 {# Override breadcrumbs #}
 {% block breadcrumb %}
@@ -16,7 +16,7 @@
             'name': 'desktop'|trans({}, 'platform'),
             'href': path('claro_desktop_open')
         }, {
-            'name': 'bank_of_questions'|trans({}, 'ujm_exo'),
+            'name': 'bank_of_questions'|trans({}, 'quiz'),
             'href': ''
         }])
     }}
@@ -36,7 +36,7 @@
     {{ parent() }}
 
     {# Translations #}
-    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'ujm_exo' }) }}"></script>
+    <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'quiz' }) }}"></script>
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'question_types' }) }}"></script>
 
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-exo-bank.js') }}"></script>

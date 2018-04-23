@@ -3,6 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {tex} from '#/main/core/translation'
+import {Button} from '#/main/app/action/components/button'
+import {HtmlText} from '#/main/core/layout/components/html-text'
 import {select as resourceSelect} from '#/main/core/resource/selectors'
 import {select as playerSelectors} from './../selectors'
 import quizSelectors from './../../selectors'
@@ -26,23 +28,31 @@ const AttemptEnd = props => {
 
         <div className={showScore ? 'col-md-9':'col-md-12'}>
           {props.endMessage ?
-            <div dangerouslySetInnerHTML={{__html: props.endMessage}}></div> :
+            <HtmlText>{props.endMessage}</HtmlText> :
             <div>
-              <h2 className="step-title">{tex('attempt_end_title')}</h2>
+              <h2 className="h4">{tex('attempt_end_title')}</h2>
               <p>{tex('attempt_end_info')}</p>
             </div>
           }
 
           {props.endNavigation && showCorrection &&
-            <a href={`#papers/${props.paper.id}`} className="btn btn-start btn-lg btn-block btn-primary">
-              {tex('view_paper')}
-            </a>
+            <Button
+              type="link"
+              className="btn btn-start btn-lg btn-block btn-primary"
+              icon="fa fa-fw fa-play"
+              label={tex('view_paper')}
+              target={`/papers/${props.paper.id}`}
+            />
           }
 
           {props.endNavigation &&
-            <a href="#play" className="btn btn-start btn-lg btn-block btn-primary">
-              {tex('exercise_restart')}
-            </a>
+            <Button
+              type="link"
+              className="btn btn-start btn-lg btn-block btn-primary"
+              icon="fa fa-fw fa-play"
+              label={tex('exercise_restart')}
+              target="/play"
+            />
           }
         </div>
       </div>

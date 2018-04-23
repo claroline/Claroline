@@ -50,21 +50,19 @@ class EditPropertiesModal extends Component {
         fadeModal={this.props.fadeModal}
         sections={[
           {
-            id: 'general',
             title: trans('general'),
             primary: true,
             fields: [
               {
                 name: 'name',
-                label: t_res('resource_name'),
+                label: trans('name'),
                 type: 'string',
                 required: true
               }
             ]
           }, {
-            id: 'meta',
             icon: 'fa fa-fw fa-info',
-            title: t_res('resource_meta'),
+            title: trans('information'),
             fields: [
               {
                 name: 'meta.description',
@@ -90,17 +88,21 @@ class EditPropertiesModal extends Component {
               }
             ]
           }, {
-            id: 'display',
             icon: 'fa fa-fw fa-desktop',
             title: trans('display_parameters'),
             fields: [
               {
                 name: 'poster',
-                label: t_res('poster'),
+                label: trans('poster'),
                 type: 'image',
                 options: {
                   ratio: '3:1'
                 }
+              }, {
+                name: 'display.showIcon',
+                label: t_res('resource_showIcon'),
+                help: t_res('resource_showIcon_help'),
+                type: 'boolean'
               }, {
                 name: 'display.fullscreen',
                 label: t_res('resource_fullscreen'),
@@ -121,11 +123,15 @@ class EditPropertiesModal extends Component {
               }
             ]
           }, {
-            id: 'restrictions',
             icon: 'fa fa-fw fa-key',
             title: trans('access_restrictions'),
             fields: [
               {
+                name: 'restrictions.hidden',
+                type: 'boolean',
+                label: trans('restrict_hidden'),
+                help: trans('restrict_hidden_help')
+              }, {
                 name: 'restrictions.enableDates',
                 label: trans('restrict_by_dates'),
                 type: 'boolean',
@@ -192,7 +198,6 @@ class EditPropertiesModal extends Component {
               }
             ]
           }, {
-            id: 'license',
             icon: 'fa fa-fw fa-copyright',
             title: t_res('resource_authors_license'),
             fields: [

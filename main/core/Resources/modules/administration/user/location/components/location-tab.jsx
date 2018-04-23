@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {t} from '#/main/core/translation'
-import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
+import {matchPath, Routes, withRouter} from '#/main/core/router'
 
 import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
 import {FormPageActionsContainer} from '#/main/core/data/form/containers/page-actions.jsx'
@@ -22,12 +22,15 @@ const LocationTabActionsComponent = props =>
       }
       opened={!!matchPath(props.location.pathname, {path: '/locations/form'})}
       open={{
+        type: 'link',
         icon: 'fa fa-plus',
         label: t('add_location'),
-        action: '#/locations/form'
+        target: '/locations/form'
       }}
       cancel={{
-        action: () => navigate('/locations')
+        type: 'link',
+        target: '/locations',
+        exact: true
       }}
     />
   </PageActions>

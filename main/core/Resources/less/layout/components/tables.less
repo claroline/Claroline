@@ -3,21 +3,6 @@
  */
 
 .table {
-    th {
-        // todo : this needs to be removed but I don't know where it's used
-        a {
-            color: @gray;
-
-            &:after {
-                content: " \25BE";
-            }
-
-            &:hover {
-                color: @gray;
-            }
-        }
-    }
-
     // header
     > thead > tr > th {
         position: relative; // for positioning sorting indicator
@@ -33,7 +18,6 @@
     }
 
     > tbody {
-        background: @panel-bg;
         .box-shadow(@box-shadow-base);
 
         th:first-child,
@@ -49,6 +33,10 @@
         > tr:last-child th,
         > tr:last-child td {
             border-bottom: 1px solid @table-border-color;
+        }
+
+        > tr {
+            background: @panel-bg;
         }
 
         > tr.selected {
@@ -130,13 +118,13 @@
     text-align: right;
 }
 
-.table-actions, // deprecated. for retro compatibility (questions bank)
 .actions-cell {
     width: 36px; // because this cell should only contain a dropdown to gain horizontal space (no buttons bar)
     padding: 0 !important; // move padding on btns
     white-space: nowrap; // avoids buttons to break on multi lines
 
-    .btn {
+    .btn,
+    .btn-link {
         padding: @table-cell-padding;
     }
 
@@ -154,7 +142,9 @@
             }
         }
 
-        .btn {
+
+        .btn,
+        .btn-link {
             padding: @table-condensed-cell-padding;
         }
     }

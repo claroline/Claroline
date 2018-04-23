@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 
 import {FormGroupWithField as FormGroupWithFieldTypes} from '#/main/core/layout/form/prop-types'
-import {FormGroup} from '#/main/core/layout/form/components/group/form-group.jsx'
-import {Select} from '#/main/core/layout/form/components/field/select.jsx'
+import {FormGroup} from '#/main/core/layout/form/components/group/form-group'
+import {Select} from '#/main/core/layout/form/components/field/select'
 
 const SelectGroup = props =>
   <FormGroup {...props}>
@@ -20,7 +20,7 @@ const SelectGroup = props =>
 
 implementPropTypes(SelectGroup, FormGroupWithFieldTypes, {
   // more precise value type
-  value: T.oneOfType([T.string, T.number, T.array]),
+  value: T.oneOfType([T.string, T.number, T.array, T.bool]),
   // custom props
   choices: T.object.isRequired,
   multiple: T.bool,

@@ -81,7 +81,7 @@ export function tval(message, placeholders = {}) {
  *
  * @returns {string}
  */
-export function tex(message, placeholders = {}, domain = 'ujm_exo') {
+export function tex(message, placeholders = {}, domain = 'quiz') {
   return trans(message, placeholders, domain)
 }
 

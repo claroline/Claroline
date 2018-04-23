@@ -133,6 +133,7 @@ class WorkspaceVoter extends AbstractVoter
             return false;
         }
 
+        //if we're amongst the administrators of the organizations
         $adminOrganizations = $token->getUser()->getAdministratedOrganizations();
         $workspaceOrganizations = $workspace->getOrganizations();
 
@@ -142,6 +143,13 @@ class WorkspaceVoter extends AbstractVoter
                     return true;
                 }
             }
+        }
+
+        //or we have the role_manager
+        $managerRole = $workspace->getManagerRole();
+
+        if ($managerRole && $token->getUser()->hasRole($managerRole->getName())) {
+            return true;
         }
 
         return false;

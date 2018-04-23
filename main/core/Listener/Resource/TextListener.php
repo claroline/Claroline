@@ -18,6 +18,7 @@ use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
 use Claroline\CoreBundle\Form\TextType;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
@@ -30,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class TextListener implements ContainerAwareInterface
 {
+    /** @var ContainerInterface */
     private $container;
 
     /**
@@ -143,6 +145,22 @@ class TextListener implements ContainerAwareInterface
         }
 
         $event->setCopy($copy);
+    }
+
+    /**
+     * Loads a Text resource.
+     *
+     * @DI\Observe("load_text")
+     *
+     * @param LoadResourceEvent $event
+     */
+    public function onLoad(LoadResourceEvent $event)
+    {
+        $event->setAdditionalData([
+            'text' => $this->container->get('claroline.api.serializer')->serialize($event->getResource()),
+        ]);
+
+        $event->stopPropagation();
     }
 
     /**

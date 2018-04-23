@@ -726,7 +726,7 @@ class WorkspaceRepository extends EntityRepository
         $query = $this->_em->createQuery($dql);
         $query->setParameter('workspaceId', $workspaceId);
 
-        return $query->getSingleScalarResult();
+        return (int) $query->getSingleScalarResult();
     }
 
     /**

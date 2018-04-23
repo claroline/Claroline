@@ -24,7 +24,6 @@ const UserForm = props =>
     name="users.current"
     sections={[
       {
-        id: 'general',
         title: t('general'),
         primary: true,
         fields: [
@@ -65,7 +64,6 @@ const UserForm = props =>
           }
         ]
       }, {
-        id: 'information',
         icon: 'fa fa-fw fa-info',
         title: t('information'),
         fields: [
@@ -80,7 +78,6 @@ const UserForm = props =>
           }
         ]
       }, {
-        id: 'display_parameters',
         icon: 'fa fa-fw fa-desktop',
         title: t('display_parameters'),
         fields: [
@@ -99,7 +96,6 @@ const UserForm = props =>
           }
         ]
       }, {
-        id: 'restrictions',
         icon: 'fa fa-fw fa-key',
         title: t('access_restrictions'),
         fields: [
@@ -111,7 +107,7 @@ const UserForm = props =>
             name: 'restrictions.enableDates',
             type: 'boolean',
             label: t('restrict_by_dates'),
-            calculated: (user) => user.restrictions && 0!== user.restrictions.dates.length,
+            calculated: (user) => user.restrictions && 0 !== user.restrictions.dates.length,
             onChange: activated => {
               if (!activated) {
                 props.updateProp('restrictions.dates', [])
@@ -140,87 +136,90 @@ const UserForm = props =>
       level={3}
     >
       <FormSection
-        id="user-groups"
         className="embedded-list-section"
         icon="fa fa-fw fa-users"
         title={t('groups')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: t('add_groups'),
-            action: () => props.pickGroups(props.user.id)
+            callback: () => props.pickGroups(props.user.id)
           }
         ]}
       >
         <DataListContainer
           name="users.current.groups"
-          open={GroupList.open}
           fetch={{
             url: ['apiv2_user_list_groups', {id: props.user.id}],
             autoload: props.user.id && !props.new
           }}
-          delete={{
-            url: ['apiv2_user_remove_groups', {id: props.user.id}]
-          }}
+          primaryAction={GroupList.open}
+          deleteAction={() => ({
+            type: 'url',
+            target: ['apiv2_user_remove_groups', {id: props.user.id}]
+          })}
           definition={GroupList.definition}
           card={GroupList.card}
         />
       </FormSection>
 
       <FormSection
-        id="group-organizations"
         className="embedded-list-section"
         icon="fa fa-fw fa-building"
         title={t('organizations')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: t('add_organizations'),
-            action: () => props.pickOrganizations(props.user.id)
+            callback: () => props.pickOrganizations(props.user.id)
           }
         ]}
       >
         <DataListContainer
           name="users.current.organizations"
-          open={OrganizationList.open}
           fetch={{
             url: ['apiv2_user_list_organizations', {id: props.user.id}],
             autoload: props.user.id && !props.new
           }}
-          delete={{
-            url: ['apiv2_user_remove_organizations', {id: props.user.id}]
-          }}
+          primaryAction={OrganizationList.open}
+          deleteAction={() => ({
+            type: 'url',
+            target: ['apiv2_user_remove_organizations', {id: props.user.id}]
+          })}
           definition={OrganizationList.definition}
           card={OrganizationList.card}
         />
       </FormSection>
 
       <FormSection
-        id="user-roles"
         className="embedded-list-section"
         icon="fa fa-fw fa-id-badge"
         title={t('roles')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: t('add_roles'),
-            action: () => props.pickRoles(props.user.id)
+            callback: () => props.pickRoles(props.user.id)
           }
         ]}
       >
         <DataListContainer
           name="users.current.roles"
-          open={RoleList.open}
           fetch={{
             url: ['apiv2_user_list_roles', {id: props.user.id}],
             autoload: props.user.id && !props.new
           }}
-          delete={{
-            url: ['apiv2_user_remove_roles', {id: props.user.id}]
-          }}
+          primaryAction={RoleList.open}
+          deleteAction={() => ({
+            type: 'url',
+            target: ['apiv2_user_remove_roles', {id: props.user.id}]
+          })}
           definition={RoleList.definition}
           card={RoleList.card}
         />
@@ -256,7 +255,6 @@ const User = connect(
         icon: 'fa fa-fw fa-users',
         title: t('add_groups'),
         name: 'groups.picker',
-        open: GroupList.open,
         definition: GroupList.definition,
         card: GroupList.card,
         fetch: {
@@ -286,7 +284,6 @@ const User = connect(
         icon: 'fa fa-fw fa-id-badge',
         title: t('add_roles'),
         name: 'roles.picker',
-        open: RoleList.open,
         definition: RoleList.definition,
         card: RoleList.card,
         fetch: {

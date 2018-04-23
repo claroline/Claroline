@@ -111,19 +111,6 @@ class Tools extends Component {
     return columns
   }
 
-  generateActions() {
-    const dataListActions = []
-
-    dataListActions.push({
-      icon: 'fa fa-fw fa-pencil',
-      label: trans('edit_tool', {}, 'dropzone'),
-      action: (rows) => this.editTool(rows[0]),
-      context: 'row'
-    })
-
-    return dataListActions
-  }
-
   render() {
     return (
       <PageContainer id="tools-container">
@@ -134,7 +121,8 @@ class Tools extends Component {
           <PageActions>
             <PageAction
               id="theme-save"
-              title={trans('add_tool', {}, 'dropzone')}
+              type="callback"
+              label={trans('add_tool', {}, 'dropzone')}
               icon="fa fa-plus"
               primary={true}
               action={() => this.showForm()}
@@ -152,7 +140,15 @@ class Tools extends Component {
               url: ['apiv2_dropzonetool_delete_bulk']
             }}
             definition={this.generateColumns()}
-            actions={this.generateActions()}
+            actions={(rows) => [
+              {
+                type: 'callback',
+                icon: 'fa fa-fw fa-pencil',
+                label: trans('edit_tool', {}, 'dropzone'),
+                callback: () => this.editTool(rows[0]),
+                context: 'row'
+              }
+            ]}
           />
         </PageContent>
       </PageContainer>

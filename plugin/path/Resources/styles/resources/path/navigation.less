@@ -7,17 +7,23 @@
     flex-direction: row;
     align-items: stretch;
 
-    .btn {
+    .btn-previous,
+    .btn-next {
         flex: 1;
+        max-width: 50%;
+    }
+
+    .btn-previous {
+        text-align: left;
+        margin-right: floor(@grid-gutter-width / 2);
+    }
+
+    .btn-next {
+        text-align: right;
+        margin-left: floor(@grid-gutter-width / 2);
 
         &:first-child {
-            text-align: left;
-            margin-right: floor(@path-grid-spacing-x / 2);
-        }
-
-        &:last-child {
-            text-align: right;
-            margin-left: floor(@path-grid-spacing-x / 2);
+            margin-left: auto;
         }
     }
 }

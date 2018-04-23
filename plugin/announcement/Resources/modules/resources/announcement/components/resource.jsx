@@ -18,8 +18,7 @@ import {actions} from './../actions.js'
 const Resource = props =>
   <ResourcePageContainer
     editor={{
-      opened: props.formOpened,
-      open: '#/add',
+      path: '/add',
       icon: 'fa fa-plus',
       label: trans('add_announce', {}, 'announcement'),
       save: {
@@ -31,9 +30,10 @@ const Resource = props =>
     }}
     customActions={[
       {
+        type: 'link',
         icon: 'fa fa-fw fa-list',
         label: trans('announcements_list', {}, 'announcement'),
-        action: '#/'
+        target: '/'
       }
     ]}
   >
@@ -77,7 +77,6 @@ Resource.propTypes = {
   resetDetail: T.func.isRequired,
 
   formData: T.object,
-  formOpened: T.bool.isRequired,
   formPendingChanges: T.bool.isRequired,
   formValidating: T.bool.isRequired,
   formValid: T.bool.isRequired,
@@ -96,7 +95,6 @@ const AnnouncementResource = connect(
     aggregateId: select.aggregateId(state),
     posts: select.posts(state),
     formPendingChanges: select.formHasPendingChanges(state),
-    formOpened: select.formIsOpened(state),
     formData: select.formData(state),
     formValid: select.formValid(state),
     formValidating: select.formValidating(state),

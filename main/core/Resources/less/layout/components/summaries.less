@@ -1,0 +1,300 @@
+/**
+ * Styles for summary
+ */
+
+
+// -
+// Summary
+// ---
+
+// there is no sizing for xs because it's always 100% in this case
+@path-summary-width-sm:             percentage((6 / @grid-columns));
+@path-summary-width:                percentage((4 / @grid-columns)); // do not affect sm screens : in this case, summary is full screen
+@path-summary-fullscreen-width:     percentage((4 / @grid-columns)); // width of the summary in fullscreen mode (only for md & lg screens)
+@path-summary-collapsed-width:      50px;
+
+@path-summary-font:                 @summary-font;
+@path-summary-padding:              @summary-padding;
+@path-summary-bg:                   @summary-bg;
+@path-summary-color:                @summary-color;
+@path-summary-box-shadow-h:         @summary-box-shadow-h;
+@path-summary-box-shadow-v:         @summary-box-shadow-v;
+@path-summary-lvl-indent:           20px; // indent children of a step in the summary
+
+// Header
+@path-summary-title-color:          @path-summary-color;
+
+// Controls (open/close, pin buttons)
+@path-summary-control-bg:           @summary-link-bg;
+@path-summary-control-color:        @summary-link-color;
+@path-summary-control-hover-bg:     @summary-link-hover-bg;
+@path-summary-control-hover-color:  @summary-link-hover-color;
+@path-summary-control-active-bg:    @summary-link-active-bg;
+@path-summary-control-active-color: @summary-link-active-color;
+
+// Links
+@path-summary-link-bg:              @summary-link-bg;
+@path-summary-link-color:           @summary-link-color;
+@path-summary-link-border-color:    @summary-link-border-color;
+@path-summary-link-hover-bg:        @summary-link-hover-bg;
+@path-summary-link-hover-color:     @summary-link-hover-color;
+@path-summary-link-active-bg:       @summary-link-active-bg;
+@path-summary-link-active-color:    @summary-link-active-color;
+
+.summary-container {
+    position: absolute;
+    overflow-x: hidden;
+    color: @path-summary-color;
+    background: @path-summary-bg;
+    padding: @path-summary-padding;
+    border-radius: @summary-border-radius;
+
+    .summary-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .step-children {
+        padding-left: 0 !important; // flatten all steps
+    }
+
+    &.opened {
+        .summary-title {
+            display: inline-block;
+        }
+
+        .step-children {
+            padding-left: @path-summary-lvl-indent !important;
+        }
+
+        .summary-link {
+            border-bottom-color: @path-summary-link-border-color;
+        }
+    }
+
+    .summary {
+        margin-top: 10px;
+        margin-bottom: 0;
+        padding-left: 0;
+    }
+}
+
+.summary-controls {
+    .summary-control {
+        color: @path-summary-control-color;
+        background: @path-summary-control-bg;
+        padding: 0;
+
+        &:hover {
+            color: @path-summary-control-hover-color;
+            background: @path-summary-control-hover-bg;
+        }
+
+        &.active,
+        &:active,
+        &:focus {
+            color: @path-summary-control-active-color;
+            background: @path-summary-control-active-bg;
+        }
+    }
+}
+
+.summary-title {
+    color: @path-summary-title-color;
+    font-size: @font-size-h3;
+    text-transform: uppercase;
+
+    // remove default h* spacing
+    padding: 0 !important;
+    margin: 0 !important;
+
+    .fa {
+        text-align: center;
+        width: @path-summary-collapsed-width - (@path-summary-padding * 2); // same as step progression
+    }
+}
+
+.summary-link-container {
+    list-style: none;
+    font-size: @path-summary-font;
+
+    .active {
+        .step-progression {
+            color: @path-summary-link-active-color !important; // override status color
+        }
+    }
+
+    .fa {
+        width: @path-summary-collapsed-width - (@path-summary-padding * 2);
+        text-align: center;
+    }
+
+    a,
+    .btn-add,
+    .btn-summary {
+        color: @path-summary-link-color;
+
+        &:hover {
+            color: @path-summary-link-hover-color;
+        }
+
+        &.active,
+        &:active,
+        &:focus {
+            color: @path-summary-link-active-color;
+        }
+    }
+
+    .btn-add,
+    a {
+        border: none;
+        flex: 1;
+        font-size: @path-summary-font; // required to override default button size
+        padding: 10px 0;
+        display: flex;
+        align-items: center;
+    }
+}
+
+.summary-link {
+    background-color: @path-summary-link-bg;
+    border-bottom: 1px solid transparent;
+
+    display: flex;
+    align-items: center;
+    //justify-content: space-between;
+
+    &:hover {
+        background-color: @path-summary-link-hover-bg;
+    }
+}
+
+.step-actions {
+    white-space: nowrap; // avoid buttons to be displayed in column
+    line-height: 2em;
+    vertical-align: middle;
+    margin-left: auto; // move to the right of the flex container
+
+    .btn-summary {
+        padding: 2px;
+    }
+}
+
+// XS screens :
+//   - summary can not be pinned
+//   - closed summary is a bar at the top of the step content
+//   - summary is full width (12 bs cols)
+@media (max-width: @screen-xs-max) {
+    .summary-container {
+        box-shadow: @path-summary-box-shadow-h;
+        height: @path-summary-collapsed-width;
+        overflow: hidden; // hide scrollbar
+
+        // Take full width of the viewport
+        top: 0;
+        left: 0;
+        right: 0;
+
+        // hide tree when closed
+        .summary {
+            display: none;
+        }
+
+        &.opened {
+            overflow: auto;
+            height: 100%; // todo : find better. it can be small if their is no content in the current step
+            bottom: 0;
+
+            .summary {
+                display: block;
+            }
+        }
+
+        + .content-container {
+            margin-top: @path-summary-collapsed-width;
+        }
+    }
+}
+
+// SM screens :
+//   - summary can not be pinned
+//   - closed summary is a bar at the left of the step content
+//   - summary is 50% width (6 bs cols)
+@media (min-width: @screen-sm-min) and (max-width: @screen-sm-max) {
+    .summary-container {
+        box-shadow: @path-summary-box-shadow-v;
+        width: @path-summary-collapsed-width;
+
+        // Take full height of the viewport / content (if taller than than viewport)
+        left: 0;
+        top: @component-margin-bottom;
+        bottom: 0;
+
+        // hide title when closed
+        .summary-title {
+            display: none;
+        }
+
+        &.opened {
+            width: @path-summary-width-sm;
+        }
+
+        + .content-container {
+            margin-left: @path-summary-collapsed-width;
+            padding-left: @grid-gutter-width; // fake bootstrap grid
+        }
+    }
+}
+
+// MD & LG screens :
+//   - summary can be pinned
+//   - closed summary is a bar at the left of the step content
+//   - summary is ~40% width (5 bs cols) by default
+//   - summary is ~33% width (4 bs cols) in fullscreen mode
+@media (min-width: @screen-sm-max) {
+    .summary-container {
+        box-shadow: @path-summary-box-shadow-v;
+        width: @path-summary-collapsed-width;
+
+        // Take full height of the viewport / content (if taller than than viewport)
+        left: 0;
+        top: @component-margin-bottom;
+        bottom: 0;
+
+        // hide title when closed
+        .summary-title {
+            display: none;
+        }
+
+        &.opened {
+            width: @path-summary-width;
+        }
+
+        &.opened.pinned {
+            + .content-container {
+                margin-left: @path-summary-width;
+            }
+        }
+
+        + .content-container {
+            margin-left: @path-summary-collapsed-width;
+            padding-left: @grid-gutter-width; // fake bootstrap grid
+        }
+    }
+
+    .page.fullscreen {
+        .summary-container {
+            &.opened {
+                width: @path-summary-fullscreen-width;
+            }
+
+            &.opened.pinned {
+                + .content-container {
+                    margin-left: @path-summary-fullscreen-width;
+                }
+            }
+        }
+    }
+}

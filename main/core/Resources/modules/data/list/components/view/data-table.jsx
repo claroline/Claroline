@@ -5,7 +5,8 @@ import merge from 'lodash/merge'
 
 import {t} from '#/main/core/translation'
 import {getTypeOrDefault} from '#/main/core/data/index'
-import {getBulkActions, getRowActions, isRowSelected} from '#/main/core/data/list/utils'
+import {getPrimaryAction, getBulkActions, getRowActions, isRowSelected} from '#/main/core/data/list/utils'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
 import {
   Table,
@@ -13,9 +14,9 @@ import {
   TableSortingCell,
   TableRow,
   TableCell
-} from '#/main/core/layout/table/components/table.jsx'
-import {DataListAction, DataListView, DataListProperty} from '#/main/core/data/list/prop-types'
-import {ListActions, ListPrimaryAction, ListBulkActions} from '#/main/core/data/list/components/actions.jsx'
+} from '#/main/core/layout/table/components/table'
+import {DataListView, DataListProperty} from '#/main/core/data/list/prop-types'
+import {ListActions, ListPrimaryAction, ListBulkActions} from '#/main/core/data/list/components/actions'
 
 const DataCell = props => {
   const typeDef = getTypeOrDefault(props.column.type)
@@ -40,22 +41,27 @@ const DataCell = props => {
 
   return (
     <TableCell className={`${props.column.type}-cell`}>
-      <ListPrimaryAction
-        item={props.rowData}
-        action={props.action}
-      >
-        {cellRendering || '-'}
-      </ListPrimaryAction>
+      {props.action &&
+        <ListPrimaryAction
+          className="list-primary-action"
+          action={props.action}
+        >
+          {cellRendering || '-'}
+        </ListPrimaryAction>
+      }
+
+      {!props.action &&
+        (cellRendering || '-')
+      }
     </TableCell>
   )
 }
 
 DataCell.propTypes = {
-  action: T.shape({
-    disabled: T.func,
-    action: T.oneOfType([T.string, T.func]).isRequired
-  }),
   rowData: T.object.isRequired,
+  action: T.shape(
+    ActionTypes.propTypes
+  ),
   column: T.shape(
     DataListProperty.propTypes
   ).isRequired
@@ -81,9 +87,9 @@ const DataTableRow = props => {
         </TableCell>
       }
 
-      {props.columns.map((column, columnIndex) =>
+      {props.columns.map((column) =>
         <DataCell
-          key={`data-cell-${columnIndex}`}
+          key={column.name}
           column={column}
           rowData={props.row}
           action={props.primaryAction && columnAction === column ? props.primaryAction : undefined}
@@ -93,8 +99,7 @@ const DataTableRow = props => {
       {0 < props.actions.length &&
         <TableCell align="right" className="actions-cell">
           <ListActions
-            id={`data-table-item-${props.index}-actions`}
-            item={props.row}
+            id={`data-table-item-${props.row.id}-actions`}
             actions={props.actions}
           />
         </TableCell>
@@ -104,18 +109,18 @@ const DataTableRow = props => {
 }
 
 DataTableRow.propTypes = {
-  index: T.number.isRequired,
-  row: T.object.isRequired,
+  row: T.shape({
+    id: T.string.isRequired
+  }).isRequired,
   columns: T.arrayOf(
     T.shape(DataListProperty.propTypes)
   ).isRequired,
-  primaryAction: T.shape({
-    disabled: T.func,
-    action: T.oneOfType([T.string, T.func]).isRequired
-  }),
-  actions: T.arrayOf(
-    T.shape(DataListAction.propTypes)
+  primaryAction: T.shape(
+    ActionTypes.propTypes
   ),
+  actions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  )),
   selected: T.bool,
   onSelect: T.func
 }
@@ -166,8 +171,10 @@ const DataTable = props =>
           <td colSpan={props.columns.length + (props.selection ? 1:0) + (props.actions ? 1:0) }>
             <ListBulkActions
               count={props.selection.current.length}
-              selectedItems={props.selection.current.map(id => props.data.find(row => id === row.id) || {id: id})}
-              actions={getBulkActions(props.actions)}
+              actions={getBulkActions(
+                props.selection.current.map(id => props.data.find(row => id === row.id) || {id: id}),
+                props.actions
+              )}
             />
           </td>
         </tr>
@@ -175,14 +182,13 @@ const DataTable = props =>
     </thead>
 
     <tbody>
-      {props.data.map((row, rowIndex) =>
+      {props.data.map((row) =>
         <DataTableRow
-          key={`data-row-${rowIndex}`}
-          index={rowIndex}
+          key={row.id}
           row={row}
           columns={props.columns}
-          primaryAction={props.primaryAction}
-          actions={getRowActions(props.actions)}
+          primaryAction={getPrimaryAction(row, props.primaryAction)}
+          actions={getRowActions(row, props.actions)}
           selected={isRowSelected(row, props.selection ? props.selection.current : [])}
           onSelect={
             props.selection ? () => {

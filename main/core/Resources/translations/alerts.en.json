@@ -148,5 +148,33 @@
       "title": "Download failure",
       "message": "We were unable to upload your file."
     }
+  },
+  "publish": {
+    "pending": {
+      "title": "Publishing in progress",
+      "message": "Please wait while we publish your content."
+    },
+    "success": {
+      "title": "Successful publishing",
+      "message": "Your content has been published correctly and is now visible."
+    },
+    "error": {
+      "title": "Publishing failure",
+      "message": "We were unable to publish your content."
+    }
+  },
+  "unpublish": {
+    "pending": {
+      "title": "Unpublish in progress",
+      "message": "Please wait while we unpublish your content."
+    },
+    "success": {
+      "title": "Successful unpublishing",
+      "message": "Your message has been unpublished correctly and is no longer visible."
+    },
+    "error": {
+      "title": "Unpublish failure",
+      "message": "We were unable to unpublish your content."
+    }
   }
 }

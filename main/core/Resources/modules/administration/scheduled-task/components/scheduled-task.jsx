@@ -21,7 +21,6 @@ const ScheduledTaskForm = props => {
       name="task"
       sections={[
         {
-          id: 'general',
           title: trans('general'),
           primary: true,
           fields: [
@@ -50,7 +49,6 @@ const ScheduledTaskForm = props => {
             }
           ]
         }, {
-          id: 'message',
           icon: 'fa fa-fw fa-envelope-o',
           title: trans('message'),
           fields: [
@@ -71,39 +69,36 @@ const ScheduledTaskForm = props => {
         }
       ]}
     >
-    {
-      <FormSections
-        level={3}
-      >
+      <FormSections level={3}>
         <FormSection
-          id="task-users"
           icon="fa fa-fw fa-user"
           title={trans('users')}
           disabled={props.new}
           actions={[
             {
+              type: 'callback',
               icon: 'fa fa-fw fa-plus',
               label: trans('add_users'),
-              action: () => props.pickUsers(props.task.id)
+              callback: () => props.pickUsers(props.task.id)
             }
           ]}
         >
           <DataListContainer
             name="task.users"
-            open={UserList.open}
             fetch={{
               url: ['apiv2_scheduledtask_list_users', {id: props.task.id}],
               autoload: props.task.id && !props.new
             }}
-            delete={{
-              url: ['apiv2_scheduledtask_remove_users', {id: props.task.id}]
-            }}
+            primaryAction={UserList.open}
+            deleteAction={() => ({
+              type: 'url',
+              target: ['apiv2_scheduledtask_remove_users', {id: props.task.id}]
+            })}
             definition={UserList.definition}
             card={UserList.card}
           />
         </FormSection>
       </FormSections>
-      }
     </FormContainer>
   )
 

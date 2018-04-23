@@ -14,7 +14,7 @@ const config = {
   skin: false, // we provide it through theme system
   content_css: [
     // reuse current platform theme for content
-    theme()
+    theme('bootstrap')
   ],
   menubar: true,
   statusbar: true,

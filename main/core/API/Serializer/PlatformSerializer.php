@@ -94,7 +94,6 @@ class PlatformSerializer
             ],
             'theme' => [
                 'name' => $this->config->getParameter('theme'),
-                'main' => 'path_to_bootstrap',
             ],
             'locale' => [
                 'current' => $locale,

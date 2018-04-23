@@ -4,7 +4,7 @@ import {connect} from 'react-redux'
 
 import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/core/translation'
-import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
+import {matchPath, Routes, withRouter} from '#/main/core/router'
 
 import {PageActions} from '#/main/core/layout/page/components/page-actions.jsx'
 import {PageAction} from '#/main/core/layout/page'
@@ -26,12 +26,14 @@ const NotificationTabEditActionsComponent = props =>
       }
       opened={!!matchPath(props.location.pathname, {path: '/notifications/form'})}
       open={{
+        type: 'link',
         icon: 'fa fa-plus',
         label: trans('create_planned_notification', {}, 'planned_notification'),
-        action: '#/notifications/form'
+        target: '/notifications/form'
       }}
       cancel={{
-        action: () => navigate('/notifications')
+        type: 'link',
+        target: '/notifications'
       }}
     />
   </PageActions>

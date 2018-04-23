@@ -20,21 +20,19 @@ const Resource = props => {
     {
       path: '/edit',
       component: Editor,
-      canEnter: () => props.canEdit
+      displayed: props.editable
     }, {
       path: '/play',
       component: Player
+    }, {
+      path: '/',
+      exact: true,
+      component: Overview,
+      displayed: props.path.display.showOverview
     }
   ]
 
-  if (props.path.display.showOverview) {
-    // add overview route
-    routes.push({
-      path: '/',
-      exact: true,
-      component: Overview
-    })
-  } else {
+  if (!props.path.display.showOverview) {
     // redirect to player
     redirect.push({
       from: '/',
@@ -54,14 +52,17 @@ const Resource = props => {
       }}
       customActions={[
         {
+          type: 'link',
           icon: 'fa fa-fw fa-home',
           label: trans('show_overview'),
           displayed: props.path.display.showOverview,
-          action: '#/'
+          target: '/',
+          exact: true
         }, {
+          type: 'link',
           icon: 'fa fa-fw fa-play',
-          label: trans('start_path', {}, 'path'),
-          action: '#/play'
+          label: trans('start', {}, 'actions'),
+          target: '/play'
         }
       ]}
     >
@@ -76,7 +77,7 @@ const Resource = props => {
 
 Resource.propTypes = {
   path: T.object.isRequired,
-  canEdit: T.bool.isRequired,
+  editable: T.bool.isRequired,
   saveEnabled: T.bool.isRequired,
 
   saveForm: T.func.isRequired
@@ -85,7 +86,7 @@ Resource.propTypes = {
 const PathResource = connect(
   (state) => ({
     path: select.path(state),
-    canEdit: resourceSelect.editable(state),
+    editable: resourceSelect.editable(state),
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'pathForm'))
   }),
   (dispatch) => ({

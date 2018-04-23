@@ -135,7 +135,7 @@ class Step
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|StepItem[]
      */
     public function getStepQuestions()
     {

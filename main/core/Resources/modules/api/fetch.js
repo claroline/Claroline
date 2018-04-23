@@ -81,7 +81,7 @@ function handleResponseError(dispatch, responseError, originalRequest, error) {
           authError => {
             error(authError, dispatch)
 
-            return authError
+            return Promise.reject(authError)
           }
         )
     } else {
@@ -89,7 +89,7 @@ function handleResponseError(dispatch, responseError, originalRequest, error) {
         .then(errorData => {
           error(errorData, dispatch)
 
-          return errorData
+          return Promise.reject(errorData)
         })
     }
   }

@@ -53,6 +53,14 @@
     }
 }
 
+.flying-alerts {
+    position: absolute;
+    z-index: @zindex-flying-alerts;
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
 .flying-alert {
     opacity: @flying-alert-opacity;
     display: flex;
@@ -158,14 +166,4 @@
 @keyframes pulse_animation {
     0% { opacity: 1; }
     100% { opacity: .25; }
-}
-
-.flying-alerts {
-    position: absolute;
-    z-index: @zindex-flying-alerts;
-    top: @top-bar-height + @top-bar-border-bottom-size + floor(@grid-gutter-width / 2);
-    right: @grid-gutter-width;
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
 }

@@ -82,39 +82,74 @@
 // -
 // Buttons
 // ---
-
-// expose a mixin to generate button links variant (this is not down by bootstrap)
-.btn-link-variant(@color, @hover-color, @hover-decoration: none) {
-    color: @color;
-    font-weight: normal;
-    border-radius: 0;
+.button-base() {
+    display: inline-block;
+    margin-bottom: 0; // For input.btn
+    font-weight: @btn-font-weight;
+    text-align: center;
+    vertical-align: middle;
+    touch-action: manipulation;
+    cursor: pointer;
+    background-image: none; // Reset unusual Firefox-on-Android default style; see https://github.com/necolas/normalize.css/issues/214
+    border-width: 1px;
+    border-style: solid;
+    white-space: nowrap;
+    .button-size(@padding-base-vertical; @padding-base-horizontal; @font-size-base; @line-height-base; @btn-border-radius-base);
+    .user-select(none);
 
     &,
     &:active,
-    &.active,
-    &[disabled],
-    fieldset[disabled] & {
-        background-color: transparent;
-        .box-shadow(none);
+    &.active {
+        &:focus,
+        &.focus {
+            .tab-focus();
+        }
     }
-    &,
+
     &:hover,
     &:focus,
-    &:active {
-        border-color: transparent;
+    &.focus {
+        text-decoration: none;
     }
+
+    &:active,
+    &.active {
+        outline: 0;
+        background-image: none;
+        .box-shadow(inset 0 3px 5px rgba(0,0,0,.125));
+    }
+
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        cursor: @cursor-disabled;
+        .opacity(.65);
+        .box-shadow(none);
+    }
+
+    a& {
+        &.disabled,
+        fieldset[disabled] & {
+            pointer-events: none; // Future-proof disabling of clicks on `<a>` elements
+        }
+    }
+}
+
+
+// expose a mixin to generate button links variant (this is not down by bootstrap)
+.button-link-variant(@color, @hover-color, @hover-decoration: none) {
+    color: @color;
+
     &:hover,
     &:focus {
         color: @hover-color;
         text-decoration: @hover-decoration;
-        background-color: transparent;
     }
     &[disabled],
     fieldset[disabled] & {
         &:hover,
         &:focus {
             color: @color;
-            text-decoration: none;
         }
     }
 }

@@ -1,12 +1,12 @@
 import React from 'react'
-import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {t} from '#/main/core/translation'
-import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
-import {DropdownButton, MenuItem} from '#/main/core/layout/components/dropdown' // todo reuse ActionDropdownButton
-import {ActionMenuItem} from '#/main/core/layout/action/components/dropdown'
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action'
+import {trans} from '#/main/core/translation'
+
+import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
+import {Button} from '#/main/app/action/components/button'
+import {DropdownButton} from '#/main/app/action/components/dropdown-button'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
 
 /**
  * Base component for each page actions.
@@ -15,47 +15,18 @@ import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action
  * @constructor
  */
 const PageAction = props =>
-  <TooltipAction
-    id={props.id}
-    className={classes('page-action-btn', props.className, {
-      'page-action-default': !props.primary && !props.dangerous,
-      'page-action-primary': props.primary,
-      'page-action-danger': props.dangerous
-    })}
-    position="bottom"
-    icon={props.icon}
-    label={props.title}
-    action={props.action}
-    disabled={props.disabled}
+  <Button
+    {...props}
+    tooltip="bottom"
+    className={classes('page-action-btn', props.className)}
   >
     {props.children}
-  </TooltipAction>
+  </Button>
 
-PageAction.propTypes = {
-  id: T.string.isRequired,
-  primary: T.bool,
-  dangerous: T.bool,
-  title: T.string.isRequired,
-  icon: T.string.isRequired,
-  disabled: T.bool,
-  children: T.node,
-
-  /**
-   * Additional CSS classes.
-   */
+implementPropTypes(PageAction, ActionTypes, {
   className: T.string,
-
-  /**
-   * The target action of the button.
-   */
-  action: T.oneOfType([T.string, T.func]).isRequired
-}
-
-PageAction.defaultProps = {
-  disabled: false,
-  primary: false,
-  dangerous: false
-}
+  children: T.any
+})
 
 /**
  * Toggles fullscreen mode.
@@ -65,13 +36,13 @@ PageAction.defaultProps = {
  */
 const FullScreenAction = props =>
   <PageAction
-    id="page-fullscreen"
-    title={t(props.fullscreen ? 'fullscreen_off' : 'fullscreen_on')}
+    type="callback"
+    label={trans(props.fullscreen ? 'fullscreen_off' : 'fullscreen_on')}
     icon={classes('fa', {
       'fa-expand': !props.fullscreen,
       'fa-compress': props.fullscreen
     })}
-    action={props.toggleFullscreen}
+    callback={props.toggleFullscreen}
   />
 
 FullScreenAction.propTypes = {
@@ -79,106 +50,30 @@ FullScreenAction.propTypes = {
   toggleFullscreen: T.func.isRequired
 }
 
-const MoreAction = props => {
-  // set defaults
-  const actions = props.actions.map(action => Object.assign({}, {
-    displayed: true,
-    disabled: false,
-    dangerous: false
-  }, action))
+const MoreAction = props =>
+  <DropdownButton
+    {...props}
+    tooltip="bottom"
+    className={classes('page-action-btn', props.className)}
+    icon="fa fa-ellipsis-v"
+    label={trans('show_more_actions')}
+    pullRight={true}
+  />
 
-  // filters and groups actions
-  const unclassifiedActions = actions.filter(action => action.displayed && !action.dangerous && !action.group)
-  const dangerousActions = actions.filter(action => action.displayed && action.dangerous)
-
-  // generate actions groups
-  const groupActions = {}
-  for (let i=0; i < actions.length; i++) {
-    const action = actions[i]
-    if (action.displayed && !action.dangerous && !!action.group) {
-      if (!groupActions[action.group]) {
-        groupActions[action.group] = []
-      }
-
-      groupActions[action.group].push(action)
-    }
-  }
-
-  return (
-    <TooltipElement
-      id="page-more-title"
-      position="bottom"
-      tip={t('show_more_actions')}
-    >
-      <DropdownButton
-        id="page-more"
-        title={<span className="action-icon fa fa-ellipsis-v" />}
-        className="page-action-btn page-action-default"
-        noCaret={true}
-        pullRight={true}
-      >
-        {0 !== unclassifiedActions.length &&
-          <MenuItem header={true}>{props.title}</MenuItem>
-        }
-
-        {unclassifiedActions.map((action, actionIndex) =>
-          <ActionMenuItem
-            key={`page-more-${actionIndex}`}
-            {...action}
-          />
-        )}
-
-        {Object.keys(groupActions).map((group, groupIndex) => [
-          <MenuItem key={`page-more-group-${groupIndex}`} header={true}>{group}</MenuItem>,
-          ...groupActions[group].map((action, actionIndex) =>
-            <ActionMenuItem
-              key={`page-more-group-action${actionIndex}`}
-              {...action}
-            />
-          )
-        ])}
-
-        {0 !== dangerousActions.length &&
-          <MenuItem divider />
-        }
-
-        {dangerousActions.map((action, actionIndex) =>
-          <ActionMenuItem
-            key={`page-more-dangerous-${actionIndex}`}
-            {...action}
-          />
-        )}
-
-      </DropdownButton>
-    </TooltipElement>
-  )
-}
-
-MoreAction.propTypes = {
-  title: T.string,
-  actions: T.arrayOf(T.shape({
-    icon: T.string,
-    label: T.string.isRequired,
-    action: T.oneOfType([T.string, T.func]).isRequired,
-    group: T.string,
-    dangerous: T.bool,
-    displayed: T.bool,
-    disabled: T.bool
-  })).isRequired
-}
-
-MoreAction.defaultProps = {
-  title: t('more_actions')
-}
+implementPropTypes(MoreAction, DropdownButton, {}, {
+  menuLabel: trans('more_actions')
+})
 
 /**
  * Groups some actions together.
+ *
+ * @todo groups should be named
  *
  * @param props
  * @constructor
  */
 const PageGroupActions = props =>
-  <div className={classes('page-actions-group', props.className)}>
+  <div role="toolbar" className={classes('page-actions-group', props.className)}>
     {props.children}
   </div>
 
@@ -194,7 +89,7 @@ PageGroupActions.propTypes = {
  * @constructor
  */
 const PageActions = props =>
-  <nav className={classes('page-actions', props.className)}>
+  <nav role="menubar" className={classes('page-actions', props.className)}>
     {props.children}
   </nav>
 

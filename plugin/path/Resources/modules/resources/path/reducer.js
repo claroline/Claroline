@@ -7,9 +7,13 @@ import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
 import {
   SUMMARY_PIN_TOGGLE,
-  SUMMARY_OPEN_TOGGLE,
-  STEP_UPDATE_USER_PROGRESSION_STATUS
+  SUMMARY_OPEN_TOGGLE
 } from '#/plugin/path/resources/path/actions'
+import {
+  STEP_ENABLE_NAVIGATION,
+  STEP_DISABLE_NAVIGATION,
+  STEP_UPDATE_PROGRESSION
+} from '#/plugin/path/resources/path/player/actions'
 
 import {reducer as editorReducer} from '#/plugin/path/resources/path/editor/reducer'
 import {getStepPath} from '#/plugin/path/resources/path/editor/utils'
@@ -23,12 +27,16 @@ const reducer = makeResourceReducer({}, {
       [SUMMARY_OPEN_TOGGLE]: (state) => !state
     })
   }),
+  navigationEnabled: makeReducer(true, {
+    [STEP_ENABLE_NAVIGATION]: () => true,
+    [STEP_DISABLE_NAVIGATION]: () => false
+  }),
   pathForm: editorReducer.pathForm,
   resourcesPicker: editorReducer.resourcesPicker,
   path: makeReducer({}, {
     // replaces path data after success updates
     [FORM_SUBMIT_SUCCESS+'/pathForm']: (state, action) => action.updatedData,
-    [STEP_UPDATE_USER_PROGRESSION_STATUS]: (state, action) => {
+    [STEP_UPDATE_PROGRESSION]: (state, action) => {
       const newState = cloneDeep(state)
       const stepPath = getStepPath(action.stepId, newState.steps, 0, [])
 

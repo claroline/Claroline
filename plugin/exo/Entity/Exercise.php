@@ -543,7 +543,7 @@ class Exercise extends AbstractResource
     }
 
     /**
-     * @return ArrayCollection
+     * @return ArrayCollection|Step[]
      */
     public function getSteps()
     {

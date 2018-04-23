@@ -108,7 +108,6 @@ class VideoPlayerListener
         $content = $this->templating->render(
             'ClarolineVideoPlayerBundle::video.html.twig',
             [
-                'workspace' => $event->getResource()->getResourceNode()->getWorkspace(),
                 '_resource' => $event->getResource(),
                 'tracks' => array_map(function (Track $track) {
                     return $this->trackSerializer->serialize($track);

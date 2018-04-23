@@ -3,7 +3,7 @@ import cloneDeep from 'lodash/cloneDeep'
 // TODO : this 3 methods should be moved in a `role` module
 const roleAnonymous = () => 'ROLE_ANONYMOUS'
 const roleUser = () => 'ROLE_USER'
-const roleWorkspaceUser = (workspace, admin = false) => (admin ? 'ROLE_WS_MANAGER_':'ROLE_WS_COLLABORATOR_')+workspace.id
+const roleWorkspace = (workspace, admin = false) => (admin ? 'ROLE_WS_MANAGER_':'ROLE_WS_COLLABORATOR_')+workspace.id
 
 /**
  * Gets standard roles that have permissions on the ResourceNode.
@@ -14,7 +14,7 @@ const roleWorkspaceUser = (workspace, admin = false) => (admin ? 'ROLE_WS_MANAGE
 const standardRoles = (workspace = null) => {
   const roles = [roleAnonymous(), roleUser()]
   if (workspace) {
-    roles.push(roleWorkspaceUser(workspace))
+    roles.push(roleWorkspace(workspace))
   }
 
   return roles
@@ -83,7 +83,7 @@ const getSimpleAccessRule = (perms, workspace = null) => {
     if (users.open) {
       return 'user'
     } else {
-      const wsUsers = findRolePermissions(roleWorkspaceUser(workspace), perms)
+      const wsUsers = findRolePermissions(roleWorkspace(workspace), perms)
       if (wsUsers.open) {
         return 'workspace'
       } else {
@@ -97,7 +97,7 @@ const setSimpleAccessRule = (perms, rule, workspace = null) => {
   // Retrieve and duplicates standard roles
   const anonymous = cloneDeep(perms[roleAnonymous()])
   const users     = cloneDeep(perms[roleUser()])
-  const wsUsers   = cloneDeep(perms[roleWorkspaceUser(workspace)])
+  const wsUsers   = cloneDeep(perms[roleWorkspace(workspace)])
 
   switch (rule) {
     case 'all':
@@ -125,14 +125,14 @@ const setSimpleAccessRule = (perms, rule, workspace = null) => {
   return Object.assign({}, perms, {
     [roleAnonymous()]: anonymous,
     [roleUser()]: users,
-    [roleWorkspaceUser(workspace)]: wsUsers
+    [roleWorkspace(workspace)]: wsUsers
   })
 }
 
 export {
   roleAnonymous,
   roleUser,
-  roleWorkspaceUser,
+  roleWorkspace,
   findRolePermissions,
   hasCustomRules,
   getSimpleAccessRule,

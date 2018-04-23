@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/core/scaffolding/bootstrap'
+import {bootstrap} from '#/main/app/bootstrap'
 
 // reducers
 import {makeResourceReducer} from '#/main/core/resource/reducer'

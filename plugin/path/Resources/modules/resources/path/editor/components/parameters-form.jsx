@@ -15,7 +15,6 @@ const ParametersForm = props =>
     className="content-container"
     sections={[
       {
-        id: 'overview',
         icon: 'fa fa-fw fa-home',
         title: trans('overview'),
         fields: [
@@ -34,7 +33,6 @@ const ParametersForm = props =>
           }
         ]
       }, {
-        id: 'display',
         icon: 'fa fa-fw fa-desktop',
         title: trans('display_parameters'),
         fields: [

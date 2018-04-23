@@ -13,7 +13,6 @@ const Organization = () =>
     name="user"
     sections={[
       {
-        id: 'general',
         title: trans('general'),
         primary: true,
         fields: [
@@ -40,7 +39,7 @@ const Organization = () =>
         ]
       }
     ]}
-/>
+  />
 
 export {
   Organization

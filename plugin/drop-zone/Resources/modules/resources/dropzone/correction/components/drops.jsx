@@ -22,9 +22,10 @@ const DropsList = props =>
         url: ['claro_dropzone_drops_search', {id: props.dropzone.id}],
         autoload: true
       }}
-      open={{
-        action: (row) => `#/drop/${row.id}`
-      }}
+      primaryAction={(row) => ({
+        type: 'link',
+        target: `#/drop/${row.id}`
+      })}
       definition={[
         {
           name: 'user',
@@ -85,23 +86,26 @@ const DropsList = props =>
           }
         }
       ]}
-      actions={[
+      actions={(rows) => [
         {
+          type: 'callback',
           icon: 'fa fa-fw fa-unlock',
           label: trans('unlock_drop', {}, 'dropzone'),
-          displayed: (rows) => !rows[0].unlockedDrop,
-          action: (rows) => props.unlockDrop(rows[0].id),
+          displayed: !rows[0].unlockedDrop,
+          callback: () => props.unlockDrop(rows[0].id),
           context: 'row' // todo should be selection action too
         }, {
+          type: 'callback',
           icon: 'fa fa-fw fa-undo',
           label: trans('cancel_drop_submission', {}, 'dropzone'),
-          displayed: (rows) => rows[0].finished,
-          action: (rows) => props.cancelDrop(rows[0].id),
+          displayed: rows[0].finished,
+          callback: (rows) => props.cancelDrop(rows[0].id),
           context: 'row' // todo should be selection action too
         }, {
+          type: 'callback',
           icon: 'fa fa-fw fa-download',
           label: trans('download', {}, 'platform'),
-          action: (rows) => props.downloadDrops(rows)
+          callback: () => props.downloadDrops(rows)
         }
       ]}
     />

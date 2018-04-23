@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {navigate, matchPath, Routes, withRouter} from '#/main/core/router'
+import {matchPath, Routes, withRouter} from '#/main/core/router'
 import {currentUser} from '#/main/core/user/current'
 
 import {MODAL_DATA_PICKER} from '#/main/core/data/list/modals'
@@ -33,12 +33,15 @@ const UserTabActionsComponent = props =>
         }
         opened={!!matchPath(props.location.pathname, {path: '/users/form'})}
         open={{
+          type: 'link',
           label: trans('create_user'),
-          action: '#/users/form',
+          target: '/users/form',
           primary: false
         }}
         cancel={{
-          action: () => navigate('/users')
+          type: 'link',
+          target: '/users',
+          exact: true
         }}
       />
     }
@@ -46,7 +49,8 @@ const UserTabActionsComponent = props =>
     {!matchPath(props.location.pathname, {path: '/users/form'}) &&
       <PageAction
         id="add-role"
-        title={trans('register_users')}
+        type="callback"
+        label={trans('register_users')}
         icon="fa fa-plus"
         action={() => props.register(props.workspace)}
         primary={true}

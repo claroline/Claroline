@@ -2,8 +2,8 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {t} from '#/main/core/translation'
-import {copyToClipboard} from '#/main/core/copy-text-to-clipboard'
+import {trans} from '#/main/core/translation'
+import {copy} from '#/main/core/scaffolding/clipboard'
 import {PageContent} from '#/main/core/layout/page'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
@@ -14,9 +14,10 @@ const Image = props =>
   <ResourcePageContainer
     customActions={[
       {
+        type: 'callback',
         icon: 'fa fa-fw fa-clipboard',
-        label: t('copy_permalink_to_clipboard'),
-        action: () => copyToClipboard(props.url)
+        label: trans('copy_permalink_to_clipboard'),
+        callback: () => copy(props.url)
       }
     ]}
   >

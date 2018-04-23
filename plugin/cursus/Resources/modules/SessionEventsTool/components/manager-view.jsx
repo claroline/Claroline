@@ -161,9 +161,10 @@ class ManagerView extends Component {
           <DataList
             data={this.props.events}
             totalResults={this.props.total}
-            primaryAction={{
-              action: (rowData) => `#event/${rowData.id}`
-            }}
+            primaryAction={(row) => ({
+              type: 'link',
+              target: `event/${row.id}`
+            })}
             definition={[
               {
                 name: 'name',
@@ -207,24 +208,32 @@ class ManagerView extends Component {
                   ''
               }
             ]}
-            actions={[
+            actions={(rows) => [
               {
+                type: 'callback',
                 icon: 'fa fa-fw fa-edit',
                 label: t('edit'),
-                action: (row) => this.showEventEditionForm(row)
+                callback: () => this.showEventEditionForm(rows[0]),
+                context: 'row'
               }, {
+                type: 'callback',
                 icon: 'fa fa-fw fa-info',
                 label: trans('informations_management', {}, 'cursus'),
-                action: (row) => this.showEventCommentsManagement(row)
+                callback: () => this.showEventCommentsManagement(rows[0]),
+                context: 'row'
               }, {
+                type: 'callback',
                 icon: 'fa fa-fw fa-files-o',
                 label: trans('repeat_session_event', {}, 'cursus'),
-                action: (row) => this.showEventRepeatForm(row)
+                callback: () => this.showEventRepeatForm(rows[0]),
+                context: 'row'
               }, {
+                type: 'callback',
                 icon: 'fa fa-fw fa-trash-o',
                 label: t('delete'),
-                action: (row) => this.deleteSessionEvent(row),
-                dangerous: true
+                callback: () => this.deleteSessionEvent(rows[0]),
+                dangerous: true,
+                context: 'row'
               }
             ]}
             filters={{

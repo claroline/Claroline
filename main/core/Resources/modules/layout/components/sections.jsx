@@ -6,8 +6,10 @@ import omit from 'lodash/omit'
 import Panel      from 'react-bootstrap/lib/Panel'
 import PanelGroup from 'react-bootstrap/lib/PanelGroup'
 
-import {Action as ActionTypes} from '#/main/core/layout/action/prop-types'
-import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
+import {toKey} from '#/main/core/scaffolding/text/utils'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {Button} from '#/main/app/action/components/button'
+import {Heading} from '#/main/core/layout/components/heading'
 
 /**
  * Renders a section.
@@ -24,48 +26,48 @@ const Section = props =>
       'panel-disabled': props.disabled
     })}
     header={
-      React.createElement('h'+props.level, {
-        className: classes(props.displayLevel && `h${props.displayLevel}`,{
+      <Heading
+        level={props.level}
+        displayLevel={props.displayLevel}
+        className={classes({
           opened: !props.disabled && props.expanded
-        })
-      }, [
+        })}
+      >
         <span
-          key="panel-icon"
-          className={classes(props.icon, {
+          className={classes('icon-with-text-right', props.icon, {
             'fa fa-fw fa-caret-down': !props.icon && !props.disabled && props.expanded,
             'fa fa-fw fa-caret-right': !props.icon && (props.disabled || !props.expanded)
           })}
-          style={{marginRight: 10}}
-        />,
-        props.title,
-        0 !== props.actions.length &&
-        <div key="panel-actions" className="panel-actions">
-          {props.actions.map((action, actionIndex) =>
-            <TooltipAction
-              {...action}
-              key={`${props.id}-action-${actionIndex}`}
-              id={`${props.id}-action-${actionIndex}`}
-              disabled={!!action.disabled || props.disabled}
-              className={classes({
-                'btn-link-default': !action.primary && !action.dangerous,
-                'btn-link-danger': action.dangerous,
-                'btn-link-primary': action.primary
-              })}
-            />
-          )}
-        </div>
-      ])
+          aria-hidden={true}
+        />
+
+        {props.title}
+
+        {0 !== props.actions.length &&
+          <div className="panel-actions">
+            {props.actions.map((action) =>
+              <Button
+                {...action}
+                key={`${toKey(props.title)}-${toKey(action.label)}`}
+                disabled={!!action.disabled || props.disabled}
+                className="btn btn-link"
+                tooltip="top"
+              />
+            )}
+          </div>
+        }
+      </Heading>
     }
   >
     {props.children}
   </Panel>
+
 Section.propTypes = {
   className: T.string,
-  id: T.string.isRequired,
   level: T.number.isRequired,
   displayLevel: T.number,
   icon: T.string,
-  title: T.node.isRequired,
+  title: T.string.isRequired,
   expanded: T.bool,
   disabled: T.bool,
   actions: T.arrayOf(T.shape(
@@ -87,8 +89,8 @@ const Sections = props =>
   >
     {React.Children.map(props.children, (child) => !child || 'hr' === child.type ? child :
       React.cloneElement(child, {
-        key: child.props.id,
-        eventKey: child.props.id,
+        key: toKey(child.props.title),
+        eventKey: toKey(child.props.title),
         level: props.level,
         displayLevel: props.displayLevel
       })

@@ -4,11 +4,12 @@ namespace Innova\PathBundle\Manager;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\CoreBundle\Manager\RightsManager;
+use Innova\PathBundle\Entity\InheritedResource;
 use Innova\PathBundle\Entity\Path\Path;
+use Innova\PathBundle\Entity\SecondaryResource;
+use Innova\PathBundle\Entity\Step;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
 /**
  * Manages life cycle of paths.
@@ -17,117 +18,36 @@ use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
  */
 class PathManager
 {
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     private $om;
 
-    /**
-     * @var AuthorizationCheckerInterface
-     */
-    private $authorization;
-
-    /**
-     * @var StepManager
-     */
-    private $stepManager;
-
-    /**
-     * @var PlatformConfigurationHandler
-     */
+    /** @var PlatformConfigurationHandler */
     private $platformConfig;
 
-    /**
-     * @var RightsManager
-     */
-    protected $rightsManager;
+    /** @var RightsManager */
+    private $rightsManager;
 
     /**
      * PathManager constructor.
      *
      * @DI\InjectParams({
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
-     *     "authorization"  = @DI\Inject("security.authorization_checker"),
-     *     "stepManager"    = @DI\Inject("innova_path.manager.step"),
      *     "platformConfig" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "rightsManager"  = @DI\Inject("claroline.manager.rights_manager")
      * })
      *
-     * @param ObjectManager                 $om
-     * @param AuthorizationCheckerInterface $authorization
-     * @param StepManager                   $stepManager
-     * @param PlatformConfigurationHandler  $platformConfig
-     * @param RightsManager                 $rightsManager
+     * @param ObjectManager                $om
+     * @param PlatformConfigurationHandler $platformConfig
+     * @param RightsManager                $rightsManager
      */
     public function __construct(
         ObjectManager $om,
-        AuthorizationCheckerInterface $authorization,
-        StepManager $stepManager,
         PlatformConfigurationHandler $platformConfig,
         RightsManager $rightsManager
     ) {
         $this->om = $om;
-        $this->authorization = $authorization;
-        $this->stepManager = $stepManager;
         $this->platformConfig = $platformConfig;
         $this->rightsManager = $rightsManager;
-    }
-
-    public function canEdit(Path $path)
-    {
-        $collection = new ResourceCollection([$path->getResourceNode()]);
-
-        return $this->authorization->isGranted('ADMINISTRATE', $collection);
-    }
-
-    /**
-     * Edit existing path.
-     *
-     * @param Path $path
-     *
-     * @return Path
-     */
-    public function edit(Path $path)
-    {
-        // Check if JSON structure is built
-        $structure = $path->getStructure();
-
-        if (empty($structure)) {
-            // Initialize path structure
-            $path->initializeStructure();
-        }
-
-        // Set path as modified (= need publishing to be able to play path with new modifs)
-        $path->setModified(true);
-        $this->om->persist($path);
-
-        // Update resource node if needed
-        $resourceNode = $path->getResourceNode();
-        if ($path->getName() !== $resourceNode->getName()) {
-            // Path name as changed => rename linked resource node
-            $resourceNode->setName($path->getName());
-            $this->om->persist($resourceNode);
-        }
-
-        $this->om->flush();
-
-        return $path;
-    }
-
-    /**
-     * Delete path.
-     *
-     * @param Path $path
-     *
-     * @return bool
-     *
-     * @throws \Exception
-     */
-    public function delete(Path $path)
-    {
-        // User can delete current path
-        $this->om->remove($path->getResourceNode());
-        $this->om->flush();
     }
 
     public function export(Path $path, array &$files)
@@ -160,7 +80,7 @@ class PathManager
         if ($path->isPublished()) {
             $stepsData = [];
             foreach ($path->getSteps() as $step) {
-                $stepsData[] = $this->stepManager->export($step);
+                $stepsData[] = $this->exportStep($step);
             }
 
             $data['steps'] = $stepsData;
@@ -198,7 +118,7 @@ class PathManager
         if (!empty($stepData)) {
             $createdSteps = [];
             foreach ($stepData as $step) {
-                $createdSteps = $this->stepManager->import($path, $step, $resourcesCreated, $createdSteps);
+                $createdSteps = $this->importStep($path, $step, $resourcesCreated, $createdSteps);
             }
         }
 
@@ -206,21 +126,6 @@ class PathManager
         $path->setStructure($structure);
 
         return $path;
-    }
-
-    /**
-     * Get list of users who have called for unlock.
-     *
-     * @param Path $path
-     *
-     * @return mixed
-     */
-    public function getPathLockedProgression(Path $path)
-    {
-        $results = $this->om->getRepository('InnovaPathBundle:UserProgression')
-            ->findByPathAndLockedStep($path);
-
-        return $results;
     }
 
     /**
@@ -238,6 +143,8 @@ class PathManager
             if ($primaryResource) {
                 $resourceNodes[$primaryResource->getGuid()] = $primaryResource;
             }
+
+            /** @var SecondaryResource $secondaryResource */
             foreach ($step->getSecondaryResources() as $secondaryResource) {
                 $resource = $secondaryResource->getResource();
                 $resourceNodes[$resource->getGuid()] = $resource;
@@ -255,5 +162,88 @@ class PathManager
             }
         }
         $this->om->endFlushSuite();
+    }
+
+    /**
+     * Transform Step data to export it.
+     *
+     * @param Step $step
+     *
+     * @return array
+     */
+    public function exportStep(Step $step)
+    {
+        $parent = $step->getParent();
+        $activity = $step->getActivity();
+
+        $data = [
+            'uid' => $step->getId(),
+            'parent' => !empty($parent) ? $parent->getId() : null,
+            'activityId' => !empty($activity) ? $activity->getId() : null,
+            'activityNodeId' => !empty($activity) ? $activity->getResourceNode()->getId() : null,
+            'order' => $step->getOrder(),
+            'lvl' => $step->getLvl(),
+            'inheritedResources' => [],
+        ];
+
+        $inheritedResources = $step->getInheritedResources();
+        foreach ($inheritedResources as $inherited) {
+            $data['inheritedResources'][] = [
+                'resource' => $inherited->getResource()->getId(),
+                'lvl' => $inherited->getLvl(),
+            ];
+        }
+
+        return $data;
+    }
+
+    /**
+     * Import a Step.
+     *
+     * @param Path  $path
+     * @param array $data
+     * @param array $createdResources
+     * @param array $createdSteps
+     *
+     * @return array
+     */
+    public function importStep(Path $path, array $data, array $createdResources = [], array $createdSteps = [])
+    {
+        $step = new Step();
+
+        $step->setPath($path);
+        if (!empty($data['parent'])) {
+            $step->setParent($createdSteps[$data['parent']]);
+        }
+
+        $step->setLvl($data['lvl']);
+        $step->setOrder($data['order']);
+        $step->setActivityHeight(0);
+
+        // Link Step to its Activity
+        if (!empty($data['activityNodeId']) && !empty($createdResources[$data['activityNodeId']])) {
+            // Step has an Activity
+            $step->setActivity($createdResources[$data['activityNodeId']]);
+        }
+
+        if (!empty($data['inheritedResources'])) {
+            foreach ($data['inheritedResources'] as $inherited) {
+                if (!empty($createdResources[$inherited['resource']])) {
+                    // Check if the resource has been created (in case of the Resource has no Importer, it may not exist)
+                    $inheritedResource = new InheritedResource();
+                    $inheritedResource->setLvl($inherited['lvl']);
+                    $inheritedResource->setStep($step);
+                    $inheritedResource->setResource($createdResources[$inherited['resource']]->getResourceNode());
+
+                    $this->om->persist($inheritedResource);
+                }
+            }
+        }
+
+        $createdSteps[$data['uid']] = $step;
+
+        $this->om->persist($step);
+
+        return $createdSteps;
     }
 }

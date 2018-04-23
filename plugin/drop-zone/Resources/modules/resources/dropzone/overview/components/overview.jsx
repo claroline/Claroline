@@ -57,16 +57,19 @@ const OverviewComponent = props =>
     actions={[
       // todo add show Drop
       {
+        type: !props.myDrop ? 'callback' : 'link',
         icon: 'fa fa-fw fa-upload icon-with-text-right',
         label: trans(!props.myDrop ? 'start_evaluation' : (!props.myDrop.finished ? 'continue_evaluation' : 'show_evaluation'), {}, 'dropzone'),
-        action: !props.myDrop ? () => props.startDrop(props.dropzone.id, props.dropzone.parameters.dropType, props.teams) : '#/my/drop',
+        target: props.myDrop ? '/my/drop' : undefined,
+        callback: !props.myDrop ? () => props.startDrop(props.dropzone.id, props.dropzone.parameters.dropType, props.teams) : undefined,
         primary: !props.myDrop || !props.myDrop.finished,
         disabled: !props.dropEnabled,
         disabledMessages: props.dropDisabledMessages
       }, {
+        type: 'link',
         icon: 'fa fa-fw fa-check-square-o icon-with-text-right',
         label: trans('correct_a_copy', {}, 'dropzone'),
-        action: '#/peer/drop',
+        target: '/peer/drop',
         primary: props.myDrop && props.myDrop.finished,
         disabled: !props.peerReviewEnabled,
         disabledMessages: props.peerReviewDisabledMessages

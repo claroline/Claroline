@@ -1,15 +1,3 @@
-# API
-innova_path_api:
-    resource: "@InnovaPathBundle/Controller/Api/"
-    type:     annotation
-    prefix:   /api
-
-# Resource
-innova_path_resource:
-    resource: "@InnovaPathBundle/Controller/Resource/"
-    type:     annotation
-    prefix:   /
-
 # Widgets
 innova_path_widgets:
     resource: "@InnovaPathBundle/Controller/Widget/"
@@ -17,8 +5,8 @@ innova_path_widgets:
     prefix:   /
 
 # JSON API
-innova_path_api_new:
-    resource: "@InnovaPathBundle/Controller/APINew/"
+innova_path_api:
+    resource: "@InnovaPathBundle/Controller/API/"
     prefix: apiv2
     type: api
     options:

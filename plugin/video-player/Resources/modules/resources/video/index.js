@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/core/scaffolding/bootstrap'
+import {bootstrap} from '#/main/app/bootstrap'
 import {registerModals} from '#/main/core/layout/modal'
 
 import {reducer} from '#/plugin/video-player/resources/video/reducer'

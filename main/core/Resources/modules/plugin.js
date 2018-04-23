@@ -6,7 +6,11 @@ const CORE_PLUGIN = 'core'
  */
 const coreConfiguration = {
   actions: [],
-  resources: [],
+  resources: {
+    'text': () => { return import(/* webpackChunkName: "core-text-resource" */ '#/main/core/resources/text') },
+    // todo move me inside exo plugin
+    'ujm_exercise': () => { return import(/* webpackChunkName: "plugin-exo-quiz-resource" */ '#/plugin/exo/resources/quiz') }
+  },
   tools: [],
   widgets: {
     'list': () => { return import(/* webpackChunkName: "core-resource-list-widget" */ '#/main/core/widget/types/list') },

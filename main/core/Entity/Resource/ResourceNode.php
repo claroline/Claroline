@@ -114,6 +114,15 @@ class ResourceNode
     protected $icon;
 
     /**
+     * Display resource icon/evaluation when the resource is rendered.
+     *
+     * @var bool
+     *
+     * @ORM\Column(type="boolean", options={"default": 1})
+     */
+    private $showIcon = true;
+
+    /**
      * @var ResourceThumbnail
      *
      * @ORM\OneToOne(
@@ -555,6 +564,16 @@ class ResourceNode
     public function setIcon(ResourceIcon $icon)
     {
         $this->icon = $icon;
+    }
+
+    public function getShowIcon()
+    {
+        return $this->showIcon;
+    }
+
+    public function setShowIcon($showIcon)
+    {
+        $this->showIcon = $showIcon;
     }
 
     /**

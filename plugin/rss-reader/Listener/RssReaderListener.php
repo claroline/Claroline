@@ -102,8 +102,9 @@ class RssReaderListener
 
     private function getRssContent($rssConfig, $widgetId)
     {
+        $ctx = stream_context_create(['http' => ['timeout' => 2]]);
         // TODO : handle feed format exception...
-        $data = file_get_contents($rssConfig->getUrl());
+        $data = file_get_contents($rssConfig->getUrl(), false, $ctx);
         $content = strstr($data, '<?xml');
 
         if (!$content && 0 === strpos($data, '<rss')) {

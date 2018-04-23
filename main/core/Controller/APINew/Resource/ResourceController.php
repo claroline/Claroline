@@ -84,7 +84,7 @@ class ResourceController
 
         /** @var LoadResourceEvent $event */
         $event = $this->dispatcher->dispatch(
-            'open_'.$type,
+            'load_'.$type,
             'Resource\LoadResource',
             [$this->resourceManager->getResourceFromNode($node)]
         );
@@ -95,7 +95,7 @@ class ResourceController
         return new JsonResponse(
             array_merge([
                 'resourceNode' => $this->serializer->serialize($node),
-                'userEvaluation' => null, // todo flag evaluated resource types and auto load Evaluation if any
+                'evaluation' => null, // todo flag evaluated resource types and auto load Evaluation if any
             ], $event->getAdditionalData())
         );
     }

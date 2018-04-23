@@ -8,6 +8,8 @@ import {displayDate} from '#/main/core/scaffolding/date'
 import {DataCard} from '#/main/core/data/components/data-card'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 
+import {UserMicro} from '#/main/core/user/components/micro'
+
 const ResourceCard = props =>
   <DataCard
     {...props}
@@ -21,7 +23,19 @@ const ResourceCard = props =>
       props.data.social && ['fa fa-fw fa-thumbs-up', trans('resource_likes', {}, 'resource'), props.data.social.likes]
     ]}
     contentText={props.data.meta.description}
-    footer={trans('published_at', {date: displayDate(props.data.meta.created, false, true)})}
+    footer={
+      <span
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <UserMicro {...props.data.meta.creator} />
+
+        {trans('published_at', {date: displayDate(props.data.meta.created, false, true)})}
+      </span>
+    }
   />
 
 ResourceCard.propTypes = {

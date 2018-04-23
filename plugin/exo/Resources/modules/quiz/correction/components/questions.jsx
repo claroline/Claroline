@@ -10,7 +10,7 @@ export const QuestionRow = props =>
   <tr>
     <td>{props.question.title || props.question.content}</td>
     <td>{props.answers.length}</td>
-    <td className="table-actions text-right">
+    <td className="actions-cell text-right">
       <TooltipElement
         id={props.question.id}
         tip={tex('to_correct')}

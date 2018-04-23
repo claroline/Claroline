@@ -1,5 +1,4 @@
 import React from 'react'
-import isEmpty from 'lodash/isEmpty'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
@@ -27,8 +26,7 @@ import {PeerDrop} from '#/plugin/drop-zone/resources/dropzone/player/components/
 const Resource = props =>
   <ResourcePageContainer
     editor={{
-      opened: props.editorOpened,
-      open: '#/edit',
+      path: '/edit',
       label: trans('configure', {}, 'platform'),
       save: {
         disabled: !props.saveEnabled,
@@ -37,23 +35,27 @@ const Resource = props =>
     }}
     customActions={[
       {
+        type: 'link',
         icon: 'fa fa-fw fa-home',
         label: trans('show_overview'),
-        action: '#/'
+        target: '/'
       }, {
+        type: 'link',
         icon: 'fa fa-fw fa-upload',
         label: trans('show_evaluation', {}, 'dropzone'),
-        action: '#/my/drop',
+        target: '/my/drop',
         displayed: !!props.myDrop
       }, {
+        type: 'link',
         icon: 'fa fa-fw fa-list',
         label: trans('show_drops', {}, 'dropzone'),
-        action: '#/drops',
+        target: '/drops',
         displayed: props.canEdit
       }, {
+        type: 'link',
         icon: 'fa fa-fw fa-users',
         label: trans('correctors', {}, 'dropzone'),
-        action: '#/correctors',
+        target: '/correctors',
         displayed: props.canEdit && constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType
       }
     ]}
@@ -108,7 +110,6 @@ const Resource = props =>
 Resource.propTypes = {
   canEdit: T.bool.isRequired,
   dropzone: T.object.isRequired,
-  editorOpened: T.bool.isRequired,
   saveEnabled: T.bool.isRequired,
   myDrop: T.object,
 
@@ -125,7 +126,6 @@ const DropzoneResource = connect(
   (state) => ({
     canEdit: resourceSelect.editable(state),
     dropzone: state.dropzone,
-    editorOpened: !isEmpty(formSelect.data(formSelect.form(state, 'dropzoneForm'))),
     saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'dropzoneForm')),
     myDrop: select.myDrop(state)
   }),

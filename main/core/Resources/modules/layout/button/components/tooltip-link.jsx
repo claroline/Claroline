@@ -3,8 +3,8 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element.jsx'
-// TODO : find why I can't use the custom Link component (tooltip is not triggered if used)
-/*import {Link} from '#/main/core/layout/button/components/link.jsx'*/
+
+// @deprecated use Button from `#/main/app/action`
 
 /**
  * Link with tooltip.
@@ -22,11 +22,9 @@ const TooltipLink = props =>
     <a
       href={!props.disabled ? props.target : ''}
       disabled={props.disabled}
-      className={classes(
-        'btn',
-        props.className,
-        {disabled: props.disabled}
-      )}
+      className={classes('btn', props.className, {
+        disabled: props.disabled
+      })}
     >
       {props.children}
     </a>

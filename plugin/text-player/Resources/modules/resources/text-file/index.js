@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/core/scaffolding/bootstrap'
+import {bootstrap} from '#/main/app/bootstrap'
 
 // reducers
 import {reducer} from '#/plugin/text-player/resources/text-file/reducer'

@@ -17,19 +17,21 @@ import {LocationList} from '#/main/core/administration/user/location/components/
 const LocationsList = props =>
   <DataListContainer
     name="locations.list"
-    open={LocationList.open}
     fetch={{
       url: ['apiv2_location_list'],
       autoload: true
     }}
-    delete={{
-      url: ['apiv2_location_delete_bulk']
-    }}
     definition={LocationList.definition}
-    actions={[{
+    primaryAction={LocationList.open}
+    deleteAction={() => ({
+      type: 'url',
+      target: ['apiv2_location_delete_bulk']
+    })}
+    actions={(rows) => [{
+      type: 'callback',
       icon: 'fa fa-fw fa-map-marker',
       label: t('geolocate'),
-      action: (rows) => props.geolocate(rows[0]),
+      callback: () => props.geolocate(rows[0]),
       context: 'row' // todo should be available in selection mode too
     }]}
     card={LocationList.card}

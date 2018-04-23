@@ -2,7 +2,6 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
-import {generateUrl} from '#/main/core/api/router'
 import {trans} from '#/main/core/translation'
 import {User} from '#/main/core/user/prop-types'
 import {ResourceUserEvaluation} from '#/main/core/user/tracking/prop-types'
@@ -15,13 +14,15 @@ const TrackingComponent = props =>
   <UserPageContainer
     customActions={[
       {
+        type: 'url',
         icon: 'fa fa-fw fa-id-card-o',
         label: trans('show_profile', {}, 'platform'),
-        action: generateUrl('claro_user_profile', {publicUrl: props.user.meta.publicUrl})
+        target: ['claro_user_profile', {publicUrl: props.user.meta.publicUrl}]
       }, {
+        type: 'callback',
         icon: 'fa fa-fw fa-file-pdf-o',
         label: trans('export_tracking_pdf', {}, 'platform'),
-        action: () => true
+        callback: () => true
       }
     ]}
   >

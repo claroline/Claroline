@@ -1,0 +1,18 @@
+
+.summarized-content {
+    position: relative; // to fix summary and content z-indexes
+    flex: 1;
+    display: flex; // this is just to make the 2 columns fill the available height
+    flex-direction: row;
+    min-height: 100%;
+    max-width: 100%;
+
+    .summary-container {
+        z-index: 2; // Make the summary overlaps the content
+    }
+
+    .content-container {
+        z-index: 1; // Make the summary overlaps the content
+        flex: 1;
+    }
+}

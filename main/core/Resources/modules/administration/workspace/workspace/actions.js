@@ -73,16 +73,18 @@ actions.deleteWorkspaces = (workspaces) => ({
       dispatch(listActions.invalidateData('workspaces.list'))
     },
     error: (data, dispatch) => {
-      if (data['errors']) {
-        Object.values(data['errors']).forEach(message => dispatch(alertActions.addAlert(
-          'workspace-deletion',
-          alertConstants.ALERT_STATUS_WARNING,
-          actionConstants.ACTION_DELETE,
-          null,
-          message
-        )))
-
+      if (data.errors) {
+        Object.values(data.errors).forEach(message => dispatch(
+          alertActions.addAlert(
+            'workspace-deletion',
+            alertConstants.ALERT_STATUS_WARNING,
+            actionConstants.ACTION_DELETE,
+            null,
+            message
+          )
+        ))
       }
+
       dispatch(listActions.invalidateData('workspaces.list'))
     }
   }

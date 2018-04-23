@@ -1,5 +1,7 @@
 import {createSelector} from 'reselect'
 
+// TODO : there are duplication with base quiz selectors
+
 const offline = (state) => state.noServer || state.testMode
 const paper = (state) => state.paper
 const currentStepId = (state) => state.currentStep.id
@@ -9,14 +11,14 @@ const quizEndMessage = (state) => state.quiz.parameters.endMessage
 const quizEndNavigation = (state) => state.quiz.parameters.endNavigation
 const showEndConfirm = (state) => state.quiz.parameters.showEndConfirm
 const showFeedback = (state) => state.quiz.parameters.showFeedback
-const feedbackEnabled = state => state.currentStep.feedbackEnabled
+const feedbackEnabled = state => state.currentStep.feedbackEnabled || false
 const showCorrectionAt = state => state.quiz.parameters.showCorrectionAt
 const correctionDate = state => state.quiz.parameters.correctionDate
 const hasEndPage = state => state.quiz.parameters.showEndPage
 
 const steps = createSelector(
   paper,
-  (paper) => paper.structure.steps
+  (paper) => paper.structure ? paper.structure.steps : []
 )
 
 /**
@@ -28,18 +30,12 @@ const currentStep = createSelector(
   (steps, currentStepId) => steps.find(step => step.id === currentStepId)
 )
 
-const currentStepIndex = createSelector(
-  steps,
-  currentStep,
-  (steps, currentStep) => steps.indexOf(currentStep) + 1
-)
-
 /**
  * Retrieves the picked items for a step.
  */
 const currentStepItems = createSelector(
   currentStep,
-  (currentStep) => currentStep.items
+  (currentStep) => currentStep ? currentStep.items : []
 )
 
 const currentStepOrder = createSelector(
@@ -104,9 +100,14 @@ const currentStepTries = createSelector(
   }
 )
 
-const currentStepMaxAttempts = createSelector(
+const currentStepParameters = createSelector(
   currentStep,
-  (currentStep) => currentStep.parameters.maxAttempts
+  (currentStep) => currentStep ? currentStep.parameters : {}
+)
+
+const currentStepMaxAttempts = createSelector(
+  currentStepParameters,
+  (currentStepParameters) => currentStepParameters.maxAttempts
 )
 
 const currentStepSend = createSelector(
@@ -128,9 +129,9 @@ export const select = {
   currentStep,
   currentStepOrder,
   currentStepNumber,
+  currentStepParameters,
   currentStepItems,
   currentStepAnswers,
-  currentStepIndex,
   previous,
   next,
   currentStepTries,

@@ -9,15 +9,8 @@
     min-height: 100%; // fill parent
     max-width: 100%;
 
-    .page-content {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
-    }
-
     &.fullscreen {
-        position: fixed;
+        position: fixed !important; // important is to override embedded default if needed
         z-index: @zindex-fullscreen;
         left: 0;
         top: 0;
@@ -26,6 +19,27 @@
         padding: floor(@grid-gutter-width / 2); // mimic grid
         background: @body-bg; // regular page container has no background. We need to hide what is under
         overflow-y: scroll; // get the scrollbar
+
+        > .flying-alerts {
+            top: floor(@grid-gutter-width / 2) !important; // important is to override embedded default if needed
+            right: floor(@grid-gutter-width / 2) !important; // important is to override embedded default if needed
+        }
+    }
+
+    &.main {
+        > .flying-alerts {
+            top: @top-bar-height + @top-bar-border-bottom-size + floor(@grid-gutter-width / 2);
+            right: @grid-gutter-width;
+        }
+    }
+
+    &.embedded {
+        position: relative;
+
+        > .flying-alerts {
+            top: 0;
+            right: 0;
+        }
     }
 }
 
@@ -129,19 +143,22 @@
 
 // Current styles permit to have 7 buttons in one line on 360px screens (without btn groups)
 .page-action-btn {
+    .button-base();
+
     position: relative; // for buttons with labels
     border-radius: 50%;
     padding: .65em;
+    border: 1px solid transparent !important; // not perfect, it's required to override default btns border
 
-    &.page-action-default {
+    &.default {
         .button-variant(#333333; #EBEBEB; transparent);
     }
 
-    &.page-action-primary {
+    &.primary {
          .button-variant(@btn-primary-color; @btn-primary-bg; transparent);
      }
 
-    &.page-action-danger {
+    &.danger {
         .button-variant(@btn-danger-color; @btn-danger-bg; transparent);
     }
 
@@ -179,6 +196,13 @@
     .page-title {
         margin-bottom: 5px;
     }
+}
+
+.page-content {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto; // only specifying flex property here make the item fill the remaining space in its parent
 }
 
 .page-tabs {
