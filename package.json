@@ -90,7 +90,7 @@
     "ui-select": "0.18.0",
     "underscore": "1.8.3",
     "uuid": "^3.0.1",
-    "video.js": "5.2.0",
+    "video.js": "5.20.5",
     "wavesurfer.js": "1.1.8",
     "whatwg-fetch": "^2.0.1"
   },

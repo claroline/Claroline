@@ -192,13 +192,18 @@ class FileUtilities
     public function createFileUse(PublicFile $publicFile, $class, $uuid, $name = null)
     {
         $cleanClass = str_replace('Proxies\\__CG__\\', '', $class);
-        $publicFileUse = new PublicFileUse();
-        $publicFileUse->setPublicFile($publicFile);
-        $publicFileUse->setObjectClass($cleanClass);
-        $publicFileUse->setObjectUuid($uuid);
-        $publicFileUse->setObjectName($name);
-        $this->om->persist($publicFileUse);
-        $this->om->flush();
+        $repo = $this->om->getRepository('ClarolineCoreBundle:File\PublicFileUse');
+        $publicFileUse = $repo->findOneBy(['publicFile' => $publicFile, 'objectClass' => $class, 'id' => $uuid]);
+
+        if (!$publicFileUse) {
+            $publicFileUse = new PublicFileUse();
+            $publicFileUse->setPublicFile($publicFile);
+            $publicFileUse->setObjectClass($cleanClass);
+            $publicFileUse->setObjectUuid($uuid);
+            $publicFileUse->setObjectName($name);
+            $this->om->persist($publicFileUse);
+            $this->om->flush();
+        }
 
         return $publicFileUse;
     }

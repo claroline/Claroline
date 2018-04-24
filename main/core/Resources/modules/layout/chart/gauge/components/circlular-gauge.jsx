@@ -4,6 +4,8 @@ import {PropTypes as T} from 'prop-types'
 import {Chart} from '#/main/core/layout/chart/components/chart.jsx'
 import {DataSeries} from '#/main/core/layout/chart/pie/components/data-series.jsx'
 
+// TODO merge with pie chart
+
 /**
  * Draws a Circular gauge
  */

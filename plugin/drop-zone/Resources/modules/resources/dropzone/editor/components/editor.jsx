@@ -18,7 +18,6 @@ const EditorComponent = props =>
       name="dropzoneForm"
       sections={[
         {
-          id: 'general',
           title: trans('general', {}, 'platform'),
           primary: true,
           fields: [
@@ -49,7 +48,6 @@ const EditorComponent = props =>
             }
           ]
         }, {
-          id: 'planning',
           icon: 'fa fa-fw fa-calendar',
           title: trans('planning', {}, 'dropzone'),
           fields: [
@@ -96,7 +94,6 @@ const EditorComponent = props =>
             }
           ]
         }, {
-          id: 'drop-configuration',
           icon: 'fa fa-fw fa-upload',
           title: trans('drop_configuration', {}, 'dropzone'),
           fields: [
@@ -123,7 +120,6 @@ const EditorComponent = props =>
             }
           ]
         }, {
-          id: 'correction',
           icon: 'fa fa-fw fa-check-square-o',
           title: trans('correction', {}, 'dropzone'),
           fields: [
@@ -200,7 +196,6 @@ const EditorComponent = props =>
             }
           ]
         }, {
-          id: 'display',
           icon: 'fa fa-fw fa-desktop',
           title: trans('display_parameters'),
           fields: [
@@ -234,7 +229,6 @@ const EditorComponent = props =>
             }
           ]
         }, {
-          id: 'notification',
           icon: 'fa fa-fw fa-bell-o',
           title: trans('notifications', {}, 'platform'),
           fields: [

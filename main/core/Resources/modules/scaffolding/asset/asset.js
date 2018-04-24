@@ -1,3 +1,4 @@
+import {platformConfig} from '#/main/core/platform'
 /**
  * Manages assets.
  *
@@ -26,17 +27,12 @@ const Asset = {
   /**
    * Get the path of the main theme file.
    *
+   * @todo manage versioning
+   *
    * @return {string}
    */
-  theme() {
-    const element = document.getElementById('homeTheme')
-
-    let basePath = ''
-    if (element) {
-      basePath = element.innerHTML
-    }
-
-    return basePath.trim()
+  theme(assetName) {
+    return `/themes/${platformConfig('theme.name')}/${assetName}.css`
   }
 
 }

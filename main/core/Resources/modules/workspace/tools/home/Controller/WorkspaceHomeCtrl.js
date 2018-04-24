@@ -42,7 +42,7 @@ export default class WorkspaceHomeCtrl {
     this.HomeTabService.loadWorkspaceHomeTabs(this.tabId)
   }
 
-  initializeDragAndDrop () {
+  initializeDragAndDrop() {
     angular.element('#workspace-home-tabs-list').sortable({
       items: '.home-tab',
       cursor: 'move'
@@ -109,7 +109,7 @@ export default class WorkspaceHomeCtrl {
     this.WidgetService.deleteWorkspaceWidget(widgetHTCId)
   }
 
-  static _getGlobal (name) {
+  static _getGlobal(name) {
     if (typeof window[name] === 'undefined') {
       throw new Error(
         `Expected ${name} to be exposed in a window.${name} variable`

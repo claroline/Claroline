@@ -164,6 +164,7 @@ class ResourceNodeManager
     private function updateDisplay(array $parameters, ResourceNode $resourceNode)
     {
         $resourceNode->setFullscreen($parameters['fullscreen']);
+        $resourceNode->setShowIcon($parameters['showIcon']);
         $resourceNode->setClosable($parameters['closable']);
         $resourceNode->setCloseTarget($parameters['closeTarget']);
     }

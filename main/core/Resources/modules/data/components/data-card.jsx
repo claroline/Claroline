@@ -3,9 +3,13 @@ import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {getPlainText} from '#/main/core/data/types/html/utils'
-import {ActionDropdownButton} from '#/main/core/layout/action/components/dropdown'
+import {number} from '#/main/core/intl'
+import {DropdownButton} from '#/main/app/action/components/dropdown-button'
+import {GenericButton} from '#/main/app/button/components/generic'
 import {TooltipElement} from '#/main/core/layout/components/tooltip-element'
+import {Heading} from '#/main/core/layout/components/heading'
 
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
 import {DataCard as DataCardTypes} from '#/main/core/data/prop-types'
 
 /**
@@ -15,7 +19,7 @@ import {DataCard as DataCardTypes} from '#/main/core/data/prop-types'
  * @constructor
  */
 const CardHeader = props =>
-  <div className="data-card-header" style={props.poster && {
+  <div className={classes('data-card-header', props.poster && 'data-card-header-poster')} style={props.poster && {
     backgroundImage: 'url(' + props.poster + ')',
     backgroundSize: 'cover',
     backgroundPosition: 'center'
@@ -39,10 +43,10 @@ const CardHeader = props =>
           >
             {undefined !== flag[2] ?
               <span className="data-card-flag">
+                {number(flag[2], true)}
                 <span className={flag[0]} />
-                {flag[2]}
               </span> :
-              <span className={classes('data-card-flag', flag[0])} />
+              <span className={classes('data-card-flag label label-default', flag[0])} />
             }
           </TooltipElement>
         )}
@@ -66,32 +70,29 @@ CardHeader.propTypes = {
  * @constructor
  */
 const CardContent = props => {
-  if (!props.action || props.disabled) {
+  if (!props.action || props.action.disabled) {
+    // no action defined
     return (
       <div className="data-card-content">
         {props.children}
       </div>
     )
   } else {
-    if (typeof props.action === 'string') {
-      return (
-        <a role="link" href={props.action} className="data-card-content">
-          {props.children}
-        </a>
-      )
-    } else {
-      return (
-        <a role="button" onClick={props.action} className="data-card-content">
-          {props.children}
-        </a>
-      )
-    }
+    return (
+      <GenericButton
+        {...props.action}
+        className="data-card-content"
+      >
+        {props.children}
+      </GenericButton>
+    )
   }
 }
 
 CardContent.propTypes = {
-  disabled: T.bool,
-  action: T.oneOfType([T.string, T.func]),
+  action: T.shape(
+    ActionTypes.propTypes
+  ),
   children: T.any.isRequired
 }
 
@@ -115,17 +116,18 @@ const DataCard = props =>
     />
 
     <CardContent
-      disabled={props.primaryAction && props.primaryAction.disabled}
-      action={props.primaryAction && props.primaryAction.action}
+      action={props.primaryAction}
     >
-      {React.createElement(`h${props.level}`, {
-        key: 'data-card-title',
-        className: 'data-card-title'
-      }, [
-        props.title,
-        props.subtitle &&
-        <small key="data-card-subtitle">{props.subtitle}</small>
-      ])}
+      <Heading
+        key="data-card-title"
+        level={props.level}
+        className="data-card-title"
+      >
+        {props.title}
+        {props.subtitle &&
+          <small>{props.subtitle}</small>
+        }
+      </Heading>
 
       {'sm' !== props.size && props.contentText &&
         <div key="data-card-description" className="data-card-description">
@@ -141,11 +143,10 @@ const DataCard = props =>
     </CardContent>
 
     {0 !== props.actions.length &&
-      <ActionDropdownButton
-        id={`${props.id}-btn`}
-        className="data-actions-btn btn-link-default"
-        bsStyle="link"
-        noCaret={true}
+      <DropdownButton
+        id={`actions-${props.id}`}
+        tooltip="left"
+        className="data-actions-btn btn btn-link"
         pullRight={true}
         actions={props.actions}
       />

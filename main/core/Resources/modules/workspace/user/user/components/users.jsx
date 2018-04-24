@@ -16,19 +16,18 @@ import {select} from '#/main/core/workspace/user/selectors'
 const UsersList = props =>
   <DataListContainer
     name="users.list"
-    open={getUserList(props.workspace).open}
     fetch={{
       url: ['apiv2_workspace_list_users', {id: props.workspace.uuid}],
       autoload: true
     }}
-    actions={[{
+    primaryAction={getUserList(props.workspace).open}
+    actions={(rows) => [{
+      type: 'callback',
       icon: 'fa fa-fw fa-trash-o',
       label: trans('unregister', {}, 'actions'),
-      action: (rows) => props.unregister(rows, props.workspace),
+      callback: () => props.unregister(rows, props.workspace),
       dangerous: true,
-      disabled: (rows) => rows.find(row => {
-        return row.groups.length > 0
-      })
+      disabled: rows.find(row => row.groups.length > 0)
     }]}
     definition={getUserList(props.workspace).definition}
     card={getUserList(props.workspace).card}

@@ -25,7 +25,7 @@ const MoveItemModal = props =>
               props.fadeModal()
             }}
           >
-            <span className='step-title'>{tex('step') + ' ' + (index + 1)}</span>
+            <span className='step-label'>{tex('step') + ' ' + (index + 1)}</span>
           </span>
         )}
       </div>

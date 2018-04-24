@@ -139,7 +139,9 @@ class LocaleManager
         $locales = $this->getAvailableLocales();
         $preferred = explode('_', $request->getPreferredLanguage());
 
-        if ($request->attributes->get('_locale')) {
+        if ($request->query->get('_locale')) {
+            $locale = $request->query->get('_locale');
+        } elseif ($request->attributes->get('_locale')) {
             $locale = $request->attributes->get('_locale');
         } elseif (($user = $this->getCurrentUser()) && $user->getLocale()) {
             $locale = $user->getLocale();

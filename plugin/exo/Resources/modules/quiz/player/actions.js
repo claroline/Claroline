@@ -1,11 +1,12 @@
 import isEmpty from 'lodash/isEmpty'
 
+// TODO : remove the use of navigate()
+
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {API_REQUEST} from '#/main/core/api/actions'
-import {actions as quizActions} from './../actions'
-import {VIEW_PLAYER} from './../enums'
+import {actions as resourceActions} from '#/main/core/resource/actions'
+
 import quizSelectors from './../selectors'
-import {navigate} from './../router'
 import {select as playerSelectors} from './selectors'
 import {generatePaper} from './../papers/generator'
 import {normalize, denormalizeAnswers, denormalize} from './normalizer'
@@ -41,12 +42,11 @@ actions.fetchAttempt = quizId => ({
     success: (data, dispatch) => {
       const normalized = normalize(data)
       dispatch(actions.initPlayer(normalized.paper, normalized.answers))
-    },
-    failure: () => navigate('overview')
+    }
   }
 })
 
-actions.sendAnswers = (quizId, paperId, answers) =>({
+actions.sendAnswers = (quizId, paperId, answers) => ({
   [API_REQUEST]: {
     silent: true,
     url: ['exercise_attempt_submit', {exerciseId: quizId, id: paperId}],
@@ -66,7 +66,7 @@ actions.requestHint = (quizId, paperId, questionId, hintId) => ({
   }
 })
 
-actions.requestEnd = (quizId, paperId) => ({
+actions.requestEnd = (quizId, paperId, navigate) => ({
   [API_REQUEST]: {
     silent: true,
     url: ['exercise_attempt_finish', {exerciseId: quizId, id: paperId}],
@@ -75,28 +75,30 @@ actions.requestEnd = (quizId, paperId) => ({
     },
     success: (data, dispatch) => {
       const normalized = normalize(data)
-      dispatch(actions.handleAttemptEnd(normalized.paper))
+      dispatch(actions.handleAttemptEnd(normalized.paper, navigate))
     }
   }
 })
 
-actions.play = (previousPaper = null, testMode = false) => {
+// previous paper seems to never be passed here.
+actions.play = (previousPaper = null) => {
   return (dispatch, getState) => {
-    dispatch(actions.setTestMode(testMode))
+    dispatch(resourceActions.triggerLifecycleAction('play'))
 
     if (!playerSelectors.offline(getState())) {
-      // Request a paper from the API and open the player
+      // Normal : Request a paper from the API and open the player
       return dispatch(actions.fetchAttempt(quizSelectors.quiz(getState()).id))
     } else {
-      // Create a new local paper and open the player
-      return dispatch(
+      // Offline & Tests : create a new local paper and open the player
+      // Promise is to expose the same interface than when there are async calls
+      return Promise.resolve(dispatch(
         actions.initPlayer(generatePaper(
           quizSelectors.quiz(getState()),
           quizSelectors.steps(getState()),
           quizSelectors.items(getState()),
           previousPaper
         ))
-      )
+      ))
     }
   }
 }
@@ -145,19 +147,21 @@ actions.navigateTo = (quizId, paperId, nextStep, pendingAnswers = {}, currentSte
   }
 }
 
-actions.finish = (quizId, paper, pendingAnswers = {}, showFeedback = false) => {
+actions.finish = (quizId, paper, pendingAnswers = {}, showFeedback = false, navigate) => {
   return (dispatch, getState) => {
+    dispatch(resourceActions.triggerLifecycleAction('end'))
+
     if (!showFeedback) {
       dispatch(actions.submit(quizId, paper.id, pendingAnswers)).then(() => {
-        endQuiz(quizId, paper, dispatch, getState)
+        endQuiz(quizId, paper, navigate, dispatch, getState)
       })
     } else {
-      endQuiz(quizId, paper, dispatch, getState)
+      endQuiz(quizId, paper, navigate, dispatch, getState)
     }
   }
 }
 
-actions.handleAttemptEnd = (paper) => {
+actions.handleAttemptEnd = (paper, navigate) => {
   return (dispatch, getState) => {
     // Finish the current attempt
     dispatch(actions.finishAttempt(paper, playerSelectors.answers(getState())))
@@ -201,7 +205,6 @@ actions.initPlayer = (paper, answers = {}) => {
     const firstStep = paper.structure.steps[0]
 
     dispatch(actions.openStep(firstStep))
-    dispatch(quizActions.updateViewMode(VIEW_PLAYER))
   }
 }
 
@@ -215,14 +218,14 @@ actions.showHint = (quizId, paperId, questionId, hint) => {
   }
 }
 
-function endQuiz(quizId, paper, dispatch, getState) {
+function endQuiz(quizId, paper, navigate, dispatch, getState) {
   //the current step was already done
   if (!playerSelectors.offline(getState())) {
     // Send finish request to API
-    return dispatch(actions.requestEnd(quizId, paper.id))
+    return dispatch(actions.requestEnd(quizId, paper.id, navigate))
   } else {
     // Finish the attempt and use quiz config to know what to do next
-    return dispatch(actions.handleAttemptEnd(paper))
+    return dispatch(actions.handleAttemptEnd(paper, navigate))
   }
 }
 

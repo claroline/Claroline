@@ -16,7 +16,7 @@ const Parameters = () =>
     tabs={[
       {
         icon: 'fa fa-save',
-        title: trans('parameters'),
+        title: trans('activate_account'),
         path: '/parameters',
         actions: ParametersActions,
         content: ParametersTab

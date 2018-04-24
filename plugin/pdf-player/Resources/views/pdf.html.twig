@@ -28,19 +28,15 @@
                         <span class="action-icon fa fa-download"></span>
                         <span class="sr-only">{{ 'download'|trans({}, 'platform') }}</span>
                     </a>
-					<a id="copy-permalink-to-clipboard" class="btn page-action-btn" href="{{ path('claro_pdf', {node: pdf.resourceNode.id}) }}">
-                        <span class="action-icon fa fa-clipboard"></span>
-						<span class="sr-only">{{ 'copy_permalink_to_clipboard'|trans({}, 'platform') }}</span>
-                    </a>
                     {% endif %}
                 </nav>
             </header>
 
             <pdf-viewer
-                    data-id="{{ pdf.resourceNode.id }}"
-                    data-name="'{{ pdf.resourceNode.name|ng_escape }}'"
-                    data-url="'{{ path('claro_pdf', {node: pdf.resourceNode.id}) }}'"
-                    data-download="{{ canDownload }}"
+                data-id="{{ pdf.resourceNode.id }}"
+                data-name="'{{ pdf.resourceNode.name|ng_escape }}'"
+                data-url="'{{ path('claro_pdf', {node: pdf.resourceNode.id}) }}'"
+                data-download="{{ canDownload }}"
             >
             </pdf-viewer>
         </main>
@@ -52,12 +48,4 @@
 
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'resource' }) }}"></script>
     <script src="{{ hotAsset('dist/claroline-distribution-plugin-pdf-player-pdf-viewer.js') }}" ></script>
-
-    <script type="text/javascript" src="{{ hotAsset('dist/claroline-distribution-main-core-copy-text-to-clipboard.js') }}" ></script>
-    <script>
-        document.querySelector('a#copy-permalink-to-clipboard').addEventListener('click', function(event) {
-            event.preventDefault();
-            copyTextToClipboard('http://' + window.location.hostname + $(this).attr('href'));
-        });
-    </script>
 {% endblock %}

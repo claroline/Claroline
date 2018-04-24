@@ -67,3 +67,14 @@
     margin-top: 10px;
     padding: @padding-large-vertical @padding-large-horizontal;
 }
+
+// todo : rename it in step indicator
+.step-progression {
+    font-size: @step-status-size !important; // override font-awesome
+
+    &.unseen    { color: @step-status-unseen-color; }
+    &.seen      { color: @step-status-seen-color; }
+    &.to_do     { color: @step-status-to_do-color; }
+    &.done      { color: @step-status-done-color; }
+    &.to_review { color: @step-status-to_review-color; }
+}

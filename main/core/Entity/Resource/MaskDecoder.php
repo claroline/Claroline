@@ -78,6 +78,7 @@ class MaskDecoder
 
         return $this;
     }
+
     public function getValue()
     {
         return $this->value;
@@ -107,7 +108,12 @@ class MaskDecoder
      */
     public function setResourceType(ResourceType $resourceType)
     {
+        if ($this->resourceType instanceof ResourceType) {
+            $this->resourceType->removeMaskDecoder($this);
+        }
+
         $this->resourceType = $resourceType;
+        $this->resourceType->addMaskDecoder($this);
 
         return $this;
     }

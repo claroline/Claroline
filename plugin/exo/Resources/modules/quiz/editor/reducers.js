@@ -9,7 +9,6 @@ import {getIndex, makeId, makeItemPanelKey, update, refreshIds} from './../../ut
 import {getDefinition} from './../../items/item-types'
 import {getContentDefinition} from './../../contents/content-types'
 import {ATTEMPT_FINISH} from './../player/actions'
-import {VIEW_MODE_UPDATE, OPEN_FIRST_STEP} from './../actions'
 import {
   TYPE_QUIZ,
   TYPE_STEP,
@@ -17,8 +16,7 @@ import {
   QUIZ_PICKING_TAGS,
   SHUFFLE_NEVER,
   SHUFFLE_ONCE,
-  SHUFFLE_ALWAYS,
-  VIEW_EDITOR
+  SHUFFLE_ALWAYS
 } from './../enums'
 import {
   ITEM_CREATE,
@@ -60,7 +58,7 @@ import {
 
 import {
   ITEM_UPDATE_TAGS
-} from '#/plugin/tag/actions.js'
+} from '#/plugin/tag/actions'
 
 function initialQuizState() {
   return {
@@ -459,12 +457,8 @@ function reduceCurrentObject(object = {}, action = {}) {
         id: action.object.id,
         type: action.object.type
       }
-    case OPEN_FIRST_STEP:
-      return {
-        id: action.stepId,
-        type: TYPE_STEP
-      }
   }
+
   return object
 }
 
@@ -532,28 +526,17 @@ function reduceSavedState(saved = true, action = {}) {
   return saved
 }
 
-function reduceOpenedState(opened = false, action = {}) {
-  if (action.type === VIEW_MODE_UPDATE && action.mode === VIEW_EDITOR) {
-    return true
-  }
-
-  return opened
-}
-
-const reduceEditor = combineReducers({
-  currentObject: reduceCurrentObject,
-  openPanels: reduceOpenPanels,
-  validating: reduceValidatingState,
-  saving: reduceSavingState,
-  saved: reduceSavedState,
-  opened: reduceOpenedState
-})
-
 export const reducers = {
   quiz: reduceQuiz,
   steps: reduceSteps,
   items: reduceItems,
   currentObject: reduceCurrentObject,
   openPanels: reduceOpenPanels,
-  editor: reduceEditor
+  editor: combineReducers({
+    currentObject: reduceCurrentObject,
+    openPanels: reduceOpenPanels,
+    validating: reduceValidatingState,
+    saving: reduceSavingState,
+    saved: reduceSavedState
+  })
 }

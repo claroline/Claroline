@@ -1,6 +1,6 @@
-import {bootstrap} from '#/main/core/scaffolding/bootstrap'
+import {bootstrap} from '#/main/app/bootstrap'
 
-import {Docimology} from './components/docimology.jsx'
+import {Docimology} from '#/plugin/exo/docimology/components/docimology'
 
 // mount the react application
 bootstrap(
@@ -13,6 +13,7 @@ bootstrap(
   // app store configuration
   {
     // app reducers
+    resourceNode: (state = {}) => state,
     quiz: (state = {}) => state,
     statistics: (state = {}) => state
   }

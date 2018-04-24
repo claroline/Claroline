@@ -2,16 +2,13 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import {
   Redirect,
-  Router as BaseRouter,
+  HashRouter,
+  MemoryRouter,
   Route as BaseRoute,
   Switch
 } from 'react-router-dom'
 
-import {history} from '#/main/core/router/history'
 import {Route as RouteTypes} from '#/main/core/router/prop-types'
-
-// todo : implement canEnter for security purpose
-// todo : manage redirect
 
 /**
  * Creates a custom Route component to bind redux action on enter and leave.
@@ -70,25 +67,29 @@ const Routes = props =>
     exact={props.exact}
   >
     <Switch>
-      {props.routes.map((routeConfig, routeIndex) => routeConfig.routes ?
-        <Routes
-          {...routeConfig}
-          key={`route-${routeIndex}`}
-        /> :
-        <Route
-          {...routeConfig}
-          key={`route-${routeIndex}`}
-          onEnter={routeConfig.onEnter}
-          onLeave={routeConfig.onLeave}
-        />
-      )}
+      {props.routes
+        .filter(route => !route.disabled)
+        .map((route, routeIndex) => route.routes ?
+          <Routes
+            {...route}
+            key={`route-${routeIndex}`}
+          /> :
+          <Route
+            {...route}
+            key={`route-${routeIndex}`}
+          />
+        )
+      }
 
-      {props.redirect.map((redirect, redirectIndex) =>
-        <Redirect
-          {...redirect}
-          key={`redirect-${redirectIndex}`}
-        />
-      )}
+      {props.redirect
+        .filter(redirect => !redirect.disabled)
+        .map((redirect, redirectIndex) =>
+          <Redirect
+            {...redirect}
+            key={`redirect-${redirectIndex}`}
+          />
+        )
+      }
     </Switch>
   </BaseRoute>
 
@@ -99,6 +100,7 @@ Routes.propTypes = {
     T.shape(RouteTypes.propTypes).isRequired // todo : allow more than one nesting in prop-types
   ),
   redirect: T.arrayOf(T.shape({
+    disabled: T.bool,
     from: T.string.isRequired,
     to: T.string.isRequired,
     exact: T.bool
@@ -111,13 +113,21 @@ Routes.defaultProps = {
   redirect: []
 }
 
-const Router = props =>
-  <BaseRouter history={history}>
+const Router = props => !props.embedded ?
+  <HashRouter>
     {props.children}
-  </BaseRouter>
+  </HashRouter> :
+  <MemoryRouter>
+    {props.children}
+  </MemoryRouter>
 
 Router.propTypes = {
-  children: T.node
+  children: T.node,
+  embedded: T.bool
+}
+
+Router.defaultProps = {
+  embedded: false
 }
 
 export {

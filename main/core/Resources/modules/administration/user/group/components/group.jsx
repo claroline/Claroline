@@ -23,7 +23,6 @@ const GroupForm = props =>
     name="groups.current"
     sections={[
       {
-        id: 'general',
         title: t('general'),
         primary: true,
         fields: [
@@ -41,26 +40,26 @@ const GroupForm = props =>
       level={3}
     >
       <FormSection
-        id="group-users"
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={t('users')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: t('add_users'),
-            action: () => props.pickUsers(props.group.id)
+            callback: () => props.pickUsers(props.group.id)
           }
         ]}
       >
         <DataListContainer
           name="groups.current.users"
-          open={UserList.open}
           fetch={{
             url: ['apiv2_group_list_users', {id: props.group.id}],
             autoload: props.group.id && !props.new
           }}
+          primaryAction={UserList.open}
           delete={{
             url: ['apiv2_group_remove_users', {id: props.group.id}]
           }}
@@ -70,26 +69,26 @@ const GroupForm = props =>
       </FormSection>
 
       <FormSection
-        id="group-roles"
         className="embedded-list-section"
         icon="fa fa-fw fa-id-badge"
         title={t('roles')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: t('add_roles'),
-            action: () => props.pickRoles(props.group.id)
+            callback: () => props.pickRoles(props.group.id)
           }
         ]}
       >
         <DataListContainer
           name="groups.current.roles"
-          open={RoleList.open}
           fetch={{
             url: ['apiv2_group_list_roles', {id: props.group.id}],
             autoload: props.group.id && !props.new
           }}
+          primaryAction={RoleList.open}
           delete={{
             url: ['apiv2_group_remove_roles', {id: props.group.id}]
           }}
@@ -99,26 +98,26 @@ const GroupForm = props =>
       </FormSection>
 
       <FormSection
-        id="group-organizations"
         className="embedded-list-section"
         icon="fa fa-fw fa-building"
         title={t('organizations')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: t('add_organizations'),
-            action: () => props.pickOrganizations(props.group.id)
+            callback: () => props.pickOrganizations(props.group.id)
           }
         ]}
       >
         <DataListContainer
           name="groups.current.organizations"
-          open={OrganizationList.open}
           fetch={{
             url: ['apiv2_group_list_organizations', {id: props.group.id}],
             autoload: props.group.id && !props.new
           }}
+          primaryAction={OrganizationList.open}
           delete={{
             url: ['apiv2_group_remove_organizations', {id: props.group.id}]
           }}

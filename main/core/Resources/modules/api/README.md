@@ -29,7 +29,7 @@ actions.fetchAttempt = quizId => ({
       const normalized = normalize(data)
       return dispatch(actions.initPlayer(normalized.paper, normalized.answers))
     },
-    error: () => navigate('overview')
+    error: () => doSometing()
   }
 })
 ```

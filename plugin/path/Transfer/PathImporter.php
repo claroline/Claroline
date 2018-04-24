@@ -14,6 +14,8 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * @DI\Service("innova_path.importer.path")
  * @DI\Tag("claroline.importer")
+ *
+ * @fixme import/export is broken for now
  */
 class PathImporter extends Importer implements ConfigurationInterface, RichTextInterface
 {

@@ -1,5 +1,7 @@
 import {createSelector} from 'reselect'
 
+const resourceLifecycle = state => state.resourceLifecycle
+
 const resourceNode = state => state.resourceNode
 
 const meta = createSelector(
@@ -43,6 +45,7 @@ const deletable = createSelector(
 )
 
 export const select = {
+  resourceLifecycle,
   resourceNode,
   meta,
   currentRights,

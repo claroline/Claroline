@@ -3,9 +3,11 @@ import {trans} from '#/main/core/translation'
 import {UserCard} from '#/main/core/user/data/components/user-card'
 
 const UserList = {
-  open: {
-    action: (row) => `#/users/form/${row.id}`
-  },
+  open: (row) => ({
+    type: 'link',
+    target: `/users/form/${row.id}`,
+    label: trans('edit', {}, 'actions')
+  }),
   definition: [
     {
       name: 'username',

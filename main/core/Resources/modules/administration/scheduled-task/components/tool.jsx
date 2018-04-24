@@ -3,7 +3,7 @@ import {PropTypes as T} from 'prop-types'
 import {connect} from 'react-redux'
 
 import {trans} from '#/main/core/translation'
-import {navigate, matchPath, withRouter} from '#/main/core/router'
+import {matchPath, withRouter} from '#/main/core/router'
 import {
   PageActions,
   PageHeader
@@ -29,13 +29,16 @@ const ToolActions = props =>
       }
       opened={!!matchPath(props.location.pathname, {path: '/form'})}
       open={{
+        type: 'link',
         icon: 'fa fa-plus',
         disabled: !props.isCronConfigured,
         label: trans('add_scheduled_task'),
-        action: '#/form'
+        target: '/form'
       }}
       cancel={{
-        action: () => navigate('/')
+        type: 'link',
+        target: '/',
+        exact: true
       }}
     />
   </PageActions>

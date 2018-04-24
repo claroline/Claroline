@@ -9,11 +9,14 @@ use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\PublicationChangeEvent;
+use Claroline\CoreBundle\Event\Resource\LoadResourceEvent;
+use Claroline\CoreBundle\Library\Security\Collection\ResourceCollection;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Form\Type\ExerciseType;
@@ -105,6 +108,31 @@ class ExerciseListener
     }
 
     /**
+     * Loads the Exercise resource.
+     *
+     * @DI\Observe("load_ujm_exercise")
+     *
+     * @param LoadResourceEvent $event
+     */
+    public function onLoad(LoadResourceEvent $event)
+    {
+        /** @var Exercise $exercise */
+        $exercise = $event->getResource();
+
+        $canEdit = $this->container
+            ->get('security.authorization_checker')
+            ->isGranted('EDIT', new ResourceCollection([$exercise->getResourceNode()]));
+
+        $event->setAdditionalData([
+            'quiz' => $this->container->get('ujm_exo.manager.exercise')->serialize(
+                $exercise,
+                $canEdit ? [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_METRICS] : [Transfer::INCLUDE_METRICS]
+            ),
+        ]);
+        $event->stopPropagation();
+    }
+
+    /**
      * Opens the Exercise resource.
      *
      * @DI\Observe("open_ujm_exercise")
@@ -116,18 +144,21 @@ class ExerciseListener
         /** @var Exercise $exercise */
         $exercise = $event->getResource();
 
-        /** @var Request $currentRequest */
-        $currentRequest = $this->container->get('request_stack')->getCurrentRequest();
+        $canEdit = $this->container
+            ->get('security.authorization_checker')
+            ->isGranted('EDIT', new ResourceCollection([$exercise->getResourceNode()]));
 
-        // Forward request to the Resource controller
-        $subRequest = $currentRequest->duplicate($currentRequest->query->all(), null, [
-            '_controller' => 'UJMExoBundle:Resource\Exercise:open',
-            'id' => $exercise->getUuid(),
-        ]);
+        $content = $this->container->get('templating')->render(
+            'UJMExoBundle:Exercise:open.html.twig', [
+                '_resource' => $exercise,
+                'quiz' => $this->container->get('ujm_exo.manager.exercise')->serialize(
+                    $exercise,
+                    $canEdit ? [Transfer::INCLUDE_SOLUTIONS, Transfer::INCLUDE_METRICS] : [Transfer::INCLUDE_METRICS]
+                ),
+            ]
+        );
 
-        $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
-
-        $event->setResponse($response);
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 
@@ -250,7 +281,7 @@ class ExerciseListener
         $event->addAsset('claroline-distribution-plugin-exo-app.js', $webpack->hotAsset('dist/claroline-distribution-plugin-exo-app.js', true));
 
         // Set translations
-        $event->addTranslationDomain('ujm_exo');
+        $event->addTranslationDomain('quiz');
         $event->addTranslationDomain('question_types');
 
         $event->stopPropagation();

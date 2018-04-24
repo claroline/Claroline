@@ -1,5 +1,6 @@
 import {PropTypes as T} from 'prop-types'
 
+import {Action} from '#/main/app/action/prop-types'
 //import {getTypes} from '#/main/core/data'
 
 const DataProperty = {
@@ -88,13 +89,12 @@ const DataCard = {
     flags: T.arrayOf(
       T.arrayOf(T.oneOfType([T.string, T.number]))
     ),
-    primaryAction: T.shape({
-      action: T.oneOfType([T.string, T.func]).isRequired,
-      disabled: T.bool
-    }),
-    actions: T.arrayOf(T.shape({
-
-    })),
+    primaryAction: T.shape(
+      Action.propTypes
+    ),
+    actions: T.arrayOf(T.shape(
+      Action.propTypes
+    )),
 
     footer: T.node
   },

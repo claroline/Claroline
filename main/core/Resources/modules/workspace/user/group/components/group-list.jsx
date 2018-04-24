@@ -19,9 +19,10 @@ function getWorkspaceRoles(workspace) {
 
 const getGroupList = (workspace) => {
   return {
-    open: {
-      action: (row) => `#/groups/form/${row.id}`
-    },
+    open: (row) => ({
+      type: 'link',
+      target: `/groups/form/${row.id}`
+    }),
     definition: [
       {
         name: 'name',

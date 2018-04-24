@@ -22,7 +22,6 @@ const OrganizationForm = props =>
     name="organizations.current"
     sections={[
       {
-        id: 'general',
         title: trans('general'),
         primary: true,
         fields: [
@@ -70,26 +69,26 @@ const OrganizationForm = props =>
       level={3}
     >
       <FormSection
-        id="organization-workspaces"
         className="embedded-list-section"
         icon="fa fa-fw fa-book"
         title={trans('workspaces')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: trans('add_workspace'),
-            action: () => props.pickWorkspaces(props.organization.id)
+            callback: () => props.pickWorkspaces(props.organization.id)
           }
         ]}
       >
         <DataListContainer
           name="organizations.current.workspaces"
-          open={WorkspaceList.open}
           fetch={{
             url: ['apiv2_organization_list_workspaces', {id: props.organization.id}],
             autoload: props.organization.id && !props.new
           }}
+          primaryAction={WorkspaceList.open}
           delete={{
             url: ['apiv2_organization_remove_workspaces', {id: props.organization.id}]
           }}
@@ -99,26 +98,26 @@ const OrganizationForm = props =>
       </FormSection>
 
       <FormSection
-        id="organization-users"
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={trans('users')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: trans('add_user'),
-            action: () => props.pickUsers(props.organization.id)
+            callback: () => props.pickUsers(props.organization.id)
           }
         ]}
       >
         <DataListContainer
           name="organizations.current.users"
-          open={UserList.open}
           fetch={{
             url: ['apiv2_organization_list_users', {id: props.organization.id}],
             autoload: props.organization.id && !props.new
           }}
+          primaryAction={UserList.open}
           delete={{
             url: ['apiv2_organization_remove_users', {id: props.organization.id}]
           }}
@@ -128,26 +127,26 @@ const OrganizationForm = props =>
       </FormSection>
 
       <FormSection
-        id="organization-groups"
         icon="fa fa-fw fa-users"
         className="embedded-list-section"
         title={trans('groups')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: trans('add_group'),
-            action: () => props.pickGroups(props.organization.id)
+            callback: () => props.pickGroups(props.organization.id)
           }
         ]}
       >
         <DataListContainer
           name="organizations.current.groups"
-          open={GroupList.open}
           fetch={{
             url: ['apiv2_organization_list_groups', {id: props.organization.id}],
             autoload: props.organization.id && !props.new
           }}
+          primaryAction={GroupList.open}
           delete={{
             url: ['apiv2_organization_remove_groups', {id: props.organization.id}]
           }}
@@ -157,26 +156,26 @@ const OrganizationForm = props =>
       </FormSection>
 
       <FormSection
-        id="organization-managers"
         className="embedded-list-section"
         icon="fa fa-fw fa-users"
         title={trans('managers')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: trans('add_managers'),
-            action: () => props.pickManagers(props.organization.id)
+            callback: () => props.pickManagers(props.organization.id)
           }
         ]}
       >
         <DataListContainer
           name="organizations.current.managers"
-          open={UserList.open}
           fetch={{
             url: ['apiv2_organization_list_managers', {id: props.organization.id}],
             autoload: props.organization.id && !props.new
           }}
+          primaryAction={UserList.open}
           delete={{
             url: ['apiv2_organization_remove_managers', {id: props.organization.id}]
           }}

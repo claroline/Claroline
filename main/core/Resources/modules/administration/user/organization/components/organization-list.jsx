@@ -1,38 +1,40 @@
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 
 import {OrganizationCard} from '#/main/core/user/data/components/organization-card'
 
 const OrganizationList = {
-  open: {
-    action: (row) => `#/organizations/form/${row.id}`
-  },
+  open: (row) => ({
+    type: 'link',
+    target: `/organizations/form/${row.id}`,
+    label: trans('edit', {}, 'actions')
+  }),
   definition: [
     {
       name: 'name',
       type: 'string',
-      label: t('name'),
+      label: trans('name'),
       displayed: true,
       primary: true
     }, {
       name: 'meta.default',
       type: 'boolean',
-      label: t('default')
+      label: trans('default')
     }, {
       name: 'meta.parent',
       type: 'organization',
-      label: t('parent')
+      label: trans('parent')
     }, {
       name: 'email',
       type: 'email',
-      label: t('email')
+      label: trans('email')
     }, {
       name: 'code',
       type: 'string',
-      label: t('code')
+      label: trans('code')
     }, {
       name: 'parent',
       type: 'organization',
-      label: t('parent')
+      label: trans('parent')
     }
   ],
   card: OrganizationCard

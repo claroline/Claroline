@@ -2,8 +2,10 @@ import {makeActionCreator} from '#/main/core/scaffolding/actions'
 
 import {API_REQUEST} from '#/main/core/api/actions'
 
-export const RESOURCE_UPDATE_NODE        = 'RESOURCE_UPDATE_NODE'
-export const RESOURCE_UPDATE_PUBLICATION = 'RESOURCE_UPDATE_PUBLICATION'
+import {select} from '#/main/core/resource/selectors'
+
+export const RESOURCE_UPDATE_NODE          = 'RESOURCE_UPDATE_NODE'
+export const RESOURCE_UPDATE_PUBLICATION   = 'RESOURCE_UPDATE_PUBLICATION'
 export const RESOURCE_UPDATE_NOTIFICATIONS = 'RESOURCE_UPDATE_NOTIFICATIONS'
 
 export const actions = {}
@@ -11,6 +13,18 @@ export const actions = {}
 actions.update              = makeActionCreator(RESOURCE_UPDATE_NODE, 'resourceNode')
 actions.updatePublication   = makeActionCreator(RESOURCE_UPDATE_PUBLICATION)
 actions.updateNotifications = makeActionCreator(RESOURCE_UPDATE_NOTIFICATIONS)
+
+actions.triggerLifecycleAction = (action) => (dispatch, getState) => {
+  const lifecycleActions = select.resourceLifecycle(getState())
+
+  // checks if the current resource implements the action
+  if (lifecycleActions[action]) {
+    // dispatch the implemented action with resourceNode as param (don't know if this is useful)
+    return lifecycleActions[action](
+      select.resourceNode(getState())
+    )
+  }
+}
 
 actions.updateNode = (resourceNode) => ({
   [API_REQUEST]: {
@@ -25,6 +39,7 @@ actions.updateNode = (resourceNode) => ({
 
 actions.togglePublication = (resourceNode) => ({
   [API_REQUEST]: {
+    type: resourceNode.meta.published ? 'unpublish' : 'publish',
     url: [
       resourceNode.meta.published ? 'claro_resource_node_unpublish' : 'claro_resource_node_publish',
       {id: resourceNode.id}

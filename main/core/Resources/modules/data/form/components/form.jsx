@@ -4,6 +4,7 @@ import classes from 'classnames'
 import get from 'lodash/get'
 
 import {t} from '#/main/core/translation'
+import {toKey} from '#/main/core/scaffolding/text/utils'
 
 import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
 import {SubSet} from '#/main/core/layout/form/components/fieldset/sub-set.jsx'
@@ -136,7 +137,7 @@ class Form extends Component {
         }
 
         {primarySections.map(primarySection =>
-          <div key={primarySection.id} className="form-primary-section panel panel-default">
+          <div key={toKey(primarySection.title)} className="form-primary-section panel panel-default">
             <fieldset className="panel-body">
               {React.createElement('h'+hLevel, {
                 className: 'sr-only'
@@ -145,7 +146,7 @@ class Form extends Component {
               {this.renderFields(primarySection.fields)}
 
               {primarySection.advanced &&
-              <AdvancedSection {...primarySection.advanced} />
+                <AdvancedSection {...primarySection.advanced} />
               }
             </fieldset>
           </div>
@@ -159,8 +160,7 @@ class Form extends Component {
           >
             {otherSections.map(section =>
               <FormSection
-                key={section.id}
-                id={section.id}
+                key={toKey(section.title)}
                 icon={section.icon}
                 title={section.title}
                 errors={this.props.errors}
@@ -190,7 +190,7 @@ Form.propTypes = {
   /**
    * Is the form embed into another ?
    *
-   * Permits to know if we use a <main> or a <section> tag.
+   * Permits to know if we use a <form> or a <fieldset> tag.
    */
   embedded: T.bool,
   level: T.number,

@@ -1,9 +1,6 @@
 import invariant from 'invariant'
 
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {actions as baseActions} from './../actions'
-import {VIEW_CORRECTION_QUESTIONS, VIEW_CORRECTION_ANSWERS} from './../enums'
-import {navigate} from './../router'
 import {selectors} from './selectors'
 import {API_REQUEST} from '#/main/core/api/actions'
 
@@ -26,19 +23,14 @@ actions.fetchCorrection = quizId => ({
     url: ['exercise_correction_questions', {exerciseId: quizId}],
     success: (data, dispatch) => {
       dispatch(initCorrection(data))
-    },
-    error: () => navigate('overview')
+    }
   }
 })
 
 actions.displayQuestions = () => {
   return (dispatch, getState) => {
     if (!selectors.questionsFetched(getState())) {
-      dispatch(actions.fetchCorrection(selectors.quizId(getState()))).then(() => {
-        dispatch(baseActions.updateViewMode(VIEW_CORRECTION_QUESTIONS))
-      })
-    } else {
-      dispatch(baseActions.updateViewMode(VIEW_CORRECTION_QUESTIONS))
+      dispatch(actions.fetchCorrection(selectors.quizId(getState())))
     }
   }
 }
@@ -48,12 +40,10 @@ actions.displayQuestionAnswers = id => {
   return (dispatch, getState) => {
     if (!selectors.questionsFetched(getState())) {
       dispatch(actions.fetchCorrection(selectors.quizId(getState()))).then(() => {
-        dispatch(setCurrentQuestionId(id))
-        dispatch(baseActions.updateViewMode(VIEW_CORRECTION_ANSWERS))
+        dispatch(setCurrentQuestionId(id)) // TODO : remove me : it's managed by router
       })
     } else {
-      dispatch(setCurrentQuestionId(id))
-      dispatch(baseActions.updateViewMode(VIEW_CORRECTION_ANSWERS))
+      dispatch(setCurrentQuestionId(id)) // TODO : remove me : it's managed by router
     }
   }
 }

@@ -2,50 +2,58 @@ import React from 'react'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-/*import {generateUrl} from '#/main/core/api/router'*/
 import {matchPath, withRouter} from '#/main/core/router'
 import {trans} from '#/main/core/translation'
+import {number} from '#/main/core/intl'
 import {t_res} from '#/main/core/resource/translation'
 import {currentUser} from '#/main/core/user/current'
 
 import {getSimpleAccessRule, hasCustomRules} from '#/main/core/resource/rights'
 
 /*import {MODAL_DELETE_CONFIRM}      from '#/main/core/layout/modal'*/
-import {MODAL_RESOURCE_PROPERTIES} from '#/main/core/resource/components/modal/edit-properties.jsx'
-import {MODAL_RESOURCE_RIGHTS}     from '#/main/core/resource/components/modal/edit-rights.jsx'
+import {MODAL_RESOURCE_PROPERTIES} from '#/main/core/resource/components/modal/edit-properties'
+import {MODAL_RESOURCE_RIGHTS}     from '#/main/core/resource/components/modal/edit-rights'
 
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {
   PageActions,
   PageGroupActions,
   PageAction,
   FullScreenAction,
   MoreAction
-} from '#/main/core/layout/page/components/page-actions.jsx'
-
-const authenticatedUser = currentUser()
+} from '#/main/core/layout/page/components/page-actions'
 
 const PublishAction = props =>
   <PageAction
-    id="resource-publish"
-    title={t_res(props.published ? 'resource_unpublish' : 'resource_publish')}
-    icon={classes(props.published ? 'fa-eye' : 'fa-eye-slash', 'fa')}
-    action={props.togglePublication}
-  />
+    type="callback"
+    label={t_res(props.resourceNode.meta.published ? 'resource_unpublish' : 'resource_publish')}
+    icon={classes(props.resourceNode.meta.published ? 'fa-eye' : 'fa-eye-slash', 'fa')}
+    callback={props.togglePublication}
+  >
+    {props.resourceNode.meta.published &&
+      <span className="label label-primary">
+        {number(props.resourceNode.meta.views, true)}
+      </span>
+    }
+  </PageAction>
 
 PublishAction.propTypes = {
-  published: T.bool.isRequired,
+  resourceNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ).isRequired,
   togglePublication: T.func.isRequired
 }
 
 const FavoriteAction = props =>
   <PageAction
-    id="resource-favorite"
-    title={props.favorited ? 'You have favorited this resource. (click to remove it)' : 'You have not favorited this resource yet. (click to favorite it)'}
+    type="callback"
+    label={props.favorited ? 'You have favorited this resource. (click to remove it)' : 'You have not favorited this resource yet. (click to favorite it)'}
     icon={classes('fa', {
       'fa-star-o': !props.favorited,
       'fa-star': props.favorited
     })}
-    action={props.toggleFavorite}
+    callback={props.toggleFavorite}
   />
 
 FavoriteAction.propTypes = {
@@ -54,8 +62,12 @@ FavoriteAction.propTypes = {
 }
 
 const ManageRightsAction = props => {
+  // computes simplified version of current rights
+  const rights = getSimpleAccessRule(props.resourceNode.rights.all.permissions, props.resourceNode.workspace)
+  const customRules = hasCustomRules(props.resourceNode.rights.all.permissions, props.resourceNode.workspace)
+
   let title, icon
-  switch (props.rights) {
+  switch (rights) {
     case 'all':
       title = 'resource_rights_all_tip'
       icon = 'fa-unlock'
@@ -76,12 +88,15 @@ const ManageRightsAction = props => {
 
   return (
     <PageAction
-      id="resource-rights"
-      title={t_res(title)}
+      type="modal"
+      label={t_res(title)}
       icon={classes('fa', icon)}
-      action={props.openRightsManagement}
+      modal={[MODAL_RESOURCE_RIGHTS, {
+        resourceNode: props.resourceNode,
+        save: props.update
+      }]}
     >
-      {props.customRules &&
+      {customRules &&
         <span className="fa fa-asterisk text-danger" />
       }
     </PageAction>
@@ -89,21 +104,18 @@ const ManageRightsAction = props => {
 }
 
 ManageRightsAction.propTypes = {
-  rights: T.oneOf(['all', 'admin', 'user', 'workspace']).isRequired,
-  customRules: T.bool,
-  openRightsManagement: T.func.isRequired
-}
-
-ManageRightsAction.defaultProps = {
-  customRules: false
+  resourceNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ).isRequired,
+  update: T.func.isRequired
 }
 
 const LikeAction = props =>
   <PageAction
-    id="resource-like"
-    title="Like this resource"
+    type="callback"
+    label="Like this resource"
     icon="fa fa-thumbs-o-up"
-    action={props.handleLike}
+    callback={props.handleLike}
   >
     <span className="label label-primary">
       {props.likes}
@@ -116,29 +128,65 @@ LikeAction.propTypes = {
 }
 
 function getMoreActions(resourceNode, props) {
+  const authenticatedUser = currentUser()
+
   return [
-    // edit resource properties
+    // administrate
     {
+      id: 'resource-edit-properties',
+      type: 'modal',
       icon: 'fa fa-fw fa-pencil',
       label: t_res('edit-properties'),
       group: t_res('resource_management'),
       displayed: resourceNode.rights.current.administrate,
-      action: () => props.showModal(MODAL_RESOURCE_PROPERTIES, {
+      modal: [MODAL_RESOURCE_PROPERTIES, {
         resourceNode: resourceNode,
         save: props.updateNode
-      })
+      }]
     }, {
+      id: 'resource-open-tracking',
+      type: 'url',
+      icon: 'fa fa-fw fa-line-chart',
+      label: t_res('open-tracking'),
+      group: t_res('resource_management'),
+      displayed: resourceNode.rights.current.administrate,
+      target: ['claro_resource_action', {
+        resourceType: resourceNode.meta.type,
+        action: 'open-tracking',
+        node: resourceNode.autoId
+      }]
+    },
+    // notifications
+    {
+      id: 'resource-toggle-notifications',
+      type: 'callback',
       icon: 'fa fa-fw fa-bell-o',
-      label: trans('follow'),
-      group: trans('notification'),
+      label: trans('follow', {}, 'actions'),
+      group: t_res('resource_notifications'),
       displayed: authenticatedUser && !resourceNode.notifications.enabled,
-      action: () => props.toggleNotifications(resourceNode)
+      callback: () => props.toggleNotifications(resourceNode)
     }, {
+      id: 'resource-toggle-notifications',
+      type: 'callback',
       icon: 'fa fa-fw fa-bell',
-      label: trans('unfollow'),
-      group: trans('notification'),
+      label: trans('unfollow', {}, 'actions'),
+      group: t_res('resource_notifications'),
       displayed: authenticatedUser && resourceNode.notifications.enabled,
-      action: () => props.toggleNotifications(resourceNode)
+      callback: () => props.toggleNotifications(resourceNode)
+    },
+    // export
+    {
+      id: 'resource-export',
+      type: 'url',
+      icon: 'fa fa-fw fa-download',
+      label: trans('export', {}, 'actions'),
+      //group: trans('resource_notifications'),
+      displayed: resourceNode.rights.current.export,
+      target: ['claro_resource_action', {
+        resourceType: resourceNode.meta.type,
+        action: 'export',
+        node: resourceNode.autoId
+      }]
     }
   ]
 
@@ -149,16 +197,6 @@ function getMoreActions(resourceNode, props) {
   >
     <span className="fa fa-fw fa-tags" />
     Manage tags
-  </MenuItem>,*/
-
-  // TODO : enable tracking. It can't be enabled because for now resource actions wants the ID of the node
-  // and we only have its UUID
-  /*<MenuItem
-    key="resource-log"
-    eventKey="resource-log"
-  >
-    <span className="fa fa-fw fa-line-chart" />
-    {t_res('open-tracking')}
   </MenuItem>,*/
 
   // TODO : create new action
@@ -194,25 +232,8 @@ function getMoreActions(resourceNode, props) {
     Add a note
   </MenuItem>,*/
 
-  // TODO : enable delete and export. It can't be enabled because for now resource actions wants the ID of the node
-  // and we only have its UUID
-  /*resourceNode.rights.current.export &&
-  <MenuItem key="resource-export-divider" divider={true} />,
-
-  resourceNode.rights.current.export &&
-  <MenuItem
-    key="resource-export"
-    eventKey="resource-export"
-    href={generateUrl('claro_resource_action', {
-      resourceType: resourceNode.meta.type,
-      action: 'export',
-      node: resourceNode.id
-    })}
-  >
-    <span className="fa fa-fw fa-upload" />
-    {t_res('export')}
-  </MenuItem>,
-
+  // TODO : enable delete
+  /*
   resourceNode.rights.current.delete &&
   <MenuItem key="resource-delete-divider" divider={true} />,
 
@@ -237,59 +258,44 @@ function getMoreActions(resourceNode, props) {
 
 const ManagementGroup = props => {
   let editorOpened = false
-  let editorOpen
-
   if (props.editor) {
-    if (props.editor.path) {
-      // routed editor
-      editorOpened = !!matchPath(props.location.pathname, {path: props.editor.path})
-      editorOpen = '#'+props.editor.path
-    } else {
-      // for retro compatibility (all resource editor should be routed)
-      editorOpened = props.editor.opened
-      editorOpen = props.editor.open
-    }
+    editorOpened = !!matchPath(props.location.pathname, {path: props.editor.path})
   }
-
 
   return (
     <PageGroupActions>
       {(props.editor && !editorOpened && props.resourceNode.rights.current.edit) &&
         <PageAction
-          id="resource-edit"
-          title={props.editor.label || t_res('edit')}
+          type="link"
+          label={props.editor.label || t_res('edit')}
           icon={props.editor.icon || 'fa fa-pencil'}
           primary={true}
-          action={editorOpen}
+          target={props.editor.path}
         />
       }
 
       {(props.editor && editorOpened && props.resourceNode.rights.current.edit) &&
         <PageAction
-          id="resource-save"
-          title={t_res('save')}
+          type="callback"
+          label={t_res('save')}
           icon="fa fa-floppy-o"
           primary={true}
           disabled={props.editor.save.disabled}
-          action={props.editor.save.action}
+          callback={props.editor.save.action}
         />
       }
 
       {props.resourceNode.rights.current.administrate &&
         <PublishAction
-          published={props.resourceNode.meta.published}
+          resourceNode={props.resourceNode}
           togglePublication={() => props.togglePublication(props.resourceNode)}
         />
       }
 
       {props.resourceNode.rights.current.administrate &&
         <ManageRightsAction
-          rights={getSimpleAccessRule(props.resourceNode.rights.all.permissions, props.resourceNode.workspace)}
-          customRules={hasCustomRules(props.resourceNode.rights.all.permissions, props.resourceNode.workspace)}
-          openRightsManagement={() => props.showModal(MODAL_RESOURCE_RIGHTS, {
-            resourceNode: props.resourceNode,
-            save: props.updateNode
-          })}
+          resourceNode={props.resourceNode}
+          update={props.updateNode}
         />
       }
     </PageGroupActions>
@@ -300,23 +306,10 @@ ManagementGroup.propTypes = {
   location: T.shape({
     pathname: T.string
   }).isRequired,
-  resourceNode: T.shape({
-    workspace: T.object,
-    meta: T.shape({
-      published: T.bool.isRequired
-    }).isRequired,
-    rights: T.shape({
-      current: T.shape({
-        edit: T.bool,
-        administrate: T.bool,
-        export: T.bool,
-        delete: T.bool
-      }).isRequired,
-      all: T.shape({
-        permissions: T.object.isRequired
-      }).isRequired
-    })
-  }).isRequired,
+  resourceNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ).isRequired,
+
   /**
    * If provided, this permits to manage the resource editor in the header (aka. open, save actions).
    */
@@ -332,8 +325,7 @@ ManagementGroup.propTypes = {
     }).isRequired
   }),
   togglePublication: T.func.isRequired,
-  updateNode: T.func.isRequired,
-  showModal: T.func.isRequired
+  updateNode: T.func.isRequired
 }
 
 const ManagementGroupActions = withRouter(ManagementGroup)
@@ -341,7 +333,12 @@ const ManagementGroupActions = withRouter(ManagementGroup)
 const CustomGroupActions = () =>
   <PageGroupActions>
     <FavoriteAction favorited={false} toggleFavorite={() => true} />
-    <PageAction id="resource-share" title="Share this resource" icon="fa fa-share" action="#share" />
+    <PageAction
+      type="callback"
+      label="Share this resource"
+      icon="fa fa-share"
+      callback={() => true}
+    />
     <LikeAction likes={100} handleLike={() => true} />
   </PageGroupActions>
 
@@ -360,7 +357,6 @@ const ResourcePageActions = props => {
           editor={props.editor}
           togglePublication={props.togglePublication}
           updateNode={props.updateNode}
-          showModal={props.showModal}
         />
       }
 
@@ -371,8 +367,7 @@ const ResourcePageActions = props => {
 
         {0 !== moreActions.length &&
           <MoreAction
-            id="resource-more"
-            title={t_res(props.resourceNode.meta.type)}
+            menuLabel={t_res(props.resourceNode.meta.type)}
             actions={moreActions}
           />
         }
@@ -382,28 +377,15 @@ const ResourcePageActions = props => {
 }
 
 ResourcePageActions.propTypes = {
-  resourceNode: T.shape({
-    name: T.string.isRequired,
-    description: T.string,
-    workspace: T.object,
-    meta: T.shape({
-      type: T.string.isRequired,
-      published: T.bool.isRequired
-    }).isRequired,
-    rights: T.shape({
-      current: T.shape({
-        edit: T.bool,
-        administrate: T.bool,
-        export: T.bool,
-        delete: T.bool
-      }),
-      all: T.object
-    })
-  }).isRequired,
+  /**
+   * The current ResourceNode.
+   */
+  resourceNode: T.shape(
+    ResourceNodeTypes.propTypes
+  ).isRequired,
 
   fullscreen: T.bool.isRequired,
   toggleFullscreen: T.func.isRequired,
-  showModal: T.func.isRequired,
 
   togglePublication: T.func.isRequired,
   updateNode: T.func.isRequired,
@@ -427,15 +409,9 @@ ResourcePageActions.propTypes = {
   /**
    * Custom actions for the resources added by the UI.
    */
-  customActions: T.arrayOf(T.shape({
-    icon: T.string.isRequired,
-    label: T.string.isRequired,
-    disabled: T.bool,
-    displayed: T.bool,
-    action: T.oneOfType([T.string, T.func]).isRequired,
-    dangerous: T.bool,
-    group: T.string
-  }))
+  customActions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  ))
 }
 
 ResourcePageActions.defaultProps = {

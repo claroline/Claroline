@@ -23,7 +23,6 @@ const LocationForm = props =>
     name="locations.current"
     sections={[
       {
-        id: 'general',
         title: t('general'),
         primary: true,
         fields: [
@@ -31,7 +30,6 @@ const LocationForm = props =>
           {name: 'meta.type', type: 'enum', label: t('type'), options: {choices: locationTypes}}
         ]
       }, {
-        id: 'contact',
         title: t('contact'),
         icon: 'fa fa-fw fa-address-card',
         fields: [
@@ -44,7 +42,6 @@ const LocationForm = props =>
           {name: 'country', type: 'string', label: t('country'), required: true}
         ]
       }, {
-        id: 'geolocation',
         title: t('geolocation'),
         icon: 'fa fa-fw fa-map-marker',
         fields: [
@@ -58,26 +55,26 @@ const LocationForm = props =>
       level={3}
     >
       <FormSection
-        id="location-users"
         className="embedded-list-section"
         icon="fa fa-fw fa-user"
         title={t('users')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: t('add_user'),
-            action: () => props.pickUsers(props.location.id)
+            callback: () => props.pickUsers(props.location.id)
           }
         ]}
       >
         <DataListContainer
           name="locations.current.users"
-          open={UserList.open}
           fetch={{
             url: ['apiv2_location_list_users', {id: props.location.id}],
             autoload: props.location.id && !props.new
           }}
+          primaryAction={UserList.open}
           delete={{
             url: ['apiv2_location_remove_users', {id: props.location.id}]
           }}
@@ -87,26 +84,26 @@ const LocationForm = props =>
       </FormSection>
 
       <FormSection
-        id="location-groups"
         className="embedded-list-section"
         icon="fa fa-fw fa-users"
         title={t('groups')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: t('add_group'),
-            action: () => props.pickGroups(props.location.id)
+            callback: () => props.pickGroups(props.location.id)
           }
         ]}
       >
         <DataListContainer
           name="locations.current.groups"
-          open={GroupList.open}
           fetch={{
             url: ['apiv2_location_list_groups', {id: props.location.id}],
             autoload: props.location.id && !props.new
           }}
+          primaryAction={GroupList.open}
           delete={{
             url: ['apiv2_location_remove_groups', {id: props.location.id}]
           }}
@@ -116,26 +113,26 @@ const LocationForm = props =>
       </FormSection>
 
       <FormSection
-        id="location-organizations"
         className="embedded-list-section"
         icon="fa fa-fw fa-building"
         title={t('organizations')}
         disabled={props.new}
         actions={[
           {
+            type: 'callback',
             icon: 'fa fa-fw fa-plus',
             label: t('add_organizations'),
-            action: () => props.pickOrganizations(props.location.id)
+            callback: () => props.pickOrganizations(props.location.id)
           }
         ]}
       >
         <DataListContainer
           name="locations.current.organizations"
-          open={OrganizationList.open}
           fetch={{
             url: ['apiv2_location_list_organizations', {id: props.location.id}],
             autoload: props.location.id && !props.new
           }}
+          primaryAction={OrganizationList.open}
           delete={{
             url: ['apiv2_location_remove_organizations', {id: props.location.id}]
           }}

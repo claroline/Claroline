@@ -6,11 +6,11 @@ import {GroupList} from '#/main/core/administration/user/group/components/group-
 const Groups = () =>
   <DataListContainer
     name="groups.list"
-    open={GroupList.open}
     fetch={{
       url: ['apiv2_group_list_managed'],
       autoload: true
     }}
+    primaryAction={GroupList.open}
     delete={{
       url: ['apiv2_group_delete_bulk']
     }}

@@ -31,7 +31,7 @@ implementPropTypes(Text, FormFieldTypes, {
 }, {
   value: '',
   long: false,
-  minRows: 2
+  minRows: 4
 })
 
 export {

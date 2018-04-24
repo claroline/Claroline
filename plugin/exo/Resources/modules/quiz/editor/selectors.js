@@ -147,7 +147,25 @@ const valid = createSelector(
   }
 )
 
+// todo remove default exports and use `select`
 export default {
+  quiz,
+  items,
+  thumbnails,
+  currentObjectDeep,
+  currentObjectIndex,
+  quizOpenPanel,
+  stepOpenPanel,
+  nextObject,
+  editor,
+  valid,
+  validating,
+  saved,
+  steps,
+  tags
+}
+
+export const select = {
   quiz,
   items,
   thumbnails,

@@ -1,9 +1,8 @@
-import {getUrl} from '#/main/core/api/router'
+import {url} from '#/main/core/api/router'
 import {makeInstanceActionCreator} from '#/main/core/scaffolding/actions'
 
 import {API_REQUEST} from '#/main/core/api/actions'
 import {select as listSelect} from '#/main/core/data/list/selectors'
-import {getDataQueryString} from '#/main/core/data/list/utils'
 
 export const actions = {}
 
@@ -37,14 +36,14 @@ export const LIST_DATA_INVALIDATE = 'LIST_DATA_INVALIDATE'
 
 actions.loadData = makeInstanceActionCreator(LIST_DATA_LOAD, 'data', 'total')
 actions.invalidateData = makeInstanceActionCreator(LIST_DATA_INVALIDATE)
-actions.fetchData = (listName, url) => (dispatch, getState) => {
+actions.fetchData = (listName, target) => (dispatch, getState) => {
   const listState = listSelect.list(getState(), listName)
 
   // todo use ACTION_REFRESH type if we reload because of invalidation
 
   return dispatch({
     [API_REQUEST]: {
-      url: getUrl(url) + listSelect.queryString(listState),
+      url: url(target) + listSelect.queryString(listState),
       success: (response, dispatch) => {
         if (listSelect.currentPage(listState) !== response.page) {
           // we reset current page because if we request a non existing page,
@@ -63,13 +62,14 @@ actions.fetchData = (listName, url) => (dispatch, getState) => {
 export const LIST_DATA_DELETE = 'LIST_DATA_DELETE'
 
 actions.deleteItems = makeInstanceActionCreator(LIST_DATA_DELETE, 'items')
-actions.deleteData = (listName, url, items) => ({
+actions.deleteData = (listName, target, items) => ({
   [API_REQUEST]: {
-    url: getUrl(url) + getDataQueryString(items),
+    url: url(target, {ids: items.map(item => item.id)}),
     request: {
       method: 'DELETE'
     },
     success: (data, dispatch) => {
+      dispatch(actions.deleteItems(listName, items))
       dispatch(actions.invalidateData(listName))
     }
   }

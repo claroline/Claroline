@@ -1,4 +1,4 @@
-import {bootstrap} from '#/main/core/scaffolding/bootstrap'
+import {bootstrap} from '#/main/app/bootstrap'
 
 import {registerType} from '#/main/core/data'
 import {FIELDS_TYPE, fieldsDefinition} from '#/main/core/data/types/fields'

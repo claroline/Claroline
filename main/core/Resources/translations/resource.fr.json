@@ -23,7 +23,7 @@
     "media": "Média",
     "more": "Plus",
     "open": "Ouvrir",
-    "open-tracking": "Voir le suivi de l'objet",
+    "open-tracking": "Voir le suivi",
     "rename": "Renommer",
     "resource_access_code": "Restreindre par code",
     "resource_access_ips": "Restreindre par IPs",
@@ -40,8 +40,6 @@
     "resource_fullscreen": "Afficher en plein écran à l'ouverture",
     "resource_license": "License",
     "resource_management": "Gestion",
-    "resource_meta": "Informations",
-    "resource_name": "Nom",
     "resource_name_form_name": "Nom de la ressource",
     "resource_no_allowed_ip": "Aucune IP n'est authorisée.",
     "resource_portal_help": "Cette option rendra la ressource accessible à tous les utilisateurs anonymes . Vous devrez enlever les droits aux anonymes dans la gestion des droits pour restreindre de nouveau l'accès.",
@@ -69,5 +67,8 @@
     "resource_overview": "Vue d'ensemble de la ressource",
     "resource_overview_actions": "Actions disponibles",
     "resource_overview_info": "Informations",
-    "resource_overview_progression": "Ma progression"
+    "resource_overview_progression": "Ma progression",
+    "resource_notifications": "Notifications",
+    "resource_showIcon": "Afficher l'icône de la ressource dans l'entête",
+    "resource_showIcon_help": "Pour les ressources évaluatives, l'icône est remplacée par une jauge de progression."
 }

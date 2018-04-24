@@ -5,14 +5,14 @@ import {registerModals} from '#/main/core/layout/modal'
 import {PageHeader} from '#/main/core/layout/page'
 import {RoutedPage} from '#/main/core/layout/router'
 
-import {t_res} from '#/main/core/resource/translation'
-import {ResourcePageActions} from '#/main/core/resource/components/page-actions.jsx'
+import {Action as ActionTypes} from '#/main/app/action/prop-types'
+import {ResourcePageActions} from '#/main/core/resource/components/page-actions'
 import {ResourceNode as ResourceNodeTypes} from '#/main/core/resource/prop-types'
 import {ProgressionGauge} from '#/main/core/resource/evaluation/components/progression-gauge.jsx'
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/evaluation/prop-types'
 
-import {MODAL_RESOURCE_PROPERTIES, EditPropertiesModal} from '#/main/core/resource/components/modal/edit-properties.jsx'
-import {MODAL_RESOURCE_RIGHTS,     EditRightsModal}     from '#/main/core/resource/components/modal/edit-rights.jsx'
+import {MODAL_RESOURCE_PROPERTIES, EditPropertiesModal} from '#/main/core/resource/components/modal/edit-properties'
+import {MODAL_RESOURCE_RIGHTS,     EditRightsModal}     from '#/main/core/resource/components/modal/edit-rights'
 
 class ResourcePage extends Component {
   constructor(props) {
@@ -26,7 +26,7 @@ class ResourcePage extends Component {
 
     // open resource in fullscreen if configured
     this.state = {
-      fullscreen: this.props.resourceNode.display.fullscreen
+      fullscreen: !this.props.embedded && this.props.resourceNode.display.fullscreen
     }
 
     this.toggleFullscreen = this.toggleFullscreen.bind(this)
@@ -50,32 +50,32 @@ class ResourcePage extends Component {
         alerts={this.props.alerts}
         removeAlert={this.props.removeAlert}
       >
-        <PageHeader
-          className="resource-header"
-          title={this.props.resourceNode.name}
-          subtitle={t_res(this.props.resourceNode.meta.type)}
-          poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
-        >
-          {this.props.userEvaluation &&
-            <ProgressionGauge
-              userEvaluation={this.props.userEvaluation}
-              width={70}
-              height={70}
-            />
-          }
+        {!this.props.embedded &&
+          <PageHeader
+            className="resource-header"
+            title={this.props.resourceNode.name}
+            poster={this.props.resourceNode.poster ? this.props.resourceNode.poster.url : undefined}
+          >
+            {this.props.resourceNode.display.showIcon && this.props.userEvaluation &&
+              <ProgressionGauge
+                userEvaluation={this.props.userEvaluation}
+                width={70}
+                height={70}
+              />
+            }
 
-          <ResourcePageActions
-            resourceNode={this.props.resourceNode}
-            editor={this.props.editor}
-            customActions={this.props.customActions}
-            fullscreen={this.state.fullscreen}
-            toggleFullscreen={this.toggleFullscreen}
-            togglePublication={this.props.togglePublication}
-            showModal={this.props.showModal}
-            updateNode={this.props.updateNode}
-            toggleNotifications={this.props.toggleNotifications}
-          />
-        </PageHeader>
+            <ResourcePageActions
+              resourceNode={this.props.resourceNode}
+              editor={this.props.editor}
+              customActions={this.props.customActions}
+              fullscreen={this.state.fullscreen}
+              toggleFullscreen={this.toggleFullscreen}
+              togglePublication={this.props.togglePublication}
+              updateNode={this.props.updateNode}
+              toggleNotifications={this.props.toggleNotifications}
+            />
+          </PageHeader>
+        }
 
         {this.props.children}
       </RoutedPage>
@@ -98,7 +98,9 @@ ResourcePage.propTypes = {
     UserEvaluationTypes.propTypes
   ),
 
-  customActions: T.array,
+  customActions: T.arrayOf(T.shape(
+    ActionTypes.propTypes
+  )),
 
   /**
    * If provided, this permits to manage the resource editor in the header (aka. open, save actions).
@@ -138,10 +140,6 @@ ResourcePage.propTypes = {
 
   // resource notification
   toggleNotifications: T.func
-}
-
-ResourcePage.defaultProps = {
-  embedded: false
 }
 
 export {

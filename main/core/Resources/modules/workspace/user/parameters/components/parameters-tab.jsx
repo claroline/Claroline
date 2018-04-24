@@ -45,7 +45,6 @@ const Parameters = props => {
     name="parameters"
     sections={[
       {
-        id: 'registration',
         icon: 'fa fa-fw fa-user-plus',
         title: trans('registration'),
         defaultOpened: true,
@@ -92,7 +91,6 @@ const Parameters = props => {
           }
         ]
       }, {
-        id: 'restrictions',
         icon: 'fa fa-fw fa-key',
         title: trans('access_restrictions'),
         fields: [

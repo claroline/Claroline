@@ -1,7 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {LiquidGauge} from '#/main/core/layout/evaluation/components/liquid-gauge.jsx'
+import {number} from '#/main/core/intl'
+import {LiquidGauge} from '#/main/core/layout/gauge/components/liquid-gauge'
 
 import {UserEvaluation as UserEvaluationTypes} from '#/main/core/resource/evaluation/prop-types'
 
@@ -13,6 +14,8 @@ const ProgressionGauge = props =>
     id="user-progression"
     type="user"
     value={props.userEvaluation.score ? (props.userEvaluation.score / props.userEvaluation.scoreMax)*100 : 0}
+    displayValue={(value) => number(value)}
+    unit="%"
     width={props.width}
     height={props.height}
   />

@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="innova_path")
  * @ORM\Entity(repositoryClass="Innova\PathBundle\Repository\PathRepository")
  */
-class Path extends AbstractResource implements \JsonSerializable
+class Path extends AbstractResource
 {
     use UuidTrait;
 
@@ -59,7 +59,7 @@ class Path extends AbstractResource implements \JsonSerializable
     /**
      * Steps linked to the path.
      *
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var ArrayCollection|Step[]
      *
      * @ORM\OneToMany(targetEntity="Innova\PathBundle\Entity\Step", mappedBy="path", cascade={"persist", "remove"})
      * @ORM\OrderBy({
@@ -292,7 +292,7 @@ class Path extends AbstractResource implements \JsonSerializable
     /**
      * Get steps.
      *
-     * @return \Doctrine\Common\Collections\Collection
+     * @return ArrayCollection|Step[]
      */
     public function getSteps()
     {
@@ -384,9 +384,9 @@ class Path extends AbstractResource implements \JsonSerializable
     /**
      * Set completeBlockingCondition.
      *
-     * @param bool completeBlockingCondition
+     * @param bool $completeBlockingCondition
      *
-     * @return \Innova\PathBundle\Entity\Path\Path
+     * @return Path
      */
     public function setCompleteBlockingCondition($completeBlockingCondition)
     {
@@ -408,9 +408,9 @@ class Path extends AbstractResource implements \JsonSerializable
     /**
      * Set manualProgressionAllowed.
      *
-     * @param bool manualProgressionAllowed
+     * @param bool $manualProgressionAllowed
      *
-     * @return \Innova\PathBundle\Entity\Path\Path
+     * @return Path
      */
     public function setManualProgressionAllowed($manualProgressionAllowed)
     {
@@ -443,7 +443,9 @@ class Path extends AbstractResource implements \JsonSerializable
     /**
      * Initialize JSON structure.
      *
-     * @return \Innova\PathBundle\Entity\Path\Path
+     * @return Path
+     *
+     * @deprecated
      */
     public function initializeStructure()
     {
@@ -461,52 +463,6 @@ class Path extends AbstractResource implements \JsonSerializable
         $this->setStructure(json_encode($structure));
 
         return $this;
-    }
-
-    /**
-     * Wrapper to access workspace of the Path.
-     *
-     * @return \Claroline\CoreBundle\Entity\Workspace\Workspace
-     */
-    public function getWorkspace()
-    {
-        $workspace = null;
-        if (!empty($this->resourceNode)) {
-            $workspace = $this->resourceNode->getWorkspace();
-        }
-
-        return $workspace;
-    }
-
-    /**
-     * Wrapper to access creator of the Path.
-     *
-     * @return \Claroline\CoreBundle\Entity\User
-     */
-    public function getCreator()
-    {
-        $creator = null;
-        if (!empty($this->resourceNode)) {
-            $creator = $this->resourceNode->getCreator();
-        }
-
-        return $creator;
-    }
-
-    public function jsonSerialize()
-    {
-        $steps = $this->getRootSteps();
-
-        return [
-            'id' => $this->id,
-            'name' => $this->getResourceNode()->getName(),
-            'description' => $this->description,
-            'breadcrumbs' => $this->breadcrumbs,
-            'summaryDisplayed' => $this->summaryDisplayed,
-            'completeBlockingCondition' => $this->completeBlockingCondition,
-            'manualProgressionAllowed' => $this->manualProgressionAllowed,
-            'steps' => $steps,
-        ];
     }
 
     /**

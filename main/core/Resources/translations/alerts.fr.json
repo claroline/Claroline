@@ -152,5 +152,33 @@
       "title": "Echec du téléchargement",
       "message": "Nous n'avons pas réussi à télécharger votre fichier."
     }
+  },
+  "publish": {
+    "pending": {
+      "title": "Publication en cours",
+      "message": "Veuillez patienter pendant la publication du contenu."
+    },
+    "success": {
+      "title": "Publication réussie",
+      "message": "Votre contenu a correctement été publié et est maintenant visible."
+    },
+    "error": {
+      "title": "Echec de la publication",
+      "message": "Nous n'avons pas réussi à publier votre contenu."
+    }
+  },
+  "unpublish": {
+    "pending": {
+      "title": "Dépublication en cours",
+      "message": "Veuillez patienter pendant la dépublication du contenu."
+    },
+    "success": {
+      "title": "Dépublication réussie",
+      "message": "Votre contenu a correctement été dépublié et n'est plus visible."
+    },
+    "error": {
+      "title": "Echec de la dépublication",
+      "message": "Nous n'avons pas réussi à dépublier votre contenu."
+    }
   }
 }

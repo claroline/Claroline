@@ -21,6 +21,8 @@ import {select as pageSelect} from '#/main/core/layout/page/selectors'
 function mapStateToProps(state) {
   const newProps = {}
 
+  newProps.embedded = pageSelect.embedded(state)
+
   // grab data for optional features
   newProps.hasAlerts = pageSelect.hasAlerts(state)
   if (newProps.hasAlerts) {
@@ -74,6 +76,8 @@ function mapDispatchToProps(dispatch) {
  */
 function mergeProps(stateProps, dispatchProps, ownProps) {
   const props = {}
+
+  props.embedded = stateProps.embedded
 
   if (stateProps.hasAlerts) {
     props.alerts = stateProps.alerts

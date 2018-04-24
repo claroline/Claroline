@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import invariant from 'invariant'
 
-import {bootstrap} from '#/main/core/scaffolding/bootstrap'
+import {bootstrap} from '#/main/app/bootstrap'
 import {theme} from '#/main/core/scaffolding/asset'
 
 /**
@@ -37,6 +37,8 @@ class EmbeddedApp extends Component {
         invariant(false, `An error occurred while loading the EmbeddedApp : ${error}`)
       })
   }
+
+  componentWillUnmount() {}
 
   render() {
     return (

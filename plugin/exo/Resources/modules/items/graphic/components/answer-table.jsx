@@ -67,12 +67,12 @@ const AnswerTable = props =>
             border: `solid 1px ${area.color}`,
             borderRadius: area.shape === SHAPE_RECT ? 0 : '12px'
           }}/>
-        {props.highlightScore &&
-          <span className={classes('fa fa-fw', 'area-status-icon', {
-            'fa-check': area.score > 0,
-            'fa-times': area.score <= 0
-          })}/>
-        }
+          {props.highlightScore &&
+            <span className={classes('fa fa-fw', 'area-status-icon', {
+              'fa-check': area.score > 0,
+              'fa-times': area.score <= 0
+            })}/>
+          }
         </span>
         <span className="info-block">
           {area.feedback &&
@@ -83,7 +83,7 @@ const AnswerTable = props =>
           }
           {props.showScore &&
             <span className="solution-score">
-              {transChoice('solution_score', area.score, {score: area.score}, 'ujm_exo')}
+              {transChoice('solution_score', area.score, {score: area.score}, 'quiz')}
             </span>
           }
         </span>

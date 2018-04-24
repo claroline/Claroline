@@ -20,6 +20,11 @@ const User = {
     restrictions: T.shape({
       disabled: T.bool,
       dates: T.arrayOf(T.string)
+    }),
+    rights: T.shape({
+      current: T.shape({
+        edit: T.bool.isRequired
+      }).isRequired
     })
   },
   defaultProps: {

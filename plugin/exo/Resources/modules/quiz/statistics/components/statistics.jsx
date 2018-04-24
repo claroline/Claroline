@@ -13,46 +13,40 @@ import {tex} from '#/main/core/translation'
 
 const Statistics = props =>
   <div>
-    <div>
-      {Object.keys(props.steps).map((key, idx) =>
-        <div key={idx} className="quiz-item item-statistics">
-          <h3 className="step-title">
-            {props.steps[key].title ? props.steps[key].title : tex('step') + ' ' + (idx + 1)}
-          </h3>
+    {Object.keys(props.steps).map((key, idx) =>
+      <div key={idx} className="quiz-item item-statistics">
+        <h3 className="h4">
+          {props.steps[key].title ? props.steps[key].title : tex('step') + ' ' + (idx + 1)}
+        </h3>
 
-          {props.steps[key].items.map((itemUid, idxItem) => {
-            let item = props.items[itemUid]
-            return isQuestionType(item.type) ?
+        {props.steps[key].items.map((itemUid, idxItem) => {
+          let item = props.items[itemUid]
+          return isQuestionType(item.type) &&
+            <Panel key={item.id}>
+              {item.title &&
+                <h4 className="item-title">{item.title}</h4>
+              }
 
-                <Panel key={item.id}>
-                {item.title &&
-                  <h4 className="item-title">{item.title}</h4>
+              {React.createElement(
+                getDefinition(item.type).paper,
+                {
+                  item,
+                  showYours: false,
+                  showExpected: false,
+                  showStats: true,
+                  showScore: false,
+                  stats: getDefinition(item.type).generateStats(item, props.papers, props.allPapersStatistics)
                 }
+              )}
 
-                {React.createElement(
-                  getDefinition(item.type).paper,
-                  {
-                    item,
-                    showYours: false,
-                    showExpected: false,
-                    showStats: true,
-                    showScore: false,
-                    stats: getDefinition(item.type).generateStats(item, props.papers, props.allPapersStatistics)
-                  }
-                )}
-
-                <ItemMetadata
-                  item={item}
-                  numbering={props.numbering !== NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
-                />
-
-                </Panel>
-               :
-              ''
-          })}
-        </div>
-      )}
-    </div>
+              <ItemMetadata
+                item={item}
+                numbering={props.numbering !== NUMBERING_NONE ? (idx + 1) + '.' + getNumbering(props.numbering, idxItem): null}
+              />
+            </Panel>
+        })}
+      </div>
+    )}
   </div>
 
 Statistics.propTypes = {
@@ -62,15 +56,16 @@ Statistics.propTypes = {
   quiz: T.object.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const ConnectedStatistics = connect(
+  (state) => ({
+    quiz: quizSelect.quiz(state),
     papers: paperSelect.papers(state),
     numbering: quizSelect.quizNumbering(state),
     steps: quizSelect.steps(state),
     items: quizSelect.items(state)
-  }
+  })
+)(Statistics)
+
+export {
+  ConnectedStatistics as Statistics
 }
-
-const ConnectedStatistics = connect(mapStateToProps)(Statistics)
-
-export {ConnectedStatistics as Statistics}

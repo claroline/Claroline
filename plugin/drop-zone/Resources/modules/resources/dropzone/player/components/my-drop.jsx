@@ -6,7 +6,7 @@ import {trans} from '#/main/core/translation'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_CONFIRM} from '#/main/core/layout/modal'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {Button} from '#/main/core/layout/button/components/button.jsx'
+import {Button} from '#/main/app/action/components/button'
 
 import {DropzoneType, DropType} from '#/plugin/drop-zone/resources/dropzone/prop-types'
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
@@ -96,18 +96,19 @@ const MyDropComponent = props =>
     {props.isDropEnabled && !props.myDrop.finished &&
       <div className="text-right">
         <Button
-          className="btn-default"
-          onClick={() => props.addDocument(props.myDrop.id, props.dropzone.parameters.documents)}
+          type="callback"
+          className="btn btn-default"
+          callback={() => props.addDocument(props.myDrop.id, props.dropzone.parameters.documents)}
         >
           <span className="fa fa-fw fa-plus icon-with-text-right" />
           {trans('add_document', {}, 'dropzone')}
         </Button>
 
         <Button
-          className="btn-primary"
-          type="button"
+          type="callback"
+          className="btn btn-primary"
           disabled={!props.myDrop.documents || 0 === props.myDrop.documents.length}
-          onClick={() => props.submit(props.myDrop.id)}
+          callback={() => props.submit(props.myDrop.id)}
         >
           <span className="fa fa-fw fa-upload icon-with-text-right" />
           {trans('submit_my_drop', {}, 'dropzone')}

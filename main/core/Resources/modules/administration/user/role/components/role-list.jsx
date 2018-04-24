@@ -8,9 +8,11 @@ import {RoleCard} from '#/main/core/user/data/components/role-card'
 import {generateUrl} from '#/main/core/api/router'
 
 const RoleList = {
-  open: {
-    action: (row) => `#/roles/form/${row.id}`
-  },
+  open: (row) => ({
+    type: 'link',
+    target: `/roles/form/${row.id}`,
+    label: trans('edit', {}, 'actions')
+  }),
   definition: [
     {
       name: 'name',

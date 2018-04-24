@@ -47,16 +47,18 @@ function customActions(props) {
   const actions = []
 
   actions.push({
+    type: 'link',
     icon: 'fa fa-fw fa-home',
     label: trans('claroline_big_blue_button', {}, 'resource'),
-    action: '#/'
+    target: '/'
   })
 
   if (props.canEdit) {
     actions.push({
+      type: 'callback',
       icon: 'fa fa-fw fa-stop-circle',
       label: trans('bbb_end', {}, 'bbb'),
-      action: props.endBBB
+      callback: props.endBBB
     })
   }
 

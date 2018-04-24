@@ -14,9 +14,10 @@ const OverviewComponent = props =>
     contentText={props.path.display.description}
     actions={[
       { // TODO : implement continue and restart
+        type: 'link',
         icon: 'fa fa-fw fa-play icon-with-text-right',
         label: trans('start_path', {}, 'path'),
-        action: '#/play',
+        target: '/play',
         primary: true,
         disabled: props.empty,
         disabledMessages: props.empty ? [trans('start_disabled_empty')]:[]

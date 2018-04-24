@@ -35,6 +35,7 @@ const Page = props =>
     embedded={props.embedded}
     className={classes('page', props.className, {
       fullscreen: props.fullscreen,
+      main: !props.embedded,
       embedded: props.embedded
     })}
   >

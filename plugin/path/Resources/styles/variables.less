@@ -5,56 +5,7 @@
 // Claroline & bootstrap variables
 @import "../../../../main/core/Resources/less/themes/default/variables";
 
-
-// -
-// Base & utilities
-// ---
-
-// Due to the complexity of the path UI we need to use a custom grid (based on flexboxes)
-// By default uses the same configuration than bootstrap grid,
-// It can be disabled for theme purposes
-@path-grid-spacing-v: @component-margin-bottom;
-@path-grid-spacing-x: @grid-gutter-width;
-
-
-// -
-// Summary
-// ---
-
-// their is no sizing for xs because it's always 100% in this case
-@path-summary-width-sm:             percentage((6 / @grid-columns));
-@path-summary-width-md:             percentage((5 / @grid-columns));
-//@path-summary-width:                percentage((5 / @grid-columns)); // do not affect sm screens : in this case, summary is full screen
-@path-summary-fullscreen-width:     percentage((4 / @grid-columns)); // width of the summary in fullscreen mode (only for md & lg screens)
-@path-summary-collapsed-width:      50px;
-
-@path-summary-font:                 @summary-font;
-@path-summary-padding:              @summary-padding;
-@path-summary-bg:                   @summary-bg;
-@path-summary-color:                @summary-color;
-@path-summary-box-shadow-h:         @summary-box-shadow-h;
-@path-summary-box-shadow-v:         @summary-box-shadow-v;
 @path-summary-lvl-indent:           20px; // indent children of a step in the summary
-
-// Header
-@path-summary-title-color:          @path-summary-color;
-
-// Controls (open/close, pin buttons)
-@path-summary-control-bg:           @summary-link-bg;
-@path-summary-control-color:        @summary-link-color;
-@path-summary-control-hover-bg:     @summary-link-hover-bg;
-@path-summary-control-hover-color:  @summary-link-hover-color;
-@path-summary-control-active-bg:    @summary-link-active-bg;
-@path-summary-control-active-color: @summary-link-active-color;
-
-// Links
-@path-summary-link-bg:              @summary-link-bg;
-@path-summary-link-color:           @summary-link-color;
-@path-summary-link-border-color:    @summary-link-border-color;
-@path-summary-link-hover-bg:        @summary-link-hover-bg;
-@path-summary-link-hover-color:     @summary-link-hover-color;
-@path-summary-link-active-bg:       @summary-link-active-bg;
-@path-summary-link-active-color:    @summary-link-active-color;
 
 
 // -

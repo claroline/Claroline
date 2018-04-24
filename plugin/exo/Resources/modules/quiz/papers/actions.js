@@ -1,16 +1,12 @@
 import invariant from 'invariant'
 
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {navigate} from './../router'
-import {actions as baseActions} from './../actions'
-import {VIEW_PAPERS, VIEW_PAPER} from './../enums'
 import {selectors} from './selectors'
 import quizSelectors from './../selectors'
 import {normalize} from './normalizer'
 import {API_REQUEST} from '#/main/core/api/actions'
 
 export const PAPER_ADD = 'PAPER_ADD'
-export const PAPERS_LIST = 'PAPERS_LIST'
 export const PAPERS_INIT = 'PAPERS_INIT'
 export const PAPER_DISPLAY = 'PAPER_DISPLAY'
 export const PAPER_CURRENT = 'PAPER_DISPLAY'
@@ -30,8 +26,7 @@ actions.fetchPapers = quizId => ({
     success: (data, dispatch) => {
       dispatch(initPapers(normalize(data)))
       dispatch(setPaperFetched())
-    },
-    error: () => navigate('overview')
+    }
   }
 })
 
@@ -40,12 +35,10 @@ actions.displayPaper = id => {
   return (dispatch, getState) => {
     if (!selectors.papersFetched(getState()) && (!selectors.papers(getState())[id] || quizSelectors.papersShowStatistics(getState()))) {
       dispatch(actions.fetchPapers(selectors.quizId(getState()))).then(() => {
-        dispatch(actions.setCurrentPaper(id))
-        dispatch(baseActions.updateViewMode(VIEW_PAPER))
+        dispatch(actions.setCurrentPaper(id)) // TODO : remove me this should be managed by router
       })
     } else {
-      dispatch(actions.setCurrentPaper(id))
-      dispatch(baseActions.updateViewMode(VIEW_PAPER))
+      dispatch(actions.setCurrentPaper(id)) // TODO : remove me this should be managed by router
     }
   }
 }
@@ -53,11 +46,7 @@ actions.displayPaper = id => {
 actions.listPapers = () => {
   return (dispatch, getState) => {
     if (!selectors.papersFetched(getState())) {
-      dispatch(actions.fetchPapers(selectors.quizId(getState()))).then(() => {
-        dispatch(baseActions.updateViewMode(VIEW_PAPERS))
-      })
-    } else {
-      dispatch(baseActions.updateViewMode(VIEW_PAPERS))
+      dispatch(actions.fetchPapers(selectors.quizId(getState())))
     }
   }
 }
