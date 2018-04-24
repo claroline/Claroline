@@ -48,6 +48,8 @@ class ResourceType
      *     mappedBy="resourceType",
      *     cascade={"persist"}
      * )
+     *
+     * @var ArrayCollection|MaskDecoder[]
      */
     protected $maskDecoders;
 
@@ -96,6 +98,7 @@ class ResourceType
     {
         $this->abstractResources = new ArrayCollection();
         $this->actions = new ArrayCollection();
+        $this->maskDecoders = new ArrayCollection();
     }
 
     /**
@@ -155,7 +158,7 @@ class ResourceType
 
     public function addAbstractResource($abstractResource)
     {
-        $this->abstractResource->add($abstractResource);
+        $this->abstractResources->add($abstractResource);
     }
 
     public function setExportable($isExportable)
@@ -168,9 +171,26 @@ class ResourceType
         return $this->isExportable;
     }
 
+    /**
+     * @return MaskDecoder[]|ArrayCollection
+     */
     public function getMaskDecoders()
     {
         return $this->maskDecoders;
+    }
+
+    public function addMaskDecoder(MaskDecoder $maskDecoder)
+    {
+        if (!$this->maskDecoders->contains($maskDecoder)) {
+            $this->maskDecoders->add($maskDecoder);
+        }
+    }
+
+    public function removeMaskDecoder(MaskDecoder $maskDecoder)
+    {
+        if ($this->maskDecoders->contains($maskDecoder)) {
+            $this->maskDecoders->removeElement($maskDecoder);
+        }
     }
 
     public function setDefaultMask($mask)

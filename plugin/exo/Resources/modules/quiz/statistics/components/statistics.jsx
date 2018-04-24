@@ -56,15 +56,16 @@ Statistics.propTypes = {
   quiz: T.object.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const ConnectedStatistics = connect(
+  (state) => ({
+    quiz: quizSelect.quiz(state),
     papers: paperSelect.papers(state),
     numbering: quizSelect.quizNumbering(state),
     steps: quizSelect.steps(state),
     items: quizSelect.items(state)
-  }
+  })
+)(Statistics)
+
+export {
+  ConnectedStatistics as Statistics
 }
-
-const ConnectedStatistics = connect(mapStateToProps)(Statistics)
-
-export {ConnectedStatistics as Statistics}

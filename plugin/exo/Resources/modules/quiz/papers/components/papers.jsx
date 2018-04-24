@@ -103,13 +103,14 @@ Papers.propTypes = {
   quiz: T.object.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const ConnectedPapers = connect(
+  (state) => ({
+    quiz: quizSelect.quiz(state),
     admin: resourceSelect.editable(state) || quizSelect.papersAdmin(state),
     papers: paperSelect.papers(state)
-  }
+  })
+)(Papers)
+
+export {
+  ConnectedPapers as Papers
 }
-
-const ConnectedPapers = connect(mapStateToProps)(Papers)
-
-export {ConnectedPapers as Papers}
