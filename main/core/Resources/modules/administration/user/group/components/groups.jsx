@@ -11,10 +11,9 @@ const Groups = () =>
       autoload: true
     }}
     primaryAction={GroupList.open}
-    deleteAction={() => ({
-      type: 'url',
-      target: ['apiv2_group_delete_bulk']
-    })}
+    delete={{
+      url: ['apiv2_group_delete_bulk']
+    }}
     definition={GroupList.definition}
     card={GroupList.card}
   />

@@ -60,10 +60,9 @@ const GroupForm = props =>
             autoload: props.group.id && !props.new
           }}
           primaryAction={UserList.open}
-          deleteAction={() => ({
-            type: 'url',
-            target: ['apiv2_group_remove_users', {id: props.group.id}]
-          })}
+          delete={{
+            url: ['apiv2_group_remove_users', {id: props.group.id}]
+          }}
           definition={UserList.definition}
           card={UserList.card}
         />
@@ -90,10 +89,9 @@ const GroupForm = props =>
             autoload: props.group.id && !props.new
           }}
           primaryAction={RoleList.open}
-          deleteAction={() => ({
-            type: 'url',
-            target: ['apiv2_group_remove_roles', {id: props.group.id}]
-          })}
+          delete={{
+            url: ['apiv2_group_remove_roles', {id: props.group.id}]
+          }}
           definition={RoleList.definition}
           card={RoleList.card}
         />
@@ -120,10 +118,9 @@ const GroupForm = props =>
             autoload: props.group.id && !props.new
           }}
           primaryAction={OrganizationList.open}
-          deleteAction={() => ({
-            type: 'url',
-            target: ['apiv2_group_remove_organizations', {id: props.group.id}]
-          })}
+          delete={{
+            url: ['apiv2_group_remove_organizations', {id: props.group.id}]
+          }}
           definition={OrganizationList.definition}
           card={OrganizationList.card}
         />

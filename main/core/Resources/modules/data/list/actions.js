@@ -68,7 +68,10 @@ actions.deleteData = (listName, target, items) => ({
     request: {
       method: 'DELETE'
     },
-    success: (data, dispatch) => dispatch(actions.invalidateData(listName))
+    success: (data, dispatch) => {
+      dispatch(actions.deleteItems(listName, items))
+      dispatch(actions.invalidateData(listName))
+    }
   }
 })
 

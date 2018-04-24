@@ -1,3 +1,6 @@
+/* eslint-disable */
+
+// TODO find a way to re enabled ESLINT it crash because of the import
 
 const CORE_PLUGIN = 'core'
 

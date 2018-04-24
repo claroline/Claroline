@@ -11,11 +11,10 @@ const Roles = () =>
       autoload: true
     }}
     primaryAction={RoleList.open}
-    deleteAction={(rows) => ({
-      type: 'url',
+    delete={{
       target: ['apiv2_role_delete_bulk'],
-      disabled: !!rows.find(role => role.meta.readOnly)
-    })}
+      disabled: rows => !!rows.find(role => role.meta.readOnly)
+    }}
     definition={RoleList.definition}
     card={RoleList.card}
   />

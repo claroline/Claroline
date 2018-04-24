@@ -397,12 +397,6 @@ DataTree.propTypes = {
   primaryAction: T.func,
 
   /**
-   * Data delete action.
-   * Providing this object will automatically append the delete action to the actions list of rows and selection.
-   */
-  deleteAction: T.func,
-
-  /**
    * Search filters configuration.
    * Providing this object automatically display the search box component.
    */

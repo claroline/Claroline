@@ -75,10 +75,9 @@ const LocationForm = props =>
             autoload: props.location.id && !props.new
           }}
           primaryAction={UserList.open}
-          deleteAction={() => ({
-            type: 'url',
-            target: ['apiv2_location_remove_users', {id: props.location.id}]
-          })}
+          delete={{
+            url: ['apiv2_location_remove_users', {id: props.location.id}]
+          }}
           definition={UserList.definition}
           card={UserList.card}
         />
@@ -105,9 +104,9 @@ const LocationForm = props =>
             autoload: props.location.id && !props.new
           }}
           primaryAction={GroupList.open}
-          deleteAction={() => ({
+          delete={{
             url: ['apiv2_location_remove_groups', {id: props.location.id}]
-          })}
+          }}
           definition={GroupList.definition}
           card={GroupList.card}
         />
@@ -134,10 +133,9 @@ const LocationForm = props =>
             autoload: props.location.id && !props.new
           }}
           primaryAction={OrganizationList.open}
-          deleteAction={() => ({
-            type: 'url',
-            target: ['apiv2_location_remove_organizations', {id: props.location.id}]
-          })}
+          delete={{
+            url: ['apiv2_location_remove_organizations', {id: props.location.id}]
+          }}
           definition={OrganizationList.definition}
           card={OrganizationList.card}
         />
