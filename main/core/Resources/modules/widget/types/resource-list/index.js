@@ -1,7 +1,6 @@
 import merge from 'lodash/merge'
 
 import {trans} from '#/main/core/translation'
-import {url} from '#/main/core/api/router'
 
 import {constants} from '#/main/core/widget/constants'
 import {App as ListApp} from '#/main/core/widget/types/list'
@@ -22,25 +21,28 @@ const App = (context, parameters) => ListApp(context, merge({}, parameters, {
     ['apiv2_widget_resource_list_ws', {workspace: context.data.id}],
 
   // todo clean and make generic
-  open: (resourceNode, dispatch) => {
-    if ('directory' !== resourceNode.meta.type) {
-      return url(['claro_resource_open', {node: resourceNode.id, resourceType: resourceNode.meta.type}])
-    }
-
-    return () => {
+  primaryAction: (resourceNode, dispatch) => 'directory' !== resourceNode.meta.type ? ({
+    type: 'url',
+    label: trans('open', {}, 'actions'),
+    target: ['claro_resource_open', {node: resourceNode.id, resourceType: resourceNode.meta.type}]
+  }) : ({
+    type: 'callback',
+    label: trans('open', {}, 'actions'),
+    callback: () => {
       // changes the target of the list to add current directory in URL
       const fetchUrl = constants.CONTEXT_DESKTOP === context.type ?
         ['apiv2_widget_resource_list_desktop', {parent: resourceNode.id}] :
         ['apiv2_widget_resource_list_ws', {workspace: context.data.id, parent: resourceNode.id}]
 
-      return dispatch(listWidgetActions.updateWidgetConfig({
+      dispatch(listWidgetActions.updateWidgetConfig({
         title: resourceNode.name,
         fetchUrl: fetchUrl,
         display: 'list', // todo mega hack
         availableDisplays: ['list']  // todo double mega hack
       }))
     }
-  },
+  }),
+
   definition: [
     {
       name: 'name',
