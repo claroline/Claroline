@@ -35,6 +35,7 @@ actions.useHint = makeActionCreator(HINT_USE, 'questionId', 'hint')
 
 actions.fetchAttempt = quizId => ({
   [API_REQUEST]: {
+    silent: true,
     url: ['exercise_attempt_start', {exerciseId: quizId}],
     request: {method: 'POST'},
     success: (data, dispatch) => {
@@ -47,6 +48,7 @@ actions.fetchAttempt = quizId => ({
 
 actions.sendAnswers = (quizId, paperId, answers) =>({
   [API_REQUEST]: {
+    silent: true,
     url: ['exercise_attempt_submit', {exerciseId: quizId, id: paperId}],
     request: {
       method: 'PUT',
@@ -66,6 +68,7 @@ actions.requestHint = (quizId, paperId, questionId, hintId) => ({
 
 actions.requestEnd = (quizId, paperId) => ({
   [API_REQUEST]: {
+    silent: true,
     url: ['exercise_attempt_finish', {exerciseId: quizId, id: paperId}],
     request: {
       method: 'PUT'
@@ -162,7 +165,7 @@ actions.handleAttemptEnd = (paper) => {
 
     // We will decide here if we show the correction now or not and where we redirect the user
     if (playerSelectors.hasEndPage(getState())) {
-        // Show the end page
+      // Show the end page
       navigate('play/end')
     } else {
       switch (playerSelectors.showCorrectionAt(getState())) {
