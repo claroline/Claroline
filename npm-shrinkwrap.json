@@ -473,9 +473,9 @@
           "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-3.2.1.tgz"
         },
         "browserslist": {
-          "version": "3.2.4",
+          "version": "3.2.5",
           "from": "browserslist@>=3.2.4 <4.0.0",
-          "resolved": "https://registry.npmjs.org/browserslist/-/browserslist-3.2.4.tgz"
+          "resolved": "https://registry.npmjs.org/browserslist/-/browserslist-3.2.5.tgz"
         },
         "chalk": {
           "version": "2.4.0",
