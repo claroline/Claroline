@@ -29,7 +29,7 @@ const LinkButton = props =>
         disabled: props.disabled,
         default: !props.primary && !props.dangerous,
         primary: props.primary,
-        dangerous: props.dangerous,
+        danger: props.dangerous,
         active: props.active
       }
     )}

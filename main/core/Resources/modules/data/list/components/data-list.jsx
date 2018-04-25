@@ -85,7 +85,7 @@ class DataList extends Component {
     }
 
     let currentColumns
-    if (listConst.DISPLAY_MODES[currentDisplay].filterColumns) {
+    if (listConst.DISPLAY_MODES[currentDisplay].options.filterColumns) {
       // gets only the displayed columns
       currentColumns = getDisplayedProps(definition)
     } else {
