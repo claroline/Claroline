@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Entity\Misc;
 
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
+use Claroline\CoreBundle\Library\Normalizer\TextNormalizer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use UJM\ExoBundle\Entity\ItemType\GridQuestion;
@@ -343,13 +344,19 @@ class Cell
     public function getChoice($text)
     {
         $found = null;
+        $text = trim($text);
+        $iText = strtoupper(TextNormalizer::stripDiacritics($text));
         foreach ($this->choices as $choice) {
             /** @var CellChoice $choice */
-          if (($choice->isCaseSensitive() && $choice->getText() === $text)
-              || strtolower($choice->getText()) === strtolower($text)) {
-              $found = $choice;
-              break;
-          }
+            $tmpText = trim($choice->getText());
+            if ($tmpText === $text
+              || (
+                  !$choice->isCaseSensitive() &&
+                  strtoupper(TextNormalizer::stripDiacritics($tmpText)) === $iText)
+          ) {
+                $found = $choice;
+                break;
+            }
         }
 
         return $found;
