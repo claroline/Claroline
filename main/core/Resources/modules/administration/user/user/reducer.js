@@ -3,7 +3,7 @@ import {combineReducers, makeReducer} from '#/main/core/scaffolding/reducer'
 import {makeListReducer} from '#/main/core/data/list/reducer'
 import {makeFormReducer} from '#/main/core/data/form/reducer'
 
-import {FORM_RESET, FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
+import {FORM_SUBMIT_SUCCESS} from '#/main/core/data/form/actions'
 
 const reducer = combineReducers({
   picker: makeListReducer('users.picker'),
@@ -13,26 +13,10 @@ const reducer = combineReducers({
     })
   }),
   current: makeFormReducer('users.current', {}, {
-    workspaces: makeListReducer('users.current.workspaces', {}, {
-      invalidated: makeReducer(false, {
-        [FORM_RESET+'/users.current']: () => true // todo : find better
-      })
-    }),
-    groups: makeListReducer('users.current.groups', {}, {
-      invalidated: makeReducer(false, {
-        [FORM_RESET+'/users.current']: () => true // todo : find better
-      })
-    }),
-    organizations: makeListReducer('users.current.organizations', {}, {
-      invalidated: makeReducer(false, {
-        [FORM_RESET+'/users.current']: () => true // todo : find better
-      })
-    }),
-    roles: makeListReducer('users.current.roles', {}, {
-      invalidated: makeReducer(false, {
-        [FORM_RESET+'/users.current']: () => true // todo : find better
-      })
-    })
+    workspaces: makeListReducer('users.current.workspaces'),
+    groups: makeListReducer('users.current.groups'),
+    organizations: makeListReducer('users.current.organizations'),
+    roles: makeListReducer('users.current.roles')
   })
 })
 

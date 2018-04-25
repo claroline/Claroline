@@ -1,5 +1,6 @@
 import {connect} from 'react-redux'
 import invariant from 'invariant'
+import isEqual from 'lodash/isEqual'
 
 import {trans, transChoice} from '#/main/core/translation'
 
@@ -68,9 +69,9 @@ function mapDispatchToProps(dispatch, ownProps) {
   // based on the enabled features.
   return {
     // async
-    fetchData() {
+    fetchData(url) {
       // return the async promise
-      return dispatch(listActions.fetchData(ownProps.name, ownProps.fetch.url))
+      return dispatch(listActions.fetchData(ownProps.name, url))
     },
     invalidateData() {
       dispatch(listActions.invalidateData(ownProps.name))
@@ -236,7 +237,12 @@ function mergeProps(stateProps, dispatchProps, ownProps) {
  * @returns {function}
  */
 function connectList() {
-  return (ListComponent) => connect(mapStateToProps, mapDispatchToProps, mergeProps)(ListComponent)
+  return (ListComponent) => connect(mapStateToProps, mapDispatchToProps, mergeProps, {
+    // the default behavior is to use shallow comparison
+    // but as I create new objects in `mergeProps`, the comparison always returns false
+    // and cause recomputing
+    areMergedPropsEqual: (next, prev) => isEqual(next, prev)
+  })(ListComponent)
 }
 
 export {

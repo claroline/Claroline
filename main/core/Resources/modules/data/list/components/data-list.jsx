@@ -39,6 +39,7 @@ class DataList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // display config or definition have changed
     if (!isEqual(this.props.definition, nextProps.definition)
       || !isEqual(this.props.display, nextProps.display)) {
       const definition = createListDefinition(nextProps.definition)
