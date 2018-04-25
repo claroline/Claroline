@@ -35,9 +35,9 @@
       }
     },
     "@types/webpack": {
-      "version": "3.8.11",
+      "version": "3.8.12",
       "from": "@types/webpack@>=3.0.5 <4.0.0",
-      "resolved": "https://registry.npmjs.org/@types/webpack/-/webpack-3.8.11.tgz",
+      "resolved": "https://registry.npmjs.org/@types/webpack/-/webpack-3.8.12.tgz",
       "dependencies": {
         "source-map": {
           "version": "0.6.1",
@@ -473,9 +473,9 @@
           "resolved": "https://registry.npmjs.org/ansi-styles/-/ansi-styles-3.2.1.tgz"
         },
         "browserslist": {
-          "version": "3.2.4",
+          "version": "3.2.5",
           "from": "browserslist@>=3.2.4 <4.0.0",
-          "resolved": "https://registry.npmjs.org/browserslist/-/browserslist-3.2.4.tgz"
+          "resolved": "https://registry.npmjs.org/browserslist/-/browserslist-3.2.5.tgz"
         },
         "chalk": {
           "version": "2.4.0",
@@ -3178,9 +3178,9 @@
       "resolved": "https://registry.npmjs.org/http-errors/-/http-errors-1.6.3.tgz"
     },
     "http-parser-js": {
-      "version": "0.4.11",
+      "version": "0.4.12",
       "from": "http-parser-js@>=0.4.0",
-      "resolved": "https://registry.npmjs.org/http-parser-js/-/http-parser-js-0.4.11.tgz"
+      "resolved": "https://registry.npmjs.org/http-parser-js/-/http-parser-js-0.4.12.tgz"
     },
     "http-proxy": {
       "version": "1.17.0",
@@ -3948,14 +3948,14 @@
       "resolved": "https://registry.npmjs.org/locate-path/-/locate-path-2.0.0.tgz"
     },
     "lodash": {
-      "version": "4.17.5",
+      "version": "4.17.10",
       "from": "lodash@>=3.5.0 <5.0.0",
-      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.5.tgz"
+      "resolved": "https://registry.npmjs.org/lodash/-/lodash-4.17.10.tgz"
     },
     "lodash-es": {
-      "version": "4.17.8",
+      "version": "4.17.10",
       "from": "lodash-es@>=4.2.1 <5.0.0",
-      "resolved": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.8.tgz"
+      "resolved": "https://registry.npmjs.org/lodash-es/-/lodash-es-4.17.10.tgz"
     },
     "lodash._arraycopy": {
       "version": "3.0.0",
