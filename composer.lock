@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "c386914653be84b4199f1a8e399b47f1",
-    "content-hash": "1c356148315018a044a20a552f4e102c",
+    "hash": "a23d5842c4d6cf4c03e3381a52b2b55f",
+    "content-hash": "73343983b8acf760afa724ac4d6549d2",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -120,20 +120,21 @@
         },
         {
             "name": "claroline/distribution",
-            "version": "11.x-dev",
+            "version": "dev-master",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "5a31f0368116e5e5ced58b44b83e5d8e506cacba"
+                "reference": "7aecff028d35952dfe7f03cdbf42fb7c93f726c5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/5a31f0368116e5e5ced58b44b83e5d8e506cacba",
-                "reference": "5a31f0368116e5e5ced58b44b83e5d8e506cacba",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/7aecff028d35952dfe7f03cdbf42fb7c93f726c5",
+                "reference": "7aecff028d35952dfe7f03cdbf42fb7c93f726c5",
                 "shasum": ""
             },
             "require": {
                 "besimple/sso-auth-bundle": "dev-master",
+                "claroline/front-end-bundle": "dev-7.x-test",
                 "cocur/slugify": "1.4.1",
                 "composer/composer": "1.1.0",
                 "ddeboer/data-import": "0.20.0",
@@ -159,13 +160,15 @@
                 "hwi/oauth-bundle": "0.5.2",
                 "icap/html-diff": "1.1.0",
                 "idci/exporter-bundle": "1.0.0",
+                "innova/angular-js-bundle": "5.1.0",
+                "innova/angular-ui-resource-picker-bundle": "6.0.0",
                 "innova/angular-ui-tinymce-bundle": "5.1.1",
                 "jdorn/sql-formatter": "1.2.17",
                 "jms/di-extra-bundle": "1.5.0",
                 "jms/security-extra-bundle": "1.5.1",
                 "jms/serializer-bundle": "0.13.0",
                 "jms/twig-js": "dev-master as 1.0.2",
-                "jms/twig-js-bundle": "1.0.0",
+                "jms/twig-js-bundle": "dev-master",
                 "json-quiz/json-quiz": "dev-master",
                 "knplabs/knp-menu-bundle": "2.0.0",
                 "knplabs/knp-snappy-bundle": "1.3",
@@ -256,7 +259,6 @@
                     "Claroline\\MigrationBundle\\ClarolineMigrationBundle",
                     "Claroline\\KernelBundle\\ClarolineKernelBundle",
                     "Claroline\\CoreBundle\\ClarolineCoreBundle",
-                    "Claroline\\AppBundle\\ClarolineAppBundle",
                     "Claroline\\AgendaBundle\\ClarolineAgendaBundle",
                     "FormaLibre\\ReservationBundle\\FormaLibreReservationBundle",
                     "Claroline\\ImagePlayerBundle\\ClarolineImagePlayerBundle",
@@ -317,7 +319,6 @@
             "autoload": {
                 "psr-4": {
                     "Claroline\\CoreBundle\\": "main/core/",
-                    "Claroline\\AppBundle\\": "main/app/",
                     "Claroline\\BundleRecorder\\": "main/recorder/",
                     "Claroline\\InstallationBundle\\": "main/installation/",
                     "Claroline\\MigrationBundle\\": "main/migration/",
@@ -397,7 +398,37 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-03-28 05:47:24"
+            "time": "2018-01-31 12:23:57"
+        },
+        {
+            "name": "claroline/front-end-bundle",
+            "version": "dev-7.x-test",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/claroline/FrontEndBundle.git",
+                "reference": "2baad174be4bcb35c87f8f5df07127de1d23fa17"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/claroline/FrontEndBundle/zipball/2baad174be4bcb35c87f8f5df07127de1d23fa17",
+                "reference": "2baad174be4bcb35c87f8f5df07127de1d23fa17",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Claroline\\Bundle\\FrontEndBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "description": "Front-end dependencies bundle for Claroline 2.0",
+            "time": "2016-04-01 14:34:48"
         },
         {
             "name": "cocur/slugify",
@@ -464,16 +495,16 @@
         },
         {
             "name": "composer/ca-bundle",
-            "version": "1.1.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/ca-bundle.git",
-                "reference": "943b2c4fcad1ef178d16a713c2468bf7e579c288"
+                "reference": "d2c0a83b7533d6912e8d516756ebd34f893e9169"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/943b2c4fcad1ef178d16a713c2468bf7e579c288",
-                "reference": "943b2c4fcad1ef178d16a713c2468bf7e579c288",
+                "url": "https://api.github.com/repos/composer/ca-bundle/zipball/d2c0a83b7533d6912e8d516756ebd34f893e9169",
+                "reference": "d2c0a83b7533d6912e8d516756ebd34f893e9169",
                 "shasum": ""
             },
             "require": {
@@ -482,7 +513,7 @@
                 "php": "^5.3.2 || ^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35",
+                "phpunit/phpunit": "^4.8.35 || ^5.7 || ^6.5",
                 "psr/log": "^1.0",
                 "symfony/process": "^2.5 || ^3.0 || ^4.0"
             },
@@ -516,7 +547,7 @@
                 "ssl",
                 "tls"
             ],
-            "time": "2017-11-29 09:37:33"
+            "time": "2018-03-29 19:57:20"
         },
         {
             "name": "composer/composer",
@@ -2848,6 +2879,65 @@
             "time": "2015-06-09 14:59:11"
         },
         {
+            "name": "innova/angular-ui-resource-picker-bundle",
+            "version": "6.0.0",
+            "target-dir": "Innova/AngularUIResourcePickerBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/InnovaLangues/AngularUIResourcePickerBundle.git",
+                "reference": "1d17ef474767b8e3e8935c57789c544e290e229b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/InnovaLangues/AngularUIResourcePickerBundle/zipball/1d17ef474767b8e3e8935c57789c544e290e229b",
+                "reference": "1d17ef474767b8e3e8935c57789c544e290e229b",
+                "shasum": ""
+            },
+            "require": {
+                "innova/angular-js-bundle": "~5.0",
+                "php": ">=5.3.0",
+                "symfony/symfony": "2.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Innova\\AngularUIResourcePickerBundle": "."
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Arnaud Bey",
+                    "email": "arnaud.bey@u-grenoble3.fr"
+                },
+                {
+                    "name": "Axel Penin",
+                    "email": "axel.penin@u-grenoble3.fr"
+                },
+                {
+                    "name": "Eric Vincent",
+                    "email": "eric.vincent@u-grenoble3.fr"
+                },
+                {
+                    "name": "Donovan Tengblad",
+                    "email": "donovan.tengblad@u-grenoble3.fr"
+                }
+            ],
+            "description": "Integrate Claroline resource picker into Angular JS",
+            "homepage": "http://github.com/InnovaLangues/AngularUIResourcePickerBundle",
+            "keywords": [
+                "Claroline",
+                "Symfony2",
+                "angular",
+                "picker",
+                "resource"
+            ],
+            "time": "2015-05-22 14:02:35"
+        },
+        {
             "name": "innova/angular-ui-tinymce-bundle",
             "version": "5.1.1",
             "target-dir": "Innova/AngularUITinyMCEBundle",
@@ -3464,7 +3554,7 @@
         },
         {
             "name": "jms/twig-js-bundle",
-            "version": "1.0.0",
+            "version": "dev-master",
             "target-dir": "JMS/TwigJsBundle",
             "source": {
                 "type": "git",
@@ -4299,16 +4389,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v1.4.2",
+            "version": "v1.4.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "965cdeb01fdcab7653253aa81d40441d261f1e66"
+                "reference": "9b3899e3c3ddde89016f576edb8c489708ad64cd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/965cdeb01fdcab7653253aa81d40441d261f1e66",
-                "reference": "965cdeb01fdcab7653253aa81d40441d261f1e66",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/9b3899e3c3ddde89016f576edb8c489708ad64cd",
+                "reference": "9b3899e3c3ddde89016f576edb8c489708ad64cd",
                 "shasum": ""
             },
             "require": {
@@ -4343,7 +4433,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2017-03-13 16:22:52"
+            "time": "2018-04-04 21:48:54"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -6738,7 +6828,7 @@
             ],
             "authors": [
                 {
-                    "name": "Pádraic Brady",
+                    "name": "Padraic Brady",
                     "email": "padraic.brady@gmail.com",
                     "homepage": "http://blog.astrumfutura.com"
                 },
@@ -7927,12 +8017,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "92a4b25dc8d602dc11498dc97c3b4a13ad84fd65"
+                "reference": "0c9f45d1ea4c213115ace1a0dc7b5438cdc031e1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/92a4b25dc8d602dc11498dc97c3b4a13ad84fd65",
-                "reference": "92a4b25dc8d602dc11498dc97c3b4a13ad84fd65",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/0c9f45d1ea4c213115ace1a0dc7b5438cdc031e1",
+                "reference": "0c9f45d1ea4c213115ace1a0dc7b5438cdc031e1",
                 "shasum": ""
             },
             "require": {
@@ -7985,7 +8075,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-03-22 13:45:58"
+            "time": "2018-04-13 14:57:55"
         },
         {
             "name": "symfony/polyfill-php54",
