@@ -42,7 +42,7 @@
         clearTimeout(resizeWindow);
         resizeWindow = setTimeout(showButton, 500);
     })
-    .load(function () {
+    .on('load', function () {
         clearTimeout(resizeWindow);
         resizeWindow = setTimeout(showButton, 500);
     });

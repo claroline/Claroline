@@ -49,7 +49,7 @@
             .attr(
                 'src', routing.generate('claro_resource_open', {'resourceType': resource.type, 'node': resource.id})
             )
-            .load(function () {
+            .on('load', function () {
                 var iframe = this;
                 setTimeout(function () {
                     activity.height(iframe);
