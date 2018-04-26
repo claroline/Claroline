@@ -48,7 +48,7 @@
                     </div>
                     {% endif %}
 
-                    <p class="login-help">{{ 'login_auth_claro_account'|trans({}, 'platform') }}</p>
+                    <p class="authentication-help">{{ 'login_auth_claro_account'|trans({}, 'platform') }}</p>
 
                     {# Claroline authentication #}
                     <form role="form" action="{{ path('claro_security_login_check') }}" method="post" id="login-form">
@@ -96,11 +96,16 @@
                             </label>
                         </div>
 
-                        <a href ="{{ path('claro_security_forgot_password')}}" tabindex="4" title="{{ 'forgot_password'|trans({}, 'platform') }}">
-                            {{ 'forgot_password'|trans({}, 'platform') }}
-                        </a>
+                        <button type="submit" class="btn btn-primary btn-block btn-emphasis" tabindex="3">
+                            {{ 'login'|trans({}, 'platform') }}
+                        </button>
 
-                        <button type="submit" class="btn btn-primary btn-block" tabindex="3">{{ 'login'|trans({}, 'platform') }}</button>
+                        <hr />
+
+                        {{ 'forgot_password'|trans({}, 'platform') }}
+                        <a href ="{{ path('claro_security_forgot_password')}}" tabindex="4" title="{{ 'forgot_password'|trans({}, 'platform') }}">
+                            {{ 'click_here'|trans({}, 'actions') }}
+                        </a>
                     </form>
 
 
@@ -114,7 +119,7 @@
                 {# SSO authentication #}
                 {% if externalAuthentication is not empty %}
                 <div class="authentication-column external-authentication-column">
-                    <p class="login-help">{{ 'login_auth_sso'|trans({}, 'platform') }}</p>
+                    <p class="authentication-help">{{ 'login_auth_sso'|trans({}, 'platform') }}</p>
 
                     {{ externalAuthentication|raw }}
                 </div>

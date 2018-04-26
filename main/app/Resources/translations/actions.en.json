@@ -1,5 +1,6 @@
 {
   "add": "Add",
+  "click_here": "Click here",
   "copy": "Copy",
   "enable": "Enable",
   "export": "Export",
@@ -14,6 +15,7 @@
   "replace": "Replace",
   "restart": "Restart",
   "select": "Select",
+  "send": "Send",
   "start": "Start",
   "unfollow": "Unfollow",
   "unpublish": "Unpublish",

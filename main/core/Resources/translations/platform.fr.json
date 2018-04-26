@@ -484,7 +484,10 @@
     "footer": "Pied de page",
     "for_period": "sur la période du :",
     "force_mail_validation": "Forcer la validation du courriel (utilisateur bloqué tant que la réception du courriel n'a pas été confirmée)",
-    "forgot_password": "Mot de passe oublié ?",
+    "forgot_password": "Vous avez oublié votre mot de passe ?",
+    "password_recovery": "Récupération de mot de passe",
+    "password_recovery_help": "Pour récupérer votre mot de passe, il vous suffit de saisir votre adresse email, nous vous le renverrons.",
+    "send_password": "Envoyer le mot de passe",
     "form_not_blank_error": "Cette valeur ne doit pas être vide.",
     "form_not_valid_error": "Cette valeur n'est pas valide.",
     "form_role": "Rôle",
@@ -1654,5 +1657,6 @@
     "unit_giga": "G",
     "unit_tera": "T",
     "bytes_short": "o",
-    "units": "Unités"
+    "units": "Unités",
+    "captcha_help": "Saisissez le texte affiché ci-dessus"
 }

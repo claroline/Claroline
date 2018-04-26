@@ -1,4 +1,16 @@
 /**
+ * Authentication styles.
+ */
+
+.authentication-help {
+    font-style: italic;
+    color: #666;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+
+/**
  * Login page
  */
 
@@ -58,8 +70,7 @@
     
     form {
         .btn-primary {
-            margin-top: 30px;
-            padding: @padding-large-vertical @padding-large-horizontal;
+            margin-top: 20px; // It should be 30px, but the remember-me checkbox adds a 10px margin-bottom
         }
     }
 }
@@ -76,13 +87,6 @@
     border: 1px solid @panel-default-border;
     box-shadow: @panel-box-shadow;
     background-color: @panel-bg;
-
-    .login-help {
-        font-style: italic;
-        color: #666;
-        margin-bottom: 30px;
-        text-align: center;
-    }
 
     .authentication-column {
         position: relative;
@@ -228,4 +232,25 @@
     &.office_365-connect   { .sso-connect-btn(@sso-office_365-icon, @sso-office_365-primary, @sso-office_365-secondary); }
     &.twitter-connect      { .sso-connect-btn(@sso-twitter-icon,    @sso-twitter-primary,    @sso-twitter-secondary); }
     &.windows_live-connect { .sso-connect-btn(@sso-office_365-icon, @sso-office_365-primary, @sso-office_365-secondary); }
+}
+
+
+/**
+ * Password recovery page
+ */
+
+/*
+.password-recovery-container {
+    width: 100%;
+    margin: 0 auto @component-margin-bottom;
+    max-width: floor(@login-max-width / 2);
+}
+*/
+
+.password-recovery-form {
+    padding: 30px 45px;
+
+    .btn-primary {
+        margin-top: 15px;
+    }
 }

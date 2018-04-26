@@ -476,7 +476,10 @@
     "footer": "Footer",
     "for_period": "for period",
     "force_mail_validation": "force the email confirmation",
-    "forgot_password": "Forgot your password?",
+    "forgot_password": "You forgot your password ?",
+    "password_recovery": "Password recovery",
+    "password_recovery_help": "To recover your password, just enter your email address, we will send it to you.",
+    "send_password": "Send password",
     "form_not_blank_error": "This value may not be blank.",
     "form_not_valid_error": "This value is not valid.",
     "form_role": "Role",
@@ -1627,5 +1630,6 @@
     "unit_giga": "G",
     "unit_tera": "T",
     "bytes_short": "B",
-    "units": "Units"
+    "units": "Units",
+    "captcha_help": "Enter the text shown above"
 }

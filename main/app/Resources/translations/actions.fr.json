@@ -1,5 +1,6 @@
 {
   "add": "Ajouter",
+  "click_here": "Cliquez ici",
   "copy": "Copier",
   "enable": "Activer",
   "export": "Exporter",
@@ -14,6 +15,7 @@
   "replace": "Remplacer",
   "restart": "Recommencer",
   "select": "Sélectionner",
+  "send": "Envoyer",
   "start": "Commencer",
   "unfollow": "Ne plus suivre",
   "unpublish": "Dépublier",
