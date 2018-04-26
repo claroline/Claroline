@@ -493,7 +493,7 @@ class MessageController
         $trimmedSearch = trim($search);
 
         if ($user->hasRole('ROLE_ADMIN')) {
-            if ($trimmedSearch === '') {
+            if ('' === $trimmedSearch) {
                 $users = $this->userManager->getAllUsers($page);
             } else {
                 $users = $this->userManager
@@ -506,7 +506,7 @@ class MessageController
             $workspaces = $this->workspaceManager->getOpenableWorkspacesByRoles($roles);
 
             if (count($workspaces) > 0) {
-                if ($trimmedSearch === '') {
+                if ('' === $trimmedSearch) {
                     $users = $this->userManager
                         ->getUsersByWorkspaces($workspaces, $page);
                 } else {
@@ -571,7 +571,7 @@ class MessageController
         $trimmedSearch = trim($search);
 
         if ($user->hasRole('ROLE_ADMIN')) {
-            if ($trimmedSearch === '') {
+            if ('' === $trimmedSearch) {
                 $groups = $this->groupManager->getAllGroups($page);
             } else {
                 $groups = $this->groupManager
@@ -583,7 +583,7 @@ class MessageController
                 ->getWorkspacesByUserAndRoleNames($user, ['ROLE_WS_MANAGER']);
             // retrieve all groups of workspace that user is manager
             if (count($workspaces) > 0) {
-                if ($trimmedSearch === '') {
+                if ('' === $trimmedSearch) {
                     $groups = $this->groupManager
                         ->getGroupsByWorkspaces($workspaces);
                 } else {
@@ -598,7 +598,7 @@ class MessageController
             $userGroups = $user->getGroups();
             $userGroupsFinal = [];
 
-            if ($trimmedSearch === '') {
+            if ('' === $trimmedSearch) {
                 $userGroupsFinal = $userGroups;
             } else {
                 $upperSearch = strtoupper($trimmedSearch);
@@ -606,7 +606,7 @@ class MessageController
                 foreach ($userGroups as $userGroup) {
                     $upperName = strtoupper($userGroup->getName());
 
-                    if (strpos($upperName, $upperSearch) !== false) {
+                    if (false !== strpos($upperName, $upperSearch)) {
                         $userGroupsFinal[] = $userGroup;
                     }
                 }
@@ -674,9 +674,9 @@ class MessageController
         $workspaceCodes = [];
 
         foreach ($names as $name) {
-            if (substr($name, 0, 1) === '{') {
+            if ('{' === substr($name, 0, 1)) {
                 $groupNames[] = trim($name, '{}');
-            } elseif (substr($name, 0, 1) === '[') {
+            } elseif ('[' === substr($name, 0, 1)) {
                 $workspaceCodes[] = trim($name, '[]');
             } else {
                 $usernames[] = trim($name);
@@ -700,5 +700,74 @@ class MessageController
         }
 
         throw new AccessDeniedException();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/users/usernames",
+     *     name="claro_usernames_from_users",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "users",
+     *      class="ClarolineCoreBundle:User",
+     *      options={"multipleIds" = true, "name" = "userIds"}
+     * )
+     */
+    public function retrieveUsernamesFromUsersAction(array $users)
+    {
+        $usernames = '';
+
+        foreach ($users as $user) {
+            $usernames .= $user->getUsername().';';
+        }
+
+        return new Response($usernames, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/groups/names",
+     *     name="claro_names_from_groups",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "groups",
+     *      class="ClarolineCoreBundle:Group",
+     *      options={"multipleIds" = true, "name" = "groupIds"}
+     * )
+     */
+    public function retrieveNamesFromGroupsAction(array $groups)
+    {
+        $names = '';
+
+        foreach ($groups as $group) {
+            $names .= '{'.$group->getName().'};';
+        }
+
+        return new Response($names, 200);
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/workspaces/names",
+     *     name="claro_names_from_workspaces",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "workspaces",
+     *      class="ClarolineCoreBundle:Workspace\Workspace",
+     *      options={"multipleIds" = true, "name" = "workspaceIds"}
+     * )
+     */
+    public function retrieveNamesFromWorkspacesAction(array $workspaces)
+    {
+        $names = '';
+
+        foreach ($workspaces as $workspace) {
+            $names .= '['.$workspace->getCode().'];';
+        }
+
+        return new Response($names, 200);
     }
 }
