@@ -1,3 +1,22 @@
+
 img[title=captcha] {
-    margin: 10px 0;
+    display: block;
+    margin-bottom: floor(@component-margin-bottom / 2);
+}
+
+.captcha-control {
+    img {
+        margin: 0;
+        width: 100%;
+        height: 60px;
+        border-top-left-radius: @input-border-radius;
+        border-top-right-radius: @input-border-radius;
+        border: 1px solid @input-border;
+    }
+
+    .form-control {
+        margin-top: -1px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+    }
 }
