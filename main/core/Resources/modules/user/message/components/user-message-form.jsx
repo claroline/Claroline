@@ -72,7 +72,7 @@ class UserMessageForm extends Component {
           )}
 
           <button
-            className="btn btn-block btn-primary btn-save"
+            className="btn btn-block btn-primary btn-save btn-emphasis"
             disabled={!this.state.pendingChanges || !this.state.content}
             onClick={() => this.props.submit(this.state.content)}
           >
