@@ -561,7 +561,6 @@ class SurveyController extends Controller
             $questionType = $question->getType();
 
             switch ($questionType) {
-
                 case 'multiple_choice_single':
                 case 'multiple_choice_multiple':
                     $postDatas = $this->request->getCurrentRequest()->request->all();
@@ -677,7 +676,6 @@ class SurveyController extends Controller
             $questionType = $question->getType();
 
             switch ($questionType) {
-
                 case 'multiple_choice_single':
                 case 'multiple_choice_multiple':
                     $postDatas = $this->request->getCurrentRequest()->request->all();
@@ -962,7 +960,6 @@ class SurveyController extends Controller
         $questionType = $question->getType();
 
         switch ($questionType) {
-
             case 'multiple_choice_single':
             case 'multiple_choice_multiple':
 
@@ -999,7 +996,6 @@ class SurveyController extends Controller
         $this->checkSurveyRight($survey, 'EDIT');
 
         switch ($questionType) {
-
             case 'multiple_choice_single':
             case 'multiple_choice_multiple':
 
@@ -1029,7 +1025,6 @@ class SurveyController extends Controller
         $this->checkQuestionRight($survey, $question, 'EDIT');
 
         switch ($questionType) {
-
             case 'multiple_choice_single':
             case 'multiple_choice_multiple':
 
@@ -1459,7 +1454,7 @@ class SurveyController extends Controller
         $page = 1,
         $max = 20
     ) {
-        $canEdit = $this->hasSurveyRight($survey, 'EDIT');
+        $canEdit = $this->hasSurveyRight($survey, 'OPEN');
 
         if (!$canEdit && !$survey->getHasPublicResult()) {
             throw new AccessDeniedException();
@@ -1964,7 +1959,6 @@ class SurveyController extends Controller
         $questionType = $question->getType();
 
         switch ($questionType) {
-
             case 'multiple_choice_single':
             case 'multiple_choice_multiple':
 
@@ -2144,7 +2138,6 @@ class SurveyController extends Controller
         $questionType = $question->getType();
 
         switch ($questionType) {
-
             case 'multiple_choice_single':
             case 'multiple_choice_multiple':
 
@@ -2337,7 +2330,6 @@ class SurveyController extends Controller
                 $type = $question->getType();
 
                 switch ($type) {
-
                     case 'open_ended':
                     case 'open_ended_bare':
 
