@@ -39,6 +39,7 @@ class DataList extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    // display config or definition have changed
     if (!isEqual(this.props.definition, nextProps.definition)
       || !isEqual(this.props.display, nextProps.display)) {
       const definition = createListDefinition(nextProps.definition)
@@ -85,7 +86,7 @@ class DataList extends Component {
     }
 
     let currentColumns
-    if (listConst.DISPLAY_MODES[currentDisplay].filterColumns) {
+    if (listConst.DISPLAY_MODES[currentDisplay].options.filterColumns) {
       // gets only the displayed columns
       currentColumns = getDisplayedProps(definition)
     } else {

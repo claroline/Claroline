@@ -89,10 +89,9 @@ const OrganizationForm = props =>
             autoload: props.organization.id && !props.new
           }}
           primaryAction={WorkspaceList.open}
-          deleteAction={() => ({
-            type: 'url',
-            target: ['apiv2_organization_remove_workspaces', {id: props.organization.id}]
-          })}
+          delete={{
+            url: ['apiv2_organization_remove_workspaces', {id: props.organization.id}]
+          }}
           definition={WorkspaceList.definition}
           card={WorkspaceList.card}
         />
@@ -119,10 +118,9 @@ const OrganizationForm = props =>
             autoload: props.organization.id && !props.new
           }}
           primaryAction={UserList.open}
-          deleteAction={() => ({
-            type: 'url',
-            target: ['apiv2_organization_remove_users', {id: props.organization.id}]
-          })}
+          delete={{
+            url: ['apiv2_organization_remove_users', {id: props.organization.id}]
+          }}
           definition={UserList.definition}
           card={UserList.card}
         />
@@ -149,10 +147,9 @@ const OrganizationForm = props =>
             autoload: props.organization.id && !props.new
           }}
           primaryAction={GroupList.open}
-          deleteAction={() => ({
-            type: 'url',
-            target: ['apiv2_organization_remove_groups', {id: props.organization.id}]
-          })}
+          delete={{
+            url: ['apiv2_organization_remove_groups', {id: props.organization.id}]
+          }}
           definition={GroupList.definition}
           card={GroupList.card}
         />
@@ -179,10 +176,9 @@ const OrganizationForm = props =>
             autoload: props.organization.id && !props.new
           }}
           primaryAction={UserList.open}
-          deleteAction={() => ({
-            type: 'url',
-            target: ['apiv2_organization_remove_managers', {id: props.organization.id}]
-          })}
+          delete={{
+            url: ['apiv2_organization_remove_managers', {id: props.organization.id}]
+          }}
           definition={UserList.definition}
           card={UserList.card}
         />

@@ -27,7 +27,7 @@ const DropdownButton = props => {
   const groupActions = {}
   for (let i=0; i < displayedActions.length; i++) {
     const action = displayedActions[i]
-    if (action.displayed && !action.dangerous && !!action.group) {
+    if (!action.dangerous && !!action.group) {
       if (!groupActions[action.group]) {
         groupActions[action.group] = []
       }

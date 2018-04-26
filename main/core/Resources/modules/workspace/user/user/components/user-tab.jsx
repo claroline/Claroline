@@ -52,7 +52,7 @@ const UserTabActionsComponent = props =>
         type="callback"
         label={trans('register_users')}
         icon="fa fa-plus"
-        action={() => props.register(props.workspace)}
+        callback={() => props.register(props.workspace)}
         primary={true}
       />
     }

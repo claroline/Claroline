@@ -10,6 +10,27 @@ import {ListSearch} from '#/main/core/data/list/components/search'
 import {constants} from '#/main/core/data/list/constants'
 import {DataListProperty} from '#/main/core/data/list/prop-types'
 
+const ListColumnCheck = props =>
+  <li className="dropdown-checkbox" role="presentation">
+    <label className="checkbox-inline">
+      <input
+        type="checkbox"
+        checked={props.checked}
+        disabled={props.disabled}
+        onChange={() => props.toggle(props.name)}
+      />
+      {props.label}
+    </label>
+  </li>
+
+ListColumnCheck.propTypes = {
+  name: T.string.isRequired,
+  label: T.string.isRequired,
+  checked: T.bool.isRequired,
+  disabled: T.bool.isRequired,
+  toggle: T.func.isRequired
+}
+
 const ListColumnsButton = props =>
   <TooltipElement
     id="list-columns"
@@ -23,22 +44,23 @@ const ListColumnsButton = props =>
       className="btn-link-default"
       noCaret={true}
       pullRight={true}
-      onSelect={(e) => e.stopPropagation()}
+      onSelect={(e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        return false
+      }}
     >
       <MenuItem header>{t('list_columns')}</MenuItem>
 
       {props.available.map(availableColumn =>
-        <li key={availableColumn.name} className="dropdown-checkbox" role="presentation">
-          <label className="checkbox-inline">
-            <input
-              type="checkbox"
-              checked={-1 !== props.current.indexOf(availableColumn.name)}
-              disabled={1 === props.current.length && -1 !== props.current.indexOf(availableColumn.name)}
-              onChange={() => props.toggle(availableColumn.name)}
-            />
-            {availableColumn.label}
-          </label>
-        </li>
+        <ListColumnCheck
+          key={availableColumn.name}
+          name={availableColumn.name}
+          label={availableColumn.label}
+          checked={-1 !== props.current.indexOf(availableColumn.name)}
+          disabled={1 === props.current.length && -1 !== props.current.indexOf(availableColumn.name)}
+          toggle={props.toggle}
+        />
       )}
     </DropdownButton>
   </TooltipElement>

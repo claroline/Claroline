@@ -10,6 +10,7 @@
 {% block content %}
     <div
         class="page-container docimology-container"
+        data-resource-node="{{ _resource.resourceNode | api_serialize | json_encode | raw | escape }}"
         data-quiz="{{ exercise | json_encode | raw | escape }}"
         data-statistics="{{ statistics | json_encode | raw | escape }}"
     ></div>

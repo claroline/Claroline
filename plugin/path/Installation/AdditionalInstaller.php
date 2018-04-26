@@ -54,7 +54,7 @@ class AdditionalInstaller extends BaseInstaller
             $updater080000->postUpdate();
         }
 
-        if (version_compare($currentVersion, '11.2.0', '<')) {
+        if (version_compare($currentVersion, '11.2.10', '<')) {
             $updater110200 = new Updater\Updater110200($this->container);
             $updater110200->setLogger($this->logger);
             $updater110200->postUpdate();

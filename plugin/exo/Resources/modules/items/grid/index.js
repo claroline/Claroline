@@ -1,3 +1,4 @@
+import { stripDiacritics } from '#/main/core/scaffolding/text/strip-diacritics'
 import editor, {SUM_CELL, SUM_COL, SUM_ROW} from './editor'
 import {GridPaper} from './paper.jsx'
 import {GridPlayer} from './player.jsx'
@@ -29,16 +30,21 @@ function getCorrectAnswerForSumCellsMode(item, answer = {data: []}) {
   item.solutions.forEach(solution => {
     let userDataAnswer =
      answer && answer.data ?
-      answer.data.find(userSolution => userSolution.cellId === solution.cellId): null
+       answer.data.find(userSolution => userSolution.cellId === solution.cellId): null
     let bestAnswer = findSolutionExpectedAnswer(solution)
     let userAnswer = userDataAnswer ?
-        solution.answers.find(answer => (answer.text === userDataAnswer.text) && answer.caseSensitive || (answer.text.toLowerCase() === userDataAnswer.text.toLowerCase()) && ! answer.caseSensitive):
-        null
+      solution.answers.find(
+        answer => (
+          answer.text === userDataAnswer.text ||
+          (stripDiacritics(answer.text).toUpperCase() === stripDiacritics(userDataAnswer.text).toUpperCase() && ! answer.caseSensitive)
+        )
+      ):
+      null
 
     if (userAnswer) {
       userAnswer.score > 0 ?
-            corrected.addExpected(new Answerable(userAnswer.score)):
-            corrected.addUnexpected(new Answerable(userAnswer.score))
+        corrected.addExpected(new Answerable(userAnswer.score)):
+        corrected.addUnexpected(new Answerable(userAnswer.score))
     } else {
       corrected.addMissing(new Answerable(bestAnswer.score))
       corrected.addPenalty(new Answerable(item.penalty))
@@ -102,7 +108,9 @@ function validateCellsAnswer(corrected, item, answer, cellIds, mode) {
 
   answers.forEach(answer => {
     const expected = item.solutions.find(solution => solution.cellId === answer.cellId).answers.find(answer => answer.expected)
-    if ((answer.text !== expected.text) && expected.caseSensitive || (answer.text.toLowerCase() !== expected.text.toLowerCase()) && !expected.caseSensitive) {
+    if (answer.text !== expected.text ||
+      (stripDiacritics(answer.text).toUpperCase() !== stripDiacritics(expected.text).toUpperCase() && !expected.caseSensitive)
+    ) {
       valid = false
     }
   })

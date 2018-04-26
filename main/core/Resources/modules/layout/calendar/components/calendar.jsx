@@ -124,9 +124,8 @@ class Calendar extends Component {
   constructor(props) {
     super(props)
 
-    const now = moment()
-      .utc()
-      .set('second', 0)
+    // Get local current time as UTC current time
+    const now = moment.utc(moment().local().format(getApiFormat())).set('second', 0)
 
     let selected
     if (this.props.selected && isValidDate(this.props.selected, getApiFormat())) {
@@ -141,8 +140,8 @@ class Calendar extends Component {
       view: constants.CALENDAR_VIEW_DAYS,
 
       // create moment objects for all used dates
-      now: now.local(),
-      selected: selected ? selected.local() : null,
+      now: now,
+      selected: selected ? selected : null,
       currentRange: [
         moment(referenceDate).startOf('month'),
         moment(referenceDate).endOf('month')
@@ -152,8 +151,8 @@ class Calendar extends Component {
         moment(this.props.maxDate)
       ],
       timeRange: [
-        moment(this.props.minTime),
-        moment(this.props.maxTime)
+        moment.utc(this.props.minTime, 'HH:mm'),
+        moment.utc(this.props.maxTime, 'HH:mm')
       ]
     }
 
@@ -192,7 +191,7 @@ class Calendar extends Component {
   }
 
   today() {
-    this.onChange(moment())
+    this.onChange(this.state.now)
     this.changeView(constants.CALENDAR_VIEW_DAYS)
   }
 

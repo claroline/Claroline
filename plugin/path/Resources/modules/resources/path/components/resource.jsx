@@ -20,7 +20,7 @@ const Resource = props => {
     {
       path: '/edit',
       component: Editor,
-      displayed: props.editable
+      disabled: !props.editable
     }, {
       path: '/play',
       component: Player
@@ -28,7 +28,7 @@ const Resource = props => {
       path: '/',
       exact: true,
       component: Overview,
-      displayed: props.path.display.showOverview
+      disabled: !props.path.display.showOverview
     }
   ]
 

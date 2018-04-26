@@ -14,11 +14,10 @@ const Organizations = () =>
       url: ['apiv2_organization_list_recursive'],
       autoload: true
     }}
-    deleteAction={(rows) => ({
-      type: 'url',
-      target: ['apiv2_organization_delete_bulk'],
-      displayed: 0 !== rows.filter(organization => !organization.meta.default).length
-    })}
+    delete={{
+      url: ['apiv2_organization_delete_bulk'],
+      displayed: (rows) => 0 !== rows.filter(organization => !organization.meta.default).length
+    }}
     definition={OrganizationList.definition}
     actions={(rows) => [
       {

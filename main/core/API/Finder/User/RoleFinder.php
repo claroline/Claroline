@@ -56,6 +56,8 @@ class RoleFinder implements FinderInterface
 
     public function configureQueryBuilder(QueryBuilder $qb, array $searches = [], array $sortBy = null)
     {
+        $isAdmin = $this->authChecker->isGranted('ROLE_ADMIN');
+
         foreach ($searches as $filterName => $filterValue) {
             switch ($filterName) {
                 case 'type':
@@ -92,9 +94,11 @@ class RoleFinder implements FinderInterface
                     $qb->setParameter('workspaceIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
                 case 'grantable':
-                    $qb->join('obj.users', 'cu');
-                    $qb->andWhere('cu.id = :currentUserId');
-                    $qb->setParameter('currentUserId', $this->tokenStorage->getToken()->getUser()->getId());
+                    if (!$isAdmin) {
+                        $qb->join('obj.users', 'cu');
+                        $qb->andWhere('cu.id = :currentUserId');
+                        $qb->setParameter('currentUserId', $this->tokenStorage->getToken()->getUser()->getId());
+                    }
                     break;
               default:
                 if (is_bool($filterValue)) {

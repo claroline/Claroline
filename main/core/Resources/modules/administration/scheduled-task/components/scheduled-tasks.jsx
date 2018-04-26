@@ -17,10 +17,9 @@ const ScheduledTasks = () =>
       type: 'link',
       target: `/form/${row.id}`
     })}
-    deleteAction={() => ({
-      type: 'url',
-      target: ['apiv2_scheduledtask_delete_bulk']
-    })}
+    delete={{
+      url: ['apiv2_scheduledtask_delete_bulk']
+    }}
     definition={[
       {
         name: 'name',
