@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "4120005dea6f45a169f5cd627012ac6f2bb8e724"
+                "reference": "fa515f803c603553be34dab9683e4a3d33772726"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/4120005dea6f45a169f5cd627012ac6f2bb8e724",
-                "reference": "4120005dea6f45a169f5cd627012ac6f2bb8e724",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/fa515f803c603553be34dab9683e4a3d33772726",
+                "reference": "fa515f803c603553be34dab9683e4a3d33772726",
                 "shasum": ""
             },
             "require": {
@@ -397,7 +397,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-04-24 14:39:19"
+            "time": "2018-04-25 15:03:27"
         },
         {
             "name": "cocur/slugify",
@@ -6031,16 +6031,16 @@
         },
         {
             "name": "zendframework/zend-eventmanager",
-            "version": "3.2.0",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-eventmanager.git",
-                "reference": "9d72db10ceb6e42fb92350c0cb54460da61bd79c"
+                "reference": "a5e2583a211f73604691586b8406ff7296a946dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-eventmanager/zipball/9d72db10ceb6e42fb92350c0cb54460da61bd79c",
-                "reference": "9d72db10ceb6e42fb92350c0cb54460da61bd79c",
+                "url": "https://api.github.com/repos/zendframework/zend-eventmanager/zipball/a5e2583a211f73604691586b8406ff7296a946dd",
+                "reference": "a5e2583a211f73604691586b8406ff7296a946dd",
                 "shasum": ""
             },
             "require": {
@@ -6049,7 +6049,7 @@
             "require-dev": {
                 "athletic/athletic": "^0.1",
                 "container-interop/container-interop": "^1.1.0",
-                "phpunit/phpunit": "^6.0.7 || ^5.7.14",
+                "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1.2",
                 "zendframework/zend-coding-standard": "~1.0.0",
                 "zendframework/zend-stdlib": "^2.7.3 || ^3.0"
             },
@@ -6081,7 +6081,7 @@
                 "events",
                 "zf2"
             ],
-            "time": "2017-07-11 19:17:22"
+            "time": "2018-04-25 15:33:34"
         },
         {
             "name": "zendframework/zend-hydrator",

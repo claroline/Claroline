@@ -1461,7 +1461,14 @@
     "compression": {
       "version": "1.7.2",
       "from": "compression@>=1.5.2 <2.0.0",
-      "resolved": "https://registry.npmjs.org/compression/-/compression-1.7.2.tgz"
+      "resolved": "https://registry.npmjs.org/compression/-/compression-1.7.2.tgz",
+      "dependencies": {
+        "safe-buffer": {
+          "version": "5.1.1",
+          "from": "safe-buffer@5.1.1",
+          "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz"
+        }
+      }
     },
     "concat-map": {
       "version": "0.0.1",
@@ -2367,9 +2374,9 @@
       "resolved": "https://registry.npmjs.org/event-emitter/-/event-emitter-0.3.5.tgz"
     },
     "eventemitter3": {
-      "version": "3.0.1",
+      "version": "3.1.0",
       "from": "eventemitter3@>=3.0.0 <4.0.0",
-      "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-3.0.1.tgz"
+      "resolved": "https://registry.npmjs.org/eventemitter3/-/eventemitter3-3.1.0.tgz"
     },
     "events": {
       "version": "1.1.1",
@@ -2476,6 +2483,11 @@
           "version": "1.1.1",
           "from": "array-flatten@1.1.1",
           "resolved": "https://registry.npmjs.org/array-flatten/-/array-flatten-1.1.1.tgz"
+        },
+        "safe-buffer": {
+          "version": "5.1.1",
+          "from": "safe-buffer@5.1.1",
+          "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz"
         }
       }
     },
@@ -6322,9 +6334,9 @@
       "resolved": "https://registry.npmjs.org/rx-lite-aggregates/-/rx-lite-aggregates-4.0.8.tgz"
     },
     "safe-buffer": {
-      "version": "5.1.1",
+      "version": "5.1.2",
       "from": "safe-buffer@>=5.1.1 <5.2.0",
-      "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz"
+      "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz"
     },
     "safe-json-parse": {
       "version": "4.0.0",
