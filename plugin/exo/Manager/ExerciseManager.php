@@ -223,23 +223,6 @@ class ExerciseManager
     }
 
     /**
-     * Generates new ids for quiz entities.
-     *
-     * @param Exercise $exercise
-     */
-    private function refreshIdentifiers(Exercise $exercise)
-    {
-        $exercise->refreshUuid();
-
-        foreach ($exercise->getSteps() as $step) {
-            $step->refreshUuid();
-            foreach ($step->getQuestions() as $item) {
-                $this->itemManager->refreshIdentifiers($item);
-            }
-        }
-    }
-
-    /**
      * Applies an arbitrary parser on all HTML contents in the quiz definition.
      *
      * @param ContentParserInterface $contentParser
@@ -273,8 +256,11 @@ class ExerciseManager
      */
     public function createCopy(\stdClass $srcData, Exercise $copyDestination = null)
     {
-        $copyDestination = $this->serializer->deserialize($srcData, $copyDestination, [Transfer::NO_FETCH]);
-        $this->refreshIdentifiers($copyDestination);
+        $copyDestination = $this->serializer->deserialize($srcData, $copyDestination, [
+            Transfer::NO_FETCH,
+            Transfer::PERSIST_TAG,
+            Transfer::REFRESH_UUID,
+        ]);
 
         // Persist copy
         $this->om->persist($copyDestination);
