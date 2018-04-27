@@ -6,6 +6,7 @@ use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\StepItem;
 use UJM\ExoBundle\Library\Options\Recurrence;
+use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 use UJM\ExoBundle\Serializer\Item\ItemSerializer;
 
@@ -76,6 +77,10 @@ class StepSerializer implements SerializerInterface
     {
         $step = $step ?: new Step();
         $step->setUuid($data->id);
+
+        if (in_array(Transfer::REFRESH_UUID, $options)) {
+            $step->refreshUuid();
+        }
 
         if (isset($data->title)) {
             $step->setTitle($data->title);
