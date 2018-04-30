@@ -71,6 +71,7 @@ const RoutedExplain = props => {
                   required: true,
                   options: {
                     noEmpty: true,
+                    condensed: true,
                     choices: choices
                   }
                 }, {

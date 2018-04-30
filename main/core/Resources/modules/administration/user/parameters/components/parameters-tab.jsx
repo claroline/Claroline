@@ -76,6 +76,7 @@ const Parameters = (props) => {
             required: true,
             options: {
               noEmpty: true,
+              condensed: true,
               choices: roleEnum
             }
           }, {
@@ -93,6 +94,7 @@ const Parameters = (props) => {
             required: true,
             options: {
               noEmpty: true,
+              condensed: true,
               choices: constants.registrationValidationTypes
             }
           }

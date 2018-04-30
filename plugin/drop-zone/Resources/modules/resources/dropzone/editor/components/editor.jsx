@@ -35,6 +35,7 @@ const EditorComponent = props =>
               },
               options: {
                 noEmpty: true,
+                condensed: true,
                 choices: constants.REVIEW_TYPES
               }
             }, {
@@ -59,6 +60,7 @@ const EditorComponent = props =>
               required: true,
               options: {
                 choices: constants.PLANNING_TYPES,
+                condensed: true,
                 noEmpty: true
               },
               linked: [
@@ -70,6 +72,7 @@ const EditorComponent = props =>
                   required: true,
                   options: {
                     noEmpty: true,
+                    condensed: true,
                     choices: constants.PLANNING_STATES[props.dropzone.parameters.reviewType]
                   }
                 }, {
@@ -104,6 +107,7 @@ const EditorComponent = props =>
               required: true,
               options: {
                 noEmpty: true,
+                condensed: true,
                 choices: constants.DROP_TYPES
               }
             }, {

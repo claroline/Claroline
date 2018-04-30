@@ -7,7 +7,7 @@ import moment from 'moment'
 import {trans} from '#/main/core/translation'
 import {NumberGroup}  from '#/main/core/layout/form/components/group/number-group.jsx'
 import {HtmlGroup}  from '#/main/core/layout/form/components/group/html-group.jsx'
-import {RadiosGroup}  from '#/main/core/layout/form/components/group/radios-group.jsx'
+import {ChoiceGroup}  from '#/main/core/layout/form/components/group/choice-group.jsx'
 import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
 import {ScoreBox} from '#/main/core/layout/evaluation/components/score-box.jsx'
 
@@ -32,7 +32,7 @@ const CriteriaForm = props =>
                 </HtmlText>
               </td>
               <td className="criterion-scale-form-row">
-                <RadiosGroup
+                <ChoiceGroup
                   id={`criterion-form-${c.id}-radio`}
                   label="criterion_form_radio"
                   choices={[...Array(props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
@@ -40,9 +40,8 @@ const CriteriaForm = props =>
 
                     return acc
                   }, {})}
-                  inline={true}
                   hideLabel={true}
-                  value={props.grades.find(g => g.criterion === c.id).value}
+                  value={`${props.grades.find(g => g.criterion === c.id).value}`}
                   onChange={value => props.handleUpdate(c.id, parseInt(value))}
                 />
               </td>

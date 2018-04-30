@@ -87,6 +87,7 @@ const Resource = props =>
             label: trans('type', {}, 'platform'),
             required: true,
             options: {
+              condensed: true,
               choices: props.resourceTypes.reduce((o, rt) => Object.assign(o, {[rt.name]: rt.name}), {})
             }
           }, {

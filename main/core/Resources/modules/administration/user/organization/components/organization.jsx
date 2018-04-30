@@ -40,10 +40,13 @@ const OrganizationForm = props =>
             type: 'choice',
             label: trans('type'),
             required: true,
-            options: {choices: {
-              'external': trans('external'),
-              'internal': trans('internal')
-            }}
+            options: {
+              condensed: true,
+              choices: {
+                'external': trans('external'),
+                'internal': trans('internal')
+              }
+            }
           }, {
             name: 'vat',
             label: trans('vat_number'),

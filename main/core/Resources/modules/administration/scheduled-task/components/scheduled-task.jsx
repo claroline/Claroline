@@ -44,6 +44,7 @@ const ScheduledTaskForm = props => {
               required: true,
               disabled: !props.new,
               options: {
+                condensed: true,
                 choices: constants.TASK_TYPES
               }
             }

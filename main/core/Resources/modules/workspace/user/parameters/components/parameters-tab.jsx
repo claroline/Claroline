@@ -81,6 +81,7 @@ const Parameters = props => {
             type: 'choice',
             label: trans('default_role'),
             options: {
+              condensed: true,
               choices: roleEnum
             },
             onChange: (roleId) => props.updateProp(

@@ -43,6 +43,7 @@ class AddDocumentModal extends Component {
                 onChange: (documentType) => this.setState({type: documentType}),
                 options: {
                   noEmpty: false,
+                  condensed: true,
                   choices: this.state.allowedTypes
                 }
               }, {

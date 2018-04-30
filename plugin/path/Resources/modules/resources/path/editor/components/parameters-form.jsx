@@ -59,6 +59,7 @@ const ParametersForm = props =>
             required: true,
             options: {
               noEmpty: true,
+              condensed: true,
               choices: constants.PATH_NUMBERINGS
             }
           }

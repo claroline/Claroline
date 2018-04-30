@@ -28,6 +28,7 @@ const NotificationForm = props =>
             required: true,
             options: {
               noEmpty: true,
+              condensed: true,
               choices: constants.TRIGGERING_ACTIONS
             }
           }, {

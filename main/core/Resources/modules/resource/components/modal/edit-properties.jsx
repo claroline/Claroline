@@ -118,6 +118,7 @@ class EditPropertiesModal extends Component {
                 required: true,
                 options: {
                   noEmpty: true,
+                  condensed: true,
                   choices: constants.RESOURCE_CLOSE_TARGETS
                 }
               }

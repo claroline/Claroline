@@ -41,6 +41,7 @@ const RoleForm = props =>
             label: t('type'),
             readOnly: true,
             options: {
+              condensed: true,
               choices: enumRole
             }
           }
