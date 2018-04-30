@@ -28,7 +28,7 @@ const RoleList = {
     }, {
       name: 'meta.type',
       alias: 'type',
-      type: 'enum',
+      type: 'choice',
       label: trans('type'),
       options: {
         choices: enumRole

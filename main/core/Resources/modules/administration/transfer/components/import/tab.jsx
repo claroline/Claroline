@@ -64,7 +64,7 @@ const RoutedExplain = props => {
               fields: [
                 {
                   name: 'action',
-                  type: 'enum',
+                  type: 'choice',
                   label: t('action'),
                   // FIXME
                   //onChange: (value) => navigate('/import/' + entity + '/' +  value.substring(value.indexOf('_') + 1)),

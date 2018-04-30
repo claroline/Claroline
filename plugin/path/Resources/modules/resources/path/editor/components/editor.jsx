@@ -197,7 +197,7 @@ const Editor = connect(
             alias: 'resourceType',
             label: trans('type'),
             displayed: true,
-            type: 'enum',
+            type: 'choice',
             options: {
               choices: resourceTypes.filter(rt => rt.name != 'directory').reduce(
                 (choices, rt) => Object.assign(choices, {[rt.name]: trans(rt.name, {}, 'resource')}),

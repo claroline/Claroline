@@ -57,8 +57,10 @@ actions.saveForm = (formName, target) => (dispatch, getState) => {
       alert.title,
       alert.message
     ))
+
+    return Promise.reject()
   } else {
-    dispatch({
+    return dispatch({
       [API_REQUEST]: {
         url: target,
         request: {

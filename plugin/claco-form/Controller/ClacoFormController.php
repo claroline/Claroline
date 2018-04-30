@@ -12,10 +12,8 @@
 namespace Claroline\ClacoFormBundle\Controller;
 
 use Claroline\AppBundle\API\FinderProvider;
-use Claroline\ClacoFormBundle\API\Serializer\CommentSerializer;
-use Claroline\ClacoFormBundle\API\Serializer\EntrySerializer;
-use Claroline\ClacoFormBundle\API\Serializer\FieldSerializer;
-use Claroline\ClacoFormBundle\Entity\Category;
+use Claroline\AppBundle\API\Options;
+use Claroline\AppBundle\API\SerializerProvider;
 use Claroline\ClacoFormBundle\Entity\ClacoForm;
 use Claroline\ClacoFormBundle\Entity\Comment;
 use Claroline\ClacoFormBundle\Entity\Entry;
@@ -23,6 +21,10 @@ use Claroline\ClacoFormBundle\Entity\Field;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\ClacoFormBundle\Manager\ClacoFormManager;
+use Claroline\ClacoFormBundle\Serializer\CommentSerializer;
+use Claroline\ClacoFormBundle\Serializer\EntrySerializer;
+use Claroline\ClacoFormBundle\Serializer\EntryUserSerializer;
+use Claroline\ClacoFormBundle\Serializer\FieldSerializer;
 use Claroline\CoreBundle\API\Serializer\User\RoleSerializer;
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\User;
@@ -31,8 +33,6 @@ use Claroline\CoreBundle\Manager\ApiManager;
 use Claroline\CoreBundle\Manager\RoleManager;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use JMS\Serializer\SerializationContext;
-use JMS\Serializer\Serializer;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -51,12 +51,15 @@ class ClacoFormController extends Controller
     private $request;
     private $roleManager;
     private $roleSerializer;
+
+    /** @var SerializerProvider */
     private $serializer;
     private $tokenStorage;
     private $userManager;
     private $entrySerializer;
     private $commentSerializer;
     private $fieldSerializer;
+    private $entryUserSerializer;
 
     /**
      * @DI\InjectParams({
@@ -68,12 +71,13 @@ class ClacoFormController extends Controller
      *     "request"               = @DI\Inject("request"),
      *     "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
      *     "roleSerializer"        = @DI\Inject("claroline.serializer.role"),
-     *     "serializer"            = @DI\Inject("jms_serializer"),
+     *     "serializer"            = @DI\Inject("claroline.api.serializer"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
      *     "userManager"           = @DI\Inject("claroline.manager.user_manager"),
      *     "entrySerializer"       = @DI\Inject("claroline.serializer.clacoform.entry"),
      *     "commentSerializer"     = @DI\Inject("claroline.serializer.clacoform.comment"),
-     *     "fieldSerializer"       = @DI\Inject("claroline.serializer.clacoform.field")
+     *     "fieldSerializer"       = @DI\Inject("claroline.serializer.clacoform.field"),
+     *     "entryUserSerializer"   = @DI\Inject("claroline.serializer.clacoform.entry.user")
      * })
      */
     public function __construct(
@@ -85,12 +89,13 @@ class ClacoFormController extends Controller
         Request $request,
         RoleManager $roleManager,
         RoleSerializer $roleSerializer,
-        Serializer $serializer,
+        SerializerProvider $serializer,
         TokenStorageInterface $tokenStorage,
         UserManager $userManager,
         EntrySerializer $entrySerializer,
         CommentSerializer $commentSerializer,
-        FieldSerializer $fieldSerializer
+        FieldSerializer $fieldSerializer,
+        EntryUserSerializer $entryUserSerializer
     ) {
         $this->apiManager = $apiManager;
         $this->clacoFormManager = $clacoFormManager;
@@ -106,6 +111,7 @@ class ClacoFormController extends Controller
         $this->entrySerializer = $entrySerializer;
         $this->commentSerializer = $commentSerializer;
         $this->fieldSerializer = $fieldSerializer;
+        $this->entryUserSerializer = $entryUserSerializer;
     }
 
     /**
@@ -121,7 +127,6 @@ class ClacoFormController extends Controller
         $this->clacoFormManager->checkRight($clacoForm, 'OPEN');
         $user = $this->tokenStorage->getToken()->getUser();
         $isAnon = 'anon.' === $user;
-        $fields = $this->clacoFormManager->getFieldsByClacoForm($clacoForm);
         $myEntries = $isAnon ? [] : $this->clacoFormManager->getUserEntries($clacoForm, $user);
         $canGeneratePdf = !$isAnon &&
             $this->platformConfigHandler->hasParameter('knp_pdf_binary_path') &&
@@ -129,38 +134,24 @@ class ClacoFormController extends Controller
         $cascadeLevelMax = $this->platformConfigHandler->hasParameter('claco_form_cascade_select_level_max') ?
             $this->platformConfigHandler->getParameter('claco_form_cascade_select_level_max') :
             2;
-        $entries = $this->finder->search(
-            'Claroline\ClacoFormBundle\Entity\Entry',
-            [
-                'limit' => 20,
-                'hiddenFilters' => ['clacoForm' => $clacoForm->getId()],
-                'sortBy' => 'creationDate',
-            ]
-        );
         $roles = [];
         $roleUser = $this->roleManager->getRoleByName('ROLE_USER');
         $roleAnonymous = $this->roleManager->getRoleByName('ROLE_ANONYMOUS');
         $workspaceRoles = $this->roleManager->getWorkspaceRoles($clacoForm->getResourceNode()->getWorkspace());
-        $roles[] = $this->roleSerializer->serialize($roleUser);
-        $roles[] = $this->roleSerializer->serialize($roleAnonymous);
+        $roles[] = $this->roleSerializer->serialize($roleUser, [Options::SERIALIZE_MINIMAL]);
+        $roles[] = $this->roleSerializer->serialize($roleAnonymous, [Options::SERIALIZE_MINIMAL]);
 
         foreach ($workspaceRoles as $workspaceRole) {
-            $roles[] = $this->roleSerializer->serialize($workspaceRole);
+            $roles[] = $this->roleSerializer->serialize($workspaceRole, [Options::SERIALIZE_MINIMAL]);
         }
         $currentUser = $this->tokenStorage->getToken()->getUser();
         $myRoles = 'anon.' === $currentUser ? [$roleAnonymous->getName()] : $currentUser->getRoles();
 
         return [
-            'user' => $user,
             '_resource' => $clacoForm,
-            'isAnon' => $isAnon,
             'clacoForm' => $clacoForm,
-            'fields' => array_map(function (Field $field) {
-                return $this->fieldSerializer->serialize($field);
-            }, $fields),
             'canGeneratePdf' => $canGeneratePdf,
             'cascadeLevelMax' => $cascadeLevelMax,
-            'entries' => $entries,
             'myEntriesCount' => count($myEntries),
             'roles' => $roles,
             'myRoles' => $myRoles,
@@ -169,79 +160,19 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/claco/form/{clacoForm}/entries/search",
-     *     name="claro_claco_form_entries_search",
-     *     options={"expose"=true}
-     * )
-     */
-    public function entriesSearchAction(ClacoForm $clacoForm)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'OPEN');
-        $params = $this->request->query->all();
-
-        if (!isset($params['hiddenFilters'])) {
-            $params['hiddenFilters'] = [];
-        }
-        $params['hiddenFilters']['clacoForm'] = $clacoForm->getId();
-
-        if (isset($params['filters'])) {
-            $filters = [];
-            $excludedFilters = [
-                'clacoForm',
-                'type',
-                'title',
-                'status',
-                'locked',
-                'user',
-                'createdAfter',
-                'createdBefore',
-                'categories',
-                'keywords',
-            ];
-
-            foreach ($params['filters'] as $key => $value) {
-                if (!in_array($key, $excludedFilters)) {
-                    $filters['field_'.$key] = $value;
-                }
-            }
-            $params['filters'] = $filters;
-        }
-        $data = $this->finder->search(
-            'Claroline\ClacoFormBundle\Entity\Entry',
-            $params
-        );
-
-        return new JsonResponse($data, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/{clacoForm}/config/edit",
-     *     name="claro_claco_form_configuration_edit",
-     *     options={"expose"=true}
-     * )
-     */
-    public function clacoFormConfigurationEditAction(ClacoForm $clacoForm)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $configData = $this->request->request->get('configData', false);
-
-        if (!is_array($configData)) {
-            $configData = json_decode($configData, true);
-        }
-        $details = $configData ?
-            $this->clacoFormManager->saveClacoFormConfig($clacoForm, $configData) :
-            $clacoForm->getDetails();
-
-        return new JsonResponse($details, 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/claco/form/{clacoForm}/template/edit",
      *     name="claro_claco_form_template_edit",
      *     options={"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "clacoForm",
+     *     class="ClarolineClacoFormBundle:ClacoForm",
+     *     options={"mapping": {"clacoForm": "uuid"}}
+     * )
+     *
+     * @param ClacoForm $clacoForm
+     *
+     * @return JsonResponse
      */
     public function clacoFormTemplateEditAction(ClacoForm $clacoForm)
     {
@@ -256,457 +187,29 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/claco/form/{clacoForm}/field/create",
-     *     name="claro_claco_form_field_create",
+     *     "/claco/form/{clacoForm}/keyword/get/by/name/{name}/excluding/uuid/{uuid}",
+     *     name="claro_claco_form_get_keyword_by_name_excluding_uuid",
      *     options = {"expose"=true}
      * )
-     *
-     * Creates a field
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function fieldCreateAction(ClacoForm $clacoForm)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $fieldData = $this->request->request->get('fieldData', false);
-        $choicesData = $this->request->request->get('choicesData', false);
-        $choiceChildrenData = $this->request->request->get('choicesChildrenData', false);
-
-        if (!is_array($fieldData)) {
-            $fieldData = json_decode($fieldData, true);
-        }
-        if ($choicesData && !is_array($choicesData)) {
-            $choicesData = json_decode($choicesData, true);
-        }
-        if ($choiceChildrenData && !is_array($choiceChildrenData)) {
-            $choiceChildrenData = json_decode($choiceChildrenData, true);
-        }
-        $choices = $choicesData ? $choicesData : [];
-        $choicesChildren = FieldFacet::SELECT_TYPE === $fieldData['type'] && $choiceChildrenData ?
-            $choiceChildrenData :
-            [];
-
-        foreach ($choices as $key => $choice) {
-            $categoryId = isset($choice['category']) ? $choice['category'] : null;
-            $choices[$key]['categoryId'] = $categoryId;
-        }
-        $required = is_bool($fieldData['required']) ? $fieldData['required'] : 'true' === $fieldData['required'];
-        $isMetadata = is_bool($fieldData['isMetadata']) ? $fieldData['isMetadata'] : 'true' === $fieldData['isMetadata'];
-        $locked = is_bool($fieldData['locked']) ? $fieldData['locked'] : 'true' === $fieldData['locked'];
-        $lockedEditionOnly = is_bool($fieldData['lockedEditionOnly']) ?
-            $fieldData['lockedEditionOnly'] :
-            'true' === $fieldData['lockedEditionOnly'];
-        $hidden = is_bool($fieldData['hidden']) ? $fieldData['hidden'] : 'true' === $fieldData['hidden'];
-        $details = isset($fieldData['details']) && is_array($fieldData['details']) ?
-            $fieldData['details'] :
-            ['file_types' => [], 'nb_files_max' => 1];
-
-        foreach ($choicesChildren as $parentId => $choicesList) {
-            foreach ($choicesList as $key => $choice) {
-                $categoryId = isset($choice['category']) ? $choice['category'] : null;
-                $choicesChildren[$parentId][$key]['categoryId'] = $categoryId;
-            }
-        }
-        $field = $this->clacoFormManager->createField(
-            $clacoForm,
-            $fieldData['name'],
-            $fieldData['type'],
-            $required,
-            $isMetadata,
-            $locked,
-            $lockedEditionOnly,
-            $hidden,
-            $choices,
-            $choicesChildren,
-            $details
-        );
-        $serializedField = $this->fieldSerializer->serialize($field);
-
-        return new JsonResponse($serializedField, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/field/{field}/edit",
-     *     name="claro_claco_form_field_edit",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Edits a field
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function fieldEditAction(Field $field)
-    {
-        $clacoForm = $field->getClacoForm();
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $fieldData = $this->request->request->get('fieldData', false);
-        $choicesData = $this->request->request->get('choicesData', false);
-        $choiceChildrenData = $this->request->request->get('choicesChildrenData', false);
-
-        if (!is_array($fieldData)) {
-            $fieldData = json_decode($fieldData, true);
-        }
-        if ($choicesData && !is_array($choicesData)) {
-            $choicesData = json_decode($choicesData, true);
-        }
-        if ($choiceChildrenData && !is_array($choiceChildrenData)) {
-            $choiceChildrenData = json_decode($choiceChildrenData, true);
-        }
-        $choices = $choicesData ? $choicesData : [];
-        $choicesChildren = FieldFacet::SELECT_TYPE === $fieldData['type'] && $choiceChildrenData ?
-            $choiceChildrenData :
-            [];
-
-        foreach ($choices as $key => $choice) {
-            $categoryId = isset($choice['category']) ? $choice['category'] : null;
-            $choices[$key]['categoryId'] = $categoryId;
-        }
-        $required = is_bool($fieldData['required']) ? $fieldData['required'] : 'true' === $fieldData['required'];
-        $isMetadata = is_bool($fieldData['isMetadata']) ? $fieldData['isMetadata'] : 'true' === $fieldData['isMetadata'];
-        $locked = is_bool($fieldData['locked']) ? $fieldData['locked'] : 'true' === $fieldData['locked'];
-        $lockedEditionOnly = is_bool($fieldData['lockedEditionOnly']) ?
-            $fieldData['lockedEditionOnly'] :
-            'true' === $fieldData['lockedEditionOnly'];
-        $hidden = is_bool($fieldData['hidden']) ? $fieldData['hidden'] : 'true' === $fieldData['hidden'];
-        $details = isset($fieldData['details']) && is_array($fieldData['details']) ?
-            $fieldData['details'] :
-            ['file_types' => [], 'nb_files_max' => 1];
-
-        foreach ($choicesChildren as $parentId => $choicesList) {
-            foreach ($choicesList as $key => $choice) {
-                $categoryId = isset($choice['category']) ? $choice['category'] : null;
-                $choicesChildren[$parentId][$key]['categoryId'] = $categoryId;
-            }
-        }
-        $this->clacoFormManager->editField(
-            $field,
-            $fieldData['name'],
-            $fieldData['type'],
-            $required,
-            $isMetadata,
-            $locked,
-            $lockedEditionOnly,
-            $hidden,
-            $choices,
-            $choicesChildren,
-            $details
-        );
-        $serializedField = $this->fieldSerializer->serialize($field);
-
-        return new JsonResponse($serializedField, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/field/{field}/delete",
-     *     name="claro_claco_form_field_delete",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Deletes a field
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function fieldDeleteAction(Field $field)
-    {
-        $clacoForm = $field->getClacoForm();
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $serializedField = $this->serializer->serialize(
-            $field,
-            'json',
-            SerializationContext::create()->setGroups(['api_facet_admin'])
-        );
-        $this->clacoFormManager->deleteField($field);
-
-        return new JsonResponse($serializedField, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/{clacoForm}/field/get/by/name/{name}/excluding/id/{id}",
-     *     name="claro_claco_form_get_field_by_name_excluding_id",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Returns the field
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function getFieldByNameExcludingIdAction(ClacoForm $clacoForm, $name, $id = 0)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $field = $this->clacoFormManager->getFieldByNameExcludingId($clacoForm, $name, $id);
-        $serializedField = $this->serializer->serialize(
-            $field,
-            'json',
-            SerializationContext::create()->setGroups(['api_facet_admin'])
-        );
-
-        return new JsonResponse($serializedField, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/field/{field}/choices/categories/retrieve",
-     *     name="claro_claco_form_field_choices_categories_retrieve",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Retrieves categories associated to choices from a field
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function fieldChoicesCategoriesRetrieveAction(Field $field)
-    {
-        $clacoForm = $field->getClacoForm();
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $fieldChoicesCategories = $this->clacoFormManager->getFieldChoicesCategoriesByField($field);
-        $serializedFieldChoicesCategories = $this->serializer->serialize(
-            $fieldChoicesCategories,
-            'json',
-            SerializationContext::create()->setGroups(['api_facet_admin'])
-        );
-
-        return new JsonResponse($serializedFieldChoicesCategories, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/{clacoForm}/category/create",
-     *     name="claro_claco_form_category_create",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Creates a category
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function categoryCreateAction(ClacoForm $clacoForm)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $categoryData = $this->request->request->get('categoryData', false);
-
-        if (!is_array($categoryData)) {
-            $categoryData = json_decode($categoryData, true);
-        }
-        $notifyAddition = is_bool($categoryData['notifyAddition']) ?
-            $categoryData['notifyAddition'] :
-            'true' === $categoryData['notifyAddition'];
-        $notifyEdition = is_bool($categoryData['notifyEdition']) ?
-            $categoryData['notifyEdition'] :
-            'true' === $categoryData['notifyEdition'];
-        $notifyRemoval = is_bool($categoryData['notifyRemoval']) ?
-            $categoryData['notifyRemoval'] :
-            'true' === $categoryData['notifyRemoval'];
-        $notifyPendingComment = is_bool($categoryData['notifyPendingComment']) ?
-            $categoryData['notifyPendingComment'] :
-            'true' === $categoryData['notifyPendingComment'];
-        $managers = isset($categoryData['managers']) && count($categoryData['managers']) > 0 ?
-            $this->userManager->getUsersByIds($categoryData['managers']) :
-            [];
-        $category = $this->clacoFormManager->createCategory(
-            $clacoForm,
-            $categoryData['name'],
-            $managers,
-            $categoryData['color'],
-            $notifyAddition,
-            $notifyEdition,
-            $notifyRemoval,
-            $notifyPendingComment
-        );
-        $serializedCategory = $this->serializer->serialize(
-            $category,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
-
-        return new JsonResponse($serializedCategory, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/category/{category}/edit",
-     *     name="claro_claco_form_category_edit",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Edits a category
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function categoryEditAction(Category $category)
-    {
-        $clacoForm = $category->getClacoForm();
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $categoryData = $this->request->request->get('categoryData', false);
-
-        if (!is_array($categoryData)) {
-            $categoryData = json_decode($categoryData, true);
-        }
-        $notifyAddition = is_bool($categoryData['notifyAddition']) ?
-            $categoryData['notifyAddition'] :
-            'true' === $categoryData['notifyAddition'];
-        $notifyEdition = is_bool($categoryData['notifyEdition']) ?
-            $categoryData['notifyEdition'] :
-            'true' === $categoryData['notifyEdition'];
-        $notifyRemoval = is_bool($categoryData['notifyRemoval']) ?
-            $categoryData['notifyRemoval'] :
-            'true' === $categoryData['notifyRemoval'];
-        $notifyPendingComment = is_bool($categoryData['notifyPendingComment']) ?
-            $categoryData['notifyPendingComment'] :
-            'true' === $categoryData['notifyPendingComment'];
-        $managers = isset($categoryData['managers']) && count($categoryData['managers']) > 0 ?
-            $this->userManager->getUsersByIds($categoryData['managers']) :
-            [];
-        $category = $this->clacoFormManager->editCategory(
-            $category,
-            $categoryData['name'],
-            $managers,
-            $categoryData['color'],
-            $notifyAddition,
-            $notifyEdition,
-            $notifyRemoval,
-            $notifyPendingComment
-        );
-        $serializedCategory = $this->serializer->serialize(
-            $category,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
-
-        return new JsonResponse($serializedCategory, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/category/{category}/delete",
-     *     name="claro_claco_form_category_delete",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Deletes a category
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function categoryDeleteAction(Category $category)
-    {
-        $clacoForm = $category->getClacoForm();
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $serializedCategory = $this->serializer->serialize(
-            $category,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
-        $this->clacoFormManager->deleteCategory($category);
-
-        return new JsonResponse($serializedCategory, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/{clacoForm}/keyword/create",
-     *     name="claro_claco_form_keyword_create",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Creates a keyword
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function keywordCreateAction(ClacoForm $clacoForm)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $keywordData = $this->request->request->get('keywordData', false);
-
-        if (!is_array($keywordData)) {
-            $keywordData = json_decode($keywordData, true);
-        }
-        $keyword = $this->clacoFormManager->createKeyword($clacoForm, $keywordData['name']);
-        $serializedKeyword = $this->serializer->serialize(
-            $keyword,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
-
-        return new JsonResponse($serializedKeyword, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/keyword/{keyword}/edit",
-     *     name="claro_claco_form_keyword_edit",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Edits a keyword
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function keywordEditAction(Keyword $keyword)
-    {
-        $clacoForm = $keyword->getClacoForm();
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $keywordData = $this->request->request->get('keywordData', false);
-
-        if (!is_array($keywordData)) {
-            $keywordData = json_decode($keywordData, true);
-        }
-        $this->clacoFormManager->editKeyword($keyword, $keywordData['name']);
-        $serializedKeyword = $this->serializer->serialize(
-            $keyword,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
-
-        return new JsonResponse($serializedKeyword, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/keyword/{keyword}/delete",
-     *     name="claro_claco_form_keyword_delete",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Deletes a keyword
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function keywordDeleteAction(Keyword $keyword)
-    {
-        $clacoForm = $keyword->getClacoForm();
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $serializedKeyword = $this->serializer->serialize(
-            $keyword,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
-        $this->clacoFormManager->deleteKeyword($keyword);
-
-        return new JsonResponse($serializedKeyword, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/{clacoForm}/keyword/get/by/name/{name}/excluding/id/{id}",
-     *     name="claro_claco_form_get_keyword_by_name_excluding_id",
-     *     options = {"expose"=true}
+     * @EXT\ParamConverter(
+     *     "clacoForm",
+     *     class="ClarolineClacoFormBundle:ClacoForm",
+     *     options={"mapping": {"clacoForm": "uuid"}}
      * )
      *
      * Returns the keyword
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param ClacoForm $clacoForm
+     * @param string    $name
+     * @param string    $uuid
+     *
+     * @return JsonResponse
      */
-    public function getKeywordByNameExcludingIdAction(ClacoForm $clacoForm, $name, $id = 0)
+    public function getKeywordByNameExcludingUuidAction(ClacoForm $clacoForm, $name, $uuid)
     {
         $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $keyword = $this->clacoFormManager->getKeywordByNameExcludingId($clacoForm, $name, $id);
-        $serializedKeyword = $this->serializer->serialize(
-            $keyword,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $keyword = $this->clacoFormManager->getKeywordByNameExcludingUuid($clacoForm, $name, $uuid);
+        $serializedKeyword = !empty($keyword) ? $this->serializer->serialize($keyword) : null;
 
         return new JsonResponse($serializedKeyword, 200);
     }
@@ -717,10 +220,17 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_random",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "clacoForm",
+     *     class="ClarolineClacoFormBundle:ClacoForm",
+     *     options={"mapping": {"clacoForm": "uuid"}}
+     * )
      *
      * Returns id of a random entry
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param ClacoForm $clacoForm
+     *
+     * @return JsonResponse
      */
     public function entryRandomAction(ClacoForm $clacoForm)
     {
@@ -732,40 +242,21 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/claco/form/{clacoForm}/entries/list",
-     *     name="claro_claco_form_entries_list",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Returns the list of entries
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function entriesListAction(ClacoForm $clacoForm)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'OPEN');
-        $currentUser = $this->tokenStorage->getToken()->getUser();
-        $user = 'anon.' === $currentUser ? null : $currentUser;
-        $entries = $this->clacoFormManager->getEntriesForUser($clacoForm, $user);
-        $serializedEntries = $this->serializer->serialize(
-            $entries,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
-
-        return new JsonResponse($serializedEntries, 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/claco/form/{clacoForm}/entry/create",
      *     name="claro_claco_form_entry_create",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "clacoForm",
+     *     class="ClarolineClacoFormBundle:ClacoForm",
+     *     options={"mapping": {"clacoForm": "uuid"}}
+     * )
      *
      * Creates an entry
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param ClacoForm $clacoForm
+     *
+     * @return JsonResponse
      */
     public function entryCreateAction(ClacoForm $clacoForm)
     {
@@ -837,26 +328,6 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/claco/form/entry/{entry}/delete",
-     *     name="claro_claco_form_entry_delete",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Deletes an entry
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function entryDeleteAction(Entry $entry)
-    {
-        $this->clacoFormManager->checkEntryEdition($entry);
-        $serializedEntry = $this->entrySerializer->serialize($entry);
-        $this->clacoFormManager->deleteEntry($entry);
-
-        return new JsonResponse($serializedEntry, 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/claco/form/entries/delete",
      *     name="claro_claco_form_entries_delete",
      *     options = {"expose"=true}
@@ -870,7 +341,7 @@ class ClacoFormController extends Controller
     {
         $entries = [];
         $serializedEntries = [];
-        $entriesParams = $this->apiManager->getParameters('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+        $entriesParams = $this->apiManager->getParametersByUuid('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
 
         foreach ($entriesParams as $entryParam) {
             if (!$entryParam->isLocked()) {
@@ -888,33 +359,21 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/claco/form/entry/{entry}/retrieve",
-     *     name="claro_claco_form_entry_retrieve",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Retrieves an entry
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function entryRetrieveAction(Entry $entry)
-    {
-        $this->clacoFormManager->checkEntryAccess($entry);
-        $serializedEntry = $this->entrySerializer->serialize($entry);
-
-        return new JsonResponse($serializedEntry, 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/claco/form/entry/{entry}/status/change",
      *     name="claro_claco_form_entry_status_change",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
      *
      * Changes status of an entry
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Entry $entry
+     *
+     * @return JsonResponse
      */
     public function entryStatusChangeAction(Entry $entry)
     {
@@ -940,13 +399,13 @@ class ClacoFormController extends Controller
      *
      * @param int $status
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      */
     public function entriesStatusChangeAction($status)
     {
         $entries = [];
         $serializedEntries = [];
-        $entriesParams = $this->apiManager->getParameters('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+        $entriesParams = $this->apiManager->getParametersByUuid('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
 
         foreach ($entriesParams as $entryParam) {
             if (!$entryParam->isLocked()) {
@@ -971,10 +430,17 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_comments_retrieve",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
      *
      * Retrieves comments of an entry
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Entry $entry
+     *
+     * @return JsonResponse
      */
     public function entryCommentsRetrieveAction(Entry $entry)
     {
@@ -988,11 +454,9 @@ class ClacoFormController extends Controller
         } else {
             $comments = $this->clacoFormManager->getAvailableCommentsForUser($entry, $user);
         }
-        $serializedComments = $this->serializer->serialize(
-            $comments,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedComments = array_map(function (Comment $comment) {
+            return $this->serializer->serialize($comment);
+        }, $comments);
 
         return new JsonResponse($serializedComments, 200);
     }
@@ -1003,10 +467,17 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_comment_create",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
      *
      * Creates a comment
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Entry $entry
+     *
+     * @return JsonResponse
      */
     public function commentCreateAction(Entry $entry)
     {
@@ -1026,11 +497,18 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_comment_edit",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "comment",
+     *     class="ClarolineClacoFormBundle:Comment",
+     *     options={"mapping": {"comment": "uuid"}}
+     * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * Edits a comment
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Comment $comment
+     *
+     * @return JsonResponse
      */
     public function commentEditAction(Comment $comment)
     {
@@ -1048,19 +526,25 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_comment_delete",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "comment",
+     *     class="ClarolineClacoFormBundle:Comment",
+     *     options={"mapping": {"comment": "uuid"}}
+     * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * Deletes a comment
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Comment $comment
+     *
+     * @return JsonResponse
      */
     public function commentDeleteAction(Comment $comment)
     {
         $this->clacoFormManager->checkCommentEditionRight($comment);
-        $serializedComment = $this->commentSerializer->serialize($comment);
         $this->clacoFormManager->deleteComment($comment);
 
-        return new JsonResponse($serializedComment, 200);
+        return new JsonResponse('success', 200);
     }
 
     /**
@@ -1069,21 +553,24 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_comment_activate",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "comment",
+     *     class="ClarolineClacoFormBundle:Comment",
+     *     options={"mapping": {"comment": "uuid"}}
+     * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * Activates a comment
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Comment $comment
+     *
+     * @return JsonResponse
      */
     public function commentActivateAction(Comment $comment)
     {
         $this->clacoFormManager->checkEntryModeration($comment->getEntry());
         $comment = $this->clacoFormManager->changeCommentStatus($comment, Comment::VALIDATED);
-        $serializedComment = $this->serializer->serialize(
-            $comment,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedComment = $this->serializer->serialize($comment);
 
         return new JsonResponse($serializedComment, 200);
     }
@@ -1094,21 +581,24 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_comment_block",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "comment",
+     *     class="ClarolineClacoFormBundle:Comment",
+     *     options={"mapping": {"comment": "uuid"}}
+     * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * Blocks a comment
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Comment $comment
+     *
+     * @return JsonResponse
      */
     public function commentBlockAction(Comment $comment)
     {
         $this->clacoFormManager->checkEntryModeration($comment->getEntry());
         $comment = $this->clacoFormManager->changeCommentStatus($comment, Comment::BLOCKED);
-        $serializedComment = $this->serializer->serialize(
-            $comment,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedComment = $this->serializer->serialize($comment);
 
         return new JsonResponse($serializedComment, 200);
     }
@@ -1119,21 +609,25 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_user_retrieve",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * Retrieves an entry options for current user
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Entry $entry
+     * @param User  $user
+     *
+     * @return JsonResponse
      */
-    public function entryUserRetrieveAction(User $user, Entry $entry)
+    public function entryUserRetrieveAction(Entry $entry, User $user)
     {
         $this->clacoFormManager->checkEntryAccess($entry);
         $entryUser = $this->clacoFormManager->getEntryUser($entry, $user);
-        $serializedEntryUser = $this->serializer->serialize(
-            $entryUser,
-            'json',
-            SerializationContext::create()->setGroups(['api_claco_form'])
-        );
+        $serializedEntryUser = $this->entryUserSerializer->serialize($entryUser);
 
         return new JsonResponse($serializedEntryUser, 200);
     }
@@ -1183,13 +677,21 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_pdf_download",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * Downloads pdf version of entry
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param Entry $entry
+     * @param User  $user
+     *
+     * @return Response
      */
-    public function entryPdfDownloadAction(User $user, Entry $entry)
+    public function entryPdfDownloadAction(Entry $entry, User $user)
     {
         $this->clacoFormManager->checkEntryAccess($entry);
         $pdf = $this->clacoFormManager->generatePdfForEntry($entry, $user);
@@ -1222,7 +724,7 @@ class ClacoFormController extends Controller
      */
     public function entriesPdfDownloadAction(User $user)
     {
-        $entries = $this->apiManager->getParameters('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+        $entries = $this->apiManager->getParametersByUuid('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
         $fileName = count($entries) > 0 ? $entries[0]->getClacoForm()->getResourceNode()->getName() : 'clacoForm';
 
         foreach ($entries as $entry) {
@@ -1253,21 +755,27 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_shared_users_list",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
      * @EXT\ParamConverter("user", converter="current_user")
      *
      * Retrieves list of users the entry is shared with
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Entry $entry
+     * @param User  $user
+     *
+     * @return JsonResponse
      */
-    public function entrySharedUsersListAction(User $user, Entry $entry)
+    public function entrySharedUsersListAction(Entry $entry, User $user)
     {
         $this->clacoFormManager->checkEntryShareRight($entry);
         $users = $this->clacoFormManager->getSharedEntryUsers($entry);
-        $serializedUsers = $this->serializer->serialize(
-            $users,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedUsers = array_map(function (User $user) {
+            return $this->serializer->serialize($user, [Options::SERIALIZE_MINIMAL]);
+        }, $users);
         $whitelist = $this->userManager->getAllVisibleUsersIdsForUserPicker($user);
 
         return new JsonResponse(['users' => $serializedUsers, 'whitelist' => $whitelist], 200);
@@ -1279,10 +787,17 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_users_share",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
      *
      * Shares entry ownership to users
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Entry $entry
+     *
+     * @return JsonResponse
      */
     public function entryUsersShareAction(Entry $entry)
     {
@@ -1302,10 +817,23 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_user_share",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
+     * @EXT\ParamConverter(
+     *     "user",
+     *     class="ClarolineCoreBundle:User",
+     *     options={"mapping": {"user": "uuid"}}
+     * )
      *
      * Shares entry ownership to user
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Entry $entry
+     * @param User  $user
+     *
+     * @return JsonResponse
      */
     public function entryUserShareAction(Entry $entry, User $user)
     {
@@ -1321,10 +849,23 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_user_unshare",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
+     * @EXT\ParamConverter(
+     *     "user",
+     *     class="ClarolineCoreBundle:User",
+     *     options={"mapping": {"user": "uuid"}}
+     * )
      *
      * Unshares entry ownership from user
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Entry $entry
+     * @param User  $user
+     *
+     * @return JsonResponse
      */
     public function entryUserUnshareAction(Entry $entry, User $user)
     {
@@ -1340,10 +881,17 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entries_export",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "clacoForm",
+     *     class="ClarolineClacoFormBundle:ClacoForm",
+     *     options={"mapping": {"clacoForm": "uuid"}}
+     * )
      *
      * Exports entries
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @param ClacoForm $clacoForm
+     *
+     * @return Response
      */
     public function clacoFormEntriesExportAction(ClacoForm $clacoForm)
     {
@@ -1380,43 +928,33 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/claco/form/{clacoForm}/all/entries/delete",
-     *     name="claro_claco_form_all_entries_delete",
-     *     options={"expose"=true}
-     * )
-     *
-     * Deletes all entries
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function clacoFormAllEntriesDeleteAction(ClacoForm $clacoForm)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'EDIT');
-        $this->clacoFormManager->deleteAllEntries($clacoForm);
-
-        return new JsonResponse('success', 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/claco/form/entry/{entry}/user/{user}/change",
      *     name="claro_claco_form_entry_user_change",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
+     * @EXT\ParamConverter(
+     *     "user",
+     *     class="ClarolineCoreBundle:User",
+     *     options={"mapping": {"user": "uuid"}}
+     * )
      *
      * Changes owner of an entry
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Entry $entry
+     * @param User  $user
+     *
+     * @return JsonResponse
      */
     public function entryOwnerChangeAction(Entry $entry, User $user)
     {
         $this->clacoFormManager->checkRight($entry->getClacoForm(), 'ADMINISTRATE');
         $updatedEntry = $this->clacoFormManager->changeEntryOwner($entry, $user);
-        $serializedEntry = $this->serializer->serialize(
-            $updatedEntry,
-            'json',
-            SerializationContext::create()->setGroups(['api_user_min'])
-        );
+        $serializedEntry = $this->serializer->serialize($updatedEntry);
 
         return new JsonResponse($serializedEntry, 200);
     }
@@ -1427,10 +965,17 @@ class ClacoFormController extends Controller
      *     name="claro_claco_form_entry_lock_switch",
      *     options = {"expose"=true}
      * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
      *
      * Switches lock of an entry
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @param Entry $entry
+     *
+     * @return JsonResponse
      */
     public function entryLockSwitchAction(Entry $entry)
     {
@@ -1452,11 +997,11 @@ class ClacoFormController extends Controller
      *
      * @param int $locked
      *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
+     * @return JsonResponse
      */
     public function entriesLockSwitchAction($locked)
     {
-        $entries = $this->apiManager->getParameters('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
+        $entries = $this->apiManager->getParametersByUuid('ids', 'Claroline\ClacoFormBundle\Entity\Entry');
         $clacoForms = [];
 
         foreach ($entries as $entry) {
@@ -1483,26 +1028,35 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/claco/form/field/{fieldValue}/file/download",
+     *     "/claco/form/entry/{entry}/field/{field}/file/download",
      *     name="claro_claco_form_field_value_file_download",
      *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "entry",
+     *     class="ClarolineClacoFormBundle:Entry",
+     *     options={"mapping": {"entry": "uuid"}}
+     * )
+     * @EXT\ParamConverter(
+     *     "field",
+     *     class="ClarolineClacoFormBundle:Field",
+     *     options={"mapping": {"field": "uuid"}}
      * )
      *
      * Downloads a file associated to a FieldValue.
      *
-     * @param FieldValue $fieldValue
+     * @param Entry $entry
+     * @param Field $field
      *
      * @return StreamedResponse
      */
-    public function downloadAction(FieldValue $fieldValue)
+    public function downloadAction(Entry $entry, Field $field)
     {
-        $field = $fieldValue->getField();
-
         if ($field->getType() !== FieldFacet::FILE_TYPE) {
             return new JsonResponse(null, 404);
         }
-        $valueData = $fieldValue->getFieldFacetValue()->getValue();
-        $data = is_array($valueData) && count($valueData) > 0 ? $valueData[0] : null;
+        $fieldValue = $this->clacoFormManager->getFieldValueByEntryAndField($entry, $field);
+        $data = $fieldValue->getFieldFacetValue()->getValue();
 
         if (empty($data)) {
             return new JsonResponse(null, 404);

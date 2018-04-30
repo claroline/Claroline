@@ -83,7 +83,7 @@ const Resource = props =>
             required: true
           }, {
             name: 'resourceType.name',
-            type: 'enum',
+            type: 'choice',
             label: trans('type', {}, 'platform'),
             required: true,
             options: {

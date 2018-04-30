@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Controller\User;
 
 use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
 use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
 use Claroline\CoreBundle\Entity\User;
@@ -41,16 +42,19 @@ class ProfileController extends Controller
     private $userSerializer;
     /** @var ProfileSerializer */
     private $profileSerializer;
+    /** @var ParametersSerializer */
+    private $parametersSerializer;
 
     /**
      * ProfileController constructor.
      *
      * @DI\InjectParams({
-     *     "tokenStorage"      = @DI\Inject("security.token_storage"),
-     *     "configHandler"     = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "userSerializer"    = @DI\Inject("claroline.serializer.user"),
-     *     "profileSerializer" = @DI\Inject("claroline.serializer.profile")
+     *     "tokenStorage"         = @DI\Inject("security.token_storage"),
+     *     "configHandler"        = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "om"                   = @DI\Inject("claroline.persistence.object_manager"),
+     *     "userSerializer"       = @DI\Inject("claroline.serializer.user"),
+     *     "profileSerializer"    = @DI\Inject("claroline.serializer.profile"),
+     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters")
      * })
      *
      * @param TokenStorageInterface        $tokenStorage
@@ -58,19 +62,22 @@ class ProfileController extends Controller
      * @param ObjectManager                $om
      * @param UserSerializer               $userSerializer
      * @param ProfileSerializer            $profileSerializer
+     * @param ParametersSerializer         $parametersSerializer
      */
     public function __construct(
         TokenStorageInterface $tokenStorage,
         PlatformConfigurationHandler $configHandler,
         ObjectManager $om,
         UserSerializer $userSerializer,
-        ProfileSerializer $profileSerializer
+        ProfileSerializer $profileSerializer,
+        ParametersSerializer $parametersSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->configHandler = $configHandler;
         $this->repository = $om->getRepository('ClarolineCoreBundle:User');
         $this->userSerializer = $userSerializer;
         $this->profileSerializer = $profileSerializer;
+        $this->parametersSerializer = $parametersSerializer;
     }
 
     /**
@@ -108,6 +115,7 @@ class ProfileController extends Controller
             return [
                 'user' => $this->userSerializer->serialize($user, [Options::SERIALIZE_FACET]),
                 'facets' => $this->profileSerializer->serialize(),
+                'parameters' => $this->parametersSerializer->serialize()['profile'],
             ];
         } catch (NoResultException $e) {
             throw new NotFoundHttpException('Page not found');

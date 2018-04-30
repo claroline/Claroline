@@ -39,7 +39,7 @@ const ScheduledTaskForm = props => {
               }
             }, {
               name: 'type',
-              type: 'enum',
+              type: 'choice',
               label: trans('task'),
               required: true,
               disabled: !props.new,

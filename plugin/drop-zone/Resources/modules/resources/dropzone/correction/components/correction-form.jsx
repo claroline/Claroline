@@ -24,27 +24,30 @@ const CriteriaForm = props =>
     {props.dropzone.parameters.criteria.length > 0 ?
       <table className="table">
         <tbody>
-        {props.dropzone.parameters.criteria.map(c =>
-          <tr key={`criterion-form-${c.id}`}>
-            <td>
-              <HtmlText>
-                {c.instruction}
-              </HtmlText>
-            </td>
-            <td className="criterion-scale-form-row">
-              <RadiosGroup
-                id={`criterion-form-${c.id}-radio`}
-                label="criterion_form_radio"
-                options={[...Array(props.dropzone.parameters.criteriaTotal).keys()].map((idx) => ({label: '', value: idx}))}
-                inline={true}
-                hideLabel={true}
-                value={props.grades.find(g => g.criterion === c.id).value}
-                onChange={value => props.handleUpdate(c.id, parseInt(value))}
-              />
-            </td>
-          </tr>
-        )}
+          {props.dropzone.parameters.criteria.map(c =>
+            <tr key={`criterion-form-${c.id}`}>
+              <td>
+                <HtmlText>
+                  {c.instruction}
+                </HtmlText>
+              </td>
+              <td className="criterion-scale-form-row">
+                <RadiosGroup
+                  id={`criterion-form-${c.id}-radio`}
+                  label="criterion_form_radio"
+                  choices={[...Array(props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
+                    acc[current] = current
 
+                    return acc
+                  }, {})}
+                  inline={true}
+                  hideLabel={true}
+                  value={props.grades.find(g => g.criterion === c.id).value}
+                  onChange={value => props.handleUpdate(c.id, parseInt(value))}
+                />
+              </td>
+            </tr>
+          )}
         </tbody>
       </table> :
       <div className="alert alert-warning">
@@ -90,7 +93,7 @@ export class CorrectionForm extends Component {
 
   validateCorrection() {
     const correction = cloneDeep(this.state.correction)
-    correction['lastEditionDate'] = moment().format('YYYY-MM-DD\THH:mm:ss')
+    correction['lastEditionDate'] = moment().format('YYYY-MM-DDTHH:mm:ss')
     const errors = validate(this.state.correction, this.props.dropzone)
     this.setState({correction: correction, errors: errors}, () => this.saveCorrection())
   }

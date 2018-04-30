@@ -1,7 +1,6 @@
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/core/api/router'
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {API_REQUEST} from '#/main/core/api/actions'
-import {getDataQueryString} from '#/main/core/data/list/utils'
 
 import {select} from '#/plugin/drop-zone/resources/dropzone/selectors'
 import {actions as playerActions} from '#/plugin/drop-zone/resources/dropzone/player/actions'
@@ -184,5 +183,5 @@ actions.cancelDropSubmission = (dropId) => ({
 })
 
 actions.downloadDrops = (drops) => () => {
-  window.location.href = generateUrl('claro_dropzone_drops_download') + getDataQueryString(drops)
+  window.location.href = url(['claro_dropzone_drops_download'], {ids: drops.map(d => d.id)})
 }

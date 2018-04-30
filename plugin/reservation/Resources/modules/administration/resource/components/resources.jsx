@@ -34,7 +34,7 @@ const ResourcesList = props =>
     }, {
       name: 'resourceType.name',
       label: trans('type', {}, 'platform'),
-      type: 'enum',
+      type: 'choice',
       displayed: true,
       options: {
         choices: props.resourceTypes.reduce((o, rt) => Object.assign(o, {[rt.name]: rt.name}), {})

@@ -89,11 +89,11 @@ const Display = props =>
     <RadiosGroup
       id="quiz-numbering"
       label={tex('quiz_numbering')}
-      options={[
-        {value: NUMBERING_NONE, label: tex('quiz_numbering_none')},
-        {value: NUMBERING_NUMERIC, label: tex('quiz_numbering_numeric')},
-        {value: NUMBERING_LITTERAL, label: tex('quiz_numbering_litteral')}
-      ]}
+      choices={{
+        [NUMBERING_NONE]: tex('quiz_numbering_none'),
+        [NUMBERING_NUMERIC]: tex('quiz_numbering_numeric'),
+        [NUMBERING_LITTERAL]: tex('quiz_numbering_litteral')
+      }}
       value={props.parameters.numbering}
       onChange={numbering => props.onChange('parameters.numbering', numbering)}
     />
@@ -251,7 +251,7 @@ const Signing = props =>
       help={tex('show_end_confirm_help')}
       onChange={checked => props.onChange('parameters.showEndConfirm', checked)}
     />
-</fieldset>
+  </fieldset>
 
 Signing.propTypes = {
   parameters: T.shape({
@@ -289,10 +289,10 @@ class Correction extends Component {
         <RadiosGroup
           id="quiz-total-score-on"
           label={tex('quiz_total_score_on')}
-          options={[
-            {value: TOTAL_SCORE_ON_DEFAULT, label: tex('quiz_total_score_on_mode_default')},
-            {value: TOTAL_SCORE_ON_CUSTOM, label: tex('quiz_total_score_on_mode_custom')}
-          ]}
+          choices={{
+            [TOTAL_SCORE_ON_DEFAULT]: tex('quiz_total_score_on_mode_default'),
+            [TOTAL_SCORE_ON_CUSTOM]: tex('quiz_total_score_on_mode_custom')
+          }}
           value={this.state.totalScoreOnMode}
           onChange={mode => this.handleScoreModeChange(mode)}
         />

@@ -11,7 +11,8 @@ const reducer = makePageReducer({}, {
     [PROFILE_FACET_OPEN]: (state, action) => action.id
   }),
   facets: makeReducer([], {}),
-  user: makeFormReducer('user', {})
+  user: makeFormReducer('user', {}),
+  parameters: makeReducer({}, {})
 })
 
 export {

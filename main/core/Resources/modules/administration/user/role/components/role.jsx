@@ -37,7 +37,7 @@ const RoleForm = props =>
             disabled: props.role.meta && props.role.meta.readOnly
           }, {
             name: 'meta.type',
-            type: 'enum',
+            type: 'choice',
             label: t('type'),
             readOnly: true,
             options: {

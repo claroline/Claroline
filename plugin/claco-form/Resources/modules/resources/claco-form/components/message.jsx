@@ -1,10 +1,12 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
-import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
-import {actions} from '../actions'
 
-class Message extends Component {
+import {HtmlText} from '#/main/core/layout/components/html-text.jsx'
+
+import {actions} from '#/plugin/claco-form/resources/claco-form/actions'
+
+class MessageComponent extends Component {
   componentWillUnmount() {
     this.props.resetMessage()
   }
@@ -29,7 +31,7 @@ class Message extends Component {
   }
 }
 
-Message.propTypes = {
+MessageComponent.propTypes = {
   message: T.shape({
     content: T.string,
     type: T.string
@@ -37,18 +39,17 @@ Message.propTypes = {
   resetMessage: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
+const Message = connect(
+  (state) => ({
     message: state.message
-  }
+  }),
+  (dispatch) => ({
+    resetMessage() {
+      dispatch(actions.resetMessage())
+    }
+  })
+)(MessageComponent)
+
+export {
+  Message
 }
-
-function mapDispatchToProps(dispatch) {
-  return {
-    resetMessage: () => dispatch(actions.resetMessage())
-  }
-}
-
-const ConnectedMessage = connect(mapStateToProps, mapDispatchToProps)(Message)
-
-export {ConnectedMessage as Message}

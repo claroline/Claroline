@@ -22,7 +22,7 @@ const NotificationForm = props =>
         fields: [
           {
             name: 'parameters.action',
-            type: 'enum',
+            type: 'choice',
             label: trans('action'),
             disabled: !props.canEdit,
             required: true,

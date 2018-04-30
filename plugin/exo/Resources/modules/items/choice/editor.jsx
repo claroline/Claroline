@@ -175,10 +175,10 @@ const Choice = props =>
       id={`item-${props.item.id}-multiple`}
       label={tex('choice_multiple')}
       hideLabel={true}
-      options={[
-        {value: QCM_SINGLE, label: tex('qcm_single_answer')},
-        {value: QCM_MULTIPLE, label: tex('qcm_multiple_answers')}
-      ]}
+      choices={{
+        [QCM_SINGLE]: tex('qcm_single_answer'),
+        [QCM_MULTIPLE]: tex('qcm_multiple_answers')
+      }}
       value={props.item.multiple ? QCM_MULTIPLE : QCM_SINGLE}
       onChange={value => props.onChange(
         actions.updateProperty('multiple', value === QCM_MULTIPLE)
@@ -237,11 +237,11 @@ const Choice = props =>
     <RadiosGroup
       id={`item-${props.item.id}-numbering`}
       label={tex('choice_numbering')}
-      options={[
-        {value: NUMBERING_NONE, label: tex('quiz_numbering_none')},
-        {value: NUMBERING_NUMERIC, label: tex('quiz_numbering_numeric')},
-        {value: NUMBERING_LITTERAL, label: tex('quiz_numbering_litteral')}
-      ]}
+      choices={{
+        [NUMBERING_NONE]: tex('quiz_numbering_none'),
+        [NUMBERING_NUMERIC]: tex('quiz_numbering_numeric'),
+        [NUMBERING_LITTERAL]: tex('quiz_numbering_litteral')
+      }}
       value={props.item.numbering ? props.item.numbering : NUMBERING_NONE}
       onChange={numbering => props.onChange(actions.updateProperty('numbering', numbering))}
     />

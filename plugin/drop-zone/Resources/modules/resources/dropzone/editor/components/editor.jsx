@@ -23,7 +23,7 @@ const EditorComponent = props =>
           fields: [
             {
               name: 'parameters.reviewType',
-              type: 'enum',
+              type: 'choice',
               label: trans('review_type', {}, 'dropzone'),
               help: trans(constants.REVIEW_TYPE_PEER === props.dropzone.parameters.reviewType ? 'peer_review_help':'manager_review_help', {}, 'dropzone'),
               required: true,
@@ -53,7 +53,7 @@ const EditorComponent = props =>
           fields: [
             {
               name: 'planning.type',
-              type: 'enum',
+              type: 'choice',
               label: trans('type'),
               help: trans(constants.PLANNING_TYPE_MANUAL === props.dropzone.planning.type ? 'planning_manual_help':'planning_auto_help', {}, 'dropzone'),
               required: true,
@@ -64,7 +64,7 @@ const EditorComponent = props =>
               linked: [
                 {
                   name: 'planning.state',
-                  type: 'enum',
+                  type: 'choice',
                   label: trans('choose_current_state', {}, 'dropzone'),
                   displayed: constants.PLANNING_TYPE_MANUAL === props.dropzone.planning.type,
                   required: true,
@@ -99,7 +99,7 @@ const EditorComponent = props =>
           fields: [
             {
               name: 'parameters.dropType',
-              type: 'enum',
+              type: 'choice',
               label: trans('drop_type', {}, 'dropzone'),
               required: true,
               options: {
@@ -110,7 +110,7 @@ const EditorComponent = props =>
               name: 'parameters.documents',
               label: trans('allowed_document_types', {}, 'dropzone'),
               help: trans('allowed_document_types_info', {}, 'dropzone'),
-              type: 'enum',
+              type: 'choice',
               required: true,
               options: {
                 choices: constants.DOCUMENT_TYPES,

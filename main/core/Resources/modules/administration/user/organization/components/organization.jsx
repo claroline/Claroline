@@ -37,7 +37,7 @@ const OrganizationForm = props =>
             required: true
           }, {
             name: 'type',
-            type: 'enum',
+            type: 'choice',
             label: trans('type'),
             required: true,
             options: {choices: {

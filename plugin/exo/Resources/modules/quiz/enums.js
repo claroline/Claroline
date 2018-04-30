@@ -37,12 +37,11 @@ export const SHUFFLE_NEVER = 'never'
 export const SHUFFLE_ALWAYS = 'always'
 export const SHUFFLE_ONCE = 'once'
 
-export const shuffleModes = [
-  {value: SHUFFLE_NEVER,  label: tex('never')},
-  {value: SHUFFLE_ALWAYS, label: tex('at_each_attempt')},
-  {value: SHUFFLE_ONCE,   label: tex('at_first_attempt')}
-]
-
+export const shuffleModes = {
+  [SHUFFLE_NEVER]: tex('never'),
+  [SHUFFLE_ALWAYS]: tex('at_each_attempt'),
+  [SHUFFLE_ONCE]: tex('at_first_attempt')
+}
 export const SHOW_CORRECTION_AT_VALIDATION = 'validation'
 export const SHOW_CORRECTION_AT_LAST_ATTEMPT = 'lastAttempt'
 export const SHOW_CORRECTION_AT_DATE = 'date'

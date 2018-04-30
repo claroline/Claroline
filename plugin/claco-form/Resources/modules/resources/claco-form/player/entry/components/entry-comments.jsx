@@ -3,18 +3,20 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 
-import {t, trans} from '#/main/core/translation'
-
+import {currentUser} from '#/main/core/user/current'
+import {trans} from '#/main/core/translation'
+import {select as formSelect} from '#/main/core/data/form/selectors'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
-
 import {UserMessage} from '#/main/core/user/message/components/user-message.jsx'
 import {UserMessageForm} from '#/main/core/user/message/components/user-message-form.jsx'
 
-import {selectors} from '../../../selectors'
-import {actions} from '../actions'
+import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
+import {actions} from '#/plugin/claco-form/resources/claco-form/player/entry/actions'
 
-class EntryComments extends Component {
+const authenticatedUser = currentUser()
+
+class EntryCommentsComponent extends Component {
   constructor(props) {
     super(props)
 
@@ -29,18 +31,18 @@ class EntryComments extends Component {
   }
 
   filterComment(comment) {
-    return this.props.canManage || comment.status === 1 || (this.props.user && comment.user && this.props.user.id === comment.user.id)
+    return this.props.canManage || comment.status === 1 || (authenticatedUser && comment.user && authenticatedUser.id === comment.user.id)
   }
 
   canEditComment(comment) {
-    return this.props.canManage || (this.props.user && comment.user && this.props.user.id === comment.user.id)
+    return this.props.canManage || (authenticatedUser && comment.user && authenticatedUser.id === comment.user.id)
   }
 
   deleteComment(commentId) {
     this.props.showModal(MODAL_DELETE_CONFIRM, {
       title: trans('delete_comment', {}, 'clacoform'),
       question: trans('delete_comment_confirm_message', {}, 'clacoform'),
-      handleConfirm: () => this.props.deleteComment(this.props.entry.id, commentId)
+      handleConfirm: () => this.props.deleteComment(commentId)
     })
   }
 
@@ -50,7 +52,7 @@ class EntryComments extends Component {
   }
 
   editComment(commentId, commentContent) {
-    this.props.editComment(this.props.entry.id, commentId, commentContent)
+    this.props.editComment(commentId, commentContent)
 
     this.setState({[commentId]: {showCommentForm: false}})
   }
@@ -83,7 +85,7 @@ class EntryComments extends Component {
             className="btn btn-link btn-sm btn-toggle-comments"
             onClick={() => this.toggleComments()}
           >
-            {t(this.state.opened ? 'hide':'show')}
+            {trans(this.state.opened ? 'hide':'show')}
           </button>
         </h3>
 
@@ -105,9 +107,9 @@ class EntryComments extends Component {
 
             {this.state.showNewCommentForm &&
               <UserMessageForm
-                user={this.props.user}
+                user={authenticatedUser}
                 allowHtml={true}
-                submitLabel={t('add_comment')}
+                submitLabel={trans('add_comment')}
                 submit={(comment) => this.createNewComment(comment)}
                 cancel={() => this.setState({showNewCommentForm: false})}
               />
@@ -131,10 +133,10 @@ class EntryComments extends Component {
               this.state[comment.id] && this.state[comment.id].showCommentForm ?
                 <UserMessageForm
                   key={`comment-${commentIndex}`}
-                  user={this.props.user}
+                  user={authenticatedUser}
                   content={comment.content}
                   allowHtml={true}
-                  submitLabel={t('add_comment')}
+                  submitLabel={trans('add_comment')}
                   submit={(commentContent) => this.editComment(comment.id, commentContent)}
                   cancel={() => this.cancelCommentEdition(comment.id)}
                 /> :
@@ -151,22 +153,22 @@ class EntryComments extends Component {
                   actions={[
                     {
                       icon: 'fa fa-fw fa-pencil',
-                      label: t('edit'),
+                      label: trans('edit'),
                       displayed: this.canEditComment(comment),
                       action: () => this.showCommentForm(comment)
                     }, {
                       icon: 'fa fa-fw fa-check',
-                      label: t('activate'),
+                      label: trans('activate'),
                       displayed: this.props.canManage && (0 === comment.status || 2 === comment.status),
-                      action: () => this.props.activateComment(this.props.entry.id, comment.id)
+                      action: () => this.props.activateComment(comment.id)
                     }, {
                       icon: 'fa fa-fw fa-ban',
                       label: trans('block', {}, 'clacoform'),
                       displayed: this.props.canManage && 1 === comment.status,
-                      action: () => this.props.blockComment(this.props.entry.id, comment.id)
+                      action: () => this.props.blockComment(comment.id)
                     }, {
                       icon: 'fa fa-fw fa-trash-o',
-                      label: t('delete'),
+                      label: trans('delete'),
                       displayed: this.props.canManage,
                       action: () => this.deleteComment(comment.id),
                       dangerous: true
@@ -181,12 +183,7 @@ class EntryComments extends Component {
   }
 }
 
-EntryComments.propTypes = {
-  user: T.shape({
-    id: T.string,
-    firstName: T.string,
-    lastName: T.string
-  }),
+EntryCommentsComponent.propTypes = {
   opened: T.bool.isRequired,
   entry: T.object.isRequired,
   canComment: T.bool.isRequired,
@@ -202,26 +199,34 @@ EntryComments.propTypes = {
   showModal: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
-    entry: state.currentEntry,
-    user: state.user,
-    displayCommentAuthor: selectors.getParam(state, 'display_comment_author'),
-    displayCommentDate: selectors.getParam(state, 'display_comment_date')
-  }
+const EntryComments = connect(
+  (state) => ({
+    entry: formSelect.data(formSelect.form(state, 'entries.current')),
+    displayCommentAuthor: select.getParam(state, 'display_comment_author'),
+    displayCommentDate: select.getParam(state, 'display_comment_date')
+  }),
+  (dispatch) => ({
+    createComment(entryId, content) {
+      dispatch(actions.createComment(entryId, content))
+    },
+    editComment(commentId, content) {
+      dispatch(actions.editComment(commentId, content))
+    },
+    deleteComment(commentId) {
+      dispatch(actions.deleteComment(commentId))
+    },
+    activateComment(commentId) {
+      dispatch(actions.activateComment(commentId))
+    },
+    blockComment(commentId) {
+      dispatch(actions.blockComment(commentId))
+    },
+    showModal(type, props) {
+      dispatch(modalActions.showModal(type, props))
+    }
+  })
+)(EntryCommentsComponent)
+
+export {
+  EntryComments
 }
-
-function mapDispatchToProps(dispatch) {
-  return {
-    createComment: (entryId, content) => dispatch(actions.createComment(entryId, content)),
-    editComment: (entryId, commentId, content) => dispatch(actions.editComment(entryId, commentId, content)),
-    deleteComment: (entryId, commentId) => dispatch(actions.deleteComment(entryId, commentId)),
-    activateComment: (entryId, commentId) => dispatch(actions.activateComment(entryId, commentId)),
-    blockComment: (entryId, commentId) => dispatch(actions.blockComment(entryId, commentId)),
-    showModal: (type, props) => dispatch(modalActions.showModal(type, props))
-  }
-}
-
-const ConnectedEntryComments = connect(mapStateToProps, mapDispatchToProps)(EntryComments)
-
-export {ConnectedEntryComments as EntryComments}

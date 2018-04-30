@@ -2,10 +2,9 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\EntryUserRepository")
@@ -21,12 +20,12 @@ use JMS\Serializer\Annotation\SerializedName;
  */
 class EntryUser
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_claco_form"})
-     * @SerializedName("id")
      */
     protected $id;
 
@@ -47,31 +46,28 @@ class EntryUser
 
     /**
      * @ORM\Column(name="shared", type="boolean")
-     * @Groups({"api_claco_form"})
-     * @SerializedName("shared")
      */
     protected $shared = false;
 
     /**
      * @ORM\Column(name="notify_edition", type="boolean")
-     * @Groups({"api_claco_form"})
-     * @SerializedName("notifyEdition")
      */
     protected $notifyEdition = false;
 
     /**
      * @ORM\Column(name="notify_comment", type="boolean")
-     * @Groups({"api_claco_form"})
-     * @SerializedName("notifyComment")
      */
     protected $notifyComment = false;
 
     /**
      * @ORM\Column(name="notify_vote", type="boolean")
-     * @Groups({"api_claco_form"})
-     * @SerializedName("notifyVote")
      */
     protected $notifyVote = false;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     public function getId()
     {

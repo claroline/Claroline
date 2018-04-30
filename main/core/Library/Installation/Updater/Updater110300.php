@@ -2,6 +2,7 @@
 
 namespace Claroline\CoreBundle\Library\Installation\Updater;
 
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\InstallationBundle\Updater\Updater;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -23,6 +24,7 @@ class Updater110300 extends Updater
     public function postUpdate()
     {
         $this->updateWorkspaceSlugs();
+        $this->updateFieldFacetsType();
     }
 
     private function updateWorkspaceSlugs()
@@ -51,5 +53,45 @@ class Updater110300 extends Updater
         }
 
         $this->log('Workspace slugs initialized!');
+    }
+
+    private function updateFieldFacetsType()
+    {
+        $this->log('Updating type of facet fields...');
+
+        $fields = $this->om->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacet')->findAll();
+
+        foreach ($fields as $field) {
+            switch ($field->getType()) {
+                case FieldFacet::RADIO_TYPE:
+                    $field->setType(FieldFacet::CHOICE_TYPE);
+                    $options = $field->getOptions();
+                    $options['multiple'] = false;
+                    $options['condensed'] = false;
+                    $field->setOptions($options);
+                    $this->om->persist($field);
+                    break;
+                case FieldFacet::SELECT_TYPE:
+                    $field->setType(FieldFacet::CHOICE_TYPE);
+                    $options = $field->getOptions();
+                    $options['multiple'] = false;
+                    $options['condensed'] = true;
+                    $field->setOptions($options);
+                    $this->om->persist($field);
+                    break;
+                case FieldFacet::CHECKBOXES_TYPE:
+                    $field->setType(FieldFacet::CHOICE_TYPE);
+                    $options = $field->getOptions();
+                    $options['multiple'] = true;
+                    $options['condensed'] = false;
+                    $field->setOptions($options);
+                    $this->om->persist($field);
+                    break;
+            }
+        }
+        $this->om->flush();
+        $this->om->clear();
+
+        $this->log('Type of facet fields updated.');
     }
 }

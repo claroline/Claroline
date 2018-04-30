@@ -1,8 +1,7 @@
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/core/api/router'
 import {API_REQUEST} from '#/main/core/api/actions'
 
 import {actions as listActions} from '#/main/core/data/list/actions'
-import {getDataQueryString} from '#/main/core/data/list/utils'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {actions as alertActions} from '#/main/core/layout/alert/actions'
 import {constants as alertConstants} from '#/main/core/layout/alert/constants'
@@ -29,7 +28,7 @@ actions.open = (formName, id = null) => {
 
 actions.copyWorkspaces = (workspaces, isModel = 0) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_workspace_copy_bulk') + getDataQueryString(workspaces) + '&model=' + isModel,
+    url: url(['apiv2_workspace_copy_bulk'], {model: isModel, ids: workspaces.map(w => w.id)}),
     request: {
       method: 'GET'
     },
@@ -39,7 +38,7 @@ actions.copyWorkspaces = (workspaces, isModel = 0) => ({
 
 actions.addOrganizations = (id, organizations) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_workspace_add_organizations', {id: id}) +'?'+ organizations.map(id => 'ids[]='+id).join('&'),
+    url: url(['apiv2_workspace_add_organizations', {id: id}], {ids: organizations}),
     request: {
       method: 'PATCH'
     },
@@ -52,7 +51,7 @@ actions.addOrganizations = (id, organizations) => ({
 
 actions.addManagers = (id, users, roleId) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_role_add_users', {id: roleId}) + '?' +  users.map(user => 'ids[]=' + user).join('&'),
+    url: url(['apiv2_role_add_users', {id: roleId}], {ids: users}),
     request: {
       method: 'PATCH'
     },
@@ -65,11 +64,12 @@ actions.addManagers = (id, users, roleId) => ({
 
 actions.deleteWorkspaces = (workspaces) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_workspace_delete_bulk') + '?' +  workspaces.map(w => 'ids[]=' + w.uuid).join('&'),
+    url: url(['apiv2_workspace_delete_bulk'], {ids: workspaces.map(w => w.id)}),
     request: {
       method: 'DELETE'
     },
     success: (data, dispatch) => {
+      dispatch(listActions.deleteItems('workspaces.list', workspaces))
       dispatch(listActions.invalidateData('workspaces.list'))
     },
     error: (data, dispatch) => {
@@ -85,6 +85,7 @@ actions.deleteWorkspaces = (workspaces) => ({
         ))
       }
 
+      dispatch(listActions.deleteItems('workspaces.list', workspaces))
       dispatch(listActions.invalidateData('workspaces.list'))
     }
   }

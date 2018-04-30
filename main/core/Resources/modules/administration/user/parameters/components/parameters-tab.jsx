@@ -71,7 +71,7 @@ const Parameters = (props) => {
             ]
           }, {
             name: 'registration.default_role',
-            type: 'enum',
+            type: 'choice',
             label: trans('default_role'),
             required: true,
             options: {
@@ -88,7 +88,7 @@ const Parameters = (props) => {
             }
           }, {
             name: 'registration.validation',
-            type: 'enum',
+            type: 'choice',
             label: trans('registration_mail_validation'),
             required: true,
             options: {
@@ -113,6 +113,38 @@ const Parameters = (props) => {
           }
         ]
       }, {
+        id: 'profile',
+        icon: 'fa fa-fw fa-id-card-o',
+        title: trans('user_profile'),
+        fields: [
+          {
+            name: 'profile.roles_confidential',
+            type: 'enum',
+            label: trans('profile_roles_for_confidential_fields'),
+            options: {
+              multiple: true,
+              choices: Object.keys(roleEnum).filter(r => r !== 'ROLE_ADMIN').reduce((choices, key) => {
+                choices[key] = roleEnum[key]
+
+                return choices
+              }, {})
+            }
+          }, {
+            name: 'profile.roles_locked',
+            type: 'enum',
+            label: trans('profile_roles_for_locked_fields'),
+            options: {
+              multiple: true,
+              choices: Object.keys(roleEnum).filter(r => r !== 'ROLE_ADMIN').reduce((choices, key) => {
+                choices[key] = roleEnum[key]
+
+                return choices
+              }, {})
+            }
+          }
+        ]
+      }, {
+        id: 'anonymous',
         icon: 'fa fa-fw fa-user-secret',
         title: trans('anonymous_users'),
         fields: [

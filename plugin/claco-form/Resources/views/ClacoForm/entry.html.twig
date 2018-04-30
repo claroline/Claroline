@@ -43,7 +43,7 @@
                                             {% if fieldValues[field.getId()] %}
                                                 {{ countries[fieldValues[field.getId()]] }}
                                             {% endif %}
-                                        {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::RICH_TEXT_TYPE') %}
+                                        {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::HTML_TYPE') %}
                                             {{ fieldValues[field.getId()]|raw }}
                                         {% elseif field.getFieldFacet().getType() == constant('Claroline\\CoreBundle\\Entity\\Facet\\FieldFacet::CASCADE_SELECT_TYPE') %}
                                             {{ fieldValues[field.getId()]|join(', ') }}

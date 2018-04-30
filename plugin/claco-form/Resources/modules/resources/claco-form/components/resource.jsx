@@ -2,28 +2,26 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
+import {currentUser} from '#/main/core/user/current'
+import {makeId} from '#/main/core/scaffolding/id'
 import {trans} from '#/main/core/translation'
-
 import {RoutedPageContent} from '#/main/core/layout/router'
+import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {select as formSelect} from '#/main/core/data/form/selectors'
+import {actions as formActions} from '#/main/core/data/form/actions'
 import {ResourcePageContainer} from '#/main/core/resource/containers/page.jsx'
 
-import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
-import {select as resourceSelect} from '#/main/core/resource/selectors'
+import {actions as entryActions} from '#/plugin/claco-form/resources/claco-form/player/entry/actions'
+import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
+import {ClacoForm as ClacoFormType} from '#/plugin/claco-form/resources/claco-form/prop-types'
+import {ClacoFormMainMenu} from '#/plugin/claco-form/resources/claco-form/player/components/claco-form-main-menu.jsx'
+import {Editor} from '#/plugin/claco-form/resources/claco-form/editor/components/editor.jsx'
+import {TemplateForm} from '#/plugin/claco-form/resources/claco-form/editor/template/components/template-form.jsx'
+import {Entries} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entries.jsx'
+import {EntryForm} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry-form.jsx'
+import {Entry} from '#/plugin/claco-form/resources/claco-form/player/entry/components/entry.jsx'
 
-import {actions as editorActions} from '../editor/actions'
-import {selectors} from '../selectors'
-
-import {ClacoFormMainMenu} from '../player/components/claco-form-main-menu.jsx'
-import {ClacoFormConfig} from '../editor/components/claco-form-config.jsx'
-import {Categories} from '../editor/category/components/categories.jsx'
-import {Keywords} from '../editor/keyword/components/keywords.jsx'
-import {Fields} from '../editor/field/components/fields.jsx'
-import {TemplateForm} from '../editor/template/components/template-form.jsx'
-import {Entries} from '../player/entry/components/entries.jsx'
-import {EntryCreateForm} from '../player/entry/components/entry-create-form.jsx'
-import {EntryEditForm} from '../player/entry/components/entry-edit-form.jsx'
-import {EntryView} from '../player/entry/components/entry-view.jsx'
+const authenticatedUser = currentUser()
 
 function getHome(type) {
   switch (type) {
@@ -31,10 +29,10 @@ function getHome(type) {
       return Entries
 
     case 'add':
-      return EntryCreateForm
+      return EntryForm
 
     case 'random':
-      return EntryView
+      return Entry
 
     case 'menu':
     default:
@@ -47,8 +45,8 @@ const Resource = props =>
     editor={{
       path: '/edit',
       save: {
-        disabled: false,
-        action: props.saveParameters
+        disabled: !props.saveEnabled,
+        action: () => props.saveForm(props.clacoForm.id)
       }
     }}
     customActions={[
@@ -62,19 +60,15 @@ const Resource = props =>
         icon: 'fa fa-fw fa-plus',
         label: trans('add_entry', {}, 'clacoform'),
         displayed: props.canAddEntry,
-        target: '/entry/create'
+        target: '/entry/form',
+        exact: true
       }, {
         type: 'link',
         icon: 'fa fa-fw fa-search',
         label: trans('entries_list', {}, 'clacoform'),
         displayed: props.canSearchEntry,
-        target: '/entries'
-      }, {
-        type: 'link',
-        icon: 'fa fa-fw fa-th-list',
-        label: trans('fields_management', {}, 'clacoform'),
-        displayed: props.canEdit,
-        target: '/fields'
+        target: '/entries',
+        exact: true
       }, {
         type: 'link',
         icon: 'fa fa-fw fa-file-text-o',
@@ -82,30 +76,11 @@ const Resource = props =>
         displayed: props.canEdit,
         target: '/template'
       }, {
-        type: 'link',
-        icon: 'fa fa-fw fa-table',
-        label: trans('categories_management', {}, 'clacoform'),
-        displayed: props.canEdit,
-        target: '/categories'
-      }, {
-        type: 'link',
-        icon: 'fa fa-fw fa-font',
-        label: trans('keywords_management', {}, 'clacoform'),
-        displayed: props.canEdit,
-        target: '/keywords'
-      }, {
         type: 'url',
         icon: 'fa fa-fw fa-upload',
         label: trans('export_all_entries', {}, 'clacoform'),
         displayed: props.canEdit,
-        target: ['claro_claco_form_entries_export', {clacoForm: props.resource.id}]
-      }, {
-        type: 'callback',
-        icon: 'fa fa-fw fa-trash-o',
-        label: trans('delete_all_entries', {}, 'clacoform'),
-        displayed: props.canEdit,
-        callback: props.deleteEntries,
-        dangerous: true
+        target: ['claro_claco_form_entries_export', {clacoForm: props.clacoForm.id}]
       }
     ]}
   >
@@ -122,76 +97,106 @@ const Resource = props =>
           component: ClacoFormMainMenu
         }, {
           path: '/edit',
-          component: ClacoFormConfig
-        }, {
-          path: '/categories',
-          component: Categories
-        }, {
-          path: '/keywords',
-          component: Keywords
-        }, {
-          path: '/fields',
-          component: Fields
+          component: Editor,
+          disabled: !props.canEdit,
+          onLeave: () => props.resetForm(),
+          onEnter: () => props.resetForm(props.clacoForm)
         }, {
           path: '/template',
-          component: TemplateForm
+          component: TemplateForm,
+          disabled: !props.canEdit
         }, {
           path: '/entries',
-          component: Entries
+          component: Entries,
+          exact: true,
+          disabled: !props.canSearchEntry
         }, {
-          path: '/entry/create',
-          component: EntryCreateForm
+          path: '/entries/:id',
+          component: Entry,
+          onEnter: (params) => {
+            props.openEntryForm(params.id, props.clacoForm.id)
+            props.loadEntryUser(params.id)
+          },
+          onLeave: () => {
+            props.resetEntryForm()
+            props.resetEntryUser()
+          }
         }, {
-          path: '/entry/:id/edit',
-          component: EntryEditForm
-        }, {
-          path: '/entry/:id/view',
-          component: EntryView
+          path: '/entry/form/:id?',
+          component: EntryForm,
+          onEnter: (params) => {
+            props.openEntryForm(params.id, props.clacoForm.id)
+
+            if (params.id) {
+              props.loadEntryUser(params.id)
+            }
+          },
+          onLeave: () => {
+            props.resetEntryForm()
+            props.resetEntryUser()
+          }
         }
       ]}
     />
   </ResourcePageContainer>
 
 Resource.propTypes = {
-  resource: T.shape({
-    id: T.number.isRequired
-  }).isRequired,
-  saveParameters: T.func.isRequired,
-  deleteEntries: T.func.isRequired,
+  clacoForm: T.shape(ClacoFormType.propTypes).isRequired,
   canEdit: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,
   canSearchEntry: T.bool.isRequired,
-  defaultHome: T.string.isRequired
+  defaultHome: T.string.isRequired,
+  saveEnabled: T.bool.isRequired,
+  resetForm: T.func.isRequired,
+  saveForm: T.func.isRequired,
+  openEntryForm: T.func.isRequired,
+  resetEntryForm: T.func.isRequired,
+  loadEntryUser: T.func.isRequired,
+  resetEntryUser: T.func.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
-    resource: selectors.resource(state),
+const ClacoFormResource = connect(
+  (state) => ({
+    clacoForm: select.clacoForm(state),
     canEdit: resourceSelect.editable(state),
-    canAddEntry: selectors.canAddEntry(state),
-    canSearchEntry: selectors.canSearchEntry(state),
-    defaultHome: selectors.getParam(state, 'default_home')
-  }
-}
+    canAddEntry: select.canAddEntry(state),
+    canSearchEntry: select.canSearchEntry(state),
+    defaultHome: select.getParam(state, 'default_home'),
+    saveEnabled: formSelect.saveEnabled(formSelect.form(state, 'clacoFormForm'))
+  }),
+  (dispatch) => ({
+    resetForm(formData) {
+      dispatch(formActions.resetForm('clacoFormForm', formData))
+    },
+    saveForm(id) {
+      dispatch(formActions.saveForm('clacoFormForm', ['apiv2_clacoform_update', {id: id}]))
+    },
+    openEntryForm(id, clacoFormId) {
+      const defaultValue = {
+        id: makeId(),
+        values: {},
+        clacoForm: {
+          id: clacoFormId
+        },
+        user: authenticatedUser,
+        categories: [],
+        keywords: []
+      }
 
-function mapDispatchToProps(dispatch) {
-  return {
-    saveParameters: () => dispatch(editorActions.saveParameters()),
-    deleteEntries: () => {
-      dispatch(
-        modalActions.showModal(MODAL_DELETE_CONFIRM, {
-          title: trans('delete_all_entries', {}, 'clacoform'),
-          question: trans('delete_all_entries_confirm', {}, 'clacoform'),
-          handleConfirm: () => dispatch(editorActions.deleteAllEntries())
-        })
-      )
-
+      dispatch(entryActions.openForm('entries.current', id, defaultValue))
+    },
+    resetEntryForm() {
+      dispatch(formActions.resetForm('entries.current', {}, true))
+    },
+    loadEntryUser(entryId) {
+      dispatch(entryActions.loadEntryUser(entryId))
+    },
+    resetEntryUser() {
+      dispatch(entryActions.resetEntryUser())
     }
-  }
-}
-
-const ConnectedClacoFormResource = connect(mapStateToProps, mapDispatchToProps)(Resource)
+  })
+)(Resource)
 
 export {
-  ConnectedClacoFormResource as ClacoFormResource
+  ClacoFormResource
 }

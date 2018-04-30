@@ -177,7 +177,7 @@ class FacetManager
                     $value;
                 $fieldFacetValue->setDateValue($date);
                 break;
-            case FieldFacet::FLOAT_TYPE:
+            case FieldFacet::NUMBER_TYPE:
                 $fieldFacetValue->setFloatValue($value);
                 break;
             case FieldFacet::CHECKBOXES_TYPE:
@@ -267,7 +267,7 @@ class FacetManager
     public function getDisplayedValue(FieldFacetValue $ffv)
     {
         switch ($ffv->getFieldFacet()->getType()) {
-            case FieldFacet::FLOAT_TYPE: return $ffv->getFloatValue();
+            case FieldFacet::NUMBER_TYPE: return $ffv->getFloatValue();
             case FieldFacet::DATE_TYPE:
                 return $ffv->getDateValue()->format($this->translator->trans('date_form_datepicker_php', [], 'platform'));
             case FieldFacet::STRING_TYPE || FieldFacet::COUNTRY_TYPE || FieldFacet::SELECT_TYPE || FieldFacet::RADIO_TYPE || FieldFacet::EMAIL_TYPE: return $ffv->getStringValue();
