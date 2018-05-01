@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "af5bc74dda282c169a8bd4a3027e8de1a951417b"
+                "reference": "52120a0ae0006057f8f9524d2198240d06dc4393"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/af5bc74dda282c169a8bd4a3027e8de1a951417b",
-                "reference": "af5bc74dda282c169a8bd4a3027e8de1a951417b",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/52120a0ae0006057f8f9524d2198240d06dc4393",
+                "reference": "52120a0ae0006057f8f9524d2198240d06dc4393",
                 "shasum": ""
             },
             "require": {
@@ -397,7 +397,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-04-27 10:01:02"
+            "time": "2018-04-30 18:21:08"
         },
         {
             "name": "cocur/slugify",
@@ -7757,12 +7757,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "e5d326c39dac1f5a12d0b4e4eed241a51eaf62ce"
+                "reference": "caf2b9942a06af7dbb185ae70e670ed1f9fee8d6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/e5d326c39dac1f5a12d0b4e4eed241a51eaf62ce",
-                "reference": "e5d326c39dac1f5a12d0b4e4eed241a51eaf62ce",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/caf2b9942a06af7dbb185ae70e670ed1f9fee8d6",
+                "reference": "caf2b9942a06af7dbb185ae70e670ed1f9fee8d6",
                 "shasum": ""
             },
             "require": {
@@ -7815,7 +7815,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-04-26 16:12:45"
+            "time": "2018-04-30 15:37:07"
         },
         {
             "name": "symfony/polyfill-php54",
