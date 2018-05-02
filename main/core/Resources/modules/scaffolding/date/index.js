@@ -12,7 +12,7 @@ moment.locale(getLocale())
  * @return {string}
  */
 function getApiFormat() {
-  return 'YYYY-MM-DD\THH:mm:ss'
+  return 'YYYY-MM-DD\\THH:mm:ss'
 }
 
 /**
@@ -74,7 +74,7 @@ function apiDate(displayDate, long = false, withTime = false) {
  * @return {string} - the date in display format.
  */
 function displayDate(apiDate, long = false, withTime = false) {
-  return moment.utc(apiDate).local().format(getDisplayFormat(long, withTime))
+  return moment.utc(apiDate).format(getDisplayFormat(long, withTime))
 }
 
 /**

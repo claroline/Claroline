@@ -64,6 +64,13 @@ class FieldFacetValue
     protected $arrayValue;
 
     /**
+     * @ORM\Column(type="boolean", nullable=true)
+     *
+     * @var bool
+     */
+    protected $boolValue;
+
+    /**
      * @ORM\ManyToOne(
      *     targetEntity="Claroline\CoreBundle\Entity\User",
      *     inversedBy="fieldsFacetValue",
@@ -197,6 +204,22 @@ class FieldFacetValue
     }
 
     /**
+     * @param bool $boolValue
+     */
+    public function setBoolValue($boolValue)
+    {
+        $this->boolValue = $boolValue;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getBoolValue()
+    {
+        return $this->boolValue;
+    }
+
+    /**
      * @param User|null $user
      */
     public function setUser(User $user = null)
@@ -218,12 +241,58 @@ class FieldFacetValue
     public function getValue()
     {
         switch ($this->getFieldFacet()->getType()) {
-            case FieldFacet::FLOAT_TYPE: return $this->getFloatValue();
+            case FieldFacet::NUMBER_TYPE: return $this->getFloatValue();
             case FieldFacet::DATE_TYPE: return $this->getDateValue();
             case FieldFacet::CHECKBOXES_TYPE: return $this->getArrayValue();
             case FieldFacet::CASCADE_SELECT_TYPE: return $this->getArrayValue();
             case FieldFacet::FILE_TYPE: return $this->getArrayValue();
+            case FieldFacet::BOOLEAN_TYPE: return $this->getBoolValue();
+            case FieldFacet::CHOICE_TYPE:
+                $options = $this->getFieldFacet()->getOptions();
+
+                return isset($options['multiple']) && $options['multiple'] ?
+                    $this->getArrayValue() :
+                    $this->getStringValue();
             default: return $this->getStringValue();
+        }
+    }
+
+    /**
+     * @param mixed $value
+     */
+    public function setValue($value)
+    {
+        switch ($this->getFieldFacet()->getType()) {
+            case FieldFacet::NUMBER_TYPE:
+                $this->setFloatValue($value);
+                break;
+            case FieldFacet::DATE_TYPE:
+                if ($value) {
+                    $dateValue = new \DateTime($value);
+                    $this->setDateValue($dateValue);
+                } else {
+                    $this->setDateValue(null);
+                }
+                break;
+            case FieldFacet::CHECKBOXES_TYPE:
+            case FieldFacet::CASCADE_SELECT_TYPE:
+            case FieldFacet::FILE_TYPE:
+                $this->setArrayValue($value);
+                break;
+            case FieldFacet::BOOLEAN_TYPE:
+                $this->setBoolValue($value);
+                break;
+            case FieldFacet::CHOICE_TYPE:
+                $options = $this->getFieldFacet()->getOptions();
+
+                if (isset($options['multiple']) && $options['multiple']) {
+                    $this->setArrayValue($value);
+                } else {
+                    $this->setStringValue($value);
+                }
+                break;
+            default:
+                $this->setStringValue($value);
         }
     }
 }

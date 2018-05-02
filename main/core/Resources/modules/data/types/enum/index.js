@@ -1,24 +1,44 @@
-import {trans} from '#/main/core/translation'
+import isEmpty from 'lodash/isEmpty'
 
-import {ChoiceGroup} from '#/main/core/layout/form/components/group/choice-group'
-import {EnumSearch} from '#/main/core/data/types/enum/components/search'
+import {chain, array, string, notBlank, unique} from '#/main/core/validation'
+import {EnumGroup} from '#/main/core/data/types/enum/components/enum-group.jsx'
 
 const ENUM_TYPE = 'enum'
 
 const enumDefinition = {
   meta: {
-    type: ENUM_TYPE,
-    creatable: true,
-    icon: 'fa fa-fw fa fa-list',
-    label: trans('enum'),
-    description: trans('enum_desc')
+    type: ENUM_TYPE
   },
-  parse: (display, options) => Object.keys(options.choices).find(enumValue => display === options.choices[enumValue]),
-  render: (raw, options) => options.choices[raw],
-  validate: (value, options) => !!options.choices[value],
+  validate: (value, options) => chain(value, options, [array, (value) => {
+    if (value) {
+      const errors = {}
+
+      value.map((item, index) => {
+        const error = chain(item.value, {}, [string, notBlank])
+
+        if (error) {
+          errors[index] = error
+        }
+      })
+
+      if (options['unique']) {
+        const uniqueErrors = chain(value.map(v => v.value), {sensitive: options['caseSensitive']}, [unique])
+
+        if (uniqueErrors) {
+          Object.keys(uniqueErrors).forEach(key => {
+            if (!errors[key]) {
+              errors[key] = uniqueErrors[key]
+            }
+          })
+        }
+      }
+      if (!isEmpty(errors)) {
+        return errors
+      }
+    }
+  }]),
   components: {
-    search: EnumSearch,
-    form: ChoiceGroup
+    form: EnumGroup
   }
 }
 

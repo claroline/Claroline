@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
@@ -8,22 +9,25 @@ import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
  */
 const Radios = props =>
   <fieldset>
-    {props.options.map(option =>
+    {Object.keys(props.choices).map(choiceValue =>
       <div
-        className={props.inline ? 'radio-inline' : 'radio'}
-        key={option.value}
+        key={choiceValue}
+        className={classes({
+          'radio-inline': props.inline,
+          'radio': !props.inline
+        })}
       >
         <label>
           <input
             type="radio"
             name={props.id}
-            value={option.value}
-            checked={option.value === props.value}
+            value={choiceValue}
+            checked={choiceValue === props.value}
             disabled={props.disabled}
-            onChange={() => props.onChange(option.value)}
+            onChange={() => props.onChange(choiceValue)}
           />
 
-          {option.label}
+          {props.choices[choiceValue]}
         </label>
       </div>
     )}
@@ -31,10 +35,9 @@ const Radios = props =>
 
 implementPropTypes(Radios, FormFieldTypes, {
   value: T.oneOfType([T.string, T.number]),
-  options: T.arrayOf(T.shape({ // todo use same format than enum
-    value: T.string.isRequired,
-    label: T.string.isRequired
-  })).isRequired,
+
+  // custom props
+  choices: T.object.isRequired,
   inline: T.bool
 }, {
   value: '',

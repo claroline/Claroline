@@ -141,7 +141,11 @@ export class CorrectionModal extends Component {
                       <RadiosGroup
                         id={`correction-criterion-${c.id}-radio`}
                         label="correction_criterion_radio"
-                        options={[...Array(this.props.dropzone.parameters.criteriaTotal).keys()].map((idx) => ({label: '', value: idx}))}
+                        choices={[...Array(this.props.dropzone.parameters.criteriaTotal).keys()].reduce((acc, current) => {
+                          acc[current] = current
+
+                          return acc
+                        }, {})}
                         disabled={true}
                         inline={true}
                         hideLabel={true}

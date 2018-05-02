@@ -26,9 +26,9 @@ const countryDefinition = {
   render: (raw) => {
     if (raw) {
       if (Array.isArray(raw)) {
-        return raw.map(country => trans(`regions.${country}`, {}, 'regions')).join(', ')
+        return raw.map(country => trans(`${country}`, {}, 'regions')).join(', ')
       } else {
-        return trans(`regions.${raw}`, {}, 'regions')
+        return trans(`${raw}`, {}, 'regions')
       }
     }
 
@@ -41,7 +41,7 @@ const countryDefinition = {
         // there are at least one invalid country in the list
         return tval('This value should be a list of valid country codes.')
       }
-    } else if (!intlConstants.REGION_CODES[countryCodes]) {
+    } else if (!intlConstants.REGION_CODES.find(code => code === countryCodes)) {
       // invalid country code
       return tval('This value should be a valid country code.')
     }

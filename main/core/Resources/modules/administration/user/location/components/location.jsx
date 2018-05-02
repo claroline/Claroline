@@ -27,7 +27,7 @@ const LocationForm = props =>
         primary: true,
         fields: [
           {name: 'name', type: 'string', label: t('name'), required: true},
-          {name: 'meta.type', type: 'enum', label: t('type'), options: {choices: locationTypes}}
+          {name: 'meta.type', type: 'choice', label: t('type'), options: {condensed: true, choices: locationTypes}}
         ]
       }, {
         title: t('contact'),

@@ -11,11 +11,10 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -24,20 +23,18 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Category
 {
+    use UuidTrait;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_claco_form", "api_user_min", "api_facet_admin"})
-     * @SerializedName("id")
      */
     protected $id;
 
     /**
      * @ORM\Column(name="category_name")
      * @Assert\NotBlank()
-     * @Groups({"api_claco_form", "api_user_min", "api_facet_admin"})
-     * @SerializedName("name")
      */
     protected $name;
 
@@ -47,28 +44,23 @@ class Category
      *     inversedBy="categories"
      * )
      * @ORM\JoinColumn(name="claco_form_id", nullable=false, onDelete="CASCADE")
-     * @Groups({"api_claco_form"})
-     * @SerializedName("clacoForm")
      */
     protected $clacoForm;
 
     /**
      * @ORM\ManyToMany(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinTable(name="claro_clacoformbundle_category_manager")
-     * @Groups({"api_user_min"})
-     * @SerializedName("managers")
      */
     protected $managers;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("details")
      */
     protected $details;
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->managers = new ArrayCollection();
     }
 

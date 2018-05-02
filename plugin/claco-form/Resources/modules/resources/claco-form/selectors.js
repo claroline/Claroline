@@ -1,20 +1,25 @@
 import {createSelector} from 'reselect'
 
+import {currentUser} from '#/main/core/user/current'
 import {select as resourceSelect} from '#/main/core/resource/selectors'
 
-const resource = state => state.resource
-const isAnon = state => state.isAnon
-const user = state => state.user
-const params = state => state.resource.details
-const visibleFields = state => state.fields.filter(f => !f.hidden)
-const template = state => state.resource.template
-const useTemplate = state => state.resource.details['use_template']
-const getParam = (state, property) => state.resource.details[property]
-const currentEntry = state => state.currentEntry
-const myEntriesCount = state => state.myEntriesCount
+const authenticatedUser = currentUser()
+
+const clacoForm = state => state.clacoForm
+const isAnon = () => authenticatedUser === null
+const params = state => state.clacoForm.details
+const fields = state => state.clacoForm.fields
+const visibleFields = state => state.clacoForm.fields.filter(f => !f.restrictions.hidden)
+const template = state => state.clacoForm.template
+const useTemplate = state => state.clacoForm.details['use_template']
+const getParam = (state, property) => state.clacoForm.details[property]
+const currentEntry = state => state.entries.current.data
+const myEntriesCount = state => state.entries.myEntriesCount
 const canAdministrate = state => state.resourceNode.rights.current.administrate
-const categories = state => state.categories
+const categories = state => state.clacoForm.categories
+const keywords = state => state.clacoForm.keywords
 const myRoles = state => state.myRoles
+const entryUser = state => state.entries.entryUser
 
 const canSearchEntry = createSelector(
   resourceSelect.editable,
@@ -25,25 +30,23 @@ const canSearchEntry = createSelector(
 
 const isCurrentEntryOwner = createSelector(
   isAnon,
-  user,
   currentEntry,
-  (isAnon, user, currentEntry) => {
-    return !isAnon && user && currentEntry && currentEntry.user && currentEntry.user.id === user.id
+  (isAnon, currentEntry) => {
+    return !isAnon && authenticatedUser && currentEntry && currentEntry.user && currentEntry.user.id === authenticatedUser.id
   }
 )
 
 const isCurrentEntryManager = createSelector(
   isAnon,
-  user,
   currentEntry,
-  (isAnon, user, currentEntry) => {
+  (isAnon, currentEntry) => {
     let isManager = false
 
-    if (!isAnon && user && currentEntry && currentEntry.categories) {
+    if (!isAnon && authenticatedUser && currentEntry && currentEntry.categories) {
       currentEntry.categories.forEach(category => {
         if (!isManager && category.managers) {
           category.managers.forEach(manager => {
-            if (manager.id === user.id) {
+            if (manager.id === authenticatedUser.id) {
               isManager = true
             }
           })
@@ -57,17 +60,16 @@ const isCurrentEntryManager = createSelector(
 
 const canManageCurrentEntry = createSelector(
   isAnon,
-  user,
   resourceSelect.editable,
   currentEntry,
-  (isAnon, user, editable, currentEntry) => {
+  (isAnon, editable, currentEntry) => {
     let canManage = editable
 
-    if (!canManage && !isAnon && user && currentEntry && currentEntry.categories) {
+    if (!canManage && !isAnon && authenticatedUser && currentEntry && currentEntry.categories) {
       currentEntry.categories.forEach(category => {
         if (!canManage && category.managers) {
           category.managers.forEach(manager => {
-            if (manager.id === user.id) {
+            if (manager.id === authenticatedUser.id) {
               canManage = true
             }
           })
@@ -121,10 +123,9 @@ const canOpenCurrentEntry = createSelector(
 )
 
 const isCategoryManager = createSelector(
-  user,
   categories,
-  (user, categories) => {
-    return user.id > 0 && categories.filter(c => c.managers.find(m => m.id === user.id)).length > 0
+  (categories) => {
+    return authenticatedUser && categories.filter(c => c.managers.find(m => m.id === authenticatedUser.id)).length > 0
   }
 )
 
@@ -158,11 +159,11 @@ const canViewComments = createSelector(
   }
 )
 
-export const selectors = {
-  resource,
+export const select = {
+  clacoForm,
   isAnon,
-  params,
   canSearchEntry,
+  fields,
   visibleFields,
   template,
   useTemplate,
@@ -176,5 +177,8 @@ export const selectors = {
   canAdministrate,
   isCategoryManager,
   canComment,
-  canViewComments
+  canViewComments,
+  categories,
+  keywords,
+  entryUser
 }

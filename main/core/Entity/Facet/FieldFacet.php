@@ -28,7 +28,7 @@ class FieldFacet
     /** @var int */
     const STRING_TYPE = 1;
     /** @var int */
-    const FLOAT_TYPE = 2;
+    const NUMBER_TYPE = 2;
     /** @var int */
     const DATE_TYPE = 3;
     /** @var int */
@@ -42,24 +42,30 @@ class FieldFacet
     /** @var int */
     const EMAIL_TYPE = 8;
     /** @var int */
-    const RICH_TEXT_TYPE = 9;
+    const HTML_TYPE = 9;
     /** @var int */
     const CASCADE_SELECT_TYPE = 10;
     /** @var int */
     const FILE_TYPE = 11;
+    /** @var int */
+    const BOOLEAN_TYPE = 12;
+    /** @var int */
+    const CHOICE_TYPE = 13;
     /** @var array */
     public static $types = [
         'string' => self::STRING_TYPE,
-        'float' => self::FLOAT_TYPE,
+        'number' => self::NUMBER_TYPE,
         'date' => self::DATE_TYPE,
         'radio' => self::RADIO_TYPE,
         'select' => self::SELECT_TYPE,
         'checkboxes' => self::CHECKBOXES_TYPE,
         'country' => self::COUNTRY_TYPE,
         'email' => self::EMAIL_TYPE,
-        'text' => self::RICH_TEXT_TYPE,
+        'html' => self::HTML_TYPE,
         'cascade ' => self::CASCADE_SELECT_TYPE,
         'file' => self::FILE_TYPE,
+        'boolean' => self::BOOLEAN_TYPE,
+        'choice' => self::CHOICE_TYPE,
     ];
 
     /**
@@ -142,6 +148,31 @@ class FieldFacet
      * @var array
      */
     private $options = [];
+
+    /**
+     * @ORM\Column(name="hidden", type="boolean", options={"default" = 0})
+     */
+    protected $hidden = false;
+
+    /**
+     * @ORM\Column(name="is_metadata", type="boolean", options={"default" = 0})
+     */
+    protected $isMetadata = false;
+
+    /**
+     * @ORM\Column(name="locked", type="boolean", options={"default" = 0})
+     */
+    protected $locked = false;
+
+    /**
+     * @ORM\Column(name="locked_edition", type="boolean", options={"default" = 0})
+     */
+    protected $lockedEditionOnly = false;
+
+    /**
+     * @ORM\Column(name="help", nullable=true)
+     */
+    protected $help;
 
     /**
      * Constructor.
@@ -272,35 +303,12 @@ class FieldFacet
     }
 
     /**
-     * @deprecated
-     *
-     * @return string
-     */
-    public function getTypeTranslationKey()
-    {
-        switch ($this->type) {
-            case self::FLOAT_TYPE: return 'number';
-            case self::DATE_TYPE: return 'date';
-            case self::STRING_TYPE: return 'text';
-            case self::RADIO_TYPE: return 'radio';
-            case self::SELECT_TYPE: return 'select';
-            case self::CHECKBOXES_TYPE: return 'checkbox';
-            case self::COUNTRY_TYPE: return 'country';
-            case self::EMAIL_TYPE: return 'email';
-            case self::RICH_TEXT_TYPE: return 'rich_text';
-            case self::CASCADE_SELECT_TYPE: return 'cascade_select';
-            case self::FILE_TYPE: return 'file';
-            default: return 'error';
-        }
-    }
-
-    /**
      * @return string
      */
     public function getFieldType()
     {
         switch ($this->type) {
-            case self::FLOAT_TYPE: return 'float';
+            case self::NUMBER_TYPE: return 'number';
             case self::DATE_TYPE: return 'date';
             case self::STRING_TYPE: return 'string';
             case self::RADIO_TYPE: return 'radio';
@@ -308,9 +316,11 @@ class FieldFacet
             case self::CHECKBOXES_TYPE: return 'checkboxes';
             case self::COUNTRY_TYPE: return 'country';
             case self::EMAIL_TYPE: return 'email';
-            case self::RICH_TEXT_TYPE: return 'html';
+            case self::HTML_TYPE: return 'html';
             case self::CASCADE_SELECT_TYPE: return 'cascade';
             case self::FILE_TYPE: return 'file';
+            case self::BOOLEAN_TYPE: return 'boolean';
+            case self::CHOICE_TYPE: return 'choice';
             default: return 'error';
         }
     }
@@ -323,17 +333,19 @@ class FieldFacet
     public function getInputType()
     {
         switch ($this->type) {
-            case self::FLOAT_TYPE: return 'number';
+            case self::NUMBER_TYPE: return 'number';
             case self::DATE_TYPE: return 'date';
-            case self::STRING_TYPE: return 'text';
+            case self::STRING_TYPE: return 'string';
             case self::RADIO_TYPE: return 'radio';
             case self::SELECT_TYPE: return 'select';
             case self::CHECKBOXES_TYPE: return 'checkboxes';
             case self::COUNTRY_TYPE: return 'country';
             case self::EMAIL_TYPE: return 'email';
-            case self::RICH_TEXT_TYPE: return 'rich_text';
+            case self::HTML_TYPE: return 'html';
             case self::CASCADE_SELECT_TYPE: return 'cascade_select';
             case self::FILE_TYPE: return 'file';
+            case self::BOOLEAN_TYPE: return 'boolean';
+            case self::CHOICE_TYPE: return 'choice';
             default: return 'error';
         }
     }
@@ -352,6 +364,11 @@ class FieldFacet
     public function getFieldFacetChoicesArray()
     {
         return $this->fieldFacetChoices->toArray();
+    }
+
+    public function emptyFieldFacetChoices()
+    {
+        return $this->fieldFacetChoices->clear();
     }
 
     /**
@@ -400,5 +417,85 @@ class FieldFacet
     public function setOptions(array $options)
     {
         $this->options = $options;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param bool $hidden
+     */
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getIsMetadata()
+    {
+        return $this->isMetadata;
+    }
+
+    /**
+     * @param bool $isMetadata
+     */
+    public function setIsMetadata($isMetadata)
+    {
+        $this->isMetadata = $isMetadata;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLocked()
+    {
+        return $this->locked;
+    }
+
+    /**
+     * @param bool $locked
+     */
+    public function setLocked($locked)
+    {
+        $this->locked = $locked;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getLockedEditionOnly()
+    {
+        return $this->lockedEditionOnly;
+    }
+
+    /**
+     * @param bool $lockedEditionOnly
+     */
+    public function setLockedEditionOnly($lockedEditionOnly)
+    {
+        $this->lockedEditionOnly = $lockedEditionOnly;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHelp()
+    {
+        return $this->help;
+    }
+
+    /**
+     * @param string $help
+     */
+    public function setHelp($help)
+    {
+        $this->help = $help;
     }
 }

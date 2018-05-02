@@ -15,7 +15,7 @@ function getCorrectedAnswer(item, answers = null) {
 
 
     if (answer) {
-      if (answer.answerText === expected.text) {
+      if (answer.answerText.trim() === expected.text) {
         corrected.addExpected(new Answerable(expected.score))
       } else {
         const userAnswer = solution.answers.find(solutionAnswer => solutionAnswer.text === answer.answerText)

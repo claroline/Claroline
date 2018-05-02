@@ -11,11 +11,10 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\Resource\AbstractResource;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 
 /**
  * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\ClacoFormRepository")
@@ -23,19 +22,17 @@ use JMS\Serializer\Annotation\SerializedName;
  */
 class ClacoForm extends AbstractResource
 {
+    use UuidTrait;
+
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("id")
      */
     protected $id;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("template")
      */
     protected $template;
 
@@ -44,8 +41,6 @@ class ClacoForm extends AbstractResource
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Field",
      *     mappedBy="clacoForm"
      * )
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("fields")
      */
     protected $fields;
 
@@ -54,8 +49,6 @@ class ClacoForm extends AbstractResource
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Category",
      *     mappedBy="clacoForm"
      * )
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("categories")
      */
     protected $categories;
 
@@ -64,20 +57,17 @@ class ClacoForm extends AbstractResource
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Keyword",
      *     mappedBy="clacoForm"
      * )
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("keywords")
      */
     protected $keywords;
 
     /**
      * @ORM\Column(type="json_array", nullable=true)
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("details")
      */
     protected $details;
 
     public function __construct()
     {
+        $this->refreshUuid();
         $this->categories = new ArrayCollection();
         $this->fields = new ArrayCollection();
         $this->keywords = new ArrayCollection();
@@ -106,6 +96,29 @@ class ClacoForm extends AbstractResource
     public function getFields()
     {
         return $this->fields->toArray();
+    }
+
+    public function addField(Field $field)
+    {
+        if (!$this->fields->contains($field)) {
+            $this->fields->add($field);
+        }
+
+        return $this;
+    }
+
+    public function removeField(Field $field)
+    {
+        if ($this->fields->contains($field)) {
+            $this->fields->removeElement($field);
+        }
+
+        return $this;
+    }
+
+    public function emptyFields()
+    {
+        return $this->fields->clear();
     }
 
     public function getCategories()
@@ -301,7 +314,7 @@ class ClacoForm extends AbstractResource
     {
         return !is_null($this->details) && isset($this->details['search_columns']) ?
             $this->details['search_columns'] :
-            ['title', 'creationDateString', 'userString', 'categoriesString', 'keywordsString', 'actions'];
+            ['title', 'date', 'user', 'categories', 'keywords'];
     }
 
     public function setSearchColumns(array $searchColumns)
@@ -665,5 +678,48 @@ class ClacoForm extends AbstractResource
             $this->details = [];
         }
         $this->details['comments_display_roles'] = $commentsDisplayRoles;
+    }
+
+    public function getTitleFieldLabel()
+    {
+        return !is_null($this->details) && isset($this->details['title_field_label']) ?
+            $this->details['title_field_label'] :
+            null;
+    }
+
+    public function setTitleFieldLabel($titleFieldLabel)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['title_field_label'] = $titleFieldLabel;
+    }
+
+    public function isSearchRestricted()
+    {
+        return !is_null($this->details) && isset($this->details['search_restricted']) ? $this->details['search_restricted'] : false;
+    }
+
+    public function setSearchRestricted($searchRestricted)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['search_restricted'] = $searchRestricted;
+    }
+
+    public function getSearchRestrictedColumns()
+    {
+        return !is_null($this->details) && isset($this->details['search_restricted_columns']) ?
+            $this->details['search_restricted_columns'] :
+            ['title'];
+    }
+
+    public function setSearchRestrictedColumns(array $searchRestrictedColumns)
+    {
+        if (is_null($this->details)) {
+            $this->details = [];
+        }
+        $this->details['search_restricted_columns'] = $searchRestrictedColumns;
     }
 }

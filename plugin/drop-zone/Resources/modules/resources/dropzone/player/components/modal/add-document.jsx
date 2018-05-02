@@ -37,12 +37,13 @@ class AddDocumentModal extends Component {
             fields: [
               {
                 name: 'type',
-                type: 'enum',
+                type: 'choice',
                 label: trans('type'),
                 required: true,
                 onChange: (documentType) => this.setState({type: documentType}),
                 options: {
                   noEmpty: false,
+                  condensed: true,
                   choices: this.state.allowedTypes
                 }
               }, {

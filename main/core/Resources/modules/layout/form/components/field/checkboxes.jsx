@@ -1,4 +1,5 @@
 import React from 'react'
+import classes from 'classnames'
 
 import {PropTypes as T, implementPropTypes} from '#/main/core/scaffolding/prop-types'
 import {FormField as FormFieldTypes} from '#/main/core/layout/form/prop-types'
@@ -17,22 +18,25 @@ const Checkboxes = props =>
   <fieldset
     onChange={e => props.onChange(getCheckedValues(e))}
   >
-    {props.options.map(option =>
+    {Object.keys(props.choices).map(choiceValue =>
       <div
-        className={props.inline ? 'checkbox-inline' : 'checkbox'}
-        key={option.value}
+        key={choiceValue}
+        className={classes({
+          'checkbox-inline': props.inline,
+          'checkbox': !props.inline
+        })}
       >
         <label>
           <input
             type="checkbox"
             name={`${props.id}[]`}
-            value={option.value}
-            checked={option.value === props.value.find(cv => cv === option.value)}
+            value={choiceValue}
+            checked={-1 !== props.value.indexOf(choiceValue)}
             disabled={props.disabled}
             onChange={() => {}}
           />
 
-          {option.label}
+          {props.choices[choiceValue]}
         </label>
       </div>
     )}
@@ -40,10 +44,7 @@ const Checkboxes = props =>
 
 implementPropTypes(Checkboxes, FormFieldTypes, {
   value: T.array,
-  options: T.arrayOf(T.shape({ // todo use same format than enum
-    value: T.string.isRequired,
-    label: T.string.isRequired
-  })).isRequired,
+  choices: T.object.isRequired,
   inline: T.bool
 }, {
   value: [],

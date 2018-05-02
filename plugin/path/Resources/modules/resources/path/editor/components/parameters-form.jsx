@@ -54,11 +54,12 @@ const ParametersForm = props =>
             label: trans('path_manual_progression_allowed', {}, 'path')
           }, {
             name: 'display.numbering',
-            type: 'enum',
+            type: 'choice',
             label: trans('path_numbering', {}, 'path'),
             required: true,
             options: {
               noEmpty: true,
+              condensed: true,
               choices: constants.PATH_NUMBERINGS
             }
           }

@@ -52,6 +52,10 @@ class HintSerializer implements SerializerInterface
         $hint = $hint ?: new Hint();
         $hint->setUuid($data->id);
 
+        if (in_array(Transfer::REFRESH_UUID, $options)) {
+            $hint->refreshUuid();
+        }
+
         if (!empty($data->penalty) || 0 === $data->penalty) {
             $hint->setPenalty($data->penalty);
         }

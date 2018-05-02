@@ -46,7 +46,7 @@ const QuestionsPage = props =>
 
               return itemIcon
             },
-            type: 'enum',
+            type: 'choice',
             options: {
               choices: listItemNames().reduce(
                 (selectObj, itemType) => Object.assign(

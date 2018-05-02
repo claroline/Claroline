@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
 import get from 'lodash/get'
+import omit from 'lodash/omit'
 
 import {t, tex} from '#/main/core/translation'
 
@@ -181,7 +182,7 @@ const TagPicking = props =>
     <RadiosGroup
       id="quiz-random-pick"
       label={tex('random_picking')}
-      options={shuffleModes.filter(m => SHUFFLE_NEVER !== m.value)}
+      choices={shuffleModes.filter(m => SHUFFLE_NEVER !== m.value)}
       value={props.randomPick}
       onChange={mode => props.onChange('randomPick', mode)}
       warnOnly={!props.validating}
@@ -217,7 +218,7 @@ const TagPicking = props =>
     <RadiosGroup
       id="quiz-random-order"
       label={tex('random_order')}
-      options={SHUFFLE_ALWAYS !== props.randomPick ? shuffleModes : shuffleModes.filter(m => SHUFFLE_ONCE !== m.value)}
+      choices={SHUFFLE_ALWAYS !== props.randomPick ? shuffleModes : omit(shuffleModes, SHUFFLE_ONCE)}
       value={props.randomOrder}
       onChange={mode => props.onChange('randomOrder', mode)}
       warnOnly={!props.validating}

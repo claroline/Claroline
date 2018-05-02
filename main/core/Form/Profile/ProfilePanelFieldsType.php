@@ -89,7 +89,7 @@ class ProfilePanelFieldsType extends AbstractType
                         ]
                     );
                     break;
-                case FieldFacet::FLOAT_TYPE:
+                case FieldFacet::NUMBER_TYPE:
                     $builder->add(
                         $field->getName(),
                         'number',

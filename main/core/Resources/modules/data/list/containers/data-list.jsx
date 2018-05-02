@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {PropTypes as T} from 'prop-types'
+import isEqual from 'lodash/isEqual'
 
 import {makeCancelable} from '#/main/core/api/utils'
 
@@ -26,11 +27,10 @@ class DataList extends Component {
   componentDidUpdate(prevProps) {
     if (this.isAutoLoaded()) {
       // list is configured to auto fetch data
-      if (this.props.loaded !== prevProps.loaded // data are not loaded
-        || this.props.invalidated !== prevProps.invalidated // data have been invalidated
-        || (this.props.fetch.autoload !== prevProps.fetch.autoload) // autoload has been enabled
-      ) {
-        this.reload()
+      if (!isEqual(this.props.invalidated, prevProps.invalidated)
+        || !isEqual(this.props.fetch, prevProps.fetch)) {
+        // we force reload if the target url has changed
+        this.reload(!isEqual(this.props.fetch.url, prevProps.fetch.url))
       }
     }
   }
@@ -39,15 +39,15 @@ class DataList extends Component {
     return this.props.fetch && !!this.props.fetch.autoload
   }
 
-  reload() {
-    if (!this.props.loaded || this.props.invalidated) {
-      if (this.pending && this.props.invalidated) {
+  reload(force = false) {
+    if (force || !this.props.loaded || this.props.invalidated) {
+      if (this.pending && (force || this.props.invalidated)) {
         this.pending.cancel()
       }
 
       if (!this.pending) {
         this.pending = makeCancelable(
-          this.props.fetchData()
+          this.props.fetchData(this.props.fetch.url)
         )
 
         this.pending.promise.then(

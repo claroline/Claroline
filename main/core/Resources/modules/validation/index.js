@@ -236,6 +236,26 @@ function dateAfter(value, limit) {
   }
 }
 
+function unique(value, options = {}) {
+  if (Array.isArray(value)) {
+    const errors = {}
+    const sensitive = options['sensitive'] !== undefined ? options['sensitive'] : false
+    value.forEach((v, index) => {
+      if (!errors[index]) {
+        value.forEach((vv, indexBis) => {
+          if (index !== indexBis && ((sensitive && v === vv) || (!sensitive && v.toUpperCase() === vv.toUpperCase()))) {
+            errors[index] = trans('value_not_unique', {}, 'validators')
+          }
+        })
+      }
+    })
+
+    if (!isEmpty(errors)) {
+      return errors
+    }
+  }
+}
+
 export {
   validateIf,
   chain,
@@ -261,5 +281,6 @@ export {
   greaterOrEqual,
   lowerOrEqual,
   between,
-  dateAfter
+  dateAfter,
+  unique
 }

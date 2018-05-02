@@ -1,24 +1,26 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {withRouter} from 'react-router-dom'
 import {PropTypes as T} from 'prop-types'
+
+import {withRouter} from '#/main/core/router'
+import {url} from '#/main/core/api/router'
 import {trans} from '#/main/core/translation'
 import {TooltipButton} from '#/main/core/layout/button/components/tooltip-button.jsx'
-import {selectors} from '../../../selectors'
-import {generateUrl} from '#/main/core/api/router'
 
-class EntryMenu extends Component {
+import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
+
+class EntryMenuComponent extends Component {
   goToRandomEntry() {
-    fetch(generateUrl('claro_claco_form_entry_random', {clacoForm: this.props.resourceId}), {
+    fetch(url(['claro_claco_form_entry_random', {clacoForm: this.props.clacoFormId}]), {
       method: 'GET' ,
       credentials: 'include'
     })
-    .then(response => response.json())
-    .then(entryId => {
-      if (entryId > 0) {
-        this.props.history.push(`/entry/${entryId}/view`)
-      }
-    })
+      .then(response => response.json())
+      .then(entryId => {
+        if (entryId) {
+          this.props.history.push(`/entries/${entryId}`)
+        }
+      })
   }
 
   render() {
@@ -29,7 +31,7 @@ class EntryMenu extends Component {
             id="tooltip-button-add"
             className="btn btn-primary entry-menu-button"
             title={trans('add_entry', {}, 'clacoform')}
-            onClick={() => this.props.history.push('/entry/create')}
+            onClick={() => this.props.history.push('/entry/form')}
           >
             <span className="fa fa-fw fa-plus" />
           </TooltipButton>
@@ -61,27 +63,23 @@ class EntryMenu extends Component {
   }
 }
 
-EntryMenu.propTypes = {
-  resourceId: T.number.isRequired,
+EntryMenuComponent.propTypes = {
+  clacoFormId: T.string.isRequired,
   canSearchEntry: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,
   randomEnabled: T.bool.isRequired,
   history: T.object.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
-    resourceId: selectors.resource(state).id,
-    canSearchEntry: selectors.canSearchEntry(state),
-    randomEnabled: selectors.getParam(state, 'random_enabled'),
-    canAddEntry: selectors.canAddEntry(state)
-  }
+const EntryMenu = withRouter(connect(
+  (state) => ({
+    clacoFormId: select.clacoForm(state).id,
+    canSearchEntry: select.canSearchEntry(state),
+    randomEnabled: select.getParam(state, 'random_enabled'),
+    canAddEntry: select.canAddEntry(state)
+  })
+)(EntryMenuComponent))
+
+export {
+  EntryMenu
 }
-
-function mapDispatchToProps() {
-  return {}
-}
-
-const ConnectedEntryMenu = withRouter(connect(mapStateToProps, mapDispatchToProps)(EntryMenu))
-
-export {ConnectedEntryMenu as EntryMenu}

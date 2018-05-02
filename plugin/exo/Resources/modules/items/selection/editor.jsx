@@ -545,11 +545,11 @@ export class Selection extends Component {
         }
         <Radios
           id="mode-group"
-          options={[
-            {value: 'select', label: tex('select')},
-            {value: 'find', label: tex('find')},
-            {value: 'highlight', label: tex('highlight')}
-          ]}
+          choices={{
+            select: tex('select'),
+            find: tex('find'),
+            highlight: tex('highlight')
+          }}
           value={this.props.item.mode}
           onChange={value => this.props.onChange(actions.updateQuestion(value, 'mode', {}))}
         />

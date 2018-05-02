@@ -67,138 +67,142 @@ class ParametersSerializer
         $parameters = $this->config->getParameters();
 
         $serialized = [
-          'display' => [
-              'footer' => $parameters['footer'],
-              'logo' => $parameters['logo'],
-              'theme' => $parameters['theme'],
-              'home_menu' => $parameters['home_menu'],
-              'footer_login' => $parameters['footer_login'],
-              'footer_workspaces' => $parameters['footer_workspaces'],
-              'header_locale' => $parameters['header_locale'],
-              'resource_icon_set' => $parameters['resource_icon_set'],
-              'name' => $parameters['name'],
-              'name_active' => $parameters['name_active'],
-          ],
-          'mailer' => [
-              'transport' => $parameters['mailer_transport'],
-              'host' => $parameters['mailer_host'],
-              'port' => $parameters['mailer_port'],
-              'encryption' => $parameters['mailer_encryption'],
-              'username' => $parameters['mailer_username'],
-              'password' => $parameters['mailer_password'],
-              'auth_mode' => $parameters['mailer_auth_mode'],
-              'api_key' => $parameters['mailer_api_key'],
-              'tag' => $parameters['mailer_tag'],
-              'from' => $parameters['mailer_from'],
-          ],
-          'ssl' => [
-              'enabled' => $parameters['ssl_enabled'],
-              'version' => $parameters['ssl_version_value'],
-          ],
-          'server' => [
-              'tmp_dir' => $parameters['tmp_dir'],
-          ],
-          'session' => [
-              'storage_type' => $parameters['session_storage_type'],
-              'db_table' => $parameters['session_db_table'],
-              'db_id_col' => $parameters['session_db_id_col'],
-              'db_data_col' => $parameters['session_db_data_col'],
-              'db_time_col' => $parameters['session_db_time_col'],
-              'db_dsn' => $parameters['session_db_dsn'],
-              'db_user' => $parameters['session_db_user'],
-              'db_password' => $parameters['session_db_password'],
-          ],
-          'auto_enable_notifications' => $parameters['auto_enable_notifications'],
-          'locales' => [
-              'available' => $parameters['locales'],
-              'default' => $parameters['locale_language'],
-          ],
-          'security' => [
-              'form_captcha' => $parameters['form_captcha'],
-              'form_honeypot' => $parameters['form_honeypot'],
-              'platform_limit_date' => $parameters['platform_limit_date'],
-              'platform_init_date' => $parameters['platform_init_date'],
-              'cookie_lifetime' => $parameters['cookie_lifetime'],
-              'account_duration' => $parameters['account_duration'],
-              'default_root_anon_id' => $parameters['default_root_anon_id'],
-              'anonymous_public_profile' => $parameters['anonymous_public_profile'],
-          ],
-          'tos' => [
-              'enabled' => $parameters['terms_of_service'],
-              'text' => $this->serializeTos(),
-          ],
-          'registration' => [
-              'username_regex' => $parameters['username_regex'],
-              'self' => $parameters['allow_self_registration'],
-              'default_role' => $parameters['default_role'],
-              'register_button_at_login' => $parameters['register_button_at_login'],
-              'auto_logging' => $parameters['auto_logging_after_registration'],
-              'validation' => $parameters['registration_mail_validation'],
-              'force_organization_creation' => $parameters['force_organization_creation'],
-              'allow_workspace' => $parameters['allow_workspace_at_registration'],
-          ],
-          'authentication' => [
-            'redirect_after_login_option' => $parameters['redirect_after_login_option'],
-            'redirect_after_login_url' => $parameters['redirect_after_login_url'],
-            'login_target_route' => $parameters['login_target_route'],
-            //used by cas
-            'direct_third_party' => $parameters['direct_third_party_authentication'],
-          ],
-          'workspace' => [
-             'max_storage_size' => $parameters['max_storage_size'],
-             'max_upload_resources' => $parameters['max_upload_resources'],
-             'max_workspace_users' => $parameters['max_workspace_users'],
-             'default_tag' => $parameters['default_workspace_tag'],
-             'users_csv_by_full_name' => $parameters['workspace_users_csv_import_by_full_name'],
-             'send_mail_at_registration' => $parameters['send_mail_at_workspace_registration'],
-             'enable_rich_text_file_import' => $parameters['enable_rich_text_file_import'],
-          ],
-          'internet' => [
-              'domain_name' => $parameters['domain_name'],
-              'platform_url' => $parameters['platform_url'],
-              'google_meta_tag' => $parameters['google_meta_tag'],
-          ],
-          'help' => [
-              'url' => $parameters['help_url'],
-              'show' => $parameters['show_help_button'],
-              'support_email' => $parameters['support_email'],
-          ],
-          'geolocation' => [
-              'google' => [
-                'geocoding_client_id' => $parameters['google_geocoding_client_id'],
-                'geocoding_signature' => $parameters['google_geocoding_signature'],
-                'geocoding_key' => $parameters['google_geocoding_key'],
-              ],
-          ],
-          'pdf' => [
-              'active' => $parameters['is_pdf_export_active'],
-          ],
-          'statistics' => [
-              'url' => $parameters['datas_sending_url'],
-              'confirmed' => $parameters['confirm_send_datas'],
-              'token' => $parameters['token'],
-          ],
-          //database_restoration section is not configurable nor documented
-          'database_restoration' => [
-            'auto_validate_email' => $parameters['auto_validate_email'],
-            'auto_enable_email_redirect' => $parameters['auto_enable_email_redirect'],
-          ],
-          'logs' => [
-              'enabled' => $parameters['platform_log_enabled'],
-          ],
-          'text' => [
-              'enable_opengraph' => $parameters['enable_opengraph'],
-          ],
-          'portfolio' => [
-              'url' => $parameters['portfolio_url'],
-          ],
-          'resource' => [
-              'soft_delete' => $parameters['resource_soft_delete'],
-          ],
-          'portal' => [
-            'enabled_resources' => $parameters['portal_enabled_resources'],
-          ],
-          'country' => $parameters['country'],
+            'display' => [
+                'footer' => $parameters['footer'],
+                'logo' => $parameters['logo'],
+                'theme' => $parameters['theme'],
+                'home_menu' => $parameters['home_menu'],
+                'footer_login' => $parameters['footer_login'],
+                'footer_workspaces' => $parameters['footer_workspaces'],
+                'header_locale' => $parameters['header_locale'],
+                'resource_icon_set' => $parameters['resource_icon_set'],
+                'name' => $parameters['name'],
+                'name_active' => $parameters['name_active'],
+            ],
+            'mailer' => [
+                'transport' => $parameters['mailer_transport'],
+                'host' => $parameters['mailer_host'],
+                'port' => $parameters['mailer_port'],
+                'encryption' => $parameters['mailer_encryption'],
+                'username' => $parameters['mailer_username'],
+                'password' => $parameters['mailer_password'],
+                'auth_mode' => $parameters['mailer_auth_mode'],
+                'api_key' => $parameters['mailer_api_key'],
+                'tag' => $parameters['mailer_tag'],
+                'from' => $parameters['mailer_from'],
+            ],
+            'ssl' => [
+                'enabled' => $parameters['ssl_enabled'],
+                'version' => $parameters['ssl_version_value'],
+            ],
+            'server' => [
+                'tmp_dir' => $parameters['tmp_dir'],
+            ],
+            'session' => [
+                'storage_type' => $parameters['session_storage_type'],
+                'db_table' => $parameters['session_db_table'],
+                'db_id_col' => $parameters['session_db_id_col'],
+                'db_data_col' => $parameters['session_db_data_col'],
+                'db_time_col' => $parameters['session_db_time_col'],
+                'db_dsn' => $parameters['session_db_dsn'],
+                'db_user' => $parameters['session_db_user'],
+                'db_password' => $parameters['session_db_password'],
+            ],
+            'auto_enable_notifications' => $parameters['auto_enable_notifications'],
+            'locales' => [
+                'available' => $parameters['locales'],
+                'default' => $parameters['locale_language'],
+            ],
+            'security' => [
+                'form_captcha' => $parameters['form_captcha'],
+                'form_honeypot' => $parameters['form_honeypot'],
+                'platform_limit_date' => $parameters['platform_limit_date'],
+                'platform_init_date' => $parameters['platform_init_date'],
+                'cookie_lifetime' => $parameters['cookie_lifetime'],
+                'account_duration' => $parameters['account_duration'],
+                'default_root_anon_id' => $parameters['default_root_anon_id'],
+                'anonymous_public_profile' => $parameters['anonymous_public_profile'],
+            ],
+            'tos' => [
+                'enabled' => $parameters['terms_of_service'],
+                'text' => $this->serializeTos(),
+            ],
+            'registration' => [
+                'username_regex' => $parameters['username_regex'],
+                'self' => $parameters['allow_self_registration'],
+                'default_role' => $parameters['default_role'],
+                'register_button_at_login' => $parameters['register_button_at_login'],
+                'auto_logging' => $parameters['auto_logging_after_registration'],
+                'validation' => $parameters['registration_mail_validation'],
+                'force_organization_creation' => $parameters['force_organization_creation'],
+                'allow_workspace' => $parameters['allow_workspace_at_registration'],
+            ],
+            'authentication' => [
+                'redirect_after_login_option' => $parameters['redirect_after_login_option'],
+                'redirect_after_login_url' => $parameters['redirect_after_login_url'],
+                'login_target_route' => $parameters['login_target_route'],
+                //used by cas
+                'direct_third_party' => $parameters['direct_third_party_authentication'],
+            ],
+            'workspace' => [
+                'max_storage_size' => $parameters['max_storage_size'],
+                'max_upload_resources' => $parameters['max_upload_resources'],
+                'max_workspace_users' => $parameters['max_workspace_users'],
+                'default_tag' => $parameters['default_workspace_tag'],
+                'users_csv_by_full_name' => $parameters['workspace_users_csv_import_by_full_name'],
+                'send_mail_at_registration' => $parameters['send_mail_at_workspace_registration'],
+                'enable_rich_text_file_import' => $parameters['enable_rich_text_file_import'],
+            ],
+            'internet' => [
+                'domain_name' => $parameters['domain_name'],
+                'platform_url' => $parameters['platform_url'],
+                'google_meta_tag' => $parameters['google_meta_tag'],
+            ],
+            'help' => [
+                'url' => $parameters['help_url'],
+                'show' => $parameters['show_help_button'],
+                'support_email' => $parameters['support_email'],
+            ],
+            'geolocation' => [
+                'google' => [
+                    'geocoding_client_id' => $parameters['google_geocoding_client_id'],
+                    'geocoding_signature' => $parameters['google_geocoding_signature'],
+                    'geocoding_key' => $parameters['google_geocoding_key'],
+                ],
+            ],
+            'pdf' => [
+                'active' => $parameters['is_pdf_export_active'],
+            ],
+            'statistics' => [
+                'url' => $parameters['datas_sending_url'],
+                'confirmed' => $parameters['confirm_send_datas'],
+                'token' => $parameters['token'],
+            ],
+            //database_restoration section is not configurable nor documented
+            'database_restoration' => [
+                'auto_validate_email' => $parameters['auto_validate_email'],
+                'auto_enable_email_redirect' => $parameters['auto_enable_email_redirect'],
+            ],
+            'logs' => [
+                'enabled' => $parameters['platform_log_enabled'],
+            ],
+            'text' => [
+                'enable_opengraph' => $parameters['enable_opengraph'],
+            ],
+            'portfolio' => [
+                'url' => $parameters['portfolio_url'],
+            ],
+            'resource' => [
+                'soft_delete' => $parameters['resource_soft_delete'],
+            ],
+            'portal' => [
+                'enabled_resources' => $parameters['portal_enabled_resources'],
+            ],
+            'country' => $parameters['country'],
+            'profile' => [
+                'roles_confidential' => $parameters['profile_roles_confidential'],
+                'roles_locked' => $parameters['profile_roles_locked'],
+            ],
         ];
 
         if (in_array(self::ALL, $options)) {
@@ -235,6 +239,7 @@ class ParametersSerializer
         $this->deserializeSecurity($parameters, $data);
         $this->deserializeRegistration($parameters, $data);
         $this->deserializeAuthentication($parameters, $data);
+        $this->deserializeProfile($parameters, $data);
 
         return $parameters;
     }
@@ -326,6 +331,10 @@ class ParametersSerializer
 
         if (isset($data->country)) {
             $parameters['country'] = $data->country;
+        }
+
+        if (isset($data['profile'])) {
+            $this->deserializeProfile($parameters, $data);
         }
 
         return new PlatformConfiguration($parameters);
@@ -491,6 +500,12 @@ class ParametersSerializer
             $serializer = $this->serializer->get('Claroline\CoreBundle\Entity\Content');
             $serializer->deserialize($data['tos']['text'], $contentTos, ['property' => 'content']);
         }
+    }
+
+    public function deserializeProfile(array &$parameters, array $data)
+    {
+        $this->buildParameter('profile.roles_confidential', 'profile_roles_confidential', $parameters, $data);
+        $this->buildParameter('profile.roles_locked', 'profile_roles_locked', $parameters, $data);
     }
 
     private function buildParameter($serializedPath, $parametersPath, array &$parameters, array $data)

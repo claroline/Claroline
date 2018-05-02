@@ -8,10 +8,11 @@ import {DataDetailsContainer} from '#/main/core/data/details/containers/details.
 
 import {ProfileFacet as ProfileFacetTypes} from '#/main/core/user/profile/prop-types'
 import {select} from '#/main/core/user/profile/selectors'
-import {getDetailsDefaultSection} from '#/main/core/user/profile/utils'
+import {getDetailsDefaultSection, formatDetailsSections} from '#/main/core/user/profile/utils'
 
 const ProfileFacetComponent = props => {
-  const sections = cloneDeep(props.facet.sections)
+  const sections = formatDetailsSections(cloneDeep(props.facet.sections), props.user, props.parameters)
+
   if (props.facet.meta.main) {
     sections.unshift(getDetailsDefaultSection(props.user))
   }
@@ -32,13 +33,15 @@ ProfileFacetComponent.propTypes = {
   user: T.object.isRequired,
   facet: T.shape(
     ProfileFacetTypes.propTypes
-  ).isRequired
+  ).isRequired,
+  parameters: T.object.isRequired
 }
 
 const ProfileFacet = connect(
   state => ({
     user: detailsSelect.data(detailsSelect.details(state, 'user')),
-    facet: select.currentFacet(state)
+    facet: select.currentFacet(state),
+    parameters: select.parameters(state)
   })
 )(ProfileFacetComponent)
 

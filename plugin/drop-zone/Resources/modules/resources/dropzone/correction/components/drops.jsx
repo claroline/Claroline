@@ -24,7 +24,7 @@ const DropsList = props =>
       }}
       primaryAction={(row) => ({
         type: 'link',
-        target: `#/drop/${row.id}`
+        target: `/drop/${row.id}`
       })}
       definition={[
         {
