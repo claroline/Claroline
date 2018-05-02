@@ -55,7 +55,6 @@ const Actions = () =>
       formName="parameters"
       target={(workspace) => ['apiv2_workspace_update', {id: workspace.id}]}
       opened={true}
-      cancel={{}}
     />
   </PageActions>
 
