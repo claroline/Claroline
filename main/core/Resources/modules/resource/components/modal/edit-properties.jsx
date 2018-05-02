@@ -114,10 +114,11 @@ class EditPropertiesModal extends Component {
               }, {
                 name: 'display.closeTarget',
                 label: t_res('resource_close_target'),
-                type: 'enum',
+                type: 'choice',
                 required: true,
                 options: {
                   noEmpty: true,
+                  condensed: true,
                   choices: constants.RESOURCE_CLOSE_TARGETS
                 }
               }

@@ -12,6 +12,7 @@
 namespace Claroline\ClacoFormBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Facet\FieldFacet;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -29,6 +30,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Field
 {
+    use UuidTrait;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
@@ -65,7 +68,7 @@ class Field
     /**
      * @ORM\Column(name="required", type="boolean")
      */
-    protected $required = true;
+    protected $required = false;
 
     /**
      * @ORM\Column(name="is_metadata", type="boolean")
@@ -105,8 +108,14 @@ class Field
      */
     protected $order = 1000;
 
+    /**
+     * @ORM\Column(name="help", nullable=true)
+     */
+    protected $help;
+
     public function __construct()
     {
+        $this->refreshUuid();
         $this->fieldChoiceCategories = new ArrayCollection();
     }
 
@@ -145,14 +154,41 @@ class Field
         return $this->type;
     }
 
-    public function setType($type)
+    public function getFieldType()
     {
-        $this->type = $type;
+        switch ($this->type) {
+            case FieldFacet::NUMBER_TYPE: return 'number';
+            case FieldFacet::DATE_TYPE: return 'date';
+            case FieldFacet::STRING_TYPE: return 'string';
+            case FieldFacet::RADIO_TYPE: return 'radio';
+            case FieldFacet::SELECT_TYPE: return 'select';
+            case FieldFacet::CHECKBOXES_TYPE: return 'checkboxes';
+            case FieldFacet::COUNTRY_TYPE: return 'country';
+            case FieldFacet::EMAIL_TYPE: return 'email';
+            case FieldFacet::HTML_TYPE: return 'html';
+            case FieldFacet::CASCADE_SELECT_TYPE: return 'cascade';
+            case FieldFacet::FILE_TYPE: return 'file';
+            case FieldFacet::BOOLEAN_TYPE: return 'boolean';
+            case FieldFacet::CHOICE_TYPE: return 'choice';
+            default: return 'error';
+        }
     }
 
-    /**
-     * @return FieldFacet
-     */
+    public function setType($type)
+    {
+        //if we pass a correct type name
+        if (in_array($type, array_keys(FieldFacet::$types))) {
+            $this->type = FieldFacet::$types[$type];
+        } elseif (in_array($type, FieldFacet::$types)) {
+            //otherwise we use the integer
+            $this->type = $type;
+        } else {
+            throw new \InvalidArgumentException(
+                'Type must be a FieldFacet class constant'
+            );
+        }
+    }
+
     public function getFieldFacet()
     {
         return $this->fieldFacet;
@@ -236,6 +272,16 @@ class Field
     public function setOrder($order)
     {
         $this->order = $order;
+    }
+
+    public function getHelp()
+    {
+        return $this->help;
+    }
+
+    public function setHelp($help)
+    {
+        $this->help = $help;
     }
 
     public function getFileTypes()

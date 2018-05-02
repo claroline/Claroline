@@ -37,13 +37,16 @@ const OrganizationForm = props =>
             required: true
           }, {
             name: 'type',
-            type: 'enum',
+            type: 'choice',
             label: trans('type'),
             required: true,
-            options: {choices: {
-              'external': trans('external'),
-              'internal': trans('internal')
-            }}
+            options: {
+              condensed: true,
+              choices: {
+                'external': trans('external'),
+                'internal': trans('internal')
+              }
+            }
           }, {
             name: 'vat',
             label: trans('vat_number'),
@@ -212,7 +215,7 @@ const Organization = connect(
         definition: UserList.definition,
         card: UserList.card,
         fetch: {
-          url: ['apiv2_user_list'],
+          url: ['apiv2_user_list_managed'],
           autoload: true
         },
         handleSelect: (selected) => dispatch(actions.addUsers(organizationId, selected))
@@ -227,7 +230,7 @@ const Organization = connect(
         definition: UserList.definition,
         card: UserList.card,
         fetch: {
-          url: ['apiv2_user_list'],
+          url: ['apiv2_user_list_managed'],
           autoload: true
         },
         handleSelect: (selected) => dispatch(actions.addManagers(organizationId, selected))
@@ -242,7 +245,7 @@ const Organization = connect(
         definition: GroupList.definition,
         card: GroupList.card,
         fetch: {
-          url: ['apiv2_group_list'],
+          url: ['apiv2_group_list_managed'],
           autoload: true
         },
         handleSelect: (selected) => dispatch(actions.addGroups(organizationId, selected))

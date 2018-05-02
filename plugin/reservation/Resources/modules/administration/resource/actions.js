@@ -1,9 +1,8 @@
-import {generateUrl} from '#/main/core/api/router'
+import {url} from '#/main/core/api/router'
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
 import {API_REQUEST} from '#/main/core/api/actions'
 import {actions as formActions} from '#/main/core/data/form/actions'
 import {actions as listActions} from '#/main/core/data/list/actions'
-import {getDataQueryString} from '#/main/core/data/list/utils'
 
 const RESOURCE_RIGHTS_ADD = 'RESOURCE_RIGHTS_ADD'
 const RESOURCE_RIGHTS_UPDATE = 'RESOURCE_RIGHTS_UPDATE'
@@ -32,7 +31,7 @@ actions.openForm = (formName, id = null) => (dispatch) => {
 
 actions.addOrganizations = (id, organizations) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_reservationresource_add_organizations', {id: id}) +'?'+ organizations.map(id => 'ids[]='+id).join('&'),
+    url: url(['apiv2_reservationresource_add_organizations', {id: id}], {ids: organizations}),
     request: {
       method: 'PATCH'
     },
@@ -75,7 +74,7 @@ actions.addRoles = (id, resourceRights, roles) => (dispatch) => {
 
 actions.editResourceRights = (rights, value) => ({
   [API_REQUEST]: {
-    url: generateUrl('apiv2_reservationresourcerights_update', {id: rights.id}),
+    url: ['apiv2_reservationresourcerights_update', {id: rights.id}],
     request: {
       method: 'PUT',
       body: JSON.stringify(Object.assign({}, rights, {mask: value}))
@@ -87,16 +86,7 @@ actions.editResourceRights = (rights, value) => ({
 })
 
 actions.exportResources = (resources) => () => {
-  window.location.href = generateUrl('apiv2_reservationresource_export') + getDataQueryString(resources)
-  // dispatch({
-  //   [API_REQUEST]: {
-  //     url: generateUrl('apiv2_reservationresource_export') + getDataQueryString(resources),
-  //     request: {
-  //       method: 'GET'
-  //     },
-  //     success: (data, dispatch) => {}
-  //   }
-  // })
+  window.location.href = url(['apiv2_reservationresource_export'], {ids: resources.map(r => r.id)})
 }
 
 export {

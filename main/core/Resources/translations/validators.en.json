@@ -32,5 +32,6 @@
     "value_between": "This value must be defined between %min% and %max%.",
     "value_greater_or_equal_to": "This value must be greater or equal to %limit%.",
     "value_lower_or_equal_to": "This value must be lower or equal to %limit%.",
-    "value_not_blank": "This value can not be blank."
+    "value_not_blank": "This value can not be blank.",
+    "value_not_unique": "This value is already in user."
 }

@@ -138,6 +138,8 @@ class PlatformDefaults implements ParameterProviderInterface
             'is_cron_configured' => false,
             'force_organization_creation' => false,
             'allow_workspace_at_registration' => false,
+            'profile_roles_confidential' => [],
+            'profile_roles_locked' => [],
         ];
     }
 }

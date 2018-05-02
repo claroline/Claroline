@@ -42,7 +42,7 @@
                         <div class="carousel-card-content">{{ path.entity.resourceNode.name }}</div>
 
                         <div class="carousel-card-btns btn-group btn-group-justified" role="group">
-                            <a class="btn btn-link" href="{{ path('innova_path_player_wizard', { id: path.entity.id }) }}">
+                            <a class="btn btn-link" href="{{ path('claro_resource_open', { node: path.entity.resourceNode.id, type: 'innova_path' }) }}">
                                 {% if path.progression == 0 %}
                                     {{ 'path_start'|trans({}, 'widget') }}
                                 {% elseif path.progression == 100 %}
@@ -50,11 +50,6 @@
                                 {% else %}
                                     {{ 'path_continue'|trans({}, 'widget') }}
                                 {% endif %}
-                            </a>
-
-                            {% if path.canEdit %}
-                            <a class="btn btn-link" href="{{ path('innova_path_editor_wizard', { id: path.entity.id }) }}">
-                                {{ 'edit'|trans({}, 'platform') }}
                             </a>
                             {% endif %}
                         </div>

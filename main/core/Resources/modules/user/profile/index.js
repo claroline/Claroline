@@ -20,6 +20,7 @@ bootstrap(
       data: initialData.user,
       originalData: initialData.user
     },
-    facets: decorate(initialData.facets)
+    facets: decorate(initialData.facets),
+    parameters: initialData.parameters
   })
 )

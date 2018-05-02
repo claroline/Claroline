@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Serializer\Item;
 
 use JMS\DiExtraBundle\Annotation as DI;
 use UJM\ExoBundle\Entity\Item\ItemObject;
+use UJM\ExoBundle\Library\Options\Transfer;
 use UJM\ExoBundle\Library\Serializer\SerializerInterface;
 
 /**
@@ -50,6 +51,9 @@ class ItemObjectSerializer implements SerializerInterface
         $itemObject = $itemObject ?: new ItemObject();
 
         $itemObject->setUuid($data->id);
+        if (in_array(Transfer::REFRESH_UUID, $options)) {
+            $itemObject->refreshUuid();
+        }
         $itemObject->setMimeType($data->type);
 
         if (isset($data->data)) {

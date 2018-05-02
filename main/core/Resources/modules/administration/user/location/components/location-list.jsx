@@ -18,7 +18,7 @@ const LocationList = {
       primary: true
     }, {
       name: 'meta.type',
-      type: 'enum',
+      type: 'choice',
       label: trans('type'),
       options: {
         choices: locationTypes

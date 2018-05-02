@@ -11,7 +11,7 @@ import cloneDeep from 'lodash/cloneDeep'
 const getCollaboratorRole = (workspace) => workspace.roles.find(role => role.name.indexOf('COLLABORATOR') > -1)
 
 export const reducer = makePageReducer({}, {
-  workspaces: makeListReducer('workspaces', {filters: []}),
+  workspaces: makeListReducer('workspaces'),
   defaultWorkspaces: (state = null) => state,
   termOfService: (state = null) => state,
   facets: (state = []) => state,

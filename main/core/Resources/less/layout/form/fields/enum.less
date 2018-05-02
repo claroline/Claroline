@@ -1,0 +1,50 @@
+.enum-group {
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    .no-item-info {
+        font-style: italic;
+        text-align: center;
+
+        margin-bottom: 0;
+        line-height: 30px;
+        border: 1px dashed #999;
+        border-radius: 4px;
+        padding: 5px;
+        color: #999;
+    }
+
+    .enum-item {
+        display: flex;
+        align-items: flex-start;
+        background-color: @gray-lighter;
+        border: 1px solid @gray-lighter;
+        border-radius: @border-radius-base;
+        padding: 10px;
+        margin-bottom: 4px;
+
+        .enum-item-content {
+            flex: 1;
+            margin-right: floor(@grid-gutter-width / 2);
+            margin-bottom: 0;
+        }
+
+        .error-block {
+            margin-bottom: 0;
+        }
+
+        .right-controls {
+            .btn {
+                padding-left: 4px;
+                padding-right: 4px;
+            }
+        }
+    }
+
+    .btn-block {
+        margin-top: 10px;
+    }
+}

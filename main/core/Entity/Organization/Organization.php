@@ -419,4 +419,19 @@ class Organization
             $this->userOrganizationReferences->removeElement($found);
         }
     }
+
+    public function getRoot()
+    {
+        return $this->root;
+    }
+
+    public function getLeft()
+    {
+        return $this->lft;
+    }
+
+    public function getRight()
+    {
+        return $this->rgt;
+    }
 }

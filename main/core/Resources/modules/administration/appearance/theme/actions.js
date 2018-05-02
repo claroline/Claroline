@@ -1,6 +1,6 @@
 import {makeActionCreator} from '#/main/core/scaffolding/actions'
-import {getDataQueryString} from '#/main/core/data/list/utils'
 
+import {url} from '#/main/core/api/router'
 import {API_REQUEST} from '#/main/core/api/actions'
 
 export const THEMES_REMOVE    = 'THEMES_REMOVE'
@@ -33,7 +33,7 @@ actions.deleteThemes = (themes) => {
 
   return {
     [API_REQUEST]: {
-      url: ['apiv2_theme_delete_bulk'] + getDataQueryString(themes),
+      url: url(['apiv2_theme_delete_bulk'], {ids: themes.map(t => t.id)}),
       request: {
         method: 'DELETE'
       },

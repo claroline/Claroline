@@ -4,6 +4,7 @@ namespace UJM\ExoBundle\Transfer;
 
 use Claroline\CoreBundle\Library\Transfert\Importer;
 use Claroline\CoreBundle\Library\Transfert\ResourceRichTextInterface;
+use Claroline\CoreBundle\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\File\File;
@@ -78,17 +79,19 @@ class ExerciseImporter extends Importer implements ResourceRichTextInterface
             $quizData
         );
 
+        /** @var ObjectManager $om */
+        $om = $this->container->get('claroline.persistence.object_manager');
         // Retrieve the new exercise
         //$exercise = $this->container->get('claroline.manager.resource_manager')->getResourceFromNode($node);
 
         // Create entities from import data
+        $om->startFlushSuite();
         $exercise = $this->container->get('ujm_exo.manager.exercise')->createCopy($quizData, $exercise);
 
         // need to init publishedOnce according to current publication state
         $exercise->setPublishedOnce($exercise->getResourceNode()->isPublished());
 
         $fileUtilities = $this->container->get('claroline.utilities.file');
-        $om = $this->container->get('claroline.persistence.object_manager');
 
         //import the objects
         foreach ($exercise->getSteps() as $step) {
@@ -114,7 +117,7 @@ class ExerciseImporter extends Importer implements ResourceRichTextInterface
             }
         }
 
-        $om->flush();
+        $om->endFlushSuite();
     }
 
     public function export($workspace, array &$files, $exercise)

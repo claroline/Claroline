@@ -30,7 +30,7 @@ const ScheduledTasks = () =>
       }, {
         name: 'type',
         label: trans('task'),
-        type: 'enum',
+        type: 'choice',
         options: {
           choices: constants.TASK_TYPES
         },

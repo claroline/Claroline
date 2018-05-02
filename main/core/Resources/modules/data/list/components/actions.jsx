@@ -49,7 +49,7 @@ ListPrimaryAction.defaultProps = {
 const ListActions = props =>
   <DropdownButton
     id={`${props.id}-btn`}
-    className="data-actions-btn btn-link"
+    className="data-actions-btn btn btn-link"
     pullRight={true}
     tooltip="left"
     actions={props.actions.filter(action => undefined === action.displayed || action.displayed)}
@@ -82,7 +82,7 @@ const ListBulkActions = props =>
           <Button
             {...action}
             key={toKey(action.label)}
-            className="btn-link"
+            className="btn btn-link"
             tooltip="top"
           />
         )

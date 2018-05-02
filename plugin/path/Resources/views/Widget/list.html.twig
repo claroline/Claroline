@@ -5,7 +5,6 @@
             <th scope="col">{{ 'path_status'|trans({}, 'path') }}</th>
             <th scope="col">{{ 'path_name'|trans({}, 'path') }}</th>
             <th scope="col">{{ 'path_description'|trans({}, 'path') }}</th>
-            <th scope="col"></th>
         </tr>
     </thead>
 
@@ -24,27 +23,13 @@
             </td>
 
             <td>
-                <a href="{{ path('innova_path_player_wizard', { id: path.entity.id }) }}">
+                <a href="{{ path('claro_resource_open', { node: path.entity.resourceNode.id, type: 'innova_path' }) }}">
                     {{ path.entity.resourceNode.name }}
                 </a>
             </td>
 
             <td>
                 <em>{{ path.entity.description | striptags | truncate(40, true, ' [...]') | raw }}</em>
-            </td>
-
-            <td class="text-right">
-                {% if path.canEdit %}
-                <a href="{{ path('innova_path_publish', { id: path.entity.id }) }}" class="btn btn-default btn-xs">
-                    <span class="fa fa-share-square-o"></span>
-                    {{ 'publish'|trans({}, 'platform') }}
-                </a>
-
-                <a href="{{ path('innova_path_editor_wizard', { id: path.entity.id }) }}" class="btn btn-default btn-xs">
-                    <span class="fa fa-pencil"></span>
-                    {{ 'edit'|trans({}, 'platform') }}
-                </a>
-                {% endif %}
             </td>
         </tr>
     {% endfor %}

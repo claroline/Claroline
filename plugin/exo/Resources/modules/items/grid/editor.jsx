@@ -409,12 +409,12 @@ const Grid = props =>
       <label htmlFor="grid-score-mode">{tex('grid_score_mode_label')}</label>
       <Radios
         id="scoreMode"
-        options={[
-          {value: SUM_CELL, label:tex('grid_score_sum_cell')},
-          {value: SUM_COL, label:tex('grid_score_sum_col')},
-          {value: SUM_ROW, label:tex('grid_score_sum_row')},
-          {value: SCORE_FIXED, label:tex('fixed_score')}
-        ]}
+        choices={{
+          [SUM_CELL]: tex('grid_score_sum_cell'),
+          [SUM_COL]: tex('grid_score_sum_col'),
+          [SUM_ROW]: tex('grid_score_sum_row'),
+          [SCORE_FIXED]: tex('fixed_score')
+        }}
         value={props.item.score.type === SCORE_FIXED ? SCORE_FIXED : props.item.sumMode}
         onChange={value => props.onChange(
           actions.updateProperty('sumMode', value)

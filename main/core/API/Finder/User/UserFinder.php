@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\API\Finder\User;
 
 use Claroline\AppBundle\API\FinderInterface;
+use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
@@ -36,27 +37,34 @@ class UserFinder implements FinderInterface
     /** @var WorkspaceManager */
     private $workspaceManager;
 
+    /** @var ObjectManager */
+    private $om;
+
     /**
      * UserFinder constructor.
      *
      * @DI\InjectParams({
      *     "authChecker"      = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"     = @DI\Inject("security.token_storage"),
-     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager")
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "om"               = @DI\Inject("claroline.persistence.object_manager")
      * })
      *
      * @param AuthorizationCheckerInterface $authChecker
      * @param TokenStorageInterface         $tokenStorage
      * @param WorkspaceManager              $workspaceManager
+     * @param ObjectManager                 $om
      */
     public function __construct(
         AuthorizationCheckerInterface $authChecker,
         TokenStorageInterface $tokenStorage,
-        WorkspaceManager $workspaceManager
+        WorkspaceManager $workspaceManager,
+        ObjectManager $om
     ) {
         $this->authChecker = $authChecker;
         $this->tokenStorage = $tokenStorage;
         $this->workspaceManager = $workspaceManager;
+        $this->om = $om;
     }
 
     public function getClass()
@@ -99,11 +107,32 @@ class UserFinder implements FinderInterface
                     $qb->andWhere('r.uuid IN (:roleIds)');
                     $qb->setParameter('roleIds', is_array($filterValue) ? $filterValue : [$filterValue]);
                     break;
-                case 'organization':
+                  //non recursive search here
+                  case 'organization':
+                   $qb->leftJoin('obj.userOrganizationReferences', 'oref');
+                   $qb->leftJoin('oref.organization', 'o');
+                   $qb->andWhere('o.uuid IN (:organizationIds)');
+                   $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                   break;
+
+                case 'recursiveOrXOrganization':
+                    $value = is_array($filterValue) ? $filterValue : [$filterValue];
+                    $roots = $this->om->findList('Claroline\CoreBundle\Entity\Organization\Organization', 'uuid', $value);
+
                     $qb->leftJoin('obj.userOrganizationReferences', 'oref');
-                    $qb->leftJoin('oref.organization', 'o');
-                    $qb->andWhere('o.uuid IN (:organizationIds)');
-                    $qb->setParameter('organizationIds', is_array($filterValue) ? $filterValue : [$filterValue]);
+                    $qb->leftJoin('oref.organization', 'oparent');
+                    $qb->leftJoin('oref.organization', 'organization');
+
+                    foreach ($roots as $root) {
+                        $expr[] = $qb->expr()->andX(
+                          $qb->expr()->gte('organization.lft', $root->getLeft()),
+                          $qb->expr()->lte('organization.rgt', $root->getRight()),
+                          $qb->expr()->eq('oparent.root', $root->getRoot())
+                        );
+                    }
+
+                    $orX = $qb->expr()->orX(...$expr);
+                    $qb->andWhere($orX);
                     break;
                 case 'location':
                     $qb->leftJoin('obj.locations', 'l');

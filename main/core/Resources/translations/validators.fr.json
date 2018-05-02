@@ -34,5 +34,6 @@
     "value_between": "Cette valeur doit être définie entre %min% et %max%.",
     "value_greater_or_equal_to": "Cette valeur doit être supérieure ou égale à %limit%.",
     "value_lower_or_equal_to": "Cette valeur doit être inférieure ou égale à %limit%.",
-    "value_not_blank": "Cette valeur ne peut pas être vide."
+    "value_not_blank": "Cette valeur ne peut pas être vide.",
+    "value_not_unique": "Cette valeur est déjà utilisée."
 }

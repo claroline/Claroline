@@ -1,3 +1,5 @@
+import { stripDiacritics } from '#/main/core/scaffolding/text/strip-diacritics'
+
 /**
  *
  * @param {object} hole
@@ -34,13 +36,14 @@ const getBestAnswer = (answers) => {
  * @returns {object|undefined}
  */
 function getAnswerSolution(solutions, answerText) {
-  if (!answerText || 0 === answerText.length) {
+  if (!answerText || 0 === answerText.trim().length) {
     return undefined
   }
-
+  answerText = answerText.trim()
+  
   return solutions.find(answer => {
-    return (answer.caseSensitive && answer.text === answerText) // case sensitive
-      || (!answer.caseSensitive && answer.text.toLowerCase() === answerText.toLowerCase()) // case insensitive
+    return answer.text === answerText || // case sensitive
+      (!answer.caseSensitive && stripDiacritics(answer.text).toUpperCase() === stripDiacritics(answerText).toUpperCase()) // case insensitive
   })
 }
 

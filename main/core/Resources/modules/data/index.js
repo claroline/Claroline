@@ -1,12 +1,12 @@
 import invariant from 'invariant'
 
 import {BOOLEAN_TYPE,     booleanDefinition}     from '#/main/core/data/types/boolean'
+import {CHOICE_TYPE,      choiceDefinition}      from '#/main/core/data/types/choice'
 import {COLOR_TYPE,       colorDefinition}       from '#/main/core/data/types/color'
 import {COUNTRY_TYPE,     countryDefinition}     from '#/main/core/data/types/country'
 import {DATE_TYPE,        dateDefinition}        from '#/main/core/data/types/date'
 import {DATE_RANGE_TYPE,  dateRangeDefinition}   from '#/main/core/data/types/date-range'
 import {EMAIL_TYPE,       emailDefinition}       from '#/main/core/data/types/email'
-import {ENUM_TYPE,        enumDefinition}        from '#/main/core/data/types/enum'
 import {FILE_TYPE,        fileDefinition}        from '#/main/core/data/types/file'
 import {HTML_TYPE,        htmlDefinition}        from '#/main/core/data/types/html'
 import {IMAGE_TYPE,       imageDefinition}       from '#/main/core/data/types/image'
@@ -21,6 +21,7 @@ import {TRANSLATION_TYPE, translationDefinition} from '#/main/core/data/types/tr
 import {TRANSLATED_TYPE,  translatedDefinition}  from '#/main/core/data/types/translated'
 import {URL_TYPE,         urlDefinition}         from '#/main/core/data/types/url'
 import {USERNAME_TYPE,    usernameDefinition}    from '#/main/core/data/types/username'
+import {ENUM_TYPE,        enumDefinition}        from '#/main/core/data/types/enum'
 
 // the list of registered data types
 const dataTypes = {}
@@ -32,7 +33,7 @@ registerType(COUNTRY_TYPE,     countryDefinition)
 registerType(DATE_TYPE,        dateDefinition)
 registerType(DATE_RANGE_TYPE,  dateRangeDefinition)
 registerType(EMAIL_TYPE,       emailDefinition)
-registerType(ENUM_TYPE,        enumDefinition)
+registerType(CHOICE_TYPE,      choiceDefinition)
 registerType(FILE_TYPE,        fileDefinition)
 registerType(IMAGE_TYPE,       imageDefinition)
 registerType(HTML_TYPE,        htmlDefinition)
@@ -47,6 +48,7 @@ registerType(TRANSLATION_TYPE, translationDefinition)
 registerType(TRANSLATED_TYPE,  translatedDefinition)
 registerType(URL_TYPE,         urlDefinition)
 registerType(USERNAME_TYPE,    usernameDefinition)
+registerType(ENUM_TYPE,        enumDefinition)
 
 /**
  * Validates & registers a data type.

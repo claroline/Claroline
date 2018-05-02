@@ -33,7 +33,7 @@ class KeywordRepository extends EntityRepository
         return $query->getOneOrNullResult();
     }
 
-    public function findKeywordByNameExcludingId(ClacoForm $clacoForm, $name, $id)
+    public function findKeywordByNameExcludingUuid(ClacoForm $clacoForm, $name, $uuid)
     {
         $dql = '
             SELECT k
@@ -41,13 +41,13 @@ class KeywordRepository extends EntityRepository
             JOIN k.clacoForm c
             WHERE c = :clacoForm
             AND UPPER(k.name) = :name
-            AND k.id != :id
+            AND k.uuid != :uuid
         ';
         $query = $this->_em->createQuery($dql);
         $query->setParameter('clacoForm', $clacoForm);
         $upperName = strtoupper($name);
         $query->setParameter('name', $upperName);
-        $query->setParameter('id', $id);
+        $query->setParameter('uuid', $uuid);
 
         return $query->getOneOrNullResult();
     }

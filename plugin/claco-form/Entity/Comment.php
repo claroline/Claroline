@@ -2,10 +2,9 @@
 
 namespace Claroline\ClacoFormBundle\Entity;
 
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Claroline\CoreBundle\Entity\User;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -14,6 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Comment
 {
+    use UuidTrait;
+
     const PENDING = 0;
     const VALIDATED = 1;
     const BLOCKED = 2;
@@ -22,24 +23,18 @@ class Comment
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("id")
      */
     protected $id;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\NotBlank()
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("content")
      */
     protected $content;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\User")
      * @ORM\JoinColumn(name="user_id", onDelete="SET NULL", nullable=true)
-     * @Groups({"api_user_min"})
-     * @SerializedName("user")
      */
     protected $user;
 
@@ -54,24 +49,23 @@ class Comment
 
     /**
      * @ORM\Column(name="creation_date", type="datetime")
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("creationDate")
      */
     protected $creationDate;
 
     /**
      * @ORM\Column(name="edition_date", type="datetime", nullable=true)
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("editionDate")
      */
     protected $editionDate;
 
     /**
      * @ORM\Column(name="comment_status", type="integer")
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("status")
      */
     protected $status;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     public function getId()
     {

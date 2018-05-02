@@ -188,7 +188,7 @@ class UserSerializer
             /** @var FieldFacetValue $field */
             foreach ($fields as $field) {
                 // we just flatten field facets in the base user structure
-                $serialized[$field->getFieldFacet()->getName()] = $field->getValue();
+                $serialized[$field->getFieldFacet()->getUuid()] = $field->getValue();
             }
         }
 
@@ -430,7 +430,7 @@ class UserSerializer
 
         /** @var FieldFacet $fieldFacet */
         foreach ($fieldFacets as $fieldFacet) {
-            if (isset($data[$fieldFacet->getName()])) {
+            if (isset($data[$fieldFacet->getUuid()])) {
                 /** @var FieldFacetValue $fieldFacetValue */
                 $fieldFacetValue = $this->om
                     ->getRepository('Claroline\CoreBundle\Entity\Facet\FieldFacetValue')
@@ -443,7 +443,7 @@ class UserSerializer
                     $serializer->deserialize('Claroline\CoreBundle\Entity\Facet\FieldFacetValue', [
                         'id' => !empty($fieldFacetValue) ? $fieldFacetValue->getUuid() : null,
                         'name' => $fieldFacet->getName(),
-                        'value' => $data[$fieldFacet->getName()],
+                        'value' => $data[$fieldFacet->getUuid()],
                         'fieldFacet' => ['id' => $fieldFacet->getUuid()],
                     ])
                 );

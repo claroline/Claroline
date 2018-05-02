@@ -74,7 +74,7 @@ function getUserList(workspace) {
         }
       }, {
         name: 'roles',
-        type: 'enum',
+        type: 'choice',
         alias: 'role',
         options: {
           choices: getWorkspaceRoles(workspace)
@@ -85,7 +85,7 @@ function getUserList(workspace) {
         renderer: (rowData) => getRoles(rowData, workspace)
       }, {
         name: 'groups',
-        type: 'enum',
+        type: 'choice',
         alias: 'group',
         options: {
           choices: getWorkspaceGroups(workspace)

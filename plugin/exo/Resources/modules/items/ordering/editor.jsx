@@ -34,7 +34,7 @@ class Item extends Component {
               actions.updateItem(this.props.id, 'data', data)
             )}
           />
-        {this.props.item.direction === DIRECTION_VERTICAL && this.state.showFeedback &&
+          {this.props.item.direction === DIRECTION_VERTICAL && this.state.showFeedback &&
             <div className="feedback-container">
               <Textarea
                 id={`item-${this.props.id}-feedback`}
@@ -149,9 +149,9 @@ OrderingItem = makeSortable(OrderingItem, 'ORDERING_ITEM', OrderingItemDragPrevi
 
 const OrderingOdd = props => {
   return (
-      <div className="item-container negative-score">
-        <Item {...props} />
-      </div>
+    <div className="item-container negative-score">
+      <Item {...props} />
+    </div>
   )
 }
 
@@ -308,7 +308,7 @@ export const Ordering = props => {
             type="number"
             min="0"
             onChange={e => props.onChange(
-               actions.updateProperty('penalty', e.target.value)
+              actions.updateProperty('penalty', e.target.value)
             )}
           />
         </div>
@@ -352,10 +352,10 @@ export const Ordering = props => {
       }
       <Radios
         id="direction"
-        options={[
-          {value: DIRECTION_VERTICAL, label: tex('ordering_direction_vertical')},
-          {value: DIRECTION_HORIZONTAL, label: tex('ordering_direction_horizontal')}
-        ]}
+        choices={{
+          [DIRECTION_VERTICAL]: tex('ordering_direction_vertical'),
+          [DIRECTION_HORIZONTAL]: tex('ordering_direction_horizontal')
+        }}
         value={props.item.direction}
         onChange={value => props.onChange(
           actions.updateProperty('direction', value)
@@ -363,10 +363,10 @@ export const Ordering = props => {
       />
       <Radios
         id="mode"
-        options={[
-          {value: MODE_INSIDE, label: tex('ordering_mode_inside')},
-          {value: MODE_BESIDE, label: tex('ordering_mode_beside')}
-        ]}
+        choices={{
+          [MODE_INSIDE]: tex('ordering_mode_inside'),
+          [MODE_BESIDE]: tex('ordering_mode_beside')
+        }}
         value={props.item.mode}
         onChange={value => props.onChange(
           actions.updateProperty('mode', value)

@@ -10,47 +10,47 @@
 
 namespace Claroline\CoreBundle\Form\Administration;
 
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 
 class FieldFacetType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('label' => 'name'));
+        $builder->add('name', 'text', ['label' => 'name']);
         $builder->add(
             'type',
             'choice',
-            array(
-                'choices' => array(
+            [
+                'choices' => [
                     FieldFacet::STRING_TYPE => 'text',
-                    FieldFacet::FLOAT_TYPE => 'number',
+                    FieldFacet::NUMBER_TYPE => 'number',
                     FieldFacet::DATE_TYPE => 'date',
-                ),
+                ],
                 'multiple' => false,
                 'expanded' => false,
                 'label' => 'type',
-            )
+            ]
         );
         $builder->add(
             'isVisibleByOwner',
-            'choice', array(
-                'choices' => array('1' => 'yes', '0' => 'no'),
+            'choice', [
+                'choices' => ['1' => 'yes', '0' => 'no'],
                 'label' => 'visible',
                 'expanded' => false,
                 'multiple' => false,
-            )
+            ]
         );
         $builder->add(
             'isEditableByOwner',
-            'choice', array(
-                'choices' => array('1' => 'yes', '0' => 'no'),
+            'choice', [
+                'choices' => ['1' => 'yes', '0' => 'no'],
                 'label' => 'editable',
                 'expanded' => false,
                 'multiple' => false,
-            )
+            ]
         );
     }
 
@@ -61,6 +61,6 @@ class FieldFacetType extends AbstractType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(['translation_domain' => 'platform']);
     }
 }

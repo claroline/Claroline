@@ -1,23 +1,25 @@
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {withRouter} from 'react-router-dom'
 import {PropTypes as T} from 'prop-types'
-import {trans} from '#/main/core/translation'
-import {selectors} from '../../selectors'
-import {generateUrl} from '#/main/core/api/router'
 
-class ClacoFormMainMenu extends Component {
+import {withRouter} from '#/main/core/router'
+import {url} from '#/main/core/api/router'
+import {trans} from '#/main/core/translation'
+
+import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
+
+class ClacoFormMainMenuComponent extends Component {
   goToRandomEntry() {
-    fetch(generateUrl('claro_claco_form_entry_random', {clacoForm: this.props.resourceId}), {
+    fetch(url(['claro_claco_form_entry_random', {clacoForm: this.props.resourceId}]), {
       method: 'GET' ,
       credentials: 'include'
     })
-    .then(response => response.json())
-    .then(entryId => {
-      if (entryId > 0) {
-        this.props.history.push(`/entry/${entryId}/view`)
-      }
-    })
+      .then(response => response.json())
+      .then(entryId => {
+        if (entryId) {
+          this.props.history.push(`/entries/${entryId}`)
+        }
+      })
   }
 
   render() {
@@ -26,7 +28,7 @@ class ClacoFormMainMenu extends Component {
         {this.props.canAddEntry &&
           <a
             className="btn btn-default claco-form-menu-btn"
-            href="#/entry/create"
+            href="#/entry/form"
           >
             <span className="fa fa-fw fa-pencil-square-o fa-5x"></span>
             <h4>{trans('add_entry', {}, 'clacoform')}</h4>
@@ -55,27 +57,23 @@ class ClacoFormMainMenu extends Component {
   }
 }
 
-ClacoFormMainMenu.propTypes = {
-  resourceId: T.number.isRequired,
+ClacoFormMainMenuComponent.propTypes = {
+  resourceId: T.string.isRequired,
   canSearchEntry: T.bool.isRequired,
   canAddEntry: T.bool.isRequired,
   randomEnabled: T.bool.isRequired,
   history: T.object.isRequired
 }
 
-function mapStateToProps(state) {
-  return {
-    resourceId: selectors.resource(state).id,
-    canSearchEntry: selectors.canSearchEntry(state),
-    randomEnabled: selectors.getParam(state, 'random_enabled'),
-    canAddEntry: selectors.canAddEntry(state)
-  }
+const ClacoFormMainMenu = withRouter(connect(
+  (state) => ({
+    resourceId: select.clacoForm(state).id,
+    canSearchEntry: select.canSearchEntry(state),
+    randomEnabled: select.getParam(state, 'random_enabled'),
+    canAddEntry: select.canAddEntry(state)
+  })
+)(ClacoFormMainMenuComponent))
+
+export {
+  ClacoFormMainMenu
 }
-
-function mapDispatchToProps() {
-  return {}
-}
-
-const ConnectedClacoFormMainMenu = withRouter(connect(mapStateToProps, mapDispatchToProps)(ClacoFormMainMenu))
-
-export {ConnectedClacoFormMainMenu as ClacoFormMainMenu}

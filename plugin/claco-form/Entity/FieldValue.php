@@ -12,9 +12,8 @@
 namespace Claroline\ClacoFormBundle\Entity;
 
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
+use Claroline\CoreBundle\Entity\Model\UuidTrait;
 use Doctrine\ORM\Mapping as ORM;
-use JMS\Serializer\Annotation\Groups;
-use JMS\Serializer\Annotation\SerializedName;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
@@ -29,12 +28,12 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
  */
 class FieldValue
 {
+    use UuidTrait;
+
     /**
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("id")
      */
     protected $id;
 
@@ -44,26 +43,25 @@ class FieldValue
      *     inversedBy="fieldValues"
      * )
      * @ORM\JoinColumn(name="entry_id", onDelete="CASCADE")
-     * @Groups({"api_claco_form"})
-     * @SerializedName("entry")
      */
     protected $entry;
 
     /**
      * @ORM\ManyToOne(targetEntity="Claroline\ClacoFormBundle\Entity\Field")
      * @ORM\JoinColumn(name="field_id", onDelete="CASCADE")
-     * @Groups({"api_claco_form", "api_user_min"})
-     * @SerializedName("field")
      */
     protected $field;
 
     /**
      * @ORM\OneToOne(targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetValue")
      * @ORM\JoinColumn(name="field_facet_value_id", onDelete="CASCADE")
-     * @Groups({"api_user_min"})
-     * @SerializedName("fieldFacetValue")
      */
     protected $fieldFacetValue;
+
+    public function __construct()
+    {
+        $this->refreshUuid();
+    }
 
     public function getId()
     {
@@ -103,5 +101,17 @@ class FieldValue
     public function setFieldFacetValue(FieldFacetValue $fieldFacetValue)
     {
         return $this->fieldFacetValue = $fieldFacetValue;
+    }
+
+    public function getValue()
+    {
+        return !empty($this->fieldFacetValue) ? $this->fieldFacetValue->getValue() : null;
+    }
+
+    public function setValue($value)
+    {
+        if (!empty($this->fieldFacetValue)) {
+            $this->fieldFacetValue->setValue($value);
+        }
     }
 }

@@ -33,7 +33,7 @@ const getGroupList = (workspace) => {
       },
       {
         name: 'roles',
-        type: 'enum',
+        type: 'choice',
         alias: 'role',
         options: {
           choices: getWorkspaceRoles(workspace)

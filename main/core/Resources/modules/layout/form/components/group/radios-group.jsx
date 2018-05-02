@@ -13,14 +13,7 @@ import {Radios} from '#/main/core/layout/form/components/field/radios.jsx'
  */
 const RadiosGroup = props =>
   <FormGroup {...props}>
-    <Radios
-      id={props.id}
-      inline={props.inline}
-      options={props.options}
-      value={props.value}
-      disabled={props.disabled}
-      onChange={props.onChange}
-    />
+    <Radios {...props} />
   </FormGroup>
 
 implementPropTypes(RadiosGroup, FormGroupWithFieldTypes, {
@@ -28,11 +21,8 @@ implementPropTypes(RadiosGroup, FormGroupWithFieldTypes, {
   value: T.oneOfType([T.string, T.number]),
 
   // custom props
-  options: T.array.isRequired,
+  choices: T.object.isRequired,
   inline: T.bool
-}, {
-  value: [],
-  inline: true
 })
 
 export {

@@ -112,14 +112,14 @@ const AnnounceForm = props =>
         <RadiosGroup
           id="announcement-notify-users"
           label={trans('announcement_notify_users', {}, 'announcement')}
-          options={[
-            {value: 0, label: trans('do_not_send', {}, 'announcement')},
-            {value: 1, label: trans('send_directly', {}, 'announcement')},
-            {value: 2, label: trans('send_at_predefined_date', {}, 'announcement')}
-          ]}
-          value={props.announcement.meta.notifyUsers}
+          choices={{
+            0: trans('do_not_send', {}, 'announcement'),
+            1: trans('send_directly', {}, 'announcement'),
+            2: trans('send_at_predefined_date', {}, 'announcement')
+          }}
+          value={props.announcement.meta.notifyUsers.toString()}
           onChange={value => {
-            props.updateProperty('meta.notifyUsers', value)
+            props.updateProperty('meta.notifyUsers', parseInt(value))
 
             if (value === 2 && !props.announcement.meta.notificationDate && props.announcement.restrictions.visibleFrom) {
               props.updateProperty('meta.notificationDate', props.announcement.restrictions.visibleFrom)
@@ -131,15 +131,14 @@ const AnnounceForm = props =>
           <CheckboxesGroup
             id="announcement-sending-roles"
             label={trans('roles_to_send_to', {}, 'announcement')}
-            options={props.workspaceRoles.map(r => ({
-              value: r.id,
-              label: t(r.translationKey)
-            }))}
+            choices={props.workspaceRoles.reduce((acc, current) => {
+              acc[current.id] = trans(current.translationKey)
+
+              return acc
+            }, {})}
             inline={false}
             value={props.announcement.roles}
-            onChange={values => {
-              props.updateProperty('roles', values)
-            }}
+            onChange={values => props.updateProperty('roles', values)}
             warnOnly={!props.validating}
             error={get(props.errors, 'roles')}
           />

@@ -223,6 +223,10 @@ class ItemSerializer extends AbstractSerializer
         $item = $item ?: new Item();
         $item->setUuid($data->id);
 
+        if ($this->hasOption(Transfer::REFRESH_UUID, $options)) {
+            $item->refreshUuid();
+        }
+
         // Sets the creator of the Item if not set
         $creator = $item->getCreator();
         if (empty($creator) || !($creator instanceof User)) {
@@ -309,6 +313,9 @@ class ItemSerializer extends AbstractSerializer
         // Deserialize item type data
         $type = $definition->deserializeQuestion($data, $question->getInteraction(), $options);
         $type->setQuestion($question);
+        if ($this->hasOption(Transfer::REFRESH_UUID, $options)) {
+            $definition->refreshIdentifiers($question->getInteraction());
+        }
     }
 
     /**
