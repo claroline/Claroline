@@ -455,6 +455,15 @@ const EditorComponent = props =>
               url: ['apiv2_clacoformcategory_list', {clacoForm: props.clacoForm.id}],
               autoload: true
             }}
+            primaryAction={(row) => ({
+              type: 'callback',
+              label: trans('edit'),
+              callback: () => props.showModal(MODAL_CATEGORY_FORM, {
+                title: trans('edit_category', {}, 'clacoform'),
+                isNew: false,
+                category: row
+              })
+            })}
             definition={[
               {
                 name: 'name',
@@ -546,6 +555,15 @@ const EditorComponent = props =>
                 url: ['apiv2_clacoformkeyword_list', {clacoForm: props.clacoForm.id}],
                 autoload: true
               }}
+              primaryAction={(row) => ({
+                type: 'callback',
+                label: trans('edit'),
+                callback: () => props.showModal(MODAL_KEYWORD_FORM, {
+                  title: trans('edit_keyword', {}, 'clacoform'),
+                  isNew: false,
+                  keyword: row
+                })
+              })}
               definition={[
                 {
                   name: 'name',

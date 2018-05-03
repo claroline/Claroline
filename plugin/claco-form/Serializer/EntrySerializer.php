@@ -11,6 +11,7 @@ use Claroline\ClacoFormBundle\Entity\Entry;
 use Claroline\ClacoFormBundle\Entity\FieldValue;
 use Claroline\ClacoFormBundle\Entity\Keyword;
 use Claroline\CoreBundle\API\Serializer\User\UserSerializer;
+use Claroline\CoreBundle\Entity\Facet\FieldFacet;
 use Claroline\CoreBundle\Entity\Facet\FieldFacetValue;
 use JMS\DiExtraBundle\Annotation as DI;
 
@@ -43,6 +44,7 @@ class EntrySerializer
     private $clacoFormRepo;
     private $fieldRepo;
     private $fieldValueRepo;
+    private $fieldChoiceCategoryRepo;
     private $categoryRepo;
     private $keywordRepo;
     private $userRepo;
@@ -84,6 +86,7 @@ class EntrySerializer
         $this->clacoFormRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\ClacoForm');
         $this->fieldRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Field');
         $this->fieldValueRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\FieldValue');
+        $this->fieldChoiceCategoryRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\FieldChoiceCategory');
         $this->categoryRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Category');
         $this->keywordRepo = $om->getRepository('Claroline\ClacoFormBundle\Entity\Keyword');
         $this->userRepo = $om->getRepository('Claroline\CoreBundle\Entity\User');
@@ -149,6 +152,10 @@ class EntrySerializer
                 $entry->setUser($user);
             }
         }
+        /* TODO: checks rights */
+        $this->deserializeCategories($entry, $data['categories']);
+        $this->deserializeKeywords($entry, $data['keywords']);
+
         if (isset($data['clacoForm']['id'])) {
             $clacoForm = $this->clacoFormRepo->findOneBy(['uuid' => $data['clacoForm']['id']]);
 
@@ -186,6 +193,21 @@ class EntrySerializer
                             $fieldValue->setValue($data['values'][$uuid]);
                         }
                         $this->om->persist($fieldValue);
+
+                        $fieldsCategories = $this->fieldChoiceCategoryRepo->findBy(['field' => $field]);
+
+                        foreach ($fieldsCategories as $fieldCategory) {
+                            switch ($field->getType()) {
+                                case FieldFacet::NUMBER_TYPE:
+                                    $isCategoryValue = floatval($data['values'][$uuid]) === floatval($fieldCategory->getValue());
+                                    break;
+                                default:
+                                    $isCategoryValue = $data['values'][$uuid] === $fieldCategory->getValue();
+                            }
+                            if ($isCategoryValue) {
+                                $entry->addCategory($fieldCategory->getCategory());
+                            }
+                        }
                     }
                 }
             }
@@ -197,9 +219,6 @@ class EntrySerializer
         } else {
             $entry->setEditionDate($currentDate);
         }
-        /* TODO: checks rights */
-        $this->deserializeCategories($entry, $data['categories']);
-        $this->deserializeKeywords($entry, $data['keywords']);
 
         return $entry;
     }

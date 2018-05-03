@@ -279,19 +279,18 @@ class EntryFinder implements FinderInterface
                     $qb->setParameter("value{$parsedFilterName}", $filterValue);
                     break;
                 case FieldFacet::DATE_TYPE:
+                case FieldFacet::FILE_TYPE:
                     break;
-                case FieldFacet::COUNTRY_TYPE:
-                    $countries = $this->locationManager->getCountries();
-                    $pattern = "/$filterValue/i";
-                    $keys = [];
+                case FieldFacet::CHOICE_TYPE:
+                    $options = $field->getDetails();
+                    $multiple = isset($options['multiple']) && $options['multiple'];
 
-                    foreach ($countries as $key => $country) {
-                        if (preg_match($pattern, $country)) {
-                            $keys[] = $key;
-                        }
+                    if ($multiple) {
+                        $qb->andWhere("UPPER(fvffv{$parsedFilterName}.arrayValue) LIKE :value{$parsedFilterName}");
+                    } else {
+                        $qb->andWhere("UPPER(fvffv{$parsedFilterName}.stringValue) LIKE :value{$parsedFilterName}");
                     }
-                    $qb->andWhere("fvffv{$parsedFilterName}.stringValue IN (:value{$parsedFilterName})");
-                    $qb->setParameter("value{$parsedFilterName}", $keys);
+                    $qb->setParameter("value{$parsedFilterName}", '%'.strtoupper($filterValue).'%');
                     break;
                 case FieldFacet::CHECKBOXES_TYPE:
                 case FieldFacet::CASCADE_SELECT_TYPE:

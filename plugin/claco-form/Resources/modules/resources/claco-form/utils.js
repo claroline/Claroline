@@ -1,12 +1,12 @@
 import {constants as intlConstants} from '#/main/core/intl/constants'
 
-export const generateFieldKey = (id) => {
+const generateFieldKey = (id) => {
   return  `%field_${id}%`
 }
 
-export const getCountry = (value) => intlConstants.REGIONS[value] || null
+const getCountry = (value) => intlConstants.REGIONS[value] || null
 
-export const getFileType = (mimeType) => {
+const getFileType = (mimeType) => {
   const typeParts = mimeType.split('/')
   let type = 'file'
 
@@ -17,4 +17,10 @@ export const getFileType = (mimeType) => {
   }
 
   return type
+}
+
+export {
+  generateFieldKey,
+  getCountry,
+  getFileType
 }
