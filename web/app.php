@@ -1,7 +1,6 @@
 <?php
 
-//not sure why I have to add this
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__.'/../app/autoload.php';
 
 $loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 
