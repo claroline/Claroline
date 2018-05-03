@@ -1,5 +1,8 @@
 <?php
 
+//not sure why I have to add this
+require_once __DIR__.'/../vendor/autoload.php';
+
 $loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 
 // Use APC for autoloading to improve performance.
@@ -36,7 +39,7 @@ if (!$maintenanceMode || $authorized) {
     $kernel = new AppKernel('prod', false);
     $kernel->loadClassCache();
     $kernel->handle($request)->send();
-    //$kernel->terminate($request, $response);
+//$kernel->terminate($request, $response);
 } else {
     $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
     $url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../maintenance.php';
