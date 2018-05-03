@@ -19,6 +19,7 @@ const ENTRY_CATEGORY_ADD = 'ENTRY_CATEGORY_ADD'
 const ENTRY_CATEGORY_REMOVE = 'ENTRY_CATEGORY_REMOVE'
 const ENTRY_KEYWORD_ADD = 'ENTRY_KEYWORD_ADD'
 const ENTRY_KEYWORD_REMOVE = 'ENTRY_KEYWORD_REMOVE'
+const USED_COUNTRIES_LOAD = 'USED_COUNTRIES_LOAD'
 
 const actions = {}
 
@@ -34,6 +35,7 @@ actions.addCategory = makeActionCreator(ENTRY_CATEGORY_ADD, 'category')
 actions.removeCategory = makeActionCreator(ENTRY_CATEGORY_REMOVE, 'categoryId')
 actions.addKeyword = makeActionCreator(ENTRY_KEYWORD_ADD, 'keyword')
 actions.removeKeyword = makeActionCreator(ENTRY_KEYWORD_REMOVE, 'keywordId')
+actions.loadUsedCountries = makeActionCreator(USED_COUNTRIES_LOAD, 'countries')
 
 actions.deleteEntries = (entries) => (dispatch) => {
   dispatch({
@@ -242,6 +244,18 @@ actions.editAndSaveEntryUser = (property, value) => (dispatch, getState) => {
   dispatch(actions.saveEntryUser(entryUser))
 }
 
+actions.loadAllUsedCountries = (clacoFormId) => ({
+  [API_REQUEST]: {
+    url: ['claro_claco_form_used_countries_load', {clacoForm: clacoFormId}],
+    request: {
+      method: 'GET'
+    },
+    success: (data, dispatch) => {
+      dispatch(actions.loadUsedCountries(data))
+    }
+  }
+})
+
 export {
   actions,
   ENTRIES_UPDATE,
@@ -256,5 +270,6 @@ export {
   ENTRY_CATEGORY_ADD,
   ENTRY_CATEGORY_REMOVE,
   ENTRY_KEYWORD_ADD,
-  ENTRY_KEYWORD_REMOVE
+  ENTRY_KEYWORD_REMOVE,
+  USED_COUNTRIES_LOAD
 }

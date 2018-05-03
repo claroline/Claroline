@@ -20,6 +20,7 @@ const categories = state => state.clacoForm.categories
 const keywords = state => state.clacoForm.keywords
 const myRoles = state => state.myRoles
 const entryUser = state => state.entries.entryUser
+const usedCountries = state => state.entries.countries
 
 const canSearchEntry = createSelector(
   resourceSelect.editable,
@@ -180,5 +181,6 @@ export const select = {
   canViewComments,
   categories,
   keywords,
-  entryUser
+  entryUser,
+  usedCountries
 }

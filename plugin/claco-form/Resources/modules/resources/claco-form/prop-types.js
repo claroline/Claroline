@@ -2,33 +2,6 @@ import {PropTypes as T} from 'prop-types'
 
 import {User as UserType} from '#/main/core/user/prop-types'
 
-const Category = {
-  propTypes: {
-    id: T.string,
-    name: T.string,
-    details: T.shape({
-      notify_addition: T.bool,
-      notify_edition: T.bool,
-      notify_removal: T.bool,
-      notify_pending_comment: T.bool,
-      color: T.string
-    }),
-    managers: T.arrayOf(T.shape({
-      id: T.string.isRequired,
-      firstName: T.string.isRequired,
-      lastName: T.string.isRequired,
-      username: T.string.isRequired
-    }))
-  }
-}
-
-const Keyword = {
-  propTypes: {
-    id: T.string,
-    name: T.string
-  }
-}
-
 const Field = {
   propTypes: {
     id: T.string,
@@ -52,18 +25,57 @@ const Field = {
       T.array
     ]),
     fieldFacet: T.shape({
-      id: T.string.isRequired,
-      name: T.string.isRequired,
-      type: T.string.isRequired,
-      required: T.bool.isRequired,
+      id: T.string,
+      name: T.string,
+      type: T.string,
+      required: T.bool,
       restrictions: T.shape({
         hidden: T.bool.isRequired,
         isMetadata: T.bool.isRequired,
         locked: T.bool.isRequired,
         lockedEditionOnly: T.bool.isRequired,
         order: T.number
-      }).isRequired
+      })
     })
+  }
+}
+
+const FieldChoiceCategory = {
+  propTypes: {
+    id: T.string,
+    field: T.shape(Field.propTypes),
+    category: T.shape({
+      id: T.string.isRequired
+    }),
+    value: T.any
+  }
+}
+
+const Category = {
+  propTypes: {
+    id: T.string,
+    name: T.string,
+    details: T.shape({
+      notify_addition: T.bool,
+      notify_edition: T.bool,
+      notify_removal: T.bool,
+      notify_pending_comment: T.bool,
+      color: T.string
+    }),
+    managers: T.arrayOf(T.shape({
+      id: T.string.isRequired,
+      firstName: T.string.isRequired,
+      lastName: T.string.isRequired,
+      username: T.string.isRequired
+    })),
+    fieldsValues: T.arrayOf(T.shape(FieldChoiceCategory.propTypes))
+  }
+}
+
+const Keyword = {
+  propTypes: {
+    id: T.string,
+    name: T.string
   }
 }
 
@@ -162,9 +174,10 @@ const Comment = {
 }
 
 export {
+  Field,
+  FieldChoiceCategory,
   Category,
   Keyword,
-  Field,
   ClacoForm,
   Entry,
   EntryUser,

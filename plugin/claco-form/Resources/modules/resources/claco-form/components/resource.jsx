@@ -109,7 +109,8 @@ const Resource = props =>
           path: '/entries',
           component: Entries,
           exact: true,
-          disabled: !props.canSearchEntry
+          disabled: !props.canSearchEntry,
+          onEnter: () => props.loadAllUsedCountries(props.clacoForm.id)
         }, {
           path: '/entries/:id',
           component: Entry,
@@ -152,7 +153,8 @@ Resource.propTypes = {
   openEntryForm: T.func.isRequired,
   resetEntryForm: T.func.isRequired,
   loadEntryUser: T.func.isRequired,
-  resetEntryUser: T.func.isRequired
+  resetEntryUser: T.func.isRequired,
+  loadAllUsedCountries: T.func.isRequired
 }
 
 const ClacoFormResource = connect(
@@ -193,6 +195,9 @@ const ClacoFormResource = connect(
     },
     resetEntryUser() {
       dispatch(entryActions.resetEntryUser())
+    },
+    loadAllUsedCountries(clacoFormId) {
+      dispatch(entryActions.loadAllUsedCountries(clacoFormId))
     }
   })
 )(Resource)

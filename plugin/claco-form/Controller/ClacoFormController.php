@@ -242,92 +242,6 @@ class ClacoFormController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/claco/form/{clacoForm}/entry/create",
-     *     name="claro_claco_form_entry_create",
-     *     options = {"expose"=true}
-     * )
-     * @EXT\ParamConverter(
-     *     "clacoForm",
-     *     class="ClarolineClacoFormBundle:ClacoForm",
-     *     options={"mapping": {"clacoForm": "uuid"}}
-     * )
-     *
-     * Creates an entry
-     *
-     * @param ClacoForm $clacoForm
-     *
-     * @return JsonResponse
-     */
-    public function entryCreateAction(ClacoForm $clacoForm)
-    {
-        $this->clacoFormManager->checkRight($clacoForm, 'OPEN');
-        $user = $this->tokenStorage->getToken()->getUser();
-        $entryUser = 'anon.' === $user ? null : $user;
-        $entryData = $this->request->request->get('entryData', false);
-        $title = $this->request->request->get('titleData', false);
-        $keywordsData = $this->request->request->get('keywordsData', false);
-        $files = $this->request->files->all();
-
-        if (!is_array($entryData)) {
-            $entryData = json_decode($entryData, true);
-        }
-        if (!is_array($keywordsData)) {
-            $keywordsData = json_decode($keywordsData, true);
-        }
-        if (!$title) {
-            $title = $entryData['entry_title'];
-        }
-
-        if ($this->clacoFormManager->canCreateEntry($clacoForm, $entryUser)) {
-            $entry = $this->clacoFormManager->createEntry($clacoForm, $entryData, $title, $keywordsData, $entryUser, $files);
-        } else {
-            $entry = null;
-        }
-        $serializedEntry = $this->entrySerializer->serialize($entry);
-
-        return new JsonResponse($serializedEntry, 200);
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/claco/form/entry/{entry}/edit",
-     *     name="claro_claco_form_entry_edit",
-     *     options = {"expose"=true}
-     * )
-     *
-     * Edits entry
-     *
-     * @return \Symfony\Component\HttpFoundation\JsonResponse
-     */
-    public function entryEditAction(Entry $entry)
-    {
-        $this->clacoFormManager->checkEntryEdition($entry);
-        $entryData = $this->request->request->get('entryData', false);
-        $title = $this->request->request->get('titleData', false);
-        $categoriesIds = $this->request->request->get('categoriesData', false);
-        $keywordsData = $this->request->request->get('keywordsData', false);
-        $files = $this->request->files->all();
-
-        if (!is_array($entryData)) {
-            $entryData = json_decode($entryData, true);
-        }
-        if (!is_array($keywordsData)) {
-            $keywordsData = json_decode($keywordsData, true);
-        }
-        if (!is_array($categoriesIds)) {
-            $categoriesIds = json_decode($categoriesIds, true);
-        }
-        if (!$title) {
-            $title = $entryData['entry_title'];
-        }
-        $updatedEntry = $this->clacoFormManager->editEntry($entry, $entryData, $title, $categoriesIds, $keywordsData, $files);
-        $serializedEntry = $this->entrySerializer->serialize($updatedEntry);
-
-        return new JsonResponse($serializedEntry, 200);
-    }
-
-    /**
-     * @EXT\Route(
      *     "/claco/form/entries/delete",
      *     name="claro_claco_form_entries_delete",
      *     options = {"expose"=true}
@@ -1075,5 +989,31 @@ class ClacoFormController extends Controller
         $response->headers->set('Connection', 'close');
 
         return $response->send();
+    }
+
+    /**
+     * @EXT\Route(
+     *     "/claco/form/{clacoForm}/entries/used/countries",
+     *     name="claro_claco_form_used_countries_load",
+     *     options = {"expose"=true}
+     * )
+     * @EXT\ParamConverter(
+     *     "clacoForm",
+     *     class="ClarolineClacoFormBundle:ClacoForm",
+     *     options={"mapping": {"clacoForm": "uuid"}}
+     * )
+     *
+     * Returns list of codes of all countries present in all entries
+     *
+     * @param ClacoForm $clacoForm
+     *
+     * @return JsonResponse
+     */
+    public function entriesUsedCountriesLoadAction(ClacoForm $clacoForm)
+    {
+        $this->clacoFormManager->checkRight($clacoForm, 'OPEN');
+        $countries = $this->clacoFormManager->getAllUsedCountriesCodes($clacoForm);
+
+        return new JsonResponse($countries, 200);
     }
 }
