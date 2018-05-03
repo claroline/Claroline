@@ -18,7 +18,8 @@ import {
   ENTRY_CATEGORY_ADD,
   ENTRY_CATEGORY_REMOVE,
   ENTRY_KEYWORD_ADD,
-  ENTRY_KEYWORD_REMOVE
+  ENTRY_KEYWORD_REMOVE,
+  USED_COUNTRIES_LOAD
 } from '#/plugin/claco-form/resources/claco-form/player/entry/actions'
 
 const reducer = combineReducers({
@@ -133,6 +134,9 @@ const reducer = combineReducers({
     [ENTRY_CREATED]: (state) => {
       return state + 1
     }
+  }),
+  countries: makeReducer([], {
+    [USED_COUNTRIES_LOAD]: (state, action) => action.countries
   })
 })
 

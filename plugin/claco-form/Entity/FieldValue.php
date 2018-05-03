@@ -17,7 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Claroline\ClacoFormBundle\Repository\FieldValueRepository")
  * @ORM\Table(
  *     name="claro_clacoformbundle_field_value",
  *     uniqueConstraints={

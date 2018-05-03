@@ -3,6 +3,7 @@ import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
 import {currentUser} from '#/main/core/user/current'
+import {constants as intlConstants} from '#/main/core/intl/constants'
 import {url} from '#/main/core/api/router'
 import {trans, transChoice} from '#/main/core/translation'
 import {displayDate} from '#/main/core/scaffolding/date'
@@ -18,7 +19,6 @@ import {UserAvatar} from '#/main/core/user/components/avatar.jsx'
 import {Field as FieldType} from '#/plugin/claco-form/resources/claco-form/prop-types'
 import {select} from '#/plugin/claco-form/resources/claco-form/selectors'
 import {constants} from '#/plugin/claco-form/resources/claco-form/constants'
-import {getCountry} from '#/plugin/claco-form/resources/claco-form/utils'
 import {actions} from '#/plugin/claco-form/resources/claco-form/player/entry/actions'
 
 const authenticatedUser = currentUser()
@@ -202,6 +202,26 @@ class EntriesComponent extends Component {
               }
             }
           })
+        } else if (this.getDataType(f) === 'country') {
+          columns.push({
+            name: f.id,
+            label: f.name,
+            type: 'choice',
+            displayed: this.isDisplayedField(f.id),
+            filterable: f.type !== 'date' && this.isFilterableField(f.id),
+            options: {
+              choices: this.props.countries.reduce((acc, country) => {
+                acc[country] = intlConstants.REGIONS[country]
+
+                return acc
+              }, {})
+            },
+            calculated: (rowData) => {
+              return rowData.values && rowData.values[f.id] ?
+                this.formatFieldValue(rowData, f, rowData.values[f.id]) :
+                ''
+            }
+          })
         } else {
           columns.push({
             name: f.id,
@@ -315,6 +335,9 @@ class EntriesComponent extends Component {
       case 'html':
         type = 'html'
         break
+      case 'country':
+        type = 'country'
+        break
     }
 
     return type
@@ -342,7 +365,7 @@ class EntriesComponent extends Component {
             formattedValue = value.date ? displayDate(value.date) : displayDate(value)
             break
           case 'country':
-            formattedValue = getCountry(value)
+            formattedValue = intlConstants.REGIONS[value]
             break
           case 'checkboxes':
             formattedValue = value.join(', ')
@@ -482,7 +505,8 @@ EntriesComponent.propTypes = {
       value: T.any
     })),
     sortBy: T.object
-  }).isRequired
+  }).isRequired,
+  countries: T.array
 }
 
 const Entries = connect(
@@ -507,7 +531,8 @@ const Entries = connect(
     displayKeywords: select.getParam(state, 'display_keywords'),
     titleLabel: select.getParam(state, 'title_field_label'),
     isCategoryManager: select.isCategoryManager(state),
-    entries: state.entries.list
+    entries: state.entries.list,
+    countries: select.usedCountries(state)
   }),
   (dispatch) => ({
     downloadEntryPdf(entryId) {

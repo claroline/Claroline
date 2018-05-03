@@ -28,9 +28,7 @@ use Claroline\ClacoFormBundle\Event\Log\LogCommentCreateEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogCommentDeleteEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogCommentEditEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogCommentStatusChangeEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogEntryCreateEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryDeleteEvent;
-use Claroline\ClacoFormBundle\Event\Log\LogEntryEditEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryLockSwitchEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryStatusChangeEvent;
 use Claroline\ClacoFormBundle\Event\Log\LogEntryUserChangeEvent;
@@ -347,240 +345,22 @@ class ClacoFormManager
             $this->getPublishedEntriesByDates($clacoForm);
     }
 
-    public function createEntry(
-        ClacoForm $clacoForm,
-        array $entryData,
-        $title,
-        array $keywordsData = [],
-        User $user = null,
-        array $files = []
-    ) {
-        $this->om->startFlushSuite();
-        $now = new \DateTime();
-        $status = $clacoForm->isModerated() ? Entry::PENDING : Entry::PUBLISHED;
-        $entry = new Entry();
-        $entry->setClacoForm($clacoForm);
-        $entry->setUser($user);
-        $entry->setTitle($title);
-        $entry->setStatus($status);
-        $entry->setCreationDate($now);
-        $categories = [];
-
-        if (Entry::PUBLISHED === $status) {
-            $entry->setPublicationDate($now);
-        }
-        foreach ($entryData as $key => $value) {
-            $field = $this->getFieldByClacoFormAndId($clacoForm, $key);
-
-            if (!is_null($field) && '' !== $value) {
-                $type = $field->getType();
-
-                if ($this->facetManager->isFileType($type)) {
-                    $values = [];
-
-                    foreach ($this->filterFieldFiles($field->getId(), $files) as $file) {
-                        $values[] = $this->registerFile($clacoForm, $file);
-                    }
-                    $value = $values;
-                }
-                $fieldValue = $this->createFieldValue($entry, $field, $value, $user);
-                $entry->addFieldValue($fieldValue);
-
-                if ($this->facetManager->isTypeWithChoices($type)) {
-                    $choiceCategories = $this->getCategoriesFromFieldAndValue($field, $value);
-
-                    foreach ($choiceCategories as $category) {
-                        $entry->addCategory($category);
-                        $categories[$category->getId()] = $category;
-                    }
-                }
-            }
-        }
-        foreach ($keywordsData as $name) {
-            if ($clacoForm->isNewKeywordsEnabled()) {
-                $keyword = $this->createKeyword($clacoForm, $name);
-            } else {
-                $keyword = $this->getKeywordByName($clacoForm, $name);
-            }
-            if (!is_null($keyword)) {
-                $entry->addKeyword($keyword);
-            }
-        }
-        $this->persistEntry($entry);
-
-        if (!is_null($user)) {
-            $this->createEntryUser($entry, $user, false, true, true, true);
-        }
-        $event = new LogEntryCreateEvent($entry);
-        $this->eventDispatcher->dispatch('log', $event);
-        $this->om->endFlushSuite();
-        $this->notifyCategoriesManagers($entry, [], $categories);
-
-        return $entry;
-    }
-
-    public function editEntry(
-        Entry $entry,
-        array $entryData,
-        $title,
-        array $categoriesIds = [],
-        array $keywordsData = [],
-        array $files = []
-    ) {
-        $this->om->startFlushSuite();
-        $clacoForm = $entry->getClacoForm();
-        $entry->setTitle($title);
-        $oldCategories = $entry->getCategories();
-        $entry->emptyCategories();
-        $entry->emptyKeywords();
-        $toRemove = [];
-        $toAdd = [];
-        $currentCategories = [];
-
-        foreach ($categoriesIds as $categoryId) {
-            $category = $this->categoryRepo->findOneById($categoryId);
-
-            if (!is_null($category)) {
-                $currentCategories[$category->getId()] = $category;
-            }
-        }
-        foreach ($entryData as $key => $value) {
-            $fieldValue = $this->getFieldValueByEntryAndFieldId($entry, $key);
-
-            if (is_null($fieldValue)) {
-                if ('' !== $value) {
-                    $field = $this->getFieldByClacoFormAndId($clacoForm, $key);
-
-                    if (!is_null($field)) {
-                        $type = $field->getType();
-
-                        if ($this->facetManager->isFileType($type)) {
-                            $values = [];
-
-                            foreach ($this->filterFieldFiles($field->getId(), $files) as $file) {
-                                $values[] = $this->registerFile($clacoForm, $file);
-                            }
-                            $value = $values;
-                        }
-                        $fieldValue = $this->createFieldValue($entry, $field, $value, $entry->getUser());
-                        $entry->addFieldValue($fieldValue);
-
-                        if ($this->facetManager->isTypeWithChoices($type)) {
-                            $categoriesToAdd = $this->getCategoriesFromFieldAndValue($field, $value);
-
-                            foreach ($categoriesToAdd as $catId => $cat) {
-                                $toAdd[$catId] = $cat;
-                            }
-                        }
-                    }
-                }
-            } else {
-                $fieldFacetValue = $fieldValue->getFieldFacetValue();
-                $field = $fieldValue->getField();
-                $type = $field->getType();
-
-                if ($this->facetManager->isTypeWithChoices($type)) {
-                    $oldValue = $fieldFacetValue->getValue();
-                    $categoriesToRemove = $this->getCategoriesFromFieldAndValue($field, $oldValue);
-                    $categoriesToAdd = $this->getCategoriesFromFieldAndValue($field, $value);
-
-                    foreach ($categoriesToRemove as $catId => $cat) {
-                        $toRemove[$catId] = $cat;
-                    }
-                    foreach ($categoriesToAdd as $catId => $cat) {
-                        $toAdd[$catId] = $cat;
-                    }
-                }
-                if ($this->facetManager->isFileType($type)) {
-                    $values = [];
-
-                    foreach ($value as $v) {
-                        if (isset($v['url'])) {
-                            $values[] = $v;
-                        }
-                    }
-                    $this->removeOldFiles($fieldFacetValue->getValue(), $values);
-                    foreach ($this->filterFieldFiles($field->getId(), $files) as $file) {
-                        $values[] = $this->registerFile($clacoForm, $file);
-                    }
-                    $value = $values;
-                }
-                $this->editFieldFacetValue($fieldFacetValue, $value);
-            }
-        }
-        foreach ($toRemove as $categoryId => $category) {
-            if (isset($currentCategories[$categoryId])) {
-                unset($currentCategories[$categoryId]);
-            }
-        }
-        foreach ($currentCategories as $category) {
-            $entry->addCategory($category);
-        }
-        foreach ($toAdd as $category) {
-            $entry->addCategory($category);
-        }
-        foreach ($keywordsData as $name) {
-            if ($clacoForm->isNewKeywordsEnabled()) {
-                $keyword = $this->createKeyword($clacoForm, $name);
-            } else {
-                $keyword = $this->getKeywordByName($clacoForm, $name);
-            }
-            if (!is_null($keyword)) {
-                $entry->addKeyword($keyword);
-            }
-        }
-        $entry->setEditionDate(new \DateTime());
-        $this->persistEntry($entry);
-        $event = new LogEntryEditEvent($entry);
-        $this->eventDispatcher->dispatch('log', $event);
-        $this->notifyCategoriesManagers($entry, $oldCategories, $entry->getCategories());
-        $this->notifyUsers($entry, 'edition');
-        $this->om->endFlushSuite();
-
-        return $entry;
-    }
-
-    private function getCategoriesFromFieldAndValue(Field $field, $value)
+    public function getAllUsedCountriesCodes(ClacoForm $clacoForm)
     {
-        $fieldFacet = $field->getFieldFacet();
-        $categories = [];
-        $choiceCategories = [];
-        $values = is_array($value) ? $value : [$value];
+        $values = [];
+        $fieldValues = $this->getFieldValuesByType($clacoForm, FieldFacet::COUNTRY_TYPE);
 
-        if (FieldFacet::CASCADE_SELECT_TYPE === $fieldFacet->getType()) {
-            $choice = null;
+        foreach ($fieldValues as $fieldValue) {
+            if (!empty($fieldValue->getFieldFacetValue() && !empty($fieldValue->getFieldFacetValue()))) {
+                $value = $fieldValue->getFieldFacetValue()->getValue();
 
-            foreach ($values as $val) {
-                $parent = $choice;
-                $choice = $this->facetManager->getChoiceByFieldFacetAndValueAndParent($fieldFacet, $val, $parent);
-
-                if ($choice) {
-                    $fcc = $this->getFieldChoiceCategoryByFieldAndChoice($field, $choice);
-
-                    if (!empty($fcc)) {
-                        $choiceCategories[] = $fcc;
-                    }
-                }
-            }
-        } else {
-            foreach ($values as $v) {
-                $fccs = $this->getFieldChoicesCategoriesByFieldAndValue($field, $v);
-
-                foreach ($fccs as $fcc) {
-                    $choiceCategories[] = $fcc;
+                if (!empty($value) && !in_array($value, $values)) {
+                    $values[] = $value;
                 }
             }
         }
-        foreach ($choiceCategories as $choiceCategory) {
-            $choiceValue = $choiceCategory->getValue();
 
-            if (in_array($choiceValue, $values, true)) {
-                $category = $choiceCategory->getCategory();
-                $categories[$category->getId()] = $category;
-            }
-        }
-
-        return $categories;
+        return sort($values) ? $values : [];
     }
 
     public function deleteEntry(Entry $entry)
@@ -864,88 +644,6 @@ class ClacoFormManager
                 $this->messageManager->send($message);
             }
         }
-    }
-
-    public function persistFieldValue(FieldValue $fieldValue)
-    {
-        $this->om->persist($fieldValue);
-        $this->om->flush();
-    }
-
-    public function createFieldValue(Entry $entry, Field $field, $value, User $user = null)
-    {
-        $fieldFacet = $field->getFieldFacet();
-        $fieldFacetValue = $this->createFieldFacetValue($fieldFacet, $value, $user);
-        $fieldValue = new FieldValue();
-        $fieldValue->setEntry($entry);
-        $fieldValue->setField($field);
-        $fieldValue->setFieldFacetValue($fieldFacetValue);
-        $this->persistFieldValue($fieldValue);
-
-        return  $fieldValue;
-    }
-
-    public function createFieldFacetValue(FieldFacet $fieldFacet, $value, User $user = null)
-    {
-        $fieldFacetValue = new FieldFacetValue();
-        $fieldFacetValue->setUser($user);
-        $fieldFacetValue->setFieldFacet($fieldFacet);
-
-        switch ($fieldFacet->getType()) {
-            case FieldFacet::DATE_TYPE:
-                $date = $value ? new \DateTime($value) : null;
-                $fieldFacetValue->setDateValue($date);
-                break;
-            case FieldFacet::NUMBER_TYPE:
-                $fieldFacetValue->setFloatValue($value);
-                break;
-            case FieldFacet::CHECKBOXES_TYPE:
-            case FieldFacet::CASCADE_SELECT_TYPE:
-                $fieldFacetValue->setArrayValue(is_array($value) ? $value : [$value]);
-                break;
-            case FieldFacet::FILE_TYPE:
-                $fieldFacetValue->setArrayValue($value);
-                break;
-            default:
-                $fieldFacetValue->setStringValue($value);
-        }
-        $this->om->persist($fieldFacetValue);
-        $this->om->flush();
-
-        return $fieldFacetValue;
-    }
-
-    public function editFieldFacetValue(FieldFacetValue $fieldFacetValue, $value)
-    {
-        $fieldFacet = $fieldFacetValue->getFieldFacet();
-
-        switch ($fieldFacet->getType()) {
-            case FieldFacet::DATE_TYPE:
-                if (is_array($value)) {
-                    $date = new \DateTime($value['date']);
-                } else {
-                    $date = is_string($value) ? new \DateTime($value) : $value;
-                }
-                $fieldFacetValue->setDateValue($date);
-                break;
-            case FieldFacet::NUMBER_TYPE:
-                $floatValue = '' === $value ? null : $value;
-                $fieldFacetValue->setFloatValue($floatValue);
-                break;
-            case FieldFacet::CHECKBOXES_TYPE:
-            case FieldFacet::CASCADE_SELECT_TYPE:
-                $fieldFacetValue->setArrayValue(is_array($value) ? $value : [$value]);
-                break;
-            case FieldFacet::FILE_TYPE:
-                $fieldFacetValue->setArrayValue($value);
-                break;
-            default:
-                $fieldFacetValue->setStringValue($value);
-        }
-        $this->om->persist($fieldFacetValue);
-        $this->om->flush();
-
-        return $fieldFacetValue;
     }
 
     public function persistComment(Comment $comment)
@@ -1847,6 +1545,11 @@ class ClacoFormManager
         return $this->fieldValueRepo->findOneBy(['entry' => $entry, 'field' => $fieldId]);
     }
 
+    public function getFieldValuesByType(ClacoForm $clacoForm, $type)
+    {
+        return $this->fieldValueRepo->findFieldValuesByType($clacoForm, $type);
+    }
+
     /***************************************
      * Access to KeywordRepository methods *
      ***************************************/
@@ -2142,37 +1845,5 @@ class ClacoFormManager
             'mimeType' => $file->getClientMimeType(),
             'url' => '../files/clacoform'.$ds.$clacoForm->getUuid().$ds.$fileName,
         ];
-    }
-
-    private function filterFieldFiles($filedId, array $files = [])
-    {
-        $filteredFiles = [];
-
-        foreach ($files as $key => $value) {
-            $keyParts = explode('-', $key);
-
-            if (count($keyParts) > 0 && intval($keyParts[0]) === intval($filedId)) {
-                $filteredFiles[] = $value;
-            }
-        }
-
-        return $filteredFiles;
-    }
-
-    private function removeOldFiles(array $oldFiles, array $newFiles)
-    {
-        foreach ($oldFiles as $oldFile) {
-            $isPresent = false;
-
-            foreach ($newFiles as $newFile) {
-                if ($newFile['url'] === $oldFile['url']) {
-                    $isPresent = true;
-                    break;
-                }
-            }
-            if (!$isPresent) {
-                $this->fileSystem->remove($this->filesDir.DIRECTORY_SEPARATOR.$oldFile['url']);
-            }
-        }
     }
 }

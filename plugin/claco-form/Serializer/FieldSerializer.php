@@ -141,6 +141,7 @@ class FieldSerializer
             $clacoForm = $field->getClacoForm();
             $fieldFacet = new FieldFacet();
             $fieldFacet->setResourceNode($clacoForm->getResourceNode());
+            $this->om->persist($fieldFacet);
         }
         $newFieldFacet = $this->fieldFacetSerializer->deserialize($data, $fieldFacet, $options);
         $this->om->persist($newFieldFacet);
