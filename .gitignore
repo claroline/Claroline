@@ -46,7 +46,6 @@ web/thumbnails/*
 web/uploads/*
 web/vendor/*
 web/vendors/*
-web/maintenance.html
 .env
 docker-compose.override.yml
 installed
