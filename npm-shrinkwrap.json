@@ -13,9 +13,9 @@
       "resolved": "https://registry.npmjs.org/@symfony/webpack-encore/-/webpack-encore-0.20.1.tgz"
     },
     "@types/node": {
-      "version": "10.0.3",
+      "version": "10.0.4",
       "from": "@types/node@*",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.0.3.tgz"
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.0.4.tgz"
     },
     "@types/tapable": {
       "version": "0.2.5",
@@ -4690,9 +4690,9 @@
       "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-1.7.3.tgz"
     },
     "node-forge": {
-      "version": "0.7.1",
-      "from": "node-forge@0.7.1",
-      "resolved": "https://registry.npmjs.org/node-forge/-/node-forge-0.7.1.tgz"
+      "version": "0.7.5",
+      "from": "node-forge@0.7.5",
+      "resolved": "https://registry.npmjs.org/node-forge/-/node-forge-0.7.5.tgz"
     },
     "node-libs-browser": {
       "version": "2.1.0",
@@ -6386,9 +6386,9 @@
       "resolved": "git://github.com/select2/select2.git#95a977f674b6938af55ec5f28b7772df93786c5c"
     },
     "selfsigned": {
-      "version": "1.10.2",
+      "version": "1.10.3",
       "from": "selfsigned@>=1.9.1 <2.0.0",
-      "resolved": "https://registry.npmjs.org/selfsigned/-/selfsigned-1.10.2.tgz"
+      "resolved": "https://registry.npmjs.org/selfsigned/-/selfsigned-1.10.3.tgz"
     },
     "semver": {
       "version": "5.5.0",
@@ -7107,9 +7107,9 @@
       "resolved": "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
     },
     "ua-parser-js": {
-      "version": "0.7.17",
+      "version": "0.7.18",
       "from": "ua-parser-js@>=0.7.9 <0.8.0",
-      "resolved": "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.17.tgz"
+      "resolved": "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.18.tgz"
     },
     "uglify-js": {
       "version": "2.8.29",
