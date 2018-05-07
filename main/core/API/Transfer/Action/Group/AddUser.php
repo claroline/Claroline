@@ -30,7 +30,7 @@ class AddUser extends AbstractAction
         $this->serializer = $serializer;
     }
 
-    public function execute(array $data)
+    public function execute(array $data, &$successData = [])
     {
         $user = $this->serializer->deserialize(
             'Claroline\CoreBundle\Entity\User',

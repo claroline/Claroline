@@ -4,9 +4,9 @@ namespace Claroline\AppBundle\API;
 
 use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
 use Claroline\AppBundle\API\Transfer\Adapter\AdapterInterface;
+use Claroline\AppBundle\Logger\JsonLogger;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
-use Claroline\CoreBundle\Library\Logger\FileLogger;
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -58,7 +58,6 @@ class TransferProvider
         $this->serializer = $serializer;
         $this->logDir = $logDir;
         $this->translator = $translator;
-        $this->logger = FileLogger::get(uniqid().'.log', 'claroline.transfer.logger');
     }
 
     /**
@@ -89,8 +88,8 @@ class TransferProvider
             $logFile = uniqid();
         }
 
-        $logFile = $this->logDir.'/'.$logFile.'.log';
-        $this->logger = FileLogger::get($logFile, 'claroline.transfer.logger');
+        $logFile = $this->logDir.'/'.$logFile;
+        $jsonLogger = new JsonLogger($logFile.'.json');
 
         $executor = $this->getExecutor($action);
         $executor->setLogger($this->logger);
@@ -98,18 +97,24 @@ class TransferProvider
 
         $schema = $executor->getSchema();
         //use the translator here
-        $this->log('Building objects from data...');
+        $jsonLogger->log('Building objects from data...');
 
         if (array_key_exists('$root', $schema)) {
             $jsonSchema = $this->serializer->getSchema($schema['$root']);
-            $explanation = $adapter->explainSchema($jsonSchema, $executor->getMode());
+            //doesn't matter imo
+            $explanation = $adapter->explainSchema($jsonSchema, 'create');
             $data = $adapter->decodeSchema($data, $explanation);
         } else {
             foreach ($schema as $prop => $value) {
-                $jsonSchema = $this->serializer->getSchema($value);
-
-                if ($jsonSchema) {
-                    $identifiersSchema[$prop] = $jsonSchema;
+                //this is for the custom schema defined in the transfer stuff (atm add user to roles for workspace)
+                //there is probably a better way to handle this
+                if (!$value instanceof \stdClass) {
+                    $jsonSchema = $this->serializer->getSchema($value);
+                    if ($jsonSchema) {
+                        $identifiersSchema[$prop] = $jsonSchema;
+                    }
+                } else {
+                    $identifiersSchema[$prop] = $value;
                 }
             }
 
@@ -120,24 +125,71 @@ class TransferProvider
         $i = 0;
         $this->om->startFlushSuite();
         $total = count($data);
-        $this->log('Executing operations...');
+        $jsonLogger->log('Executing operations...');
+
+        $jsonLogger->set('total', $total);
+        $jsonLogger->set('processed', 0);
+        $jsonLogger->set('error', 0);
+        $jsonLogger->set('success', 0);
+        $jsonLogger->set('data.error', []);
+        $jsonLogger->set('data.success', []);
+        $loaded = [];
+        $loggedSuccess = [];
 
         foreach ($data as $data) {
             ++$i;
             $this->log("{$i}/{$total}: ".$this->getActionName($executor));
 
             try {
-                $executor->execute($data);
-            } catch (InvalidDataException $e) {
-                $this->log($e->getMessage());
+                $successData = [];
+                $loaded[] = $executor->execute($data, $successData);
+                $jsonLogger->log("Operation {$i}/{$total} is a success");
+                $jsonLogger->increment('success');
+                $loggedSuccess = array_merge_recursive($loggedSuccess, $successData);
+                $jsonLogger->set('data.success', $loggedSuccess);
+            } catch (\Exception $e) {
+                $jsonLogger->log("Operation {$i}/{$total} failed");
+                $jsonLogger->increment('error');
+
+                if ($e instanceof InvalidDataException) {
+                    $content = [
+                      'line' => $i,
+                      'value' => $e->getErrors(),
+                    ];
+
+                    $jsonLogger->push('data.error', $content);
+                } else {
+                    $content = [
+                      'line' => $i,
+                      'value' => $e->getFile().':'.$e->getLine()."\n".$e->getMessage(),
+                    ];
+
+                    $jsonLogger->push('data.error', $content);
+                }
             }
 
             if (0 === $i % $executor->getBatchSize()) {
-                $this->om->forceFlush();
+                try {
+                    $this->om->forceFlush();
+
+                    foreach ($loaded as $el) {
+                        if ($el) {
+                            $this->om->detach($el);
+                        }
+                    }
+
+                    $loaded = [];
+                } catch (\Exception $e) {
+                    $jsonLogger->log($e->getMessage());
+                }
             }
+
+            $jsonLogger->increment('processed');
         }
 
         $this->om->endFlushSuite();
+
+        return $jsonLogger->get();
     }
 
     /**
@@ -212,10 +264,10 @@ class TransferProvider
         $identifiersSchema = [];
 
         foreach ($schema as $prop => $value) {
-            $jsonSchema = $this->serializer->getSchema($value);
-
-            if ($jsonSchema) {
-                $identifiersSchema[$prop] = $jsonSchema;
+            if ($this->serializer->has($value)) {
+                $identifiersSchema[$prop] = $this->serializer->getSchema($value);
+            } else {
+                $identifiersSchema[$prop] = $value;
             }
         }
 

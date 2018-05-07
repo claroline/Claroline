@@ -114,6 +114,29 @@ class SerializerProvider
     }
 
     /**
+     * Check if serializer instance exists.
+     *
+     * @param mixed $object
+     *
+     * @return mixed
+     *
+     * @throws \Exception
+     */
+    public function has($object)
+    {
+        // search for the correct serializer
+        foreach ($this->serializers as $serializer) {
+            $className = $this->getSerializerHandledClass($serializer);
+
+            if ($object instanceof $className || $object === $className) {
+                return true;
+            }
+        }
+
+        false;
+    }
+
+    /**
      * Return the list of serializers.
      *
      * @return mixed[];

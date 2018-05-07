@@ -1644,5 +1644,10 @@
     "unit_giga": "G",
     "unit_tera": "T",
     "bytes_short": "B",
-    "units": "Units"
+    "units": "Units",
+    "processed": "Processed",
+    "success": "Success",
+    "log": "Log",
+    "execution_date": "Execution date",
+    "upload date": "Upload date"
 }

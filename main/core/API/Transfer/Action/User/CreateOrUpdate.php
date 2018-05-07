@@ -2,18 +2,18 @@
 
 namespace Claroline\CoreBundle\API\Transfer\Action\User;
 
-use Claroline\AppBundle\API\Transfer\Action\AbstractCreateAction;
+use Claroline\AppBundle\API\Transfer\Action\AbstractCreateOrUpdateAction;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service()
  * @DI\Tag("claroline.transfer.action")
  */
-class Create extends AbstractCreateAction
+class CreateOrUpdate extends AbstractCreateOrUpdateAction
 {
     public function getAction()
     {
-        return ['user', self::MODE_CREATE];
+        return ['user', 'create_or_update'];
     }
 
     public function getClass()

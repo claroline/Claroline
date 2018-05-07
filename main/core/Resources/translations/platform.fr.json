@@ -931,6 +931,7 @@
     "preview": "Aperçu",
     "previous": "Précédent",
     "private": "Privé",
+    "processed": "Exécuté",
     "profil_edition": "Modification du profil utilisateur",
     "profile_edition": "Modification du profil",
     "profile_management": "Gestion du profil",
@@ -1203,6 +1204,7 @@
     "subscribe_selected_users": "Inscrire les utilisateurs sélectionnés",
     "subscribe_users": "Inscrire des utilisateurs",
     "subscription": "Inscription",
+    "success": "Succès",
     "success_rate": "Taux de réussite",
     "successfull_workspace_creation": "L'espace d'activités %name% a été créé avec succès.",
     "support_email": "Courriel du support",
@@ -1671,5 +1673,8 @@
     "unit_giga": "G",
     "unit_tera": "T",
     "bytes_short": "o",
-    "units": "Unités"
+    "units": "Unités",
+    "log": "Log",
+    "execution_date": "Date d'exécution",
+    "upload date": "Date d'upload"
 }

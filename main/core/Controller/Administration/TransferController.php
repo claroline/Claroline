@@ -37,6 +37,9 @@ class TransferController
     }
 
     /**
+     * Not routed.
+     * Index page of import/export tool.
+     *
      * @EXT\Route("/", name="claro_admin_transfer_index")
      * @EXT\Method("GET")
      * @EXT\Template()

@@ -2,58 +2,22 @@
 
 namespace Claroline\CoreBundle\API\Transfer\Action\Workspace;
 
-use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
-use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\API\Transfer\Action\AbstractCreateAction;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service()
  * @DI\Tag("claroline.transfer.action")
  */
-class Create extends AbstractAction
+class Create extends AbstractCreateAction
 {
-    /**
-     * Action constructor.
-     *
-     * @DI\InjectParams({
-     *     "crud" = @DI\Inject("claroline.api.crud")
-     * })
-     *
-     * @param Crud $crud
-     */
-    public function __construct(Crud $crud)
+    public function getClass()
     {
-        $this->crud = $crud;
+        return 'Claroline\CoreBundle\Entity\Workspace\Workspace';
     }
 
-    public function execute(array $data)
-    {
-        $this->crud->create('Claroline\CoreBundle\Entity\Workspace', $data);
-    }
-
-    /**
-     * return an array with the following element:
-     * - section
-     * - action
-     * - action name.
-     */
     public function getAction()
     {
-        return ['workspace', 'create'];
-    }
-
-    public function getMode()
-    {
-        return self::MODE_CREATE;
-    }
-
-    public function clear(ObjectManager $om)
-    {
-    }
-
-    public function getSchema()
-    {
-        return ['$root' => 'Claroline\CoreBundle\Entity\Workspace\Workspace'];
+        return ['workspace', self::MODE_CREATE];
     }
 }
