@@ -121,10 +121,11 @@ const Parameters = (props) => {
         fields: [
           {
             name: 'profile.roles_confidential',
-            type: 'enum',
+            type: 'choice',
             label: trans('profile_roles_for_confidential_fields'),
             options: {
               multiple: true,
+              condensed: true,
               choices: Object.keys(roleEnum).filter(r => r !== 'ROLE_ADMIN').reduce((choices, key) => {
                 choices[key] = roleEnum[key]
 
@@ -133,10 +134,11 @@ const Parameters = (props) => {
             }
           }, {
             name: 'profile.roles_locked',
-            type: 'enum',
+            type: 'choice',
             label: trans('profile_roles_for_locked_fields'),
             options: {
               multiple: true,
+              condensed: true,
               choices: Object.keys(roleEnum).filter(r => r !== 'ROLE_ADMIN').reduce((choices, key) => {
                 choices[key] = roleEnum[key]
 
