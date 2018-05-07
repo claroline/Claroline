@@ -5,12 +5,13 @@ import omit from 'lodash/omit'
 
 const Heading = props =>
   React.createElement(`h${props.level}`, Object.assign({},
-    omit(props, 'level', 'displayLevel', 'first'),
+    omit(props, 'level', 'displayLevel', 'first', 'displayed'),
     {
       className: classes(
         props.className,
         props.displayLevel && `h${props.displayLevel}`,
-        props.first && 'h-first'
+        props.first && 'h-first',
+        !props.displayed && 'sr-only'
       )
     }
   ), props.children)
@@ -20,11 +21,13 @@ Heading.propTypes = {
   level: T.number.isRequired,
   displayLevel: T.number,
   first: T.bool,
+  displayed: T.bool,
   children: T.any.isRequired
 }
 
 Heading.defaultProps = {
-  first: false
+  first: false,
+  displayed: true
 }
 
 export {
