@@ -30,7 +30,7 @@ const FormGroup = {
     className: T.string,
     label: T.string.isRequired,
     hideLabel: T.bool,
-    help: T.string,
+    help: T.oneOfType([T.string, T.arrayOf(T.string)]),
     warnOnly: T.bool,
     error: T.string,
     optional: T.bool

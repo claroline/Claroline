@@ -25,8 +25,8 @@ implementPropTypes(TextGroup, FormGroupWithFieldTypes, {
   // custom props
   long: T.bool,
   minRows: T.number,
-  minLength: T.number, // todo implement
-  maxLength: T.number // todo implement
+  minLength: T.number,
+  maxLength: T.number
 })
 
 export {

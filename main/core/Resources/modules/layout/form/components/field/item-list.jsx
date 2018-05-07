@@ -110,7 +110,7 @@ class ItemList extends Component {
           </TooltipButton>
         </div>
 
-        {this.props.help &&
+        {this.props.help && 0 !== this.props.help.length &&
           <HelpBlock help={this.props.help} />
         }
 
@@ -160,7 +160,7 @@ ItemList.propTypes = {
   items: T.array.isRequired,
   onChange: T.func.isRequired,
   children: T.element.isRequired, // the form control of the item
-  help: T.string,
+  help: T.oneOfType([T.string, T.arrayOf(T.string)]),
   emptyText: T.string
 }
 

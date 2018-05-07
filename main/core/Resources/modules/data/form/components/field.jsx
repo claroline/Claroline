@@ -17,11 +17,10 @@ const FormField = props => {
       <FormGroup
         id={props.name}
         label={props.label}
+        hideLabel={props.hideLabel}
         help={props.help}
       >
-        <div>
-          {typeDef.render(props.value, props.options) || '-'}
-        </div>
+        {typeDef.render(props.value, props.options) || '-'}
       </FormGroup>
     )
   } else {
@@ -53,7 +52,7 @@ FormField.propTypes = {
   name: T.string.isRequired,
   type: T.string,
   label: T.string.isRequired,
-  help: T.string,
+  help: T.oneOfType([T.string, T.arrayOf(T.string)]),
   hideLabel: T.bool,
   disabled: T.bool,
   readOnly: T.bool,
