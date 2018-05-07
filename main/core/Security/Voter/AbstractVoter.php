@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Claroline\CoreBundle\Security;
+namespace Claroline\CoreBundle\Security\Voter;
 
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\AppBundle\Security\ObjectCollection;
-use Claroline\AppBundle\Security\VoterInterface as ClarolineVoterInterface;
+use Claroline\AppBundle\Security\Voter\VoterInterface as ClarolineVoterInterface;
 use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\User;
 use JMS\DiExtraBundle\Annotation as DI;

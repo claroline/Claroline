@@ -1,6 +1,6 @@
 <?php
 
-namespace Claroline\AppBundle\Security;
+namespace Claroline\AppBundle\Security\Voter;
 
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
