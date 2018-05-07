@@ -40,7 +40,7 @@ class AddUser extends AbstractAction
         );
 
         if (!$user->getId()) {
-            throw new \Exception('User '.$this->print($data['user'])." doesn't exists.");
+            throw new \Exception('User '.$this->printError($data['user'])." doesn't exists.");
         }
 
         $workspace = $this->serializer->deserialize(
@@ -49,20 +49,20 @@ class AddUser extends AbstractAction
         );
 
         if (!$workspace->getId()) {
-            throw new \Exception('Workspace '.$this->print($data['workspace'])." doesn't exists.");
+            throw new \Exception('Workspace '.$this->printError($data['workspace'])." doesn't exists.");
         }
 
         $role = $this->om->getRepository('ClarolineCoreBundle:Role')
           ->findOneBy(['workspace' => $workspace, 'translationKey' => $data['role']['translationKey']]);
 
         if (!$role->getId()) {
-            throw new \Exception('Role '.$this->print($data['role'])." doesn't exists.");
+            throw new \Exception('Role '.$this->printError($data['role'])." doesn't exists.");
         }
 
         $this->crud->patch($user, 'role', 'add', [$role]);
     }
 
-    public function print(array $el)
+    public function printError(array $el)
     {
         $string = '';
 
