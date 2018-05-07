@@ -1093,22 +1093,6 @@ class UserManager
     }
 
     /**
-     * @param \Claroline\CoreBundle\Entity\User $user
-     */
-    public function uploadAvatar(User $user)
-    {
-        if ($user->getPictureFile()) {
-            $file = $user->getPictureFile();
-            $publicFile = $this->fu->createFile($file, $file->getBasename());
-            $this->fu->createFileUse($publicFile, get_class($user), $user->getUuid());
-            //../.. for legacy compatibility
-            $user->setPicture('../../'.$publicFile->getUrl());
-            $this->objectManager->persist($user);
-            $this->objectManager->flush();
-        }
-    }
-
-    /**
      * Set the user locale.
      *
      * @todo use crud instead
@@ -1258,35 +1242,6 @@ class UserManager
         return $this->userRepo->countAllEnabledUsers($executeQuery);
     }
 
-    public function importPictureFiles($filepath)
-    {
-        $archive = new \ZipArchive();
-        $archive->open($filepath);
-        $tmpDir = $this->platformConfigHandler->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid();
-        //add the tmp dir to the "trash list files"
-        $tmpList = $this->container->getParameter('claroline.param.platform_generated_archive_path');
-        file_put_contents($tmpList, $tmpDir."\n", FILE_APPEND);
-        $archive->extractTo($tmpDir);
-        $iterator = new \DirectoryIterator($tmpDir);
-
-        foreach ($iterator as $element) {
-            if (!$element->isDot()) {
-                $fileName = basename($element->getPathName());
-                $username = preg_replace("/\.[^.]+$/", '', $fileName);
-                $user = $this->getUserByUsername($username);
-                $file = new File($element->getPathName());
-
-                $publicFile = $this->fu->createFile($file, $file->getBasename());
-                $this->fu->createFileUse($publicFile, get_class($user), $user->getUuid());
-                //../.. for legacy compatibility
-                $user->setPicture('../../'.$publicFile->getUrl());
-                $this->objectManager->persist($user);
-            }
-        }
-
-        $this->objectManager->flush();
-    }
-
     /**
      * Checks if a user will have a personal workspace at his creation.
      */
@@ -1327,9 +1282,15 @@ class UserManager
     public function logUser(User $user)
     {
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', [$user]);
+
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->tokenStorage->setToken($token);
+
+        if (null === $user->getInitDate()) {
+            $this->setUserInitDate($user);
+        }
         $user->setLastLogin(new \DateTime());
+
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }

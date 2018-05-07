@@ -5,6 +5,8 @@ import moment from 'moment'
 import {trans, tval} from '#/main/core/translation'
 import {IPv4} from '#/main/core/scaffolding/ip'
 
+// TODO : break me
+
 function notEmpty(value) {
   if (
     undefined === value
@@ -104,7 +106,7 @@ function lengthMin(value, options) {
 }
 
 function lengthMax(value, options) {
-  if (undefined !== options.minLength && value.length > options.maxLength) {
+  if (undefined !== options.maxLength && value.length > options.maxLength) {
     return trans(
       'This value should be lower than {{ limit }}.',
       {},

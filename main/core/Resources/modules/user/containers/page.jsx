@@ -1,7 +1,7 @@
 import {connectPage} from '#/main/core/layout/page/connect'
 
 import {actions} from '#/main/core/user/actions'
-import {UserPage} from '#/main/core/user/components/page.jsx'
+import {UserPage} from '#/main/core/user/components/page'
 
 /**
  * Connected container for users.
@@ -23,7 +23,10 @@ const UserPageContainer = connectPage(
   dispatch => ({
     //edition
     updatePassword(user, password) {
-      dispatch(actions.changePassword(user, password))
+      dispatch(actions.updatePassword(user, password))
+    },
+    updatePublicUrl(user, publicUrl) {
+      dispatch(actions.updatePublicUrl(user, publicUrl, true))
     }
   })
 )(UserPage)

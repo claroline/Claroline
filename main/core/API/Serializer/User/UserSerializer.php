@@ -280,6 +280,7 @@ class UserSerializer
 
         return [
             'publicUrl' => $user->getPublicUrl(),
+            'publicUrlTuned' => $user->hasTunedPublicUrl(),
             'acceptedTerms' => $user->hasAcceptedTerms(),
             'lastLogin' => $user->getLastLogin() ? $user->getLastLogin()->format('Y-m-d\TH:i:s') : null,
             'created' => $user->getCreated() ? $user->getCreated()->format('Y-m-d\TH:i:s') : null,
@@ -287,7 +288,6 @@ class UserSerializer
             'mailValidated' => $user->isMailValidated(),
             'mailNotified' => $user->isMailNotified(),
             'mailWarningHidden' => $user->getHideMailWarning(),
-            'publicUrlTuned' => $user->hasTunedPublicUrl(),
             'authentication' => $user->getAuthentication(),
             'personalWorkspace' => (bool) $user->getPersonalWorkspace(),
             'removed' => $user->isRemoved(),
@@ -306,6 +306,12 @@ class UserSerializer
         } else {
             // use given locale
             $user->setLocale($meta['locale']);
+        }
+
+        // tune public URL
+        if (!empty($meta['publicUrl']) && $meta['publicUrl'] !== $user->getPublicUrl()) {
+            $user->setPublicUrl($meta['publicUrl']);
+            $user->setHasTunedPublicUrl(true);
         }
     }
 
