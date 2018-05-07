@@ -5,7 +5,8 @@ import get from 'lodash/get'
 import merge from 'lodash/merge'
 
 import {t} from '#/main/core/translation'
-import {Sections, Section} from '#/main/core/layout/components/sections.jsx'
+import {Heading} from '#/main/core/layout/components/heading'
+import {Sections, Section} from '#/main/core/layout/components/sections'
 import {getTypeOrDefault} from '#/main/core/data'
 import {DataDetailsSection as DataDetailsSectionTypes} from '#/main/core/data/details/prop-types'
 import {createDetailsDefinition} from '#/main/core/data/details/utils'
@@ -53,6 +54,12 @@ DataDetailsField.propTypes = {
 }
 
 const DataDetails = props => {
+  const hLevel = props.level + (props.title ? 1 : 0)
+  let hDisplay
+  if (props.displayLevel) {
+    hDisplay = props.displayLevel + (props.title ? 1 : 0)
+  }
+
   const sections = createDetailsDefinition(props.sections)
 
   const primarySections = 1 === sections.length ? [sections[0]] : sections.filter(section => section.primary)
@@ -61,9 +68,19 @@ const DataDetails = props => {
 
   return (
     <div className={classes('data-details', props.className)}>
+      {props.title &&
+        <Heading level={props.level} displayLevel={props.displayLevel}>
+          {props.title}
+        </Heading>
+      }
+
       {primarySections.map(primarySection =>
         <div key={primarySection.id} className="panel panel-default">
           <div className="panel-body">
+            <Heading level={hLevel} displayed={false}>
+              {primarySection.title}
+            </Heading>
+
             {primarySection.fields.map(field =>
               <DataDetailsField
                 {...field}
@@ -77,7 +94,8 @@ const DataDetails = props => {
 
       {0 !== otherSections.length &&
         <Sections
-          level={props.level}
+          level={hLevel}
+          displayLevel={hDisplay}
           defaultOpened={openedSection ? openedSection.id : undefined}
         >
           {otherSections.map(section =>
@@ -105,6 +123,8 @@ const DataDetails = props => {
 DataDetails.propTypes = {
   className: T.string,
   level: T.number,
+  displayLevel: T.number,
+  title: T.string,
   data: T.object,
   sections: T.arrayOf(T.shape(
     DataDetailsSectionTypes.propTypes
