@@ -64,7 +64,7 @@ const Section = props =>
 
 Section.propTypes = {
   className: T.string,
-  level: T.number.isRequired,
+  level: T.number,
   displayLevel: T.number,
   icon: T.string,
   title: T.string.isRequired,
@@ -78,6 +78,7 @@ Section.propTypes = {
 
 Section.defaultProps = {
   actions: [],
+  level: 5,
   disabled: false
 }
 
