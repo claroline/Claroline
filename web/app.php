@@ -36,7 +36,6 @@ if (file_exists($file = __DIR__.'/../app/config/ip_white_list.yml')) {
 if (!$maintenanceMode || $authorized) {
     $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
     $kernel = new AppKernel('prod', false);
-    $kernel->loadClassCache();
     $kernel->handle($request)->send();
 //$kernel->terminate($request, $response);
 } else {
