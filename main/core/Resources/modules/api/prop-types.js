@@ -79,7 +79,14 @@ const ApiRequest = {
     silent: false,
     request: {
       method: 'GET',
-      credentials: 'include'
+      credentials: 'include',
+      headers: new Headers({
+        'Content-Type': 'application/json; charset=utf-8',
+        // next header is required for symfony to recognize our requests as XMLHttpRequest
+        // there is no spec about possible values, but this is the one expected by symfony
+        // @see Symfony\Component\HttpFoundation\Request::isXmlHttpRequest
+        'X-Requested-With': 'XMLHttpRequest'
+      })
     },
     messages: {},
     before: () => true,

@@ -77,7 +77,7 @@ class RegistrationManager
      *      "tokenStorage"          = @DI\Inject("security.token_storage"),
      *      "userManager"           = @DI\Inject("claroline.manager.user_manager"),
      *      "roleManager"           = @DI\Inject("claroline.manager.role_manager"),
-     *      "authenticationHandler" = @DI\Inject("claroline.authentication_handler")
+     *      "authenticationHandler" = @DI\Inject("claroline.security.authentication.success_handler")
      * })
      *
      * @param ObjectManager                 $om

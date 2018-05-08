@@ -55,6 +55,7 @@ const UserPage = props =>
         showModal={props.showModal}
         customActions={props.customActions}
         updatePassword={props.updatePassword}
+        updatePublicUrl={props.updatePublicUrl}
       />
     </UserPageHeader>
 
@@ -80,7 +81,8 @@ implementPropTypes(UserPage, PageTypes, {
     group: T.string
   })),
   children: T.node.isRequired,
-  updatePassword: T.func.isRequired
+  updatePassword: T.func.isRequired,
+  updatePublicUrl: T.func.isRequired
 }, {
   customActions: []
 })

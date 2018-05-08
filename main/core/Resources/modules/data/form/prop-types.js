@@ -17,7 +17,7 @@ const DataFormProperty = {
     calculated : T.func,
 
     // form configuration
-    help: T.string,
+    help: T.oneOfType([T.string, T.arrayOf(T.string)]),
     hideLabel: T.bool,
     displayed: T.oneOfType([
       T.bool,

@@ -1,5 +1,5 @@
-import {t} from '#/main/core/translation'
-import {chain, string, lengthInRange} from '#/main/core/validation'
+import {trans} from '#/main/core/translation'
+import {chain, lengthInRange, match, string} from '#/main/core/validation'
 
 import {TextGroup} from '#/main/core/layout/form/components/group/text-group.jsx'
 
@@ -11,8 +11,8 @@ const stringDefinition = {
     default: true,
     creatable: true,
     icon: 'fa fa-fw fa fa-font',
-    label: t('string'),
-    description: t('string_desc')
+    label: trans('string', {}, 'data'),
+    description: trans('string_desc', {}, 'data')
   },
 
   /**
@@ -22,24 +22,24 @@ const stringDefinition = {
     {
       name: 'long',
       type: 'boolean',
-      label: t('text_long')
+      label: trans('text_long')
     }, {
       name: 'minRows',
       type: 'number',
       parent: 'long',
       displayed: !!options.long,
-      label: t('textarea_rows'),
+      label: trans('textarea_rows'),
       options: {
         min: 1
       }
     }, {
       name: 'minLength',
       type: 'number',
-      label: t('min_text_length')
+      label: trans('min_text_length')
     }, {
       name: 'maxLength',
       type: 'number',
-      label: t('max_text_length'),
+      label: trans('max_text_length'),
       options: {
         min: 1
       }
@@ -50,7 +50,7 @@ const stringDefinition = {
   parse: (display) => display,
   // nothing special to do
   render: (raw) => raw,
-  validate: (value, options) => chain(value, options, [string, lengthInRange]),
+  validate: (value, options) => chain(value, options, [string, match, lengthInRange]),
   components: {
     form: TextGroup
   }

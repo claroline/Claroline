@@ -24,6 +24,7 @@ use Icap\OAuthBundle\Model\Configuration;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("icap.oauth.manager")
@@ -60,8 +61,6 @@ class OauthManager
      */
     private $registrationManager;
 
-    private $authenticationHandler;
-
     private $authenticator;
 
     /**
@@ -72,7 +71,6 @@ class OauthManager
      *      "tokenStorage"          = @DI\Inject("security.token_storage"),
      *      "userManager"           = @DI\Inject("claroline.manager.user_manager"),
      *      "registrationManager"   = @DI\Inject("claroline.manager.registration_manager"),
-     *      "authenticationHandler" = @DI\Inject("claroline.authentication_handler"),
      *      "authenticator"         = @DI\Inject("claroline.authenticator")
      * })
      *
@@ -82,8 +80,7 @@ class OauthManager
      * @param TokenStorage                 $tokenStorage
      * @param UserManager                  $userManager
      * @param RegistrationManager          $registrationManager
-     * @param $authenticationHandler
-     * @param Authenticator $authenticator
+     * @param Authenticator                $authenticator
      */
     public function __construct(
         EntityManager $entityManager,
@@ -92,7 +89,6 @@ class OauthManager
         TokenStorage $tokenStorage,
         UserManager $userManager,
         registrationManager $registrationManager,
-        $authenticationHandler,
         Authenticator $authenticator
     ) {
         $this->em = $entityManager;
@@ -101,7 +97,6 @@ class OauthManager
         $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
         $this->registrationManager = $registrationManager;
-        $this->authenticationHandler = $authenticationHandler;
         $this->authenticator = $authenticator;
     }
 
@@ -151,6 +146,8 @@ class OauthManager
             case 'generic':
                 return [];
         }
+
+        return null;
     }
 
     public function getConfiguration($service)
@@ -210,7 +207,7 @@ class OauthManager
         return $this->registrationManager->getRegistrationForm($user);
     }
 
-    public function createNewAccount(Request $request, $translator, $service)
+    public function createNewAccount(Request $request, TranslatorInterface $translator, $service)
     {
         $user = new User();
         $form = $this->registrationManager->getRegistrationForm($user);
@@ -263,7 +260,7 @@ class OauthManager
 
     public function unlinkAccount($userId)
     {
-        $this->em->getRepository("Icap\OAuthBundle\Entity\OauthUser")->unlinkOAuthUser($userId);
+        $this->em->getRepository('Icap\OAuthBundle\Entity\OauthUser')->unlinkOAuthUser($userId);
     }
 
     private function isActive($service)

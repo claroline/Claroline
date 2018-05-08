@@ -129,7 +129,7 @@ const Users = connect(
     updatePassword(user) {
       dispatch(
         modalActions.showModal(MODAL_CHANGE_PASSWORD, {
-          changePassword: (password) => dispatch(userActions.changePassword(user, password))
+          changePassword: (password) => dispatch(userActions.updatePassword(user, password))
         })
       )
     }

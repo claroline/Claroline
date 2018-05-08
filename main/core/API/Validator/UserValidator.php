@@ -39,7 +39,7 @@ class UserValidator implements ValidatorInterface
     {
         $errors = [];
 
-        //implments something cleaner later
+        // implements something cleaner later
         if (ValidatorProvider::UPDATE === $mode && !isset($data['id'])) {
             return $errors;
         }
@@ -59,6 +59,13 @@ class UserValidator implements ValidatorInterface
             $errors[] = [
                 'path' => 'email',
                 'message' => 'The email '.$data['email'].' already exists.',
+            ];
+        }
+
+        if ($this->exists('publicUrl', $data['meta']['publicUrl'], isset($data['id']) ? $data['id'] : null)) {
+            $errors[] = [
+                'path' => 'meta/publicUrl',
+                'message' => 'The public url '.$data['meta']['publicUrl'].' already exists.',
             ];
         }
 

@@ -16,7 +16,7 @@ const Field = {
       hidden: T.bool,
       order: T.number
     }),
-    help: T.string,
+    help: T.oneOfType([T.string, T.arrayOf(T.string)]),
     options: T.oneOfType([
       T.shape({
         file_types: T.arrayOf(T.string),

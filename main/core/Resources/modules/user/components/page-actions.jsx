@@ -5,7 +5,7 @@ import {t} from '#/main/core/translation'
 import {withRouter, matchPath} from '#/main/core/router'
 
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
-import {MODAL_CHANGE_PASSWORD, MODAL_SEND_MESSAGE} from '#/main/core/user/modals'
+import {MODAL_CHANGE_PASSWORD, MODAL_CHANGE_PUBLIC_URL, MODAL_SEND_MESSAGE} from '#/main/core/user/modals'
 import {
   PageGroupActions,
   PageActions,
@@ -53,6 +53,17 @@ const UserPageActions = props => {
         changePassword: (password) => props.updatePassword(props.user, password)
       })
     }, {
+      type: 'callback',
+      icon: 'fa fa-fw fa-link',
+      label: t('change_profile_public_url'),
+      group: t('user_management'),
+      displayed: props.user.rights.current.edit,
+      disabled: props.user.meta.publicUrlTuned,
+      callback: () => props.showModal(MODAL_CHANGE_PUBLIC_URL, {
+        url: props.user.meta.publicUrl,
+        changeUrl: (publicUrl) => props.updatePublicUrl(props.user, publicUrl)
+      })
+    }, {
       type: 'url',
       icon: 'fa fa-fw fa-line-chart',
       label: t('show_tracking'),
@@ -64,9 +75,7 @@ const UserPageActions = props => {
       icon: 'fa fa-fw fa-trash-o',
       label: t('delete'),
       displayed: props.user.rights.current.delete,
-      callback: () =>  props.showModal(MODAL_DELETE_CONFIRM, {
-
-      }),
+      callback: () =>  props.showModal(MODAL_DELETE_CONFIRM),
       dangerous: true
     }
   ])
@@ -113,7 +122,8 @@ const UserPageActions = props => {
 UserPageActions.propTypes = {
   user: T.shape({
     meta: T.shape({
-      publicUrl: T.string.isRequired
+      publicUrl: T.string.isRequired,
+      publicUrlTuned: T.bool
     }).isRequired,
     rights: T.shape({
       current: T.shape({
@@ -125,7 +135,8 @@ UserPageActions.propTypes = {
   }).isRequired,
   customActions: T.array,
   showModal: T.func.isRequired,
-  updatePassword: T.func.isRequired
+  updatePassword: T.func.isRequired,
+  updatePublicUrl: T.func.isRequired
 }
 
 UserPageActions.defaultProps = {

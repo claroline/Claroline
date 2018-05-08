@@ -3,16 +3,17 @@ import {PropTypes as T} from 'prop-types'
 import classes from 'classnames'
 import get from 'lodash/get'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {toKey} from '#/main/core/scaffolding/text/utils'
 
-import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections.jsx'
-import {SubSet} from '#/main/core/layout/form/components/fieldset/sub-set.jsx'
-import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set.jsx'
+import {Heading} from '#/main/core/layout/components/heading'
+import {FormSections, FormSection} from '#/main/core/layout/form/components/form-sections'
+import {SubSet} from '#/main/core/layout/form/components/fieldset/sub-set'
+import {ToggleableSet} from '#/main/core/layout/form/components/fieldset/toggleable-set'
 
 import {createFormDefinition} from '#/main/core/data/form/utils'
 import {DataFormSection as DataFormSectionTypes} from '#/main/core/data/form/prop-types'
-import {FormField} from '#/main/core/data/form/components/field.jsx'
+import {FormField} from '#/main/core/data/form/components/field'
 
 const AdvancedSection = props =>
   <ToggleableSet
@@ -34,8 +35,8 @@ AdvancedSection.propTypes = {
 }
 
 AdvancedSection.defaultProps = {
-  showText: t('show_advanced_options'),
-  hideText: t('hide_advanced_options')
+  showText: trans('show_advanced_options'),
+  hideText: trans('hide_advanced_options')
 }
 
 const FormWrapper = props => props.embedded ?
@@ -70,7 +71,7 @@ class Form extends Component {
       // popup (see https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onbeforeunload#Example)
       // but it doesn't seem to be actually used in modern browsers. We use it
       // here because a string is needed anyway.
-      e.returnValue = t('unsaved_changes_warning')
+      e.returnValue = trans('unsaved_changes_warning')
 
       return e.returnValue
     }
@@ -131,14 +132,18 @@ class Form extends Component {
     return (
       <FormWrapper embedded={this.props.embedded} className={this.props.className}>
         {this.props.title &&
-          React.createElement('h'+this.props.level, {
-            className: classes('form-title', this.props.displayLevel && `h${this.props.displayLevel}`)
-          }, this.props.title)
+          <Heading level={this.props.level} displayLevel={this.props.displayLevel}>
+            {this.props.title}
+          </Heading>
         }
 
         {primarySections.map(primarySection =>
           <div key={toKey(primarySection.title)} className="form-primary-section panel panel-default">
             <fieldset className="panel-body">
+              <Heading level={hLevel} displayed={false}>
+                {primarySection.title}
+              </Heading>
+
               {React.createElement('h'+hLevel, {
                 className: 'sr-only'
               }, primarySection.title)}

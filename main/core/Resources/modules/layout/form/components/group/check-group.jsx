@@ -16,7 +16,7 @@ const CheckGroup = props =>
       onChange={props.onChange}
     />
 
-    {props.help &&
+    {props.help && 0 !== props.help.length &&
       <HelpBlock help={props.help} />
     }
   </div>

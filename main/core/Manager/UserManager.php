@@ -22,18 +22,15 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\UserOptions;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use Claroline\CoreBundle\Library\Utilities\FileUtilities;
 use Claroline\CoreBundle\Manager\Exception\AddRoleException;
 use Claroline\CoreBundle\Manager\Organization\OrganizationManager;
 use Claroline\CoreBundle\Pager\PagerFactory;
 use Claroline\CoreBundle\Repository\UserRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\DiExtraBundle\Annotation as DI;
 use Pagerfanta\Pagerfanta;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -60,7 +57,6 @@ class UserManager
     private $roleManager;
     private $strictEventDispatcher;
     private $tokenStorage;
-    private $toolManager;
     private $transferManager;
     private $translator;
     private $uploadsDirectory;
@@ -68,7 +64,6 @@ class UserManager
     private $workspaceManager;
     /** @var UserRepository */
     private $userRepo;
-    private $fu;
 
     /**
      * UserManager Constructor.
@@ -84,13 +79,10 @@ class UserManager
      *     "roleManager"            = @DI\Inject("claroline.manager.role_manager"),
      *     "strictEventDispatcher"  = @DI\Inject("claroline.event.event_dispatcher"),
      *     "tokenStorage"           = @DI\Inject("security.token_storage"),
-     *     "toolManager"            = @DI\Inject("claroline.manager.tool_manager"),
      *     "transferManager"        = @DI\Inject("claroline.manager.transfer_manager"),
      *     "translator"             = @DI\Inject("translator"),
-     *     "uploadsDirectory"       = @DI\Inject("%claroline.param.uploads_directory%"),
      *     "validator"              = @DI\Inject("validator"),
-     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "fu"                     = @DI\Inject("claroline.utilities.file")
+     *     "workspaceManager"       = @DI\Inject("claroline.manager.workspace_manager")
      * })
      *
      * @param ContainerInterface           $container
@@ -103,13 +95,10 @@ class UserManager
      * @param RoleManager                  $roleManager
      * @param StrictDispatcher             $strictEventDispatcher
      * @param TokenStorageInterface        $tokenStorage
-     * @param ToolManager                  $toolManager
      * @param TransferManager              $transferManager
      * @param TranslatorInterface          $translator
-     * @param string                       $uploadsDirectory
      * @param ValidatorInterface           $validator
      * @param WorkspaceManager             $workspaceManager
-     * @param FileUtilities                $fu
      */
     public function __construct(
         ContainerInterface $container,
@@ -122,14 +111,11 @@ class UserManager
         RoleManager $roleManager,
         StrictDispatcher $strictEventDispatcher,
         TokenStorageInterface $tokenStorage,
-        ToolManager $toolManager,
         TransferManager $transferManager,
         TranslatorInterface $translator,
-        $uploadsDirectory,
         ValidatorInterface $validator,
-        WorkspaceManager $workspaceManager,
-        FileUtilities $fu
-    ) {
+        WorkspaceManager $workspaceManager)
+    {
         $this->container = $container;
         $this->groupManager = $groupManager;
         $this->mailManager = $mailManager;
@@ -140,14 +126,11 @@ class UserManager
         $this->roleManager = $roleManager;
         $this->strictEventDispatcher = $strictEventDispatcher;
         $this->tokenStorage = $tokenStorage;
-        $this->toolManager = $toolManager;
         $this->transferManager = $transferManager;
         $this->translator = $translator;
-        $this->uploadsDirectory = $uploadsDirectory;
         $this->validator = $validator;
         $this->workspaceManager = $workspaceManager;
         $this->userRepo = $objectManager->getRepository('ClarolineCoreBundle:User');
-        $this->fu = $fu;
     }
 
     /**
@@ -155,7 +138,7 @@ class UserManager
      * Its basic properties (name, username,... ) must already be set.
      *
      * @todo use crud instead
-     * @todo REMOVE ME (caution: this is used to create users in Command\User\CreateCommand)
+     * @todo REMOVE ME (caution: this is used to create users in Command\User\CreateCommand and default User in fixtures, and other things)
      *
      * @param User      $user
      * @param bool      $sendMail               do we need to email the new user ?
@@ -163,7 +146,8 @@ class UserManager
      * @param Workspace $model                  a model to create workspace
      * @param string    $publicUrl
      * @param array     $organizations
-     * @param null      $forcePersonalWorkspace
+     * @param bool      $forcePersonalWorkspace
+     * @param bool      $addNotifications
      *
      * @return User
      */
@@ -192,6 +176,10 @@ class UserManager
 
         if ($forcePersonalWorkspace) {
             $options[] = Options::ADD_PERSONAL_WORKSPACE;
+        }
+
+        if (!empty($publicUrl)) {
+            $user->setPublicUrl($publicUrl);
         }
 
         $this->container->get('claroline.crud.user')->create(
@@ -721,8 +709,8 @@ class UserManager
      * @todo use crud instead
      * @todo REMOVE ME
      *
-     * @param User            $user
-     * @param ArrayCollection $roles
+     * @param User   $user
+     * @param Role[] $roles
      */
     public function setPlatformRoles(User $user, $roles)
     {
@@ -976,7 +964,10 @@ class UserManager
      */
     public function getUserById($userId)
     {
-        return $this->userRepo->find($userId);
+        /** @var User $user */
+        $user = $this->userRepo->find($userId);
+
+        return $user;
     }
 
     /**
@@ -1056,7 +1047,10 @@ class UserManager
      */
     public function getByResetPasswordHash($resetPassword)
     {
-        return $this->userRepo->findOneByResetPasswordHash($resetPassword);
+        /** @var User $user */
+        $user = $this->userRepo->findBy(['resetPasswordHash' => $resetPassword]);
+
+        return $user;
     }
 
     /**
@@ -1069,11 +1063,15 @@ class UserManager
      */
     public function getByEmailValidationHash($validationHash)
     {
-        return $this->userRepo->findByEmailValidationHash($validationHash);
+        /** @var User $user */
+        $user = $this->userRepo->findBy(['emailValidationHash' => $validationHash]);
+
+        return $user;
     }
 
     public function validateEmailHash($validationHash)
     {
+        /** @var User[] $users */
         $users = $this->getByEmailValidationHash($validationHash);
         $user = $users[0];
         $user->setIsMailValidated(true);
@@ -1090,22 +1088,6 @@ class UserManager
     public function getAllEnabledUsers($executeQuery = true)
     {
         return $this->userRepo->findAllEnabledUsers($executeQuery);
-    }
-
-    /**
-     * @param \Claroline\CoreBundle\Entity\User $user
-     */
-    public function uploadAvatar(User $user)
-    {
-        if ($user->getPictureFile()) {
-            $file = $user->getPictureFile();
-            $publicFile = $this->fu->createFile($file, $file->getBasename());
-            $this->fu->createFileUse($publicFile, get_class($user), $user->getUuid());
-            //../.. for legacy compatibility
-            $user->setPicture('../../'.$publicFile->getUrl());
-            $this->objectManager->persist($user);
-            $this->objectManager->flush();
-        }
     }
 
     /**
@@ -1130,6 +1112,7 @@ class UserManager
 
         $resultArray['users'] = [];
         if (count($users) > 0) {
+            /** @var User $user */
             foreach ($users as $user) {
                 $userArray = [];
                 $userArray['id'] = $user->getId();
@@ -1152,9 +1135,9 @@ class UserManager
     {
         $publicUrl = $user->getFirstName().'.'.$user->getLastName();
         $publicUrl = strtolower(str_replace(' ', '-', $publicUrl));
-        $searchedUsers = $this->objectManager->getRepository('ClarolineCoreBundle:User')->findOneByPublicUrl($publicUrl);
+        $searchedUsers = $this->userRepo->findOneBy(['publicUrl' => $publicUrl]);
 
-        if (null !== $searchedUsers) {
+        if (!empty($searchedUsers)) {
             $publicUrl .= '_'.uniqid();
         }
 
@@ -1163,7 +1146,7 @@ class UserManager
 
     public function countUsersByRoleIncludingGroup(Role $role)
     {
-        return $this->objectManager->getRepository('ClarolineCoreBundle:User')->countUsersByRoleIncludingGroup($role);
+        return $this->userRepo->countUsersByRoleIncludingGroup($role);
     }
 
     public function countUsersOfGroup(Group $group)
@@ -1258,35 +1241,6 @@ class UserManager
         return $this->userRepo->countAllEnabledUsers($executeQuery);
     }
 
-    public function importPictureFiles($filepath)
-    {
-        $archive = new \ZipArchive();
-        $archive->open($filepath);
-        $tmpDir = $this->platformConfigHandler->getParameter('tmp_dir').DIRECTORY_SEPARATOR.uniqid();
-        //add the tmp dir to the "trash list files"
-        $tmpList = $this->container->getParameter('claroline.param.platform_generated_archive_path');
-        file_put_contents($tmpList, $tmpDir."\n", FILE_APPEND);
-        $archive->extractTo($tmpDir);
-        $iterator = new \DirectoryIterator($tmpDir);
-
-        foreach ($iterator as $element) {
-            if (!$element->isDot()) {
-                $fileName = basename($element->getPathName());
-                $username = preg_replace("/\.[^.]+$/", '', $fileName);
-                $user = $this->getUserByUsername($username);
-                $file = new File($element->getPathName());
-
-                $publicFile = $this->fu->createFile($file, $file->getBasename());
-                $this->fu->createFileUse($publicFile, get_class($user), $user->getUuid());
-                //../.. for legacy compatibility
-                $user->setPicture('../../'.$publicFile->getUrl());
-                $this->objectManager->persist($user);
-            }
-        }
-
-        $this->objectManager->flush();
-    }
-
     /**
      * Checks if a user will have a personal workspace at his creation.
      */
@@ -1310,6 +1264,8 @@ class UserManager
 
     /**
      * Activates a User and set the init date to now.
+     *
+     * @param User $user
      */
     public function activateUser(User $user)
     {
@@ -1317,6 +1273,7 @@ class UserManager
         $user->setIsMailValidated(true);
         $user->setResetPasswordHash(null);
         $user->setInitDate(new \DateTime());
+
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
@@ -1326,10 +1283,18 @@ class UserManager
      */
     public function logUser(User $user)
     {
+        // TODO : log in an EventListener on user log event instead
         $this->strictEventDispatcher->dispatch('log', 'Log\LogUserLogin', [$user]);
+
+        // TODO : nope, we should let Symfony handles token creation
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
         $this->tokenStorage->setToken($token);
+
+        if (null === $user->getInitDate()) {
+            $this->setUserInitDate($user);
+        }
         $user->setLastLogin(new \DateTime());
+
         $this->objectManager->persist($user);
         $this->objectManager->flush();
     }
@@ -1453,6 +1418,7 @@ class UserManager
             $workspaces
         );
 
+        /** @var User $user */
         foreach ($users as $user) {
             $usersIds[] = $user->getId();
         }
@@ -1546,6 +1512,7 @@ class UserManager
         while ($offset < $countUsers) {
             $users = $this->userRepo->findBy([], null, $limit, $offset);
 
+            /** @var User $user */
             foreach ($users as $user) {
                 if (0 === count($user->getOrganizations())) {
                     ++$i;
@@ -1674,14 +1641,17 @@ class UserManager
 
         if (!$user) {
             $user = new User();
+
             $user->setUsername('claroline-connect');
             $user->setFirstName('claroline-connect');
             $user->setLastName('claroline-connect');
             $user->setEmail('claroline-connect');
             $user->setPlainPassword(uniqid('', true));
+
             $user->disable();
             $user->remove();
-            $this->createUser($user, false, [], null, null, [], false, false, false);
+
+            $this->createUser($user, false, [], null, null, [], false, false);
         }
 
         return $user;

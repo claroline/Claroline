@@ -26,8 +26,8 @@ implementPropTypes(Text, FormFieldTypes, {
   value: T.string,
   long: T.bool,
   minRows: T.number,
-  minLength: T.number, // todo implement
-  maxLength: T.number // todo implement
+  minLength: T.number,
+  maxLength: T.number
 }, {
   value: '',
   long: false,

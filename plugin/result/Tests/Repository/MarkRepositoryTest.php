@@ -34,7 +34,7 @@ class MarkRepositoryTest extends TransactionalTestCase
 
     public function testFindByResult()
     {
-        $bob = $this->persist->user('bob');
+        $bob = $this->persist->user('bob', true);
         $bill = $this->persist->user('bill');
         $jane = $this->persist->user('jane');
 
@@ -67,7 +67,7 @@ class MarkRepositoryTest extends TransactionalTestCase
 
     public function testFindByResultAndUser()
     {
-        $bob = $this->persist->user('bob');
+        $bob = $this->persist->user('bob', true);
         $bill = $this->persist->user('bill');
         $jane = $this->persist->user('jane');
 

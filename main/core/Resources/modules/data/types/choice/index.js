@@ -39,11 +39,11 @@ const choiceDefinition = {
     }
   ],
   parse: (display, options) => Object.keys(options.choices).find(enumValue => display === options.choices[enumValue]),
-  render: (raw) => {
+  render: (raw, options) => {
     if (Array.isArray(raw)) {
-      return raw.join(', ')
+      return raw.map(value => options.choices[value]).join(', ')
     } else {
-      return raw
+      return options.choices[raw]
     }
   },
   validate: (value, options) => !!options.choices[value],

@@ -11,7 +11,7 @@
 
 namespace FormaLibre\ReservationBundle\Security\Voter;
 
-use Claroline\CoreBundle\Security\AbstractVoter;
+use Claroline\CoreBundle\Security\Voter\AbstractVoter;
 use FormaLibre\ReservationBundle\Entity\Resource;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

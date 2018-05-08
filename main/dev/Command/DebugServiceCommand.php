@@ -26,22 +26,18 @@ class DebugServiceCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
-        $this->setName('claroline:debug:service')
-            ->setDescription('Get the logs of a service (mainly for debugging doctrine)');
-        $this->setDefinition(
-            [
+        $this
+            ->setName('claroline:debug:service')
+            ->setDescription('Get the logs of a service (mainly for debugging doctrine)')
+            ->setDefinition([
                 new InputArgument('owner', InputArgument::REQUIRED, 'The user doing the action'),
                 new InputArgument('service_name', InputArgument::REQUIRED, 'The service name'),
                 new InputArgument('method_name', InputArgument::REQUIRED, 'The method name'),
                 new InputArgument('parameters', InputArgument::IS_ARRAY, 'The method parameters'),
-            ]
-        );
-        $this->addOption(
-            'debug_doctrine_all',
-            'a',
-            InputOption::VALUE_NONE,
-            'When set to true, shows the doctrine logs'
-        );
+            ])
+            ->addOption(
+                'debug_doctrine_all', 'a', InputOption::VALUE_NONE, 'When set to true, shows the doctrine logs'
+            );
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)

@@ -19,6 +19,8 @@ use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
+ *
+ * @deprecated
  */
 class ActivityRuleListener
 {

@@ -5,15 +5,15 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/14/15
  */
 
 namespace Icap\NotificationBundle\Listener;
 
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
+use Claroline\CoreBundle\Listener\Administration\AdministrationToolListener as BaseAdministrationToolListener;
 use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Listener\AdministrationToolListener as BaseAdministrationToolListener;
 
 /**
  * Class AdminToolListener.

@@ -56,7 +56,7 @@ class ResultManagerTest extends TransactionalTestCase
 
     public function testGetMarksWithAndWithoutFullAccess()
     {
-        $bob = $this->persist->user('bob');
+        $bob = $this->persist->user('bob', true);
         $bill = $this->persist->user('bill');
         $jane = $this->persist->user('jane');
 
@@ -87,7 +87,7 @@ class ResultManagerTest extends TransactionalTestCase
 
     public function testImportExpectsNonEmptyFile()
     {
-        $john = $this->persist->user('john');
+        $john = $this->persist->user('john', true);
         $result = $this->persist->result('Result 1', $john);
         $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
         $this->om->flush();
@@ -99,7 +99,7 @@ class ResultManagerTest extends TransactionalTestCase
 
     public function testImportExpectsThreeValues()
     {
-        $john = $this->persist->user('john');
+        $john = $this->persist->user('john', true);
         $result = $this->persist->result('Result 1', $john);
         $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
         $this->om->flush();
@@ -114,7 +114,7 @@ class ResultManagerTest extends TransactionalTestCase
 
     public function testImportExpectsNonEmptyValues()
     {
-        $john = $this->persist->user('john');
+        $john = $this->persist->user('john', true);
         $result = $this->persist->result('Result 1', $john);
         $this->om->flush();
 
@@ -126,7 +126,7 @@ class ResultManagerTest extends TransactionalTestCase
 
     public function testImportExpectsValidMarks()
     {
-        $john = $this->persist->user('john');
+        $john = $this->persist->user('john', true);
         $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
         $result = $this->persist->result('Result 1', $john);
         $this->om->flush();
@@ -141,7 +141,7 @@ class ResultManagerTest extends TransactionalTestCase
 
     public function testImportExpectsWorkspaceUsers()
     {
-        $john = $this->persist->user('john');
+        $john = $this->persist->user('john', true);
         $bob = $this->persist->user('bob');
         $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);
         $this->persist->workspaceUser($john->getPersonalWorkspace(), $bob);
@@ -149,6 +149,7 @@ class ResultManagerTest extends TransactionalTestCase
         $this->om->flush();
 
         $data = $this->manager->importMarksFromCsv($result, $this->stubCsv('valid-1'));
+
         $this->assertEquals(1, count($data['errors']));
         $this->assertEquals(ResultManager::ERROR_EXTRA_USERS, $data['errors'][0]['code']);
         $this->assertEquals(2, $data['errors'][0]['line']);
@@ -156,7 +157,7 @@ class ResultManagerTest extends TransactionalTestCase
 
     public function testImportMarks()
     {
-        $john = $this->persist->user('john');
+        $john = $this->persist->user('john', true);
         $jane = $this->persist->user('jane');
         $bob = $this->persist->user('bob');
         $this->persist->workspaceUser($john->getPersonalWorkspace(), $john);

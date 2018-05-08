@@ -20,14 +20,11 @@ const ProfileFacetComponent = props => {
   }
 
   return (
-    <div className="profile-facet">
-      <h2>{props.facet.title}</h2>
-
-      <FormContainer
-        name="user"
-        sections={sections}
-      />
-    </div>
+    <FormContainer
+      name="user"
+      title={props.facet.title}
+      sections={sections}
+    />
   )
 }
 

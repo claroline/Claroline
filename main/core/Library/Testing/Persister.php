@@ -54,10 +54,11 @@ class Persister
 
     /**
      * @param string $username
+     * @param bool   $personalWorkspace
      *
      * @return User
      */
-    public function user($username)
+    public function user($username, $personalWorkspace = false)
     {
         $roleUser = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
 
@@ -67,11 +68,25 @@ class Persister
         $user->setUsername($username);
         $user->setPlainPassword($username);
         $user->setEmail($username.'@email.com');
+        $user->setIsMailValidated(true);
         $user->addRole($roleUser);
         $user->setPublicUrl($username);
         $user->setCreationDate(new \DateTime());
         $this->container->get('claroline.manager.role_manager')->createUserRole($user);
         $this->om->persist($user);
+
+        // add a personal WS to the User
+        if ($personalWorkspace) {
+            $workspace = new Workspace();
+            $workspace->setName($username);
+            $workspace->setCreator($user);
+            $workspace->setCode($username);
+            $workspace->setGuid($username);
+
+            $user->setPersonalWorkspace($workspace);
+            $this->om->persist($workspace);
+        }
+
         $this->om->flush();
 
         return $user;

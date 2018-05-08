@@ -12,6 +12,10 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 /**
  * @DI\Service("claroline.doctrine.debug")
  * @DI\Tag("doctrine.event_listener", attributes={"event"="onFlush"})
+ *
+ * @todo merge with logger in claroline.persistence.object_manager and keep only one implementation
+ *  - logging MUST BE enabled inside the claroline.persistence.object_manager
+ *  - printing log MUST BE down through event listening
  */
 class DoctrineDebug extends ContainerAware
 {
@@ -32,6 +36,7 @@ class DoctrineDebug extends ContainerAware
         $this->debugLevel = 0;
         $this->debugVendor = null;
     }
+
     /**
      * Gets all the entities to flush.
      *

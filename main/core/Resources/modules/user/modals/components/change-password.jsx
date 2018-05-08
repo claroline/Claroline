@@ -1,8 +1,8 @@
 import React from 'react'
 import {PropTypes as T} from 'prop-types'
 
-import {t} from '#/main/core/translation'
-import {DataFormModal} from '#/main/core/data/form/modals/components/data-form.jsx'
+import {trans} from '#/main/core/translation'
+import {DataFormModal} from '#/main/core/data/form/modals/components/data-form'
 
 const MODAL_CHANGE_PASSWORD = 'MODAL_CHANGE_PASSWORD'
 
@@ -10,18 +10,18 @@ const ChangePasswordModal = props =>
   <DataFormModal
     {...props}
     icon="fa fa-fw fa-lock"
-    title={t('change_password')}
+    title={trans('change_password')}
     save={(data) => props.changePassword(data.plainPassword)}
     sections={[
       {
         id: 'general',
-        title: t('general'),
+        title: trans('general'),
         primary: true,
         fields: [
           {
             name: 'plainPassword',
             type: 'password',
-            label: t('password'),
+            label: trans('password'),
             required: true
           }
         ]

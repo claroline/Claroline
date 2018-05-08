@@ -18,14 +18,11 @@ const ProfileFacetComponent = props => {
   }
 
   return (
-    <div className="profile-facet">
-      <h2>{props.facet.title}</h2>
-
-      <DataDetailsContainer
-        name="user"
-        sections={sections}
-      />
-    </div>
+    <DataDetailsContainer
+      name="user"
+      title={props.facet.title}
+      sections={sections}
+    />
   )
 }
 
