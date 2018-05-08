@@ -1,0 +1,67 @@
+.cascade-enum-group {
+    ul {
+        padding: 0;
+        margin: 0;
+        list-style-type: none;
+    }
+
+    .no-item-info {
+        font-style: italic;
+        text-align: center;
+
+        margin-bottom: 0;
+        line-height: 30px;
+        border: 1px dashed #999;
+        border-radius: 4px;
+        padding: 5px;
+        color: #999;
+    }
+
+    .cascade-enum-item.item-root {
+        background-color: @gray-lighter;
+        border: 1px solid @gray-lighter;
+        border-radius: @border-radius-base;
+        padding: 10px;
+        margin-bottom: 10px;
+    }
+
+    .enum-children-list {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+
+    .cascade-enum-item.item-child {
+        width: calc(100% - 40px);
+    }
+
+    .cascade-enum-item {
+        .item-container {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 5px;
+
+            .enum-item-content {
+                flex: 1;
+                margin-right: floor(@grid-gutter-width / 2);
+                margin-bottom: 0;
+            }
+
+            .error-block {
+                margin-bottom: 0;
+            }
+
+            .right-controls {
+                .btn {
+                    padding-left: 4px;
+                    padding-right: 4px;
+                }
+            }
+        }
+
+    }
+
+    .btn-block {
+        margin-top: 10px;
+    }
+}

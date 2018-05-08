@@ -102,8 +102,8 @@ class ClacoFormWidgetController extends Controller
                             case FieldFacet::DATE_TYPE:
                                 $value = !is_null($value) ? $value->format('d/m/Y') : $value;
                                 break;
-                            case FieldFacet::CHECKBOXES_TYPE:
-                            case FieldFacet::CASCADE_SELECT_TYPE:
+                            case FieldFacet::CHOICE_TYPE:
+                            case FieldFacet::CASCADE_TYPE:
                                 $value = is_array($value) ? implode(', ', $value) : $value;
                                 break;
                             case FieldFacet::COUNTRY_TYPE:

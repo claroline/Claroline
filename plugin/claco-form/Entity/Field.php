@@ -160,13 +160,10 @@ class Field
             case FieldFacet::NUMBER_TYPE: return 'number';
             case FieldFacet::DATE_TYPE: return 'date';
             case FieldFacet::STRING_TYPE: return 'string';
-            case FieldFacet::RADIO_TYPE: return 'radio';
-            case FieldFacet::SELECT_TYPE: return 'select';
-            case FieldFacet::CHECKBOXES_TYPE: return 'checkboxes';
             case FieldFacet::COUNTRY_TYPE: return 'country';
             case FieldFacet::EMAIL_TYPE: return 'email';
             case FieldFacet::HTML_TYPE: return 'html';
-            case FieldFacet::CASCADE_SELECT_TYPE: return 'cascade';
+            case FieldFacet::CASCADE_TYPE: return 'cascade';
             case FieldFacet::FILE_TYPE: return 'file';
             case FieldFacet::BOOLEAN_TYPE: return 'boolean';
             case FieldFacet::CHOICE_TYPE: return 'choice';

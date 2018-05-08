@@ -185,7 +185,7 @@ class FieldChoiceCategory
             case FieldFacet::DATE_TYPE:
                 $value = $this->getDateValue();
                 break;
-            case FieldFacet::CASCADE_SELECT_TYPE:
+            case FieldFacet::CASCADE_TYPE:
             case FieldFacet::FILE_TYPE:
                 $value = $this->getArrayValue();
                 break;
@@ -219,7 +219,7 @@ class FieldChoiceCategory
                     $this->setDateValue(null);
                 }
                 break;
-            case FieldFacet::CASCADE_SELECT_TYPE:
+            case FieldFacet::CASCADE_TYPE:
             case FieldFacet::FILE_TYPE:
                 $this->setArrayValue($value);
                 break;
