@@ -34,8 +34,8 @@ class ResultRepositoryTest extends TransactionalTestCase
         /** @var ResultRepository $repo */
         $repo = $this->om->getRepository('ClarolineResultBundle:Result');
 
-        $john = $this->persist->user('john');
-        $jane = $this->persist->user('jane');
+        $john = $this->persist->user('john', true);
+        $jane = $this->persist->user('jane', true);
 
         $res1 = $this->persist->result('Res 1', $john);
         $res2 = $this->persist->result('Res 2', $john);

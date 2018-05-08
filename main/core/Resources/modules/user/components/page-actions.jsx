@@ -122,7 +122,8 @@ const UserPageActions = props => {
 UserPageActions.propTypes = {
   user: T.shape({
     meta: T.shape({
-      publicUrl: T.string.isRequired
+      publicUrl: T.string.isRequired,
+      publicUrlTuned: T.bool
     }).isRequired,
     rights: T.shape({
       current: T.shape({

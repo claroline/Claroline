@@ -13,6 +13,7 @@ namespace Claroline\CoreBundle\Listener\Widget;
 
 use Claroline\CoreBundle\Event\ConfigureWidgetEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
+use Claroline\CoreBundle\Listener\NoHttpRequestException;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
@@ -26,9 +27,15 @@ class TextResourceListener
     private $httpKernel;
 
     /**
+     * TextResourceListener constructor.
+     *
      * @DI\InjectParams({
-     *     "requestStack"        = @DI\Inject("request_stack")
+     *     "httpKernel"   = @DI\Inject("http_kernel"),
+     *     "requestStack" = @DI\Inject("request_stack")
      * })
+     *
+     * @param HttpKernelInterface $httpKernel
+     * @param RequestStack        $requestStack
      */
     public function __construct(
         HttpKernelInterface $httpKernel,
@@ -42,6 +49,8 @@ class TextResourceListener
      * @DI\Observe("widget_resource_text")
      *
      * @param DisplayWidgetEvent $event
+     *
+     * @throws NoHttpRequestException
      */
     public function onDisplay(DisplayWidgetEvent $event)
     {
@@ -60,6 +69,10 @@ class TextResourceListener
 
     /**
      * @DI\Observe("widget_resource_text_configuration")
+     *
+     * @param ConfigureWidgetEvent $event
+     *
+     * @throws NoHttpRequestException
      */
     public function onConfig(ConfigureWidgetEvent $event)
     {

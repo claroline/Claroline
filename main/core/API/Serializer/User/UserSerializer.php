@@ -19,7 +19,6 @@ use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 /**
  * @DI\Service("claroline.serializer.user")
@@ -34,9 +33,6 @@ class UserSerializer
 
     /** @var AuthorizationCheckerInterface */
     private $authChecker;
-
-    /** @var EncoderFactoryInterface */
-    private $encoderFactory;
 
     /** @var ObjectManager */
     private $om;
@@ -59,7 +55,6 @@ class UserSerializer
      * @DI\InjectParams({
      *     "tokenStorage"   = @DI\Inject("security.token_storage"),
      *     "authChecker"    = @DI\Inject("security.authorization_checker"),
-     *     "encoderFactory" = @DI\Inject("security.encoder_factory"),
      *     "om"             = @DI\Inject("claroline.persistence.object_manager"),
      *     "config"         = @DI\Inject("claroline.config.platform_config_handler"),
      *     "facetManager"   = @DI\Inject("claroline.manager.facet_manager"),
@@ -69,7 +64,6 @@ class UserSerializer
      *
      * @param TokenStorageInterface         $tokenStorage
      * @param AuthorizationCheckerInterface $authChecker
-     * @param EncoderFactoryInterface       $encoderFactory
      * @param ObjectManager                 $om
      * @param PlatformConfigurationHandler  $config
      * @param FacetManager                  $facetManager
@@ -79,7 +73,6 @@ class UserSerializer
     public function __construct(
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authChecker,
-        EncoderFactoryInterface $encoderFactory,
         ObjectManager $om,
         PlatformConfigurationHandler $config,
         FacetManager $facetManager,
@@ -88,7 +81,6 @@ class UserSerializer
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->authChecker = $authChecker;
-        $this->encoderFactory = $encoderFactory;
         $this->om = $om;
         $this->config = $config;
         $this->facetManager = $facetManager;
@@ -347,6 +339,7 @@ class UserSerializer
     {
         return [
             'disabled' => !$user->isEnabled(),
+            'removed' => $user->isRemoved(),
             'dates' => DateRangeNormalizer::normalize($user->getInitDate(), $user->getExpirationDate()),
         ];
     }
@@ -382,6 +375,7 @@ class UserSerializer
 
         $this->sipe('picture.url', 'setPicture', $data, $user);
         $this->sipe('email', 'setEmail', $data, $user);
+        $this->sipe('plainPassword', 'setPlainPassword', $data, $user);
 
         if (isset($data['meta'])) {
             $this->deserializeMeta($data['meta'], $user);
@@ -389,10 +383,6 @@ class UserSerializer
 
         if (isset($data['restrictions'])) {
             $this->deserializeRestrictions($data['restrictions'], $user);
-        }
-
-        if (isset($data['plainPassword'])) {
-            $this->deserializePassword($data['plainPassword'], $user);
         }
 
         //avoid recursive dependencies
@@ -457,16 +447,5 @@ class UserSerializer
         }
 
         return $user;
-    }
-
-    private function deserializePassword($plainPassword, User $user)
-    {
-        $user->setPlainPassword($plainPassword);
-
-        $password = $this->encoderFactory
-            ->getEncoder($user)
-            ->encodePassword($user->getPlainPassword(), $user->getSalt());
-
-        $user->setPassword($password);
     }
 }

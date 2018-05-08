@@ -384,6 +384,10 @@ class TransferManager
 
     /**
      * Full workspace export.
+     *
+     * @param Workspace $workspace
+     *
+     * @return string - the path to the exported archive
      */
     public function export($workspace)
     {
@@ -408,37 +412,11 @@ class TransferManager
             }
         }
 
-        //then we parse and replace the text, we also add missing files in $resManagerData
+        // parse and replace the text, we also add missing files in $resManagerData
         $files = $this->container->get('claroline.importer.rich_text_formatter')
             ->setPlaceHolders($files, $_resManagerData);
-        //throw new \Exception();
-        //generate the archive in a temp dir
-        $content = Yaml::dump($data, 10);
-        //zip and returns the archive
-        $archDir = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir')
-            .DIRECTORY_SEPARATOR.uniqid();
-        $archPath = $archDir.DIRECTORY_SEPARATOR.'archive.zip';
-        mkdir($archDir);
-        $manifestPath = $archDir.DIRECTORY_SEPARATOR.'manifest.yml';
-        file_put_contents($manifestPath, $content);
-        $archive = new \ZipArchive();
-        $success = $archive->open($archPath, \ZipArchive::CREATE);
 
-        if (true === $success) {
-            $archive->addFile($manifestPath, 'manifest.yml');
-
-            foreach ($files as $uid => $file) {
-                $archive->addFile($file, $uid);
-            }
-
-            $archive->close();
-        } else {
-            throw new \Exception('Unable to create archive . '.$archPath.' (error '.$success.')');
-        }
-
-        $this->container->get('claroline.core_bundle.listener.kernel_terminate_listener')->addElementToRemove($archPath);
-
-        return $archPath;
+        return $this->generateExportArchive($data, $files);
     }
 
     /**
@@ -468,38 +446,52 @@ class TransferManager
         }
 
         if ($parseAndReplace) {
-            $files = $this->container->get('claroline.importer.rich_text_formatter')
+            $files = $this->container
+                ->get('claroline.importer.rich_text_formatter')
                 ->setPlaceHolders($files, $_resManagerData);
         }
 
-        //throw new \Exception();
-        //generate the archive in a temp dir
-        $content = Yaml::dump($data, 10);
-        //zip and returns the archive
-        $archDir = $this->container->get('claroline.config.platform_config_handler')->getParameter('tmp_dir')
-            .DIRECTORY_SEPARATOR.uniqid();
-        $archPath = $archDir.DIRECTORY_SEPARATOR.'archive.zip';
-        mkdir($archDir);
-        $manifestPath = $archDir.DIRECTORY_SEPARATOR.'manifest.yml';
-        file_put_contents($manifestPath, $content);
-        $archive = new \ZipArchive();
-        $success = $archive->open($archPath, \ZipArchive::CREATE);
+        return $this->generateExportArchive($data, $files);
+    }
 
-        if (true === $success) {
+    /**
+     * Creates an export archive with manifest.
+     *
+     * @param array $data
+     * @param array $files
+     *
+     * @return string - the path to the generated archive
+     *
+     * @throws \Exception - if the archive file cannot be generated
+     */
+    private function generateExportArchive(array $data, array $files)
+    {
+        // generate the archive in a temp dir
+        $archivePath = $this->container->get('claroline.manager.temp_file')->generate();
+
+        $archive = new \ZipArchive();
+        $archiveState = $archive->open($archivePath, \ZipArchive::CREATE);
+        if (true === $archiveState) {
+            // generate manifest
+            $manifestPath = $this->container->get('claroline.manager.temp_file')->generate();
+            file_put_contents($manifestPath, Yaml::dump($data, 10));
+
+            // append manifest to the final archive
             $archive->addFile($manifestPath, 'manifest.yml');
 
+            // append all exported files to the final archive
             foreach ($files as $uid => $file) {
                 $archive->addFile($file, $uid);
             }
 
             $archive->close();
         } else {
-            throw new \Exception('Unable to create archive . '.$archPath.' (error '.$success.')');
+            throw new \Exception(
+                sprintf('Unable to create archive %s (error: %s)', $archivePath, $archiveState)
+            );
         }
 
-        $this->container->get('claroline.core_bundle.listener.kernel_terminate_listener')->addElementToRemove($archPath);
-
-        return $archPath;
+        return $archivePath;
     }
 
     /**

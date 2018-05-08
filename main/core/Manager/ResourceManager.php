@@ -1102,7 +1102,8 @@ class ResourceManager
     /**
      * Returns an archive with the required content.
      *
-     * @param array $nodes[] the nodes being exported
+     * @param ResourceNode[] $elements     - the nodes being exported
+     * @param bool           $forceArchive
      *
      * @throws ExportResourceException
      *
@@ -1116,12 +1117,12 @@ class ResourceManager
             throw new ExportResourceException('No resources were selected.');
         }
 
-        $archive = new \ZipArchive();
-        $pathArch = $this->container->get('claroline.config.platform_config_handler')
-                ->getParameter('tmp_dir').DIRECTORY_SEPARATOR.$this->ut->generateGuid().'.zip';
-        $archive->open($pathArch, \ZipArchive::CREATE);
-        $nodes = $this->expandResources($elements);
+        $pathArch = $this->container->get('claroline.manager.temp_file')->generate();
 
+        $archive = new \ZipArchive();
+        $archive->open($pathArch, \ZipArchive::CREATE);
+
+        $nodes = $this->expandResources($elements);
         if (!$forceArchive && 1 === count($nodes)) {
             $event = $this->dispatcher->dispatch(
                 "download_{$nodes[0]->getResourceType()->getName()}",
@@ -1191,12 +1192,10 @@ class ResourceManager
         }
 
         $archive->close();
-        $tmpList = $this->container->getParameter('claroline.param.platform_generated_archive_path');
-        file_put_contents($tmpList, $pathArch."\n", FILE_APPEND);
+
         $data['name'] = 'archive.zip';
         $data['file'] = $pathArch;
         $data['mimeType'] = 'application/zip';
-        $this->container->get('claroline.core_bundle.listener.kernel_terminate_listener')->addElementToRemove($pathArch);
 
         return $data;
     }

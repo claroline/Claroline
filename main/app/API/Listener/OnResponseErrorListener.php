@@ -14,38 +14,24 @@ use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 class OnResponseErrorListener
 {
     /**
-     * @DI\Observe("kernel.exception")
+     * Converts Exceptions in JSON for the async api.
+     *
+     * @DI\Observe("kernel.exception", priority=99)
      *
      * @param GetResponseForExceptionEvent $event
      */
-    public function onKernelRequest(GetResponseForExceptionEvent $event)
+    public function handleError(GetResponseForExceptionEvent $event)
     {
-        $controller = $event->getRequest()->attributes->get('_controller');
-
-        //get the first controller part
-        $class = substr($controller, 0, strpos($controller, ':'));
-
-        if (is_subclass_of($class, 'Claroline\CoreBundle\Controller\APINew\AbstractApiController')) {
-            $this->handleError($event->getException(), $event);
-        }
-    }
-
-    /**
-     * @param \Exception                   $exception
-     * @param GetResponseForExceptionEvent $event
-     */
-    private function handleError(\Exception $exception, GetResponseForExceptionEvent $event)
-    {
-        if ($exception instanceof InvalidDataException) {
-            $response = new JsonResponse($exception->getErrors(), 422);
-
-            $event->setResponse($response);
-        } else {
-            $data = [
-              'message' => $exception->getMessage(),
-              'trace' => $exception->getTrace(),
-            ];
-            $response = new JsonResponse($data, 500);
+        if ($event->getRequest()->isXmlHttpRequest()) {
+            $exception = $event->getException();
+            if ($exception instanceof InvalidDataException) {
+                $response = new JsonResponse($exception->getErrors(), 422);
+            } else {
+                $response = new JsonResponse([
+                    'message' => $exception->getMessage(),
+                    'trace' => $exception->getTrace(),
+                ], 500);
+            }
 
             $event->setResponse($response);
         }

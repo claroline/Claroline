@@ -12,25 +12,29 @@
 namespace Claroline\CoreBundle\Library\Security\Authentication;
 
 use FOS\OAuthServerBundle\Security\Authentication\Token\OAuthToken;
+use JMS\DiExtraBundle\Annotation as DI;
 use OAuth2\OAuth2;
+use Symfony\Bridge\Doctrine\Security\User\EntityUserProvider;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
+use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\SecurityContextInterface;
-use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Bridge\Doctrine\Security\User\EntityUserProvider;
-use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
-use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
+use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
  * This is the API Authentication class. It supports Cookies, HTTP, Anonymous & OAUTH authentication.
  *
  * @DI\Service("claroline.core_bundle.library.security.authentication.claroline_api_listener")
+ *
+ * @deprecated
+ *
+ * @todo create a custom authenticator for each method (HTTP, OAuth, Cookie)
  */
 class ClarolineApiListener implements ListenerInterface
 {
@@ -54,10 +58,15 @@ class ClarolineApiListener implements ListenerInterface
      */
     protected $userProvider;
 
-     /**
-      * @var EncoderFactoryInterface
-      */
-     protected $encodeFactory;
+    /**
+     * @var EncoderFactoryInterface
+     */
+    protected $encodeFactory;
+
+    /**
+     * @var string
+     */
+    private $sessionKey;
 
     /**
      * @DI\InjectParams({
@@ -86,12 +95,10 @@ class ClarolineApiListener implements ListenerInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event The event.
+     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event The event
      */
     public function handle(GetResponseEvent $event)
     {
-        $request = $event->getRequest();
-
         if (null === $oauthToken = $this->serverService->getBearerToken($event->getRequest(), true)) {
             if ($this->tryCookieAuth($event)) {
                 return;
@@ -164,26 +171,26 @@ class ClarolineApiListener implements ListenerInterface
 
     private function authenticateAnonymous()
     {
-        $token = new AnonymousToken('main', 'anon.', array('ROLE_ANONYMOUS'));
+        $token = new AnonymousToken('main', 'anon.', ['ROLE_ANONYMOUS']);
         $this->securityContext->setToken($token);
 
-       /*
-        * To do things properly, we should retrieve the anonymous key from the firewall ($firewall['anonymous'][key])
-        * It can be set in the security.yml manually or is randomly generated. I don't know how to retrieve the random one yet.
-        *
-        *    $token = new AnonymousToken($key, 'anon.', array('ROLE_ANONYMOUS'));
-        *
-        *    try {
-        *        $returnValue = $this->authenticationManager->authenticate($token);
-        *        if ($returnValue instanceof TokenInterface) {
-        *            $this->securityContext->setToken($returnValue);
-        *
-        *            return true;
-        *        }
-        *    } catch (AuthenticationException $e) {
-        *        return false;
-        *    }
-        */
+        /*
+         * To do things properly, we should retrieve the anonymous key from the firewall ($firewall['anonymous'][key])
+         * It can be set in the security.yml manually or is randomly generated. I don't know how to retrieve the random one yet.
+         *
+         *    $token = new AnonymousToken($key, 'anon.', array('ROLE_ANONYMOUS'));
+         *
+         *    try {
+         *        $returnValue = $this->authenticationManager->authenticate($token);
+         *        if ($returnValue instanceof TokenInterface) {
+         *            $this->securityContext->setToken($returnValue);
+         *
+         *            return true;
+         *        }
+         *    } catch (AuthenticationException $e) {
+         *        return false;
+         *    }
+         */
     }
 
     private function tryOauthAuth(GetResponseEvent $event, $oauthToken)

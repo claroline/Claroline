@@ -81,14 +81,13 @@ class PlatformConfigurationHandler
 
     public function setParameter($parameter, $value)
     {
-        if (!is_writable($this->configFile)) {
-            $exception = new UnwritableException();
-            $exception->setPath($this->configFile);
-
-            throw $exception;
-        }
-
         $this->parameters[$parameter] = $value;
+        $this->saveParameters();
+    }
+
+    public function removeParameter($parameter)
+    {
+        unset($this->parameters[$parameter]);
         $this->saveParameters();
     }
 
@@ -167,6 +166,13 @@ class PlatformConfigurationHandler
 
     protected function saveParameters()
     {
+        if (!is_writable($this->configFile)) {
+            $exception = new UnwritableException();
+            $exception->setPath($this->configFile);
+
+            throw $exception;
+        }
+
         ksort($this->parameters);
         $parameters = Yaml::dump($this->parameters);
         file_put_contents($this->configFile, $parameters);

@@ -1,73 +1,84 @@
 <?php
 
-/*
- * This file is part of the Claroline Connect package.
- *
- * (c) Claroline Consortium <consortium@claroline.net>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Claroline\CoreBundle\Listener\Administration;
 
-use Claroline\CoreBundle\Entity\User;
+use Claroline\AppBundle\API\FinderProvider;
+use Claroline\CoreBundle\API\Serializer\ParametersSerializer;
+use Claroline\CoreBundle\API\Serializer\User\ProfileSerializer;
+use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Claroline\CoreBundle\Event\AdminUserActionEvent;
-use Symfony\Component\HttpKernel\HttpKernelInterface;
+use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
+ * User administration tool.
+ * Manages Users, Groups, Roles, Organizations, Locations, Profile, Parameters.
+ *
  * @DI\Service()
  */
 class UserListener
 {
-    private $container;
-    private $httpKernel;
+    /** @var TwigEngine */
+    private $templating;
+
+    /** @var FinderProvider */
+    private $finder;
+
+    /** @var ParametersSerializer */
+    private $parametersSerializer;
+
+    /** @var ProfileSerializer */
+    private $profileSerializer;
 
     /**
+     * UserListener constructor.
+     *
      * @DI\InjectParams({
-     *     "container"  = @DI\Inject("service_container"),
-     *     "httpKernel" = @DI\Inject("http_kernel")
+     *     "templating"           = @DI\Inject("templating"),
+     *     "finder"               = @DI\Inject("claroline.api.finder"),
+     *     "parametersSerializer" = @DI\Inject("claroline.serializer.parameters"),
+     *     "profileSerializer"    = @DI\Inject("claroline.serializer.profile")
      * })
+     *
+     * @param TwigEngine           $templating
+     * @param FinderProvider       $finder
+     * @param ParametersSerializer $parametersSerializer
+     * @param ProfileSerializer    $profileSerializer
      */
-    public function __construct(ContainerInterface $container, HttpKernelInterface $httpKernel)
+    public function __construct(
+        TwigEngine $templating,
+        FinderProvider $finder,
+        ParametersSerializer $parametersSerializer,
+        ProfileSerializer $profileSerializer)
     {
-        $this->container = $container;
-        $this->httpKernel = $httpKernel;
+        $this->templating = $templating;
+        $this->finder = $finder;
+        $this->parametersSerializer = $parametersSerializer;
+        $this->profileSerializer = $profileSerializer;
     }
 
     /**
-     * @DI\Observe("admin_user_action_edit")
+     * Displays user administration tool.
+     *
+     * @DI\Observe("administration_tool_user_management")
+     *
+     * @param OpenAdministrationToolEvent $event
      */
-    public function onEditUser(AdminUserActionEvent $event)
+    public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
-        $params = array(
-            '_controller' => 'ClarolineCoreBundle:Profile:editProfile',
-            'user' => $event->getUser()->getId(),
+        $content = $this->templating->render(
+            'ClarolineCoreBundle:Administration:User\index.html.twig', [
+                // todo : put it in the async load of form
+                'parameters' => $this->parametersSerializer->serialize(),
+                'profile' => $this->profileSerializer->serialize(),
+                'platformRoles' => $this->finder->search('Claroline\CoreBundle\Entity\Role', [
+                    'filters' => ['type' => Role::PLATFORM_ROLE],
+                ]),
+            ]
         );
 
-        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("admin_user_action_show_workspaces")
-     */
-    public function onOpenWorkspaceUser(AdminUserActionEvent $event)
-    {
-        $params = array(
-            '_controller' => 'ClarolineCoreBundle:Administration\Users:userWorkspaceList',
-            'user' => $event->getUser()->getId(),
-            'page' => 1,
-            'max' => 50,
-        );
-
-        $subRequest = $this->container->get('request')->duplicate(array(), null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 }

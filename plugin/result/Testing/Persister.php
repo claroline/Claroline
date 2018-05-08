@@ -23,41 +23,12 @@ use Claroline\ResultBundle\Entity\Result;
 class Persister extends ClarolinePersister
 {
     private $om;
-    private $userRole;
     private $resultType;
 
     public function __construct(ObjectManager $om, $container)
     {
         parent::__construct($om, $container);
         $this->om = $om;
-    }
-
-    public function user($username)
-    {
-        $user = new User();
-        $user->setFirstName($username);
-        $user->setLastName($username);
-        $user->setUsername($username);
-        $user->setPassword($username);
-        $user->setEmail($username.'@email.com');
-        $user->setPublicUrl($username);
-        $user->setIsMailValidated(true);
-        $this->om->persist($user);
-
-        if (!$this->userRole) {
-            $this->userRole = $this->om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_USER');
-        }
-
-        $user->addRole($this->userRole);
-        $workspace = new Workspace();
-        $workspace->setName($username);
-        $workspace->setCreator($user);
-        $workspace->setCode($username);
-        $workspace->setGuid($username);
-        $this->om->persist($workspace);
-        $user->setPersonalWorkspace($workspace);
-
-        return $user;
     }
 
     public function workspaceUser(Workspace $workspace, User $user)
@@ -69,6 +40,7 @@ class Persister extends ClarolinePersister
         $user->addRole($role);
         $workspace->addRole($role);
 
+        $this->om->persist($workspace);
         $this->om->persist($role);
         $this->om->persist($user);
 
@@ -92,6 +64,9 @@ class Persister extends ClarolinePersister
         $node->setWorkspace($creator->getPersonalWorkspace());
         $node->setClass('Claroline\ResultBundle\Entity\Result');
         $node->setGuid(time());
+
+        // create 'open' mask in db
+        $this->maskDecoder($node->getResourceType(), 'open', 1);
 
         $result->setResourceNode($node);
 

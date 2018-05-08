@@ -89,7 +89,6 @@ claro_user_tracking:
 
 claro_desktop:
     resource: "@ClarolineCoreBundle/Controller/DesktopController.php"
-    prefix: desktop
     type: annotation
 
 claro_desktop_tool_properties:
@@ -115,11 +114,6 @@ claro_workspace_tool_properties:
 claro_workspace_tool_tools_properties:
     resource: "@ClarolineCoreBundle/Controller/Tool/WorkspaceToolsParametersController.php"
     prefix: workspaces/tool/properties
-    type: annotation
-
-claro_workspace_tool_home:
-    resource: "@ClarolineCoreBundle/Controller/Tool/HomeController.php"
-    prefix: workspaces/tool/home
     type: annotation
 
 claro_workspace_analytics:
@@ -219,17 +213,6 @@ claro_admin_parameters:
     resource: "@ClarolineCoreBundle/Controller/Administration/ParametersController.php"
     type: annotation
 
-claro_admin_workspaces:
-    prefix: admin/workspaces
-    resource: "@ClarolineCoreBundle/Controller/Administration/WorkspaceController.php"
-    type: annotation
-
-claro_admin_users:
-    prefix: admin/users
-    resource: "@ClarolineCoreBundle/Controller/Administration/UsersController.php"
-    type: annotation
-    options: { expose: true }
-
 claro_admin_logs:
     prefix: admin/logs
     resource: "@ClarolineCoreBundle/Controller/Administration/LogsController.php"
@@ -284,11 +267,6 @@ claro_resources_api:
     options:
         expose: true
 
-claro_contact:
-    resource: "@ClarolineCoreBundle/Controller/ContactController.php"
-    prefix: contact
-    type: annotation
-
 claro_portal:
     resource: "@ClarolineCoreBundle/Controller/PortalController.php"
     prefix: portal
@@ -315,11 +293,6 @@ claro_client:
 claro_admin_resource_icons:
     resource: "@ClarolineCoreBundle/Controller/Administration/IconController.php"
     prefix: admin/parameters/appearance/icon
-    type: annotation
-
-claro_admin_scheduled_task:
-    resource: "@ClarolineCoreBundle/Controller/Administration/ScheduledTaskController.php"
-    prefix: admin/scheduled/task
     type: annotation
 
 claro_new_api:

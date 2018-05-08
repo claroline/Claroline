@@ -307,9 +307,9 @@ class AdditionalInstaller extends BaseInstaller
             $updater->postUpdate();
         }
         if (version_compare($currentVersion, '6.7.4', '<=')) {
-                $updater = new Updater\Updater060704($this->container);
-                $updater->setLogger($this->logger);
-                $updater->postUpdate();
+            $updater = new Updater\Updater060704($this->container);
+            $updater->setLogger($this->logger);
+            $updater->postUpdate();
         }
         if (version_compare($currentVersion, '6.8.0', '<')) {
             $updater = new Updater\Updater060800($this->container, $this->logger);
@@ -368,6 +368,11 @@ class AdditionalInstaller extends BaseInstaller
         }
         if (version_compare($currentVersion, '11.3.0', '<')) {
             $updater = new Updater\Updater110300($this->container, $this->logger);
+            $updater->setLogger($this->logger);
+            $updater->postUpdate();
+        }
+        if (version_compare($currentVersion, '12.0.0', '<')) {
+            $updater = new Updater\Updater120000($this->container, $this->logger);
             $updater->setLogger($this->logger);
             $updater->postUpdate();
         }

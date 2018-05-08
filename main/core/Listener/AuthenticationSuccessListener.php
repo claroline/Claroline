@@ -15,6 +15,7 @@ use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\BundleRecorder\Log\LoggableTrait;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Event\GenericDataEvent;
 use Claroline\CoreBundle\Form\TermsOfServiceType;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
@@ -32,6 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpKernel\Event\FilterResponseEvent;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -39,15 +41,16 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Role\SwitchUserRole;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
-use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
 use Symfony\Component\Templating\EngineInterface;
 
 /**
- * @DI\Service("claroline.authentication_handler")
+ * @DI\Service("claroline.security.authentication.success_handler")
  */
 class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInterface
 {
     use LoggableTrait;
+    /** @var Kernel */
+    private $kernel;
     /** @var TokenStorageInterface */
     private $tokenStorage;
     /** @var AuthorizationCheckerInterface */
@@ -72,22 +75,40 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     private $requestStack;
 
     /**
+     * AuthenticationSuccessListener constructor.
+     *
      * @DI\InjectParams({
-     *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "tokenStorage"    = @DI\Inject("security.token_storage"),
-     *     "eventDispatcher"        = @DI\Inject("claroline.event.event_dispatcher"),
-     *     "configurationHandler"   = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "templating"             = @DI\Inject("templating"),
-     *     "formFactory"            = @DI\Inject("form.factory"),
-     *     "termsOfService"         = @DI\Inject("claroline.common.terms_of_service_manager"),
-     *     "manager"                = @DI\Inject("claroline.persistence.object_manager"),
-     *     "router"                 = @DI\Inject("router"),
-     *     "userManager"            = @DI\Inject("claroline.manager.user_manager"),
-     *     "requestStack"           = @DI\Inject("request_stack"),
-     *     "kernelRootDir"          = @DI\Inject("%kernel.root_dir%")
+     *     "kernel"               = @DI\Inject("kernel"),
+     *     "authorization"        = @DI\Inject("security.authorization_checker"),
+     *     "tokenStorage"         = @DI\Inject("security.token_storage"),
+     *     "eventDispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
+     *     "configurationHandler" = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "templating"           = @DI\Inject("templating"),
+     *     "formFactory"          = @DI\Inject("form.factory"),
+     *     "termsOfService"       = @DI\Inject("claroline.common.terms_of_service_manager"),
+     *     "manager"              = @DI\Inject("claroline.persistence.object_manager"),
+     *     "router"               = @DI\Inject("router"),
+     *     "userManager"          = @DI\Inject("claroline.manager.user_manager"),
+     *     "requestStack"         = @DI\Inject("request_stack"),
+     *     "kernelRootDir"        = @DI\Inject("%kernel.root_dir%")
      * })
+     *
+     * @param Kernel                        $kernel
+     * @param TokenStorageInterface         $tokenStorage
+     * @param AuthorizationCheckerInterface $authorization
+     * @param StrictDispatcher              $eventDispatcher
+     * @param PlatformConfigurationHandler  $configurationHandler
+     * @param EngineInterface               $templating
+     * @param FormFactory                   $formFactory
+     * @param TermsOfServiceManager         $termsOfService
+     * @param ObjectManager                 $manager
+     * @param Router                        $router
+     * @param UserManager                   $userManager
+     * @param RequestStack                  $requestStack
+     * @param string                        $kernelRootDir
      */
     public function __construct(
+        Kernel $kernel,
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         StrictDispatcher $eventDispatcher,
@@ -101,6 +122,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         RequestStack $requestStack,
         $kernelRootDir
     ) {
+        $this->kernel = $kernel;
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->eventDispatcher = $eventDispatcher;
@@ -118,13 +140,9 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     /**
      * @DI\Observe("security.interactive_login")
      */
-    public function onLoginSuccess(InteractiveLoginEvent $event)
+    public function onLoginSuccess()
     {
         $user = $this->tokenStorage->getToken()->getUser();
-
-        if (null === $user->getInitDate()) {
-            $this->userManager->setUserInitDate($user);
-        }
 
         $this->userManager->logUser($user);
     }
@@ -172,6 +190,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
             $this->configurationHandler->isRedirectOption(PlatformDefaults::$REDIRECT_OPTIONS['WORKSPACE_TAG'])
             && null !== $defaultWorkspaceTag = $this->configurationHandler->getParameter('default_workspace_tag')
         ) {
+            /** @var GenericDataEvent $event */
             $event = $this->eventDispatcher->dispatch(
                 'claroline_retrieve_user_workspaces_by_tag',
                 'GenericData',
@@ -201,19 +220,26 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
     }
 
     /**
+     * Checks the current user has accepted term of services if any before displaying platform.
+     *
      * @DI\Observe("kernel.request")
      *
      * @param GetResponseEvent $event
      */
-    public function onKernelRequest(GetResponseEvent $event)
+    public function checkTermOfServices(GetResponseEvent $event)
     {
-        if ($this->configurationHandler->getParameter('terms_of_service')) {
-            $this->showTermOfServices($event);
+        if ('prod' === $this->kernel->getEnvironment() && $event->isMasterRequest()) {
+            $user = !empty($this->tokenStorage->getToken()) ? $this->tokenStorage->getToken()->getUser() : null;
+            if ($user instanceof User && $this->configurationHandler->getParameter('terms_of_service')) {
+                $this->showTermOfServices($event);
+            }
         }
     }
 
     /**
      * @DI\Observe("kernel.response", priority = 1)
+     *
+     * @param FilterResponseEvent $event
      */
     public function onKernelResponse(FilterResponseEvent $event)
     {
@@ -276,7 +302,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
      *
      * @param \Symfony\Component\HttpFoundation\Request $request
      *
-     * @return Claroline\CoreBundle\Entity\User
+     * @return User
      */
     private function getUser(Request $request)
     {
@@ -290,6 +316,8 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
         ) {
             return $user;
         }
+
+        return null;
     }
 
     /**
@@ -332,5 +360,7 @@ class AuthenticationSuccessListener implements AuthenticationSuccessHandlerInter
                 }
             }
         }
+
+        return false;
     }
 }

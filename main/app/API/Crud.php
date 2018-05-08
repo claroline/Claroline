@@ -81,7 +81,7 @@ class Crud
             $errors = $this->validate($class, $data, ValidatorProvider::CREATE);
 
             if (count($errors) > 0) {
-                return $errors;
+                return $errors; // todo : it should throw an Exception otherwise it makes return inconsistent
             }
         }
 

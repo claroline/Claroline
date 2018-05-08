@@ -42,6 +42,14 @@ class ExerciseControllerTest extends TransactionalTestCase
         $this->om->flush();
     }
 
+    public function testOpenNonExistentDocimology()
+    {
+        // Try to open non existent docimology
+        $this->request('GET', '/exercises/1234/docimology', $this->exerciseCreator);
+        // The user must have access to the exercise
+        $this->assertEquals(404, $this->client->getResponse()->getStatusCode());
+    }
+
     /**
      * The exercise docimology action MUST be accessible to admins of the exercise.
      */

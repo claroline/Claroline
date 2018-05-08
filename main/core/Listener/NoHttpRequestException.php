@@ -11,14 +11,15 @@
 
 namespace Claroline\CoreBundle\Listener;
 
+// TODO : I don't understand why it is here
+// TODO : I don't understand why there is a listener attached to the constructor (It should be a regular Exception)
+
 class NoHttpRequestException extends \Exception
 {
     /**
-     * @DI\Observe("kernel.request")
-     *
      * Sets the platform language.
      *
-     * @param GetResponseEvent $event
+     * @DI\Observe("kernel.request")
      */
     public function __construct()
     {

@@ -47,6 +47,7 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  *
  * )
  * @ORM\Entity(repositoryClass="Claroline\CoreBundle\Repository\UserRepository")
+ * @ORM\EntityListeners({"Claroline\CoreBundle\Listener\Entity\UserListener"})
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("email")

@@ -12,7 +12,7 @@
 namespace Icap\InwicastBundle\Listener;
 
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
-use Claroline\CoreBundle\Listener\AdministrationToolListener as BaseAdministrationToolListener;
+use Claroline\CoreBundle\Listener\Administration\AdministrationToolListener as BaseAdministrationToolListener;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**

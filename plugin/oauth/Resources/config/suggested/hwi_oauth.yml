@@ -73,7 +73,7 @@ security:
                     windows_live: /login/check-windows
                     office_365:   /login/check-o365
                     generic:      /login/check-generic
-                success_handler:    claroline.authentication_handler
+                success_handler:    claroline.security.authentication.success_handler
                 failure_handler:    icap.oauth.failure_handler
                 login_path: /login
                 failure_path: /login

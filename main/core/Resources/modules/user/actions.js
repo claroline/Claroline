@@ -21,6 +21,10 @@ actions.updatePublicUrl = (user, publicUrl, redirect = false) => ({
       method: 'PUT',
       body: JSON.stringify(Object.assign({}, user, {meta: {publicUrl: publicUrl, publicUrlTuned: true}}))
     },
-    success: () => window.location = url(['claro_user_profile', {publicUrl: publicUrl}]) // TODO : find better
+    success: () => {
+      if (redirect) {
+        window.location = url(['claro_user_profile', {publicUrl: publicUrl}]) // TODO : find better
+      }
+    }
   }
 })
