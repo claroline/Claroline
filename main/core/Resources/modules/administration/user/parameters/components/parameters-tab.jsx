@@ -120,6 +120,19 @@ const Parameters = (props) => {
         title: trans('user_profile'),
         fields: [
           {
+            name: 'profile.roles_edition',
+            type: 'choice',
+            label: trans('profile_roles_for_edition'),
+            options: {
+              multiple: true,
+              condensed: true,
+              choices: Object.keys(roleEnum).filter(r => ['ROLE_ADMIN', 'ROLE_ANONYMOUS'].indexOf(r) === -1).reduce((choices, key) => {
+                choices[key] = roleEnum[key]
+
+                return choices
+              }, {})
+            }
+          }, {
             name: 'profile.roles_confidential',
             type: 'choice',
             label: trans('profile_roles_for_confidential_fields'),
@@ -139,7 +152,7 @@ const Parameters = (props) => {
             options: {
               multiple: true,
               condensed: true,
-              choices: Object.keys(roleEnum).filter(r => r !== 'ROLE_ADMIN').reduce((choices, key) => {
+              choices: Object.keys(roleEnum).filter(r => ['ROLE_ADMIN', 'ROLE_ANONYMOUS'].indexOf(r) === -1).reduce((choices, key) => {
                 choices[key] = roleEnum[key]
 
                 return choices

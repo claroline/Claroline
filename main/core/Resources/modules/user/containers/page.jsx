@@ -1,7 +1,11 @@
 import {connectPage} from '#/main/core/layout/page/connect'
 
+import {currentUser} from '#/main/core/user/current'
 import {actions} from '#/main/core/user/actions'
 import {UserPage} from '#/main/core/user/components/page.jsx'
+import {select as profileSelect} from '#/main/core/user/profile/selectors'
+
+const authenticatedUser = currentUser()
 
 /**
  * Connected container for users.
@@ -16,9 +20,11 @@ import {UserPage} from '#/main/core/user/components/page.jsx'
  */
 const UserPageContainer = connectPage(
   (state, ownProps) => ownProps.user ? ({
-    user: ownProps.user
+    user: ownProps.user,
+    canEditProfile: authenticatedUser.roles.filter(r => ['ROLE_ADMIN'].concat(profileSelect.parameters(state)['roles_edition']).indexOf(r.name) > -1).length > 0
   }) : ({
-    user: state.user
+    user: state.user,
+    canEditProfile: authenticatedUser.roles.filter(r => ['ROLE_ADMIN'].concat(profileSelect.parameters(state)['roles_edition']).indexOf(r.name) > -1).length > 0
   }),
   dispatch => ({
     //edition
