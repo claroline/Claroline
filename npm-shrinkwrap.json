@@ -13,9 +13,9 @@
       "resolved": "https://registry.npmjs.org/@symfony/webpack-encore/-/webpack-encore-0.20.1.tgz"
     },
     "@types/node": {
-      "version": "10.0.4",
+      "version": "10.0.6",
       "from": "@types/node@*",
-      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.0.4.tgz"
+      "resolved": "https://registry.npmjs.org/@types/node/-/node-10.0.6.tgz"
     },
     "@types/tapable": {
       "version": "0.2.5",
@@ -132,9 +132,16 @@
       }
     },
     "ajv": {
-      "version": "6.4.0",
+      "version": "6.5.0",
       "from": "ajv@>=6.0.0 <7.0.0",
-      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.4.0.tgz"
+      "resolved": "https://registry.npmjs.org/ajv/-/ajv-6.5.0.tgz",
+      "dependencies": {
+        "fast-deep-equal": {
+          "version": "2.0.1",
+          "from": "fast-deep-equal@>=2.0.1 <3.0.0",
+          "resolved": "https://registry.npmjs.org/fast-deep-equal/-/fast-deep-equal-2.0.1.tgz"
+        }
+      }
     },
     "ajv-keywords": {
       "version": "3.2.0",
@@ -1213,14 +1220,14 @@
       }
     },
     "caniuse-db": {
-      "version": "1.0.30000835",
+      "version": "1.0.30000836",
       "from": "caniuse-db@>=1.0.30000634 <2.0.0",
-      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000835.tgz"
+      "resolved": "https://registry.npmjs.org/caniuse-db/-/caniuse-db-1.0.30000836.tgz"
     },
     "caniuse-lite": {
-      "version": "1.0.30000835",
+      "version": "1.0.30000836",
       "from": "caniuse-lite@>=1.0.30000792 <2.0.0",
-      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30000835.tgz"
+      "resolved": "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30000836.tgz"
     },
     "caseless": {
       "version": "0.12.0",
@@ -1253,9 +1260,9 @@
       "resolved": "https://registry.npmjs.org/cheerio/-/cheerio-1.0.0-rc.2.tgz",
       "dependencies": {
         "domhandler": {
-          "version": "2.4.1",
+          "version": "2.4.2",
           "from": "domhandler@>=2.3.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/domhandler/-/domhandler-2.4.1.tgz"
+          "resolved": "https://registry.npmjs.org/domhandler/-/domhandler-2.4.2.tgz"
         },
         "htmlparser2": {
           "version": "3.9.2",
@@ -2453,9 +2460,9 @@
       "resolved": "https://registry.npmjs.org/expand-range/-/expand-range-1.8.2.tgz",
       "dependencies": {
         "fill-range": {
-          "version": "2.2.3",
+          "version": "2.2.4",
           "from": "fill-range@>=2.1.0 <3.0.0",
-          "resolved": "https://registry.npmjs.org/fill-range/-/fill-range-2.2.3.tgz"
+          "resolved": "https://registry.npmjs.org/fill-range/-/fill-range-2.2.4.tgz"
         },
         "is-number": {
           "version": "2.1.0",
@@ -4206,9 +4213,9 @@
       "resolved": "https://registry.npmjs.org/loglevel/-/loglevel-1.6.1.tgz"
     },
     "lolex": {
-      "version": "2.3.2",
+      "version": "2.4.1",
       "from": "lolex@>=2.2.0 <3.0.0",
-      "resolved": "https://registry.npmjs.org/lolex/-/lolex-2.3.2.tgz"
+      "resolved": "https://registry.npmjs.org/lolex/-/lolex-2.4.1.tgz"
     },
     "longest": {
       "version": "1.0.1",
@@ -4306,6 +4313,11 @@
       "version": "1.2.17",
       "from": "math-expression-evaluator@>=1.2.14 <2.0.0",
       "resolved": "https://registry.npmjs.org/math-expression-evaluator/-/math-expression-evaluator-1.2.17.tgz"
+    },
+    "math-random": {
+      "version": "1.0.1",
+      "from": "math-random@>=1.0.1 <2.0.0",
+      "resolved": "https://registry.npmjs.org/math-random/-/math-random-1.0.1.tgz"
     },
     "mathjax": {
       "version": "2.6.1",
@@ -5862,14 +5874,19 @@
       "resolved": "https://registry.npmjs.org/randexp/-/randexp-0.4.6.tgz"
     },
     "randomatic": {
-      "version": "1.1.7",
-      "from": "randomatic@>=1.1.3 <2.0.0",
-      "resolved": "https://registry.npmjs.org/randomatic/-/randomatic-1.1.7.tgz",
+      "version": "3.0.0",
+      "from": "randomatic@>=3.0.0 <4.0.0",
+      "resolved": "https://registry.npmjs.org/randomatic/-/randomatic-3.0.0.tgz",
       "dependencies": {
-        "kind-of": {
+        "is-number": {
           "version": "4.0.0",
-          "from": "kind-of@>=4.0.0 <5.0.0",
-          "resolved": "https://registry.npmjs.org/kind-of/-/kind-of-4.0.0.tgz"
+          "from": "is-number@>=4.0.0 <5.0.0",
+          "resolved": "https://registry.npmjs.org/is-number/-/is-number-4.0.0.tgz"
+        },
+        "kind-of": {
+          "version": "6.0.2",
+          "from": "kind-of@>=6.0.0 <7.0.0",
+          "resolved": "https://registry.npmjs.org/kind-of/-/kind-of-6.0.2.tgz"
         }
       }
     },
@@ -7247,9 +7264,9 @@
       "resolved": "https://registry.npmjs.org/upper-case/-/upper-case-1.1.3.tgz"
     },
     "uri-js": {
-      "version": "3.0.2",
-      "from": "uri-js@>=3.0.2 <4.0.0",
-      "resolved": "https://registry.npmjs.org/uri-js/-/uri-js-3.0.2.tgz"
+      "version": "4.2.1",
+      "from": "uri-js@>=4.2.1 <5.0.0",
+      "resolved": "https://registry.npmjs.org/uri-js/-/uri-js-4.2.1.tgz"
     },
     "urix": {
       "version": "0.1.0",
