@@ -1,7 +1,0 @@
-{
-  "webpack": {
-    "entry": {
-      "room": "chatRoom/chatRoom"
-    }
-  }
-}

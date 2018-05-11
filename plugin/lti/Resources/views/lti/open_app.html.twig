@@ -1,0 +1,59 @@
+{% extends "ClarolineCoreBundle:workspace:layout.html.twig" %}
+{% block title %}
+    {{ parent() ~ ' - ' ~ "ujm_lti_tool_apps" | trans({}, "lti") | striptags | raw }}
+{% endblock %}
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+{% block breadcrumb %}
+    {{
+    macros.workspaceBreadcrumbs(
+    workspace,
+    [
+    {
+        'name': 'ujm_lti_resource'|trans({}, 'resource'),
+        'href': ''
+    }
+    ]
+    )
+    }}
+{% endblock %}
+
+{% block section_content %}
+
+    <table class="table table-bordered">
+        <tr>
+            <th>{{ 'title' | trans({}, 'platform') }}</th>
+            <th>{{ 'description' | trans({}, 'platform') }}</th>
+        </tr>
+        <tr>
+            <td>{{ ltiApp.title }}</td>
+            <td>{{ ltiApp.description }}</td>
+        </tr>
+    </table>
+
+    <form id="form_app_{{ ltiApp.id }}" method="POST" target="lti" action="{{ printfTwig(ltiApp.url) }}">
+        {% for key,value in ltiDatas %}
+            <input type="hidden" name="{{ key }}" value="{{ value }}">
+        {% endfor %}
+        <input type="hidden" name="oauth_signature" value="{{ signature }}">
+    </form>
+
+    <div id="frameLti" style="display: none">
+        <iframe name="lti"  style="height: 700px; width: 100%"></iframe>
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript">
+        var target = "{{ target }}";
+        if ( target ) {
+            $("#form_app_{{ ltiApp.id }}").attr('target', '_blank');
+        } else {
+            $("#frameLti").show();
+        }
+        jQuery(document).ready(function($){
+            $("#form_app_{{ ltiApp.id }}").submit();
+        });
+    </script>
+{% endblock %}

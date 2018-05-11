@@ -42,7 +42,7 @@ class RssReaderController extends Controller
                 $rssConfig->setUrl($form->get('url')->getData());
             } else {
                 return $this->render(
-                  'ClarolineRssReaderBundle::formRss.html.twig',
+                  'ClarolineRssReaderBundle::form_rss.html.twig',
                   array(
                       'form' => $form->createView(),
                       'isAdmin' => $widget->isAdmin(),
@@ -57,7 +57,7 @@ class RssReaderController extends Controller
                 $rssConfig->setUrl($form->get('url')->getData());
             } else {
                 return $this->render(
-                  'ClarolineRssReaderBundle::formRss.html.twig',
+                  'ClarolineRssReaderBundle::form_rss.html.twig',
                   array(
                       'form' => $form->createView(),
                       'isAdmin' => $widget->isAdmin(),

@@ -90,7 +90,7 @@ class RssReaderListener
         $form = $this->formFactory->create(new ConfigType(), $config);
 
         $content = $this->templating->render(
-                'ClarolineRssReaderBundle::formRss.html.twig',
+                'ClarolineRssReaderBundle::form_rss.html.twig',
                 [
                     'form' => $form->createView(),
                     'isAdmin' => $instance->isAdmin(),

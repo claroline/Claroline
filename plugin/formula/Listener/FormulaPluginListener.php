@@ -46,7 +46,7 @@ class FormulaPluginListener
     public function onInjectJs(InjectJavascriptEvent $event)
     {
         $content = $this->templating->render(
-            'IcapFormulaPluginBundle:Formula:plugin.js.html.twig'
+            'IcapFormulaPluginBundle:formula:plugin.js.html.twig'
         );
 
         $event->addContent($content);

@@ -47,7 +47,7 @@ class ClarolinePluginListener
     public function onInjectJs(InjectJavascriptEvent $event)
     {
         $content = $this->templating->render(
-            'IcapInwicastBundle:Inwicast:javascript_layout.html.twig',
+            'IcapInwicastBundle:inwicast:javascript_layout.html.twig',
             []
         );
 
