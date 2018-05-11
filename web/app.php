@@ -1,5 +1,7 @@
 <?php
 
+require_once __DIR__.'/../app/autoload.php';
+
 $loader = require_once __DIR__.'/../app/bootstrap.php.cache';
 
 // Use APC for autoloading to improve performance.
@@ -34,9 +36,8 @@ if (file_exists($file = __DIR__.'/../app/config/ip_white_list.yml')) {
 if (!$maintenanceMode || $authorized) {
     $request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
     $kernel = new AppKernel('prod', false);
-    $kernel->loadClassCache();
     $kernel->handle($request)->send();
-    //$kernel->terminate($request, $response);
+//$kernel->terminate($request, $response);
 } else {
     $protocol = isset($_SERVER['HTTPS']) ? 'https://' : 'http://';
     $url = $protocol.$_SERVER['HTTP_HOST'].$_SERVER['SCRIPT_NAME'].'/../maintenance.php';
