@@ -46,7 +46,7 @@ class WebpackExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'hotAsset' => new \Twig_Function_Method($this, 'hotAsset'),
+            'hotAsset' => new \Twig_SimpleFunction('hotAsset', [$this, 'hotAsset']),
         ];
     }
 

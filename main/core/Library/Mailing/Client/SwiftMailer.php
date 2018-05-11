@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Mailing\Message;
 use Claroline\CoreBundle\Library\Mailing\Validator;
 use JMS\DiExtraBundle\Annotation as DI;
-use Swift_SendmailTransport;
 use Swift_SmtpTransport;
 use Swift_TransportException;
 
@@ -129,7 +128,7 @@ class SwiftMailer implements MailClientInterface
         $port = $data['port'];
 
         if (empty($port)) {
-            $port = $data['encryption'] === 'ssl' ? 465 : 25;
+            $port = 'ssl' === $data['encryption'] ? 465 : 25;
         }
 
         try {
@@ -162,7 +161,9 @@ class SwiftMailer implements MailClientInterface
     private function testSendmail(array $data)
     {
         try {
-            Swift_SendmailTransport::newInstance()->start();
+            //allow to configure this
+            $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
+            $transport->start();
         } catch (Swift_TransportException $ex) {
             return static::UNABLE_TO_START_SENDMAIL;
         }

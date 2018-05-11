@@ -137,7 +137,7 @@ $event->setContent($this->templating->render(...));
 Note: if you want to keep the layout, you must extends either
 
 ```html+jinja
-{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:desktop:layout.html.twig' %}
 ```
 
 or

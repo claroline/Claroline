@@ -26,6 +26,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
@@ -48,7 +49,7 @@ class ResourcePropertiesController extends Controller
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
-     *     "request"         = @DI\Inject("request"),
+     *     "request"         = @DI\Inject("request_stack"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "translator"      = @DI\Inject("translator")
      * })
@@ -58,7 +59,7 @@ class ResourcePropertiesController extends Controller
         TokenStorageInterface $tokenStorage,
         AuthorizationCheckerInterface $authorization,
         ResourceManager $resourceManager,
-        Request $request,
+        RequestStack $request,
         StrictDispatcher $dispatcher,
         TranslatorInterface $translator
     ) {
@@ -66,7 +67,7 @@ class ResourcePropertiesController extends Controller
         $this->tokenStorage = $tokenStorage;
         $this->authorization = $authorization;
         $this->resourceManager = $resourceManager;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->dispatcher = $dispatcher;
         $this->translator = $translator;
     }

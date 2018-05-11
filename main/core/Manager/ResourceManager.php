@@ -1148,7 +1148,7 @@ class ResourceManager
 
         foreach ($nodes as $node) {
             //we only download is we can...
-            if ($this->container->get('security.context')->isGranted('EXPORT', $node)) {
+            if ($this->container->get('security.authorization_checker')->isGranted('EXPORT', $node)) {
                 $node = $this->getRealTarget($node);
                 $resource = $this->getResourceFromNode($node);
 
@@ -1917,7 +1917,7 @@ class ResourceManager
             );
         }
 
-        $node = $this->container->get('request')->getSession()->get('current_resource_node');
+        $node = $this->container->get('request_stack')->getMasterRequest()->getSession()->get('current_resource_node');
 
         if ($node && $node->getWorkspace()) {
             $root = $this->directoryRepo->findDefaultUploadDirectories($node->getWorkspace());

@@ -126,7 +126,8 @@ class LayoutController extends Controller
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\Template()
      *
@@ -177,6 +178,7 @@ class LayoutController extends Controller
 
         $adminTools = $this->toolManager->getAdminToolsByRoles($secRoles);
         $isLogged = !in_array('ROLE_ANONYMOUS', $roles);
+        $isLogged = false;
 
         if ($isLogged) {
             $tools = $this->toolManager->getAdminToolsByRoles($secRoles);

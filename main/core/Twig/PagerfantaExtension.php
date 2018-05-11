@@ -20,12 +20,12 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\PropertyAccess\PropertyPath;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Pagerfanta\PagerfantaInterface;
-use WhiteOctober\PagerfantaBundle\Twig\PagerfantaExtension as P;
 use JMS\DiExtraBundle\Annotation as DI;
+use Pagerfanta\PagerfantaInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyPath;
+use WhiteOctober\PagerfantaBundle\Twig\PagerfantaExtension as P;
 
 /**
  * @DI\Service(parent="twig.extension.pagerfanta")
@@ -33,34 +33,26 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class PagerfantaExtension extends P
 {
-    private $container;
-
-    /**
-     * @DI\InjectParams({"container" = @DI\Inject("service_container")})
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
+    use ContainerAwareTrait;
 
     /**
      * Renders a pagerfanta.
      *
-     * @param PagerfantaInterface $pagerfanta The pagerfanta.
-     * @param string              $viewName   The view name.
-     * @param array               $options    An array of options (optional).
+     * @param PagerfantaInterface $pagerfanta the pagerfanta
+     * @param string              $viewName   the view name
+     * @param array               $options    an array of options (optional)
      *
-     * @return string The pagerfanta rendered.
+     * @return string the pagerfanta rendered
      */
-    public function renderPagerfanta(PagerfantaInterface $pagerfanta, $viewName = null, array $options = array())
+    public function renderPagerfanta(PagerfantaInterface $pagerfanta, $viewName = null, array $options = [])
     {
         $options = array_replace(
-            array(
+            [
                 'routeName' => null,
-                'routeParams' => array(),
+                'routeParams' => [],
                 'pageParameter' => '[page]',
                 'queryString' => null,
-            ),
+            ],
             $options
         );
 
@@ -71,7 +63,7 @@ class PagerfantaExtension extends P
         $router = $this->container->get('router');
 
         if (null === $options['routeName']) {
-            $request = $this->container->get('request');
+            $request = $this->container->get('request_stack')->getMasterRequest();
 
             $options['routeName'] = $request->attributes->get('_route');
             if ('_internal' === $options['routeName']) {

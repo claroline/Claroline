@@ -20,15 +20,17 @@ use Icap\InwicastBundle\Entity\MediaCenter;
 use Icap\InwicastBundle\Entity\MediacenterUser;
 use Icap\InwicastBundle\Exception\NoMediacenterException;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * @DI\Service
  */
-class ClarolinePluginListener extends ContainerAware
+class ClarolinePluginListener
 {
+    use ContainerAwareTrait;
+
     private $templating;
 
     //-------------------------------
@@ -82,7 +84,7 @@ class ClarolinePluginListener extends ContainerAware
         if (!empty($media)) {
             try {
                 $mediacenter = $this->getMediacenterManager()->getMediacenter();
-                //$loggedUser = $this->container->get("security.context")->getToken()->getUser();
+                //$loggedUser = $this->container->get("security.token_storage")->getToken()->getUser();
                 //$media = $mediaManager->getMediaInfo($media, $mediacenter, $loggedUser);
                 // Get video player
                 $event->setContent(
@@ -117,7 +119,7 @@ class ClarolinePluginListener extends ContainerAware
         // Get widget instance
         $widgetInstance = $event->getInstance();
         // Get mediacenter user from database
-        $loggedUser = $this->container->get('security.context')->getToken()->getUser();
+        $loggedUser = $this->container->get('security.token_storage')->getToken()->getUser();
         try {
             $mediacenter = $this->getMediacenterManager()->getMediacenter();
             $mediaManager = $this->getMediaManager();
@@ -149,7 +151,7 @@ class ClarolinePluginListener extends ContainerAware
     public function onToolOpen(DisplayToolEvent $event)
     {
         // Get mediacenter user from database
-        $loggedUser = $this->container->get('security.context')->getToken()->getUser();
+        $loggedUser = $this->container->get('security.token_storage')->getToken()->getUser();
         try {
             $mediacenter = $this->getMediacenterManager()->getMediacenter();
             $mediacenterUserManager = $this->getMediacenterUserManager();

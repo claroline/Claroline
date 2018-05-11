@@ -1,7 +1,7 @@
 {% if workspace is defined %}
     {% set calendarExtends = 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 {% else %}
-    {% set calendarExtends = 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+    {% set calendarExtends = 'ClarolineCoreBundle:desktop:layout.html.twig' %}
 {% endif %}
 
 {% extends calendarExtends %}
@@ -175,9 +175,6 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"] "@ClarolineAgendaBundle/Resources/views/Agenda/eventContent.html.twig" %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
     {% javascripts debug=false
      'js/translations/agenda/*.js'
        %}<script src="{{ asset_url }}"></script>

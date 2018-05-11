@@ -11,8 +11,8 @@
 
 namespace Claroline\KernelBundle\Kernel;
 
-use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpKernel\Kernel;
 
 abstract class SwitchKernel extends Kernel
 {
@@ -56,7 +56,7 @@ abstract class SwitchKernel extends Kernel
         $fileSystem->remove($this->getCacheDir());
     }
 
-    public function reboot()
+    public function reboot($warmupDir)
     {
         $this->shutdown();
         $this->boot();

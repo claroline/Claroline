@@ -42,6 +42,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -66,7 +67,7 @@ class WorkspaceHomeController extends Controller
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "pluginManager"   = @DI\Inject("claroline.manager.plugin_manager"),
-     *     "request"         = @DI\Inject("request"),
+     *     "request"         = @DI\Inject("request_stack"),
      *     "serializer"      = @DI\Inject("jms_serializer"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "utils"           = @DI\Inject("claroline.security.utilities"),
@@ -79,7 +80,7 @@ class WorkspaceHomeController extends Controller
         EventDispatcherInterface $eventDispatcher,
         HomeTabManager $homeTabManager,
         PluginManager $pluginManager,
-        Request $request,
+        RequestStack $request,
         Serializer $serializer,
         TokenStorageInterface $tokenStorage,
         Utilities $utils,
@@ -91,7 +92,7 @@ class WorkspaceHomeController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->homeTabManager = $homeTabManager;
         $this->pluginManager = $pluginManager;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
         $this->utils = $utils;

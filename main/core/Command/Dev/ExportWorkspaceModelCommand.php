@@ -55,7 +55,7 @@ class ExportWorkspaceModelCommand extends ContainerAwareCommand
         //set the token for qti
         $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->getContainer()->get('security.context')->setToken($token);
+        $this->getContainer()->get('security.token_storage')->setToken($token);
 
         $workspaces = [];
         $workspaceRepo = $this->getContainer()->get('doctrine.orm.entity_manager')

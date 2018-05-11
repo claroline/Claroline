@@ -38,7 +38,7 @@ class ClarolineKernelBundle extends Bundle
     {
         $bundles = [];
 
-        foreach ($this->bundleManager->getActiveBundles($this->bundleManager->getEnvironment() === 'test') as $bundle) {
+        foreach ($this->bundleManager->getActiveBundles('test' === $this->bundleManager->getEnvironment()) as $bundle) {
             $bundles[] = $bundle[BundleManager::BUNDLE_INSTANCE];
         }
 

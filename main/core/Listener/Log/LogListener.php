@@ -98,8 +98,7 @@ class LogListener
                     $doer = $token->getUser();
                     $doerType = Log::doerTypeUser;
                 }
-                if ($this->container->isScopeActive('request')) {
-                    $request = $this->container->get('request');
+                if ($request = $this->container->get('request_stack')->getMasterRequest()) {
                     $doerSessionId = $request->getSession()->getId();
                     $doerIp = $request->getClientIp();
                 } else {
@@ -234,7 +233,7 @@ class LogListener
         }
 
         if ($event instanceof LogNotRepeatableInterface) {
-            $request = $this->container->get('request');
+            $request = $this->container->get('request_stack')->getMasterRequest();
             $session = $request->getSession();
 
             $is = false;

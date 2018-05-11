@@ -11,6 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -33,19 +34,19 @@ class DashboardsController extends Controller
     /**
      * @DI\InjectParams({
      *     "authorization"      = @DI\Inject("security.authorization_checker"),
-     *     "request"            = @DI\Inject("request"),
+     *     "request"            = @DI\Inject("request_stack"),
      *     "dashboardManager"   = @DI\Inject("claroline.manager.dashboard_manager"),
      *     "tokenStorage"       = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        Request $request,
+        RequestStack $request,
         DashboardManager $dashboardManager,
         TokenStorageInterface $tokenStorage
     ) {
         $this->authorization = $authorization;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->dashboardManager = $dashboardManager;
         $this->tokenStorage = $tokenStorage;
     }
@@ -55,9 +56,9 @@ class DashboardsController extends Controller
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      * @EXT\Method("POST")
      */
-    public function createDashboard(User $user)
+    public function createDashboard(User $user, Request $request)
     {
-        $data = $this->container->get('request')->request->all();
+        $data = $request->request->all();
         $dashboard = $this->dashboardManager->create($user, $data);
 
         return new JsonResponse($dashboard);
@@ -69,9 +70,9 @@ class DashboardsController extends Controller
      * @EXT\ParamConverter("dashboard", class="ClarolineDashboardBundle:Dashboard", options={"mapping": {"dashboardId": "id"}})
      * @EXT\Method("PUT")
      */
-    public function updateDashboard(User $user, Dashboard $dashboard)
+    public function updateDashboard(User $user, Dashboard $dashboard, Request $request)
     {
-        $data = $this->container->get('request')->request->all();
+        $data = $request->request->all();
         $dashboard = $this->dashboardManager->update($user, $dashboard, $data);
 
         return new JsonResponse($dashboard);

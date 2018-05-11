@@ -61,11 +61,11 @@ class WorkspaceAccessExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'get_workspaces_accesses' => new \Twig_Function_Method($this, 'getAccesses'),
-            'has_role_access_to_workspace' => new \Twig_Function_Method($this, 'hasRoleAccess'),
-            'has_access_to_workspace' => new \Twig_Function_Method($this, 'hasAccess'),
-            'has_role_in_workspace' => new \Twig_Function_Method($this, 'hasRoleInWorkspace'),
-            'is_date_access_valid' => new \Twig_Function_Method($this, 'isDateAccessValid'),
+            'get_workspaces_accesses' => new \Twig_SimpleFunction('get_workspaces_accesses', [$this, 'getAccesses']),
+            'has_role_access_to_workspace' => new \Twig_SimpleFunction('has_role_access_to_workspace', [$this, 'hasRoleAccess']),
+            'has_access_to_workspace' => new \Twig_SimpleFunction('has_access_to_workspace', [$this, 'hasAccess']),
+            'has_role_in_workspace' => new \Twig_SimpleFunction('has_role_in_workspace', [$this, 'hasRoleInWorkspace']),
+            'is_date_access_valid' => new \Twig_SimpleFunction('is_date_access_valid', [$this, 'isDateAccessValid']),
         ];
     }
 

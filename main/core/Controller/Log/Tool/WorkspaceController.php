@@ -54,7 +54,8 @@ class WorkspaceController extends Controller
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig")
@@ -95,7 +96,8 @@ class WorkspaceController extends Controller
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * @EXT\Template("ClarolineCoreBundle:Tool/workspace/logs:logByUser.html.twig")
@@ -128,7 +130,8 @@ class WorkspaceController extends Controller
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
@@ -177,7 +180,8 @@ class WorkspaceController extends Controller
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace

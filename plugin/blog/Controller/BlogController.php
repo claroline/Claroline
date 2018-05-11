@@ -151,7 +151,7 @@ class BlogController extends BaseController
      */
     public function rssAction(Blog $blog)
     {
-        $baseUrl = $this->get('request')->getSchemeAndHttpHost();
+        $baseUrl = $this->get('request_stack')->getMasterRequest()->getSchemeAndHttpHost();
 
         $feed = [
             'title' => $blog->getResourceNode()->getName(),

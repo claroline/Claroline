@@ -38,6 +38,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /**
@@ -61,7 +62,7 @@ class HomeTabController extends Controller
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "pluginManager"   = @DI\Inject("claroline.manager.plugin_manager"),
-     *     "request"         = @DI\Inject("request"),
+     *     "request"         = @DI\Inject("request_stack"),
      *     "serializer"      = @DI\Inject("jms_serializer"),
      *     "widgetManager"   = @DI\Inject("claroline.manager.widget_manager")
      * })
@@ -71,7 +72,7 @@ class HomeTabController extends Controller
         EventDispatcherInterface $eventDispatcher,
         HomeTabManager $homeTabManager,
         PluginManager $pluginManager,
-        Request $request,
+        RequestStack $request,
         Serializer $serializer,
         WidgetManager $widgetManager
     ) {
@@ -80,7 +81,7 @@ class HomeTabController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->homeTabManager = $homeTabManager;
         $this->pluginManager = $pluginManager;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->serializer = $serializer;
         $this->widgetManager = $widgetManager;
     }
@@ -162,7 +163,7 @@ class HomeTabController extends Controller
      */
     public function postAdminHomeTabCreationAction($homeTabType = 'desktop')
     {
-        $isDesktop = ($homeTabType === 'desktop');
+        $isDesktop = ('desktop' === $homeTabType);
         $type = $isDesktop ? 'admin_desktop' : 'admin_workspace';
         $formType = new HomeTabType('admin');
         $formType->enableApi();
@@ -436,7 +437,7 @@ class HomeTabController extends Controller
     public function postAdminWidgetInstanceCreationAction(HomeTab $homeTab, $homeTabType = 'desktop')
     {
         $this->checkAdminHomeTab($homeTab, $homeTabType);
-        $isDesktop = ($homeTabType === 'desktop');
+        $isDesktop = ('desktop' === $homeTabType);
         $formType = new WidgetInstanceConfigType('admin', $this->bundles);
         $formType->enableApi();
         $form = $this->createForm($formType);
@@ -685,7 +686,7 @@ class HomeTabController extends Controller
 
     private function checkAdminAccessForWidgetHomeTabConfig(WidgetHomeTabConfig $whtc)
     {
-        if ($whtc->getType() !== 'admin' ||
+        if ('admin' !== $whtc->getType() ||
             !is_null($whtc->getUser()) ||
             !is_null($whtc->getWorkspace())) {
             throw new AccessDeniedException();

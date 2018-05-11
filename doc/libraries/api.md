@@ -45,13 +45,9 @@
 - mrclay/minify : minification des JS / remplacé par Webpack
 - werkint/jsmin
 - natxet/CssMin : minification des CSS / sera remplacé par un gestionnaire de tâche JS (Gulp, Grunt)
-- white-october/pagerfanta-bundle : système de pagination 
-- jms/twig-js-bundle
+- white-october/pagerfanta-bundle : système de pagination
 - symfony/assetic-bundle
-- twig/extensions
 - knplabs/knp-menu-bundle
 - gregwar/captcha-bundle
 - cocur/slugify => utiliser les slug de DoctrineExtension
 - zenstruck/form-bundle (support Bootstrap pour les formulaires / Utilisé dans le BadgeBundle)
-- idci/exporter-bundle (transforme les Entités en CSV, ICS, JSON)
-=> Peut-être doublon avec JMS

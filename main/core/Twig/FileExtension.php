@@ -22,9 +22,9 @@ class FileExtension extends \Twig_Extension
 {
     public function getFunctions()
     {
-        return array(
-            'is_writable' => new \Twig_Function_Method($this, 'isWritable'),
-        );
+        return [
+            'is_writable' => new \Twig_SimpleFunction('is_writable', [$this, 'isWritable']),
+        ];
     }
 
     public function getName()

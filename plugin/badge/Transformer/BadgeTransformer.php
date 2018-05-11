@@ -3,13 +3,12 @@
 namespace Icap\BadgeBundle\Transformer;
 
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
-use IDCI\Bundle\ExporterBundle\Transformer\TwigTransformer;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("icap_badge.transformer.badge")
  */
-class BadgeTransformer extends TwigTransformer
+class BadgeTransformer
 {
     /**
      * @var PlatformConfigurationHandler
@@ -51,7 +50,7 @@ class BadgeTransformer extends TwigTransformer
 
         return $this->getTemplate()->render(
             $template,
-            array('entity' => $entity)
+            ['entity' => $entity]
         );
     }
 }

@@ -3,7 +3,7 @@
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block stylesheets %}
-    {% include 'ClarolineCoreBundle:Layout:stylesheets.html.twig' %}
+    {% include 'ClarolineCoreBundle:layout:stylesheets.html.twig' %}
 
     {# todo : this should be removed and fully managed in LESS #}
     {% if hideTopBar is defined and hideTopBar and not (has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated()) %}
@@ -40,9 +40,9 @@
         {% if (hideTopBar is not defined or not hideTopBar) and not has_role('ROLE_USURPATE_WORKSPACE_ROLE') %}
             {% block topBarRender %}
                 {% if workspace is defined and workspace is not null %}
-                    {% render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id})) %}
+                    {{ render(controller('ClarolineCoreBundle:Layout:topBar', {'workspaceId': workspace.id})) }}
                 {% else %}
-                    {% render(controller('ClarolineCoreBundle:Layout:topBar')) %}
+                    {{ render(controller('ClarolineCoreBundle:Layout:topBar')) }}
                 {% endif %}
             {% endblock %}
         {% endif %}
@@ -50,7 +50,7 @@
         {# User impersonated notification #}
         {% block impersonation %}
             {% if has_role('ROLE_USURPATE_WORKSPACE_ROLE') or is_impersonated() %}
-                {% render(controller('ClarolineCoreBundle:Layout:renderWarningImpersonation')) %}
+                {{ render(controller('ClarolineCoreBundle:Layout:renderWarningImpersonation')) }}
             {% endif %}
         {% endblock %}
 
@@ -102,7 +102,7 @@
 
     {% if not isRenderedInIframe and (hideFooter is not defined or not hideFooter) %}
         {% block footer %}
-            {% render(controller('ClarolineCoreBundle:Layout:footer')) %}
+            {{ render(controller('ClarolineCoreBundle:layout:footer')) }}
         {% endblock%}
     {% endif %}
 {% endblock %}
@@ -110,5 +110,5 @@
 {% block javascripts %}
     {{ parent() }}
 
-    {% include 'ClarolineCoreBundle:Layout:javascripts.html.twig' %}
+    {% include 'ClarolineCoreBundle:layout:javascripts.html.twig' %}
 {% endblock %}

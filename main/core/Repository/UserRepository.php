@@ -21,6 +21,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\NoResultException;
 use Doctrine\ORM\Query;
 use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -29,7 +30,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 /**
  * Class UserRepository.
  */
-class UserRepository extends EntityRepository implements UserProviderInterface
+class UserRepository extends EntityRepository implements UserProviderInterface, UserLoaderInterface
 {
     /**
      * @var PlatformConfigurationHandler
@@ -1632,7 +1633,7 @@ class UserRepository extends EntityRepository implements UserProviderInterface
                 WHERE usr.id NOT IN (
                   SELECT IDENTITY(uo.user) FROM Claroline\CoreBundle\Entity\Organization\UserOrganizationReference uo
                   WHERE uo.isMain = :main
-                )                
+                )
             ')
             ->setParameter('main', true);
         if (!$count && $limit > 0 && $offset > -1) {

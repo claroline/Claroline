@@ -36,7 +36,7 @@ class VideoExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'get_video_tracks' => new \Twig_Function_Method($this, 'getVideoTracks'),
+            'get_video_tracks' => new \Twig_SimpleFunction('get_video_tracks', [$this, 'getVideoTracks']),
         ];
     }
 

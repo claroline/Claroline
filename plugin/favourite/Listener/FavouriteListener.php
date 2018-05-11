@@ -6,7 +6,7 @@ use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Doctrine\Common\Persistence\ObjectManager;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -15,12 +15,15 @@ use Symfony\Component\Templating\EngineInterface;
 /**
  * @DI\Service
  */
-class FavouriteListener extends ContainerAware
+class FavouriteListener
 {
+    use ContainerAwareTrait;
+
     private $om;
     private $tokenStorage;
     private $router;
     private $templatingEngine;
+
     /**
      * @DI\InjectParams({
      *     "om"               = @DI\Inject("claroline.persistence.object_manager"),
@@ -77,7 +80,7 @@ class FavouriteListener extends ContainerAware
         $widgetInstance = $event->getInstance();
         $workspace = $widgetInstance->getWorkspace();
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = $user === 'anon.';
+        $isAnon = 'anon.' === $user;
         $favourites = [];
 
         if (!$isAnon) {

@@ -36,9 +36,9 @@ class ListenerExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            'listener_exists' => new \Twig_Function_Method($this, 'listenerExists'),
-        );
+        return [
+            'listener_exists' => new \Twig_SimpleFunction('listener_exists', [$this, 'listenerExists']),
+        ];
     }
 
     public function listenerExists($name)

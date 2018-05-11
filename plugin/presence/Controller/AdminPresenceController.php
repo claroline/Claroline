@@ -467,7 +467,7 @@ class AdminPresenceController extends Controller
             ->add('modifier', 'submit')
             ->getForm();
 
-        $request = $this->get('request');
+        $request = $this->get('request_stack')->getMasterRequest();
 
         if ('POST' === $request->getMethod()) {
             $ModifPeriodForm->handleRequest($request);

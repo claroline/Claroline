@@ -26,5 +26,5 @@ angular.module('DesktopHomeModule', [
   'HomeTabsModule',
   'WidgetsModule'
 ])
-.controller('DesktopHomeMainCtrl', ['$http', '$stateParams', '$state', 'HomeTabService', 'WidgetService', DesktopHomeMainCtrl])
-.config(Routing)
+  .controller('DesktopHomeMainCtrl', ['$http', '$stateParams', '$state', 'HomeTabService', 'WidgetService', DesktopHomeMainCtrl])
+  .config(Routing)

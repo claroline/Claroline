@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Twig;
 
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\FrameworkBundle\Templating\Helper\AssetsHelper;
+use Symfony\Component\Asset\Packages;
 
 /**
  * @DI\Service
@@ -24,17 +24,17 @@ class BaseUriExtension extends \Twig_Extension
 
     /**
      * @DI\InjectParams({
-     *     "helper" = @DI\Inject("templating.helper.assets")
+     *     "helper" = @DI\Inject("assets.packages")
      * })
      */
-    public function __construct(AssetsHelper $helper)
+    public function __construct(Packages $helper)
     {
         $this->assetsHelper = $helper;
     }
 
     public function getFunctions()
     {
-        return ['getAssetPath' => new \Twig_Function_Method($this, 'getAssetPath')];
+        return ['getAssetPath' => new \Twig_SimpleFunction('getAssetPath', [$this, 'getAssetPath'])];
     }
 
     public function getName()
@@ -51,7 +51,7 @@ class BaseUriExtension extends \Twig_Extension
     {
         $path = $this->assetsHelper->getUrl('');
 
-        if ($path[strlen($path) - 1] === '/') {
+        if ('/' === $path[strlen($path) - 1]) {
             $path = rtrim($path, '/');
         }
 

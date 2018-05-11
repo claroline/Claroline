@@ -13,11 +13,13 @@ namespace Claroline\PdfPlayerBundle\Listener;
 
 use Claroline\CoreBundle\Event\PlayFileEvent;
 use Claroline\ScormBundle\Event\ExportScormResourceEvent;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Response;
 
-class PdfPlayerListener extends ContainerAware
+class PdfPlayerListener
 {
+    use ContainerAwareTrait;
+
     public function onOpenPdf(PlayFileEvent $event)
     {
         $canDownload = $this->container->get('security.authorization_checker')->isGranted('EXPORT', $event->getResource()->getResourceNode());

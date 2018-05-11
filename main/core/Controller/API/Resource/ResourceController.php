@@ -21,6 +21,7 @@ use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -33,14 +34,14 @@ class ResourceController extends FOSRestController
     /**
      * @DI\InjectParams({
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
-     *     "request"         = @DI\Inject("request"),
+     *     "request"         = @DI\Inject("request_stack"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "dispatcher"      = @DI\Inject("claroline.event.event_dispatcher"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage")
      * })
      */
     public function __construct(
-        Request $request,
+        RequestStack $request,
         ResourceManager $resourceManager,
         StrictDispatcher $dispatcher,
         TokenStorageInterface $tokenStorage,
@@ -48,7 +49,7 @@ class ResourceController extends FOSRestController
     ) {
         $this->authorization = $authorization;
         $this->tokenStorage = $tokenStorage;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->resourceManager = $resourceManager;
         $this->dispatcher = $dispatcher;
     }

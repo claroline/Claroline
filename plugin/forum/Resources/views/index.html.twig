@@ -29,10 +29,10 @@
                             {% endif %}
                         {% endif %}
                     {% endif %}
-                    {% render controller(
+                    {{ render controller(
                         'IcapNotificationBundle:FollowerResource:renderForm',
                         {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}
-                    ) %}
+                    ) }}
                 </div>
                 <div class="col-md-4">
                      <div class="input-group">

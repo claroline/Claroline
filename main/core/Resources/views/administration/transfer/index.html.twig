@@ -1,0 +1,33 @@
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
+
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% block title %}{{ parent() ~ ' - ' ~ 'themes_management' | trans({}, 'platform') | striptags | raw }}{% endblock %}
+
+{% block breadcrumb %}
+    {{ macros.breadcrumbs([
+        {
+            'name': 'administration'|trans({}, 'platform'),
+            'href': path('claro_admin_index')
+        },
+        {
+            'name': 'data_transfer'|trans({}, 'tools'),
+            'href': ''
+        }
+    ]) }}
+{% endblock %}
+
+{% block content %}
+    <div
+        class="page-container import-container"
+        data-explanation="{{ explanation | json_encode | raw | escape }}"
+    >
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    {# Claroline JS #}
+    {{ parent() }}
+
+    <script src="{{ hotAsset('dist/claroline-distribution-main-core-transfer-management.js') }}"></script>
+{% endblock %}

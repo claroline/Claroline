@@ -37,7 +37,7 @@ class ApiController extends BaseController
      */
     public function getBlogAction(Blog $blog)
     {
-        $info = $blog->getInfos() === null ? '' : $blog->getInfos();
+        $info = null === $blog->getInfos() ? '' : $blog->getInfos();
 
         return ['info' => $info];
     }
@@ -312,7 +312,7 @@ class ApiController extends BaseController
      * @RequestParam(name="title", allowBlank=false)
      * @RequestParam(name="content", allowBlank=false)
      * @RequestParam(name="publication_date", nullable=true)
-     * @RequestParam(name="tags", allowBlank=false, array=true)
+     * @RequestParam(name="tags", allowBlank=false, map=true)
      *
      * @View(serializerGroups={ "blog_list", "api_user_min" })
      */
@@ -332,7 +332,7 @@ class ApiController extends BaseController
             ->setTitle($paramFetcher->get('title'))
             ->setContent($paramFetcher->get('content'));
 
-        if ($paramFetcher->get('publication_date') !== null) {
+        if (null !== $paramFetcher->get('publication_date')) {
             $post->setPublicationDate(new \DateTime($paramFetcher->get('publication_date')));
         }
 
@@ -351,7 +351,7 @@ class ApiController extends BaseController
 
         $this->dispatchPostCreateEvent($blog, $post);
 
-        if ($user !== 'anon.') {
+        if ('anon.' !== $user) {
             $this->updateResourceTracking($blog->getResourceNode(), $user, new \DateTime());
         }
 
@@ -366,7 +366,7 @@ class ApiController extends BaseController
      * @RequestParam(name="title", allowBlank=false)
      * @RequestParam(name="content", allowBlank=false)
      * @RequestParam(name="publication_date", nullable=true)
-     * @RequestParam(name="tags", allowBlank=false, array=true)
+     * @RequestParam(name="tags", allowBlank=false, map=true)
      *
      * @View(serializerGroups={ "blog_list", "api_user_min" })
      */
@@ -389,7 +389,7 @@ class ApiController extends BaseController
             ->setTitle($paramFetcher->get('title'))
             ->setContent($paramFetcher->get('content'));
 
-        if ($paramFetcher->get('publication_date') !== null) {
+        if (null !== $paramFetcher->get('publication_date')) {
             $myPost->setPublicationDate(new \DateTime($paramFetcher->get('publication_date')));
         } else {
             $myPost->setPublicationDate(null);
@@ -423,7 +423,7 @@ class ApiController extends BaseController
 
         $user = $this->get('security.token_storage')->getToken()->getUser();
 
-        if ($user !== 'anon.') {
+        if ('anon.' !== $user) {
             $this->updateResourceTracking($blog->getResourceNode(), $user, new \DateTime());
         }
 
@@ -452,7 +452,7 @@ class ApiController extends BaseController
             throw new NotFoundHttpException();
         }
 
-        if ($paramFetcher->get('is_published') === true) {
+        if (true === $paramFetcher->get('is_published')) {
             $myPost->publish();
         } else {
             $myPost->unpublish();
@@ -587,7 +587,7 @@ class ApiController extends BaseController
 
         $this->dispatchCommentCreateEvent($myPost, $comment);
 
-        if ($user !== 'anon.') {
+        if ('anon.' !== $user) {
             $this->updateResourceTracking($blog->getResourceNode(), $user, new \DateTime());
         }
 
@@ -701,7 +701,7 @@ class ApiController extends BaseController
             throw new NotFoundHttpException();
         }
 
-        if ($paramFetcher->get('is_published') === true) {
+        if (true === $paramFetcher->get('is_published')) {
             $myComment->publish();
         } else {
             $myComment->unpublish();

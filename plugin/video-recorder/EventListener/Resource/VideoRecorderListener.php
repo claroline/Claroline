@@ -66,7 +66,7 @@ class VideoRecorderListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $request = $this->container->get('request');
+        $request = $this->container->get('request_stack')->getMasterRequest();
         $formData = $request->request->all();
         $video = $request->files->get('video');
 
@@ -111,7 +111,7 @@ class VideoRecorderListener
     {
         $params = [];
         $params['_controller'] = 'InnovaVideoRecorderBundle:VideoRecorder:pluginConfigureForm';
-        $subRequest = $this->container->get('request')->duplicate([], null, $params);
+        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate([], null, $params);
         $response = $this->container->get('http_kernel')->handle($subRequest, KernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();

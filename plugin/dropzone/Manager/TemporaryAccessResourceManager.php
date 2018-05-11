@@ -37,7 +37,7 @@ class TemporaryAccessResourceManager
 
     public function hasTemporaryAccessOnSomeResources(User $user = null)
     {
-        $temporaryAccessArray = $this->container->get('request')->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
+        $temporaryAccessArray = $this->container->get('request_stack')->getMasterRequest()->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
 
         if ($temporaryAccessArray == null || count($temporaryAccessArray) == 0) {
             return false;
@@ -50,7 +50,7 @@ class TemporaryAccessResourceManager
 
     public function hasTemporaryAccess(ResourceNode $resource, User $user = null)
     {
-        $temporaryAccessArray = $this->container->get('request')->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
+        $temporaryAccessArray = $this->container->get('request_stack')->getMasterRequest()->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
 
         if ($temporaryAccessArray == null || count($temporaryAccessArray) == 0) {
             return false;
@@ -76,7 +76,7 @@ class TemporaryAccessResourceManager
     public function addTemporaryAccess(ResourceNode $node, User $user = null)
     {
         $collection = new ResourceCollection(array($node));
-        $temporaryAccessArray = $this->container->get('request')->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
+        $temporaryAccessArray = $this->container->get('request_stack')->getMasterRequest()->getSession()->get(self::RESOURCE_TEMPORARY_ACCESS_KEY);
 
         if ($temporaryAccessArray === null) {
             $temporaryAccessArray = array();
@@ -98,7 +98,7 @@ class TemporaryAccessResourceManager
             $temporaryAccessIds[] = $node->getId();
             $temporaryAccessArray[$this->getUserKey($user)] = $temporaryAccessIds;
         }
-        $this->container->get('request')->getSession()
+        $this->container->get('request_stack')->getMasterRequest()->getSession()
         ->set(self::RESOURCE_TEMPORARY_ACCESS_KEY, $temporaryAccessArray);
     }
 }

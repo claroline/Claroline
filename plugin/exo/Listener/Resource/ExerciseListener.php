@@ -79,7 +79,7 @@ class ExerciseListener
     {
         /** @var FormInterface $form */
         $form = $this->container->get('form.factory')->create(new ExerciseType());
-        $request = $this->container->get('request');
+        $request = $this->container->get('request_stack')->getMasterRequest();
 
         $form->handleRequest($request);
         if ($form->isValid()) {

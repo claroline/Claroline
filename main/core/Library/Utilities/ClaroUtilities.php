@@ -99,7 +99,7 @@ class ClaroUtilities
 
     public function getDefaultEncoding()
     {
-        $headers = $this->container->get('request')->server->getHeaders();
+        $headers = $this->container->get('request_stack')->getMasterRequest()->server->getHeaders();
         $userAgent = $headers['USER_AGENT'];
 
         if (strpos($userAgent, 'Linux') !== false) {

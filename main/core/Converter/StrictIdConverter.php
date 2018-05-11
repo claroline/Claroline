@@ -19,8 +19,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @DI\Service()
- * @DI\Tag("request.param_converter", attributes={"priority" = 500})
+ * @DI\Service("claroline.converter.strict_id_converter")
+ * @DI\Tag("request.param_converter", attributes={"priority" = -500, "converter" = "strict_id"})
  *
  * Retreives an entity by its id (no further guessing) and adds it to the request
  * attributes. The matching between the entity id and the request id attribute
@@ -86,7 +86,8 @@ class StrictIdConverter implements ParamConverterInterface
     {
         $options = $configuration->getOptions();
 
-        if (isset($options['strictId']) && $options['strictId'] === true) {
+        if (isset($options['strictId']) && true === $options['strictId']) {
+            //throw new \Exception(print_r($options, true));
             return true;
         }
 

@@ -45,6 +45,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -72,7 +73,7 @@ class DesktopHomeController extends Controller
      *     "eventDispatcher" = @DI\Inject("event_dispatcher"),
      *     "homeTabManager"  = @DI\Inject("claroline.manager.home_tab_manager"),
      *     "pluginManager"   = @DI\Inject("claroline.manager.plugin_manager"),
-     *     "request"         = @DI\Inject("request"),
+     *     "request"         = @DI\Inject("request_stack"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "serializer"      = @DI\Inject("jms_serializer"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
@@ -87,7 +88,7 @@ class DesktopHomeController extends Controller
         EventDispatcherInterface $eventDispatcher,
         HomeTabManager $homeTabManager,
         PluginManager $pluginManager,
-        Request $request,
+        RequestStack $request,
         RoleManager $roleManager,
         Serializer $serializer,
         TokenStorageInterface $tokenStorage,
@@ -101,7 +102,7 @@ class DesktopHomeController extends Controller
         $this->eventDispatcher = $eventDispatcher;
         $this->homeTabManager = $homeTabManager;
         $this->pluginManager = $pluginManager;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->roleManager = $roleManager;
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;

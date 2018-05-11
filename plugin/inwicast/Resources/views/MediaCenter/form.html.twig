@@ -7,7 +7,7 @@
  # file that was distributed with this source code.
  #}
 
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'packages' | trans({}, 'platform') | striptags | raw }}
     {{ ' - ' ~ 'inwicastclarolineplugin' | trans({}, 'plugin_description') | striptags | raw }}{% endblock %}

@@ -9,7 +9,6 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * User administration tool.
@@ -78,7 +77,9 @@ class UserListener
             ]
         );
 
-        $event->setResponse(new Response($content));
+        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate([], null, $params);
+        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
+        $event->setResponse($response);
         $event->stopPropagation();
     }
 }

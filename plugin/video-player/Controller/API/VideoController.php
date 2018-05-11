@@ -22,6 +22,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -38,15 +39,15 @@ class VideoController extends FOSRestController
     /**
      * @DI\InjectParams({
      *     "videoManager"  = @DI\Inject("claroline.manager.video_player_manager"),
-     *     "request"       = @DI\Inject("request"),
+     *     "request"       = @DI\Inject("request_stack"),
      *     "fileDir"       = @DI\Inject("%claroline.param.files_directory%"),
      *     "authorization" = @DI\Inject("security.authorization_checker")
      * })
      */
-    public function __construct(VideoPlayerManager $videoManager, Request $request, $fileDir, AuthorizationCheckerInterface $authorization)
+    public function __construct(VideoPlayerManager $videoManager, RequestStack $request, $fileDir, AuthorizationCheckerInterface $authorization)
     {
         $this->videoManager = $videoManager;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->fileDir = $fileDir;
         $this->authorization = $authorization;
     }

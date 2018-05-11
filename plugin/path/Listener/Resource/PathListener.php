@@ -170,7 +170,7 @@ class PathListener
         $form = $this->container->get('form.factory')->create(new ResourceNameType(true), new Path());
 
         // Try to process the form data
-        $form->handleRequest($this->container->get('request'));
+        $form->handleRequest($this->container->get('request_stack')->getMasterRequest());
         if ($form->isValid()) {
             $event->setPublished(
                 $form->get('published')->getData()

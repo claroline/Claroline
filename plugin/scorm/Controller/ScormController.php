@@ -87,7 +87,8 @@ class ScormController extends Controller
      * @EXT\ParamConverter(
      *      "scorm",
      *      class="ClarolineScormBundle:Scorm12Resource",
-     *      options={"id" = "scormId", "strictId" = true}
+     *      options={"id" = "scormId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\Template("ClarolineScormBundle::scorm12.html.twig")
      *
@@ -156,7 +157,8 @@ class ScormController extends Controller
      * @EXT\ParamConverter(
      *      "scorm12Sco",
      *      class="ClarolineScormBundle:Scorm12Sco",
-     *      options={"id" = "scoId", "strictId" = true}
+     *      options={"id" = "scoId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\Template("ClarolineScormBundle::scorm12MenuSco.html.twig")
      *
@@ -226,7 +228,8 @@ class ScormController extends Controller
      * @EXT\ParamConverter(
      *      "scorm12Sco",
      *      class="ClarolineScormBundle:Scorm12Sco",
-     *      options={"id" = "scoId", "strictId" = true}
+     *      options={"id" = "scoId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * @param string $datasString
@@ -392,7 +395,8 @@ class ScormController extends Controller
      * @EXT\ParamConverter(
      *      "scorm",
      *      class="ClarolineScormBundle:Scorm2004Resource",
-     *      options={"id" = "scormId", "strictId" = true}
+     *      options={"id" = "scormId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\Template("ClarolineScormBundle::scorm2004.html.twig")
      *
@@ -461,7 +465,8 @@ class ScormController extends Controller
      * @EXT\ParamConverter(
      *      "scorm2004Sco",
      *      class="ClarolineScormBundle:Scorm2004Sco",
-     *      options={"id" = "scoId", "strictId" = true}
+     *      options={"id" = "scoId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\Template("ClarolineScormBundle::scorm2004MenuSco.html.twig")
      *
@@ -550,7 +555,8 @@ class ScormController extends Controller
      * @EXT\ParamConverter(
      *      "scorm2004Sco",
      *      class="ClarolineScormBundle:Scorm2004Sco",
-     *      options={"id" = "scoId", "strictId" = true}
+     *      options={"id" = "scoId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * @param string       $mode         determines if given datas must be persisted

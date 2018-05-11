@@ -253,7 +253,7 @@ class ApiController extends FOSRestController
 
         $response = new JsonResponse();
 
-        $payload = $this->get('request')->request->all();
+        $payload = $this->get('request_stack')->getMasterRequest()->request->all();
 
         try {
             $newParentId = $payload['newParent'];

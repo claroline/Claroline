@@ -14,20 +14,20 @@ namespace Claroline\CoreBundle\Controller;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
-use Symfony\Component\Form\FormFactory;
+use Claroline\CoreBundle\Form\AdminWorkspaceTagType;
+use Claroline\CoreBundle\Form\WorkspaceTagType;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
 use Claroline\CoreBundle\Manager\WorkspaceTagManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\DiExtraBundle\Annotation as DI;
-use Claroline\CoreBundle\Form\WorkspaceTagType;
-use Claroline\CoreBundle\Form\AdminWorkspaceTagType;
 
 class WorkspaceTagController extends Controller
 {
@@ -78,7 +78,8 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *      "tag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "tagId", "strictId" = true}
+     *      options={"id" = "tagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * Create hierarchy link between given admin tag and a given list of admin tags
@@ -126,7 +127,8 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *      "tag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "tagId", "strictId" = true}
+     *      options={"id" = "tagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
@@ -187,7 +189,7 @@ class WorkspaceTagController extends Controller
         $workspaceTag = new WorkspaceTag();
         $form = $this->formFactory->create(new AdminWorkspaceTagType(), $workspaceTag);
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -222,7 +224,7 @@ class WorkspaceTagController extends Controller
             return new Response($workspaceTag->getId(), 201);
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -246,7 +248,7 @@ class WorkspaceTagController extends Controller
 
         $form = $this->formFactory->create(new WorkspaceTagType(), $workspaceTag);
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -279,7 +281,7 @@ class WorkspaceTagController extends Controller
             return new Response($workspaceTag->getId(), 201);
         }
 
-        return array('form' => $form->createView());
+        return ['form' => $form->createView()];
     }
 
     /**
@@ -291,7 +293,8 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *     "workspaceTag",
      *     class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *     options={"id" = "workspaceTagId", "strictId" = true}
+     *     options={"id" = "workspaceTagId", "strictId" = true},
+     *     converter="strict_id"
      * )
      * @EXT\Template()
      *
@@ -307,10 +310,10 @@ class WorkspaceTagController extends Controller
 
         $form = $this->formFactory->create(new AdminWorkspaceTagType(), $workspaceTag);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspaceTag' => $workspaceTag,
-        );
+        ];
     }
 
     /**
@@ -323,7 +326,8 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *     "workspaceTag",
      *     class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *     options={"id" = "workspaceTagId", "strictId" = true}
+     *     options={"id" = "workspaceTagId", "strictId" = true},
+     *     converter="strict_id"
      * )
      * @EXT\Template("ClarolineCoreBundle:WorkspaceTag:adminWorkspaceTagEditForm.html.twig")
      *
@@ -345,10 +349,10 @@ class WorkspaceTagController extends Controller
             return new Response('success', 204);
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspaceTag' => $workspaceTag,
-        );
+        ];
     }
 
     /**
@@ -360,7 +364,8 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *     "workspaceTag",
      *     class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *     options={"id" = "workspaceTagId", "strictId" = true}
+     *     options={"id" = "workspaceTagId", "strictId" = true},
+     *     converter="strict_id"
      * )
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\Template()
@@ -375,10 +380,10 @@ class WorkspaceTagController extends Controller
     ) {
         $form = $this->formFactory->create(new WorkspaceTagType(), $workspaceTag);
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspaceTag' => $workspaceTag,
-        );
+        ];
     }
 
     /**
@@ -391,7 +396,8 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *     "workspaceTag",
      *     class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *     options={"id" = "workspaceTagId", "strictId" = true}
+     *     options={"id" = "workspaceTagId", "strictId" = true},
+     *     converter="strict_id"
      * )
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      * @EXT\Template("ClarolineCoreBundle:WorkspaceTag:workspaceTagEditForm.html.twig")
@@ -412,10 +418,10 @@ class WorkspaceTagController extends Controller
             return new Response('success', 204);
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'workspaceTag' => $workspaceTag,
-        );
+        ];
     }
 
     /**
@@ -428,12 +434,14 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *      "parentTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "parentTagId", "strictId" = true}
+     *      options={"id" = "parentTagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter(
      *      "childTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "childTagId", "strictId" = true}
+     *      options={"id" = "childTagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * Removes hierarchy links between 2 admin tags
@@ -452,14 +460,14 @@ class WorkspaceTagController extends Controller
         $childrenHierarchies = $this->tagManager
             ->getAdminHierarchiesByParent($childTag);
         // Get an array with all parents id
-        $parentsTagsId = array();
+        $parentsTagsId = [];
         $parentsTags = $this->tagManager->getAdminParentsFromTag($parentTag);
 
         foreach ($parentsTags as $tagParent) {
             $parentsTagsId[] = $tagParent->getId();
         }
         // Get an array with all children id
-        $childrenTagsId = array();
+        $childrenTagsId = [];
         $childrenTags = $this->tagManager->getAdminChildrenFromTag($childTag);
 
         foreach ($childrenTags as $childTag) {
@@ -474,7 +482,7 @@ class WorkspaceTagController extends Controller
             );
         // Get all hierarchies where given tag (parent) is a child
         $parentHierarchies = $this->tagManager->getHierarchiesByTag($parentTag);
-        $levelsArray = array();
+        $levelsArray = [];
 
         // Count the number of nodes by level
         foreach ($childrenHierarchies as $childHierarchy) {
@@ -482,7 +490,7 @@ class WorkspaceTagController extends Controller
             $level = $childHierarchy->getLevel() + 1;
 
             if (!isset($levelsArray[$childTagId])) {
-                $levelsArray[$childTagId] = array();
+                $levelsArray[$childTagId] = [];
             }
             if (!isset($levelsArray[$childTagId][$level])) {
                 $levelsArray[$childTagId][$level] = 0;
@@ -526,12 +534,14 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *      "parentTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "parentTagId", "strictId" = true}
+     *      options={"id" = "parentTagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter(
      *      "childTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "childTagId", "strictId" = true}
+     *      options={"id" = "childTagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
@@ -547,7 +557,7 @@ class WorkspaceTagController extends Controller
         $childrenHierarchies = $this->tagManager
             ->getHierarchiesByParent($currentUser, $childTag);
         // Get an array with all parents id
-        $parentsTagsId = array();
+        $parentsTagsId = [];
         $parentsTags = $this->tagManager
             ->getParentsFromTag($currentUser, $parentTag);
 
@@ -555,7 +565,7 @@ class WorkspaceTagController extends Controller
             $parentsTagsId[] = $tagParent->getId();
         }
         // Get an array with all children id
-        $childrenTagsId = array();
+        $childrenTagsId = [];
         $childrenTags = $this->tagManager
             ->getChildrenFromTag($currentUser, $childTag);
 
@@ -572,7 +582,7 @@ class WorkspaceTagController extends Controller
             );
         // Get all hierarchies where given tag (parent) is a child
         $parentHierarchies = $this->tagManager->getHierarchiesByTag($parentTag);
-        $levelsArray = array();
+        $levelsArray = [];
 
         // Count the number of nodes by level
         foreach ($childrenHierarchies as $childHierarchy) {
@@ -580,7 +590,7 @@ class WorkspaceTagController extends Controller
             $level = $childHierarchy->getLevel() + 1;
 
             if (!isset($levelsArray[$childTagId])) {
-                $levelsArray[$childTagId] = array();
+                $levelsArray[$childTagId] = [];
             }
             if (!isset($levelsArray[$childTagId][$level])) {
                 $levelsArray[$childTagId][$level] = 0;
@@ -630,7 +640,8 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true}
+     *      options={"id" = "workspaceTagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * @EXT\Template()
@@ -649,17 +660,17 @@ class WorkspaceTagController extends Controller
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-        $possibleChildrenPager = $search === '' ?
+        $possibleChildrenPager = '' === $search ?
             $this->tagManager
                 ->getPossibleAdminChildrenPager($workspaceTag, $page) :
             $this->tagManager
                 ->getPossibleAdminChildrenPagerBySearch($workspaceTag, $page, $search);
 
-        return array(
+        return [
             'workspaceTag' => $workspaceTag,
             'possibleChildren' => $possibleChildrenPager,
             'search' => $search,
-        );
+        ];
     }
 
     /**
@@ -678,7 +689,8 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true}
+     *      options={"id" = "workspaceTagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
@@ -696,7 +708,7 @@ class WorkspaceTagController extends Controller
         $page,
         $search
     ) {
-        $possibleChildrenPager = $search === '' ?
+        $possibleChildrenPager = '' === $search ?
             $this->tagManager
                 ->getPossibleChildrenPager($currentUser, $workspaceTag, $page) :
             $this->tagManager->getPossibleChildrenPagerBySearch(
@@ -706,11 +718,11 @@ class WorkspaceTagController extends Controller
                 $search
             );
 
-        return array(
+        return [
             'workspaceTag' => $workspaceTag,
             'possibleChildren' => $possibleChildrenPager,
             'search' => $search,
-        );
+        ];
     }
 
     /**
@@ -723,12 +735,14 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true}
+     *      options={"id" = "workspaceTagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * Remove admin Tag from Workspace
@@ -762,12 +776,14 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true}
+     *      options={"id" = "workspaceTagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
@@ -821,12 +837,12 @@ class WorkspaceTagController extends Controller
         if (!$this->authorization->isGranted('ROLE_ADMIN')) {
             throw new AccessDeniedException();
         }
-        $workspaces = ($search === '') ?
+        $workspaces = ('' === $search) ?
             $this->workspaceManager
                 ->getDisplayableWorkspacesPager($page) :
             $this->workspaceManager
                 ->getDisplayableWorkspacesBySearchPager($search, $page);
-        $workspacesTags = array();
+        $workspacesTags = [];
 
         foreach ($workspaces as $workspace) {
             $relWsTagsByWs = $this->tagManager
@@ -837,25 +853,25 @@ class WorkspaceTagController extends Controller
         // Get datas to display tag hierarchy
         $tagsHierarchy = $this->tagManager->getAllAdminHierarchies();
         $rootTags = $this->tagManager->getAdminRootTags();
-        $hierarchy = array();
+        $hierarchy = [];
 
         foreach ($tagsHierarchy as $tagHierarchy) {
-            if ($tagHierarchy->getLevel() === 1) {
+            if (1 === $tagHierarchy->getLevel()) {
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = [];
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
             }
         }
 
-        return array(
+        return [
             'search' => $search,
             'workspaces' => $workspaces,
             'workspacesTags' => $workspacesTags,
             'hierarchy' => $hierarchy,
             'rootTags' => $rootTags,
-        );
+        ];
     }
 
     /**
@@ -883,12 +899,12 @@ class WorkspaceTagController extends Controller
     {
         $token = $this->tokenStorage->getToken();
         $roleNames = $this->utils->getRoles($token);
-        $workspaces = ($search === '') ?
+        $workspaces = ('' === $search) ?
             $this->workspaceManager
                 ->getOpenableWorkspacesByRolesPager($roleNames, $page, 20) :
             $this->workspaceManager
                 ->getOpenableWorkspacesBySearchAndRolesPager($search, $roleNames, $page, 20);
-        $workspacesTags = array();
+        $workspacesTags = [];
 
         foreach ($workspaces as $workspace) {
             $relWsTagsByWs = $this->tagManager
@@ -899,26 +915,26 @@ class WorkspaceTagController extends Controller
         // Get datas to display tag hierarchy
         $tagsHierarchy = $this->tagManager->getAllHierarchiesByUser($currentUser);
         $rootTags = $this->tagManager->getRootTags($currentUser);
-        $hierarchy = array();
+        $hierarchy = [];
 
         foreach ($tagsHierarchy as $tagHierarchy) {
-            if ($tagHierarchy->getLevel() === 1) {
+            if (1 === $tagHierarchy->getLevel()) {
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = [];
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
             }
         }
 
-        return array(
+        return [
             'user' => $currentUser,
             'search' => $search,
             'workspaces' => $workspaces,
             'workspacesTags' => $workspacesTags,
             'hierarchy' => $hierarchy,
             'rootTags' => $rootTags,
-        );
+        ];
     }
 
     /**
@@ -952,19 +968,19 @@ class WorkspaceTagController extends Controller
                 $relWsTag = $this->tagManager
                     ->getAdminTagRelationByWorkspaceAndTag($workspace, $tag);
 
-                if ($relWsTag === null) {
+                if (null === $relWsTag) {
                     $this->tagManager->createTagRelation($tag, $workspace);
                     // Set success flashbag message
                     $msg = $this->translator->trans(
                         'the_workspace',
-                        array(),
+                        [],
                         'platform'
                     );
                     $msg .= ' ['.$workspace->getName()
                         .' ('.$workspace->getCode().')] ';
                     $msg .= $this->translator->trans(
                         'has_been_put_in_category',
-                        array(),
+                        [],
                         'platform'
                     );
                     $msg .= ' ['.$tag->getName().']';
@@ -973,14 +989,14 @@ class WorkspaceTagController extends Controller
                     // Set success flashbag message
                     $msg = $this->translator->trans(
                         'the_workspace',
-                        array(),
+                        [],
                         'platform'
                     );
                     $msg .= ' ['.$workspace->getName()
                         .' ('.$workspace->getCode().')] ';
                     $msg .= $this->translator->trans(
                         'is_already_in_category',
-                        array(),
+                        [],
                         'platform'
                     );
                     $msg .= ' ['.$tag->getName().']';
@@ -1024,19 +1040,19 @@ class WorkspaceTagController extends Controller
                     $currentUser
                 );
 
-                if ($relWsTag === null) {
+                if (null === $relWsTag) {
                     $this->tagManager->createTagRelation($tag, $workspace);
                     // Set success flashbag message
                     $msg = $this->translator->trans(
                         'the_workspace',
-                        array(),
+                        [],
                         'platform'
                     );
                     $msg .= ' ['.$workspace->getName()
                         .' ('.$workspace->getCode().')] ';
                     $msg .= $this->translator->trans(
                         'has_been_put_in_category',
-                        array(),
+                        [],
                         'platform'
                     );
                     $msg .= ' ['.$tag->getName().']';
@@ -1045,14 +1061,14 @@ class WorkspaceTagController extends Controller
                     // Set success flashbag message
                     $msg = $this->translator->trans(
                         'the_workspace',
-                        array(),
+                        [],
                         'platform'
                     );
                     $msg .= ' ['.$workspace->getName()
                         .' ('.$workspace->getCode().')] ';
                     $msg .= $this->translator->trans(
                         'is_already_in_category',
-                        array(),
+                        [],
                         'platform'
                     );
                     $msg .= ' ['.$tag->getName().']';
@@ -1081,22 +1097,22 @@ class WorkspaceTagController extends Controller
         }
         $tagsHierarchy = $this->tagManager->getAllAdminHierarchies();
         $rootTags = $this->tagManager->getAdminRootTags();
-        $hierarchy = array();
+        $hierarchy = [];
 
         foreach ($tagsHierarchy as $tagHierarchy) {
-            if ($tagHierarchy->getLevel() === 1) {
+            if (1 === $tagHierarchy->getLevel()) {
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = [];
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
             }
         }
 
-        return array(
+        return [
             'hierarchy' => $hierarchy,
             'rootTags' => $rootTags,
-        );
+        ];
     }
 
     /**
@@ -1114,22 +1130,22 @@ class WorkspaceTagController extends Controller
     {
         $tagsHierarchy = $this->tagManager->getAllHierarchiesByUser($currentUser);
         $rootTags = $this->tagManager->getRootTags($currentUser);
-        $hierarchy = array();
+        $hierarchy = [];
 
         foreach ($tagsHierarchy as $tagHierarchy) {
-            if ($tagHierarchy->getLevel() === 1) {
+            if (1 === $tagHierarchy->getLevel()) {
                 if (!isset($hierarchy[$tagHierarchy->getParent()->getId()]) ||
                     !is_array($hierarchy[$tagHierarchy->getParent()->getId()])) {
-                    $hierarchy[$tagHierarchy->getParent()->getId()] = array();
+                    $hierarchy[$tagHierarchy->getParent()->getId()] = [];
                 }
                 $hierarchy[$tagHierarchy->getParent()->getId()][] = $tagHierarchy->getTag();
             }
         }
 
-        return array(
+        return [
             'hierarchy' => $hierarchy,
             'rootTags' => $rootTags,
-        );
+        ];
     }
 
     /**
@@ -1142,7 +1158,8 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true}
+     *      options={"id" = "workspaceTagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * Delete admin Tag
@@ -1173,7 +1190,8 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *      "workspaceTag",
      *      class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *      options={"id" = "workspaceTagId", "strictId" = true}
+     *      options={"id" = "workspaceTagId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
@@ -1203,12 +1221,14 @@ class WorkspaceTagController extends Controller
      * @EXT\ParamConverter(
      *     "workspaceTag",
      *     class="ClarolineCoreBundle:Workspace\WorkspaceTag",
-     *     options={"id" = "workspaceTagId", "strictId" = true}
+     *     options={"id" = "workspaceTagId", "strictId" = true},
+     *     converter="strict_id"
      * )
      * @EXT\ParamConverter(
      *     "workspace",
      *     class="ClarolineCoreBundle:Workspace\Workspace",
-     *     options={"id" = "workspaceId", "strictId" = true}
+     *     options={"id" = "workspaceId", "strictId" = true},
+     *     converter="strict_id"
      * )
      *
      * Associate a Workspace Tag to a Workspace
@@ -1254,16 +1274,16 @@ class WorkspaceTagController extends Controller
         $page,
         $search
     ) {
-        $workspaces = ($search === '') ?
+        $workspaces = ('' === $search) ?
             $this->workspaceManager
                 ->getDisplayableWorkspacesPager($page) :
             $this->workspaceManager
                 ->getDisplayableWorkspacesBySearchPager($search, $page);
 
-        return array(
+        return [
             'linkedWorkspaceId' => $linkedWorkspaceId,
             'workspaces' => $workspaces,
             'search' => $search,
-        );
+        ];
     }
 }

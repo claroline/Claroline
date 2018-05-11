@@ -31,7 +31,7 @@ class SerializerExtension extends \Twig_Extension
      * SerializerExtension constructor.
      *
      * @DI\InjectParams({
-     *     "serializer"         = @DI\Inject("serializer"),
+     *     "serializer"         = @DI\Inject("jms_serializer"),
      *     "serializerProvider" = @DI\Inject("claroline.api.serializer")
      * })
      *
@@ -49,8 +49,8 @@ class SerializerExtension extends \Twig_Extension
     public function getFilters()
     {
         return [
-            'api_serialize' => new \Twig_Filter_Method($this, 'apiSerialize'),
-            'json_serialize' => new \Twig_Filter_Method($this, 'serialize'),
+            'api_serialize' => new \Twig_SimpleFilter('api_serialize', [$this, 'apiSerialize']),
+            'json_serialize' => new \Twig_SimpleFilter('json_serialize', [$this, 'serialize']),
         ];
     }
 

@@ -22,7 +22,7 @@ use JMS\SecurityExtraBundle\Annotation as SEC;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -46,7 +46,7 @@ class AnalyticsController extends Controller
      *     "widgetManager"       = @DI\Inject("claroline.manager.widget_manager"),
      *     "formFactory"         = @DI\Inject("form.factory"),
      *     "analyticsManager"    = @DI\Inject("claroline.manager.analytics_manager"),
-     *     "request"             = @DI\Inject("request")
+     *     "request"             = @DI\Inject("request_stack")
      * })
      */
     public function __construct(
@@ -55,14 +55,14 @@ class AnalyticsController extends Controller
         WidgetManager $widgetManager,
         FormFactory $formFactory,
         AnalyticsManager $analyticsManager,
-        Request $request
+        RequestStack $request
     ) {
         $this->userManager = $userManager;
         $this->workspaceManager = $workspaceManager;
         $this->widgetManager = $widgetManager;
         $this->formFactory = $formFactory;
         $this->analyticsManager = $analyticsManager;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
     }
 
     /**
@@ -124,7 +124,7 @@ class AnalyticsController extends Controller
 
         if ($criteriaForm->isValid()) {
             $range = $criteriaForm->get('range')->getData();
-            $unique = $criteriaForm->get('unique')->getData() === 'true';
+            $unique = 'true' === $criteriaForm->get('unique')->getData();
         }
 
         $actionsForRange = $this->analyticsManager

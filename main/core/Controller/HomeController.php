@@ -26,6 +26,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -46,7 +47,7 @@ class HomeController
      * @InjectParams({
      *     "manager"        = @Inject("claroline.manager.home_manager"),
      *     "authorization"  = @Inject("security.authorization_checker"),
-     *     "request"        = @Inject("request"),
+     *     "request"        = @Inject("request_stack"),
      *     "templating"     = @Inject("templating"),
      *     "homeService"    = @Inject("claroline.common.home_service"),
      *     "container"      = @Inject("service_container"),
@@ -55,7 +56,7 @@ class HomeController
      */
     public function __construct(
         HomeManager $manager,
-        Request $request,
+        RequestStack $request,
         $authorization,
         $templating,
         $homeService,
@@ -63,7 +64,7 @@ class HomeController
         FormFactory $formFactory
     ) {
         $this->manager = $manager;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->authorization = $authorization;
         $this->templating = $templating;
         $this->homeService = $homeService;
@@ -92,7 +93,7 @@ class HomeController
     public function contentAction(Content $content, Type $type, Content $father = null)
     {
         return $this->render(
-            'ClarolineCoreBundle:Home/types:'.(is_object($type) ? $type->getName() : 'home').'.html.twig',
+            'ClarolineCoreBundle:home/types:'.(is_object($type) ? $type->getName() : 'home').'.html.twig',
             $this->manager->getContent($content, $type, $father),
             true
         );
@@ -119,8 +120,8 @@ class HomeController
         } else {
             $typeTemplate = $typeEntity->getTemplate();
             $template = is_null($typeTemplate) ?
-                'ClarolineCoreBundle:Home:home.html.twig' :
-                'ClarolineCoreBundle:Home\templates\custom:'.$typeTemplate;
+                'ClarolineCoreBundle:home:home.html.twig' :
+                'ClarolineCoreBundle:home\templates\custom:'.$typeTemplate;
             $response = $this->render(
                 $template,
                 [
@@ -149,7 +150,7 @@ class HomeController
         $layout = $this->manager->contentLayout($type, $father, $region, $this->canEdit());
 
         if ($layout) {
-            return $this->render('ClarolineCoreBundle:Home:layout.html.twig', $this->renderContent($layout));
+            return $this->render('ClarolineCoreBundle:home:layout.html.twig', $this->renderContent($layout));
         }
 
         return $this->render('ClarolineCoreBundle:Home:error.html.twig', ['path' => $type]);
@@ -169,7 +170,7 @@ class HomeController
         $hasCustomTemplates = is_dir($this->templatesDirectory);
 
         $response = $this->render(
-            'ClarolineCoreBundle:Home:home.html.twig',
+            'ClarolineCoreBundle:home:home.html.twig',
             [
                 'type' => '_pages',
                 'region' => $this->renderRegions($this->manager->getRegionContents()),
@@ -209,7 +210,7 @@ class HomeController
      * @Route("/rename/type/{type}", name="claro_content_rename_type_form", options = {"expose" = true})
      * @Secure(roles="ROLE_HOME_MANAGER")
      *
-     * @Template("ClarolineCoreBundle:Home:rename.html.twig")
+     * @Template("ClarolineCoreBundle:home:rename.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -224,7 +225,7 @@ class HomeController
      * @Route("/rename/type/{type}/{name}", name="claro_content_rename_type", options = {"expose" = true})
      * @Secure(roles="ROLE_HOME_MANAGER")
      *
-     * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"type": "name"}})
+     * @ParamConverter("type", class = "ClarolineCoreBundle:Home\Type", options = {"mapping" : {"type": "name"}})
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -249,7 +250,7 @@ class HomeController
      * )
      * @Secure(roles="ROLE_HOME_MANAGER")
      *
-     * @Template("ClarolineCoreBundle:Home:changeTemplateModalForm.html.twig")
+     * @Template("ClarolineCoreBundle:home:change_template_modal_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -273,7 +274,7 @@ class HomeController
      * )
      * @Secure(roles="ROLE_HOME_MANAGER")
      *
-     * @Template("ClarolineCoreBundle:Home:changeTemplateModalForm.html.twig")
+     * @Template("ClarolineCoreBundle:home:change_template_modal_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -300,7 +301,7 @@ class HomeController
      * @Route("/move/content/{currentType}", name="claroline_move_content_form", options = {"expose" = true})
      * @Secure(roles="ROLE_HOME_MANAGER")
      *
-     * @Template("ClarolineCoreBundle:Home:move.html.twig")
+     * @Template("ClarolineCoreBundle:home:move.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -316,7 +317,7 @@ class HomeController
      *
      * @Secure(roles="ROLE_HOME_MANAGER")
      *
-     * @Template("ClarolineCoreBundle:Home:move.html.twig")
+     * @Template("ClarolineCoreBundle:home:move.html.twig")
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      * @ParamConverter("type", class = "ClarolineCoreBundle:home\Type", options = {"mapping" : {"type": "name"}})
@@ -349,7 +350,7 @@ class HomeController
         //cant use @Secure(roles="ROLE_ADMIN") annotation beacause this method is called in anonymous mode
         if ($this->canEdit()) {
             return $this->render(
-                'ClarolineCoreBundle:Home/types:'.$type.'.creator.twig',
+                'ClarolineCoreBundle:home/types:'.$type.'.creator.twig',
                 $this->manager->getCreator($type, $id, $content, $father),
                 true
             );
@@ -365,7 +366,7 @@ class HomeController
      * @param string $size The size (content-12) of the content
      * @param string $type The type of the content
      *
-     * @Template("ClarolineCoreBundle:Home:menu.html.twig")
+     * @Template("ClarolineCoreBundle:home:menu.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -383,7 +384,7 @@ class HomeController
      *
      * @Route("/content/size/{id}/{size}/{type}", name="claroline_content_size", options = {"expose" = true})
      *
-     * @Template("ClarolineCoreBundle:Home:sizes.html.twig")
+     * @Template("ClarolineCoreBundle:home:sizes.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -405,7 +406,7 @@ class HomeController
 
         if (isset($graph['type'])) {
             return $this->render(
-                'ClarolineCoreBundle:Home/graph:'.$graph['type'].'.html.twig',
+                'ClarolineCoreBundle:home/graph:'.$graph['type'].'.html.twig',
                 ['content' => $graph],
                 true
             );
@@ -423,7 +424,7 @@ class HomeController
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
-     * @Template("ClarolineCoreBundle:Home:regions.html.twig")
+     * @Template("ClarolineCoreBundle:home:regions.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -558,7 +559,7 @@ class HomeController
      * @Route("/content/createtype/{name}", name="claroline_content_createtype")
      * @Secure(roles="ROLE_HOME_MANAGER")
      *
-     * @Template("ClarolineCoreBundle:Home:type.html.twig")
+     * @Template("ClarolineCoreBundle:home:type.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -657,7 +658,7 @@ class HomeController
 
             if (isset($graph['type'])) {
                 return $this->render(
-                    'ClarolineCoreBundle:Home/graph:'.$graph['type'].'.html.twig',
+                    'ClarolineCoreBundle:home/graph:'.$graph['type'].'.html.twig',
                     ['content' => $graph],
                     true
                 );
@@ -729,7 +730,7 @@ class HomeController
         if (isset($layout['content']) && isset($layout['type']) && is_array($layout['content'])) {
             foreach ($layout['content'] as $content) {
                 $tmp .= $this->render(
-                    'ClarolineCoreBundle:Home/types:'.$content['type'].'.html.twig', $content, true
+                    'ClarolineCoreBundle:home/types:'.$content['type'].'.html.twig', $content, true
                 )->getContent();
             }
         }
@@ -753,7 +754,7 @@ class HomeController
 
             foreach ($region as $variables) {
                 $tmp[$name] .= $this->render(
-                    'ClarolineCoreBundle:Home/types:'.$variables['type'].'.html.twig', $variables, true
+                    'ClarolineCoreBundle:home/types:'.$variables['type'].'.html.twig', $variables, true
                 )->getContent();
             }
         }

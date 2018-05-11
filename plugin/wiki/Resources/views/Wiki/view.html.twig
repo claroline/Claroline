@@ -43,9 +43,8 @@
             sections: {{ tree|json_encode(constant('JSON_PRETTY_PRINT'))|raw }},
             deletedSections: {{ deletedSections|json_encode(constant('JSON_PRETTY_PRINT'))|raw }},
             {% if user is not empty %}
-            notificationButton: `{% render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) %}`
+            notificationButton: `{{ render controller('IcapNotificationBundle:FollowerResource:renderForm', {'resourceId': _resource.resourceNode.id, 'resourceClass': _resource.resourceNode.class}) }}`
             {% endif %}
         });
     </script>
 {% endblock %}
-

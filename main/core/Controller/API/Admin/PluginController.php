@@ -20,6 +20,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use JMS\SecurityExtraBundle\Annotation as SEC;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * @NamePrefix("api_")
@@ -33,13 +34,13 @@ class PluginController extends FOSRestController
 
     /**
      * @DI\InjectParams({
-     *     "request"       = @DI\Inject("request"),
+     *     "request"       = @DI\Inject("request_stack"),
      *	   "bundleManager" = @DI\Inject("claroline.manager.plugin_manager")
      * })
      */
-    public function __construct(Request $request, PluginManager $bundleManager)
+    public function __construct(RequestStack $request, PluginManager $bundleManager)
     {
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->bundleManager = $bundleManager;
     }
 

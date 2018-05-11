@@ -40,7 +40,7 @@
                             {% set documentTitle = document.resourceNode.name %}
                         {% endif %}
                     {% endif %}
-                    
+
                     <div class="row text-left">
                         <div class="form-group row col-md-6">
                         <table class="table table-responsive table-condensed well table-striped">
@@ -77,7 +77,7 @@
                         <div class="row text-left">
                             <div class="form-group row col-md-6">
                                 <b>{{ 'Grade'|trans({}, 'innova_collecticiel') }}</b>
-                                {{ notationDocument }}    
+                                {{ notationDocument }}
                                 {{ 'Notation Max'|trans({}, 'innova_collecticiel') }}
                                 {{ maximumNotation }}
                                 {{ ')' }}
@@ -95,12 +95,12 @@
                             <div class="row text-left">
                                 <div class="form-group col-md-6">
                                     {# Pour affichage de la valeur de l'accusé de réception #}
-                                    {% render(controller('InnovaCollecticielBundle:ChoiceNotation:renderChoiceText',
-                                    {'gradingNotationId': notation.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) %}
+                                    {{ render(controller('InnovaCollecticielBundle:ChoiceNotation:renderChoiceText',
+                                    {'gradingNotationId': notation.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) }}
                                 </div>
                             </div>
                         {% endfor %}
-                        
+
                     {% endif %}
 
                     {% if dropzone.evaluationType == "ratingScale" %}
@@ -130,8 +130,8 @@
                             <div class="row text-left">
                                 <div class="form-group col-md-6">
                                     {# Pour affichage de la valeur de l'accusé de réception #}
-                                    {% render(controller('InnovaCollecticielBundle:ChoiceCriteria:renderChoiceText',
-                                    {'gradingCriteriaId': criteria.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) %}
+                                    {{ render(controller('InnovaCollecticielBundle:ChoiceCriteria:renderChoiceText',
+                                    {'gradingCriteriaId': criteria.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) }}
                                 </div>
                             </div>
                         {% endfor %}

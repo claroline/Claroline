@@ -119,7 +119,7 @@ class WebResourceListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $request = $this->container->get('request');
+        $request = $this->container->get('request_stack')->getMasterRequest();
         $workspace = $event->getParent()->getWorkspace();
         $form = $this->container->get('form.factory')->create(new FileType(), new File());
         $form->handleRequest($request);

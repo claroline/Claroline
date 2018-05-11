@@ -1,6 +1,6 @@
 <form class="form-horizontal" role="form" method="POST"
  action="{{ path('innova_collecticiel_add_notation') }}">
-          
+
     <div class="innova_collecticiel_notation_form container">
 
         <div class="row">
@@ -84,8 +84,8 @@
                         <textarea id="innova_collecticiel_notation_form_{{notation.notationName}}_{{document.id}}" name="innova_collecticiel_notation_form[{{notation.notationName}}]" required="required" class="claroline-tiny-mce hide"
                         {% if recordOrTransmitNotation == 0 %}value="{{notation.notationName}}" {% endif %}
                         >
-                            {% render(controller('InnovaCollecticielBundle:ChoiceNotation:renderChoiceText',
-                            {'gradingNotationId': notation.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) %}
+                            {{ render(controller('InnovaCollecticielBundle:ChoiceNotation:renderChoiceText',
+                            {'gradingNotationId': notation.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) }}
                         </textarea>
                     </div>
                 </div>
@@ -138,8 +138,8 @@
                         {% if recordOrTransmitNotation == 0 %}value="{{criteria.criteriaName}}" {% endif %}
                         >
                         {# Pour affichage de la valeur de l'accusé de réception #}
-                        {% render(controller('InnovaCollecticielBundle:ChoiceCriteria:renderChoiceText',
-                        {'gradingCriteriaId': criteria.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) %}
+                        {{ render(controller('InnovaCollecticielBundle:ChoiceCriteria:renderChoiceText',
+                        {'gradingCriteriaId': criteria.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) }}
                         </textarea>
                     </div>
                 </div>

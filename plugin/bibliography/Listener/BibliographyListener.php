@@ -219,7 +219,7 @@ class BibliographyListener
     {
         $params = [];
         $params['_controller'] = 'IcapBibliographyBundle:BookReference:pluginConfigureForm';
-        $subRequest = $this->container->get('request')->duplicate([], null, $params);
+        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate([], null, $params);
         $response = $this->container->get('http_kernel')->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
         $event->setResponse($response);
         $event->stopPropagation();

@@ -33,15 +33,13 @@ class DeckListener
     private $kernel;
     private $manager;
     private $formHandler;
-    private $security;
 
     /**
      * @DI\InjectParams({
      *     "stack"      = @DI\Inject("request_stack"),
      *     "kernel"     = @DI\Inject("http_kernel"),
      *     "manager"    = @DI\Inject("claroline.flashcard.deck_manager"),
-     *     "handler"    = @DI\Inject("claroline.form_handler"),
-     *     "context"    = @DI\Inject("security.context")
+     *     "handler"    = @DI\Inject("claroline.form_handler")
      * })
      *
      * @param RequestStack        $stack
@@ -54,14 +52,12 @@ class DeckListener
         RequestStack $stack,
         HttpKernelInterface $kernel,
         DeckManager $manager,
-        FormHandler $handler,
-        SecurityContext $context
+        FormHandler $handler
     ) {
         $this->request = $stack->getCurrentRequest();
         $this->kernel = $kernel;
         $this->manager = $manager;
         $this->formHandler = $handler;
-        $this->security = $context;
     }
 
     /**

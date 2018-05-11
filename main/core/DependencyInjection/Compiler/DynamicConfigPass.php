@@ -62,5 +62,8 @@ class DynamicConfigPass implements CompilerPassInterface
         $container
             ->getDefinition('fos_oauth_server.security.authentication.provider')
             ->setClass('Claroline\CoreBundle\Library\Security\Provider\OAuthProvider');
+
+        $definition = $container->findDefinition('security.authentication.listener.anonymous');
+        $definition->setClass('Claroline\CoreBundle\Listener\AnonymousAuthenticationListener');
     }
 }

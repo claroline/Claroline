@@ -32,6 +32,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -55,7 +56,7 @@ class SessionEventsToolController extends Controller
      *     "configHandler"   = @DI\Inject("claroline.config.platform_config_handler"),
      *     "cursusManager"   = @DI\Inject("claroline.manager.cursus_manager"),
      *     "locationManager" = @DI\Inject("claroline.manager.organization.location_manager"),
-     *     "request"         = @DI\Inject("request"),
+     *     "request"         = @DI\Inject("request_stack"),
      *     "serializer"      = @DI\Inject("jms_serializer"),
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "userManager"     = @DI\Inject("claroline.manager.user_manager")
@@ -67,7 +68,7 @@ class SessionEventsToolController extends Controller
         PlatformConfigurationHandler $configHandler,
         CursusManager $cursusManager,
         LocationManager $locationManager,
-        Request $request,
+        RequestStack $request,
         Serializer $serializer,
         TokenStorageInterface $tokenStorage,
         UserManager $userManager
@@ -77,7 +78,7 @@ class SessionEventsToolController extends Controller
         $this->configHandler = $configHandler;
         $this->cursusManager = $cursusManager;
         $this->locationManager = $locationManager;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->serializer = $serializer;
         $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
@@ -141,8 +142,8 @@ class SessionEventsToolController extends Controller
             intval($this->request->get('registrationType')) :
             CourseSession::REGISTRATION_AUTO;
         $maxUsers = $this->request->get('maxUsers', false);
-        $maxUsers = $maxUsers !== false && $maxUsers !== '' ? intval($maxUsers) : null;
-        $type = $this->request->get('type', false) !== false ? $this->request->get('type') : SessionEvent::TYPE_NONE;
+        $maxUsers = false !== $maxUsers && '' !== $maxUsers ? intval($maxUsers) : null;
+        $type = false !== $this->request->get('type', false) ? $this->request->get('type') : SessionEvent::TYPE_NONE;
         $locationExtra = $this->request->get('locationExtra', false) ? $this->request->get('locationExtra') : null;
         $locationId = intval($this->request->get('location', false));
         $location = $locationId ? $this->locationManager->getLocationById($locationId) : null;
@@ -153,14 +154,14 @@ class SessionEventsToolController extends Controller
             $teachersIds = explode(',', $teachersParams);
 
             if ($teachersIds) {
-                if (intval($teachersIds[0]) === 0) {
+                if (0 === intval($teachersIds[0])) {
                     array_splice($teachersIds, 0, 1);
                 }
                 $teachers = $this->userManager->getUsersByIds($teachersIds);
             }
         }
         $eventSetName = $this->request->get('eventSet', false);
-        $eventSet = $eventSetName && $registrationType === CourseSession::REGISTRATION_PUBLIC ?
+        $eventSet = $eventSetName && CourseSession::REGISTRATION_PUBLIC === $registrationType ?
             $this->cursusManager->getSessionEventSet($session, $eventSetName) :
              null;
         $sessionEvent = $this->cursusManager->createSessionEvent(
@@ -230,8 +231,8 @@ class SessionEventsToolController extends Controller
             intval($this->request->get('registrationType')) :
             CourseSession::REGISTRATION_AUTO;
         $maxUsers = $this->request->get('maxUsers', false);
-        $maxUsers = $maxUsers !== false && $maxUsers !== '' ? intval($maxUsers) : null;
-        $type = $this->request->get('type', false) !== false ? $this->request->get('type') : SessionEvent::TYPE_NONE;
+        $maxUsers = false !== $maxUsers && '' !== $maxUsers ? intval($maxUsers) : null;
+        $type = false !== $this->request->get('type', false) ? $this->request->get('type') : SessionEvent::TYPE_NONE;
         $locationExtra = $this->request->get('locationExtra', false) ? $this->request->get('locationExtra') : null;
         $eventSetName = $this->request->get('eventSet', false);
         $sessionEvent->emptyTutors();
@@ -253,7 +254,7 @@ class SessionEventsToolController extends Controller
             $teachersIds = explode(',', $teachersParams);
 
             if ($teachersIds) {
-                if (intval($teachersIds[0]) === 0) {
+                if (0 === intval($teachersIds[0])) {
                     array_splice($teachersIds, 0, 1);
                 }
                 $teachers = $this->userManager->getUsersByIds($teachersIds);
@@ -263,7 +264,7 @@ class SessionEventsToolController extends Controller
                 }
             }
         }
-        $eventSet = $eventSetName && $registrationType === CourseSession::REGISTRATION_PUBLIC ?
+        $eventSet = $eventSetName && CourseSession::REGISTRATION_PUBLIC === $registrationType ?
             $this->cursusManager->getSessionEventSet($sessionEvent->getSession(), $eventSetName) :
              null;
         $sessionEvent->setEventSet($eventSet);
@@ -390,7 +391,7 @@ class SessionEventsToolController extends Controller
         $this->checkToolAccess($sessionEventUser->getSessionEvent()->getSession()->getWorkspace(), 'edit');
         $results = $this->cursusManager->acceptSessionEventUser($sessionEventUser);
 
-        if ($results['status'] === 'success') {
+        if ('success' === $results['status']) {
             $results['data'] = $this->serializer->serialize(
                 $results['data'],
                 'json',
@@ -429,7 +430,7 @@ class SessionEventsToolController extends Controller
         ];
         $endDate = $this->request->get('until', false) ? new \DateTime($this->request->get('until')) : null;
         $duration = $this->request->get('duration', false);
-        $duration = $duration !== false && $duration !== '' ? intval($duration) : null;
+        $duration = false !== $duration && '' !== $duration ? intval($duration) : null;
 
         $createdSessionEvents = $this->cursusManager->repeatSessionEvent($sessionEvent, $iteration, $endDate, $duration);
         $serializedSessionEvents = $this->serializer->serialize(
@@ -606,7 +607,7 @@ class SessionEventsToolController extends Controller
         $this->checkToolAccess($sessionEventSet->getSession()->getWorkspace(), 'open');
         $events = $sessionEventSet->getEvents();
         $user = $this->tokenStorage->getToken()->getUser();
-        $eventUsers = $user !== 'anon.' ?
+        $eventUsers = 'anon.' !== $user ?
             $this->cursusManager->getSessionEventUsersByUserAndEventSet($user, $sessionEventSet) :
             [];
         $registrations = [];

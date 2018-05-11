@@ -386,7 +386,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $_data
                 );
             } else {
-                if ($this->container->get('security.context')->isGranted('EXPORT', $resourceNode)) {
+                if ($this->container->get('security.authorization_checker')->isGranted('EXPORT', $resourceNode)) {
                     $_data['items'][] = $this->getResourceElement($resourceNode, $workspace, $_files, $_data, true);
                 }
             }
@@ -413,7 +413,7 @@ class ResourceManagerImporter extends Importer implements ConfigurationInterface
                     $_data
                 );
             } else {
-                if ($this->container->get('security.context')->isGranted('EXPORT', $child)) {
+                if ($this->container->get('security.authorization_checker')->isGranted('EXPORT', $child)) {
                     $_data['items'][] = $this->getResourceElement($child, $workspace, $_files, $_data);
                 }
             }

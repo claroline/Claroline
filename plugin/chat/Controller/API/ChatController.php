@@ -23,6 +23,7 @@ use FOS\RestBundle\Controller\FOSRestController;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -44,7 +45,7 @@ class ChatController extends FOSRestController
      *     "chatManager"           = @DI\Inject("claroline.manager.chat_manager"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
-     *     "request"               = @DI\Inject("request")
+     *     "request"               = @DI\Inject("request_stack")
      * })
      */
     public function __construct(
@@ -52,13 +53,13 @@ class ChatController extends FOSRestController
         ChatManager $chatManager,
         PlatformConfigurationHandler $platformConfigHandler,
         TokenStorageInterface $tokenStorage,
-        Request $request
+        RequestStack $request
     ) {
         $this->authorization = $authorization;
         $this->chatManager = $chatManager;
         $this->platformConfigHandler = $platformConfigHandler;
         $this->tokenStorage = $tokenStorage;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
     }
 
     /**
@@ -69,7 +70,7 @@ class ChatController extends FOSRestController
         $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
 
-        if ($user === '.anon') {
+        if ('.anon' === $user) {
             throw new AccessDeniedException();
         } else {
             $chatUser = $this->chatManager->getChatUserByUser($user);
@@ -100,7 +101,7 @@ class ChatController extends FOSRestController
         $token = $this->tokenStorage->getToken();
         $user = $token->getUser();
 
-        if ($user === '.anon') {
+        if ('.anon' === $user) {
             throw new AccessDeniedException();
         } else {
             $userInfos = [];

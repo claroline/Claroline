@@ -3,8 +3,8 @@
 namespace Icap\BlogBundle\Twig;
 
 use Icap\BlogBundle\Entity\Blog;
-use Icap\BlogBundle\Repository\PostRepository;
 use Icap\BlogBundle\Manager\TagManager;
+use Icap\BlogBundle\Repository\PostRepository;
 
 class IcapBlogExtension extends \Twig_Extension
 {
@@ -48,21 +48,21 @@ class IcapBlogExtension extends \Twig_Extension
 
     public function getFunctions()
     {
-        return array(
-            'blog_tags' => new \Twig_Function_Method($this, 'getTagsByBlog'),
-            'blog_authors' => new \Twig_Function_Method($this, 'getAuthorsByBlog'),
-            'get_blog_banner' => new \Twig_Function_Method($this, 'getBlogBanner'),
-            'get_blog_upload_dir' => new \Twig_Function_Method($this, 'getBlogUploadDir'),
-            'get_blog_banner_web_path' => new \Twig_Function_Method($this, 'getBlogBannerWebPath'),
-        );
+        return [
+            'blog_tags' => new \Twig_SimpleFunction('blog_tags', [$this, 'getTagsByBlog']),
+            'blog_authors' => new \Twig_SimpleFunction('blog_authors', [$this, 'getAuthorsByBlog']),
+            'get_blog_banner' => new \Twig_SimpleFunction('get_blog_banner', [$this, 'getBlogBanner']),
+            'get_blog_upload_dir' => new \Twig_SimpleFunction('get_blog_upload_dir', [$this, 'getBlogUploadDir']),
+            'get_blog_banner_web_path' => new \Twig_SimpleFunction('get_blog_banner_web_path', [$this, 'getBlogBannerWebPath']),
+        ];
     }
 
     public function getFilters()
     {
-        return array(
-            'highlight' => new \Twig_Filter_Method($this, 'highlight'),
-            'tagnames' => new \Twig_Filter_Method($this, 'getTagNames'),
-        );
+        return [
+            'highlight' => new \Twig_SimpleFilter('highlight', [$this, 'highlight']),
+            'tagnames' => new \Twig_SimpleFilter('tagnames', [$this, 'getTagnames']),
+        ];
     }
 
     public function getTagsByBlog(Blog $blog)
@@ -84,7 +84,7 @@ class IcapBlogExtension extends \Twig_Extension
 
     public function getTagnames($tags)
     {
-        $tagNames = array_map(function ($val) {return $val['name'];}, $tags);
+        $tagNames = array_map(function ($val) {return $val['name']; }, $tags);
 
         return $tagNames;
     }

@@ -40,7 +40,7 @@
 {% from _self import renderPager %}
 {% from _self import sortUrl %}
 
-{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:desktop:layout.html.twig' %}
 
 {% block title %}
     {{ 'formalibre_support_tool' | trans({}, 'tools') }}
@@ -70,7 +70,7 @@
         </div>
         <div class="panel-body">
             {% if supportType is defined %}
-                {% render(controller('FormaLibreSupportBundle:Support:supportTabs', {'type': supportType})) %}
+                {{ render(controller('FormaLibreSupportBundle:Support:supportTabs', {'type': supportType})) }}
                 <br>
             {% endif %}
 

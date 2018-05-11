@@ -11,8 +11,8 @@
 
 namespace Claroline\CoreBundle\Twig;
 
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Library\Utilities\ClaroUtilities;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service
@@ -36,11 +36,11 @@ class DateFormatterExtension extends \Twig_Extension
     /**
      * Get filters of the service.
      *
-     * @return \Twig_Filter_Method
+     * @return \Twig_SimpleFilter
      */
     public function getFilters()
     {
-        return array('intl_date_format' => new \Twig_Filter_Method($this, 'intlDateFormat'));
+        return ['intl_date_format' => new \Twig_SimpleFilter('intl_date_format', [$this, 'intlDateFormat'])];
     }
 
     /*

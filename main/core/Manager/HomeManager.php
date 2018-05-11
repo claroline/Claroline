@@ -153,7 +153,7 @@ class HomeManager
             }
 
             if ($first) {
-                for ($i = 0; $i < $type->getMaxContentPage() && $first !== null; ++$i) {
+                for ($i = 0; $i < $type->getMaxContentPage() && null !== $first; ++$i) {
                     $variables = [];
                     $variables['content'] = $first->getContent();
                     $variables['size'] = $first->getSize();
@@ -187,7 +187,7 @@ class HomeManager
         foreach ($regions as $region) {
             $first = $this->contentRegion->findOneBy(['back' => null, 'region' => $region]);
 
-            while ($first !== null) {
+            while (null !== $first) {
                 $contentType = $this->contentType->findOneBy(['content' => $first->getContent()]);
 
                 if ($contentType) {
@@ -477,7 +477,7 @@ class HomeManager
     {
         $publish = true;
 
-        if ($type instanceof Type && $type->getName() !== 'home' && $type->getName() !== 'menu') {
+        if ($type instanceof Type && 'home' !== $type->getName() && 'menu' !== $type->getName()) {
             if ($type->isPublish()) {
                 $publish = false;
             }
@@ -520,7 +520,7 @@ class HomeManager
     {
         $regions = $this->contentRegion->findBy(['content' => $content]);
 
-        if (count($regions) === 1 && $regions[0]->getRegion()->getName() === $region->getName()) {
+        if (1 === count($regions) && $regions[0]->getRegion()->getName() === $region->getName()) {
             $this->deleteRegions($content, $regions);
         } else {
             $this->deleteRegions($content, $regions);
@@ -561,7 +561,9 @@ class HomeManager
         }
 
         $variables['form'] = $this->formFactory->create(
-            new HomeContentType($id, $type, $father), $content
+            HomeContentType::class,
+            $content,
+            ['id' => $id, 'type' => $type, 'father' => $father]
         )->createView();
 
         return $this->homeService->isDefinedPush($variables, 'father', $father);
@@ -592,7 +594,7 @@ class HomeManager
      */
     public function isValidUrl($url)
     {
-        return filter_var($url, FILTER_VALIDATE_URL) !== false;
+        return false !== filter_var($url, FILTER_VALIDATE_URL);
     }
 
     /**
@@ -616,9 +618,9 @@ class HomeManager
         $this->configHandler->setParameters(
             [
                 'home_menu' => is_numeric($homeMenu) ? intval($homeMenu) : null,
-                'footer_login' => ($footerLogin === 'true'),
-                'footer_workspaces' => ($footerWorkspaces === 'true'),
-                'header_locale' => ($headerLocale === 'true'),
+                'footer_login' => ('true' === $footerLogin),
+                'footer_workspaces' => ('true' === $footerWorkspaces),
+                'header_locale' => ('true' === $headerLocale),
             ]
         );
     }

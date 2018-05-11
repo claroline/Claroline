@@ -12,10 +12,13 @@
 namespace Claroline\CoreBundle\Menu;
 
 use Knp\Menu\FactoryInterface;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class Builder extends ContainerAware
+class Builder implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     public function topBarRightMenu(FactoryInterface $factory, array $options)
     {
         $translator = $this->container->get('translator');
@@ -77,7 +80,7 @@ class Builder extends ContainerAware
         foreach ($tools as $tool) {
             $toolName = $tool->getName();
 
-            if ($toolName === 'home' || $toolName === 'parameters') {
+            if ('home' === $toolName || 'parameters' === $toolName) {
                 continue;
             }
             $event = new ConfigureMenuEvent($factory, $menu, $tool);
@@ -130,7 +133,7 @@ class Builder extends ContainerAware
         $menu = $factory->createItem('root')
             ->setChildrenAttribute('class', 'nav navbar-nav');
 
-        if ($configHandler->getParameter('name') === '' && $configHandler->getParameter('logo') === '') {
+        if ('' === $configHandler->getParameter('name') && '' === $configHandler->getParameter('logo')) {
             $menu->addChild($translator->trans('home', [], 'platform'), ['route' => 'claro_index'])
                 ->setExtra('icon', 'fa fa-home');
         }
@@ -175,7 +178,7 @@ class Builder extends ContainerAware
             foreach ($tools as $tool) {
                 $toolName = $tool->getName();
 
-                if ($toolName === 'home') {
+                if ('home' === $toolName) {
                     continue;
                 }
                 $event = new ConfigureMenuEvent($factory, $menu, $tool);

@@ -171,7 +171,7 @@ class ToolListener
         //otherwise only parameters exists so we return the parameters page.
         $params['_controller'] = 'ClarolineCoreBundle:Tool\DesktopParameters:desktopParametersMenu';
 
-        $subRequest = $this->container->get('request')->duplicate(
+        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate(
             [],
             null,
             $params
@@ -199,7 +199,7 @@ class ToolListener
             'workspaceId' => $workspace->getId(),
         ];
 
-        $subRequest = $this->container->get('request')->duplicate([], null, $params);
+        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate([], null, $params);
         $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
 
         return $response->getContent();
@@ -214,7 +214,7 @@ class ToolListener
      */
     public function onDisplay(DisplayToolEvent $event)
     {
-        $subRequest = $this->container->get('request')->duplicate(
+        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate(
             [], null,
             [
                 '_controller' => 'ClarolineCoreBundle:Workspace:usersManagement',

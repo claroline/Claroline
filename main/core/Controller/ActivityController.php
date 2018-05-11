@@ -21,8 +21,8 @@ use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\ActivityEvaluationType;
 use Claroline\CoreBundle\Form\ActivityParametersType;
 use Claroline\CoreBundle\Form\ActivityPastEvaluationType;
-use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Form\ActivityRuleType;
+use Claroline\CoreBundle\Form\ActivityType;
 use Claroline\CoreBundle\Manager\ActivityManager;
 use Claroline\CoreBundle\Manager\ResourceManager;
 use JMS\DiExtraBundle\Annotation\Inject;
@@ -34,8 +34,8 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ActivityController
@@ -115,7 +115,7 @@ class ActivityController
 
         if ($form->isValid()
             && $formParams->isValid()
-            && ($formRule->get('action')->getData() === 'none' || $formRule->isValid())) {
+            && ('none' === $formRule->get('action')->getData() || $formRule->isValid())) {
             $this->activityManager->editActivity($form->getData());
             $evaluationType = $formParams->get('evaluation_type')->getData();
 
@@ -126,7 +126,7 @@ class ActivityController
                 $evaluationType
             );
 
-            if ($formRule->get('action')->getData() === 'none') {
+            if ('none' === $formRule->get('action')->getData()) {
                 if ($hasRule) {
                     $this->activityManager->deleteActivityRule($rule);
                 }
@@ -171,17 +171,17 @@ class ActivityController
             }
         }
 
-            //set the permissions for each resources
-            $this->activityManager->initializePermissions($resource);
+        //set the permissions for each resources
+        $this->activityManager->initializePermissions($resource);
 
-        return array(
+        return [
             '_resource' => $resource,
             'form' => $form->createView(),
             'formParams' => $formParams->createView(),
             'params' => $params,
             'formRule' => $formRule->createView(),
             'defaultRuleStartingDate' => $resource->getResourceNode()->getCreationDate()->format('Y-m-d'),
-        );
+        ];
     }
 
     /**
@@ -196,12 +196,12 @@ class ActivityController
         if ($this->activityManager->addResource($activity, $resource)) {
             return new Response(
                 json_encode(
-                    array(
+                    [
                         'id' => $resource->getId(),
                         'name' => $resource->getName(),
                         'type' => $resource->getResourceType()->getName(),
                         'mimeType' => $resource->getMimeType(),
-                    )
+                    ]
                 )
             );
         }
@@ -248,12 +248,14 @@ class ActivityController
      * @ParamConverter(
      *      "actvityParams",
      *      class="ClarolineCoreBundle:Activity\ActivityParameters",
-     *      options={"id" = "activityParamsId", "strictId" = true}
+     *      options={"id" = "activityParamsId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @ParamConverter(
      *      "resourceNode",
      *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "resourceNodeId", "strictId" = true}
+     *      options={"id" = "resourceNodeId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * Creates a rule and associates it to the activity
@@ -314,7 +316,7 @@ class ActivityController
         }
 
         if (count($ruleActions) > 0) {
-            $actions = array();
+            $actions = [];
 
             foreach ($ruleActions as $ruleAction) {
                 $actions[] = $ruleAction->getAction();
@@ -336,7 +338,8 @@ class ActivityController
      * @ParamConverter(
      *      "params",
      *      class="ClarolineCoreBundle:Activity\ActivityParameters",
-     *      options={"id" = "paramsId", "strictId" = true}
+     *      options={"id" = "paramsId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @Template()
      *
@@ -359,7 +362,7 @@ class ActivityController
         $ruleScore = null;
         $isResultVisible = false;
 
-        if ($params->getEvaluationType() === 'automatic' &&
+        if ('automatic' === $params->getEvaluationType() &&
             count($params->getRules()) > 0) {
             $rule = $params->getRules()->first();
             $score = $rule->getResult();
@@ -377,13 +380,13 @@ class ActivityController
             }
         }
 
-        return array(
+        return [
             'activityParameters' => $params,
             'evaluation' => $evaluation,
             'pastEvals' => $pastEvals,
             'ruleScore' => $ruleScore,
             'isResultVisible' => $isResultVisible,
-        );
+        ];
     }
 
     /**
@@ -396,7 +399,8 @@ class ActivityController
      * @ParamConverter(
      *      "evaluation",
      *      class="ClarolineCoreBundle:Activity\Evaluation",
-     *      options={"id" = "evaluationId", "strictId" = true}
+     *      options={"id" = "evaluationId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @Template()
      */
@@ -428,10 +432,10 @@ class ActivityController
             return new Response('success', 204);
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'evaluation' => $evaluation,
-        );
+        ];
     }
 
     /**
@@ -444,7 +448,8 @@ class ActivityController
      * @ParamConverter(
      *      "pastEvaluation",
      *      class="ClarolineCoreBundle:Activity\PastEvaluation",
-     *      options={"id" = "pastEvaluationId", "strictId" = true}
+     *      options={"id" = "pastEvaluationId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @Template()
      */
@@ -476,10 +481,10 @@ class ActivityController
             return new Response('success', 204);
         }
 
-        return array(
+        return [
             'form' => $form->createView(),
             'pastEvaluation' => $pastEvaluation,
-        );
+        ];
     }
 
     private function checkAccess($permission, $resource)

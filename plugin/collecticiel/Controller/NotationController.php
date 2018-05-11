@@ -28,13 +28,13 @@ class NotationController extends DropzoneBaseController
     {
 
         // Récupération de l'ID du document
-        $documentId = $this->get('request')->query->get('documentId');
-        $dropzoneId = $this->get('request')->query->get('dropzoneId');
-        $note = (int) $this->get('request')->query->get('note');
+        $documentId = $this->get('request_stack')->getMasterRequest()->query->get('documentId');
+        $dropzoneId = $this->get('request_stack')->getMasterRequest()->query->get('dropzoneId');
+        $note = (int) $this->get('request_stack')->getMasterRequest()->query->get('note');
         $note = empty($note) ? 0 : $note;
-        $appreciation = $this->get('request')->query->get('appreciation');
-        $recordOrTransmit = (int) $this->get('request')->query->get('recordOrTransmit');
-        $evaluationType = $this->get('request')->query->get('evaluationType');
+        $appreciation = $this->get('request_stack')->getMasterRequest()->query->get('appreciation');
+        $recordOrTransmit = (int) $this->get('request_stack')->getMasterRequest()->query->get('recordOrTransmit');
+        $evaluationType = $this->get('request_stack')->getMasterRequest()->query->get('evaluationType');
 
         $em = $this->getDoctrine()->getManager();
         $dropzone = $em->getRepository('InnovaCollecticielBundle:Dropzone')->find($dropzoneId);
@@ -46,8 +46,8 @@ class NotationController extends DropzoneBaseController
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
         // Récupération des documents sélectionnés
-        $arrayCriteriaId = $this->get('request')->query->get('arrayCriteriaId');
-        $arrayCriteriaValue = $this->get('request')->query->get('arrayCriteriaValue');
+        $arrayCriteriaId = $this->get('request_stack')->getMasterRequest()->query->get('arrayCriteriaId');
+        $arrayCriteriaValue = $this->get('request_stack')->getMasterRequest()->query->get('arrayCriteriaValue');
 
         // Pour insérer l'ID de la table Notation dans la tabke Choice_criteria
         $notationId = 0;

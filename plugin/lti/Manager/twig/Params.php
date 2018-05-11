@@ -31,7 +31,7 @@ class Params extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'printfTwig' => new \Twig_Function_Method($this, 'printfTwig'),
+            'printfTwig' => new \Twig_SimpleFunction('printfTwig', [$this, 'printfTwig']),
         ];
     }
 

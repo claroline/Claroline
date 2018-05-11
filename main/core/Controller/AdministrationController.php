@@ -92,7 +92,7 @@ class AdministrationController extends Controller
     }
 
     /**
-     * @EXT\Template("ClarolineCoreBundle:Administration:left_bar.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration:left_bar.html.twig")
      *
      * @return array
      */

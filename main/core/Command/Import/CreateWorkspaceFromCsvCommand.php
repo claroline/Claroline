@@ -64,7 +64,7 @@ class CreateWorkspaceFromCsvCommand extends ContainerAwareCommand
             ->setVendor('Claroline');
         $user = $this->getContainer()->get('claroline.manager.user_manager')->getUserByUsername($username);
         $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-        $this->getContainer()->get('security.context')->setToken($token);
+        $this->getContainer()->get('security.token_storage')->setToken($token);
 
         //validate the csv file...
         $validator = $this->getContainer()->get('validator');

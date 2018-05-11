@@ -36,9 +36,9 @@ class ContentExtension extends \Twig_Extension
 
     public function getFunctions()
     {
-        return array(
-            'getContent' => new \Twig_Function_Method($this, 'getContent'),
-        );
+        return [
+            'getContent' => new \Twig_SimpleFunction('getContent', [$this, 'getContent']),
+        ];
     }
 
     public function getName()
@@ -48,6 +48,6 @@ class ContentExtension extends \Twig_Extension
 
     public function getContent($type)
     {
-        return $this->content->getContent(array('type' => $type));
+        return $this->content->getContent(['type' => $type]);
     }
 }

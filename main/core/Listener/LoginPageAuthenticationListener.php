@@ -3,8 +3,8 @@
 namespace Claroline\CoreBundle\Listener;
 
 use Claroline\CoreBundle\Event\RenderAuthenticationButtonEvent;
-use JMS\DiExtraBundle\Annotation as DI;
 use Claroline\CoreBundle\Manager\OauthManager;
+use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service()
@@ -37,8 +37,8 @@ class LoginPageAuthenticationListener
     {
         $platforms = $this->oauthManager->findActivatedExternalAuthentications();
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Authentication:externalClaroline.html.twig',
-            array('platforms' => $platforms)
+            'ClarolineCoreBundle:authentication:external_claroline.html.twig',
+            ['platforms' => $platforms]
         );
 
         $event->addContent($content);

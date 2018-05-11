@@ -12,23 +12,25 @@ namespace Innova\CollecticielBundle\Listener;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Innova\CollecticielBundle\Entity\Document;
 use Proxies\__CG__\Innova\CollecticielBundle\Entity\Dropzone;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class DeleteListener extends ContainerAware
+class DeleteListener
 {
+    use ContainerAwareTrait;
+
     public function preRemove(LifecycleEventArgs $args)
     {
         $entity = $args->getEntity();
         if ($entity instanceof Document) {
-            if ($entity->getResourceNode() != null) {
+            if (null != $entity->getResourceNode()) {
                 $this->container->get('claroline.manager.resource_manager')->delete($entity->getResourceNode());
             }
         } elseif ($entity instanceof Drop) {
-            if ($entity->getHiddenDirectory() != null) {
+            if (null != $entity->getHiddenDirectory()) {
                 $this->container->get('claroline.manager.resource_manager')->delete($entity->getHiddenDirectory());
             }
         } elseif ($entity instanceof Dropzone) {
-            if ($entity->getHiddenDirectory() != null) {
+            if (null != $entity->getHiddenDirectory()) {
                 $this->container->get('claroline.manager.resource_manager')->delete($entity->getHiddenDirectory());
             }
         }

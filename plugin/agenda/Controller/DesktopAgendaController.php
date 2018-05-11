@@ -25,6 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -48,7 +49,7 @@ class DesktopAgendaController extends Controller
      * @DI\InjectParams({
      *     "tokenStorage"    = @DI\Inject("security.token_storage"),
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "request"         = @DI\Inject("request"),
+     *     "request"         = @DI\Inject("request_stack"),
      *     "translator"      = @DI\Inject("translator"),
      *     "agendaManager"   = @DI\Inject("claroline.manager.agenda_manager"),
      *     "router"          = @DI\Inject("router"),
@@ -58,7 +59,7 @@ class DesktopAgendaController extends Controller
     public function __construct(
         TokenStorageInterface $tokenStorage,
         ObjectManager $om,
-        Request $request,
+        RequestStack $request,
         TranslatorInterface $translator,
         AgendaManager $agendaManager,
         RouterInterface $router,
@@ -66,7 +67,7 @@ class DesktopAgendaController extends Controller
     ) {
         $this->tokenStorage = $tokenStorage;
         $this->om = $om;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->translator = $translator;
         $this->agendaManager = $agendaManager;
         $this->router = $router;

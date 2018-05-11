@@ -1,0 +1,179 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% if _resource is defined %}
+    {# we're finding wich is the workspace we want to display here #}
+    {% set node = app.session.get('current_resource_node') %}
+    {% if node is not null %}
+        {% set workspace = node.getWorkspace() %}
+    {% elseif _resource.getResourceNode() is defined %}
+        {% set node = _resource.getResourceNode() %}
+        {% set workspace = node.getWorkspace() %}
+    {% else %}
+        {% set node = _resource %}
+        {% set workspace = node.getWorkspace() %}
+    {% endif %}
+{% endif %}
+
+{# Checks if we need to hide the breadcrumb #}
+{% if workspace is defined and
+    workspace is not null and
+    workspace.getOptions() is not empty and
+    workspace.getOptions().getDetails() is not empty and
+    workspace.getOptions().getDetails()['hide_breadcrumb'] is defined and
+    workspace.getOptions().getDetails()['hide_breadcrumb']
+%}
+    {% set hideBreadcrumb = true %}
+{% endif %}
+
+{% block claroline_danger %}
+    {{ parent() }}
+
+    {% if workspace is defined and is_date_access_valid(workspace) == false %}
+        <div class="label label-danger">
+            {{ 'workspace_access_date_invalid'|trans({}, 'platform') }}
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block title %}
+    {% spaceless %}
+        {% if node is defined %}
+            {% if node.getWorkspace() is defined %}
+                {{ node.getWorkspace.getName() }} -
+            {% endif %}
+
+            {{node.getName() | striptags | raw }}
+        {% elseif workspace is defined %}
+            {{ workspace.getName() }}
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}
+
+{% block breadcrumb %}
+    {# Create resource breadcrumb #}
+    {% if _resource is defined and not has_role('ROLE_ANONYMOUS') %}
+        <ul class="breadcrumb">
+            {% if workspace is defined and workspace != null %}
+                <li>
+                    {# we're finding wich is the workspace we want to display here #}
+                    <a href="{{ path('claro_workspace_open_tool', {'toolName': 'home', 'workspaceId': workspace.getId() }) }}">
+                        {{ workspace.getName() ~ ' (' ~ workspace.getCode() ~ ') ' }}
+                    </a>
+                </li>
+
+                {{ render(controller("ClarolineCoreBundle:Resource:renderBreadcrumbs", {
+                    'node': node,
+                    '_breadcrumbs': app.request.query.get('_breadcrumbs', {})
+                })) }}
+            {% endif %}
+
+            {% block resourceBreadcrumb %}
+                <li class="active">{{ node.getName() }}</li>
+            {% endblock %}
+        </ul>
+    {% endif %}
+{% endblock %}
+
+{# I don't know if it's still used. Can not find any reference to the anchor in the project... #}
+{% block server_vars %}
+    {% if _resource is defined %}
+        <div id="twig-resource-attributes"
+             data-resource-id="{{ _resource.getId() }}"
+             data-resource-name="{{ _resource.getName() }}"
+        >
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block leftbar %}
+    {% if workspace is defined and workspace != null %}
+        {% if is_granted('OPEN', workspace) %}
+            {{ render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})) }}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    {# @deprecated block : will be removed ASAP #}
+    {% block section_panel %}
+        <div class="panel panel-default">
+            {# @deprecated block : will be removed ASAP #}
+            {% block section_content %}{% endblock %}
+        </div>
+    {% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        window.Workspace = {};
+        {% if node is defined and node.getWorkspace() is not null %}
+            window.Workspace.id = {{ node.getWorkspace().getId() }};
+        {% else %}
+            window.Workspace.id = null;
+        {% endif %}
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            if (window.self !== window.top) {
+                // I'm an IFrame
+                var currentHeight = 0;
+                var element = document.getElementById('wrap');
+
+                function getHeight() {
+                    return Math.max(
+                        document.body.scrollHeight,
+                        document.body.offsetHeight
+                    );
+                }
+
+                function postHeight(height) {
+                    if (parent && height !== currentHeight) {
+                        currentHeight = height;
+                        parent.postMessage('documentHeight:'+height, "*");
+                    }
+                }
+
+                // post height
+                postHeight(getHeight());
+
+                // attach mutation observer
+                // we also listen to image loading to resize after load
+                new MutationObserver(function (mutations) {
+                    mutations.forEach(function (mutation) {
+                        if ('childList' === mutation.type) {
+                            var children = mutation.target.getElementsByTagName('img')
+                            for (var i = 0; i < children.length; i++) {
+                                var child = children[i]
+                                child.addEventListener('load', function() {
+                                    postHeight(getHeight());
+                                })
+                            }
+                        }
+                    });
+
+                    postHeight(getHeight());
+                }).observe(element, {
+                    attributes: true,
+                    childList: true,
+                    characterData: true,
+                    subtree: true
+                })
+            }
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {% if workspace is defined and workspace is not null and workspace.backgroundColor is not null %}
+    <style type="text/css">
+        body {
+            background-color: {{ workspace.getOptions().getDetails()['background_color'] }};
+        }
+    </style>
+    {% endif %}
+{% endblock %}

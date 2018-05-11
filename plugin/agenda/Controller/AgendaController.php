@@ -11,20 +11,21 @@
 
 namespace Claroline\AgendaBundle\Controller;
 
-use Doctrine\ORM\EntityManager;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
-use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use Claroline\AgendaBundle\Entity\Event;
 use Claroline\AgendaBundle\Manager\AgendaManager;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
-use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Routing\RouterInterface;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Doctrine\ORM\EntityManager;
+use JMS\DiExtraBundle\Annotation as DI;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
+use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class AgendaController extends Controller
@@ -39,7 +40,7 @@ class AgendaController extends Controller
     /**
      * @DI\InjectParams({
      *     "authorization"      = @DI\Inject("security.authorization_checker"),
-     *     "request"            = @DI\Inject("request"),
+     *     "request"            = @DI\Inject("request_stack"),
      *     "agendaManager"      = @DI\Inject("claroline.manager.agenda_manager"),
      *     "router"             = @DI\Inject("router"),
      *     "tokenStorage"       = @DI\Inject("security.token_storage"),
@@ -48,14 +49,14 @@ class AgendaController extends Controller
      */
     public function __construct(
         AuthorizationCheckerInterface $authorization,
-        Request $request,
+        RequestStack $request,
         AgendaManager $agendaManager,
         RouterInterface $router,
         TokenStorageInterface $tokenStorage,
         EntityManager $em
     ) {
         $this->authorization = $authorization;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->agendaManager = $agendaManager;
         $this->router = $router;
         $this->tokenStorage = $tokenStorage;
@@ -252,12 +253,12 @@ class AgendaController extends Controller
 
     private function checkPermission(Event $event)
     {
-        if ($event->isEditable() === false) {
+        if (false === $event->isEditable()) {
             throw new AccessDeniedException('You cannot edit this event');
         }
 
         if ($event->getWorkspace()) {
-            if (!$this->authorization->isGranted(array('agenda_', 'edit'), $event->getWorkspace())) {
+            if (!$this->authorization->isGranted(['agenda_', 'edit'], $event->getWorkspace())) {
                 throw new AccessDeniedException('You cannot edit the agenda');
             }
 

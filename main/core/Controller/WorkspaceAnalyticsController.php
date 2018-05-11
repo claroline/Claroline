@@ -86,7 +86,8 @@ class WorkspaceAnalyticsController extends Controller
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:traffic.html.twig")
      *
@@ -126,7 +127,8 @@ class WorkspaceAnalyticsController extends Controller
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:resources.html.twig")
      *
@@ -156,7 +158,8 @@ class WorkspaceAnalyticsController extends Controller
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * Displays activities evaluations home tab of analytics tool
@@ -251,7 +254,7 @@ class WorkspaceAnalyticsController extends Controller
                         ->createBlankEvaluation($currentUser, $params);
                 }
 
-                if ($evaluationType === AbstractEvaluation::TYPE_AUTOMATIC
+                if (AbstractEvaluation::TYPE_AUTOMATIC === $evaluationType
                     && count($params->getRules()) > 0) {
                     $rule = $params->getRules()->first();
                     $isResultVisible = $rule->getIsResultVisible();
@@ -274,8 +277,8 @@ class WorkspaceAnalyticsController extends Controller
 
                 $status = $evaluationsAssoc[$activity->getId()]->getStatus();
 
-                if ($status === AbstractEvaluation::STATUS_COMPLETED
-                    || $status === AbstractEvaluation::STATUS_PASSED) {
+                if (AbstractEvaluation::STATUS_COMPLETED === $status
+                    || AbstractEvaluation::STATUS_PASSED === $status) {
                     ++$nbSuccess;
                 }
             }
@@ -310,17 +313,20 @@ class WorkspaceAnalyticsController extends Controller
      * @EXT\ParamConverter(
      *      "user",
      *      class="ClarolineCoreBundle:User",
-     *      options={"id" = "userId", "strictId" = true}
+     *      options={"id" = "userId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true}
+     *      options={"id" = "workspaceId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter(
      *      "activityParameters",
      *      class="ClarolineCoreBundle:Activity\ActivityParameters",
-     *      options={"id" = "activityParametersId", "strictId" = true}
+     *      options={"id" = "activityParametersId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:workspaceActivitiesPastEvaluations.html.twig")
      *
@@ -350,7 +356,7 @@ class WorkspaceAnalyticsController extends Controller
         $ruleScore = null;
         $isResultVisible = false;
 
-        if ($activityParameters->getEvaluationType() === AbstractEvaluation::TYPE_AUTOMATIC
+        if (AbstractEvaluation::TYPE_AUTOMATIC === $activityParameters->getEvaluationType()
             && count($activityParameters->getRules()) > 0) {
             $rule = $activityParameters->getRules()->first();
             $score = $rule->getResult();
@@ -395,7 +401,8 @@ class WorkspaceAnalyticsController extends Controller
      * @EXT\ParamConverter(
      *      "activity",
      *      class="ClarolineCoreBundle:Resource\Activity",
-     *      options={"id" = "activityId", "strictId" = true}
+     *      options={"id" = "activityId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:workspaceManagerActivityEvaluations.html.twig")
      *
@@ -447,8 +454,8 @@ class WorkspaceAnalyticsController extends Controller
 
             $status = $evaluations[$user->getId()]->getStatus();
 
-            if ($status === AbstractEvaluation::STATUS_COMPLETED
-                || $status === AbstractEvaluation::STATUS_PASSED) {
+            if (AbstractEvaluation::STATUS_COMPLETED === $status
+                || AbstractEvaluation::STATUS_PASSED === $status) {
                 ++$nbSuccess;
             }
         }
@@ -458,7 +465,7 @@ class WorkspaceAnalyticsController extends Controller
 
         $ruleScore = null;
 
-        if ($activityParams->getEvaluationType() === AbstractEvaluation::TYPE_AUTOMATIC
+        if (AbstractEvaluation::TYPE_AUTOMATIC === $activityParams->getEvaluationType()
             && count($activityParams->getRules()) > 0) {
             $rule = $activityParams->getRules()->first();
             $score = $rule->getResult();

@@ -39,25 +39,25 @@ class HomeExtension extends \Twig_Extension
     /**
      * Get filters of the service.
      *
-     * @return \Twig_Filter_Method
+     * @return \Twig_SimpleFilter
      */
     public function getFilters()
     {
         return [
-            'timeAgo' => new \Twig_Filter_Method($this, 'timeAgo'),
-            'homeLink' => new \Twig_Filter_Method($this, 'homeLink'),
-            'activeLink' => new \Twig_Filter_Method($this, 'activeLink'),
-            'activeRoute' => new \Twig_Filter_Method($this, 'activeRoute'),
-            'compareRoute' => new \Twig_Filter_Method($this, 'compareRoute'),
-            'autoLink' => new \Twig_Filter_Method($this, 'autoLink'),
+            'timeAgo' => new \Twig_SimpleFilter('timeAgo', [$this, 'timeAgo']),
+            'homeLink' => new \Twig_SimpleFilter('homeLink', [$this, 'homeLink']),
+            'activeLink' => new \Twig_SimpleFilter('activeLink', [$this, 'activeLink']),
+            'activeRoute' => new \Twig_SimpleFilter('activeRoute', [$this, 'activeRoute']),
+            'compareRoute' => new \Twig_SimpleFilter('compareRoute', [$this, 'compareRoute']),
+            'autoLink' => new \Twig_SimpleFilter('autoLink', [$this, 'autoLink']),
         ];
     }
 
     public function getFunctions()
     {
         return [
-            'isDesktop' => new \Twig_Function_Method($this, 'isDesktop'),
-            'asset_exists' => new \Twig_Function_Method($this, 'assetExists'),
+            'isDesktop' => new \Twig_SimpleFunction('isDesktop', [$this, 'isDesktop']),
+            'asset_exists' => new \Twig_SimpleFunction('asset_exists', [$this, 'assetExists']),
         ];
     }
 
@@ -98,14 +98,14 @@ class HomeExtension extends \Twig_Extension
         ];
 
         foreach ($formats as $format) {
-            if ($format === '%W') {
+            if ('%W' === $format) {
                 $i = round($interval->format('%d') / 8); //fix for week that does not exist in DataInterval obj
             } else {
                 $i = ltrim($interval->format($format), '0');
             }
 
             if ($i > 0) {
-                $unit = (int) $i === 1 ? $translation['singular'][$format] : $translation['plural'][$format];
+                $unit = 1 === (int) $i ? $translation['singular'][$format] : $translation['plural'][$format];
 
                 return $this->container->get('translator')->transChoice(
                     'time_ago',
@@ -130,10 +130,10 @@ class HomeExtension extends \Twig_Extension
      */
     public function homeLink($link)
     {
-        if (!(strpos($link, 'http://') === 0 ||
-            strpos($link, 'https://') === 0 ||
-            strpos($link, 'ftp://') === 0 ||
-            strpos($link, 'www.') === 0)
+        if (!(0 === strpos($link, 'http://') ||
+            0 === strpos($link, 'https://') ||
+            0 === strpos($link, 'ftp://') ||
+            0 === strpos($link, 'www.'))
         ) {
             $home = $this->container->get('router')->generate('claro_index').$link;
 
@@ -151,7 +151,7 @@ class HomeExtension extends \Twig_Extension
     public function activeLink($link)
     {
         $pathinfo = $this->getPathInfo();
-        if (($pathinfo && '/'.$pathinfo === $link) || (!$pathinfo && $link === '/')) {
+        if (($pathinfo && '/'.$pathinfo === $link) || (!$pathinfo && '/' === $link)) {
             return ' active'; //the white space is nedded
         }
 
@@ -188,7 +188,7 @@ class HomeExtension extends \Twig_Extension
     public function compareRoute($link, $return = " class='active'")
     {
         $pathinfo = $this->getPathInfo();
-        if ($pathinfo && strpos('/'.$pathinfo, $link) === 0) {
+        if ($pathinfo && 0 === strpos('/'.$pathinfo, $link)) {
             return $return;
         }
 
@@ -254,7 +254,7 @@ class HomeExtension extends \Twig_Extension
         }
 
         // check if file is well contained in web/ directory (prevents ../ in paths)
-        if (strncmp($webRoot, $toCheck, strlen($webRoot)) !== 0) {
+        if (0 !== strncmp($webRoot, $toCheck, strlen($webRoot))) {
             return false;
         }
 

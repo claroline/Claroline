@@ -661,7 +661,7 @@ class LogManager
         $resourceClass,
         $dateRangeToTextTransformer
     ) {
-        $request = $this->container->get('request');
+        $request = $this->container->get('request_stack')->getMasterRequest();
         $data = $request->query->all();
 
         $action = null;

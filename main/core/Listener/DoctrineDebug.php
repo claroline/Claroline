@@ -7,7 +7,7 @@ use Doctrine\ORM\Event\OnFlushEventArgs;
 use JMS\DiExtraBundle\Annotation as DI;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 /**
  * @DI\Service("claroline.doctrine.debug")
@@ -17,8 +17,10 @@ use Symfony\Component\DependencyInjection\ContainerAware;
  *  - logging MUST BE enabled inside the claroline.persistence.object_manager
  *  - printing log MUST BE down through event listening
  */
-class DoctrineDebug extends ContainerAware
+class DoctrineDebug
 {
+    use ContainerAwareTrait;
+
     const DEBUG_NONE = 0;
     const DEBUG_CLAROLINE = 1;
     const DEBUG_ALL = 2;
@@ -50,19 +52,19 @@ class DoctrineDebug extends ContainerAware
         if ($this->activateLog) {
             $this->log('onFlush event fired !!!', LogLevel::DEBUG);
 
-            if ($this->debugLevel !== self::DEBUG_NONE) {
+            if (self::DEBUG_NONE !== $this->debugLevel) {
                 $stack = debug_backtrace();
 
                 foreach ($stack as $call) {
                     if (isset($call['file'])) {
                         $file = $call['file'];
-                        if ($this->debugLevel === self::DEBUG_CLAROLINE) {
+                        if (self::DEBUG_CLAROLINE === $this->debugLevel) {
                             if (strpos($file, 'claroline')) {
                                 $this->logTrace($call);
                             }
-                        } elseif ($this->debugLevel === self::DEBUG_ALL) {
+                        } elseif (self::DEBUG_ALL === $this->debugLevel) {
                             $this->logTrace($call);
-                        } elseif ($this->debugLevel === self::DEBUG_VENDOR) {
+                        } elseif (self::DEBUG_VENDOR === $this->debugLevel) {
                             if (strpos($file, $this->debugVendor)) {
                                 $this->logTrace($call);
                             }

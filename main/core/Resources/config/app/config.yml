@@ -1,7 +1,6 @@
 # This file gathers container configuration that must be loaded at the application level
 
 parameters:
-    security.authentication.listener.anonymous.class: Claroline\CoreBundle\Listener\AnonymousAuthenticationListener
     security.exception_listener.class: Claroline\CoreBundle\Library\Security\Firewall\ExceptionListener
     security.logout.handler.session.class: Claroline\CoreBundle\Library\Security\LogoutHandler
     templating.locator.class: Claroline\CoreBundle\Library\Templating\Loader\TemplateLocator
@@ -20,14 +19,14 @@ services:
             - "@service_container"
         class: Claroline\CoreBundle\Form\Extension\CaptchaExtension
         tags:
-            - { name: form.type_extension, alias: form }
+            - { name: form.type_extension, alias: form, extended_type: Symfony\Component\Form\Extension\Core\Type\StringType }
 
     claroline.honeypot_extension:
         arguments:
             - "@service_container"
         class: Claroline\CoreBundle\Form\Extension\HoneypotExtension
         tags:
-            - { name: form.type_extension, alias: form }
+            - { name: form.type_extension, alias: form, extended_type: Symfony\Component\Form\Extension\Core\Type\StringType }
 
 framework:
     test: true

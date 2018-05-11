@@ -29,11 +29,11 @@ security:
             anonymous: true
 
         api:
-            pattern:    /(api|apiv2)/
-            claro_api: true
-            #fos_oauth: true
-            #stateless:  true
-            security: true
+           pattern:    /(api|apiv2)/
+           claro_api: true #do something about me
+           #fos_oauth: true
+           #stateless:  true
+           security: true
 
         main:
             pattern: ^/
@@ -48,8 +48,9 @@ security:
             anonymous: ~
             logout: true
             switch_user: { role: ROLE_ADMIN, parameter: _switch }
+
             remember_me:
-                key:      "%secret%"
+                secret:      "%secret%"
                 lifetime: 31536000 # 365 days
                 path:     /
                 domain:   ~

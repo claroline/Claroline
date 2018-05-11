@@ -1,4 +1,4 @@
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
 {% set pageTitle = '' %}
 
@@ -76,7 +76,7 @@
         </div>
         <br>
         <div id="sessions-list-box">
-            {% render(controller("ClarolineCursusBundle:CursusRegistration:sessionsDatasList")) %}
+            {{ render(controller("ClarolineCursusBundle:CursusRegistration:sessionsDatasList")) }}
         </div>
     </div>
     <div class="panel-footer">

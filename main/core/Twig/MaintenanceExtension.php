@@ -27,9 +27,9 @@ class MaintenanceExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            'is_maintenance_enabled' => new \Twig_Function_Method($this, 'isMaintenanceEnabled'),
-        );
+        return [
+            'is_maintenance_enabled' => new \Twig_SimpleFunction('is_maintenance_enabled', [$this, 'isMaintenanceEnabled']),
+        ];
     }
 
     public function isMaintenanceEnabled()

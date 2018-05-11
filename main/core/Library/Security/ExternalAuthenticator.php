@@ -18,13 +18,13 @@ use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Security\Core\Authentication\SimpleFormAuthenticatorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Symfony\Component\Security\Http\Authentication\SimpleFormAuthenticatorInterface;
 
 /**
  * @Service()
@@ -109,7 +109,7 @@ class ExternalAuthenticator implements SimpleFormAuthenticatorInterface
         );
 
         //do we want an external authentication
-        if ($user->getAuthentication() && $user->getAuthentication() !== '' && $token->getCredentials()) {
+        if ($user->getAuthentication() && '' !== $user->getAuthentication() && $token->getCredentials()) {
             if (!$this->authenticationManager->authenticate(
                 $user->getAuthentication(), $user->getUsername(), $token->getCredentials()
             )) {

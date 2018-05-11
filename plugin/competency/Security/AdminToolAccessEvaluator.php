@@ -4,7 +4,7 @@ namespace HeVinci\CompetencyBundle\Security;
 
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Component\Security\Core\SecurityContextInterface;
+use Symfony\Component\Security\Core\Authorization\AuthorizationChecker;
 
 /**
  * @DI\Service
@@ -20,7 +20,7 @@ class AdminToolAccessEvaluator
 
     /**
      * @DI\InjectParams({
-     *     "context"    = @DI\Inject("security.context"),
+     *     "context"    = @DI\Inject("security.authorization_checker"),
      *     "em"         = @DI\Inject("doctrine.orm.entity_manager")
      * })
      *
@@ -28,7 +28,7 @@ class AdminToolAccessEvaluator
      * @param EntityManagerInterface   $em
      */
     public function __construct(
-        SecurityContextInterface $context,
+        AuthorizationChecker $context,
         EntityManagerInterface $em
     ) {
         $this->securityContext = $context;

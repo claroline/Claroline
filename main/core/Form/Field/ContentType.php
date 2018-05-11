@@ -14,19 +14,19 @@ namespace Claroline\CoreBundle\Form\Field;
 use Claroline\CoreBundle\Entity\Content;
 use Claroline\CoreBundle\Manager\ContentManager;
 use Claroline\CoreBundle\Manager\LocaleManager;
-use JMS\DiExtraBundle\Annotation\FormType;
 use JMS\DiExtraBundle\Annotation\Inject;
 use JMS\DiExtraBundle\Annotation\InjectParams;
 use JMS\DiExtraBundle\Annotation\Service;
+use JMS\DiExtraBundle\Annotation\Tag;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @Service("claroline.form.content")
- * @FormType(alias = "content")
+ * @Tag("form.type")
  */
 class ContentType extends AbstractType
 {
@@ -49,11 +49,11 @@ class ContentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $translatedContent = array();
+        $translatedContent = [];
 
         if ($builder->getData() instanceof Content) {
             $translatedContent = $this->contentManager->getTranslatedContent(
-                array('id' => $builder->getData()->getId())
+                ['id' => $builder->getData()->getId()]
             );
         } elseif (is_array($builder->getData())) {
             $translatedContent = $builder->getData();
@@ -69,30 +69,25 @@ class ContentType extends AbstractType
                     $builder->add(
                         $lang,
                         'base_content',
-                        array(
-                            'theme_options' => array('tinymce' => $this->tinymce),
+                        [
+                            'theme_options' => ['tinymce' => $this->tinymce],
                             'data' => $translatedContent[$lang],
-                        )
+                        ]
                     );
                 } else {
-                    $builder->add($lang, 'base_content', array('theme_options' => array('tinymce' => $this->tinymce)));
+                    $builder->add($lang, 'base_content', ['theme_options' => ['tinymce' => $this->tinymce]]);
                 }
             }
         }
     }
 
-    public function getName()
-    {
-        return 'content';
-    }
-
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'mapped' => false,
-                'attr' => array('class' => 'content-element content-translatable relative'),
-            )
+                'attr' => ['class' => 'content-element content-translatable relative'],
+            ]
         );
     }
 
@@ -100,12 +95,12 @@ class ContentType extends AbstractType
     {
         parent::finishView($view, $form, $options);
 
-        $themeOptions = array(
+        $themeOptions = [
             'contentTitle' => true,
             'contentText' => true,
             'titlePlaceHolder' => 'optional_title',
             'textPlaceHolder' => 'create_content',
-        );
+        ];
 
         foreach ($themeOptions as $option => $defaultValue) {
             if (isset($options['theme_options']) && isset($options['theme_options'][$option])) {

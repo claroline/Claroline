@@ -41,6 +41,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -78,7 +79,7 @@ class ResourceController extends Controller
      *     "rightsManager"       = @DI\Inject("claroline.manager.rights_manager"),
      *     "roleManager"         = @DI\Inject("claroline.manager.role_manager"),
      *     "translator"          = @DI\Inject("translator"),
-     *     "request"             = @DI\Inject("request"),
+     *     "request"             = @DI\Inject("request_stack"),
      *     "dispatcher"          = @DI\Inject("claroline.event.event_dispatcher"),
      *     "templating"          = @DI\Inject("templating"),
      *     "logManager"          = @DI\Inject("claroline.log.manager"),
@@ -97,7 +98,7 @@ class ResourceController extends Controller
         RightsManager $rightsManager,
         RoleManager $roleManager,
         TranslatorInterface $translator,
-        Request $request,
+        RequestStack $request,
         StrictDispatcher $dispatcher,
         MaskManager $maskManager,
         TwigEngine $templating,
@@ -115,7 +116,7 @@ class ResourceController extends Controller
         $this->translator = $translator;
         $this->rightsManager = $rightsManager;
         $this->roleManager = $roleManager;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->dispatcher = $dispatcher;
         $this->maskManager = $maskManager;
         $this->templating = $templating;
@@ -160,7 +161,8 @@ class ResourceController extends Controller
      * @EXT\ParamConverter(
      *      "parent",
      *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "parentId", "strictId" = true}
+     *      options={"id" = "parentId", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
@@ -736,7 +738,8 @@ class ResourceController extends Controller
      * @EXT\ParamConverter(
      *      "node",
      *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "nodeId", "strictId" = true}
+     *      options={"id" = "nodeId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * Returns a json representation of a directory, containing the following items :
@@ -973,7 +976,8 @@ class ResourceController extends Controller
      * @EXT\ParamConverter(
      *      "node",
      *      class="ClarolineCoreBundle:Resource\ResourceNode",
-     *      options={"id" = "nodeId", "strictId" = true}
+     *      options={"id" = "nodeId", "strictId" = true},
+     *      converter="strict_id"
      * )
      *
      * Returns a json representation of a resource search result.

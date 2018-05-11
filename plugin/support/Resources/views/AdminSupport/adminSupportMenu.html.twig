@@ -1,7 +1,7 @@
-{% extends "ClarolineCoreBundle:Administration:layout.html.twig" %}
+{% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
 {% block title %}
-    {{ 
+    {{
         parent() ~
         ' - ' ~
         title|trans({}, 'support')
@@ -69,11 +69,11 @@
     </div>
     <div class="panel-body">
         {% if noOfficialSupportInfo is not defined %}
-            {% render(controller('FormaLibreSupportBundle:AdminSupport:adminSupportOfficialSupportInfo', {})) %}
+            {{ render(controller('FormaLibreSupportBundle:AdminSupport:adminSupportOfficialSupportInfo', {})) }}
         {% endif %}
 
         {% if supportType is defined %}
-            {% render(controller('FormaLibreSupportBundle:AdminSupport:adminSupportTabs', {'type': supportType})) %}
+            {{ render(controller('FormaLibreSupportBundle:AdminSupport:adminSupportTabs', {'type': supportType})) }}
             <br>
         {% endif %}
         <div>

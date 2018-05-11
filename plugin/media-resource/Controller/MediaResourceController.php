@@ -30,7 +30,7 @@ class MediaResourceController extends Controller
      */
     public function openAction(Workspace $workspace, MediaResource $mr)
     {
-        if (false === $this->container->get('security.context')->isGranted('OPEN', $mr->getResourceNode())) {
+        if (false === $this->container->get('security.authorization_checker')->isGranted('OPEN', $mr->getResourceNode())) {
             throw new AccessDeniedException();
         }
 
@@ -48,7 +48,7 @@ class MediaResourceController extends Controller
      */
     public function administrateAction(Workspace $workspace, MediaResource $mr)
     {
-        if (false === $this->container->get('security.context')->isGranted('ADMINISTRATE', $mr->getResourceNode())) {
+        if (false === $this->container->get('security.authorization_checker')->isGranted('ADMINISTRATE', $mr->getResourceNode())) {
             throw new AccessDeniedException();
         }
 
@@ -66,7 +66,7 @@ class MediaResourceController extends Controller
      */
     public function save(Workspace $workspace, MediaResource $resource)
     {
-        $data = $this->container->get('request')->request->all();
+        $data = $this->container->get('request_stack')->getMasterRequest()->request->all();
         $this->get('innova_media_resource.manager.media_resource_options')->update($resource->getOptions(), $data);
         $this->get('innova_media_resource.manager.media_resource_region')->updateRegions($resource, $data);
 
@@ -110,7 +110,7 @@ class MediaResourceController extends Controller
      */
     public function exportToZip(MediaResource $resource)
     {
-        $data = $this->container->get('request')->request->all();
+        $data = $this->container->get('request_stack')->getMasterRequest()->request->all();
         $zipData = $this->get('innova_media_resource.manager.media_resource')->exportToZip($resource, $data);
 
         $response = new Response();

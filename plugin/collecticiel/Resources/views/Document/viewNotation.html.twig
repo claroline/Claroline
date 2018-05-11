@@ -104,7 +104,7 @@
                         <div class="row text-left">
                             <div class="col-md-12">
                                 {# Pour affichage de la valeur de l'accusé de réception #}
-                                {% render(controller('InnovaCollecticielBundle:ChoiceNotation:renderChoiceText', {'gradingNotationId': notation.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) %}
+                                {{ render(controller('InnovaCollecticielBundle:ChoiceNotation:renderChoiceText', {'gradingNotationId': notation.id, 'documentId': document.id, 'dropzoneId': dropzone.id})) }}
                             </div>
                         </div>
                     {% endfor %}

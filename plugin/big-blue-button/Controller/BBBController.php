@@ -23,6 +23,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
@@ -40,7 +41,7 @@ class BBBController extends Controller
      *     "bbbManager"            = @DI\Inject("claroline.manager.bbb_manager"),
      *     "curlManager"           = @DI\Inject("claroline.manager.curl_manager"),
      *     "platformConfigHandler" = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "request"               = @DI\Inject("request"),
+     *     "request"               = @DI\Inject("request_stack"),
      *     "tokenStorage"          = @DI\Inject("security.token_storage"),
      *     "translator"            = @DI\Inject("translator")
      * })
@@ -49,14 +50,14 @@ class BBBController extends Controller
         BBBManager $bbbManager,
         CurlManager $curlManager,
         PlatformConfigurationHandler $platformConfigHandler,
-        Request $request,
+        RequestStack $request,
         TokenStorageInterface $tokenStorage,
         TranslatorInterface $translator
     ) {
         $this->bbbManager = $bbbManager;
         $this->curlManager = $curlManager;
         $this->platformConfigHandler = $platformConfigHandler;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->tokenStorage = $tokenStorage;
         $this->translator = $translator;
     }
@@ -73,7 +74,7 @@ class BBBController extends Controller
     {
         $this->bbbManager->checkRight($bbb, 'OPEN');
         $user = $this->tokenStorage->getToken()->getUser();
-        $isAnon = $user === 'anon.';
+        $isAnon = 'anon.' === $user;
         $serverUrl = $this->platformConfigHandler->hasParameter('bbb_server_url') ?
             trim($this->platformConfigHandler->getParameter('bbb_server_url'), '/') :
             null;
@@ -279,7 +280,7 @@ class BBBController extends Controller
                     ceil(abs($now->getTimestamp() - $endDate->getTimestamp()) / 60) :
                     null;
 
-                if ($duration === 0) {
+                if (0 === $duration) {
                     $duration = 1;
                 }
                 $meetingId = $bbb->getResourceNode()->getGuid();
@@ -301,7 +302,7 @@ class BBBController extends Controller
 
                 if ($dom->loadXML($response)) {
                     $returnCodes = $dom->getElementsByTagName('returncode');
-                    $success = $returnCodes->length > 0 && $returnCodes->item(0)->textContent === 'SUCCESS';
+                    $success = $returnCodes->length > 0 && 'SUCCESS' === $returnCodes->item(0)->textContent;
                     $code = $success ? 200 : 404;
                 }
             }

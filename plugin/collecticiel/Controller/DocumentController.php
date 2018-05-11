@@ -30,7 +30,7 @@ class DocumentController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $hiddenDirectory = $dropzone->getHiddenDirectory();
 
-        if ($hiddenDirectory === null) {
+        if (null === $hiddenDirectory) {
             $hiddenDirectory = new Directory();
             $name = $this->get('translator')->trans(
                 'Hidden folder for "%dropzoneName%"',
@@ -70,7 +70,7 @@ class DocumentController extends DropzoneBaseController
         $em = $this->getDoctrine()->getManager();
         $hiddenDropDirectory = $drop->getHiddenDirectory();
 
-        if ($hiddenDropDirectory === null) {
+        if (null === $hiddenDropDirectory) {
             $hiddenDropDirectory = new Directory();
             // slugify user name
             $slugify = new Slugify();
@@ -172,7 +172,7 @@ class DocumentController extends DropzoneBaseController
 
     private function createResource(Dropzone $dropzone, Drop $drop, $resourceId)
     {
-        if ($resourceId === null) {
+        if (null === $resourceId) {
             throw new \ErrorException();
         }
         $em = $this->getDoctrine()->getManager();
@@ -195,18 +195,18 @@ class DocumentController extends DropzoneBaseController
         $document->setType($documentType);
 
         $node = null;
-        if ($documentType === 'url') {
+        if ('url' === $documentType) {
             $data = $form->getData();
             $url = $data['document'];
             $document->setUrl($url);
-        } elseif ($documentType === 'file') {
+        } elseif ('file' === $documentType) {
             $file = $form['document'];
             $node = $this->createFile($dropzone, $drop, $file->getData());
-        } elseif ($documentType === 'text') {
+        } elseif ('text' === $documentType) {
             $data = $form->getData();
             // Maintenant, on insère le TITRE qui est saisi.
             $node = $this->createText($dropzone, $drop, $data['document'], $data['title']);
-        } elseif ($documentType === 'resource') {
+        } elseif ('resource' === $documentType) {
             $data = $form->getData();
             $node = $this->createResource($dropzone, $drop, $data['document']);
         } else {
@@ -223,7 +223,7 @@ class DocumentController extends DropzoneBaseController
         $document->setSender($sender);
 
         // Ajout de la valorisation du titre du document. InnovaERV.
-        if ($documentType === 'text') {
+        if ('text' === $documentType) {
             $document->setTitle($data['title']);
         }
 
@@ -251,19 +251,19 @@ class DocumentController extends DropzoneBaseController
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
-        if ($documentType === 'url') {
+        if ('url' === $documentType) {
             if (!$dropzone->getAllowUrl()) {
                 throw new AccessDeniedException();
             }
-        } elseif ($documentType === 'file') {
+        } elseif ('file' === $documentType) {
             if (!$dropzone->getAllowUpload()) {
                 throw new AccessDeniedException();
             }
-        } elseif ($documentType === 'resource') {
+        } elseif ('resource' === $documentType) {
             if (!$dropzone->getAllowWorkspaceResource()) {
                 throw new AccessDeniedException();
             }
-        } elseif ($documentType === 'text') {
+        } elseif ('text' === $documentType) {
             if (!$dropzone->getAllowRichText()) {
                 throw new AccessDeniedException();
             }
@@ -282,7 +282,7 @@ class DocumentController extends DropzoneBaseController
                 // Ici, on récupère le créateur du collecticiel = l'admin
                 $userCreator = $dropzone->getResourceNode()->getCreator()->getId();
                 // Ici, on récupère celui qui vient de déposer le nouveau document
-                //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId();
+                //$userAddDocument = $this->get('security.token_storage')->getToken()->getUser()->getId();
                 $userDropDocument = $drop->getUser()->getId();
                 $userSenderDocument = $newDocument->getSender()->getId();
 
@@ -425,12 +425,12 @@ class DocumentController extends DropzoneBaseController
     {
         $this->get('innova.manager.dropzone_voter')->isAllowToOpen($dropzone);
 
-        if ($document->getType() === 'url') {
+        if ('url' === $document->getType()) {
             return $this->redirect($document->getUrl());
         } elseif (
-            $document->getType() === 'text'
-            || $document->getType() === 'resource'
-            || $document->getType() === 'file'
+            'text' === $document->getType()
+            || 'resource' === $document->getType()
+            || 'file' === $document->getType()
         ) {
             /* Issue #27 "il se produit un plantage au niveau de "temporary_access_resource_manager" InnovaERV */
             $this->get('innova.temporary_access_resource_manager')->addTemporaryAccess($document->getResourceNode(), $user);
@@ -438,7 +438,7 @@ class DocumentController extends DropzoneBaseController
             $event = new LogDocumentOpenEvent($dropzone, $document->getDrop(), $document);
             $this->dispatch($event);
 
-            if ($document->getResourceNode()->getResourceType()->getName() === 'file') {
+            if ('file' === $document->getResourceNode()->getResourceType()->getName()) {
                 return $this->redirect(
                     $this->generateUrl('claro_resource_download').'?ids[]='.$document->getResourceNode()->getId()
                 );
@@ -468,7 +468,6 @@ class DocumentController extends DropzoneBaseController
      */
     public function ajaxValidateDocumentAction(Document $document)
     {
-
         // Appel pour accès base
         $em = $this->getDoctrine()->getManager();
 
@@ -498,14 +497,14 @@ class DocumentController extends DropzoneBaseController
         $usersIds = [];
 
         // Ici, on récupère le créateur du collecticiel = l'admin
-        if ($document->getType() === 'url') {
+        if ('url' === $document->getType()) {
             $userCreator = $document->getDrop()->getDropzone()->getResourceNode()->getCreator()->getId();
         } else {
             $userCreator = $document->getResourceNode()->getCreator()->getId();
         }
 
         // Ici, on récupère celui qui vient de déposer le nouveau document
-        //$userAddDocument = $this->get('security.context')->getToken()->getUser()->getId();
+        //$userAddDocument = $this->get('security.token_storage')->getToken()->getUser()->getId();
         $userDropDocument = $document->getDrop()->getUser()->getId();
         $userSenderDocument = $document->getSender()->getId();
 
@@ -548,7 +547,6 @@ class DocumentController extends DropzoneBaseController
      */
     public function ajaxUnvalidateDocumentAction(Document $document)
     {
-
         // Appel pour accés base
         $em = $this->getDoctrine()->getManager();
 
@@ -575,7 +573,7 @@ class DocumentController extends DropzoneBaseController
         $collecticielOpenOrNot = $dropzoneManager->collecticielOpenOrNot($dropzones[0]);
 
         // Récupération des documents sélectionnés
-        $adminInnova = $this->get('request')->query->get('adminInnova');
+        $adminInnova = $this->get('request_stack')->getMasterRequest()->query->get('adminInnova');
 
         // Ajout afin d'afficher la partie du code avec "Demande transmise"
         $template = $this->get('templating')
@@ -602,7 +600,6 @@ class DocumentController extends DropzoneBaseController
      */
     public function renderReturnReceiptAction(Document $document, Dropzone $dropzone)
     {
-
         // Récupération de l'accusé de réceptoin
         $returnReceiptType = $this->getDoctrine()
             ->getRepository('InnovaCollecticielBundle:ReturnReceipt')

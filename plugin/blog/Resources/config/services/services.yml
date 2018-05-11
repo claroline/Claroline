@@ -40,17 +40,17 @@ services:
 
     icap.blog.manager.tag:
         class: "%icap.blog.manager.tag.class%"
-        arguments: [@icap.blog.tag_repository]
+        arguments: ["@icap.blog.tag_repository"]
 
     icap.blog.type.tags:
         class: "%icap.blog.type.tags.class%"
-        arguments: [@icap.blog.manager.tag]
+        arguments: ["@icap.blog.manager.tag"]
         tags:
             - { name: form.type, alias: tags }
 
     icap.blog.twig.extension:
         class: "%icap.blog.twig.extension.class%"
-        arguments: [@icap.blog.manager.tag, @icap.blog.post_repository, %icap.blog.banner_directory%, %icap.blog.banner_upload_directory%]
+        arguments: ["@icap.blog.manager.tag", "@icap.blog.post_repository", %icap.blog.banner_directory%, %icap.blog.banner_upload_directory%]
         tags:
             - { name: twig.extension }
 

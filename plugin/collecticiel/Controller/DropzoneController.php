@@ -656,31 +656,31 @@ class DropzoneController extends DropzoneBaseController
     public function updateAjaxDropzoneAction()
     {
         // Dropzone ID
-        $dropzoneId = $this->get('request')->query->get('dropzoneId');
+        $dropzoneId = $this->get('request_stack')->getMasterRequest()->query->get('dropzoneId');
 
         // datas from JS
-        $instruction = $this->get('request')->query->get('instruction');
+        $instruction = $this->get('request_stack')->getMasterRequest()->query->get('instruction');
 
         $allowWorkspaceResource
-            = $this->get('request')->query->get('allowWorkspaceResource');
-        $allowUpload = $this->get('request')->query->get('allowUpload');
-        $allowUrl = $this->get('request')->query->get('allowUrl');
-        $allowRichText = $this->get('request')->query->get('allowRichText');
+            = $this->get('request_stack')->getMasterRequest()->query->get('allowWorkspaceResource');
+        $allowUpload = $this->get('request_stack')->getMasterRequest()->query->get('allowUpload');
+        $allowUrl = $this->get('request_stack')->getMasterRequest()->query->get('allowUrl');
+        $allowRichText = $this->get('request_stack')->getMasterRequest()->query->get('allowRichText');
 
-        $manualPlanning = $this->get('request')->query->get('manualPlanning');
-        $manualState = $this->get('request')->query->get('manualState');
+        $manualPlanning = $this->get('request_stack')->getMasterRequest()->query->get('manualPlanning');
+        $manualState = $this->get('request_stack')->getMasterRequest()->query->get('manualState');
 
         $startAllowDrop_date
-            = $this->get('request')->query->get('startAllowDrop_date');
+            = $this->get('request_stack')->getMasterRequest()->query->get('startAllowDrop_date');
         $startAllowDrop_time
-            = $this->get('request')->query->get('startAllowDrop_time');
-        $endAllowDrop_date = $this->get('request')->query->get('endAllowDrop_date');
-        $endAllowDrop_time = $this->get('request')->query->get('endAllowDrop_time');
+            = $this->get('request_stack')->getMasterRequest()->query->get('startAllowDrop_time');
+        $endAllowDrop_date = $this->get('request_stack')->getMasterRequest()->query->get('endAllowDrop_date');
+        $endAllowDrop_time = $this->get('request_stack')->getMasterRequest()->query->get('endAllowDrop_time');
 
-        $published = $this->get('request')->query->get('published');
-        $returnReceipt = $this->get('request')->query->get('returnReceipt');
-        $picture = $this->get('request')->query->get('picture');
-        $username = $this->get('request')->query->get('username');
+        $published = $this->get('request_stack')->getMasterRequest()->query->get('published');
+        $returnReceipt = $this->get('request_stack')->getMasterRequest()->query->get('returnReceipt');
+        $picture = $this->get('request_stack')->getMasterRequest()->query->get('picture');
+        $username = $this->get('request_stack')->getMasterRequest()->query->get('username');
 
         // Database dropzone
         $em = $this->getDoctrine()->getManager();

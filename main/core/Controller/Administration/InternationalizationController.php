@@ -67,7 +67,7 @@ class InternationalizationController extends Controller
 
         $form = $this->createForm(new InternationalizationType($activatedLocales, $availableLocales));
 
-        $form->handleRequest($this->get('request'));
+        $form->handleRequest($this->get('request_stack')->getMasterRequest());
         if ($form->isValid()) {
             $data = array_values($form->get('locales')->getData());
             $this->container->get('claroline.config.platform_config_handler')->setParameter('locales', $data);

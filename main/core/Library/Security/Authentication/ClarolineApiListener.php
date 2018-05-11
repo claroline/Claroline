@@ -19,11 +19,11 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
 use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
-use Symfony\Component\Security\Core\SecurityContextInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
@@ -39,7 +39,7 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 class ClarolineApiListener implements ListenerInterface
 {
     /**
-     * @var \Symfony\Component\Security\Core\SecurityContextInterface
+     * @var TokenStorage
      */
     protected $securityContext;
 
@@ -64,13 +64,8 @@ class ClarolineApiListener implements ListenerInterface
     protected $encodeFactory;
 
     /**
-     * @var string
-     */
-    private $sessionKey;
-
-    /**
      * @DI\InjectParams({
-     *     "securityContext"       = @DI\Inject("security.context"),
+     *     "securityContext"       = @DI\Inject("security.token_storage"),
      *     "authenticationManager" = @DI\Inject("security.authentication.manager"),
      *     "serverService"         = @DI\Inject("fos_oauth_server.server"),
      *     "userProvider"          = @DI\Inject("security.user.provider.concrete.user_db"),
@@ -79,7 +74,7 @@ class ClarolineApiListener implements ListenerInterface
      * })
      */
     public function __construct(
-        SecurityContextInterface $securityContext,
+        TokenStorage $securityContext,
         AuthenticationManagerInterface $authenticationManager,
         OAuth2 $serverService,
         EntityUserProvider $userProvider,
@@ -95,7 +90,7 @@ class ClarolineApiListener implements ListenerInterface
     }
 
     /**
-     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event The event
+     * @param \Symfony\Component\HttpKernel\Event\GetResponseEvent $event the event
      */
     public function handle(GetResponseEvent $event)
     {

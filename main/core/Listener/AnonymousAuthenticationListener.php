@@ -13,8 +13,10 @@ namespace Claroline\CoreBundle\Listener;
 
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
+use Symfony\Component\Security\Core\Authentication\AuthenticationManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\AnonymousToken;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\Security\Http\Firewall\AnonymousAuthenticationListener as Listener;
 use Symfony\Component\Security\Http\Firewall\ListenerInterface;
 
 /**
@@ -25,29 +27,20 @@ use Symfony\Component\Security\Http\Firewall\ListenerInterface;
  */
 class AnonymousAuthenticationListener implements ListenerInterface
 {
-    /** @var TokenStorageInterface */
     private $tokenStorage;
-
-    /** @var string */
     private $secret;
-
-    /** @var LoggerInterface */
+    private $authenticationManager;
     private $logger;
 
-    /**
-     * AnonymousAuthenticationListener constructor.
-     *
-     * @param TokenStorageInterface $tokenStorage
-     * @param string                $secret
-     * @param LoggerInterface       $logger
-     */
     public function __construct(
         TokenStorageInterface $tokenStorage,
-        $secret,
-        LoggerInterface $logger = null)
-    {
+        string $secret,
+        LoggerInterface $logger = null,
+        AuthenticationManagerInterface $authenticationManager = null
+    ) {
         $this->tokenStorage = $tokenStorage;
         $this->secret = $secret;
+        $this->authenticationManager = $authenticationManager;
         $this->logger = $logger;
     }
 

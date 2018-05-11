@@ -42,7 +42,7 @@ class OauthController extends BaseAuthorizeController
     {
         $lastUsername = $request->getSession()->get(SecurityContext::LAST_USERNAME);
         $user = $this->container->get('claroline.manager.user_manager')->getUserByUsername($lastUsername);
-        $clientId = $this->container->get('request')->get('client_id');
+        $clientId = $this->container->get('request_stack')->getMasterRequest()->get('client_id');
 
         if ($clientId) {
             $this->container->get('session')->set('client_id', $clientId);
@@ -94,7 +94,7 @@ class OauthController extends BaseAuthorizeController
      */
     public function authorizeFormAction(Request $request)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         if (!$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
@@ -119,7 +119,7 @@ class OauthController extends BaseAuthorizeController
      */
     public function authorizeSubmitAction(Request $request)
     {
-        $user = $this->container->get('security.context')->getToken()->getUser();
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
 
         if (!$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
@@ -138,7 +138,7 @@ class OauthController extends BaseAuthorizeController
         );
 
         if ($event->isAuthorizedClient()) {
-            $scope = $this->container->get('request')->get('scope', null);
+            $scope = $this->container->get('request_stack')->getMasterRequest()->get('scope', null);
 
             return $this->container
                 ->get('fos_oauth_server.server')
@@ -159,7 +159,7 @@ class OauthController extends BaseAuthorizeController
     protected function processSuccess(UserInterface $user, AuthorizeFormHandler $formHandler, Request $request)
     {
         if (true === $this->container->get('session')->get('_fos_oauth_server.ensure_logout')) {
-            $this->container->get('security.context')->setToken(null);
+            $this->container->get('security.token_storage')->setToken(null);
             $this->container->get('session')->invalidate();
         }
 
@@ -191,11 +191,11 @@ class OauthController extends BaseAuthorizeController
      */
     public function logAction($name)
     {
-        $authCode = $this->container->get('request')->query->get('code');
+        $authCode = $this->container->get('request_stack')->getMasterRequest()->query->get('code');
         $curlManager = $this->container->get('claroline.manager.curl_manager');
         $friendRequest = $this->container->get('claroline.manager.oauth_manager')->findFriendRequestByName($name);
         $access = $friendRequest->getClarolineAccess();
-        $redirect = $this->container->get('request')->getSchemeAndHttpHost().
+        $redirect = $this->container->get('request_stack')->getMasterRequest()->getSchemeAndHttpHost().
             $this->container->get('router')->getContext()->getBaseUrl().'/oauth/v2/log/'.$name;
 
         //request the token
@@ -250,7 +250,7 @@ class OauthController extends BaseAuthorizeController
     protected function getClient()
     {
         if (null === $this->client) {
-            $clientId = $this->container->get('request')->get('client_id');
+            $clientId = $this->container->get('request_stack')->getMasterRequest()->get('client_id');
             if (null === $clientId) {
                 $clientId = $this->container->get('session')->get('client_id');
             }

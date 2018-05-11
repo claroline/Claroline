@@ -1,4 +1,4 @@
-{% extends 'ClarolineCoreBundle:Desktop:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:desktop:layout.html.twig' %}
 
 {% block breadcrumb %}
     {{
@@ -24,7 +24,7 @@
         </div>
         <div class="panel-body">
             {% if supportType is defined %}
-                {% render(controller('FormaLibreSupportBundle:Support:supportTabs', {'type': supportType})) %}
+                {{ render(controller('FormaLibreSupportBundle:Support:supportTabs', {'type': supportType})) }}
                 <br>
             {% endif %}
 
@@ -153,7 +153,7 @@
                     >
                         <div class="panel-body">
                             <div id="ticket-comment-form-box">
-                                {% render(controller("FormaLibreSupportBundle:Support:ticketCommentCreateForm", {'ticket': ticket.getId()})) %}
+                                {{ render(controller("FormaLibreSupportBundle:Support:ticketCommentCreateForm", {'ticket': ticket.getId()})) }}
                             </div>
                             <br>
                             <br>

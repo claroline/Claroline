@@ -98,10 +98,11 @@
     {% if dropzone.returnreceipt == 1  %}
         <td class="{{ classArray }} centered centering-columnsAR-study" id="is-validate-{{ document.id }}">
             {# Pour affichage de la valeur de l'accusé de réception
-            {% render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt',
-            {'documentId': document.id, 'dropzoneId': dropzone.id})) #}
+            {{ render(controller('InnovaCollecticielBundle:Document:renderReturnReceipt',
+            {'documentId': document.id, 'dropzoneId': dropzone.id})) }} #}
+
             {% include 'InnovaCollecticielBundle:Document:renderReturnReceipt.html.twig'
-            with {'value': returnReceiptArray[document.id]} 
+            with {'value': returnReceiptArray[document.id]}
             %}
         </td>
     {% endif %}
@@ -115,7 +116,7 @@
             {% set documentTitle = document.resourceNode.name %}
         {% endif %}
     {% endif %}
-    
+
     {# On affiche cette colonne si le créateur du collecticiel veut gérer les évaluations. Demande JJQ. InnovaERV #}
     {% if dropzone.evaluation == 1  %}
         <td class="{{ classArray }} centered centering-columnsComment-study">
@@ -145,7 +146,7 @@
             <td id="delete_button_td" class="td_action">
                 {# Cas 1 #}
                 {# Si le document a été validé alors je ne peux pas le supprimer #}
-                <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" 
+                <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
                 class="btn btn-danger btn-sm launch-modal del_btn_td"
                 id="delete_{{ document.id }}" style="display:none;" >
                     {# Ajout de l'icône "supprimer" #}
@@ -180,7 +181,7 @@
                 <td id="delete_button_td" class="td_action">
                 {# Cas 1 #}
                 {# Si le document a été validé alors je ne peux pas le supprimer #}
-                <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}" 
+                <a href="{{ path('innova_collecticiel_delete_document', {'resourceId': dropzone.id, 'dropId': drop.id, 'documentId': document.id}) }}"
                 class="btn btn-danger btn-sm launch-modal del_btn_td" id="delete_{{ document.id }}" style="display:none;" >
                     {# Ajout de l'icône "supprimer" #}
                     <i class="fa fa-trash" data-toggle="tooltip" data-placement="top" data-original-title="{{ 'Delete'|trans({},'innova_collecticiel') }}"></i>
@@ -240,10 +241,10 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">{{ 'Cancel'|trans({}, 'innova_collecticiel') }}</button>
                 <button data-document_id="titi"
-                        data-document_sender_id="99" 
+                        data-document_sender_id="99"
                         data-document_comment_length="99"
-                        data-document_docDropUser_id="99" 
-                        data-document_adminInnova="99" 
+                        data-document_docDropUser_id="99"
+                        data-document_adminInnova="99"
                 id="modal_confirm-cancel" data-method="VALIDATE" type="button" class="btn btn-primary rest" href="#">{{ 'Ok'|trans({}, 'innova_collecticiel') }}</button>
             </div>
         </div>

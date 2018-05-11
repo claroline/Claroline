@@ -34,16 +34,14 @@ class UrlAutoDetectorTwigExtension extends \Twig_Extension
      */
     public function getFilters()
     {
-        return array(
-            'url_detect' => new \Twig_Filter_Method(
-                $this,
-                'autoDetectUrls',
-                array(
+        return [
+            'url_detect' => new \Twig_SimpleFilter('url_detect', [$this, 'autoDetectUrls'],
+                [
                     'pre_escape' => 'html',
-                    'is_safe' => array('html'),
-                )
+                    'is_safe' => ['html'],
+                ]
             ),
-        );
+        ];
     }
 
     /**
@@ -56,7 +54,7 @@ class UrlAutoDetectorTwigExtension extends \Twig_Extension
     public function autoDetectUrls($string)
     {
         $pattern = '/(<a\b[^>]*>\s*|href="|src=")?([-a-zA-Zа-яёА-ЯЁ0-9@:%_\+.~#?&\/\/=]{2,256}\.[a-zа-яё]{2,4}\b(\/?([-\p{L}0-9@:%_\+~#&\/\/=\(\)]|[.?,](?!\s|$))*)?)/u';
-        $stringFiltered = preg_replace_callback($pattern, array($this, 'callbackReplace'), $string);
+        $stringFiltered = preg_replace_callback($pattern, [$this, 'callbackReplace'], $string);
 
         return $stringFiltered;
     }
@@ -70,16 +68,16 @@ class UrlAutoDetectorTwigExtension extends \Twig_Extension
      */
     public function callbackReplace($matches)
     {
-        if ($matches[1] !== '') {
+        if ('' !== $matches[1]) {
             return $matches[0]; // don't modify existing <a href="">links</a> and <img src="">
         }
         $url = $matches[2];
         $urlWithPrefix = $matches[2];
-        if (strpos($url, '@') !== false) {
+        if (false !== strpos($url, '@')) {
             $urlWithPrefix = 'mailto:'.$url;
-        } elseif (strpos($url, 'https://') === 0) {
+        } elseif (0 === strpos($url, 'https://')) {
             $urlWithPrefix = $url;
-        } elseif (strpos($url, 'http://') !== 0) {
+        } elseif (0 !== strpos($url, 'http://')) {
             $urlWithPrefix = 'http://'.$url;
         }
 

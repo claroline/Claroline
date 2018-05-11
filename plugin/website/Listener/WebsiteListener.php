@@ -75,7 +75,7 @@ class WebsiteListener
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $request = $this->container->get('request');
+        $request = $this->container->get('request_stack')->getMasterRequest();
         $form = $this->container->get('form.factory')->create(new WebsiteType(), new Website());
         $form->handleRequest($request);
         if ($form->isValid()) {

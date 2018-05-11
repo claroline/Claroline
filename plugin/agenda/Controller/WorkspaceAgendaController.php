@@ -23,6 +23,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 
@@ -41,7 +42,7 @@ class WorkspaceAgendaController extends Controller
     /**
      * @DI\InjectParams({
      *     "om"              = @DI\Inject("claroline.persistence.object_manager"),
-     *     "request"         = @DI\Inject("request"),
+     *     "request"         = @DI\Inject("request_stack"),
      *     "agendaManager"   = @DI\Inject("claroline.manager.agenda_manager"),
      *     "router"          = @DI\Inject("router"),
      *     "authorization"   = @DI\Inject("security.authorization_checker"),
@@ -50,14 +51,14 @@ class WorkspaceAgendaController extends Controller
      */
     public function __construct(
         ObjectManager $om,
-        Request $request,
+        RequestStack $request,
         AgendaManager $agendaManager,
         RouterInterface $router,
         AuthorizationCheckerInterface $authorization,
         EventDispatcherInterface $eventDispatcher
     ) {
         $this->om = $om;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->agendaManager = $agendaManager;
         $this->router = $router;
         $this->authorization = $authorization;

@@ -50,7 +50,7 @@ class MailingChecker
         $port = $this->settings->getTransportOption('port');
 
         if (empty($port)) {
-            $port = $this->settings->getTransportOption('encryption') === 'ssl' ? 465 : 25;
+            $port = 'ssl' === $this->settings->getTransportOption('encryption') ? 465 : 25;
         }
 
         try {
@@ -72,11 +72,12 @@ class MailingChecker
     private function testGmail()
     {
         try {
-            Swift_SmtpTransport::newInstance('smtp.gmail.com', 465, 'ssl')
-                ->setUsername($this->settings->getTransportOption('username'))
-                ->setPassword($this->settings->getTransportOption('password'))
-                ->setAuthMode('login')
-                ->start();
+            //allow to configure this
+            $transport = new \Swift_SendmailTransport('/usr/sbin/sendmail -bs');
+            $transport->setUsername($this->settings->getTransportOption('username'))
+            ->setPassword($this->settings->getTransportOption('password'))
+            ->setAuthMode('login')
+            ->start();
         } catch (Swift_TransportException $ex) {
             return static::UNABLE_TO_START_GMAIL;
         }

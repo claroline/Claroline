@@ -3,15 +3,17 @@
 namespace Icap\PortfolioBundle\Listener;
 
 use Claroline\CoreBundle\Event\Log\LogCreateDelegateViewEvent;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-class LogListener extends ContainerAware
+class LogListener
 {
+    use ContainerAwareTrait;
+
     public function onCreateLogListItem(LogCreateDelegateViewEvent $event)
     {
         $content = $this->container->get('templating')->render(
             'IcapPortfolioBundle:Log:log_list_item.html.twig',
-            array('log' => $event->getLog())
+            ['log' => $event->getLog()]
         );
 
         $event->setResponseContent($content);
@@ -22,13 +24,13 @@ class LogListener extends ContainerAware
     {
         $content = $this->container->get('templating')->render(
             'IcapPortfolioBundle:Log:log_details.html.twig',
-            array(
+            [
                 'log' => $event->getLog(),
                 'listItemView' => $this->container->get('templating')->render(
                     'IcapPortfolioBundle:Log:log_list_item.html.twig',
-                    array('log' => $event->getLog())
+                    ['log' => $event->getLog()]
                 ),
-            )
+            ]
         );
 
         $event->setResponseContent($content);

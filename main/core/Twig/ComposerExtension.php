@@ -41,7 +41,7 @@ class ComposerExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'get_current_distribution_commit' => new \Twig_Function_Method($this, 'getCurrentDistributionCommit'),
+            'get_current_distribution_commit' => new \Twig_SimpleFunction('get_current_distribution_commit', [$this, 'getCurrentDistributionCommit']),
         ];
     }
 

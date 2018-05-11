@@ -137,8 +137,8 @@ class ForumImporter extends Importer implements ConfigurationInterface, RichText
                         $subjectEntity->setCreationDate(new \DateTime($subject['subject']['creation_date']));
                     }
 
-                    if ($creator === null) {
-                        $creator = $this->container->get('security.context')->getToken()->getUser();
+                    if (null === $creator) {
+                        $creator = $this->container->get('security.token_storage')->getToken()->getUser();
                     }
 
                     if (isset($subject['subject']['author'])) {
@@ -162,8 +162,8 @@ class ForumImporter extends Importer implements ConfigurationInterface, RichText
                             $creator = $repo->findOneByUsername($message['message']['creator']);
                         }
 
-                        if ($creator === null) {
-                            $creator = $this->container->get('security.context')->getToken()->getUser();
+                        if (null === $creator) {
+                            $creator = $this->container->get('security.token_storage')->getToken()->getUser();
                         }
 
                         if (isset($message['message']['creation_date'])) {

@@ -25,6 +25,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -43,7 +44,7 @@ class DesktopParametersController extends Controller
     /**
      * @DI\InjectParams({
      *     "formFactory"  = @DI\Inject("form.factory"),
-     *     "request"      = @DI\Inject("request"),
+     *     "request"      = @DI\Inject("request_stack"),
      *     "urlGenerator" = @DI\Inject("router"),
      *     "toolManager"  = @DI\Inject("claroline.manager.tool_manager"),
      *     "ed"           = @DI\Inject("claroline.event.event_dispatcher"),
@@ -52,14 +53,14 @@ class DesktopParametersController extends Controller
      */
     public function __construct(
         FormFactoryInterface $formFactory,
-        Request $request,
+        RequestStack $request,
         UrlGeneratorInterface $router,
         ToolManager $toolManager,
         StrictDispatcher $ed,
         ObjectManager $om
     ) {
         $this->formFactory = $formFactory;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->router = $router;
         $this->toolManager = $toolManager;
         $this->ed = $ed;

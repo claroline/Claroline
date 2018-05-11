@@ -30,6 +30,7 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -60,7 +61,7 @@ class MessageController
      *     "mailManager"      = @DI\Inject("claroline.manager.mail_manager"),
      *     "messageManager"   = @DI\Inject("claroline.manager.message_manager"),
      *     "pagerFactory"     = @DI\Inject("claroline.pager.pager_factory"),
-     *     "request"          = @DI\Inject("request"),
+     *     "request"          = @DI\Inject("request_stack"),
      *     "router"           = @DI\Inject("router"),
      *     "tokenStorage"     = @DI\Inject("security.token_storage"),
      *     "userManager"      = @DI\Inject("claroline.manager.user_manager"),
@@ -74,7 +75,7 @@ class MessageController
         MailManager $mailManager,
         MessageManager $messageManager,
         PagerFactory $pagerFactory,
-        Request $request,
+        RequestStack $request,
         UrlGeneratorInterface $router,
         TokenStorageInterface $tokenStorage,
         UserManager $userManager,
@@ -86,7 +87,7 @@ class MessageController
         $this->mailManager = $mailManager;
         $this->messageManager = $messageManager;
         $this->pagerFactory = $pagerFactory;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->router = $router;
         $this->tokenStorage = $tokenStorage;
         $this->userManager = $userManager;
@@ -166,7 +167,8 @@ class MessageController
      * @EXT\ParamConverter(
      *     "parent",
      *     class="ClarolineMessageBundle:Message",
-     *     options={"id" = "parentId", "strictId" = true}
+     *     options={"id" = "parentId", "strictId" = true},
+     *     converter="strict_id"
      * )
      * @EXT\Template("ClarolineMessageBundle:Message:show.html.twig")
      *
@@ -320,7 +322,8 @@ class MessageController
      * @EXT\ParamConverter(
      *      "message",
      *      class="ClarolineMessageBundle:Message",
-     *      options={"id" = "message", "strictId" = true}
+     *      options={"id" = "message", "strictId" = true},
+     *      converter="strict_id"
      * )
      * @EXT\Template()
      *

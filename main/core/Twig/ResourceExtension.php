@@ -53,10 +53,10 @@ class ResourceExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'isMenuActionImplemented' => new \Twig_Function_Method($this, 'isMenuActionImplemented'),
-            'getCurrentUrl' => new \Twig_Function_Method($this, 'getCurrentUrl'),
-            'isCodeProtected' => new \Twig_Function_Method($this, 'isCodeProtected'),
-            'requiresUnlock' => new \Twig_Function_Method($this, 'requiresUnlock'),
+            'isMenuActionImplemented' => new \Twig_SimpleFunction('isMenuActionImplemented', [$this, 'isMenuActionImplemented']),
+            'getCurrentUrl' => new \Twig_SimpleFunction('getCurrentUrl', [$this, 'getCurrentUrl']),
+            'isCodeProtected' => new \Twig_SimpleFunction('isCodeProtected', [$this, 'isCodeProtected']),
+            'requiresUnlock' => new \Twig_SimpleFunction('requiresUnlock', [$this, 'requiresUnlock']),
         ];
     }
 

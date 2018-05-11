@@ -402,7 +402,7 @@ You can find wich template to use with this code (it's not automatic yet in subj
 {% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
 
 {% if isDesktop() %}
-    {% set layout = "ClarolineCoreBundle:Desktop:layout.html.twig" %}
+    {% set layout = "ClarolineCoreBundle:desktop:layout.html.twig" %}
 {% endif %}
 
 {% extends layout %}

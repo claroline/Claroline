@@ -33,14 +33,14 @@ class PcreExtension extends \Twig_Extension
 
     public function getFilters()
     {
-        return array(
-            'preg_filter' => new \Twig_Filter_Method($this, '_preg_filter'),
-            'preg_grep' => new \Twig_Filter_Method($this, '_preg_grep'),
-            'preg_match' => new \Twig_Filter_Method($this, '_preg_match'),
-            'preg_quote' => new \Twig_Filter_Method($this, '_preg_quote'),
-            'preg_replace' => new \Twig_Filter_Method($this, '_preg_replace'),
-            'preg_split' => new \Twig_Filter_Method($this, '_preg_split'),
-        );
+        return [
+            'preg_filter' => new \Twig_SimpleFilter('preg_filter', [$this, '_preg_filter']),
+            'preg_grep' => new \Twig_SimpleFilter('preg_grep', [$this, '_preg_grep']),
+            'preg_match' => new \Twig_SimpleFilter('preg_match', [$this, '_preg_match']),
+            'preg_quote' => new \Twig_SimpleFilter('preg_quote', [$this, '_preg_quote']),
+            'preg_replace' => new \Twig_SimpleFilter('preg_replace', [$this, '_preg_replace']),
+            'preg_split' => new \Twig_SimpleFilter('preg_split', [$this, '_preg_split']),
+        ];
     }
 
     public function initRuntime(\Twig_Environment $env)

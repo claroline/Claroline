@@ -30,7 +30,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
@@ -65,7 +65,7 @@ class FileController extends Controller
      *     "formFactory"     = @DI\Inject("form.factory"),
      *     "homeExtension"   = @DI\Inject("claroline.twig.home_extension"),
      *     "mimeTypeGuesser" = @DI\Inject("claroline.utilities.mime_type_guesser"),
-     *     "request"         = @DI\Inject("request"),
+     *     "requestStack"         = @DI\Inject("request_stack"),
      *     "resourceManager" = @DI\Inject("claroline.manager.resource_manager"),
      *     "roleManager"     = @DI\Inject("claroline.manager.role_manager"),
      *     "session"         = @DI\Inject("session"),
@@ -82,7 +82,7 @@ class FileController extends Controller
         FormFactoryInterface $formFactory,
         HomeExtension $homeExtension,
         MimeTypeGuesser $mimeTypeGuesser,
-        Request $request,
+        RequestStack $request,
         ResourceManager $resourceManager,
         RoleManager $roleManager,
         SessionInterface $session,
@@ -97,7 +97,7 @@ class FileController extends Controller
         $this->formFactory = $formFactory;
         $this->homeExtension = $homeExtension;
         $this->mimeTypeGuesser = $mimeTypeGuesser;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->resourceManager = $resourceManager;
         $this->roleManager = $roleManager;
         $this->session = $session;

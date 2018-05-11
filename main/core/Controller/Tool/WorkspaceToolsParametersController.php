@@ -29,6 +29,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundmaxUsersation\RedirectResponse;
 use Symfony\Component\Routing\RouterInterface;
@@ -51,7 +52,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * @DI\InjectParams({
      *     "om"                = @DI\Inject("claroline.persistence.object_manager"),
      *     "formFactory"       = @DI\Inject("form.factory"),
-     *     "request"           = @DI\Inject("request"),
+     *     "request"           = @DI\Inject("request_stack"),
      *     "resourceManager"   = @DI\Inject("claroline.manager.resource_manager"),
      *     "rightsManager"     = @DI\Inject("claroline.manager.rights_manager"),
      *     "roleManager"       = @DI\Inject("claroline.manager.role_manager"),
@@ -64,7 +65,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     public function __construct(
         FormFactory $formFactory,
         ObjectManager $om,
-        Request $request,
+        RequestStack $request,
         ResourceManager $resourceManager,
         RightsManager $rightsManager,
         RoleManager $roleManager,
@@ -75,7 +76,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
     ) {
         $this->formFactory = $formFactory;
         $this->om = $om;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->resourceManager = $resourceManager;
         $this->rightsManager = $rightsManager;
         $this->roleManager = $roleManager;

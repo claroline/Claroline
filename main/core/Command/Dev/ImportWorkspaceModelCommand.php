@@ -160,7 +160,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
                 throw new \Exception('User not found : '.$username);
             }
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->getContainer()->get('security.context')->setToken($token);
+            $this->getContainer()->get('security.token_storage')->setToken($token);
             $workspace = new Workspace();
             $workspace->setCreator($user);
             $workspaceManager->create($workspace, $file);
@@ -185,7 +185,7 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
                 throw new \Exception('User not found : '.$username);
             }
             $token = new UsernamePasswordToken($user, null, 'main', $user->getRoles());
-            $this->getContainer()->get('security.context')->setToken($token);
+            $this->getContainer()->get('security.token_storage')->setToken($token);
             $workspace = new Workspace();
             $workspace->setCreator($user);
             $workspaceManager->createFromTemplate($workspace, $dir);

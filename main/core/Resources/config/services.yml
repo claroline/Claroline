@@ -1,6 +1,10 @@
 # This file contains only services that cannot be defined using annotations.
 
 services:
+    _defaults:
+        autowire: false #default should be true now
+        autoconfigure: false #default should be true now
+        public: true #default should be false now
 
     # array injection with annotations is not supported
     claroline.plugin.validator:

@@ -9,6 +9,7 @@ use Icap\BadgeBundle\Manager\BadgeManager;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 class BadgeHandler
 {
@@ -36,14 +37,14 @@ class BadgeHandler
 
     public function __construct(
        FormInterface $form,
-       Request $request,
+       RequestStack $request,
        EntityManager $entityManager,
        BadgeManager $badgeManager,
        $webDir,
        FileUtilities $fu
      ) {
         $this->form = $form;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->entityManager = $entityManager;
         $this->badgeManager = $badgeManager;
         $this->webDir = $webDir;
@@ -98,7 +99,6 @@ class BadgeHandler
                 $userBadges = $badge->getUserBadges();
 
                 if (0 < count($userBadges) && $this->badgeManager->isRuleChanged($badgeRules, $originalRules)) {
-
                     /** @var \Doctrine\ORM\UnitOfWork $unitOfWork */
                     $unitOfWork = $this->entityManager->getUnitOfWork();
 
@@ -150,7 +150,7 @@ class BadgeHandler
         $this->entityManager->remove($badge);
         $this->entityManager->flush();
 
-        if ($imagePath !== null && file_exists($this->uploadDir.$ds.$imagePath)) {
+        if (null !== $imagePath && file_exists($this->uploadDir.$ds.$imagePath)) {
             @unlink($this->uploadDir.$ds.$imagePath);
         }
     }

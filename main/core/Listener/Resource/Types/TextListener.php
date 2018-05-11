@@ -74,7 +74,7 @@ class TextListener implements ContainerAwareInterface
      */
     public function onCreate(CreateResourceEvent $event)
     {
-        $request = $this->container->get('request');
+        $request = $this->container->get('request_stack')->getMasterRequest();
         $em = $this->container->get('doctrine.orm.entity_manager');
         $user = $this->container->get('security.token_storage')->getToken()->getUser();
         $keys = array_keys($request->request->all());

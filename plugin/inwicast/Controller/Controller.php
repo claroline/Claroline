@@ -41,7 +41,7 @@ class Controller extends BaseController
 
     protected function getSecurityContext()
     {
-        return $this->get('security.context');
+        return $this->get('security.authorization_checker');
     }
 
     /**

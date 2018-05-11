@@ -13,6 +13,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -37,7 +38,7 @@ class ReservationController extends Controller
      * @DI\InjectParams({
      *      "om"          = @DI\Inject("claroline.persistence.object_manager"),
      *      "router"      = @DI\Inject("router"),
-     *      "request"     = @DI\Inject("request"),
+     *      "request"     = @DI\Inject("request_stack"),
      *      "agendaManager" = @DI\Inject("claroline.manager.agenda_manager"),
      *      "reservationManager" = @DI\Inject("formalibre.manager.reservation_manager"),
      *      "translator"    = @DI\Inject("translator"),
@@ -47,7 +48,7 @@ class ReservationController extends Controller
     public function __construct(
         ObjectManager $om,
         RouterInterface $router,
-        Request $request,
+        RequestStack $request,
         AgendaManager $agendaManager,
         ReservationManager $reservationManager,
         TranslatorInterface $translator,
@@ -55,7 +56,7 @@ class ReservationController extends Controller
     ) {
         $this->om = $om;
         $this->router = $router;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->agendaManager = $agendaManager;
         $this->reservationManager = $reservationManager;
         $this->translator = $translator;
@@ -115,7 +116,7 @@ class ReservationController extends Controller
         return $this->render('FormaLibreReservationBundle:Tool:reservationForm.html.twig', [
             'form' => $form->createView(),
             'action' => $this->router->generate('formalibre_add_reservation'),
-            'reservation' => $this->request->getMethod() === 'POST' ? $form->getData() : null,
+            'reservation' => 'POST' === $this->request->getMethod() ? $form->getData() : null,
             'editMode' => false,
         ]);
     }
@@ -216,7 +217,7 @@ class ReservationController extends Controller
         $maxTimeArray = explode(':', $reservation->getResource()->getMaxTimeReservation());
         $maxTime = $maxTimeArray[0] * 3600 + $maxTimeArray[2] * 60;
 
-        if ($newEnd - $start > $maxTime && $maxTime !== 0) {
+        if ($newEnd - $start > $maxTime && 0 !== $maxTime) {
             return new JsonResponse(['error' => 'error.max_time_reservation_exceeded']);
         }
 
@@ -266,7 +267,7 @@ class ReservationController extends Controller
         return new JsonResponse([
             'description' => empty($description) ? $none : $description,
             'localisation' => empty($localisation) ? $none : $localisation,
-            'maxTime' => $resource->getMaxTimeReservation() === '00:00:00' ? $none : $resource->getMaxTimeReservation(),
+            'maxTime' => '00:00:00' === $resource->getMaxTimeReservation() ? $none : $resource->getMaxTimeReservation(),
         ]);
     }
 }

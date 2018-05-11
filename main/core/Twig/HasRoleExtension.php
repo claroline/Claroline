@@ -36,10 +36,10 @@ class HasRoleExtension extends \Twig_Extension
      */
     public function getFunctions()
     {
-        return array(
-            'has_role' => new \Twig_Function_Method($this, 'hasRole'),
-            'is_impersonated' => new \Twig_Function_Method($this, 'isImpersonated'),
-        );
+        return [
+            'has_role' => new \Twig_SimpleFunction('has_role', [$this, 'hasRole']),
+            'is_impersonated' => new \Twig_SimpleFunction('is_impersonated', [$this, 'isImpersonated']),
+        ];
     }
 
     public function hasRole($role)

@@ -60,13 +60,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
-        "@HeVinciCompetencyBundle/Resources/views/Objective/objectiveRow.html.twig"
-        "@HeVinciCompetencyBundle/Resources/views/Objective/userObjectiveRow.html.twig"
-        "@HeVinciCompetencyBundle/Resources/views/Objective/groupObjectiveRow.html.twig"
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/flasher.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/objectiveUtils.js') }}"></script>

@@ -38,8 +38,8 @@ services:
     claroline.view_handler:
         parent: fos_rest.view_handler.default
         calls:
-            - ['registerHandler', [ 'csv', [@claroline.view_handler.exporter.class, 'createResponse'] ] ]
-            - ['registerHandler', [ 'xls', [@claroline.view_handler.exporter.class, 'createResponse'] ] ]
+            - ['registerHandler', [ 'csv', ['@claroline.view_handler.exporter.class', 'createResponse'] ] ]
+            - ['registerHandler', [ 'xls', ['@claroline.view_handler.exporter.class', 'createResponse'] ] ]
 
 parameters:
     fos_rest.view_handler.default.class: Claroline\CoreBundle\Library\View\ViewHandler

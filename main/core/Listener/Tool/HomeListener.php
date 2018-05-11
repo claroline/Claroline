@@ -67,7 +67,7 @@ class HomeListener
     public function onDisplayDesktop(DisplayToolEvent $event)
     {
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Tool:home.html.twig', [
+            'ClarolineCoreBundle:tool:home.html.twig', [
                 'editable' => true,
                 'context' => [
                     'type' => Widget::CONTEXT_DESKTOP,
@@ -106,7 +106,7 @@ class HomeListener
         $workspace = $event->getWorkspace();
 
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Tool:home.html.twig', [
+            'ClarolineCoreBundle:tool:home.html.twig', [
                 'workspace' => $workspace,
                 'editable' => $this->authorization->isGranted(['home', 'edit'], $workspace),
                 'context' => [

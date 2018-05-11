@@ -68,7 +68,7 @@ class ThemeExtension extends \Twig_Extension
     public function getFunctions()
     {
         return [
-            'themeAsset' => new \Twig_Function_Method($this, 'themeAsset'),
+            'themeAsset' => new \Twig_SimpleFunction('themeAsset', [$this, 'themeAsset']),
         ];
     }
 

@@ -24,6 +24,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ClacoFormWidgetController extends Controller
@@ -39,7 +40,7 @@ class ClacoFormWidgetController extends Controller
      *     "clacoFormManager" = @DI\Inject("claroline.manager.claco_form_manager"),
      *     "formFactory"      = @DI\Inject("form.factory"),
      *     "locationManager"  = @DI\Inject("claroline.manager.organization.location_manager"),
-     *     "request"          = @DI\Inject("request"),
+     *     "request"          = @DI\Inject("request_stack"),
      *     "translator"       = @DI\Inject("translator")
      * })
      */
@@ -47,13 +48,13 @@ class ClacoFormWidgetController extends Controller
         ClacoFormManager $clacoFormManager,
         FormFactory $formFactory,
         LocationManager $locationManager,
-        Request $request,
+        RequestStack $request,
         TranslatorInterface $translator
     ) {
         $this->clacoFormManager = $clacoFormManager;
         $this->formFactory = $formFactory;
         $this->locationManager = $locationManager;
-        $this->request = $request;
+        $this->request = $request->getMasterRequest();
         $this->translator = $translator;
     }
 
@@ -79,7 +80,7 @@ class ClacoFormWidgetController extends Controller
         $data = [];
 
         foreach ($entries as $entry) {
-            if (count($fields) === 0) {
+            if (0 === count($fields)) {
                 $value = [
                     'label' => $this->translator->trans('entry_title', [], 'clacoform'),
                     'value' => $entry->getTitle(),

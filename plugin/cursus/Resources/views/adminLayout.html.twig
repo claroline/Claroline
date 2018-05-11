@@ -3,7 +3,7 @@
 {% block title %}{{ 'administration'|trans({}, 'platform')|striptags|raw }}{% endblock %}
 
 {% block leftbar %}
-    {% render(controller("ClarolineCoreBundle:Administration:renderLeftBar")) %}
+    {{ render(controller("ClarolineCoreBundle:Administration:renderLeftBar")) }}
 {% endblock %}
 
 {% block content %}

@@ -22,11 +22,13 @@ use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\ResourceCreatedEvent;
 use Claroline\ForumBundle\Entity\Forum;
 use Claroline\ForumBundle\Form\ForumType;
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 
-class ForumListener extends ContainerAware
+class ForumListener
 {
+    use ContainerAwareTrait;
+
     public function onCreateForm(CreateFormResourceEvent $event)
     {
         $form = $this->container->get('form.factory')->create(new ForumType(), new Forum());
@@ -43,7 +45,7 @@ class ForumListener extends ContainerAware
 
     public function onCreate(CreateResourceEvent $event)
     {
-        $request = $this->container->get('request');
+        $request = $this->container->get('request_stack')->getMasterRequest();
         $form = $this->container->get('form.factory')->create(new ForumType(), new Forum());
         $form->handleRequest($request);
 
@@ -145,7 +147,7 @@ class ForumListener extends ContainerAware
                     case 'resource-read':
                         ++$nbOpenings;
 
-                        if ($status === AbstractResourceEvaluation::STATUS_UNKNOWN) {
+                        if (AbstractResourceEvaluation::STATUS_UNKNOWN === $status) {
                             $status = AbstractResourceEvaluation::STATUS_OPENED;
                         }
                         break;

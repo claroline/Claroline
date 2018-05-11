@@ -114,7 +114,7 @@
                                     <i class="fa fa-pencil"></i> {{ 'reply'|trans({}, 'forum') }}
                                 </a>
                             {% endif %}
-                            {% if isModerator or app.security.token.user == creator %}
+                            {% if isModerator or token_storage.token.user == creator %}
                                 <a class="btn btn-default" href="{{ path('claro_forum_edit_message_form', {'message': message.getId()}) }}">
                                     <i class="fa fa-pencil"></i> {{ 'edit'|trans({}, 'platform') }}
                                 </a>

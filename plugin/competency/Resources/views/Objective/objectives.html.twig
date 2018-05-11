@@ -46,11 +46,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts debug=false filter='twig_js, jsmin' vars=["locale"]
-        "@HeVinciCompetencyBundle/Resources/views/Picker/users.html.twig"
-    %}
-        <script type="text/javascript" src="{{ asset_url }}"></script>
-    {% endjavascripts %}
+
     <script src="{{ url('bazinga_jstranslation_js', { 'domain': 'competency' }) }}"></script>
     <script type="text/javascript" src="{{ asset('packages/typeahead.js/dist/typeahead.bundle.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/hevincicompetency/js/tree.js') }}"></script>
@@ -63,4 +59,3 @@
     {{ parent() }}
     <link rel="stylesheet" type="text/css" href="{{ asset('packages/typeahead.js-bootstrap3.less/typeaheadjs.css') }}"/>
 {% endblock %}
-

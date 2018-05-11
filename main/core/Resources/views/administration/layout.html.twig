@@ -1,0 +1,32 @@
+{% extends 'ClarolineCoreBundle::layout.html.twig' %}
+
+{% block title %}{{ 'administration'|trans({}, 'platform')|striptags|raw }}{% endblock %}
+
+{% block claroline_danger %}
+    {{ parent() }}
+
+    {% if not is_send_datas_confirmed() %}
+        <a class="label label-danger" href="{{ path('claro_admin_send_datas_confirm_form') }}">
+            {{ 'infos_sending_has_not_been_accepted'|trans({}, 'platform') }}
+            <i class="fa fa-question-circle"
+               data-container=".alert-claroline-danger"
+               data-toggle="tooltip"
+               data-placement="bottom"
+               title="{{ 'infos_sending_bar_msg'|trans({}, 'platform') }}"
+            >
+            </i>
+        </a>
+    {% endif %}
+{% endblock %}
+
+{% block leftbar %}
+    {{ render(controller("ClarolineCoreBundle:Administration:renderLeftBar")) }}
+{% endblock %}
+
+{% block content %}
+    {% block section_panel %}
+        <div class="panel panel-default">
+            {% block section_content %}{% endblock %}
+        </div>
+    {% endblock %}
+{% endblock %}

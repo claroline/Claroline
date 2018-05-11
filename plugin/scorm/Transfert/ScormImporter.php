@@ -19,6 +19,9 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Processor;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * @DI\Service("claroline.tool.resources.scorm_importer")
+ */
 class ScormImporter extends Importer implements ConfigurationInterface
 {
     private $container;
@@ -74,7 +77,7 @@ class ScormImporter extends Importer implements ConfigurationInterface
 
     public function supports($type)
     {
-        return $type === 'yml' ? true : false;
+        return 'yml' === $type ? true : false;
     }
 
     public function validate(array $data)
