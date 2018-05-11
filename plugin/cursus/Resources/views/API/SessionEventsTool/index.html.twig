@@ -3,7 +3,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ 'claroline_session_events_tool' | trans({}, "tools") | striptags | raw }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(

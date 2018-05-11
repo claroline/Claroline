@@ -1,3 +1,5 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
 {% macro showTag(tagsList, tagWorkspaces, hierarchy, index, displayable) %}
 
     {% for tag in tagsList %}
@@ -52,7 +54,7 @@
 
 {% from _self import showTag %}
 
-{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:workspace_tag:layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "all_public_workspaces" | trans({}, "platform") | striptags | raw }}{% endblock %}
 
@@ -134,7 +136,7 @@
                         </a>
                     </div>
                     <div id="collapse-all-non-personal" class="list-group collapse {% if tags|length == 0 %}in{% endif %}">
-                        {% include 'ClarolineCoreBundle:Workspace:nonPersonalWorkspacesListPager.html.twig' %}
+                        {% include 'ClarolineCoreBundle:workspace:non_personal_workspaces_list_pager.html.twig' %}
                     </div>
                 </div>
             {% endif %}

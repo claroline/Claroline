@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'home' | trans({}, 'platform') | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
     macros.breadcrumbs([
@@ -43,4 +43,3 @@
     {{ parent() }}
     <script type="text/javascript" src="{{ asset('bundles/clarolinecore/js/administration/session.js') }}"></script>
 {% endblock%}
-

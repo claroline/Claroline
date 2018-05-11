@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'LDAP' | trans({}, 'ldap') | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

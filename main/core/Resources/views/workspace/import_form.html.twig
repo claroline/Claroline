@@ -1,4 +1,6 @@
-{% extends "ClarolineCoreBundle:WorkspaceTag:layout.html.twig" %}
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
+{% extends "ClarolineCoreBundle:workspace_tag:layout.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "workspace.create" | trans({}, "platform") | striptags | raw }}{% endblock %}
 

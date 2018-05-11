@@ -3,7 +3,7 @@
 {% block title %}{{ 'badge'|trans({}, 'icap_badge') }} {{ userBadge.badge.name }}{% endblock %}
 
 {% trans_default_domain "icap_badge" %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block content %}
     {{ macros.flashBox() }}
 

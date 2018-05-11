@@ -67,7 +67,7 @@ class UserListener
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Administration:User\index.html.twig', [
+            'ClarolineCoreBundle:administration:user\index.html.twig', [
                 // todo : put it in the async load of form
                 'parameters' => $this->parametersSerializer->serialize(),
                 'profile' => $this->profileSerializer->serialize(),

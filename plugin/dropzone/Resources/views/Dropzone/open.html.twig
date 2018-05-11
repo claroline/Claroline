@@ -2,7 +2,7 @@
 {% block resourceBreadcrumb %}
     <li class="active"><span class="fa fa-file"></span> {{ dropzone.resourceNode.name }}</li>
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block dropzone_content %}
     <div class="container container-dropzone">
     <h2>{{ dropzone.resourceNode.name|capitalize }} </h2>

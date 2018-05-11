@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'resources' | trans({}, 'platform') | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block section_content %}
     <div class="panel-body">
         {{

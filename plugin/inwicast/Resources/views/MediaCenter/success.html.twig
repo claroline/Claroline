@@ -11,7 +11,7 @@
 
 {% block title %}{{ parent() ~ ' - ' ~ 'packages' | trans({}, 'platform') | striptags | raw }}
     {{ ' - ' ~ 'inwicastclarolineplugin' | trans({}, 'plugin_description') | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{ macros.breadcrumbs([
     {

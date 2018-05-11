@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:desktop:layout.html.twig" %}
 
 {% block title %}{{ user.getLastName() ~ ' ' ~ user.getFirstName() | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block content %}
     {{ macros.flashBox() }}
     <div class="panel panel-default panel-user">

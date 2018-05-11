@@ -5,7 +5,7 @@
  * (c) Claroline Consortium <consortium@claroline.net>
  *
  * Author: Panagiotis TSAVDARIS
- * 
+ *
  * Date: 4/13/15
  */
 
@@ -13,8 +13,9 @@ namespace Icap\NotificationBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
 use Icap\NotificationBundle\Installation\Updater\Updater040200;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
-class AdditionalInstaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
     public function postUpdate($currentVersion, $targetVersion)
     {

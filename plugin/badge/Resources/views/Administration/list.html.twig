@@ -3,7 +3,7 @@
 {% trans_default_domain "icap_badge" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'badges_management' | trans({}, 'icap_badge') | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

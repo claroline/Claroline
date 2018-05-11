@@ -16,7 +16,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ 'competencies'|trans({}, 'tools')|striptags|raw }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{ macros.breadcrumbs(competencyBreadcrumbs) }}
 {% endblock %}

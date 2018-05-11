@@ -1,3 +1,5 @@
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+
 {% macro renderPager(pager) %}
     {{
         pagerfanta(
@@ -14,7 +16,7 @@
 {% from _self import renderPager %}
 {% set nbPages = workspaces.getNbPages() %}
 
-{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:workspace_tag:layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "unregister_from_a_workspace" | trans({}, "platform") | striptags | raw }}{% endblock %}
 

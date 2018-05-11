@@ -1,7 +1,7 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'badges' | trans({}, 'icap_badge') | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block section_content %}
     <div class="panel-heading">
         <h1 class="panel-title">{% block section_title %}{% endblock %}</h1>

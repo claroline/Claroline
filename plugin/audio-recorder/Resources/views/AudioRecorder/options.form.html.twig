@@ -3,7 +3,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ 'innova_audio_recorder_config' | trans({}, 'innova_audio_recorder') | striptags | raw }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

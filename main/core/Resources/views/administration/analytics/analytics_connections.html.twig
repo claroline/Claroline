@@ -1,5 +1,5 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block title %}{{ parent() ~ ' - ' ~ 'user_visit' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 
 {% block stylesheets %}

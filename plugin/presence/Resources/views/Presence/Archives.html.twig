@@ -1,9 +1,9 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
-
-{% block section_content %} 
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
+{% block section_content %}
 
 <div class="panel panel-default">
-    <div class="panel-body">   
+    <div class="panel-body">
         {% if canViewArchives%}
             <div>
                     <!-- Nav tabs -->
@@ -12,9 +12,9 @@
                       <li role="presentation" class="active"><a href="{{path("formalibre_presence_archives")}}"  >{{"archives"|trans({},"presences")}}</a></li>
                     </ul>
             </div>
-                    
+
             </br>
-            
+
             <div style="text-align: center;">
                     <H1>{{"archives"|trans({},"presences")}}:</H1>
             </div>
@@ -24,21 +24,21 @@
                     <h4>{{"periode_relevee"|trans({},"presences")}} : {{schoolYearName}}</h4>
                 </div>
             </div>
-            <form method="post" {{ form_enctype(schoolYearSelection) }} 
+            <form method="post" {{ form_enctype(schoolYearSelection) }}
                   action="{{path("formalibre_presence_archives")}}">
                 <div class="row">
                     <div class="col-md-2">
                         {{form_widget(schoolYearSelection.selection)}}
                     </div>
                     <div class="col-md-2">
-                        <button type="submit" 
+                        <button type="submit"
                            class="btn btn-primary"
                            name="schoolYearSelection[valider]">
-                          {{"valider"|trans({},"presences")}} 
+                          {{"valider"|trans({},"presences")}}
                         </button>
                     </div>
                 </div>
-            </form>        
+            </form>
             </br></br>
 
             <table id="archivesList" style="text-align: center;" class="table table-striped table-bordered" cellspacing="0" width="100%">
@@ -78,19 +78,19 @@
                                         <td>
                                             <span class="btn btn-default modifier-presence-btn"
                                                                        data-presence-id="{{presence.getId()}}"
-                                                                       data-toggle="tooltip" 
-                                                                       data-placement="bottom" 
-                                                                       title="" 
-                                                                       data-original-title="Modifier" 
+                                                                       data-toggle="tooltip"
+                                                                       data-placement="bottom"
+                                                                       title=""
+                                                                       data-original-title="Modifier"
                                                                        role="button">
                                                 <i class="fa fa-pencil"></i>
                                             </span>
                                              <a class="btn btn-default supprimer-presence-btn"
                                                                        data-presence-id="{{presence.getId()}}"
-                                                                       data-toggle="tooltip" 
-                                                                       data-placement="bottom" 
-                                                                       title="" 
-                                                                       data-original-title="Supprimer" 
+                                                                       data-toggle="tooltip"
+                                                                       data-placement="bottom"
+                                                                       title=""
+                                                                       data-original-title="Supprimer"
                                                                        role="button">
                                                 <i class="fa fa-times"></i>
                                             </a>
@@ -107,18 +107,18 @@
                 {{"acces_error"|trans({},"presences")}}
                 </br></br>
                 </br></br>
-            {% endif %}        
+            {% endif %}
          </div>
     </div>
-{% endblock %}   
+{% endblock %}
 {% block javascripts %}
-    
+
     {{ parent() }}
 
     <!-- DataTables -->
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jquery.dataTables.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/dataTables.bootstrap.min.js') }}"></script>
-    
+
 
     <!-- outils -->
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/buttons.html5.min.js') }}"></script>
@@ -128,7 +128,7 @@
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/jszip.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/pdfmake.min.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/formalibrepresence/js/vfs_fonts.js') }}"></script>
-    <script>    
+    <script>
         $(document).ready(function() {
             $('#archivesList').DataTable( {
 
@@ -145,9 +145,9 @@
                 }
             } );
         } );
-        
-        
-        
+
+
+
     </script>
     <script>
     $(".modifier-presence-btn").on("click",function(){
@@ -159,9 +159,9 @@
                             },
                             function() {}
                                 );
-   
-    });    
-    
+
+    });
+
     $(".supprimer-presence-btn").on("click",function(){
        var presenceId=$(this).data("presence-id");
         window.Claroline.Modal.displayForm(
@@ -171,10 +171,9 @@
                             },
                             function() {}
                                 );
-   
-    });  
-                
+
+    });
+
     </script>
 
 {% endblock javascripts %}
-   

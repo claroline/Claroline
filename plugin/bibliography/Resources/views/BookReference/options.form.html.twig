@@ -3,7 +3,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ 'icap_bibliography_config' | trans({}, 'icap_bibliography') | striptags | raw }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

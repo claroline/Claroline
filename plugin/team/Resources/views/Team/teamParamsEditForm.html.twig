@@ -3,7 +3,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ 'default_parameters' | trans({}, 'team') | striptags | raw }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(

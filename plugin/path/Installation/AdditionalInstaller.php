@@ -3,11 +3,12 @@
 namespace Innova\PathBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
 /**
  * Executes correct action when PathBundle is installed or updated.
  */
-class AdditionalInstaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
     protected $logger;
 

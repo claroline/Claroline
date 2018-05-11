@@ -5,7 +5,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "users" | trans({}, "platform") | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(

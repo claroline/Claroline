@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% trans_default_domain "icap_badge" %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block stylesheets %}
     {{ parent() }}
     {% stylesheets debug=false filter="less, cssmin" output="css/icapbadge/badge.css"

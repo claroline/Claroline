@@ -3,6 +3,7 @@
 namespace UJM\ExoBundle\Installation;
 
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use UJM\ExoBundle\Installation\Updater\Updater060000;
 use UJM\ExoBundle\Installation\Updater\Updater060001;
 use UJM\ExoBundle\Installation\Updater\Updater060200;
@@ -13,7 +14,7 @@ use UJM\ExoBundle\Installation\Updater\Updater090200;
 use UJM\ExoBundle\Installation\Updater\Updater100200;
 use UJM\ExoBundle\Installation\Updater\Updater100600;
 
-class AdditionalInstaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
     public function preUpdate($currentVersion, $targetVersion)
     {

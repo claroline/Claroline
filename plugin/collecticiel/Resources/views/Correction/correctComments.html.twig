@@ -36,7 +36,7 @@
         <li class="active">{{ 'Correction'|trans({}, 'innova_collecticiel') }}</li>
     {% endif %}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block dropzone_content %}
     <div class="panel-body container-dropzone">
 
@@ -111,10 +111,10 @@
             {# {{ dropzoneMacros.displayDocumentsList(correction.drop, dropzone, 6, "condensed", documentListText) }} #}
             {#  Ajout de l'appel aux macros Collecticiel InnovaERV #}
             {{ collecticielDocumentMacrosAddComments.innovaDocumentDisplay(dropzone, 12, "condensed", documentListText, arrayDocsToView) }}
-            
+
             {# Bloc Apprenants #}
             <div class="row">
-            {# 
+            {#
                 <h4 class="text-muted col-md-4">{{ 'Author'|trans({}, 'innova_collecticiel') }}</h4>
                 <div class="col-md-8">{{ correction.drop.user.firstName }} {{ correction.drop.user.lastName }}</div>
             #}
@@ -128,7 +128,7 @@
                 <div class="col-md-8">{{ correction.user.firstName }} {{ correction.user.lastName }}</div>
             </div>
             #}
-            
+
             {# Bloc Note attribuée #}
             {#
             <div class="row">

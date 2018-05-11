@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "resources_rights_management" | trans({}, "platform") | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(
@@ -29,7 +29,7 @@
                data-toggle="tooltip"
                data-placement="left"
                title="{{ 'edit_root_directory_icon' | trans({}, 'platform') }}"
-            >    
+            >
             </i>
         </h3>
     </div>

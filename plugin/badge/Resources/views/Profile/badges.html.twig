@@ -1,7 +1,7 @@
 {% extends "IcapBadgeBundle::layout.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'my_badges' | trans({}, 'icap_badge') | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
     macros.breadcrumbs([

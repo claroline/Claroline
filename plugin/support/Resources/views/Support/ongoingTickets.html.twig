@@ -45,7 +45,7 @@
 {% block title %}
     {{ 'formalibre_support_tool' | trans({}, 'tools') }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.desktopBreadcrumbs([

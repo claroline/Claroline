@@ -7,7 +7,7 @@
 {% block stylesheets %}
     {{ parent() }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.desktopBreadcrumbs([

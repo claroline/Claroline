@@ -3,7 +3,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ 'home_lock' | trans({}, 'platform') | striptags | raw }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -40,7 +40,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    
+
                     {% for role in roles %}
                         {% set roleId = role.getId() %}
                         <tr>
@@ -48,13 +48,13 @@
                                 {{ role.getTranslationKey()|trans({}, 'platform') }}
                             </td>
                             <td class="text-center">
-                                
+
                                 {% if options[roleId]['home_lock'] is defined %}
                                     {% set isHomeLocked = options[roleId]['home_lock'] %}
                                 {% else %}
                                     {% set isHomeLocked = false %}
                                 {% endif %}
-                                
+
                                 {% if isHomeLocked %}
                                     <i class="fa fa-lock unlock-home-btn pointer-hand"
                                        data-role-id="{{ roleId }}"

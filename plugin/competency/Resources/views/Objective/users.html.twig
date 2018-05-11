@@ -9,7 +9,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ 'users'|trans({}, 'platform') }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs(objectiveBreadcrumbs|merge([{

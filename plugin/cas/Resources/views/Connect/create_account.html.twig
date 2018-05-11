@@ -6,7 +6,7 @@
 {% block topBarRender %}
     {% include 'ClarolineCoreBundle:Layout:topBar.html.twig' %}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block content %}
     {{ macros.flashBox() }}
     <div class="panel panel-default">

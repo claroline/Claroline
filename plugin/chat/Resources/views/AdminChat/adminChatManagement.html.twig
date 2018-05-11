@@ -1,13 +1,13 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
 {% block title %}
-    {{ 
+    {{
         parent() ~
         ' - ' ~
         'claroline_chat_management_admin_tool' | trans({}, 'tools')
     }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

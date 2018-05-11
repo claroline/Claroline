@@ -2,10 +2,11 @@
 
 namespace Icap\BlogBundle\Installation;
 
-use Icap\BlogBundle\Installation\Updater\UpdaterMaster;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Icap\BlogBundle\Installation\Updater\UpdaterMaster;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
-class AdditionalInstaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
     public function postUpdate($currentVersion, $targetVersion)
     {

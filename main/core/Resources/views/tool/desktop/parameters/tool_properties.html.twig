@@ -9,7 +9,7 @@
 {% endif %}
 
 {% block title %}{{ parent() ~ ' - ' ~ title | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.desktopBreadcrumbs([

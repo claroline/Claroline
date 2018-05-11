@@ -7,7 +7,7 @@
 {% block title %}{{ parent() ~ ' - ' ~ 'update_portfolio_visibility' | trans({}, 'icap_portfolio') | striptags | raw }}{% endblock %}
 
 {% block content_title %}{{ 'update_portfolio_visibility'|trans({}, 'icap_portfolio') }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

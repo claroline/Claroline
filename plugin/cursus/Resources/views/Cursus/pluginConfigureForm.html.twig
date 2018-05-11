@@ -3,7 +3,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ 'cursus_plugin_configuration' | trans({}, 'cursus') | striptags | raw }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -76,7 +76,7 @@
             {{ form_row(form.startDate) }}
             {{ form_row(form.endDate) }}
             <hr>
-            
+
             <div class="alert alert-warning">
                 <button type="button"
                         class="close"

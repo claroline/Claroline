@@ -42,7 +42,7 @@ class WorkspaceListener
     public function onDisplayTool(OpenAdministrationToolEvent $event)
     {
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Administration:Workspace\index.html.twig'
+            'ClarolineCoreBundle:administration:workspace\index.html.twig'
         );
 
         $event->setResponse(new Response($content));

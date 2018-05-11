@@ -5,13 +5,13 @@
             {% set tagId = tag.getId() %}
             {% set tagName = tag.getName() %}
             {% set linkedWorkspace = tag.getWorkspace() %}
-            
+
             {% if linkedWorkspace is null %}
                 {% set linkedWorkspaceId = 0 %}
             {% else %}
                 {% set linkedWorkspaceId = linkedWorkspace.getId() %}
             {% endif %}
-            
+
             <li class="hierarchy-tag-parent tag-parent-{{ tagId }}"
                 workspace-tag-id="{{ tagId }}"
             >
@@ -103,7 +103,8 @@
 
 {% from _self import showTagHierarchy %}
 
-{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:workspace_tag:layout.html.twig' %}
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block breadcrumb %}
     {{

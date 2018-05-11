@@ -16,8 +16,9 @@ use Psr\Log\LogLevel;
 use Symfony\Bundle\SecurityBundle\Command\InitAclCommand;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\NullOutput;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
-class AdditionalInstaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
     public function preInstall()
     {

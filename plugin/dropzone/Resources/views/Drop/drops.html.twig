@@ -4,7 +4,7 @@
                     class="fa fa-list"></span>  {{ dropzone.resourceNode.name }}</a></li>
     <li class="active"> {{ 'List of copies'|trans({}, 'icap_dropzone') }}</li>
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block dropzone_content %}
     <div class="container container-dropzone">
         <h2>

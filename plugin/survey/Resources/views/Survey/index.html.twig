@@ -14,7 +14,7 @@
 {% block title %}
     {{ survey.getResourceNode().getName() | striptags | raw  }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block section_content %}
     <div>{{ macros.flashBox() }}</div>
     <div class="panel-heading">
@@ -24,12 +24,12 @@
         {% if status == 'unpublished' %}
             <div class="alert alert-warning" role="alert">
                 {{ 'unpublished_user_message'|trans({}, 'survey') }}
-                
+
                 {% if startDate is not empty %}
                     <br>
                     <b>{{ 'publication_date'|trans({}, 'survey') }} :</b>
                     {{ startDate|intl_date_format }}
-                    
+
                     {% if endDate is not empty %}
                         <br>
                         <b>{{ 'closing_date'|trans({}, 'survey') }} :</b>
@@ -56,7 +56,7 @@
         {% elseif status == 'closed' %}
             <div class="alert alert-danger" role="alert">
                 {{ 'closed_user_message'|trans({}, 'survey') }}
-                
+
                 {% if startDate is not empty and endDate is not empty and currentDate < startDate and currentDate < endDate %}
                     <br>
                     <b>{{ 'publication_date_next'|trans({}, 'survey') }} :</b>
@@ -67,7 +67,7 @@
                 {% endif %}
             </div>
         {% endif %}
-                
+
         {% if status == 'published' or (status == 'closed' and hasAnswered) %}
             <hr>
             <a href="{{ path('claro_survey_answer_form', {'survey': surveyId}) }}"
@@ -82,8 +82,8 @@
                     {{ 'view_your_answers'|trans({}, 'survey') }}
                 {% endif %}
             </a>
-            
-            {% if hasAnswered and survey.getHasPublicResult() %}  
+
+            {% if hasAnswered and survey.getHasPublicResult() %}
                 {% set questionsRelations = survey.getQuestionRelations() %}
 
                 {% if questionsRelations|length > 0 %}

@@ -4,8 +4,9 @@ namespace Claroline\AgendaBundle\Installation;
 
 use Claroline\AgendaBundle\Installation\Updater\Updater500002;
 use Claroline\InstallationBundle\Additional\AdditionalInstaller as BaseInstaller;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
-class AdditionalInstaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
     public function preInstall()
     {

@@ -16,7 +16,7 @@
 {% endmacro %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'view_badge' | trans({'%badge_name%' : badge.name}) | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{ macros.breadcrumbs([
     {

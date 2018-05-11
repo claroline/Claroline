@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block title %}{{ 'desktop' | trans({}, 'platform') | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block content %}
     {{ macros.flashBox() }}
     {% block section_panel %}

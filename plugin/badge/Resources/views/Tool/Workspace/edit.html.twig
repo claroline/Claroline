@@ -3,7 +3,7 @@
 {% form_theme form 'IcapBadgeBundle:Form:rules.html.twig' %}
 
 {% trans_default_domain "icap_badge" %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% macro awardButtons(badgeSlug) %}
     <button id="awardUser" class="btn btn-primary btn-md" href="{{ path('icap_badge_admin_badges_award', {'slug': badgeSlug})}}">{{ 'award'|trans({}, 'icap_badge') }}</button>
     <span data-toggle="modal" data-target="#recalculateModal">

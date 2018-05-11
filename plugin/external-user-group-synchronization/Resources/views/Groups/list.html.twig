@@ -47,7 +47,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "external_groups_list" | trans({}, "claro_external_user_group") | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
     macros.workspaceBreadcrumbs(

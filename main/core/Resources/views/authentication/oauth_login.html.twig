@@ -6,7 +6,7 @@
 This form doesn't include the usual form theme as we want it to always display the
 same message when authentication has failed (no precise validation errors).
 #}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block content %}
     {{ macros.flashBox() }}
     <div class="col-md-offset-4 col-md-4">

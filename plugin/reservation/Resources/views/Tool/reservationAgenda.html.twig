@@ -7,7 +7,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ "formalibre_reservation_agenda" | trans({}, "tools") | striptags | raw }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block stylesheets %}
     {{ parent() }}
     <link rel='stylesheet' type='text/css' href='{{ asset(calendarPath ~ 'fullcalendar.min.css') }}'/>

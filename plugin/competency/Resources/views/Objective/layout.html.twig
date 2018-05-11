@@ -20,7 +20,7 @@
         {{ parent() ~ ' - ' ~ 'learning-objectives'|trans({}, 'tools') }}
     {% endautoescape %}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{ macros.breadcrumbs(objectiveBreadcrumbs) }}
 {% endblock %}

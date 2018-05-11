@@ -56,7 +56,8 @@
 {% from _self import showTagHierarchy %}
 {% from _self import renderPager %}
 
-{% extends 'ClarolineCoreBundle:WorkspaceTag:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:workspace_tag:layout.html.twig' %}
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 
 {% block breadcrumb %}
     {{

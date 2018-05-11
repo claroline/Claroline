@@ -5,6 +5,7 @@
     <base href="{{ path('claro_portal_index') }}">
     {{ parent() }}
 {% endblock %}
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
     macros.breadcrumbs([

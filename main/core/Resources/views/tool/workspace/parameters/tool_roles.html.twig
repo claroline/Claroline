@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "tools_rights_configuration" | trans({}, "platform") | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(
@@ -145,7 +145,7 @@
                         {{ 'tool_cannot_be_edited'|trans({}, 'platform') }}
                     </span>
                 </div>
-                
+
                 {% if workspace.isPersonal() == 1 %}
                     <br>
                     <div>
@@ -161,7 +161,7 @@
                         </span>
                     </div>
                 {% endif %}
-                
+
                 <br>
                 <a class="btn btn-default"
                      href="{{ path('claro_workspace_open_tool', {'workspaceId': workspace.getId(), 'toolName': 'parameters'}) }}"

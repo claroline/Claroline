@@ -3,7 +3,7 @@
 {% form_theme form_settings "ClarolineCoreBundle:Form:redirect_after_login_theme.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'general' | trans({}, 'platform') | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

@@ -16,7 +16,7 @@
             <i class="fa fa-caret-down"></i>
         </span>
         <ul id="sessions-{{ type }}-{{ course.getId() }}" class="collapse in">
-            
+
             {% for userSession in userSessions %}
                 {% set user = userSession.getUser() %}
                 {% set session = userSession.getSession() %}
@@ -135,7 +135,7 @@
         'user_sessions_management' | trans({}, 'cursus') | striptags | raw
     }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block section_content %}
     <div class="panel-heading">
         <h3 class="panel-title">
@@ -160,9 +160,9 @@
             </div>
             <div id="learner-sessions-panel" class="collapse in">
                 <div class="panel-body">
-                    
+
                     {% if learnerSessions|length > 0 %}
-                        
+
                         {% for learnerSession in learnerSessions %}
                             {{ displayCourseSessions(learnerSession, 0, sessionEvents) }}
                         {% endfor %}
@@ -188,9 +188,9 @@
             </div>
             <div id="tutor-sessions-panel" class="collapse in">
                 <div class="panel-body">
-                    
+
                     {% if tutorSessions|length > 0 %}
-                        
+
                         {% for tutorSession in tutorSessions %}
                             {{ displayCourseSessions(tutorSession, 1, sessionEvents) }}
                         {% endfor %}

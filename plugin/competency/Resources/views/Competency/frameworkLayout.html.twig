@@ -5,7 +5,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ framework.name }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs(competencyBreadcrumbs|merge([{

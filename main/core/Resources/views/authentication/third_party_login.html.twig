@@ -1,7 +1,7 @@
 {% extends 'ClarolineCoreBundle::layout.html.twig' %}
 
 {% block title %}{{ 'login' | trans({}, 'platform') ~ ' - ' ~ parent() | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block content %}
     {{ macros.flashBox() }}
 

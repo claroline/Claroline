@@ -3,8 +3,9 @@
 namespace Icap\OAuthBundle\Installation;
 
 use Claroline\InstalationBundle\Additional\AdditinalInstaller as BaseInstaller;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 
-class AdditionalInstaller extends BaseInstaller
+class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterface
 {
     private $logger;
 

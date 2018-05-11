@@ -7,7 +7,7 @@
 {% endif %}
 
 {% block title %}{{ pagetitle ~ ' - ' ~ 'menu_settings' | trans({}, 'home') }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([

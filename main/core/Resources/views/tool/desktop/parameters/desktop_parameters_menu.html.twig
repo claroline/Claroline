@@ -3,7 +3,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ "preferences" | trans({}, "platform") | striptags | raw }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.desktopBreadcrumbs([

@@ -13,7 +13,7 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'email' | trans({}, 'platform') | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
@@ -39,7 +39,7 @@
         <h3 class="panel-title">{{ 'security_token_list'|trans({}, 'platform') }}</h3>
     </div>
     <div class="panel-body">
-        
+
         {% if tokens|length > 0 %}
             <div class="table-responsive">
                 <table class="table table-hover">
@@ -74,7 +74,7 @@
                 </table>
             </div>
         {% endif %}
-        
+
         <a href="{{ path('claro_admin_security_token_create_form') }}"
             class="btn btn-primary"
         >

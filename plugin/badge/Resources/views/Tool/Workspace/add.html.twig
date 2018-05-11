@@ -5,7 +5,7 @@
 {% trans_default_domain "icap_badge" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'add_badge' | trans | striptags | raw }}{% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.workspaceBreadcrumbs(

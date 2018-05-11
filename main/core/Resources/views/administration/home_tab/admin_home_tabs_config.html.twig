@@ -5,7 +5,7 @@
 {% block title %}
     {{ parent() ~ ' - ' ~ 'desktop_home_tabs'|trans({}, 'platform') | striptags | raw }}
 {% endblock %}
-
+{% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
 {% block breadcrumb %}
     {{
         macros.breadcrumbs([
