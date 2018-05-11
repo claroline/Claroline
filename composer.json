@@ -59,7 +59,6 @@
         "symfony/swiftmailer-bundle": "*",
         "twig/extensions": "*",
         "twig/twig": "*",
-        "werkint/jsmin": "*",
         "white-october/pagerfanta-bundle": "*",
         "willdurand/js-translation-bundle": "*",
         "zendframework/zend-crypt": "*",

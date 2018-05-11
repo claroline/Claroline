@@ -99,7 +99,7 @@ class BadgeController extends Controller
         $badgePager = $pagerFactory->createPagerFromArray($displayedBadges, $badgePage, 10);
 
         return $this->render(
-            'IcapBadgeBundle:Template:Tool/list.html.twig',
+            'IcapBadgeBundle:template:Tool/list.html.twig',
             array(
                 'badgePager' => $badgePager,
                 'workspace' => $workspace,

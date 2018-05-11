@@ -26,7 +26,7 @@
 {# ATTENTION : it must be loaded before Bootstrap to override `.tooltip()` method #}
 <script src="{{ asset('packages/jquery-ui-dist/jquery-ui.min.js') }}"></script>
 
-{% javascripts debug=false filter='jsmin' output='vendor/twitter/bootstrap/js/bootstrap.js'
+{% javascripts debug=false output='vendor/twitter/bootstrap/js/bootstrap.js'
     'packages/bootstrap/js/transition.js'
     'packages/bootstrap/js/alert.js'
     'packages/bootstrap/js/button.js'
@@ -66,7 +66,7 @@
 <script src="{{ asset('packages/underscore/underscore.js') }}"></script>
 <script src="{{ asset('packages/backbone/backbone.js') }}"></script>
 
-{% javascripts debug=false filter='jsmin' output='vendor/claroline/js/libraries.js'
+{% javascripts debug=false output='vendor/claroline/js/libraries.js'
     '@ClarolineCoreBundle/Resources/public/js/common.js'
     '@ClarolineCoreBundle/Resources/public/js/modal.js'
     '@ClarolineCoreBundle/Resources/public/js/simplerights.js'

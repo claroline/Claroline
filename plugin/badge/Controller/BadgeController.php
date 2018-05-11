@@ -62,7 +62,7 @@ class BadgeController extends Controller
         $badges = $badgeManager->getBadgesByWorkspace($userPager, $badgeClaimsWorkspace, $parameters['userPage'], 10);
 
         return $this->render(
-            'IcapBadgeBundle::Template/list.html.twig',
+            'IcapBadgeBundle::template/list.html.twig',
             [
                 'badgePager' => $badgePager,
                 'claimPager' => $claimPager,

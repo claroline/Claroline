@@ -3,10 +3,11 @@
 namespace Claroline\AppBundle\Controller;
 
 use Claroline\CoreBundle\Validator\Exception\InvalidDataException;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\HttpFoundation\Request;
 
-abstract class AbstractApiController
+abstract class AbstractApiController implements ContainerAwareInterface
 {
     use ContainerAwareTrait;
 
