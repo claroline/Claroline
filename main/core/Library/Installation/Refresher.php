@@ -11,15 +11,10 @@
 
 namespace Claroline\CoreBundle\Library\Installation;
 
-use Bazinga\Bundle\JsTranslationBundle\Command\DumpCommand as TranslationDumpCommand;
-use Claroline\CoreBundle\Command\Theme\BuildThemesCommand;
 use Claroline\CoreBundle\Library\Utilities\FileSystem;
 use Composer\Script\Event;
 use JMS\DiExtraBundle\Annotation as DI;
-use Symfony\Bundle\AsseticBundle\Command\DumpCommand;
-use Symfony\Bundle\FrameworkBundle\Command\AssetsInstallCommand;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\NullOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -66,10 +61,9 @@ class Refresher
     public function installAssets()
     {
         $webDir = "{$this->container->get('kernel')->getRootDir()}/../web";
-        $args = ['target' => $webDir];
-        $assetInstallCmd = new AssetsInstallCommand();
-        $assetInstallCmd->setContainer($this->container);
-        $assetInstallCmd->run(new ArrayInput($args), $this->output ?: new NullOutput());
+        $args = ['command' => 'assets:install', 'target' => $webDir, '--symlink' => true];
+        $this->container->get('claroline.manager.command_manager')
+          ->run(new ArrayInput($args), $this->output ?: new NullOutput());
     }
 
     public function dumpAssets($environment)
@@ -77,25 +71,21 @@ class Refresher
         if ($this->output) {
             $this->output->writeln('Dumping translations...');
         }
-        $translationDumpCommand = new TranslationDumpCommand();
-        $translationDumpCommand->setContainer($this->container);
-        $translationDumpCommand->run(new ArrayInput([]), $this->output ?: new NullOutput());
+
+        $cmdManager = $this->container->get('claroline.manager.command_manager');
+        $cmdManager->run(new ArrayInput(['command' => 'bazinga:js-translation:dump']), $this->output ?: new NullOutput());
+
         if ($this->output) {
             $this->output->writeln('Compiling javascripts...');
         }
-        $assetDumpCmd = new DumpCommand();
-        $assetDumpCmd->setContainer($this->container);
-        $assetDumpCmd->getDefinition()->addOption(
-            new InputOption('--env', '-e', InputOption::VALUE_REQUIRED, 'Env', $environment)
-        );
-        $assetDumpCmd->run(new ArrayInput([]), $this->output ?: new NullOutput());
+
+        $cmdManager->run(new ArrayInput(['command' => 'assetic:dump', '--env' => $environment]), $this->output ?: new NullOutput());
     }
 
     public function buildThemes()
     {
-        $themeBuilder = new BuildThemesCommand();
-        $themeBuilder->setContainer($this->container);
-        $themeBuilder->run(new ArrayInput([]), $this->output);
+        $this->container->get('claroline.manager.command_manager')
+          ->run(new ArrayInput(['command' => 'claroline:theme:build']), $this->output);
     }
 
     public function clearCache($environment = null)
@@ -105,7 +95,7 @@ class Refresher
         }
 
         $baseCacheDir = "{$this->container->get('kernel')->getRootDir()}/cache";
-        $cacheDir = $environment === null ? $baseCacheDir : "{$baseCacheDir}/{$environment}";
+        $cacheDir = null === $environment ? $baseCacheDir : "{$baseCacheDir}/{$environment}";
         static::removeContentFrom($cacheDir);
     }
 

@@ -73,18 +73,18 @@ class FieldFacetSerializer
             $serialized['options'] = $fieldFacet->getOptions();
         }
 
-        if ($fieldFacet->getType() === FieldFacet::CHOICE_TYPE) {
+        if (in_array($fieldFacet->getType(), [FieldFacet::CHOICE_TYPE, FieldFacet::CASCADE_TYPE])) {
             $serialized['options']['choices'] = array_map(function (FieldFacetChoice $choice) {
                 return $this->serializer
                     ->get('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice')
                     ->serialize($choice);
-            }, $fieldFacet->getFieldFacetChoices()->toArray());
+            }, $fieldFacet->getRootFieldFacetChoices());
         }
 
         return $serialized;
     }
 
-    public function deserialize(array $data, FieldFacet $field = null, array $options = [])
+    public function deserialize(array $data, FieldFacet $field = null)
     {
         $this->sipe('id', 'setUuid', $data, $field);
         $this->sipe('label', 'setLabel', $data, $field);
@@ -98,45 +98,105 @@ class FieldFacetSerializer
         $this->sipe('restrictions.order', 'setPosition', $data, $field);
 
         if (isset($data['options'])) {
-            $options = $data['options'];
-
             if (isset($data['options']['choices'])) {
-                $choicesData = $data['options']['choices'];
-                $oldChoices = $field->getFieldFacetChoicesArray();
-                $newChoicesUuids = [];
-                $field->emptyFieldFacetChoices();
-
-                foreach ($choicesData as $key => $choiceData) {
-                    $newChoicesUuids[] = $choiceData['id'];
-                    $choiceData['name'] = $choiceData['value'];
-                    $choiceData['position'] = $key + 1;
-                    $choice = $this->fieldFacetChoiceRepo->findOneBy(['uuid' => $choiceData['id']]);
-
-                    if (empty($choice)) {
-                        $choice = new FieldFacetChoice();
-                        $choice->setFieldFacet($field);
-                    }
-                    $newChoice = $this->serializer
-                        ->get('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice')
-                        ->deserialize($choiceData, $choice);
-                    $this->om->persist($newChoice);
-
-                    $field->addFieldChoice($newChoice);
-                }
-                $this->om->startFlushSuite();
-
-                /* Removes previous choices that are not used anymore */
-                foreach ($oldChoices as $oldChoice) {
-                    if (!in_array($oldChoice->getUuid(), $newChoicesUuids)) {
-                        $this->om->remove($oldChoice);
-                    }
-                }
-                $this->om->endFlushSuite();
-                unset($options['choices']);
+                $this->deserializeChoices($data['options']['choices'], $field);
+                unset($data['options']['choices']);
             }
-            $field->setOptions($options);
+            $this->sipe('options', 'setOptions', $data, $field);
         }
 
         return $field;
+    }
+
+    private function deserializeChoices(array $choicesData, FieldFacet $field)
+    {
+        $oldChoices = $field->getRootFieldFacetChoices();
+        $newChoicesUuids = [];
+        $field->emptyFieldFacetChoices();
+
+        foreach ($choicesData as $key => $choiceData) {
+            $isNew = false;
+            $newChoicesUuids[] = $choiceData['id'];
+            $choiceData['name'] = $choiceData['value'];
+            $choiceData['position'] = $key + 1;
+            $choice = $this->fieldFacetChoiceRepo->findOneBy(['uuid' => $choiceData['id']]);
+
+            if (empty($choice)) {
+                $choice = new FieldFacetChoice();
+                $choice->setFieldFacet($field);
+                $isNew = true;
+            }
+            $newChoice = $this->serializer
+                ->get('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice')
+                ->deserialize($choiceData, $choice);
+            $this->om->persist($newChoice);
+
+            $field->addFieldChoice($newChoice);
+
+            if (isset($choiceData['children'])) {
+                $this->deserializeChildrenChoices($choiceData['children'], $newChoice, $field);
+            } elseif (!$isNew) {
+                $children = $newChoice->getChildren();
+
+                foreach ($children as $child) {
+                    $this->om->remove($child);
+                }
+            }
+        }
+        $this->om->startFlushSuite();
+
+        /* Removes previous choices that are not used anymore */
+        foreach ($oldChoices as $oldChoice) {
+            if (!in_array($oldChoice->getUuid(), $newChoicesUuids)) {
+                $this->om->remove($oldChoice);
+            }
+        }
+        $this->om->endFlushSuite();
+    }
+
+    private function deserializeChildrenChoices(array $choicesData, FieldFacetChoice $parent, FieldFacet $field)
+    {
+        $oldChoices = $parent->getChildren();
+        $newChoicesUuids = [];
+        $parent->emptyChildren();
+
+        foreach ($choicesData as $key => $choiceData) {
+            $isNew = false;
+            $newChoicesUuids[] = $choiceData['id'];
+            $choiceData['name'] = $choiceData['value'];
+            $choiceData['position'] = $key + 1;
+            $choice = $this->fieldFacetChoiceRepo->findOneBy(['uuid' => $choiceData['id']]);
+
+            if (empty($choice)) {
+                $choice = new FieldFacetChoice();
+                $choice->setUuid($choiceData['id']);
+                $choice->setParent($parent);
+                $choice->setFieldFacet($field);
+                $isNew = true;
+            }
+            $newChoice = $this->serializer
+                ->get('Claroline\CoreBundle\Entity\Facet\FieldFacetChoice')
+                ->deserialize($choiceData, $choice);
+            $this->om->persist($newChoice);
+
+            $parent->addChild($newChoice);
+
+            if (isset($choiceData['children'])) {
+                $this->deserializeChildrenChoices($choiceData['children'], $newChoice, $field);
+            } elseif (!$isNew) {
+                $children = $newChoice->getChildren();
+
+                foreach ($children as $child) {
+                    $this->om->remove($child);
+                }
+            }
+        }
+
+        /* Removes previous choices that are not used anymore */
+        foreach ($oldChoices as $oldChoice) {
+            if (!in_array($oldChoice->getUuid(), $newChoicesUuids)) {
+                $this->om->remove($oldChoice);
+            }
+        }
     }
 }

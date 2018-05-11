@@ -31,13 +31,13 @@ class LoggerController
     }
 
     /**
-     * @EXT\Route("/transfer/{name}", name="apiv2_logger_transfer_get")
+     * @EXT\Route("/{name}", name="apiv2_logger_get")
      * @EXT\Method("GET")
      *
      * @return Response
      */
-    public function transfer($name)
+    public function getAction($name)
     {
-        return new Response(file_get_contents($this->logDir.'/'.$name.'.log'));
+        return new Response(file_get_contents($this->logDir.'/'.$name.'.json'));
     }
 }

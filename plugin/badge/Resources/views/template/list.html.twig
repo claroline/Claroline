@@ -27,18 +27,18 @@
         <a href="{{ path(parameters.add_link, parameters.route_parameters) }}" title="{{ 'add_badge'|trans({}, 'icap_badge') }}" role="button" class="btn btn-primary btn-md">
             <span class="fa fa-plus"></span> {{ 'add_badge'|trans({}, 'icap_badge') }}
         </a>
-        {% include 'IcapBadgeBundle:Template:list_badges.html.twig'%}
+        {% include 'IcapBadgeBundle:template:list_badges.html.twig'%}
     </div>
     <div class="tab-pane" id="users">
         <a href="{{ path(parameters.csv_link, parameters.route_parameters) }}" role="button" class="btn btn-primary btn-md">
             <span class="fa fa-download"></span> {{ 'csv_export'|trans({}, 'icap_badge') }}
         </a>
-        {% include 'IcapBadgeBundle:Template:list_badges_claim.html.twig'%}
-        {% include 'IcapBadgeBundle:Template:list_users.html.twig'%}
+        {% include 'IcapBadgeBundle:template:list_badges_claim.html.twig'%}
+        {% include 'IcapBadgeBundle:template:list_users.html.twig'%}
     </div>
     {% if parameters.badges_per_user is defined%}
     <div class="tab-pane" id="stats">
-        {% include 'IcapBadgeBundle:Template:statistics.html.twig'%}
+        {% include 'IcapBadgeBundle:template:statistics.html.twig'%}
     </div>
     {% endif %}
 </div>
@@ -52,7 +52,7 @@
     {% if parameters.badges_per_user is defined and parameters.badges_per_user is not empty and parameters.totalBadges > 0 %}
         <!--[if lt IE 9]><script language="javascript" type="text/javascript" src="{{ asset('packages/jqplot/src/excanvas.min.js') }}"></script><![endif]-->
         <script type="text/javascript" src="{{ asset('packages/jqplot/src/jquery.jqplot.js') }}"></script>
-        {% javascripts debug=false filter='jsmin' output='js/icapbadge/jqplot.plugins.min.js'
+        {% javascripts debug=false output='js/icapbadge/jqplot.plugins.min.js'
         'packages/jqplot/src/plugins/jqplot.pieRenderer.js'
         'packages/jqplot/src/plugins/jqplot.donutRenderer.js'
         'packages/jqplot/src/plugins/jqplot.barRenderer.js'

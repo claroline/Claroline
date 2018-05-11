@@ -292,8 +292,7 @@ class EntryFinder implements FinderInterface
                     }
                     $qb->setParameter("value{$parsedFilterName}", '%'.strtoupper($filterValue).'%');
                     break;
-                case FieldFacet::CHECKBOXES_TYPE:
-                case FieldFacet::CASCADE_SELECT_TYPE:
+                case FieldFacet::CASCADE_TYPE:
                     $qb->andWhere("UPPER(fvffv{$parsedFilterName}.arrayValue) LIKE :value{$parsedFilterName}");
                     $qb->setParameter("value{$parsedFilterName}", '%'.strtoupper($filterValue).'%');
                     break;
@@ -329,8 +328,16 @@ class EntryFinder implements FinderInterface
                 case FieldFacet::DATE_TYPE:
                     $qb->orderBy("fvffv{$parsedSortBy}.dateValue", $direction);
                     break;
-                case FieldFacet::CHECKBOXES_TYPE:
-                case FieldFacet::CASCADE_SELECT_TYPE:
+                case FieldFacet::CHOICE_TYPE:
+                    $options = $field->getDetails();
+
+                    if (isset($options['multiple']) && $options['multiple']) {
+                        $qb->orderBy("fvffv{$parsedSortBy}.arrayValue", $direction);
+                    } else {
+                        $qb->orderBy("fvffv{$parsedSortBy}.stringValue", $direction);
+                    }
+                    break;
+                case FieldFacet::CASCADE_TYPE:
                     $qb->orderBy("fvffv{$parsedSortBy}.arrayValue", $direction);
                     break;
                 default:

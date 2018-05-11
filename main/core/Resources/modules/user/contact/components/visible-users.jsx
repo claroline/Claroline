@@ -2,7 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {PropTypes as T} from 'prop-types'
 
-import {t} from '#/main/core/translation'
+import {trans} from '#/main/core/translation'
 import {generateUrl} from '#/main/core/api/router'
 import {DataListContainer} from '#/main/core/data/list/containers/data-list.jsx'
 import {UserCard} from '#/main/core/user/data/components/user-card'
@@ -31,12 +31,12 @@ const VisibleUsersComponent = props =>
       {
         type: 'callback',
         icon: 'fa fa-fw fa-address-book-o',
-        label: t('add_contact'),
+        label: trans('add_contact'),
         callback: () => props.createContacts(rows.map(r => r.id))
       }, {
         type: 'url',
         icon: 'fa fa-fw fa-paper-plane-o',
-        label: t('send_message'),
+        label: trans('send_message'),
         target: `${generateUrl('claro_message_show', {'message': 0})}?${rows.map(u => `userIds[]=${u.autoId}`).join('&')}`
       }
     ]}
@@ -44,30 +44,37 @@ const VisibleUsersComponent = props =>
       {
         name: 'username',
         type: 'username',
-        label: t('username'),
+        label: trans('username'),
         displayed: props.options.data.show_username,
         primary: props.options.data.show_username
       }, {
         name: 'lastName',
         type: 'string',
-        label: t('last_name'),
+        label: trans('last_name'),
         displayed: true,
         primary: !props.options.data.show_username
       }, {
         name: 'firstName',
         type: 'string',
-        label: t('first_name'),
+        label: trans('first_name'),
         displayed: true
       }, {
         name: 'email',
         type: 'string',
-        label: t('email'),
+        label: trans('email'),
         displayed: props.options.data.show_mail
       }, {
         name: 'phone',
         type: 'string',
-        label: t('phone'),
+        label: trans('phone'),
         displayed: props.options.data.show_phone
+      }, {
+        name: 'groupName',
+        type: 'string',
+        label: trans('group'),
+        displayed: false,
+        displayable: false,
+        filterable: true
       }
     ]}
     card={UserCard}

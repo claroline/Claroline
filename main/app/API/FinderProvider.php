@@ -140,7 +140,7 @@ class FinderProvider
      *
      * @return mixed
      */
-    public function fetch($class, $page, $limit, array $filters, array $sortBy = null, $count = false)
+    public function fetch($class, $page = 0, $limit = -1, array $filters = [], array $sortBy = null, $count = false)
     {
         try {
             /** @var QueryBuilder $qb */

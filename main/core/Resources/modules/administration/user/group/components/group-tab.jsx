@@ -35,11 +35,6 @@ const GroupTabActionsComponent = props =>
     />
   </PageActions>
 
-GroupTabActionsComponent.propTypes = {
-  location: T.shape({
-    pathname: T.string
-  }).isRequired
-}
 
 const GroupTabActions = withRouter(GroupTabActionsComponent)
 

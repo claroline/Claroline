@@ -9,6 +9,7 @@ use Claroline\CoreBundle\Entity\Role;
 use Claroline\CoreBundle\Event\OpenAdministrationToolEvent;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Bundle\TwigBundle\TwigEngine;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * User administration tool.
@@ -49,8 +50,8 @@ class UserListener
         TwigEngine $templating,
         FinderProvider $finder,
         ParametersSerializer $parametersSerializer,
-        ProfileSerializer $profileSerializer)
-    {
+        ProfileSerializer $profileSerializer
+    ) {
         $this->templating = $templating;
         $this->finder = $finder;
         $this->parametersSerializer = $parametersSerializer;
@@ -77,9 +78,7 @@ class UserListener
             ]
         );
 
-        $subRequest = $this->container->get('request_stack')->getMasterRequest()->duplicate([], null, $params);
-        $response = $this->httpKernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST);
-        $event->setResponse($response);
+        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 }

@@ -41,6 +41,7 @@ class ClacoForm extends AbstractResource
      *     targetEntity="Claroline\ClacoFormBundle\Entity\Field",
      *     mappedBy="clacoForm"
      * )
+     * @ORM\OrderBy({"order" = "ASC"})
      */
     protected $fields;
 

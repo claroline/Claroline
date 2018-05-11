@@ -128,16 +128,19 @@ class EntryFormComponent extends Component {
       }
       this.props.fields.forEach(f => {
         const fieldEl = document.getElementById(`clacoform-field-${f.autoId}`)
+        let options = f.options ? Object.assign({}, f.options) : {}
 
         if (fieldEl) {
-          const choices = f.options && f.options.choices ?
-            f.options.choices.reduce((acc, choice) => {
-              acc[choice.value] = choice.value
+          if (f.type === 'choice') {
+            const choices = f.options && f.options.choices ?
+              f.options.choices.reduce((acc, choice) => {
+                acc[choice.value] = choice.value
 
-              return acc
-            }, {}) :
-            {}
-          const options = f.options ? Object.assign({}, f.options, {choices: choices}) : {}
+                return acc
+              }, {}) :
+              {}
+            options = Object.assign({}, options, {choices: choices})
+          }
 
           if (f.type === 'file') {
             options['uploadUrl'] = ['apiv2_clacoformentry_file_upload', {clacoForm: this.props.clacoFormId}]

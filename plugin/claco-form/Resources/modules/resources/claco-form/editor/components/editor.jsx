@@ -201,14 +201,14 @@ const EditorComponent = props =>
                   type: 'date',
                   label: trans('label_random_start_date', {}, 'clacoform'),
                   displayed: props.clacoForm.details.random_enabled,
-                  required: true
+                  required: false
                 },
                 {
                   name: 'details.random_end_date',
                   type: 'date',
                   label: trans('label_random_end_date', {}, 'clacoform'),
                   displayed: props.clacoForm.details.random_enabled,
-                  required: true
+                  required: false
                 }
               ]
             }

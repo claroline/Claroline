@@ -44,7 +44,7 @@ class FieldFacet
     /** @var int */
     const HTML_TYPE = 9;
     /** @var int */
-    const CASCADE_SELECT_TYPE = 10;
+    const CASCADE_TYPE = 10;
     /** @var int */
     const FILE_TYPE = 11;
     /** @var int */
@@ -56,13 +56,10 @@ class FieldFacet
         'string' => self::STRING_TYPE,
         'number' => self::NUMBER_TYPE,
         'date' => self::DATE_TYPE,
-        'radio' => self::RADIO_TYPE,
-        'select' => self::SELECT_TYPE,
-        'checkboxes' => self::CHECKBOXES_TYPE,
         'country' => self::COUNTRY_TYPE,
         'email' => self::EMAIL_TYPE,
         'html' => self::HTML_TYPE,
-        'cascade ' => self::CASCADE_SELECT_TYPE,
+        'cascade' => self::CASCADE_TYPE,
         'file' => self::FILE_TYPE,
         'boolean' => self::BOOLEAN_TYPE,
         'choice' => self::CHOICE_TYPE,
@@ -311,13 +308,10 @@ class FieldFacet
             case self::NUMBER_TYPE: return 'number';
             case self::DATE_TYPE: return 'date';
             case self::STRING_TYPE: return 'string';
-            case self::RADIO_TYPE: return 'radio';
-            case self::SELECT_TYPE: return 'select';
-            case self::CHECKBOXES_TYPE: return 'checkboxes';
             case self::COUNTRY_TYPE: return 'country';
             case self::EMAIL_TYPE: return 'email';
             case self::HTML_TYPE: return 'html';
-            case self::CASCADE_SELECT_TYPE: return 'cascade';
+            case self::CASCADE_TYPE: return 'cascade';
             case self::FILE_TYPE: return 'file';
             case self::BOOLEAN_TYPE: return 'boolean';
             case self::CHOICE_TYPE: return 'choice';
@@ -336,13 +330,10 @@ class FieldFacet
             case self::NUMBER_TYPE: return 'number';
             case self::DATE_TYPE: return 'date';
             case self::STRING_TYPE: return 'string';
-            case self::RADIO_TYPE: return 'radio';
-            case self::SELECT_TYPE: return 'select';
-            case self::CHECKBOXES_TYPE: return 'checkboxes';
             case self::COUNTRY_TYPE: return 'country';
             case self::EMAIL_TYPE: return 'email';
             case self::HTML_TYPE: return 'html';
-            case self::CASCADE_SELECT_TYPE: return 'cascade_select';
+            case self::CASCADE_TYPE: return 'cascade_select';
             case self::FILE_TYPE: return 'file';
             case self::BOOLEAN_TYPE: return 'boolean';
             case self::CHOICE_TYPE: return 'choice';
@@ -364,6 +355,26 @@ class FieldFacet
     public function getFieldFacetChoicesArray()
     {
         return $this->fieldFacetChoices->toArray();
+    }
+
+    /**
+     * Get root choices.
+     *
+     * @return FieldFacetChoice[]
+     */
+    public function getRootFieldFacetChoices()
+    {
+        $roots = [];
+
+        if (!empty($this->fieldFacetChoices)) {
+            foreach ($this->fieldFacetChoices as $choice) {
+                if (empty($choice->getParent())) {
+                    $roots[] = $choice;
+                }
+            }
+        }
+
+        return $roots;
     }
 
     public function emptyFieldFacetChoices()

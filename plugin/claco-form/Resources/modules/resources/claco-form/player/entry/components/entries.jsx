@@ -367,10 +367,9 @@ class EntriesComponent extends Component {
           case 'country':
             formattedValue = intlConstants.REGIONS[value]
             break
-          case 'checkboxes':
+          case 'cascade':
             formattedValue = value.join(', ')
             break
-          case 'select':
           case 'choice':
             if (Array.isArray(value)) {
               formattedValue = value.join(', ')

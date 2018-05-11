@@ -1654,6 +1654,11 @@ class UserManager
             $this->createUser($user, false, [], null, null, [], false, false);
         }
 
+        $roleAdmin = $this->roleManager->getRoleByName('ROLE_ADMIN');
+        $user->addRole($roleAdmin);
+        $this->objectManager->persist($user);
+        $this->objectManager->flush();
+
         return $user;
     }
 

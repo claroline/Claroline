@@ -7,6 +7,8 @@ import {Import as ImportTab} from '#/main/core/administration/transfer/component
 //import {Export as ExportTab} from '#/main/core/administration/transfer/components/export/tab.jsx'
 import {Action as ImportAction} from '#/main/core/administration/transfer/components/import/action.jsx'
 //import {Action as ExportAction} from '#/main/core/administration/transfer/components/export/action.jsx'
+import {Tab as HistoryTab} from '#/main/core/administration/transfer/components/history/tab.jsx'
+import {Action as HistoryAction} from '#/main/core/administration/transfer/components/history/action.jsx'
 
 const Transfer = () =>
   <TabbedPageContainer
@@ -22,7 +24,14 @@ const Transfer = () =>
         path: '/import',
         actions: ImportAction,
         content: ImportTab
-      }/*, {
+      }, {
+        icon: 'fa fa-download',
+        title: trans('history'),
+        path: '/history',
+        actions: HistoryAction,
+        content: HistoryTab
+      }
+      /*, {
         icon: 'fa fa-download',
         title: trans('export'),
         path: '/export',

@@ -10,6 +10,3 @@ assetic:
         cssmin:
             file: '%kernel.root_dir%/../vendor/natxet/CssMin/src/CssMin.php'
             apply_to: '\.css$|\.less$'
-        jsmin:
-            file: '%kernel.root_dir%/../vendor/werkint/jsmin/JsMin/Minify.php'
-            apply_to: '\.js$|\.twigjs$'

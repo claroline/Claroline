@@ -202,6 +202,7 @@ class ParametersSerializer
             'profile' => [
                 'roles_confidential' => $parameters['profile_roles_confidential'],
                 'roles_locked' => $parameters['profile_roles_locked'],
+                'roles_edition' => $parameters['profile_roles_edition'],
             ],
         ];
 
@@ -506,6 +507,7 @@ class ParametersSerializer
     {
         $this->buildParameter('profile.roles_confidential', 'profile_roles_confidential', $parameters, $data);
         $this->buildParameter('profile.roles_locked', 'profile_roles_locked', $parameters, $data);
+        $this->buildParameter('profile.roles_edition', 'profile_roles_edition', $parameters, $data);
     }
 
     private function buildParameter($serializedPath, $parametersPath, array &$parameters, array $data)

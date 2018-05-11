@@ -56,6 +56,7 @@ const UserPage = props =>
         customActions={props.customActions}
         updatePassword={props.updatePassword}
         updatePublicUrl={props.updatePublicUrl}
+        canEditProfile={props.canEditProfile}
       />
     </UserPageHeader>
 
@@ -82,9 +83,11 @@ implementPropTypes(UserPage, PageTypes, {
   })),
   children: T.node.isRequired,
   updatePassword: T.func.isRequired,
-  updatePublicUrl: T.func.isRequired
+  updatePublicUrl: T.func.isRequired,
+  canEditProfile: T.bool.isRequired
 }, {
-  customActions: []
+  customActions: [],
+  canEditProfile: false
 })
 
 export {
