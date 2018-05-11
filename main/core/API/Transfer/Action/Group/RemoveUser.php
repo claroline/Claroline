@@ -30,7 +30,7 @@ class RemoveUser extends AbstractAction
         $this->serializer = $serializer;
     }
 
-    public function execute(array $data)
+    public function execute(array $data, &$successData = [])
     {
         $user = $this->serializer->deserialize(
             'Claroline\CoreBundle\Entity\User',
@@ -62,10 +62,6 @@ class RemoveUser extends AbstractAction
     public function getAction()
     {
         return ['group', 'remove_user'];
-    }
-
-    public function getLogMessage($data)
-    {
     }
 
     public function getBatchSize()

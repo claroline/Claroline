@@ -27,7 +27,7 @@ class Create extends AbstractAction
         $this->crud = $crud;
     }
 
-    public function execute(array $data)
+    public function execute(array $data, &$successData = [])
     {
         $this->crud->create('FormaLibre\ReservationBundle\Entity\Resource', $data);
     }

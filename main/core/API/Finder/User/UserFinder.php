@@ -161,6 +161,11 @@ class UserFinder implements FinderInterface
                     $qb->andWhere("obj.uuid NOT IN (:{$filterName})");
                     $qb->setParameter($filterName, $filterValue);
                     break;
+                case 'groupName':
+                    $qb->join('obj.groups', 'gn');
+                    $qb->andWhere("UPPER(gn.name) LIKE :{$filterName}");
+                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
+                    break;
                 default:
                     if (is_bool($filterValue)) {
                         $qb->andWhere("obj.{$filterName} = :{$filterName}");

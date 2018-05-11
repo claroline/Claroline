@@ -90,8 +90,8 @@ const Sections = props =>
   >
     {React.Children.map(props.children, (child) => !child || 'hr' === child.type ? child :
       React.cloneElement(child, {
-        key: toKey(child.props.title),
-        eventKey: toKey(child.props.title),
+        key: child.props.id || toKey(child.props.title),
+        eventKey: child.props.id || toKey(child.props.title),
         level: props.level,
         displayLevel: props.displayLevel
       })

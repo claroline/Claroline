@@ -2,63 +2,22 @@
 
 namespace Claroline\CoreBundle\API\Transfer\Action\Group;
 
-use Claroline\AppBundle\API\Crud;
-use Claroline\AppBundle\API\Transfer\Action\AbstractAction;
-use Claroline\AppBundle\Persistence\ObjectManager;
+use Claroline\AppBundle\API\Transfer\Action\AbstractCreateAction;
 use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service()
  * @DI\Tag("claroline.transfer.action")
  */
-class Create extends AbstractAction
+class Create extends AbstractCreateAction
 {
-    /**
-     * Action constructor.
-     *
-     * @DI\InjectParams({
-     *     "crud" = @DI\Inject("claroline.api.crud")
-     * })
-     *
-     * @param Crud $crud
-     */
-    public function __construct(Crud $crud)
-    {
-        $this->crud = $crud;
-    }
-
-    public function execute(array $data)
-    {
-        $this->crud->create('Claroline\CoreBundle\Entity\Group', $data);
-    }
-
-    /**
-     * return an array with the following element:
-     * - section
-     * - action
-     * - action name.
-     */
     public function getAction()
     {
-        return ['group', 'create'];
+        return ['group', self::MODE_CREATE];
     }
 
-    public function getMode()
+    public function getClass()
     {
-        return self::MODE_CREATE;
-    }
-
-    public function getBatchSize()
-    {
-        return 250;
-    }
-
-    public function clear(ObjectManager $om)
-    {
-    }
-
-    public function getSchema()
-    {
-        return ['$root' => 'Claroline\CoreBundle\Entity\Group'];
+        return 'Claroline\CoreBundle\Entity\Group';
     }
 }

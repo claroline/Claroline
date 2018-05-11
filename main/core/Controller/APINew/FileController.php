@@ -15,17 +15,18 @@ use Claroline\AppBundle\Annotations\ApiMeta;
 use Claroline\AppBundle\Controller\AbstractCrudController;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration as EXT;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Manages platform uploaded files... sort of.
  *
- * @EXT\Route("/uploadedfile")
  * @ApiMeta(
  *     class="Claroline\CoreBundle\Entity\File\PublicFile",
  *     ignore={"update", "exist", "list", "copyBulk"}
  * )
+ * @Route("/publicfile")
  */
 class FileController extends AbstractCrudController
 {
@@ -43,26 +44,36 @@ class FileController extends AbstractCrudController
      */
     public function uploadAction(Request $request)
     {
+        $files = $this->uploadFiles($request);
+        $data = [];
+
+        foreach ($files as $file) {
+            $data[] = $this->serializer->serialize($file);
+        }
+
+        return new JsonResponse($data, 200);
+    }
+
+    public function uploadFiles(Request $request)
+    {
         $files = $request->files->all();
         $handler = $request->get('handler');
-        //maybe a few mode from the request ?
-        $data = [];
+        $objects = [];
         /** @var StrictDispatcher */
         $dispatcher = $this->container->get('claroline.event.event_dispatcher');
 
         foreach ($files as $file) {
             $object = $this->crud->create(
-                'Claroline\CoreBundle\Entity\File\PublicFile',
-                [],
-                ['file' => $file]
-            );
+              'Claroline\CoreBundle\Entity\File\PublicFile',
+              [],
+              ['file' => $file]
+          );
 
             $dispatcher->dispatch(strtolower('upload_file_'.$handler), 'UploadFile', [$object]);
-
-            $data[] = $this->serializer->serialize($object);
+            $objects[] = $object;
         }
 
-        return new JsonResponse($data, 200);
+        return $objects;
     }
 
     /** @return string */

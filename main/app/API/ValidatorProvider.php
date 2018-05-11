@@ -92,7 +92,7 @@ class ValidatorProvider
      *
      * @param string $class          - the class of the validator to use
      * @param mixed  $data           - the data to validate
-     * @param string $mode           - 'create' or 'update'
+     * @param string $mode           - 'create', 'update'
      * @param bool   $throwException - if true an InvalidDataException is thrown instead of returning the errors
      *
      * @return array - the list of validation errors

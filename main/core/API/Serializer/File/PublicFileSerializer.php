@@ -11,6 +11,18 @@ use JMS\DiExtraBundle\Annotation as DI;
  */
 class PublicFileSerializer
 {
+    private $utilities;
+
+    /**
+     * @DI\InjectParams({
+     *     "utilities" = @DI\Inject("claroline.utilities.file")
+     * })
+     */
+    public function __construct($utilities)
+    {
+        $this->utilities = $utilities;
+    }
+
     /** @return string */
     public function getClass()
     {
@@ -51,7 +63,9 @@ class PublicFileSerializer
     public function deserialize($data, PublicFile $file = null, array $options = [])
     {
         //this is currently done in FileUtilities
-        return $file;
+        if (isset($data['id'])) {
+            return $this->utilities->getOneBy(['id' => $data['id']]);
+        }
     }
 
     public function getSchema()

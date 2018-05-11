@@ -123,7 +123,7 @@ class ResourceNodeManager
             $this->resourceManager->rename($resourceNode, $data['name'], true);
         }
 
-        if (isset($data['poster'])) {
+        if (isset($data['poster']) && isset($data['poster']['url'])) {
             $resourceNode->setPoster($data['poster']['url']);
         }
 

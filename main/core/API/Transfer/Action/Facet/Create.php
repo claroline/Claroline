@@ -33,7 +33,7 @@ class Create extends AbstractAction
     /**
      * @param array $data
      */
-    public function execute(array $data)
+    public function execute(array $data, &$successData = [])
     {
         return $this->crud->create('Claroline\CoreBundle\Entity\Facet\Facet', $data);
     }

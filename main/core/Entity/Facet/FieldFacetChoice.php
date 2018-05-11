@@ -89,7 +89,8 @@ class FieldFacetChoice
     /**
      * @ORM\OneToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Facet\FieldFacetChoice",
-     *     mappedBy="parent"
+     *     mappedBy="parent",
+     *     cascade={"persist", "remove"}
      * )
      *
      * @var ArrayCollection
@@ -186,10 +187,35 @@ class FieldFacetChoice
         return $this->children->toArray();
     }
 
+    public function emptyChildren()
+    {
+        return $this->children->clear();
+    }
+
+    /**
+     * @param FieldFacetChoice $child
+     */
+    public function addChild(FieldFacetChoice $child)
+    {
+        if (!$this->children->contains($child)) {
+            $this->children->add($child);
+        }
+    }
+
+    /**
+     * @param FieldFacetChoice $child
+     */
+    public function removeChild(FieldFacetChoice $child)
+    {
+        if ($this->children->contains($child)) {
+            $this->children->removeElement($child);
+        }
+    }
+
     /**
      * for the api form select field.
      *
-     * @var string
+     * @return string
      */
     public function getValue()
     {

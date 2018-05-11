@@ -253,7 +253,7 @@ abstract class AbstractCrudController extends AbstractApiController
     /**
      * @return array
      */
-    private function getDefaultOptions()
+    protected function getDefaultOptions()
     {
         return [
             'list' => [],

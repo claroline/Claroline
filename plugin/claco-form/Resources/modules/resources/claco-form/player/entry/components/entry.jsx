@@ -302,10 +302,9 @@ class EntryComponent extends Component {
 
       if (this.canViewMetadata() || !f.isMetadata) {
         switch (f.type) {
-          case 'checkboxes':
+          case 'cascade':
             replacedField = fieldValue ? fieldValue.join(', ') : ''
             break
-          case 'select':
           case 'choice':
             replacedField = fieldValue ?
               Array.isArray(fieldValue) ?

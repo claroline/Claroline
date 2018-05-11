@@ -64,17 +64,18 @@ class ContactFinder implements FinderInterface
             switch ($filterName) {
                 case 'user':
                     break;
-                case 'data.username':
-                case 'data.firstName':
-                case 'data.lastName':
-                case 'data.phone':
-                    $shortFilterName = substr($filterName, 5);
-                    $qb->andWhere("UPPER(c.{$shortFilterName}) LIKE :{$shortFilterName}");
-                    $qb->setParameter($shortFilterName, '%'.strtoupper($filterValue).'%');
+                case 'username':
+                case 'firstName':
+                case 'lastName':
+                case 'phone':
+                case 'email':
+                    $qb->andWhere("UPPER(c.{$filterName}) LIKE :{$filterName}");
+                    $qb->setParameter($filterName, '%'.strtoupper($filterValue).'%');
                     break;
-                case 'data.email':
-                    $qb->andWhere('UPPER(c.email) LIKE :email');
-                    $qb->setParameter('email', '%'.strtoupper($filterValue).'%');
+                case 'group':
+                    $qb->join('c.groups', 'g');
+                    $qb->andWhere('UPPER(g.name) LIKE :group');
+                    $qb->setParameter('group', '%'.strtoupper($filterValue).'%');
                     break;
             }
         }
@@ -83,15 +84,12 @@ class ContactFinder implements FinderInterface
             $sortByDirection = 1 === $sortBy['direction'] ? 'ASC' : 'DESC';
 
             switch ($sortByProperty) {
-                case 'data.username':
-                case 'data.firstName':
-                case 'data.lastName':
-                case 'data.phone':
-                    $shortProperty = substr($sortByProperty, 5);
-                    $qb->orderBy("c.{$shortProperty}", $sortByDirection);
-                    break;
-                case 'data.email':
-                    $qb->orderBy('c.email', $sortByDirection);
+                case 'username':
+                case 'firstName':
+                case 'lastName':
+                case 'phone':
+                case 'email':
+                    $qb->orderBy("c.{$sortByProperty}", $sortByDirection);
                     break;
             }
         }

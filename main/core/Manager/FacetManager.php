@@ -180,7 +180,16 @@ class FacetManager
             case FieldFacet::NUMBER_TYPE:
                 $fieldFacetValue->setFloatValue($value);
                 break;
-            case FieldFacet::CHECKBOXES_TYPE:
+            case FieldFacet::CHOICE_TYPE:
+                $options = $field->getOptions();
+
+                if (isset($options['multiple']) && $options['multiple']) {
+                    $fieldFacetValue->setArrayValue($value);
+                } else {
+                    $fieldFacetValue->setStringValue($value);
+                }
+                break;
+            case FieldFacet::CASCADE_TYPE:
                 $fieldFacetValue->setArrayValue($value);
                 break;
             default:
@@ -267,12 +276,24 @@ class FacetManager
     public function getDisplayedValue(FieldFacetValue $ffv)
     {
         switch ($ffv->getFieldFacet()->getType()) {
-            case FieldFacet::NUMBER_TYPE: return $ffv->getFloatValue();
+            case FieldFacet::NUMBER_TYPE:
+                return $ffv->getFloatValue();
             case FieldFacet::DATE_TYPE:
                 return $ffv->getDateValue()->format($this->translator->trans('date_form_datepicker_php', [], 'platform'));
-            case FieldFacet::STRING_TYPE || FieldFacet::COUNTRY_TYPE || FieldFacet::SELECT_TYPE || FieldFacet::RADIO_TYPE || FieldFacet::EMAIL_TYPE: return $ffv->getStringValue();
-            case FieldFacet::CHECKBOXES_TYPE: return $ffv->getArrayValue();
-            default: return 'error';
+            case FieldFacet::STRING_TYPE || FieldFacet::COUNTRY_TYPE || FieldFacet::EMAIL_TYPE:
+                return $ffv->getStringValue();
+            case FieldFacet::CHOICE_TYPE:
+                $options = $ffv->getFieldFacet()->getOptions();
+
+                if (isset($options['multiple']) && $options['multiple']) {
+                    return $ffv->getArrayValue();
+                } else {
+                    return $ffv->getStringValue();
+                }
+            case FieldFacet::CASCADE_TYPE:
+                return $ffv->getArrayValue();
+            default:
+                return 'error';
         }
     }
 
@@ -399,52 +420,5 @@ class FacetManager
         }
 
         $this->om->flush();
-    }
-
-    /**
-     * Used by claco form.
-     */
-    public function isTypeWithChoices($type)
-    {
-        $withChoices = false;
-
-        switch ($type) {
-            case FieldFacet::CHECKBOXES_TYPE:
-            case FieldFacet::RADIO_TYPE:
-            case FieldFacet::SELECT_TYPE:
-                $withChoices = true;
-        }
-
-        return $withChoices;
-    }
-
-    /**
-     * Used by claco form.
-     */
-    public function isFileType($type)
-    {
-        return FieldFacet::FILE_TYPE === $type;
-    }
-
-    /**
-     * Used by claco form.
-     *
-     * @deprecated
-     */
-    public function getFieldFacetChoiceById($id)
-    {
-        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetChoice')->findOneById($id);
-    }
-
-    /**
-     * Used by claco form.
-     *
-     * @deprecated
-     */
-    public function getChoiceByFieldFacetAndValueAndParent(FieldFacet $fieldFacet, $value, FieldFacetChoice $parent = null)
-    {
-        return $this->om->getRepository('ClarolineCoreBundle:Facet\FieldFacetChoice')->findOneBy(
-            ['fieldFacet' => $fieldFacet, 'name' => $value, 'parent' => $parent]
-        );
     }
 }

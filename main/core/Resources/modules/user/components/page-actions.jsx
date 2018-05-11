@@ -82,7 +82,7 @@ const UserPageActions = props => {
 
   return (
     <PageActions>
-      {props.user.rights.current.edit &&
+      {(props.user.rights.current.edit || props.canEditProfile) &&
         <EditGroupActions />
       }
 
@@ -136,11 +136,13 @@ UserPageActions.propTypes = {
   customActions: T.array,
   showModal: T.func.isRequired,
   updatePassword: T.func.isRequired,
-  updatePublicUrl: T.func.isRequired
+  updatePublicUrl: T.func.isRequired,
+  canEditProfile: T.bool.isRequired
 }
 
 UserPageActions.defaultProps = {
-  customActions: []
+  customActions: [],
+  canEditProfile: false
 }
 
 export {

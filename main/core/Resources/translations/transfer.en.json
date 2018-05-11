@@ -1,0 +1,8 @@
+{
+    "create": "Create",
+    "add_user": "Add user",
+    "remove_user": "Remove user",
+    "delete": "Delete",
+    "update": "Mettre à jour",
+    "create_or_update": "Create or update"
+}

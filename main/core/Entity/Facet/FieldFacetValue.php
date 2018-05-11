@@ -243,8 +243,7 @@ class FieldFacetValue
         switch ($this->getFieldFacet()->getType()) {
             case FieldFacet::NUMBER_TYPE: return $this->getFloatValue();
             case FieldFacet::DATE_TYPE: return $this->getDateValue();
-            case FieldFacet::CHECKBOXES_TYPE: return $this->getArrayValue();
-            case FieldFacet::CASCADE_SELECT_TYPE: return $this->getArrayValue();
+            case FieldFacet::CASCADE_TYPE: return $this->getArrayValue();
             case FieldFacet::FILE_TYPE: return $this->getArrayValue();
             case FieldFacet::BOOLEAN_TYPE: return $this->getBoolValue();
             case FieldFacet::CHOICE_TYPE:
@@ -274,8 +273,7 @@ class FieldFacetValue
                     $this->setDateValue(null);
                 }
                 break;
-            case FieldFacet::CHECKBOXES_TYPE:
-            case FieldFacet::CASCADE_SELECT_TYPE:
+            case FieldFacet::CASCADE_TYPE:
             case FieldFacet::FILE_TYPE:
                 $this->setArrayValue($value);
                 break;

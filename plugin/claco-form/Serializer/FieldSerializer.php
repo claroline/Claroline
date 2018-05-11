@@ -94,10 +94,10 @@ class FieldSerializer
         if (count($field->getDetails()) > 0) {
             $serialized['options'] = $field->getDetails();
         }
-        if ($field->getType() === FieldFacet::CHOICE_TYPE) {
+        if (in_array($field->getType(), [FieldFacet::CHOICE_TYPE, FieldFacet::CASCADE_TYPE])) {
             $serialized['options']['choices'] = array_map(function (FieldFacetChoice $choice) {
                 return $this->fieldFacetChoiceSerializer->serialize($choice);
-            }, $field->getFieldFacet()->getFieldFacetChoices()->toArray());
+            }, $field->getFieldFacet()->getRootFieldFacetChoices());
         }
         if (!in_array(Options::SERIALIZE_MINIMAL, $options)) {
             $serialized = array_merge($serialized, [
@@ -133,7 +133,6 @@ class FieldSerializer
         $this->sipe('restrictions.lockedEditionOnly', 'setLockedEditionOnly', $data, $field);
         $this->sipe('restrictions.order', 'setOrder', $data, $field);
         $this->sipe('help', 'setHelp', $data, $field);
-        $this->sipe('options', 'setDetails', $data, $field);
 
         $fieldFacet = $field->getFieldFacet();
 
@@ -146,6 +145,11 @@ class FieldSerializer
         $newFieldFacet = $this->fieldFacetSerializer->deserialize($data, $fieldFacet, $options);
         $this->om->persist($newFieldFacet);
         $field->setFieldFacet($newFieldFacet);
+
+        if (isset($data['options']['choices'])) {
+            unset($data['options']['choices']);
+        }
+        $this->sipe('options', 'setDetails', $data, $field);
 
         return $field;
     }

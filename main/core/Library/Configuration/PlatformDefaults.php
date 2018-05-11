@@ -140,6 +140,7 @@ class PlatformDefaults implements ParameterProviderInterface
             'allow_workspace_at_registration' => false,
             'profile_roles_confidential' => [],
             'profile_roles_locked' => [],
+            'profile_roles_edition' => [],
         ];
     }
 }

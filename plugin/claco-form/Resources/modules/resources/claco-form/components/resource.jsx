@@ -4,6 +4,7 @@ import {PropTypes as T} from 'prop-types'
 
 import {currentUser} from '#/main/core/user/current'
 import {makeId} from '#/main/core/scaffolding/id'
+import {url} from '#/main/core/api/router'
 import {trans} from '#/main/core/translation'
 import {RoutedPageContent} from '#/main/core/layout/router'
 import {select as resourceSelect} from '#/main/core/resource/selectors'
@@ -91,7 +92,30 @@ const Resource = props =>
         {
           path: '/',
           component: getHome(props.defaultHome),
-          exact: true
+          exact: true,
+          onEnter: () => {
+            switch (props.defaultHome) {
+              case 'search':
+                props.loadAllUsedCountries(props.clacoForm.id)
+                break
+              case 'add':
+                props.openEntryForm(null, props.clacoForm.id)
+                break
+              case 'random':
+                fetch(url(['claro_claco_form_entry_random', {clacoForm: props.clacoForm.id}]), {
+                  method: 'GET' ,
+                  credentials: 'include'
+                })
+                  .then(response => response.json())
+                  .then(entryId => {
+                    if (entryId) {
+                      props.openEntryForm(entryId, props.clacoForm.id)
+                      props.loadEntryUser(entryId)
+                    }
+                  })
+                break
+            }
+          }
         }, {
           path: '/menu',
           component: ClacoFormMainMenu
