@@ -32,6 +32,8 @@
     - title: Resources
       doc: application/resources
 
+    - title: Widgets
+      doc: application/widgets
 
 - title: JSON API
   home: json/index
@@ -97,6 +99,10 @@
 
 - title: Contributing
   doc: contributing
+
+
+- title: Cookbook
+  doc: cookbook
 
 
 - title: Glossary
