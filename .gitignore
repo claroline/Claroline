@@ -11,19 +11,12 @@ app/config/.update
 app/config/Authentication/*
 app/config/Synchronization/*
 app/config/bundles.ini
-app/config/bundles.bup.ini
-app/config/frontend.json
-app/config/ips
-app/config/is_installed.php
-app/config/operations.xml*
 app/config/parameters.yml
 app/config/platform_options.yml
 app/config/tmp_files.yml
 app/config/previous-installed.json
 app/logs/*
-app/SymfonyRequirements.php
 bin/*
-claroline.sql
 coverage
 files/*
 node_modules
@@ -46,7 +39,6 @@ web/thumbnails/*
 web/uploads/*
 web/vendor/*
 web/vendors/*
-web/maintenance.html
 .env
 docker-compose.override.yml
 installed

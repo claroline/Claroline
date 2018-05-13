@@ -1,7 +1,0 @@
-{
-  "directory": "web/packages",
-  "analytics": false,
-  "resolvers": [
-    "filesystem-bower-resolver"
-  ]
-}
