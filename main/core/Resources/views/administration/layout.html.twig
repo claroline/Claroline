@@ -6,7 +6,7 @@
     {{ parent() }}
 
     {% if not is_send_datas_confirmed() %}
-        <a class="label label-danger" href="{{ path('claro_admin_send_datas_confirm_form') }}">
+        <a class="label label-danger" href="{{ path('claro_admin_send_data_confirm_form') }}">
             {{ 'infos_sending_has_not_been_accepted'|trans({}, 'platform') }}
             <i class="fa fa-question-circle"
                data-container=".alert-claroline-danger"

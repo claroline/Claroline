@@ -155,7 +155,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/", name="claro_admin_parameters_index")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:index.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -167,7 +167,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/general", name="claro_admin_parameters_general")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:general_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @param Request $request
@@ -264,7 +264,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/appearance", name="claro_admin_parameters_appearance")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:appearance_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -332,7 +332,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/email", name="claro_admin_parameters_mail_index")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:mail_index.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -344,7 +344,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/email/server", name="claro_admin_parameters_mail_server")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:mail_server_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -366,7 +366,7 @@ class ParametersController extends Controller
     /**
      * @EXT\Route("/email/server/submit", name="claro_admin_edit_parameters_mail_server")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:mailServerForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:mail_server_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * Updates the platform settings and redirects to the settings form.
@@ -457,7 +457,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/email/registration", name="claro_admin_mail_registration")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:registration_mail_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -475,7 +475,7 @@ class ParametersController extends Controller
     /**
      * @EXT\Route("/email/registration/submit", name="claro_admin_edit_mail_registration")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:registrationMailForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:registration_mail_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -495,7 +495,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/email/layout", name="claro_admin_mail_layout")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:mail_layout_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -513,7 +513,7 @@ class ParametersController extends Controller
     /**
      * @EXT\Route("/email/layout/submit", name="claro_admin_edit_mail_layout")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:mailLayoutForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:mail_layout_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -533,7 +533,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/email/layout/option/form", name="claro_admin_mail_option_form")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:open_mail_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -549,7 +549,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/email/layout/option/submit", name="claro_admin_mail_submit_form")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:optionMailForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:option_mail_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -574,7 +574,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/terms", name="claro_admin_edit_terms_of_service")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:terms_of_service_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -595,7 +595,7 @@ class ParametersController extends Controller
     /**
      * @EXT\Route("/terms/submit", name="claro_admin_edit_terms_of_service_submit")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:termsOfServiceForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:terms_of_service_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -630,7 +630,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/indexing", name="claro_admin_parameters_indexing")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:indexing_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
@@ -659,7 +659,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/session", name="claro_admin_session")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:session_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -681,7 +681,7 @@ class ParametersController extends Controller
     /**
      * @EXT\Route("/session/submit", name="claro_admin_session_submit")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:sessionForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:session_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -732,7 +732,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/oauth", name="claro_admin_parameters_oauth_index")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:oauth_index.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -744,7 +744,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/third-party-authentication", name="claro_admin_parameters_third_party_authentication_index")
-     * @EXT\Template
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:third_party_authentication_index.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -775,7 +775,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/maintenance", name="claro_admin_parameters_maintenance")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:maintenance.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:maintenance.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -817,7 +817,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/maintenance/message/edit/form", name="claro_admin_parameters_maintenance_message_edit_form")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:maintenanceMessageEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:maintenance_message_edit_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -832,7 +832,7 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route("/maintenance/message/edit", name="claro_admin_parameters_maintenance_message_edit")
-     * @EXT\Template("ClarolineCoreBundle:Administration\Parameters:maintenanceMessageEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:maintenance_message_edit_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -863,9 +863,7 @@ class ParametersController extends Controller
      *     name="claro_admin_security_token_list",
      *     defaults={"order"="clientName","direction"="ASC"},
      * )
-     * @EXT\Template(
-     *     "ClarolineCoreBundle:Administration\Parameters:securityTokenList.html.twig"
-     * )
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:security_token_list.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -885,9 +883,7 @@ class ParametersController extends Controller
      *     "/security/token/create/form",
      *     name="claro_admin_security_token_create_form"
      * )
-     * @EXT\Template(
-     *     "ClarolineCoreBundle:Administration\Parameters:securityTokenCreateForm.html.twig"
-     * )
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:security_token_create_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -907,9 +903,7 @@ class ParametersController extends Controller
      *     "/security/token/create",
      *     name="claro_admin_security_token_create"
      * )
-     * @EXT\Template(
-     *     "ClarolineCoreBundle:Administration\Parameters:securityTokenCreateForm.html.twig"
-     * )
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:security_token_create_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -945,9 +939,7 @@ class ParametersController extends Controller
      *     options={"id" = "tokenId", "strictId" = true},
      *     converter="strict_id"
      * )
-     * @EXT\Template(
-     *     "ClarolineCoreBundle:Administration\Parameters:securityTokenEditForm.html.twig"
-     * )
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:security_token_edit_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -976,9 +968,7 @@ class ParametersController extends Controller
      *     options={"id" = "tokenId", "strictId" = true},
      *     converter="strict_id"
      * )
-     * @EXT\Template(
-     *     "ClarolineCoreBundle:Administration\Parameters:securityTokenEditForm.html.twig"
-     * )
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:security_token_edit_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -1032,37 +1022,35 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/send/datas/confirmation/form",
-     *     name="claro_admin_send_datas_confirm_form"
+     *     "/send/data/confirmation/form",
+     *     name="claro_admin_send_data_confirm_form"
      * )
-     * @EXT\Template(
-     *     "ClarolineCoreBundle:Administration\Parameters:sendDatasConfirmationForm.html.twig"
-     * )
+     * @EXT\Template("ClarolineCoreBundle:administration\parameters:send_data_confirmation_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendDatasConfirmationFormAction()
+    public function sendDataConfirmationFormAction()
     {
         return [];
     }
 
     /**
      * @EXT\Route(
-     *     "/send/datas/confirm",
-     *     name="claro_admin_send_datas_confirm"
+     *     "/send/data/confirm",
+     *     name="claro_admin_send_data_confirm"
      * )
      * @SEC\PreAuthorize("canOpenAdminTool('platform_parameters')")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendDatasConfirmAction()
+    public function sendDataConfirmAction()
     {
         if (is_null($this->configHandler->getParameter('token'))) {
             $token = $this->generateToken(20);
             $this->configHandler->setParameter('token', $token);
         }
-        $this->sendDatas();
+        $this->sendData();
 
         $this->configHandler->setParameter('confirm_send_datas', 'OK');
 
@@ -1073,18 +1061,18 @@ class ParametersController extends Controller
 
     /**
      * @EXT\Route(
-     *     "/send/datas/token/{token}",
-     *     name="claro_admin_send_datas",
+     *     "/send/data/token/{token}",
+     *     name="claro_admin_send_data",
      *     options={"expose"=true}
      * )
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function sendDatasAction($token)
+    public function sendDataAction($token)
     {
         if ($token === $this->configHandler->getParameter('token') &&
             'OK' === $this->configHandler->getParameter('confirm_send_datas')) {
-            $this->sendDatas(2);
+            $this->sendData(2);
 
             return new Response('success', 200);
         } else {
@@ -1134,7 +1122,7 @@ class ParametersController extends Controller
         return $maintenanceContent;
     }
 
-    private function sendDatas($mode = 1)
+    private function sendData($mode = 1)
     {
         $url = $this->configHandler->getParameter('datas_sending_url');
         $ip = $_SERVER['REMOTE_ADDR'];
@@ -1155,7 +1143,7 @@ class ParametersController extends Controller
         $currentUrl = $this->request->getHttpHost().
             $this->request->getRequestUri();
         $currentUrl = preg_replace(
-            '/\/admin\/parameters\/send\/datas\/(.)*$/',
+            '/\/admin\/parameters\/send\/data\/(.)*$/',
             '',
             $currentUrl
         );
@@ -1166,7 +1154,7 @@ class ParametersController extends Controller
         );
         $this->configHandler->setParameter('platform_url', $platformUrl);
 
-        $postDatas = "ip=$ip".
+        $postData = "ip=$ip".
             "&name=$name".
             "&url=$platformUrl".
             "&lang=$lang".
@@ -1181,7 +1169,7 @@ class ParametersController extends Controller
 
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_POST, 1);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $postDatas);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $postData);
         curl_setopt($curl, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($curl, CURLOPT_HEADER, 0);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
