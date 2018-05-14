@@ -8,7 +8,10 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "2.11",
-        "phpmd/phpmd": "@stable"
+        "mockery/mockery": "0.9.6",
+        "phpmd/phpmd": "@stable",
+        "phpunit/phpunit": "4.8.35",
+        "symfony/phpunit-bridge": "3.4"
     },
     "scripts": {
         "fast-install" : [
