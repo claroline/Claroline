@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\Resource\ResourceNode;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Repository\Exception\MissingSelectClauseException;
-use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Security\Core\Role\Role;
 
 /**
  * Builder for DQL queries on AbstractResource entities.
@@ -206,7 +206,7 @@ class ResourceQueryBuilder
     /**
      * Filters nodes that are bound to any of the given roles.
      *
-     * @param array[string|RoleInterface] $roles
+     * @param Role[]|string[] $roles
      *
      * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
      */
@@ -218,7 +218,7 @@ class ResourceQueryBuilder
             $clause = "{$eol}({$eol}";
 
             foreach ($roles as $i => $role) {
-                $role = $roles[$i] instanceof RoleInterface ? $roles[$i]->getRole() : $roles[$i];
+                $role = $roles[$i] instanceof Role ? $roles[$i]->getRole() : $roles[$i];
                 $clause .= $i > 0 ? '    OR ' : '    ';
                 $clause .= "rightRole.name = :role_{$i}{$eol}";
                 $this->parameters[":role_{$i}"] = $role;
@@ -281,7 +281,7 @@ class ResourceQueryBuilder
             $clause = "{$eol}({$eol}";
 
             for ($i = 0, $count = count($types); $i < $count; ++$i) {
-                $clause .= $i === 0 ?
+                $clause .= 0 === $i ?
                     "resourceType.name = :type_{$i}" :
                     "OR resourceType.name = :type_{$i}";
                 $clause .= $i < $count - 1 ? PHP_EOL : '';
@@ -419,7 +419,7 @@ class ResourceQueryBuilder
             )
         )';
         $this->addWhereClause($clause);
-        $this->parameters[':creatorId'] = ($user === 'anon.') ? -1 : $user->getId();
+        $this->parameters[':creatorId'] = ('anon.' === $user) ? -1 : $user->getId();
         $this->parameters[':currentdate'] = $currentDate->format('Y-m-d H:i:s');
 
         return $this;
@@ -571,7 +571,7 @@ class ResourceQueryBuilder
     /**
      * Filters nodes that are bound to any of the given roles.
      *
-     * @param array[string|RoleInterface] $roles
+     * @param array[string|Role] $roles
      *
      * @return \Claroline\CoreBundle\Repository\ResourceQueryBuilder
      */
@@ -581,7 +581,7 @@ class ResourceQueryBuilder
         $otherRoles = [];
 
         foreach ($roles as $role) {
-            $roleName = $role instanceof RoleInterface ? $role->getRole() : $role;
+            $roleName = $role instanceof Role ? $role->getRole() : $role;
 
             if (preg_match('/^ROLE_WS_MANAGER_/', $roleName)) {
                 $managerRoles[] = $roleName;
@@ -592,14 +592,14 @@ class ResourceQueryBuilder
 
         $eol = PHP_EOL;
 
-        if (count($otherRoles) > 0 && count($managerRoles) === 0) {
+        if (count($otherRoles) > 0 && 0 === count($managerRoles)) {
             $this->leftJoinRights = true;
             $clause = "{$eol}({$eol}";
             $clause .= "rightRole.name IN (:roles){$eol}";
             $this->parameters[':roles'] = $otherRoles;
             $clause .= "AND{$eol}BIT_AND(rights.mask, 1) = 1{$eol})";
             $this->addWhereClause($clause);
-        } elseif (count($otherRoles) === 0 && count($managerRoles) > 0) {
+        } elseif (0 === count($otherRoles) && count($managerRoles) > 0) {
             $this->leftJoinRoles = true;
             $clause = "{$eol}({$eol}";
             $clause .= "role.name IN (:roles){$eol}";

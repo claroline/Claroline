@@ -9,8 +9,8 @@ const FormField = {
   propTypes: {
     id: T.string.isRequired,
     className: T.string,
-    value: T.any,
-    placeholder: T.string,
+    value: T.any, // depends on type
+    placeholder: T.any, // depends on type
     disabled: T.bool,
     onChange: T.func.isRequired
   },

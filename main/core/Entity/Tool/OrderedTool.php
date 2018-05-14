@@ -56,6 +56,8 @@ class OrderedTool
      *     inversedBy="orderedTools"
      * )
      * @ORM\JoinColumn(onDelete="CASCADE")
+     *
+     * @var Workspace
      */
     protected $workspace;
 
@@ -66,6 +68,8 @@ class OrderedTool
      *     inversedBy="orderedTools"
      * )
      * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
+     *
+     * @var Tool
      */
     protected $tool;
 
@@ -137,6 +141,9 @@ class OrderedTool
         $this->tool = $tool;
     }
 
+    /**
+     * @return Tool
+     */
     public function getTool()
     {
         return $this->tool;

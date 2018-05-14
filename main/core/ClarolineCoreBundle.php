@@ -30,7 +30,6 @@ use FOS\OAuthServerBundle\FOSOAuthServerBundle;
 use Symfony\Bundle\WebProfilerBundle\WebProfilerBundle;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Zenstruck\Bundle\FormBundle\ZenstruckFormBundle;
 
 class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfigurableInterface, ConfigurationProviderInterface
 {
@@ -77,7 +76,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
             'Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle',
             'FOS\JsRoutingBundle\FOSJsRoutingBundle',
             'JMS\AopBundle\JMSAopBundle',
-            'JMS\TwigJsBundle\JMSTwigJsBundle',
             'WhiteOctober\PagerfantaBundle\WhiteOctoberPagerfantaBundle',
             'Claroline\MigrationBundle\ClarolineMigrationBundle',
             'Claroline\Bundle\FrontEndBundle\FrontEndBundle',
@@ -120,13 +118,6 @@ class ClarolineCoreBundle extends DistributionPluginBundle implements AutoConfig
             $config
                 ->addContainerResource($this->buildPath('fos_oauth_server_config'))
                 ->addRoutingResource($this->buildPath('fos_oauth_server_routing'));
-
-            return $config;
-        } elseif ($bundle instanceof ZenstruckFormBundle) {
-            $config = new ConfigurationBuilder();
-            $config
-                ->addContainerResource($this->buildPath('zenstruck_form'))
-                ->addRoutingResource($this->buildPath('zenstruck_form_routing'));
 
             return $config;
         } elseif (in_array($environment, ['dev', 'test'])) {

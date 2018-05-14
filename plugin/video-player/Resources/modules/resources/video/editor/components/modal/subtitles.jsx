@@ -8,7 +8,7 @@ import Modal from 'react-bootstrap/lib/Modal'
 
 import {MODAL_DELETE_CONFIRM} from '#/main/core/layout/modal'
 import {actions as modalActions} from '#/main/core/layout/modal/actions'
-import {constants as formConst} from '#/main/core/layout/form/constants'
+import {constants as intlConst} from '#/main/core/intl/constants'
 import {BaseModal} from '#/main/core/layout/modal/components/base.jsx'
 import {TooltipAction} from '#/main/core/layout/button/components/tooltip-action.jsx'
 import {CheckGroup} from '#/main/core/layout/form/components/group/check-group.jsx'
@@ -22,7 +22,7 @@ export const MODAL_VIDEO_SUBTITLES = 'MODAL_VIDEO_SUBTITLES'
 
 function generateLangs() {
   const langs = {}
-  Object.keys(formConst.LANGS).forEach(key => langs[key] = formConst.LANGS[key]['nativeName'])
+  Object.keys(intlConst.LANGS).forEach(key => langs[key] = intlConst.LANGS[key]['nativeName'])
 
   return langs
 }
@@ -100,7 +100,7 @@ class Subtitles extends Component {
     switch (property) {
       case 'lang':
         track['meta']['lang'] = value || ''
-        track['meta']['label'] = value ? formConst.LANGS[value]['nativeName'] : ''
+        track['meta']['label'] = value ? intlConst.LANGS[value]['nativeName'] : ''
         break
       case 'default':
         track['meta']['default'] = value

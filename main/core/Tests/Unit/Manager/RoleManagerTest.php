@@ -363,7 +363,7 @@ class RoleManagerTest extends MockeryTestCase
     public function testGetStringRoleFromToken()
     {
         $token = $this->mock('Symfony\Component\Security\Core\Authentication\Token\TokenInterface');
-        $tokenRole = $this->mock('Symfony\Component\Security\Core\Role\RoleInterface');
+        $tokenRole = $this->mock('Symfony\Component\Security\Core\Role\Role');
         $tokenRole->shouldReceive('getRole')->once()->andReturn('ROLE');
         $token->shouldReceive('getRoles')->once()->andReturn([$tokenRole]);
         $res = ['ROLE'];

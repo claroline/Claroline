@@ -34,7 +34,6 @@ use Symfony\Component\Security\Core\User\AdvancedUserInterface;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\ExecutionContextInterface;
 
 /**
  * @ORM\Table(
@@ -51,7 +50,6 @@ use Symfony\Component\Validator\ExecutionContextInterface;
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("username")
  * @DoctrineAssert\UniqueEntity("email")
- * @Assert\Callback(methods={"isPublicUrlValid"})
  * @ClaroAssert\Username()
  * @ClaroAssert\UserAdministrativeCode()
  */
@@ -1053,19 +1051,6 @@ class User extends AbstractRoleSubject implements Serializable, AdvancedUserInte
     public function hasTunedPublicUrl()
     {
         return $this->hasTunedPublicUrl;
-    }
-
-    /**
-     * @param ExecutionContextInterface $context
-     *
-     * @deprecated should be moved in UserValidator
-     */
-    public function isPublicUrlValid(ExecutionContextInterface $context)
-    {
-        // Search for whitespaces
-        if (preg_match("/\s/", $this->getPublicUrl())) {
-            $context->addViolationAt('publicUrl', 'public_profile_url_not_valid', [], null);
-        }
     }
 
     public function setExpirationDate($expirationDate)

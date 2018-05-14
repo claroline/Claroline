@@ -87,6 +87,7 @@ class PlatformSerializer
             'name' => $this->config->getParameter('name'),
             'description' => null, // the one for the current locale
             'version' => $this->versionManager->getDistributionVersion(),
+            'help' => $this->config->getParameter('help_url'),
             'environment' => $this->env,
             'server' => [
                 'protocol' => $request->isSecure() || $this->config->getParameter('theme') ? 'https' : 'http',

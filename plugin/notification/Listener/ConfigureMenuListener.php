@@ -58,11 +58,11 @@ class ConfigureMenuListener
         //this is still configurable in the core bundle and should be changed...
         $isActive = $this->ch->getParameter('is_notification_active');
 
-        if ($user !== 'anon.' && $isActive) {
+        if ('anon.' !== $user && $isActive) {
             $countUnviewedNotifications = $this->notificationManager->countUnviewedNotifications($user);
 
             $end = $this->templating->render(
-                'IcapNotificationBundle:Notification:dropdownScript.html.twig',
+                'IcapNotificationBundle:Notification:dropdown_script.html.twig',
                 ['notificationElementId' => 'notification-topbar-item']
             );
 
@@ -96,7 +96,7 @@ class ConfigureMenuListener
     {
         $user = $this->tokenStorage->getToken()->getUser();
 
-        if ($user !== 'anon.') {
+        if ('anon.' !== $user) {
             $menu = $event->getMenu();
             $menu->addChild(
                 $this->translator->trans('notifications', [], 'platform'),

@@ -16,7 +16,6 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Entity\Workspace\WorkspaceTag;
 use Claroline\CoreBundle\Event\DisplayToolEvent;
-use Claroline\CoreBundle\Event\DisplayWidgetEvent;
 use Claroline\CoreBundle\Event\Log\LogRoleUnsubscribeEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceDeleteEvent;
 use Claroline\CoreBundle\Event\Log\LogWorkspaceEnterEvent;
@@ -46,7 +45,6 @@ use Symfony\Component\Form\FormFactory;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -462,75 +460,41 @@ class WorkspaceController extends Controller
     }
 
     /**
-     * @EXT\Template()
-     *
      * Renders the left tool bar. Not routed.
      *
-     * @param Workspace $workspace
-     * @param int[]     $_breadcrumbs
+     * @EXT\Template()
      *
-     * @throws \Symfony\Component\Security\Core\Exception\AccessDeniedException
+     * @param Workspace $workspace
      *
      * @return array
      */
-    public function renderToolListAction(Workspace $workspace, $_breadcrumbs)
+    public function renderToolListAction(Workspace $workspace)
     {
-        //first we add check if some tools will be missing from the navbar and we add them if necessary
-        //lets be sure we loaded everything properly because the pathbundle broke something
-        $workspace = $this->workspaceManager->getWorkspaceByCode($workspace->getCode());
-        $this->toolManager->addMissingWorkspaceTools($workspace);
+        $orderedTools = [];
+        $roleHasAccess = []; // for impersonation
 
-        if (!empty($_breadcrumbs)) {
-            //for manager.js, id = 0 => "no root".
-            if (0 !== $_breadcrumbs[0]) {
-                $rootId = $_breadcrumbs[0];
-            } else {
-                $rootId = $_breadcrumbs[1];
-            }
-            $workspace = $this->resourceManager->getNode($rootId)->getWorkspace();
-        }
-
-        $currentRoles = $this->utils->getRoles($this->tokenStorage->getToken());
-        //do I need to display every tools.
-        $hasManagerAccess = false;
-        $managerRole = $this->roleManager->getManagerRole($workspace);
-
-        foreach ($currentRoles as $role) {
-            //We check if $managerRole exists as an error proof condition.
-            //If something went wrong and it doesn't exists anymore,
-            //restorations tools should be used at this point
-            if ($managerRole && $managerRole->getName() === $role) {
-                $hasManagerAccess = true;
-            }
-        }
-
-        if ($this->authorization->isGranted('ROLE_ADMIN')) {
-            $hasManagerAccess = true;
-        }
-
-        if ($workspace->isModel()) {
-            $orderedTools = array_filter($this->toolManager->getOrderedToolsByWorkspace($workspace), function ($orderedTool) {
-                return in_array($orderedTool->getTool()->getName(), ['home', 'resource_manager', 'users', 'parameters']);
-            });
-            $hideToolsMenu = false;
-        } else {
-            //if manager or admin, show every tools
+        $hasManagerAccess = $this->workspaceManager->isManager($workspace, $this->tokenStorage->getToken());
+        $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
+        if ($hasManagerAccess || !$hideToolsMenu) {
+            // load tool list
             if ($hasManagerAccess) {
+                // gets all available tools
                 $orderedTools = $this->toolManager->getOrderedToolsByWorkspace($workspace);
+                // always display tools to managers
                 $hideToolsMenu = false;
+
+                // gets Workspace roles for impersonation
+                $workspaceRolesWithAccess = $this->roleManager
+                    ->getWorkspaceRoleWithToolAccess($workspace);
+
+                foreach ($workspaceRolesWithAccess as $workspaceRole) {
+                    $roleHasAccess[$workspaceRole->getId()] = $workspaceRole;
+                }
             } else {
-                //otherwise only shows the relevant tools
+                // gets accessible tools by user
+                $currentRoles = $this->utils->getRoles($this->tokenStorage->getToken());
                 $orderedTools = $this->toolManager->getOrderedToolsByWorkspaceAndRoles($workspace, $currentRoles);
-                $hideToolsMenu = $this->workspaceManager->isToolsMenuHidden($workspace);
             }
-        }
-
-        $roleHasAccess = [];
-        $workspaceRolesWithAccess = $this->roleManager
-            ->getWorkspaceRoleWithToolAccess($workspace);
-
-        foreach ($workspaceRolesWithAccess as $workspaceRole) {
-            $roleHasAccess[$workspaceRole->getId()] = $workspaceRole;
         }
 
         return [
@@ -574,139 +538,7 @@ class WorkspaceController extends Controller
             $this->workspaceManager->addRecentWorkspaceForUser($this->tokenStorage->getToken()->getUser(), $workspace);
         }
 
-        if ('resource_manager' === $toolName) {
-            $this->session->set('isDesktop', false);
-        }
-
         return new Response($event->getContent());
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspaceId}/tab/{homeTabId}/picker",
-     *     name="claro_workspace_home_tab_widget_list_picker",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true},
-     *      converter="strict_id"
-     * )
-     * Returns a list with all visible registered widgets for a homeTab of a workspace.
-     *
-     * @param Workspace $workspace
-     * @param int       $homeTabId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function listWidgetsForPickerAction(
-        Workspace $workspace,
-        $homeTabId
-    ) {
-        $response = new JsonResponse('', 401);
-        $isGranted = $this->authorization->isGranted('OPEN', $workspace);
-
-        if (true === $isGranted) {
-            $widgetData = [];
-            $widgetHomeTabConfigs = $this->homeTabManager
-                ->getVisibleWidgetConfigsByTabIdAndWorkspace($homeTabId, $workspace);
-            foreach ($widgetHomeTabConfigs as $widgetHomeTabConfig) {
-                array_push($widgetData, $widgetHomeTabConfig->getWidgetInstance()->serializeForWidgetPicker());
-            }
-            $data = [
-                'items' => $widgetData,
-            ];
-
-            $response->setData($data)->setStatusCode(200);
-        }
-
-        return $response;
-    }
-
-    /**
-     * Returns the html iframe to embed a widget.
-     *
-     * @EXT\Route(
-     *     "/{workspaceId}/tab/{homeTabId}/widget/{widgetId}/embed",
-     *     name="claro_widget_embed",
-     *     options={"expose"=true}
-     * )
-     *
-     * @todo simplify route params
-     *
-     * @param int $workspaceId
-     * @param int $homeTabId
-     * @param int $widgetId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function embedWidgetAction($workspaceId, $homeTabId, $widgetId)
-    {
-        return new Response(
-            $this->templating->render(
-                'ClarolineCoreBundle:Widget:embed/iframe.html.twig',
-                [
-                    'widgetId' => $widgetId,
-                    'workspaceId' => $workspaceId,
-                    'homeTabId' => $homeTabId,
-                ]
-            )
-        );
-    }
-
-    /**
-     * @EXT\Route(
-     *     "/{workspaceId}/tab/{homeTabId}/widget/{widgetId}/embeded",
-     *     name="claro_workspace_hometab_embeded_widget",
-     *     options={"expose"=true}
-     * )
-     *
-     * @EXT\ParamConverter(
-     *      "workspace",
-     *      class="ClarolineCoreBundle:Workspace\Workspace",
-     *      options={"id" = "workspaceId", "strictId" = true},
-     *      converter="strict_id"
-     * )
-     *
-     * Returns the widget's html content
-     *
-     * @param Workspace $workspace
-     * @param int       $homeTabId
-     * @param int       $widgetId
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
-     */
-    public function getEmbededWidgetAction(
-        Workspace $workspace,
-        $homeTabId,
-        $widgetId
-    ) {
-        $this->assertIsGranted('OPEN', $workspace);
-
-        $widgetConfig = $this->homeTabManager
-            ->getVisibleWidgetConfigByWidgetIdAndTabIdAndWorkspace($widgetId, $homeTabId, $workspace);
-
-        $widget = null;
-
-        if (!empty($widgetConfig)) {
-            $widgetInstance = $widgetConfig->getWidgetInstance();
-            $event = $this->eventDispatcher->dispatch("widget_{$widgetInstance->getWidget()->getName()}", new DisplayWidgetEvent($widgetInstance));
-            $widget = [
-                'title' => $widgetInstance->getName(),
-                'content' => $event->getContent(),
-            ];
-        }
-
-        return new Response(
-            $this->templating->render(
-                'ClarolineCoreBundle:Widget:embed/widget.html.twig',
-                [
-                    'widget' => $widget,
-                ]
-            )
-        );
     }
 
     /**

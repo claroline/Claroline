@@ -970,6 +970,11 @@ class RoleManager
             $this->roleRepo->findUserRolesByTranslationKeys($keys, $executeQuery);
     }
 
+    /**
+     * @param Workspace $workspace
+     *
+     * @return Role[]
+     */
     public function getWorkspaceRoleWithToolAccess(Workspace $workspace)
     {
         return $this->roleRepo->findWorkspaceRoleWithToolAccess($workspace);

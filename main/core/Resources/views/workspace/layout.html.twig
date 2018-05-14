@@ -88,7 +88,7 @@
 {% block leftbar %}
     {% if workspace is defined and workspace != null %}
         {% if is_granted('OPEN', workspace) %}
-            {{ render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace, '_breadcrumbs': app.request.query.get('_breadcrumbs', {})})) }}
+            {{ render(controller("ClarolineCoreBundle:Workspace:renderToolList", {'workspace': workspace})) }}
         {% endif %}
     {% endif %}
 {% endblock %}

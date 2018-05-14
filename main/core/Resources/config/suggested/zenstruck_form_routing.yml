@@ -1,2 +1,0 @@
-zenstruck_form:
-    resource: "@ZenstruckFormBundle/Resources/config/ajax_entity_routing.xml"

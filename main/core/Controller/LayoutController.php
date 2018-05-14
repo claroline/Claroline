@@ -12,8 +12,10 @@
 namespace Claroline\CoreBundle\Controller;
 
 use Claroline\AppBundle\Event\StrictDispatcher;
+use Claroline\CoreBundle\Entity\Tool\AdminTool;
 use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
+use Claroline\CoreBundle\Event\InjectJavascriptEvent;
 use Claroline\CoreBundle\Library\Configuration\PlatformConfigurationHandler;
 use Claroline\CoreBundle\Library\Security\Utilities;
 use Claroline\CoreBundle\Manager\HomeManager;
@@ -35,6 +37,7 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class LayoutController extends Controller
 {
+    private $dispatcher;
     private $roleManager;
     private $workspaceManager;
     private $router;
@@ -43,21 +46,34 @@ class LayoutController extends Controller
     private $translator;
     private $configHandler;
     private $toolManager;
-    private $dipatcher;
+    private $homeManager;
 
     /**
+     * LayoutController constructor.
+     *
      * @DI\InjectParams({
-     *     "roleManager"        = @DI\Inject("claroline.manager.role_manager"),
-     *     "workspaceManager"   = @DI\Inject("claroline.manager.workspace_manager"),
-     *     "router"             = @DI\Inject("router"),
-     *     "tokenStorage"       = @DI\Inject("security.token_storage"),
-     *     "utils"              = @DI\Inject("claroline.security.utilities"),
-     *     "translator"         = @DI\Inject("translator"),
-     *     "configHandler"      = @DI\Inject("claroline.config.platform_config_handler"),
-     *     "toolManager"        = @DI\Inject("claroline.manager.tool_manager"),
-     *     "homeManager"        = @DI\Inject("claroline.manager.home_manager"),
-     *     "dispatcher"     = @DI\Inject("claroline.event.event_dispatcher")
+     *     "roleManager"      = @DI\Inject("claroline.manager.role_manager"),
+     *     "workspaceManager" = @DI\Inject("claroline.manager.workspace_manager"),
+     *     "router"           = @DI\Inject("router"),
+     *     "tokenStorage"     = @DI\Inject("security.token_storage"),
+     *     "utils"            = @DI\Inject("claroline.security.utilities"),
+     *     "translator"       = @DI\Inject("translator"),
+     *     "configHandler"    = @DI\Inject("claroline.config.platform_config_handler"),
+     *     "toolManager"      = @DI\Inject("claroline.manager.tool_manager"),
+     *     "homeManager"      = @DI\Inject("claroline.manager.home_manager"),
+     *     "dispatcher"       = @DI\Inject("claroline.event.event_dispatcher")
      * })
+     *
+     * @param RoleManager                  $roleManager
+     * @param WorkspaceManager             $workspaceManager
+     * @param ToolManager                  $toolManager
+     * @param UrlGeneratorInterface        $router
+     * @param TokenStorageInterface        $tokenStorage
+     * @param Utilities                    $utils
+     * @param TranslatorInterface          $translator
+     * @param PlatformConfigurationHandler $configHandler
+     * @param HomeManager                  $homeManager
+     * @param StrictDispatcher             $dispatcher
      */
     public function __construct(
         RoleManager $roleManager,
@@ -88,7 +104,7 @@ class LayoutController extends Controller
      *
      * Displays the platform header.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return array
      */
     public function headerAction()
     {
@@ -100,11 +116,10 @@ class LayoutController extends Controller
      *
      * Displays the platform footer.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return array
      */
     public function footerAction()
     {
-        // TODO: replace core bundle version by distribution version when available
         // TODO: find the lightest way to get that information
         $version = $this->get('claroline.manager.version_manager')->getDistributionVersion();
 
@@ -123,6 +138,10 @@ class LayoutController extends Controller
     }
 
     /**
+     * Displays the platform top bar. Its content depends on the user status
+     * (anonymous/logged, profile, etc.) and the platform options (e.g. self-
+     * registration allowed/prohibited).
+     *
      * @EXT\ParamConverter(
      *      "workspace",
      *      class="ClarolineCoreBundle:Workspace\Workspace",
@@ -131,64 +150,41 @@ class LayoutController extends Controller
      * )
      * @EXT\Template()
      *
-     * Displays the platform top bar. Its content depends on the user status
-     * (anonymous/logged, profile, etc.) and the platform options (e.g. self-
-     * registration allowed/prohibited).
+     * @param Workspace $workspace
      *
-     * @param \Claroline\CoreBundle\Entity\Workspace\Workspace $workspace
-     *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return array
      */
     public function topBarAction(Workspace $workspace = null)
     {
-        if ($token = $this->tokenStorage->getToken()) {
-            $tools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
-        } else {
-            $tools = [];
+        $user = null;
+        $token = $this->tokenStorage->getToken();
+        if ($token) {
+            $user = $token->getUser();
         }
 
-        $canAdministrate = count($tools) > 0;
-        $isLogged = false;
         $registerTarget = null;
         $loginTarget = null;
         $workspaces = null;
         $personalWs = null;
-        $homeMenu = $this->configHandler->getParameter('home_menu');
-        $showHelpButton = $this->configHandler->getParameter('show_help_button');
-        $helpUrl = $this->configHandler->getParameter('help_url');
-        $loginTargetRoute = $this->configHandler->getParameter('login_target_route');
 
+        $homeMenu = $this->configHandler->getParameter('home_menu');
         if (is_numeric($homeMenu)) {
             $homeMenu = $this->homeManager->getContentByType('menu', $homeMenu);
         }
 
-        if ($token) {
-            $user = $token->getUser();
-            $roles = $this->utils->getRoles($token);
-        } else {
-            $roles = ['ROLE_ANONYMOUS'];
-        }
-        $adminTools = [];
-
-        if ($token) {
-            $secRoles = $this->tokenStorage->getToken()->getRoles();
-        } else {
-            $secRoles = [];
-        }
-
-        $adminTools = $this->toolManager->getAdminToolsByRoles($secRoles);
-        $isLogged = !in_array('ROLE_ANONYMOUS', $roles);
         $isLogged = false;
-
-        if ($isLogged) {
-            $tools = $this->toolManager->getAdminToolsByRoles($secRoles);
-            $canAdministrate = count($tools) > 0;
+        $canAdministrate = false;
+        $adminTools = [];
+        if ($user instanceof User) {
+            $isLogged = true;
+            $adminTools = $this->toolManager->getAdminToolsByRoles($token->getRoles());
+            $canAdministrate = count($adminTools) > 0;
             $personalWs = $user->getPersonalWorkspace();
             $workspaces = $this->findWorkspacesFromLogs();
         } else {
             $workspaces = [];
 
-            if (true === $this->configHandler->getParameter('allow_self_registration') &&
+            if ($this->configHandler->getParameter('allow_self_registration') &&
                 $this->roleManager->validateRoleInsert(
                     new User(),
                     $this->roleManager->getRoleByName('ROLE_USER')
@@ -197,6 +193,7 @@ class LayoutController extends Controller
                 $registerTarget = $this->router->generate('claro_user_registration');
             }
 
+            $loginTargetRoute = $this->configHandler->getParameter('login_target_route');
             if (!$loginTargetRoute) {
                 $loginTarget = $this->router->generate('claro_security_login');
             } else {
@@ -205,7 +202,7 @@ class LayoutController extends Controller
         }
 
         $translator = $this->translator;
-        usort($adminTools, function ($a, $b) use ($translator) {
+        usort($adminTools, function (AdminTool $a, AdminTool $b) use ($translator) {
             return $translator->trans($a->getName(), [], 'tools') > $translator->trans($b->getName(), [], 'tools');
         });
 
@@ -222,17 +219,17 @@ class LayoutController extends Controller
             'headerLocale' => $this->configHandler->getParameter('header_locale'),
             'homeMenu' => $homeMenu,
             'adminTools' => $adminTools,
-            'showHelpButton' => $showHelpButton,
-            'helpUrl' => $helpUrl,
+            'showHelpButton' => $this->configHandler->getParameter('show_help_button'),
+            'helpUrl' => $this->configHandler->getParameter('help_url'),
         ];
     }
 
     /**
-     * @EXT\Template()
-     *
      * Renders the warning bar when a workspace role is impersonated.
      *
-     * @return Response
+     * @EXT\Template()
+     *
+     * @return array
      */
     public function renderWarningImpersonationAction()
     {
@@ -279,6 +276,7 @@ class LayoutController extends Controller
     //not routed
     public function injectJavascriptAction()
     {
+        /** @var InjectJavascriptEvent $event */
         $event = $this->dispatcher->dispatch('inject_javascript_layout', 'InjectJavascript');
 
         return new Response($event->getContent());

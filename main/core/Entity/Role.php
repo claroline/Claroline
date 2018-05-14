@@ -23,7 +23,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\Groups;
 use RuntimeException;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use Symfony\Component\Security\Core\Role\RoleInterface;
+use Symfony\Component\Security\Core\Role\Role as BaseRole;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -32,7 +32,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\HasLifecycleCallbacks
  * @DoctrineAssert\UniqueEntity("name")
  */
-class Role implements RoleInterface
+class Role extends BaseRole
 {
     use UuidTrait;
 
