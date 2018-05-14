@@ -66,7 +66,7 @@ class ContactsListener
     public function onDisplayDesktopContactTool(DisplayToolEvent $event)
     {
         $content = $this->templating->render(
-            'ClarolineCoreBundle:Tool:contacts.html.twig', [
+            'ClarolineCoreBundle:tool:contacts.html.twig', [
                 'options' => $this->contactManager->getUserOptions(
                     $this->tokenStorage->getToken()->getUser()
                 ),

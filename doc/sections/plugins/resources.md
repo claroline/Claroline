@@ -399,7 +399,7 @@ will define wich layout should be used.
 You can find wich template to use with this code (it's not automatic yet in subject to changes)
 
 ```html+jinja
-{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:workspace:layout.html.twig" %}
 
 {% if isDesktop() %}
     {% set layout = "ClarolineCoreBundle:desktop:layout.html.twig" %}

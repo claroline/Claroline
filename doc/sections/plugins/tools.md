@@ -84,7 +84,7 @@ private function desktop()
 
 As you can see, if a tool is displayed in a workspace, you can know the current context
 using $event->getWorkspace();
-Then the workspace_tool.html.twig template must extends {% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+Then the workspace_tool.html.twig template must extends {% extends 'ClarolineCoreBundle:workspace:layout.html.twig' %}
 
 ## Translations
 
@@ -143,7 +143,7 @@ Note: if you want to keep the layout, you must extends either
 or
 
 ```html+jinja
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:workspace:layout.html.twig' %}
 ```
 
 [[Documentation index]][index_path]

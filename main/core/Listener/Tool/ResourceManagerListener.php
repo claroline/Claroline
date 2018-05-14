@@ -164,7 +164,7 @@ class ResourceManagerListener
         $defaultResourceActionsMask = $this->maskManager->getDefaultResourceActionsMask();
 
         return $this->templating->render(
-            'ClarolineCoreBundle:Tool\workspace\resource_manager:resources.html.twig', [
+            'ClarolineCoreBundle:tool\workspace\resource_manager:resources.html.twig', [
                 'workspace' => $workspace,
                 'directoryId' => $directoryId,
                 'resourceTypes' => $resourceTypes,

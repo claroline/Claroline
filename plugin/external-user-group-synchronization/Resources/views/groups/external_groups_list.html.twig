@@ -12,7 +12,7 @@
 {% from _self import sortUrl %}
 {% from "ClarolineCoreBundle::macros.html.twig" import maxResultsSelectBox %}
 
-{% extends 'ClarolineCoreBundle:Workspace:layout.html.twig' %}
+{% extends 'ClarolineCoreBundle:workspace:layout.html.twig' %}
 
 {% block title %}{{ parent() ~ ' - ' ~ "external_groups_registration_in_workspace" | trans({}, "claro_external_user_group") | striptags | raw }}{% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}

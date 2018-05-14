@@ -73,7 +73,7 @@ class DesktopParametersController extends Controller
      *     name="claro_desktop_parameters_menu"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:desktopParametersMenu.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool\desktop\parameters:desktop_parameters_menu.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * Displays the desktop tools configuration menu page.
@@ -94,7 +94,7 @@ class DesktopParametersController extends Controller
      *     defaults={"type"=0}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:toolProperties.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool\desktop\parameters:tool_properties.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * Displays the tools configuration page.
@@ -235,7 +235,7 @@ class DesktopParametersController extends Controller
      *     name="claro_user_options_edit_form"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:userOptionsEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool\desktop\parameters:user_options_edit_form.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * Displays the user options form page.
@@ -271,7 +271,7 @@ class DesktopParametersController extends Controller
      *     name="claro_user_options_edit"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\desktop\parameters:userOptionsEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool\desktop\parameters:user_options_edit_form.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser"=true})
      *
      * Edit user options.

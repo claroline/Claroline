@@ -99,7 +99,7 @@ resource breadcrumbs.
 *Claroline\VideoPlayerBundle\Resources\view\video.html.twig*
 
 ```html+jinja
-{% set layout = "ClarolineCoreBundle:Workspace:layout.html.twig" %}
+{% set layout = "ClarolineCoreBundle:workspace:layout.html.twig" %}
 
 {% if isDesktop() %}
     {% set layout = "ClarolineCoreBundle:desktop:layout.html.twig" %}
