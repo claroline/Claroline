@@ -10,8 +10,8 @@
         "friendsofphp/php-cs-fixer": "2.11",
         "mockery/mockery": "0.9.6",
         "phpmd/phpmd": "@stable",
-        "phpunit/phpunit": "4.8.35",
-        "symfony/phpunit-bridge": "3.4"
+        "phpunit/phpunit": "7.1.5",
+        "symfony/phpunit-bridge": "4.0.9"
     },
     "scripts": {
         "fast-install" : [
