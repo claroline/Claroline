@@ -611,7 +611,7 @@ class ResourceController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Resource/logs:logByUser.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource/logs:log_by_user.html.twig")
      *
      * Shows resource logs list
      *
@@ -1071,16 +1071,15 @@ class ResourceController extends Controller
     }
 
     /**
-     * @EXT\Template("ClarolineCoreBundle:Resource:breadcrumbs.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:breadcrumbs.html.twig")
      *
      * @param ResourceNode $node
-     * @param int[]        $_breadcrumbs
      *
      * @return array
      *
      * @throws Exception
      */
-    public function renderBreadcrumbsAction(ResourceNode $node, array $_breadcrumbs)
+    public function renderBreadcrumbsAction(ResourceNode $node)
     {
         //this trick will never work with shortcuts to directory
         //we don't support directory links anymore
@@ -1284,7 +1283,7 @@ class ResourceController extends Controller
      *     name="claro_resource_import_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:importModalForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:import_modal_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -1301,7 +1300,7 @@ class ResourceController extends Controller
      *     name="claro_resource_import",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:importModalForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:import_modal_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -1343,7 +1342,7 @@ class ResourceController extends Controller
     //this method is not routed and called from the Resource/layout.html.twig file
 
     /**
-     * @EXT\Template("ClarolineCoreBundle:Resource:unlockCodeForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:unlock_code_form.html.twig")
      */
     public function unlockCodeFormAction(ResourceNode $node)
     {

@@ -149,7 +149,7 @@ class ExerciseListener
             ->isGranted('EDIT', new ResourceCollection([$exercise->getResourceNode()]));
 
         $content = $this->container->get('templating')->render(
-            'UJMExoBundle:Exercise:open.html.twig', [
+            'UJMExoBundle:exercise:open.html.twig', [
                 '_resource' => $exercise,
                 'quiz' => $this->container->get('ujm_exo.manager.exercise')->serialize(
                     $exercise,
