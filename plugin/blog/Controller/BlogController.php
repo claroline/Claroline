@@ -229,7 +229,6 @@ class BlogController extends BaseController
     /**
      * @Route("/configure/{blogId}", name="icap_blog_configure", requirements={"blogId" = "\d+"})
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @Template()
      */
     public function configureAction(Blog $blog)
     {

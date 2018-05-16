@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\Request;
 class FollowerResourceController extends Controller
 {
     /**
-     * @Template("IcapNotificationBundle:FollowerResource:follower_resource_form.html.twig")
+     * @Template("IcapNotificationBundle:follower_resource:follower_resource_form.html.twig")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function renderFormAction($resourceId, $resourceClass, $user)

@@ -5,7 +5,6 @@ namespace Icap\BlogBundle\Controller;
 use Icap\BlogBundle\Entity\Blog;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 
 class PostController extends BaseController
 {
@@ -19,7 +18,6 @@ class PostController extends BaseController
      * )
      *
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
-     * @Template()
      */
     public function viewAction(Blog $blog, $postSlug)
     {

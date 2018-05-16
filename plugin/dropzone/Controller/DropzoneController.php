@@ -544,9 +544,6 @@ class DropzoneController extends DropzoneBaseController
      *      name="icap_dropzone_download_copies_by_date",
      *      requirements={"resourceId" = "\d+"}
      * )
-     *
-     *
-     *
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
@@ -561,9 +558,9 @@ class DropzoneController extends DropzoneBaseController
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $view = 'IcapDropzoneBundle:Drop:dropsDownloadBetweenDates.html.twig';
+        $view = 'IcapDropzoneBundle:drop:drops_download_between_dates.html.twig';
         if ($request->isXmlHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Drop:dropsDownloadBetweenDatesModal.html.twig';
+            $view = 'IcapDropzoneBundle:drop:drops_download_between_dates_modal.html.twig';
         }
 
         $platformConfigHandler = $this->get('claroline.config.platform_config_handler');
@@ -583,9 +580,6 @@ class DropzoneController extends DropzoneBaseController
      *      name="icap_dropzone_download_copies",
      *      requirements={"resourceId" = "\d+"}
      * )
-     *
-     *
-     *
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("user", options={
      *      "authenticatedUser" = true,
@@ -593,7 +587,6 @@ class DropzoneController extends DropzoneBaseController
      *      "messageTranslationKey" = "Manage an evaluation requires authentication. Please login.",
      *      "messageTranslationDomain" = "icap_dropzone"
      * })
-     * @Template()
      */
     public function donwloadCopiesAction(Request $request, Dropzone $dropzone, $beginDate = null, $endDate = null)
     {

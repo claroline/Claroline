@@ -49,7 +49,7 @@ class LessonController extends Controller
      *      requirements={"resourceId" = "\d+"}
      * )
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
-     * @Template("IcapLessonBundle:Lesson:viewChapter.html.ng.twig")
+     * @Template("IcapLessonBundle:lesson:view_chapter.html.ng.twig")
      */
     public function viewLessonAction($lesson)
     {
@@ -73,7 +73,7 @@ class LessonController extends Controller
         $chapterRepository = $this->getDoctrine()->getManager()->getRepository('IcapLessonBundle:Chapter');
         $tree = $chapterRepository->buildChapterTree($lesson->getRoot());
         $content = $this->renderView(
-                'IcapLessonBundle:Lesson:view.pdf.twig', [
+                'IcapLessonBundle:lesson:view.pdf.twig', [
             '_resource' => $lesson,
             'tree' => $tree,
                 ]
@@ -102,7 +102,7 @@ class LessonController extends Controller
      *      options = {"expose"=true}
      * )
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
-     * @Template("IcapLessonBundle:Lesson:viewChapter.html.twig")
+     * @Template("IcapLessonBundle:lesson:view_chapter.html.twig")
      */
     public function viewChapterAction($lesson, $chapterId)
     {
@@ -203,12 +203,12 @@ class LessonController extends Controller
         //for ajaxification
         if ($this->getRequest()->isXMLHttpRequest()) {
             return $this->render(
-                            'IcapLessonBundle:Lesson:editChapterAjaxified.html.twig', [
-                        '_resource' => $lesson,
-                        'chapter' => $chapter,
-                        'form' => $form->createView(),
-                        'workspace' => $lesson->getResourceNode()->getWorkspace(),
-                            ]
+                'IcapLessonBundle:lesson:edit_chapter_ajaxified.html.twig', [
+                    '_resource' => $lesson,
+                    'chapter' => $chapter,
+                    'form' => $form->createView(),
+                    'workspace' => $lesson->getResourceNode()->getWorkspace(),
+                ]
             );
         }
 
@@ -233,7 +233,7 @@ class LessonController extends Controller
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
-     * @Template("IcapLessonBundle:Lesson:editChapter.html.twig")
+     * @Template("IcapLessonBundle:lesson:edit_chapter.html.twig")
      */
     public function updateChapterAction($lesson, $chapterId)
     {
@@ -262,8 +262,8 @@ class LessonController extends Controller
         }
 
         return $this->redirect($this->generateUrl('icap_lesson_chapter', [
-                            'resourceId' => $lesson->getId(),
-                            'chapterId' => $chapter->getSlug(),
+            'resourceId' => $lesson->getId(),
+            'chapterId' => $chapter->getSlug(),
         ]));
     }
 
@@ -297,13 +297,13 @@ class LessonController extends Controller
         //for ajaxification
         if ($this->getRequest()->isXMLHttpRequest()) {
             return $this->render(
-                            'IcapLessonBundle:Lesson:deleteChapterPopup.html.twig', [
-                        'lesson' => $lesson,
-                        'chapter' => $chapter,
-                        'form' => $form->createView(),
-                        'haschild' => $childrenChapter,
-                        'workspace' => $lesson->getResourceNode()->getWorkspace(),
-                            ]
+                'IcapLessonBundle:lesson:delete_chapter_popup.html.twig', [
+                    'lesson' => $lesson,
+                    'chapter' => $chapter,
+                    'form' => $form->createView(),
+                    'haschild' => $childrenChapter,
+                    'workspace' => $lesson->getResourceNode()->getWorkspace(),
+                ]
             );
         }
 
@@ -329,7 +329,7 @@ class LessonController extends Controller
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
-     * @Template("IcapLessonBundle:Lesson:confirmDeleteChapter.html.twig")
+     * @Template("IcapLessonBundle:lesson:confirm_delete_chapter.html.twig")
      */
     public function deleteChapterAction($lesson, $chapterId)
     {
@@ -406,12 +406,12 @@ class LessonController extends Controller
         //for ajaxification
         if ($this->getRequest()->isXMLHttpRequest()) {
             return $this->render(
-                            'IcapLessonBundle:Lesson:newChapterAjaxified.html.twig', [
-                        '_resource' => $lesson,
-                        'form' => $form->createView(),
-                        'chapterParent' => $chapterParent,
-                        'workspace' => $lesson->getResourceNode()->getWorkspace(),
-                            ]
+                'IcapLessonBundle:lesson:new_chapter_ajaxified.html.twig', [
+                    '_resource' => $lesson,
+                    'form' => $form->createView(),
+                    'chapterParent' => $chapterParent,
+                    'workspace' => $lesson->getResourceNode()->getWorkspace(),
+                ]
             );
         }
 
@@ -434,7 +434,7 @@ class LessonController extends Controller
      *      name="icap_lesson_add_chapter",
      *      requirements={"resourceId" = "\d+"}
      * )
-     * @Template("IcapLessonBundle:Lesson:newChapter.html.twig")
+     * @Template("IcapLessonBundle:lesson:new_chapter.html.twig")
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      */
     public function addChapterAction($lesson)
@@ -513,12 +513,12 @@ class LessonController extends Controller
         //for ajaxification
         if ($request->isXMLHttpRequest()) {
             return $this->render(
-                            'IcapLessonBundle:Lesson:choiceMoveChapterAjaxified.html.twig', [
-                        '_resource' => $lesson,
-                        'chapter' => $chapter,
-                        'form' => $form->createView(),
-                        'workspace' => $lesson->getResourceNode()->getWorkspace(),
-                            ]
+                'IcapLessonBundle:lesson:choice_move_chapter_ajaxified.html.twig', [
+                    '_resource' => $lesson,
+                    'chapter' => $chapter,
+                    'form' => $form->createView(),
+                    'workspace' => $lesson->getResourceNode()->getWorkspace(),
+                ]
             );
         }
 
@@ -537,7 +537,7 @@ class LessonController extends Controller
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"}
      * )
      * @Method("POST")
-     * @Template("IcapLessonBundle:Lesson:choiceMoveChapter.html.twig")
+     * @Template("IcapLessonBundle:lesson:choice_move_chapter.html.twig")
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      */
     public function moveChapterAction($lesson, $chapterId)
@@ -587,8 +587,8 @@ class LessonController extends Controller
         $this->dispatchChapterMoveEvent($lesson, $chapter, $oldparent, $newParent);
 
         return $this->redirect($this->generateUrl('icap_lesson_chapter', [
-                            'resourceId' => $lesson->getId(),
-                            'chapterId' => $chapter->getSlug(),
+            'resourceId' => $lesson->getId(),
+            'chapterId' => $chapter->getSlug(),
         ]));
     }
 
@@ -599,7 +599,7 @@ class LessonController extends Controller
      *      requirements={"resourceId" = "\d+", "chapterId" = "\d+"},
      *      options = {"expose"=true}
      * )
-     * @Template("IcapLessonBundle:Lesson:duplicateChapter.html.twig")
+     * @Template("IcapLessonBundle:lesson:duplicate_chapter.html.twig")
      * @ParamConverter("lesson", class="IcapLessonBundle:Lesson", options={"id" = "resourceId"})
      */
     public function duplicateFormChapterAction($lesson, $chapterId)
@@ -613,12 +613,12 @@ class LessonController extends Controller
         //for ajaxification
         if ($this->getRequest()->isXMLHttpRequest()) {
             return $this->render(
-                            'IcapLessonBundle:Lesson:duplicateChapterAjaxified.html.twig', [
-                        '_resource' => $lesson,
-                        'chapter' => $chapter,
-                        'form' => $form->createView(),
-                        'workspace' => $lesson->getResourceNode()->getWorkspace(),
-                            ]
+                'IcapLessonBundle:lesson:duplicate_chapter_ajaxified.html.twig', [
+                    '_resource' => $lesson,
+                    'chapter' => $chapter,
+                    'form' => $form->createView(),
+                    'workspace' => $lesson->getResourceNode()->getWorkspace(),
+                ]
             );
         }
 
@@ -657,14 +657,13 @@ class LessonController extends Controller
                 $copy_children = $form->get('duplicate_children')->getData();
             }
         } else {
-            return
-                    $this->redirect(
-                            $this->generateUrl(
-                                    'icap_lesson_duplicate_form_chapter', [
-                                'resourceId' => $lesson->getId(),
-                                'chapterId' => $chapter->getId(),
-                                    ]
-                            )
+            return $this->redirect(
+                $this->generateUrl(
+                    'icap_lesson_duplicate_form_chapter', [
+                        'resourceId' => $lesson->getId(),
+                        'chapterId' => $chapter->getId(),
+                    ]
+                )
             );
         }
 
@@ -674,8 +673,8 @@ class LessonController extends Controller
         $this->dispatchChapterCreateEvent($lesson, $chapter_copy);
 
         return $this->redirect($this->generateUrl('icap_lesson_chapter', [
-                            'resourceId' => $lesson->getId(),
-                            'chapterId' => $chapter_copy->getSlug(),
+            'resourceId' => $lesson->getId(),
+            'chapterId' => $chapter_copy->getSlug(),
         ]));
     }
 

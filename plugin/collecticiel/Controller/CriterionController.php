@@ -81,7 +81,7 @@ class CriterionController extends DropzoneBaseController
      *      defaults={"criterionId" = 0}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template("InnovaCollecticielBundle:Dropzone:editAddCriteria.html.twig")
+     * @Template("InnovaCollecticielBundle:dropzone:edit_add_criteria.html.twig")
      */
     public function editCreateCriterionAction($dropzone, $page, $criterionId)
     {
@@ -210,7 +210,7 @@ class CriterionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("criterion", class="InnovaCollecticielBundle:Criterion", options={"id" = "criterionId"})
-     * @Template("InnovaCollecticielBundle:Dropzone:editDeleteCriterion.html.twig")
+     * @Template("InnovaCollecticielBundle:dropzone:edit_delete_criterion.html.twig")
      */
     public function editRemoveCriterionAction(Dropzone $dropzone, $page, Criterion $criterion)
     {

@@ -45,7 +45,7 @@ class LocaleController
      *
      * @Route("/locale/select", name="claroline_locale_select", options = {"expose" = true})
      *
-     * @Template("ClarolineCoreBundle:Locale:select.html.twig")
+     * @Template("ClarolineCoreBundle:locale:select.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

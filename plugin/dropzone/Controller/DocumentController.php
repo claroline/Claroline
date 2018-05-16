@@ -227,7 +227,6 @@ class DocumentController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
-     * @Template()
      */
     public function documentAction(Request $request, $dropzone, $documentType, $drop)
     {
@@ -269,9 +268,9 @@ class DocumentController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Document:document.html.twig';
+        $view = 'IcapDropzoneBundle:document:document.html.twig';
         if ($request->isXMLHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Document:documentInline.html.twig';
+            $view = 'IcapDropzoneBundle:document:document_inline.html.twig';
         }
 
         return $this->render(
@@ -297,7 +296,6 @@ class DocumentController extends DropzoneBaseController
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
      * @ParamConverter("document", class="IcapDropzoneBundle:Document", options={"id" = "documentId"})
-     * @Template()
      */
     public function deleteDocumentAction(Request $request, Dropzone $dropzone, $user, Drop $drop, Document $document)
     {
@@ -335,9 +333,9 @@ class DocumentController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Document:deleteDocument.html.twig';
+        $view = 'IcapDropzoneBundle:document:delete_document.html.twig';
         if ($request->isXMLHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Document:deleteDocumentModal.html.twig';
+            $view = 'IcapDropzoneBundle:document:delete_document_modal.html.twig';
         }
 
         return $this->render(
@@ -362,7 +360,6 @@ class DocumentController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("document", class="IcapDropzoneBundle:Document", options={"id" = "documentId"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
-     * @Template()
      */
     public function openResourceAction(Dropzone $dropzone, Document $document, $user)
     {

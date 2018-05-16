@@ -68,7 +68,7 @@ class PortfolioController extends Controller
         ];
 
         if ($request->isXmlHttpRequest()) {
-            $returnData = new Response($this->renderView('IcapPortfolioBundle:Portfolio:list_content.html.twig', $returnData));
+            $returnData = new Response($this->renderView('IcapPortfolioBundle:portfolio:list_content.html.twig', $returnData));
         } else {
             $analyticsViewsForm = $this->get('form.factory')->create($this->getAnalyticsManager()->getAnalyticsViewsForm());
             $returnData['analyticsViewsForm'] = $analyticsViewsForm->createView();
@@ -144,7 +144,7 @@ class PortfolioController extends Controller
             'portfolioId' => 0,
         ];
 
-        return $this->renderView('IcapPortfolioBundle:Portfolio:list_content.html.twig', $parameters);
+        return $this->renderView('IcapPortfolioBundle:portfolio:list_content.html.twig', $parameters);
     }
 
     /**
@@ -473,14 +473,14 @@ class PortfolioController extends Controller
                 || (
                     Portfolio::VISIBILITY_USER === $portfolioVisibility && null !== $user && !$portfolio->visibleToUser($user)
                 )) {
-                $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.error.html.twig', ['errorCode' => 403, 'portfolioSlug' => $portfolioSlug]), 403);
+                $response = new Response($this->renderView('IcapPortfolioBundle:portfolio:view.error.html.twig', ['errorCode' => 403, 'portfolioSlug' => $portfolioSlug]), 403);
             } elseif (
                     null === $user
                     && (
                         Portfolio::VISIBILITY_PLATFORM_USER === $portfolioVisibility
                         || Portfolio::VISIBILITY_USER === $portfolioVisibility
                     )) {
-                $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.error.html.twig', ['errorCode' => 401, 'portfolioSlug' => $portfolioSlug]), 401);
+                $response = new Response($this->renderView('IcapPortfolioBundle:portfolio:view.error.html.twig', ['errorCode' => 401, 'portfolioSlug' => $portfolioSlug]), 401);
             } else {
                 throw new \LogicException('Unknow opening mode for the portfolio.');
             }
@@ -500,7 +500,7 @@ class PortfolioController extends Controller
                 $responseParameters['resourceTypes'] = $this->get('claroline.manager.resource_manager')->getAllResourceTypes();
             }
 
-            $response = new Response($this->renderView('IcapPortfolioBundle:Portfolio:view.html.twig', $responseParameters));
+            $response = new Response($this->renderView('IcapPortfolioBundle:portfolio:view.html.twig', $responseParameters));
         }
 
         return $response;

@@ -41,7 +41,7 @@ class NotificationController extends Controller
             $result['unviewedNotifications'] = $unviewedNotifications;
 
             return $this->render(
-                'IcapNotificationBundle:Templates:notificationDropdownList.html.twig',
+                'IcapNotificationBundle:templates:notification_dropdown_list.html.twig',
                 $result
             );
         } else {
@@ -80,7 +80,7 @@ class NotificationController extends Controller
             $result = ['error' => 'zero_notifications'];
         }
 
-        return $this->render('IcapNotificationBundle:Notification:rss.xml.twig', $result);
+        return $this->render('IcapNotificationBundle:notification:rss.xml.twig', $result);
     }
 
     /**

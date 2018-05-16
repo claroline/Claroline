@@ -149,7 +149,7 @@ class AuthenticationController
      *     name="claro_security_forgot_password",
      *     options={"expose"=true}
      * )
-     * @Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
+     * @Template("ClarolineCoreBundle:authentication:forgot_password.html.twig")
      */
     public function forgotPasswordAction()
     {
@@ -173,7 +173,7 @@ class AuthenticationController
      *     options={"expose"=true}
      * )
      * @Method("POST")
-     * @Template("ClarolineCoreBundle:Authentication:forgotPassword.html.twig")
+     * @Template("ClarolineCoreBundle:authentication:forgot_password.html.twig")
      */
     public function sendEmailAction()
     {
@@ -223,7 +223,7 @@ class AuthenticationController
      *     options={"expose"=true}
      * )
      *
-     * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
+     * @Template("ClarolineCoreBundle:authentication:reset_password.html.twig")
      */
     public function resetPasswordAction($hash)
     {
@@ -257,7 +257,7 @@ class AuthenticationController
      * )
      * @Method("POST")
      *
-     * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
+     * @Template("ClarolineCoreBundle:authentication:reset_password.html.twig")
      */
     public function newPasswordAction($hash)
     {
@@ -293,7 +293,7 @@ class AuthenticationController
      * )
      * @Method("GET")
      *
-     * @Template("ClarolineCoreBundle:Authentication:resetPassword.html.twig")
+     * @Template("ClarolineCoreBundle:authentication:reset_password.html.twig")
      */
     public function validateEmailAction($hash)
     {
@@ -381,7 +381,7 @@ class AuthenticationController
      * )
      * @Method("GET")
      * @SEC\PreAuthorize("hasRole('ROLE_USER')")
-     * @Template("ClarolineCoreBundle:Authentication:authenticated.html.twig")
+     * @Template("ClarolineCoreBundle:authentication:authenticated.html.twig")
      */
     public function triggerAuthenticationAction($hash)
     {

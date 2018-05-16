@@ -31,7 +31,7 @@ class MyWorkspaceController extends Controller
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
-     * @Template
+     * @Template("IcapBadgeBundle:tool/my_workspace:list.html.twig")
      */
     public function listAction(Workspace $workspace, User $loggedUser, $badgePage)
     {
@@ -53,7 +53,6 @@ class MyWorkspaceController extends Controller
      * )
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @ParamConverter("badge", class="IcapBadgeBundle:Badge", options={"id" = "badge_id"})
-     * @Template()
      */
     public function claimAction(Workspace $workspace, User $user, Badge $badge)
     {
@@ -85,7 +84,7 @@ class MyWorkspaceController extends Controller
      * )
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @ParamConverter("badge", converter="badge_converter", options={"check_deleted" = false})
-     * @Template()
+     * @Template("IcapBadgeBundle:tool/my_workspace:view.html.twig")
      */
     public function viewAction(Workspace $workspace, Badge $badge, User $user)
     {

@@ -25,7 +25,7 @@ class NotificationPluginConfigurationController extends Controller
 {
     /**
      * @Route("/configuration", name="icap_notification_configuration")
-     * @Template("IcapNotificationBundle:Configuration:config.html.twig")
+     * @Template("IcapNotificationBundle:configuration:config.html.twig")
      * @Method({"GET"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Security("has_role('ROLE_ADMIN')")
@@ -40,7 +40,7 @@ class NotificationPluginConfigurationController extends Controller
 
     /**
      * @Route("/configuration", name="icap_notification_configuration_save")
-     * @Template("IcapNotificationBundle:Configuration:config.html.twig")
+     * @Template("IcapNotificationBundle:configuration:config.html.twig")
      * @Method({"POST"})
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @Security("has_role('ROLE_ADMIN')")

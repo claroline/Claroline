@@ -593,9 +593,9 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        $view = 'InnovaCollecticielBundle:Drop:dropsDelete.html.twig';
+        $view = 'InnovaCollecticielBundle:drop:drops_delete.html.twig';
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $view = 'InnovaCollecticielBundle:Drop:dropsDeleteModal.html.twig';
+            $view = 'InnovaCollecticielBundle:drop:drops_delete_modal.html.twig';
         }
 
         return $this->render($view, [
@@ -720,18 +720,17 @@ class DropController extends DropzoneBaseController
      *
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @Route(
-     *                                                            "/unlock/drop/{dropId}",
-     *                                                            name="innova_collecticiel_unlock_drop",
-     *                                                            requirements={"resourceId" = "\d+", "dropId" = "\d+"}
-     *                                                            )
+     *     "/unlock/drop/{dropId}",
+     *     name="innova_collecticiel_unlock_drop",
+     *     requirements={"resourceId" = "\d+", "dropId" = "\d+"}
+     * )
      * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @ParamConverter("user", options={
-     *                                                            "authenticatedUser" = true,
-     *                                                            "messageEnabled" = true,
-     *                                                            "messageTranslationKey" = "This action requires authentication. Please login.",
-     *                                                            "messageTranslationDomain" = "innova_collecticiel"
-     *                                                            })
-     * @Template()
+     *     "authenticatedUser" = true,
+     *     "messageEnabled" = true,
+     *     "messageTranslationKey" = "This action requires authentication. Please login.",
+     *     "messageTranslationDomain" = "innova_collecticiel"
+     * })
      */
     public function unlockDropAction(Drop $drop, User $user)
     {
@@ -815,9 +814,9 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        $view = 'InnovaCollecticielBundle:Drop:reportDrop.html.twig';
+        $view = 'InnovaCollecticielBundle:drop:report_drop.html.twig';
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $view = 'InnovaCollecticielBundle:Drop:reportDropModal.html.twig';
+            $view = 'InnovaCollecticielBundle:drop:report_drop_modal.html.twig';
         }
 
         return $this->render($view, [
@@ -846,7 +845,6 @@ class DropController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
      * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
-     * @Template()
      */
     public function removeReportAction(Dropzone $dropzone, Drop $drop, Correction $correction, $invalidate)
     {
@@ -891,7 +889,6 @@ class DropController extends DropzoneBaseController
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template()
      */
     public function autoCloseDropsConfirmationAction(Dropzone $dropzone)
     {
@@ -899,8 +896,8 @@ class DropController extends DropzoneBaseController
         $this->get('innova.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
         $view = $this->getRequest()->isXmlHttpRequest()
-          ? 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDropModal.html.twig'
-          : 'InnovaCollecticielBundle:Dropzone:confirmCloseUnterminatedDrop.html.twig';
+          ? 'InnovaCollecticielBundle:dropzone:confirm_closeunterminated_drop_modal.html.twig'
+          : 'InnovaCollecticielBundle:dropzone:confirm_close_unterminated_drop.html.twig';
 
         return $this->render($view, [
             'workspace' => $dropzone->getResourceNode()->getWorkspace(),
@@ -1017,7 +1014,6 @@ class DropController extends DropzoneBaseController
      *      name="innova_collecticiel_return_receipt",
      *      options={"expose"=true}
      * )
-     * @Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -1076,7 +1072,6 @@ class DropController extends DropzoneBaseController
      *      name="innova_collecticiel_back_link",
      *      options={"expose"=true}
      * )
-     * @Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

@@ -25,7 +25,7 @@ class NotificationUserParametersController extends Controller
     /**
      * @Route("/parameters", name="icap_notification_user_parameters")
      * @Method({"GET"})
-     * @Template("IcapNotificationBundle:Parameters:config.html.twig")
+     * @Template("IcapNotificationBundle:parameters:config.html.twig")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function getAction(User $user)
@@ -40,7 +40,7 @@ class NotificationUserParametersController extends Controller
     /**
      * @Route("/parameters", name="icap_notification_save_user_parameters")
      * @Method({"POST"})
-     * @Template("IcapNotificationBundle:Parameters:config.html.twig")
+     * @Template("IcapNotificationBundle:parameters:config.html.twig")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function postAction(Request $request, User $user)
@@ -52,7 +52,7 @@ class NotificationUserParametersController extends Controller
 
     /**
      * @Route("/regenerate_rss", name="icap_notification_regenerate_rss_url")
-     * @Template("IcapNotificationBundle:Parameters:config.html.twig")
+     * @Template("IcapNotificationBundle:parameters:config.html.twig")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function regenerateRssUrlAction(User $user)

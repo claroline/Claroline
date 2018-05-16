@@ -219,7 +219,6 @@ class DropController extends DropzoneBaseController
      *      defaults={"page" = 1}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template()
      */
     public function dropsByUserAction($dropzone, $page)
     {
@@ -392,7 +391,6 @@ class DropController extends DropzoneBaseController
      * )
      *
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template()
      **/
     public function dropsByDefaultAction($dropzone, $page = 1)
     {
@@ -448,7 +446,6 @@ class DropController extends DropzoneBaseController
      * )
      *
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template()
      */
     public function dropsByReportAction($dropzone, $page)
     {
@@ -504,7 +501,6 @@ class DropController extends DropzoneBaseController
      *      defaults={"page" = 1}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template()
      */
     public function dropsByDateAction($dropzone, $page)
     {
@@ -559,7 +555,6 @@ class DropController extends DropzoneBaseController
      *      defaults={"page" = 1}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template()
      */
     public function dropsAwaitingAction($dropzone, $page)
     {
@@ -615,7 +610,6 @@ class DropController extends DropzoneBaseController
      *      defaults={"page" = 1}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template()
      */
     public function dropsUnfinishedAction($dropzone, $page)
     {
@@ -666,7 +660,6 @@ class DropController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
-     * @Template()
      */
     public function dropsDeleteAction(Request $request, $dropzone, $drop, $tab, $page)
     {
@@ -703,9 +696,9 @@ class DropController extends DropzoneBaseController
             //}
         }
 
-        $view = 'IcapDropzoneBundle:Drop:dropsDelete.html.twig';
+        $view = 'IcapDropzoneBundle:drop:drops_delete.html.twig';
         if ($request->isXmlHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Drop:dropsDeleteModal.html.twig';
+            $view = 'IcapDropzoneBundle:drop:drops_delete_modal.html.twig';
         }
 
         return $this->render($view, [
@@ -770,7 +763,6 @@ class DropController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
-     * @Template()
      */
     public function dropDetailAction(Dropzone $dropzone, Drop $drop)
     {
@@ -837,7 +829,6 @@ class DropController extends DropzoneBaseController
      *      "messageTranslationKey" = "This action requires authentication. Please login.",
      *      "messageTranslationDomain" = "icap_dropzone"
      * })
-     * @Template()
      */
     public function unlockDropAction(Request $request, Drop $drop, User $user)
     {
@@ -876,7 +867,6 @@ class DropController extends DropzoneBaseController
      *      "messageTranslationKey" = "Participate in an evaluation requires authentication. Please login.",
      *      "messageTranslationDomain" = "icap_dropzone"
      * })
-     * @Template()
      */
     public function reportDropAction(Request $request, Correction $correction, User $user)
     {
@@ -927,9 +917,9 @@ class DropController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Drop:reportDrop.html.twig';
+        $view = 'IcapDropzoneBundle:drop:report_drop.html.twig';
         if ($request->isXmlHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Drop:reportDropModal.html.twig';
+            $view = 'IcapDropzoneBundle:drop:report_drop_modal.html.twig';
         }
 
         return $this->render($view, [
@@ -958,7 +948,6 @@ class DropController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
-     * @Template()
      */
     public function removeReportAction(Dropzone $dropzone, Drop $drop, Correction $correction, $invalidate)
     {
@@ -1003,16 +992,15 @@ class DropController extends DropzoneBaseController
      *      requirements={"resourceId" = "\d+", "dropId" = "\d+"}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template()
      */
     public function autoCloseDropsConfirmationAction(Request $request, $dropzone)
     {
         $this->get('icap.manager.dropzone_voter')->isAllowToOpen($dropzone);
         $this->get('icap.manager.dropzone_voter')->isAllowToEdit($dropzone);
 
-        $view = 'IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDrop.html.twig';
+        $view = 'IcapDropzoneBundle:dropzone:confirm_close_unterminated_drop.html.twig';
         if ($request->isXmlHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Dropzone:confirmCloseUnterminatedDropModal.html.twig';
+            $view = 'IcapDropzoneBundle:dropzone:confirm_close_unterminated_drop_modal.html.twig';
         }
 
         return $this->render($view, [

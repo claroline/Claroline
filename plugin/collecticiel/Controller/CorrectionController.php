@@ -406,7 +406,7 @@ class CorrectionController extends DropzoneBaseController
         $dropzoneManager = $this->get('innova.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
-        $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
+        $view = 'InnovaCollecticielBundle:correction:correct_criteria.html.twig';
 
         return $this->render(
             $view,
@@ -527,7 +527,7 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-        $view = 'InnovaCollecticielBundle:Correction:correctComment.html.twig';
+        $view = 'InnovaCollecticielBundle:correction:correct_comment.html.twig';
 
         $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
 
@@ -626,7 +626,7 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-        $view = 'InnovaCollecticielBundle:Correction:correctStandard.html.twig';
+        $view = 'InnovaCollecticielBundle:correction:correct_standard.html.twig';
 
         return $this->render(
             $view,
@@ -664,11 +664,9 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
      *      "messageTranslationDomain" = "innova_collecticiel"
      * })
-     * @Template()
      */
     public function dropsDetailCommentAction(Dropzone $dropzone, $state, $correctionId, $page, User $user, Document $document)
     {
-        $documentOri = new Document();
         $documentOri = $document;
 
         $em = $this->getDoctrine()->getManager();
@@ -854,7 +852,7 @@ class CorrectionController extends DropzoneBaseController
         $canEdit = $dropzoneVoter->checkEditRight($dropzone);
 
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
-        $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
+        $view = 'InnovaCollecticielBundle:correction:correct_criteria.html.twig';
 
         if ('show' === $state || 'edit' === $state) {
             return $this->render(
@@ -911,7 +909,6 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
      *      "messageTranslationDomain" = "innova_collecticiel"
      * })
-     * @Template()
      */
     public function dropsDetailCorrectionCommentAction(Dropzone $dropzone, $state, $correctionId, $user)
     {
@@ -968,7 +965,7 @@ class CorrectionController extends DropzoneBaseController
                 }
             }
 
-            $view = 'InnovaCollecticielBundle:Correction:correctComment.html.twig';
+            $view = 'InnovaCollecticielBundle:correction:correct_comment.html.twig';
             $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
 
             return $this->render(
@@ -988,7 +985,7 @@ class CorrectionController extends DropzoneBaseController
             );
         }
 
-        $view = 'InnovaCollecticielBundle:Correction:correctComment.html.twig';
+        $view = 'InnovaCollecticielBundle:correction:correct_comment.html.twig';
 
         if ('show' === $state) {
             $totalGrade = $this->get('innova.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
@@ -1044,7 +1041,6 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
-     * @Template()
      */
     public function dropsDetailAddCommentsInnovaAction($dropzone, $user, $drop, $document)
     {
@@ -1132,7 +1128,7 @@ class CorrectionController extends DropzoneBaseController
         } else {
             // Action on GET , Ask confirmation Modal or not.
 
-            $view = 'InnovaCollecticielBundle:Correction:deleteCorrection.html.twig';
+            $view = 'InnovaCollecticielBundle:correction:delete_correction.html.twig';
             $backUserId = 0;
 
             $backUserId = $this->getRequest()->get('backUserId');
@@ -1167,7 +1163,6 @@ class CorrectionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
-     * @Template()
      */
     public function RevalidateCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value)
     {
@@ -1178,7 +1173,7 @@ class CorrectionController extends DropzoneBaseController
             // Ask confirmation to have more correction than expected.
             $view = 'InnovaCollecticielBundle:Correction:Admin/revalidateCorrection.html.twig';
             if ($this->getRequest()->isXmlHttpRequest()) {
-                $view = 'InnovaCollecticielBundle:Correction:Admin/revalidateCorrectionModal.html.twig';
+                $view = 'InnovaCollecticielBundle:correction:admin/revalidate_correction_modal.html.twig';
             }
 
             return $this->render(
@@ -1220,7 +1215,6 @@ class CorrectionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
-     * @Template()
      */
     public function setCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value, $routeParam)
     {
@@ -1276,7 +1270,6 @@ class CorrectionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
-     * @Template()
      */
     public function invalidateAllCorrectionsAction($dropzone, $drop)
     {
@@ -1354,10 +1347,10 @@ class CorrectionController extends DropzoneBaseController
         }
 
         // not a post, she show the view.
-        $view = 'InnovaCollecticielBundle:Correction:reportCorrection.html.twig';
+        $view = 'InnovaCollecticielBundle:correction:report_correction.html.twig';
 
         if ($this->getRequest()->isXmlHttpRequest()) {
-            $view = 'InnovaCollecticielBundle:Correction:reportCorrectionModal.html.twig';
+            $view = 'InnovaCollecticielBundle:correction:report_correction_modal.html.twig';
         }
 
         return $this->render(
@@ -1389,7 +1382,6 @@ class CorrectionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
-     * @Template()
      */
     public function recalculateScoreAction(Dropzone $dropzone, Correction $correction)
     {
@@ -1500,10 +1492,9 @@ class CorrectionController extends DropzoneBaseController
      *      defaults={"page" = 1, "withDropOnly" = "all" }
      * )
      *
-     *
      * @ParamConverter("dropzone",class="InnovaCollecticielBundle:Dropzone",options={"id" = "resourceId"})
-     * @Template()
-     * **/
+     *
+     **/
     public function ExaminersByCorrectionMadeAction($dropzone, $page, $withDropOnly)
     {
         // check rights
@@ -1558,7 +1549,7 @@ class CorrectionController extends DropzoneBaseController
         ];
 
         return $this->render(
-            'InnovaCollecticielBundle:Drop:Examiners/ExaminersByName.htlm.twig',
+            'InnovaCollecticielBundle:drop:examiners/examiners_by_name.htlm.twig',
             $response
         );
     }
@@ -1695,7 +1686,6 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationDomain" = "innova_collecticiel"
      * })
      * @ParamConverter("drop", class="InnovaCollecticielBundle:Drop", options={"id" = "dropId"})
-     * @Template()
      */
     public function dropsDetailAddCorrectionAction($dropzone, $user, $drop)
     {
@@ -1746,7 +1736,6 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
      *      "messageTranslationDomain" = "innova_collecticiel"
      * })
-     * @Template()
      */
     public function dropsDetailAddCommentsAction(Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
@@ -1881,7 +1870,7 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-        $view = 'InnovaCollecticielBundle:Correction:correctCriteria.html.twig';
+        $view = 'InnovaCollecticielBundle:correction:correct_criteria.html.twig';
 
         if ('show' === $state || 'edit' === $state) {
             return $this->render(
@@ -1927,7 +1916,6 @@ class CorrectionController extends DropzoneBaseController
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzoneId"})
      * @ParamConverter("correction", class="InnovaCollecticielBundle:Correction", options={"id" = "correctionId"})
      * @Method("POST")
-     * @Template()
      */
     public function AddCommentsInnovaAction(Document $document, User $user, Dropzone $dropzone, Correction $correction)
     {
@@ -1991,7 +1979,6 @@ class CorrectionController extends DropzoneBaseController
      *      name="innova_collecticiel_add_more_comments",
      *      options={"expose"=true}
      * )
-     * @Template()
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -2096,7 +2083,6 @@ class CorrectionController extends DropzoneBaseController
      *      name="innova_collecticiel_add_more_comments_view",
      *      options={"expose"=true}
      * )
-     * @Template()
      */
     public function dropzoneAddMoreCommentsAction()
     {
@@ -2172,7 +2158,7 @@ class CorrectionController extends DropzoneBaseController
         );
 
         // Appel de la vue qui va gérer l'ajout des commentaires. InnovaERV.
-        $view = 'InnovaCollecticielBundle:Correction:correctAddMoreComments.html.twig';
+        $view = 'InnovaCollecticielBundle:correction:correct_add_more_comments.html.twig';
 
         return $this->render(
             $view,
@@ -2203,7 +2189,6 @@ class CorrectionController extends DropzoneBaseController
      *      requirements={}
      * )
      * @Method("POST")
-     * @Template()
      */
     public function addMoreCommentsInnovaAction()
     {
@@ -2267,7 +2252,6 @@ class CorrectionController extends DropzoneBaseController
      * @ParamConverter("user",class="ClarolineCoreBundle:User",options={"id" = "userId"})
      * @ParamConverter("dropzone", class="InnovaCollecticielBundle:Dropzone", options={"id" = "dropzoneId"})
      * @Method("POST")
-     * @Template()
      */
     public function addCommentForDocsInnovaAction(User $user, Dropzone $dropzone)
     {

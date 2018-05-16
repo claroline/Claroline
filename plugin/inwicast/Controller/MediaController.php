@@ -75,7 +75,7 @@ class MediaController extends Controller
      *      name="inwicast_mediacenter_user_videos"
      * )
      * @Method({"GET"})
-     * @Template("IcapInwicastBundle:Media:videosList.html.twig")
+     * @Template("IcapInwicastBundle:media:videos_list.html.twig")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      * @ParamConverter("widget", class="ClarolineCoreBundle:Widget\WidgetInstance", options={"id" = "widgetId"})
      */
@@ -90,7 +90,7 @@ class MediaController extends Controller
      *      options={"expose"=true}
      * )
      * @Method({"GET"})
-     * @Template("IcapInwicastBundle:Media:videosListTinymce.html.twig")
+     * @Template("IcapInwicastBundle:media:videos_list_tinymce.html.twig")
      * @ParamConverter("user", options={"authenticatedUser" = true})
      */
     public function listTinymceAction(User $user)

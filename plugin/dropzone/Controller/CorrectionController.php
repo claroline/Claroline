@@ -424,7 +424,7 @@ class CorrectionController extends DropzoneBaseController
         $dropzoneManager = $this->get('icap.manager.dropzone_manager');
         $dropzoneProgress = $dropzoneManager->getDropzoneProgressByUser($dropzone, $user);
 
-        $view = 'IcapDropzoneBundle:Correction:correctCriteria.html.twig';
+        $view = 'IcapDropzoneBundle:correction:correct_criteria.html.twig';
 
         return $this->render(
             $view,
@@ -455,7 +455,6 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
      *      "messageTranslationDomain" = "icap_dropzone"
      * })
-     * @Template()
      */
     public function correctCommentAction(Request $request, Dropzone $dropzone, User $user)
     {
@@ -539,7 +538,7 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
+        $view = 'IcapDropzoneBundle:correction:correct_comment.html.twig';
 
         $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
 
@@ -638,7 +637,7 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Correction:correctStandard.html.twig';
+        $view = 'IcapDropzoneBundle:correction:correct_standard.html.twig';
 
         return $this->render(
             $view,
@@ -675,7 +674,6 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
      *      "messageTranslationDomain" = "icap_dropzone"
      * })
-     * @Template()
      */
     public function dropsDetailCorrectionAction(Request $request, Dropzone $dropzone, $state, $correctionId, $page, $user)
     {
@@ -810,7 +808,7 @@ class CorrectionController extends DropzoneBaseController
             }
         }
 
-        $view = 'IcapDropzoneBundle:Correction:correctCriteria.html.twig';
+        $view = 'IcapDropzoneBundle:correction:correct_criteria.html.twig';
 
         if ($state === 'show' || $state === 'edit') {
             return $this->render(
@@ -858,7 +856,6 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationKey" = "Correct an evaluation requires authentication. Please login.",
      *      "messageTranslationDomain" = "icap_dropzone"
      * })
-     * @Template()
      */
     public function dropsDetailCorrectionCommentAction(Request $request, Dropzone $dropzone, $state, $correctionId, $user)
     {
@@ -908,7 +905,7 @@ class CorrectionController extends DropzoneBaseController
                 }
             }
 
-            $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
+            $view = 'IcapDropzoneBundle:correction:correct_comment.html.twig';
             $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
 
             return $this->render(
@@ -928,7 +925,7 @@ class CorrectionController extends DropzoneBaseController
             );
         }
 
-        $view = 'IcapDropzoneBundle:Correction:correctComment.html.twig';
+        $view = 'IcapDropzoneBundle:correction:correct_comment.html.twig';
 
         if ($state === 'show') {
             $totalGrade = $this->get('icap.manager.correction_manager')->calculateCorrectionTotalGrade($dropzone, $correction);
@@ -983,7 +980,6 @@ class CorrectionController extends DropzoneBaseController
      *      "messageTranslationDomain" = "icap_dropzone"
      * })
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
-     * @Template()
      */
     public function dropsDetailAddCorrectionAction($dropzone, $user, $drop)
     {
@@ -1024,7 +1020,6 @@ class CorrectionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
-     * @Template()
      */
     public function deleteCorrectionAction(Request $request, Dropzone $dropzone, Correction $correction, $backPage)
     {
@@ -1072,12 +1067,12 @@ class CorrectionController extends DropzoneBaseController
         } else {
             // Action on GET , Ask confirmation Modal or not.
 
-            $view = 'IcapDropzoneBundle:Correction:deleteCorrection.html.twig';
+            $view = 'IcapDropzoneBundle:correction:delete_correction.html.twig';
             $backUserId = 0;
 
             $backUserId = $request->get('backUserId');
             if ($request->isXmlHttpRequest()) {
-                $view = 'IcapDropzoneBundle:Correction:deleteCorrectionModal.html.twig';
+                $view = 'IcapDropzoneBundle:correction:delete_correction_modal.html.twig';
                 $backUserId = $correction->getUser()->getId();
             }
 
@@ -1104,7 +1099,6 @@ class CorrectionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
-     * @Template()
      */
     public function RevalidateCorrectionValidationAction(Request $request, Dropzone $dropzone, Correction $correction, $value)
     {
@@ -1114,9 +1108,9 @@ class CorrectionController extends DropzoneBaseController
         if ($dropzone->getExpectedTotalCorrection() <= $correction->getDrop()->countFinishedCorrections()) {
 
             // Ask confirmation to have more correction than expected.
-            $view = 'IcapDropzoneBundle:Correction:Admin/revalidateCorrection.html.twig';
+            $view = 'IcapDropzoneBundle:correction:admin/revalidate_correction.html.twig';
             if ($request->isXmlHttpRequest()) {
-                $view = 'IcapDropzoneBundle:Correction:Admin/revalidateCorrectionModal.html.twig';
+                $view = 'IcapDropzoneBundle:correction:admin/revalidate_correction_modal.html.twig';
             }
 
             return $this->render($view, [
@@ -1155,7 +1149,6 @@ class CorrectionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
-     * @Template()
      */
     public function setCorrectionValidationAction(Dropzone $dropzone, Correction $correction, $value, $routeParam)
     {
@@ -1211,7 +1204,6 @@ class CorrectionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("drop", class="IcapDropzoneBundle:Drop", options={"id" = "dropId"})
-     * @Template()
      */
     public function invalidateAllCorrectionsAction($dropzone, $drop)
     {
@@ -1290,10 +1282,10 @@ class CorrectionController extends DropzoneBaseController
         }
 
         // not a post, she show the view.
-        $view = 'IcapDropzoneBundle:Correction:reportCorrection.html.twig';
+        $view = 'IcapDropzoneBundle:correction:report_correction.html.twig';
 
         if ($request->isXmlHttpRequest()) {
-            $view = 'IcapDropzoneBundle:Correction:reportCorrectionModal.html.twig';
+            $view = 'IcapDropzoneBundle:correction:report_correction_modal.html.twig';
         }
 
         return $this->render($view, [
@@ -1322,7 +1314,6 @@ class CorrectionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("correction", class="IcapDropzoneBundle:Correction", options={"id" = "correctionId"})
-     * @Template()
      */
     public function recalculateScoreAction(Dropzone $dropzone, Correction $correction)
     {
@@ -1435,7 +1426,6 @@ class CorrectionController extends DropzoneBaseController
      *
      *
      * @ParamConverter("dropzone",class="IcapDropzoneBundle:Dropzone",options={"id" = "resourceId"})
-     * @Template()
      * **/
     public function ExaminersByCorrectionMadeAction($dropzone, $page, $withDropOnly)
     {
@@ -1491,7 +1481,7 @@ class CorrectionController extends DropzoneBaseController
         ];
 
         return $this->render(
-            'IcapDropzoneBundle:Drop:Examiners/ExaminersByName.htlm.twig',
+            'IcapDropzoneBundle:drop:examiners/examiners_by_name.htlm.twig',
             $response
         );
     }

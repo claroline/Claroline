@@ -67,7 +67,7 @@ class WorkspaceController extends Controller
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
-     * @Template
+     * @Template("IcapBadgeBundle:tool/workspace:list.html.twig")
      */
     public function listAction(Workspace $workspace, $badgePage, $claimPage, $userPage)
     {
@@ -120,7 +120,7 @@ class WorkspaceController extends Controller
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
-     * @Template()
+     * @Template("IcapBadgeBundle:tool/workspace:add.html.twig")
      */
     public function addAction(Request $request, Workspace $workspace)
     {
@@ -169,7 +169,7 @@ class WorkspaceController extends Controller
      *     options={"id" = "workspaceId"}
      * )
      * @ParamConverter("badge", converter="badge_converter")
-     * @Template
+     * @Template("IcapBadgeBundle:tool/workspace:edit.html.twig")
      */
     public function editAction(Request $request, Workspace $workspace, Badge $badge, $page = 1)
     {
@@ -225,7 +225,6 @@ class WorkspaceController extends Controller
      *     options={"id" = "workspaceId"}
      * )
      * @ParamConverter("badge", converter="badge_converter")
-     * @Template
      */
     public function deleteAction(Workspace $workspace, Badge $badge)
     {
@@ -267,7 +266,7 @@ class WorkspaceController extends Controller
      * )
      * @ParamConverter("badge", converter="badge_converter")
      * @ParamConverter("loggedUser", options={"authenticatedUser" = true})
-     * @Template
+     * @Template("IcapBadgeBundle:tool/workspace:award.html.twig")
      */
     public function awardAction(Request $request, Workspace $workspace, Badge $badge, User $loggedUser)
     {
@@ -355,7 +354,6 @@ class WorkspaceController extends Controller
      *     options={"id" = "workspaceId"}
      * )
      * @ParamConverter("user", options={"mapping": {"username": "username"}})
-     * @Template
      */
     public function unawardAction(Request $request, Workspace $workspace, Badge $badge, User $user)
     {
@@ -410,7 +408,6 @@ class WorkspaceController extends Controller
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
-     * @Template
      */
     public function manageClaimAction(Workspace $workspace, BadgeClaim $badgeClaim, $validate = false)
     {
@@ -461,7 +458,7 @@ class WorkspaceController extends Controller
      *     class="ClarolineCoreBundle:Workspace\Workspace",
      *     options={"id" = "workspaceId"}
      * )
-     * @Template()
+     * @Template("IcapBadgeBundle:tool/workspace:statistics.html.twig")
      */
     public function statisticsAction(Request $request, Workspace $workspace)
     {

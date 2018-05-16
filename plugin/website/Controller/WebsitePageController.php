@@ -34,7 +34,7 @@ class WebsitePageController extends Controller
      *      options={"expose"=true}
      * )
      * @ParamConverter("website", class="IcapWebsiteBundle:Website", options={"id" = "websiteId"})
-     * @Template("IcapWebsiteBundle:Website:view.html.twig")
+     * @Template("IcapWebsiteBundle:website:view.html.twig")
      * @Method({"GET"})
      */
     public function viewAction(Website $website, $pageId)

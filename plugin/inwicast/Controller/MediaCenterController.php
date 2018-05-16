@@ -27,7 +27,7 @@ class MediaCenterController extends Controller
     /**
      * @Route("/admin/configure", name="inwicast_mediacenter_configure")
      * @Method({"GET", "POST"})
-     * @Template("IcapInwicastBundle:MediaCenter:form.html.twig")
+     * @Template("IcapInwicastBundle:media_center:form.html.twig")
      *
      * @param Request $request
      *

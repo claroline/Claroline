@@ -7,7 +7,6 @@ use Icap\BlogBundle\Entity\Comment;
 use Icap\BlogBundle\Entity\Post;
 use Icap\BlogBundle\Entity\Blog;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,7 +19,6 @@ class CommentController extends BaseController
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @ParamConverter("comment", class="IcapBlogBundle:Comment", options={"id" = "commentId"})
-     * @Template()
      */
     public function deleteAction(Blog $blog, Post $post, Comment $comment)
     {
@@ -50,7 +48,6 @@ class CommentController extends BaseController
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @ParamConverter("comment", class="IcapBlogBundle:Comment", options={"id" = "commentId"})
-     * @Template()
      */
     public function publishAction(Blog $blog, Post $post, Comment $comment)
     {
@@ -72,7 +69,6 @@ class CommentController extends BaseController
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @ParamConverter("comment", class="IcapBlogBundle:Comment", options={"id" = "commentId"})
-     * @Template()
      */
     public function unpublishAction(Blog $blog, Post $post, Comment $comment)
     {
@@ -122,7 +118,6 @@ class CommentController extends BaseController
      * @ParamConverter("blog", class="IcapBlogBundle:Blog", options={"id" = "blogId"})
      * @ParamConverter("post", class="IcapBlogBundle:Post", options={"mapping": {"postSlug": "slug"}})
      * @ParamConverter("comment", class="IcapBlogBundle:Comment", options={"id" = "commentId"})
-     * @Template()
      */
     public function editAction(Request $request, Blog $blog, Post $post, Comment $comment)
     {

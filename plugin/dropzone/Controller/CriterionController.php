@@ -29,7 +29,6 @@ class CriterionController extends DropzoneBaseController
      *      defaults={"criterionId" = 0}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template()
      */
     public function editAddCriterionAction(Request $request, $dropzone, $page, $criterionId)
     {
@@ -51,7 +50,7 @@ class CriterionController extends DropzoneBaseController
 
         if ($request->isXMLHttpRequest()) {
             return $this->render(
-                'IcapDropzoneBundle:Criterion:editAddCriterionModal.html.twig',
+                'IcapDropzoneBundle:criterion:edit_add_criterion_modal.html.twig',
                 array(
                     'workspace' => $dropzone->getResourceNode()->getWorkspace(),
                     '_resource' => $dropzone,
@@ -81,7 +80,7 @@ class CriterionController extends DropzoneBaseController
      *      defaults={"criterionId" = 0}
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
-     * @Template("IcapDropzoneBundle:Dropzone:editAddCriteria.html.twig")
+     * @Template("IcapDropzoneBundle:dropzone:edit_add_criteria.html.twig")
      */
     public function editCreateCriterionAction(Request $request, $dropzone, $page, $criterionId)
     {
@@ -159,7 +158,6 @@ class CriterionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("criterion", class="IcapDropzoneBundle:Criterion", options={"id" = "criterionId"})
-     * @Template()
      */
     public function editDeleteCriterionAction(Request $request, Dropzone $dropzone, $page, $criterion, $number)
     {
@@ -176,7 +174,7 @@ class CriterionController extends DropzoneBaseController
 
         if ($request->isXMLHttpRequest()) {
             return $this->render(
-                'IcapDropzoneBundle:Criterion:editDeleteCriterionModal.html.twig',
+                'IcapDropzoneBundle:criterion:edit_delete_criterion_modal.html.twig',
                 array(
                     'workspace' => $dropzone->getResourceNode()->getWorkspace(),
                     '_resource' => $dropzone,
@@ -210,7 +208,7 @@ class CriterionController extends DropzoneBaseController
      * )
      * @ParamConverter("dropzone", class="IcapDropzoneBundle:Dropzone", options={"id" = "resourceId"})
      * @ParamConverter("criterion", class="IcapDropzoneBundle:Criterion", options={"id" = "criterionId"})
-     * @Template("IcapDropzoneBundle:Dropzone:editDeleteCriterion.html.twig")
+     * @Template("IcapDropzoneBundle:dropzone:edit_delete_criterion.html.twig")
      */
     public function editRemoveCriterionAction(Request $request, Dropzone $dropzone, $page, Criterion $criterion)
     {

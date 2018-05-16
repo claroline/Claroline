@@ -676,7 +676,7 @@ class HomeController
      *
      * @ParamConverter("content", class = "ClarolineCoreBundle:Content", options = {"id" = "content"})
      *
-     * @Template("ClarolineCoreBundle:Home:menuSettings.html.twig")
+     * @Template("ClarolineCoreBundle:home:menu_settings.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
