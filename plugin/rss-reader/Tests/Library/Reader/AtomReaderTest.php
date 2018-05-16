@@ -13,7 +13,7 @@ namespace Claroline\RssReaderBundle\Library\Reader;
 
 use SimpleXMLElement;
 
-class AtomReaderTest extends \PHPUnit_Framework_TestCase
+class AtomReaderTest extends \PHPUnit\Framework\TestCase
 {
     private $reader;
 

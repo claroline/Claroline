@@ -9,8 +9,9 @@
 namespace Innova\CollecticielBundle\Tests\Entity;
 
 use Innova\CollecticielBundle\Entity\Correction;
+use PHPUnit\Framework\TestCase;
 
-class DropTest extends \PHPUnit_Framework_TestCase
+class DropTest extends TestCase
 {
     public function testgetCalculatedGrade()
     {

@@ -12,6 +12,7 @@
 namespace Claroline\CoreBundle\Controller\Administration;
 
 use Claroline\AppBundle\API\FinderProvider;
+use Claroline\AppBundle\API\Options;
 use Claroline\AppBundle\Event\StrictDispatcher;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Form\WorkspaceImportType;
@@ -74,14 +75,7 @@ class WorkspaceController extends Controller
         }
 
         return [
-            'workspaces' => $this->finder->search(
-                'Claroline\CoreBundle\Entity\Workspace\Workspace',
-                [
-                    'limit' => 20,
-                    'filters' => $filters,
-                    'sortBy' => 'name',
-                ]
-            ),
+            'workspaces' => [],
         ];
     }
 

@@ -27,6 +27,7 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
 
     public function preUpdate($currentVersion, $targetVersion)
     {
+        $this->updateRolesAdmin();
         $dataWebDir = $this->container->getParameter('claroline.param.data_web_dir');
         $fileSystem = $this->container->get('filesystem');
         $publicFilesDir = $this->container->getParameter('claroline.param.public_files_directory');
@@ -399,5 +400,31 @@ class AdditionalInstaller extends BaseInstaller implements ContainerAwareInterfa
         $locale = $ch->getParameter('locale_language');
         $translator = $this->container->get('translator');
         $translator->setLocale($locale);
+    }
+
+    private function updateRolesAdmin()
+    {
+        $om = $this->container->get('claroline.persistence.object_manager');
+
+        /** @var Role $role */
+        $wscreator = $om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_WS_CREATOR');
+
+        /** @var AdminTool $tool */
+        $wsmanagement = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('workspace_management');
+
+        $wsmanagement->addRole($wscreator);
+        $om->persist($wsmanagement);
+
+        /** @var Role $role */
+        $adminOrganization = $om->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN_ORGANIZATION');
+
+        /** @var AdminTool $tool */
+        $usermanagement = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('user_management');
+        $workspacemanagement = $om->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('workspace_management');
+        $usermanagement->addRole($adminOrganization);
+        $workspacemanagement->addRole($adminOrganization);
+        $om->persist($usermanagement);
+        $om->persist($workspacemanagement);
+        $om->flush();
     }
 }

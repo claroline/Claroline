@@ -11,7 +11,6 @@
 
 namespace Claroline\CoreBundle\Library\Testing;
 
-use Claroline\CoreBundle\Entity\Group;
 use Claroline\CoreBundle\Entity\Home\HomeTab;
 use Claroline\CoreBundle\Entity\Home\HomeTabConfig;
 use Claroline\CoreBundle\Entity\Log\Log;
@@ -64,7 +63,7 @@ abstract class RepositoryTestCase extends WebTestCase
         self::$persister = self::$client->getContainer()->get('claroline.library.testing.persister');
         self::$references = [];
         self::$time = new \DateTime();
-        self::$client->beginTransaction();
+        self::$om->beginTransaction();
         self::disableTimestampableListener();
     }
 
@@ -76,7 +75,8 @@ abstract class RepositoryTestCase extends WebTestCase
 
     public static function tearDownAfterClass()
     {
-        self::$client->shutdown();
+        self::$om->rollback();
+        //self::$client->shutdown();
     }
 
     /**

@@ -11,12 +11,12 @@
 
 namespace Claroline\CoreBundle\Command\User;
 
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Entity\User as UserEntity;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Claroline\CoreBundle\Manager\UserManager;
 use Claroline\CoreBundle\Security\PlatformRoles;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -26,19 +26,21 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CreateCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+
+    private $params = [
+        'user_first_name' => 'first name',
+        'user_last_name' => 'last name',
+        'user_username' => 'username',
+        'user_password' => 'password',
+        'user_email' => 'email',
+    ];
+
     protected function configure()
     {
         $this->setName('claroline:user:create')
             ->setDescription('Creates a new user.');
-        $this->setDefinition(
-            [
-                new InputArgument('user_first_name', InputArgument::REQUIRED, 'The user first name'),
-                new InputArgument('user_last_name', InputArgument::REQUIRED, 'The user last name'),
-                new InputArgument('user_username', InputArgument::REQUIRED, 'The user username'),
-                new InputArgument('user_password', InputArgument::REQUIRED, 'The user password'),
-                new InputArgument('user_email', InputArgument::REQUIRED, 'The user email'),
-            ]
-        );
+        $this->configureParams();
         $this->addOption(
             'ws_creator',
             'w',
@@ -51,43 +53,6 @@ class CreateCommand extends ContainerAwareCommand
             InputOption::VALUE_NONE,
             'When set to true, created user will have the admin role'
         );
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $params = [
-            'user_first_name' => 'first name',
-            'user_last_name' => 'last name',
-            'user_username' => 'username',
-            'user_password' => 'password',
-            'user_email' => 'email',
-        ];
-
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
-                $input->setArgument(
-                    $argument,
-                    $this->askArgument($output, $argumentName)
-                );
-            }
-        }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            "Enter the user {$argumentName}: ",
-            function ($argument) {
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
-
-                return $argument;
-            }
-        );
-
-        return $argument;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

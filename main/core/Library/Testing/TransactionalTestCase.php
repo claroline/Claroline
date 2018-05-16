@@ -11,11 +11,11 @@
 
 namespace Claroline\CoreBundle\Library\Testing;
 
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Claroline\CoreBundle\Entity\User;
+use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
-use Symfony\Bundle\FrameworkBundle\Client;
 
 abstract class TransactionalTestCase extends WebTestCase
 {
@@ -26,7 +26,7 @@ abstract class TransactionalTestCase extends WebTestCase
     {
         parent::setUp();
         $this->client = self::createClient();
-        $this->client->beginTransaction();
+        $this->client->getContainer()->get('claroline.persistence.object_manager')->beginTransaction();
     }
 
     protected function tearDown()
@@ -37,7 +37,7 @@ abstract class TransactionalTestCase extends WebTestCase
         // (by PHPUnit?) and the original error is hidden behind a fatal
         // "Call to a member function shutdown() on a non-object"...
         if ($this->client instanceof TransactionalTestClient) {
-            $this->client->shutdown();
+            $this->client->getContainer()->get('claroline.persistence.object_manager')->rollback();
         }
 
         // the following helps to free memory and speed up test suite execution.

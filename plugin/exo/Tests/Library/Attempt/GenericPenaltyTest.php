@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Tests\Library\Attempt;
 
 use UJM\ExoBundle\Library\Attempt\GenericPenalty;
 
-class GenericPenaltyTest extends \PHPUnit_Framework_TestCase
+class GenericPenaltyTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @expectedException \InvalidArgumentException

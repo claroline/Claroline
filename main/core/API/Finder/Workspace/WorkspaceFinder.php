@@ -104,6 +104,13 @@ class WorkspaceFinder implements FinderInterface
                     ));
                     $qb->setParameter('currentUserId', $filterValue);
                     break;
+                    //use this whith the 'user' property
+              case 'isManager':
+                  if ($filterValue) {
+                      $qb->andWhere('r.name like :ROLE_WS_MANAGER');
+                      $qb->setParameter('ROLE_WS_MANAGER', 'ROLE_WS_MANAGER%');
+                  }
+                  break;
                 default:
                     if (is_string($filterValue)) {
                         $qb->andWhere("UPPER(obj.{$filterName}) LIKE :{$filterName}");

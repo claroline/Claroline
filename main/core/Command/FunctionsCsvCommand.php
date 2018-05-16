@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Command;
 
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -18,6 +19,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class FunctionsCsvCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+
+    private $params = [
+        'functions_csv_path' => 'Absolute path to the csv file: ',
+    ];
+
     protected function configure()
     {
         $this->setName('claroline:csv:functions')
@@ -31,39 +38,6 @@ class FunctionsCsvCommand extends ContainerAwareCommand
                 ),
             ]
         );
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $params = [
-            'functions_csv_path' => 'Absolute path to the csv file: ',
-        ];
-
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
-                $input->setArgument(
-                    $argument,
-                    $this->askArgument($output, $argumentName)
-                );
-            }
-        }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            $argumentName,
-            function ($argument) {
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
-
-                return $argument;
-            }
-        );
-
-        return $argument;
     }
 
     /**

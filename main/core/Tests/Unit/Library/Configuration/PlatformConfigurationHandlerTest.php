@@ -13,7 +13,7 @@ namespace Claroline\CoreBundle\Library\Configuration;
 
 use org\bovigo\vfs\vfsStream;
 
-class PlatformConfigurationHandlerTest extends \PHPUnit_Framework_TestCase
+class PlatformConfigurationHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /** @var PlatformConfigurationHandler */
     private $handler;

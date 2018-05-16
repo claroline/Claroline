@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Command;
 
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -20,6 +21,13 @@ use Symfony\Component\Console\Question\ChoiceQuestion;
 
 class UpdateRichTextCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+
+    private $params = [
+        'old_string' => 'The string to match',
+        'new_string' => 'The string to replace',
+    ];
+
     protected function configure()
     {
         $this->setName('claroline:rich_texts:update')
@@ -35,49 +43,6 @@ class UpdateRichTextCommand extends ContainerAwareCommand
                InputOption::VALUE_NONE,
                'When set to true, no confirmation required'
            );
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $params = [
-            'old_string' => 'The string to match',
-            'new_string' => 'The string to replace',
-        ];
-
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
-                $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
-                );
-            }
-        }
-
-        $helper = $this->getHelper('question');
-        $entities = array_keys($this->getParsableEntities());
-        $question = new ChoiceQuestion('Entity to parse: ', $entities);
-        $question->setMultiselect(true);
-
-        while (null === $entity = $input->getArgument('classes')) {
-            $entity = $helper->ask($input, $output, $question);
-            $input->setArgument('classes', $entity);
-        }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            "Enter the {$argumentName}: ",
-            function ($argument) {
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
-
-                return $argument;
-            }
-        );
-
-        return $argument;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -215,7 +215,7 @@ const Organization = connect(
         definition: UserList.definition,
         card: UserList.card,
         fetch: {
-          url: ['apiv2_user_list_managed'],
+          url: ['apiv2_user_list_managed_organization'],
           autoload: true
         },
         handleSelect: (selected) => dispatch(actions.addUsers(organizationId, selected))
@@ -230,7 +230,7 @@ const Organization = connect(
         definition: UserList.definition,
         card: UserList.card,
         fetch: {
-          url: ['apiv2_user_list_managed'],
+          url: ['apiv2_user_list_managed_organization'],
           autoload: true
         },
         handleSelect: (selected) => dispatch(actions.addManagers(organizationId, selected))

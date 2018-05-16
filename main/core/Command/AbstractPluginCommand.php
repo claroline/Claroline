@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Command;
 
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\BundleRecorder\Detector\Detector;
 use Claroline\CoreBundle\Library\PluginBundle;
 use Psr\Log\LogLevel;
@@ -26,27 +27,13 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class AbstractPluginCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+
+    private $params = ['bundle' => 'the bundle name'];
+
     protected function configure()
     {
         $this->addArgument('bundle', InputArgument::REQUIRED, 'The bundle name');
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        if (!$input->getArgument('bundle')) {
-            $bundleName = $this->getHelper('dialog')->askAndValidate(
-                $output,
-                'Enter the bundle name: ',
-                function ($argument) {
-                    if (empty($argument)) {
-                        throw new \Exception('This argument is required');
-                    }
-
-                    return $argument;
-                }
-            );
-            $input->setArgument('bundle', $bundleName);
-        }
     }
 
     protected function getPlugin(InputInterface $input, $fromKernel = true)
@@ -104,7 +91,7 @@ abstract class AbstractPluginCommand extends ContainerAwareCommand
      */
     protected function resetCache(OutputInterface $output)
     {
-        if ($this->getContainer()->get('kernel')->getEnvironment() === 'prod') {
+        if ('prod' === $this->getContainer()->get('kernel')->getEnvironment()) {
             $command = $this->getApplication()->find('cache:clear');
 
             $input = new ArrayInput(

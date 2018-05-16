@@ -5,7 +5,7 @@ namespace UJM\ExoBundle\Tests\Entity;
 use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Entity\Step;
 
-class ExerciseTest extends \PHPUnit_Framework_TestCase
+class ExerciseTest extends \PHPUnit\Framework\TestCase
 {
     public function testUuidInitialized()
     {

@@ -34,6 +34,15 @@ class AdministrationToolVoter extends AbstractVoter implements VoterInterface
             }
         }
 
+        //exception for the workspace creator for now. We'll streamline everything later.
+        if ('workspace_management' === $object->getName()) {
+            foreach ($tokenRoles as $tokenRole) {
+                if ('ROLE_WS_CREATOR' === $tokenRole->getRole()) {
+                    return true;
+                }
+            }
+        }
+
         return VoterInterface::ACCESS_DENIED;
     }
 

@@ -348,14 +348,19 @@ class Workspace
      */
     protected $thumbnail;
 
+    //not mapped. Used for creation
+    private $workspaceModel;
+
     /**
      * Workspace constructor.
      */
     public function __construct()
     {
+        $this->refreshUuid();
         $this->roles = new ArrayCollection();
         $this->orderedTools = new ArrayCollection();
         $this->organizations = new ArrayCollection();
+        $this->workspaceModel = null;
     }
 
     public function __toString()
@@ -894,5 +899,15 @@ class Workspace
         }
 
         return $this->defaultRole;
+    }
+
+    public function setWorkspaceModel(self $model)
+    {
+        $this->workspaceModel = $model;
+    }
+
+    public function getWorkspaceModel()
+    {
+        return $this->workspaceModel;
     }
 }

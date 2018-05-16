@@ -23,6 +23,32 @@ const WorkspaceForm = (props) => {
     props.workspace.roles.find(role => role.name.indexOf('ROLE_WS_MANAGER') > -1).id:
     null
 
+  const baseSectionFields = [
+    {
+      name: 'name',
+      type: 'string',
+      label: trans('name'),
+      required: true
+    }, {
+      name: 'code',
+      type: 'string',
+      label: trans('code'),
+      required: true
+    }, {
+      name: 'meta.description',
+      type: 'html',
+      label: trans('description')
+    }
+  ]
+
+  if (props.new) {
+    baseSectionFields.push({
+      name: 'extra.model',
+      type: 'model',
+      label: trans('model')
+    })
+  }
+
   return (
     <FormContainer
       level={3}
@@ -31,23 +57,7 @@ const WorkspaceForm = (props) => {
         {
           title: trans('general'),
           primary: true,
-          fields: [
-            {
-              name: 'name',
-              type: 'string',
-              label: trans('name'),
-              required: true
-            }, {
-              name: 'code',
-              type: 'string',
-              label: trans('code'),
-              required: true
-            }, {
-              name: 'meta.description',
-              type: 'html',
-              label: trans('description')
-            }
-          ]
+          fields: baseSectionFields
         }, {
           icon: 'fa fa-fw fa-user-plus',
           title: trans('registration'),
@@ -230,7 +240,7 @@ const Workspace = connect(
         definition: UserList.definition,
         card: UserList.card,
         fetch: {
-          url: ['apiv2_user_list'],
+          url: ['apiv2_user_list_managed_workspace'],
           autoload: true
         },
         handleSelect: (selected) => dispatch(actions.addManagers(workspace.uuid, selected, managerRole.id))

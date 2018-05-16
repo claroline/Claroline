@@ -11,7 +11,7 @@
 
 namespace Claroline\CoreBundle\Form\DataTransformer;
 
-class JavascriptSafeTransformerTest extends \PHPUnit_Framework_TestCase
+class JavascriptSafeTransformerTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider inputProvider
@@ -27,17 +27,17 @@ class JavascriptSafeTransformerTest extends \PHPUnit_Framework_TestCase
 
     public function inputProvider()
     {
-        return array(
-            array('<p><script>alert("foo")</script></p>', '<p></p>'),
-            array('<nav><Script>var z = 123;</SCRIPT></nav>', '<nav></nav>'),
-            array('<p> test<script foo=" bar="xyz"> </script ...baz></p>', '<p> test</p>'),
-            array('  <body onload="alert(\'baz\')">... ', '  <body >... '),
-            array('< li onclick = " var x; "  > test  <li', '< li > test  <li'),
-            array('< DIV color="red"  onunload  = "throw new Error()  ">aaa</Div>', '< DIV color="red"  >aaa</Div>'),
-            array('<a href="/bar"  onmouseup="alert(789)"  alt="bar">link</a>', '<a href="/bar"  alt="bar">link</a>'),
-            array('<p ONKEYup="++i">test</p>', '<p >test</p>'),
-            array("<select onselect='a = \"foo\"'>...</select>", '<select >...</select>'),
-            array('<html><body color="blue">Correct</body></html>', '<html><body color="blue">Correct</body></html>'),
-        );
+        return [
+            ['<p><script>alert("foo")</script></p>', '<p></p>'],
+            ['<nav><Script>var z = 123;</SCRIPT></nav>', '<nav></nav>'],
+            ['<p> test<script foo=" bar="xyz"> </script ...baz></p>', '<p> test</p>'],
+            ['  <body onload="alert(\'baz\')">... ', '  <body >... '],
+            ['< li onclick = " var x; "  > test  <li', '< li > test  <li'],
+            ['< DIV color="red"  onunload  = "throw new Error()  ">aaa</Div>', '< DIV color="red"  >aaa</Div>'],
+            ['<a href="/bar"  onmouseup="alert(789)"  alt="bar">link</a>', '<a href="/bar"  alt="bar">link</a>'],
+            ['<p ONKEYup="++i">test</p>', '<p >test</p>'],
+            ["<select onselect='a = \"foo\"'>...</select>", '<select >...</select>'],
+            ['<html><body color="blue">Correct</body></html>', '<html><body color="blue">Correct</body></html>'],
+        ];
     }
 }

@@ -39,7 +39,7 @@ class UserOrganizationReference
     private $user;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization")
+     * @ORM\ManyToOne(targetEntity="Claroline\CoreBundle\Entity\Organization\Organization", inversedBy="userOrganizationReferences")
      * @ORM\JoinColumn(name="oganization_id", nullable=false, onDelete="CASCADE")
      */
     private $organization;

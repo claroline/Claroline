@@ -245,8 +245,6 @@ class ApiManager
     {
         $historyFile = $this->finder->fetch(
             'Claroline\CoreBundle\Entity\Import\File',
-            0,
-            -1,
             ['file' => $publicFile->getId()]
         )[0];
 

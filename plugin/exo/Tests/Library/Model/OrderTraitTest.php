@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Tests\Library\Model;
 
 use UJM\ExoBundle\Library\Model\OrderTrait;
 
-class OrderTraitTest extends \PHPUnit_Framework_TestCase
+class OrderTraitTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject

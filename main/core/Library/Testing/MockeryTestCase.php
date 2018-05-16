@@ -14,11 +14,11 @@ namespace Claroline\CoreBundle\Library\Testing;
 use Mockery as m;
 use Mockery\Mock;
 
-abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
+abstract class MockeryTestCase extends \PHPUnit\Framework\TestCase
 {
     private static $isMockeryInitialized = false;
-    private static $nonCloneableClasses = array();
-    private static $mocks = array();
+    private static $nonCloneableClasses = [];
+    private static $mocks = [];
 
     /**
      * {@inheritdoc}
@@ -59,7 +59,7 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
             return clone self::$mocks[$class];
         }
 
-        $mock = $parameters === null ? m::mock($class) : m::mock($class, $parameters);
+        $mock = null === $parameters ? m::mock($class) : m::mock($class, $parameters);
 
         // ensure the class can be cloned safely
         if (!$this->isCloneable($class)) {
@@ -83,7 +83,6 @@ abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
         if (!is_string($class) // probably a final class mock
             || in_array($class, self::$nonCloneableClasses) // already checked
             || false !== strpos($class, '[')) { // partial mock
-
             return false;
         }
 

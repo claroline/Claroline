@@ -85,7 +85,7 @@
             {{ topbar.item({'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book'}) }}
             {% if is_granted('ROLE_WS_CREATOR') %}
                 <li role="presentation" class="divider"></li>
-                {{ topbar.item({'name':'create_workspace', 'href':path('claro_workspace_creation_form'), 'icon':'pencil'}) }}
+                {{ topbar.item({'name':'create_workspace', 'href':path('claro_admin_open_tool', {'toolName': 'workspace_management'}) ~ '#/workspaces/form', 'icon':'pencil'}) }}
             {% endif %}
         {% else %}
             {{ topbar.item({'name':'find_workspaces', 'href':path('claro_workspace_list'), 'icon':'book'}) }}

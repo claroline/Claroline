@@ -264,4 +264,11 @@ class WorkspaceController extends AbstractCrudController
             ['hiddenFilters' => ['displayable' => true, 'selfRegistration' => true]]
         ));
     }
+
+    public function getOptions()
+    {
+        return [
+            'list' => [Options::NO_COUNT],
+        ];
+    }
 }

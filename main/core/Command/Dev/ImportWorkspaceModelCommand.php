@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\AppBundle\Persistence\ObjectManager;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Manager\WorkspaceManager;
@@ -29,6 +30,13 @@ use Symfony\Component\Security\Core\Authentication\Token\UsernamePasswordToken;
  */
 class ImportWorkspaceModelCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+
+    private $params = [
+        'directory_path' => 'Absolute path to the archive directory file: ',
+        'owner_username' => 'The workspace owner username: ',
+    ];
+
     protected function configure()
     {
         $this->setName('claroline:workspace:import_model')
@@ -51,40 +59,6 @@ class ImportWorkspaceModelCommand extends ContainerAwareCommand
             InputOption::VALUE_NONE,
             'When set to true, will try to import directory_path parameter as an uncompressed template'
         );
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        //@todo ask authentication source
-        $params = [
-            'directory_path' => 'Absolute path to the archive directory file: ',
-            'owner_username' => 'The workspace owner username: ',
-        ];
-
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
-                $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
-                );
-            }
-        }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            $argumentName,
-            function ($argument) {
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
-
-                return $argument;
-            }
-        );
-
-        return $argument;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -105,15 +105,15 @@ class FinderProvider
         $queryFilters = array_merge_recursive($filters, $hiddenFilters);
 
         // count the total results (without pagination)
-        $count = $this->fetch($class, $page, $limit, $queryFilters, $sortBy, true);
+        $count = $this->fetch($class, $queryFilters, $sortBy, $page, $limit, true);
         // get the list of data for the current search and page
-        $data = $this->fetch($class, $page, $limit, $queryFilters, $sortBy);
+        $data = $this->fetch($class, $queryFilters, $sortBy, $page, $limit);
 
         if (0 < $count && empty($data)) {
             // search should have returned results, but we have requested a non existent page => get the last page
             $page = ceil($count / $limit) - 1;
             // load last page data
-            $data = $this->fetch($class, $page, $limit, $queryFilters, $sortBy);
+            $data = $this->fetch($class, $queryFilters, $sortBy, $page, $limit);
         }
 
         return [
@@ -140,7 +140,7 @@ class FinderProvider
      *
      * @return mixed
      */
-    public function fetch($class, $page = 0, $limit = -1, array $filters = [], array $sortBy = null, $count = false)
+    public function fetch($class, array $filters = [], array $sortBy = null, $page = 0, $limit = -1, $count = false)
     {
         try {
             /** @var QueryBuilder $qb */

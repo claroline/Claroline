@@ -11,6 +11,7 @@
 
 namespace Claroline\MigrationBundle\Command;
 
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Psr\Log\LogLevel;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -20,37 +21,23 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 abstract class AbstractCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+
+    private $params = ['bundle' => 'The bundle name'];
+
     protected function configure()
     {
         $this->addArgument('bundle', InputArgument::REQUIRED, 'The bundle name');
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        if (!$input->getArgument('bundle')) {
-            $bundleName = $this->getHelper('dialog')->askAndValidate(
-                $output,
-                'Enter the bundle name: ',
-                function ($argument) {
-                    if (empty($argument)) {
-                        throw new \Exception('This argument is required');
-                    }
-
-                    return $argument;
-                }
-            );
-            $input->setArgument('bundle', $bundleName);
-        }
-    }
-
     protected function getManager(OutputInterface $output)
     {
         $manager = $this->getContainer()->get('claroline.migration.manager');
-        $verbosityLevelMap = array(
+        $verbosityLevelMap = [
             LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::INFO => OutputInterface::VERBOSITY_NORMAL,
             LogLevel::DEBUG => OutputInterface::VERBOSITY_NORMAL,
-        );
+        ];
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
         $manager->setLogger($consoleLogger);
 

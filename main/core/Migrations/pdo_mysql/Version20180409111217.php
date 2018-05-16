@@ -15,7 +15,7 @@ class Version20180409111217 extends AbstractMigration
     public function up(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE claro_resource_node 
+            ALTER TABLE claro_resource_node
             ADD showIcon TINYINT(1) DEFAULT "1" NOT NULL
         ');
     }
@@ -23,7 +23,7 @@ class Version20180409111217 extends AbstractMigration
     public function down(Schema $schema)
     {
         $this->addSql('
-            ALTER TABLE claro_resource_node 
+            ALTER TABLE claro_resource_node
             DROP showIcon
         ');
     }

@@ -8,7 +8,7 @@ use UJM\ExoBundle\Entity\Exercise;
 use UJM\ExoBundle\Manager\Attempt\PaperManager;
 use UJM\ExoBundle\Serializer\Attempt\PaperSerializer;
 
-class PaperManagerTest extends \PHPUnit_Framework_TestCase
+class PaperManagerTest extends \PHPUnit\Framework\TestCase
 {
     /** @var ObjectManager|\PHPUnit_Framework_MockObject_MockObject */
     private $om;

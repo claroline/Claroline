@@ -27,8 +27,6 @@ class PostLoadRolesData implements RequiredFixture
 
     public function load(ObjectManager $manager)
     {
-        $om = $this->container->get('claroline.persistence.object_manager');
-
         /** @var Role $role */
         $wscreator = $manager->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_WS_CREATOR');
 
@@ -36,7 +34,7 @@ class PostLoadRolesData implements RequiredFixture
         $wsmanagement = $manager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('workspace_management');
 
         $wsmanagement->addRole($wscreator);
-        $om->persist($wsmanagement);
+        $manager->persist($wsmanagement);
 
         /** @var Role $role */
         $adminOrganization = $manager->getRepository('ClarolineCoreBundle:Role')->findOneByName('ROLE_ADMIN_ORGANIZATION');
@@ -46,8 +44,8 @@ class PostLoadRolesData implements RequiredFixture
         $workspacemanagement = $manager->getRepository('ClarolineCoreBundle:Tool\AdminTool')->findOneByName('workspace_management');
         $usermanagement->addRole($adminOrganization);
         $workspacemanagement->addRole($adminOrganization);
-        $om->persist($usermanagement);
-        $om->persist($workspacemanagement);
-        $om->flush();
+        $manager->persist($usermanagement);
+        $manager->persist($workspacemanagement);
+        $manager->flush();
     }
 }

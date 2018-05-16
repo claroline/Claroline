@@ -105,7 +105,7 @@
   },
   "delete": {
     "pending": {
-      "title": "Suppresion en cours",
+      "title": "Suppression en cours",
       "message": "Veuillez patienter pendant la suppression de vos données."
     },
     "success": {

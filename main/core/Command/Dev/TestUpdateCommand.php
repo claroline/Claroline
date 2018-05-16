@@ -11,6 +11,7 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Entity\Plugin;
 use Claroline\CoreBundle\Library\DistributionPluginBundle;
 use Psr\Log\LogLevel;
@@ -22,6 +23,14 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class TestUpdateCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+
+    private $params = [
+        'from_version' => 'from version: ',
+        'to_version' => 'to version: ',
+        'bundle' => 'bundle: ',
+    ];
+
     protected function configure()
     {
         parent::configure();
@@ -35,40 +44,6 @@ class TestUpdateCommand extends ContainerAwareCommand
                 new InputArgument('to_version', InputArgument::REQUIRED, 'to version'),
             ]
         );
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $params = [
-            'from_version' => 'from version: ',
-            'to_version' => 'to version: ',
-            'bundle' => 'bundle: ',
-        ];
-
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
-                $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
-                );
-            }
-        }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            $argumentName,
-            function ($argument) {
-                if ($argument === null) {
-                    throw new \Exception('This argument is required');
-                }
-
-                return $argument;
-            }
-        );
-
-        return $argument;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -88,7 +63,7 @@ class TestUpdateCommand extends ContainerAwareCommand
         $consoleLogger = new ConsoleLogger($output, $verbosityLevelMap);
 
         //for historical reasons, CoreBundle might not be installed yet...
-        if ($bundleName === 'ClarolineCoreBundle') {
+        if ('ClarolineCoreBundle' === $bundleName) {
             $om = $container->get('claroline.persistence.object_manager');
             $plugin = $om->getRepository('ClarolineCoreBundle:Plugin')->findOneBy([
               'vendorName' => 'Claroline', 'bundleName' => 'CoreBundle',

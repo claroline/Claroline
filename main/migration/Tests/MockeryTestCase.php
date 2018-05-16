@@ -12,8 +12,9 @@
 namespace Claroline\MigrationBundle\Tests;
 
 use Mockery as m;
+use PHPUnit\Framework\TestCase;
 
-abstract class MockeryTestCase extends \PHPUnit_Framework_TestCase
+abstract class MockeryTestCase extends TestCase
 {
     protected function setUp()
     {

@@ -4,7 +4,7 @@ namespace UJM\ExoBundle\Tests\Library\Model;
 
 use UJM\ExoBundle\Library\Model\FeedbackTrait;
 
-class FeedbackTraitTest extends \PHPUnit_Framework_TestCase
+class FeedbackTraitTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject

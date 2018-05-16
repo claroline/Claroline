@@ -6,7 +6,6 @@ use Claroline\CoreBundle\Entity\Resource\ResourceShortcut;
 use Claroline\CoreBundle\Event\CopyResourceEvent;
 use Claroline\CoreBundle\Event\CreateFormResourceEvent;
 use Claroline\CoreBundle\Event\CreateResourceEvent;
-use Claroline\CoreBundle\Event\CustomActionResourceEvent;
 use Claroline\CoreBundle\Event\DeleteResourceEvent;
 use Claroline\CoreBundle\Event\OpenResourceEvent;
 use Claroline\CoreBundle\Event\PluginOptionsEvent;
@@ -96,7 +95,7 @@ class BibliographyListener
 
             $bookReferenceInWorkspace = $this->manager->bookExistsInWorkspace($bookResource->getIsbn(), $event->getParent()->getWorkspace());
 
-            if ($bookReferenceInWorkspace !== null) {
+            if (null !== $bookReferenceInWorkspace) {
                 // Book already exists, create a link instead of a new resource
 
                 $resourceShortcut = new ResourceShortcut();
@@ -184,29 +183,6 @@ class BibliographyListener
         $em = $this->container->get('claroline.persistence.object_manager');
         $em->remove($event->getResource());
         $em->flush();
-        $event->stopPropagation();
-    }
-
-    /**
-     * @DI\Observe("change_bookreference_menu_icap_bibliography")
-     *
-     * @param CustomActionResourceEvent $event
-     */
-    public function onChangeAction(CustomActionResourceEvent $event)
-    {
-        $resource = get_class($event->getResource()) === 'Claroline\CoreBundle\Entity\Resource\ResourceShortcut' ?
-            $this->manager->getResourceFromShortcut($event->getResource()->getResourceNode()) :
-            $event->getResource();
-        $resource->setName($event->getResource()->getResourceNode()->getName());
-        $form = $this->container->get('form.factory')->create(new BookReferenceType(), $resource);
-        $form->handleRequest($this->request);
-
-        $content = $this->container->get('templating')->render('IcapBibliographyBundle:BookReference:editForm.html.twig', [
-            'form' => $form->createView(),
-            'node' => $resource->getResourceNode()->getId(),
-        ]);
-
-        $event->setResponse(new Response($content));
         $event->stopPropagation();
     }
 

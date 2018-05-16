@@ -1231,7 +1231,7 @@ class RoleManager
             $creator->addRole($manager);
         }
 
-        $roles = $this->container->get('claroline.api.finder')->fetch('Claroline\CoreBundle\Entity\Role', 0, -1, ['name' => $workspace->getUuid()]);
+        $roles = $this->container->get('claroline.api.finder')->fetch('Claroline\CoreBundle\Entity\Role', ['name' => $workspace->getUuid()]);
 
         foreach ($roles as $role) {
             if (!$role->getWorkspace()) {

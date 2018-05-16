@@ -6,7 +6,7 @@ use UJM\ExoBundle\Entity\Item\Item;
 use UJM\ExoBundle\Entity\Step;
 use UJM\ExoBundle\Entity\StepItem;
 
-class StepTest extends \PHPUnit_Framework_TestCase
+class StepTest extends \PHPUnit\Framework\TestCase
 {
     public function testUuidInitialized()
     {

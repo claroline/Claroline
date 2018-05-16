@@ -76,7 +76,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
             $users = array_unique($users);
 
             $ignore = $this->getContainer()->get('claroline.api.finder')
-              ->fetch('Claroline\CoreBundle\Entity\Workspace\Workspace', null, null, ['code' => $ignore, 'isPersonal' => false], []);
+              ->fetch('Claroline\CoreBundle\Entity\Workspace\Workspace', ['code' => $ignore, 'isPersonal' => false]);
 
             $ignoreIds = array_map(function ($el) {
                 return $el->getId();
@@ -89,7 +89,7 @@ class RegisterUserToWorkspaceFromCsvCommand extends ContainerAwareCommand
             foreach ($users as $username) {
                 //clean user roles except those in workspace matching $ignore
                 $roles = $this->getContainer()->get('claroline.api.finder')
-                  ->fetch('Claroline\CoreBundle\Entity\Role', null, null, ['user' => $username, 'type' => Role::WS_ROLE], []);
+                  ->fetch('Claroline\CoreBundle\Entity\Role', ['user' => $username, 'type' => Role::WS_ROLE]);
 
                 foreach ($roles as $role) {
                     if (!in_array($role->getWorkspace()->getId(), $ignoreIds)) {

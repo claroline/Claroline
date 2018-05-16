@@ -34,7 +34,7 @@ trait OrganizationsTrait
     /**
      * Set the array directly.
      */
-    public function setOrganizations($organizations)
+    public function setOrganizations(array $organizations)
     {
         $this->hasOrganizationsProperty();
 

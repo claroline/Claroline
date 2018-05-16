@@ -11,55 +11,30 @@
 
 namespace Claroline\CoreBundle\Command\Dev;
 
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Input\InputArgument;
 
 class ApiTestCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+
+    private $params = [
+        'platform_name' => 'the friend request name',
+        'url' => 'the url',
+    ];
+
     protected function configure()
     {
         $this->setName('claroline:api:test')->setDescription('Tests the api');
         $this->setDefinition(
-            array(
+            [
                 new InputArgument('platform_name', InputArgument::REQUIRED, 'the friend request name'),
                 new InputArgument('url', InputArgument::REQUIRED, 'the url'),
-            )
+            ]
         );
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $params = array(
-            'platform_name' => 'the friend request name',
-            'url' => 'the url',
-        );
-
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
-                $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
-                );
-            }
-        }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            "Enter the {$argumentName}: ",
-            function ($argument) {
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
-
-                return $argument;
-            }
-        );
-
-        return $argument;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -8,11 +8,11 @@
 
 namespace Icap\DropzoneBundle\Tests\Entity;
 
+use DateTime;
 use Icap\DropzoneBundle\Entity\Correction;
 use Icap\DropzoneBundle\Entity\Drop;
-use DateTime;
 
-class DropTest extends \PHPUnit_Framework_TestCase
+class DropTest extends \PHPUnit\Framework\TestCase
 {
     public function testgetCalculatedGrade()
     {
@@ -23,15 +23,15 @@ class DropTest extends \PHPUnit_Framework_TestCase
         $correction5 = $this->createCorrection(12, false, false);
 
         $drop1 = new Drop();
-        $drop1->setCorrections(array($correction1, $correction2));
+        $drop1->setCorrections([$correction1, $correction2]);
         $this->assertEquals(15, $drop1->getCalculatedGrade());
 
         $drop2 = new Drop();
-        $drop2->setCorrections(array($correction2, $correction3, $correction4, $correction5));
+        $drop2->setCorrections([$correction2, $correction3, $correction4, $correction5]);
         $this->assertEquals(12.5, $drop2->getCalculatedGrade());
 
         $drop3 = new Drop();
-        $drop3->setCorrections(array($correction4, $correction5));
+        $drop3->setCorrections([$correction4, $correction5]);
         $this->assertEquals(-1, $drop3->getCalculatedGrade());
     }
 
@@ -58,19 +58,19 @@ class DropTest extends \PHPUnit_Framework_TestCase
         $correction6 = $this->createCorrection(12, true, true);
 
         $drop1 = new Drop();
-        $drop1->setCorrections(array($correction1, $correction2));
+        $drop1->setCorrections([$correction1, $correction2]);
         $this->assertEquals(1, $drop1->countFinishedCorrections());
 
         $drop2 = new Drop();
-        $drop2->setCorrections(array($correction2, $correction3, $correction4, $correction5));
+        $drop2->setCorrections([$correction2, $correction3, $correction4, $correction5]);
         $this->assertEquals(0, $drop2->countFinishedCorrections());
 
         $drop3 = new Drop();
-        $drop3->setCorrections(array($correction1, $correction3));
+        $drop3->setCorrections([$correction1, $correction3]);
         $this->assertEquals(1, $drop3->countFinishedCorrections());
 
         $drop4 = new Drop();
-        $drop4->setCorrections(array($correction1, $correction2, $correction4, $correction5, $correction3, $correction6));
+        $drop4->setCorrections([$correction1, $correction2, $correction4, $correction5, $correction3, $correction6]);
         $this->assertEquals(2, $drop4->countFinishedCorrections());
     }
 
@@ -87,19 +87,19 @@ class DropTest extends \PHPUnit_Framework_TestCase
         $correction6 = $this->createCorrection(12, true, true);
 
         $drop1 = new Drop();
-        $drop1->setCorrections(array($correction1, $correction2));
+        $drop1->setCorrections([$correction1, $correction2]);
         $this->assertEquals(true, $drop1->getHasDeniedCorrection());
 
         $drop2 = new Drop();
-        $drop2->setCorrections(array($correction2, $correction3, $correction4, $correction5));
+        $drop2->setCorrections([$correction2, $correction3, $correction4, $correction5]);
         $this->assertEquals(true, $drop2->getHasDeniedCorrection());
 
         $drop3 = new Drop();
-        $drop3->setCorrections(array($correction4, $correction3));
+        $drop3->setCorrections([$correction4, $correction3]);
         $this->assertEquals(false, $drop3->getHasDeniedCorrection());
 
         $drop4 = new Drop();
-        $drop4->setCorrections(array($correction1, $correction2, $correction4, $correction5, $correction3, $correction6));
+        $drop4->setCorrections([$correction1, $correction2, $correction4, $correction5, $correction3, $correction6]);
         $this->assertEquals(true, $drop4->getHasDeniedCorrection());
     }
 
@@ -122,15 +122,15 @@ class DropTest extends \PHPUnit_Framework_TestCase
         $correction4->setEndDate($date4);
 
         $drop1 = new Drop();
-        $drop1->setCorrections(array($correction1, $correction2));
+        $drop1->setCorrections([$correction1, $correction2]);
         $this->assertEquals($date2, $drop1->getLastCorrectionDate());
 
         $drop2 = new Drop();
-        $drop2->setCorrections(array($correction2, $correction3, $correction4));
+        $drop2->setCorrections([$correction2, $correction3, $correction4]);
         $this->assertEquals($date4, $drop2->getLastCorrectionDate());
 
         $drop3 = new Drop();
-        $drop3->setCorrections(array($correction4, $correction3));
+        $drop3->setCorrections([$correction4, $correction3]);
         $this->assertEquals($date4, $drop3->getLastCorrectionDate());
     }
 }

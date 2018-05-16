@@ -19,6 +19,7 @@ use Claroline\CoreBundle\Controller\APINew\Model\HasOrganizationsTrait;
 use Claroline\CoreBundle\Controller\APINew\Model\HasRolesTrait;
 use Claroline\CoreBundle\Entity\Organization\Organization;
 use Claroline\CoreBundle\Entity\User;
+use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -207,8 +208,8 @@ class UserController extends AbstractCrudController
 
     /**
      * @Route(
-     *    "/list/managed",
-     *    name="apiv2_user_list_managed"
+     *    "/list/managed/organization",
+     *    name="apiv2_user_list_managed_organization"
      * )
      * @Method("GET")
      * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
@@ -217,13 +218,44 @@ class UserController extends AbstractCrudController
      *
      * @return JsonResponse
      */
-    public function listManagedAction(User $user, Request $request)
+    public function listManagedOrganizationAction(User $user, Request $request)
     {
         $filters = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ?
           [] :
-          ['recursiveOrXOrganization' => array_map(function (Organization $organization) {
+          ['workspaces' => array_map(function (Organization $organization) {
               return $organization->getUuid();
           }, $user->getAdministratedOrganizations()->toArray())];
+
+        return new JsonResponse($this->finder->search(
+            'Claroline\CoreBundle\Entity\User',
+            array_merge($request->query->all(), ['hiddenFilters' => $filters])
+        ));
+    }
+
+    /**
+     * @Route(
+     *    "/list/managed/workspace",
+     *    name="apiv2_user_list_managed_workspace"
+     * )
+     * @Method("GET")
+     * @ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
+     *
+     * @param Workspace $workspace
+     *
+     * @return JsonResponse
+     */
+    public function listManagedWorkspaceAction(User $user, Request $request)
+    {
+        $managedWorkspaces = $this->finder->fetch(
+            'Claroline\CoreBundle\Entity\Workspace\Workspace',
+            ['user' => $user->getId(), 'isManager' => true]
+        );
+
+        $filters = $this->container->get('security.authorization_checker')->isGranted('ROLE_ADMIN') ?
+          [] :
+          ['workspace' => array_map(function (Workspace $workspace) {
+              return $workspace->getUuid();
+          }, $managedWorkspaces)];
 
         return new JsonResponse($this->finder->search(
             'Claroline\CoreBundle\Entity\User',

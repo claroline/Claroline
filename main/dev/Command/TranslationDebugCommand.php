@@ -11,6 +11,7 @@
 
 namespace Claroline\DevBundle\Command;
 
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,6 +22,12 @@ use Symfony\Component\Yaml\Yaml;
 
 class TranslationDebugCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+
+    private $params = [
+        'locale' => 'locale to fill: ',
+    ];
+
     protected function configure()
     {
         $this->setName('claroline:fixup:translations')
@@ -56,38 +63,6 @@ class TranslationDebugCommand extends ContainerAwareCommand
         );
     }
 
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $params = [
-            'locale' => 'locale to fill: ',
-        ];
-
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
-                $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
-                );
-            }
-        }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            $argumentName,
-            function ($argument) {
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
-
-                return $argument;
-            }
-        );
-
-        return $argument;
-    }
-
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $fqcn = $input->getOption('fqcn') ? $input->getOption('fqcn') : 'ClarolineCoreBundle';
@@ -107,7 +82,7 @@ class TranslationDebugCommand extends ContainerAwareCommand
         $this->showUntranslated($filledFile, $output, $locale);
     }
 
-    private function showUntranslated($filledFile,  OutputInterface $output, $locale)
+    private function showUntranslated($filledFile, OutputInterface $output, $locale)
     {
         $displayWarning = true;
         $line = 1;
@@ -142,10 +117,8 @@ class TranslationDebugCommand extends ContainerAwareCommand
                 'dsn',
             ],
             'nl' => [
-
             ],
             'de' => [
-
             ],
         ];
     }

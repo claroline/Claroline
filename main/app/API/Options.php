@@ -24,6 +24,8 @@ final class Options
      */
     const NO_FETCH = 'no_fetch';
 
+    const NO_COUNT = 'no_count';
+
     /*
      * Using this option, the serializers will return minmal data (no meta or restrictions)
      */

@@ -93,46 +93,46 @@ class RoutingCheckerTest extends MockeryTestCase
 
     public function invalidRoutingPrefixProvider()
     {
-        return array(
-            array('Invalid\UnexpectedRoutingPrefix1\InvalidUnexpectedRoutingPrefix1'),
-            array('Invalid\UnexpectedRoutingPrefix2\InvalidUnexpectedRoutingPrefix2'),
-            array('Invalid\UnexpectedRoutingPrefix3\InvalidUnexpectedRoutingPrefix3'),
-        );
+        return [
+            ['Invalid\UnexpectedRoutingPrefix1\InvalidUnexpectedRoutingPrefix1'],
+            ['Invalid\UnexpectedRoutingPrefix2\InvalidUnexpectedRoutingPrefix2'],
+            ['Invalid\UnexpectedRoutingPrefix3\InvalidUnexpectedRoutingPrefix3'],
+        ];
     }
 
     public function alreadyRegisteredPrefixProvider()
     {
-        return array(
-            array('Invalid\AlreadyRegisteredRoutingPrefix\InvalidAlreadyRegisteredRoutingPrefix'),
-        );
+        return [
+            ['Invalid\AlreadyRegisteredRoutingPrefix\InvalidAlreadyRegisteredRoutingPrefix'],
+        ];
     }
 
     public function nonExistentRoutingResourceProvider()
     {
-        return array(
-            array('Invalid\NonExistentRoutingResource1\InvalidNonExistentRoutingResource1'),
-            array('Invalid\NonExistentRoutingResource2\InvalidNonExistentRoutingResource2'),
-        );
+        return [
+            ['Invalid\NonExistentRoutingResource1\InvalidNonExistentRoutingResource1'],
+            ['Invalid\NonExistentRoutingResource2\InvalidNonExistentRoutingResource2'],
+        ];
     }
 
     public function unexpectedRoutingResourceLocationProvider()
     {
-        return array(
-            array('Invalid\UnexpectedRoutingResourceLocation1\InvalidUnexpectedRoutingResourceLocation1'),
-        );
+        return [
+            ['Invalid\UnexpectedRoutingResourceLocation1\InvalidUnexpectedRoutingResourceLocation1'],
+        ];
     }
 
     public function nonYamlRoutingResourceProvider()
     {
-        return array(
-            array('Invalid\NonYamlRoutingResource1\InvalidNonYamlRoutingResource1'),
-        );
+        return [
+            ['Invalid\NonYamlRoutingResource1\InvalidNonYamlRoutingResource1'],
+        ];
     }
 
     public function unloadableYamlRoutingResourceProvider()
     {
-        return array(
-            array('Invalid\UnloadableRoutingResource1\InvalidUnloadableRoutingResource1'),
-        );
+        return [
+            ['Invalid\UnloadableRoutingResource1\InvalidUnloadableRoutingResource1'],
+        ];
     }
 }

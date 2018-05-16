@@ -489,7 +489,7 @@ class ParametersSerializer
     {
         if (isset($data['tos'])) {
             $this->buildParameter('tos.enabled', 'terms_of_service', $parameters, $data);
-            $contentTos = $this->finder->fetch('Claroline\CoreBundle\Entity\Content', 0, 10, ['type' => 'termsOfService']);
+            $contentTos = $this->finder->fetch('Claroline\CoreBundle\Entity\Content', ['type' => 'termsOfService'], [], 0, 10);
 
             if (0 === count($contentTos)) {
                 $contentTos = new Content();

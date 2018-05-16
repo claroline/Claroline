@@ -1182,20 +1182,17 @@ class UserRepository extends EntityRepository implements UserProviderInterface, 
     public function countByRoles(array $roles, $includeGrps)
     {
         if ($includeGrps) {
-            $dql = 'SELECT count (DISTINCT u)
+            $dql = 'SELECT COUNT(DISTINCT u)
                 From Claroline\CoreBundle\Entity\User u
-                LEFT JOIN u.roles r1
-                LEFT JOIN u.personalWorkspace ws
+                LEFT JOIN u.roles r1 WITH  r1 in (:roles)
                 LEFT JOIN u.groups g
-                LEFT JOIN g.roles r2
-                WHERE r1 in (:roles)
-                AND u.isRemoved = false
-                OR r2 in (:roles)';
+                LEFT JOIN g.roles r2 WITH r2 in (:roles)
+                WHERE u.isRemoved = false';
 
             $query = $this->_em->createQuery($dql);
             $query->setParameter('roles', $roles);
 
-            return (int) $query->getSingleScalarResult();
+            return $query->getSingleScalarResult();
         }
     }
 

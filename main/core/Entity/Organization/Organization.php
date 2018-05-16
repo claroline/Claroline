@@ -140,16 +140,6 @@ class Organization
     private $children;
 
     /**
-     * @ORM\OneToMany(
-     *     targetEntity="Claroline\CoreBundle\Entity\User",
-     *     mappedBy="organizations"
-     * )
-     *
-     * @var ArrayCollection
-     */
-    protected $users;
-
-    /**
      * @ORM\ManyToMany(
      *     targetEntity="Claroline\CoreBundle\Entity\Workspace\Workspace",
      *     mappedBy="organizations"

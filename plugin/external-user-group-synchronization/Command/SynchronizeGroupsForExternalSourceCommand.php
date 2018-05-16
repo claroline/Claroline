@@ -12,6 +12,7 @@
 
 namespace Claroline\ExternalSynchronizationBundle\Command;
 
+use Claroline\AppBundle\Command\BaseCommandTrait;
 use Claroline\CoreBundle\Library\Logger\ConsoleLogger;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
@@ -21,6 +22,12 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class SynchronizeGroupsForExternalSourceCommand extends ContainerAwareCommand
 {
+    use BaseCommandTrait;
+
+    private $params = [
+        'source_slug' => 'external source slug',
+    ];
+
     protected function configure()
     {
         $this->setName('claroline:external_sync:groups')
@@ -38,38 +45,6 @@ class SynchronizeGroupsForExternalSourceCommand extends ContainerAwareCommand
             InputOption::VALUE_NONE,
             'When set to true, unsubscribes users not present in distant group'
         );
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $params = [
-            'source_slug' => 'external source slug',
-        ];
-
-        foreach ($params as $argument => $argumentName) {
-            if (!$input->getArgument($argument)) {
-                $input->setArgument(
-                    $argument, $this->askArgument($output, $argumentName)
-                );
-            }
-        }
-    }
-
-    protected function askArgument(OutputInterface $output, $argumentName)
-    {
-        $argument = $this->getHelper('dialog')->askAndValidate(
-            $output,
-            "Enter the user {$argumentName}: ",
-            function ($argument) {
-                if (empty($argument)) {
-                    throw new \Exception('This argument is required');
-                }
-
-                return $argument;
-            }
-        );
-
-        return $argument;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

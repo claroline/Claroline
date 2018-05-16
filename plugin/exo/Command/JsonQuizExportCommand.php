@@ -34,10 +34,7 @@ class JsonQuizExportCommand extends ContainerAwareCommand
     {
         $exos = $this->getContainer()->get('claroline.api.finder')->fetch(
             'Claroline\CoreBundle\Entity\Resource\ResourceNode',
-            0,
-            9999999,
-            ['resourceType' => 'ujm_exercise'],
-            []
+            ['resourceType' => 'ujm_exercise']
         );
 
         $question = new ChoiceQuestion(

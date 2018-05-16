@@ -18,7 +18,7 @@ const UsersList = props =>
   <DataListContainer
     name="users.list"
     fetch={{
-      url: ['apiv2_user_list_managed'],
+      url: ['apiv2_user_list_managed_organization'],
       autoload: true
     }}
     delete={{

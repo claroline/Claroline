@@ -37,7 +37,9 @@ class EntryFormComponent extends Component {
   }
 
   componentDidMount() {
-    this.generateTemplate()
+    if (this.props.useTemplate && this.props.template) {
+      this.generateTemplate()
+    }
   }
 
   componentDidUpdate(prevProps) {

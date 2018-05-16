@@ -2,7 +2,9 @@
 
 namespace HeVinci\CompetencyBundle\Util;
 
-abstract class UnitTestCase extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+abstract class UnitTestCase extends TestCase
 {
     protected function mock($class)
     {

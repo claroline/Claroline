@@ -4,7 +4,7 @@ namespace Claroline\CoreBundle\Tests\Unit\Entity\Model;
 
 use Claroline\CoreBundle\Entity\Model\UuidTrait;
 
-class UuidTraitTest extends \PHPUnit_Framework_TestCase
+class UuidTraitTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject
