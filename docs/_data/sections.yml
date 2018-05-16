@@ -79,6 +79,9 @@
       - title: Actions
         doc: user-interface/actions
 
+      - title: API
+        doc: user-interface/api
+
 
 - title: Themes
   doc: themes
