@@ -358,7 +358,7 @@ class WorkspaceController extends Controller
      * )
      * @EXT\Method("POST")
      *
-     * @EXT\Template("ClarolineCoreBundle:Workspace:creationForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:workspace:creation_form.html.twig")
      *
      * @return RedirectResponse | array
      */
@@ -1283,7 +1283,7 @@ class WorkspaceController extends Controller
 
         return new Response(
             $this->templating->render(
-                'ClarolineCoreBundle:Workspace:importForm.html.twig',
+                'ClarolineCoreBundle:workspace:import_form.html.twig',
                 ['form' => $form->createView()]
             )
         );

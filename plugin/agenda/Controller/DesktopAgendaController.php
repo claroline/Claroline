@@ -102,7 +102,7 @@ class DesktopAgendaController extends Controller
      *     name="claro_desktop_agenda_add_event_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:agenda:add_event_modal_form.html.twig")
      *
      * @return array
      */
@@ -120,7 +120,7 @@ class DesktopAgendaController extends Controller
 
     /**
      * @EXT\Route("/add", name="claro_desktop_agenda_add")
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:agenda:add_event_modal_form.html.twig")
      */
     public function addEvent()
     {
@@ -149,7 +149,7 @@ class DesktopAgendaController extends Controller
      *     name="claro_desktop_agenda_update_event_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:agenda:update_event_modal_form.html.twig")
      *
      * @return array
      */
@@ -174,7 +174,7 @@ class DesktopAgendaController extends Controller
      *     name="claro_desktop_agenda_update"
      * )
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:agenda:update_event_modal_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -210,7 +210,7 @@ class DesktopAgendaController extends Controller
      *     name="claro_desktop_agenda_guest_update",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:agenda:update_event_modal_form.html.twig")
      */
     public function guestUpdateAction(Event $event)
     {
@@ -258,7 +258,7 @@ class DesktopAgendaController extends Controller
 
     /**
      * @EXT\Route("/widget/{order}", name="claro_desktop_agenda_widget")
-     * @EXT\Template("ClarolineAgendaBundle:Widget:agenda_widget.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:widget:agenda_widget.html.twig")
      */
     public function widgetAction($order = null)
     {
@@ -276,7 +276,7 @@ class DesktopAgendaController extends Controller
      *     name="claro_agenda_import_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:tool:import_ics_modal_form.html.twig")
      *
      * @return array
      */
@@ -289,7 +289,7 @@ class DesktopAgendaController extends Controller
 
     /**
      * @EXT\Route("/import", name="claro_agenda_import")
-     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:tool:import_ics_modal_form.html.twig")
      *
      * @return array
      */

@@ -41,7 +41,7 @@ class PortalController extends Controller
      * @EXT\Route("/", name="claro_portal_index")
      * @EXT\Route("/{path}", name="claro_portal_index_2", requirements={"path" = "^((?!api).)*$"})
      * @EXT\Method({"GET", "HEAD"})
-     * @EXT\Template("ClarolineCoreBundle:Portal:index.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:portal:index.html.twig")
      */
     public function indexAction()
     {

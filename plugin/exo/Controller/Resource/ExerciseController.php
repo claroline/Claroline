@@ -22,7 +22,7 @@ class ExerciseController extends Controller
      *
      * @EXT\Route("/docimology", name="ujm_exercise_docimology")
      * @EXT\Method("GET")
-     * @EXT\Template("UJMExoBundle:Exercise:docimology.html.twig")
+     * @EXT\Template("UJMExoBundle:exercise:docimology.html.twig")
      *
      * @param Exercise $exercise
      *

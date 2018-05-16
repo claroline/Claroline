@@ -274,7 +274,7 @@ class FileController extends Controller
     /**
      * @EXT\Route("uploadmodal", name="claro_upload_modal", options = {"expose" = true})
      *
-     * @EXT\Template("ClarolineCoreBundle:Resource:uploadModal.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:upload_modal.html.twig")
      */
     public function uploadModalAction()
     {
@@ -307,7 +307,7 @@ class FileController extends Controller
     /**
      * @EXT\Route("/update/{file}", name="update_file", options = {"expose" = true})
      *
-     * @EXT\Template("ClarolineCoreBundle:File:updateFileForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:file:update_file_form.html.twig")
      */
     public function updateFileAction(File $file)
     {

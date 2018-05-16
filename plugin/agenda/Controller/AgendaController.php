@@ -122,7 +122,7 @@ class AgendaController extends Controller
      *      "/accept/invitation/{event}/{action}",
      *      name="claro_agenda_invitation_action"
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:invitation.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:agenda:invitation.html.twig")
      */
     public function invitationAction(Event $event, $action)
     {

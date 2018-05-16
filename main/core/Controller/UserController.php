@@ -67,7 +67,7 @@ class UserController extends Controller
      *     requirements={"workspaceId" = "\d+"}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:User:user_search_workspace_results.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:user:user_search_workspace_results.html.twig")
      */
     public function userSearchInWorkspaceAction($workspaceId, $search)
     {

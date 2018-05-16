@@ -62,7 +62,7 @@ class ExternalGroupSynchronizationController extends Controller
      *     options={"expose"=true},
      *     defaults={"page"=1, "search"="", "max"=50, "order"="name", "direction"="ASC"},
      * )
-     * @EXT\Template("ClarolineExternalSynchronizationBundle:Groups:list.html.twig")
+     * @EXT\Template("ClarolineExternalSynchronizationBundle:groups:list.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * @return \Symfony\Component\HttpFoundation\Response
@@ -103,7 +103,7 @@ class ExternalGroupSynchronizationController extends Controller
      *     defaults={"page"=1, "search"="", "order"="name", "direction"="ASC"},
      *     options={"expose"=true},
      * )
-     * @EXT\Template("ClarolineExternalSynchronizationBundle:Groups:externalGroupsList.html.twig")
+     * @EXT\Template("ClarolineExternalSynchronizationBundle:groups:external_groups_list.html.twig")
      */
     public function unregisteredExternalGroupsListAction(Workspace $workspace, $source, $order, $direction, $search)
     {

@@ -19,7 +19,7 @@ class ConnexionController extends Controller
 {
     /**
      * @EXT\Route("/icap_oauth/check_connection", name="icap_oauth_check_connexion")
-     * @EXT\Template("IcapOAuthBundle:Connect:check_connexion.html.twig")
+     * @EXT\Template("IcapOAuthBundle:connect:check_connexion.html.twig")
      *
      * @param Request $request
      *
@@ -51,7 +51,7 @@ class ConnexionController extends Controller
 
     /**
      * @EXT\Route("/icap_oauth/register", name="icap_oauth_register")
-     * @EXT\Template("IcapOAuthBundle:Connect:create_account.html.twig")
+     * @EXT\Template("IcapOAuthBundle:connect:create_account.html.twig")
      *
      * @param Request $request
      *
@@ -77,7 +77,7 @@ class ConnexionController extends Controller
     /**
      * @EXT\Route("/icap_oauth/create_account", name="icap_oauth_create_account")
      * @EXT\Method("POST")
-     * @EXT\Template("IcapOAuthBundle:Connect:create_account.html.twig")
+     * @EXT\Template("IcapOAuthBundle:connect:create_account.html.twig")
      *
      * @param Request $request
      *
@@ -102,7 +102,7 @@ class ConnexionController extends Controller
 
     /**
      * @EXT\Route("/icap_oauth/login", name="icap_oauth_login")
-     * @EXT\Template("IcapOAuthBundle:Connect:link_account.html.twig")
+     * @EXT\Template("IcapOAuthBundle:connect:link_account.html.twig")
      *
      * @param Request $request
      *
@@ -125,7 +125,7 @@ class ConnexionController extends Controller
     /**
      * @EXT\Route("/icap_oauth/link_account", name="icap_oauth_link_account")
      * @EXT\Method("POST")
-     * @EXT\Template("IcapOAuthBundle:Connect:link_account.html.twig")
+     * @EXT\Template("IcapOAuthBundle:connect:link_account.html.twig")
      *
      * @param Request $request
      *
@@ -143,7 +143,7 @@ class ConnexionController extends Controller
     /**
      * @EXT\Route("/icap_oauth/link_account_mail", name="icap_oauth_link_account_mail")
      * @EXT\Method("GET")
-     * @EXT\Template("IcapOAuthBundle:Connect:link_account.html.twig")
+     * @EXT\Template("IcapOAuthBundle:connect:link_account.html.twig")
      *
      * @param Request $request
      *

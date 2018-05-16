@@ -200,7 +200,7 @@ class WorkspaceTagController extends Controller
      * )
      * @EXT\Method("POST")
      *
-     * @EXT\Template("ClarolineCoreBundle:WorkspaceTag:adminWorkspaceTagCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:workspace_tag:admin_workspace_tag_create_form.html.twig")
      *
      * Creates a new Tag
      *
@@ -260,7 +260,7 @@ class WorkspaceTagController extends Controller
      * @EXT\Method("POST")
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
      *
-     * @EXT\Template("ClarolineCoreBundle:WorkspaceTag:workspaceTagCreateForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:workspace_tag:workspace_tag_create_form.html.twig")
      *
      * Creates a new Tag
      *
@@ -329,7 +329,7 @@ class WorkspaceTagController extends Controller
      *     options={"id" = "workspaceTagId", "strictId" = true},
      *     converter="strict_id"
      * )
-     * @EXT\Template("ClarolineCoreBundle:WorkspaceTag:adminWorkspaceTagEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:workspace_tag:admin_workspace_tag_edit_form.html.twig")
      *
      * Edits name of a given tag
      */
@@ -400,7 +400,7 @@ class WorkspaceTagController extends Controller
      *     converter="strict_id"
      * )
      * @EXT\ParamConverter("currentUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCoreBundle:WorkspaceTag:workspaceTagEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:workspace_tag:workspace_tag_edit_form.html.twig")
      *
      * Edits name of a given tag
      */
@@ -747,7 +747,7 @@ class WorkspaceTagController extends Controller
      *
      * Remove admin Tag from Workspace
      *
-     * @param Workspace workspace
+     * @param Workspace $workspace
      * @param WorkspaceTag $workspaceTag
      *
      * @return Response
@@ -789,7 +789,7 @@ class WorkspaceTagController extends Controller
      *
      * Remove Tag from Workspace
      *
-     * @param Workspace workspace
+     * @param Workspace $workspace
      * @param WorkspaceTag $workspaceTag
      *
      * @return Response

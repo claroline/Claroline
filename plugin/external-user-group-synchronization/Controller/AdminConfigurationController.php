@@ -73,7 +73,7 @@ class AdminConfigurationController extends Controller
      * @EXT\Route("/",
      *     options={"expose"=true},
      *     name="claro_admin_external_sync_config_index")
-     * @EXT\Template("ClarolineExternalSynchronizationBundle:Configuration:index.html.twig")
+     * @EXT\Template("ClarolineExternalSynchronizationBundle:configuration:index.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -87,7 +87,7 @@ class AdminConfigurationController extends Controller
     /**
      * @EXT\Route("/new", name="claro_admin_external_sync_new_source_form")
      * @EXT\Method({ "GET" })
-     * @EXT\Template("ClarolineExternalSynchronizationBundle:Configuration:newSource.html.twig")
+     * @EXT\Template("ClarolineExternalSynchronizationBundle:configuration:new_source.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -101,7 +101,7 @@ class AdminConfigurationController extends Controller
     /**
      * @EXT\Route("/new", name="claro_admin_external_sync_post_new_source")
      * @EXT\Method({ "POST" })
-     * @EXT\Template("ClarolineExternalSynchronizationBundle:Configuration:newSource.html.twig")
+     * @EXT\Template("ClarolineExternalSynchronizationBundle:configuration:new_source.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -124,7 +124,7 @@ class AdminConfigurationController extends Controller
      *     options={"expose"=true},
      *     name="claro_admin_external_sync_edit_source_form"
      * )
-     * @EXT\Template("ClarolineExternalSynchronizationBundle:Configuration:editSource.html.twig")
+     * @EXT\Template("ClarolineExternalSynchronizationBundle:configuration:edit_source.html.twig")
      */
     public function editSourceAction(Request $request, $source)
     {
@@ -159,7 +159,7 @@ class AdminConfigurationController extends Controller
      *     name="claro_admin_external_sync_source_user_configuration_form"
      * )
      * @EXT\Method({ "GET" })
-     * @EXT\Template("ClarolineExternalSynchronizationBundle:Configuration:userConfiguration.html.twig")
+     * @EXT\Template("ClarolineExternalSynchronizationBundle:configuration:user_configuration.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -185,7 +185,7 @@ class AdminConfigurationController extends Controller
      *     name="claro_admin_external_sync_source_group_configuration_form"
      * )
      * @EXT\Method({ "GET" })
-     * @EXT\Template("ClarolineExternalSynchronizationBundle:Configuration:groupConfiguration.html.twig")
+     * @EXT\Template("ClarolineExternalSynchronizationBundle:configuration:group_configuration.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -287,7 +287,7 @@ class AdminConfigurationController extends Controller
      *     options={"expose"=true},
      *     name="claro_admin_external_sync_source_synchronize"
      * )
-     * @EXT\Template("ClarolineExternalSynchronizationBundle:Configuration:synchronization.html.twig")
+     * @EXT\Template("ClarolineExternalSynchronizationBundle:configuration:synchronization.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

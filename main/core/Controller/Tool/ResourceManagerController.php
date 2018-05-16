@@ -24,7 +24,7 @@ class ResourceManagerController extends Controller
      *     name="claro_workspace_resource_rights_creation_form"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\resource_manager:resourceRightsCreation.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool\workspace\resource_manager:resource_rights_creation.html.twig")
      *
      * @param Workspace $workspace
      * @param Role      $role

@@ -71,7 +71,7 @@ class WidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template()
+     * @EXT\Template("ClarolineCoreBundle:administration\widget:widgets_management.html.twig")
      */
     public function widgetsManagementAction()
     {
@@ -94,7 +94,7 @@ class WidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCoreBundle:Administration\Widget:widgetEditModalForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\widget:widget_edit_modal_form.html.twig")
      *
      * @param Widget $widget
      */
@@ -112,7 +112,7 @@ class WidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCoreBundle:Administration\Widget:widgetEditModalForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\widget:widget_edit_modal_form.html.twig")
      *
      * @param Widget $widget
      */

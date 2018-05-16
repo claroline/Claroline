@@ -80,7 +80,7 @@ class PathWidgetController
      *
      * @EXT\Route("/widget/config/{widgetInstance}", name= "innova_path_widget_config")
      * @EXT\Method("POST")
-     * @EXT\Template("InnovaPathBundle:Widget:config.html.twig")
+     * @EXT\Template("InnovaPathBundle:widget:config.html.twig")
      *
      * @param WidgetInstance $widgetInstance
      * @param Request        $request

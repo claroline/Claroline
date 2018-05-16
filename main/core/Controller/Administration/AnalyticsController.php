@@ -71,7 +71,7 @@ class AnalyticsController extends Controller
      *     name="claro_admin_analytics_show"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\Analytics:analytics.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\analytics:analytics.html.twig")
      *
      * Displays platform analytics home page
      *
@@ -102,7 +102,7 @@ class AnalyticsController extends Controller
      *     name="claro_admin_analytics_connections"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\Analytics:analytics_connections.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\analytics:analytics_connections.html.twig")
      *
      * Displays platform analytics connections page
      *
@@ -154,7 +154,7 @@ class AnalyticsController extends Controller
      *     name="claro_admin_analytics_resources"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\Analytics:analytics_resources.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\analytics:analytics_resources.html.twig")
      *
      * Displays platform analytics resources page
      *
@@ -188,7 +188,7 @@ class AnalyticsController extends Controller
      *     name="claro_admin_analytics_widgets"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\Analytics:analytics_widgets.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\analytics:analytics_widgets.html.twig")
      *
      * Displays platform analytics widgets page
      *
@@ -220,7 +220,7 @@ class AnalyticsController extends Controller
      *     defaults={"topType" = "top_users_connections"}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Administration\Analytics:analytics_top.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\analytics:analytics_top.html.twig")
      *
      * Displays platform analytics top activity page
      *

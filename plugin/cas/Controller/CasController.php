@@ -36,7 +36,7 @@ class CasController extends Controller
 
     /**
      * @EXT\Route("/admin/parameters/cas/config", name="claro_admin_cas_server_config_form")
-     * @EXT\Template("ClarolineCasBundle::serverConfigForm.html.twig")
+     * @EXT\Template("ClarolineCasBundle::server_config_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -50,7 +50,7 @@ class CasController extends Controller
     /**
      * @EXT\Route("/admin/parameters/cas/config/submit", name="claro_admin_cas_server_config_form_submit")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCasBundle::serverConfigForm.html.twig")
+     * @EXT\Template("ClarolineCasBundle::server_config_form.html.twig")
      *
      * @param Request $request
      *

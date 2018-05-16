@@ -129,7 +129,7 @@ class CursusController extends Controller
      *     name="claro_cursus_plugin_configure"
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Cursus:pluginConfigureForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:cursus:plugin_configure_form.html.twig")
      */
     public function pluginConfigureAction()
     {
@@ -205,7 +205,7 @@ class CursusController extends Controller
      *     name="claro_cursus_courses_registration_widget",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCursusBundle:Widget:coursesRegistrationWidget.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:courses_registration_widget.html.twig")
      */
     public function coursesRegistrationWidgetAction(WidgetInstance $widgetInstance)
     {
@@ -231,7 +231,7 @@ class CursusController extends Controller
      *     defaults={"page"=1, "search"="", "max"=20, "orderedBy"="title","order"="ASC"},
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCursusBundle:Widget:coursesListForRegistrationWidget.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:courses_list_for_registration_widget.html.twig")
      */
     public function coursesListForRegistrationWidgetAction(
         WidgetInstance $widgetInstance,
@@ -367,7 +367,7 @@ class CursusController extends Controller
      *     defaults={"search"=""},
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCursusBundle:Widget:coursesListForRegistrationWidgetCalendar.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:courses_list_for_registration_widget_calendar.html.twig")
      */
     public function coursesListForRegistrationWidgetCalendarAction(WidgetInstance $widgetInstance, $search = '')
     {
@@ -542,7 +542,7 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("ClarolineCursusBundle:Widget:coursesRegistrationWidgetConfigureForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:courses_registration_widget_configure_form.html.twig")
      *
      * @param User           $user
      * @param WidgetInstance $widgetInstance
@@ -574,7 +574,7 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("ClarolineCursusBundle:Widget:coursesRegistrationWidgetConfigureForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:courses_registration_widget_configure_form.html.twig")
      *
      * @param User                $user
      * @param CoursesWidgetConfig $config
@@ -618,7 +618,7 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidgetConfigureForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:my_courses_widget_configure_form.html.twig")
      *
      * @param User           $user
      * @param WidgetInstance $widgetInstance
@@ -645,10 +645,10 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidgetConfigureForm.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:my_courses_widget_configure_form.html.twig")
      *
-     * @param User           $user
-     * @param WidgetInstance $widgetInstance
+     * @param User                $user
+     * @param CoursesWidgetConfig $config
      *
      * @return \Symfony\Component\HttpFoundation\JsonResponse | array
      */
@@ -685,7 +685,7 @@ class CursusController extends Controller
      *     name="claro_cursus_my_courses_widget",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesWidget.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:my_courses_widget.html.twig")
      */
     public function myCoursesWidgetAction(WidgetInstance $widgetInstance)
     {
@@ -704,7 +704,7 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesListForWidget.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:my_courses_list_for_widget.html.twig")
      */
     public function myCoursesListForWidgetAction(
         User $authenticatedUser,
@@ -781,7 +781,7 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesListForWidgetCalendar.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:my_courses_list_for_widget_calendar.html.twig")
      */
     public function myCoursesListForWidgetCalendarAction(User $authenticatedUser, WidgetInstance $widgetInstance, $search = '')
     {
@@ -855,7 +855,7 @@ class CursusController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineCursusBundle:Widget:myCoursesListForWidgetChronologic.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:widget:my_courses_list_for_widget_chronologic.html.twig")
      */
     public function myCoursesListForWidgetChronologicAction(User $user, WidgetInstance $widgetInstance, $search = '')
     {
@@ -935,7 +935,7 @@ class CursusController extends Controller
      *     defaults={"withWorkspace"=1, "withMail"=1, "type"=0},
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCursusBundle:Cursus:sessionInformationsModal.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:cursus:session_informations_modal.html.twig")
      */
     public function coursesWidgetSessionInformationsAction(
         WidgetInstance $widgetInstance,
@@ -993,7 +993,7 @@ class CursusController extends Controller
      *     defaults={"withMail"=1},
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCursusBundle:Cursus:sessionEventInformationsModal.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:cursus:session_event_informations_modal.html.twig")
      */
     public function coursesWidgetSessionEventInformationsAction(SessionEvent $sessionEvent, $withMail = 1)
     {
@@ -1121,7 +1121,7 @@ class CursusController extends Controller
      *     name="claro_courses_widget_session_event_set_registration",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCursusBundle:Cursus:sessionEventSetRegistrationModal.html.twig")
+     * @EXT\Template("ClarolineCursusBundle:cursus:session_event_set_registration_modal.html.twig")
      */
     public function coursesWidgetSessionEventSetRegistrationAction(WidgetInstance $widgetInstance, SessionEventSet $sessionEventSet)
     {

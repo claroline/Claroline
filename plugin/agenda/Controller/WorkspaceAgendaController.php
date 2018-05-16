@@ -97,7 +97,7 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_import_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:tool:import_ics_modal_form.html.twig")
      *
      * @param Workspace $workspace
      *
@@ -113,7 +113,7 @@ class WorkspaceAgendaController extends Controller
 
     /**
      * @EXT\Route("/workspace/{workspace}/import", name="claro_workspace_agenda_import")
-     * @EXT\Template("ClarolineAgendaBundle:Tool:importIcsModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:tool:import_ics_modal_form.html.twig")
      *
      * @param Workspace $workspace
      *
@@ -140,7 +140,7 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_add_event_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:agenda:add_event_modal_form.html.twig")
      *
      * @param Workspace $workspace
      *
@@ -164,7 +164,7 @@ class WorkspaceAgendaController extends Controller
     /**
      * @EXT\Route("/{workspace}/add", name="claro_workspace_agenda_add_event")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:addEventModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:agenda:add_event_modal_form.html.twig")
      *
      * @param Workspace $workspace
      *
@@ -202,7 +202,7 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_update_event_form",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:agenda:update_event_modal_form.html.twig")
      *
      * @return array
      */
@@ -227,7 +227,7 @@ class WorkspaceAgendaController extends Controller
      *     name="claro_workspace_agenda_update"
      * )
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineAgendaBundle:Agenda:updateEventModalForm.html.twig")
+     * @EXT\Template("ClarolineAgendaBundle:agenda:update_event_modal_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

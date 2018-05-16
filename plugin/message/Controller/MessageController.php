@@ -170,7 +170,7 @@ class MessageController
      *     options={"id" = "parentId", "strictId" = true},
      *     converter="strict_id"
      * )
-     * @EXT\Template("ClarolineMessageBundle:Message:show.html.twig")
+     * @EXT\Template("ClarolineMessageBundle:message:show.html.twig")
      *
      * Handles the message form submission.
      *

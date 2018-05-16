@@ -54,7 +54,7 @@ class MyWorkspacesWidgetController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Widget:displayMyWorkspacesWidget.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:widget:display_my_workspaces_widget.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Renders the workspaces list widget

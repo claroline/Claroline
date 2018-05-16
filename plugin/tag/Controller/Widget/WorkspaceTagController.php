@@ -51,7 +51,7 @@ class WorkspaceTagController extends Controller
      *     name="claro_widget_workspace_tag_update_config"
      * )
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineTagBundle:Widget:WorkspaceTag\widgetConfigureForm.html.twig")
+     * @EXT\Template("ClarolineTagBundle:widget:workspace_tag\widget_configure_form.html.twig")
      */
     public function updateSimpleTextWidgetConfigAction(WidgetInstance $widgetInstance, Request $request)
     {
@@ -79,7 +79,7 @@ class WorkspaceTagController extends Controller
      *     name="claro_widget_workspace_tag_update_form"
      * )
      * @EXT\Method("POST")
-     * @EXT\Template()
+     * @EXT\Template("ClarolineTagBundle:widget:workspace_tag\widget_configure_form.html.twig")
      */
     public function widgetConfigureFormAction(WidgetInstance $widgetInstance, Request $request)
     {
@@ -100,7 +100,7 @@ class WorkspaceTagController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * @EXT\Template()
+     * @EXT\Template("ClarolineTagBundle:widget:workspace_tag\display.html.twig")
      */
     public function displayAction(WidgetInstance $widgetInstance)
     {

@@ -47,7 +47,7 @@ class ReservationAdminController extends Controller
      *      name="formalibre_reservation_admin_index"
      * )
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     * @EXT\Template("FormaLibreReservationBundle:Admin:index.html.twig")
+     * @EXT\Template("FormaLibreReservationBundle:admin:index.html.twig")
      *
      * @param User $user
      */

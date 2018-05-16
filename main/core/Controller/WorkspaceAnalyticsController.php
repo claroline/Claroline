@@ -89,7 +89,7 @@ class WorkspaceAnalyticsController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true},
      *      converter="strict_id"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:traffic.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool/workspace/analytics:traffic.html.twig")
      *
      * Displays activities evaluations home tab of analytics tool
      *
@@ -130,7 +130,7 @@ class WorkspaceAnalyticsController extends Controller
      *      options={"id" = "workspaceId", "strictId" = true},
      *      converter="strict_id"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:resources.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool/workspace/analytics:resources.html.twig")
      *
      * Displays workspace analytics resource page.
      *
@@ -194,7 +194,7 @@ class WorkspaceAnalyticsController extends Controller
 
             return new Response(
                 $this->templating->render(
-                    'ClarolineCoreBundle:Tool/workspace/analytics:workspaceManagerActivitiesEvaluations.html.twig',
+                    'ClarolineCoreBundle:tool/workspace/analytics:workspace_manager_activities_evaluations.html.twig',
                     [
                         'analyticsTab' => 'activities',
                         'workspace' => $workspace,
@@ -289,7 +289,7 @@ class WorkspaceAnalyticsController extends Controller
 
             return new Response(
                 $this->templating->render(
-                    'ClarolineCoreBundle:Tool/workspace/analytics:workspaceActivitiesEvaluations.html.twig',
+                    'ClarolineCoreBundle:tool/workspace/analytics:workspace_activities_evaluations.html.twig',
                     [
                         'analyticsTab' => 'activities',
                         'workspace' => $workspace,
@@ -328,7 +328,7 @@ class WorkspaceAnalyticsController extends Controller
      *      options={"id" = "activityParametersId", "strictId" = true},
      *      converter="strict_id"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:workspaceActivitiesPastEvaluations.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool/workspace/analytics:workspace_activities_past_evaluations.html.twig")
      *
      * Displays past evaluations of one activity for one user
      *
@@ -404,7 +404,7 @@ class WorkspaceAnalyticsController extends Controller
      *      options={"id" = "activityId", "strictId" = true},
      *      converter="strict_id"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/analytics:workspaceManagerActivityEvaluations.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool/workspace/analytics:workspace_manager_activity_evaluations.html.twig")
      *
      * Displays evaluations of an activity for each user of the workspace
      *

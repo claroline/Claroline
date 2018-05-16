@@ -229,7 +229,7 @@ class TeamController extends Controller
      *     name="claro_team_create"
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTeamBundle:Team:teamCreateForm.html.twig")
+     * @EXT\Template("ClarolineTeamBundle:team:team_create_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -286,7 +286,7 @@ class TeamController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTeamBundle:Team:teamEditForm.html.twig")
+     * @EXT\Template("ClarolineTeamBundle:team:team_edit_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -363,7 +363,7 @@ class TeamController extends Controller
      *     name="claro_team_multiple_create"
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTeamBundle:Team:multipleTeamsCreateForm.html.twig")
+     * @EXT\Template("ClarolineTeamBundle:team:multiple_teams_create_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -646,7 +646,7 @@ class TeamController extends Controller
      *     name="claro_team_parameters_edit"
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTeamBundle:Team:teamParamsEditForm.html.twig")
+     * @EXT\Template("ClarolineTeamBundle:team:team_params_edit_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */

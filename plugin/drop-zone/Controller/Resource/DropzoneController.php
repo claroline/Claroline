@@ -67,7 +67,7 @@ class DropzoneController extends Controller
      * @EXT\Method("GET")
      * @EXT\ParamConverter("dropzone", class="ClarolineDropZoneBundle:Dropzone")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=true})
-     * @EXT\Template("ClarolineDropZoneBundle:Dropzone:open.html.twig")
+     * @EXT\Template("ClarolineDropZoneBundle:dropzone:open.html.twig")
      *
      * @param Dropzone $dropzone
      * @param User     $user

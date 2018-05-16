@@ -197,7 +197,7 @@ class SurveyController extends Controller
      *     "/survey/{survey}/parameters/edit",
      *     name="claro_survey_parameters_edit"
      * )
-     * @EXT\Template( "ClarolineSurveyBundle:Survey:surveyParametersEditForm.html.twig")
+     * @EXT\Template( "ClarolineSurveyBundle:survey:survey_parameters_edit_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -292,7 +292,7 @@ class SurveyController extends Controller
                     $this->typedQuestionDisplayAction($survey, $question)->getContent();
             } else {
                 $questionViews[] = $this->templating->render(
-                    'ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig',
+                    'ClarolineSurveyBundle:survey:title_question_display.html.twig',
                     ['question' => $question]
                 );
             }
@@ -431,7 +431,7 @@ class SurveyController extends Controller
      *     name="claro_survey_model_delete",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineSurveyBundle:Survey:modelsManagement.html.twig")
+     * @EXT\Template("ClarolineSurveyBundle:survey:models_management.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -541,7 +541,7 @@ class SurveyController extends Controller
      *     name="claro_survey_question_create",
      *     defaults={"source"="question"}
      * )
-     * @EXT\Template("ClarolineSurveyBundle:Survey:questionCreateForm.html.twig")
+     * @EXT\Template("ClarolineSurveyBundle:survey:question_create_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -653,7 +653,7 @@ class SurveyController extends Controller
      *     name="claro_survey_question_edit",
      *     defaults={"source"="question"}
      * )
-     * @EXT\Template("ClarolineSurveyBundle:Survey:questionEditForm.html.twig")
+     * @EXT\Template("ClarolineSurveyBundle:survey:question_edit_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -731,7 +731,7 @@ class SurveyController extends Controller
      *     name="claro_survey_question_delete",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineSurveyBundle:Survey:questionsManagement.html.twig")
+     * @EXT\Template("ClarolineSurveyBundle:survey:questions_management.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -780,7 +780,7 @@ class SurveyController extends Controller
      *     "/survey/{survey}/question/title/create",
      *     name="claro_survey_question_title_create"
      * )
-     * @EXT\Template("ClarolineSurveyBundle:Survey:questionTitleCreateForm.html.twig")
+     * @EXT\Template("ClarolineSurveyBundle:survey:question_title_create_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -846,7 +846,7 @@ class SurveyController extends Controller
      *     "/survey/{survey}/question/{question}/title/edit",
      *     name="claro_survey_question_title_edit"
      * )
-     * @EXT\Template("ClarolineSurveyBundle:Survey:questionTitleEditForm.html.twig")
+     * @EXT\Template("ClarolineSurveyBundle:survey:question_title_edit_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -1162,7 +1162,7 @@ class SurveyController extends Controller
                 )->getContent();
             } else {
                 $questionViews[$relation->getId()] = $this->templating->render(
-                    'ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig',
+                    'ClarolineSurveyBundle:survey:title_question_display.html.twig',
                     ['question' => $question]
                 );
             }
@@ -1183,7 +1183,7 @@ class SurveyController extends Controller
      *     "/survey/{survey}/answer",
      *     name="claro_survey_answer"
      * )
-     * @EXT\Template("ClarolineSurveyBundle:Survey:surveyAnswerForm.html.twig")
+     * @EXT\Template("ClarolineSurveyBundle:survey:survey_answer_form.html.twig")
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -1244,7 +1244,7 @@ class SurveyController extends Controller
                         )->getContent();
                     } else {
                         $questionViews[$relation->getId()] = $this->templating->render(
-                            'ClarolineSurveyBundle:Survey:titleQuestionDisplay.html.twig',
+                            'ClarolineSurveyBundle:survey:title_question_display.html.twig',
                             ['question' => $question]
                         );
                     }
@@ -1660,7 +1660,7 @@ class SurveyController extends Controller
         }
         $response = new Response(
             $this->templating->render(
-                'ClarolineSurveyBundle:Survey:surveyResultsExport.html.twig',
+                'ClarolineSurveyBundle:survey:survey_results_export.html.twig',
                 [
                     'survey' => $survey,
                     'questions' => $questions,
@@ -1701,7 +1701,7 @@ class SurveyController extends Controller
 
         $response = new Response(
             $this->templating->render(
-                'ClarolineSurveyBundle:Survey:surveyResultsExport.html.twig',
+                'ClarolineSurveyBundle:survey:survey_results_export.html.twig',
                 [
                     'survey' => $survey,
                     'questions' => [$question],
@@ -2045,7 +2045,7 @@ class SurveyController extends Controller
 
         return new Response(
             $this->templating->render(
-                'ClarolineSurveyBundle:Survey:showMultipleChoiceQuestionResults.html.twig',
+                'ClarolineSurveyBundle:survey:show_multiple_choice_question_results.html.twig',
                 [
                     'survey' => $survey,
                     'question' => $question,
@@ -2083,7 +2083,7 @@ class SurveyController extends Controller
 
         return new Response(
             $this->templating->render(
-                'ClarolineSurveyBundle:Survey:showOpenEndedQuestionResults.html.twig',
+                'ClarolineSurveyBundle:survey:show_open_ended_question_results.html.twig',
                 [
                     'survey' => $survey,
                     'question' => $question,
@@ -2116,7 +2116,7 @@ class SurveyController extends Controller
 
         return new Response(
             $this->templating->render(
-                'ClarolineSurveyBundle:Survey:showSimpleTextQuestionResults.html.twig',
+                'ClarolineSurveyBundle:survey:show_simple_text_question_results.html.twig',
                 [
                     'survey' => $survey,
                     'question' => $question,
@@ -2187,7 +2187,7 @@ class SurveyController extends Controller
 
         return new Response(
             $this->templating->render(
-                'ClarolineSurveyBundle:Survey:multipleChoiceQuestionForm.html.twig',
+                'ClarolineSurveyBundle:survey:multiple_choice_question_form.html.twig',
                 [
                     'survey' => $survey,
                     'horizontal' => $horizontal,
@@ -2214,7 +2214,7 @@ class SurveyController extends Controller
 
         return new Response(
             $this->templating->render(
-                'ClarolineSurveyBundle:Survey:displayMultipleChoiceQuestion.html.twig',
+                'ClarolineSurveyBundle:survey:display_multiple_choice_question.html.twig',
                 [
                     'question' => $question,
                     'choices' => $choices,
@@ -2236,7 +2236,7 @@ class SurveyController extends Controller
 
         return new Response(
             $this->templating->render(
-                'ClarolineSurveyBundle:Survey:displayOpenEndedQuestion.html.twig',
+                'ClarolineSurveyBundle:survey:display_open_ended_question.html.twig',
                 [
                     'question' => $question,
                     'answers' => $answersDatas,
@@ -2254,7 +2254,7 @@ class SurveyController extends Controller
     ) {
         return new Response(
             $this->templating->render(
-                'ClarolineSurveyBundle:Survey:displaySimpleTextQuestion.html.twig',
+                'ClarolineSurveyBundle:survey:display_simple_text_question.html.twig',
                 [
                     'question' => $question,
                     'answers' => $answers,

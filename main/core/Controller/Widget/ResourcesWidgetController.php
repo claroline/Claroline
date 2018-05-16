@@ -73,7 +73,7 @@ class ResourcesWidgetController extends Controller
      *     name="claro_resources_widget",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Widget:resourcesWidget.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:widget:resources_widget.html.twig")
      */
     public function resourcesWidgetAction(WidgetInstance $widgetInstance)
     {
@@ -126,7 +126,7 @@ class ResourcesWidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("ClarolineCoreBundle:Widget:resourcesWidgetConfigureForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:widget:resources_widget_configure_form.html.twig")
      */
     public function resourcesWidgetConfigureFormAction(WidgetInstance $widgetInstance)
     {
@@ -154,7 +154,7 @@ class ResourcesWidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("ClarolineCoreBundle:Widget:resourcesWidgetConfigureForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:widget:resources_widget_configure_form.html.twig")
      */
     public function resourcesWidgetConfigureAction(ResourcesWidgetConfig $config)
     {
@@ -198,7 +198,7 @@ class ResourcesWidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("ClarolineCoreBundle:Widget:resourceTextConfigureForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:widget:resource_text_configure_form.html.twig")
      */
     public function resourceTextConfigureFormAction(WidgetInstance $widgetInstance)
     {
@@ -217,7 +217,7 @@ class ResourcesWidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("ClarolineCoreBundle:Widget:resourceTextConfigureForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:widget:resource_text_configure_form.html.twig")
      */
     public function resourceTextSubmitFormAction(WidgetDisplayConfig $config)
     {
@@ -247,7 +247,7 @@ class ResourcesWidgetController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Widget:resourceTextDisplay.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:widget:resource_text_display.html.twig")
      */
     public function displayResourceTextWidgetAction(WidgetInstance $widgetInstance)
     {

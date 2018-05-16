@@ -59,7 +59,7 @@ class ScormController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineScormBundle::scormResults.html.twig")
+     * @EXT\Template("ClarolineScormBundle::scorm_results.html.twig")
      */
     public function scormResultsAction(ResourceNode $resourceNode)
     {

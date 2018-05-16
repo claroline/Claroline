@@ -71,7 +71,7 @@ class TrackingController extends Controller
      * Displays a user tracking.
      *
      * @EXT\Route("/{publicUrl}", name="claro_user_tracking")
-     * @EXT\Template("ClarolineCoreBundle:User:tracking.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:user:tracking.html.twig")
      * @EXT\ParamConverter("user", converter="current_user", options={"allowAnonymous"=false})
      *
      * @param string $publicUrl

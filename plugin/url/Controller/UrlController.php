@@ -47,7 +47,7 @@ class UrlController extends Controller
      *     name="hevinci_url_change",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("HeVinciUrlBundle:Url:form.html.twig")
+     * @EXT\Template("HeVinciUrlBundle:url:form.html.twig")
      */
     public function changeUrlAction(ResourceNode $node)
     {

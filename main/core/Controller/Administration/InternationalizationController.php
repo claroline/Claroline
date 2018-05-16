@@ -54,7 +54,7 @@ class InternationalizationController extends Controller
      *
      * @EXT\Route("", name="claro_admin_i18n_submit")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCoreBundle:Administration:Internationalization\form.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration:internationalization\form.html.twig")
      *
      * @return array|RedirectResponse
      */

@@ -59,7 +59,7 @@ class FavouriteController extends Controller
      * )
      *
      * @EXT\Method("POST")
-     * @EXT\Template("HeVinciFavouriteBundle:Favourite:formError.html.twig")
+     * @EXT\Template("HeVinciFavouriteBundle:favourite:form_error.html.twig")
      */
     public function addFavouriteFormAction(ResourceNode $node)
     {
@@ -93,7 +93,7 @@ class FavouriteController extends Controller
      * )
      *
      * @EXT\Method("POST")
-     * @EXT\Template("HeVinciFavouriteBundle:Favourite:formError.html.twig")
+     * @EXT\Template("HeVinciFavouriteBundle:favourite:form_error.html.twig")
      */
     public function deleteFavouriteFormAction(ResourceNode $node)
     {

@@ -92,7 +92,7 @@ class HomeTabController extends Controller
      *     name="claro_admin_home_tabs_configuration",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Administration\HomeTab:adminHomeTabsConfig.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration\home_tab:admin_home_tabs_config.html.twig")
      *
      * Displays the admin homeTabs configuration page.
      *
@@ -215,7 +215,7 @@ class HomeTabController extends Controller
             ];
 
             return $this->apiManager->handleFormView(
-                'ClarolineCoreBundle:API:HomeTab\adminHomeTabCreateForm.html.twig',
+                'ClarolineCoreBundle:api:home_tab\admin_home_tab_create_form.html.twig',
                 $form,
                 $options
             );
@@ -248,7 +248,7 @@ class HomeTabController extends Controller
         $form = $this->createForm($formType, $homeTab);
 
         return $this->apiManager->handleFormView(
-            'ClarolineCoreBundle:API:HomeTab\adminHomeTabEditForm.html.twig',
+            'ClarolineCoreBundle:api:home_tab\admin_home_tab_edit_form.html.twig',
             $form
         );
     }
@@ -312,7 +312,7 @@ class HomeTabController extends Controller
             ];
 
             return $this->apiManager->handleFormView(
-                'ClarolineCoreBundle:API:HomeTab\adminHomeTabEditForm.html.twig',
+                'ClarolineCoreBundle:api:home_tab\admin_home_tab_edit_form.html.twig',
                 $form,
                 $options
             );
@@ -419,7 +419,7 @@ class HomeTabController extends Controller
         $form = $this->createForm($formType);
 
         return $this->apiManager->handleFormView(
-            'ClarolineCoreBundle:API:Widget\widgetInstanceCreateForm.html.twig',
+            'ClarolineCoreBundle:api:widget\widget_instance_create_form.html.twig',
             $form
         );
     }
@@ -487,7 +487,7 @@ class HomeTabController extends Controller
             ];
 
             return $this->apiManager->handleFormView(
-                'ClarolineCoreBundle:API:Widget\widgetInstanceCreateForm.html.twig',
+                'ClarolineCoreBundle:api:widget\widget_instance_create_form.html.twig',
                 $form,
                 $options
             );
@@ -521,7 +521,7 @@ class HomeTabController extends Controller
         $form = $this->createForm($formType, $widgetInstance);
 
         return $this->apiManager->handleFormView(
-            'ClarolineCoreBundle:API:Widget\widgetInstanceEditForm.html.twig',
+            'ClarolineCoreBundle:api:widget\widget_instance_edit_form.html.twig',
             $form,
             ['extra_infos' => $widget->isConfigurable(), 'form_view' => ['instance' => $widgetInstance]]
         );
@@ -592,7 +592,7 @@ class HomeTabController extends Controller
             ];
 
             return $this->apiManager->handleFormView(
-                'ClarolineCoreBundle:API:Widget\widgetInstanceEditForm.html.twig',
+                'ClarolineCoreBundle:api:widget\widget_instance_edit_form.html.twig',
                 $form,
                 $options
             );

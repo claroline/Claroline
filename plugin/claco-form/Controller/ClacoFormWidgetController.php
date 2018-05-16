@@ -148,7 +148,7 @@ class ClacoFormWidgetController extends Controller
      *     name="claro_claco_form_widget_configure",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineClacoFormBundle:ClacoFormWidget:clacoFormWidgetConfigureForm.html.twig")
+     * @EXT\Template("ClarolineClacoFormBundle:claco_form_widget:claco_form_widget_configure_form.html.twig")
      */
     public function clacoFormWidgetConfigureAction(ClacoFormWidgetConfig $config)
     {

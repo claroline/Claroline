@@ -58,7 +58,7 @@ class WorkspaceController extends Controller
      *      converter="strict_id"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/logs:logList.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool/workspace/logs:log_list.html.twig")
      *
      * Displays logs list using filter parameteres and page number
      *
@@ -100,7 +100,7 @@ class WorkspaceController extends Controller
      *      converter="strict_id"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool/workspace/logs:logByUser.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool/workspace/logs:log_by_user.html.twig")
      *
      * Displays logs list using filter parameteres and page number
      *
@@ -213,8 +213,8 @@ class WorkspaceController extends Controller
                 fputcsv($handle, [
                     $result->getDateLog()->format($date_format).' '.$result->getDateLog()->format('H:i'),
                     $this->translator->trans('log_'.$result->getAction().'_shortname', [], 'log'),
-                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:Log:view_list_item_doer.html.twig', ['log' => $result])),
-                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:Log:view_list_item_sentence.html.twig', [
+                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:log:view_list_item_doer.html.twig', ['log' => $result])),
+                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:log:view_list_item_sentence.html.twig', [
                         'log' => $result,
                         'listItemView' => array_key_exists($result->getId(), $workspaceList['listItemViews']) ? $workspaceList['listItemViews'][$result->getId()] : null,
                     ])),

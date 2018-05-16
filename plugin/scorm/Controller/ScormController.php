@@ -160,7 +160,7 @@ class ScormController extends Controller
      *      options={"id" = "scoId", "strictId" = true},
      *      converter="strict_id"
      * )
-     * @EXT\Template("ClarolineScormBundle::scorm12MenuSco.html.twig")
+     * @EXT\Template("ClarolineScormBundle::scorm12_menu_sco.html.twig")
      *
      * @param Scorm12Sco $scorm12Sco
      *
@@ -468,7 +468,7 @@ class ScormController extends Controller
      *      options={"id" = "scoId", "strictId" = true},
      *      converter="strict_id"
      * )
-     * @EXT\Template("ClarolineScormBundle::scorm2004MenuSco.html.twig")
+     * @EXT\Template("ClarolineScormBundle::scorm2004_menu_sco.html.twig")
      *
      * @param Scorm2004Sco $scorm2004Sco
      *
@@ -672,7 +672,7 @@ class ScormController extends Controller
      *     name="claro_scorm_12_configuration_edit_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineScormBundle::scorm12ConfigurationModalForm.html.twig")
+     * @EXT\Template("ClarolineScormBundle::scorm12_configuration_modal_form.html.twig")
      *
      * @param Scorm12Resource $scorm
      */
@@ -690,7 +690,7 @@ class ScormController extends Controller
      *     name="claro_scorm_12_configuration_edit",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineScormBundle::scorm12ConfigurationModalForm.html.twig")
+     * @EXT\Template("ClarolineScormBundle::scorm12_configuration_modal_form.html.twig")
      *
      * @param Scorm12Resource $scorm
      */
@@ -715,7 +715,7 @@ class ScormController extends Controller
      *     name="claro_scorm_2004_configuration_edit_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineScormBundle::scorm2004ConfigurationModalForm.html.twig")
+     * @EXT\Template("ClarolineScormBundle::scorm2004_configuration_modal_form.html.twig")
      *
      * @param Scorm12Resource $scorm
      */
@@ -733,7 +733,7 @@ class ScormController extends Controller
      *     name="claro_scorm_2004_configuration_edit",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineScormBundle::scorm2004ConfigurationModalForm.html.twig")
+     * @EXT\Template("ClarolineScormBundle::scorm2004_configuration_modal_form.html.twig")
      *
      * @param Scorm12Resource $scorm
      */

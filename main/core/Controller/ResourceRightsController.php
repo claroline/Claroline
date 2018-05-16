@@ -122,14 +122,14 @@ class ResourceRightsController extends Controller
             $data['currentWorkspace'] = $node->getWorkspace();
 
             return $this->templating->renderResponse(
-                'ClarolineCoreBundle:Resource:multipleRightsPage.html.twig',
+                'ClarolineCoreBundle:resource:multiple_rights_page.html.twig',
                 $data
             );
         } else {
             $resourceRights = $this->rightsManager->getOneByRoleAndResource($role, $node);
 
             return $this->templating->renderResponse(
-                'ClarolineCoreBundle:Resource:singleRightsForm.html.twig',
+                'ClarolineCoreBundle:resource:single_rights_form.html.twig',
                 [
                     'resourceRights' => $resourceRights,
                     'isDir' => $isDir,
@@ -200,7 +200,7 @@ class ResourceRightsController extends Controller
      *     name="claro_resource_right_creation_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:rightsCreation.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:rights_creation.html.twig")
      *
      * Displays the form for resource creation rights (i.e the right to create a
      * type of resource in a directory). Show the different resource types already
@@ -265,7 +265,7 @@ class ResourceRightsController extends Controller
      *     options={"expose"=true},
      *     defaults={"search"="","ordered"="firstName","order"="ASC","page"=1,"max"=50}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:resourcesRightsUsersWithRightsForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:resources_rights_users_with_rights_form.html.twig")
      *
      * Displays the resource rights form for all users.
      *

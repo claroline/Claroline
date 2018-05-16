@@ -36,7 +36,7 @@ class OauthController extends BaseAuthorizeController
 
     /**
      * @EXT\Route("/oauth/v2/auth_login", name="claro_oauth_login")
-     * @EXT\Template("ClarolineCoreBundle:Authentication:oauthLogin.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:authentication:oauth_login.html.twig")
      */
     public function oauthLoginAction(Request $request)
     {
@@ -103,7 +103,7 @@ class OauthController extends BaseAuthorizeController
         $form = $this->container->get('fos_oauth_server.authorize.form');
 
         return $this->container->get('templating')->renderResponse(
-            'ClarolineCoreBundle:Authentication:oauth_authorize.html.twig',
+            'ClarolineCoreBundle:authentication:oauth_authorize.html.twig',
             [
                 'form' => $form->createView(),
                 'client' => $this->getClient(),

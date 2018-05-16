@@ -423,7 +423,7 @@ class ResourceController extends Controller
         if (!$this->authorization->isGranted('MOVE', $collection)) {
             $errors = $collection->getErrors();
             $content = $this->templating->render(
-                'ClarolineCoreBundle:Resource:errors.html.twig',
+                'ClarolineCoreBundle:resource:errors.html.twig',
                 ['errors' => $errors]
             );
 
@@ -513,7 +513,7 @@ class ResourceController extends Controller
      *     options={"expose"=true}
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Resource/logs:logList.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource/logs:log_list.html.twig")
      *
      * Shows resource logs list
      *
@@ -566,8 +566,8 @@ class ResourceController extends Controller
                 fputcsv($handle, [
                     $result->getDateLog()->format($date_format).' '.$result->getDateLog()->format('H:i'),
                     $this->translator->trans('log_'.$result->getAction().'_shortname', [], 'log'),
-                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:Log:view_list_item_doer.html.twig', ['log' => $result])),
-                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:Log:view_list_item_sentence.html.twig', [
+                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:log:view_list_item_doer.html.twig', ['log' => $result])),
+                    $this->str_to_csv($this->renderView('ClarolineCoreBundle:log:view_list_item_sentence.html.twig', [
                         'log' => $result,
                         'listItemView' => array_key_exists($result->getId(), $resourceList['listItemViews']) ? $resourceList['listItemViews'][$result->getId()] : null,
                     ])),
@@ -932,7 +932,7 @@ class ResourceController extends Controller
         if (!$this->authorization->isGranted('COPY', $collection)) {
             $errors = $collection->getErrors();
             $content = $this->templating->render(
-                'ClarolineCoreBundle:Resource:errors.html.twig',
+                'ClarolineCoreBundle:resource:errors.html.twig',
                 ['errors' => $errors]
             );
 
@@ -955,7 +955,7 @@ class ResourceController extends Controller
         } catch (ResourceNotFoundException $e) {
             $errors = [$e->getMessage()];
             $content = $this->templating->render(
-                'ClarolineCoreBundle:Resource:errors.html.twig',
+                'ClarolineCoreBundle:resource:errors.html.twig',
                 ['errors' => $errors]
             );
             $response = new Response($content, 403);
@@ -1172,7 +1172,7 @@ class ResourceController extends Controller
         $response = new Response('', 401, ['Content-Type' => 'application/json']);
         if ($this->authorization->isGranted('ROLE_USER')) {
             $json = $this->templating->render(
-                'ClarolineCoreBundle:Resource:managerParameters.json.twig',
+                'ClarolineCoreBundle:resource:manager_parameters.json.twig',
                 [
                     'resourceTypes' => $this->resourceManager->getAllResourceTypes(),
                     'defaultResourceActionsMask' => $this->maskManager->getDefaultResourceActionsMask(),
@@ -1202,7 +1202,7 @@ class ResourceController extends Controller
 
         return new Response(
             $this->templating->render(
-                "ClarolineCoreBundle:Resource:embed/{$view}.html.twig",
+                "ClarolineCoreBundle:resource:embed/{$view}.html.twig",
                 [
                     'node' => $node,
                     'resource' => $this->resourceManager->getResourceFromNode($node),

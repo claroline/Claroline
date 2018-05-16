@@ -511,7 +511,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCommentCreateForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_ticket_comment_create_form.html.twig")
      */
     public function adminTicketCommentCreateAction(User $user, Ticket $ticket, $type)
     {
@@ -606,7 +606,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCommentEditModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_ticket_comment_edit_modal_form.html.twig")
      */
     public function adminTicketCommentEditFormAction(Comment $comment, $type)
     {
@@ -626,7 +626,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCommentEditModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_ticket_comment_edit_modal_form.html.twig")
      */
     public function adminTicketCommentEditAction(User $user, Comment $comment, $type)
     {
@@ -691,7 +691,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportTypeCreateModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_support_type_create_modal_form.html.twig")
      */
     public function adminSupportTypeCreateFormAction()
     {
@@ -707,7 +707,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportTypeCreateModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_support_type_create_modal_form.html.twig")
      */
     public function adminSupportTypeCreateAction()
     {
@@ -734,7 +734,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportTypeEditModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_support_type_edit_modal_form.html.twig")
      */
     public function adminSupportTypeEditFormAction(Type $type)
     {
@@ -750,7 +750,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportTypeEditModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_support_type_edit_modal_form.html.twig")
      */
     public function adminSupportTypeEditAction(Type $type)
     {
@@ -799,7 +799,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportStatusCreateModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_support_status_create_modal_form.html.twig")
      */
     public function adminSupportStatusCreateFormAction()
     {
@@ -815,7 +815,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportStatusCreateModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_support_status_create_modal_form.html.twig")
      */
     public function adminSupportStatusCreateAction()
     {
@@ -856,7 +856,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportStatusEditModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_support_status_edit_modal_form.html.twig")
      */
     public function adminSupportStatusEditFormAction(Status $status)
     {
@@ -872,7 +872,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportStatusEditModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_support_status_edit_modal_form.html.twig")
      */
     public function adminSupportStatusEditAction(Status $status)
     {
@@ -939,7 +939,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportTicketInterventionModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_support_ticket_intervention_modal_form.html.twig")
      */
     public function adminSupportTicketInterventionCreateFormAction(Ticket $ticket)
     {
@@ -955,7 +955,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminSupportTicketInterventionModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_support_ticket_intervention_modal_form.html.twig")
      */
     public function adminSupportTicketInterventionCreateAction(User $user, Ticket $ticket)
     {
@@ -1121,7 +1121,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCreateModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_ticket_create_modal_form.html.twig")
      */
     public function adminTicketCreateFormAction(User $user)
     {
@@ -1141,7 +1141,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminTicketCreateModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_ticket_create_modal_form.html.twig")
      */
     public function adminTicketCreateAction(User $user)
     {
@@ -1210,7 +1210,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminForwardedTicketCreateModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_forwarded_ticket_create_modal_form.html.twig")
      */
     public function adminForwardedTicketCreateFormAction(User $user, Ticket $ticket)
     {
@@ -1233,7 +1233,7 @@ class AdminSupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:AdminSupport:adminForwardedTicketCreateModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:admin_support:admin_forwarded_ticket_create_modal_form.html.twig")
      */
     public function adminForwardedTicketCreateAction(User $user, Ticket $ticket)
     {

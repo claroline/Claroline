@@ -101,7 +101,7 @@ class RegistrationController extends Controller
      * Displays the user self-registration form.
      *
      * @EXT\Route("", name="claro_user_registration")
-     * @EXT\Template("ClarolineCoreBundle:User:registration.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:user:registration.html.twig")
      *
      * @return array
      */

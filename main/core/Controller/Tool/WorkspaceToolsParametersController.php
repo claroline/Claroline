@@ -91,7 +91,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *     "/{workspace}/tools",
      *     name="claro_workspace_tools_roles"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolRoles.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool\workspace\parameters:tool_roles.html.twig")
      *
      * @param Workspace $workspace
      *
@@ -118,7 +118,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *     name="claro_workspace_order_tool_edit_form"
      * )
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:toolNameModalForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool\workspace\parameters:tool_name_modal_form.html.twig")
      *
      * @param Workspace $workspace
      * @param Tool      $tool
@@ -144,7 +144,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      * )
      * @EXT\Method("POST")
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceOrderToolEdit.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool\workspace\parameters:workspace_order_tool_edit.html.twig")
      *
      * @param Workspace   $workspace
      * @param OrderedTool $workspaceOrderTool
@@ -265,7 +265,7 @@ class WorkspaceToolsParametersController extends AbstractParametersController
      *     "/{workspace}/display/edit",
      *     name="claro_workspace_display_edit"
      * )
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:workspaceDisplayEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool\workspace\parameters:workspace_display_edit_form.html.twig")
      *
      * @param Workspace $workspace
      */

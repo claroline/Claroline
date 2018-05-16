@@ -39,7 +39,7 @@ class RedirectController extends Controller
      * )
      * @EXT\ParamConverter("workspace",  options={"mapping": {"slug": "slug"}})
      *
-     * @EXT\Template("ClarolineCoreBundle:Tool\workspace\parameters:generate_url_subscription.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:tool\workspace\parameters:generate_url_subscription.html.twig")
      *
      * @param Workspace $workspace
      *

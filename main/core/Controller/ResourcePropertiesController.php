@@ -78,7 +78,7 @@ class ResourcePropertiesController extends Controller
      *     name="claro_resource_rename_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:renameForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:rename_form.html.twig")
      *
      * Displays the form allowing to rename a resource.
      *
@@ -101,7 +101,7 @@ class ResourcePropertiesController extends Controller
      *     name="claro_resource_rename",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:renameForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:rename_form.html.twig")
      *
      * Renames a resource.
      *
@@ -136,7 +136,7 @@ class ResourcePropertiesController extends Controller
      *     name="claro_resource_form_properties",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:properties_form.html.twig")
      *
      * Displays the resource properties form.
      *
@@ -169,7 +169,7 @@ class ResourcePropertiesController extends Controller
      *     name="claro_resource_edit_properties",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:propertiesForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:properties_form.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Changes the resource properties.
@@ -247,7 +247,7 @@ class ResourcePropertiesController extends Controller
      *     name="claro_resource_icon_edit_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:iconEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:icon_edit_form.html.twig")
      *
      * Displays the resource properties form.
      *
@@ -280,7 +280,7 @@ class ResourcePropertiesController extends Controller
      *     name="claro_resource_icon_edit",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:Resource:iconEditForm.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:resource:icon_edit_form.html.twig")
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
      *
      * Changes the resource properties.

@@ -81,7 +81,7 @@ class TagController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTagBundle:Tag:resourceTagModalForm.html.twig")
+     * @EXT\Template("ClarolineTagBundle:tag:resource_tag_modal_form.html.twig")
      */
     public function resourceTagFormAction(ResourceNode $resourceNode)
     {
@@ -104,7 +104,7 @@ class TagController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTagBundle:Tag:resourceTagModalForm.html.twig")
+     * @EXT\Template("ClarolineTagBundle:tag:resource_tag_modal_form.html.twig")
      */
     public function resourceTagAction(ResourceNode $resourceNode)
     {
@@ -140,7 +140,7 @@ class TagController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTagBundle:Tag:groupTagModalForm.html.twig")
+     * @EXT\Template("ClarolineTagBundle:tag:group_tag_modal_form.html.twig")
      */
     public function groupTagFormAction(Group $group)
     {
@@ -163,7 +163,7 @@ class TagController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTagBundle:Tag:groupTagModalForm.html.twig")
+     * @EXT\Template("ClarolineTagBundle:tag:group_tag_modal_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
      */
     public function groupTagAction(Group $group)
@@ -196,7 +196,7 @@ class TagController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTagBundle:Tag:userTagModalForm.html.twig")
+     * @EXT\Template("ClarolineTagBundle:tag:user_tag_modal_form.html.twig")
      */
     public function userTagFormAction(User $user)
     {
@@ -219,7 +219,7 @@ class TagController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTagBundle:Tag:userTagModalForm.html.twig")
+     * @EXT\Template("ClarolineTagBundle:tag:user_tag_modal_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('user_management')")
      */
     public function userTagAction(User $user)
@@ -252,7 +252,7 @@ class TagController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTagBundle:Tag:workspaceTagModalForm.html.twig")
+     * @EXT\Template("ClarolineTagBundle:tag:workspace_tag_modal_form.html.twig")
      */
     public function workspaceTagFormAction(Workspace $workspace)
     {
@@ -275,7 +275,7 @@ class TagController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTagBundle:Tag:workspaceTagModalForm.html.twig")
+     * @EXT\Template("ClarolineTagBundle:tag:workspace_tag_modal_form.html.twig")
      * @SEC\PreAuthorize("canOpenAdminTool('workspace_management')")
      */
     public function workspaceTagAction(Workspace $workspace)
@@ -311,7 +311,7 @@ class TagController extends Controller
      *     name="claro_tag_resources_widget",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineTagBundle:Widget:resourcesTagsWidget.html.twig")
+     * @EXT\Template("ClarolineTagBundle:widget:resources_tags_widget.html.twig")
      */
     public function resourcesTagsWidgetAction(WidgetInstance $widgetInstance)
     {
@@ -394,7 +394,7 @@ class TagController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("authenticatedUser", options={"authenticatedUser" = true})
-     * @EXT\Template("ClarolineTagBundle:Widget:resourcesTagsWidgetConfigForm.html.twig")
+     * @EXT\Template("ClarolineTagBundle:widget:resources_tags_widget_config_form.html.twig")
      */
     public function resourcesTagsWidgetConfigureFormAction(WidgetInstance $widgetInstance)
     {

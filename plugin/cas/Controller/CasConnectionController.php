@@ -82,7 +82,7 @@ class CasConnectionController extends Controller
 
     /**
      * @EXT\Route("/login/failure", name="claro_cas_login_failure")
-     * @EXT\Template("ClarolineCasBundle:Connect:check_connexion.html.twig")
+     * @EXT\Template("ClarolineCasBundle:connect:check_connexion.html.twig")
      *
      * @param Request $request
      *
@@ -108,7 +108,7 @@ class CasConnectionController extends Controller
 
     /**
      * @EXT\Route("/register", name="claro_cas_register")
-     * @EXT\Template("ClarolineCasBundle:Connect:create_account.html.twig")
+     * @EXT\Template("ClarolineCasBundle:connect:create_account.html.twig")
      *
      * @param Request $request
      *
@@ -136,7 +136,7 @@ class CasConnectionController extends Controller
     /**
      * @EXT\Route("/create_account", name="claro_cas_create_account")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCasBundle:Connect:create_account.html.twig")
+     * @EXT\Template("ClarolineCasBundle:connect:create_account.html.twig")
      *
      * @param Request $request
      *
@@ -155,7 +155,7 @@ class CasConnectionController extends Controller
 
     /**
      * @EXT\Route("/link/login", name="claro_cas_login_link")
-     * @EXT\Template("ClarolineCasBundle:Connect:link_account.html.twig")
+     * @EXT\Template("ClarolineCasBundle:connect:link_account.html.twig")
      *
      * @param Request $request
      *
@@ -175,7 +175,7 @@ class CasConnectionController extends Controller
     /**
      * @EXT\Route("/link_account", name="claro_cas_link_account")
      * @EXT\Method("POST")
-     * @EXT\Template("ClarolineCasBundle:Connect:link_account.html.twig")
+     * @EXT\Template("ClarolineCasBundle:connect:link_account.html.twig")
      *
      * @param Request $request
      *
@@ -195,7 +195,7 @@ class CasConnectionController extends Controller
     /**
      * @EXT\Route("/link_account_mail", name="claro_cas_link_account_mail")
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineCasBundle:Connect:link_account.html.twig")
+     * @EXT\Template("ClarolineCasBundle:connect:link_account.html.twig")
      *
      * @param Request $request
      *

@@ -83,7 +83,7 @@ class AnnouncementWidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineAnnouncementBundle:Widget:list.html.twig")
+     * @EXT\Template("ClarolineAnnouncementBundle:widget:list.html.twig")
      *
      * @param WidgetInstance $widgetInstance
      *
@@ -104,7 +104,7 @@ class AnnouncementWidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\Method("GET")
-     * @EXT\Template("ClarolineAnnouncementBundle:Widget:pager.html.twig")
+     * @EXT\Template("ClarolineAnnouncementBundle:widget:pager.html.twig")
      *
      * @param WidgetInstance $widgetInstance
      * @param int            $page
@@ -152,7 +152,7 @@ class AnnouncementWidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("ClarolineAnnouncementBundle:Widget:configure.html.twig")
+     * @EXT\Template("ClarolineAnnouncementBundle:widget:configure.html.twig")
      *
      * @param WidgetInstance $widgetInstance
      *
@@ -174,7 +174,7 @@ class AnnouncementWidgetController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", converter="current_user")
-     * @EXT\Template("ClarolineAnnouncementBundle:Widget:configure.html.twig")
+     * @EXT\Template("ClarolineAnnouncementBundle:widget:configure.html.twig")
      *
      * @param AnnouncementsWidgetConfig $config
      * @param Request                   $request

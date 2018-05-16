@@ -208,7 +208,7 @@ class SupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:ticketCreateModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:support:ticket_create_modal_form.html.twig")
      */
     public function ticketCreateFormAction(User $user)
     {
@@ -232,7 +232,7 @@ class SupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:ticketCreateModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:support:ticket_create_modal_form.html.twig")
      */
     public function ticketCreateAction(User $user)
     {
@@ -272,7 +272,7 @@ class SupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:ticketEditModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:support:ticket_edit_modal_form.html.twig")
      */
     public function ticketEditFormAction(User $user, Ticket $ticket)
     {
@@ -292,7 +292,7 @@ class SupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:ticketEditModalForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:support:ticket_edit_modal_form.html.twig")
      */
     public function ticketEditAction(User $user, Ticket $ticket)
     {
@@ -425,7 +425,7 @@ class SupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:ticketCommentCreateForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:support:ticket_comment_create_form.html.twig")
      */
     public function ticketCommentCreateAction(User $user, Ticket $ticket)
     {
@@ -469,7 +469,7 @@ class SupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:ticketFromIssueCreateForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:support:ticket_from_issue_create_form.html.twig")
      */
     public function ticketFromIssueCreateFormAction(User $user)
     {
@@ -483,7 +483,7 @@ class SupportController extends Controller
      *     options={"expose"=true}
      * )
      * @EXT\ParamConverter("user", options={"authenticatedUser" = true})
-     * @EXT\Template("FormaLibreSupportBundle:Support:ticketFromIssueCreateForm.html.twig")
+     * @EXT\Template("FormaLibreSupportBundle:support:ticket_from_issue_create_form.html.twig")
      */
     public function ticketFromIssueCreateAction(User $user)
     {
