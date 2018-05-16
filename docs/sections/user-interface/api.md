@@ -7,14 +7,14 @@ title: API
 
 The API module is responsible of the UI calls to the underlying data api.
 
-> To learn more about creating an API for your user interface, please check (API documentation)[/sections/api/index].
+> To learn more about creating an API for your user interface, please check [API documentation](/sections/api/index).
 
 ## Router
 
 ## Middleware
 
 The api middleware is highly inspired by:
-(Redux real world example)[https://github.com/reactjs/redux/blob/master/examples/real-world/src/middleware/api.js].
+[Redux real world example](https://github.com/reactjs/redux/blob/master/examples/real-world/src/middleware/api.js).
 
 It permits to declare new actions that will be caught and transformed in API request.
 
@@ -49,7 +49,7 @@ Action parameters:
 - `url (array)`: the route definition of the api endpoint. It's passed to FOSJsRouting to generate the final URL.
  The first param is the route name, the second it's an arguments object.
 - `url (string)`: the url to call. If provided, it's used in priority, if not, the middleware will fallback to the `route` param.
-- `request (object|Request)`: a custom request to send. See (Fetch)[https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch] for more detail..
+- `request (object|Request)`: a custom request to send. See [Fetch](https://developer.mozilla.org/en-US/docs/Web/API/GlobalFetch/fetch) for more detail.
 - `before (func)`:  a callback to execute before sending the request
                     (called with dispatch function)
 - `success (func)`: a callback to execute AJAX request is processed without errors
