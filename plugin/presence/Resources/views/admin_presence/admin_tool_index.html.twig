@@ -15,7 +15,7 @@
 
             <br /><br />
             <h3>{{"config_periode"|trans({},"presences")}}</h3>
-            <form method="post" {{ form_enctype(NewSchoolYearForm) }} action="{{path("formalibre_presence_admin_add_school_year")}}">
+            <form method="post" enctype='multipart/form-data' action="{{path("formalibre_presence_admin_add_school_year")}}">
                 <div class="row">
                     <div class="col-md-2">
                         {{"choix_nom"|trans({},"presences")}}:
@@ -119,7 +119,7 @@
             <br /><br />
             <h3>{{"config_statut"|trans({},"presences")}}</h3>
             <br />
-            <form method="post" {{ form_enctype(NewStatusForm) }} action="{{path("formalibre_presence_admin_tool_index")}}">
+            <form method="post" enctype='multipart/form-data' action="{{path("formalibre_presence_admin_tool_index")}}">
                 <div class="row">
                     <div class="col-md-3">
                         {{"choix_nom"|trans({},"presences")}}

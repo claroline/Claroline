@@ -1,6 +1,6 @@
 {% extends "ClarolineCoreBundle:administration:layout.html.twig" %}
 
-{% form_theme form_settings "ClarolineCoreBundle:Form:redirect_after_login_theme.html.twig" %}
+{% form_theme form_settings "ClarolineCoreBundle:form:redirect_after_login_theme.html.twig" %}
 
 {% block title %}{{ parent() ~ ' - ' ~ 'general' | trans({}, 'platform') | striptags | raw }}{% endblock %}
 {% import 'ClarolineCoreBundle::macros.html.twig' as macros %}
@@ -28,7 +28,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'general'|trans({}, 'platform') }}</h3>
     </div>
-    <form role="form" class="form-horizontal general_parameters_form" action="{{path('claro_admin_parameters_general')}}" method="post" {{ form_enctype(form_settings) }} id="form_settings" enctype='multipart/form-data'>
+    <form role="form" class="form-horizontal general_parameters_form" action="{{path('claro_admin_parameters_general')}}" method="post" id="form_settings" enctype='multipart/form-data'>
         {{ macros.flashBox() }}
         <div class="panel-body">
             {{ form_errors(form_settings) }}

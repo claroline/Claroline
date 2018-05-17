@@ -81,7 +81,7 @@ class IconController extends Controller
      */
     public function resourceIconSetNewAction()
     {
-        $form = $this->createForm(new IconSetType());
+        $form = $this->createForm(IconSetType::class);
         $iconNamesForTypes = $this->iconSetManager->getResourceIconSetIconNamesForMimeTypes();
         $shortcutIcon = $this->iconSetManager->getResourceIconSetStampIcon();
         $iconNamesForTypes->prependShortcutIcon($shortcutIcon);
@@ -107,7 +107,7 @@ class IconController extends Controller
     public function resourceIconSetEditAction($id)
     {
         $iconSet = $this->iconSetManager->getIconSetById($id);
-        $form = $this->createForm(new IconSetType(), $iconSet);
+        $form = $this->createForm(IconSetType::class, $iconSet);
         $iconNamesForTypes = $this->iconSetManager->getIconSetIconsByType($iconSet);
         $shortcutIcon = $this->iconSetManager->getResourceIconSetStampIcon($iconSet);
         $iconNamesForTypes->prependShortcutIcon($shortcutIcon, empty($iconSet->getResourceStampIcon()));
@@ -129,10 +129,10 @@ class IconController extends Controller
      */
     public function resourceIconSetCreateUpdateAction($id, Request $request)
     {
-        $isNew = $id === null;
+        $isNew = null === $id;
         $iconSet = $this->iconSetManager->getIconSetById($id);
         $iconNamesForTypes = $this->iconSetManager->getIconSetIconsByType($iconSet);
-        $form = $this->createForm(new IconSetType(), $iconSet);
+        $form = $this->createForm(IconSetType::class, $iconSet);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
@@ -182,7 +182,7 @@ class IconController extends Controller
         $iconSet = $this->iconSetManager->getIconSetById($id);
         $relativeUrl = null;
         $newIconFile = $request->files->get('file');
-        if ($iconSet !== null && $newIconFile !== null) {
+        if (null !== $iconSet && null !== $newIconFile) {
             $relativeUrl = $this->iconSetManager
                 ->uploadNewResourceIconSetIconByFilename($iconSet, $newIconFile, $filename);
         }
@@ -205,7 +205,7 @@ class IconController extends Controller
     public function iconSetDeleteAction($id)
     {
         $iconSet = $this->iconSetManager->getIconSetById($id);
-        if ($iconSet !== null) {
+        if (null !== $iconSet) {
             $this->iconSetManager->deleteIconSet($iconSet);
         }
 
@@ -229,7 +229,7 @@ class IconController extends Controller
     {
         $iconSet = $this->iconSetManager->getIconSetById($id);
         $relativeUrl = null;
-        if ($iconSet !== null) {
+        if (null !== $iconSet) {
             $relativeUrl = $this->iconSetManager->deleteResourceIconSetIconByFilename($iconSet, $filename);
         }
 

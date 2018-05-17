@@ -40,7 +40,7 @@
                 <h4>{{"periode_relevee"|trans({},"presences")}}: {{schoolYear.getSchoolYearName()}}</h4>
             {% endif %}
             <br /><br />
-            <form method="post" {{ form_enctype(NewPeriodForm) }}>
+            <form method="post" enctype='multipart/form-data'>
                 <div class="row">
                     <div class="col-md-2"  style="text-align: left;">
                         {{"jour"|trans({},"presences")}}:{{form_widget(NewPeriodForm.day)}}

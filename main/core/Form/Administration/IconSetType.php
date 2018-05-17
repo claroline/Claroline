@@ -36,19 +36,9 @@ class IconSetType extends AbstractType
                 FileType::class,
                 [
                     'required' => false,
-                    'label' => FileType::class,
+                    'label' => 'file',
                 ]
             );
-    }
-
-    /**
-     * Returns the name of this type.
-     *
-     * @return string The name of this type
-     */
-    public function getName()
-    {
-        return 'icon_set_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)

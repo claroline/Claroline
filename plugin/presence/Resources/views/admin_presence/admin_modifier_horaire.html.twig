@@ -15,38 +15,38 @@
         </div>
         <div class="modal-body">
 
-            <form id="ModifHoraireForm" 
-                  method="post" {{ form_enctype(ModifPeriodForm) }} 
-                  action="{{path("formalibre_presence_modifier_horaire",{"period":period.getId()})}}">   
-              
+            <form id="ModifHoraireForm"
+                  method="post" enctype='multipart/form-data' 
+                  action="{{path("formalibre_presence_modifier_horaire",{"period":period.getId()})}}">
+
                        {{"num_tranche"|trans({},"presences")}}:{{form_widget(ModifPeriodForm.numberMod,{ 'attr': {'value': period.getNumPeriod()} } )}}
                         {{"nom_tranche"|trans({},"presences")}}{{form_widget(ModifPeriodForm.nameMod,{ 'attr': {'value': period.getName()} } )}}
                         {{"heure_debut"|trans({},"presences")}}:{{form_widget(ModifPeriodForm.startMod,{ 'attr': {'value':period.getBeginHour()|date('H:i')} } )}}
                         {{"heure_fin"|trans({},"presences")}}:{{form_widget(ModifPeriodForm.endMod,{ 'attr': {'value': period.getEndHour()|date('H:i')} } )}}
                         {{form_widget(ModifPeriodForm.dayName,{ 'attr': {'value': period.getDayName} } )}}
-                       
+
                         <br />
                         <div class="row">
                              <div class="row">
-                            <button class="btn btn-primary col-md-4 col-md-offset-1" 
-                                    type="submit" 
+                            <button class="btn btn-primary col-md-4 col-md-offset-1"
+                                    type="submit"
                                     name="form[modifier]">Modifier la tranche
-                            </button> 
-                            <button class="btn btn-danger col-md-4 col-md-offset-2" 
+                            </button>
+                            <button class="btn btn-danger col-md-4 col-md-offset-2"
                                     id="supprimer-btn"
                                     data-dismiss="modal"
                                     data-period-id="{{period.getId()}}">
                              {{"supprimer"|trans({},"presences")}}
-                            </button> 
-                         
+                            </button>
+
                         </div>
-                          
+
                         </div>
                     </div>
                     <br />
                 </div>
             </form>
-         
+
 
         </div>
     </div>
@@ -78,7 +78,7 @@
         });
     </script>
      <script>
-             
+
         $("#supprimer-btn").on("click",function(){
             var periodId=$(this).data("period-id");
             window.Claroline.Modal.confirmRequest(
@@ -90,9 +90,9 @@
                 "Etes-vous certain de vouloir supprimer cette tranche horaire ? Cela effacera également toutes les présences liées.",
                 "Supression tranche horaire"
                     );
-   
-    });  
-                     
+
+    });
+
     </script>
 
 {% endblock %}

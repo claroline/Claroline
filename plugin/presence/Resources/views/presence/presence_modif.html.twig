@@ -15,8 +15,8 @@
             {% if canEditArchives%}
                 <div class="row">
                     <div class="col-md-6">
-                        {{"le"|trans({},"presences")}} {{presence.getPeriod.getDay()|date('d-m-Y')}} 
-                        {{"de"|trans({},"presences")}} {{presence.getPeriod.getBeginHour()|date('H:i')}} 
+                        {{"le"|trans({},"presences")}} {{presence.getPeriod.getDay()|date('d-m-Y')}}
+                        {{"de"|trans({},"presences")}} {{presence.getPeriod.getBeginHour()|date('H:i')}}
                         {{"à"|trans({},"presences")}} {{presence.getPeriod.getEndHour()|date('H:i')}}
                     </div>
                     <strong class="col-md-5 col-md-offset-1">
@@ -30,25 +30,25 @@
                 </div></br></br>
                 <div class="row">
                     <div class="col-md-3" style="text-align: center;">
-                        <img id="photo" 
-                             style="height:150px;" 
-                             class="img-thumbnail" 
-                             src="{{asset('uploads/pictures/') ~ presence.getUserStudent().getPicture()}}" 
-                             width="100" 
+                        <img id="photo"
+                             style="height:150px;"
+                             class="img-thumbnail"
+                             src="{{asset('uploads/pictures/') ~ presence.getUserStudent().getPicture()}}"
+                             width="100"
                              alt="Photo de l'élève">
                         {{presence.getUserStudent.getLastName()}}
                         {{presence.getUserStudent.getFirstName()}}
                      </div>
                     <div class="col-md-8">
-                        <form id="ModifHoraireForm" 
-                              method="post" {{ form_enctype(ModifPresenceForm) }} 
+                        <form id="ModifHoraireForm"
+                              method="post" enctype='multipart/form-data'
                               action="{{path("formalibre_presence_modif",{"id":presence.getId()})}}">
                             {{"modifier_statut"|trans({},"presences")}}:
                             {{form_widget(ModifPresenceForm.Status)}}
                             {{"comment"|trans({},"presences")}}:
-                            {{form_widget(ModifPresenceForm.Comment)}}  
+                            {{form_widget(ModifPresenceForm.Comment)}}
                             </br> </br>
-                             <button type="submit" 
+                             <button type="submit"
                                    class="btn btn-primary"
                                    style="float: right;"
                                    id="CollReleve_Valider"
@@ -59,24 +59,24 @@
                     </div>
                 </div>
                 <div class="row"> </br></br>
-                    <div class="col-md-10">    
+                    <div class="col-md-10">
                         {{"prof_appel"|trans({},"presences")}}:
                         {{presence.getUserTeacher.getLastName()}}
                         {{presence.getUserTeacher.getFirstName()}}
-                    </div>     
+                    </div>
                  </div>
         {% else %}
            {{"access_error"|trans({},"presences")}}
-        {% endif %}    
+        {% endif %}
         </div>
     </div>
 </div>
-{% block javascripts %}    
+{% block javascripts %}
     <script>
-         
+
        $(document).ready(function() {
            document.getElementById("form_Comment").defaultValue = "{{presence.getComment()}}";
-                      
+
         });
     </script>
 {% endblock %}

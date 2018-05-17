@@ -42,7 +42,11 @@ class InternationalizationController extends Controller
         $availableLocales = $localeManager->getImplementedLocales();
         $activatedLocales = $localeManager->retrieveAvailableLocales();
 
-        $form = $this->createForm(new InternationalizationType($activatedLocales, $availableLocales));
+        $form = $this->createForm(
+          InternationalizationType::class,
+          null,
+          ['activatedLocales' => $activatedLocales, 'availableLocales' => $availableLocales]
+        );
 
         return [
             'form' => $form->createView(),
@@ -65,7 +69,11 @@ class InternationalizationController extends Controller
         $availableLocales = $localeManager->getImplementedLocales();
         $activatedLocales = $localeManager->retrieveAvailableLocales();
 
-        $form = $this->createForm(new InternationalizationType($activatedLocales, $availableLocales));
+        $form = $this->createForm(
+          InternationalizationType::class,
+          null,
+          ['activatedLocales' => $activatedLocales, 'availableLocales' => $availableLocales]
+        );
 
         $form->handleRequest($this->get('request_stack')->getMasterRequest());
         if ($form->isValid()) {

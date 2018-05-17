@@ -61,11 +61,6 @@ class AppearanceType extends AbstractType
             );
     }
 
-    public function getName()
-    {
-        return 'platform_parameters_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

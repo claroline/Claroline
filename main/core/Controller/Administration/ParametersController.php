@@ -190,16 +190,17 @@ class ParametersController extends Controller
             );
         }
         $form = $this->formFactory->create(
-            new AdminForm\GeneralType(
-                $this->localeManager->getAvailableLocales(),
-                $role,
-                $descriptions,
-                $this->translator->trans('date_form_format', [], 'platform'),
-                $this->localeManager->getUserLocale($request),
-                $this->configHandler->getLockedParameters(),
-                $targetLoginUrls
-            ),
-            $platformConfig
+            AdminForm\GeneralType::class,
+            $platformConfig,
+            [
+                'langs' => $this->localeManager->getAvailableLocales(),
+                'role' => $role,
+                'description' => $descriptions,
+                'date_format' => $this->translator->trans('date_form_format', [], 'platform'),
+                'locale' => $this->localeManager->getUserLocale($request),
+                'lockedParams' => $this->configHandler->getLockedParameters(),
+                'targetLoginUrls' => $targetLoginUrls,
+            ]
         );
 
         if ($this->request->isMethod('POST')) {
@@ -357,11 +358,12 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\MailServerType(
-                $platformConfig->getMailerTransport(),
-                $this->configHandler->getLockedParameters()
-            ),
-            $platformConfig
+            AdminForm\MailServerType::class,
+            $platformConfig,
+            [
+              'transport' => $platformConfig->getMailerTransport(),
+              'lockedParams' => $this->configHandler->getLockedParameters(),
+            ]
         );
 
         return ['form_mail' => $form->createView()];
@@ -381,11 +383,12 @@ class ParametersController extends Controller
     {
         $platformConfig = $this->configHandler->getPlatformConfig();
         $form = $this->formFactory->create(
-            new AdminForm\MailServerType(
-                $platformConfig->getMailerTransport(),
-                $this->configHandler->getLockedParameters()
-            ),
-            $platformConfig
+            AdminForm\MailServerType::class,
+            $platformConfig,
+            [
+              'transport' => $platformConfig->getMailerTransport(),
+              'lockedParams' => $this->configHandler->getLockedParameters(),
+            ]
         );
         $form->handleRequest($this->request);
 
@@ -489,7 +492,7 @@ class ParametersController extends Controller
     public function submitRegistrationMailAction()
     {
         $formData = $this->request->get('platform_parameters_form');
-        $form = $this->formFactory->create(new AdminForm\MailInscriptionType(), $formData['content']);
+        $form = $this->formFactory->create(AdminForm\MailInscriptionType::class, $formData['content']);
         $errors = $this->mailManager->validateMailVariable($formData['content'], '%password%');
 
         return [
@@ -507,7 +510,7 @@ class ParametersController extends Controller
     public function mailLayoutFormAction()
     {
         $form = $this->formFactory->create(
-            new AdminForm\MailLayoutType(),
+            AdminForm\MailLayoutType::class,
             $this->mailManager->getMailLayout()
         );
 
@@ -527,7 +530,7 @@ class ParametersController extends Controller
     public function submitMailLayoutAction()
     {
         $formData = $this->request->get('platform_parameters_form');
-        $form = $this->formFactory->create(new AdminForm\MailLayoutType(), $formData['content']);
+        $form = $this->formFactory->create(AdminForm\MailLayoutType::class, $formData['content']);
         $errors = $this->mailManager->validateMailVariable($formData['content'], '%content%');
 
         return [
@@ -545,7 +548,7 @@ class ParametersController extends Controller
     public function optionMailFormAction()
     {
         $form = $this->formFactory->create(
-            new AdminForm\MailOptionType($this->mailManager->getMailerFrom())
+            AdminForm\MailOptionType::class, ['from' => $this->mailManager->getMailerFrom()]
         );
 
         return ['form' => $form->createView()];
@@ -560,10 +563,7 @@ class ParametersController extends Controller
      */
     public function optionMailSubmitAction()
     {
-        $form = $this->formFactory->create(
-            new AdminForm\MailOptionType()
-        );
-
+        $form = $this->formFactory->create(AdminForm\MailOptionType::class);
         $form->handleRequest($this->request);
 
         if ($form->isValid()) {
@@ -642,8 +642,9 @@ class ParametersController extends Controller
     public function indexingFormAction()
     {
         $form = $this->formFactory->create(
-            new AdminForm\IndexingType($this->configHandler->getLockedParameters()),
-            $this->configHandler->getPlatformConfig()
+            AdminForm\IndexingType::class,
+            $this->configHandler->getPlatformConfig(),
+            ['lockedParams' => $this->configHandler->getLockedParameters()]
         );
 
         if ('POST' === $this->request->getMethod()) {

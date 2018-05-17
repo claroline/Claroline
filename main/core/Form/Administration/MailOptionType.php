@@ -18,13 +18,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MailOptionType extends AbstractType
 {
-    private $from;
-
-    public function __construct($from = null)
-    {
-        $this->from = $from;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
@@ -34,7 +27,7 @@ class MailOptionType extends AbstractType
                 [
                     'required' => false,
                     'label' => 'mailer_from',
-                    'data' => $this->from,
+                    'data' => $options['from'],
                 ]
             );
     }
@@ -46,6 +39,6 @@ class MailOptionType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['translation_domain' => 'platform']);
+        $resolver->setDefaults(['translation_domain' => 'platform', 'from' => null]);
     }
 }

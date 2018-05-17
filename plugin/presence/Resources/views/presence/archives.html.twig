@@ -24,7 +24,7 @@
                     <h4>{{"periode_relevee"|trans({},"presences")}} : {{schoolYearName}}</h4>
                 </div>
             </div>
-            <form method="post" {{ form_enctype(schoolYearSelection) }}
+            <form method="post" enctype='multipart/form-data'
                   action="{{path("formalibre_presence_archives")}}">
                 <div class="row">
                     <div class="col-md-2">

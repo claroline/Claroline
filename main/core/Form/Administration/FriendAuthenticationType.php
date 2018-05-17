@@ -36,11 +36,6 @@ class FriendAuthenticationType extends AbstractType
         );
     }
 
-    public function getName()
-    {
-        return 'friend_authentication_form';
-    }
-
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([

@@ -25,15 +25,10 @@ class MailLayoutType extends AbstractType
             ContentType::class,
             [
                 'data' => $builder->getData(),
-                'theme_options' => ['contentTitle' => false],
+                //'theme_options' => ['contentTitle' => false],
                 'label' => ContentType::class,
             ]
         );
-    }
-
-    public function getName()
-    {
-        return 'platform_parameters_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)

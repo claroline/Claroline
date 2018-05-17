@@ -18,40 +18,31 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InternationalizationType extends AbstractType
 {
-    private $activatedLocales = [];
-    private $availableLocales = [];
-
-    public function __construct(array $activatedLocales, array $availableLocales)
-    {
-        $this->activatedLocales = $activatedLocales;
-        foreach ($availableLocales as $available) {
-            $this->availableLocales[$available] = $available;
-        }
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $availables = [];
+        foreach ($options['availableLocales'] as $available) {
+            $availables[$available] = $available;
+        }
+
         $builder->add(
             'locales',
             ChoiceType::class, [
-                'choices' => $this->availableLocales,
+                'choices' => $availables,
                 'label' => 'languages',
                 'expanded' => true,
                 'multiple' => true,
-                'data' => $this->activatedLocales,
+                'data' => $options['activatedLocales'],
             ]
         );
-    }
-
-    public function getName()
-    {
-        return 'i18n_form';
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'platform',
+            'activatedLocales' => [],
+            'availableLocales' => [],
         ]);
     }
 }

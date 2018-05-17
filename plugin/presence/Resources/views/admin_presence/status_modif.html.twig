@@ -12,8 +12,8 @@
             </h3>
         </div>
         <div class="modal-body">
-            <form method="post" {{ form_enctype(ModifStatusForm) }} action="{{path("formalibre_status_modif",{"theStatus":theStatus.getId()})}}">
-              
+            <form method="post" enctype='multipart/form-data' action="{{path("formalibre_status_modif",{"theStatus":theStatus.getId()})}}">
+
                 {{"choix_nom"|trans({},"presences")}} :
                 {{form_widget(ModifStatusForm.name2)}}
 
@@ -22,31 +22,31 @@
 
                 {{"mise_evidence"|trans({},"presences")}} :
                 {{form_widget(ModifStatusForm.principalStatus2)}}
-                
+
                 </br></br>
                 {{form_widget(ModifStatusForm.valider2)}}
-                  
+
             </form>
         </div>
     </div>
 </div>
-{% block javascripts %}    
+{% block javascripts %}
     <script>
-         
+
        $(document).ready(function() {
-           document.getElementById("form_name2").defaultValue = "{{theStatus.getStatusName()}}";                        
+           document.getElementById("form_name2").defaultValue = "{{theStatus.getStatusName()}}";
         });
-        
+
         $(document).ready(function() {
            document.getElementById("form_color2").defaultValue = "{{theStatus.getStatusColor()}}";
-                                
+
         });
          $(document).ready(function() {
             var byDefault={% if theStatus.getStatusByDefault()%}true{%else%}false{%endif%};
             if(byDefault){
                  document.getElementById("form_principalStatus2").checked=true;
              }
-                      
+
         });
     </script>
     <script type="text/javascript" src="{{ asset('packages/mjolnic-bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js') }}"></script>
