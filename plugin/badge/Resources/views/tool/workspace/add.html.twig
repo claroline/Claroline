@@ -27,7 +27,7 @@
 {% block section_title %}{{ 'add_badge'|trans }}{% endblock %}
 
 {% block section_body %}
-    <form role="form" action="{{ path('icap_badge_workspace_tool_badges_add', {'workspaceId': workspace.id}) }}" method="post" class="form-horizontal" {{ form_enctype(form) }} novalidate>
+    <form role="form" action="{{ path('icap_badge_workspace_tool_badges_add', {'workspaceId': workspace.id}) }}" method="post" class="form-horizontal" enctype="multipart/form-data" novalidate>
         {% if not form.vars.valid %}
             {% for error in form.vars.errors %}
             <div class="alert alert-danger">

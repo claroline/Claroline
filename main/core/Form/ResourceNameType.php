@@ -12,8 +12,10 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ResourceNameType extends AbstractType
@@ -29,14 +31,14 @@ class ResourceNameType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             ['label' => 'name', 'constraints' => new NotBlank(), 'attr' => ['autofocus' => true]]
         );
 
         if ($this->withPublication) {
             $builder->add(
                 'published',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'publish_resource',
                     'required' => true,
@@ -52,7 +54,7 @@ class ResourceNameType extends AbstractType
         return 'resource_name_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'platform']);
     }

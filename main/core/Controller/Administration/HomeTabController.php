@@ -92,7 +92,7 @@ class HomeTabController extends Controller
      *     name="claro_admin_home_tabs_configuration",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:administration\home_tab:admin_home_tabs_config.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration/home_tab:admin_home_tabs_config.html.twig")
      *
      * Displays the admin homeTabs configuration page.
      *

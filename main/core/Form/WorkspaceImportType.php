@@ -13,10 +13,11 @@ namespace Claroline\CoreBundle\Form;
 
 use Claroline\CoreBundle\Validator\Constraints\CsvWorkspace;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class WorkspaceImportType extends AbstractType
 {
@@ -24,17 +25,17 @@ class WorkspaceImportType extends AbstractType
     {
         $builder->add(
             'file',
-            'file',
-            array(
+            FileType::class,
+            [
                 'label' => 'workspace',
                 'required' => true,
                 'mapped' => false,
-                'constraints' => array(
+                'constraints' => [
                     new NotBlank(),
                     new File(),
                     new CsvWorkspace(),
-                ),
-            )
+                ],
+            ]
         );
     }
 
@@ -43,13 +44,13 @@ class WorkspaceImportType extends AbstractType
         return 'workspace_import_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
             ->setDefaults(
-                array(
+                [
                     'translation_domain' => 'platform',
-                )
+                ]
             );
     }
 }

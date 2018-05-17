@@ -27,7 +27,7 @@
           class="form-horizontal"
           action="{{ path('claro_user_options_edit', {'options': options.getId()}) }}"
           method="post"
-          {{ form_enctype(form) }}
+          enctype="multipart/form-data"
     >
         <div class="panel-body">
             {{ form_widget(form) }}

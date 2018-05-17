@@ -4,7 +4,7 @@ namespace UJM\LtiBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AppType extends AbstractType
 {
@@ -12,7 +12,7 @@ class AppType extends AbstractType
     {
         $builder
             ->add(
-                'title', 'text', [
+                'title', TextType::class, [
                     'label' => ' ',
                     'attr' => ['style' => 'height:34px; ',
                         'class' => 'form-control',
@@ -21,16 +21,16 @@ class AppType extends AbstractType
                 ]
             )
             ->add(
-                'url', 'text', [
+                UrlType::class, TextType::class, [
                     'label' => ' ',
                     'attr' => ['style' => 'height:34px; ',
                         'class' => 'form-control',
-                        'placeholder' => 'url',
+                        'placeholder' => UrlType::class,
                     ],
                 ]
             )
             ->add(
-                'appkey', 'text', [
+                'appkey', TextType::class, [
                     'label' => ' ',
                     'required' => false,
                     'attr' => ['style' => 'height:34px; ',
@@ -40,7 +40,7 @@ class AppType extends AbstractType
                 ]
             )
             ->add(
-                'secret', 'text', [
+                'secret', TextType::class, [
                     'label' => ' ',
                     'required' => false,
                     'attr' => ['style' => 'height:34px; ',
@@ -50,7 +50,7 @@ class AppType extends AbstractType
                 ]
             )
             ->add(
-                'description', 'textarea', [
+                'description', TextareaType::class, [
                     'label' => ' ',
                     'required' => false,
                     'attr' => ['style' => 'height:34px; ',
@@ -65,7 +65,7 @@ class AppType extends AbstractType
         return 'platform_parameters_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'lti']);
     }

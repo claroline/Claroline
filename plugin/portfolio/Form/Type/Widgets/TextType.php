@@ -15,7 +15,7 @@ class TextType extends AbstractWidgetType
     {
         parent::buildForm($builder, $options);
 
-        $builder->add('text', 'tinymce');
+        $builder->add(TextType::class, 'tinymce');
     }
 
     public function getName()

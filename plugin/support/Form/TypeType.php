@@ -4,7 +4,7 @@ namespace FormaLibre\SupportBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TypeType extends AbstractType
 {
@@ -19,7 +19,7 @@ class TypeType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => 'name',
@@ -43,7 +43,7 @@ class TypeType extends AbstractType
         return 'type_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'support']);
     }

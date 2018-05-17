@@ -26,7 +26,7 @@ class LastMessageWidgetConfigType extends AbstractType
         );
         $builder->add(
             'displayMyLastMessages',
-            'checkbox'
+            CheckboxType::class
         );
     }
 

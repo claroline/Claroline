@@ -6,8 +6,9 @@ use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Manager\EventManager;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\Service("claroline.form.resourceLogFilter")
@@ -37,7 +38,7 @@ class ResourceLogFilterType extends AbstractType
         $builder
             ->add(
                 'action',
-                'choice',
+                ChoiceType::class,
                 [
                     'label' => 'Show actions for',
                     'attr' => ['class' => 'input-sm'],
@@ -84,7 +85,7 @@ class ResourceLogFilterType extends AbstractType
         return '';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'log']);
     }

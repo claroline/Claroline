@@ -11,7 +11,7 @@ class GradingScaleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('scaleName', 'text',
+            ->add('scaleName', TextType::class,
                 array(
                     'required' => true,
                     'label' => false,

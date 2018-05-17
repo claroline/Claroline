@@ -4,7 +4,7 @@ namespace FormaLibre\SupportBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class StatusType extends AbstractType
 {
@@ -19,7 +19,7 @@ class StatusType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => 'name',
@@ -28,7 +28,7 @@ class StatusType extends AbstractType
         );
         $builder->add(
             'code',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => 'code',
@@ -52,7 +52,7 @@ class StatusType extends AbstractType
         return 'status_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'support']);
     }

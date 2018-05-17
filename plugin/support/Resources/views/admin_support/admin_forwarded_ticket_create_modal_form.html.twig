@@ -17,7 +17,7 @@
             <form id="forwarded-ticket-create-form"
                   action="{{ path('formalibre_admin_forwarded_ticket_create', {'ticket': ticket.getId()}) }}"
                   method="POST"
-                  {{ form_enctype(form) }}
+                  enctype="multipart/form-data"
             >
                 <div class="form-group row">
                     <label class="control-label col-md-3">

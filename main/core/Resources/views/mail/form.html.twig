@@ -9,7 +9,7 @@
         <form role="form"
             novalidate="novalidate"
             action="{{path('claro_mail_send', {'userId': userId})}}"
-            method="post" {{ form_enctype(form) }}
+            method="post" enctype="multipart/form-data"
             id="generic-form"
             >
             <div class="panel-body">

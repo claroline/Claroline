@@ -10,33 +10,34 @@
 
 namespace Claroline\CoreBundle\Form\Field;
 
+use JMS\DiExtraBundle\Annotation as DI;
+use JMS\DiExtraBundle\Annotation\Tag;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\Service("claroline.form.datetimepicker")
- * @DI\FormType(alias = "datetimepicker")
+ * @Tag("form.type")
  */
 class DateTimePickerType extends AbstractType
 {
     public function buildView(FormView $view, FormInterface $form, array $options)
     {
         $view->vars['component'] = $options['component'];
-        $view->vars['options'] = array(
+        $view->vars['options'] = [
             'autoclose' => $options['autoclose'],
             'language' => $options['language'],
             'date_format' => $options['format'],
-        );
+        ];
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array(
+            [
                 'date_widget' => 'single_text',
                 'time_widget' => 'single_text',
                 'with_seconds' => false,
@@ -44,7 +45,7 @@ class DateTimePickerType extends AbstractType
                 'component' => true,
                 'autoclose' => true,
                 'date_format' => DateType::HTML5_FORMAT,
-            )
+            ]
         );
     }
 

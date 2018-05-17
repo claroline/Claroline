@@ -25,7 +25,7 @@
         <h1>{{ 'workspace.create'|trans({}, 'platform') }}</h1>
     </div>
 
-    <form role="form" class="form-horizontal panel panel-default" id="ws_creation_form" action="{{ path('claro_workspace_create') }}" method="post" {{ form_enctype(form) }}>
+    <form role="form" class="form-horizontal panel panel-default" id="ws_creation_form" action="{{ path('claro_workspace_create') }}" method="post" enctype="multipart/form-data">
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>

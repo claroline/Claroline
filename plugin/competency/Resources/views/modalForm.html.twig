@@ -4,7 +4,7 @@
     <form id="{% block id %}#{% endblock %}"
           action="{% block action %}#{% endblock %}"
           method="POST"
-          {{ form_enctype(form) }}>
+          enctype="multipart/form-data">
         {{ form_widget(form) }}
     </form>
 {% endblock %}

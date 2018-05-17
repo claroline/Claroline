@@ -19,7 +19,7 @@
         {% set action = path('claro_oauth_authorize_submit') ~ '?client_id=' ~ client.id ~ '_' ~ client.randomId ~ '&redirect_uri=' ~ client.getUri() ~ '&response_type=code'%}
 
         <div align="center">
-            <form action="{{ action }}" method="POST" class="fos_oauth_server_authorize" {{ form_enctype(form) }}>
+            <form action="{{ action }}" method="POST" class="fos_oauth_server_authorize" enctype="multipart/form-data">
                 <input class="btn btn-primary" type="submit" name="accepted" value="{{ 'authorize.accept'|trans({}, 'FOSOAuthServerBundle') }}" />
                 <input class="btn" type="submit" name="rejected" value="{{ 'authorize.reject'|trans({}, 'FOSOAuthServerBundle') }}" />
 

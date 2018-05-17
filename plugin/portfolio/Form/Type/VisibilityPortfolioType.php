@@ -30,7 +30,7 @@ class VisibilityPortfolioType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('visibility', 'choice', array(
+            ->add('visibility', ChoiceType::class, array(
                 'choices' => Portfolio::getVisibilityLabels(),
                 'required' => true,
                 'label' => 'visibility',

@@ -5,7 +5,7 @@ namespace FormaLibre\SupportBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AdminTicketType extends AbstractType
 {
@@ -13,7 +13,7 @@ class AdminTicketType extends AbstractType
     {
         $builder->add(
             'contactMail',
-            'email',
+            EmailType::class,
             [
                 'required' => true,
                 'label' => 'contact_email',
@@ -21,7 +21,7 @@ class AdminTicketType extends AbstractType
         );
         $builder->add(
             'contactPhone',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => 'contact_phone',
@@ -29,7 +29,7 @@ class AdminTicketType extends AbstractType
         );
         $builder->add(
             'title',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => 'title',
@@ -71,7 +71,7 @@ class AdminTicketType extends AbstractType
         return 'admin_ticket_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'support']);
     }

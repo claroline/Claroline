@@ -5,7 +5,7 @@ namespace UJM\LtiBundle\Form;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class LtiResourceType extends AbstractType
 {
@@ -22,7 +22,7 @@ class LtiResourceType extends AbstractType
         ]);
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             [
                 'label' => 'name_app',
                 'attr' => ['autofocus' => true],
@@ -30,7 +30,7 @@ class LtiResourceType extends AbstractType
         );
         $builder->add(
             'openInNewTab',
-            'checkbox',
+            CheckboxType::class,
             [
                 'label' => 'open_application_in_a_new_window',
             ]
@@ -43,7 +43,7 @@ class LtiResourceType extends AbstractType
         return 'ltiApp_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'lti']);
     }

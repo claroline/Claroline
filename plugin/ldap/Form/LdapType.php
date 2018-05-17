@@ -13,7 +13,7 @@ namespace Claroline\LdapBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Regex;
 
@@ -23,7 +23,7 @@ class LdapType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             [
                 'label' => 'name',
                 'constraints' => [
@@ -34,19 +34,19 @@ class LdapType extends AbstractType
         )
         ->add(
             'host',
-            'text',
+            TextType::class,
             [
                 'label' => 'host',
                 'constraints' => [new NotBlank()],
             ]
         )
-        ->add('port', 'number', ['label' => 'port'])
-        ->add('dn', 'text', ['label' => 'distinguished_name'])
-        ->add('user', 'text', ['label' => 'username'])
+        ->add('port', NumberType::class, ['label' => 'port'])
+        ->add('dn', TextType::class, ['label' => 'distinguished_name'])
+        ->add('user', TextType::class, ['label' => 'username'])
         ->add('password', 'password', ['label' => 'password', 'always_empty' => false])
         ->add(
             'protocol_version',
-            'choice',
+            ChoiceType::class,
             [
                 'choices' => ['1' => '1', '2' => '2', '3' => '3'],
                 'required' => true,
@@ -54,15 +54,15 @@ class LdapType extends AbstractType
                 'data' => 3,
             ]
         );
-        $builder->add('append_dn', 'checkbox', [
+        $builder->add('append_dn', CheckboxType::class, [
             'label' => 'append_dn',
             'required' => false,
         ]);
-        $builder->add('auto_creation', 'checkbox', [
+        $builder->add('auto_creation', CheckboxType::class, [
             'label' => 'auto_creation',
             'required' => false,
         ]);
-        $builder->add('active', 'checkbox', [
+        $builder->add('active', CheckboxType::class, [
             'label' => 'active',
             'required' => false,
         ]);
@@ -73,7 +73,7 @@ class LdapType extends AbstractType
         return 'platform_parameters_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'ldap']);
     }

@@ -8,7 +8,7 @@
 
 {% block drop_zone_content_edit %}
 
-    <form class="form-horizontal" role="form" method="POST" action="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}" {{ form_enctype(form) }}>
+    <form class="form-horizontal" role="form" method="POST" action="{{ path('innova_collecticiel_edit_common', {'resourceId': dropzone.id}) }}" enctype="multipart/form-data">
 
         {{ form_errors(form) }}
 

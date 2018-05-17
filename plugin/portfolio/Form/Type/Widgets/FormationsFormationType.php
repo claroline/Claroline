@@ -15,11 +15,11 @@ class FormationsFormationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('id', 'integer', array(
+            ->add('id', IntegerType::class, array(
                 'required' => false,
                 'mapped' => false,
             ))
-            ->add('name', 'text', array(
+            ->add('name', TextType::class, array(
                 'required' => false,
                 'mapped' => false,
             ))
@@ -28,11 +28,11 @@ class FormationsFormationType extends AbstractType
                 'property' => 'name',
                 'required' => false,
             ))
-            ->add('uri', 'text', array(
+            ->add('uri', TextType::class, array(
                 'required' => false,
                 'mapped' => false,
             ))
-            ->add('uriLabel', 'text', array(
+            ->add('uriLabel', TextType::class, array(
                 'required' => false,
                 'mapped' => false,
             ));

@@ -43,7 +43,7 @@ class WidgetListType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
             ))
-            ->add('widgetDisplayListBlogs', 'choice', array(
+            ->add('widgetDisplayListBlogs', ChoiceType::class, array(
                 'choices' => array(
                     'b' => $displayBlockLabel,
                     'l' => $displayInlineLabel,

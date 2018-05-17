@@ -10,8 +10,8 @@ class ExerciseType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', ['required' => true]);
-        $builder->add('published', 'checkbox', ['mapped' => false]);
+        $builder->add('name', TextType::class, ['required' => true]);
+        $builder->add('published', CheckboxType::class, ['mapped' => false]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

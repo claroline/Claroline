@@ -11,15 +11,17 @@
 
 namespace Claroline\CoreBundle\Form\Field;
 
-use Symfony\Component\Form\Extension\Core\Type\BaseType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation\Service;
-use JMS\DiExtraBundle\Annotation\FormType;
+use JMS\DiExtraBundle\Annotation\Tag;
+use Symfony\Component\Form\Extension\Core\Type\BaseType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @Service("claroline.form.base_content")
- * @FormType(alias = "base_content")
+ * @Tag("form.type")
  */
 class BaseContentType extends BaseType
 {
@@ -42,24 +44,24 @@ class BaseContentType extends BaseType
             }
         }
 
-        $builder->add('title', 'text', array('data' => $title));
+        $builder->add('title', TextType::class, ['data' => $title]);
         if (isset($options['theme_options']['tinymce']) && !$options['theme_options']['tinymce']) {
             $builder->add(
                 'content',
-                'textarea',
-                array(
-                    'attr' => array('class' => 'form-control', 'rows' => '3'),
+                TextareaType::class,
+                [
+                    'attr' => ['class' => 'form-control', 'rows' => '3'],
                     'mapped' => false,
                     'data' => $content,
-                )
+                ]
             );
         } else {
-            $builder->add('content', 'tinymce', array('data' => $content));
+            $builder->add('content', TinymceType::class, ['data' => $content]);
         }
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('required' => false, 'mapped' => false));
+        $resolver->setDefaults(['required' => false, 'mapped' => false, 'theme_options' => []]);
     }
 }

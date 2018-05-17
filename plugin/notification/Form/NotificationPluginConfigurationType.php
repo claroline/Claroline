@@ -26,26 +26,26 @@ class NotificationPluginConfigurationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dropdownItems', 'integer',
+            ->add('dropdownItems', IntegerType::class,
                 array(
                     'label' => 'dropdown_items',
                     'theme_options' => array('control_width' => 'col-md-2'),
                 )
             )
-            ->add('maxPerPage', 'integer',
+            ->add('maxPerPage', IntegerType::class,
                 array(
                     'label' => 'max_per_page',
                     'theme_options' => array('control_width' => 'col-md-2'),
                 )
             )
-            ->add('purgeEnabled', 'checkbox',
+            ->add('purgeEnabled', CheckboxType::class,
                 array(
                     'required' => false,
                     'label' => 'purge_enabled',
                     'theme_options' => array('control_width' => 'col-md-2'),
                 )
             )
-            ->add('purgeAfterDays', 'integer',
+            ->add('purgeAfterDays', IntegerType::class,
                 array(
                     'label' => 'purge_after_days',
                     'theme_options' => array('control_width' => 'col-md-2'),

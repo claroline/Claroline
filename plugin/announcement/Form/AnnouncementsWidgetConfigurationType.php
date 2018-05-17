@@ -13,7 +13,7 @@ namespace Claroline\AnnouncementBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AnnouncementsWidgetConfigurationType extends AbstractType
 {
@@ -50,7 +50,7 @@ class AnnouncementsWidgetConfigurationType extends AbstractType
         return 'announcements_widget_configuration_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'platform']);
     }

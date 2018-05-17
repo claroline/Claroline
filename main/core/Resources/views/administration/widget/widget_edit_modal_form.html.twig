@@ -17,7 +17,7 @@
             <form id="widget-edit-form"
                   action="{{ path('claro_widget_edit', {'widget': widget.getId()}) }}"
                   method="POST"
-                  {{ form_enctype(form) }}
+                  enctype="multipart/form-data"
             >
                 {{ form_row(form.defaultWidth) }}
                 {{ form_row(form.defaultHeight) }}

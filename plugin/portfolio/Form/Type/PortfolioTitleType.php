@@ -15,7 +15,7 @@ class PortfolioTitleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'text',
+            ->add('title', TextType::class,
                 array(
                     'label' => 'title',
                     'theme_options' => array('label_width' => 'col-md-2'),

@@ -15,7 +15,7 @@ class UserBadgeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('is_shared', 'checkbox');
+            ->add('is_shared', CheckboxType::class);
     }
 
     public function getName()

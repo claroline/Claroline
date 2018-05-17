@@ -55,7 +55,7 @@
                     {% else %}
                         action="{{ path('claro_message_send', {'parentId': message.getId()}) }}"
                     {% endif %}
-                    method="post" {{ form_enctype(form) }}
+                    method="post" enctype="multipart/form-data"
                     id="generic-form"
                     class="form-horizontal">
                     <div class="panel-body">

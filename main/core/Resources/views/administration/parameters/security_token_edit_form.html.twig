@@ -34,7 +34,7 @@
         class="form-horizontal"
         action="{{ path('claro_admin_security_token_edit', {'tokenId': token.getId()}) }}"
         method="post"
-        {{ form_enctype(form) }}
+        enctype="multipart/form-data"
         id="form_settings"
         novalidate
     >

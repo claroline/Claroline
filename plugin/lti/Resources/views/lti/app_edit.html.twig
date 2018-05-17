@@ -24,7 +24,7 @@
 
 {% block section_content %}
         <div id="add_app">
-            <form class="form-horizontal" action="{{ path('ujm_lti_edit_form_app', {'appId': appId}) }}" method="post" {{ form_enctype(form) }} id="form_edit_app">
+            <form class="form-horizontal" action="{{ path('ujm_lti_edit_form_app', {'appId': appId}) }}" method="post" enctype="multipart/form-data" id="form_edit_app">
                 {{ form_errors(form) }}
                 {{ form_widget(form) }}
                 <button type="submit" class="btn btn-primary" id="sub_add_app">{{ 'ok'|trans({}, 'platform') }}</button>

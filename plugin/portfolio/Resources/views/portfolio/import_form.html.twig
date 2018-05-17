@@ -24,7 +24,7 @@
 {% endblock %}
 
 {% block content_body %}
-    <form action="{{ path('icap_portfolio_import') }}" method="post" class="form-horizontal" id="portfolio_import" {{ form_enctype(form) }}>
+    <form action="{{ path('icap_portfolio_import') }}" method="post" class="form-horizontal" id="portfolio_import" enctype="multipart/form-data">
         {{ form_errors(form) }}
 
         {{ form_row(form.format) }}

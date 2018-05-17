@@ -68,14 +68,14 @@ class ContentType extends AbstractType
                 if (isset($translatedContent[$lang])) {
                     $builder->add(
                         $lang,
-                        'base_content',
+                        BaseContentType::class,
                         [
                             'theme_options' => ['tinymce' => $this->tinymce],
                             'data' => $translatedContent[$lang],
                         ]
                     );
                 } else {
-                    $builder->add($lang, 'base_content', ['theme_options' => ['tinymce' => $this->tinymce]]);
+                    $builder->add($lang, BaseContentType::class, ['theme_options' => ['tinymce' => $this->tinymce]]);
                 }
             }
         }

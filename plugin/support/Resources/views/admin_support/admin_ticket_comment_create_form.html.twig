@@ -13,7 +13,7 @@
           {% endif %}
           action="{{ path('formalibre_admin_ticket_comment_create', {'ticket': ticket.getId(), 'type': type}) }}"
           method="POST"
-          {{ form_enctype(form) }}
+          enctype="multipart/form-data"
     > 
         {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
         {{ form_widget(form) }}

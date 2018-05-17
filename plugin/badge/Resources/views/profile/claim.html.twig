@@ -11,7 +11,7 @@
         </div>
 
         <div class="panel-body">
-            <form role="form" action="{{ path('icap_badge_claim_badge') }}" method="post" {{ form_enctype(form) }} class="form-horizontal">
+            <form role="form" action="{{ path('icap_badge_claim_badge') }}" method="post" enctype="multipart/form-data" class="form-horizontal">
             {{ form_widget(form) }}
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">{{ 'claim'|trans }}</button>

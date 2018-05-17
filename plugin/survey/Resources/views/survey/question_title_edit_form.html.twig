@@ -30,7 +30,7 @@
           class="form-horizontal"
           action="{{ path('claro_survey_question_title_edit', {'question': question.getId(), 'survey': surveyId}) }}"
           method="post"
-          {{ form_enctype(form) }}
+          enctype="multipart/form-data"
           id="form_settings"
           novalidate
     >

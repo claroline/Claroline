@@ -48,7 +48,7 @@
         </table>
         <a class="btn btn-primary" id="bt_add_app"><i class="fa fa-plus"></i> {{ 'add_lti_app' | trans({}, 'lti') }}</a>
         <div id="add_app" style="display: none">
-            <form class="form-horizontal" action="{{ path('ujm_admin_lti') }}" method="post" {{ form_enctype(form) }} id="form_add_app">
+            <form class="form-horizontal" action="{{ path('ujm_admin_lti') }}" method="post" enctype="multipart/form-data" id="form_add_app">
                 {{ form_widget(form) }}
                 {{ form_rest(form) }}
                 <button type="submit" class="btn btn-primary" id="sub_add_app">{{ 'ok'|trans({}, 'platform') }}</button>

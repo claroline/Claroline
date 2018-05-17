@@ -16,7 +16,7 @@ class ScaleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', ['label' => 'name'])
+            ->add('name', TextType::class, ['label' => 'name'])
             ->add('levels', 'scale_levels');
     }
 

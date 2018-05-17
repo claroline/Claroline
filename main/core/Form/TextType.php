@@ -12,8 +12,9 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType as Type;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class TextType extends AbstractType
@@ -27,11 +28,11 @@ class TextType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', ['label' => 'name', 'constraints' => new NotBlank(), 'attr' => ['autofocus' => true]]);
-        $builder->add('text', 'tinymce', ['label' => 'text']);
+        $builder->add('name', Type::class, ['label' => 'name', 'constraints' => new NotBlank(), 'attr' => ['autofocus' => true]]);
+        $builder->add('text', 'tinymce', ['label' => self::class]);
         $builder->add(
             'published',
-            'checkbox',
+            CheckboxType::class,
             [
                 'label' => 'publish_resource',
                 'required' => true,
@@ -46,7 +47,7 @@ class TextType extends AbstractType
         return $this->formName;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             [

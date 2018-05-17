@@ -10,7 +10,7 @@
                 {% else %}
                     {{ path('claro_agenda_import') }}"
                 {% endif %}
-                {{ form_enctype(form) }}
+                enctype="multipart/form-data"
               class="form-inline"
               role="form"
               id="ics-import-form"

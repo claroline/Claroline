@@ -305,7 +305,13 @@ class ThemeManager
      */
     public function getDefaultTheme()
     {
-        return $this->repository->findOneBy(['default' => true]);
+        $default = $this->repository->findOneBy(['default' => true]);
+
+        if (!$default) {
+            $default = $this->repository->findAll()[0];
+        }
+
+        return $default;
     }
 
     /**

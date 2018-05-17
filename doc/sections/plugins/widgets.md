@@ -83,7 +83,7 @@ $event->stopPropagation();
 {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
 <form class="form-horizontal"
       action="{{ path('my_submission_route', {'instance': instance.getId()}) }}"
-      method="post" {{ form_enctype(form) }}
+      method="post" enctype="multipart/form-data"
 >
     <div class="panel-body">
         {{ form_widget(form) }}

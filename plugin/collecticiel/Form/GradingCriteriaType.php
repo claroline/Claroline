@@ -11,7 +11,7 @@ class GradingCriteriaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('criteriaName', 'text',
+            ->add('criteriaName', TextType::class,
                 array(
                     'required' => true,
                     'label' => false,

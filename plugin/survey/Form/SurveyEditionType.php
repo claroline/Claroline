@@ -13,7 +13,7 @@ namespace Claroline\SurveyBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SurveyEditionType extends AbstractType
 {
@@ -43,12 +43,12 @@ class SurveyEditionType extends AbstractType
         );
         $builder->add(
             'hasPublicResult',
-            'checkbox',
+            CheckboxType::class,
             array('required' => true)
         );
         $builder->add(
             'allowAnswerEdition',
-            'checkbox',
+            CheckboxType::class,
             array('required' => true)
         );
     }
@@ -58,7 +58,7 @@ class SurveyEditionType extends AbstractType
         return 'survey_edition_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array('translation_domain' => 'survey'));
     }

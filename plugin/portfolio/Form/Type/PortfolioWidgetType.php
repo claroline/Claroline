@@ -92,7 +92,7 @@ class PortfolioWidgetType extends AbstractType
                     $choices[$choiceType['name']] = $choiceType['name'];
                 }
 
-                $form->add('widget_type', 'choice', [
+                $form->add('widget_type', ChoiceType::class, [
                     'choices' => $choices,
                 ]);
             }

@@ -27,7 +27,7 @@ class AbilityType extends AbstractType
         }
 
         $builder
-            ->add('name', 'textarea', [
+            ->add('name', TextareaType::class, [
                 'label' => 'description',
                 'attr' => ['class' => 'form-control'],
             ])
@@ -40,7 +40,7 @@ class AbilityType extends AbstractType
                     return $repo->getFindByCompetencyBuilder($options['competency']);
                 },
             ])
-            ->add('minResourceCount', 'integer', [
+            ->add('minResourceCount', IntegerType::class, [
                 'label' => 'ability.min_resource_count',
                 'translation_domain' => 'competency',
                 'attr' => ['min' => 0, 'max' => 1000],

@@ -15,7 +15,7 @@ class CorrectionCommentType extends AbstractType
         }
 
         $builder
-            ->add('goBack', 'hidden', array('mapped' => false));
+            ->add('goBack', HiddenType::class, array('mapped' => false));
     }
 
     public function getName()

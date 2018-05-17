@@ -45,7 +45,7 @@ class BadgeCollectionType extends AbstractType
         $user = $this->tokenStorage->getToken()->getUser();
 
         $builder
-            ->add('name', 'text')
+            ->add('name', TextType::class)
             ->add('userBadges', 'entity',
                 array(
                      'class' => 'IcapBadgeBundle:UserBadge',
@@ -60,7 +60,7 @@ class BadgeCollectionType extends AbstractType
                      'expanded' => true,
                 )
             )
-            ->add('is_shared', 'checkbox');
+            ->add('is_shared', CheckboxType::class);
     }
 
     public function getName()

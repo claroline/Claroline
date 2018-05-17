@@ -17,7 +17,7 @@
             <form id="ticket-create-form"
                   action="{{ path('formalibre_ticket_create') }}"
                   method="POST"
-                  {{ form_enctype(form) }}
+                  enctype="multipart/form-data"
             >
                 {{ form_widget(form) }}
             </form>

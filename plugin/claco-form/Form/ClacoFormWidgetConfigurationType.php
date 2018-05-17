@@ -18,7 +18,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Range;
 
 class ClacoFormWidgetConfigurationType extends AbstractType
@@ -40,7 +40,7 @@ class ClacoFormWidgetConfigurationType extends AbstractType
 
         $builder->add(
             'nbEntries',
-            'integer',
+            IntegerType::class,
             [
                 'mapped' => false,
                 'data' => $nbEntries,
@@ -52,7 +52,7 @@ class ClacoFormWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'showCreatorPicture',
-            'checkbox',
+            CheckboxType::class,
             [
                 'mapped' => false,
                 'data' => $showCreatorPicture,
@@ -61,7 +61,7 @@ class ClacoFormWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'showFieldLabel',
-            'checkbox',
+            CheckboxType::class,
             [
                 'mapped' => false,
                 'data' => $showFieldLabel,
@@ -220,7 +220,7 @@ class ClacoFormWidgetConfigurationType extends AbstractType
         return 'claco_form_widget_configuration_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'clacoform']);
     }

@@ -14,7 +14,7 @@ namespace Claroline\ScormBundle\Form;
 use Claroline\ScormBundle\Entity\ScormResource;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ScormConfigType extends AbstractType
 {
@@ -22,7 +22,7 @@ class ScormConfigType extends AbstractType
     {
         $builder->add(
             'hideTopBar',
-            'checkbox',
+            CheckboxType::class,
             [
                 'label' => 'hide_top_bar',
                 'translation_domain' => 'scorm',
@@ -30,7 +30,7 @@ class ScormConfigType extends AbstractType
         );
         $builder->add(
             'exitMode',
-            'choice',
+            ChoiceType::class,
             [
                 'choices' => [
                     'workspace_opening' => ScormResource::WORKSPACE_OPEN,
@@ -50,7 +50,7 @@ class ScormConfigType extends AbstractType
         return 'scorm_config_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'scorm']);
     }

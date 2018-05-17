@@ -24,14 +24,14 @@ class DropzoneCommonType extends AbstractType
         $builder
             ->add(
                 'stayHere',
-                'hidden',
+                HiddenType::class,
                 [
                     'mapped' => false,
                 ]
             )
             ->add(
                 'autoCloseForManualStates',
-                'hidden',
+                HiddenType::class,
                 [
                     'mapped' => false,
                 ]
@@ -44,17 +44,17 @@ class DropzoneCommonType extends AbstractType
                 ]
             )
 
-            ->add('allowWorkspaceResource', 'checkbox', ['required' => false])
-            ->add('allowUpload', 'checkbox', ['required' => false])
-            ->add('allowUrl', 'checkbox', ['required' => false])
-            ->add('allowRichText', 'checkbox', ['required' => false])
+            ->add('allowWorkspaceResource', CheckboxType::class, ['required' => false])
+            ->add('allowUpload', CheckboxType::class, ['required' => false])
+            ->add('allowUrl', CheckboxType::class, ['required' => false])
+            ->add('allowRichText', CheckboxType::class, ['required' => false])
 
             ->add('successMessage', 'tinymce', ['required' => false])
             ->add('failMessage', 'tinymce', ['required' => false])
 
             ->add(
                 'manualPlanning',
-                'choice',
+                ChoiceType::class,
                 [
                     'required' => true,
                     'choices' => [
@@ -65,7 +65,7 @@ class DropzoneCommonType extends AbstractType
                     'multiple' => false,
                     ]
             )
-            ->add('manualState', 'choice',
+            ->add('manualState', ChoiceType::class,
                 [
                 'choices' => [
                     'allowDrop' => 'allowDropManualState',
@@ -79,7 +79,7 @@ class DropzoneCommonType extends AbstractType
 
         $builder
             // Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('published', 'checkbox',
+            ->add('published', CheckboxType::class,
                 [
                     'attr' => [],
                     'mapped' => false,
@@ -89,26 +89,26 @@ class DropzoneCommonType extends AbstractType
 
         $builder
             // Accusé de réception. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('returnReceipt', 'checkbox',
+            ->add('returnReceipt', CheckboxType::class,
                 [
                     'required' => false,
                 ]
             )
             // Picture. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('picture', 'checkbox',
+            ->add('picture', CheckboxType::class,
                 [
                     'required' => false,
                 ]
             )
             // Username. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('username', 'checkbox',
+            ->add('username', CheckboxType::class,
                 [
                     'required' => false,
                 ]
             )
 
             // EvaluationType. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('evaluationType', 'choice',
+            ->add('evaluationType', ChoiceType::class,
                 [
                     'choices' => [
                         'noEvaluation' => 'noEvaluation',
@@ -121,7 +121,7 @@ class DropzoneCommonType extends AbstractType
             )
 
             // Notation maxi. Ajout de cette zone, demande JJQ. InnovaERV
-            ->add('maximumNotation', 'integer',
+            ->add('maximumNotation', IntegerType::class,
                 [
                     'required' => true,
                     'attr' => [

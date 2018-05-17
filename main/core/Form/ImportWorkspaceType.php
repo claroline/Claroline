@@ -13,8 +13,11 @@ namespace Claroline\CoreBundle\Form;
 
 use Claroline\CoreBundle\Validator\Constraints\FileUpload;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ImportWorkspaceType extends AbstractType
@@ -23,22 +26,22 @@ class ImportWorkspaceType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             ['label' => 'name', 'constraints' => [new NotBlank()]]
         );
         $builder->add(
             'code',
-            'text',
+            TextType::class,
             ['label' => 'code', 'constraints' => [new NotBlank()]]
         );
         $builder->add(
             'workspace',
-            'file',
-            ['label' => 'file', 'mapped' => false, 'required' => false, 'constraints' => [new FileUpload()]]
+            FileType::class,
+            ['label' => FileType::class, 'mapped' => false, 'required' => false, 'constraints' => [new FileUpload()]]
         );
         $builder->add(
             'fileUrl',
-            'url',
+            UrlType::class,
             ['label' => 'URL', 'mapped' => false, 'required' => false]
         );
         $builder->add(
@@ -50,22 +53,22 @@ class ImportWorkspaceType extends AbstractType
         );
         $builder->add(
             'displayable',
-            'checkbox',
+            CheckboxType::class,
             ['required' => false, 'label' => 'displayable_in_workspace_list']
         );
         $builder->add(
             'selfRegistration',
-            'checkbox',
+            CheckboxType::class,
             ['required' => false, 'label' => 'public_registration']
         );
         $builder->add(
             'registrationValidation',
-            'checkbox',
+            CheckboxType::class,
             ['required' => false, 'label' => 'registration_validation']
         );
         $builder->add(
             'selfUnregistration',
-            'checkbox',
+            CheckboxType::class,
             ['required' => false, 'label' => 'public_unregistration']
         );
     }
@@ -75,7 +78,7 @@ class ImportWorkspaceType extends AbstractType
         return 'workspace_template_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'platform']);
     }

@@ -12,8 +12,9 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AdminAnalyticsTopType extends AbstractType
 {
@@ -21,12 +22,12 @@ class AdminAnalyticsTopType extends AbstractType
     {
         $builder
             ->add(
-                'top_type', 'choice', array(
+                'top_type', ChoiceType::class, [
                     'label' => 'show',
-                    'attr' => array(
+                    'attr' => [
                         'class' => 'input-sm',
-                    ),
-                    'choices' => array(
+                    ],
+                    'choices' => [
                         'top_extension' => 'top_extension',
                         'top_workspaces_resources' => 'top_workspaces_resources',
                         'top_workspaces_connections' => 'top_workspaces_connections',
@@ -36,32 +37,32 @@ class AdminAnalyticsTopType extends AbstractType
                         'top_users_workspaces_enrolled' => 'top_users_workspaces_enrolled',
                         'top_users_connections' => 'top_users_connections',
                         'top_media_views' => 'top_media_views',
-                    ),
-                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-4'),
-                )
+                    ],
+                    'theme_options' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-4'],
+                ]
             )
             ->add(
                 'range',
                 'daterange',
-                array(
+                [
                     'label' => 'for_period',
                     'required' => false,
-                    'attr' => array('class' => 'input-sm'),
-                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-4'),
-                )
+                    'attr' => ['class' => 'input-sm'],
+                    'theme_options' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-4'],
+                ]
             )
             ->add(
-                'top_number', 'buttongroupselect', array(
+                'top_number', 'buttongroupselect', [
                     'label' => 'top',
-                    'attr' => array('class' => 'input-sm'),
-                    'choices' => array(
+                    'attr' => ['class' => 'input-sm'],
+                    'choices' => [
                         '20' => '20',
                         '30' => '30',
                         '50' => '50',
                         '100' => '100',
-                    ),
-                    'theme_options' => array('label_width' => 'col-md-2', 'control_width' => 'col-md-3'),
-                )
+                    ],
+                    'theme_options' => ['label_width' => 'col-md-2', 'control_width' => 'col-md-3'],
+                ]
             );
     }
 
@@ -70,14 +71,14 @@ class AdminAnalyticsTopType extends AbstractType
         return 'admin_analytics_top_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
         ->setDefaults(
-            array(
+            [
                 'translation_domain' => 'platform',
                 'csrf_protection' => false,
-            )
+            ]
         );
     }
 }

@@ -183,7 +183,7 @@
             {% endif %}
             <form id="badge-edit" role="form"
                   action="{{ path('icap_badge_admin_badges_edit', {'slug': badge.slug}) }}{% if 0 == pager.currentPageResults|length %}#!edit{% endif %}"
-                  method="post" id="editBadgeForm" class="form-horizontal" {{ form_enctype(form) }} novalidate>
+                  method="post" id="editBadgeForm" class="form-horizontal" enctype="multipart/form-data" novalidate>
                 {{ form_errors(form) }}
                 <div class="row badges_infos">
                     <div class="col-md-2{% if form.file.vars.errors|length > 0 %} has-error{% endif %} text-center">

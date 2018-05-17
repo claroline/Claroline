@@ -14,8 +14,9 @@ namespace Claroline\CoreBundle\Form\Administration;
 use Claroline\CoreBundle\Entity\Role;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 
@@ -25,7 +26,7 @@ class WidgetEditType extends AbstractType
     {
         $builder->add(
             'defaultWidth',
-            'integer',
+            IntegerType::class,
             [
                 'label' => 'width',
                 'required' => true,
@@ -38,7 +39,7 @@ class WidgetEditType extends AbstractType
         );
         $builder->add(
             'defaultHeight',
-            'integer',
+            IntegerType::class,
             [
                 'label' => 'height',
                 'required' => true,
@@ -51,12 +52,12 @@ class WidgetEditType extends AbstractType
         );
         $builder->add(
             'isDisplayableInDesktop',
-            'checkbox',
+            CheckboxType::class,
             ['label' => 'displayable_in_desktop', 'required' => true]
         );
         $builder->add(
             'isDisplayableInWorkspace',
-            'checkbox',
+            CheckboxType::class,
             ['label' => 'displayable_in_workspace', 'required' => true]
         );
         $builder->add(
@@ -88,7 +89,7 @@ class WidgetEditType extends AbstractType
         return 'widget_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'platform']);
     }

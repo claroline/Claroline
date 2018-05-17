@@ -1,7 +1,7 @@
 <div class='modal-dialog'>
     <form role="form" novalidate="novalidate"
           action="{{ path('claro_resource_edit_properties', {'node': nodeId}) }}"
-          method="post" {{ form_enctype(form) }}
+          method="post" enctype="multipart/form-data"
           id="resource-properties-form"
           class="modal-content">
         <div class='modal-header'>

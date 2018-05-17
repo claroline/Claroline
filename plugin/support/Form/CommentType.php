@@ -5,7 +5,7 @@ namespace FormaLibre\SupportBundle\Form;
 use FormaLibre\SupportBundle\Entity\Comment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CommentType extends AbstractType
 {
@@ -19,11 +19,11 @@ class CommentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add(
-            'content',
+            ContentType::class,
             'tinymce',
             [
                 'required' => true,
-                'label' => 'content',
+                'label' => ContentType::class,
                 'translation_domain' => 'platform',
             ]
         );
@@ -34,7 +34,7 @@ class CommentType extends AbstractType
         return $this->type === Comment::PUBLIC_COMMENT ? 'comment_form' : 'private_comment_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'support']);
     }

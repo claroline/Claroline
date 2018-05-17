@@ -68,7 +68,7 @@ class BadgePickerType extends AbstractType
 
     public function getParent()
     {
-        return 'text';
+        return TextType::class;
     }
 
     public function getName()

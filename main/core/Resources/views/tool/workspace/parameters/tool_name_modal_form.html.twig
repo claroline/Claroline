@@ -11,7 +11,7 @@
             action="{{ path('claro_workspace_order_tool_edit', {
                 'workspace': workspace.getId(),
                 'workspaceOrderTool': wot.getId()})
-            }}" method="post" {{ form_enctype(form) }}>
+            }}" method="post" enctype="multipart/form-data">
             <div class="panel-body">
                 {{ form_widget(form) }}
                 <div class="panel-footer">

@@ -16,7 +16,7 @@ use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class MyCoursesWidgetConfigurationType extends AbstractType
@@ -63,7 +63,7 @@ class MyCoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'defaultMode',
-            'choice',
+            ChoiceType::class,
             [
                 'multiple' => false,
                 'choices' => [
@@ -76,7 +76,7 @@ class MyCoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'openSessionsColor',
-            'text',
+            TextType::class,
             [
                 'required' => false,
                 'mapped' => false,
@@ -88,7 +88,7 @@ class MyCoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'closedSessionsColor',
-            'text',
+            TextType::class,
             [
                 'required' => false,
                 'mapped' => false,
@@ -100,7 +100,7 @@ class MyCoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'unstartedSessionsColor',
-            'text',
+            TextType::class,
             [
                 'required' => false,
                 'mapped' => false,
@@ -112,7 +112,7 @@ class MyCoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'displayClosedSessions',
-            'checkbox',
+            CheckboxType::class,
             [
                 'mapped' => false,
                 'data' => isset($this->extra['displayClosedSessions']) ? $this->extra['displayClosedSessions'] : true,
@@ -122,7 +122,7 @@ class MyCoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'displayUnstartedSessions',
-            'checkbox',
+            CheckboxType::class,
             [
                 'mapped' => false,
                 'data' => isset($this->extra['displayUnstartedSessions']) ? $this->extra['displayUnstartedSessions'] : true,
@@ -132,7 +132,7 @@ class MyCoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'disableClosedSessionsWs',
-            'checkbox',
+            CheckboxType::class,
             [
                 'mapped' => false,
                 'data' => isset($this->extra['disableClosedSessionsWs']) ? $this->extra['disableClosedSessionsWs'] : false,
@@ -141,7 +141,7 @@ class MyCoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'disableUnstartedSessionsWs',
-            'checkbox',
+            CheckboxType::class,
             [
                 'mapped' => false,
                 'data' => isset($this->extra['disableUnstartedSessionsWs']) ? $this->extra['disableUnstartedSessionsWs'] : false,
@@ -155,7 +155,7 @@ class MyCoursesWidgetConfigurationType extends AbstractType
         return 'my_courses_widget_configuration_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'cursus']);
     }

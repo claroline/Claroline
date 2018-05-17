@@ -29,7 +29,7 @@ class WidgetTagListBlogType extends AbstractType
                 'display_browse_button' => false,
                 'display_download_button' => false,
             ))
-            ->add('tag_cloud', 'choice', array(
+            ->add('tag_cloud', ChoiceType::class, array(
                 'choices' => array('0' => 'classic', '1' => '3D', '2' => 'advanced'),
                 'required' => false,
                 'expanded' => true,

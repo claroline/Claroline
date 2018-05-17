@@ -12,7 +12,7 @@ class BookReferenceConfigurationType extends AbstractType
     {
         $builder->add(
             'api_key',
-            'text',
+            TextType::class,
             [
                 'required' => false,
                 'label' => 'api_key',

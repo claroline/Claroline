@@ -12,8 +12,12 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class ResourcePropertiesType extends AbstractType
@@ -43,10 +47,10 @@ class ResourcePropertiesType extends AbstractType
             'attr' => $attrParams,
         ];
 
-        $builder->add('name', 'text', ['label' => 'name']);
+        $builder->add('name', TextType::class, ['label' => 'name']);
         $builder->add(
             'newIcon',
-            'file',
+            FileType::class,
             [
                 'required' => false,
                 'mapped' => false,
@@ -75,26 +79,26 @@ class ResourcePropertiesType extends AbstractType
         );
         $builder->add(
             'published',
-            'checkbox',
+            CheckboxType::class,
             ['required' => true, 'label' => 'published']
         );
         $builder->add(
             'publishedToPortal',
-            'checkbox',
+            CheckboxType::class,
             ['required' => false, 'label' => 'published_to_portal']
         );
         $builder->add(
-            'hidden',
-            'checkbox',
+            HiddenType::class,
+            CheckboxType::class,
             ['label' => 'hidden']
         );
-        $builder->add('description', 'textarea', [
+        $builder->add('description', TextareaType::class, [
             'label' => 'description',
             'attr' => [
                 'class' => 'form-control',
             ],
         ]);
-        $builder->add('newThumbnail', 'file',
+        $builder->add('newThumbnail', FileType::class,
             [
                 'required' => false,
                 'mapped' => false,
@@ -123,7 +127,7 @@ class ResourcePropertiesType extends AbstractType
         );
         $builder->add(
             'creator',
-            'text',
+            TextType::class,
             [
                 'data' => $this->creator,
                 'mapped' => false,
@@ -133,7 +137,7 @@ class ResourcePropertiesType extends AbstractType
         );
         $builder->add(
             'license',
-            'text',
+            TextType::class,
             [
                 'label' => 'license',
                 'required' => false,
@@ -141,7 +145,7 @@ class ResourcePropertiesType extends AbstractType
         );
         $builder->add(
             'author',
-            'text',
+            TextType::class,
             [
                 'label' => 'author',
                 'required' => false,
@@ -149,7 +153,7 @@ class ResourcePropertiesType extends AbstractType
         );
         $builder->add(
             'deletable',
-            'checkbox',
+            CheckboxType::class,
             ['required' => true, 'label' => 'deletable']
         );
     }
@@ -159,7 +163,7 @@ class ResourcePropertiesType extends AbstractType
         return 'resource_properties_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'platform']);
     }

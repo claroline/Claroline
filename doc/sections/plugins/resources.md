@@ -352,7 +352,7 @@ If the *is_form* parameter is set to **true**, you have to return a modal form a
 ```html
 <div class="modal-dialog">
     <form role="form" novalidate="novalidate"
-        action="{{ path('hevinci_url_change', {'node': node}) }}" {{ form_enctype(form) }}
+        action="{{ path('hevinci_url_change', {'node': node}) }}" enctype="multipart/form-data"
         method="post" class="modal-content">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>

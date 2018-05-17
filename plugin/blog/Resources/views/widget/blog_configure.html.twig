@@ -6,7 +6,7 @@
       class="form-inline widget-content-config-form"
       action="{{ path("icap_blog_widget_blog_configure", {'id': widgetInstance.id}) }}"
       method="post"
-      {{ form_enctype(form) }}
+      enctype="multipart/form-data"
       novalidate="novalidate"
 >
     <div class="panel-body">

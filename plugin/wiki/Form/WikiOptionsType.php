@@ -11,7 +11,7 @@ class WikiOptionsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('mode', 'choice', array(
+            ->add('mode', ChoiceType::class, array(
                 'choices' => array(
                     '0' => 'normal',
                     '1' => 'moderate',

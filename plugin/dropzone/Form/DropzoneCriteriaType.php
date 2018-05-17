@@ -11,14 +11,14 @@ class DropzoneCriteriaType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('goBack', 'hidden', array(
+            ->add('goBack', HiddenType::class, array(
                 'mapped' => false,
             ))
             ->add('correctionInstruction', 'tinymce', array('required' => false))
-            ->add('totalCriteriaColumn', 'number', array('required' => true))
-            ->add('allowCommentInCorrection', 'checkbox', array('required' => false))
-            ->add('forceCommentInCorrection', 'checkbox', array('required' => false))
-            ->add('recalculateGrades', 'hidden', array('mapped' => false));
+            ->add('totalCriteriaColumn', NumberType::class, array('required' => true))
+            ->add('allowCommentInCorrection', CheckboxType::class, array('required' => false))
+            ->add('forceCommentInCorrection', CheckboxType::class, array('required' => false))
+            ->add('recalculateGrades', HiddenType::class, array('mapped' => false));
     }
 
     public function getName()

@@ -6,7 +6,7 @@
           class="form-horizontal"
           id="workspace_tag_form"
           action="{{ path('claro_workspace_tag_create') }}"
-          method="post" {{ form_enctype(form) }}>
+          method="post" enctype="multipart/form-data">
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>

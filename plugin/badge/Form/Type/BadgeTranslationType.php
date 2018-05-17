@@ -11,8 +11,8 @@ class BadgeTranslationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array('label' => 'badge_form_name', 'attr' => array('maxlength' => 128)))
-            ->add('description', 'text', array('label' => 'badge_form_description', 'attr' => array('maxlength' => 128)))
+            ->add('name', TextType::class, array('label' => 'badge_form_name', 'attr' => array('maxlength' => 128)))
+            ->add('description', TextType::class, array('label' => 'badge_form_description', 'attr' => array('maxlength' => 128)))
             ->add('criteria', 'tinymce', array('label' => 'badge_form_criteria'))
             ->add('locale', 'hidden');
     }

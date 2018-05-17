@@ -15,7 +15,7 @@ class ObjectiveType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', ['label' => 'name']);
+        $builder->add('name', TextType::class, ['label' => 'name']);
     }
 
     public function getName()

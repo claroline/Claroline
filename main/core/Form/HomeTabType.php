@@ -14,8 +14,10 @@ namespace Claroline\CoreBundle\Form;
 use Claroline\CoreBundle\Entity\Workspace\Workspace;
 use Claroline\CoreBundle\Form\Angular\AngularType;
 use Doctrine\ORM\EntityRepository;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class HomeTabType extends AngularType
@@ -40,10 +42,10 @@ class HomeTabType extends AngularType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', ['constraints' => new NotBlank(), 'label' => 'name']);
+        $builder->add('name', TextType::class, ['constraints' => new NotBlank(), 'label' => 'name']);
         $builder->add(
             'color',
-            'text',
+            TextType::class,
             [
                 'required' => false,
                 'mapped' => false,
@@ -53,10 +55,10 @@ class HomeTabType extends AngularType
             ]
         );
 
-        if ($this->type === 'admin') {
+        if ('admin' === $this->type) {
             $builder->add(
                 'visible',
-                'choice',
+                ChoiceType::class,
                 [
                     'choices' => [
                         'yes' => true,
@@ -72,7 +74,7 @@ class HomeTabType extends AngularType
             );
             $builder->add(
                 'locked',
-                'choice',
+                ChoiceType::class,
                 [
                     'choices' => [
                         'yes' => true,
@@ -106,10 +108,10 @@ class HomeTabType extends AngularType
                     'required' => false,
                 ]
             );
-        } elseif ($this->type === 'workspace' && !is_null($this->workspace)) {
+        } elseif ('workspace' === $this->type && !is_null($this->workspace)) {
             $builder->add(
                 'visible',
-                'choice',
+                ChoiceType::class,
                 [
                     'choices' => [
                         'yes' => true,
@@ -153,7 +155,7 @@ class HomeTabType extends AngularType
         return 'home_tab_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $default = ['translation_domain' => 'platform'];
 

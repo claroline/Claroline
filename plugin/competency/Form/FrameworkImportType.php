@@ -17,8 +17,8 @@ class FrameworkImportType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('file', 'file', [
-            'label' => 'file',
+        $builder->add(FileType::class, FileType::class, [
+            'label' => FileType::class,
             'constraints' => [
                 new NotBlank(),
                 new ImportableFramework(),

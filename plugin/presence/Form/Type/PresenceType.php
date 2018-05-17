@@ -4,7 +4,7 @@ namespace FormaLibre\PresenceBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PresenceType extends AbstractType
 {
@@ -37,7 +37,7 @@ class PresenceType extends AbstractType
              );
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'data_class' => 'FormaLibre\PresenceBundle\Entity\Presence',

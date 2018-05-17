@@ -13,7 +13,7 @@ namespace Claroline\TeamBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TeamParamsType extends AbstractType
 {
@@ -21,7 +21,7 @@ class TeamParamsType extends AbstractType
     {
         $builder->add(
             'maxTeams',
-            'integer',
+            IntegerType::class,
             array(
                 'attr' => array('min' => 0),
                 'required' => false,
@@ -29,7 +29,7 @@ class TeamParamsType extends AbstractType
         );
         $builder->add(
             'isPublic',
-            'choice',
+            ChoiceType::class,
             array(
                 'choices' => array(
                     true => 'public',
@@ -40,12 +40,12 @@ class TeamParamsType extends AbstractType
         );
         $builder->add(
             'selfRegistration',
-            'checkbox',
+            CheckboxType::class,
             array('required' => true)
         );
         $builder->add(
             'selfUnregistration',
-            'checkbox',
+            CheckboxType::class,
             array('required' => true)
         );
     }
@@ -55,7 +55,7 @@ class TeamParamsType extends AbstractType
         return 'team_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array('translation_domain' => 'team'));
     }

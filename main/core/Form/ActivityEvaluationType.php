@@ -12,8 +12,10 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ActivityEvaluationType extends AbstractType
 {
@@ -26,73 +28,73 @@ class ActivityEvaluationType extends AbstractType
             'manual' :
             $activityParams->getEvaluationType();
 
-        $statusOptions = array(
-            'choices' => array(
+        $statusOptions = [
+            'choices' => [
                 'not_attempted' => 'not_attempted',
                 'completed' => 'completed',
                 'incomplete' => 'incomplete',
                 'passed' => 'passed',
                 'failed' => 'failed',
-            ),
+            ],
             'required' => false,
             'label' => 'status',
-        );
+        ];
 
-        if ($evaluationType === 'automatic') {
+        if ('automatic' === $evaluationType) {
             $statusOptions['read_only'] = true;
             $statusOptions['disabled'] = true;
         }
 
         $builder->add(
             'status',
-            'choice',
+            ChoiceType::class,
             $statusOptions
         );
         $builder->add(
             'numScore',
-            'integer',
-            array(
+            IntegerType::class,
+            [
                 'read_only' => true,
                 'required' => false,
                 'label' => 'best_score',
-            )
+            ]
         );
         $builder->add(
             'date',
             'datetime',
-            array(
+            [
                 'read_only' => true,
                 'required' => false,
                 'widget' => 'single_text',
                 'format' => 'yyyy-MM-dd H:m:s',
                 'label' => 'last_attempt_date',
-            )
+            ]
         );
         $builder->add(
             'attemptsCount',
-            'integer',
-            array(
+            IntegerType::class,
+            [
                 'read_only' => true,
                 'required' => false,
                 'label' => 'max_attempts',
-            )
+            ]
         );
         $builder->add(
             'score',
-            'text',
-            array(
+            TextType::class,
+            [
                 'required' => false,
                 'label' => 'evaluation',
-            )
+            ]
         );
         $builder->add(
             'comment',
-            'textarea',
-            array(
-                'attr' => array('rows' => 5),
+            TextareaType::class,
+            [
+                'attr' => ['rows' => 5],
                 'required' => false,
                 'label' => 'comment',
-            )
+            ]
         );
     }
 
@@ -101,10 +103,10 @@ class ActivityEvaluationType extends AbstractType
         return 'activity_evaluation_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array('translation_domain' => 'platform')
+            ['translation_domain' => 'platform']
         );
     }
 }

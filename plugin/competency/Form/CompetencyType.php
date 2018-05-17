@@ -24,7 +24,7 @@ class CompetencyType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->uniqueNameConstraint->parentCompetency = $options['parent_competency'];
-        $builder->add('name', 'textarea', [
+        $builder->add('name', TextareaType::class, [
             'label' => 'description',
             'attr' => ['class' => 'form-control'],
         ]);

@@ -11,20 +11,21 @@
 
 namespace Claroline\CoreBundle\Form\Field;
 
+use Claroline\CoreBundle\Form\DataTransformer\JavascriptSafeTransformer;
+use JMS\DiExtraBundle\Annotation as DI;
+use JMS\DiExtraBundle\Annotation\Tag;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\Options;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Claroline\CoreBundle\Form\DataTransformer\JavascriptSafeTransformer;
-use JMS\DiExtraBundle\Annotation as DI;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\Service("claroline.form.tinymce")
- * @DI\FormType(alias = "tinymce")
+ * @Tag("form.type")
  */
 class TinymceType extends TextareaType
 {
-    private $defaultAttributes = array('class' => 'claroline-tiny-mce hide');
+    private $defaultAttributes = ['class' => 'claroline-tiny-mce hide'];
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -38,18 +39,14 @@ class TinymceType extends TextareaType
 
     public function getParent()
     {
-        return 'textarea';
+        return TextareaType::class;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('attr' => $this->defaultAttributes));
-        $resolver->setNormalizers(
-            array(
-                'attr' => function (Options $options, $value) {
-                    return array_merge($this->defaultAttributes, $value);
-                },
-            )
-        );
+        $resolver->setDefaults(['attr' => $this->defaultAttributes]);
+        $resolver->setNormalizer('attr', function (Options $options, $value) {
+            return array_merge($this->defaultAttributes, $value);
+        });
     }
 }

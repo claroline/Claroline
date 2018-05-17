@@ -13,7 +13,7 @@ namespace Claroline\BigBlueButtonBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class BBBType extends AbstractType
@@ -22,7 +22,7 @@ class BBBType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             [
                 'label' => 'name',
                 'constraints' => new NotBlank(),
@@ -32,7 +32,7 @@ class BBBType extends AbstractType
         );
         $builder->add(
             'published',
-            'checkbox',
+            CheckboxType::class,
             [
                 'label' => 'publish_resource',
                 'required' => true,
@@ -43,7 +43,7 @@ class BBBType extends AbstractType
         );
         $builder->add(
             'roomName',
-            'text',
+            TextType::class,
             [
                 'label' => 'room_name',
                 'attr' => ['autofocus' => true],
@@ -51,7 +51,7 @@ class BBBType extends AbstractType
         );
         $builder->add(
             'welcomeMessage',
-            'text',
+            TextType::class,
             [
                 'label' => 'welcome_message',
                 'attr' => ['autofocus' => true],
@@ -59,7 +59,7 @@ class BBBType extends AbstractType
         );
         $builder->add(
             'newTab',
-            'checkbox',
+            CheckboxType::class,
             [
                 'label' => 'open_bbb_in_new_tab',
                 'mapped' => true,
@@ -67,7 +67,7 @@ class BBBType extends AbstractType
         );
         $builder->add(
             'moderatorRequired',
-            'checkbox',
+            CheckboxType::class,
             [
                 'label' => 'wait_for_moderator',
                 'mapped' => true,
@@ -75,7 +75,7 @@ class BBBType extends AbstractType
         );
         $builder->add(
             'record',
-            'checkbox',
+            CheckboxType::class,
             [
                 'label' => 'allow_recording',
                 'mapped' => true,
@@ -83,7 +83,7 @@ class BBBType extends AbstractType
         );
         $builder->add(
             'startDate',
-            'text',
+            TextType::class,
             [
                 'label' => 'start_date',
                 'mapped' => false,
@@ -92,7 +92,7 @@ class BBBType extends AbstractType
         );
         $builder->add(
             'endDate',
-            'text',
+            TextType::class,
             [
                 'label' => 'end_date',
                 'mapped' => false,
@@ -106,7 +106,7 @@ class BBBType extends AbstractType
         return 'bbb_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'bbb']);
     }

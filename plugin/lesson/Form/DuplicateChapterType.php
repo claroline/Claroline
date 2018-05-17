@@ -63,12 +63,12 @@ class DuplicateChapterType extends AbstractType
                 }
 
                 $form
-                    ->add('title', 'text', array(
+                    ->add('title', TextType::class, array(
                             'mapped' => false,
                             'data' => $this->translator->trans('copy_prefix', array(), 'icap_lesson').$data->getTitle(),
                         )
                     )
-                    ->add('parent', 'choice',
+                    ->add('parent', ChoiceType::class,
                         array(
                             'mapped' => false,
                             'choices' => $chapters_list,
@@ -77,7 +77,7 @@ class DuplicateChapterType extends AbstractType
 
                 if ($this->entityManager->getRepository('IcapLessonBundle:Chapter')->childCount($data) > 0) {
                     $form
-                        ->add('duplicate_children', 'checkbox',
+                        ->add('duplicate_children', CheckboxType::class,
                             array(
                                 'mapped' => false,
                                 'required' => false,

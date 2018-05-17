@@ -11,19 +11,21 @@
 
 namespace Claroline\CoreBundle\Form\Field;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolver;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\DiExtraBundle\Annotation\Tag;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\Service("claroline.form.twolevelselect")
- * @DI\FormType(alias = "twolevelselect")
+ * @Tag("form.type")
  */
 class TwoLevelSelectType extends AbstractType
 {
     public function getParent()
     {
-        return 'choice';
+        return ChoiceType::class;
     }
 
     public function getName()
@@ -35,9 +37,9 @@ class TwoLevelSelectType extends AbstractType
     {
         $resolver
         ->setDefaults(
-            array(
+            [
                 'translation_domain' => 'platform',
-            )
+            ]
         );
     }
 }

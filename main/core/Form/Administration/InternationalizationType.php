@@ -12,8 +12,9 @@
 namespace Claroline\CoreBundle\Form\Administration;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class InternationalizationType extends AbstractType
 {
@@ -32,7 +33,7 @@ class InternationalizationType extends AbstractType
     {
         $builder->add(
             'locales',
-            'choice', [
+            ChoiceType::class, [
                 'choices' => $this->availableLocales,
                 'label' => 'languages',
                 'expanded' => true,
@@ -47,7 +48,7 @@ class InternationalizationType extends AbstractType
         return 'i18n_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'translation_domain' => 'platform',

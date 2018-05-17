@@ -32,7 +32,7 @@ class FormationsType extends AbstractWidgetType
         $language = $this->platformConfigHandler->getParameter('locale_language');
 
         $builder
-            ->add('name', 'text')
+            ->add('name', TextType::class)
             ->add('startDate', 'datepicker',
                 [
                     'required' => false,
@@ -47,8 +47,8 @@ class FormationsType extends AbstractWidgetType
                     'format' => 'Y/M/d',
                ]
             )
-            ->add('establishmentName', 'text')
-            ->add('diploma', 'text')
+            ->add('establishmentName', TextType::class)
+            ->add('diploma', TextType::class)
             ->add('children', 'collection',
                 [
                     'type' => 'icap_portfolio_widget_form_formations_formation',

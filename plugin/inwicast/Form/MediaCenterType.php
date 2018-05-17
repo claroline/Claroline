@@ -14,7 +14,7 @@ namespace Icap\InwicastBundle\Form;
 use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * Class MediacenterType.
@@ -26,12 +26,12 @@ class MediaCenterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('url', 'url', ['required' => true])
-            ->add('driver', 'text', ['required' => true])
-            ->add('host', 'text', ['required' => true])
-            ->add('port', 'text', ['required' => true])
-            ->add('dbname', 'text', ['required' => true])
-            ->add('user', 'text', ['required' => true])
+            ->add(UrlType::class, UrlType::class, ['required' => true])
+            ->add('driver', TextType::class, ['required' => true])
+            ->add('host', TextType::class, ['required' => true])
+            ->add('port', TextType::class, ['required' => true])
+            ->add('dbname', TextType::class, ['required' => true])
+            ->add('user', TextType::class, ['required' => true])
             ->add('password', 'password', ['required' => true]);
     }
 
@@ -45,7 +45,7 @@ class MediaCenterType extends AbstractType
         return 'inwicast_plugin_type_mediacenter';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             [

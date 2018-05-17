@@ -14,7 +14,7 @@
     </div>
     <form role="form" novalidate="novalidate"
       action="{{ path('update_file', {'file': file.getId()}) }}"
-      method="post" {{ form_enctype(form) }}
+      method="post" enctype="multipart/form-data"
       id="change-file-form"
     >
         <div class="panel-body">

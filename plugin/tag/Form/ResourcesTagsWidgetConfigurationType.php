@@ -14,7 +14,7 @@ namespace Claroline\TagBundle\Form;
 use Claroline\TagBundle\Entity\ResourcesTagsWidgetConfig;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Range;
 
@@ -34,7 +34,7 @@ class ResourcesTagsWidgetConfigurationType extends AbstractType
 
         $builder->add(
             'nbTags',
-            'integer',
+            IntegerType::class,
             array(
                 'required' => true,
                 'mapped' => false,
@@ -54,7 +54,7 @@ class ResourcesTagsWidgetConfigurationType extends AbstractType
         return 'resources_tags_widget_configuration_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array('translation_domain' => 'tag'));
     }

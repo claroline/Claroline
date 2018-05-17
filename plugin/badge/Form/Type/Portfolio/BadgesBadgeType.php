@@ -15,11 +15,11 @@ class BadgesBadgeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text', array(
+            ->add('name', TextType::class, array(
                 'required' => false,
                 'mapped' => false,
             ))
-            ->add('img', 'text', array(
+            ->add('img', TextType::class, array(
                 'required' => false,
                 'mapped' => false,
             ))

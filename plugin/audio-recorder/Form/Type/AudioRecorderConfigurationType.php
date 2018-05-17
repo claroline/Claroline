@@ -10,14 +10,14 @@ class AudioRecorderConfigurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('max_try', 'integer', [
+        $builder->add('max_try', IntegerType::class, [
                       'required' => true,
                       'attr' => [
                           'min' => 1,
                           'max' => 5,
                         ],
                     ])
-                ->add('max_recording_time', 'integer', [
+                ->add('max_recording_time', IntegerType::class, [
                       'required' => true,
                       'attr' => [
                         'min' => 0,

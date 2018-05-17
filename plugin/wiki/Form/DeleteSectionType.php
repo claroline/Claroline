@@ -19,12 +19,12 @@ class DeleteSectionType extends AbstractType
                 $data = $event->getData();
 
                 if ($data->hasChildren()) {
-                    $form->add('children', 'checkbox', array(
+                    $form->add('children', CheckboxType::class, array(
                         'required' => false,
                         'mapped' => false,
                     ));
                 } else {
-                    $form->add('children', 'hidden', array(
+                    $form->add('children', HiddenType::class, array(
                         'required' => false,
                         'mapped' => false,
                     ));

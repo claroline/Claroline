@@ -17,7 +17,7 @@
             <form id="type-edit-form"
                   action="{{ path('formalibre_admin_support_type_edit', {'type': type.getId()}) }}"
                   method="POST"
-                  {{ form_enctype(form) }}
+                  enctype="multipart/form-data"
             > 
                 {{ form_widget(form) }}
             </form>

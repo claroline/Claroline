@@ -13,10 +13,11 @@ namespace Claroline\CoreBundle\Form\Log;
 
 use Claroline\CoreBundle\Event\Log\LogGenericEvent;
 use Claroline\CoreBundle\Manager\EventManager;
+use JMS\DiExtraBundle\Annotation as DI;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use JMS\DiExtraBundle\Annotation as DI;
 
 /**
  * @DI\Service("claroline.form.logWorkspaceWidgetConfig")
@@ -44,28 +45,28 @@ class LogWorkspaceWidgetConfigType extends AbstractType
             ->add(
                 'restrictions',
                 'select2',
-                array(
+                [
                     'choices' => $actionChoices,
                     'required' => false,
                     'multiple' => true,
                     'expanded' => false,
                     'translation_domain' => 'log',
-                    'attr' => array('placeholder' => 'click_to_choose'),
-                )
+                    'attr' => ['placeholder' => 'click_to_choose'],
+                ]
             )
             ->add(
                 'amount',
-                'choice',
-                array(
-                    'choices' => array(
+                ChoiceType::class,
+                [
+                    'choices' => [
                         '1' => '1',
                         '5' => '5',
                         '10' => '10',
                         '15' => '15',
                         '20' => '20',
-                    ),
+                    ],
                     'required' => true,
-                )
+                ]
             );
     }
 
@@ -76,10 +77,10 @@ class LogWorkspaceWidgetConfigType extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
             'translation_domain' => 'log',
             'csrf_protection' => true,
             'csrf_field_name' => '_token',
-        ));
+        ]);
     }
 }

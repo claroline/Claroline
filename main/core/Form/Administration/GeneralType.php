@@ -12,16 +12,20 @@
 namespace Claroline\CoreBundle\Form\Administration;
 
 use Claroline\CoreBundle\Entity\Role;
+use Claroline\CoreBundle\Form\Field\ContentType;
 use Claroline\CoreBundle\Library\Configuration\PlatformDefaults;
 use Claroline\CoreBundle\Validator\Constraints\DomainName;
 use Claroline\CoreBundle\Validator\Constraints\FileSize;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class GeneralType extends AbstractType
 {
@@ -61,7 +65,7 @@ class GeneralType extends AbstractType
         $builder
             ->add(
                 'name',
-                'text',
+                TextType::class,
                 [
                     'required' => false,
                     'disabled' => isset($this->lockedParams['name']),
@@ -70,7 +74,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'description',
-                'content',
+                ContentType::class,
                 [
                     'data' => $this->description,
                     'mapped' => false,
@@ -81,7 +85,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'supportEmail',
-                'email',
+                EmailType::class,
                 [
                     'label' => 'support_email',
                     'disabled' => isset($this->lockedParams['support_email']),
@@ -89,7 +93,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'domainName',
-                'text',
+                TextType::class,
                 [
                     'label' => 'domain_name',
                     'disabled' => isset($this->lockedParams['domain_name']),
@@ -99,7 +103,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'sslEnabled',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'label' => 'ssl_enabled',
@@ -108,7 +112,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'allowSelfRegistration',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'disabled' => isset($this->lockedParams['allow_self_registration']),
@@ -117,7 +121,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'registerButtonAtLogin',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'disabled' => isset($this->lockedParams['register_button_at_login']),
@@ -146,7 +150,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'localeLanguage',
-                'choice',
+                ChoiceType::class,
                 [
                     'choices' => $this->langs,
                     'disabled' => isset($this->lockedParams['locale_language']),
@@ -155,7 +159,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'formCaptcha',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'display_captcha',
                     'required' => false,
@@ -164,7 +168,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'formHoneypot',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'use_honeypot',
                     'required' => false,
@@ -173,7 +177,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'loginTargetRoute',
-                'choice',
+                ChoiceType::class,
                 [
                     'choices' => $this->targetLoginUrls,
                     'choices_as_values' => true,
@@ -184,7 +188,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'redirectAfterLoginOption',
-                'choice',
+                ChoiceType::class,
                 [
                     'choices' => $this->buildRedirectOptions(),
                     'attr' => [
@@ -198,7 +202,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'redirectAfterLoginUrl',
-                'text',
+                TextType::class,
                 [
                     'label' => 'redirect_after_login_url',
                     'required' => false,
@@ -206,7 +210,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'accountDuration',
-                'integer',
+                IntegerType::class,
                 [
                     'label' => 'account_duration_label',
                     'required' => false,
@@ -214,7 +218,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'anonymousPublicProfile',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'show_profile_for_anonymous',
                     'required' => false,
@@ -223,7 +227,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'portfolioUrl',
-                'url',
+                UrlType::class,
                 [
                     'label' => 'portfolio_url',
                     'required' => false,
@@ -232,7 +236,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'isNotificationActive',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'activate_notifications',
                     'required' => false,
@@ -241,7 +245,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'maxStorageSize',
-                'text',
+                TextType::class,
                 [
                     'required' => false,
                     'label' => 'max_storage_size',
@@ -251,7 +255,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'maxUploadResources',
-                'integer',
+                IntegerType::class,
                 [
                     'required' => false,
                     'label' => 'count_resources',
@@ -260,7 +264,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'maxWorkspaceUsers',
-                'integer',
+                IntegerType::class,
                 [
                     'required' => false,
                     'label' => 'workspaces_max_users',
@@ -269,7 +273,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'showHelpButton',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'show_help_button',
                     'required' => false,
@@ -278,7 +282,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'helpUrl',
-                'text',
+                TextType::class,
                 [
                     'label' => 'help_url',
                     'required' => false,
@@ -287,7 +291,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'sendMailAtWorkspaceRegistration',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'disabled' => isset($this->lockedParams['send_mail_at_workspace_registration']),
@@ -296,7 +300,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'registrationMailValidation',
-                'choice',
+                ChoiceType::class,
                 [
                     'disabled' => isset($this->lockedParams['registration_mail_validation']),
                     'label' => 'registration_mail_validation',
@@ -308,7 +312,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'defaultWorkspaceTag',
-                'text',
+                TextType::class,
                 [
                     'label' => 'default_workspace_tag',
                     'required' => false,
@@ -317,7 +321,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'enableOpengraph',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'enable_opengraph',
                     'required' => false,
@@ -326,7 +330,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'isPdfExportActive',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'activate_pdf_export',
                     'required' => false,
@@ -335,7 +339,7 @@ class GeneralType extends AbstractType
             )
             ->add(
                 'tmpDir',
-                'text',
+                TextType::class,
                 [
                     'label' => 'temporary_directory',
                     'disabled' => isset($this->lockedParams['tmp_dir']),
@@ -378,7 +382,7 @@ class GeneralType extends AbstractType
         return 'platform_parameters_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
                 'translation_domain' => 'platform',

@@ -32,7 +32,7 @@
     </div>
     {{ macros.flashBox() }}
     <div class="page-body">
-        <form role="form" class="form-horizontal" autocomplete="false" action="{{path('claro_admin_external_sync_edit_source_form', { 'source': source })}}" method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
+        <form role="form" class="form-horizontal" autocomplete="false" action="{{path('claro_admin_external_sync_edit_source_form', { 'source': source })}}" method="post" enctype="multipart/form-data" id="form_settings" enctype='multipart/form-data'>
             {{ form_widget(form) }}
             <div class="form-group row">
                 <div class="col-md-offset-3 col-md-9">

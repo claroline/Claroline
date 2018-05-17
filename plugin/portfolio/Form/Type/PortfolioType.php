@@ -19,9 +19,9 @@ class PortfolioType extends AbstractType
             ->add('commentsViewAt', 'datetime', [
                     'widget' => 'single_text',
                 ])
-            ->add('comments', 'text', ['mapped' => false])
-            ->add('portfolioWidgets', 'text', ['mapped' => false])
-            ->add('title', 'text');
+            ->add('comments', TextType::class, ['mapped' => false])
+            ->add('portfolioWidgets', TextType::class, ['mapped' => false])
+            ->add('title', TextType::class);
     }
 
     public function getName()

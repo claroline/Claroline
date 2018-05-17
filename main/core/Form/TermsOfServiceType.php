@@ -11,10 +11,11 @@
 
 namespace Claroline\CoreBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use Claroline\CoreBundle\Entity\Content;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TermsOfServiceType extends AbstractType
 {
@@ -27,8 +28,8 @@ class TermsOfServiceType extends AbstractType
         }
 
         $builder
-            ->add('scroll', 'scroll', array('label' => 'term_of_service', 'data' => $content))
-            ->add('terms_of_service', 'checkbox', array('mapped' => false, 'label' => 'terms_of_service_acceptance'));
+            ->add('scroll', 'scroll', ['label' => 'term_of_service', 'data' => $content])
+            ->add('terms_of_service', CheckboxType::class, ['mapped' => false, 'label' => 'terms_of_service_acceptance']);
     }
 
     public function getName()
@@ -36,10 +37,10 @@ class TermsOfServiceType extends AbstractType
         return 'accept_terms_of_service_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array('translation_domain' => 'platform', 'validation_groups' => array('registration', 'Default'))
+            ['translation_domain' => 'platform', 'validation_groups' => ['registration', 'Default']]
         );
     }
 }

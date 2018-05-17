@@ -15,8 +15,10 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CoreBundle\Validator\Constraints\WorkspaceUniqueCode;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class WorkspaceType extends AbstractType
@@ -33,7 +35,7 @@ class WorkspaceType extends AbstractType
     {
         $user = $this->user;
 
-        if (php_sapi_name() === 'cli') {
+        if ('cli' === php_sapi_name()) {
             $this->forApi = true;
         }
 
@@ -46,7 +48,7 @@ class WorkspaceType extends AbstractType
         $builder
             ->add(
                 'name',
-                'text',
+                TextType::class,
                 [
                     'label' => 'name',
                     'constraints' => new NotBlank(),
@@ -54,7 +56,7 @@ class WorkspaceType extends AbstractType
             )
             ->add(
                 'code',
-                'text',
+                TextType::class,
                 [
                     'constraints' => $codeConstraints,
                     'label' => 'code',
@@ -69,11 +71,11 @@ class WorkspaceType extends AbstractType
             );
 
         $builder
-            ->add('displayable', 'checkbox', ['required' => false, 'label' => 'displayable_in_workspace_list'])
-            ->add('selfRegistration', 'checkbox', ['required' => false, 'label' => 'public_registration'])
-            ->add('registrationValidation', 'checkbox', ['required' => false, 'label' => 'registration_validation'])
-            ->add('selfUnregistration', 'checkbox', ['required' => false, 'label' => 'public_unregistration'])
-            ->add('disabledNotifications', 'checkbox', ['required' => false, 'label' => 'disable_workspace_notifications'])
+            ->add('displayable', CheckboxType::class, ['required' => false, 'label' => 'displayable_in_workspace_list'])
+            ->add('selfRegistration', CheckboxType::class, ['required' => false, 'label' => 'public_registration'])
+            ->add('registrationValidation', CheckboxType::class, ['required' => false, 'label' => 'registration_validation'])
+            ->add('selfUnregistration', CheckboxType::class, ['required' => false, 'label' => 'public_unregistration'])
+            ->add('disabledNotifications', CheckboxType::class, ['required' => false, 'label' => 'disable_workspace_notifications'])
             ->add('organizations', 'organization_picker', ['label' => 'organizations']);
 
         if (!$this->forApi) {
@@ -109,13 +111,13 @@ class WorkspaceType extends AbstractType
                $options
             );
 
-            $builder->add('model', 'checkbox', ['required' => false, 'label' => 'model']);
+            $builder->add('model', CheckboxType::class, ['required' => false, 'label' => 'model']);
         }
 
         if ($this->forApi) {
             $builder->add(
                 'maxStorageSize',
-                'text',
+                TextType::class,
                 [
                     'label' => 'max_storage_size',
                     'constraints' => [new NotBlank()],
@@ -123,7 +125,7 @@ class WorkspaceType extends AbstractType
             );
             $builder->add(
                 'maxUploadResources',
-                'text',
+                TextType::class,
                 [
                     'label' => 'max_amount_resources',
                     'constraints' => [new NotBlank()],
@@ -131,7 +133,7 @@ class WorkspaceType extends AbstractType
             );
             $builder->add(
                 'maxUsers',
-                'text',
+                TextType::class,
                 [
                     'label' => 'workspace_max_users',
                     'constraints' => [new NotBlank()],
@@ -163,7 +165,7 @@ class WorkspaceType extends AbstractType
         $this->forApi = true;
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $default = ['translation_domain' => 'platform'];
         if ($this->forApi) {

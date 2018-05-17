@@ -176,7 +176,7 @@
                     action="{{ path('icap_badge_workspace_tool_badges_edit', {'workspaceId': workspace.id, 'slug': badge.slug}) }}{% if 0 == pager.currentPageResults|length %}#!edit{% endif %}"
                     method="post"
                     class="form-horizontal"
-                    {{ form_enctype(form) }}
+                    enctype="multipart/form-data"
                     novalidate>
                 {{ form_errors(form) }}
                 <div class="row badges_infos">

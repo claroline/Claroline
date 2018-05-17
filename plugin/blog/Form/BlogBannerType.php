@@ -11,29 +11,29 @@ class BlogBannerType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('banner_activate', 'checkbox', array(
+            ->add('banner_activate', CheckboxType::class, array(
                 'required' => false,
             ))
-            ->add('banner_background_color', 'text', array(
+            ->add('banner_background_color', TextType::class, array(
                 'theme_options' => array('label_width' => ''),
             ))
-            ->add('banner_height', 'text', array(
+            ->add('banner_height', TextType::class, array(
                 'theme_options' => array('label_width' => ''),
                 'attr' => array(
                     'class' => 'input-sm',
                     'data-min' => 100,
                 ),
             ))
-            ->add('file', 'file', array(
+            ->add(FileType::class, FileType::class, array(
                 'label' => 'icap_blog_banner_form_banner_background_image',
                 'theme_options' => array('label_width' => ''),
                 'required' => false,
             ))
-            ->add('banner_background_image_position', 'text', array(
+            ->add('banner_background_image_position', TextType::class, array(
                 'theme_options' => array('label_width' => ''),
                 'required' => false,
             ))
-            ->add('banner_background_image_repeat', 'text', array(
+            ->add('banner_background_image_repeat', TextType::class, array(
                 'theme_options' => array('label_width' => ''),
                 'required' => false,
             ))

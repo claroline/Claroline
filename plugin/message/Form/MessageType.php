@@ -14,7 +14,7 @@ namespace Claroline\MessageBundle\Form;
 use Claroline\MessageBundle\Validator\Constraints\SendToNames;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class MessageType extends AbstractType
@@ -39,7 +39,7 @@ class MessageType extends AbstractType
         $builder
             ->add(
                 'to',
-                'text',
+                TextType::class,
                 array(
                     'data' => $this->username,
                     'required' => true,
@@ -52,11 +52,11 @@ class MessageType extends AbstractType
             )
             ->add(
                 'object',
-                'text',
+                TextType::class,
                 array('data' => $this->object, 'required' => true)
             )
             ->add(
-                'content',
+                ContentType::class,
                 'tinymce',
                 array('required' => true)
             );
@@ -67,7 +67,7 @@ class MessageType extends AbstractType
         return 'message_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array('translation_domain' => 'platform'));
     }

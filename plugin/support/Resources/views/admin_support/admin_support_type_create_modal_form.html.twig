@@ -17,7 +17,7 @@
             <form id="type-create-form"
                   action="{{ path('formalibre_admin_support_type_create') }}"
                   method="POST"
-                  {{ form_enctype(form) }}
+                  enctype="multipart/form-data"
             > 
                 {{ form_widget(form) }}
             </form>

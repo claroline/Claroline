@@ -45,7 +45,7 @@ class AbilityImportType extends AbstractType
         }
 
         $builder
-            ->add('ability', 'textarea', [
+            ->add('ability', TextareaType::class, [
                 'label' => 'ability_',
                 'constraints' => [new NotBlank(), new ExistingAbility()],
                 'attr' => [

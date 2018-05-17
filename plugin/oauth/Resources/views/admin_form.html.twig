@@ -31,7 +31,7 @@
         <h3 class="panel-title">{{ service|trans({}, 'icap_oauth') }}</h3>
     </div>
     {{ macros.flashBox() }}
-    <form role="form" class="form-horizontal" action="{{ path('claro_admin_oauth_form_submit', {'service':service}) }}" method="post" {{ form_enctype(form) }} id="form_settings">
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_oauth_form_submit', {'service':service}) }}" method="post" enctype="multipart/form-data" id="form_settings">
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>

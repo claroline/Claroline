@@ -21,22 +21,22 @@ class DropzoneCommonType extends AbstractType
         );
 
         $builder
-            ->add('stayHere', 'hidden', array(
+            ->add('stayHere', HiddenType::class, array(
                 'mapped' => false,
             ))
-            ->add('autoCloseForManualStates', 'hidden', array(
+            ->add('autoCloseForManualStates', HiddenType::class, array(
                 'mapped' => false,
             ))
             ->add('instruction', 'tinymce', array(
                 'required' => false,
             ))
 
-            ->add('allowWorkspaceResource', 'checkbox', array('required' => false))
-            ->add('allowUpload', 'checkbox', array('required' => false))
-            ->add('allowUrl', 'checkbox', array('required' => false))
-            ->add('allowRichText', 'checkbox', array('required' => false))
+            ->add('allowWorkspaceResource', CheckboxType::class, array('required' => false))
+            ->add('allowUpload', CheckboxType::class, array('required' => false))
+            ->add('allowUrl', CheckboxType::class, array('required' => false))
+            ->add('allowRichText', CheckboxType::class, array('required' => false))
 
-            ->add('peerReview', 'choice', array(
+            ->add('peerReview', ChoiceType::class, array(
                 'required' => true,
                 'choices' => array(
                     'Standard evaluation' => false,
@@ -46,17 +46,17 @@ class DropzoneCommonType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
             ))
-            ->add('expectedTotalCorrection', 'integer', array('required' => true))
+            ->add('expectedTotalCorrection', IntegerType::class, array('required' => true))
 
-            ->add('displayNotationToLearners', 'checkbox', array('required' => false))
-            ->add('diplayCorrectionsToLearners', 'checkbox', array('required' => false))
-            ->add('allowCorrectionDeny', 'checkbox', array('required' => false))
-            ->add('displayNotationMessageToLearners', 'checkbox', array('required' => false))
+            ->add('displayNotationToLearners', CheckboxType::class, array('required' => false))
+            ->add('diplayCorrectionsToLearners', CheckboxType::class, array('required' => false))
+            ->add('allowCorrectionDeny', CheckboxType::class, array('required' => false))
+            ->add('displayNotationMessageToLearners', CheckboxType::class, array('required' => false))
             ->add('successMessage', 'tinymce', array('required' => false))
             ->add('failMessage', 'tinymce', array('required' => false))
-            ->add('minimumScoreToPass', 'integer', array('required' => true))
+            ->add('minimumScoreToPass', IntegerType::class, array('required' => true))
 
-            ->add('manualPlanning', 'choice', array(
+            ->add('manualPlanning', ChoiceType::class, array(
                 'required' => true,
                 'choices' => array(
                     'manualPlanning' => true,
@@ -67,7 +67,7 @@ class DropzoneCommonType extends AbstractType
                 'multiple' => false,
             ))
 
-            ->add('manualState', 'choice', array(
+            ->add('manualState', ChoiceType::class, array(
                 'choices' => array(
                     'notStartedManualState' => 'notStarted',
                     'allowDropManualState' => 'allowDrop',
@@ -79,8 +79,8 @@ class DropzoneCommonType extends AbstractType
                 'expanded' => true,
                 'multiple' => false,
             ))
-            ->add('autoCloseOpenedDropsWhenTimeIsUp', 'checkbox', array('required' => false))
-            ->add('notifyOnDrop', 'checkbox', array('required' => false))
+            ->add('autoCloseOpenedDropsWhenTimeIsUp', CheckboxType::class, array('required' => false))
+            ->add('notifyOnDrop', CheckboxType::class, array('required' => false))
             /*
              *
              ->add('startAllowDrop', 'datetime', array('date_widget' => 'single_text', 'time_widget' => 'single_text', 'with_seconds' => false, 'required' => false))

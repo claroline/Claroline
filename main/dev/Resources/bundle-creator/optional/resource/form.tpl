@@ -5,7 +5,7 @@ namespace [[Vendor]]\[[Bundle]]Bundle\Form;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class [[Resource_Type]]Type extends AbstractType
 {
@@ -29,7 +29,7 @@ class [[Resource_Type]]Type extends AbstractType
         return '[[resource_type]]_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array('translation_domain' => '[[resource_type]]'));
     }

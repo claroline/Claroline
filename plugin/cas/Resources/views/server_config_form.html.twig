@@ -31,7 +31,7 @@
         <h3 class="panel-title">CAS</h3>
     </div>
     {{ macros.flashBox() }}
-    <form role="form" class="form-horizontal" action="{{ path('claro_admin_cas_server_config_form_submit') }}" method="post" {{ form_enctype(form) }} id="form_settings">
+    <form role="form" class="form-horizontal" action="{{ path('claro_admin_cas_server_config_form_submit') }}" method="post" enctype="multipart/form-data" id="form_settings">
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>

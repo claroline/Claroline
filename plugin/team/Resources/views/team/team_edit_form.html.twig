@@ -12,7 +12,7 @@
             <form id="team-edit-form"
                   action="{{ path('claro_team_edit', {'team': team.getId()}) }}"
                   method="POST"
-                  {{ form_enctype(form) }}
+                  enctype="multipart/form-data"
                   novalidate
             > 
                 {{ form_widget(form) }}

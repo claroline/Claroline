@@ -8,7 +8,7 @@
     <form role="form"
             class="form-horizontal"
             ng-submit="eofm.submit($scope)"
-            method="post" {{ form_enctype(form) }}
+            method="post" enctype="multipart/form-data"
         >
         <div class="modal-body">
             {{ form_widget(form) }}

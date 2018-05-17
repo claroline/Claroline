@@ -27,7 +27,7 @@
         <h3 class="panel-title">{{ 'indexing'|trans({}, 'platform') }}</h3>
     </div>
     <form role="form" class="form-horizontal" action="{{path('claro_admin_parameters_indexing')}}"
-          method="post" {{ form_enctype(form) }}>
+          method="post" enctype="multipart/form-data">
         <div class="panel-body">
             {{ form_widget(form) }}
             <div class="row">

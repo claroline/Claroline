@@ -14,7 +14,7 @@
     </div>
     <div class="well"> {{ message.getContent()|raw }} </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form novalidate="novalidate" action="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}" method="post" {{ form_enctype(form) }} id="message_form">
+    <form novalidate="novalidate" action="{{ path('claro_forum_reply_message_form', {'message': message.getId()}) }}" method="post" enctype="multipart/form-data" id="message_form">
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>

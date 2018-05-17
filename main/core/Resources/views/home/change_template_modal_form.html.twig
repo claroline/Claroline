@@ -17,7 +17,7 @@
             <form id="template-select-form"
                   action="{{ path('claro_content_change_template', {'type': type.getId()}) }}"
                   method="POST"
-                  {{ form_enctype(form) }}
+                  enctype="multipart/form-data"
             > 
                 {% form_theme form 'ClarolineCoreBundle::form_theme_no_label.html.twig' %}
                 {{ form_widget(form) }}

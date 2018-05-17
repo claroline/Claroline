@@ -12,7 +12,7 @@
         <h3 class="panel-title">{{ 'forum_subject_edit'|trans({}, 'forum') }}</h3>
     </div>
     {% form_theme form 'ClarolineCoreBundle::form_theme.html.twig' %}
-    <form novalidate="novalidate" action="{{ path('claro_forum_edit_subject', {'subjectId': subject.getId()}) }}" method="post" {{ form_enctype(form) }} id="subject_form">
+    <form novalidate="novalidate" action="{{ path('claro_forum_edit_subject', {'subjectId': subject.getId()}) }}" method="post" enctype="multipart/form-data" id="subject_form">
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>

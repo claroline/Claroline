@@ -4,7 +4,7 @@
       class="form-inline widget-content-config-form"
       action="{{ path("claroline_forum_last_message_widget_configure", {'widgetInstance': widgetInstance.getId()}) }}"
       method="post"
-      {{ form_enctype(form) }}
+      enctype="multipart/form-data"
       novalidate="novalidate"
 >
     <div class="panel-body">

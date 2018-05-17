@@ -10,7 +10,7 @@ class VideoRecorderConfigurationType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('max_recording_time', 'integer', ['required' => true, 'attr' => ['min' => 0]])
+        $builder->add('max_recording_time', IntegerType::class, ['required' => true, 'attr' => ['min' => 0]])
             ->add('validate', 'submit', ['label' => 'validate', 'translation_domain' => 'innova_video_recorder', 'attr' => ['class' => 'btn btn-primary pull-right']]);
     }
 

@@ -33,7 +33,7 @@ class BadgesType extends AbstractType
         $language = $this->platformConfigHandler->getParameter('locale_language');
 
         $builder
-            ->add('label', 'text')
+            ->add('label', TextType::class)
             ->add('children', 'collection',
                 array(
                     'type' => 'icap_badge_portfolio_widget_form_badges_badge',

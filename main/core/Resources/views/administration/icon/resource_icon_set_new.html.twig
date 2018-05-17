@@ -42,7 +42,7 @@
                 <div style="margin-top: 10px;"><abbr title="" class="text-info" uib-tooltip-html="{{ '\"' ~ ('resource_icon_set_illustrator_options'|trans({}, 'platform')) ~ '\"'  }}|trust_html"><i class="fa fa-lightbulb-o fa-lg"></i> {{ 'resource_icon_set_illustrator_help'|trans({}, 'platform')  }}</abbr></div>
             </div>
         </div>
-        <form role="form" class="form-horizontal" action="{{path('claro_admin_resource_icon_set_create')}}" method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
+        <form role="form" class="form-horizontal" action="{{path('claro_admin_resource_icon_set_create')}}" method="post" enctype="multipart/form-data" id="form_settings" enctype='multipart/form-data'>
             {{ form_widget(form) }}
             <div class="form-group row">
                 <div class="col-md-offset-3 col-md-9">

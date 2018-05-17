@@ -25,7 +25,7 @@ class ExternalSourceConfigurationType extends AbstractType
         $builder
             ->add(
                 'name',
-                'text',
+                TextType::class,
                 [
                     'constraints' => new NotBlank(),
                     'label' => 'name',
@@ -33,7 +33,7 @@ class ExternalSourceConfigurationType extends AbstractType
             )
             ->add(
                 'host',
-                'text',
+                TextType::class,
                 [
                     'constraints' => new NotBlank(),
                     'label' => 'host',
@@ -41,7 +41,7 @@ class ExternalSourceConfigurationType extends AbstractType
             )
             ->add(
                 'port',
-                'number',
+                NumberType::class,
                 [
                     'required' => false,
                     'label' => 'port',
@@ -49,7 +49,7 @@ class ExternalSourceConfigurationType extends AbstractType
             )
             ->add(
                 'dbname',
-                'text',
+                TextType::class,
                 [
                     'constraints' => new NotBlank(),
                     'label' => 'database',
@@ -57,7 +57,7 @@ class ExternalSourceConfigurationType extends AbstractType
             )
             ->add(
                 'driver',
-                'choice',
+                ChoiceType::class,
                 [
                     'choices' => ExternalSourceConfiguration::PDO_LIST,
                     'choices_as_values' => true,
@@ -67,7 +67,7 @@ class ExternalSourceConfigurationType extends AbstractType
             )
             ->add(
                 'user',
-                'text',
+                TextType::class,
                 [
                     'constraints' => new NotBlank(),
                     'label' => 'user',

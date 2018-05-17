@@ -7,7 +7,7 @@
       method="POST"
       action="{{ path('innova_path_widget_config', { 'widgetInstance': instance.getId() }) }}"
       class="form-horizontal widget-content-config-form"
-      {{ form_enctype(form) }}
+      enctype="multipart/form-data"
 >
     <div class="panel-body">
         {{ form_widget(form) }}

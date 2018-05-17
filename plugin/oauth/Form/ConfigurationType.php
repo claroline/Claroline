@@ -24,7 +24,7 @@ class ConfigurationType extends AbstractType
         $builder
             ->add(
                 'client_id',
-                'text',
+                TextType::class,
                 [
                     'constraints' => [
                         new NotBlank(),
@@ -36,7 +36,7 @@ class ConfigurationType extends AbstractType
             )
             ->add(
                 'client_secret',
-                'text',
+                TextType::class,
                 [
                     'constraints' => new NotBlank(),
                     'label' => 'client_secret',
@@ -45,7 +45,7 @@ class ConfigurationType extends AbstractType
         if ($options['resource_owner'] !== 'linkedin') {
             $builder->add(
                 'client_force_reauthenticate',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'label' => 'client_force_reauthenticate',
                     'required' => false,
@@ -55,7 +55,7 @@ class ConfigurationType extends AbstractType
         if ($options['resource_owner'] === 'office_365') {
             $builder->add(
                 'client_tenant_domain',
-                'text',
+                TextType::class,
                 [
                     'required' => false,
                     'label' => 'client_tenant_domain',
@@ -64,37 +64,37 @@ class ConfigurationType extends AbstractType
             );
         }
         if ($options['resource_owner'] === 'generic') {
-            $builder->add('access_token_url', 'text', [
+            $builder->add('access_token_url', TextType::class, [
                 'required' => true,
                 'label' => 'access_token_url',
             ])
-            ->add('authorization_url', 'text', [
+            ->add('authorization_url', TextType::class, [
                 'required' => true,
                 'label' => 'authorization_url',
             ])
-            ->add('infos_url', 'text', [
+            ->add('infos_url', TextType::class, [
                 'required' => true,
                 'label' => 'infos_url',
             ])
-            ->add('scope', 'text', [
+            ->add('scope', TextType::class, [
                 'required' => false,
                 'label' => 'scope',
             ])
-            ->add('paths_login', 'text', [
+            ->add('paths_login', TextType::class, [
                 'required' => false,
                 'label' => 'paths_login',
             ])
-            ->add('paths_email', 'text', [
+            ->add('paths_email', TextType::class, [
                 'required' => false,
                 'label' => 'paths_email',
             ])
-            ->add('display_name', 'text', [
+            ->add('display_name', TextType::class, [
                 'required' => false,
                 'label' => 'display_name',
             ]);
         }
 
-        $builder->add('client_active', 'checkbox', ['label' => 'client_active', 'required' => false]);
+        $builder->add('client_active', CheckboxType::class, ['label' => 'client_active', 'required' => false]);
     }
 
     public function getName()

@@ -32,8 +32,8 @@ class ExperienceType extends AbstractWidgetType
         $language = $this->platformConfigHandler->getParameter('locale_language');
 
         $builder
-            ->add('post', 'text')
-            ->add('companyName', 'text')
+            ->add('post', TextType::class)
+            ->add('companyName', TextType::class)
             ->add('startDate', 'datepicker',
                 [
                     'required' => false,
@@ -49,7 +49,7 @@ class ExperienceType extends AbstractWidgetType
                ]
             )
             ->add('description', 'tinymce')
-            ->add('website', 'url',
+            ->add('website', UrlType::class,
                 [
                     'required' => false,
                 ]

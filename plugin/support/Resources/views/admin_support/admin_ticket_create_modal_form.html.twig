@@ -17,7 +17,7 @@
             <form id="admin-ticket-create-form"
                   action="{{ path('formalibre_admin_ticket_create') }}"
                   method="POST"
-                  {{ form_enctype(form) }}
+                  enctype="multipart/form-data"
             >
                 <div class="form-group row">
                     <label class="control-label col-md-3">

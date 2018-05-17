@@ -14,7 +14,7 @@ namespace Claroline\AgendaBundle\Form;
 use Claroline\AgendaBundle\Entity\EventInvitation;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class EventInvitationType extends AbstractType
@@ -29,7 +29,7 @@ class EventInvitationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'text', [
+            ->add('title', TextType::class, [
                 'label' => 'form.title',
                 'required' => true,
             ])
@@ -38,7 +38,7 @@ class EventInvitationType extends AbstractType
                 'label' => 'form.description',
             ])
 
-            ->add('status', 'choice', [
+            ->add('status', ChoiceType::class, [
                 'choices' => [
                     EventInvitation::JOIN => $this->trans->trans('invitation_join_label', [], 'agenda'),
                     EventInvitation::MAYBE => $this->trans->trans('invitation_maybe_label', [], 'agenda'),
@@ -53,7 +53,7 @@ class EventInvitationType extends AbstractType
         return 'agenda_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

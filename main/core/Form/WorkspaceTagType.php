@@ -12,8 +12,9 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class WorkspaceTagType extends AbstractType
@@ -22,8 +23,8 @@ class WorkspaceTagType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
-            array('constraints' => new NotBlank())
+            TextType::class,
+            ['constraints' => new NotBlank()]
         );
     }
 
@@ -32,10 +33,10 @@ class WorkspaceTagType extends AbstractType
         return 'workspace_tag_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array('translation_domain' => 'platform')
+            ['translation_domain' => 'platform']
         );
     }
 }

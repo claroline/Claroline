@@ -12,7 +12,7 @@
 namespace Claroline\CoreBundle\Form;
 
 use Claroline\CoreBundle\Entity\Content;
-use Claroline\CoreBundle\Form\Field\Content as ContentType;
+use Claroline\CoreBundle\Form\Field\ContentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;

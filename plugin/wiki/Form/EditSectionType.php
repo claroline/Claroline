@@ -45,17 +45,17 @@ class EditSectionType extends AbstractType
                 $isRoot = $data->isRoot();
                 if ($isRoot === false && $data->getIsWikiAdmin()) {
                     $form
-                        ->add('visible', 'checkbox', array(
+                        ->add('visible', CheckboxType::class, array(
                                 'required' => false,
                                 'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'hidden'),
                             )
                         )
-                        ->add('position', 'choice', array(
+                        ->add('position', ChoiceType::class, array(
                                 'choices' => $sectionManager->getArchivedSectionsForPosition($data),
                                 'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'col-md-12'),
                             )
                         )
-                        ->add('brother', 'checkbox', array(
+                        ->add('brother', CheckboxType::class, array(
                                 'required' => false,
                                 'theme_options' => array('label_width' => 'col-md-12', 'control_width' => 'hidden'),
                             )

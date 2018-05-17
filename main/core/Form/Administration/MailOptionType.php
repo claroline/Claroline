@@ -12,8 +12,9 @@
 namespace Claroline\CoreBundle\Form\Administration;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MailOptionType extends AbstractType
 {
@@ -29,12 +30,12 @@ class MailOptionType extends AbstractType
         $builder
             ->add(
                 'mailerFrom',
-                'email',
-                array(
+                EmailType::class,
+                [
                     'required' => false,
                     'label' => 'mailer_from',
                     'data' => $this->from,
-                )
+                ]
             );
     }
 
@@ -43,8 +44,8 @@ class MailOptionType extends AbstractType
         return 'platform_parameters_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(['translation_domain' => 'platform']);
     }
 }

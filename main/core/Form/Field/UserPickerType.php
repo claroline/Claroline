@@ -14,7 +14,9 @@ namespace Claroline\CoreBundle\Form\Field;
 use Claroline\CoreBundle\Form\DataTransformer\UserPickerTransfromer;
 use Claroline\CoreBundle\Manager\UserManager;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\DiExtraBundle\Annotation\Tag;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
@@ -23,7 +25,7 @@ use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * @DI\Service("claroline.form.user_picker")
- * @DI\FormType(alias = "userpicker")
+ * @Tag("form.type")
  */
 class UserPickerType extends AbstractType
 {
@@ -55,7 +57,7 @@ class UserPickerType extends AbstractType
 
     public function getParent()
     {
-        return 'text';
+        return TextType::class;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)

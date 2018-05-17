@@ -17,7 +17,7 @@
             <form id="status-edit-form"
                   action="{{ path('formalibre_admin_support_status_edit', {'status': status.getId()}) }}"
                   method="POST"
-                  {{ form_enctype(form) }}
+                  enctype="multipart/form-data"
             > 
                 {{ form_widget(form) }}
             </form>

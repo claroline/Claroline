@@ -12,8 +12,10 @@
 namespace Claroline\CoreBundle\Form\Administration;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class FriendAuthenticationType extends AbstractType
 {
@@ -21,16 +23,16 @@ class FriendAuthenticationType extends AbstractType
     {
         $builder->add(
             'allowAuthentication',
-            'checkbox',
-            array(
+            CheckboxType::class,
+            [
                 'label' => 'allow_authentication',
                 'required' => false,
-            )
+            ]
         );
         $builder->add(
             'createUserIfMissing',
-            'hidden',
-            array('data' => true)
+            HiddenType::class,
+            ['data' => true]
         );
     }
 
@@ -39,11 +41,11 @@ class FriendAuthenticationType extends AbstractType
         return 'friend_authentication_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
+        $resolver->setDefaults([
                 'translation_domain' => 'platform',
-            )
+            ]
         );
     }
 }

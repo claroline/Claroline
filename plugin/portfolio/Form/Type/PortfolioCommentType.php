@@ -37,9 +37,9 @@ class PortfolioCommentType extends AbstractType
         }
 
         $builder
-            ->add('message', 'text')
-            ->add('sender', 'text', array('mapped' => false))
-            ->add('date', 'text', array('mapped' => false));
+            ->add('message', TextType::class)
+            ->add('sender', TextType::class, array('mapped' => false))
+            ->add('date', TextType::class, array('mapped' => false));
 
         $builder->addEventListener(
             FormEvents::POST_SUBMIT,

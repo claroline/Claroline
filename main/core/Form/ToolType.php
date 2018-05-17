@@ -12,14 +12,15 @@
 namespace Claroline\CoreBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ToolType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('displayName', 'text', array('label' => 'name'));
+        $builder->add('displayName', TextType::class, ['label' => 'name']);
     }
 
     public function getName()
@@ -27,14 +28,14 @@ class ToolType extends AbstractType
         return 'tool_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
         ->setDefaults(
-            array(
+            [
                 'classe' => 'Claroline\CoreBundle\Entity\Tool\Tool.php',
                 'translation_domain' => 'platform',
-                )
+                ]
         );
     }
 }

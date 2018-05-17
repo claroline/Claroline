@@ -19,7 +19,7 @@
 <div class='modal-dialog' id="icap-bibliography-modal">
     <form role="form" novalidate="novalidate" name="bibliographyForm"
           action="{{ path('claro_resource_create', {'resourceType':resourceType, 'parentId':'_nodeId'}) }}"
-          method="post" {{ form_enctype(form) }}
+          method="post" enctype="multipart/form-data"
           id="generic-form"
           novalidate
           class="modal-content">

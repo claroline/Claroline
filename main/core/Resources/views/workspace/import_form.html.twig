@@ -25,7 +25,7 @@
         <h1>{{ 'import'|trans({}, 'platform') }}</h1>
     </div>
     {{ macros.flashBox() }}
-    <form role="form" class="form-horizontal panel panel-default" id="ws_import_form" action="{{ path('claro_workspace_import') }}" method="post" {{ form_enctype(form) }}>
+    <form role="form" class="form-horizontal panel panel-default" id="ws_import_form" action="{{ path('claro_workspace_import') }}" method="post" enctype="multipart/form-data">
         <div class="panel-body">
             {{ form_errors(form) }}
             {{ form_row(form.name) }}

@@ -13,13 +13,13 @@ namespace Claroline\ForumBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SubjectType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('title', 'text');
+        $builder->add('title', TextType::class);
         $builder->add('message', new MessageType(), array('mapped' => false));
     }
 
@@ -28,7 +28,7 @@ class SubjectType extends AbstractType
         return 'forum_subject_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

@@ -13,7 +13,7 @@ namespace Claroline\ForumBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ForumOptionsType extends AbstractType
 {
@@ -28,7 +28,7 @@ class ForumOptionsType extends AbstractType
         return 'forum_options_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
             array(

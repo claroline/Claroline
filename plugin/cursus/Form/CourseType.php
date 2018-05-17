@@ -15,7 +15,7 @@ use Claroline\CoreBundle\Entity\User;
 use Claroline\CursusBundle\Manager\CursusManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -41,7 +41,7 @@ class CourseType extends AbstractType
 
         $builder->add(
             'title',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => 'title',
@@ -50,7 +50,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'code',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => 'code',
@@ -59,7 +59,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'description',
-            'textarea',
+            TextareaType::class,
             [
                 'required' => false,
                 'label' => 'description',
@@ -68,7 +68,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'icon',
-            'file',
+            FileType::class,
             [
                 'required' => false,
                 'mapped' => false,
@@ -78,7 +78,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'publicRegistration',
-            'choice',
+            ChoiceType::class,
             [
                 'choices' => ['yes' => true, 'no' => false],
                 'choices_as_values' => true,
@@ -88,7 +88,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'publicUnregistration',
-            'choice',
+            ChoiceType::class,
             [
                 'choices' => ['yes' => true, 'no' => false],
                 'choices_as_values' => true,
@@ -98,7 +98,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'defaultSessionDuration',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'constraints' => [new Range(['min' => 0]), new NotBlank()],
@@ -108,7 +108,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'withSessionEvent',
-            'choice',
+            ChoiceType::class,
             [
                 'choices' => ['yes' => true, 'no' => false],
                 'choices_as_values' => true,
@@ -131,7 +131,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'tutorRoleName',
-            'text',
+            TextType::class,
             [
                 'required' => false,
                 'attr' => ['class' => 'role-name-txt'],
@@ -140,7 +140,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'learnerRoleName',
-            'text',
+            TextType::class,
             [
                 'required' => false,
                 'attr' => ['class' => 'role-name-txt'],
@@ -149,7 +149,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'maxUsers',
-            'integer',
+            IntegerType::class,
             [
                 'required' => false,
                 'constraints' => [new Range(['min' => 0])],
@@ -159,7 +159,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'userValidation',
-            'choice',
+            ChoiceType::class,
             [
                 'choices' => ['yes' => true, 'no' => false],
                 'choices_as_values' => true,
@@ -169,7 +169,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'organizationValidation',
-            'choice',
+            ChoiceType::class,
             [
                 'choices' => ['yes' => true, 'no' => false],
                 'choices_as_values' => true,
@@ -179,7 +179,7 @@ class CourseType extends AbstractType
         );
         $builder->add(
             'registrationValidation',
-            'choice',
+            ChoiceType::class,
             [
                 'choices' => ['yes' => true, 'no' => false],
                 'choices_as_values' => true,
@@ -207,7 +207,7 @@ class CourseType extends AbstractType
         return 'course_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'cursus']);
     }

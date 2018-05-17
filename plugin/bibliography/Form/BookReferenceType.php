@@ -13,7 +13,7 @@ class BookReferenceType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => 'name',
@@ -27,7 +27,7 @@ class BookReferenceType extends AbstractType
 
         $builder->add(
             'isbn',
-            'text',
+            TextType::class,
             [
                 'required' => false,
                 'attr' => [
@@ -43,7 +43,7 @@ class BookReferenceType extends AbstractType
 
         $builder->add(
             'author',
-            'text',
+            TextType::class,
             [
                 'required' => true,
                 'label' => 'author',
@@ -56,7 +56,7 @@ class BookReferenceType extends AbstractType
 
         $builder->add(
             'description',
-            'textarea',
+            TextareaType::class,
             [
                 'required' => false,
                 'attr' => [
@@ -69,7 +69,7 @@ class BookReferenceType extends AbstractType
 
         $builder->add(
             'abstract',
-            'textarea',
+            TextareaType::class,
             [
                 'required' => false,
                 'attr' => [
@@ -82,7 +82,7 @@ class BookReferenceType extends AbstractType
 
         $builder->add(
             'publisher',
-            'text',
+            TextType::class,
             [
                 'required' => false,
                 'attr' => [
@@ -94,7 +94,7 @@ class BookReferenceType extends AbstractType
 
         $builder->add(
             'printer',
-            'text',
+            TextType::class,
             [
                 'required' => false,
                 'attr' => [
@@ -106,7 +106,7 @@ class BookReferenceType extends AbstractType
 
         $builder->add(
             'publicationYear',
-            'integer',
+            IntegerType::class,
             [
                 'required' => false,
                 'attr' => [
@@ -131,7 +131,7 @@ class BookReferenceType extends AbstractType
 
         $builder->add(
             'pageCount',
-            'integer',
+            IntegerType::class,
             [
                 'required' => false,
                 'attr' => [
@@ -143,21 +143,21 @@ class BookReferenceType extends AbstractType
         );
 
         $builder->add(
-            'url',
-            'url',
+            UrlType::class,
+            UrlType::class,
             [
                 'required' => false,
                 'attr' => [
                     'data-ng-model' => 'vm.bookReference.url',
                 ],
-                'label' => 'url',
+                'label' => UrlType::class,
                 'constraints' => new Assert\Url(['checkDNS' => true]),
             ]
         );
 
         $builder->add(
             'coverUrl',
-            'url',
+            UrlType::class,
             [
                 'required' => false,
                 'attr' => [

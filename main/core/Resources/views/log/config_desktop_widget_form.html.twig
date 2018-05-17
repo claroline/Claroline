@@ -6,7 +6,7 @@
       method="POST"
       action="{{ path('claro_log_update_desktop_widget_config', {'widgetInstance': instance.getId()})}}"
       class="form-horizontal widget-content-config-form"
-      {{ form_enctype(form) }}
+      enctype="multipart/form-data"
 >
     <div class="panel-body">
         <legend>{{ 'widget_workspace_pick'|trans({}, 'platform') }}</legend>

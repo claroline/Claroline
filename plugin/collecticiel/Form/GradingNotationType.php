@@ -11,7 +11,7 @@ class GradingNotationType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('notationName', 'text',
+            ->add('notationName', TextType::class,
                 [
                     'required' => true,
                     'label' => false,

@@ -16,8 +16,12 @@ use Claroline\CoreBundle\Form\Profile\ProfileFacetFieldsType;
 use Claroline\CoreBundle\Manager\LocaleManager;
 use Claroline\CoreBundle\Manager\TermsOfServiceManager;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class BaseProfileType extends AbstractType
@@ -41,9 +45,9 @@ class BaseProfileType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('firstName', 'text', ['label' => 'first_name'])
-            ->add('lastName', 'text', ['label' => 'last_name'])
-            ->add('username', 'text', [
+        $builder->add('firstName', TextType::class, ['label' => 'first_name'])
+            ->add('lastName', TextType::class, ['label' => 'last_name'])
+            ->add('username', TextType::class, [
                 'label' => 'username',
                 'attr' => [
                     'placeholder' => 'your_platform_id',
@@ -63,8 +67,8 @@ class BaseProfileType extends AbstractType
                     ],
                 ]
             )
-            ->add('email', 'email', ['label' => 'email'])
-            ->add('locale', 'choice', ['choices' => $this->langs, 'required' => false, 'label' => 'language']);
+            ->add(EmailType::class, EmailType::class, ['label' => 'email'])
+            ->add('locale', ChoiceType::class, ['choices' => $this->langs, 'required' => false, 'label' => 'language']);
 
         $content = $this->termsOfService->getTermsOfService(false);
 
@@ -77,7 +81,7 @@ class BaseProfileType extends AbstractType
                     'data' => $content->getContent(),
                 ]
             )
-            ->add('accepted_terms', 'checkbox', ['label' => 'terms_of_service_acceptance']);
+            ->add('accepted_terms', CheckboxType::class, ['label' => 'terms_of_service_acceptance']);
         }
 
         foreach ($this->facets as $facet) {
@@ -91,7 +95,7 @@ class BaseProfileType extends AbstractType
         return 'profile_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
         ->setDefaults(

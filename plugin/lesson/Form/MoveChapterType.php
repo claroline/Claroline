@@ -66,18 +66,18 @@ class MoveChapterType extends AbstractType
                     }
 
                     $form
-                        ->add('choiceChapter', 'choice', array(
+                        ->add('choiceChapter', ChoiceType::class, array(
                             'mapped' => false,
                             'choices' => $chapters_list,
                         ));
                 }
 
                 $form
-                    ->add('brother', 'checkbox', array(
+                    ->add('brother', CheckboxType::class, array(
                         'required' => false,
                         'mapped' => false,
                     ))
-                    ->add('firstposition', 'hidden', array(
+                    ->add('firstposition', HiddenType::class, array(
                         'required' => false,
                         'mapped' => false,
                         'data' => 'false',

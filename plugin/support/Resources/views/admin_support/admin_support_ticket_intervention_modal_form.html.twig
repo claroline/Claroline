@@ -84,7 +84,7 @@
             <form id="ticket-intervention-create-form"
                   action="{{ path('formalibre_admin_support_ticket_intervention_create', {'ticket': ticket.getId()}) }}"
                   method="POST"
-                  {{ form_enctype(form) }}
+                  enctype="multipart/form-data"
             >
                 {{ form_row(form.type) }}
                 {{ form_row(form.status) }}

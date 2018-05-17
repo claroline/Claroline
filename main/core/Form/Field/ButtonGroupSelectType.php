@@ -11,19 +11,21 @@
 
 namespace Claroline\CoreBundle\Form\Field;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 use JMS\DiExtraBundle\Annotation as DI;
+use JMS\DiExtraBundle\Annotation\Tag;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @DI\Service("claroline.form.buttongroupselect")
- * @DI\FormType(alias = "buttongroupselect")
+ * @Tag("form.type")
  */
 class ButtonGroupSelectType extends AbstractType
 {
     public function getParent()
     {
-        return 'choice';
+        return ChoiceType::class;
     }
 
     public function getName()
@@ -31,13 +33,13 @@ class ButtonGroupSelectType extends AbstractType
         return 'buttongroupselect';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver
         ->setDefaults(
-            array(
+            [
                 'translation_domain' => 'platform',
-            )
+            ]
         );
     }
 }

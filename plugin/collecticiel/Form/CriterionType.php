@@ -12,9 +12,9 @@ class CriterionType extends AbstractType
     {
         $builder
             ->add('instruction', 'tinymce', array())
-            ->add('totalCriteriaColumn', 'hidden', array())
-            ->add('allowCommentInCorrection', 'hidden', array())
-            ->add('correctionsGlobalInstructions', 'hidden', array('mapped' => false));
+            ->add('totalCriteriaColumn', HiddenType::class, array())
+            ->add('allowCommentInCorrection', HiddenType::class, array())
+            ->add('correctionsGlobalInstructions', HiddenType::class, array('mapped' => false));
     }
 
     public function getName()

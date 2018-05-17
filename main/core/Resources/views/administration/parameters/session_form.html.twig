@@ -26,7 +26,7 @@
     <div class="panel-heading">
         <h3 class="panel-title">{{ 'session'|trans({}, 'platform') }}</h3>
     </div>
-    <form role="form" class="form-horizontal" action="{{path('claro_admin_session_submit')}}" method="post" {{ form_enctype(form) }} id="form_settings" enctype='multipart/form-data'>
+    <form role="form" class="form-horizontal" action="{{path('claro_admin_session_submit')}}" method="post" enctype="multipart/form-data" id="form_settings" enctype='multipart/form-data'>
         <div class="panel-body">
             {{ form_widget(form) }}
         </div>

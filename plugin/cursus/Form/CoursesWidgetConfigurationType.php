@@ -16,7 +16,7 @@ use Claroline\CursusBundle\Entity\CoursesWidgetConfig;
 use Doctrine\ORM\EntityRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Translation\TranslatorInterface;
 
 class CoursesWidgetConfigurationType extends AbstractType
@@ -41,7 +41,7 @@ class CoursesWidgetConfigurationType extends AbstractType
         if ($this->isAdmin) {
             $builder->add(
                 'displayAll',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'mapped' => false,
                     'data' => isset($this->extra['displayAll']) ? $this->extra['displayAll'] : false,
@@ -78,7 +78,7 @@ class CoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'defaultMode',
-            'choice',
+            ChoiceType::class,
             [
                 'multiple' => false,
                 'choices' => [
@@ -90,7 +90,7 @@ class CoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'hideSessionRegistrationButton',
-            'checkbox',
+            CheckboxType::class,
             [
                 'mapped' => false,
                 'data' => isset($this->extra['hideSessionRegistrationButton']) ? $this->extra['hideSessionRegistrationButton'] : false,
@@ -100,12 +100,12 @@ class CoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'publicSessionsOnly',
-            'checkbox',
+            CheckboxType::class,
             ['label' => 'public_sessions_only']
         );
         $builder->add(
             'collapseCourses',
-            'checkbox',
+            CheckboxType::class,
             [
                 'mapped' => false,
                 'data' => isset($this->extra['collapseCourses']) ? $this->extra['collapseCourses'] : false,
@@ -115,7 +115,7 @@ class CoursesWidgetConfigurationType extends AbstractType
         );
         $builder->add(
             'collapseSessions',
-            'checkbox',
+            CheckboxType::class,
             [
                 'mapped' => false,
                 'data' => isset($this->extra['collapseSessions']) ? $this->extra['collapseSessions'] : false,
@@ -130,7 +130,7 @@ class CoursesWidgetConfigurationType extends AbstractType
         return 'courses_widget_configuration_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(['translation_domain' => 'cursus']);
     }

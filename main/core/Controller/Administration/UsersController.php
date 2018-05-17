@@ -161,7 +161,7 @@ class UsersController extends Controller
      *     name="claro_admin_users_index",
      *     options = {"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:administration\user:index.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration/user:index.html.twig")
      *
      * Displays the platform user list.
      *
@@ -186,7 +186,7 @@ class UsersController extends Controller
      *     defaults={"page"=1, "max"=50},
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:administration\user:user_workspace_list.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration/user:user_workspace_list.html.twig")
      *
      * @param User $user
      * @param int  $page
@@ -238,7 +238,7 @@ class UsersController extends Controller
      *     "/workspace/personal/tool/config",
      *     name="claro_admin_workspace_tool_config_index"
      * )
-     * @EXT\Template("ClarolineCoreBundle:administration\user:personal_workspace_tool_config.html.twig").
+     * @EXT\Template("ClarolineCoreBundle:administration/user:personal_workspace_tool_config.html.twig").
      *
      * @return array
      */
@@ -291,7 +291,7 @@ class UsersController extends Controller
      *     name="import_profile_pics_form",
      *     options={"expose"=true}
      * )
-     * @EXT\Template("ClarolineCoreBundle:administration\user:import_profile_pics_form.html.twig")
+     * @EXT\Template("ClarolineCoreBundle:administration/user:import_profile_pics_form.html.twig")
      * )
      */
     public function importProfilePicsFormAction()

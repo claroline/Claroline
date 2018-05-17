@@ -11,11 +11,12 @@
 
 namespace Claroline\CoreBundle\Form;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Claroline\CoreBundle\Validator\Constraints\AdminWorkspaceTagUniqueName;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AdminWorkspaceTagType extends AbstractType
 {
@@ -23,13 +24,13 @@ class AdminWorkspaceTagType extends AbstractType
     {
         $builder->add(
             'name',
-            'text',
-            array(
-                'constraints' => array(
+            TextType::class,
+            [
+                'constraints' => [
                     new NotBlank(),
                     new AdminWorkspaceTagUniqueName(),
-                ),
-            )
+                ],
+            ]
         );
     }
 
@@ -38,10 +39,10 @@ class AdminWorkspaceTagType extends AbstractType
         return 'admin_workspace_tag_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(
-            array('translation_domain' => 'platform')
+            ['translation_domain' => 'platform']
         );
     }
 }

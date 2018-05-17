@@ -11,9 +11,10 @@
 
 namespace Claroline\CoreBundle\Form\Administration;
 
+use Claroline\CoreBundle\Form\Field\ContentType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MailInscriptionType extends AbstractType
 {
@@ -21,11 +22,11 @@ class MailInscriptionType extends AbstractType
     {
         $builder->add(
             'content',
-            'content',
-            array(
+            ContentType::class,
+            [
                 'data' => $builder->getData(),
-                'label' => 'content',
-            )
+                'label' => ContentType::class,
+            ]
         );
     }
 
@@ -34,8 +35,8 @@ class MailInscriptionType extends AbstractType
         return 'platform_parameters_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array('translation_domain' => 'platform'));
+        $resolver->setDefaults(['translation_domain' => 'platform']);
     }
 }

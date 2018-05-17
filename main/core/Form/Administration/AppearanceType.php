@@ -12,58 +12,50 @@
 namespace Claroline\CoreBundle\Form\Administration;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class AppearanceType extends AbstractType
 {
-    private $themes;
-    private $iconSets;
-    private $lockedParams;
-
-    public function __construct(array $themes, array $iconSets, array $lockedParams = [])
-    {
-        $this->themes = $themes;
-        $this->iconSets = $iconSets;
-        $this->lockedParams = $lockedParams;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add(
                 'name_active',
-                'checkbox',
+                CheckboxType::class,
                 [
                     'required' => false,
                     'label' => 'show_name_in_top_bar',
-                    'disabled' => isset($this->lockedParams['nameActive']),
+                    'disabled' => isset($options['lockedParams']['nameActive']),
                 ]
             )
             ->add(
                 'footer',
-                'text',
+                TextType::class,
                 [
                     'required' => false,
-                    'disabled' => isset($this->lockedParams['footer']),
+                    'disabled' => isset($options['lockedParams']['footer']),
                     'label' => 'footer',
                 ]
             )
             ->add(
                 'theme',
-                'choice',
+                ChoiceType::class,
                 [
-                    'choices' => $this->themes,
-                    'disabled' => isset($this->lockedParams['theme']),
+                    'choices' => $options['themes'],
+                    'disabled' => isset($options['lockedParams']['theme']),
                     'label' => 'theme',
                 ]
             )
             ->add(
                 'resource_icon_set',
-                'choice',
+                ChoiceType::class,
                 [
-                    'choices' => $this->iconSets,
-                    'disabled' => isset($this->lockedParams['resource_icon_set']),
+                    'choices' => $options['icons'],
+                    'disabled' => isset($options['lockedParams']['resource_icon_set']),
                     'label' => 'resource_icon_set',
                 ]
             );
@@ -74,8 +66,13 @@ class AppearanceType extends AbstractType
         return 'platform_parameters_form';
     }
 
-    public function setDefaultOptions(OptionsResolverInterface $resolver)
+    public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(['translation_domain' => 'platform']);
+        $resolver->setDefaults([
+          'translation_domain' => 'platform',
+          'themes' => [],
+          'icons' => [],
+          'lockedParams' => [],
+        ]);
     }
 }

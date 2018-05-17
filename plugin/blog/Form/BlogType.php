@@ -10,7 +10,7 @@ class BlogType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', array('attr' => array('autofocus' => true)));
+        $builder->add('name', TextType::class, array('attr' => array('autofocus' => true)));
     }
 
     public function getName()

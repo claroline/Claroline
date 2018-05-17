@@ -10,7 +10,7 @@ class CorrectionStandardType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('totalGrade', 'number', array('required' => true));
+        $builder->add('totalGrade', NumberType::class, array('required' => true));
     }
 
     public function getName()

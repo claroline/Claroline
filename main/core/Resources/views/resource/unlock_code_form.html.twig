@@ -3,7 +3,7 @@
   class="form-horizontal panel panel-default"
   id="resource_unlock"
   action="{{ path('claro_resource_form_unlock', {'node': node.getId()}) }}"
-  method="post" {{ form_enctype(form) }}
+  method="post" enctype="multipart/form-data"
 >
     <div class="panel-body">
         <div class="well">

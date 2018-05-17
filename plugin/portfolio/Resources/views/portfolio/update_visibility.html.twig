@@ -142,7 +142,7 @@
 {% endmacro %}
 
 {% block content_body %}
-    <form action="{{ path('icap_portfolio_update_visibility', {'id': portfolio.id}) }}" method="post" class="form-horizontal" id="visibility_form" {{ form_enctype(form) }}>
+    <form action="{{ path('icap_portfolio_update_visibility', {'id': portfolio.id}) }}" method="post" class="form-horizontal" id="visibility_form" enctype="multipart/form-data">
         {{ form_errors(form) }}
 
         <div class="form-group">

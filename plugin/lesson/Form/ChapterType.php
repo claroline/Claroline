@@ -31,8 +31,8 @@ class ChapterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('title', 'text')
-            ->add('text', 'tinymce', array(
+            ->add('title', TextType::class)
+            ->add(TextType::class, 'tinymce', array(
                     'attr' => array(
                         'data-theme' => 'advanced',
                         'height' => '600',
@@ -55,7 +55,7 @@ class ChapterType extends AbstractType
                     $parentId = $child->getId();
                 }
             }
-            $builder->add('parentChapter', 'choice', array(
+            $builder->add('parentChapter', ChoiceType::class, array(
                 'mapped' => false,
                 'choices' => $choices,
                 'data' => $parentId,
