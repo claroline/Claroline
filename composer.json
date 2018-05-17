@@ -40,7 +40,7 @@
         "jdorn/sql-formatter": "1.2.17",
         "jms/di-extra-bundle": "1.8.2",
         "jms/security-extra-bundle": "1.6.1",
-        "jms/serializer-bundle": "1.11.0",
+        "jms/serializer-bundle": "1.5.0",
         "json-quiz/json-quiz": "dev-master",
         "knplabs/knp-menu-bundle": "2.2.1",
         "knplabs/knp-snappy-bundle": "1.5.2",
