@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "0dd89490ab1d90a0b62e7b9b7c038aa32ffb734d"
+                "reference": "e253563c20e98058a66d0e14da88bdecd5cb4805"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/0dd89490ab1d90a0b62e7b9b7c038aa32ffb734d",
-                "reference": "0dd89490ab1d90a0b62e7b9b7c038aa32ffb734d",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/e253563c20e98058a66d0e14da88bdecd5cb4805",
+                "reference": "e253563c20e98058a66d0e14da88bdecd5cb4805",
                 "shasum": ""
             },
             "require": {
@@ -397,7 +397,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-05-15 14:40:36"
+            "time": "2018-05-17 18:25:34"
         },
         {
             "name": "cocur/slugify",
@@ -5126,6 +5126,7 @@
                 "compression",
                 "minification"
             ],
+            "abandoned": "symfony/webpack-encore-pack",
             "time": "2015-12-28 13:12:39"
         },
         {
@@ -7757,12 +7758,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/phpunit-bridge.git",
-                "reference": "b6887d640f3c73bbddeac3459b94c5b2374b9368"
+                "reference": "b3d384006662916bfcf294de26a860aa14f1f35b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/b6887d640f3c73bbddeac3459b94c5b2374b9368",
-                "reference": "b6887d640f3c73bbddeac3459b94c5b2374b9368",
+                "url": "https://api.github.com/repos/symfony/phpunit-bridge/zipball/b3d384006662916bfcf294de26a860aa14f1f35b",
+                "reference": "b3d384006662916bfcf294de26a860aa14f1f35b",
                 "shasum": ""
             },
             "require": {
@@ -7815,7 +7816,7 @@
             ],
             "description": "Symfony PHPUnit Bridge",
             "homepage": "https://symfony.com",
-            "time": "2018-05-07 14:51:25"
+            "time": "2018-05-16 14:42:13"
         },
         {
             "name": "symfony/polyfill-php54",
