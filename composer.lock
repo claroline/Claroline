@@ -124,12 +124,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/claroline/Distribution.git",
-                "reference": "8599c34e6042e67fb139d727a19cae7f299b9728"
+                "reference": "e532ea43f3f7cfa8bcc13a356c4c2e581b39fb10"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claroline/Distribution/zipball/8599c34e6042e67fb139d727a19cae7f299b9728",
-                "reference": "8599c34e6042e67fb139d727a19cae7f299b9728",
+                "url": "https://api.github.com/repos/claroline/Distribution/zipball/e532ea43f3f7cfa8bcc13a356c4c2e581b39fb10",
+                "reference": "e532ea43f3f7cfa8bcc13a356c4c2e581b39fb10",
                 "shasum": ""
             },
             "require": {
@@ -397,7 +397,7 @@
                 "Claroline",
                 "distribution"
             ],
-            "time": "2018-05-18 13:51:59"
+            "time": "2018-05-19 07:00:50"
         },
         {
             "name": "cocur/slugify",
