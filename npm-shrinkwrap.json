@@ -2702,9 +2702,9 @@
       "resolved": "git://github.com/toddmotto/fluidvids.git#2c05563dde0ecda0133338727cb095afae044753"
     },
     "follow-redirects": {
-      "version": "1.4.1",
+      "version": "1.5.0",
       "from": "follow-redirects@>=1.0.0 <2.0.0",
-      "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.4.1.tgz",
+      "resolved": "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.5.0.tgz",
       "dependencies": {
         "debug": {
           "version": "3.1.0",
